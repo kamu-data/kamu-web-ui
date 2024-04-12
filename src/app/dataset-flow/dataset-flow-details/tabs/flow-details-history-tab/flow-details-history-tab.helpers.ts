@@ -80,12 +80,12 @@ export class DatasetFlowDetailsHelpers {
     }
 
     public static flowOutcomeOptions(outcome: MaybeNullOrUndefined<FlowOutcome>): { icon: string; class: string } {
-        switch (outcome) {
-            case FlowOutcome.Success:
+        switch (outcome?.__typename) {
+            case "FlowSuccessResult":
                 return { icon: "check_circle", class: "completed-status" };
-            case FlowOutcome.Failed:
+            case "FlowFailedError":
                 return { icon: "dangerous", class: "failed-status" };
-            case FlowOutcome.Aborted:
+            case "FlowAbortedResult":
                 return { icon: "cancel", class: "aborted-outcome" };
             /* istanbul ignore next */
             default:
@@ -110,10 +110,10 @@ export class DatasetFlowDetailsHelpers {
                     case TaskStatus.Running:
                         return `Task #${flowEvent.taskId}`;
                     case TaskStatus.Finished:
-                        switch (flowDetails.outcome) {
-                            case FlowOutcome.Failed:
+                        switch (flowDetails.outcome?.__typename) {
+                            case "FlowFailedError":
                                 return `An error occurred, see logs for more details`;
-                            case FlowOutcome.Success:
+                            case "FlowSuccessResult":
                                 switch (flowDetails.description.__typename) {
                                     case "FlowDescriptionDatasetPollingIngest":
                                     case "FlowDescriptionDatasetPushIngest":

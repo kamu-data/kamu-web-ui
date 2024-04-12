@@ -187,8 +187,8 @@ export class DataHelpers {
                 return `Push ingest`;
             case "FlowDescriptionDatasetExecuteTransform":
                 return `Execute transformation`;
-            case "FlowDescriptionDatasetCompaction":
-                return `Compacting`;
+            case "FlowDescriptionDatasetHardCompacting":
+                return `Hard compacting`;
             case "FlowDescriptionSystemGC":
                 return `Garbage collector`;
             default:

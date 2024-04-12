@@ -26,10 +26,13 @@ fragment FlowSummaryData on Flow {
       }
     }
 
-    ... on FlowDescriptionDatasetCompaction {
+    ... on FlowDescriptionDatasetHardCompacting {
       datasetId
-      originalBlocksCount
-      resultingBlocksCount
+      compactingResult {
+        originalBlocksCount
+        resultingBlocksCount
+        newHead
+      }
     }
 
     ... on FlowDescriptionSystemGC {
@@ -41,7 +44,19 @@ fragment FlowSummaryData on Flow {
   initiator {
     ...Account
   }
-  outcome
+  outcome {
+    ... on FlowSuccessResult {
+      message
+    }
+
+    ... on FlowFailedError {
+      reason
+    }
+
+    ... on FlowAbortedResult {
+      message
+    }
+  }
   timing {
     awaitingExecutorSince
     runningSince

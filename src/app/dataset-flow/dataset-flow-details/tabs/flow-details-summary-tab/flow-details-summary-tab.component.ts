@@ -12,7 +12,6 @@ import { DatasetFlowDetailsHelpers } from "../flow-details-history-tab/flow-deta
 })
 export class FlowDetailsSummaryTabComponent {
     @Input() flowDetails: FlowSummaryDataFragment;
-    public readonly FlowOutcome: typeof FlowOutcome = FlowOutcome;
     public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;
     public readonly DATE_FORMAT = AppValues.CRON_EXPRESSION_DATE_FORMAT;
 
@@ -27,4 +26,10 @@ export class FlowDetailsSummaryTabComponent {
     public durationFlowEvent(startEventTime: string, endEventTime: string): string {
         return DataHelpers.durationTask(startEventTime, endEventTime);
     }
+
+    public flowOutcomeMessage: Record<string, string> = {
+        FlowSuccessResult: "success",
+        FlowFailedError: "failed",
+        FlowAbortedResult: "aborted",
+    };
 }

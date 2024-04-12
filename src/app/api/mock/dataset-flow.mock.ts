@@ -9,7 +9,6 @@ import {
     DatasetTriggerFlowMutation,
     FlowConnectionDataFragment,
     FlowHistoryDataFragment,
-    FlowOutcome,
     FlowStatus,
     FlowSummaryDataFragment,
     GetDatasetListFlowsQuery,
@@ -207,7 +206,10 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         flowId: "414",
         status: FlowStatus.Finished,
         initiator: null,
-        outcome: FlowOutcome.Success,
+        outcome: {
+            __typename: "FlowSuccessResult",
+            message: "Succes",
+        },
         startCondition: null,
         timing: {
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
@@ -266,7 +268,10 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         flowId: "414",
         status: FlowStatus.Finished,
         initiator: null,
-        outcome: FlowOutcome.Aborted,
+        outcome: {
+            __typename: "FlowAbortedResult",
+            message: "Aborted",
+        },
         startCondition: null,
         timing: {
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
@@ -285,7 +290,10 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         flowId: "414",
         status: FlowStatus.Finished,
         initiator: null,
-        outcome: FlowOutcome.Failed,
+        outcome: {
+            __typename: "FlowFailedError",
+            reason: "Failed",
+        },
         startCondition: null,
         timing: {
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
@@ -391,7 +399,10 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                 flowId: "88",
                                 status: FlowStatus.Finished,
                                 initiator: null,
-                                outcome: FlowOutcome.Success,
+                                outcome: {
+                                    __typename: "FlowSuccessResult",
+                                    message: "Succes",
+                                },
                                 timing: {
                                     awaitingExecutorSince: "2024-02-13T10:10:25+00:00",
                                     runningSince: "2024-02-13T10:10:25.468811294+00:00",
@@ -443,7 +454,10 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     flowId: "88",
                                     status: FlowStatus.Finished,
                                     initiator: null,
-                                    outcome: FlowOutcome.Success,
+                                    outcome: {
+                                        __typename: "FlowSuccessResult",
+                                        message: "Succes",
+                                    },
                                     timing: {
                                         awaitingExecutorSince: "2024-02-13T10:10:25+00:00",
                                         runningSince: "2024-02-13T10:10:25.468811294+00:00",
@@ -564,7 +578,10 @@ export const mockCancelScheduledTasksMutationSuccess: CancelScheduledTasksMutati
                             flowId: "17",
                             status: FlowStatus.Finished,
                             initiator: null,
-                            outcome: FlowOutcome.Aborted,
+                            outcome: {
+                                __typename: "FlowAbortedResult",
+                                message: "Aborted",
+                            },
                             timing: {
                                 awaitingExecutorSince: null,
                                 runningSince: null,
@@ -680,7 +697,10 @@ export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
                             flowId: "595",
                             status: FlowStatus.Finished,
                             initiator: null,
-                            outcome: FlowOutcome.Success,
+                            outcome: {
+                                __typename: "FlowSuccessResult",
+                                message: "Succes",
+                            },
                             timing: {
                                 awaitingExecutorSince: "2024-03-15T19:43:38+00:00",
                                 runningSince: "2024-03-15T19:43:39.414651763+00:00",

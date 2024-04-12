@@ -177,6 +177,11 @@ export type CommitResultSuccess = CommitResult &
         oldHead?: Maybe<Scalars["Multihash"]>;
     };
 
+export type CompactingConditionInput = {
+    maxSliceRecords: Scalars["Int"];
+    maxSliceSize: Scalars["Int"];
+};
+
 export enum CompressionFormat {
     Gzip = "GZIP",
     Zip = "ZIP",
@@ -280,6 +285,7 @@ export type DataSchema = {
 };
 
 export enum DataSchemaFormat {
+    ArrowJson = "ARROW_JSON",
     Parquet = "PARQUET",
     ParquetJson = "PARQUET_JSON",
 }
@@ -306,7 +312,7 @@ export type Dataset = {
     flows: DatasetFlows;
     /** Unique identifier of the dataset */
     id: Scalars["DatasetID"];
-    /** Returns the kind of a dataset (Root or Derivative) */
+    /** Returns the kind of dataset (Root or Derivative) */
     kind: DatasetKind;
     /** Creation time of the most recent metadata block in the chain */
     lastUpdatedAt: Scalars["DateTime"];
@@ -405,6 +411,7 @@ export type DatasetFlowConfigsMut = {
     pauseFlows: Scalars["Boolean"];
     resumeFlows: Scalars["Boolean"];
     setConfigBatching: SetFlowConfigResult;
+    setConfigCompacting: SetFlowConfigResult;
     setConfigSchedule: SetFlowConfigResult;
 };
 
@@ -418,6 +425,12 @@ export type DatasetFlowConfigsMutResumeFlowsArgs = {
 
 export type DatasetFlowConfigsMutSetConfigBatchingArgs = {
     batching: BatchingConditionInput;
+    datasetFlowType: DatasetFlowType;
+    paused: Scalars["Boolean"];
+};
+
+export type DatasetFlowConfigsMutSetConfigCompactingArgs = {
+    compactingArgs: CompactingConditionInput;
     datasetFlowType: DatasetFlowType;
     paused: Scalars["Boolean"];
 };
@@ -465,8 +478,8 @@ export type DatasetFlowRunsMutTriggerFlowArgs = {
 };
 
 export enum DatasetFlowType {
-    Compaction = "COMPACTION",
     ExecuteTransform = "EXECUTE_TRANSFORM",
+    HardCompacting = "HARD_COMPACTING",
     Ingest = "INGEST",
 }
 
@@ -768,9 +781,15 @@ export type Flow = {
     timing: FlowTimingRecords;
 };
 
+export type FlowAbortedResult = {
+    __typename?: "FlowAbortedResult";
+    message: Scalars["String"];
+};
+
 export type FlowConfiguration = {
     __typename?: "FlowConfiguration";
     batching?: Maybe<FlowConfigurationBatching>;
+    compacting?: Maybe<FlowConfigurationCompacting>;
     paused: Scalars["Boolean"];
     schedule?: Maybe<FlowConfigurationSchedule>;
 };
@@ -779,6 +798,12 @@ export type FlowConfigurationBatching = {
     __typename?: "FlowConfigurationBatching";
     maxBatchingInterval: TimeDelta;
     minRecordsToAwait: Scalars["Int"];
+};
+
+export type FlowConfigurationCompacting = {
+    __typename?: "FlowConfigurationCompacting";
+    maxSliceRecords: Scalars["Int"];
+    maxSliceSize: Scalars["Int"];
 };
 
 export type FlowConfigurationSchedule = Cron5ComponentExpression | TimeDelta;
@@ -795,23 +820,29 @@ export type FlowConnection = {
 };
 
 export type FlowDescription =
-    | FlowDescriptionDatasetCompaction
     | FlowDescriptionDatasetExecuteTransform
+    | FlowDescriptionDatasetHardCompacting
     | FlowDescriptionDatasetPollingIngest
     | FlowDescriptionDatasetPushIngest
     | FlowDescriptionSystemGc;
-
-export type FlowDescriptionDatasetCompaction = {
-    __typename?: "FlowDescriptionDatasetCompaction";
-    datasetId: Scalars["DatasetID"];
-    originalBlocksCount: Scalars["Int"];
-    resultingBlocksCount?: Maybe<Scalars["Int"]>;
-};
 
 export type FlowDescriptionDatasetExecuteTransform = {
     __typename?: "FlowDescriptionDatasetExecuteTransform";
     datasetId: Scalars["DatasetID"];
     transformResult?: Maybe<FlowDescriptionUpdateResult>;
+};
+
+export type FlowDescriptionDatasetHardCompacting = {
+    __typename?: "FlowDescriptionDatasetHardCompacting";
+    compactingResult?: Maybe<FlowDescriptionDatasetHardCompactingResult>;
+    datasetId: Scalars["DatasetID"];
+};
+
+export type FlowDescriptionDatasetHardCompactingResult = {
+    __typename?: "FlowDescriptionDatasetHardCompactingResult";
+    newHead: Scalars["Multihash"];
+    originalBlocksCount: Scalars["Int"];
+    resultingBlocksCount: Scalars["Int"];
 };
 
 export type FlowDescriptionDatasetPollingIngest = {
@@ -886,6 +917,11 @@ export type FlowEventTriggerAdded = FlowEvent & {
     trigger: FlowTrigger;
 };
 
+export type FlowFailedError = {
+    __typename?: "FlowFailedError";
+    reason: Scalars["String"];
+};
+
 export type FlowIncompatibleDatasetKind = SetFlowConfigResult &
     TriggerFlowResult & {
         __typename?: "FlowIncompatibleDatasetKind";
@@ -900,6 +936,12 @@ export type FlowInvalidBatchingConfig = SetFlowConfigResult & {
     reason: Scalars["String"];
 };
 
+export type FlowInvalidCompactingConfig = SetFlowConfigResult & {
+    __typename?: "FlowInvalidCompactingConfig";
+    message: Scalars["String"];
+    reason: Scalars["String"];
+};
+
 export type FlowNotFound = CancelScheduledTasksResult &
     GetFlowResult & {
         __typename?: "FlowNotFound";
@@ -907,11 +949,7 @@ export type FlowNotFound = CancelScheduledTasksResult &
         message: Scalars["String"];
     };
 
-export enum FlowOutcome {
-    Aborted = "ABORTED",
-    Failed = "FAILED",
-    Success = "SUCCESS",
-}
+export type FlowOutcome = FlowAbortedResult | FlowFailedError | FlowSuccessResult;
 
 export type FlowPreconditionsNotMet = SetFlowConfigResult &
     TriggerFlowResult & {
@@ -957,6 +995,11 @@ export enum FlowStatus {
     Waiting = "WAITING",
 }
 
+export type FlowSuccessResult = {
+    __typename?: "FlowSuccessResult";
+    message: Scalars["String"];
+};
+
 export type FlowTimingRecords = {
     __typename?: "FlowTimingRecords";
     /** Recorded time of last task scheduling */
@@ -992,6 +1035,11 @@ export type FlowTriggerManual = {
 export type FlowTriggerPush = {
     __typename?: "FlowTriggerPush";
     dummy: Scalars["Boolean"];
+};
+
+export type FlowTypeIsNotSupported = SetFlowConfigResult & {
+    __typename?: "FlowTypeIsNotSupported";
+    message: Scalars["String"];
 };
 
 export type GetFlowResult = {
@@ -2209,14 +2257,7 @@ export type FlowSummaryDataFragment = {
     __typename?: "Flow";
     flowId: string;
     status: FlowStatus;
-    outcome?: FlowOutcome | null;
     description:
-        | {
-              __typename?: "FlowDescriptionDatasetCompaction";
-              datasetId: string;
-              originalBlocksCount: number;
-              resultingBlocksCount?: number | null;
-          }
         | {
               __typename?: "FlowDescriptionDatasetExecuteTransform";
               datasetId: string;
@@ -2224,6 +2265,16 @@ export type FlowSummaryDataFragment = {
                   __typename?: "FlowDescriptionUpdateResult";
                   numBlocks: number;
                   numRecords: number;
+              } | null;
+          }
+        | {
+              __typename?: "FlowDescriptionDatasetHardCompacting";
+              datasetId: string;
+              compactingResult?: {
+                  __typename?: "FlowDescriptionDatasetHardCompactingResult";
+                  originalBlocksCount: number;
+                  resultingBlocksCount: number;
+                  newHead: string;
               } | null;
           }
         | {
@@ -2248,6 +2299,11 @@ export type FlowSummaryDataFragment = {
           }
         | { __typename?: "FlowDescriptionSystemGC"; dummy: boolean };
     initiator?: ({ __typename?: "Account" } & AccountFragment) | null;
+    outcome?:
+        | { __typename?: "FlowAbortedResult"; message: string }
+        | { __typename?: "FlowFailedError"; reason: string }
+        | { __typename?: "FlowSuccessResult"; message: string }
+        | null;
     timing: {
         __typename?: "FlowTimingRecords";
         awaitingExecutorSince?: string | null;
@@ -2968,7 +3024,9 @@ export type DatasetFlowBatchingMutation = {
                               actualDatasetKind: DatasetKind;
                           }
                         | { __typename: "FlowInvalidBatchingConfig"; message: string; reason: string }
+                        | { __typename: "FlowInvalidCompactingConfig"; reason: string; message: string }
                         | { __typename: "FlowPreconditionsNotMet"; message: string }
+                        | { __typename: "FlowTypeIsNotSupported"; message: string }
                         | {
                               __typename: "SetFlowConfigSuccess";
                               message: string;
@@ -3048,7 +3106,9 @@ export type DatasetFlowScheduleMutation = {
                               actualDatasetKind: DatasetKind;
                           }
                         | { __typename: "FlowInvalidBatchingConfig" }
+                        | { __typename: "FlowInvalidCompactingConfig" }
                         | { __typename: "FlowPreconditionsNotMet"; message: string }
+                        | { __typename: "FlowTypeIsNotSupported" }
                         | {
                               __typename: "SetFlowConfigSuccess";
                               message: string;
@@ -3146,10 +3206,13 @@ export const FlowSummaryDataFragmentDoc = gql`
                     numRecords
                 }
             }
-            ... on FlowDescriptionDatasetCompaction {
+            ... on FlowDescriptionDatasetHardCompacting {
                 datasetId
-                originalBlocksCount
-                resultingBlocksCount
+                compactingResult {
+                    originalBlocksCount
+                    resultingBlocksCount
+                    newHead
+                }
             }
             ... on FlowDescriptionSystemGC {
                 dummy
@@ -3160,7 +3223,17 @@ export const FlowSummaryDataFragmentDoc = gql`
         initiator {
             ...Account
         }
-        outcome
+        outcome {
+            ... on FlowSuccessResult {
+                message
+            }
+            ... on FlowFailedError {
+                reason
+            }
+            ... on FlowAbortedResult {
+                message
+            }
+        }
         timing {
             awaitingExecutorSince
             runningSince
@@ -4999,6 +5072,13 @@ export const DatasetFlowBatchingDocument = gql`
                                 reason
                             }
                             ... on FlowPreconditionsNotMet {
+                                message
+                            }
+                            ... on FlowTypeIsNotSupported {
+                                message
+                            }
+                            ... on FlowInvalidCompactingConfig {
+                                reason
                                 message
                             }
                         }

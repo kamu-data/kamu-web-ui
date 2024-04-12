@@ -23,7 +23,7 @@
 
                 <span class="fs-12 fw-bold">Outcome:</span>
                 <span class="fs-12">
-                    {{ node.outcome ? (node.outcome | lowercase) : "-" }}
+                    {{ node.outcome ? tileOutcomeMessage[node.outcome.__typename!] : "-" }}
                 </span>
                 <br />
 

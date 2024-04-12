@@ -1,10 +1,10 @@
-import { FlowOutcome, FlowStatus, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
+import { FlowStatus, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
 
 export class TileBaseWidgetHelpers {
     public static tileWidgetClass(node: FlowSummaryDataFragment): string {
         switch (node.status) {
             case FlowStatus.Finished: {
-                return node.outcome ? flowOutcomeMapperClass[node.outcome] : "";
+                return node.outcome ? flowOutcomeMapperClass[node.outcome.__typename as string] : "";
             }
             case FlowStatus.Running: {
                 return "running-class";
@@ -19,8 +19,8 @@ export class TileBaseWidgetHelpers {
     }
 }
 
-const flowOutcomeMapperClass: Record<FlowOutcome, string> = {
-    [FlowOutcome.Success]: "success-class",
-    [FlowOutcome.Failed]: "failed-class",
-    [FlowOutcome.Aborted]: "aborted-class",
+const flowOutcomeMapperClass: Record<string, string> = {
+    FlowSuccessResult: "success-class",
+    FlowFailedError: "failed-class",
+    FlowAbortedResult: "aborted-class",
 };

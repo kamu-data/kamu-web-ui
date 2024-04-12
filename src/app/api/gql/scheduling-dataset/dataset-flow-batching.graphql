@@ -36,6 +36,15 @@ mutation datasetFlowBatching(
             ... on FlowPreconditionsNotMet {
               message
             }
+
+            ... on FlowTypeIsNotSupported {
+              message
+            }
+
+            ... on FlowInvalidCompactingConfig {
+              reason
+              message
+            }
           }
         }
       }

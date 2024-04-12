@@ -16,7 +16,6 @@ import {
 } from "@angular/core";
 import {
     FlowSummaryDataFragment,
-    FlowOutcome,
     FlowStatus,
     FetchStep,
     FlowStartCondition,
@@ -55,7 +54,6 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
-    public readonly FlowOutcome: typeof FlowOutcome = FlowOutcome;
     public readonly FilterByInitiatorEnum: typeof FilterByInitiatorEnum = FilterByInitiatorEnum;
     public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>();
     @ViewChildren(MatMenuTrigger) triggersMatMenu: QueryList<MatMenuTrigger>;
@@ -111,7 +109,7 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     }
 
     public durationBlockVisible(node: FlowSummaryDataFragment): boolean {
-        return node.status === FlowStatus.Finished && node.outcome === FlowOutcome.Success;
+        return node.status === FlowStatus.Finished && node.outcome?.__typename === "FlowSuccessResult";
     }
 
     public durationBlockText(node: FlowSummaryDataFragment): string {

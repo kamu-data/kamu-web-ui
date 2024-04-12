@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "@apollo/client/core";
+import { gql } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -1724,6 +1724,51 @@ export type AccountByNameQuery = {
     accounts: { __typename?: "Accounts"; byName?: ({ __typename?: "Account" } & AccountFragment) | null };
 };
 
+export type DatasetFlowCompactingMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    datasetFlowType: DatasetFlowType;
+    compactingArgs: CompactingConditionInput;
+}>;
+
+export type DatasetFlowCompactingMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            flows: {
+                __typename?: "DatasetFlowsMut";
+                configs: {
+                    __typename?: "DatasetFlowConfigsMut";
+                    setConfigCompacting:
+                        | {
+                              __typename?: "FlowIncompatibleDatasetKind";
+                              message: string;
+                              expectedDatasetKind: DatasetKind;
+                              actualDatasetKind: DatasetKind;
+                          }
+                        | { __typename?: "FlowInvalidBatchingConfig"; message: string; reason: string }
+                        | { __typename?: "FlowInvalidCompactingConfig"; reason: string; message: string }
+                        | { __typename?: "FlowPreconditionsNotMet"; message: string; preconditions: string }
+                        | { __typename?: "FlowTypeIsNotSupported"; message: string }
+                        | {
+                              __typename?: "SetFlowConfigSuccess";
+                              message: string;
+                              config: {
+                                  __typename?: "FlowConfiguration";
+                                  compacting?: {
+                                      __typename?: "FlowConfigurationCompacting";
+                                      maxSliceSize: number;
+                                      maxSliceRecords: number;
+                                  } | null;
+                              };
+                          };
+                };
+            };
+        } | null;
+    };
+};
+
 export type CommitEventToDatasetMutationVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     event: Scalars["String"];
@@ -3025,7 +3070,7 @@ export type DatasetFlowBatchingMutation = {
                           }
                         | { __typename: "FlowInvalidBatchingConfig"; message: string; reason: string }
                         | { __typename: "FlowInvalidCompactingConfig"; reason: string; message: string }
-                        | { __typename: "FlowPreconditionsNotMet"; message: string }
+                        | { __typename: "FlowPreconditionsNotMet"; message: string; preconditions: string }
                         | { __typename: "FlowTypeIsNotSupported"; message: string }
                         | {
                               __typename: "SetFlowConfigSuccess";
@@ -4129,6 +4174,71 @@ export class AccountByNameGQL extends Apollo.Query<AccountByNameQuery, AccountBy
         super(apollo);
     }
 }
+export const DatasetFlowCompactingDocument = gql`
+    mutation datasetFlowCompacting(
+        $datasetId: DatasetID!
+        $datasetFlowType: DatasetFlowType!
+        $compactingArgs: CompactingConditionInput!
+    ) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    configs {
+                        setConfigCompacting(
+                            datasetFlowType: $datasetFlowType
+                            paused: false
+                            compactingArgs: $compactingArgs
+                        ) {
+                            ... on SetFlowConfigSuccess {
+                                message
+                                config {
+                                    compacting {
+                                        maxSliceSize
+                                        maxSliceRecords
+                                    }
+                                }
+                            }
+                            ... on FlowIncompatibleDatasetKind {
+                                message
+                                expectedDatasetKind
+                                actualDatasetKind
+                            }
+                            ... on FlowInvalidBatchingConfig {
+                                message
+                                reason
+                            }
+                            ... on FlowPreconditionsNotMet {
+                                message
+                                preconditions
+                            }
+                            ... on FlowTypeIsNotSupported {
+                                message
+                            }
+                            ... on FlowInvalidCompactingConfig {
+                                reason
+                                message
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetFlowCompactingGQL extends Apollo.Mutation<
+    DatasetFlowCompactingMutation,
+    DatasetFlowCompactingMutationVariables
+> {
+    document = DatasetFlowCompactingDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
 export const CommitEventToDatasetDocument = gql`
     mutation commitEventToDataset($datasetId: DatasetID!, $event: String!) {
         datasets {
@@ -5073,6 +5183,7 @@ export const DatasetFlowBatchingDocument = gql`
                             }
                             ... on FlowPreconditionsNotMet {
                                 message
+                                preconditions
                             }
                             ... on FlowTypeIsNotSupported {
                                 message

@@ -1,23 +1,19 @@
-mutation datasetFlowBatching(
+mutation datasetFlowCompacting(
   $datasetId: DatasetID!
   $datasetFlowType: DatasetFlowType!
-  $paused: Boolean!
-  $batching: BatchingConditionInput!
+  $compactingArgs: CompactingConditionInput!
 ) {
   datasets {
     byId(datasetId: $datasetId) {
       flows {
         configs {
-          setConfigBatching(datasetFlowType: $datasetFlowType, paused: $paused, batching: $batching) {
-            __typename
+          setConfigCompacting(datasetFlowType: $datasetFlowType, paused: false, compactingArgs: $compactingArgs) {
             ... on SetFlowConfigSuccess {
               message
               config {
-                batching {
-                  maxBatchingInterval {
-                    ...TimeDeltaData
-                  }
-                  minRecordsToAwait
+                compacting {
+                  maxSliceSize
+                  maxSliceRecords
                 }
               }
             }

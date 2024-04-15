@@ -385,7 +385,6 @@ type DatasetFlowConfigsMut {
   ): SetFlowConfigResult!
   setConfigCompacting(
     datasetFlowType: DatasetFlowType!
-    paused: Boolean!
     compactingArgs: CompactingConditionInput!
   ): SetFlowConfigResult!
   pauseFlows(datasetFlowType: DatasetFlowType): Boolean!
@@ -782,11 +781,9 @@ type FlowDescriptionDatasetHardCompacting {
   compactingResult: FlowDescriptionDatasetHardCompactingResult
 }
 
-type FlowDescriptionDatasetHardCompactingResult {
-  originalBlocksCount: Int!
-  resultingBlocksCount: Int!
-  newHead: Multihash!
-}
+union FlowDescriptionDatasetHardCompactingResult =
+  | FlowDescriptionHardCompactingNothingToDo
+  | FlowDescriptionHardCompactingSuccess
 
 type FlowDescriptionDatasetPollingIngest {
   datasetId: DatasetID!
@@ -798,6 +795,17 @@ type FlowDescriptionDatasetPushIngest {
   sourceName: String
   inputRecordsCount: Int!
   ingestResult: FlowDescriptionUpdateResult
+}
+
+type FlowDescriptionHardCompactingNothingToDo {
+  dummy: String!
+  message: String!
+}
+
+type FlowDescriptionHardCompactingSuccess {
+  originalBlocksCount: Int!
+  resultingBlocksCount: Int!
+  newHead: Multihash!
 }
 
 type FlowDescriptionSystemGC {

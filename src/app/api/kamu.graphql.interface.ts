@@ -432,7 +432,6 @@ export type DatasetFlowConfigsMutSetConfigBatchingArgs = {
 export type DatasetFlowConfigsMutSetConfigCompactingArgs = {
     compactingArgs: CompactingConditionInput;
     datasetFlowType: DatasetFlowType;
-    paused: Scalars["Boolean"];
 };
 
 export type DatasetFlowConfigsMutSetConfigScheduleArgs = {
@@ -838,12 +837,9 @@ export type FlowDescriptionDatasetHardCompacting = {
     datasetId: Scalars["DatasetID"];
 };
 
-export type FlowDescriptionDatasetHardCompactingResult = {
-    __typename?: "FlowDescriptionDatasetHardCompactingResult";
-    newHead: Scalars["Multihash"];
-    originalBlocksCount: Scalars["Int"];
-    resultingBlocksCount: Scalars["Int"];
-};
+export type FlowDescriptionDatasetHardCompactingResult =
+    | FlowDescriptionHardCompactingNothingToDo
+    | FlowDescriptionHardCompactingSuccess;
 
 export type FlowDescriptionDatasetPollingIngest = {
     __typename?: "FlowDescriptionDatasetPollingIngest";
@@ -857,6 +853,19 @@ export type FlowDescriptionDatasetPushIngest = {
     ingestResult?: Maybe<FlowDescriptionUpdateResult>;
     inputRecordsCount: Scalars["Int"];
     sourceName?: Maybe<Scalars["String"]>;
+};
+
+export type FlowDescriptionHardCompactingNothingToDo = {
+    __typename?: "FlowDescriptionHardCompactingNothingToDo";
+    dummy: Scalars["String"];
+    message: Scalars["String"];
+};
+
+export type FlowDescriptionHardCompactingSuccess = {
+    __typename?: "FlowDescriptionHardCompactingSuccess";
+    newHead: Scalars["Multihash"];
+    originalBlocksCount: Scalars["Int"];
+    resultingBlocksCount: Scalars["Int"];
 };
 
 export type FlowDescriptionSystemGc = {
@@ -2315,12 +2324,15 @@ export type FlowSummaryDataFragment = {
         | {
               __typename?: "FlowDescriptionDatasetHardCompacting";
               datasetId: string;
-              compactingResult?: {
-                  __typename?: "FlowDescriptionDatasetHardCompactingResult";
-                  originalBlocksCount: number;
-                  resultingBlocksCount: number;
-                  newHead: string;
-              } | null;
+              compactingResult?:
+                  | { __typename?: "FlowDescriptionHardCompactingNothingToDo"; message: string; dummy: string }
+                  | {
+                        __typename?: "FlowDescriptionHardCompactingSuccess";
+                        originalBlocksCount: number;
+                        resultingBlocksCount: number;
+                        newHead: string;
+                    }
+                  | null;
           }
         | {
               __typename?: "FlowDescriptionDatasetPollingIngest";
@@ -3254,9 +3266,15 @@ export const FlowSummaryDataFragmentDoc = gql`
             ... on FlowDescriptionDatasetHardCompacting {
                 datasetId
                 compactingResult {
-                    originalBlocksCount
-                    resultingBlocksCount
-                    newHead
+                    ... on FlowDescriptionHardCompactingSuccess {
+                        originalBlocksCount
+                        resultingBlocksCount
+                        newHead
+                    }
+                    ... on FlowDescriptionHardCompactingNothingToDo {
+                        message
+                        dummy
+                    }
                 }
             }
             ... on FlowDescriptionSystemGC {
@@ -4184,11 +4202,7 @@ export const DatasetFlowCompactingDocument = gql`
             byId(datasetId: $datasetId) {
                 flows {
                     configs {
-                        setConfigCompacting(
-                            datasetFlowType: $datasetFlowType
-                            paused: false
-                            compactingArgs: $compactingArgs
-                        ) {
+                        setConfigCompacting(datasetFlowType: $datasetFlowType, compactingArgs: $compactingArgs) {
                             ... on SetFlowConfigSuccess {
                                 message
                                 config {

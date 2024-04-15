@@ -143,9 +143,16 @@ export class DatasetFlowDetailsHelpers {
                                             : "Dataset is up-to-date";
 
                                     case "FlowDescriptionDatasetHardCompacting":
-                                        return flowDetails.description.compactingResult
-                                            ? `There were ${flowDetails.description.compactingResult.originalBlocksCount} block(s), now there are ${flowDetails.description.compactingResult.resultingBlocksCount} block(s)`
-                                            : "Compacting is up-to-date";
+                                        switch (flowDetails.description.compactingResult?.__typename) {
+                                            case "FlowDescriptionHardCompactingSuccess":
+                                                return `There were ${flowDetails.description.compactingResult.originalBlocksCount} block(s), now there are ${flowDetails.description.compactingResult.resultingBlocksCount} block(s)`;
+
+                                            case "FlowDescriptionHardCompactingNothingToDo":
+                                                return flowDetails.description.compactingResult.message as string;
+                                            /* istanbul ignore next */
+                                            default:
+                                                return "Unknown compacting result typename";
+                                        }
 
                                     // TODO
                                     //  - GC

@@ -7,7 +7,7 @@ mutation datasetFlowCompacting(
     byId(datasetId: $datasetId) {
       flows {
         configs {
-          setConfigCompacting(datasetFlowType: $datasetFlowType, paused: false, compactingArgs: $compactingArgs) {
+          setConfigCompacting(datasetFlowType: $datasetFlowType, compactingArgs: $compactingArgs) {
             ... on SetFlowConfigSuccess {
               message
               config {

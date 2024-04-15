@@ -98,9 +98,16 @@ export class DatasetFlowTableHelpers {
                                     : "Dataset is up-to-date";
 
                             case "FlowDescriptionDatasetHardCompacting":
-                                return element.description.compactingResult
-                                    ? `There were ${element.description.compactingResult.originalBlocksCount} block(s), now there are ${element.description.compactingResult.resultingBlocksCount} block(s)`
-                                    : "Compacting is up-to-date";
+                                switch (element.description.compactingResult?.__typename) {
+                                    case "FlowDescriptionHardCompactingSuccess":
+                                        return `There were ${element.description.compactingResult.originalBlocksCount} block(s), now there are ${element.description.compactingResult.resultingBlocksCount} block(s)`;
+
+                                    case "FlowDescriptionHardCompactingNothingToDo":
+                                        return element.description.compactingResult.message as string;
+                                    /* istanbul ignore next */
+                                    default:
+                                        return "Unknown compacting result typename";
+                                }
                             // TODO
                             //  - GC
                             default:

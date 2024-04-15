@@ -96,8 +96,12 @@ export class DatasetFlowTableHelpers {
                                           element.description.transformResult.numBlocks == 1 ? "block" : "blocks"
                                       }`
                                     : "Dataset is up-to-date";
+
+                            case "FlowDescriptionDatasetHardCompacting":
+                                return element.description.compactingResult
+                                    ? `There were ${element.description.compactingResult.originalBlocksCount} block(s), now there are ${element.description.compactingResult.resultingBlocksCount} block(s)`
+                                    : "Compacting is up-to-date";
                             // TODO
-                            //  - Compacting
                             //  - GC
                             default:
                                 return "Unknown description typename";

@@ -1,11 +1,15 @@
+import { NavigationService } from "./../../../../../services/navigation.service";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
-import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
+import { DatasetBasicsFragment, DatasetFlowType } from "src/app/api/kamu.graphql.interface";
 import { promiseWithCatch } from "src/app/common/app.helpers";
 import { CompactingTooltipsTexts } from "src/app/common/tooltips/compacting.text";
 import { ModalService } from "src/app/components/modal/modal.service";
-import { SliceUnit } from "./dataset-settings-compacting-tab.types";
+import { SliceUnit, sliceSizeMapper } from "./dataset-settings-compacting-tab.types";
+import { DatasetCompactingService } from "../../services/dataset-compacting.service";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import AppValues from "src/app/common/app.values";
 
 @Component({
     selector: "app-dataset-settings-compacting-tab",
@@ -27,6 +31,8 @@ export class DatasetSettingsCompactingTabComponent implements OnInit {
     constructor(
         public modalService: ModalService,
         private fb: FormBuilder,
+        private datasetCompactingService: DatasetCompactingService,
+        private navigationService: NavigationService,
     ) {}
 
     ngOnInit(): void {}
@@ -40,7 +46,26 @@ export class DatasetSettingsCompactingTabComponent implements OnInit {
                 noButtonText: "Cancel",
                 handler: (ok) => {
                     if (ok) {
-                        // console.log("ok")
+                        this.datasetCompactingService
+                            .runHardCompaction({
+                                datasetId: this.datasetBasics.id,
+                                datasetFlowType: DatasetFlowType.HardCompacting,
+                                compactingArgs: {
+                                    maxSliceSize: this.sliceSizeInBytes,
+                                    maxSliceRecords: this.hardCompactionForm.controls.recordsCount.value as number,
+                                },
+                            })
+                            .subscribe((result: boolean) => {
+                                if (result) {
+                                    setTimeout(() => {
+                                        this.navigationService.navigateToDatasetView({
+                                            accountName: this.datasetBasics.owner.accountName,
+                                            datasetName: this.datasetBasics.name,
+                                            tab: DatasetViewTypeEnum.Flows,
+                                        });
+                                    }, AppValues.SIMULATION_START_CONDITION_DELAY_MS);
+                                }
+                            });
                     }
                 },
             }),
@@ -50,14 +75,7 @@ export class DatasetSettingsCompactingTabComponent implements OnInit {
     public get sliceSizeInBytes(): number {
         return (
             (this.hardCompactionForm.controls.sliceSize.value as number) *
-            this.sliceSizeMapper[this.hardCompactionForm.controls.sliceUnit.value as SliceUnit]
+            sliceSizeMapper[this.hardCompactionForm.controls.sliceUnit.value as SliceUnit]
         );
     }
-
-    private sliceSizeMapper: Record<SliceUnit, number> = {
-        [SliceUnit.B]: 1,
-        [SliceUnit.KB]: Math.pow(2, 10),
-        [SliceUnit.MB]: Math.pow(2, 20),
-        [SliceUnit.GB]: Math.pow(2, 30),
-    };
 }

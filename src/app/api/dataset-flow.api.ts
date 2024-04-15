@@ -4,10 +4,13 @@ import {
     BatchingConditionInput,
     CancelScheduledTasksGQL,
     CancelScheduledTasksMutation,
+    CompactingConditionInput,
     DatasetAllFlowsPausedGQL,
     DatasetAllFlowsPausedQuery,
     DatasetFlowBatchingGQL,
     DatasetFlowBatchingMutation,
+    DatasetFlowCompactingGQL,
+    DatasetFlowCompactingMutation,
     DatasetFlowFilters,
     DatasetFlowScheduleGQL,
     DatasetFlowScheduleMutation,
@@ -44,6 +47,7 @@ export class DatasetFlowApi {
         private datasetTriggerFlowGQL: DatasetTriggerFlowGQL,
         private datasetFlowByIdGQL: GetFlowByIdGQL,
         private cancelScheduledTasksGQL: CancelScheduledTasksGQL,
+        private datasetFlowCompactingGQL: DatasetFlowCompactingGQL,
     ) {}
 
     public datasetTriggerFlow(params: {
@@ -225,6 +229,30 @@ export class DatasetFlowApi {
             .pipe(
                 first(),
                 map((result: MutationResult<CancelScheduledTasksMutation>) => {
+                    /* istanbul ignore else */
+                    if (result.data) {
+                        return result.data;
+                    } else {
+                        throw new DatasetOperationError(result.errors ?? []);
+                    }
+                }),
+            );
+    }
+
+    public setDatasetFlowCompacting(params: {
+        datasetId: string;
+        datasetFlowType: DatasetFlowType;
+        compactingArgs: CompactingConditionInput;
+    }): Observable<DatasetFlowCompactingMutation> {
+        return this.datasetFlowCompactingGQL
+            .mutate({
+                datasetId: params.datasetId,
+                datasetFlowType: params.datasetFlowType,
+                compactingArgs: params.compactingArgs,
+            })
+            .pipe(
+                first(),
+                map((result: MutationResult<DatasetFlowCompactingMutation>) => {
                     /* istanbul ignore else */
                     if (result.data) {
                         return result.data;

@@ -141,8 +141,13 @@ export class DatasetFlowDetailsHelpers {
                                                       : "blocks"
                                               }`
                                             : "Dataset is up-to-date";
+
+                                    case "FlowDescriptionDatasetHardCompacting":
+                                        return flowDetails.description.compactingResult
+                                            ? `There were ${flowDetails.description.compactingResult.originalBlocksCount} block(s), now there are ${flowDetails.description.compactingResult.resultingBlocksCount} block(s)`
+                                            : "Compacting is up-to-date";
+
                                     // TODO
-                                    //  - Compacting
                                     //  - GC
                                     /* istanbul ignore next */
                                     default:

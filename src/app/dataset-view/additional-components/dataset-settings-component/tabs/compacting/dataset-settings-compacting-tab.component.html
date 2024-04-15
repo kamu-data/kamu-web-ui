@@ -14,10 +14,10 @@
                 </div>
                 <div class="col-md-9 d-flex">
                     <select class="form-select me-4 form-control-width" formControlName="sliceUnit">
-                        <option [value]="'B'">B</option>
-                        <option [value]="'KB'">KB</option>
-                        <option [value]="'MB'">MB</option>
-                        <option [value]="'GB'">GB</option>
+                        <option [value]="SliceUnit.B">B</option>
+                        <option [value]="SliceUnit.KB">KB</option>
+                        <option [value]="SliceUnit.MB">MB</option>
+                        <option [value]="SliceUnit.GB">GB</option>
                     </select>
                     <input type="number" min="1" class="form-control form-control-width" formControlName="sliceSize" />
                     <ng-container

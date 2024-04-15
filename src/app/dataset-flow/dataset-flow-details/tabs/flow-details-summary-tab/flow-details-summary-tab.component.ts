@@ -13,7 +13,7 @@ import { DatasetFlowDetailsHelpers } from "../flow-details-history-tab/flow-deta
 export class FlowDetailsSummaryTabComponent {
     @Input() flowDetails: FlowSummaryDataFragment;
     public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;
-    public readonly DATE_FORMAT = AppValues.CRON_EXPRESSION_DATE_FORMAT;
+    public readonly DATE_FORMAT = AppValues.DISPLAY_FLOW_DATE_FORMAT;
 
     public outcomeClass(flowOutcome: MaybeNullOrUndefined<FlowOutcome>): string {
         return DatasetFlowDetailsHelpers.flowOutcomeOptions(flowOutcome).class;

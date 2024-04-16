@@ -1,16 +1,21 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
+import { DatasetCompactingService } from "./dataset-compacting.service";
+import { Apollo } from "apollo-angular";
+import { ApolloTestingModule } from "apollo-angular/testing";
+import { ToastrModule } from "ngx-toastr";
 
-import { DatasetCompactingService } from './dataset-compacting.service';
+describe("DatasetCompactingService", () => {
+    let service: DatasetCompactingService;
 
-describe('DatasetCompactingService', () => {
-  let service: DatasetCompactingService;
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [Apollo],
+            imports: [ApolloTestingModule, ToastrModule.forRoot()],
+        });
+        service = TestBed.inject(DatasetCompactingService);
+    });
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(DatasetCompactingService);
-  });
-
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+    it("should be created", () => {
+        expect(service).toBeTruthy();
+    });
 });

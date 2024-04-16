@@ -1,4 +1,4 @@
-import { FlowOutcome, FlowStatus, FlowSummaryDataFragment, TimeUnit } from "src/app/api/kamu.graphql.interface";
+import { FlowStatus, FlowSummaryDataFragment, TimeUnit } from "src/app/api/kamu.graphql.interface";
 
 export const expectationsDesriptionColumnOptions = [
     {
@@ -26,7 +26,10 @@ export const mockDatasetExecuteTransformFlowSummaryData: FlowSummaryDataFragment
     flowId: "1000",
     status: FlowStatus.Finished,
     initiator: null,
-    outcome: FlowOutcome.Success,
+    outcome: {
+        __typename: "FlowSuccessResult",
+        message: "Succes",
+    },
     timing: {
         awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
         runningSince: null,
@@ -122,7 +125,10 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         flowId: "415",
         status: FlowStatus.Waiting,
         initiator: null,
-        outcome: FlowOutcome.Success,
+        outcome: {
+            __typename: "FlowSuccessResult",
+            message: "Succes",
+        },
         timing: {
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: null,
@@ -143,7 +149,10 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         flowId: "415",
         status: FlowStatus.Finished,
         initiator: null,
-        outcome: FlowOutcome.Success,
+        outcome: {
+            __typename: "FlowSuccessResult",
+            message: "Succes",
+        },
         timing: {
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: "2024-02-12T18:22:31+00:00",
@@ -164,7 +173,10 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         flowId: "415",
         status: FlowStatus.Finished,
         initiator: null,
-        outcome: FlowOutcome.Aborted,
+        outcome: {
+            __typename: "FlowAbortedResult",
+            message: "Aborted",
+        },
         timing: {
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: "2024-02-12T18:22:31+00:00",
@@ -185,7 +197,10 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         flowId: "415",
         status: FlowStatus.Finished,
         initiator: null,
-        outcome: FlowOutcome.Failed,
+        outcome: {
+            __typename: "FlowFailedError",
+            reason: "Failed",
+        },
         timing: {
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: null,
@@ -327,7 +342,10 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         flowId: "420",
         status: FlowStatus.Finished,
         initiator: null,
-        outcome: FlowOutcome.Success,
+        outcome: {
+            __typename: "FlowSuccessResult",
+            message: "Succes",
+        },
         timing: {
             awaitingExecutorSince: "2024-03-14T10:24:29+00:00",
             runningSince: "2024-03-14T10:34:29+00:00",
@@ -346,7 +364,10 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         flowId: "421",
         status: FlowStatus.Finished,
         initiator: null,
-        outcome: FlowOutcome.Aborted,
+        outcome: {
+            __typename: "FlowAbortedResult",
+            message: "Aborted",
+        },
         timing: {
             awaitingExecutorSince: "2024-03-14T09:22:29+00:00",
             runningSince: null,
@@ -365,7 +386,10 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         flowId: "422",
         status: FlowStatus.Finished,
         initiator: null,
-        outcome: FlowOutcome.Failed,
+        outcome: {
+            __typename: "FlowFailedError",
+            reason: "Failed",
+        },
         timing: {
             awaitingExecutorSince: "2024-03-14T09:22:29+00:00",
             runningSince: "2024-03-14T09:24:29+00:00",

@@ -148,7 +148,7 @@ export class DatasetFlowDetailsHelpers {
                                                 return `There were ${flowDetails.description.compactingResult.originalBlocksCount} block(s), now there are ${flowDetails.description.compactingResult.resultingBlocksCount} block(s)`;
 
                                             case "FlowDescriptionHardCompactingNothingToDo":
-                                                return flowDetails.description.compactingResult.message as string;
+                                                return flowDetails.description.compactingResult.message;
                                             /* istanbul ignore next */
                                             default:
                                                 return "Unknown compacting result typename";

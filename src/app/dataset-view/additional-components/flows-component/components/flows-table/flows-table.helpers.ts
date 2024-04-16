@@ -103,7 +103,7 @@ export class DatasetFlowTableHelpers {
                                         return `There were ${element.description.compactingResult.originalBlocksCount} block(s), now there are ${element.description.compactingResult.resultingBlocksCount} block(s)`;
 
                                     case "FlowDescriptionHardCompactingNothingToDo":
-                                        return element.description.compactingResult.message as string;
+                                        return element.description.compactingResult.message;
                                     /* istanbul ignore next */
                                     default:
                                         return "Unknown compacting result typename";

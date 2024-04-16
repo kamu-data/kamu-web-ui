@@ -24,7 +24,7 @@ export class DataHelpers {
     private static readonly SHIFT_ATTACHMENTS_VIEW = "\u00A0".repeat(12);
 
     public static descriptionForEngine(name: string): EventPropertyLogo {
-        switch (name) {
+        switch (name.toLowerCase()) {
             case "flink":
                 return {
                     name: "flink",
@@ -42,13 +42,18 @@ export class DataHelpers {
             case "datafusion":
                 return {
                     name: "datafusion",
-                    label: "DataFusion",
+                    label: "Apache DataFusion",
                     url_logo: "assets/images/datafusion-logo.png",
+                };
+            case "risingwave":
+                return {
+                    name: "risingwave",
+                    label: "RisingWave",
+                    url_logo: "assets/images/risingwave-logo.png",
                 };
             default:
                 return {
-                    name: "Engine is not defined",
-                    label: "Unknown engine",
+                    name: name,
                 };
         }
     }

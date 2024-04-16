@@ -70,7 +70,7 @@ describe("SetPollingSourceEventComponent", () => {
         expect(primaryKey.textContent).toEqual("id ");
 
         const engine = getElementByDataTestId(fixture, "setPollingSource-transformSql-engine");
-        expect(engine.textContent).toEqual("(Apache Spark)");
+        expect(engine.textContent).toEqual("Apache Spark (spark)");
 
         const queries = getElementByDataTestId(fixture, "setPollingSource-transformSql-queries");
         expect(queries).toBeDefined();

@@ -382,11 +382,11 @@ type DatasetFlowConfigsMut {
     datasetFlowType: DatasetFlowType!
     paused: Boolean!
     batching: BatchingConditionInput!
-  ): SetFlowConfigResult!
+  ): SetFlowBatchingConfigResult!
   setConfigCompacting(
     datasetFlowType: DatasetFlowType!
     compactingArgs: CompactingConditionInput!
-  ): SetFlowConfigResult!
+  ): SetFlowCompactingConfigResult!
   pauseFlows(datasetFlowType: DatasetFlowType): Boolean!
   resumeFlows(datasetFlowType: DatasetFlowType): Boolean!
 }
@@ -864,18 +864,18 @@ type FlowFailedError {
 
 scalar FlowID
 
-type FlowIncompatibleDatasetKind implements SetFlowConfigResult & TriggerFlowResult {
+type FlowIncompatibleDatasetKind implements SetFlowConfigResult & SetFlowBatchingConfigResult & SetFlowCompactingConfigResult & TriggerFlowResult {
   expectedDatasetKind: DatasetKind!
   actualDatasetKind: DatasetKind!
   message: String!
 }
 
-type FlowInvalidBatchingConfig implements SetFlowConfigResult {
+type FlowInvalidBatchingConfig implements SetFlowBatchingConfigResult {
   reason: String!
   message: String!
 }
 
-type FlowInvalidCompactingConfig implements SetFlowConfigResult {
+type FlowInvalidCompactingConfig implements SetFlowCompactingConfigResult {
   reason: String!
   message: String!
 }
@@ -887,7 +887,7 @@ type FlowNotFound implements GetFlowResult & CancelScheduledTasksResult {
 
 union FlowOutcome = FlowSuccessResult | FlowFailedError | FlowAbortedResult
 
-type FlowPreconditionsNotMet implements SetFlowConfigResult & TriggerFlowResult {
+type FlowPreconditionsNotMet implements SetFlowConfigResult & SetFlowBatchingConfigResult & TriggerFlowResult {
   preconditions: String!
   message: String!
 }
@@ -965,7 +965,7 @@ type FlowTriggerPush {
   dummy: Boolean!
 }
 
-type FlowTypeIsNotSupported implements SetFlowConfigResult {
+type FlowTypeIsNotSupported implements SetFlowConfigResult & SetFlowBatchingConfigResult & SetFlowCompactingConfigResult {
   message: String!
 }
 
@@ -1353,11 +1353,19 @@ type SetDataSchema {
   schema: DataSchema!
 }
 
+interface SetFlowBatchingConfigResult {
+  message: String!
+}
+
+interface SetFlowCompactingConfigResult {
+  message: String!
+}
+
 interface SetFlowConfigResult {
   message: String!
 }
 
-type SetFlowConfigSuccess implements SetFlowConfigResult {
+type SetFlowConfigSuccess implements SetFlowConfigResult & SetFlowBatchingConfigResult & SetFlowCompactingConfigResult {
   config: FlowConfiguration!
   message: String!
 }

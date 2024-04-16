@@ -24,16 +24,6 @@ mutation datasetFlowCompacting(
               actualDatasetKind
             }
 
-            ... on FlowInvalidBatchingConfig {
-              message
-              reason
-            }
-
-            ... on FlowPreconditionsNotMet {
-              message
-              preconditions
-            }
-
             ... on FlowTypeIsNotSupported {
               message
             }

@@ -410,8 +410,8 @@ export type DatasetFlowConfigsMut = {
     __typename?: "DatasetFlowConfigsMut";
     pauseFlows: Scalars["Boolean"];
     resumeFlows: Scalars["Boolean"];
-    setConfigBatching: SetFlowConfigResult;
-    setConfigCompacting: SetFlowConfigResult;
+    setConfigBatching: SetFlowBatchingConfigResult;
+    setConfigCompacting: SetFlowCompactingConfigResult;
     setConfigSchedule: SetFlowConfigResult;
 };
 
@@ -931,7 +931,9 @@ export type FlowFailedError = {
     reason: Scalars["String"];
 };
 
-export type FlowIncompatibleDatasetKind = SetFlowConfigResult &
+export type FlowIncompatibleDatasetKind = SetFlowBatchingConfigResult &
+    SetFlowCompactingConfigResult &
+    SetFlowConfigResult &
     TriggerFlowResult & {
         __typename?: "FlowIncompatibleDatasetKind";
         actualDatasetKind: DatasetKind;
@@ -939,13 +941,13 @@ export type FlowIncompatibleDatasetKind = SetFlowConfigResult &
         message: Scalars["String"];
     };
 
-export type FlowInvalidBatchingConfig = SetFlowConfigResult & {
+export type FlowInvalidBatchingConfig = SetFlowBatchingConfigResult & {
     __typename?: "FlowInvalidBatchingConfig";
     message: Scalars["String"];
     reason: Scalars["String"];
 };
 
-export type FlowInvalidCompactingConfig = SetFlowConfigResult & {
+export type FlowInvalidCompactingConfig = SetFlowCompactingConfigResult & {
     __typename?: "FlowInvalidCompactingConfig";
     message: Scalars["String"];
     reason: Scalars["String"];
@@ -960,7 +962,8 @@ export type FlowNotFound = CancelScheduledTasksResult &
 
 export type FlowOutcome = FlowAbortedResult | FlowFailedError | FlowSuccessResult;
 
-export type FlowPreconditionsNotMet = SetFlowConfigResult &
+export type FlowPreconditionsNotMet = SetFlowBatchingConfigResult &
+    SetFlowConfigResult &
     TriggerFlowResult & {
         __typename?: "FlowPreconditionsNotMet";
         message: Scalars["String"];
@@ -1046,10 +1049,12 @@ export type FlowTriggerPush = {
     dummy: Scalars["Boolean"];
 };
 
-export type FlowTypeIsNotSupported = SetFlowConfigResult & {
-    __typename?: "FlowTypeIsNotSupported";
-    message: Scalars["String"];
-};
+export type FlowTypeIsNotSupported = SetFlowBatchingConfigResult &
+    SetFlowCompactingConfigResult &
+    SetFlowConfigResult & {
+        __typename?: "FlowTypeIsNotSupported";
+        message: Scalars["String"];
+    };
 
 export type GetFlowResult = {
     message: Scalars["String"];
@@ -1461,15 +1466,25 @@ export type SetDataSchema = {
     schema: DataSchema;
 };
 
+export type SetFlowBatchingConfigResult = {
+    message: Scalars["String"];
+};
+
+export type SetFlowCompactingConfigResult = {
+    message: Scalars["String"];
+};
+
 export type SetFlowConfigResult = {
     message: Scalars["String"];
 };
 
-export type SetFlowConfigSuccess = SetFlowConfigResult & {
-    __typename?: "SetFlowConfigSuccess";
-    config: FlowConfiguration;
-    message: Scalars["String"];
-};
+export type SetFlowConfigSuccess = SetFlowBatchingConfigResult &
+    SetFlowCompactingConfigResult &
+    SetFlowConfigResult & {
+        __typename?: "SetFlowConfigSuccess";
+        config: FlowConfiguration;
+        message: Scalars["String"];
+    };
 
 export type SetInfo = {
     __typename?: "SetInfo";
@@ -1756,9 +1771,7 @@ export type DatasetFlowCompactingMutation = {
                               expectedDatasetKind: DatasetKind;
                               actualDatasetKind: DatasetKind;
                           }
-                        | { __typename?: "FlowInvalidBatchingConfig"; message: string; reason: string }
                         | { __typename?: "FlowInvalidCompactingConfig"; reason: string; message: string }
-                        | { __typename?: "FlowPreconditionsNotMet"; message: string; preconditions: string }
                         | { __typename?: "FlowTypeIsNotSupported"; message: string }
                         | {
                               __typename?: "SetFlowConfigSuccess";
@@ -3081,7 +3094,6 @@ export type DatasetFlowBatchingMutation = {
                               actualDatasetKind: DatasetKind;
                           }
                         | { __typename: "FlowInvalidBatchingConfig"; message: string; reason: string }
-                        | { __typename: "FlowInvalidCompactingConfig"; reason: string; message: string }
                         | { __typename: "FlowPreconditionsNotMet"; message: string; preconditions: string }
                         | { __typename: "FlowTypeIsNotSupported"; message: string }
                         | {
@@ -3162,10 +3174,8 @@ export type DatasetFlowScheduleMutation = {
                               expectedDatasetKind: DatasetKind;
                               actualDatasetKind: DatasetKind;
                           }
-                        | { __typename: "FlowInvalidBatchingConfig" }
-                        | { __typename: "FlowInvalidCompactingConfig" }
                         | { __typename: "FlowPreconditionsNotMet"; message: string }
-                        | { __typename: "FlowTypeIsNotSupported" }
+                        | { __typename: "FlowTypeIsNotSupported"; message: string }
                         | {
                               __typename: "SetFlowConfigSuccess";
                               message: string;
@@ -4217,14 +4227,6 @@ export const DatasetFlowCompactingDocument = gql`
                                 expectedDatasetKind
                                 actualDatasetKind
                             }
-                            ... on FlowInvalidBatchingConfig {
-                                message
-                                reason
-                            }
-                            ... on FlowPreconditionsNotMet {
-                                message
-                                preconditions
-                            }
                             ... on FlowTypeIsNotSupported {
                                 message
                             }
@@ -5202,10 +5204,6 @@ export const DatasetFlowBatchingDocument = gql`
                             ... on FlowTypeIsNotSupported {
                                 message
                             }
-                            ... on FlowInvalidCompactingConfig {
-                                reason
-                                message
-                            }
                         }
                     }
                 }
@@ -5307,6 +5305,9 @@ export const DatasetFlowScheduleDocument = gql`
                                 actualDatasetKind
                             }
                             ... on FlowPreconditionsNotMet {
+                                message
+                            }
+                            ... on FlowTypeIsNotSupported {
                                 message
                             }
                         }

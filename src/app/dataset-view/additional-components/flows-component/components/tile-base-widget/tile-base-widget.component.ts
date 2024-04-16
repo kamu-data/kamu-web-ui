@@ -1,6 +1,6 @@
 import { MaybeNullOrUndefined } from "./../../../../../common/app.types";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { FlowStatus, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
+import { FlowOutcome, FlowStatus, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
 import { TileBaseWidgetHelpers } from "./tile-base-widget.helpers";
 import { DataHelpers } from "src/app/common/data.helpers";
 import AppValues from "src/app/common/app.values";
@@ -26,9 +26,22 @@ export class TileBaseWidgetComponent {
         return TileBaseWidgetHelpers.tileWidgetClass(node);
     }
 
-    public tileOutcomeMessage: Record<string, string> = {
-        FlowSuccessResult: "success",
-        FlowFailedError: "failed",
-        FlowAbortedResult: "aborted",
-    };
+    // public tileOutcomeMessage: Record<string, string> = {
+    //     FlowSuccessResult: "success",
+    //     FlowFailedError: "failed",
+    //     FlowAbortedResult: "aborted",
+    // };
+
+    public tileOutcomeMessage(outcome: FlowOutcome): string {
+        switch (outcome.__typename) {
+            case "FlowSuccessResult":
+                return "success";
+            case "FlowFailedError":
+                return "failed";
+            case "FlowAbortedResult":
+                return "aborted";
+            default:
+                return "Unknown outcome typename";
+        }
+    }
 }

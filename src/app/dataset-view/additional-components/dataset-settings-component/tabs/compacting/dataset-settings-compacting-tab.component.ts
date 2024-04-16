@@ -1,6 +1,6 @@
 import { NavigationService } from "./../../../../../services/navigation.service";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { FormBuilder, Validators } from "@angular/forms";
+import { AbstractControl, FormBuilder, Validators } from "@angular/forms";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { DatasetBasicsFragment, DatasetFlowType } from "src/app/api/kamu.graphql.interface";
 import { promiseWithCatch } from "src/app/common/app.helpers";
@@ -20,13 +20,14 @@ import AppValues from "src/app/common/app.values";
 export class DatasetSettingsCompactingTabComponent implements OnInit {
     @Input() public datasetBasics: DatasetBasicsFragment;
     public hardCompactionForm = this.fb.group({
-        sliceUnit: [SliceUnit.GB, [Validators.required]],
-        sliceSize: [1, [Validators.required, RxwebValidators.minNumber({ value: 1 })]],
+        sliceUnit: [SliceUnit.MB, [Validators.required]],
+        sliceSize: [10, [Validators.required, RxwebValidators.minNumber({ value: 1 })]],
         recordsCount: [10000, [Validators.required, RxwebValidators.minNumber({ value: 1 })]],
     });
     public readonly SliceUnit: typeof SliceUnit = SliceUnit;
     public readonly MAX_SLICE_SIZE_TOOLTIP = CompactingTooltipsTexts.MAX_SLICE_SIZE;
     public readonly MAX_SLICE_RECORDS_TOOLTIP = CompactingTooltipsTexts.MAX_SLICE_RECORDS;
+    public readonly MIN_VALUE_ERROR_TEXT = "The value must be positive";
 
     constructor(
         public modalService: ModalService,
@@ -77,5 +78,13 @@ export class DatasetSettingsCompactingTabComponent implements OnInit {
             (this.hardCompactionForm.controls.sliceSize.value as number) *
             sliceSizeMapper[this.hardCompactionForm.controls.sliceUnit.value as SliceUnit]
         );
+    }
+
+    public get sliceSizeControl(): AbstractControl {
+        return this.hardCompactionForm.controls.sliceSize;
+    }
+
+    public get recordsCountControl(): AbstractControl {
+        return this.hardCompactionForm.controls.recordsCount;
     }
 }

@@ -1,4 +1,3 @@
-import { MaybeNullOrUndefined } from "./../../../../common/app.types";
 import moment from "moment";
 import {
     FlowEventInitiated,
@@ -63,7 +62,7 @@ export class DatasetFlowDetailsHelpers {
                 const event = flowEvent as FlowEventTaskChanged;
                 switch (event.taskStatus) {
                     case TaskStatus.Finished:
-                        return DatasetFlowDetailsHelpers.flowOutcomeOptions(flowDetails.outcome);
+                        return DatasetFlowDetailsHelpers.flowOutcomeOptions(flowDetails.outcome as FlowOutcome);
                     case TaskStatus.Queued:
                         return { icon: "radio_button_checked", class: "scheduled-status" };
                     case TaskStatus.Running:
@@ -79,8 +78,8 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    public static flowOutcomeOptions(outcome: MaybeNullOrUndefined<FlowOutcome>): { icon: string; class: string } {
-        switch (outcome?.__typename) {
+    public static flowOutcomeOptions(outcome: FlowOutcome): { icon: string; class: string } {
+        switch (outcome.__typename) {
             case "FlowSuccessResult":
                 return { icon: "check_circle", class: "completed-status" };
             case "FlowFailedError":
@@ -145,7 +144,7 @@ export class DatasetFlowDetailsHelpers {
                                     case "FlowDescriptionDatasetHardCompacting":
                                         switch (flowDetails.description.compactingResult?.__typename) {
                                             case "FlowDescriptionHardCompactingSuccess":
-                                                return `There were ${flowDetails.description.compactingResult.originalBlocksCount} block(s), now there are ${flowDetails.description.compactingResult.resultingBlocksCount} block(s)`;
+                                                return `Compacted ${flowDetails.description.compactingResult.originalBlocksCount} original blocks to ${flowDetails.description.compactingResult.resultingBlocksCount} resulting blocks`;
 
                                             case "FlowDescriptionHardCompactingNothingToDo":
                                                 return flowDetails.description.compactingResult.message;

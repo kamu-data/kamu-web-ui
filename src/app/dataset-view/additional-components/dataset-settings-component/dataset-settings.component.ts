@@ -59,6 +59,14 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
         return !this.overview?.metadata.currentTransform && this.datasetBasics.kind === DatasetKind.Derivative;
     }
 
+    public get showSchedulingTab(): boolean {
+        return this.isSchedulingAvailable && this.activeTab === SettingsTabsEnum.SCHEDULING;
+    }
+
+    public get showCompactingTab(): boolean {
+        return this.datasetBasics.kind === DatasetKind.Root && this.activeTab === SettingsTabsEnum.COMPACTING;
+    }
+
     ngOnInit(): void {
         this.activeTab = this.getSectionFromUrl() ?? SettingsTabsEnum.GENERAL;
         this.trackSubscription(
@@ -81,5 +89,16 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
             section: section === SettingsTabsEnum.GENERAL ? undefined : section,
         });
         this.activeTab = section;
+    }
+
+    public visibilitySettingsMenuItem(item: DatasetSettingsSidePanelItem): boolean {
+        switch (item.activeTab) {
+            case SettingsTabsEnum.SCHEDULING:
+                return this.isSchedulingAvailable;
+            case SettingsTabsEnum.COMPACTING:
+                return this.datasetBasics.kind === DatasetKind.Root;
+            default:
+                return Boolean(item.visible);
+        }
     }
 }

@@ -41,7 +41,7 @@ export const datasetSettingsSidePanelData: DatasetSettingsSidePanelItem[] = [
     },
     {
         name: "Compacting",
-        iconName: "compress",
+        iconName: "compact",
         showDivider: false,
         activeTab: SettingsTabsEnum.COMPACTING,
         iconClassName: "mr-2",

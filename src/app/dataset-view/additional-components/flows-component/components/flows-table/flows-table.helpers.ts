@@ -100,7 +100,7 @@ export class DatasetFlowTableHelpers {
                             case "FlowDescriptionDatasetHardCompacting":
                                 switch (element.description.compactingResult?.__typename) {
                                     case "FlowDescriptionHardCompactingSuccess":
-                                        return `There were ${element.description.compactingResult.originalBlocksCount} block(s), now there are ${element.description.compactingResult.resultingBlocksCount} block(s)`;
+                                        return `Compacted ${element.description.compactingResult.originalBlocksCount} original blocks to ${element.description.compactingResult.resultingBlocksCount} resulting blocks`;
 
                                     case "FlowDescriptionHardCompactingNothingToDo":
                                         return element.description.compactingResult.message;

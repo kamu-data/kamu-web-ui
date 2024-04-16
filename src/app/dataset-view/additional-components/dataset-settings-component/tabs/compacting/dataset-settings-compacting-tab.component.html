@@ -14,7 +14,6 @@
                 </div>
                 <div class="col-md-9 d-flex">
                     <select class="form-select me-4 form-control-width" formControlName="sliceUnit">
-                        <option [value]="SliceUnit.B">B</option>
                         <option [value]="SliceUnit.KB">KB</option>
                         <option [value]="SliceUnit.MB">MB</option>
                         <option [value]="SliceUnit.GB">GB</option>
@@ -22,15 +21,14 @@
                     <input type="number" min="1" class="form-control form-control-width" formControlName="sliceSize" />
                     <ng-container
                         *ngIf="
-                            hardCompactionForm?.get('sliceSize')?.errors?.minNumber &&
-                            (hardCompactionForm.get('sliceSize')?.touched || hardCompactionForm.get('sliceSize')?.dirty)
+                            sliceSizeControl.errors?.minNumber && (sliceSizeControl.touched || sliceSizeControl.dirty)
                         "
                     >
                         <span
                             class="text-danger ms-4 fs-12 d-flex align-items-end text-break"
                             data-test-id="slice-size-error"
                         >
-                            The value must be positive
+                            {{ MIN_VALUE_ERROR_TEXT }}
                         </span>
                     </ng-container>
                 </div>
@@ -52,16 +50,15 @@
                     />
                     <ng-container
                         *ngIf="
-                            hardCompactionForm?.get('recordsCount')?.errors?.minNumber &&
-                            (hardCompactionForm.get('recordsCount')?.touched ||
-                                hardCompactionForm.get('recordsCount')?.dirty)
+                            recordsCountControl.errors?.minNumber &&
+                            (recordsCountControl.touched || recordsCountControl.dirty)
                         "
                     >
                         <span
                             class="text-danger ms-4 fs-12 d-flex align-items-end text-break"
                             data-test-id="slice-size-error"
                         >
-                            The value must be positive
+                            {{ MIN_VALUE_ERROR_TEXT }}
                         </span>
                     </ng-container>
                 </div>

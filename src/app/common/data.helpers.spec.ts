@@ -336,12 +336,19 @@ it("should check description for ExecuteTransform block (no data)", () => {
 [
     { engine: "spark", label: "Apache Spark" },
     { engine: "flink", label: "Apache Flink" },
-    { engine: "datafusion", label: "DataFusion" },
-    { engine: "unknown", label: "Unknown engine" },
+    { engine: "datafusion", label: "Apache DataFusion" },
+    { engine: "risingwave", label: "RisingWave" },
 ].forEach((item: { engine: string; label: string }) => {
     it(`should check label for ${item.engine} engine`, () => {
         expect(DataHelpers.descriptionForEngine(item.engine).label).toEqual(item.label);
     });
+});
+
+it(`should propagate the name for unknown engines`, () => {
+    const engineDesc = DataHelpers.descriptionForEngine("foobar");
+    expect(engineDesc.name).toEqual("foobar");
+    expect(engineDesc.label).toBeUndefined();
+    expect(engineDesc.url_logo).toBeUndefined();
 });
 
 [

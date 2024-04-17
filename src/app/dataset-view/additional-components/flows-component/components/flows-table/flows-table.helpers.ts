@@ -143,10 +143,12 @@ export class DatasetFlowTableHelpers {
                                 return `Polling data from file: ${fetchStep.path}`;
                         }
                         break;
-                    case "FlowDescriptionDatasetExecuteTransform":
+                    case "FlowDescriptionDatasetExecuteTransform": {
+                        const engineDesc = DataHelpers.descriptionForEngine(transformData.engine);
                         return `Transforming ${transformData.numInputs} input datasets using "${
-                            DataHelpers.descriptionForEngine(transformData.engine).label ?? "unknown"
+                            engineDesc.label ?? engineDesc.name
                         }" engine`;
+                    }
                     // TODO: consider what to display for other flow types
                     //  - push ingest
                     //  - compacting

@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - Support `RisingWave` engine
+- Added `Compacting` tab in the root dataset settings
 ### Fixed
 - Hide the Scheduling tab when `SetPollingSource` or `SetTransform` undefined
 ### Changed

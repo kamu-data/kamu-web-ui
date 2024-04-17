@@ -14,12 +14,13 @@ import {
     findElementByDataTestId,
     setFieldValue,
 } from "src/app/common/base-test.helpers.spec";
-import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
+import { mockDatasetBasicsDerivedFragment, mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { ModalService } from "src/app/components/modal/modal.service";
 import { DatasetCompactingService } from "../../services/dataset-compacting.service";
 import { of } from "rxjs";
 import { NavigationService } from "src/app/services/navigation.service";
 import AppValues from "src/app/common/app.values";
+import { ActivatedRoute } from "@angular/router";
 
 describe("DatasetSettingsCompactingTabComponent", () => {
     let component: DatasetSettingsCompactingTabComponent;
@@ -31,7 +32,30 @@ describe("DatasetSettingsCompactingTabComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [DatasetSettingsCompactingTabComponent, TooltipIconComponent],
-            providers: [Apollo],
+            providers: [
+                Apollo,
+
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            queryParamMap: {
+                                get: () => null,
+                            },
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return mockDatasetBasicsDerivedFragment.owner.accountName;
+                                        case "datasetName":
+                                            return mockDatasetBasicsDerivedFragment.name;
+                                    }
+                                },
+                            },
+                        },
+                    },
+                },
+            ],
             imports: [
                 ApolloTestingModule,
                 MatDividerModule,

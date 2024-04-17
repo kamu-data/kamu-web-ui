@@ -92,17 +92,17 @@ describe("DatasetSettingsCompactingTabComponent", () => {
         expect(errorRecordsCountMessage?.textContent?.trim()).toEqual(component.MIN_VALUE_ERROR_TEXT);
     });
 
-    it("should check run hard compaction", fakeAsync(() => {
+    it("should check run hard compacting", fakeAsync(() => {
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
-        const runHardCompactionSpy = spyOn(datasetCompactingService, "runHardCompaction").and.returnValue(of(true));
+        const runHardCompactingSpy = spyOn(datasetCompactingService, "runHardCompacting").and.returnValue(of(true));
         const modalServiceSpy = spyOn(modalService, "error").and.callFake((options) => {
             options.handler?.call(undefined, true);
             return Promise.resolve("");
         });
-        emitClickOnElementByDataTestId(fixture, "run-compaction-btn");
+        emitClickOnElementByDataTestId(fixture, "run-compacting-btn");
 
         expect(modalServiceSpy).toHaveBeenCalledTimes(1);
-        expect(runHardCompactionSpy).toHaveBeenCalledTimes(1);
+        expect(runHardCompactingSpy).toHaveBeenCalledTimes(1);
         tick(AppValues.SIMULATION_START_CONDITION_DELAY_MS);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
         flush();

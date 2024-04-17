@@ -19,7 +19,7 @@ export class DatasetCompactingService {
         private flowsService: DatasetFlowsService,
     ) {}
 
-    public runHardCompaction(params: {
+    public runHardCompacting(params: {
         datasetId: string;
         datasetFlowType: DatasetFlowType;
         compactingArgs: CompactingConditionInput;

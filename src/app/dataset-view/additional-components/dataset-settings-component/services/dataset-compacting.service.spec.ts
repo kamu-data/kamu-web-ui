@@ -36,12 +36,12 @@ describe("DatasetCompactingService", () => {
         expect(service).toBeTruthy();
     });
 
-    it("should check runHardCompaction with success", () => {
+    it("should check runHardCompacting with success", () => {
         spyOn(flowsService, "datasetTriggerFlow").and.returnValue(of(true));
         spyOn(datasetFlowApi, "setDatasetFlowCompacting").and.returnValue(of(mockDatasetFlowCompactingMutationSuccess));
 
         const subscription$ = service
-            .runHardCompaction({
+            .runHardCompacting({
                 datasetId: TEST_DATASET_ID,
                 datasetFlowType: DatasetFlowType.HardCompacting,
                 compactingArgs: {
@@ -56,12 +56,12 @@ describe("DatasetCompactingService", () => {
         expect(subscription$.closed).toBeTrue();
     });
 
-    it("should check runHardCompaction with error", () => {
+    it("should check runHardCompacting with error", () => {
         spyOn(datasetFlowApi, "setDatasetFlowCompacting").and.returnValue(of(mockDatasetFlowCompactingMutationError));
         const toastrServiceErrorSpy = spyOn(toastService, "error");
 
         const subscription$ = service
-            .runHardCompaction({
+            .runHardCompacting({
                 datasetId: TEST_DATASET_ID,
                 datasetFlowType: DatasetFlowType.HardCompacting,
                 compactingArgs: {

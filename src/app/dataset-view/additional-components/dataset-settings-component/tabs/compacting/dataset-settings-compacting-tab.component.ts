@@ -20,7 +20,7 @@ import { BaseComponent } from "src/app/common/base.component";
 })
 export class DatasetSettingsCompactingTabComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics: DatasetBasicsFragment;
-    public hardCompactionForm = this.fb.group({
+    public hardCompactingForm = this.fb.group({
         sliceUnit: [SliceUnit.MB, [Validators.required]],
         sliceSize: [10, [Validators.required, RxwebValidators.minNumber({ value: 1 })]],
         recordsCount: [10000, [Validators.required, RxwebValidators.minNumber({ value: 1 })]],
@@ -41,23 +41,23 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent impleme
 
     ngOnInit(): void {}
 
-    public onRunCompaction(): void {
+    public onRunCompacting(): void {
         promiseWithCatch(
             this.modalService.error({
-                title: "Run compaction",
-                message: "Do you want to run hard compaction?",
+                title: "Run compacting",
+                message: "Do you want to run hard compacting?",
                 yesButtonText: "Ok",
                 noButtonText: "Cancel",
                 handler: (ok) => {
                     if (ok) {
                         this.trackSubscription(
                             this.datasetCompactingService
-                                .runHardCompaction({
+                                .runHardCompacting({
                                     datasetId: this.datasetBasics.id,
                                     datasetFlowType: DatasetFlowType.HardCompacting,
                                     compactingArgs: {
                                         maxSliceSize: this.sliceSizeInBytes,
-                                        maxSliceRecords: this.hardCompactionForm.controls.recordsCount.value as number,
+                                        maxSliceRecords: this.hardCompactingForm.controls.recordsCount.value as number,
                                     },
                                 })
                                 .subscribe((result: boolean) => {
@@ -80,16 +80,16 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent impleme
 
     public get sliceSizeInBytes(): number {
         return (
-            (this.hardCompactionForm.controls.sliceSize.value as number) *
-            sliceSizeMapper[this.hardCompactionForm.controls.sliceUnit.value as SliceUnit]
+            (this.hardCompactingForm.controls.sliceSize.value as number) *
+            sliceSizeMapper[this.hardCompactingForm.controls.sliceUnit.value as SliceUnit]
         );
     }
 
     public get sliceSizeControl(): AbstractControl {
-        return this.hardCompactionForm.controls.sliceSize;
+        return this.hardCompactingForm.controls.sliceSize;
     }
 
     public get recordsCountControl(): AbstractControl {
-        return this.hardCompactionForm.controls.recordsCount;
+        return this.hardCompactingForm.controls.recordsCount;
     }
 }

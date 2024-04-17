@@ -193,7 +193,7 @@ export class DataHelpers {
             case "FlowDescriptionDatasetExecuteTransform":
                 return `Execute transformation`;
             case "FlowDescriptionDatasetHardCompacting":
-                return `Hard compaction`;
+                return `Hard compacting`;
             case "FlowDescriptionSystemGC":
                 return `Garbage collector`;
             default:

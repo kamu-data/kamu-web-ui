@@ -818,6 +818,12 @@ export type FlowConnection = {
     totalCount: Scalars["Int"];
 };
 
+export type FlowDatasetCompactedFailedError = {
+    __typename?: "FlowDatasetCompactedFailedError";
+    message: Scalars["String"];
+    rootDataset: Dataset;
+};
+
 export type FlowDescription =
     | FlowDescriptionDatasetExecuteTransform
     | FlowDescriptionDatasetHardCompacting
@@ -928,8 +934,15 @@ export type FlowEventTriggerAdded = FlowEvent & {
 
 export type FlowFailedError = {
     __typename?: "FlowFailedError";
-    reason: Scalars["String"];
+    reason: FlowFailedReason;
 };
+
+export type FlowFailedMessage = {
+    __typename?: "FlowFailedMessage";
+    message: Scalars["String"];
+};
+
+export type FlowFailedReason = FlowDatasetCompactedFailedError | FlowFailedMessage;
 
 export type FlowIncompatibleDatasetKind = SetFlowBatchingConfigResult &
     SetFlowCompactingConfigResult &
@@ -1316,6 +1329,7 @@ export type Query = {
 export enum QueryDialect {
     SqlDataFusion = "SQL_DATA_FUSION",
     SqlFlink = "SQL_FLINK",
+    SqlRisingWave = "SQL_RISING_WAVE",
     SqlSpark = "SQL_SPARK",
 }
 
@@ -2371,7 +2385,16 @@ export type FlowSummaryDataFragment = {
     initiator?: ({ __typename?: "Account" } & AccountFragment) | null;
     outcome?:
         | { __typename?: "FlowAbortedResult"; message: string }
-        | { __typename?: "FlowFailedError"; reason: string }
+        | {
+              __typename?: "FlowFailedError";
+              reason:
+                  | {
+                        __typename?: "FlowDatasetCompactedFailedError";
+                        message: string;
+                        rootDataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+                    }
+                  | { __typename?: "FlowFailedMessage"; message: string };
+          }
         | { __typename?: "FlowSuccessResult"; message: string }
         | null;
     timing: {
@@ -3241,6 +3264,24 @@ export const AccountFragmentDoc = gql`
         isAdmin
     }
 `;
+export const AccountBasicsFragmentDoc = gql`
+    fragment AccountBasics on Account {
+        id
+        accountName
+    }
+`;
+export const DatasetBasicsFragmentDoc = gql`
+    fragment DatasetBasics on Dataset {
+        id
+        kind
+        name
+        owner {
+            ...AccountBasics
+        }
+        alias
+    }
+    ${AccountBasicsFragmentDoc}
+`;
 export const TimeDeltaDataFragmentDoc = gql`
     fragment TimeDeltaData on TimeDelta {
         every
@@ -3301,7 +3342,17 @@ export const FlowSummaryDataFragmentDoc = gql`
                 message
             }
             ... on FlowFailedError {
-                reason
+                reason {
+                    ... on FlowFailedMessage {
+                        message
+                    }
+                    ... on FlowDatasetCompactedFailedError {
+                        message
+                        rootDataset {
+                            ...DatasetBasics
+                        }
+                    }
+                }
             }
             ... on FlowAbortedResult {
                 message
@@ -3339,6 +3390,7 @@ export const FlowSummaryDataFragmentDoc = gql`
         }
     }
     ${AccountFragmentDoc}
+    ${DatasetBasicsFragmentDoc}
     ${TimeDeltaDataFragmentDoc}
 `;
 export const DatasetPageInfoFragmentDoc = gql`
@@ -3366,24 +3418,6 @@ export const FlowConnectionDataFragmentDoc = gql`
     }
     ${FlowSummaryDataFragmentDoc}
     ${DatasetPageInfoFragmentDoc}
-`;
-export const AccountBasicsFragmentDoc = gql`
-    fragment AccountBasics on Account {
-        id
-        accountName
-    }
-`;
-export const DatasetBasicsFragmentDoc = gql`
-    fragment DatasetBasics on Dataset {
-        id
-        kind
-        name
-        owner {
-            ...AccountBasics
-        }
-        alias
-    }
-    ${AccountBasicsFragmentDoc}
 `;
 export const FlowHistoryDataFragmentDoc = gql`
     fragment FlowHistoryData on FlowEvent {

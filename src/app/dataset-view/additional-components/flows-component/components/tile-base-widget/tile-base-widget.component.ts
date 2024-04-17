@@ -26,12 +26,6 @@ export class TileBaseWidgetComponent {
         return TileBaseWidgetHelpers.tileWidgetClass(node);
     }
 
-    // public tileOutcomeMessage: Record<string, string> = {
-    //     FlowSuccessResult: "success",
-    //     FlowFailedError: "failed",
-    //     FlowAbortedResult: "aborted",
-    // };
-
     public tileOutcomeMessage(outcome: FlowOutcome): string {
         switch (outcome.__typename) {
             case "FlowSuccessResult":

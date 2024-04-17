@@ -57,7 +57,18 @@ fragment FlowSummaryData on Flow {
     }
 
     ... on FlowFailedError {
-      reason
+      reason {
+        ... on FlowFailedMessage {
+          message
+        }
+
+        ... on FlowDatasetCompactedFailedError {
+          message
+          rootDataset {
+            ...DatasetBasics
+          }
+        }
+      }
     }
 
     ... on FlowAbortedResult {

@@ -18,7 +18,13 @@
                         <option [value]="SliceUnit.MB">MB</option>
                         <option [value]="SliceUnit.GB">GB</option>
                     </select>
-                    <input type="number" min="1" class="form-control form-control-width" formControlName="sliceSize" />
+                    <input
+                        type="number"
+                        min="1"
+                        class="form-control form-control-width"
+                        formControlName="sliceSize"
+                        data-test-id="slice-size"
+                    />
                     <ng-container
                         *ngIf="
                             sliceSizeControl.errors?.minNumber && (sliceSizeControl.touched || sliceSizeControl.dirty)
@@ -47,6 +53,7 @@
                         min="1"
                         class="form-control form-control-width"
                         formControlName="recordsCount"
+                        data-test-id="records-count"
                     />
                     <ng-container
                         *ngIf="
@@ -56,7 +63,7 @@
                     >
                         <span
                             class="text-danger ms-4 fs-12 d-flex align-items-end text-break"
-                            data-test-id="slice-size-error"
+                            data-test-id="records-count-error"
                         >
                             {{ MIN_VALUE_ERROR_TEXT }}
                         </span>
@@ -76,6 +83,7 @@
                     [disabled]="hardCompactionForm.invalid"
                     class="d-block"
                     type="button"
+                    data-test-id="run-compaction-btn"
                 >
                     Run compaction
                 </button>

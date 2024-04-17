@@ -3,6 +3,7 @@ import {
     CancelScheduledTasksMutation,
     DatasetAllFlowsPausedQuery,
     DatasetFlowBatchingMutation,
+    DatasetFlowCompactingMutation,
     DatasetFlowScheduleMutation,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsMutation,
@@ -755,5 +756,52 @@ export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
                 },
             },
         },
+    },
+};
+
+export const mockDatasetFlowCompactingMutationSuccess: DatasetFlowCompactingMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                configs: {
+                    setConfigCompacting: {
+                        message: "Success",
+                        config: {
+                            compacting: {
+                                maxSliceSize: 10485760,
+                                maxSliceRecords: 10000,
+                                __typename: "FlowConfigurationCompacting",
+                            },
+                            __typename: "FlowConfiguration",
+                        },
+                        __typename: "SetFlowConfigSuccess",
+                    },
+                    __typename: "DatasetFlowConfigsMut",
+                },
+                __typename: "DatasetFlowsMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockDatasetFlowCompactingMutationError: DatasetFlowCompactingMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                configs: {
+                    setConfigCompacting: {
+                        message: "Error",
+                        reason: "Failed",
+                        __typename: "FlowInvalidCompactingConfig",
+                    },
+                    __typename: "DatasetFlowConfigsMut",
+                },
+                __typename: "DatasetFlowsMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
     },
 };

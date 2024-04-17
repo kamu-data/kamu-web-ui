@@ -10,6 +10,7 @@ import { SliceUnit, sliceSizeMapper } from "./dataset-settings-compacting-tab.ty
 import { DatasetCompactingService } from "../../services/dataset-compacting.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import AppValues from "src/app/common/app.values";
+import { BaseComponent } from "src/app/common/base.component";
 
 @Component({
     selector: "app-dataset-settings-compacting-tab",
@@ -17,7 +18,7 @@ import AppValues from "src/app/common/app.values";
     styleUrls: ["./dataset-settings-compacting-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DatasetSettingsCompactingTabComponent implements OnInit {
+export class DatasetSettingsCompactingTabComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics: DatasetBasicsFragment;
     public hardCompactionForm = this.fb.group({
         sliceUnit: [SliceUnit.MB, [Validators.required]],
@@ -34,7 +35,9 @@ export class DatasetSettingsCompactingTabComponent implements OnInit {
         private fb: FormBuilder,
         private datasetCompactingService: DatasetCompactingService,
         private navigationService: NavigationService,
-    ) {}
+    ) {
+        super();
+    }
 
     ngOnInit(): void {}
 
@@ -47,26 +50,28 @@ export class DatasetSettingsCompactingTabComponent implements OnInit {
                 noButtonText: "Cancel",
                 handler: (ok) => {
                     if (ok) {
-                        this.datasetCompactingService
-                            .runHardCompaction({
-                                datasetId: this.datasetBasics.id,
-                                datasetFlowType: DatasetFlowType.HardCompacting,
-                                compactingArgs: {
-                                    maxSliceSize: this.sliceSizeInBytes,
-                                    maxSliceRecords: this.hardCompactionForm.controls.recordsCount.value as number,
-                                },
-                            })
-                            .subscribe((result: boolean) => {
-                                if (result) {
-                                    setTimeout(() => {
-                                        this.navigationService.navigateToDatasetView({
-                                            accountName: this.datasetBasics.owner.accountName,
-                                            datasetName: this.datasetBasics.name,
-                                            tab: DatasetViewTypeEnum.Flows,
-                                        });
-                                    }, AppValues.SIMULATION_START_CONDITION_DELAY_MS);
-                                }
-                            });
+                        this.trackSubscription(
+                            this.datasetCompactingService
+                                .runHardCompaction({
+                                    datasetId: this.datasetBasics.id,
+                                    datasetFlowType: DatasetFlowType.HardCompacting,
+                                    compactingArgs: {
+                                        maxSliceSize: this.sliceSizeInBytes,
+                                        maxSliceRecords: this.hardCompactionForm.controls.recordsCount.value as number,
+                                    },
+                                })
+                                .subscribe((result: boolean) => {
+                                    if (result) {
+                                        setTimeout(() => {
+                                            this.navigationService.navigateToDatasetView({
+                                                accountName: this.datasetBasics.owner.accountName,
+                                                datasetName: this.datasetBasics.name,
+                                                tab: DatasetViewTypeEnum.Flows,
+                                            });
+                                        }, AppValues.SIMULATION_START_CONDITION_DELAY_MS);
+                                    }
+                                }),
+                        );
                     }
                 },
             }),

@@ -27,7 +27,10 @@
                         </div>
                         <div class="d-flex flex-column">
                             <div class="mt-2px ms-2 fw-500">{{ flowEventDescription(flowEvent, flowDetails) }}</div>
-                            <span class="fs-12 ms-2 word-break">{{ flowEventSubMessage(flowEvent, flowDetails) }}</span>
+                            <span
+                                class="fs-12 ms-2 word-break"
+                                [innerHTML]="flowEventSubMessage(flowEvent, flowDetails) | safeHtml"
+                            ></span>
                         </div>
                     </div>
                     <div class="col-md-3">

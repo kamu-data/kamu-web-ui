@@ -52,28 +52,7 @@ fragment FlowSummaryData on Flow {
     ...Account
   }
   outcome {
-    ... on FlowSuccessResult {
-      message
-    }
-
-    ... on FlowFailedError {
-      reason {
-        ... on FlowFailedMessage {
-          message
-        }
-
-        ... on FlowDatasetCompactedFailedError {
-          message
-          rootDataset {
-            ...DatasetBasics
-          }
-        }
-      }
-    }
-
-    ... on FlowAbortedResult {
-      message
-    }
+    ...FlowOutcomeData
   }
   timing {
     awaitingExecutorSince

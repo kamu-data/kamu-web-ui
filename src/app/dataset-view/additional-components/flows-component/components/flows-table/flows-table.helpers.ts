@@ -119,8 +119,19 @@ export class DatasetFlowTableHelpers {
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
 
-                    case "FlowFailedError":
-                        return `An error occurred, see logs for more details`;
+                    case "FlowFailedError": {
+                        switch (element.outcome.reason.__typename) {
+                            case "FlowFailedMessage":
+                                return `An error occurred, see logs for more details`;
+                            case "FlowDatasetCompactedFailedError": {
+                                return `Input dataset <a class="text-small text-danger">${element.outcome.reason.rootDataset.name}</a> was hard compacted`;
+                            }
+                            /* istanbul ignore next */
+                            default:
+                                return "Unknown flow failed error";
+                        }
+                    }
+
                     /* istanbul ignore next */
                     default:
                         throw new Error("Unsupported flow outcome");
@@ -129,6 +140,8 @@ export class DatasetFlowTableHelpers {
             case FlowStatus.Waiting:
             case FlowStatus.Running:
                 switch (element.description.__typename) {
+                    case "FlowDescriptionDatasetHardCompacting":
+                        return "Running hard compacting";
                     case "FlowDescriptionDatasetPollingIngest":
                         /* istanbul ignore next */
                         if (_.isNil(fetchStep)) {

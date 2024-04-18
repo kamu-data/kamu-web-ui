@@ -1,6 +1,6 @@
 import { MaybeNullOrUndefined } from "./../../../../../common/app.types";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { FlowOutcome, FlowStatus, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
+import { FlowOutcomeDataFragment, FlowStatus, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
 import { TileBaseWidgetHelpers } from "./tile-base-widget.helpers";
 import { DataHelpers } from "src/app/common/data.helpers";
 import AppValues from "src/app/common/app.values";
@@ -26,7 +26,8 @@ export class TileBaseWidgetComponent {
         return TileBaseWidgetHelpers.tileWidgetClass(node);
     }
 
-    public tileOutcomeMessage(outcome: FlowOutcome): string {
+    public tileOutcomeMessage(outcome: FlowOutcomeDataFragment): string {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         switch (outcome.__typename) {
             case "FlowSuccessResult":
                 return "success";

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { FlowOutcome, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
+import { FlowOutcomeDataFragment, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { DataHelpers } from "src/app/common/data.helpers";
 import { DatasetFlowDetailsHelpers } from "../flow-details-history-tab/flow-details-history-tab.helpers";
@@ -14,7 +14,7 @@ export class FlowDetailsSummaryTabComponent {
     public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;
     public readonly DATE_FORMAT = AppValues.DISPLAY_FLOW_DATE_FORMAT;
 
-    public outcomeClass(flowOutcome: FlowOutcome): string {
+    public outcomeClass(flowOutcome: FlowOutcomeDataFragment): string {
         return DatasetFlowDetailsHelpers.flowOutcomeOptions(flowOutcome).class;
     }
 

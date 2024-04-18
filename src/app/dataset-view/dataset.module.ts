@@ -132,6 +132,7 @@ import { DatasetSettingsCompactingTabComponent } from "./additional-components/d
         MatCheckboxModule,
         MatDividerModule,
         DataAccessPanelModule,
+        SharedModule,
     ],
     exports: [
         DatasetViewHeaderComponent,
@@ -151,6 +152,7 @@ import { DatasetSettingsCompactingTabComponent } from "./additional-components/d
         MatTreeModule,
         MatTooltipModule,
         DataAccessPanelModule,
+        SharedModule,
     ],
     declarations: [
         DatasetViewHeaderComponent,

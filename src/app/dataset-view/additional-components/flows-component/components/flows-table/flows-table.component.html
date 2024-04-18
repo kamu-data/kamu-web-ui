@@ -47,9 +47,10 @@
                         <span>{{ descriptionDatasetFlowEndOfMessage(element) }}</span>
                     </span>
                     <br />
-                    <span class="text-small truncate-sub-message d-block">{{
-                        descriptionDatasetFlowSubMessage(element)
-                    }}</span>
+                    <span
+                        class="text-small d-block pe-4"
+                        [innerHTML]="descriptionDatasetFlowSubMessage(element) | safeHtml"
+                    ></span>
                 </div>
             </div>
         </td>

@@ -2384,18 +2384,9 @@ export type FlowSummaryDataFragment = {
         | { __typename?: "FlowDescriptionSystemGC"; dummy: boolean };
     initiator?: ({ __typename?: "Account" } & AccountFragment) | null;
     outcome?:
-        | { __typename?: "FlowAbortedResult"; message: string }
-        | {
-              __typename?: "FlowFailedError";
-              reason:
-                  | {
-                        __typename?: "FlowDatasetCompactedFailedError";
-                        message: string;
-                        rootDataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
-                    }
-                  | { __typename?: "FlowFailedMessage"; message: string };
-          }
-        | { __typename?: "FlowSuccessResult"; message: string }
+        | ({ __typename?: "FlowAbortedResult" } & FlowOutcomeData_FlowAbortedResult_Fragment)
+        | ({ __typename?: "FlowFailedError" } & FlowOutcomeData_FlowFailedError_Fragment)
+        | ({ __typename?: "FlowSuccessResult" } & FlowOutcomeData_FlowSuccessResult_Fragment)
         | null;
     timing: {
         __typename?: "FlowTimingRecords";
@@ -2498,6 +2489,26 @@ export type FlowHistoryDataFragment =
     | FlowHistoryData_FlowEventStartConditionUpdated_Fragment
     | FlowHistoryData_FlowEventTaskChanged_Fragment
     | FlowHistoryData_FlowEventTriggerAdded_Fragment;
+
+type FlowOutcomeData_FlowAbortedResult_Fragment = { __typename?: "FlowAbortedResult"; message: string };
+
+type FlowOutcomeData_FlowFailedError_Fragment = {
+    __typename?: "FlowFailedError";
+    reason:
+        | {
+              __typename?: "FlowDatasetCompactedFailedError";
+              message: string;
+              rootDataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+          }
+        | { __typename?: "FlowFailedMessage"; message: string };
+};
+
+type FlowOutcomeData_FlowSuccessResult_Fragment = { __typename?: "FlowSuccessResult"; message: string };
+
+export type FlowOutcomeDataFragment =
+    | FlowOutcomeData_FlowAbortedResult_Fragment
+    | FlowOutcomeData_FlowFailedError_Fragment
+    | FlowOutcomeData_FlowSuccessResult_Fragment;
 
 export type AddDataEventFragment = {
     __typename?: "AddData";
@@ -3282,6 +3293,30 @@ export const DatasetBasicsFragmentDoc = gql`
     }
     ${AccountBasicsFragmentDoc}
 `;
+export const FlowOutcomeDataFragmentDoc = gql`
+    fragment FlowOutcomeData on FlowOutcome {
+        ... on FlowSuccessResult {
+            message
+        }
+        ... on FlowFailedError {
+            reason {
+                ... on FlowFailedMessage {
+                    message
+                }
+                ... on FlowDatasetCompactedFailedError {
+                    message
+                    rootDataset {
+                        ...DatasetBasics
+                    }
+                }
+            }
+        }
+        ... on FlowAbortedResult {
+            message
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+`;
 export const TimeDeltaDataFragmentDoc = gql`
     fragment TimeDeltaData on TimeDelta {
         every
@@ -3338,25 +3373,7 @@ export const FlowSummaryDataFragmentDoc = gql`
             ...Account
         }
         outcome {
-            ... on FlowSuccessResult {
-                message
-            }
-            ... on FlowFailedError {
-                reason {
-                    ... on FlowFailedMessage {
-                        message
-                    }
-                    ... on FlowDatasetCompactedFailedError {
-                        message
-                        rootDataset {
-                            ...DatasetBasics
-                        }
-                    }
-                }
-            }
-            ... on FlowAbortedResult {
-                message
-            }
+            ...FlowOutcomeData
         }
         timing {
             awaitingExecutorSince
@@ -3390,7 +3407,7 @@ export const FlowSummaryDataFragmentDoc = gql`
         }
     }
     ${AccountFragmentDoc}
-    ${DatasetBasicsFragmentDoc}
+    ${FlowOutcomeDataFragmentDoc}
     ${TimeDeltaDataFragmentDoc}
 `;
 export const DatasetPageInfoFragmentDoc = gql`

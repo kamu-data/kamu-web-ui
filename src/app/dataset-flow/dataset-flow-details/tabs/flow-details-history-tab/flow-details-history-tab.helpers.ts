@@ -6,6 +6,7 @@ import {
     FlowEventTriggerAdded,
     FlowHistoryDataFragment,
     FlowOutcome,
+    FlowOutcomeDataFragment,
     FlowStartCondition,
     FlowStatus,
     FlowSummaryDataFragment,
@@ -78,7 +79,8 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    public static flowOutcomeOptions(outcome: FlowOutcome): { icon: string; class: string } {
+    public static flowOutcomeOptions(outcome: FlowOutcomeDataFragment): { icon: string; class: string } {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         switch (outcome.__typename) {
             case "FlowSuccessResult":
                 return { icon: "check_circle", class: "completed-status" };
@@ -111,7 +113,15 @@ export class DatasetFlowDetailsHelpers {
                     case TaskStatus.Finished:
                         switch (flowDetails.outcome?.__typename) {
                             case "FlowFailedError":
-                                return `An error occurred, see logs for more details`;
+                                switch (flowDetails.outcome.reason.__typename) {
+                                    case "FlowFailedMessage":
+                                        return `An error occurred, see logs for more details`;
+                                    case "FlowDatasetCompactedFailedError":
+                                        return `Root dataset <span class="text-small text-danger">${flowDetails.outcome.reason.rootDataset.name}</span> was compacted`;
+                                    /* istanbul ignore next */
+                                    default:
+                                        return "Unknown flow failed error";
+                                }
                             case "FlowSuccessResult":
                                 switch (flowDetails.description.__typename) {
                                     case "FlowDescriptionDatasetPollingIngest":

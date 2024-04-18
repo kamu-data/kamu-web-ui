@@ -1,12 +1,6 @@
 import _ from "lodash";
 import moment from "moment";
-import {
-    FetchStep,
-    FlowOutcome,
-    FlowStartCondition,
-    FlowStatus,
-    FlowSummaryDataFragment,
-} from "src/app/api/kamu.graphql.interface";
+import { FetchStep, FlowStartCondition, FlowStatus, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import AppValues from "src/app/common/app.values";
 import { TransformDescriptionTableData } from "./flows-table.types";
@@ -20,12 +14,12 @@ export class DatasetFlowTableHelpers {
                 if (_.isNil(element.outcome)) {
                     throw new Error("Expected to have flow outcome in Finished state");
                 }
-                switch (element.outcome) {
-                    case FlowOutcome.Success:
+                switch (element.outcome.__typename) {
+                    case "FlowSuccessResult":
                         return { icon: "check_circle", class: "completed-status" };
-                    case FlowOutcome.Failed:
+                    case "FlowFailedError":
                         return { icon: "dangerous", class: "failed-status" };
-                    case FlowOutcome.Aborted:
+                    case "FlowAbortedResult":
                         return { icon: "cancel", class: "aborted-outcome" };
                     /* istanbul ignore next */
                     default:
@@ -47,12 +41,12 @@ export class DatasetFlowTableHelpers {
                 if (_.isNil(element.outcome)) {
                     throw new Error("Expected to have flow outcome in Finished state");
                 }
-                switch (element.outcome) {
-                    case FlowOutcome.Success:
+                switch (element.outcome.__typename) {
+                    case "FlowSuccessResult":
                         return "finished";
-                    case FlowOutcome.Aborted:
+                    case "FlowAbortedResult":
                         return "aborted";
-                    case FlowOutcome.Failed:
+                    case "FlowFailedError":
                         return "failed";
                     /* istanbul ignore next */
                     default:
@@ -81,8 +75,8 @@ export class DatasetFlowTableHelpers {
                 if (_.isNil(element.outcome)) {
                     throw new Error("Expected to have flow outcome in Finished state");
                 }
-                switch (element.outcome) {
-                    case FlowOutcome.Success:
+                switch (element.outcome.__typename) {
+                    case "FlowSuccessResult":
                         switch (element.description.__typename) {
                             case "FlowDescriptionDatasetPollingIngest":
                             case "FlowDescriptionDatasetPushIngest":
@@ -102,20 +96,42 @@ export class DatasetFlowTableHelpers {
                                           element.description.transformResult.numBlocks == 1 ? "block" : "blocks"
                                       }`
                                     : "Dataset is up-to-date";
+
+                            case "FlowDescriptionDatasetHardCompacting":
+                                switch (element.description.compactingResult?.__typename) {
+                                    case "FlowDescriptionHardCompactingSuccess":
+                                        return `Compacted ${element.description.compactingResult.originalBlocksCount} original blocks to ${element.description.compactingResult.resultingBlocksCount} resulting blocks`;
+
+                                    case "FlowDescriptionHardCompactingNothingToDo":
+                                        return element.description.compactingResult.message;
+                                    /* istanbul ignore next */
+                                    default:
+                                        return "Unknown compacting result typename";
+                                }
                             // TODO
-                            //  - Compacting
                             //  - GC
                             default:
                                 return "Unknown description typename";
                         }
 
-                    case FlowOutcome.Aborted:
+                    case "FlowAbortedResult":
                         return `Aborted at ${moment(element.timing.finishedAt).format(
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
 
-                    case FlowOutcome.Failed:
-                        return `An error occurred, see logs for more details`;
+                    case "FlowFailedError": {
+                        switch (element.outcome.reason.__typename) {
+                            case "FlowFailedMessage":
+                                return `An error occurred, see logs for more details`;
+                            case "FlowDatasetCompactedFailedError": {
+                                return `Input dataset <a class="text-small text-danger">${element.outcome.reason.rootDataset.name}</a> was hard compacted`;
+                            }
+                            /* istanbul ignore next */
+                            default:
+                                return "Unknown flow failed error";
+                        }
+                    }
+
                     /* istanbul ignore next */
                     default:
                         throw new Error("Unsupported flow outcome");
@@ -124,6 +140,8 @@ export class DatasetFlowTableHelpers {
             case FlowStatus.Waiting:
             case FlowStatus.Running:
                 switch (element.description.__typename) {
+                    case "FlowDescriptionDatasetHardCompacting":
+                        return "Running hard compacting";
                     case "FlowDescriptionDatasetPollingIngest":
                         /* istanbul ignore next */
                         if (_.isNil(fetchStep)) {
@@ -172,12 +190,12 @@ export class DatasetFlowTableHelpers {
             case FlowStatus.Running:
                 return "running since " + moment(node.timing.runningSince).fromNow();
             case FlowStatus.Finished:
-                switch (node.outcome) {
-                    case FlowOutcome.Success:
+                switch (node.outcome?.__typename) {
+                    case "FlowSuccessResult":
                         return "finished " + moment(node.timing.finishedAt).fromNow();
-                    case FlowOutcome.Aborted:
+                    case "FlowAbortedResult":
                         return "aborted " + moment(node.timing.finishedAt).fromNow();
-                    case FlowOutcome.Failed:
+                    case "FlowFailedError":
                         return "failed " + moment(node.timing.runningSince).fromNow();
                     /* istanbul ignore next */
                     default:
@@ -230,16 +248,16 @@ export class DatasetFlowTableHelpers {
                         return "";
                 }
             case FlowStatus.Finished:
-                switch (node.outcome) {
-                    case FlowOutcome.Success:
+                switch (node.outcome?.__typename) {
+                    case "FlowSuccessResult":
                         return `Completed time: ${moment(node.timing.finishedAt).format(
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
-                    case FlowOutcome.Aborted:
+                    case "FlowAbortedResult":
                         return `Aborted time: ${moment(node.timing.finishedAt).format(
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
-                    case FlowOutcome.Failed:
+                    case "FlowFailedError":
                         return `Start running time: ${moment(node.timing.runningSince).format(
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;

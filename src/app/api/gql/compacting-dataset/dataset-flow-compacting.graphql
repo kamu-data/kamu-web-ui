@@ -1,25 +1,19 @@
-mutation DatasetFlowSchedule(
+mutation datasetFlowCompacting(
   $datasetId: DatasetID!
   $datasetFlowType: DatasetFlowType!
-  $paused: Boolean!
-  $schedule: ScheduleInput!
+  $compactingArgs: CompactingConditionInput!
 ) {
   datasets {
     byId(datasetId: $datasetId) {
       flows {
         configs {
-          setConfigSchedule(datasetFlowType: $datasetFlowType, paused: $paused, schedule: $schedule) {
-            __typename
+          setConfigCompacting(datasetFlowType: $datasetFlowType, compactingArgs: $compactingArgs) {
             ... on SetFlowConfigSuccess {
               message
               config {
-                schedule {
-                  ... on TimeDelta {
-                    ...TimeDeltaData
-                  }
-                  ... on Cron5ComponentExpression {
-                    cron5ComponentExpression
-                  }
+                compacting {
+                  maxSliceSize
+                  maxSliceRecords
                 }
               }
             }
@@ -30,11 +24,12 @@ mutation DatasetFlowSchedule(
               actualDatasetKind
             }
 
-            ... on FlowPreconditionsNotMet {
+            ... on FlowTypeIsNotSupported {
               message
             }
 
-            ... on FlowTypeIsNotSupported {
+            ... on FlowInvalidCompactingConfig {
+              reason
               message
             }
           }

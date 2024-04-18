@@ -1,15 +1,18 @@
 @import "var";
 
-.get-data-button {
-    padding: 0 12px;
+.btn-group-parent {
+    .get-data-button {
+        padding: 0 12px;
 
-    &:hover {
-        background-color: transparent;
-    }
+        &:hover {
+            background-color: transparent;
+        }
 
-    .get-data-text {
-        color: #1a7f37;
-        font-weight: 700;
+        .get-data-text {
+            color: #1a7f37;
+            font-weight: 700;
+            font-size: 17px;
+        }
     }
 }
 

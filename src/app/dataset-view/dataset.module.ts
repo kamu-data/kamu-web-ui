@@ -78,6 +78,8 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { DataAccessPanelModule } from "../components/data-access-panel/data-access-panel.module";
+import { DatasetSettingsCompactingTabComponent } from "./additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.component";
+
 @NgModule({
     imports: [
         CommonModule,
@@ -130,6 +132,7 @@ import { DataAccessPanelModule } from "../components/data-access-panel/data-acce
         MatCheckboxModule,
         MatDividerModule,
         DataAccessPanelModule,
+        SharedModule,
     ],
     exports: [
         DatasetViewHeaderComponent,
@@ -149,6 +152,7 @@ import { DataAccessPanelModule } from "../components/data-access-panel/data-acce
         MatTreeModule,
         MatTooltipModule,
         DataAccessPanelModule,
+        SharedModule,
     ],
     declarations: [
         DatasetViewHeaderComponent,
@@ -186,6 +190,7 @@ import { DataAccessPanelModule } from "../components/data-access-panel/data-acce
         SourceNameStepComponent,
         DatasetSettingsGeneralTabComponent,
         DatasetSettingsSchedulingTabComponent,
+        DatasetSettingsCompactingTabComponent,
     ],
 })
 export class DatasetModule {

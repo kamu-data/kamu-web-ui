@@ -26,6 +26,7 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics: DatasetBasicsFragment;
     @Input() public datasetPermissions: DatasetPermissionsFragment;
     public readonly settingsTabsEnum: typeof SettingsTabsEnum = SettingsTabsEnum;
+    public readonly DatasetKind: typeof DatasetKind = DatasetKind;
     public activeTab: SettingsTabsEnum;
     public sidePanelData: DatasetSettingsSidePanelItem[] = datasetSettingsSidePanelData;
     public overview: MaybeNull<DatasetOverviewFragment>;
@@ -46,12 +47,24 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
         );
     }
 
+    public get isRootDataset(): boolean {
+        return this.datasetBasics.kind === DatasetKind.Root;
+    }
+
     public get isSetPollingSourceEmpty(): boolean {
         return !this.overview?.metadata.currentPollingSource && this.datasetBasics.kind === DatasetKind.Root;
     }
 
     public get isSetTransformEmpty(): boolean {
         return !this.overview?.metadata.currentTransform && this.datasetBasics.kind === DatasetKind.Derivative;
+    }
+
+    public get showSchedulingTab(): boolean {
+        return this.isSchedulingAvailable && this.activeTab === SettingsTabsEnum.SCHEDULING;
+    }
+
+    public get showCompactingTab(): boolean {
+        return this.datasetBasics.kind === DatasetKind.Root && this.activeTab === SettingsTabsEnum.COMPACTING;
     }
 
     ngOnInit(): void {
@@ -76,5 +89,16 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
             section: section === SettingsTabsEnum.GENERAL ? undefined : section,
         });
         this.activeTab = section;
+    }
+
+    public visibilitySettingsMenuItem(item: DatasetSettingsSidePanelItem): boolean {
+        switch (item.activeTab) {
+            case SettingsTabsEnum.SCHEDULING:
+                return this.isSchedulingAvailable;
+            case SettingsTabsEnum.COMPACTING:
+                return this.datasetBasics.kind === DatasetKind.Root;
+            default:
+                return Boolean(item.visible);
+        }
     }
 }

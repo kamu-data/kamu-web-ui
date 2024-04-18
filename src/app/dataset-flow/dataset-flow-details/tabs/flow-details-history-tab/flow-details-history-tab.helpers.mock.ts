@@ -2,7 +2,6 @@ import {
     AccountType,
     DatasetFlowType,
     FlowHistoryDataFragment,
-    FlowOutcome,
     FlowStatus,
     FlowSummaryDataFragment,
     TaskStatus,
@@ -31,7 +30,10 @@ export const mockFlowSummaryDataFragmentIngestResult: FlowSummaryDataFragment = 
     flowId: "414",
     status: FlowStatus.Finished,
     initiator: null,
-    outcome: FlowOutcome.Success,
+    outcome: {
+        __typename: "FlowSuccessResult",
+        message: "Succes",
+    },
     startCondition: null,
     timing: {
         awaitingExecutorSince: "2024-02-12T18:21:26+00:00",

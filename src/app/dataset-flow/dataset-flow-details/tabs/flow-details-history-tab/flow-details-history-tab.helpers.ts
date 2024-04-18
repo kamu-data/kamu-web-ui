@@ -1,4 +1,3 @@
-import { MaybeNullOrUndefined } from "./../../../../common/app.types";
 import moment from "moment";
 import {
     FlowEventInitiated,
@@ -7,6 +6,7 @@ import {
     FlowEventTriggerAdded,
     FlowHistoryDataFragment,
     FlowOutcome,
+    FlowOutcomeDataFragment,
     FlowStartCondition,
     FlowStatus,
     FlowSummaryDataFragment,
@@ -63,7 +63,7 @@ export class DatasetFlowDetailsHelpers {
                 const event = flowEvent as FlowEventTaskChanged;
                 switch (event.taskStatus) {
                     case TaskStatus.Finished:
-                        return DatasetFlowDetailsHelpers.flowOutcomeOptions(flowDetails.outcome);
+                        return DatasetFlowDetailsHelpers.flowOutcomeOptions(flowDetails.outcome as FlowOutcome);
                     case TaskStatus.Queued:
                         return { icon: "radio_button_checked", class: "scheduled-status" };
                     case TaskStatus.Running:
@@ -79,13 +79,14 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    public static flowOutcomeOptions(outcome: MaybeNullOrUndefined<FlowOutcome>): { icon: string; class: string } {
-        switch (outcome) {
-            case FlowOutcome.Success:
+    public static flowOutcomeOptions(outcome: FlowOutcomeDataFragment): { icon: string; class: string } {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        switch (outcome.__typename) {
+            case "FlowSuccessResult":
                 return { icon: "check_circle", class: "completed-status" };
-            case FlowOutcome.Failed:
+            case "FlowFailedError":
                 return { icon: "dangerous", class: "failed-status" };
-            case FlowOutcome.Aborted:
+            case "FlowAbortedResult":
                 return { icon: "cancel", class: "aborted-outcome" };
             /* istanbul ignore next */
             default:
@@ -110,10 +111,18 @@ export class DatasetFlowDetailsHelpers {
                     case TaskStatus.Running:
                         return `Task #${flowEvent.taskId}`;
                     case TaskStatus.Finished:
-                        switch (flowDetails.outcome) {
-                            case FlowOutcome.Failed:
-                                return `An error occurred, see logs for more details`;
-                            case FlowOutcome.Success:
+                        switch (flowDetails.outcome?.__typename) {
+                            case "FlowFailedError":
+                                switch (flowDetails.outcome.reason.__typename) {
+                                    case "FlowFailedMessage":
+                                        return `An error occurred, see logs for more details`;
+                                    case "FlowDatasetCompactedFailedError":
+                                        return `Root dataset <span class="text-small text-danger">${flowDetails.outcome.reason.rootDataset.name}</span> was compacted`;
+                                    /* istanbul ignore next */
+                                    default:
+                                        return "Unknown flow failed error";
+                                }
+                            case "FlowSuccessResult":
                                 switch (flowDetails.description.__typename) {
                                     case "FlowDescriptionDatasetPollingIngest":
                                     case "FlowDescriptionDatasetPushIngest":
@@ -141,8 +150,20 @@ export class DatasetFlowDetailsHelpers {
                                                       : "blocks"
                                               }`
                                             : "Dataset is up-to-date";
+
+                                    case "FlowDescriptionDatasetHardCompacting":
+                                        switch (flowDetails.description.compactingResult?.__typename) {
+                                            case "FlowDescriptionHardCompactingSuccess":
+                                                return `Compacted ${flowDetails.description.compactingResult.originalBlocksCount} original blocks to ${flowDetails.description.compactingResult.resultingBlocksCount} resulting blocks`;
+
+                                            case "FlowDescriptionHardCompactingNothingToDo":
+                                                return flowDetails.description.compactingResult.message;
+                                            /* istanbul ignore next */
+                                            default:
+                                                return "Unknown compacting result typename";
+                                        }
+
                                     // TODO
-                                    //  - Compacting
                                     //  - GC
                                     /* istanbul ignore next */
                                     default:

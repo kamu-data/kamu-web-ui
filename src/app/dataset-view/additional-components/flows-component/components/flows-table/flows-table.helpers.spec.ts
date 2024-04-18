@@ -74,8 +74,7 @@ describe("DatasetFlowTableHelpers", () => {
     });
 
     mockFlowSummaryDataFragments.forEach((item: FlowSummaryDataFragment, index: number) => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        it(`should check description column options with status=${item.status} and outcome=${item.outcome!}`, () => {
+        it(`should check description column options with status=${item.status} and outcome=${item.outcome?.__typename}`, () => {
             expect(DatasetFlowTableHelpers.descriptionColumnTableOptions(item)).toEqual(
                 expectationsDesriptionColumnOptions[index],
             );
@@ -83,8 +82,7 @@ describe("DatasetFlowTableHelpers", () => {
     });
 
     mockFlowSummaryDataFragments.forEach((item: FlowSummaryDataFragment, index: number) => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        it(`should check description end of message with status=${item.status} and outcome=${item.outcome!}`, () => {
+        it(`should check description end of message with status=${item.status} and outcome=${item.outcome?.__typename}`, () => {
             expect(DatasetFlowTableHelpers.descriptionEndOfMessage(item)).toEqual(
                 expectationsDescriptionEndOfMessage[index],
             );
@@ -92,15 +90,13 @@ describe("DatasetFlowTableHelpers", () => {
     });
 
     mockFlowSummaryDataFragmentTooltipAndDurationText.forEach((item: FlowSummaryDataFragment, index: number) => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        it(`should check duration block text with status=${item.status} and outcome=${item.outcome!}`, () => {
+        it(`should check duration block text with status=${item.status} and outcome=${item.outcome?.__typename}`, () => {
             expect(DatasetFlowTableHelpers.durationBlockText(item)).toEqual(durationBlockTextResults[index]);
         });
     });
 
     mockFlowSummaryDataFragmentTooltipAndDurationText.forEach((item: FlowSummaryDataFragment, index: number) => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        it(`should check tooltip text with status=${item.status} and outcome=${item.outcome!}`, () => {
+        it(`should check tooltip text with status=${item.status} and outcome=${item.outcome?.__typename}`, () => {
             expect(DatasetFlowTableHelpers.tooltipText(item)).toEqual(tooltipTextResults[index]);
         });
     });

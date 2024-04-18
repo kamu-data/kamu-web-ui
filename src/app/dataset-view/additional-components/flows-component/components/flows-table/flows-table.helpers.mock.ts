@@ -199,7 +199,10 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         initiator: null,
         outcome: {
             __typename: "FlowFailedError",
-            reason: "Failed",
+            reason: {
+                __typename: "FlowFailedMessage",
+                message: "Failed",
+            },
         },
         timing: {
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
@@ -388,7 +391,10 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         initiator: null,
         outcome: {
             __typename: "FlowFailedError",
-            reason: "Failed",
+            reason: {
+                __typename: "FlowFailedMessage",
+                message: "Failed",
+            },
         },
         timing: {
             awaitingExecutorSince: "2024-03-14T09:22:29+00:00",

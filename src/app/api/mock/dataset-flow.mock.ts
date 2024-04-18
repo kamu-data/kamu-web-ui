@@ -293,7 +293,10 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         initiator: null,
         outcome: {
             __typename: "FlowFailedError",
-            reason: "Failed",
+            reason: {
+                __typename: "FlowFailedMessage",
+                message: "Failed",
+            },
         },
         startCondition: null,
         timing: {

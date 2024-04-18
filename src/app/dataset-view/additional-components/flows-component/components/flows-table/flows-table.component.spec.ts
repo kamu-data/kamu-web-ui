@@ -20,6 +20,7 @@ import { SharedTestModule } from "src/app/common/shared-test.module";
 import { SimpleChanges } from "@angular/core";
 import { NavigationService } from "src/app/services/navigation.service";
 import { ModalService } from "src/app/components/modal/modal.service";
+import { SharedModule } from "src/app/shared/shared/shared.module";
 
 describe("FlowsTableComponent", () => {
     let component: FlowsTableComponent;
@@ -43,6 +44,7 @@ describe("FlowsTableComponent", () => {
                 AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
                 SharedTestModule,
+                SharedModule,
             ],
         }).compileComponents();
 

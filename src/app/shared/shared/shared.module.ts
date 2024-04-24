@@ -17,6 +17,7 @@ import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/com
 import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
 import { MarkdownModule } from "ngx-markdown";
 import { SafeHtmlPipe } from "src/app/common/pipes/safe-html.pipe";
+import { DragAndDropDirective } from "src/app/common/directives/drag-and-drop.directive";
 
 @NgModule({
     declarations: [
@@ -31,6 +32,7 @@ import { SafeHtmlPipe } from "src/app/common/pipes/safe-html.pipe";
         MergeStrategyPropertyComponent,
         CardsPropertyComponent,
         SafeHtmlPipe,
+        DragAndDropDirective,
     ],
     imports: [
         CommonModule,
@@ -56,6 +58,7 @@ import { SafeHtmlPipe } from "src/app/common/pipes/safe-html.pipe";
         MarkdownModule,
         DisplaySizeModule,
         SafeHtmlPipe,
+        DragAndDropDirective,
     ],
 })
 export class SharedModule {}

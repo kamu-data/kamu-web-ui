@@ -81,6 +81,7 @@ import { DataAccessPanelModule } from "../components/data-access-panel/data-acce
 import { DatasetSettingsCompactingTabComponent } from "./additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.component";
 import { RequestTimerComponent } from "./additional-components/data-component/request-timer/request-timer.component";
 import { AddDataModalComponent } from "./additional-components/overview-component/components/add-data-modal/add-data-modal.component";
+import { FileFromUrlModalComponent } from "./additional-components/overview-component/components/file-from-url-modal/file-from-url-modal.component";
 
 @NgModule({
     imports: [
@@ -195,6 +196,7 @@ import { AddDataModalComponent } from "./additional-components/overview-componen
         DatasetSettingsCompactingTabComponent,
         RequestTimerComponent,
         AddDataModalComponent,
+        FileFromUrlModalComponent,
     ],
 })
 export class DatasetModule {

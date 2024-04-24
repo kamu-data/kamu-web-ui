@@ -97,7 +97,7 @@ export const mockDatasetProtocolsQuery: DatasetProtocolsQuery = {
             name: "account.tokens.portfolio",
             owner: {
                 __typename: "Account",
-                id: "12345",
+                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
                 accountName: "kamu",
             },
             alias: "kamu/account.tokens.portfolio",

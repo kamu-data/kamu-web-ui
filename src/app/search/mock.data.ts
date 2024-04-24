@@ -60,12 +60,12 @@ export const mockDatasetInfo: DatasetInfo = {
 };
 
 export const mockOwnerFields: AccountBasicsFragment = {
-    id: "1",
+    id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
     accountName: "kamu",
 };
 
 export const mockOwnerFieldsWithAvatar: AccountBasicsFragment & { avatarUrl?: string } = {
-    id: "1",
+    id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
     accountName: "kamu",
     avatarUrl: TEST_AVATAR_URL,
 };
@@ -225,6 +225,8 @@ export const mockDatasetResponseNotFound: GetDatasetMainDataQuery = {
 
 export const mockDatasetMainDataId = "did:odf:z4k88e8egJJeQEd4HHuL4BSwYTWm8qiWxzqhydvHQcX2TPCrMyP";
 
+export const TEST_ACCOUNT_ID = "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f";
+
 export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
     datasets: {
         __typename: "Datasets",
@@ -235,7 +237,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
             name: "alberta.case-details",
             owner: {
                 __typename: "Account",
-                id: "12345",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
             },
             alias: "kamu/alberta.case-details",
@@ -342,7 +344,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                 sequenceNumber: 6,
                                 author: {
                                     __typename: "Account",
-                                    id: "12345",
+                                    id: TEST_ACCOUNT_ID,
                                     accountName: "kamu",
                                     avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
                                 },
@@ -427,7 +429,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
             name: "account.transactions",
             owner: {
                 __typename: "Account",
-                id: "12345",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
                 avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
             },
@@ -466,7 +468,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                     __typename: "Account",
                                                     avatarUrl:
                                                         "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                                                    id: "12345",
+                                                    id: TEST_ACCOUNT_ID,
                                                     accountName: "kamu",
                                                 },
                                                 id: "did:odf:z4k88e8e4Zxc7gWaPoi1U62QuPqk5TeDJWw9HrwCBdcbvwjL4zy",
@@ -499,7 +501,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                                 __typename: "Account",
                                                                 avatarUrl:
                                                                     "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                                                                id: "12345",
+                                                                id: TEST_ACCOUNT_ID,
                                                                 accountName: "kamu",
                                                             },
                                                             id: "did:odf:z4k88e8oTx4k79T3hff88ArDf7pJ1nbxSnackQva5c2dwWPBngW",
@@ -523,7 +525,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                     __typename: "Account",
                                                     avatarUrl:
                                                         "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                                                    id: "12345",
+                                                    id: TEST_ACCOUNT_ID,
                                                     accountName: "kamu",
                                                 },
                                                 id: "did:odf:z4k88e8gayUCbQ92pUcnSghtZamfoyPHrbMudTw8Fn2SJSdYwSS",
@@ -546,7 +548,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                     owner: {
                                         __typename: "Account",
                                         avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                                        id: "12345",
+                                        id: TEST_ACCOUNT_ID,
                                         accountName: "kamu",
                                     },
                                     id: "did:odf:z4k88e8jSFz98biMiuj5YftgbMQm6WZ9C48An4bBFH6jdZpBgsf",
@@ -569,7 +571,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                         owner: {
                             __typename: "Account",
                             avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                            id: "12345",
+                            id: TEST_ACCOUNT_ID,
                             accountName: "kamu",
                         },
                         id: "did:odf:z4k88e8pkrnwUSr3ZYjfWbwWPPbEmbSW2DJ4qJ6zjRwFkpDKwdy",
@@ -1182,7 +1184,7 @@ export const mockHistoryEditPollingSourceService: DatasetHistoryUpdate = {
             sequenceNumber: 0,
             author: {
                 __typename: "Account",
-                id: "1",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
             },
             event: {
@@ -1199,7 +1201,7 @@ export const mockHistoryEditPollingSourceService: DatasetHistoryUpdate = {
             sequenceNumber: 0,
             author: {
                 __typename: "Account",
-                id: "1",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
             },
             event: {
@@ -1216,7 +1218,7 @@ export const mockHistoryEditPollingSourceService: DatasetHistoryUpdate = {
             sequenceNumber: 1,
             author: {
                 __typename: "Account",
-                id: "1",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
             },
             event: {
@@ -1255,7 +1257,7 @@ export const mockHistoryEditPollingSourceService: DatasetHistoryUpdate = {
             sequenceNumber: 0,
             author: {
                 __typename: "Account",
-                id: "1",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
             },
             event: {
@@ -1284,7 +1286,7 @@ export const mockHistoryEditAddPushSourceService: DatasetHistoryUpdate = {
             sequenceNumber: 0,
             author: {
                 __typename: "Account",
-                id: "1",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
             },
             event: {
@@ -1301,7 +1303,7 @@ export const mockHistoryEditAddPushSourceService: DatasetHistoryUpdate = {
             sequenceNumber: 0,
             author: {
                 __typename: "Account",
-                id: "1",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
             },
             event: {
@@ -1318,7 +1320,7 @@ export const mockHistoryEditAddPushSourceService: DatasetHistoryUpdate = {
             sequenceNumber: 1,
             author: {
                 __typename: "Account",
-                id: "1",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
             },
             event: {
@@ -1348,7 +1350,7 @@ export const mockHistoryEditAddPushSourceService: DatasetHistoryUpdate = {
             sequenceNumber: 0,
             author: {
                 __typename: "Account",
-                id: "1",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
             },
             event: {

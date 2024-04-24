@@ -5,3 +5,56 @@
 .no-data-container {
     background-color: rgb(97 144 195 / 15%);
 }
+
+.upload-file-container {
+    position: relative;
+    padding: 2rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    background:
+        linear-gradient(to right, #000 50%, #fff 70%) top/15px 1px repeat-x,
+        /* top */ linear-gradient(#000 50%, #fff 70%) right/1px 15px repeat-y,
+        /* right */ linear-gradient(to right, #000 50%, #fff 70%) bottom/15px 1px repeat-x,
+        /* bottom */ linear-gradient(#000 50%, #fff 70%) left/1px 15px repeat-y; /* left */
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    // .file-uploader {
+    //     opacity: 0;
+    //     padding: 4.5rem;
+    //     width: inherit;
+    //     height: 100%;
+
+    //     &:hover {
+    //         cursor: pointer;
+    //     }
+    // }
+
+    .upload-file-icon {
+        z-index: 10;
+    }
+
+    .upload-file-description {
+        font-size: 18px;
+        z-index: 10;
+    }
+
+    .add-data-button-container {
+        .add-data-button {
+            width: 140px;
+        }
+    }
+
+    .upload-file-hint {
+        font-size: 12px;
+        color: #8a9cae;
+        z-index: 5;
+    }
+}

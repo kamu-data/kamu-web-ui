@@ -24,6 +24,7 @@ import { EditWatermarkModalComponent } from "./components/edit-watermark-modal/e
 import _ from "lodash";
 import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
+import { AddDataModalComponent } from "./components/add-data-modal/add-data-modal.component";
 
 @Component({
     selector: "app-overview",
@@ -37,6 +38,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     @Output() toggleReadmeViewEmit = new EventEmitter<null>();
     @Output() selectTopicEmit = new EventEmitter<string>();
     public editingReadme = false;
+    public files: FileList;
 
     public currentState?: {
         schema: MaybeNull<DatasetSchema>;
@@ -274,5 +276,16 @@ export class OverviewComponent extends BaseComponent implements OnInit {
                     }
                 }),
         );
+    }
+
+    public addData(): void {
+        const modalRef: NgbModalRef = this.modalService.open(AddDataModalComponent);
+        const modalRefInstance = modalRef.componentInstance as AddDataModalComponent;
+        // modalRefInstance.currentWatermark = this.currentState?.overview.metadata.currentWatermark;
+        // modalRefInstance.datasetBasics = this.datasetBasics;
+    }
+
+    public onFileDropped(files: FileList): void {
+        this.files = files;
     }
 }

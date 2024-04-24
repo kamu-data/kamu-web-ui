@@ -1,0 +1,60 @@
+.source-button {
+    padding: 1.5rem 1.7rem;
+    border: 1px solid #000;
+    border-radius: 10px;
+    width: 220px;
+    line-height: 120%;
+
+    &:hover {
+        cursor: pointer;
+        background: #e5e5ef;
+    }
+}
+
+.link-icon {
+    transform: scale(1.5);
+}
+
+.cloud-icon {
+    transform: scale(1.3);
+}
+
+.button-label {
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.file-uploader-container {
+    border: 1px solid #000;
+    border-radius: 10px;
+    width: 220px;
+    background: #f0f0f0;
+    line-height: 120%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        background: #e5e5ef;
+    }
+}
+
+.file-uploader {
+    opacity: 0;
+    width: 220px;
+    padding: 4.3rem 0;
+    position: absolute;
+    z-index: 10;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.button-content {
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

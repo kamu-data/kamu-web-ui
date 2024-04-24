@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
-import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { NgbActiveModal, NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { BaseComponent } from "src/app/common/base.component";
+import { FileFromUrlModalComponent } from "../file-from-url-modal/file-from-url-modal.component";
 
 @Component({
     selector: "app-add-data-modal",
@@ -9,7 +10,10 @@ import { BaseComponent } from "src/app/common/base.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddDataModalComponent extends BaseComponent implements OnInit {
-    constructor(public activeModal: NgbActiveModal) {
+    constructor(
+        public activeModal: NgbActiveModal,
+        private modalService: NgbModal,
+    ) {
         super();
     }
 
@@ -17,5 +21,11 @@ export class AddDataModalComponent extends BaseComponent implements OnInit {
 
     public getFile(event: Event): void {
         console.log("event", event);
+    }
+
+    public onAddUrl(): void {
+        const modalRef: NgbModalRef = this.modalService.open(FileFromUrlModalComponent);
+        const modalRefInstance = modalRef.componentInstance as FileFromUrlModalComponent;
+        this.activeModal.close();
     }
 }

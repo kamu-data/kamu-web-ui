@@ -40,7 +40,7 @@ export const datasetSettingsSidePanelData: DatasetSettingsSidePanelItem[] = [
         iconClassName: "mr-1",
     },
     {
-        name: "Compacting",
+        name: "Compaction",
         iconName: "compact",
         showDivider: false,
         activeTab: SettingsTabsEnum.COMPACTING,

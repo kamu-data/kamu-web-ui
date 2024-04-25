@@ -106,6 +106,7 @@ td.mat-cell {
     border-bottom-right-radius: 0;
     box-shadow: none;
     font-size: 12px;
+    width: 200px;
 
     &::placeholder {
         font-size: 12px;
@@ -125,7 +126,7 @@ td.mat-cell {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    width: 360px;
+    width: 370px;
 }
 
 .dynamic-icon {
@@ -133,4 +134,11 @@ td.mat-cell {
     left: -42px;
     top: 10px;
     width: 15px;
+}
+
+.container-spinner {
+    position: absolute;
+    z-index: 100;
+    top: 23px;
+    right: 65px;
 }

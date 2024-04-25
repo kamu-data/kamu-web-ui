@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
-import { Observable, map } from "rxjs";
+import { Observable, map, of } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
     CancelScheduledTasksMutation,
@@ -126,5 +126,9 @@ export class DatasetFlowsService {
                 }
             }),
         );
+    }
+
+    public flowsOwners(): Observable<string[]> {
+        return of(["kamu", "test"]);
     }
 }

@@ -30,6 +30,18 @@ import { DatasetFlowTableHelpers } from "./flows-table.helpers";
 import { FilterByInitiatorEnum, TransformDescriptionTableData } from "./flows-table.types";
 import { ModalService } from "src/app/components/modal/modal.service";
 import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
+import {
+    Observable,
+    OperatorFunction,
+    catchError,
+    debounceTime,
+    distinctUntilChanged,
+    map,
+    of,
+    switchMap,
+    tap,
+} from "rxjs";
+import { DatasetFlowsService } from "../../services/dataset-flows.service";
 
 @Component({
     selector: "app-flows-table",
@@ -57,10 +69,12 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     public readonly FilterByInitiatorEnum: typeof FilterByInitiatorEnum = FilterByInitiatorEnum;
     public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>();
     @ViewChildren(MatMenuTrigger) triggersMatMenu: QueryList<MatMenuTrigger>;
+    public searchingAccount: boolean = false;
 
     constructor(
         private navigationService: NavigationService,
         private modalService: ModalService,
+        private flowService: DatasetFlowsService,
     ) {}
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -155,4 +169,22 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     public dynamicImgSrc(status: FlowStatus): string {
         return DatasetFlowDetailsHelpers.dynamicImgSrc(status);
     }
+
+    public search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>
+        text$.pipe(
+            debounceTime(200),
+            distinctUntilChanged(),
+            tap(() => (this.searchingAccount = true)),
+            switchMap((term) =>
+                this.flowService.flowsOwners().pipe(
+                    map((owners) =>
+                        owners.filter((v) => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10),
+                    ),
+                    catchError(() => {
+                        return of([]);
+                    }),
+                ),
+            ),
+            tap(() => (this.searchingAccount = false)),
+        );
 }

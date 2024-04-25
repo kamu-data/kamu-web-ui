@@ -48,7 +48,7 @@
                     </span>
                     <br />
                     <span
-                        class="text-small d-block pe-4"
+                        class="text-small d-block pe-4 truncate-sub-message"
                         [innerHTML]="descriptionDatasetFlowSubMessage(element) | safeHtml"
                     ></span>
                 </div>
@@ -113,15 +113,33 @@
                                 </mat-radio-button>
                             </mat-radio-group>
                         </div>
-                        <div class="select-item d-flex">
+                        <div class="select-item d-flex position-relative">
+                            <div class="container-spinner" *ngIf="searchingAccount">
+                                <mat-spinner [diameter]="15" color="primary" mode="indeterminate"></mat-spinner>
+                            </div>
                             <input
                                 class="form-control search-creator color-bg-subtle"
                                 type="text"
+                                #searchByAccount
+                                autocomplete="on"
                                 [(ngModel)]="searchByAccountName"
                                 placeholder="Enter name..."
                                 data-test-id="searchByAccountName"
+                                [ngbTypeahead]="search"
+                                [resultTemplate]="rt"
+                                [editable]="false"
                                 [disabled]="filterByInitiator !== FilterByInitiatorEnum.Account"
                             />
+                            <ng-template #rt let-r="result" let-t="term">
+                                <div class="d-flex flex-row" [style.width.px]="searchByAccount.clientWidth - 28">
+                                    <img
+                                        [src]="'https://avatars.githubusercontent.com/u/11951648?v=4'"
+                                        class="me-2"
+                                        style="width: 18px"
+                                    />
+                                    <ngb-highlight [result]="r" [term]="t"></ngb-highlight>
+                                </div>
+                            </ng-template>
                             <button
                                 (click)="onSearchByAccountName()"
                                 [disabled]="!searchByAccountName"

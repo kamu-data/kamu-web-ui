@@ -141,6 +141,20 @@
                 <ng-template [ngIf]="datasetBasics && currentState">
                     <div class="dataset-info--block">
                         <div class="dataset-info--sub-block d-flex align-items-center">
+                            <mat-icon class="fs-4 mr-2">key_vertical</mat-icon>
+                            <h2 class="dataset-info--subtitle">Id:</h2>
+                        </div>
+
+                        <div class="dataset-info--sub-block">
+                            <app-display-hash
+                                [value]="datasetBasics.id"
+                                [showCopyButton]="true"
+                                [class]="'text-decoration-none text-dark mr-4 hashBlock'"
+                            ></app-display-hash>
+                        </div>
+                    </div>
+                    <div class="dataset-info--block">
+                        <div class="dataset-info--sub-block d-flex align-items-center">
                             <mat-icon class="fs-4 mr-2">account_tree</mat-icon>
                             <h2 class="dataset-info--subtitle">Kind:</h2>
                         </div>

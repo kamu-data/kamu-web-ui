@@ -135,7 +135,7 @@
         </div>
 
         <div class="position-relative">
-            <ng-container *ngIf="!editorLoaded">
+            <ng-container *ngIf="showEditorSpinner">
                 <mat-progress-bar
                     data-test-id="editor-progress-bar"
                     class="position-absolute"

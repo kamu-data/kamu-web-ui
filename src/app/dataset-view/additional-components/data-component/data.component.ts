@@ -29,6 +29,7 @@ import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 })
 export class DataComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics: DatasetBasicsFragment;
+    @Input() public sqlLoading: boolean;
     @Output() public runSQLRequestEmit = new EventEmitter<DatasetRequestBySql>();
 
     public savedQueries = DataTabValues.savedQueries;
@@ -69,6 +70,10 @@ export class DataComponent extends BaseComponent implements OnInit {
         );
         this.buildSqlRequestCode();
         this.runSQLRequest({ query: this.sqlRequestCode }, true);
+    }
+
+    public get showEditorSpinner():boolean {
+        return !this.editorLoaded || this.sqlLoading
     }
 
     public runSQLRequest(params: DatasetRequestBySql, initialSqlRun = false): void {

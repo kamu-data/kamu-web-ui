@@ -39,6 +39,7 @@
             <app-data
                 *ngIf="datasetViewType === DatasetViewTypeEnum.Data"
                 [datasetBasics]="datasetBasics"
+                [sqlLoading]="sqlLoading"
                 (runSQLRequestEmit)="onRunSQLRequest($event)"
             ></app-data>
 

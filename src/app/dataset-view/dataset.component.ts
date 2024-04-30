@@ -25,6 +25,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
     public datasetInfo: DatasetInfo;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
     public readonly DatasetViewTypeEnum = DatasetViewTypeEnum;
+    public sqlLoading = false;
 
     private mainDatasetQueryComplete$: Subject<DatasetInfo> = new ReplaySubject<DatasetInfo>(1 /* bufferSize */);
 
@@ -282,7 +283,12 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
 
     public onRunSQLRequest(params: DatasetRequestBySql): void {
         this.datasetService
-            .requestDatasetDataSqlRun(params) // TODO: Propagate limit from UI and display when it was reached
-            .subscribe();
+            // TODO: Propagate limit from UI and display when it was reached
+            .requestDatasetDataSqlRun(params)
+            .pipe(tap(() => (this.sqlLoading = true)))
+            .subscribe(() => {
+                this.sqlLoading = false;
+                this.cdr.detectChanges();
+            });
     }
 }

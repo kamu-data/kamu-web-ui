@@ -153,6 +153,8 @@ import { DatasetSettingsCompactingTabComponent } from "./additional-components/d
         MatTooltipModule,
         DataAccessPanelModule,
         SharedModule,
+        TileBaseWidgetComponent,
+        FlowsTableComponent,
     ],
     declarations: [
         DatasetViewHeaderComponent,

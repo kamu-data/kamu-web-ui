@@ -68,6 +68,7 @@ import { LocalStorageService } from "./services/local-storage.service";
 import { apolloCache } from "./apollo-cache.helper";
 import { AdminDashboardComponent } from "./admin-view/admin-dashboard/admin-dashboard.component";
 import { DatasetFlowDetailsModule } from "./dataset-flow/dataset-flow-details/dataset-flow-details.module";
+import { AccountFlowsTabComponent } from './auth/account/additional-components/account-flows-tab/account-flows-tab.component';
 
 const Services = [
     {
@@ -195,6 +196,7 @@ const MatModules = [
         AccountSettingsComponent,
         DatasetsTabComponent,
         AdminDashboardComponent,
+        AccountFlowsTabComponent,
     ],
     imports: [
         AppRoutingModule,

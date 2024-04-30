@@ -115,6 +115,10 @@ export class AccountComponent extends BaseComponent implements OnInit {
         this.navigationService.navigateToOwnerView(user.accountName, AccountTabs.STARS);
     }
 
+    public onSelectFlowsTab(user: AccountFragment): void {
+        this.navigationService.navigateToOwnerView(user.accountName, AccountTabs.FLOWS);
+    }
+
     private pipelineAccountByName(accountName$: Observable<string>): Observable<AccountFragment> {
         return accountName$.pipe(
             switchMap((accountName: string) => {

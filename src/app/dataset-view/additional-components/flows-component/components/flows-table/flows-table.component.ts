@@ -42,14 +42,17 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     @Input() public filterByStatus: MaybeNull<FlowStatus>;
     @Input() public filterByInitiator: FilterByInitiatorEnum;
     @Input() public searchByAccountName: string;
+    @Input() public searchByDatasetName: string = "";
     @Input() public fetchStep: MaybeUndefined<FetchStep>;
     @Input() public transformData: TransformDescriptionTableData;
     @Input() public datasetBasics: DatasetBasicsFragment;
+    @Input() public accountView: boolean = false;
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
     @Output() public filterByInitiatorChange = new EventEmitter<FilterByInitiatorEnum>();
     @Output() public searchByAccountNameChange = new EventEmitter<string>();
     @Output() public cancelFlowChange = new EventEmitter<string>();
-    public readonly DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"];
+    public DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"];
+
     public readonly INITIATORS: string[] = Object.keys(FilterByInitiatorEnum);
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;
@@ -72,6 +75,9 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
+        if (this.accountView) {
+            this.DISPLAY_COLUMNS.splice(3, 0, "dataset");
+        }
         this.dataSource.data = this.nodes;
     }
 

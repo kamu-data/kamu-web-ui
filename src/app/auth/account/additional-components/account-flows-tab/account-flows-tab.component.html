@@ -1,0 +1,30 @@
+<div class="container-content mt-4">
+    <div class="d-flex justify-content-between">
+        <div class="mt-4">
+            <h2 class="title">{{ nodes.length }} Account flow run(s)</h2>
+            <div>
+                <span class="text-muted"> Compute work associated with this account </span>
+            </div>
+        </div>
+        <div class="d-flex flex-column">
+            <button
+                class="border-1 px-3 py-2 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
+                type="button"
+            >
+                Pause account flows
+            </button>
+        </div>
+    </div>
+    <div class="search-result-container__content my-4">
+        <app-tile-base-widget [nodes]="nodes"></app-tile-base-widget>
+    </div>
+    <ng-container *ngIf="nodes.length">
+        <app-flows-table
+            [nodes]="nodes"
+            [filterByStatus]="filterByStatus"
+            [filterByInitiator]="filterByInitiator"
+            [searchByAccountName]="searchByAccountName"
+            [accountView]="true"
+        ></app-flows-table>
+    </ng-container>
+</div>

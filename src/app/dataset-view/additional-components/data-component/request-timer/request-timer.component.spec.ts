@@ -1,23 +1,21 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { RequestTimerComponent } from "./request-timer.component";
 
-import { RequestTimerComponent } from './request-timer.component';
+describe("RequestTimerComponent", () => {
+    let component: RequestTimerComponent;
+    let fixture: ComponentFixture<RequestTimerComponent>;
 
-describe('RequestTimerComponent', () => {
-  let component: RequestTimerComponent;
-  let fixture: ComponentFixture<RequestTimerComponent>;
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [RequestTimerComponent],
+        }).compileComponents();
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ RequestTimerComponent ]
-    })
-    .compileComponents();
+        fixture = TestBed.createComponent(RequestTimerComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-    fixture = TestBed.createComponent(RequestTimerComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
 });

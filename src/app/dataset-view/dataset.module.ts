@@ -79,7 +79,7 @@ import { MatRadioModule } from "@angular/material/radio";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { DataAccessPanelModule } from "../components/data-access-panel/data-access-panel.module";
 import { DatasetSettingsCompactingTabComponent } from "./additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.component";
-import { RequestTimerComponent } from './additional-components/data-component/request-timer/request-timer.component';
+import { RequestTimerComponent } from "./additional-components/data-component/request-timer/request-timer.component";
 
 @NgModule({
     imports: [

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { NavigationEnd, Router } from "@angular/router";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
-import { filter, first, switchMap, tap } from "rxjs/operators";
+import { delay, filter, first, switchMap, tap } from "rxjs/operators";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "../api/kamu.graphql.interface";
 import ProjectLinks from "../project-links";
 import { DatasetInfo } from "../interface/navigation.interface";
@@ -285,10 +285,14 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
         this.datasetService
             // TODO: Propagate limit from UI and display when it was reached
             .requestDatasetDataSqlRun(params)
-            .pipe(tap(() => (this.sqlLoading = true)))
+            .pipe(
+                tap(() => {
+                    this.sqlLoading = true;
+                }),
+                delay(100),
+            )
             .subscribe(() => {
                 this.sqlLoading = false;
-                this.cdr.detectChanges();
             });
     }
 }

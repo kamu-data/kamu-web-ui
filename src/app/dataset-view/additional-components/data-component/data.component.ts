@@ -72,10 +72,6 @@ export class DataComponent extends BaseComponent implements OnInit {
         this.runSQLRequest({ query: this.sqlRequestCode }, true);
     }
 
-    public get showEditorSpinner():boolean {
-        return !this.editorLoaded || this.sqlLoading
-    }
-
     public runSQLRequest(params: DatasetRequestBySql, initialSqlRun = false): void {
         if (initialSqlRun) {
             this.resetRowsLimits();

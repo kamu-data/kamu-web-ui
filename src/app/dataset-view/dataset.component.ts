@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { NavigationEnd, Router } from "@angular/router";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
-import { delay, filter, finalize, first, switchMap, tap } from "rxjs/operators";
+import { filter, finalize, first, switchMap, tap } from "rxjs/operators";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "../api/kamu.graphql.interface";
 import ProjectLinks from "../project-links";
 import { DatasetInfo } from "../interface/navigation.interface";
@@ -25,7 +25,8 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
     public datasetInfo: DatasetInfo;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
     public readonly DatasetViewTypeEnum = DatasetViewTypeEnum;
-    public sqlLoading = false;
+    public sqlLoading: boolean = false;
+    public sqlRequestTime: number;
 
     private mainDatasetQueryComplete$: Subject<DatasetInfo> = new ReplaySubject<DatasetInfo>(1 /* bufferSize */);
 
@@ -282,18 +283,19 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
     }
 
     public onRunSQLRequest(params: DatasetRequestBySql): void {
+        const startTime = new Date().valueOf();
+        this.sqlLoading = true;
         this.datasetService
             // TODO: Propagate limit from UI and display when it was reached
             .requestDatasetDataSqlRun(params)
             .pipe(
-                tap(() => {
-                    this.sqlLoading = true;
-                }),
-                delay(50),
                 finalize(() => {
                     this.sqlLoading = false;
+                    const endTime = new Date().valueOf();
+                    this.sqlRequestTime = endTime - startTime;
                 }),
             )
             .subscribe();
+        this.cdr.detectChanges();
     }
 }

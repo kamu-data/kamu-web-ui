@@ -135,7 +135,7 @@
         </div>
 
         <div class="position-relative">
-            <ng-container *ngIf="!this.editorLoaded">
+            <ng-container *ngIf="!this.editorLoaded || sqlLoading">
                 <mat-progress-bar
                     data-test-id="editor-progress-bar"
                     class="position-absolute"
@@ -154,14 +154,14 @@
         <ng-container *ngIf="sqlErrorMarker$ | async as sqlErrorMarker">
             <div class="d-flex justify-content-between align-items-center">
                 <h2 class="box-title align-items-center pb-3 pt-3 m-0">Error:</h2>
-                <app-request-timer class="badge text-bg-danger" [start]="sqlLoading"></app-request-timer>
+                <app-request-timer class="badge text-bg-danger" [resultTime]="resultTime"></app-request-timer>
             </div>
             <p class="sql-error-message" data-test-id="sql-error-message">{{ sqlErrorMarker }}</p>
         </ng-container>
         <ng-container *ngIf="!(sqlErrorMarker$ | async) && dataUpdate.schema && currentData">
             <div class="d-flex justify-content-between align-items-center">
                 <h2 class="box-title align-items-center py-3 m-0">Result:</h2>
-                <app-request-timer class="badge text-bg-success" [start]="sqlLoading"></app-request-timer>
+                <app-request-timer class="badge text-bg-success" [resultTime]="resultTime"></app-request-timer>
             </div>
 
             <app-dynamic-table

@@ -30,7 +30,7 @@ import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 export class DataComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics: DatasetBasicsFragment;
     @Input() public sqlLoading: boolean;
-    @Input() public resultTime: number
+    @Input() public resultTime: number;
     @Output() public runSQLRequestEmit = new EventEmitter<DatasetRequestBySql>();
 
     public savedQueries = DataTabValues.savedQueries;

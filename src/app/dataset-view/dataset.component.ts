@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { NavigationEnd, Router } from "@angular/router";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
-import { delay, filter, first, switchMap, tap } from "rxjs/operators";
+import { delay, filter, finalize, first, switchMap, tap } from "rxjs/operators";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "../api/kamu.graphql.interface";
 import ProjectLinks from "../project-links";
 import { DatasetInfo } from "../interface/navigation.interface";
@@ -289,10 +289,11 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
                 tap(() => {
                     this.sqlLoading = true;
                 }),
-                delay(100),
+                delay(50),
+                finalize(() => {
+                    this.sqlLoading = false;
+                }),
             )
-            .subscribe(() => {
-                this.sqlLoading = false;
-            });
+            .subscribe();
     }
 }

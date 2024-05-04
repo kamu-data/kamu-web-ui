@@ -172,7 +172,7 @@ it("should check description for SetTransform block", () => {
                         name: "quebec.case-details",
                         owner: {
                             __typename: "Account",
-                            id: "1",
+                            id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
                             accountName: "kamu",
                         },
                         alias: "kamu/quebec.case-details",

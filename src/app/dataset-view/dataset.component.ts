@@ -26,7 +26,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
     public readonly DatasetViewTypeEnum = DatasetViewTypeEnum;
     public sqlLoading: boolean = false;
-    public sqlRequestTime: number;
+    public sqlRequestTimeInMilliseconds: number;
 
     private mainDatasetQueryComplete$: Subject<DatasetInfo> = new ReplaySubject<DatasetInfo>(1 /* bufferSize */);
 
@@ -292,7 +292,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
                 finalize(() => {
                     this.sqlLoading = false;
                     const endTime = new Date().valueOf();
-                    this.sqlRequestTime = endTime - startTime;
+                    this.sqlRequestTimeInMilliseconds = endTime - startTime;
                 }),
             )
             .subscribe();

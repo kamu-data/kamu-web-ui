@@ -1,6 +1,8 @@
 import { DatasetAutocompleteItem, TypeNames } from "../../interface/search.interface";
 import { DatasetKind, SearchDatasetsAutocompleteQuery, SearchDatasetsOverviewQuery } from "../kamu.graphql.interface";
 
+export const TEST_ACCOUNT_ID = "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f";
+
 export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
     search: {
         __typename: "Search",
@@ -43,7 +45,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                                 name: "alberta.case-details.hm",
                                 owner: {
                                     __typename: "Account",
-                                    id: "1",
+                                    id: TEST_ACCOUNT_ID,
                                     accountName: "kamu",
                                 },
                             },
@@ -54,7 +56,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     name: "alberta.case-details",
                     owner: {
                         __typename: "Account",
-                        id: "1",
+                        id: TEST_ACCOUNT_ID,
                         accountName: "kamu",
                     },
                     alias: "kamu/alberta.case-details",
@@ -96,7 +98,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                                 name: "canada.case-details.hm",
                                 owner: {
                                     __typename: "Account",
-                                    id: "1",
+                                    id: TEST_ACCOUNT_ID,
                                     accountName: "kamu",
                                 },
                             },
@@ -107,7 +109,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     name: "alberta.case-details.hm",
                     owner: {
                         __typename: "Account",
-                        id: "1",
+                        id: TEST_ACCOUNT_ID,
                         accountName: "kamu",
                     },
                     alias: "kamu/alberta.case-details.hm",
@@ -149,7 +151,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                                 name: "british-columbia.case-details.hm",
                                 owner: {
                                     __typename: "Account",
-                                    id: "1",
+                                    id: TEST_ACCOUNT_ID,
                                     accountName: "kamu",
                                 },
                             },
@@ -160,7 +162,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     name: "british-columbia.case-details",
                     owner: {
                         __typename: "Account",
-                        id: "1",
+                        id: TEST_ACCOUNT_ID,
                         accountName: "kamu",
                     },
                     alias: "kamu/british-columbia.case-details",
@@ -202,7 +204,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                                 name: "canada.case-details.hm",
                                 owner: {
                                     __typename: "Account",
-                                    id: "1",
+                                    id: TEST_ACCOUNT_ID,
                                     accountName: "kamu",
                                 },
                             },
@@ -213,7 +215,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     name: "british-columbia.case-details.hm",
                     owner: {
                         __typename: "Account",
-                        id: "1",
+                        id: TEST_ACCOUNT_ID,
                         accountName: "kamu",
                     },
                     alias: "kamu/british-columbia.case-details.hm",
@@ -255,7 +257,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                                 name: "canada.case-details.hm",
                                 owner: {
                                     __typename: "Account",
-                                    id: "1",
+                                    id: TEST_ACCOUNT_ID,
                                     accountName: "kamu",
                                 },
                             },
@@ -266,7 +268,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     name: "canada.case-details",
                     owner: {
                         __typename: "Account",
-                        id: "1",
+                        id: TEST_ACCOUNT_ID,
                         accountName: "kamu",
                     },
                     alias: "kamu/canada.case-details",
@@ -297,7 +299,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     name: "canada.daily-cases",
                     owner: {
                         __typename: "Account",
-                        id: "1",
+                        id: TEST_ACCOUNT_ID,
                         accountName: "kamu",
                     },
                     alias: "kamu/canada.daily-cases",
@@ -321,7 +323,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     name: "co.alphavantage.tickers.daily.spy",
                     owner: {
                         __typename: "Account",
-                        id: "1",
+                        id: TEST_ACCOUNT_ID,
                         accountName: "kamu",
                     },
                     alias: "kamu/co.alphavantage.tickers.daily.spy",
@@ -351,7 +353,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     name: "com.cryptocompare.ohlcv.eth-usd",
                     owner: {
                         __typename: "Account",
-                        id: "1",
+                        id: TEST_ACCOUNT_ID,
                         accountName: "kamu",
                     },
                     alias: "kamu/com.cryptocompare.ohlcv.eth-usd",
@@ -375,7 +377,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     name: "net.rocketpool.reth.mint-burn",
                     owner: {
                         __typename: "Account",
-                        id: "1",
+                        id: TEST_ACCOUNT_ID,
                         accountName: "kamu",
                     },
                     alias: "kamu/net.rocketpool.reth.mint-burn",
@@ -416,7 +418,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                                 name: "ontario.case-details.hm",
                                 owner: {
                                     __typename: "Account",
-                                    id: "1",
+                                    id: TEST_ACCOUNT_ID,
                                     accountName: "kamu",
                                 },
                             },
@@ -427,7 +429,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     name: "ontario.case-details",
                     owner: {
                         __typename: "Account",
-                        id: "1",
+                        id: TEST_ACCOUNT_ID,
                         accountName: "kamu",
                     },
                     alias: "kamu/ontario.case-details",
@@ -458,7 +460,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     name: "alberta.case-details",
                     owner: {
                         __typename: "Account",
-                        id: "1",
+                        id: TEST_ACCOUNT_ID,
                         accountName: "kamu",
                     },
                     alias: "kamu/alberta.case-details",
@@ -470,7 +472,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     name: "alberta.case-details.hm",
                     owner: {
                         __typename: "Account",
-                        id: "1",
+                        id: TEST_ACCOUNT_ID,
                         accountName: "kamu",
                     },
                     alias: "kamu/alberta.case-details.hm",
@@ -482,7 +484,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     name: "british-columbia.case-details",
                     owner: {
                         __typename: "Account",
-                        id: "1",
+                        id: TEST_ACCOUNT_ID,
                         accountName: "kamu",
                     },
                     alias: "kamu/british-columbia.case-details",
@@ -494,7 +496,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     name: "british-columbia.case-details.hm",
                     owner: {
                         __typename: "Account",
-                        id: "1",
+                        id: TEST_ACCOUNT_ID,
                         accountName: "kamu",
                     },
                     alias: "kamu/british-columbia.case-details.hm",
@@ -506,7 +508,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     name: "canada.case-details",
                     owner: {
                         __typename: "Account",
-                        id: "1",
+                        id: TEST_ACCOUNT_ID,
                         accountName: "kamu",
                     },
                     alias: "kamu/canada.case-details",
@@ -518,7 +520,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     name: "canada.daily-cases",
                     owner: {
                         __typename: "Account",
-                        id: "1",
+                        id: TEST_ACCOUNT_ID,
                         accountName: "kamu",
                     },
                     alias: "kamu/canada.daily-cases",
@@ -530,7 +532,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     name: "co.alphavantage.tickers.daily.spy",
                     owner: {
                         __typename: "Account",
-                        id: "1",
+                        id: TEST_ACCOUNT_ID,
                         accountName: "kamu",
                     },
                     alias: "kamu/co.alphavantage.tickers.daily.spy",
@@ -542,7 +544,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     name: "com.cryptocompare.ohlcv.eth-usd",
                     owner: {
                         __typename: "Account",
-                        id: "1",
+                        id: TEST_ACCOUNT_ID,
                         accountName: "kamu",
                     },
                     alias: "kamu/com.cryptocompare.ohlcv.eth-usd",
@@ -554,7 +556,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     name: "ontario.case-details",
                     owner: {
                         __typename: "Account",
-                        id: "1",
+                        id: TEST_ACCOUNT_ID,
                         accountName: "kamu",
                     },
                     alias: "kamu/ontario.case-details",
@@ -566,7 +568,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     name: "ontario.case-details.hm",
                     owner: {
                         __typename: "Account",
-                        id: "1",
+                        id: TEST_ACCOUNT_ID,
                         accountName: "kamu",
                     },
                     alias: "kamu/ontario.case-details.hm",
@@ -599,7 +601,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
             name: "alberta.case-details",
             owner: {
                 __typename: "Account",
-                id: "1",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
             },
             alias: "kamu/alberta.case-details",
@@ -615,7 +617,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
             name: "alberta.case-details.hm",
             owner: {
                 __typename: "Account",
-                id: "1",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
             },
             alias: "kamu/alberta.case-details.hm",
@@ -631,7 +633,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
             name: "british-columbia.case-details",
             owner: {
                 __typename: "Account",
-                id: "1",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
             },
             alias: "kamu/british-columbia.case-details",
@@ -647,7 +649,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
             name: "british-columbia.case-details.hm",
             owner: {
                 __typename: "Account",
-                id: "1",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
             },
             alias: "kamu/british-columbia.case-details.hm",
@@ -663,7 +665,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
             name: "canada.case-details",
             owner: {
                 __typename: "Account",
-                id: "1",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
             },
             alias: "kamu/canada.case-details",
@@ -679,7 +681,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
             name: "canada.daily-cases",
             owner: {
                 __typename: "Account",
-                id: "1",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
             },
             alias: "kamu/canada.daily-cases",
@@ -695,7 +697,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
             name: "co.alphavantage.tickers.daily.spy",
             owner: {
                 __typename: "Account",
-                id: "1",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
             },
             alias: "kamu/co.alphavantage.tickers.daily.spy",
@@ -711,7 +713,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
             name: "com.cryptocompare.ohlcv.eth-usd",
             owner: {
                 __typename: "Account",
-                id: "1",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
             },
             alias: "kamu/com.cryptocompare.ohlcv.eth-usd",
@@ -727,7 +729,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
             name: "ontario.case-details",
             owner: {
                 __typename: "Account",
-                id: "1",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
             },
             alias: "kamu/ontario.case-details",
@@ -743,7 +745,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
             name: "ontario.case-details.hm",
             owner: {
                 __typename: "Account",
-                id: "1",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
             },
             alias: "kamu/ontario.case-details.hm",

@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - Display dataset ID in Details section(Overview tab)
+- Added visual feedback on query execution(Data tab)
 
 
 ## [0.18.1] - 2024-04-18

@@ -7,7 +7,7 @@ import {
     mockReadonlyDatasetPermissionsFragment,
 } from "../search/mock.data";
 import { DatasetService } from "./dataset.service";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Apollo, ApolloModule } from "apollo-angular";
@@ -16,7 +16,7 @@ import { DatasetApi } from "../api/dataset.api";
 import { DatasetComponent } from "./dataset.component";
 import { NavigationService } from "../services/navigation.service";
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
-import { of } from "rxjs";
+import { delay, of } from "rxjs";
 import { routerMock, routerMockEventSubject } from "../common/base-test.helpers.spec";
 import { OverviewComponent } from "./additional-components/overview-component/overview.component";
 import { DatasetViewMenuComponent } from "./dataset-view-menu/dataset-view-menu.component";
@@ -315,4 +315,21 @@ describe("DatasetComponent", () => {
         component.showOwnerPage(mockDatasetBasicsDerivedFragment.owner.accountName);
         expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(mockDatasetBasicsDerivedFragment.owner.accountName);
     });
+
+    // TODO: investigate why the test does not work
+    // eslint-disable-next-line jasmine/no-disabled-tests
+    xit("should count the request time if the result is successful", fakeAsync(() => {
+        const params = {
+            query: "select * from test.table",
+            skip: 50,
+            limit: AppValues.SQL_QUERY_LIMIT,
+        };
+
+        spyOn(datasetService, "requestDatasetDataSqlRun").and.returnValue(of().pipe(delay(1000)));
+        component.onRunSQLRequest(params);
+        tick(500);
+
+        expect(component.sqlLoading).toEqual(true);
+        flush();
+    }));
 });

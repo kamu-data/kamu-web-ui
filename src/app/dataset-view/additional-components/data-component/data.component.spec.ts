@@ -27,6 +27,7 @@ import { EditorModule } from "src/app/shared/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import _ from "lodash";
+import { RequestTimerComponent } from "./request-timer/request-timer.component";
 
 describe("DataComponent", () => {
     let component: DataComponent;
@@ -46,7 +47,7 @@ describe("DataComponent", () => {
                 EditorModule,
                 MatProgressBarModule,
             ],
-            declarations: [DataComponent, LoadMoreComponent],
+            declarations: [DataComponent, LoadMoreComponent, RequestTimerComponent],
         }).compileComponents();
         fixture = TestBed.createComponent(DataComponent);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { NgbActiveModal, NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { BaseComponent } from "src/app/common/base.component";
 import { FileFromUrlModalComponent } from "../file-from-url-modal/file-from-url-modal.component";
+import { MaybeNull } from "src/app/common/app.types";
 
 @Component({
     selector: "app-add-data-modal",
@@ -19,8 +20,16 @@ export class AddDataModalComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {}
 
-    public getFile(event: Event): void {
-        console.log("event", event);
+    public onFileSelected(event: Event): Promise<MaybeNull<string>> {
+        return new Promise<string>((resolve) => {
+            const input = event.target as HTMLInputElement;
+            if (!input.files?.length) {
+                resolve("");
+            } else {
+                const file: File = input.files[0];
+                console.log("file", file);
+            }
+        });
     }
 
     public onAddUrl(): void {

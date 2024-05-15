@@ -21,7 +21,7 @@
 
 <div class="d-flex justify-content-between px-4 mb-4">
     <div class="file-uploader-container">
-        <input type="file" (change)="getFile($event)" class="file-uploader" title="" />
+        <input type="file" (change)="onFileSelected($event)" class="file-uploader" title="" />
         <div class="position-relative button-content">
             <mat-icon class="text-muted cloud-icon">cloud_upload</mat-icon>
             <span class="d-block button-label mt-2"> Upload from computer</span>

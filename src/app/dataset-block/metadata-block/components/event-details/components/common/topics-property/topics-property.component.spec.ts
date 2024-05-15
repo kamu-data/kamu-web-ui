@@ -1,23 +1,27 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { TopicsPropertyComponent } from "./topics-property.component";
+import { DynamicTableComponent } from "src/app/components/dynamic-table/dynamic-table.component";
+import { MatTableModule } from "@angular/material/table";
+import { SharedTestModule } from "src/app/common/shared-test.module";
+import { MqttQos } from "src/app/api/kamu.graphql.interface";
 
-import { TopicsPropertyComponent } from './topics-property.component';
+describe("TopicsPropertyComponent", () => {
+    let component: TopicsPropertyComponent;
+    let fixture: ComponentFixture<TopicsPropertyComponent>;
 
-describe('TopicsPropertyComponent', () => {
-  let component: TopicsPropertyComponent;
-  let fixture: ComponentFixture<TopicsPropertyComponent>;
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [TopicsPropertyComponent, DynamicTableComponent],
+            imports: [MatTableModule, SharedTestModule],
+        }).compileComponents();
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ TopicsPropertyComponent ]
-    })
-    .compileComponents();
+        fixture = TestBed.createComponent(TopicsPropertyComponent);
+        component = fixture.componentInstance;
+        component.data = [{ path: "test.com", qos: MqttQos.AtMostOnce }];
+        fixture.detectChanges();
+    });
 
-    fixture = TestBed.createComponent(TopicsPropertyComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
 });

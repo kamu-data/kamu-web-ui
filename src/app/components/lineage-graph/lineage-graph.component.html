@@ -114,6 +114,32 @@
                     {{ node.label }}
                 </svg:text>
             </svg:g>
+            <svg:g class="node" *ngIf="node.data.kind === LineageGraphNodeKind.Mqtt">
+                <svg:rect
+                    [attr.width]="node.dimension.width * 1.1"
+                    [attr.height]="50"
+                    [attr.rx]="5"
+                    [attr.fill]="'#FFF'"
+                    [attr.cursor]="'pointer'"
+                />
+                <image
+                    [attr.x]="2"
+                    [attr.y]="(node.dimension.height * 1.1) / 2 - 20"
+                    [attr.width]="30"
+                    [attr.height]="30"
+                    [attr.href]="'../assets/images/mqtt-5.jpg'"
+                />
+
+                <svg:text
+                    alignment-baseline="central"
+                    [attr.x]="35"
+                    [attr.y]="node.dimension.height / 2"
+                    [attr.font-weight]="'normal'"
+                    [attr.cursor]="'pointer'"
+                >
+                    {{ node.label }}
+                </svg:text>
+            </svg:g>
         </ng-template>
 
         <ng-template #linkTemplate let-link>

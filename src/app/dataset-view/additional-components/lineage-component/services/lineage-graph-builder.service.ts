@@ -105,40 +105,78 @@ export class LineageGraphBuilderService {
     }
 
     private buildSourceSubgraph(uniqueDatasets: DatasetLineageBasicsFragment[]): LineageGraph {
-        const qualifyingDatasets = uniqueDatasets.filter(
+        let sourceNodeLabel: string;
+        const source2DatasetLinks: Edge[] = [];
+        const sourceNodesByLabel = new Map<string, Node>();
+
+        const qualifyingDatasetsUrl = uniqueDatasets.filter(
             (dataset: DatasetLineageBasicsFragment) =>
                 dataset.kind === DatasetKind.Root &&
                 dataset.metadata.currentPollingSource?.fetch.__typename === "FetchStepUrl",
         );
 
-        const source2DatasetLinks: Edge[] = [];
+        if (qualifyingDatasetsUrl.length) {
+            qualifyingDatasetsUrl.forEach((dataset: DatasetLineageBasicsFragment) => {
+                const datasetId = this.sanitizeID(dataset.id);
+                sourceNodeLabel = this.getDomainFromUrl(
+                    (dataset.metadata.currentPollingSource?.fetch as FetchStepUrl).url,
+                );
 
-        const sourceNodesByLabel = new Map<string, Node>();
-        qualifyingDatasets.forEach((dataset: DatasetLineageBasicsFragment) => {
-            const datasetId = this.sanitizeID(dataset.id);
-            const sourceNodeLabel = this.getDomainFromUrl(
-                (dataset.metadata.currentPollingSource?.fetch as FetchStepUrl).url,
-            );
+                let sourceNode: Node | undefined = sourceNodesByLabel.get(sourceNodeLabel);
+                if (_.isNil(sourceNode)) {
+                    sourceNode = {
+                        id: `source-node-${datasetId}`,
+                        label: sourceNodeLabel,
+                        data: {
+                            kind: LineageGraphNodeKind.Source,
+                            dataObject: {},
+                        } as LineageGraphNodeData,
+                    } as Node;
+                    sourceNodesByLabel.set(sourceNodeLabel, sourceNode);
+                }
 
-            let sourceNode: Node | undefined = sourceNodesByLabel.get(sourceNodeLabel);
-            if (_.isNil(sourceNode)) {
-                sourceNode = {
-                    id: `source-node-${datasetId}`,
-                    label: sourceNodeLabel,
-                    data: {
-                        kind: LineageGraphNodeKind.Source,
-                        dataObject: {},
-                    } as LineageGraphNodeData,
-                } as Node;
-                sourceNodesByLabel.set(sourceNodeLabel, sourceNode);
-            }
+                source2DatasetLinks.push({
+                    id: `${sourceNode.id}__and__${datasetId}`,
+                    source: sourceNode.id,
+                    target: datasetId,
+                } as Edge);
+            });
+        }
 
-            source2DatasetLinks.push({
-                id: `${sourceNode.id}__and__${datasetId}`,
-                source: sourceNode.id,
-                target: datasetId,
-            } as Edge);
-        });
+        const qualifyingDatasetsMqtt = uniqueDatasets.filter(
+            (dataset: DatasetLineageBasicsFragment) =>
+                dataset.kind === DatasetKind.Root &&
+                dataset.metadata.currentPollingSource?.fetch.__typename === "FetchStepMqtt",
+        );
+
+        if (qualifyingDatasetsMqtt.length) {
+            qualifyingDatasetsMqtt.forEach((dataset: DatasetLineageBasicsFragment) => {
+                const datasetId = this.sanitizeID(dataset.id);
+                if (dataset.metadata.currentPollingSource?.fetch.__typename === "FetchStepMqtt") {
+                    const fetchStepMqtt = dataset.metadata.currentPollingSource?.fetch;
+                    sourceNodeLabel = `${fetchStepMqtt.host}:${fetchStepMqtt.port}`;
+                }
+
+                let sourceNode: Node | undefined = sourceNodesByLabel.get(sourceNodeLabel);
+                if (_.isNil(sourceNode)) {
+                    sourceNode = {
+                        id: `source-node-${datasetId}`,
+                        label: sourceNodeLabel,
+                        data: {
+                            kind: LineageGraphNodeKind.Mqtt,
+                            dataObject: {},
+                        } as LineageGraphNodeData,
+                    } as Node;
+                    sourceNodesByLabel.set(sourceNodeLabel, sourceNode);
+                }
+
+                source2DatasetLinks.push({
+                    id: `${sourceNode.id}__and__${datasetId}`,
+                    source: sourceNode.id,
+                    target: datasetId,
+                } as Edge);
+            });
+        }
 
         return { nodes: [...sourceNodesByLabel.values()], links: source2DatasetLinks };
     }

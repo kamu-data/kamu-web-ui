@@ -4,6 +4,11 @@ fragment CurrentSourceFetchUrl on DatasetMetadata {
       ... on FetchStepUrl {
         url
       }
+
+      ... on FetchStepMqtt {
+        host
+        port
+      }
     }
   }
 }

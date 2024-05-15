@@ -2,7 +2,6 @@ import { MaybeNull, MaybeUndefined } from "./../../../../common/app.types";
 import { SetVocabEventComponent } from "./components/set-vocab-event/set-vocab-event.component";
 import { SupportedEvents } from "./supported.events";
 import {
-    AfterViewChecked,
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,

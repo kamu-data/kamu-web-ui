@@ -11,7 +11,7 @@ import { CommandPropertyComponent } from "../common/command-property/command-pro
 import { StepTypePropertyComponent } from "../common/step-type-property/step-type-property.component";
 import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
 import { getSourcesDescriptors } from "../common-sources/sources-event.source";
-import { SchemaPropertyComponent } from "../common/schema-property/schema-property.component";
+import { TopicsPropertyComponent } from "../common/topics-property/topics-property.component";
 
 export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetPollingSource.FetchStepUrl.__typename": {
@@ -97,7 +97,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetPollingSource.FetchStepMqtt.topics": {
         label: "Topics:",
         tooltip: SetPollingSourceTooltipsTexts.MQTT_TOPICS,
-        presentationComponent: SimplePropertyComponent,
+        presentationComponent: TopicsPropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-FetchStepMqtt-topics",
     },

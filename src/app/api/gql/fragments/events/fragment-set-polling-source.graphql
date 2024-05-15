@@ -3,6 +3,7 @@ fragment SetPollingSourceEvent on SetPollingSource {
     ...FetchStepUrlData
     ...FetchStepFilesGlobData
     ...FetchStepContainerData
+    ...FetchStepMqttData
   }
   read {
     ...ReadStepCsvData

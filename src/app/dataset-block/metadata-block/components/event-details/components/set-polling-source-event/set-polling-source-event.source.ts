@@ -11,6 +11,7 @@ import { CommandPropertyComponent } from "../common/command-property/command-pro
 import { StepTypePropertyComponent } from "../common/step-type-property/step-type-property.component";
 import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
 import { getSourcesDescriptors } from "../common-sources/sources-event.source";
+import { SchemaPropertyComponent } from "../common/schema-property/schema-property.component";
 
 export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetPollingSource.FetchStepUrl.__typename": {
@@ -51,6 +52,54 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         presentationComponent: CachePropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-fetchStepUrl-cache",
+    },
+
+    "SetPollingSource.FetchStepMqtt.__typename": {
+        label: "Type:",
+        tooltip: SetPollingSourceTooltipsTexts.FROM_MQTT,
+        presentationComponent: StepTypePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-FetchStepMqtt-__typename",
+    },
+
+    "SetPollingSource.FetchStepMqtt.host": {
+        label: "Host:",
+        tooltip: SetPollingSourceTooltipsTexts.MQTT_HOST,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-FetchStepMqtt-host",
+    },
+
+    "SetPollingSource.FetchStepMqtt.port": {
+        label: "Port:",
+        tooltip: SetPollingSourceTooltipsTexts.MQTT_PORT,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-FetchStepMqtt-port",
+    },
+
+    "SetPollingSource.FetchStepMqtt.username": {
+        label: "Username:",
+        tooltip: SetPollingSourceTooltipsTexts.MQTT_USERNAME,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-FetchStepMqtt-username",
+    },
+
+    "SetPollingSource.FetchStepMqtt.password": {
+        label: "Password:",
+        tooltip: SetPollingSourceTooltipsTexts.MQTT_PASSWORD,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-FetchStepMqtt-password",
+    },
+
+    "SetPollingSource.FetchStepMqtt.topics": {
+        label: "Topics:",
+        tooltip: SetPollingSourceTooltipsTexts.MQTT_TOPICS,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-FetchStepMqtt-topics",
     },
 
     "SetPollingSource.FetchStepFilesGlob.__typename": {
@@ -196,6 +245,8 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetPollingSource.ReadStepNdJson.dateFormat": getSourcesDescriptors("SetPollingSource.ReadStepNdJson.dateFormat"),
 
     "SetPollingSource.ReadStepNdJson.encoding": getSourcesDescriptors("SetPollingSource.ReadStepNdJson.encoding"),
+
+    "SetPollingSource.ReadStepNdJson.schema": getSourcesDescriptors("SetPollingSource.ReadStepNdJson.schema"),
 
     "SetPollingSource.ReadStepNdJson.timestampFormat": getSourcesDescriptors(
         "SetPollingSource.ReadStepNdJson.timestampFormat",

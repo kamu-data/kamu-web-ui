@@ -1,0 +1,31 @@
+<div [formGroup]="form">
+    <div class="d-flex">
+        <app-tooltip-icon [tooltip]="tooltip"></app-tooltip-icon>
+        <label class="form-label">{{ label }} <span *ngIf="requiredField" class="text-danger">*</span></label
+        ><br />
+    </div>
+    <ng-container [formArrayName]="controlName" *ngFor="let item of items?.controls; let i = index">
+        <div class="row mb-2" [formGroupName]="i">
+            <div class="col-md-5">
+                <input class="form-control" placeholder="Please enter path" formControlName="path" trim />
+            </div>
+            <div class="col-md-6">
+                <select formControlName="qos" class="form-select" placeholder="Please select qos">
+                    <option [value]="'AtLeastOnce'">At Least Once</option>
+                    <option [value]="'AtMostOnce'">At Most Once</option>
+                    <option [value]="'ExactlyOnce'">Exactly Once</option>
+                </select>
+            </div>
+            <div class="col-md-1 d-flex justify-content-end align-items-center">
+                <button type="button" class="btn btn-light" (click)="removeItem(i)" attr.data-test-id="item-{{ i }}">
+                    x
+                </button>
+            </div>
+        </div>
+    </ng-container>
+    <div class="ms-4">
+        <button type="button" class="add-header-button" data-test-id="add-button" (click)="addItem()">
+            <span>{{ buttonText }}</span>
+        </button>
+    </div>
+</div>

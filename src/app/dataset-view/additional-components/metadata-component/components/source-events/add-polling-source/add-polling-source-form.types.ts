@@ -44,6 +44,7 @@ export type JsonFormData = Record<
 export enum ControlType {
     TEXT = "text",
     ARRAY_KEY_VALUE = "array-key-value",
+    TOPICS = "topics",
     CHECKBOX = "checkbox",
     ARRAY_KEY = "array-key",
     SCHEMA = "schema",
@@ -52,12 +53,14 @@ export enum ControlType {
     ORDER = "order",
     TYPEAHEAD = "typeahead",
     JSON_KIND = "json-kind",
+    NUMBER = "number",
 }
 
 export enum FetchKind {
     URL = "Url",
     FILES_GLOB = "FilesGlob",
     CONTAINER = "Container",
+    MQTT = "Mqtt",
 }
 
 export enum ReadKind {
@@ -114,6 +117,7 @@ export interface AddPollingSourceEditFormType {
         path?: string;
         url?: string;
         order?: string;
+        topics?: TopicsType[];
     };
     read: {
         kind: ReadKind;
@@ -153,6 +157,11 @@ export interface EditFormParseType {
 export interface NameValue {
     name: string;
     value: string;
+}
+
+export interface TopicsType {
+    path: string;
+    qos: string;
 }
 
 export interface PreprocessStepValue {

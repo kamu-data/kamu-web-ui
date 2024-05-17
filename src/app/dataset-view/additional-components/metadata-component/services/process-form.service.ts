@@ -66,7 +66,7 @@ export class ProcessFormService {
 
     private processEventTimeControl(formGroup: FormGroup): void {
         const form = formGroup.value as OrderControlType;
-        if (form.fetch.eventTime && form.fetch.kind === FetchKind.CONTAINER) {
+        if (form.fetch.eventTime && [FetchKind.CONTAINER, FetchKind.MQTT].includes(form.fetch.kind)) {
             delete form.fetch.eventTime;
         }
         if (form.fetch.eventTime?.kind !== EventTimeSourceKind.FROM_PATH) {
@@ -116,6 +116,8 @@ export class ProcessFormService {
         if (
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             formGroup.value[SetPollingSourceSection.FETCH].kind !== FetchKind.CONTAINER &&
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            formGroup.value[SetPollingSourceSection.FETCH].eventTime &&
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             !formGroup.value[SetPollingSourceSection.FETCH].eventTime.timestampFormat
         ) {

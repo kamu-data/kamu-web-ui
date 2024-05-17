@@ -1,0 +1,21 @@
+<div [formGroup]="form">
+    <div class="d-flex">
+        <app-tooltip-icon [tooltip]="tooltip"></app-tooltip-icon>
+        <label class="form-label">{{ label }} <span *ngIf="requiredField" class="text-danger">*</span></label>
+    </div>
+    <input
+        type="number"
+        class="form-control"
+        [placeholder]="placeholder"
+        [formControlName]="controlName"
+        [attr.data-test-id]="dataTestId"
+        [value]="value"
+    />
+    <div *ngIf="form.get(controlName)?.invalid && (form.get(controlName)?.touched || form.get(controlName)?.dirty)">
+        <div *ngIf="form?.get(controlName)?.errors?.required" class="mt-1">
+            <span class="text-danger fs-12" attr.data-test-id="error-{{ controlName }}-required">
+                Field is required</span
+            >
+        </div>
+    </div>
+</div>

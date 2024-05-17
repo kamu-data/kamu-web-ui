@@ -7,6 +7,7 @@ import {
     MergeKind,
     NameValue,
     ReadKind,
+    TopicsType,
 } from "./add-polling-source-form.types";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
@@ -58,6 +59,8 @@ export class EditPollingSourceService extends BaseYamlEventService {
             this.initFetchUrlControls(sectionForm, editFormValue);
         } else if (editFormValue.fetch.kind === FetchKind.CONTAINER) {
             this.initFetchContainerControls(sectionForm, editFormValue);
+        } else if (editFormValue.fetch.kind === FetchKind.MQTT) {
+            this.initFetchMqttControls(sectionForm, editFormValue);
         }
     }
 
@@ -147,6 +150,24 @@ export class EditPollingSourceService extends BaseYamlEventService {
                 this.fb.group({
                     name: [item.name],
                     value: [item.value],
+                }),
+            );
+        });
+    }
+
+    private initFetchMqttControls(sectionForm: FormGroup, editFormValue: AddPollingSourceEditFormType): void {
+        const topics = sectionForm.controls.topics as FormArray;
+        if (editFormValue.fetch.topics) {
+            this.initTopicsControl(editFormValue.fetch.topics, topics);
+        }
+    }
+
+    private initTopicsControl(array: TopicsType[], formArray: FormArray): void {
+        array.forEach((item) => {
+            formArray.push(
+                this.fb.group({
+                    path: [item.path],
+                    qos: [item.qos],
                 }),
             );
         });

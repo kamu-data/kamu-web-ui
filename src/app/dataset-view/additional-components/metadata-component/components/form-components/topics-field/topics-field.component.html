@@ -11,6 +11,7 @@
             </div>
             <div class="col-md-6">
                 <select formControlName="qos" class="form-select" placeholder="Please select qos">
+                    <option [value]=""></option>
                     <option [value]="'AtLeastOnce'">At Least Once</option>
                     <option [value]="'AtMostOnce'">At Most Once</option>
                     <option [value]="'ExactlyOnce'">Exactly Once</option>

@@ -35,7 +35,7 @@ export const FETCH_STEP_RADIO_CONTROLS: RadioControlType[] = [
     {
         id: "from-mqtt",
         value: FetchKind.MQTT,
-        icon: "aod_tablet",
+        icon: "rss_feed",
         label: "Sync from MQTT",
         tooltip: SetPollingSourceTooltipsTexts.FROM_MQTT,
     },

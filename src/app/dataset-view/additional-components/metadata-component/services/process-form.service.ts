@@ -13,6 +13,7 @@ import {
     EventTimeSourceKind,
     FetchKind,
     PrepareKind,
+    TopicsType,
 } from "../components/source-events/add-polling-source/add-polling-source-form.types";
 import AppValues from "src/app/common/app.values";
 import { has } from "lodash";
@@ -123,6 +124,20 @@ export class ProcessFormService {
         ) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             delete formGroup.value[SetPollingSourceSection.FETCH].eventTime.timestampFormat;
+        }
+
+        if (
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            formGroup.value[SetPollingSourceSection.FETCH].kind === FetchKind.MQTT &&
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            formGroup.value[SetPollingSourceSection.FETCH].topics
+        ) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            (formGroup.value[SetPollingSourceSection.FETCH].topics as TopicsType[]).forEach((item: TopicsType) => {
+                if (!item.qos) {
+                    delete item.qos;
+                }
+            });
         }
     }
 

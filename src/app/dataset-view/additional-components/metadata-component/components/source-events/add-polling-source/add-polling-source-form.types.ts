@@ -161,7 +161,7 @@ export interface NameValue {
 
 export interface TopicsType {
     path: string;
-    qos: string;
+    qos?: string;
 }
 
 export interface PreprocessStepValue {

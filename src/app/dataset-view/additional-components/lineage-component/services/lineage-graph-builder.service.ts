@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Observable, map } from "rxjs";
-import { DatasetLineageBasicsFragment, DatasetKind, FetchStepUrl } from "src/app/api/kamu.graphql.interface";
+import { DatasetLineageBasicsFragment, DatasetKind, FetchStep } from "src/app/api/kamu.graphql.interface";
 import { LineageUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
@@ -105,22 +105,31 @@ export class LineageGraphBuilderService {
     }
 
     private buildSourceSubgraph(uniqueDatasets: DatasetLineageBasicsFragment[]): LineageGraph {
-        let sourceNodeLabel: string;
         const source2DatasetLinks: Edge[] = [];
         const sourceNodesByLabel = new Map<string, Node>();
 
+        this.buildSourceNodesByType(uniqueDatasets, sourceNodesByLabel, source2DatasetLinks, "FetchStepUrl");
+        this.buildSourceNodesByType(uniqueDatasets, sourceNodesByLabel, source2DatasetLinks, "FetchStepMqtt");
+
+        return { nodes: [...sourceNodesByLabel.values()], links: source2DatasetLinks };
+    }
+
+    private buildSourceNodesByType(
+        uniqueDatasets: DatasetLineageBasicsFragment[],
+        sourceNodesByLabel: Map<string, Node>,
+        source2DatasetLinks: Edge[],
+        kind: string,
+    ): void {
+        let sourceNodeLabel: string;
         const qualifyingDatasetsUrl = uniqueDatasets.filter(
             (dataset: DatasetLineageBasicsFragment) =>
-                dataset.kind === DatasetKind.Root &&
-                dataset.metadata.currentPollingSource?.fetch.__typename === "FetchStepUrl",
+                dataset.kind === DatasetKind.Root && dataset.metadata.currentPollingSource?.fetch.__typename === kind,
         );
 
         if (qualifyingDatasetsUrl.length) {
             qualifyingDatasetsUrl.forEach((dataset: DatasetLineageBasicsFragment) => {
                 const datasetId = this.sanitizeID(dataset.id);
-                sourceNodeLabel = this.getDomainFromUrl(
-                    (dataset.metadata.currentPollingSource?.fetch as FetchStepUrl).url,
-                );
+                sourceNodeLabel = this.buildSourceNodeLabel(dataset.metadata.currentPollingSource?.fetch as FetchStep);
 
                 let sourceNode: Node | undefined = sourceNodesByLabel.get(sourceNodeLabel);
                 if (_.isNil(sourceNode)) {
@@ -128,7 +137,7 @@ export class LineageGraphBuilderService {
                         id: `source-node-${datasetId}`,
                         label: sourceNodeLabel,
                         data: {
-                            kind: LineageGraphNodeKind.Source,
+                            kind: this.graphNodeKindMapper[kind],
                             dataObject: {},
                         } as LineageGraphNodeData,
                     } as Node;
@@ -142,43 +151,6 @@ export class LineageGraphBuilderService {
                 } as Edge);
             });
         }
-
-        const qualifyingDatasetsMqtt = uniqueDatasets.filter(
-            (dataset: DatasetLineageBasicsFragment) =>
-                dataset.kind === DatasetKind.Root &&
-                dataset.metadata.currentPollingSource?.fetch.__typename === "FetchStepMqtt",
-        );
-
-        if (qualifyingDatasetsMqtt.length) {
-            qualifyingDatasetsMqtt.forEach((dataset: DatasetLineageBasicsFragment) => {
-                const datasetId = this.sanitizeID(dataset.id);
-                if (dataset.metadata.currentPollingSource?.fetch.__typename === "FetchStepMqtt") {
-                    const fetchStepMqtt = dataset.metadata.currentPollingSource?.fetch;
-                    sourceNodeLabel = `${fetchStepMqtt.host}:${fetchStepMqtt.port}`;
-                }
-
-                let sourceNode: Node | undefined = sourceNodesByLabel.get(sourceNodeLabel);
-                if (_.isNil(sourceNode)) {
-                    sourceNode = {
-                        id: `source-node-${datasetId}`,
-                        label: sourceNodeLabel,
-                        data: {
-                            kind: LineageGraphNodeKind.Mqtt,
-                            dataObject: {},
-                        } as LineageGraphNodeData,
-                    } as Node;
-                    sourceNodesByLabel.set(sourceNodeLabel, sourceNode);
-                }
-
-                source2DatasetLinks.push({
-                    id: `${sourceNode.id}__and__${datasetId}`,
-                    source: sourceNode.id,
-                    target: datasetId,
-                } as Edge);
-            });
-        }
-
-        return { nodes: [...sourceNodesByLabel.values()], links: source2DatasetLinks };
     }
 
     private sanitizeID(id: string): string {
@@ -187,5 +159,21 @@ export class LineageGraphBuilderService {
 
     private getDomainFromUrl(url: string): string {
         return new URL(url).hostname;
+    }
+
+    private graphNodeKindMapper: Record<string, LineageGraphNodeKind> = {
+        FetchStepUrl: LineageGraphNodeKind.Source,
+        FetchStepMqtt: LineageGraphNodeKind.Mqtt,
+    };
+
+    private buildSourceNodeLabel(step: FetchStep): string {
+        switch (step.__typename) {
+            case "FetchStepUrl":
+                return this.getDomainFromUrl(step.url);
+            case "FetchStepMqtt":
+                return `${step.host}:${step.port}`;
+            default:
+                throw new Error(`Unknown source label type ${step.__typename}`);
+        }
     }
 }

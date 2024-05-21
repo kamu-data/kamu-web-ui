@@ -46,6 +46,11 @@ import { DatasetSettingsGeneralTabComponent } from "./additional-components/data
 import { DatasetSettingsSchedulingTabComponent } from "./additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.component";
 import { ToastrModule } from "ngx-toastr";
 import { DataAccessPanelModule } from "../components/data-access-panel/data-access-panel.module";
+import { SqlEditorComponent } from "../shared/editor/components/sql-editor/sql-editor.component";
+import { RequestTimerComponent } from "./additional-components/data-component/request-timer/request-timer.component";
+import { EditorModule } from "../shared/editor/editor.module";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { CdkAccordionModule } from "@angular/cdk/accordion";
 
 describe("DatasetComponent", () => {
     let component: DatasetComponent;
@@ -71,6 +76,8 @@ describe("DatasetComponent", () => {
                 SearchAdditionalButtonsNavComponent,
                 DatasetSettingsGeneralTabComponent,
                 DatasetSettingsSchedulingTabComponent,
+                SqlEditorComponent,
+                RequestTimerComponent,
             ],
             imports: [
                 AngularSvgIconModule.forRoot(),
@@ -88,6 +95,9 @@ describe("DatasetComponent", () => {
                 RouterTestingModule,
                 ToastrModule.forRoot(),
                 DataAccessPanelModule,
+                EditorModule,
+                MatProgressBarModule,
+                CdkAccordionModule,
             ],
             providers: [
                 DatasetApi,

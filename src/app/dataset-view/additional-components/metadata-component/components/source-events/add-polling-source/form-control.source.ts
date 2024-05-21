@@ -32,6 +32,13 @@ export const FETCH_STEP_RADIO_CONTROLS: RadioControlType[] = [
         label: "Sync from container",
         tooltip: SetPollingSourceTooltipsTexts.FROM_CONTAINER,
     },
+    {
+        id: "from-mqtt",
+        value: FetchKind.MQTT,
+        icon: "rss_feed",
+        label: "Sync from MQTT",
+        tooltip: SetPollingSourceTooltipsTexts.FROM_MQTT,
+    },
 ];
 
 export const READ_STEP_RADIO_CONTROLS: RadioControlType[] = [

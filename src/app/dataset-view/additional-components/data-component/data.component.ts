@@ -8,7 +8,7 @@ import {
     Output,
 } from "@angular/core";
 import { Location } from "@angular/common";
-import { Observable, map, tap } from "rxjs";
+import { Observable, map, shareReplay, tap } from "rxjs";
 
 import AppValues from "src/app/common/app.values";
 import DataTabValues from "./mock.data";
@@ -58,6 +58,7 @@ export class DataComponent extends BaseComponent implements OnInit {
         this.overviewUpdate$ = this.datasetSubsService.overviewChanges;
         this.sqlErrorMarker$ = this.datasetSubsService.sqlErrorOccurrences.pipe(
             map((data: DataSqlErrorUpdate) => data.error),
+            shareReplay(),
         );
         this.dataUpdate$ = this.datasetSubsService.sqlQueryDataChanges.pipe(
             tap((dataUpdate: DataUpdate) => {
@@ -68,6 +69,7 @@ export class DataComponent extends BaseComponent implements OnInit {
                 this.currentData = this.skipRows ? [...this.currentData, ...dataUpdate.content] : dataUpdate.content;
                 this.datasetSubsService.resetSqlError();
             }),
+            shareReplay(),
         );
         this.buildSqlRequestCode();
         this.runSQLRequest({ query: this.sqlRequestCode }, true);

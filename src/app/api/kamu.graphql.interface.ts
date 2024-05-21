@@ -2853,7 +2853,7 @@ export type CurrentSourceFetchUrlFragment = {
         fetch:
             | { __typename?: "FetchStepContainer" }
             | { __typename?: "FetchStepFilesGlob" }
-            | { __typename?: "FetchStepMqtt" }
+            | { __typename?: "FetchStepMqtt"; host: string; port: number }
             | { __typename?: "FetchStepUrl"; url: string };
     } | null;
 };
@@ -3673,6 +3673,10 @@ export const CurrentSourceFetchUrlFragmentDoc = gql`
             fetch {
                 ... on FetchStepUrl {
                     url
+                }
+                ... on FetchStepMqtt {
+                    host
+                    port
                 }
             }
         }

@@ -48,6 +48,7 @@ import { StepTypePropertyComponent } from "./components/event-details/components
 import { AddPushSourceEventComponent } from "./components/event-details/components/add-push-source-event/add-push-source-event.component";
 import { SetDataSchemaEventComponent } from "./components/event-details/components/set-data-schema-event/set-data-schema-event.component";
 import { UnsupportedEventComponent } from "./components/event-details/components/unsupported-event/unsupported-event.component";
+import { TopicsPropertyComponent } from "./components/event-details/components/common/topics-property/topics-property.component";
 
 @NgModule({
     declarations: [
@@ -87,6 +88,7 @@ import { UnsupportedEventComponent } from "./components/event-details/components
         AddPushSourceEventComponent,
         SetDataSchemaEventComponent,
         UnsupportedEventComponent,
+        TopicsPropertyComponent,
     ],
     imports: [
         CommonModule,

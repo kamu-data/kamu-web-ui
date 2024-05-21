@@ -125,6 +125,9 @@ export class DataHelpers {
             case "FetchStepFilesGlob": {
                 return "Files Glob";
             }
+            case "FetchStepMqtt": {
+                return "Mqtt";
+            }
             case "MergeStrategyLedger": {
                 return "Ledger";
             }

@@ -9,6 +9,7 @@ export interface LineageGraphNodeData {
 export enum LineageGraphNodeKind {
     Dataset = "dataset",
     Source = "source",
+    Mqtt = "mqtt",
 }
 
 export enum LineageNodeAccess {

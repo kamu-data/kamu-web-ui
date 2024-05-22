@@ -8,11 +8,9 @@ import {
     Output,
 } from "@angular/core";
 import { Location } from "@angular/common";
-import { Observable, map, shareReplay, tap } from "rxjs";
-
+import { Observable, map, tap } from "rxjs";
 import AppValues from "src/app/common/app.values";
 import DataTabValues from "./mock.data";
-
 import { OffsetInterval } from "../../../api/kamu.graphql.interface";
 import { DataSqlErrorUpdate, DataUpdate, OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DataRow, DatasetRequestBySql } from "../../../interface/dataset.interface";
@@ -58,7 +56,6 @@ export class DataComponent extends BaseComponent implements OnInit {
         this.overviewUpdate$ = this.datasetSubsService.overviewChanges;
         this.sqlErrorMarker$ = this.datasetSubsService.sqlErrorOccurrences.pipe(
             map((data: DataSqlErrorUpdate) => data.error),
-            shareReplay(),
         );
         this.dataUpdate$ = this.datasetSubsService.sqlQueryDataChanges.pipe(
             tap((dataUpdate: DataUpdate) => {
@@ -69,7 +66,6 @@ export class DataComponent extends BaseComponent implements OnInit {
                 this.currentData = this.skipRows ? [...this.currentData, ...dataUpdate.content] : dataUpdate.content;
                 this.datasetSubsService.resetSqlError();
             }),
-            shareReplay(),
         );
         this.buildSqlRequestCode();
         this.runSQLRequest({ query: this.sqlRequestCode }, true);

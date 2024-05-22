@@ -26,7 +26,6 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
     public readonly DatasetViewTypeEnum = DatasetViewTypeEnum;
     public sqlLoading: boolean = false;
-    public sqlRequestTimeInMilliseconds: number;
 
     private mainDatasetQueryComplete$: Subject<DatasetInfo> = new ReplaySubject<DatasetInfo>(1 /* bufferSize */);
 
@@ -283,7 +282,6 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
     }
 
     public onRunSQLRequest(params: DatasetRequestBySql): void {
-        const startTime = new Date().valueOf();
         this.sqlLoading = true;
         this.datasetService
             // TODO: Propagate limit from UI and display when it was reached
@@ -291,8 +289,6 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
             .pipe(
                 finalize(() => {
                     this.sqlLoading = false;
-                    const endTime = new Date().valueOf();
-                    this.sqlRequestTimeInMilliseconds = endTime - startTime;
                 }),
             )
             .subscribe();

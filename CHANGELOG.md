@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added MQTT polling source support 
 - Added MQTT metadata block support
+### Fixed
+- Sql query timer improvements
 
 ## [0.19.0] - 2024-05-14
 ### Added

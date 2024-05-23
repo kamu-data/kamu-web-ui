@@ -12,8 +12,14 @@ mutation datasetFlowCompacting(
               message
               config {
                 compacting {
-                  maxSliceSize
-                  maxSliceRecords
+                  ... on CompactingFull {
+                    maxSliceSize
+                    maxSliceRecords
+                  }
+
+                  ... on CompactingMetadataOnly {
+                    recursive
+                  }
                 }
               }
             }

@@ -58,7 +58,7 @@ export type AccountFlowConfigsMut = {
 };
 
 export type AccountFlowFilters = {
-    byDatasetName?: InputMaybe<Scalars["DatasetName"]>;
+    byDatasetIds: Array<Scalars["DatasetID"]>;
     byFlowType?: InputMaybe<DatasetFlowType>;
     byInitiator?: InputMaybe<InitiatorFilterInput>;
     byStatus?: InputMaybe<FlowStatus>;
@@ -236,9 +236,28 @@ export type CommitResultSuccess = CommitResult &
         oldHead?: Maybe<Scalars["Multihash"]>;
     };
 
-export type CompactingConditionInput = {
+export type CompactingConditionFull = {
     maxSliceRecords: Scalars["Int"];
     maxSliceSize: Scalars["Int"];
+};
+
+export type CompactingConditionInput =
+    | { full: CompactingConditionFull; metadataOnly?: never }
+    | { full?: never; metadataOnly: CompactingConditionMetadataOnly };
+
+export type CompactingConditionMetadataOnly = {
+    recursive: Scalars["Boolean"];
+};
+
+export type CompactingFull = {
+    __typename?: "CompactingFull";
+    maxSliceRecords: Scalars["Int"];
+    maxSliceSize: Scalars["Int"];
+};
+
+export type CompactingMetadataOnly = {
+    __typename?: "CompactingMetadataOnly";
+    recursive: Scalars["Boolean"];
 };
 
 export enum CompressionFormat {
@@ -536,6 +555,7 @@ export type DatasetFlowRunsMutCancelScheduledTasksArgs = {
 
 export type DatasetFlowRunsMutTriggerFlowArgs = {
     datasetFlowType: DatasetFlowType;
+    flowRunConfiguration?: InputMaybe<FlowRunConfiguration>;
 };
 
 export enum DatasetFlowType {
@@ -829,6 +849,8 @@ export type FlightSqlDesc = {
 
 export type Flow = {
     __typename?: "Flow";
+    /** Flow config snapshot */
+    configSnapshot?: Maybe<FlowConfigurationSnapshot>;
     /** Description of key flow parameters */
     description: FlowDescription;
     /** Unique identifier of the flow */
@@ -870,13 +892,24 @@ export type FlowConfigurationBatching = {
     minRecordsToAwait: Scalars["Int"];
 };
 
-export type FlowConfigurationCompacting = {
-    __typename?: "FlowConfigurationCompacting";
-    maxSliceRecords: Scalars["Int"];
-    maxSliceSize: Scalars["Int"];
+export type FlowConfigurationCompacting = CompactingFull | CompactingMetadataOnly;
+
+export type FlowConfigurationCompactingRule = {
+    __typename?: "FlowConfigurationCompactingRule";
+    compactingRule: FlowConfigurationCompacting;
 };
 
 export type FlowConfigurationSchedule = Cron5ComponentExpression | TimeDelta;
+
+export type FlowConfigurationScheduleRule = {
+    __typename?: "FlowConfigurationScheduleRule";
+    scheduleRule: FlowConfigurationSchedule;
+};
+
+export type FlowConfigurationSnapshot =
+    | FlowConfigurationBatching
+    | FlowConfigurationCompactingRule
+    | FlowConfigurationScheduleRule;
 
 export type FlowConnection = {
     __typename?: "FlowConnection";
@@ -1037,6 +1070,12 @@ export type FlowInvalidCompactingConfig = SetFlowCompactingConfigResult & {
     reason: Scalars["String"];
 };
 
+export type FlowInvalidRunConfigurations = TriggerFlowResult & {
+    __typename?: "FlowInvalidRunConfigurations";
+    error: Scalars["String"];
+    message: Scalars["String"];
+};
+
 export type FlowNotFound = CancelScheduledTasksResult &
     GetFlowResult & {
         __typename?: "FlowNotFound";
@@ -1053,6 +1092,11 @@ export type FlowPreconditionsNotMet = SetFlowBatchingConfigResult &
         message: Scalars["String"];
         preconditions: Scalars["String"];
     };
+
+export type FlowRunConfiguration =
+    | { batching: BatchingConditionInput; compacting?: never; schedule?: never }
+    | { batching?: never; compacting: CompactingConditionInput; schedule?: never }
+    | { batching?: never; compacting?: never; schedule: ScheduleInput };
 
 export type FlowStartCondition =
     | FlowStartConditionBatching
@@ -1882,11 +1926,10 @@ export type DatasetFlowCompactingMutation = {
                               message: string;
                               config: {
                                   __typename?: "FlowConfiguration";
-                                  compacting?: {
-                                      __typename?: "FlowConfigurationCompacting";
-                                      maxSliceSize: number;
-                                      maxSliceRecords: number;
-                                  } | null;
+                                  compacting?:
+                                      | { __typename?: "CompactingFull"; maxSliceSize: number; maxSliceRecords: number }
+                                      | { __typename?: "CompactingMetadataOnly"; recursive: boolean }
+                                      | null;
                               };
                           };
                 };
@@ -2413,6 +2456,7 @@ export type DatasetTriggerFlowMutation = {
                               actualDatasetKind: DatasetKind;
                               message: string;
                           }
+                        | { __typename?: "FlowInvalidRunConfigurations"; error: string; message: string }
                         | { __typename?: "FlowPreconditionsNotMet"; message: string }
                         | {
                               __typename?: "TriggerFlowSuccess";
@@ -4388,8 +4432,13 @@ export const DatasetFlowCompactingDocument = gql`
                                 message
                                 config {
                                     compacting {
-                                        maxSliceSize
-                                        maxSliceRecords
+                                        ... on CompactingFull {
+                                            maxSliceSize
+                                            maxSliceRecords
+                                        }
+                                        ... on CompactingMetadataOnly {
+                                            recursive
+                                        }
                                     }
                                 }
                             }
@@ -5198,6 +5247,10 @@ export const DatasetTriggerFlowDocument = gql`
                                 message
                             }
                             ... on FlowPreconditionsNotMet {
+                                message
+                            }
+                            ... on FlowInvalidRunConfigurations {
+                                error
                                 message
                             }
                         }

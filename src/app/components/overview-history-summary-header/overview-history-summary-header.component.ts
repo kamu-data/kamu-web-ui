@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { AccountExtendedFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { DataHelpers } from "src/app/common/data.helpers";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 
 @Component({
     selector: "app-overview-history-summary-header",
@@ -42,6 +43,14 @@ export class OverviewHistorySummaryHeaderComponent {
             accountName,
             datasetName,
             blockHash,
+        });
+    }
+
+    public navigateToHistory(accountName: string, datasetName: string): void {
+        this.navigationService.navigateToDatasetView({
+            accountName,
+            datasetName,
+            tab: DatasetViewTypeEnum.History,
         });
     }
 }

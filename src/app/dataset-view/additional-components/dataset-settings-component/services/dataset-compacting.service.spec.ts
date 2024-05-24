@@ -45,8 +45,10 @@ describe("DatasetCompactingService", () => {
                 datasetId: TEST_DATASET_ID,
                 datasetFlowType: DatasetFlowType.HardCompacting,
                 compactingArgs: {
-                    maxSliceSize: MOCK_SLICE_SIZE,
-                    maxSliceRecords: MOCK_SLICE_RECORDS,
+                    full: {
+                        maxSliceSize: MOCK_SLICE_SIZE,
+                        maxSliceRecords: MOCK_SLICE_RECORDS,
+                    },
                 },
             })
             .subscribe((result: boolean) => {
@@ -65,8 +67,10 @@ describe("DatasetCompactingService", () => {
                 datasetId: TEST_DATASET_ID,
                 datasetFlowType: DatasetFlowType.HardCompacting,
                 compactingArgs: {
-                    maxSliceSize: MOCK_SLICE_SIZE,
-                    maxSliceRecords: MOCK_SLICE_RECORDS,
+                    full: {
+                        maxSliceSize: MOCK_SLICE_SIZE,
+                        maxSliceRecords: MOCK_SLICE_RECORDS,
+                    },
                 },
             })
             .subscribe((result: boolean) => {

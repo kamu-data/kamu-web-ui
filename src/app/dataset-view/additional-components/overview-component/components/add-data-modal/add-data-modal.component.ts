@@ -33,36 +33,33 @@ export class AddDataModalComponent extends BaseComponent implements OnInit {
             } else {
                 const file: File = input.files[0];
 
-                interface UploadFormField {
-                    name: string;
-                    value: string;
-                }
-
                 interface UploadGetResponse {
                     uploadUrl: string;
                     method: "POST" | "PUT";
-                    fields: UploadFormField[];
+                    headers: [string, string][];
+                    fields: [string, string][];
                 }
 
                 const getHeaders = { Authorization: `Bearer ${this.localStorageService.accessToken}` };
                 const uploadGet$: Observable<UploadGetResponse> = this.http.get<UploadGetResponse>(
-                    "http://localhost:8080/platform/file/upload?file_name=" + file.name,
+                    "http://localhost:8080/platform/file/upload?file_name=" +
+                        file.name +
+                        "&content_length=" +
+                        file.size,
                     { headers: getHeaders },
                 );
 
                 uploadGet$.subscribe((response: UploadGetResponse) => {
-                    const formData = new FormData();
-                    formData.append("thumbnail", file);
-
-                    // TODO: use fields
                     let uploadHeaders = new HttpHeaders();
-                    uploadHeaders = uploadHeaders.append(
-                        "Authorization",
-                        `Bearer ${this.localStorageService.accessToken}`,
-                    );
-                    response.fields.forEach((field: UploadFormField) => {
-                        uploadHeaders = uploadHeaders.append(field.name, field.value);
+                    response.headers.forEach((header: [string, string]) => {
+                        uploadHeaders = uploadHeaders.append(header[0], header[1]);
                     });
+
+                    const formData = new FormData();
+                    response.fields.forEach((field: [string, string]) => {
+                        formData.append(field[0], field[1]);
+                    });
+                    formData.append("file", file);
 
                     let upload$: Observable<object>;
                     switch (response.method) {

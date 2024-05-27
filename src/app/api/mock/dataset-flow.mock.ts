@@ -773,7 +773,7 @@ export const mockDatasetFlowCompactingMutationSuccess: DatasetFlowCompactingMuta
                             compacting: {
                                 maxSliceSize: 10485760,
                                 maxSliceRecords: 10000,
-                                __typename: "FlowConfigurationCompacting",
+                                __typename: "CompactingFull",
                             },
                             __typename: "FlowConfiguration",
                         },

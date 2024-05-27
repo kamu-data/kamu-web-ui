@@ -522,6 +522,78 @@ export const mockLineageGraphUpdate: LineageUpdate = {
     ],
 };
 
+export const mockLineageGraphUpdateWithMqttSource: LineageUpdate = {
+    origin: {
+        __typename: "Dataset",
+        id: "did:odf:fed01bbbdd6bf91ef55c042e10b741104517523301b13ff7120801b1c581da035cb5a",
+        kind: DatasetKind.Root,
+        name: "temp",
+        owner: {
+            __typename: "Account",
+            id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+            accountName: "kamu",
+            avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+        },
+        alias: "temp",
+        metadata: {
+            __typename: "DatasetMetadata",
+            currentPollingSource: {
+                __typename: "SetPollingSource",
+                fetch: {
+                    __typename: "FetchStepMqtt",
+                    host: "test.mosquitto.org",
+                    port: 1883,
+                },
+            },
+            currentLicense: null,
+            currentWatermark: null,
+        },
+        createdAt: "2024-05-20T13:21:15.141982827+00:00",
+        lastUpdatedAt: "2024-05-20T13:21:15.141982827+00:00",
+        data: {
+            __typename: "DatasetData",
+            numRecordsTotal: 0,
+            estimatedSize: 0,
+        },
+    },
+    nodes: [
+        {
+            __typename: "Dataset",
+            id: "did:odf:fed01bbbdd6bf91ef55c042e10b741104517523301b13ff7120801b1c581da035cb5a",
+            kind: DatasetKind.Root,
+            name: "temp",
+            owner: {
+                __typename: "Account",
+                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+                accountName: "kamu",
+                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+            },
+            alias: "temp",
+            metadata: {
+                __typename: "DatasetMetadata",
+                currentPollingSource: {
+                    __typename: "SetPollingSource",
+                    fetch: {
+                        __typename: "FetchStepMqtt",
+                        host: "test.mosquitto.org",
+                        port: 1883,
+                    },
+                },
+                currentLicense: null,
+                currentWatermark: null,
+            },
+            createdAt: "2024-05-20T13:21:15.141982827+00:00",
+            lastUpdatedAt: "2024-05-20T13:21:15.141982827+00:00",
+            data: {
+                __typename: "DatasetData",
+                numRecordsTotal: 0,
+                estimatedSize: 0,
+            },
+        },
+    ],
+    edges: [],
+};
+
 export const mockBuildGraphNodesResult: Node[] = [
     {
         id: "source-node-didodfz4k88e8egJJeQEd4HHuL4BSwYTWm8qiWxzqhydvHQcX2TPCrMyP",

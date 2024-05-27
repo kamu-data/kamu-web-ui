@@ -49,7 +49,7 @@ input AccountFlowFilters {
   byFlowType: DatasetFlowType
   byStatus: FlowStatus
   byInitiator: InitiatorFilterInput
-  byDatasetName: DatasetName
+  byDatasetIds: [DatasetID!]!
 }
 
 type AccountFlowRuns {
@@ -188,9 +188,27 @@ type CommitResultSuccess implements CommitResult & UpdateReadmeResult {
   message: String!
 }
 
-input CompactingConditionInput {
+input CompactingConditionFull {
   maxSliceSize: Int!
   maxSliceRecords: Int!
+}
+
+input CompactingConditionInput @oneOf {
+  full: CompactingConditionFull
+  metadataOnly: CompactingConditionMetadataOnly
+}
+
+input CompactingConditionMetadataOnly {
+  recursive: Boolean!
+}
+
+type CompactingFull {
+  maxSliceSize: Int!
+  maxSliceRecords: Int!
+}
+
+type CompactingMetadataOnly {
+  recursive: Boolean!
 }
 
 enum CompressionFormat {
@@ -457,7 +475,7 @@ type DatasetFlowRuns {
 }
 
 type DatasetFlowRunsMut {
-  triggerFlow(datasetFlowType: DatasetFlowType!): TriggerFlowResult!
+  triggerFlow(datasetFlowType: DatasetFlowType!, flowRunConfiguration: FlowRunConfiguration): TriggerFlowResult!
   cancelScheduledTasks(flowId: FlowID!): CancelScheduledTasksResult!
 }
 
@@ -709,7 +727,7 @@ type ExecuteTransformInput {
   newOffset: Int
 }
 
-union FetchStep = FetchStepUrl | FetchStepFilesGlob | FetchStepContainer
+union FetchStep = FetchStepUrl | FetchStepFilesGlob | FetchStepContainer | FetchStepMqtt
 
 type FetchStepContainer {
   image: String!
@@ -723,6 +741,14 @@ type FetchStepFilesGlob {
   eventTime: EventTimeSource
   cache: SourceCaching
   order: SourceOrdering
+}
+
+type FetchStepMqtt {
+  host: String!
+  port: Int!
+  username: String
+  password: String
+  topics: [MqttTopicSubscription!]!
 }
 
 type FetchStepUrl {
@@ -777,6 +803,10 @@ type Flow {
   Start condition
   """
   startCondition: FlowStartCondition
+  """
+  Flow config snapshot
+  """
+  configSnapshot: FlowConfigurationSnapshot
 }
 
 type FlowAbortedResult {
@@ -795,12 +825,22 @@ type FlowConfigurationBatching {
   maxBatchingInterval: TimeDelta!
 }
 
-type FlowConfigurationCompacting {
-  maxSliceSize: Int!
-  maxSliceRecords: Int!
+union FlowConfigurationCompacting = CompactingFull | CompactingMetadataOnly
+
+type FlowConfigurationCompactingRule {
+  compactingRule: FlowConfigurationCompacting!
 }
 
 union FlowConfigurationSchedule = TimeDelta | Cron5ComponentExpression
+
+type FlowConfigurationScheduleRule {
+  scheduleRule: FlowConfigurationSchedule!
+}
+
+union FlowConfigurationSnapshot =
+  | FlowConfigurationBatching
+  | FlowConfigurationScheduleRule
+  | FlowConfigurationCompactingRule
 
 type FlowConnection {
   """
@@ -945,6 +985,11 @@ type FlowInvalidCompactingConfig implements SetFlowCompactingConfigResult {
   message: String!
 }
 
+type FlowInvalidRunConfigurations implements TriggerFlowResult {
+  error: String!
+  message: String!
+}
+
 type FlowNotFound implements GetFlowResult & CancelScheduledTasksResult {
   flowId: FlowID!
   message: String!
@@ -955,6 +1000,12 @@ union FlowOutcome = FlowSuccessResult | FlowFailedError | FlowAbortedResult
 type FlowPreconditionsNotMet implements SetFlowConfigResult & SetFlowBatchingConfigResult & TriggerFlowResult {
   preconditions: String!
   message: String!
+}
+
+input FlowRunConfiguration @oneOf {
+  schedule: ScheduleInput
+  batching: BatchingConditionInput
+  compacting: CompactingConditionInput
 }
 
 union FlowStartCondition =
@@ -1161,6 +1212,17 @@ type MetadataManifestMalformed implements CommitResult & CreateDatasetFromSnapsh
 
 type MetadataManifestUnsupportedVersion implements CommitResult & CreateDatasetFromSnapshotResult {
   message: String!
+}
+
+enum MqttQos {
+  AT_MOST_ONCE
+  AT_LEAST_ONCE
+  EXACTLY_ONCE
+}
+
+type MqttTopicSubscription {
+  path: String!
+  qos: MqttQos
 }
 
 scalar Multihash

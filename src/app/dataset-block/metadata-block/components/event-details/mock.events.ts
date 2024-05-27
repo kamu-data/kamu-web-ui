@@ -4,6 +4,7 @@ import {
     DataSchemaFormat,
     DatasetTransformFragment,
     ExecuteTransformEventFragment,
+    MqttQos,
     SetAttachments,
     SetDataSchema,
     SetInfo,
@@ -86,6 +87,45 @@ export const mockSetPollingSourceEvent: SetPollingSource = {
         ],
         temporalTables: null,
     },
+};
+
+export const mockSetPollingSourceEventWithFetchStepMqtt: SetPollingSource = {
+    __typename: "SetPollingSource",
+    fetch: {
+        __typename: "FetchStepMqtt",
+        host: "test.mosquitto.org",
+        port: 1183,
+        username: "mock-user",
+        password: "123456",
+        topics: [{ __typename: "MqttTopicSubscription", path: "dev.kamu.example.mqtt.temp", qos: MqttQos.AtMostOnce }],
+    },
+    read: {
+        __typename: "ReadStepCsv",
+        schema: [
+            "id BIGINT",
+            "date_reported TIMESTAMP",
+            "zone STRING",
+            "gender STRING",
+            "age_group STRING",
+            "case_status STRING",
+            "case_type STRING",
+        ],
+        separator: ",",
+        encoding: null,
+        quote: null,
+        escape: null,
+        header: true,
+        inferSchema: false,
+        nullValue: null,
+        dateFormat: null,
+        timestampFormat: null,
+    },
+    merge: {
+        __typename: "MergeStrategyLedger",
+        primaryKey: ["id"],
+    },
+    prepare: null,
+    preprocess: null,
 };
 
 export const mockSeed: Seed = {

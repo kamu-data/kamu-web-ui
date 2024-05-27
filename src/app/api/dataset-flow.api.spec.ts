@@ -215,8 +215,10 @@ describe("DatasetFlowApi", () => {
                 datasetId: TEST_DATASET_ID,
                 datasetFlowType: DatasetFlowType.HardCompacting,
                 compactingArgs: {
-                    maxSliceSize: MOCK_SLICE_SIZE,
-                    maxSliceRecords: MOCK_SLICE_RECORDS,
+                    full: {
+                        maxSliceSize: MOCK_SLICE_SIZE,
+                        maxSliceRecords: MOCK_SLICE_RECORDS,
+                    },
                 },
             })
             .subscribe((res: DatasetFlowCompactingMutation) => {

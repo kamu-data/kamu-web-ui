@@ -43,10 +43,53 @@ export type Account = {
     avatarUrl?: Maybe<Scalars["String"]>;
     /** Account name to display */
     displayName: Scalars["AccountDisplayName"];
+    /** Access to the flow configurations of this account */
+    flows?: Maybe<AccountFlows>;
     /** Unique and stable identifier of this account */
     id: Scalars["AccountID"];
     /** Indicates the administrator status */
     isAdmin: Scalars["Boolean"];
+};
+
+export type AccountFlowConfigsMut = {
+    __typename?: "AccountFlowConfigsMut";
+    pauseAccountDatasetFlows: Scalars["Boolean"];
+    resumeAccountDatasetFlows: Scalars["Boolean"];
+};
+
+export type AccountFlowFilters = {
+    byDatasetIds: Array<Scalars["DatasetID"]>;
+    byFlowType?: InputMaybe<DatasetFlowType>;
+    byInitiator?: InputMaybe<InitiatorFilterInput>;
+    byStatus?: InputMaybe<FlowStatus>;
+};
+
+export type AccountFlowRuns = {
+    __typename?: "AccountFlowRuns";
+    listFlows: FlowConnection;
+};
+
+export type AccountFlowRunsListFlowsArgs = {
+    filters?: InputMaybe<AccountFlowFilters>;
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+};
+
+export type AccountFlows = {
+    __typename?: "AccountFlows";
+    /** Returns interface for flow runs queries */
+    runs: AccountFlowRuns;
+};
+
+export type AccountFlowsMut = {
+    __typename?: "AccountFlowsMut";
+    configs: AccountFlowConfigsMut;
+};
+
+export type AccountMut = {
+    __typename?: "AccountMut";
+    /** Access to the mutable flow configurations of this account */
+    flows: AccountFlowsMut;
 };
 
 export enum AccountType {
@@ -68,6 +111,22 @@ export type AccountsByIdArgs = {
 
 export type AccountsByNameArgs = {
     name: Scalars["AccountName"];
+};
+
+export type AccountsMut = {
+    __typename?: "AccountsMut";
+    /** Returns a mutable account by its id */
+    byId?: Maybe<AccountMut>;
+    /** Returns a mutable account by its name */
+    byName?: Maybe<AccountMut>;
+};
+
+export type AccountsMutByIdArgs = {
+    accountId: Scalars["AccountID"];
+};
+
+export type AccountsMutByNameArgs = {
+    accountName: Scalars["AccountName"];
 };
 
 export type AddData = {
@@ -177,9 +236,28 @@ export type CommitResultSuccess = CommitResult &
         oldHead?: Maybe<Scalars["Multihash"]>;
     };
 
-export type CompactingConditionInput = {
+export type CompactingConditionFull = {
     maxSliceRecords: Scalars["Int"];
     maxSliceSize: Scalars["Int"];
+};
+
+export type CompactingConditionInput =
+    | { full: CompactingConditionFull; metadataOnly?: never }
+    | { full?: never; metadataOnly: CompactingConditionMetadataOnly };
+
+export type CompactingConditionMetadataOnly = {
+    recursive: Scalars["Boolean"];
+};
+
+export type CompactingFull = {
+    __typename?: "CompactingFull";
+    maxSliceRecords: Scalars["Int"];
+    maxSliceSize: Scalars["Int"];
+};
+
+export type CompactingMetadataOnly = {
+    __typename?: "CompactingMetadataOnly";
+    recursive: Scalars["Boolean"];
 };
 
 export enum CompressionFormat {
@@ -236,8 +314,11 @@ export type DataBatch = {
 export enum DataBatchFormat {
     Csv = "CSV",
     Json = "JSON",
+    JsonAoa = "JSON_AOA",
+    /** Deprecated: Use ND_JSON instead */
     JsonLd = "JSON_LD",
     JsonSoa = "JSON_SOA",
+    NdJson = "ND_JSON",
 }
 
 export type DataQueries = {
@@ -474,6 +555,7 @@ export type DatasetFlowRunsMutCancelScheduledTasksArgs = {
 
 export type DatasetFlowRunsMutTriggerFlowArgs = {
     datasetFlowType: DatasetFlowType;
+    flowRunConfiguration?: InputMaybe<FlowRunConfiguration>;
 };
 
 export enum DatasetFlowType {
@@ -725,7 +807,7 @@ export type ExecuteTransformInput = {
     prevOffset?: Maybe<Scalars["Int"]>;
 };
 
-export type FetchStep = FetchStepContainer | FetchStepFilesGlob | FetchStepUrl;
+export type FetchStep = FetchStepContainer | FetchStepFilesGlob | FetchStepMqtt | FetchStepUrl;
 
 export type FetchStepContainer = {
     __typename?: "FetchStepContainer";
@@ -743,6 +825,15 @@ export type FetchStepFilesGlob = {
     path: Scalars["String"];
 };
 
+export type FetchStepMqtt = {
+    __typename?: "FetchStepMqtt";
+    host: Scalars["String"];
+    password?: Maybe<Scalars["String"]>;
+    port: Scalars["Int"];
+    topics: Array<MqttTopicSubscription>;
+    username?: Maybe<Scalars["String"]>;
+};
+
 export type FetchStepUrl = {
     __typename?: "FetchStepUrl";
     cache?: Maybe<SourceCaching>;
@@ -758,6 +849,8 @@ export type FlightSqlDesc = {
 
 export type Flow = {
     __typename?: "Flow";
+    /** Flow config snapshot */
+    configSnapshot?: Maybe<FlowConfigurationSnapshot>;
     /** Description of key flow parameters */
     description: FlowDescription;
     /** Unique identifier of the flow */
@@ -799,13 +892,24 @@ export type FlowConfigurationBatching = {
     minRecordsToAwait: Scalars["Int"];
 };
 
-export type FlowConfigurationCompacting = {
-    __typename?: "FlowConfigurationCompacting";
-    maxSliceRecords: Scalars["Int"];
-    maxSliceSize: Scalars["Int"];
+export type FlowConfigurationCompacting = CompactingFull | CompactingMetadataOnly;
+
+export type FlowConfigurationCompactingRule = {
+    __typename?: "FlowConfigurationCompactingRule";
+    compactingRule: FlowConfigurationCompacting;
 };
 
 export type FlowConfigurationSchedule = Cron5ComponentExpression | TimeDelta;
+
+export type FlowConfigurationScheduleRule = {
+    __typename?: "FlowConfigurationScheduleRule";
+    scheduleRule: FlowConfigurationSchedule;
+};
+
+export type FlowConfigurationSnapshot =
+    | FlowConfigurationBatching
+    | FlowConfigurationCompactingRule
+    | FlowConfigurationScheduleRule;
 
 export type FlowConnection = {
     __typename?: "FlowConnection";
@@ -966,6 +1070,12 @@ export type FlowInvalidCompactingConfig = SetFlowCompactingConfigResult & {
     reason: Scalars["String"];
 };
 
+export type FlowInvalidRunConfigurations = TriggerFlowResult & {
+    __typename?: "FlowInvalidRunConfigurations";
+    error: Scalars["String"];
+    message: Scalars["String"];
+};
+
 export type FlowNotFound = CancelScheduledTasksResult &
     GetFlowResult & {
         __typename?: "FlowNotFound";
@@ -982,6 +1092,11 @@ export type FlowPreconditionsNotMet = SetFlowBatchingConfigResult &
         message: Scalars["String"];
         preconditions: Scalars["String"];
     };
+
+export type FlowRunConfiguration =
+    | { batching: BatchingConditionInput; compacting?: never; schedule?: never }
+    | { batching?: never; compacting: CompactingConditionInput; schedule?: never }
+    | { batching?: never; compacting?: never; schedule: ScheduleInput };
 
 export type FlowStartCondition =
     | FlowStartConditionBatching
@@ -1219,8 +1334,27 @@ export type MetadataManifestUnsupportedVersion = CommitResult &
         message: Scalars["String"];
     };
 
+export enum MqttQos {
+    AtLeastOnce = "AT_LEAST_ONCE",
+    AtMostOnce = "AT_MOST_ONCE",
+    ExactlyOnce = "EXACTLY_ONCE",
+}
+
+export type MqttTopicSubscription = {
+    __typename?: "MqttTopicSubscription";
+    path: Scalars["String"];
+    qos?: Maybe<MqttQos>;
+};
+
 export type Mutation = {
     __typename?: "Mutation";
+    /**
+     * Account-related functionality group.
+     *
+     * Accounts can be individual users or organizations registered in the
+     * system. This groups deals with their identities and permissions.
+     */
+    accounts: AccountsMut;
     /** Authentication and authorization-related functionality group */
     auth: AuthMut;
     /**
@@ -1792,11 +1926,10 @@ export type DatasetFlowCompactingMutation = {
                               message: string;
                               config: {
                                   __typename?: "FlowConfiguration";
-                                  compacting?: {
-                                      __typename?: "FlowConfigurationCompacting";
-                                      maxSliceSize: number;
-                                      maxSliceRecords: number;
-                                  } | null;
+                                  compacting?:
+                                      | { __typename?: "CompactingFull"; maxSliceSize: number; maxSliceRecords: number }
+                                      | { __typename?: "CompactingMetadataOnly"; recursive: boolean }
+                                      | null;
                               };
                           };
                 };
@@ -2243,6 +2376,7 @@ export type GetDatasetListFlowsQuery = {
                     fetch:
                         | ({ __typename?: "FetchStepContainer" } & FetchStepContainerDataFragment)
                         | ({ __typename?: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment)
+                        | { __typename?: "FetchStepMqtt" }
                         | ({ __typename?: "FetchStepUrl" } & FetchStepUrlDataFragment);
                 } | null;
                 currentTransform?: {
@@ -2322,6 +2456,7 @@ export type DatasetTriggerFlowMutation = {
                               actualDatasetKind: DatasetKind;
                               message: string;
                           }
+                        | { __typename?: "FlowInvalidRunConfigurations"; error: string; message: string }
                         | { __typename?: "FlowPreconditionsNotMet"; message: string }
                         | {
                               __typename?: "TriggerFlowSuccess";
@@ -2597,6 +2732,7 @@ export type SetPollingSourceEventFragment = {
     fetch:
         | ({ __typename?: "FetchStepContainer" } & FetchStepContainerDataFragment)
         | ({ __typename?: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment)
+        | ({ __typename?: "FetchStepMqtt" } & FetchStepMqttDataFragment)
         | ({ __typename?: "FetchStepUrl" } & FetchStepUrlDataFragment);
     read:
         | ({ __typename?: "ReadStepCsv" } & ReadStepCsvDataFragment)
@@ -2643,6 +2779,15 @@ export type FetchStepFilesGlobDataFragment = {
         | { __typename: "EventTimeSourceFromSystemTime" }
         | null;
     cache?: { __typename: "SourceCachingForever" } | null;
+};
+
+export type FetchStepMqttDataFragment = {
+    __typename?: "FetchStepMqtt";
+    host: string;
+    port: number;
+    username?: string | null;
+    password?: string | null;
+    topics: Array<{ __typename?: "MqttTopicSubscription"; path: string; qos?: MqttQos | null }>;
 };
 
 export type FetchStepUrlDataFragment = {
@@ -2752,6 +2897,7 @@ export type CurrentSourceFetchUrlFragment = {
         fetch:
             | { __typename?: "FetchStepContainer" }
             | { __typename?: "FetchStepFilesGlob" }
+            | { __typename?: "FetchStepMqtt"; host: string; port: number }
             | { __typename?: "FetchStepUrl"; url: string };
     } | null;
 };
@@ -3572,6 +3718,10 @@ export const CurrentSourceFetchUrlFragmentDoc = gql`
                 ... on FetchStepUrl {
                     url
                 }
+                ... on FetchStepMqtt {
+                    host
+                    port
+                }
             }
         }
     }
@@ -3734,6 +3884,18 @@ export const FetchStepContainerDataFragmentDoc = gql`
         }
     }
 `;
+export const FetchStepMqttDataFragmentDoc = gql`
+    fragment FetchStepMqttData on FetchStepMqtt {
+        host
+        port
+        username
+        password
+        topics {
+            path
+            qos
+        }
+    }
+`;
 export const ReadStepCsvDataFragmentDoc = gql`
     fragment ReadStepCsvData on ReadStepCsv {
         schema
@@ -3833,6 +3995,7 @@ export const SetPollingSourceEventFragmentDoc = gql`
             ...FetchStepUrlData
             ...FetchStepFilesGlobData
             ...FetchStepContainerData
+            ...FetchStepMqttData
         }
         read {
             ...ReadStepCsvData
@@ -3859,6 +4022,7 @@ export const SetPollingSourceEventFragmentDoc = gql`
     ${FetchStepUrlDataFragmentDoc}
     ${FetchStepFilesGlobDataFragmentDoc}
     ${FetchStepContainerDataFragmentDoc}
+    ${FetchStepMqttDataFragmentDoc}
     ${ReadStepCsvDataFragmentDoc}
     ${ReadStepJsonDataFragmentDoc}
     ${ReadStepNdJsonDataFragmentDoc}
@@ -4268,8 +4432,13 @@ export const DatasetFlowCompactingDocument = gql`
                                 message
                                 config {
                                     compacting {
-                                        maxSliceSize
-                                        maxSliceRecords
+                                        ... on CompactingFull {
+                                            maxSliceSize
+                                            maxSliceRecords
+                                        }
+                                        ... on CompactingMetadataOnly {
+                                            recursive
+                                        }
                                     }
                                 }
                             }
@@ -5078,6 +5247,10 @@ export const DatasetTriggerFlowDocument = gql`
                                 message
                             }
                             ... on FlowPreconditionsNotMet {
+                                message
+                            }
+                            ... on FlowInvalidRunConfigurations {
+                                error
                                 message
                             }
                         }

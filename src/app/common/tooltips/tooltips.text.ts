@@ -21,4 +21,10 @@ export class SetPollingSourceTooltipsTexts {
     public static readonly FROM_URL = "Pulls data from one of the supported sources by its URL.";
     public static readonly FROM_FILES_GLOB = "Uses glob operator to match files on the local file system.";
     public static readonly FROM_CONTAINER = "Runs the specified OCI container to fetch data from an arbitrary source.";
+    public static readonly FROM_MQTT = "Connects to an MQTT broker to fetch events from the specified topic.";
+    public static readonly MQTT_HOST = "Hostname of the MQTT broker.";
+    public static readonly MQTT_PORT = "Port of the MQTT broker.";
+    public static readonly MQTT_USERNAME = "Username to use for auth with the broker.";
+    public static readonly MQTT_PASSWORD = "Password to use for auth with the broker (can be templated).";
+    public static readonly MQTT_TOPICS = "List of topic subscription parameters.";
 }

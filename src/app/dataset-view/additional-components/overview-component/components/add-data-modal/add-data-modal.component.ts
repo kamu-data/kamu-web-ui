@@ -34,6 +34,7 @@ export class AddDataModalComponent extends BaseComponent implements OnInit {
                 const file: File = input.files[0];
 
                 interface UploadGetResponse {
+                    uploadId: string;
                     uploadUrl: string;
                     method: "POST" | "PUT";
                     headers: [string, string][];
@@ -46,31 +47,31 @@ export class AddDataModalComponent extends BaseComponent implements OnInit {
                     { headers: getHeaders },
                 );
 
-                uploadGet$.subscribe((response: UploadGetResponse) => {
+                uploadGet$.subscribe((uploadGetResponse: UploadGetResponse) => {
                     let uploadHeaders = new HttpHeaders();
-                    response.headers.forEach((header: [string, string]) => {
+                    uploadGetResponse.headers.forEach((header: [string, string]) => {
                         uploadHeaders = uploadHeaders.append(header[0], header[1]);
                     });
 
                     const formData = new FormData();
-                    response.fields.forEach((field: [string, string]) => {
+                    uploadGetResponse.fields.forEach((field: [string, string]) => {
                         formData.append(field[0], field[1]);
                     });
                     formData.append("file", file);
 
                     let upload$: Observable<object>;
-                    switch (response.method) {
+                    switch (uploadGetResponse.method) {
                         case "POST":
-                            upload$ = this.http.post(response.uploadUrl, formData, { headers: uploadHeaders });
+                            upload$ = this.http.post(uploadGetResponse.uploadUrl, formData, { headers: uploadHeaders });
                             break;
                         case "PUT":
-                            upload$ = this.http.put(response.uploadUrl, formData, { headers: uploadHeaders });
+                            upload$ = this.http.put(uploadGetResponse.uploadUrl, formData, { headers: uploadHeaders });
                             break;
                         default:
                             throw new Error("Unexpected upload method");
                     }
                     upload$.subscribe(() => {
-                        console.log("Upload done");
+                        console.log(`Upload with id ${uploadGetResponse.uploadId} done`);
                     });
                 });
             }

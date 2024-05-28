@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { NgbActiveModal, NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { BaseComponent } from "src/app/common/base.component";
 import { FileFromUrlModalComponent } from "../file-from-url-modal/file-from-url-modal.component";
@@ -6,6 +6,7 @@ import { MaybeNull } from "src/app/common/app.types";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { LocalStorageService } from "src/app/services/local-storage.service";
+import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-add-data-modal",
@@ -14,6 +15,8 @@ import { LocalStorageService } from "src/app/services/local-storage.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddDataModalComponent extends BaseComponent implements OnInit {
+    @Input() public datasetBasics: DatasetBasicsFragment;
+
     constructor(
         public activeModal: NgbActiveModal,
         private modalService: NgbModal,
@@ -72,6 +75,15 @@ export class AddDataModalComponent extends BaseComponent implements OnInit {
                     }
                     upload$.subscribe(() => {
                         console.log(`Upload with id ${uploadGetResponse.uploadId} done`);
+
+                        const ingest$: Observable<object> = this.http.post<object>(
+                            `http://localhost:8080/${this.datasetBasics.owner.accountName}/${this.datasetBasics.name}/ingest?uploadId=${uploadGetResponse.uploadId}&uploadFileName=${file.name}&uploadContentType=${file.type}`,
+                            null,
+                            { headers: getHeaders },
+                        );
+                        ingest$.subscribe((ingestResponse: object) => {
+                            console.log(`Ingest complete: ${JSON.stringify(ingestResponse)}`);
+                        });
                     });
                 });
             }

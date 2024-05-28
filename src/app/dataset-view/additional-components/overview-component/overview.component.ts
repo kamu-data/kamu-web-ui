@@ -282,7 +282,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         const modalRef: NgbModalRef = this.modalService.open(AddDataModalComponent);
         const modalRefInstance = modalRef.componentInstance as AddDataModalComponent;
         // modalRefInstance.currentWatermark = this.currentState?.overview.metadata.currentWatermark;
-        // modalRefInstance.datasetBasics = this.datasetBasics;
+        modalRefInstance.datasetBasics = this.datasetBasics;
     }
 
     public onFileDropped(files: FileList): void {

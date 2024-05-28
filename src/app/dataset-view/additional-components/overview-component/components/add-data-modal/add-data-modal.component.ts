@@ -42,10 +42,7 @@ export class AddDataModalComponent extends BaseComponent implements OnInit {
 
                 const getHeaders = { Authorization: `Bearer ${this.localStorageService.accessToken}` };
                 const uploadGet$: Observable<UploadGetResponse> = this.http.get<UploadGetResponse>(
-                    "http://localhost:8080/platform/file/upload?file_name=" +
-                        file.name +
-                        "&content_length=" +
-                        file.size,
+                    "http://localhost:8080/platform/file/upload?fileName=" + file.name + "&contentLength=" + file.size,
                     { headers: getHeaders },
                 );
 
@@ -69,6 +66,8 @@ export class AddDataModalComponent extends BaseComponent implements OnInit {
                         case "PUT":
                             upload$ = this.http.put(response.uploadUrl, formData, { headers: uploadHeaders });
                             break;
+                        default:
+                            throw new Error("Unexpected upload method");
                     }
                     upload$.subscribe(() => {
                         console.log("Upload done");

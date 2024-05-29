@@ -1922,6 +1922,102 @@ export type AccountByNameQuery = {
     accounts: { __typename?: "Accounts"; byName?: ({ __typename?: "Account" } & AccountFragment) | null };
 };
 
+export type AccountListDatasetsWithFlowsQueryVariables = Exact<{
+    name: Scalars["AccountName"];
+}>;
+
+export type AccountListDatasetsWithFlowsQuery = {
+    __typename?: "Query";
+    accounts: {
+        __typename?: "Accounts";
+        byName?: {
+            __typename?: "Account";
+            flows?: {
+                __typename?: "AccountFlows";
+                runs: {
+                    __typename?: "AccountFlowRuns";
+                    listDatasetsWithFlow: { __typename?: "DatasetConnection" } & DatasetConnectionDataFragment;
+                };
+            } | null;
+        } | null;
+    };
+};
+
+export type AccountListFlowsQueryVariables = Exact<{
+    name: Scalars["AccountName"];
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+    filters?: InputMaybe<AccountFlowFilters>;
+}>;
+
+export type AccountListFlowsQuery = {
+    __typename?: "Query";
+    accounts: {
+        __typename?: "Accounts";
+        byName?: {
+            __typename?: "Account";
+            flows?: {
+                __typename?: "AccountFlows";
+                runs: {
+                    __typename?: "AccountFlowRuns";
+                    listFlows: { __typename?: "FlowConnection" } & FlowConnectionDataFragment;
+                };
+            } | null;
+        } | null;
+    };
+};
+
+export type DatasetConnectionDataFragment = {
+    __typename?: "DatasetConnection";
+    nodes: Array<
+        {
+            __typename?: "Dataset";
+            metadata: {
+                __typename?: "DatasetMetadata";
+                currentPollingSource?: {
+                    __typename?: "SetPollingSource";
+                    fetch:
+                        | ({ __typename?: "FetchStepContainer" } & FetchStepContainerDataFragment)
+                        | ({ __typename?: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment)
+                        | { __typename?: "FetchStepMqtt" }
+                        | ({ __typename?: "FetchStepUrl" } & FetchStepUrlDataFragment);
+                } | null;
+                currentTransform?: {
+                    __typename?: "SetTransform";
+                    inputs: Array<{ __typename: "TransformInput" }>;
+                    transform: { __typename?: "TransformSql"; engine: string };
+                } | null;
+            };
+        } & DatasetBasicsFragment
+    >;
+};
+
+export type LoginMutationVariables = Exact<{
+    login_method: Scalars["String"];
+    login_credentials_json: Scalars["String"];
+}>;
+
+export type LoginMutation = {
+    __typename?: "Mutation";
+    auth: {
+        __typename?: "AuthMut";
+        login: {
+            __typename?: "LoginResponse";
+            accessToken: string;
+            account: { __typename?: "Account" } & AccountFragment;
+        };
+    };
+};
+
+export type FetchAccountDetailsMutationVariables = Exact<{
+    accessToken: Scalars["String"];
+}>;
+
+export type FetchAccountDetailsMutation = {
+    __typename?: "Mutation";
+    auth: { __typename?: "AuthMut"; accountDetails: { __typename?: "Account" } & AccountFragment };
+};
+
 export type DatasetFlowCompactingMutationVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     datasetFlowType: DatasetFlowType;
@@ -3229,32 +3325,6 @@ export type MetadataBlockFragment = {
         | ({ __typename: "SetVocab" } & SetVocabEventFragment);
 };
 
-export type LoginMutationVariables = Exact<{
-    login_method: Scalars["String"];
-    login_credentials_json: Scalars["String"];
-}>;
-
-export type LoginMutation = {
-    __typename?: "Mutation";
-    auth: {
-        __typename?: "AuthMut";
-        login: {
-            __typename?: "LoginResponse";
-            accessToken: string;
-            account: { __typename?: "Account" } & AccountFragment;
-        };
-    };
-};
-
-export type FetchAccountDetailsMutationVariables = Exact<{
-    accessToken: Scalars["String"];
-}>;
-
-export type FetchAccountDetailsMutation = {
-    __typename?: "Mutation";
-    auth: { __typename?: "AuthMut"; accountDetails: { __typename?: "Account" } & AccountFragment };
-};
-
 export type GetMetadataBlockQueryVariables = Exact<{
     accountName: Scalars["AccountName"];
     datasetName: Scalars["DatasetName"];
@@ -3462,16 +3532,6 @@ export type SearchDatasetsOverviewQuery = {
     };
 };
 
-export const AccountFragmentDoc = gql`
-    fragment Account on Account {
-        id
-        accountName
-        displayName
-        accountType
-        avatarUrl
-        isAdmin
-    }
-`;
 export const AccountBasicsFragmentDoc = gql`
     fragment AccountBasics on Account {
         id
@@ -3489,6 +3549,102 @@ export const DatasetBasicsFragmentDoc = gql`
         alias
     }
     ${AccountBasicsFragmentDoc}
+`;
+export const FetchStepUrlDataFragmentDoc = gql`
+    fragment FetchStepUrlData on FetchStepUrl {
+        url
+        eventTime {
+            ... on EventTimeSourceFromPath {
+                pattern
+                timestampFormat
+            }
+            ... on EventTimeSourceFromMetadata {
+                __typename
+            }
+            ... on EventTimeSourceFromSystemTime {
+                __typename
+            }
+        }
+        headers {
+            name
+            value
+        }
+        cache {
+            __typename
+        }
+    }
+`;
+export const FetchStepFilesGlobDataFragmentDoc = gql`
+    fragment FetchStepFilesGlobData on FetchStepFilesGlob {
+        path
+        eventTime {
+            ... on EventTimeSourceFromPath {
+                pattern
+                timestampFormat
+            }
+            ... on EventTimeSourceFromMetadata {
+                __typename
+            }
+            ... on EventTimeSourceFromSystemTime {
+                __typename
+            }
+        }
+        cache {
+            __typename
+        }
+        order
+    }
+`;
+export const FetchStepContainerDataFragmentDoc = gql`
+    fragment FetchStepContainerData on FetchStepContainer {
+        image
+        command
+        args
+        env {
+            name
+            value
+        }
+    }
+`;
+export const DatasetConnectionDataFragmentDoc = gql`
+    fragment DatasetConnectionData on DatasetConnection {
+        nodes {
+            ...DatasetBasics
+            metadata {
+                currentPollingSource {
+                    fetch {
+                        ...FetchStepUrlData
+                        ...FetchStepFilesGlobData
+                        ...FetchStepContainerData
+                    }
+                }
+                currentTransform {
+                    inputs {
+                        __typename
+                    }
+                    transform {
+                        ... on TransformSql {
+                            engine
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+    ${FetchStepUrlDataFragmentDoc}
+    ${FetchStepFilesGlobDataFragmentDoc}
+    ${FetchStepContainerDataFragmentDoc}
+`;
+export const AccountFragmentDoc = gql`
+    fragment Account on Account {
+        id
+        accountName
+        displayName
+        accountType
+        avatarUrl
+        isAdmin
+    }
 `;
 export const FlowOutcomeDataFragmentDoc = gql`
     fragment FlowOutcomeData on FlowOutcome {
@@ -3877,62 +4033,6 @@ export const DatasetCurrentInfoFragmentDoc = gql`
     fragment DatasetCurrentInfo on SetInfo {
         description
         keywords
-    }
-`;
-export const FetchStepUrlDataFragmentDoc = gql`
-    fragment FetchStepUrlData on FetchStepUrl {
-        url
-        eventTime {
-            ... on EventTimeSourceFromPath {
-                pattern
-                timestampFormat
-            }
-            ... on EventTimeSourceFromMetadata {
-                __typename
-            }
-            ... on EventTimeSourceFromSystemTime {
-                __typename
-            }
-        }
-        headers {
-            name
-            value
-        }
-        cache {
-            __typename
-        }
-    }
-`;
-export const FetchStepFilesGlobDataFragmentDoc = gql`
-    fragment FetchStepFilesGlobData on FetchStepFilesGlob {
-        path
-        eventTime {
-            ... on EventTimeSourceFromPath {
-                pattern
-                timestampFormat
-            }
-            ... on EventTimeSourceFromMetadata {
-                __typename
-            }
-            ... on EventTimeSourceFromSystemTime {
-                __typename
-            }
-        }
-        cache {
-            __typename
-        }
-        order
-    }
-`;
-export const FetchStepContainerDataFragmentDoc = gql`
-    fragment FetchStepContainerData on FetchStepContainer {
-        image
-        command
-        args
-        env {
-            name
-            value
-        }
     }
 `;
 export const FetchStepMqttDataFragmentDoc = gql`
@@ -4463,6 +4563,111 @@ export const AccountByNameDocument = gql`
 })
 export class AccountByNameGQL extends Apollo.Query<AccountByNameQuery, AccountByNameQueryVariables> {
     document = AccountByNameDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const AccountListDatasetsWithFlowsDocument = gql`
+    query accountListDatasetsWithFlows($name: AccountName!) {
+        accounts {
+            byName(name: $name) {
+                flows {
+                    runs {
+                        listDatasetsWithFlow {
+                            ...DatasetConnectionData
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${DatasetConnectionDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class AccountListDatasetsWithFlowsGQL extends Apollo.Query<
+    AccountListDatasetsWithFlowsQuery,
+    AccountListDatasetsWithFlowsQueryVariables
+> {
+    document = AccountListDatasetsWithFlowsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const AccountListFlowsDocument = gql`
+    query accountListFlows($name: AccountName!, $page: Int, $perPage: Int, $filters: AccountFlowFilters) {
+        accounts {
+            byName(name: $name) {
+                flows {
+                    runs {
+                        listFlows(page: $page, perPage: $perPage, filters: $filters) {
+                            ...FlowConnectionData
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${FlowConnectionDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class AccountListFlowsGQL extends Apollo.Query<AccountListFlowsQuery, AccountListFlowsQueryVariables> {
+    document = AccountListFlowsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const LoginDocument = gql`
+    mutation Login($login_method: String!, $login_credentials_json: String!) {
+        auth {
+            login(loginMethod: $login_method, loginCredentialsJson: $login_credentials_json) {
+                accessToken
+                account {
+                    ...Account
+                }
+            }
+        }
+    }
+    ${AccountFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class LoginGQL extends Apollo.Mutation<LoginMutation, LoginMutationVariables> {
+    document = LoginDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const FetchAccountDetailsDocument = gql`
+    mutation FetchAccountDetails($accessToken: String!) {
+        auth {
+            accountDetails(accessToken: $accessToken) {
+                ...Account
+            }
+        }
+    }
+    ${AccountFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class FetchAccountDetailsGQL extends Apollo.Mutation<
+    FetchAccountDetailsMutation,
+    FetchAccountDetailsMutationVariables
+> {
+    document = FetchAccountDetailsDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);
@@ -5354,54 +5559,6 @@ export class DatasetTriggerFlowGQL extends Apollo.Mutation<
     DatasetTriggerFlowMutationVariables
 > {
     document = DatasetTriggerFlowDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
-export const LoginDocument = gql`
-    mutation Login($login_method: String!, $login_credentials_json: String!) {
-        auth {
-            login(loginMethod: $login_method, loginCredentialsJson: $login_credentials_json) {
-                accessToken
-                account {
-                    ...Account
-                }
-            }
-        }
-    }
-    ${AccountFragmentDoc}
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class LoginGQL extends Apollo.Mutation<LoginMutation, LoginMutationVariables> {
-    document = LoginDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
-export const FetchAccountDetailsDocument = gql`
-    mutation FetchAccountDetails($accessToken: String!) {
-        auth {
-            accountDetails(accessToken: $accessToken) {
-                ...Account
-            }
-        }
-    }
-    ${AccountFragmentDoc}
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class FetchAccountDetailsGQL extends Apollo.Mutation<
-    FetchAccountDetailsMutation,
-    FetchAccountDetailsMutationVariables
-> {
-    document = FetchAccountDetailsDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

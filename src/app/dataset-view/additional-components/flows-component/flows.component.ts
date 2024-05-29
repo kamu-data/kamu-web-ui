@@ -8,6 +8,7 @@ import {
     Output,
 } from "@angular/core";
 import {
+    Account,
     DatasetBasicsFragment,
     DatasetFlowType,
     DatasetKind,
@@ -44,7 +45,7 @@ export class FlowsComponent extends BaseComponent implements OnInit {
     public allFlowsPaused$: Observable<MaybeUndefined<boolean>>;
     public filterByStatus: MaybeNull<FlowStatus> = null;
     public filterByInitiator = FilterByInitiatorEnum.All;
-    public searchByAccountName = "";
+    public searchByAccount: MaybeNull<Account>;
     public currentPage = 1;
     public overview: DatasetOverviewFragment;
     public readonly WIDGET_FLOW_RUNS_PER_PAGE: number = 150;
@@ -195,14 +196,16 @@ export class FlowsComponent extends BaseComponent implements OnInit {
                 filterOptions = { system: true };
             }
             this.getFlowConnectionData(this.currentPage, this.filterByStatus, filterOptions);
-            this.resetSearchByAccountName();
+            this.resetSearchByAccount();
         }
         this.filterByInitiator = initiator;
     }
 
-    public onSearchByAccountName(accountName: string): void {
-        this.getFlowConnectionData(this.currentPage, this.filterByStatus, { account: accountName });
-        this.searchByAccountName = accountName;
+    public onSearchByAccountName(account: MaybeNull<Account>): void {
+        if (account) {
+            this.getFlowConnectionData(this.currentPage, this.filterByStatus, { accounts: [account.id] });
+            this.searchByAccount = account;
+        }
     }
 
     public toggleStateDatasetFlowConfigs(paused: boolean): void {
@@ -235,8 +238,8 @@ export class FlowsComponent extends BaseComponent implements OnInit {
         this.getFlowConnectionData(this.currentPage, this.filterByStatus);
     }
 
-    private resetSearchByAccountName(): void {
-        this.searchByAccountName = "";
+    private resetSearchByAccount(): void {
+        this.searchByAccount = null;
     }
 
     public refreshFlow(): void {

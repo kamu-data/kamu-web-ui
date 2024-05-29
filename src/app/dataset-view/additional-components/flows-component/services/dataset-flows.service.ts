@@ -3,10 +3,12 @@ import { ToastrService } from "ngx-toastr";
 import { Observable, map } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
+    Account,
     CancelScheduledTasksMutation,
     DatasetAllFlowsPausedQuery,
     DatasetFlowFilters,
     DatasetFlowType,
+    DatasetFlowsInitiatorsQuery,
     DatasetMetadata,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsMutation,
@@ -124,6 +126,14 @@ export class DatasetFlowsService {
                 } else if (data.datasets.byId?.flows.runs.getFlow.__typename === "FlowNotFound") {
                     this.toastrService.error(data.datasets.byId.flows.runs.getFlow.message);
                 }
+            }),
+        );
+    }
+
+    public flowsInitiators(datasetId: string): Observable<Account[]> {
+        return this.datasetFlowApi.getDatasetFlowsInitiators(datasetId).pipe(
+            map((data: DatasetFlowsInitiatorsQuery) => {
+                return data.datasets.byId?.flows.runs.listFlowInitiators.nodes ?? [];
             }),
         );
     }

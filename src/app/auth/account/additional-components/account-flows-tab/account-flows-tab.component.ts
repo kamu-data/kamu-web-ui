@@ -11,7 +11,7 @@ import { DatasetFlowsService } from "src/app/dataset-view/additional-components/
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
-import { FlowStatus, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
+import { Account, FlowStatus, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-account-flows-tab",
@@ -24,7 +24,7 @@ export class AccountFlowsTabComponent extends BaseComponent implements OnInit {
     public nodes: FlowSummaryDataFragment[] = [mockFlowSummaryDataFragments[0]];
     public filterByStatus: MaybeNull<FlowStatus> = null;
     public filterByInitiator = FilterByInitiatorEnum.All;
-    public searchByAccountName = "";
+    public searchByAccount: MaybeNull<Account> = null;
     public currentPage = 1;
 
     constructor(

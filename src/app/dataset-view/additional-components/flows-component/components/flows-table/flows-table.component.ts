@@ -20,6 +20,7 @@ import {
     FetchStep,
     FlowStartCondition,
     DatasetBasicsFragment,
+    Account,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { MatTableDataSource } from "@angular/material/table";
@@ -30,6 +31,18 @@ import { DatasetFlowTableHelpers } from "./flows-table.helpers";
 import { FilterByInitiatorEnum, TransformDescriptionTableData } from "./flows-table.types";
 import { ModalService } from "src/app/components/modal/modal.service";
 import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
+import { DatasetFlowsService } from "../../services/dataset-flows.service";
+import {
+    OperatorFunction,
+    Observable,
+    debounceTime,
+    distinctUntilChanged,
+    tap,
+    switchMap,
+    map,
+    catchError,
+    of,
+} from "rxjs";
 
 @Component({
     selector: "app-flows-table",
@@ -41,7 +54,7 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     @Input() public nodes: FlowSummaryDataFragment[];
     @Input() public filterByStatus: MaybeNull<FlowStatus>;
     @Input() public filterByInitiator: FilterByInitiatorEnum;
-    @Input() public searchByAccountName: string;
+    @Input() public searchByAccount: MaybeNull<Account>;
     @Input() public searchByDatasetName: string = "";
     @Input() public fetchStep: MaybeUndefined<FetchStep>;
     @Input() public transformData: TransformDescriptionTableData;
@@ -49,7 +62,7 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     @Input() public accountView: boolean = false;
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
     @Output() public filterByInitiatorChange = new EventEmitter<FilterByInitiatorEnum>();
-    @Output() public searchByAccountNameChange = new EventEmitter<string>();
+    @Output() public searchByAccountNameChange = new EventEmitter<MaybeNull<Account>>();
     @Output() public cancelFlowChange = new EventEmitter<string>();
     public DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"];
 
@@ -60,10 +73,12 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     public readonly FilterByInitiatorEnum: typeof FilterByInitiatorEnum = FilterByInitiatorEnum;
     public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>();
     @ViewChildren(MatMenuTrigger) triggersMatMenu: QueryList<MatMenuTrigger>;
+    public searchingAccount: boolean = false;
 
     constructor(
         private navigationService: NavigationService,
         private modalService: ModalService,
+        private flowService: DatasetFlowsService,
     ) {}
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -106,7 +121,7 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     }
 
     public onSearchByAccountName(): void {
-        this.searchByAccountNameChange.emit(this.searchByAccountName);
+        this.searchByAccountNameChange.emit(this.searchByAccount);
         this.triggersMatMenu.get(1)?.closeMenu();
     }
 
@@ -161,4 +176,24 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     public dynamicImgSrc(status: FlowStatus): string {
         return DatasetFlowDetailsHelpers.dynamicImgSrc(status);
     }
+
+    public formatter(x: Account | string): string {
+        return typeof x !== "string" ? x.accountName : x;
+    }
+
+    public search: OperatorFunction<string, readonly Account[]> = (text$: Observable<string>) =>
+        text$.pipe(
+            debounceTime(200),
+            distinctUntilChanged(),
+            tap(() => (this.searchingAccount = true)),
+            switchMap((term) =>
+                this.flowService.flowsInitiators(this.datasetBasics.id).pipe(
+                    map((owners) => owners?.filter((v) => v.accountName.toLowerCase().indexOf(term) > -1).slice(0, 10)),
+                    catchError(() => {
+                        return of([]);
+                    }),
+                ),
+            ),
+            tap(() => (this.searchingAccount = false)),
+        );
 }

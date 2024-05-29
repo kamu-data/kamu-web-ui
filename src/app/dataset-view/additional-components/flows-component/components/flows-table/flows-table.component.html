@@ -112,18 +112,33 @@
                                 </mat-radio-button>
                             </mat-radio-group>
                         </div>
-                        <div class="select-item d-flex">
+                        <div class="select-item d-flex position-relative">
+                            <div class="container-spinner" *ngIf="searchingAccount">
+                                <mat-spinner [diameter]="15" color="primary" mode="indeterminate"></mat-spinner>
+                            </div>
                             <input
                                 class="form-control search-creator color-bg-subtle"
                                 type="text"
-                                [(ngModel)]="searchByAccountName"
+                                #searchAccount
+                                autocomplete="on"
+                                [(ngModel)]="searchByAccount"
                                 placeholder="Enter name..."
                                 data-test-id="searchByAccountName"
+                                [inputFormatter]="formatter"
+                                [ngbTypeahead]="search"
+                                [resultTemplate]="rt"
+                                [editable]="false"
                                 [disabled]="filterByInitiator !== FilterByInitiatorEnum.Account"
                             />
+                            <ng-template #rt let-r="result" let-t="term">
+                                <div class="d-flex flex-row" [style.width.px]="searchAccount.clientWidth - 28">
+                                    <img [src]="r.avatarUrl" class="me-2" style="width: 18px" />
+                                    <ngb-highlight [result]="r.accountName" [term]="t"></ngb-highlight>
+                                </div>
+                            </ng-template>
                             <button
                                 (click)="onSearchByAccountName()"
-                                [disabled]="!searchByAccountName"
+                                [disabled]="!searchByAccount"
                                 class="btn btn-sm btn-gray rounded-0 search-creator-button position-relative"
                             >
                                 <mat-icon class="text-muted fs-4 search-creator-icon">search</mat-icon>

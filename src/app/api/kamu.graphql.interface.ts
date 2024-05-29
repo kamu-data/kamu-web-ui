@@ -51,6 +51,28 @@ export type Account = {
     isAdmin: Scalars["Boolean"];
 };
 
+export type AccountConnection = {
+    __typename?: "AccountConnection";
+    edges: Array<AccountEdge>;
+    /** A shorthand for `edges { node { ... } }` */
+    nodes: Array<Account>;
+    /** Page information */
+    pageInfo: PageBasedInfo;
+    /** Approximate number of total nodes */
+    totalCount: Scalars["Int"];
+};
+
+export type AccountEdge = {
+    __typename?: "AccountEdge";
+    node: Account;
+};
+
+export type AccountFlowConfigs = {
+    __typename?: "AccountFlowConfigs";
+    /** Checks if all configs of all datasets in account are disabled */
+    allPaused: Scalars["Boolean"];
+};
+
 export type AccountFlowConfigsMut = {
     __typename?: "AccountFlowConfigsMut";
     pauseAccountDatasetFlows: Scalars["Boolean"];
@@ -66,6 +88,7 @@ export type AccountFlowFilters = {
 
 export type AccountFlowRuns = {
     __typename?: "AccountFlowRuns";
+    listDatasetsWithFlow: DatasetConnection;
     listFlows: FlowConnection;
 };
 
@@ -77,6 +100,8 @@ export type AccountFlowRunsListFlowsArgs = {
 
 export type AccountFlows = {
     __typename?: "AccountFlows";
+    /** Returns interface for flow configurations queries */
+    configs: AccountFlowConfigs;
     /** Returns interface for flow runs queries */
     runs: AccountFlowRuns;
 };
@@ -530,6 +555,7 @@ export type DatasetFlowFilters = {
 export type DatasetFlowRuns = {
     __typename?: "DatasetFlowRuns";
     getFlow: GetFlowResult;
+    listFlowInitiators: AccountConnection;
     listFlows: FlowConnection;
 };
 
@@ -1195,8 +1221,8 @@ export type GetFlowSuccess = GetFlowResult & {
 };
 
 export type InitiatorFilterInput =
-    | { account: Scalars["AccountName"]; system?: never }
-    | { account?: never; system: Scalars["Boolean"] };
+    | { accounts: Array<Scalars["AccountID"]>; system?: never }
+    | { accounts?: never; system: Scalars["Boolean"] };
 
 export type JdbcDesc = {
     __typename?: "JdbcDesc";
@@ -2350,6 +2376,31 @@ export type GetFlowByIdQuery = {
                                   >;
                               } & FlowSummaryDataFragment;
                           };
+                };
+            };
+        } | null;
+    };
+};
+
+export type DatasetFlowsInitiatorsQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+}>;
+
+export type DatasetFlowsInitiatorsQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            flows: {
+                __typename?: "DatasetFlows";
+                runs: {
+                    __typename?: "DatasetFlowRuns";
+                    listFlowInitiators: {
+                        __typename?: "AccountConnection";
+                        totalCount: number;
+                        nodes: Array<{ __typename?: "Account" } & AccountFragment>;
+                    };
                 };
             };
         } | null;
@@ -5120,6 +5171,39 @@ export const GetFlowByIdDocument = gql`
 })
 export class GetFlowByIdGQL extends Apollo.Query<GetFlowByIdQuery, GetFlowByIdQueryVariables> {
     document = GetFlowByIdDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetFlowsInitiatorsDocument = gql`
+    query datasetFlowsInitiators($datasetId: DatasetID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    runs {
+                        listFlowInitiators {
+                            totalCount
+                            nodes {
+                                ...Account
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${AccountFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetFlowsInitiatorsGQL extends Apollo.Query<
+    DatasetFlowsInitiatorsQuery,
+    DatasetFlowsInitiatorsQueryVariables
+> {
+    document = DatasetFlowsInitiatorsDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

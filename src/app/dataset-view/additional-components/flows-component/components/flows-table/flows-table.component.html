@@ -192,7 +192,7 @@
         </th>
         <td mat-cell *matCellDef="let element">
             <div class="d-flex align-items-center ps-3">
-                <a class="text-small">account.tokens.portfolio</a>
+                <a class="text-small">{{ datasetByIdForAccount(element.description.datasetId).name }}</a>
             </div>
         </td>
     </ng-container>
@@ -204,7 +204,9 @@
             <div class="pe-2">
                 <button mat-button [matMenuTriggerFor]="tableOptions"><svg-icon name="show-options"></svg-icon></button>
                 <mat-menu #tableOptions="matMenu" xPosition="before" [hasBackdrop]="true">
-                    <button mat-menu-item (click)="navigateToFlowDetaisView(element.flowId)">Details</button>
+                    <button mat-menu-item (click)="navigateToFlowDetaisView(element, element.description.datasetId)">
+                        Details
+                    </button>
                     <mat-divider></mat-divider>
                     <button
                         (click)="cancelFlow(element.flowId)"

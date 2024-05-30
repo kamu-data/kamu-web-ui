@@ -146,7 +146,7 @@
                 ></app-datasets-tab>
             </ng-container>
             <ng-container *ngIf="activeTab === AccountTabs.FLOWS">
-                <app-account-flows-tab></app-account-flows-tab>
+                <app-account-flows-tab [accountName]="user.accountName"></app-account-flows-tab>
             </ng-container>
             <ng-container *ngIf="activeTab === AccountTabs.ORGANIZATIONS">
                 <div>Organizations</div>

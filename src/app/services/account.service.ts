@@ -1,4 +1,11 @@
-import { AccountFragment } from "../api/kamu.graphql.interface";
+import { MaybeUndefined } from "src/app/common/app.types";
+import { AccountListDatasetsWithFlowsQuery, DatasetConnectionDataFragment } from "./../api/kamu.graphql.interface";
+import {
+    AccountFlowFilters,
+    AccountFragment,
+    AccountListFlowsQuery,
+    FlowConnectionDataFragment,
+} from "../api/kamu.graphql.interface";
 import { AccountApi } from "../api/account.api";
 import { Observable, forkJoin } from "rxjs";
 import { DatasetApi } from "../api/dataset.api";
@@ -7,6 +14,7 @@ import { DatasetsByAccountNameQuery } from "../api/kamu.graphql.interface";
 import { DatasetsAccountResponse } from "../interface/dataset.interface";
 import { map } from "rxjs/operators";
 import { MaybeNull } from "../common/app.types";
+import { FlowsTableData } from "../dataset-view/additional-components/flows-component/components/flows-table/flows-table.types";
 
 @Injectable({
     providedIn: "root",
@@ -46,6 +54,31 @@ export class AccountService {
                     }
                 });
                 return accountsByName;
+            }),
+        );
+    }
+
+    public getAccountListFlows(params: {
+        accounName: string;
+        page: number;
+        perPage: number;
+        filters: AccountFlowFilters;
+    }): Observable<FlowsTableData> {
+        return this.accountApi.fetchAccountListFlows(params).pipe(
+            map((data: AccountListFlowsQuery) => {
+                return {
+                    connectionData: data.accounts.byName?.flows?.runs.listFlows as FlowConnectionDataFragment,
+                    source: undefined,
+                    transformData: undefined,
+                };
+            }),
+        );
+    }
+
+    public getDatasetsWithFlows(accounName: string): Observable<MaybeUndefined<DatasetConnectionDataFragment>> {
+        return this.accountApi.accountDatasetsWithFlows(accounName).pipe(
+            map((data: AccountListDatasetsWithFlowsQuery) => {
+                return data.accounts.byName?.flows?.runs.listDatasetsWithFlow;
             }),
         );
     }

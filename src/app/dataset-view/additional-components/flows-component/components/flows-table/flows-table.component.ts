@@ -21,6 +21,8 @@ import {
     FlowStartCondition,
     DatasetBasicsFragment,
     Account,
+    DatasetConnectionDataFragment,
+    Dataset,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { MatTableDataSource } from "@angular/material/table";
@@ -60,6 +62,8 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     @Input() public transformData: TransformDescriptionTableData;
     @Input() public datasetBasics: DatasetBasicsFragment;
     @Input() public accountView: boolean = false;
+    @Input() public accountName?: string;
+    @Input() public accountDatasets?: MaybeUndefined<DatasetConnectionDataFragment>;
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
     @Output() public filterByInitiatorChange = new EventEmitter<FilterByInitiatorEnum>();
     @Output() public searchByAccountNameChange = new EventEmitter<MaybeNull<Account>>();
@@ -149,6 +153,11 @@ export class FlowsTableComponent implements OnInit, OnChanges {
         return DatasetFlowTableHelpers.waitingBlockText(startCondition);
     }
 
+    public datasetByIdForAccount(datasetId: string): Dataset {
+        const dataset = this.accountDatasets?.nodes.find((dataset) => dataset.id === datasetId) as Dataset;
+        return dataset;
+    }
+
     public cancelFlow(flowId: string): void {
         promiseWithCatch(
             this.modalService.error({
@@ -165,11 +174,11 @@ export class FlowsTableComponent implements OnInit, OnChanges {
         );
     }
 
-    public navigateToFlowDetaisView(flowId: string): void {
+    public navigateToFlowDetaisView(flow: FlowSummaryDataFragment, datasetId: string): void {
         this.navigationService.navigateToFlowDetails({
-            accountName: this.datasetBasics.owner.accountName,
-            datasetName: this.datasetBasics.name,
-            flowId,
+            accountName: this.accountView && this.accountName ? this.accountName : this.datasetBasics.owner.accountName,
+            datasetName: this.accountView ? this.datasetByIdForAccount(datasetId).name : this.datasetBasics.name,
+            flowId: flow.flowId,
         });
     }
 

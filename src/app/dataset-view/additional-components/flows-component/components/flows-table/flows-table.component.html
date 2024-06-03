@@ -48,7 +48,12 @@
                     </span>
                     <div
                         class="text-small d-block pe-4 truncate-sub-message"
-                        [innerHTML]="descriptionDatasetFlowSubMessage(element) | safeHtml"
+                        [innerHTML]="
+                            descriptionDatasetFlowSubMessage(
+                                element,
+                                datasetByIdForAccount(element.description.datasetId)
+                            ) | safeHtml
+                        "
                     ></div>
                 </div>
             </div>
@@ -192,7 +197,9 @@
         </th>
         <td mat-cell *matCellDef="let element">
             <div class="d-flex align-items-center ps-3">
-                <a class="text-small">{{ datasetByIdForAccount(element.description.datasetId).name }}</a>
+                <a (click)="onClickDataset(element.description.datasetId)" class="text-small">{{
+                    datasetByIdForAccount(element.description.datasetId).name
+                }}</a>
             </div>
         </td>
     </ng-container>

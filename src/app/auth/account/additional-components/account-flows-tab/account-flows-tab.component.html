@@ -1,39 +1,41 @@
 <div class="container-content mt-4">
     <ng-container *ngIf="flowConnectionData$ | async as flowConnectionData">
-        <div class="d-flex justify-content-between">
-            <div class="mt-4">
-                <h2 class="title">{{ flowConnectionData[0].connectionData.nodes.length }} Account flow run(s)</h2>
-                <div>
-                    <span class="text-muted"> Compute work associated with this account </span>
+        <ng-container *ngIf="flowConnectionData[0].connectionData.nodes.length">
+            <div class="d-flex justify-content-between">
+                <div class="mt-4">
+                    <h2 class="title">{{ flowConnectionData[0].connectionData.nodes.length }} Account flow run(s)</h2>
+                    <div>
+                        <span class="text-muted"> Compute work associated with this account </span>
+                    </div>
+                </div>
+                <div class="d-flex flex-column">
+                    <button
+                        class="border-1 px-3 py-2 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
+                        type="button"
+                    >
+                        Pause account flows
+                    </button>
                 </div>
             </div>
-            <div class="d-flex flex-column">
-                <button
-                    class="border-1 px-3 py-2 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
-                    type="button"
-                >
-                    Pause account flows
-                </button>
+            <div class="search-result-container__content my-4">
+                <app-tile-base-widget [nodes]="flowConnectionData[0].connectionData.nodes"></app-tile-base-widget>
             </div>
-        </div>
-        <div class="search-result-container__content my-4">
-            <app-tile-base-widget [nodes]="flowConnectionData[0].connectionData.nodes"></app-tile-base-widget>
-        </div>
-        <app-flows-table
-            [nodes]="flowConnectionData[0].connectionData.nodes"
-            [filterByStatus]="filterByStatus"
-            [searchByAccount]="searchByAccount"
-            [accountView]="true"
-            [accountName]="accountName"
-            [accountDatasets]="flowConnectionData[1]"
-        ></app-flows-table>
-        <div class="mt-50px">
-            <app-pagination
-                [currentPage]="flowConnectionData[0].connectionData.pageInfo.currentPage + 1"
-                [pageInfo]="flowConnectionData[0].connectionData.pageInfo"
-                (pageChangeEvent)="onPageChange($event)"
-            ></app-pagination>
-        </div>
+            <app-flows-table
+                [nodes]="flowConnectionData[0].connectionData.nodes"
+                [filterByStatus]="filterByStatus"
+                [searchByAccount]="searchByAccount"
+                [accountView]="true"
+                [accountName]="accountName"
+                [accountDatasets]="flowConnectionData[1]"
+            ></app-flows-table>
+            <div class="mt-50px">
+                <app-pagination
+                    [currentPage]="flowConnectionData[0].connectionData.pageInfo.currentPage + 1"
+                    [pageInfo]="flowConnectionData[0].connectionData.pageInfo"
+                    (pageChangeEvent)="onPageChange($event)"
+                ></app-pagination>
+            </div>
+        </ng-container>
     </ng-container>
 
     <ng-container *ngIf="flowConnectionData$ | async as flowConnectionData">

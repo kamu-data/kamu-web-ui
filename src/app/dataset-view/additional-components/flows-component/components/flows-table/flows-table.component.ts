@@ -116,7 +116,15 @@ export class FlowsTableComponent implements OnInit, OnChanges {
         return DatasetFlowTableHelpers.descriptionEndOfMessage(element);
     }
 
-    public descriptionDatasetFlowSubMessage(element: FlowSummaryDataFragment): string {
+    public descriptionDatasetFlowSubMessage(element: FlowSummaryDataFragment, dataset: Dataset): string {
+        if (this.accountView) {
+            this.fetchStep = dataset.metadata.currentPollingSource?.fetch;
+            const currentTransform = dataset.metadata.currentTransform;
+            this.transformData = {
+                numInputs: currentTransform?.inputs.length ?? 0,
+                engine: currentTransform?.transform.engine ?? "",
+            };
+        }
         return DatasetFlowTableHelpers.descriptionSubMessage(element, this.fetchStep, this.transformData);
     }
 
@@ -205,4 +213,13 @@ export class FlowsTableComponent implements OnInit, OnChanges {
             ),
             tap(() => (this.searchingAccount = false)),
         );
+
+    public onClickDataset(datasetId: string): void {
+        if (this.accountName) {
+            this.navigationService.navigateToDatasetView({
+                accountName: this.accountName,
+                datasetName: this.datasetByIdForAccount(datasetId).name,
+            });
+        }
+    }
 }

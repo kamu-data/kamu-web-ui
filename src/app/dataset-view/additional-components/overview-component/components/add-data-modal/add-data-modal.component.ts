@@ -37,7 +37,7 @@ export class AddDataModalComponent extends BaseComponent implements OnInit {
                 const file: File = input.files[0];
 
                 interface UploadPrepareResponse {
-                    uploadId: string;
+                    uploadToken: string;
                     uploadUrl: string;
                     method: "POST" | "PUT";
                     headers: [string, string][];
@@ -49,7 +49,9 @@ export class AddDataModalComponent extends BaseComponent implements OnInit {
                     "http://localhost:8080/platform/file/upload/prepare?fileName=" +
                         file.name +
                         "&contentLength=" +
-                        file.size,
+                        file.size +
+                        "&contentType=" +
+                        file.type,
                     null,
                     { headers: authHeaders },
                 );
@@ -82,10 +84,10 @@ export class AddDataModalComponent extends BaseComponent implements OnInit {
                             throw new Error("Unexpected upload method");
                     }
                     upload$.subscribe(() => {
-                        console.log(`Upload with id ${uploadPrepareResponse.uploadId} done`);
+                        console.log(`Upload with token ${uploadPrepareResponse.uploadToken} done`);
 
                         const ingest$: Observable<object> = this.http.post<object>(
-                            `http://localhost:8080/${this.datasetBasics.owner.accountName}/${this.datasetBasics.name}/ingest?uploadId=${uploadPrepareResponse.uploadId}&uploadFileName=${file.name}&uploadContentType=${file.type}`,
+                            `http://localhost:8080/${this.datasetBasics.owner.accountName}/${this.datasetBasics.name}/ingest?uploadToken=${uploadPrepareResponse.uploadToken}`,
                             null,
                             { headers: authHeaders },
                         );

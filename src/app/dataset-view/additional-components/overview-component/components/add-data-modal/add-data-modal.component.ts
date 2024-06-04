@@ -40,6 +40,7 @@ export class AddDataModalComponent extends BaseComponent implements OnInit {
                     uploadToken: string;
                     uploadUrl: string;
                     method: "POST" | "PUT";
+                    useMultipart: boolean;
                     headers: [string, string][];
                     fields: [string, string][];
                 }
@@ -62,21 +63,27 @@ export class AddDataModalComponent extends BaseComponent implements OnInit {
                         uploadHeaders = uploadHeaders.append(header[0], header[1]);
                     });
 
-                    const formData = new FormData();
-                    uploadPrepareResponse.fields.forEach((field: [string, string]) => {
-                        formData.append(field[0], field[1]);
-                    });
-                    formData.append("file", file);
+                    let bodyObject: FormData | File;
+                    if (uploadPrepareResponse.useMultipart) {
+                        const formData = new FormData();
+                        uploadPrepareResponse.fields.forEach((field: [string, string]) => {
+                            formData.append(field[0], field[1]);
+                        });
+                        formData.append("file", file);
+                        bodyObject = formData;
+                    } else {
+                        bodyObject = file;
+                    }
 
                     let upload$: Observable<object>;
                     switch (uploadPrepareResponse.method) {
                         case "POST":
-                            upload$ = this.http.post(uploadPrepareResponse.uploadUrl, formData, {
+                            upload$ = this.http.post(uploadPrepareResponse.uploadUrl, bodyObject, {
                                 headers: uploadHeaders,
                             });
                             break;
                         case "PUT":
-                            upload$ = this.http.put(uploadPrepareResponse.uploadUrl, formData, {
+                            upload$ = this.http.put(uploadPrepareResponse.uploadUrl, bodyObject, {
                                 headers: uploadHeaders,
                             });
                             break;

@@ -62,7 +62,7 @@ describe("FlowsTableComponent", () => {
         component.nodes = mockFlowSummaryDataFragments;
         component.filterByStatus = null;
         component.filterByInitiator = FilterByInitiatorEnum.All;
-        component.searchByAccountName = "";
+        component.searchByAccount = null;
         component.datasetBasics = mockDatasetBasicsRootFragment;
         component.fetchStep = {
             __typename: "FetchStepUrl",
@@ -94,7 +94,7 @@ describe("FlowsTableComponent", () => {
     it("should check search by accountName emits value", () => {
         const searchByAccountNameChangeSpy = spyOn(component.searchByAccountNameChange, "emit");
         component.onSearchByAccountName();
-        expect(searchByAccountNameChangeSpy).toHaveBeenCalledWith("");
+        expect(searchByAccountNameChangeSpy).toHaveBeenCalledWith(null);
     });
 
     it("should check table rows length", async () => {
@@ -126,7 +126,7 @@ describe("FlowsTableComponent", () => {
 
     it("should check navigate to flow details view", () => {
         const navigateToFlowDetailsSpy = spyOn(navigationService, "navigateToFlowDetails");
-        component.navigateToFlowDetaisView(MOCK_FLOW_ID);
+        component.navigateToFlowDetaisView(mockFlowSummaryDataFragments[0], MOCK_FLOW_ID);
         expect(navigateToFlowDetailsSpy).toHaveBeenCalledWith(jasmine.objectContaining({ flowId: MOCK_FLOW_ID }));
     });
 });

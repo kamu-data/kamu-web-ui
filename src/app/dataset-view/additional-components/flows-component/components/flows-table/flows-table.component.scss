@@ -136,9 +136,53 @@ td.mat-cell {
     width: 15px;
 }
 
-.container-spinner {
+.container-account-spinner {
     position: absolute;
     z-index: 100;
     top: 23px;
     right: 65px;
+}
+
+.container-dataset-spinner {
+    position: absolute;
+    z-index: 100;
+    top: 23px;
+    right: 107px;
+}
+
+.select-item-dataset {
+    padding: 16px;
+}
+
+::ng-deep .mat-radio-button {
+    .mat-radio-container {
+        .mat-radio-ripple {
+            position: relative;
+        }
+
+        .mat-radio-outer-circle {
+            height: 16px;
+            width: 16px;
+            top: 2px;
+        }
+
+        .mat-radio-inner-circle {
+            height: 16px;
+            width: 16px;
+            top: 2px;
+        }
+    }
+}
+
+::ng-deep {
+    .mat-menu-panel {
+        min-width: fit-content;
+    }
+}
+
+.truncate-dataset-search {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 300px;
 }

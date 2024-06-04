@@ -97,8 +97,8 @@
                 </button>
 
                 <mat-menu #creatorByMenu="matMenu" xPosition="after" [hasBackdrop]="true">
-                    <div (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" class="test">
-                        <div class="px-4 py-2 border-bottom d-flex align-items-center">
+                    <div (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+                        <div class="px-4 py-2 border-bottom d-flex align-items-center overflow-hidden">
                             <mat-radio-group
                                 color="primary"
                                 class="example-radio-group d-flex flex-column gap-2"
@@ -117,8 +117,8 @@
                                 </mat-radio-button>
                             </mat-radio-group>
                         </div>
-                        <div class="select-item d-flex position-relative">
-                            <div class="container-spinner" *ngIf="searchingAccount">
+                        <div *ngIf="!accountView" class="select-item d-flex position-relative">
+                            <div class="container-account-spinner" *ngIf="searchingAccount">
                                 <mat-spinner [diameter]="15" color="primary" mode="indeterminate"></mat-spinner>
                             </div>
                             <input
@@ -129,8 +129,8 @@
                                 [(ngModel)]="searchByAccount"
                                 placeholder="Enter name..."
                                 data-test-id="searchByAccountName"
-                                [inputFormatter]="formatter"
-                                [ngbTypeahead]="search"
+                                [inputFormatter]="accountFormatter"
+                                [ngbTypeahead]="searchByAccountName"
                                 [resultTemplate]="rt"
                                 [editable]="false"
                                 [disabled]="filterByInitiator !== FilterByInitiatorEnum.Account"
@@ -173,19 +173,51 @@
                     <span class="text-dark"> Dataset <span class="carpet"></span> </span>
                 </button>
 
-                <mat-menu #datasetName="matMenu" xPosition="after" [hasBackdrop]="true">
-                    <div (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" class="test">
-                        <div class="select-item d-flex">
+                <mat-menu #datasetName="matMenu" class="search-dataset" xPosition="before" [hasBackdrop]="true">
+                    <div
+                        (click)="$event.stopPropagation()"
+                        (keydown)="$event.stopPropagation()"
+                        [style.height.px]="
+                            searchByDataset
+                                ? SEARCH_DATASET_TYPEAHEAD_HEIGHT
+                                : SEARCH_DATASET_TYPEAHEAD_HEIGHT + searchAccountDatasetsLength * TYPEAHEAD_ITEM_HEIGHT
+                        "
+                    >
+                        <div class="d-flex select-item position-relative">
+                            <div class="container-dataset-spinner" *ngIf="searchingDataset">
+                                <mat-spinner [diameter]="15" color="primary" mode="indeterminate"></mat-spinner>
+                            </div>
                             <input
                                 class="form-control search-creator color-bg-subtle"
                                 type="text"
-                                [(ngModel)]="searchByDatasetName"
-                                placeholder="Enter dataset ..."
+                                [(ngModel)]="searchByDataset"
+                                placeholder="Enter dataset name ..."
+                                autocomplete="on"
+                                [inputFormatter]="datasetFormatter"
+                                [ngbTypeahead]="searchByDatasetName"
                                 data-test-id="searchByDatasetName"
+                                [editable]="false"
+                                [resultTemplate]="dr"
                             />
+                            <ng-template #dr let-r="result" let-t="term">
+                                <div class="d-flex flex-row">
+                                    <ngb-highlight
+                                        class="truncate-dataset-search"
+                                        [result]="r.name"
+                                        [term]="t"
+                                    ></ngb-highlight>
+                                </div>
+                            </ng-template>
                             <button
-                                (click)="onSearchByAccountName()"
-                                [disabled]="!searchByDatasetName"
+                                (click)="clearSearchByDatasetName()"
+                                [disabled]="!searchByDataset"
+                                class="btn btn-sm btn-gray rounded-0 position-relative"
+                            >
+                                Clear
+                            </button>
+                            <button
+                                [disabled]="!searchByDataset"
+                                (click)="onSearchByDatasetName()"
                                 class="btn btn-sm btn-gray rounded-0 search-creator-button position-relative"
                             >
                                 <mat-icon class="text-muted fs-4 search-creator-icon">search</mat-icon>
@@ -229,7 +261,8 @@
 
     <!-- Row shown when there is no matching data. -->
     <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell text-center" colspan="4">No data matching the filter</td>
+        <td *ngIf="!accountView" class="mat-cell text-center" colspan="4">No data matching the filter</td>
+        <td *ngIf="accountView" class="mat-cell text-center" colspan="5">No data matching the filter</td>
     </tr>
 
     <tr mat-header-row *matHeaderRowDef="DISPLAY_COLUMNS"></tr>

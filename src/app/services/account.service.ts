@@ -1,5 +1,4 @@
-import { MaybeUndefined } from "src/app/common/app.types";
-import { AccountListDatasetsWithFlowsQuery, DatasetConnectionDataFragment } from "./../api/kamu.graphql.interface";
+import { AccountListDatasetsWithFlowsQuery, Dataset } from "./../api/kamu.graphql.interface";
 import {
     AccountFlowFilters,
     AccountFragment,
@@ -75,10 +74,10 @@ export class AccountService {
         );
     }
 
-    public getDatasetsWithFlows(accounName: string): Observable<MaybeUndefined<DatasetConnectionDataFragment>> {
+    public getDatasetsWithFlows(accounName: string): Observable<Dataset[]> {
         return this.accountApi.accountDatasetsWithFlows(accounName).pipe(
             map((data: AccountListDatasetsWithFlowsQuery) => {
-                return data.accounts.byName?.flows?.runs.listDatasetsWithFlow;
+                return (data.accounts.byName?.flows?.runs.listDatasetsWithFlow.nodes as Dataset[]) ?? [];
             }),
         );
     }

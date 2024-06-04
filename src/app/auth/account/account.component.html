@@ -98,6 +98,7 @@
                     >
                         <mat-icon class="text-muted fs-4">add_task</mat-icon>
                         <span class="mx-2">Flows </span>
+                        <span class="counter">{{ (accountListFlows$ | async)?.connectionData?.totalCount }}</span>
                     </mat-button-toggle>
                     <mat-button-toggle
                         data-test-id="account-organizations-tab"

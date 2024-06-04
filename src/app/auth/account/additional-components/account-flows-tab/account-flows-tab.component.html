@@ -1,9 +1,9 @@
 <div class="container-content mt-4">
     <ng-container *ngIf="flowConnectionData$ | async as flowConnectionData">
-        <ng-container *ngIf="flowConnectionData[0].connectionData.nodes.length">
+        <ng-container *ngIf="flowConnectionData[2].connectionData.nodes.length">
             <div class="d-flex justify-content-between">
                 <div class="mt-4">
-                    <h2 class="title">{{ flowConnectionData[0].connectionData.nodes.length }} Account flow run(s)</h2>
+                    <h2 class="title">{{ flowConnectionData[2].connectionData.totalCount }} Account flow run(s)</h2>
                     <div>
                         <span class="text-muted"> Compute work associated with this account </span>
                     </div>
@@ -18,15 +18,19 @@
                 </div>
             </div>
             <div class="search-result-container__content my-4">
-                <app-tile-base-widget [nodes]="flowConnectionData[0].connectionData.nodes"></app-tile-base-widget>
+                <app-tile-base-widget [nodes]="flowConnectionData[2].connectionData.nodes"></app-tile-base-widget>
             </div>
             <app-flows-table
                 [nodes]="flowConnectionData[0].connectionData.nodes"
                 [filterByStatus]="filterByStatus"
-                [searchByAccount]="searchByAccount"
+                [filterByInitiator]="filterByInitiator"
+                [searchByDataset]="searchByDataset"
                 [accountView]="true"
                 [accountName]="accountName"
                 [accountDatasets]="flowConnectionData[1]"
+                (filterByStatusChange)="onChangeFilterByStatus($event)"
+                (filterByInitiatorChange)="onChangeFilterByInitiator($event)"
+                (searchByDatasetNameChange)="onSearchByDatasetName($event)"
             ></app-flows-table>
             <div class="mt-50px">
                 <app-pagination
@@ -39,6 +43,6 @@
     </ng-container>
 
     <ng-container *ngIf="flowConnectionData$ | async as flowConnectionData">
-        <div *ngIf="!flowConnectionData[0].connectionData.nodes.length">No flows related with account</div>
+        <div *ngIf="!flowConnectionData[2].connectionData.nodes.length">No flows related with account</div>
     </ng-container>
 </div>

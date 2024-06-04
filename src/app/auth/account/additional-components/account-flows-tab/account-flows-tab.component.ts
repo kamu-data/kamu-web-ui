@@ -3,17 +3,15 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } 
 import { Router } from "@angular/router";
 import { Observable, combineLatest } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
-import { FlowsTableData } from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table.types";
+import {
+    FilterByInitiatorEnum,
+    FlowsTableData,
+} from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table.types";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
-import {
-    Account,
-    DatasetConnectionDataFragment,
-    FlowStatus,
-    FlowSummaryDataFragment,
-} from "src/app/api/kamu.graphql.interface";
+import { Dataset, FlowStatus, FlowSummaryDataFragment, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
 import { AccountService } from "src/app/services/account.service";
 import { AccountTabs } from "../../account.constants";
 import ProjectLinks from "src/app/project-links";
@@ -30,12 +28,11 @@ export class AccountFlowsTabComponent extends BaseComponent implements OnInit {
     public tileWidgetData$: Observable<MaybeUndefined<FlowsTableData>>;
     public nodes: FlowSummaryDataFragment[] = [mockFlowSummaryDataFragments[0]];
     public filterByStatus: MaybeNull<FlowStatus> = null;
-    // public filterByInitiator = FilterByInitiatorEnum.All;
-    // public searchByAccount: MaybeNull<Account> = null;
-    public searchByAccount: MaybeNull<Account>;
+    public filterByInitiator = FilterByInitiatorEnum.All;
+    public searchByDataset: MaybeNull<Dataset> = null;
     public currentPage = 1;
 
-    public flowConnectionData$: Observable<[FlowsTableData, MaybeUndefined<DatasetConnectionDataFragment>]>;
+    public flowConnectionData$: Observable<[FlowsTableData, Dataset[], FlowsTableData]>;
     public readonly WIDGET_FLOW_RUNS_PER_PAGE: number = 150;
     public readonly TABLE_FLOW_RUNS_PER_PAGE: number = 15;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
@@ -57,15 +54,31 @@ export class AccountFlowsTabComponent extends BaseComponent implements OnInit {
         this.getTableDate(this.currentPage);
     }
 
-    private getTableDate(page: number): void {
+    private getTableDate(
+        page: number,
+        filterByStatus?: MaybeNull<FlowStatus>,
+        filterByInitiator?: MaybeNull<InitiatorFilterInput>,
+        datasetsIds?: string[],
+    ): void {
         this.flowConnectionData$ = combineLatest([
             this.accountService.getAccountListFlows({
                 accounName: this.accountName,
                 page: page - 1,
                 perPage: this.TABLE_FLOW_RUNS_PER_PAGE,
-                filters: { byFlowType: null, byStatus: this.filterByStatus, byInitiator: null, byDatasetIds: [] },
+                filters: {
+                    byFlowType: null,
+                    byStatus: filterByStatus,
+                    byInitiator: filterByInitiator,
+                    byDatasetIds: datasetsIds ?? [],
+                },
             }),
             this.accountService.getDatasetsWithFlows(this.accountName),
+            this.accountService.getAccountListFlows({
+                accounName: this.accountName,
+                page: 0,
+                perPage: this.WIDGET_FLOW_RUNS_PER_PAGE,
+                filters: { byFlowType: null, byStatus: null, byInitiator: null, byDatasetIds: [] },
+            }),
         ]);
     }
 
@@ -84,5 +97,26 @@ export class AccountFlowsTabComponent extends BaseComponent implements OnInit {
         }
         this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.FLOWS, page);
         this.getTableDate(page);
+    }
+
+    public onChangeFilterByStatus(status: MaybeNull<FlowStatus>): void {
+        this.getTableDate(this.currentPage, status);
+        this.filterByStatus = status;
+    }
+
+    public onChangeFilterByInitiator(initiator: FilterByInitiatorEnum): void {
+        if (initiator !== FilterByInitiatorEnum.Account) {
+            let filterOptions: MaybeNull<InitiatorFilterInput> = null;
+            if (initiator === FilterByInitiatorEnum.System) {
+                filterOptions = { system: true };
+            }
+            this.getTableDate(this.currentPage, this.filterByStatus, filterOptions);
+        }
+        this.filterByInitiator = initiator;
+    }
+
+    public onSearchByDatasetName(dataset: MaybeNull<Dataset>): void {
+        this.getTableDate(this.currentPage, this.filterByStatus, null, dataset ? [dataset.id] : []);
+        this.searchByDataset = dataset;
     }
 }

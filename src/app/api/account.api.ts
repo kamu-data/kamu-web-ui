@@ -65,10 +65,20 @@ export class AccountApi {
     }
 
     public accountDatasetsWithFlows(accounName: string): Observable<AccountListDatasetsWithFlowsQuery> {
-        return this.accountListDatasetsWithFlows.watch({ name: accounName }, noCacheFetchPolicy).valueChanges.pipe(
-            map((result: ApolloQueryResult<AccountListDatasetsWithFlowsQuery>) => {
-                return result.data;
-            }),
-        );
+        return this.accountListDatasetsWithFlows
+            .watch(
+                { name: accounName },
+                {
+                    ...noCacheFetchPolicy,
+                    context: {
+                        skipLoading: true,
+                    },
+                },
+            )
+            .valueChanges.pipe(
+                map((result: ApolloQueryResult<AccountListDatasetsWithFlowsQuery>) => {
+                    return result.data;
+                }),
+            );
     }
 }

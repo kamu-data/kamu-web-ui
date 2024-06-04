@@ -1,7 +1,7 @@
 import { BaseComponent } from "src/app/common/base.component";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { Observable, combineLatest } from "rxjs";
+import { Observable, combineLatest, switchMap, timer } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import {
     FilterByInitiatorEnum,
@@ -60,26 +60,30 @@ export class AccountFlowsTabComponent extends BaseComponent implements OnInit {
         filterByInitiator?: MaybeNull<InitiatorFilterInput>,
         datasetsIds?: string[],
     ): void {
-        this.flowConnectionData$ = combineLatest([
-            this.accountService.getAccountListFlows({
-                accounName: this.accountName,
-                page: page - 1,
-                perPage: this.TABLE_FLOW_RUNS_PER_PAGE,
-                filters: {
-                    byFlowType: null,
-                    byStatus: filterByStatus,
-                    byInitiator: filterByInitiator,
-                    byDatasetIds: datasetsIds ?? [],
-                },
-            }),
-            this.accountService.getDatasetsWithFlows(this.accountName),
-            this.accountService.getAccountListFlows({
-                accounName: this.accountName,
-                page: 0,
-                perPage: this.WIDGET_FLOW_RUNS_PER_PAGE,
-                filters: { byFlowType: null, byStatus: null, byInitiator: null, byDatasetIds: [] },
-            }),
-        ]);
+        this.flowConnectionData$ = timer(0, 10000).pipe(
+            switchMap(() =>
+                combineLatest([
+                    this.accountService.getAccountListFlows({
+                        accounName: this.accountName,
+                        page: page - 1,
+                        perPage: this.TABLE_FLOW_RUNS_PER_PAGE,
+                        filters: {
+                            byFlowType: null,
+                            byStatus: filterByStatus,
+                            byInitiator: filterByInitiator,
+                            byDatasetIds: datasetsIds ?? [],
+                        },
+                    }),
+                    this.accountService.getDatasetsWithFlows(this.accountName),
+                    this.accountService.getAccountListFlows({
+                        accounName: this.accountName,
+                        page: 0,
+                        perPage: this.WIDGET_FLOW_RUNS_PER_PAGE,
+                        filters: { byFlowType: null, byStatus: null, byInitiator: null, byDatasetIds: [] },
+                    }),
+                ]),
+            ),
+        );
     }
 
     public getPageFromUrl(): void {

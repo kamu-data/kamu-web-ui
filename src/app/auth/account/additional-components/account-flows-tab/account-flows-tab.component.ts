@@ -119,4 +119,9 @@ export class AccountFlowsTabComponent extends BaseComponent implements OnInit {
         this.getTableDate(this.currentPage, this.filterByStatus, null, dataset ? [dataset.id] : []);
         this.searchByDataset = dataset;
     }
+
+    public refreshFlow(): void {
+        this.getPageFromUrl();
+        this.getTableDate(this.currentPage);
+    }
 }

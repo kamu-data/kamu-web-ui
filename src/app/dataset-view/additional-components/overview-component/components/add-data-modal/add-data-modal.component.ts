@@ -36,7 +36,7 @@ export class AddDataModalComponent extends BaseComponent implements OnInit {
             } else {
                 const file: File = input.files[0];
 
-                interface UploadGetResponse {
+                interface UploadPrepareResponse {
                     uploadId: string;
                     uploadUrl: string;
                     method: "POST" | "PUT";
@@ -44,42 +44,50 @@ export class AddDataModalComponent extends BaseComponent implements OnInit {
                     fields: [string, string][];
                 }
 
-                const getHeaders = { Authorization: `Bearer ${this.localStorageService.accessToken}` };
-                const uploadGet$: Observable<UploadGetResponse> = this.http.get<UploadGetResponse>(
-                    "http://localhost:8080/platform/file/upload?fileName=" + file.name + "&contentLength=" + file.size,
-                    { headers: getHeaders },
+                const authHeaders = { Authorization: `Bearer ${this.localStorageService.accessToken}` };
+                const uploadPrepare$: Observable<UploadPrepareResponse> = this.http.post<UploadPrepareResponse>(
+                    "http://localhost:8080/platform/file/upload/prepare?fileName=" +
+                        file.name +
+                        "&contentLength=" +
+                        file.size,
+                    null,
+                    { headers: authHeaders },
                 );
 
-                uploadGet$.subscribe((uploadGetResponse: UploadGetResponse) => {
+                uploadPrepare$.subscribe((uploadPrepareResponse: UploadPrepareResponse) => {
                     let uploadHeaders = new HttpHeaders();
-                    uploadGetResponse.headers.forEach((header: [string, string]) => {
+                    uploadPrepareResponse.headers.forEach((header: [string, string]) => {
                         uploadHeaders = uploadHeaders.append(header[0], header[1]);
                     });
 
                     const formData = new FormData();
-                    uploadGetResponse.fields.forEach((field: [string, string]) => {
+                    uploadPrepareResponse.fields.forEach((field: [string, string]) => {
                         formData.append(field[0], field[1]);
                     });
                     formData.append("file", file);
 
                     let upload$: Observable<object>;
-                    switch (uploadGetResponse.method) {
+                    switch (uploadPrepareResponse.method) {
                         case "POST":
-                            upload$ = this.http.post(uploadGetResponse.uploadUrl, formData, { headers: uploadHeaders });
+                            upload$ = this.http.post(uploadPrepareResponse.uploadUrl, formData, {
+                                headers: uploadHeaders,
+                            });
                             break;
                         case "PUT":
-                            upload$ = this.http.put(uploadGetResponse.uploadUrl, formData, { headers: uploadHeaders });
+                            upload$ = this.http.put(uploadPrepareResponse.uploadUrl, formData, {
+                                headers: uploadHeaders,
+                            });
                             break;
                         default:
                             throw new Error("Unexpected upload method");
                     }
                     upload$.subscribe(() => {
-                        console.log(`Upload with id ${uploadGetResponse.uploadId} done`);
+                        console.log(`Upload with id ${uploadPrepareResponse.uploadId} done`);
 
                         const ingest$: Observable<object> = this.http.post<object>(
-                            `http://localhost:8080/${this.datasetBasics.owner.accountName}/${this.datasetBasics.name}/ingest?uploadId=${uploadGetResponse.uploadId}&uploadFileName=${file.name}&uploadContentType=${file.type}`,
+                            `http://localhost:8080/${this.datasetBasics.owner.accountName}/${this.datasetBasics.name}/ingest?uploadId=${uploadPrepareResponse.uploadId}&uploadFileName=${file.name}&uploadContentType=${file.type}`,
                             null,
-                            { headers: getHeaders },
+                            { headers: authHeaders },
                         );
                         ingest$.subscribe((ingestResponse: object) => {
                             console.log(`Ingest complete: ${JSON.stringify(ingestResponse)}`);

@@ -1922,6 +1922,24 @@ export type AccountByNameQuery = {
     accounts: { __typename?: "Accounts"; byName?: ({ __typename?: "Account" } & AccountFragment) | null };
 };
 
+export type AccountDatasetFlowsPausedQueryVariables = Exact<{
+    accountName: Scalars["AccountName"];
+}>;
+
+export type AccountDatasetFlowsPausedQuery = {
+    __typename?: "Query";
+    accounts: {
+        __typename?: "Accounts";
+        byName?: {
+            __typename?: "Account";
+            flows?: {
+                __typename?: "AccountFlows";
+                configs: { __typename?: "AccountFlowConfigs"; allPaused: boolean };
+            } | null;
+        } | null;
+    };
+};
+
 export type AccountListDatasetsWithFlowsQueryVariables = Exact<{
     name: Scalars["AccountName"];
 }>;
@@ -1963,6 +1981,42 @@ export type AccountListFlowsQuery = {
                     listFlows: { __typename?: "FlowConnection" } & FlowConnectionDataFragment;
                 };
             } | null;
+        } | null;
+    };
+};
+
+export type AccountPauseFlowsMutationVariables = Exact<{
+    accountName: Scalars["AccountName"];
+}>;
+
+export type AccountPauseFlowsMutation = {
+    __typename?: "Mutation";
+    accounts: {
+        __typename?: "AccountsMut";
+        byName?: {
+            __typename?: "AccountMut";
+            flows: {
+                __typename?: "AccountFlowsMut";
+                configs: { __typename?: "AccountFlowConfigsMut"; pauseAccountDatasetFlows: boolean };
+            };
+        } | null;
+    };
+};
+
+export type AccountResumeFlowsMutationVariables = Exact<{
+    accountName: Scalars["AccountName"];
+}>;
+
+export type AccountResumeFlowsMutation = {
+    __typename?: "Mutation";
+    accounts: {
+        __typename?: "AccountsMut";
+        byName?: {
+            __typename?: "AccountMut";
+            flows: {
+                __typename?: "AccountFlowsMut";
+                configs: { __typename?: "AccountFlowConfigsMut"; resumeAccountDatasetFlows: boolean };
+            };
         } | null;
     };
 };
@@ -4568,6 +4622,33 @@ export class AccountByNameGQL extends Apollo.Query<AccountByNameQuery, AccountBy
         super(apollo);
     }
 }
+export const AccountDatasetFlowsPausedDocument = gql`
+    query accountDatasetFlowsPaused($accountName: AccountName!) {
+        accounts {
+            byName(name: $accountName) {
+                flows {
+                    configs {
+                        allPaused
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class AccountDatasetFlowsPausedGQL extends Apollo.Query<
+    AccountDatasetFlowsPausedQuery,
+    AccountDatasetFlowsPausedQueryVariables
+> {
+    document = AccountDatasetFlowsPausedDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
 export const AccountListDatasetsWithFlowsDocument = gql`
     query accountListDatasetsWithFlows($name: AccountName!) {
         accounts {
@@ -4620,6 +4701,60 @@ export const AccountListFlowsDocument = gql`
 })
 export class AccountListFlowsGQL extends Apollo.Query<AccountListFlowsQuery, AccountListFlowsQueryVariables> {
     document = AccountListFlowsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const AccountPauseFlowsDocument = gql`
+    mutation accountPauseFlows($accountName: AccountName!) {
+        accounts {
+            byName(accountName: $accountName) {
+                flows {
+                    configs {
+                        pauseAccountDatasetFlows
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class AccountPauseFlowsGQL extends Apollo.Mutation<
+    AccountPauseFlowsMutation,
+    AccountPauseFlowsMutationVariables
+> {
+    document = AccountPauseFlowsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const AccountResumeFlowsDocument = gql`
+    mutation accountResumeFlows($accountName: AccountName!) {
+        accounts {
+            byName(accountName: $accountName) {
+                flows {
+                    configs {
+                        resumeAccountDatasetFlows
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class AccountResumeFlowsGQL extends Apollo.Mutation<
+    AccountResumeFlowsMutation,
+    AccountResumeFlowsMutationVariables
+> {
+    document = AccountResumeFlowsDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

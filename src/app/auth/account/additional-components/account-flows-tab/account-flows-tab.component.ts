@@ -1,6 +1,5 @@
 import { BaseComponent } from "src/app/common/base.component";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
+import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { Observable, combineLatest, switchMap, timer } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import {
@@ -9,7 +8,6 @@ import {
     FlowsTableData,
 } from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table.types";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
-import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import { Dataset, FlowStatus, FlowSummaryDataFragment, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
@@ -33,7 +31,7 @@ export class AccountFlowsTabComponent extends BaseComponent implements OnInit {
     public searchByDataset: MaybeNull<Dataset> = null;
     public currentPage = 1;
 
-    public flowConnectionData$: Observable<[FlowsTableData, Dataset[], FlowsTableData]>;
+    public flowConnectionData$: Observable<[FlowsTableData, Dataset[], FlowsTableData, MaybeUndefined<boolean>]>;
     public readonly WIDGET_FLOW_RUNS_PER_PAGE: number = 150;
     public readonly TABLE_FLOW_RUNS_PER_PAGE: number = 15;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
@@ -41,10 +39,7 @@ export class AccountFlowsTabComponent extends BaseComponent implements OnInit {
 
     constructor(
         private flowsService: DatasetFlowsService,
-        private router: Router,
         private navigationService: NavigationService,
-        private cdr: ChangeDetectorRef,
-        private datasetSubsService: DatasetSubscriptionsService,
         private accountService: AccountService,
     ) {
         super();
@@ -82,6 +77,7 @@ export class AccountFlowsTabComponent extends BaseComponent implements OnInit {
                         perPage: this.WIDGET_FLOW_RUNS_PER_PAGE,
                         filters: { byFlowType: null, byStatus: null, byInitiator: null, byDatasetIds: [] },
                     }),
+                    this.accountService.accountAllFlowsPaused(this.accountName),
                 ]),
             ),
         );
@@ -145,5 +141,16 @@ export class AccountFlowsTabComponent extends BaseComponent implements OnInit {
                     }
                 }),
         );
+    }
+
+    public toggleStateAccountFlowConfigs(paused: boolean): void {
+        if (!paused) {
+            this.accountService.accountPauseFlows(this.accountName).subscribe();
+        } else {
+            this.accountService.accountResumeFlows(this.accountName).subscribe();
+        }
+        setTimeout(() => {
+            this.refreshFlow();
+        }, this.TIMEOUT_REFRESH_FLOW);
     }
 }

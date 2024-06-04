@@ -29,7 +29,7 @@ import { promiseWithCatch } from "src/app/common/app.helpers";
 import { MatMenuTrigger } from "@angular/material/menu";
 import { MatRadioChange } from "@angular/material/radio";
 import { DatasetFlowTableHelpers } from "./flows-table.helpers";
-import { FilterByInitiatorEnum, TransformDescriptionTableData } from "./flows-table.types";
+import { CancelFlowArgs, FilterByInitiatorEnum, TransformDescriptionTableData } from "./flows-table.types";
 import { ModalService } from "src/app/components/modal/modal.service";
 import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
 import { DatasetFlowsService } from "../../services/dataset-flows.service";
@@ -68,7 +68,7 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     @Output() public filterByInitiatorChange = new EventEmitter<FilterByInitiatorEnum>();
     @Output() public searchByAccountNameChange = new EventEmitter<MaybeNull<Account>>();
     @Output() public searchByDatasetNameChange = new EventEmitter<MaybeNull<Dataset>>();
-    @Output() public cancelFlowChange = new EventEmitter<string>();
+    @Output() public cancelFlowChange = new EventEmitter<CancelFlowArgs>();
     public DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"];
     public INITIATORS: string[] = Object.keys(FilterByInitiatorEnum);
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
@@ -178,7 +178,7 @@ export class FlowsTableComponent implements OnInit, OnChanges {
         return dataset;
     }
 
-    public cancelFlow(flowId: string): void {
+    public cancelFlow(flowId: string, datasetId: string): void {
         promiseWithCatch(
             this.modalService.error({
                 title: "Cancel flow",
@@ -187,7 +187,7 @@ export class FlowsTableComponent implements OnInit, OnChanges {
                 noButtonText: "Cancel",
                 handler: (ok) => {
                     if (ok) {
-                        this.cancelFlowChange.emit(flowId);
+                        this.cancelFlowChange.emit({ flowId, datasetId });
                     }
                 },
             }),

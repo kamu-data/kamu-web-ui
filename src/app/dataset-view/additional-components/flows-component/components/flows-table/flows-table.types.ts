@@ -17,3 +17,8 @@ export interface TransformDescriptionTableData {
     numInputs: number;
     engine: string;
 }
+
+export interface CancelFlowArgs {
+    flowId: string;
+    datasetId: string;
+}

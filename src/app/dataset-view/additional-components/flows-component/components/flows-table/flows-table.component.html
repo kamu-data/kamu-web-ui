@@ -248,7 +248,7 @@
                     </button>
                     <mat-divider></mat-divider>
                     <button
-                        (click)="cancelFlow(element.flowId)"
+                        (click)="cancelFlow(element.flowId, element.description.datasetId)"
                         mat-menu-item
                         [disabled]="element.status === FlowStatus.Finished"
                     >

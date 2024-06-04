@@ -26,7 +26,7 @@ import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
-import { FilterByInitiatorEnum, FlowsTableData } from "./components/flows-table/flows-table.types";
+import { CancelFlowArgs, FilterByInitiatorEnum, FlowsTableData } from "./components/flows-table/flows-table.types";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 
@@ -247,12 +247,12 @@ export class FlowsComponent extends BaseComponent implements OnInit {
         this.getFlowConnectionData(this.currentPage, this.filterByStatus);
     }
 
-    public onCancelFlow(flowId: string): void {
+    public onCancelFlow(params: CancelFlowArgs): void {
         this.trackSubscription(
             this.flowsService
                 .cancelScheduledTasks({
-                    datasetId: this.datasetBasics.id,
-                    flowId,
+                    datasetId: params.datasetId,
+                    flowId: params.flowId,
                 })
                 .subscribe((success: boolean) => {
                     if (success) {

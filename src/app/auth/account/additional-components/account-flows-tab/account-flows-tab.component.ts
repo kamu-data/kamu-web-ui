@@ -4,6 +4,7 @@ import { Router } from "@angular/router";
 import { Observable, combineLatest, switchMap, timer } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import {
+    CancelFlowArgs,
     FilterByInitiatorEnum,
     FlowsTableData,
 } from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table.types";
@@ -127,5 +128,22 @@ export class AccountFlowsTabComponent extends BaseComponent implements OnInit {
     public refreshFlow(): void {
         this.getPageFromUrl();
         this.getTableDate(this.currentPage);
+    }
+
+    public onCancelFlow(params: CancelFlowArgs): void {
+        this.trackSubscription(
+            this.flowsService
+                .cancelScheduledTasks({
+                    datasetId: params.datasetId,
+                    flowId: params.flowId,
+                })
+                .subscribe((success: boolean) => {
+                    if (success) {
+                        setTimeout(() => {
+                            this.refreshFlow();
+                        }, this.TIMEOUT_REFRESH_FLOW);
+                    }
+                }),
+        );
     }
 }

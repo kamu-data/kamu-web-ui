@@ -9,6 +9,7 @@ import { MaybeNull } from "../common/app.types";
 import { AccountFragment } from "../api/kamu.graphql.interface";
 import { mockDatasetsByAccountNameQuery } from "../api/mock/dataset.mock";
 import { DatasetsAccountResponse } from "../interface/dataset.interface";
+import { ToastrModule } from "ngx-toastr";
 
 describe("AccountService", () => {
     let service: AccountService;
@@ -17,7 +18,7 @@ describe("AccountService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [ApolloTestingModule],
+            imports: [ApolloTestingModule, ToastrModule.forRoot()],
         });
         service = TestBed.inject(AccountService);
         accountApi = TestBed.inject(AccountApi);

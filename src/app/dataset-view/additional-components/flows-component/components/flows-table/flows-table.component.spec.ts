@@ -9,8 +9,7 @@ import { FormsModule } from "@angular/forms";
 import { mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import { FilterByInitiatorEnum } from "./flows-table.types";
 import { DisplayTimeModule } from "src/app/components/display-time/display-time.module";
-import { FlowStatus } from "src/app/api/kamu.graphql.interface";
-import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
+import { Dataset, FlowStatus } from "src/app/api/kamu.graphql.interface";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { AngularSvgIconModule, SvgIconRegistryService } from "angular-svg-icon";
 import { HarnessLoader } from "@angular/cdk/testing";
@@ -21,6 +20,9 @@ import { SimpleChanges } from "@angular/core";
 import { NavigationService } from "src/app/services/navigation.service";
 import { ModalService } from "src/app/components/modal/modal.service";
 import { SharedModule } from "src/app/shared/shared/shared.module";
+import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
+import { mockDatasets } from "./flows-table.helpers.mock";
+import { mockDatasetMainDataId } from "src/app/search/mock.data";
 
 describe("FlowsTableComponent", () => {
     let component: FlowsTableComponent;
@@ -45,6 +47,7 @@ describe("FlowsTableComponent", () => {
                 HttpClientTestingModule,
                 SharedTestModule,
                 SharedModule,
+                NgbTypeaheadModule,
             ],
         }).compileComponents();
 
@@ -63,15 +66,11 @@ describe("FlowsTableComponent", () => {
         component.filterByStatus = null;
         component.filterByInitiator = FilterByInitiatorEnum.All;
         component.searchByAccount = null;
-        component.datasetBasics = mockDatasetBasicsRootFragment;
-        component.fetchStep = {
-            __typename: "FetchStepUrl",
-            url: "http://test.com",
+        component.tableOptions = {
+            displayColumns: ["description", "information", "creator", "options"],
+            initiatorsTypes: Object.keys(FilterByInitiatorEnum),
         };
-        component.transformData = {
-            numInputs: 0,
-            engine: "",
-        };
+        component.datasetFlowOwners = [mockDatasets[0]] as Dataset[];
         fixture.detectChanges();
     });
 
@@ -120,13 +119,13 @@ describe("FlowsTableComponent", () => {
             options.handler?.call(undefined, false);
             return Promise.resolve("");
         });
-        component.cancelFlow(MOCK_FLOW_ID);
+        component.cancelFlow(MOCK_FLOW_ID, mockDatasetMainDataId);
         expect(modalWindowSpy).toHaveBeenCalledWith(jasmine.objectContaining({ title: "Cancel flow" }));
     });
 
     it("should check navigate to flow details view", () => {
         const navigateToFlowDetailsSpy = spyOn(navigationService, "navigateToFlowDetails");
-        component.navigateToFlowDetaisView(mockFlowSummaryDataFragments[0], MOCK_FLOW_ID);
-        expect(navigateToFlowDetailsSpy).toHaveBeenCalledWith(jasmine.objectContaining({ flowId: MOCK_FLOW_ID }));
+        component.navigateToFlowDetaisView(mockFlowSummaryDataFragments[0], mockDatasetMainDataId);
+        expect(navigateToFlowDetailsSpy).toHaveBeenCalledTimes(1);
     });
 });

@@ -25,6 +25,8 @@ import { MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
 import { AccountNotFoundError } from "src/app/common/errors";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { ToastrModule } from "ngx-toastr";
+import { AccountFlowsTabComponent } from "./additional-components/account-flows-tab/account-flows-tab.component";
 
 describe("AccountComponent", () => {
     let component: AccountComponent;
@@ -52,6 +54,7 @@ describe("AccountComponent", () => {
                 DatasetListItemComponent,
                 PaginationComponent,
                 DisplayTimeComponent,
+                AccountFlowsTabComponent,
             ],
             imports: [
                 ApolloTestingModule,
@@ -63,6 +66,7 @@ describe("AccountComponent", () => {
                 NgbPopoverModule,
                 NgbRatingModule,
                 HttpClientTestingModule,
+                ToastrModule.forRoot(),
             ],
             providers: [
                 DatasetApi,

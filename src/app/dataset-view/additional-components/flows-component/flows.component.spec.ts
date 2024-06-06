@@ -6,7 +6,7 @@ import { FlowsComponent } from "./flows.component";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ActivatedRoute, Router } from "@angular/router";
-import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
+import { mockDatasetBasicsRootFragment, mockDatasetMainDataId } from "src/app/search/mock.data";
 import { ToastrModule } from "ngx-toastr";
 import { findElementByDataTestId, routerMock } from "src/app/common/base-test.helpers.spec";
 import { DatasetFlowsService } from "./services/dataset-flows.service";
@@ -25,12 +25,13 @@ import { NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
-import { FlowStatus } from "src/app/api/kamu.graphql.interface";
+import { Account, FlowStatus } from "src/app/api/kamu.graphql.interface";
 import { FilterByInitiatorEnum } from "./components/flows-table/flows-table.types";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import _ from "lodash";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { mockMetadataDerivedUpdate, mockOverviewDataUpdate } from "../data-tabs.mock";
+import { mockAccountByNameResponse } from "src/app/api/mock/account.mock";
 
 describe("FlowsComponent", () => {
     let component: FlowsComponent;
@@ -144,10 +145,9 @@ describe("FlowsComponent", () => {
 
     it("should check search by account name", () => {
         const getFlowConnectionDataSpy = spyOn(component, "getFlowConnectionData");
-        const mockAccountName = "mockAccountName";
-        component.onSearchByAccountName(mockAccountName);
+        component.onSearchByAccountName(mockAccountByNameResponse.accounts.byName as Account);
         expect(getFlowConnectionDataSpy).toHaveBeenCalledTimes(1);
-        expect(component.searchByAccountName).toEqual(mockAccountName);
+        expect(component.searchByAccount).toEqual(mockAccountByNameResponse.accounts.byName as Account);
     });
 
     it("should empty block is visible", () => {
@@ -189,7 +189,7 @@ describe("FlowsComponent", () => {
     it("should check cancel flow button", fakeAsync(() => {
         const refreshFlowSpy = spyOn(component, "refreshFlow");
         spyOn(datasetFlowsService, "cancelScheduledTasks").and.returnValue(of(true));
-        component.onCancelFlow(MOCK_FLOW_ID);
+        component.onCancelFlow({ flowId: MOCK_FLOW_ID, datasetId: mockDatasetMainDataId });
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
         flush();

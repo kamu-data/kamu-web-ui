@@ -5,11 +5,11 @@ import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
     Account,
     CancelScheduledTasksMutation,
+    Dataset,
     DatasetAllFlowsPausedQuery,
     DatasetFlowFilters,
     DatasetFlowType,
     DatasetFlowsInitiatorsQuery,
-    DatasetMetadata,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsMutation,
     DatasetTriggerFlowMutation,
@@ -69,14 +69,9 @@ export class DatasetFlowsService {
     }): Observable<FlowsTableData> {
         return this.datasetFlowApi.getDatasetListFlows(params).pipe(
             map((data: GetDatasetListFlowsQuery) => {
-                const metadata = data.datasets.byId?.metadata as DatasetMetadata;
                 return {
                     connectionData: data.datasets.byId?.flows.runs.listFlows as FlowConnectionDataFragment,
-                    source: metadata.currentPollingSource?.fetch,
-                    transformData: {
-                        numInputs: metadata.currentTransform?.inputs.length ?? 0,
-                        engine: metadata.currentTransform?.transform.engine ?? "",
-                    },
+                    flowOwners: [data.datasets.byId as Dataset],
                 };
             }),
         );

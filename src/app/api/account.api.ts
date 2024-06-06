@@ -47,7 +47,7 @@ export class AccountApi {
     }
 
     public fetchAccountListFlows(params: {
-        accounName: string;
+        accountName: string;
         page: number;
         perPage: number;
         filters: AccountFlowFilters;
@@ -55,7 +55,7 @@ export class AccountApi {
         return this.accountListFlowsGql
             .watch(
                 {
-                    name: params.accounName,
+                    name: params.accountName,
                     page: params.page,
                     perPage: params.perPage,
                     filters: params.filters,

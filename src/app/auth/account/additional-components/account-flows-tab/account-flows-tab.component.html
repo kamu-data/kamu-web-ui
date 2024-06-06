@@ -1,20 +1,24 @@
 <div class="container-content mt-4">
     <ng-container *ngIf="flowConnectionData$ | async as flowConnectionData">
-        <ng-container *ngIf="flowConnectionData[2].connectionData.nodes.length">
+        <ng-container *ngIf="flowConnectionData.widgetListFlows.connectionData.nodes.length">
             <div class="d-flex justify-content-between">
                 <div class="mt-4">
-                    <h2 class="title">{{ flowConnectionData[2].connectionData.totalCount }} Account flow run(s)</h2>
+                    <h2 class="title">
+                        {{ flowConnectionData.widgetListFlows.connectionData.totalCount }} Account flow run(s)
+                    </h2>
                     <div>
-                        <span class="text-muted"> Compute work associated with this account </span>
+                        <span class="text-muted">
+                            Compute work associated with datasets belonging to this account
+                        </span>
                     </div>
                 </div>
                 <div class="d-flex flex-column">
                     <button
                         class="border-1 px-3 py-2 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
                         type="button"
-                        (click)="toggleStateAccountFlowConfigs(flowConnectionData[3]!)"
+                        (click)="toggleStateAccountFlowConfigs(flowConnectionData.accountAllFlowsPaused!)"
                     >
-                        {{ flowConnectionData[3] ? "Resume" : "Pause" }} account flows
+                        {{ flowConnectionData.accountAllFlowsPaused ? "Resume" : "Pause" }} account flows
                     </button>
                 </div>
             </div>
@@ -28,16 +32,20 @@
                 </button>
             </div>
             <div class="search-result-container__content my-4">
-                <app-tile-base-widget [nodes]="flowConnectionData[2].connectionData.nodes"></app-tile-base-widget>
+                <app-tile-base-widget
+                    [nodes]="flowConnectionData.widgetListFlows.connectionData.nodes"
+                ></app-tile-base-widget>
             </div>
             <app-flows-table
-                [nodes]="flowConnectionData[0].connectionData.nodes"
+                [nodes]="flowConnectionData.accountListFlows.connectionData.nodes"
                 [filterByStatus]="filterByStatus"
                 [filterByInitiator]="filterByInitiator"
                 [searchByDataset]="searchByDataset"
-                [accountView]="true"
-                [accountName]="accountName"
-                [accountDatasets]="flowConnectionData[1]"
+                [tableOptions]="{
+                    displayColumns: DISPLAY_COLUMNS,
+                    initiatorsTypes: INITIATORS
+                }"
+                [datasetFlowOwners]="flowConnectionData.accountListFlows.flowOwners"
                 (filterByStatusChange)="onChangeFilterByStatus($event)"
                 (filterByInitiatorChange)="onChangeFilterByInitiator($event)"
                 (searchByDatasetNameChange)="onSearchByDatasetName($event)"
@@ -45,8 +53,8 @@
             ></app-flows-table>
             <div class="mt-50px">
                 <app-pagination
-                    [currentPage]="flowConnectionData[0].connectionData.pageInfo.currentPage + 1"
-                    [pageInfo]="flowConnectionData[0].connectionData.pageInfo"
+                    [currentPage]="flowConnectionData.accountListFlows.connectionData.pageInfo.currentPage + 1"
+                    [pageInfo]="flowConnectionData.accountListFlows.connectionData.pageInfo"
                     (pageChangeEvent)="onPageChange($event)"
                 ></app-pagination>
             </div>
@@ -54,6 +62,8 @@
     </ng-container>
 
     <ng-container *ngIf="flowConnectionData$ | async as flowConnectionData">
-        <div *ngIf="!flowConnectionData[2].connectionData.nodes.length">No flows related with account</div>
+        <div *ngIf="!flowConnectionData.widgetListFlows.connectionData.nodes.length">
+            No flows yet in datasets belonging to this account
+        </div>
     </ng-container>
 </div>

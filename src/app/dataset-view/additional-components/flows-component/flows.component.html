@@ -72,9 +72,12 @@
                     [filterByStatus]="filterByStatus"
                     [filterByInitiator]="filterByInitiator"
                     [searchByAccount]="searchByAccount"
-                    [fetchStep]="flowConnectionData?.source!"
-                    [transformData]="flowConnectionData?.transformData!"
-                    [datasetBasics]="datasetBasics"
+                    [accountFlowInitiators]="accountFlowInitiators$ | async"
+                    [datasetFlowOwners]="flowConnectionData.flowOwners"
+                    [tableOptions]="{
+                        displayColumns: DISPLAY_COLUMNS,
+                        initiatorsTypes: INITIATORS
+                    }"
                     (filterByStatusChange)="onChangeFilterByStatus($event)"
                     (filterByInitiatorChange)="onChangeFilterByInitiator($event)"
                     (searchByAccountNameChange)="onSearchByAccountName($event)"

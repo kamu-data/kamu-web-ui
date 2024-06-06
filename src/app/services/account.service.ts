@@ -6,14 +6,9 @@ import {
     AccountResumeFlowsMutation,
     Dataset,
 } from "./../api/kamu.graphql.interface";
-import {
-    AccountFlowFilters,
-    AccountFragment,
-    AccountListFlowsQuery,
-    FlowConnectionDataFragment,
-} from "../api/kamu.graphql.interface";
+import { AccountFlowFilters, AccountFragment, FlowConnectionDataFragment } from "../api/kamu.graphql.interface";
 import { AccountApi } from "../api/account.api";
-import { Observable, forkJoin } from "rxjs";
+import { Observable, combineLatest, forkJoin } from "rxjs";
 import { DatasetApi } from "../api/dataset.api";
 import { Injectable } from "@angular/core";
 import { DatasetsByAccountNameQuery } from "../api/kamu.graphql.interface";
@@ -67,17 +62,19 @@ export class AccountService {
     }
 
     public getAccountListFlows(params: {
-        accounName: string;
+        accountName: string;
         page: number;
         perPage: number;
         filters: AccountFlowFilters;
     }): Observable<FlowsTableData> {
-        return this.accountApi.fetchAccountListFlows(params).pipe(
-            map((data: AccountListFlowsQuery) => {
+        return combineLatest([
+            this.accountApi.fetchAccountListFlows(params),
+            this.getDatasetsWithFlows(params.accountName),
+        ]).pipe(
+            map(([listFlows, datasetsWithFlows]) => {
                 return {
-                    connectionData: data.accounts.byName?.flows?.runs.listFlows as FlowConnectionDataFragment,
-                    source: undefined,
-                    transformData: undefined,
+                    connectionData: listFlows.accounts.byName?.flows?.runs.listFlows as FlowConnectionDataFragment,
+                    flowOwners: datasetsWithFlows,
                 };
             }),
         );
@@ -86,7 +83,13 @@ export class AccountService {
     public getDatasetsWithFlows(accounName: string): Observable<Dataset[]> {
         return this.accountApi.accountDatasetsWithFlows(accounName).pipe(
             map((data: AccountListDatasetsWithFlowsQuery) => {
-                return (data.accounts.byName?.flows?.runs.listDatasetsWithFlow.nodes as Dataset[]) ?? [];
+                return (
+                    (data.accounts.byName?.flows?.runs.listDatasetsWithFlow.nodes.sort((a, b) => {
+                        if (a.name < b.name) return -1;
+                        if (a.name > b.name) return 1;
+                        return 0;
+                    }) as Dataset[]) ?? []
+                );
             }),
         );
     }

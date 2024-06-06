@@ -6,6 +6,7 @@ export const environment = {
     production: false,
     delay_http_request_ms: 500,
     runtime_config_file: "/assets/runtime-config.json",
+    delay_polling_ms: 10000,
 };
 
 /*

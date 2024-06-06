@@ -1,5 +1,4 @@
-import { MaybeUndefined } from "src/app/common/app.types";
-import { FetchStep, FlowConnectionDataFragment } from "src/app/api/kamu.graphql.interface";
+import { Dataset, FlowConnectionDataFragment } from "src/app/api/kamu.graphql.interface";
 
 export enum FilterByInitiatorEnum {
     All = "All",
@@ -9,8 +8,7 @@ export enum FilterByInitiatorEnum {
 
 export interface FlowsTableData {
     connectionData: FlowConnectionDataFragment;
-    source: MaybeUndefined<FetchStep>;
-    transformData: MaybeUndefined<TransformDescriptionTableData>;
+    flowOwners: Dataset[];
 }
 
 export interface TransformDescriptionTableData {
@@ -21,4 +19,9 @@ export interface TransformDescriptionTableData {
 export interface CancelFlowArgs {
     flowId: string;
     datasetId: string;
+}
+
+export interface FlowsTableOptions {
+    displayColumns: string[];
+    initiatorsTypes: string[];
 }

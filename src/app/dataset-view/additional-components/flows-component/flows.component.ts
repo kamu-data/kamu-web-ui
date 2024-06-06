@@ -48,10 +48,14 @@ export class FlowsComponent extends BaseComponent implements OnInit {
     public searchByAccount: MaybeNull<Account>;
     public currentPage = 1;
     public overview: DatasetOverviewFragment;
+    public accountFlowInitiators$: Observable<Account[]>;
+
     public readonly WIDGET_FLOW_RUNS_PER_PAGE: number = 150;
     public readonly TABLE_FLOW_RUNS_PER_PAGE: number = 15;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly TIMEOUT_REFRESH_FLOW = 800;
+    public readonly DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"]; //1
+    public readonly INITIATORS: string[] = Object.keys(FilterByInitiatorEnum);
     private readonly loadingFlowsList = new Subject<boolean>();
 
     constructor(
@@ -83,6 +87,7 @@ export class FlowsComponent extends BaseComponent implements OnInit {
                 this.overview = overviewUpdate.overview;
             }),
         );
+        this.fetchAccountFlowInitiators();
     }
 
     public get isSetPollingSourceEmpty(): boolean {
@@ -261,6 +266,18 @@ export class FlowsComponent extends BaseComponent implements OnInit {
                         }, this.TIMEOUT_REFRESH_FLOW);
                     }
                 }),
+        );
+    }
+
+    private fetchAccountFlowInitiators(): void {
+        this.accountFlowInitiators$ = this.flowsService.flowsInitiators(this.datasetBasics.id).pipe(
+            map((accounts) =>
+                accounts.sort((a: Account, b: Account) => {
+                    if (a.accountName < b.accountName) return -1;
+                    if (a.accountName > b.accountName) return 1;
+                    return 0;
+                }),
+            ),
         );
     }
 }

@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "@apollo/client/core";
+import { gql } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -2568,32 +2568,34 @@ export type GetDatasetListFlowsQuery = {
     __typename?: "Query";
     datasets: {
         __typename?: "Datasets";
-        byId?: {
-            __typename?: "Dataset";
-            metadata: {
-                __typename?: "DatasetMetadata";
-                currentPollingSource?: {
-                    __typename?: "SetPollingSource";
-                    fetch:
-                        | ({ __typename?: "FetchStepContainer" } & FetchStepContainerDataFragment)
-                        | ({ __typename?: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment)
-                        | { __typename?: "FetchStepMqtt" }
-                        | ({ __typename?: "FetchStepUrl" } & FetchStepUrlDataFragment);
-                } | null;
-                currentTransform?: {
-                    __typename?: "SetTransform";
-                    inputs: Array<{ __typename: "TransformInput" }>;
-                    transform: { __typename?: "TransformSql"; engine: string };
-                } | null;
-            };
-            flows: {
-                __typename?: "DatasetFlows";
-                runs: {
-                    __typename?: "DatasetFlowRuns";
-                    listFlows: { __typename?: "FlowConnection" } & FlowConnectionDataFragment;
-                };
-            };
-        } | null;
+        byId?:
+            | ({
+                  __typename?: "Dataset";
+                  metadata: {
+                      __typename?: "DatasetMetadata";
+                      currentPollingSource?: {
+                          __typename?: "SetPollingSource";
+                          fetch:
+                              | ({ __typename?: "FetchStepContainer" } & FetchStepContainerDataFragment)
+                              | ({ __typename?: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment)
+                              | { __typename?: "FetchStepMqtt" }
+                              | ({ __typename?: "FetchStepUrl" } & FetchStepUrlDataFragment);
+                      } | null;
+                      currentTransform?: {
+                          __typename?: "SetTransform";
+                          inputs: Array<{ __typename: "TransformInput" }>;
+                          transform: { __typename?: "TransformSql"; engine: string };
+                      } | null;
+                  };
+                  flows: {
+                      __typename?: "DatasetFlows";
+                      runs: {
+                          __typename?: "DatasetFlowRuns";
+                          listFlows: { __typename?: "FlowConnection" } & FlowConnectionDataFragment;
+                      };
+                  };
+              } & DatasetBasicsFragment)
+            | null;
     };
 };
 
@@ -5553,6 +5555,7 @@ export const GetDatasetListFlowsDocument = gql`
     query getDatasetListFlows($datasetId: DatasetID!, $page: Int, $perPage: Int, $filters: DatasetFlowFilters) {
         datasets {
             byId(datasetId: $datasetId) {
+                ...DatasetBasics
                 metadata {
                     currentPollingSource {
                         fetch {
@@ -5582,6 +5585,7 @@ export const GetDatasetListFlowsDocument = gql`
             }
         }
     }
+    ${DatasetBasicsFragmentDoc}
     ${FetchStepUrlDataFragmentDoc}
     ${FetchStepFilesGlobDataFragmentDoc}
     ${FetchStepContainerDataFragmentDoc}

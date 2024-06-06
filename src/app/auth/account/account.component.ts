@@ -16,7 +16,6 @@ import { LoggedUserService } from "../logged-user.service";
 import { MaybeNull } from "src/app/common/app.types";
 import { AccountNotFoundError } from "src/app/common/errors";
 import { AccountPageQueryParams } from "./account.component.model";
-import { FlowsTableData } from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table.types";
 
 @Component({
     selector: "app-account",
@@ -32,7 +31,6 @@ export class AccountComponent extends BaseComponent implements OnInit {
     public user$: Observable<AccountFragment>;
     public datasetsAccount$: Observable<DatasetsAccountResponse>;
     public activeTab$: Observable<AccountTabs>;
-    public accountListFlows$: Observable<FlowsTableData>;
 
     @ViewChild("containerMenu") containerMenu: ElementRef;
     @ViewChild("dropdownMenu") dropdownMenu: ElementRef;
@@ -69,16 +67,6 @@ export class AccountComponent extends BaseComponent implements OnInit {
 
         this.user$ = this.pipelineAccountByName(accountName$);
         this.datasetsAccount$ = this.pipelineAccountDatasets(this.user$, queryParams$);
-        this.accountListFlows$ = this.user$.pipe(
-            switchMap((account) => {
-                return this.accountService.getAccountListFlows({
-                    accounName: account.accountName,
-                    page: 0,
-                    perPage: 0,
-                    filters: { byFlowType: null, byStatus: null, byInitiator: null, byDatasetIds: [] },
-                });
-            }),
-        );
     }
 
     public avatarLink(user: AccountFragment): string {

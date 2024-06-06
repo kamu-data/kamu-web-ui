@@ -1,9 +1,8 @@
 import _ from "lodash";
 import moment from "moment";
-import { FetchStep, FlowStartCondition, FlowStatus, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
+import { Dataset, FlowStartCondition, FlowStatus, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
+import { MaybeNull } from "src/app/common/app.types";
 import AppValues from "src/app/common/app.values";
-import { TransformDescriptionTableData } from "./flows-table.types";
 import { DataHelpers } from "src/app/common/data.helpers";
 
 export class DatasetFlowTableHelpers {
@@ -66,9 +65,12 @@ export class DatasetFlowTableHelpers {
 
     public static descriptionSubMessage(
         element: FlowSummaryDataFragment,
-        fetchStep: MaybeUndefined<FetchStep>,
-        transformData: TransformDescriptionTableData,
+        datasets: Dataset[],
+        datasetId: string,
     ): string {
+        const datasetWithFlow = datasets.find((dataset) => dataset.id === datasetId);
+        const fetchStep = datasetWithFlow?.metadata.currentPollingSource?.fetch;
+        const transformData = datasetWithFlow?.metadata.currentTransform;
         switch (element.status) {
             case FlowStatus.Finished:
                 /* istanbul ignore next */
@@ -147,7 +149,7 @@ export class DatasetFlowTableHelpers {
                         if (_.isNil(fetchStep)) {
                             throw new Error("FetchStep expected for polling ingest flow");
                         }
-                        switch (fetchStep.__typename) {
+                        switch (fetchStep?.__typename) {
                             case "FetchStepUrl":
                                 return `Polling data from url: ${fetchStep.url}`;
                             case "FetchStepContainer":
@@ -157,8 +159,8 @@ export class DatasetFlowTableHelpers {
                         }
                         break;
                     case "FlowDescriptionDatasetExecuteTransform": {
-                        const engineDesc = DataHelpers.descriptionForEngine(transformData.engine);
-                        return `Transforming ${transformData.numInputs} input datasets using "${
+                        const engineDesc = DataHelpers.descriptionForEngine(transformData?.transform.engine ?? "");
+                        return `Transforming ${transformData?.inputs.length} input datasets using "${
                             engineDesc.label ?? engineDesc.name
                         }" engine`;
                     }

@@ -1,6 +1,6 @@
 import { BaseComponent } from "src/app/common/base.component";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { Observable, combineLatest, switchMap, timer } from "rxjs";
+import { Observable, combineLatest, map, switchMap, timer } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import {
     CancelFlowArgs,
@@ -15,6 +15,7 @@ import { AccountService } from "src/app/services/account.service";
 import { AccountTabs } from "../../account.constants";
 import ProjectLinks from "src/app/project-links";
 import { requireValue } from "src/app/common/app.helpers";
+import { environment } from "src/environments/environment";
 
 @Component({
     selector: "app-account-flows-tab",
@@ -31,11 +32,17 @@ export class AccountFlowsTabComponent extends BaseComponent implements OnInit {
     public searchByDataset: MaybeNull<Dataset> = null;
     public currentPage = 1;
 
-    public flowConnectionData$: Observable<[FlowsTableData, Dataset[], FlowsTableData, MaybeUndefined<boolean>]>;
+    public flowConnectionData$: Observable<{
+        accountListFlows: FlowsTableData;
+        widgetListFlows: FlowsTableData;
+        accountAllFlowsPaused: MaybeUndefined<boolean>;
+    }>;
     public readonly WIDGET_FLOW_RUNS_PER_PAGE: number = 150;
     public readonly TABLE_FLOW_RUNS_PER_PAGE: number = 15;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly TIMEOUT_REFRESH_FLOW = 800;
+    public readonly DISPLAY_COLUMNS = ["description", "information", "creator", "dataset", "options"];
+    public readonly INITIATORS = [FilterByInitiatorEnum.All, FilterByInitiatorEnum.System];
 
     constructor(
         private flowsService: DatasetFlowsService,
@@ -47,20 +54,20 @@ export class AccountFlowsTabComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {
         this.getPageFromUrl();
-        this.getTableDate(this.currentPage);
+        this.fetchTableData(this.currentPage);
     }
 
-    private getTableDate(
+    private fetchTableData(
         page: number,
         filterByStatus?: MaybeNull<FlowStatus>,
         filterByInitiator?: MaybeNull<InitiatorFilterInput>,
         datasetsIds?: string[],
     ): void {
-        this.flowConnectionData$ = timer(0, 10000).pipe(
+        this.flowConnectionData$ = timer(0, environment.delay_polling_ms).pipe(
             switchMap(() =>
                 combineLatest([
                     this.accountService.getAccountListFlows({
-                        accounName: this.accountName,
+                        accountName: this.accountName,
                         page: page - 1,
                         perPage: this.TABLE_FLOW_RUNS_PER_PAGE,
                         filters: {
@@ -70,9 +77,8 @@ export class AccountFlowsTabComponent extends BaseComponent implements OnInit {
                             byDatasetIds: datasetsIds ?? [],
                         },
                     }),
-                    this.accountService.getDatasetsWithFlows(this.accountName),
                     this.accountService.getAccountListFlows({
-                        accounName: this.accountName,
+                        accountName: this.accountName,
                         page: 0,
                         perPage: this.WIDGET_FLOW_RUNS_PER_PAGE,
                         filters: { byFlowType: null, byStatus: null, byInitiator: null, byDatasetIds: [] },
@@ -80,6 +86,9 @@ export class AccountFlowsTabComponent extends BaseComponent implements OnInit {
                     this.accountService.accountAllFlowsPaused(this.accountName),
                 ]),
             ),
+            map(([accountListFlows, widgetListFlows, accountAllFlowsPaused]) => {
+                return { accountListFlows, widgetListFlows, accountAllFlowsPaused };
+            }),
         );
     }
 
@@ -93,15 +102,15 @@ export class AccountFlowsTabComponent extends BaseComponent implements OnInit {
     public onPageChange(page: number): void {
         if (page === 1) {
             this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.FLOWS);
-            this.getTableDate(page);
-            return;
+            this.fetchTableData(page);
+        } else {
+            this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.FLOWS, page);
+            this.fetchTableData(page);
         }
-        this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.FLOWS, page);
-        this.getTableDate(page);
     }
 
     public onChangeFilterByStatus(status: MaybeNull<FlowStatus>): void {
-        this.getTableDate(this.currentPage, status);
+        this.fetchTableData(this.currentPage, status);
         this.filterByStatus = status;
     }
 
@@ -111,19 +120,19 @@ export class AccountFlowsTabComponent extends BaseComponent implements OnInit {
             if (initiator === FilterByInitiatorEnum.System) {
                 filterOptions = { system: true };
             }
-            this.getTableDate(this.currentPage, this.filterByStatus, filterOptions);
+            this.fetchTableData(this.currentPage, this.filterByStatus, filterOptions);
         }
         this.filterByInitiator = initiator;
     }
 
     public onSearchByDatasetName(dataset: MaybeNull<Dataset>): void {
-        this.getTableDate(this.currentPage, this.filterByStatus, null, dataset ? [dataset.id] : []);
+        this.fetchTableData(this.currentPage, this.filterByStatus, null, dataset ? [dataset.id] : []);
         this.searchByDataset = dataset;
     }
 
     public refreshFlow(): void {
         this.getPageFromUrl();
-        this.getTableDate(this.currentPage);
+        this.fetchTableData(this.currentPage);
     }
 
     public onCancelFlow(params: CancelFlowArgs): void {

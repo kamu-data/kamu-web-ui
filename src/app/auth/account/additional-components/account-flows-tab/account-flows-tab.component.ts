@@ -1,4 +1,3 @@
-import { BaseComponent } from "src/app/common/base.component";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { Observable, combineLatest, map, switchMap, timer } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
@@ -7,15 +6,13 @@ import {
     FilterByInitiatorEnum,
     FlowsTableData,
 } from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table.types";
-import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
-import { NavigationService } from "src/app/services/navigation.service";
-import { mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import { Dataset, FlowStatus, FlowSummaryDataFragment, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
 import { AccountService } from "src/app/services/account.service";
 import { AccountTabs } from "../../account.constants";
 import ProjectLinks from "src/app/project-links";
 import { requireValue } from "src/app/common/app.helpers";
 import { environment } from "src/environments/environment";
+import { FlowsTableProcessingBaseComponent } from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table-processing-base.component";
 
 @Component({
     selector: "app-account-flows-tab",
@@ -23,32 +20,20 @@ import { environment } from "src/environments/environment";
     styleUrls: ["./account-flows-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccountFlowsTabComponent extends BaseComponent implements OnInit {
+export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent implements OnInit {
     @Input() accountName: string;
-    public tileWidgetData$: Observable<MaybeUndefined<FlowsTableData>>;
-    public nodes: FlowSummaryDataFragment[] = [mockFlowSummaryDataFragments[0]];
-    public filterByStatus: MaybeNull<FlowStatus> = null;
-    public filterByInitiator = FilterByInitiatorEnum.All;
+    public nodes: FlowSummaryDataFragment[] = [];
     public searchByDataset: MaybeNull<Dataset> = null;
     public currentPage = 1;
-
     public flowConnectionData$: Observable<{
         accountListFlows: FlowsTableData;
         widgetListFlows: FlowsTableData;
         accountAllFlowsPaused: MaybeUndefined<boolean>;
     }>;
-    public readonly WIDGET_FLOW_RUNS_PER_PAGE: number = 150;
-    public readonly TABLE_FLOW_RUNS_PER_PAGE: number = 15;
-    public readonly FlowStatus: typeof FlowStatus = FlowStatus;
-    public readonly TIMEOUT_REFRESH_FLOW = 800;
     public readonly DISPLAY_COLUMNS = ["description", "information", "creator", "dataset", "options"];
     public readonly INITIATORS = [FilterByInitiatorEnum.All, FilterByInitiatorEnum.System];
 
-    constructor(
-        private flowsService: DatasetFlowsService,
-        private navigationService: NavigationService,
-        private accountService: AccountService,
-    ) {
+    constructor(private accountService: AccountService) {
         super();
     }
 
@@ -102,11 +87,10 @@ export class AccountFlowsTabComponent extends BaseComponent implements OnInit {
     public onPageChange(page: number): void {
         if (page === 1) {
             this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.FLOWS);
-            this.fetchTableData(page);
         } else {
             this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.FLOWS, page);
-            this.fetchTableData(page);
         }
+        this.fetchTableData(page);
     }
 
     public onChangeFilterByStatus(status: MaybeNull<FlowStatus>): void {

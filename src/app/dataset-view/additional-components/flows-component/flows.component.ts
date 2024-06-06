@@ -16,19 +16,17 @@ import {
     FlowStatus,
     InitiatorFilterInput,
 } from "src/app/api/kamu.graphql.interface";
-import { DatasetFlowsService } from "./services/dataset-flows.service";
 import { Observable, Subject, filter, map, switchMap, tap, timer } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
-import { BaseComponent } from "src/app/common/base.component";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { requireValue } from "src/app/common/app.helpers";
 import ProjectLinks from "src/app/project-links";
-import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
 import { CancelFlowArgs, FilterByInitiatorEnum, FlowsTableData } from "./components/flows-table/flows-table.types";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
+import { FlowsTableProcessingBaseComponent } from "./components/flows-table/flows-table-processing-base.component";
 
 @Component({
     selector: "app-flows",
@@ -36,32 +34,22 @@ import { OverviewUpdate } from "../../dataset.subscriptions.interface";
     styleUrls: ["./flows.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FlowsComponent extends BaseComponent implements OnInit {
+export class FlowsComponent extends FlowsTableProcessingBaseComponent implements OnInit {
     @Input() public datasetBasics: DatasetBasicsFragment;
     @Output() onPageChangeEmit = new EventEmitter<number>();
     public searchFilter = "";
-    public tileWidgetData$: Observable<MaybeUndefined<FlowsTableData>>;
     public flowConnectionData$: Observable<MaybeUndefined<FlowsTableData>>;
     public allFlowsPaused$: Observable<MaybeUndefined<boolean>>;
-    public filterByStatus: MaybeNull<FlowStatus> = null;
-    public filterByInitiator = FilterByInitiatorEnum.All;
     public searchByAccount: MaybeNull<Account>;
     public currentPage = 1;
     public overview: DatasetOverviewFragment;
     public accountFlowInitiators$: Observable<Account[]>;
-
-    public readonly WIDGET_FLOW_RUNS_PER_PAGE: number = 150;
-    public readonly TABLE_FLOW_RUNS_PER_PAGE: number = 15;
-    public readonly FlowStatus: typeof FlowStatus = FlowStatus;
-    public readonly TIMEOUT_REFRESH_FLOW = 800;
     public readonly DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"]; //1
     public readonly INITIATORS: string[] = Object.keys(FilterByInitiatorEnum);
     private readonly loadingFlowsList = new Subject<boolean>();
 
     constructor(
-        private flowsService: DatasetFlowsService,
         private router: Router,
-        private navigationService: NavigationService,
         private cdr: ChangeDetectorRef,
         private datasetSubsService: DatasetSubscriptionsService,
     ) {
@@ -249,7 +237,7 @@ export class FlowsComponent extends BaseComponent implements OnInit {
 
     public refreshFlow(): void {
         this.getTileWidgetData();
-        this.getFlowConnectionData(this.currentPage, this.filterByStatus);
+        this.getFlowConnectionData(this.currentPage);
     }
 
     public onCancelFlow(params: CancelFlowArgs): void {

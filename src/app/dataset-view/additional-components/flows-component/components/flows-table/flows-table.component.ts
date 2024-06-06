@@ -45,18 +45,11 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     @Input() public searchByAccount: MaybeNull<Account>;
     @Input() public searchByDataset: MaybeNull<Dataset>;
     @Input() tableOptions: FlowsTableOptions;
-    // @Input() public fetchStep: MaybeUndefined<FetchStep>;
-    // @Input() public transformData: TransformDescriptionTableData;
-    @Input() public accountView: boolean = false;
-    // @Input() public accountName?: string;
-    //  @Input() public accountDatasets?: Dataset[];
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
     @Output() public filterByInitiatorChange = new EventEmitter<FilterByInitiatorEnum>();
     @Output() public searchByAccountNameChange = new EventEmitter<MaybeNull<Account>>();
     @Output() public searchByDatasetNameChange = new EventEmitter<MaybeNull<Dataset>>();
     @Output() public cancelFlowChange = new EventEmitter<CancelFlowArgs>();
-    // public DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"]; //1
-    // public INITIATORS: string[] = Object.keys(FilterByInitiatorEnum); //2
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;

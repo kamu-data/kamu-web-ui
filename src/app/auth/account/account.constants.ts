@@ -4,5 +4,5 @@ export enum AccountTabs {
     ORGANIZATIONS = "organizations",
     INBOX = "inbox",
     STARS = "stars",
-    FLOWS="flows"
+    FLOWS = "flows",
 }

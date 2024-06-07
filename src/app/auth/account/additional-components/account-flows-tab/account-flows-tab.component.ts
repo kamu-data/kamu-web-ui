@@ -1,25 +1,13 @@
 import { AccountType } from "./../../../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { Observable, combineLatest, map, of, switchMap, timer } from "rxjs";
-import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
-import {
-    CancelFlowArgs,
-    FilterByInitiatorEnum,
-    FlowsTableData,
-} from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table.types";
-import {
-    Account,
-    Dataset,
-    FlowStatus,
-    FlowSummaryDataFragment,
-    InitiatorFilterInput,
-} from "src/app/api/kamu.graphql.interface";
+import { combineLatest, map, of, switchMap, timer } from "rxjs";
+import { MaybeNull } from "src/app/common/app.types";
+import { Dataset, FlowStatus, FlowSummaryDataFragment, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
 import { AccountService } from "src/app/services/account.service";
 import { AccountTabs } from "../../account.constants";
-import ProjectLinks from "src/app/project-links";
-import { requireValue } from "src/app/common/app.helpers";
 import { environment } from "src/environments/environment";
 import { FlowsTableProcessingBaseComponent } from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table-processing-base.component";
+import { TEST_ACCOUNT_ID } from "src/app/search/mock.data";
 
 @Component({
     selector: "app-account-flows-tab",
@@ -31,12 +19,6 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
     @Input() accountName: string;
     public nodes: FlowSummaryDataFragment[] = [];
     public searchByDataset: MaybeNull<Dataset> = null;
-    public flowConnectionData$: Observable<{
-        mainTableFlowsData: FlowsTableData;
-        tileWidgetListFlowsData: FlowsTableData;
-        allFlowsPaused: MaybeUndefined<boolean>;
-        flowInitiators: Account[];
-    }>;
     public readonly DISPLAY_COLUMNS = ["description", "information", "creator", "dataset", "options"];
 
     constructor(private accountService: AccountService) {
@@ -48,7 +30,7 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
         this.fetchTableData(this.currentPage);
     }
 
-    private fetchTableData(
+    public fetchTableData(
         page: number,
         filterByStatus?: MaybeNull<FlowStatus>,
         filterByInitiator?: MaybeNull<InitiatorFilterInput>,
@@ -80,7 +62,7 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
                         {
                             accountName: "kamu",
                             accountType: AccountType.User,
-                            id: "1",
+                            id: TEST_ACCOUNT_ID,
                             displayName: "kamu",
                             isAdmin: true,
                         },
@@ -93,13 +75,6 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
         );
     }
 
-    public getPageFromUrl(): void {
-        const pageParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE);
-        if (pageParam) {
-            this.currentPage = +requireValue(pageParam);
-        }
-    }
-
     public onPageChange(page: number): void {
         if (page === 1) {
             this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.FLOWS);
@@ -109,47 +84,9 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
         this.fetchTableData(page);
     }
 
-    public onChangeFilterByStatus(status: MaybeNull<FlowStatus>): void {
-        this.fetchTableData(this.currentPage, status);
-        this.filterByStatus = status;
-    }
-
-    public onChangeFilterByInitiator(initiator: FilterByInitiatorEnum): void {
-        if (initiator !== FilterByInitiatorEnum.Account) {
-            let filterOptions: MaybeNull<InitiatorFilterInput> = null;
-            if (initiator === FilterByInitiatorEnum.System) {
-                filterOptions = { system: true };
-            }
-            this.fetchTableData(this.currentPage, this.filterByStatus, filterOptions);
-        }
-        this.filterByInitiator = initiator;
-    }
-
     public onSearchByDatasetName(dataset: MaybeNull<Dataset>): void {
         this.fetchTableData(this.currentPage, this.filterByStatus, null, dataset ? [dataset.id] : []);
         this.searchByDataset = dataset;
-    }
-
-    public refreshFlow(): void {
-        this.getPageFromUrl();
-        this.fetchTableData(this.currentPage);
-    }
-
-    public onCancelFlow(params: CancelFlowArgs): void {
-        this.trackSubscription(
-            this.flowsService
-                .cancelScheduledTasks({
-                    datasetId: params.datasetId,
-                    flowId: params.flowId,
-                })
-                .subscribe((success: boolean) => {
-                    if (success) {
-                        setTimeout(() => {
-                            this.refreshFlow();
-                        }, this.TIMEOUT_REFRESH_FLOW);
-                    }
-                }),
-        );
     }
 
     public toggleStateAccountFlowConfigs(paused: boolean): void {
@@ -160,14 +97,7 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
         }
         setTimeout(() => {
             this.refreshFlow();
+            this.cdr.detectChanges();
         }, this.TIMEOUT_REFRESH_FLOW);
-    }
-
-    public onSearchByAccountName(account: MaybeNull<Account>): void {
-        if (account) {
-            console.log("===>", account);
-            //  this.getFlowConnectionData(this.currentPage, this.filterByStatus, { accounts: [account.id] });
-            this.searchByAccount = account;
-        }
     }
 }

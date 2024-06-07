@@ -1,9 +1,11 @@
-<ng-container *ngIf="{ flowConnection: tileWidgetData$ | async, allFlowsPaused: allFlowsPaused$ | async } as result">
+<ng-container *ngIf="flowConnectionData$ | async as flowConnectionData">
     <div class="search-result-container__content mb-20">
-        <ng-container *ngIf="result.flowConnection?.connectionData?.nodes?.length; else noRuns">
+        <ng-container *ngIf="flowConnectionData.tileWidgetListFlowsData.connectionData.nodes.length; else noRuns">
             <div class="d-flex justify-content-between">
                 <div class="mt-4">
-                    <h2 class="title">{{ result.flowConnection?.connectionData?.totalCount }} Dataset flow run(s)</h2>
+                    <h2 class="title">
+                        {{ flowConnectionData.tileWidgetListFlowsData.connectionData.totalCount }} Dataset flow run(s)
+                    </h2>
                     <div>
                         <span class="text-muted"> Compute work associated with this dataset </span>
                     </div>
@@ -25,8 +27,11 @@
                             <mat-divider></mat-divider>
                             <button mat-menu-item (click)="updateSettings()">Update settings</button>
                             <mat-divider></mat-divider>
-                            <button mat-menu-item (click)="toggleStateDatasetFlowConfigs(result.allFlowsPaused!)">
-                                {{ !result.allFlowsPaused ? "Pause" : "Resume" }}
+                            <button
+                                mat-menu-item
+                                (click)="toggleStateDatasetFlowConfigs(flowConnectionData.allFlowsPaused!)"
+                            >
+                                {{ !flowConnectionData.allFlowsPaused ? "Pause" : "Resume" }}
                                 dataset flows
                             </button>
                         </mat-menu>
@@ -63,17 +68,19 @@
             </div>
 
             <div class="search-result-container__content mt-2 mb-4">
-                <app-tile-base-widget [nodes]="result.flowConnection?.connectionData?.nodes!"></app-tile-base-widget>
+                <app-tile-base-widget
+                    [nodes]="flowConnectionData.tileWidgetListFlowsData.connectionData.nodes!"
+                ></app-tile-base-widget>
             </div>
 
             <ng-container *ngIf="flowConnectionData$ | async as flowConnectionData">
                 <app-flows-table
-                    [nodes]="flowConnectionData.connectionData.nodes"
+                    [nodes]="flowConnectionData.mainTableFlowsData.connectionData.nodes"
                     [filterByStatus]="filterByStatus"
                     [filterByInitiator]="filterByInitiator"
                     [searchByAccount]="searchByAccount"
-                    [accountFlowInitiators]="accountFlowInitiators$ | async"
-                    [involvedDatasets]="flowConnectionData.involvedDatasets"
+                    [accountFlowInitiators]="flowConnectionData.flowInitiators"
+                    [involvedDatasets]="flowConnectionData.mainTableFlowsData.involvedDatasets"
                     [tableOptions]="{
                         displayColumns: DISPLAY_COLUMNS,
                         initiatorsTypes: INITIATORS
@@ -85,15 +92,15 @@
                 ></app-flows-table>
                 <div class="mt-50px">
                     <app-pagination
-                        [currentPage]="flowConnectionData.connectionData.pageInfo.currentPage + 1"
-                        [pageInfo]="flowConnectionData.connectionData.pageInfo"
+                        [currentPage]="flowConnectionData.mainTableFlowsData.connectionData.pageInfo.currentPage + 1"
+                        [pageInfo]="flowConnectionData.mainTableFlowsData.connectionData.pageInfo"
                         (pageChangeEvent)="onPageChange($event)"
                     ></app-pagination>
                 </div>
             </ng-container>
         </ng-container>
         <ng-template #noRuns>
-            <p class="ps-2 pt-2" data-test-id="empty-flow-runs-block" *ngIf="loadingFlowsList$ | async">
+            <p class="ps-2 pt-2" data-test-id="empty-flow-runs-block">
                 <ng-container *ngIf="!isSetTransformEmpty && !isSetPollingSourceEmpty">
                     No flow runs. You can
                     <a class="text-decoration-none" href="javascript:void(0);" (click)="updateSettings()"

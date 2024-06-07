@@ -59,11 +59,9 @@ export class FlowsTableComponent implements OnInit, OnChanges {
 
     public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>();
     @ViewChildren(MatMenuTrigger) triggersMatMenu: QueryList<MatMenuTrigger>;
-    public searchingAccount: boolean = false;
-    public searchingDataset: boolean = false;
     public searchAccountDatasetsLength: number;
     @Input() public accountFlowInitiators: MaybeNull<Account[]> = null;
-    @Input() public datasetFlowOwners: MaybeNull<Dataset[]> = null;
+    @Input() public involvedDatasets: Dataset[];
 
     constructor(
         private navigationService: NavigationService,
@@ -99,7 +97,7 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     }
 
     public descriptionDatasetFlowSubMessage(element: FlowSummaryDataFragment, datasetId: string): string {
-        return DatasetFlowTableHelpers.descriptionSubMessage(element, this.datasetFlowOwners ?? [], datasetId);
+        return DatasetFlowTableHelpers.descriptionSubMessage(element, this.involvedDatasets ?? [], datasetId);
     }
 
     public changeFilterByStatus(status: MaybeNull<FlowStatus>): void {
@@ -141,7 +139,7 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     }
 
     public datasetById(datasetId: string): Dataset {
-        const dataset = this.datasetFlowOwners?.find((dataset) => dataset.id === datasetId) as Dataset;
+        const dataset = this.involvedDatasets.find((dataset) => dataset.id === datasetId) as Dataset;
         return dataset;
     }
 
@@ -181,7 +179,6 @@ export class FlowsTableComponent implements OnInit, OnChanges {
         text$.pipe(
             debounceTime(200),
             distinctUntilChanged(),
-            tap(() => (this.searchingAccount = true)),
             map((term) =>
                 (term === "" || !this.accountFlowInitiators
                     ? []
@@ -190,24 +187,21 @@ export class FlowsTableComponent implements OnInit, OnChanges {
                       )
                 ).slice(0, 10),
             ),
-            tap(() => (this.searchingAccount = false)),
         );
 
     public searchByDatasetName: OperatorFunction<string, readonly Dataset[]> = (text$: Observable<string>) =>
         text$.pipe(
             debounceTime(200),
             distinctUntilChanged(),
-            tap(() => (this.searchingDataset = true)),
             map((term) =>
-                (term === "" || !this.datasetFlowOwners
+                (term === "" || !this.involvedDatasets
                     ? []
-                    : this.datasetFlowOwners.filter(
+                    : this.involvedDatasets.filter(
                           (initiator) => initiator.name.toLowerCase().indexOf(term.toLowerCase()) > -1,
                       )
                 ).slice(0, 10),
             ),
             tap((result) => (this.searchAccountDatasetsLength = result.length)),
-            tap(() => (this.searchingDataset = false)),
         );
 
     public datasetFormatter(x: Dataset | string): string {
@@ -226,7 +220,7 @@ export class FlowsTableComponent implements OnInit, OnChanges {
         this.searchByDatasetNameChange.emit(this.searchByDataset);
     }
 
-    public get accountMode(): boolean {
+    public get hasDatasetColumn(): boolean {
         return this.tableOptions.displayColumns.includes("dataset");
     }
 }

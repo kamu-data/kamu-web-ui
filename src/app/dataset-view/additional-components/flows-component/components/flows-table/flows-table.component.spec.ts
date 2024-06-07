@@ -70,7 +70,7 @@ describe("FlowsTableComponent", () => {
             displayColumns: ["description", "information", "creator", "options"],
             initiatorsTypes: Object.keys(FilterByInitiatorEnum),
         };
-        component.datasetFlowOwners = [mockDatasets[0]] as Dataset[];
+        component.involvedDatasets = [mockDatasets[0]] as Dataset[];
         fixture.detectChanges();
     });
 

@@ -1,10 +1,10 @@
 <div class="container-content mt-4">
     <ng-container *ngIf="flowConnectionData$ | async as flowConnectionData">
-        <ng-container *ngIf="flowConnectionData.widgetListFlows.connectionData.nodes.length">
+        <ng-container *ngIf="flowConnectionData.tileWidgetListFlowsData.connectionData.nodes.length">
             <div class="d-flex justify-content-between">
                 <div class="mt-4">
                     <h2 class="title">
-                        {{ flowConnectionData.widgetListFlows.connectionData.totalCount }} Account flow run(s)
+                        {{ flowConnectionData.tileWidgetListFlowsData.connectionData.totalCount }} Account flow run(s)
                     </h2>
                     <div>
                         <span class="text-muted">
@@ -16,9 +16,9 @@
                     <button
                         class="border-1 px-3 py-2 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
                         type="button"
-                        (click)="toggleStateAccountFlowConfigs(flowConnectionData.accountAllFlowsPaused!)"
+                        (click)="toggleStateAccountFlowConfigs(flowConnectionData.allFlowsPaused!)"
                     >
-                        {{ flowConnectionData.accountAllFlowsPaused ? "Resume" : "Pause" }} account flows
+                        {{ flowConnectionData.allFlowsPaused ? "Resume" : "Pause" }} account flows
                     </button>
                 </div>
             </div>
@@ -33,28 +33,31 @@
             </div>
             <div class="search-result-container__content my-4">
                 <app-tile-base-widget
-                    [nodes]="flowConnectionData.widgetListFlows.connectionData.nodes"
+                    [nodes]="flowConnectionData.tileWidgetListFlowsData.connectionData.nodes"
                 ></app-tile-base-widget>
             </div>
             <app-flows-table
-                [nodes]="flowConnectionData.accountListFlows.connectionData.nodes"
+                [nodes]="flowConnectionData.mainTableFlowsData.connectionData.nodes"
                 [filterByStatus]="filterByStatus"
                 [filterByInitiator]="filterByInitiator"
                 [searchByDataset]="searchByDataset"
+                [searchByAccount]="searchByAccount"
                 [tableOptions]="{
                     displayColumns: DISPLAY_COLUMNS,
                     initiatorsTypes: INITIATORS
                 }"
-                [datasetFlowOwners]="flowConnectionData.accountListFlows.flowOwners"
+                [accountFlowInitiators]="flowConnectionData.flowInitiators"
+                [involvedDatasets]="flowConnectionData.mainTableFlowsData.involvedDatasets"
                 (filterByStatusChange)="onChangeFilterByStatus($event)"
                 (filterByInitiatorChange)="onChangeFilterByInitiator($event)"
+                (searchByAccountNameChange)="onSearchByAccountName($event)"
                 (searchByDatasetNameChange)="onSearchByDatasetName($event)"
                 (cancelFlowChange)="onCancelFlow($event)"
             ></app-flows-table>
             <div class="mt-50px">
                 <app-pagination
-                    [currentPage]="flowConnectionData.accountListFlows.connectionData.pageInfo.currentPage + 1"
-                    [pageInfo]="flowConnectionData.accountListFlows.connectionData.pageInfo"
+                    [currentPage]="flowConnectionData.mainTableFlowsData.connectionData.pageInfo.currentPage + 1"
+                    [pageInfo]="flowConnectionData.mainTableFlowsData.connectionData.pageInfo"
                     (pageChangeEvent)="onPageChange($event)"
                 ></app-pagination>
             </div>
@@ -62,7 +65,7 @@
     </ng-container>
 
     <ng-container *ngIf="flowConnectionData$ | async as flowConnectionData">
-        <div *ngIf="!flowConnectionData.widgetListFlows.connectionData.nodes.length">
+        <div *ngIf="!flowConnectionData.tileWidgetListFlowsData.connectionData.nodes.length">
             No flows yet in datasets belonging to this account
         </div>
     </ng-container>

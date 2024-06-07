@@ -8,7 +8,7 @@ export enum FilterByInitiatorEnum {
 
 export interface FlowsTableData {
     connectionData: FlowConnectionDataFragment;
-    flowOwners: Dataset[];
+    involvedDatasets: Dataset[];
 }
 
 export interface TransformDescriptionTableData {

@@ -16,7 +16,7 @@ import {
     FlowStatus,
     InitiatorFilterInput,
 } from "src/app/api/kamu.graphql.interface";
-import { Observable, Subject, filter, map, switchMap, tap, timer } from "rxjs";
+import { Observable, filter, map, switchMap, tap, timer } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { requireValue } from "src/app/common/app.helpers";
@@ -41,12 +41,9 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public flowConnectionData$: Observable<MaybeUndefined<FlowsTableData>>;
     public allFlowsPaused$: Observable<MaybeUndefined<boolean>>;
     public searchByAccount: MaybeNull<Account>;
-    public currentPage = 1;
     public overview: DatasetOverviewFragment;
-    public accountFlowInitiators$: Observable<Account[]>;
     public readonly DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"]; //1
-    public readonly INITIATORS: string[] = Object.keys(FilterByInitiatorEnum);
-    private readonly loadingFlowsList = new Subject<boolean>();
+    public accountFlowInitiators$: Observable<Account[]>;
 
     constructor(
         private router: Router,
@@ -54,10 +51,6 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         private datasetSubsService: DatasetSubscriptionsService,
     ) {
         super();
-    }
-
-    public get loadingFlowsList$(): Observable<boolean> {
-        return this.loadingFlowsList;
     }
 
     ngOnInit(): void {
@@ -257,15 +250,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         );
     }
 
-    private fetchAccountFlowInitiators(): void {
-        this.accountFlowInitiators$ = this.flowsService.flowsInitiators(this.datasetBasics.id).pipe(
-            map((accounts) =>
-                accounts.sort((a: Account, b: Account) => {
-                    if (a.accountName < b.accountName) return -1;
-                    if (a.accountName > b.accountName) return 1;
-                    return 0;
-                }),
-            ),
-        );
+    public fetchAccountFlowInitiators(): void {
+        this.accountFlowInitiators$ = this.flowsService.flowsInitiators(this.datasetBasics.id);
     }
 }

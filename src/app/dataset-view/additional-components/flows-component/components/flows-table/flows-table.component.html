@@ -114,10 +114,7 @@
                                 </mat-radio-button>
                             </mat-radio-group>
                         </div>
-                        <div *ngIf="!accountMode" class="select-item d-flex position-relative">
-                            <div class="container-account-spinner" *ngIf="searchingAccount">
-                                <mat-spinner [diameter]="15" color="primary" mode="indeterminate"></mat-spinner>
-                            </div>
+                        <div class="select-item d-flex position-relative">
                             <input
                                 class="form-control search-creator color-bg-subtle"
                                 type="text"
@@ -134,7 +131,7 @@
                             />
                             <ng-template #rt let-r="result" let-t="term">
                                 <div class="d-flex flex-row" [style.width.px]="searchAccount.clientWidth - 28">
-                                    <img [src]="r.avatarUrl" class="me-2" style="width: 18px" />
+                                    <img [src]="r.avatarUrl ?? DEFAULT_AVATAR_URL" class="me-2" style="width: 18px" />
                                     <ngb-highlight [result]="r.accountName" [term]="t"></ngb-highlight>
                                 </div>
                             </ng-template>
@@ -153,7 +150,7 @@
         <td mat-cell *matCellDef="let element">
             <div class="d-flex align-items-center ps-3">
                 <ng-container *ngIf="element.initiator; else noInitiator">
-                    <img class="img-creator" [src]="element.initiator.avatarUrl || DEFAULT_AVATAR_URL" />
+                    <img class="img-creator" [src]="element.initiator.avatarUrl ?? DEFAULT_AVATAR_URL" />
                     <span class="ms-2 text-small"> {{ element.initiator.displayName }}</span>
                 </ng-container>
                 <ng-template #noInitiator>
@@ -163,7 +160,7 @@
         </td>
     </ng-container>
 
-    <ng-container matColumnDef="dataset" *ngIf="accountMode">
+    <ng-container matColumnDef="dataset" *ngIf="hasDatasetColumn">
         <th mat-header-cell *matHeaderCellDef style="width: 20%">
             <div class="d-inline-block">
                 <button mat-button [matMenuTriggerFor]="datasetName">
@@ -181,9 +178,6 @@
                         "
                     >
                         <div class="d-flex select-item position-relative">
-                            <div class="container-dataset-spinner" *ngIf="searchingDataset">
-                                <mat-spinner [diameter]="15" color="primary" mode="indeterminate"></mat-spinner>
-                            </div>
                             <input
                                 class="form-control search-creator color-bg-subtle"
                                 type="text"

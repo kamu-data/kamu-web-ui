@@ -1,12 +1,19 @@
+import { AccountType } from "./../../../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { Observable, combineLatest, map, switchMap, timer } from "rxjs";
+import { Observable, combineLatest, map, of, switchMap, timer } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import {
     CancelFlowArgs,
     FilterByInitiatorEnum,
     FlowsTableData,
 } from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table.types";
-import { Dataset, FlowStatus, FlowSummaryDataFragment, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
+import {
+    Account,
+    Dataset,
+    FlowStatus,
+    FlowSummaryDataFragment,
+    InitiatorFilterInput,
+} from "src/app/api/kamu.graphql.interface";
 import { AccountService } from "src/app/services/account.service";
 import { AccountTabs } from "../../account.constants";
 import ProjectLinks from "src/app/project-links";
@@ -24,14 +31,13 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
     @Input() accountName: string;
     public nodes: FlowSummaryDataFragment[] = [];
     public searchByDataset: MaybeNull<Dataset> = null;
-    public currentPage = 1;
     public flowConnectionData$: Observable<{
-        accountListFlows: FlowsTableData;
-        widgetListFlows: FlowsTableData;
-        accountAllFlowsPaused: MaybeUndefined<boolean>;
+        mainTableFlowsData: FlowsTableData;
+        tileWidgetListFlowsData: FlowsTableData;
+        allFlowsPaused: MaybeUndefined<boolean>;
+        flowInitiators: Account[];
     }>;
     public readonly DISPLAY_COLUMNS = ["description", "information", "creator", "dataset", "options"];
-    public readonly INITIATORS = [FilterByInitiatorEnum.All, FilterByInitiatorEnum.System];
 
     constructor(private accountService: AccountService) {
         super();
@@ -69,10 +75,20 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
                         filters: { byFlowType: null, byStatus: null, byInitiator: null, byDatasetIds: [] },
                     }),
                     this.accountService.accountAllFlowsPaused(this.accountName),
+                    // TODO: Implemented all accounts with flows from API
+                    of([
+                        {
+                            accountName: "kamu",
+                            accountType: AccountType.User,
+                            id: "1",
+                            displayName: "kamu",
+                            isAdmin: true,
+                        },
+                    ]),
                 ]),
             ),
-            map(([accountListFlows, widgetListFlows, accountAllFlowsPaused]) => {
-                return { accountListFlows, widgetListFlows, accountAllFlowsPaused };
+            map(([mainTableFlowsData, tileWidgetListFlowsData, allFlowsPaused, flowInitiators]) => {
+                return { mainTableFlowsData, tileWidgetListFlowsData, allFlowsPaused, flowInitiators };
             }),
         );
     }
@@ -145,5 +161,13 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
         setTimeout(() => {
             this.refreshFlow();
         }, this.TIMEOUT_REFRESH_FLOW);
+    }
+
+    public onSearchByAccountName(account: MaybeNull<Account>): void {
+        if (account) {
+            console.log("===>", account);
+            //  this.getFlowConnectionData(this.currentPage, this.filterByStatus, { accounts: [account.id] });
+            this.searchByAccount = account;
+        }
     }
 }

@@ -74,7 +74,7 @@ export class AccountService {
             map(([listFlows, datasetsWithFlows]) => {
                 return {
                     connectionData: listFlows.accounts.byName?.flows?.runs.listFlows as FlowConnectionDataFragment,
-                    flowOwners: datasetsWithFlows,
+                    involvedDatasets: datasetsWithFlows,
                 };
             }),
         );

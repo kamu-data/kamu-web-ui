@@ -37,6 +37,8 @@ export const mockSqlErrorUpdate: DataSqlErrorUpdate = {
     error: "sql parser error",
 };
 
+export const TEST_ACCOUNT_ID = "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f";
+
 export const mockHistoryUpdate: DatasetHistoryUpdate = {
     history: [
         {
@@ -47,7 +49,7 @@ export const mockHistoryUpdate: DatasetHistoryUpdate = {
             systemTime: "2022-08-05T21:19:28.817281255+00:00",
             author: {
                 __typename: "Account",
-                id: "1",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
             },
             event: {
@@ -80,7 +82,7 @@ export const mockHistoryUpdate: DatasetHistoryUpdate = {
             sequenceNumber: 3,
             author: {
                 __typename: "Account",
-                id: "1",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
             },
             event: {
@@ -144,7 +146,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
         name: "alberta.case-details",
         owner: {
             __typename: "Account",
-            id: "12345",
+            id: TEST_ACCOUNT_ID,
             accountName: "kamu",
             avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
         },
@@ -184,7 +186,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             name: "alberta.case-details",
             owner: {
                 __typename: "Account",
-                id: "12345",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
                 avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
             },
@@ -239,7 +241,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             owner: {
                 __typename: "Account",
                 avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                id: "12345",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
             },
             id: "did:odf:z4k88e8jmNqgCt5L84XPdaog32MttcHzGiXcktfuTuDY3QKwiyK",
@@ -271,7 +273,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             owner: {
                 __typename: "Account",
                 avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                id: "12345",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
             },
             id: "did:odf:z4k88e8nN5SdNPxsc5oeqwdCLvjzcvJzoyEQ938E87A15nTrkAk",
@@ -303,7 +305,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             owner: {
                 __typename: "Account",
                 avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                id: "12345",
+                id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
             },
             id: "did:odf:z4k88e8qAReYmLPFUyaKfk1UHCSY2Mkh6X1AHxuUGNhec76QsGq",
@@ -321,7 +323,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 name: "alberta.case-details",
                 owner: {
                     __typename: "Account",
-                    id: "12345",
+                    id: TEST_ACCOUNT_ID,
                     accountName: "kamu",
                     avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
                 },
@@ -376,7 +378,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 owner: {
                     __typename: "Account",
                     avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                    id: "12345",
+                    id: TEST_ACCOUNT_ID,
                     accountName: "kamu",
                 },
                 id: "did:odf:z4k88e8jmNqgCt5L84XPdaog32MttcHzGiXcktfuTuDY3QKwiyK",
@@ -410,7 +412,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 owner: {
                     __typename: "Account",
                     avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                    id: "12345",
+                    id: TEST_ACCOUNT_ID,
                     accountName: "kamu",
                 },
                 id: "did:odf:z4k88e8jmNqgCt5L84XPdaog32MttcHzGiXcktfuTuDY3QKwiyK",
@@ -442,7 +444,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 owner: {
                     __typename: "Account",
                     avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                    id: "12345",
+                    id: TEST_ACCOUNT_ID,
                     accountName: "kamu",
                 },
                 id: "did:odf:z4k88e8nN5SdNPxsc5oeqwdCLvjzcvJzoyEQ938E87A15nTrkAk",
@@ -476,7 +478,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 owner: {
                     __typename: "Account",
                     avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                    id: "12345",
+                    id: TEST_ACCOUNT_ID,
                     accountName: "kamu",
                 },
                 id: "did:odf:z4k88e8nN5SdNPxsc5oeqwdCLvjzcvJzoyEQ938E87A15nTrkAk",
@@ -508,7 +510,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 owner: {
                     __typename: "Account",
                     avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                    id: "12345",
+                    id: TEST_ACCOUNT_ID,
                     accountName: "kamu",
                 },
                 id: "did:odf:z4k88e8qAReYmLPFUyaKfk1UHCSY2Mkh6X1AHxuUGNhec76QsGq",
@@ -518,6 +520,78 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             },
         ],
     ],
+};
+
+export const mockLineageGraphUpdateWithMqttSource: LineageUpdate = {
+    origin: {
+        __typename: "Dataset",
+        id: "did:odf:fed01bbbdd6bf91ef55c042e10b741104517523301b13ff7120801b1c581da035cb5a",
+        kind: DatasetKind.Root,
+        name: "temp",
+        owner: {
+            __typename: "Account",
+            id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+            accountName: "kamu",
+            avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+        },
+        alias: "temp",
+        metadata: {
+            __typename: "DatasetMetadata",
+            currentPollingSource: {
+                __typename: "SetPollingSource",
+                fetch: {
+                    __typename: "FetchStepMqtt",
+                    host: "test.mosquitto.org",
+                    port: 1883,
+                },
+            },
+            currentLicense: null,
+            currentWatermark: null,
+        },
+        createdAt: "2024-05-20T13:21:15.141982827+00:00",
+        lastUpdatedAt: "2024-05-20T13:21:15.141982827+00:00",
+        data: {
+            __typename: "DatasetData",
+            numRecordsTotal: 0,
+            estimatedSize: 0,
+        },
+    },
+    nodes: [
+        {
+            __typename: "Dataset",
+            id: "did:odf:fed01bbbdd6bf91ef55c042e10b741104517523301b13ff7120801b1c581da035cb5a",
+            kind: DatasetKind.Root,
+            name: "temp",
+            owner: {
+                __typename: "Account",
+                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+                accountName: "kamu",
+                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+            },
+            alias: "temp",
+            metadata: {
+                __typename: "DatasetMetadata",
+                currentPollingSource: {
+                    __typename: "SetPollingSource",
+                    fetch: {
+                        __typename: "FetchStepMqtt",
+                        host: "test.mosquitto.org",
+                        port: 1883,
+                    },
+                },
+                currentLicense: null,
+                currentWatermark: null,
+            },
+            createdAt: "2024-05-20T13:21:15.141982827+00:00",
+            lastUpdatedAt: "2024-05-20T13:21:15.141982827+00:00",
+            data: {
+                __typename: "DatasetData",
+                numRecordsTotal: 0,
+                estimatedSize: 0,
+            },
+        },
+    ],
+    edges: [],
 };
 
 export const mockBuildGraphNodesResult: Node[] = [
@@ -619,7 +693,7 @@ export const mockOverviewDataUpdate = {
         name: "net.rocketpool.reth.mint-burn",
         owner: {
             __typename: "Account",
-            id: "1",
+            id: TEST_ACCOUNT_ID,
             accountName: "kamu",
         },
         alias: "kamu/net.rocketpool.reth.mint-burn",
@@ -709,7 +783,7 @@ export const mockOverviewDataUpdate = {
                             sequenceNumber: 14,
                             author: {
                                 __typename: "Account",
-                                id: "1",
+                                id: TEST_ACCOUNT_ID,
                                 accountName: "kamu",
                             },
                             event: {
@@ -904,7 +978,7 @@ export const mockMetadataRootUpdate: MetadataSchemaUpdate = {
                             sequenceNumber: 13,
                             author: {
                                 __typename: "Account",
-                                id: "12345",
+                                id: TEST_ACCOUNT_ID,
                                 accountName: "sergeiz",
                             },
                             event: {
@@ -1088,7 +1162,7 @@ export const mockMetadataRootPushSourceUpdate: MetadataSchemaUpdate = {
                             sequenceNumber: 13,
                             author: {
                                 __typename: "Account",
-                                id: "12345",
+                                id: TEST_ACCOUNT_ID,
                                 accountName: "sergeiz",
                             },
                             event: {
@@ -1208,7 +1282,7 @@ export const mockMetadataDerivedUpdate: MetadataSchemaUpdate = {
                             name: "alberta.case-details",
                             owner: {
                                 __typename: "Account",
-                                id: "1",
+                                id: TEST_ACCOUNT_ID,
                                 accountName: "kamu",
                             },
                             alias: "kamu/alberta.case-details",
@@ -1250,7 +1324,7 @@ export const mockMetadataDerivedUpdate: MetadataSchemaUpdate = {
                             sequenceNumber: 6,
                             author: {
                                 __typename: "Account",
-                                id: "1",
+                                id: TEST_ACCOUNT_ID,
                                 accountName: "kamu",
                             },
                             event: {
@@ -1313,7 +1387,7 @@ export const mockOverviewWithSetInfo = {
     name: "net.rocketpool.reth.mint-burn",
     owner: {
         __typename: "Account",
-        id: "1",
+        id: TEST_ACCOUNT_ID,
         accountName: "kamu",
     },
     alias: "kamu/net.rocketpool.reth.mint-burn",
@@ -1403,7 +1477,7 @@ export const mockOverviewWithSetInfo = {
                         sequenceNumber: 14,
                         author: {
                             __typename: "Account",
-                            id: "1",
+                            id: TEST_ACCOUNT_ID,
                             accountName: "kamu",
                         },
                         event: {
@@ -1443,7 +1517,7 @@ export const mockOverviewWithSetLicense = {
     name: "net.rocketpool.reth.mint-burn",
     owner: {
         __typename: "Account",
-        id: "1",
+        id: TEST_ACCOUNT_ID,
         accountName: "kamu",
     },
     alias: "kamu/net.rocketpool.reth.mint-burn",
@@ -1539,7 +1613,7 @@ export const mockOverviewWithSetLicense = {
                         sequenceNumber: 14,
                         author: {
                             __typename: "Account",
-                            id: "1",
+                            id: TEST_ACCOUNT_ID,
                             accountName: "kamu",
                         },
                         event: {

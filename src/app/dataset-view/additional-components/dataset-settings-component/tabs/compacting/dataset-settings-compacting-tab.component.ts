@@ -22,7 +22,7 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent impleme
     @Input() public datasetBasics: DatasetBasicsFragment;
     public hardCompactingForm = this.fb.group({
         sliceUnit: [SliceUnit.MB, [Validators.required]],
-        sliceSize: [10, [Validators.required, RxwebValidators.minNumber({ value: 1 })]],
+        sliceSize: [300, [Validators.required, RxwebValidators.minNumber({ value: 1 })]],
         recordsCount: [10000, [Validators.required, RxwebValidators.minNumber({ value: 1 })]],
     });
     public readonly SliceUnit: typeof SliceUnit = SliceUnit;

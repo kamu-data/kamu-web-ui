@@ -32,7 +32,7 @@ export const mockIngestGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQuery 
             kind: DatasetKind.Root,
             name: "account.transactions",
             owner: {
-                id: "12345",
+                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
                 accountName: "kamu",
                 __typename: "Account",
             },
@@ -66,7 +66,7 @@ export const mockBatchingGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQuer
             kind: DatasetKind.Derivative,
             name: "account.tokens.portfolio",
             owner: {
-                id: "12345",
+                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
                 accountName: "kamu",
                 __typename: "Account",
             },
@@ -513,7 +513,7 @@ export const mockDatasetTriggerFlowMutation: DatasetTriggerFlowMutation = {
                             flowId: "0",
                             status: FlowStatus.Waiting,
                             initiator: {
-                                id: "12345",
+                                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
                                 accountName: "kamu",
                                 displayName: "kamu",
                                 accountType: AccountType.User,

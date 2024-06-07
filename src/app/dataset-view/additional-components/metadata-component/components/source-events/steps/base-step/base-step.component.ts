@@ -96,6 +96,8 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
                         kind: [this.DEFAULT_EVENT_TIME_SOURCE],
                     }),
                 );
+            } else if (item.type === this.controlType.TOPICS) {
+                this.sectionForm.addControl(item.name, this.fb.array([], getValidators(item.validators)));
             } else {
                 this.sectionForm.addControl(item.name, this.fb.control(item.value, getValidators(item.validators)));
             }

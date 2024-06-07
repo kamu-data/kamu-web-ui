@@ -104,6 +104,27 @@
                         [controlDescriptors]="control.readFormatDescriptors!"
                     ></app-json-kind-field>
                 </ng-container>
+                <ng-container *ngIf="control.type === controlType.NUMBER">
+                    <app-number-field
+                        [form]="sectionForm"
+                        [controlName]="control.name"
+                        [label]="control.label"
+                        [value]="control.value"
+                        [requiredField]="control.validators.required"
+                        [placeholder]="control.placeholder"
+                        [tooltip]="control.tooltip!"
+                    ></app-number-field>
+                </ng-container>
+                <ng-container *ngIf="control.type === controlType.TOPICS">
+                    <app-topics-field
+                        [form]="sectionForm"
+                        [controlName]="control.options?.formArrayName!"
+                        [label]="control.label!"
+                        [buttonText]="control.options?.buttonText!"
+                        [requiredField]="control.validators.required"
+                        [tooltip]="control.tooltip!"
+                    ></app-topics-field>
+                </ng-container>
             </div>
         </ng-container>
         <ng-content></ng-content>

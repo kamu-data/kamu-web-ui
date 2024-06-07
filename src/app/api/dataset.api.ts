@@ -96,7 +96,14 @@ export class DatasetApi {
 
     public getDatasetDataSqlRun(params: DatasetRequestBySql): Observable<GetDatasetDataSqlRunQuery> {
         return this.datasetDataSqlRunGQL
-            .watch({ query: params.query, limit: params.limit ?? AppValues.SQL_QUERY_LIMIT, skip: params.skip })
+            .watch(
+                { query: params.query, limit: params.limit ?? AppValues.SQL_QUERY_LIMIT, skip: params.skip },
+                {
+                    context: {
+                        skipLoading: true,
+                    },
+                },
+            )
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<GetDatasetDataSqlRunQuery>) => {

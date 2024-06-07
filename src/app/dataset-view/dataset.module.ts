@@ -79,8 +79,9 @@ import { MatRadioModule } from "@angular/material/radio";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { DataAccessPanelModule } from "../components/data-access-panel/data-access-panel.module";
 import { DatasetSettingsCompactingTabComponent } from "./additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.component";
-import { AddDataModalComponent } from './additional-components/overview-component/components/add-data-modal/add-data-modal.component';
-import { FileFromUrlModalComponent } from './additional-components/overview-component/components/file-from-url-modal/file-from-url-modal.component';
+import { RequestTimerComponent } from "./additional-components/data-component/request-timer/request-timer.component";
+import { AddDataModalComponent } from "./additional-components/overview-component/components/add-data-modal/add-data-modal.component";
+import { FileFromUrlModalComponent } from "./additional-components/overview-component/components/file-from-url-modal/file-from-url-modal.component";
 
 @NgModule({
     imports: [
@@ -193,6 +194,7 @@ import { FileFromUrlModalComponent } from './additional-components/overview-comp
         DatasetSettingsGeneralTabComponent,
         DatasetSettingsSchedulingTabComponent,
         DatasetSettingsCompactingTabComponent,
+        RequestTimerComponent,
         AddDataModalComponent,
         FileFromUrlModalComponent,
     ],

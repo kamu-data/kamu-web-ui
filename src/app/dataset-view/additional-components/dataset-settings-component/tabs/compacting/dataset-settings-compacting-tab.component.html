@@ -1,9 +1,9 @@
 <div class="w-75 content-container">
-    <h2>Compacting</h2>
+    <h2>Compaction</h2>
     <mat-divider class="mt-1 mb-2"></mat-divider>
 
     <div class="box p-4 mt-3">
-        <h4 class="subtitle">Hard compacting</h4>
+        <h4 class="subtitle">Hard compaction</h4>
         <form [formGroup]="hardCompactingForm">
             <div class="row">
                 <div class="col-md-3">
@@ -73,8 +73,8 @@
 
             <div class="d-flex action-area justify-content-between align-items-center mt-4">
                 <div class="description">
-                    Hard compactings rewrite the history of the dataset as if data was originally written in big
-                    batches. Hard compactings will rewrite the metadata chain, changing block hashes. Therefore, they
+                    Hard compactions rewrite the history of the dataset as if data was originally written in big
+                    batches. Hard compactions will rewrite the metadata chain, changing block hashes. Therefore, they
                     will
                     <strong>break all downstream datasets</strong> that depend on them.
                 </div>
@@ -85,7 +85,7 @@
                     type="button"
                     data-test-id="run-compacting-btn"
                 >
-                    Run compacting
+                    Run compaction
                 </button>
             </div>
         </form>

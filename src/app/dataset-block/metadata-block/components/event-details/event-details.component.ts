@@ -2,7 +2,7 @@ import { MaybeNull, MaybeUndefined } from "./../../../../common/app.types";
 import { SetVocabEventComponent } from "./components/set-vocab-event/set-vocab-event.component";
 import { SupportedEvents } from "./supported.events";
 import {
-    AfterViewChecked,
+    AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     Input,
@@ -32,25 +32,31 @@ import { SetLicenseEventComponent } from "./components/set-license-event/set-lic
     templateUrl: "./event-details.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EventDetailsComponent implements AfterViewChecked {
+export class EventDetailsComponent extends BaseComponent implements AfterViewInit {
     public block$: Observable<MetadataBlockFragment> = this.blockService.metadataBlockChanges;
     @Input() public datasetInfo: DatasetInfo;
 
     @ViewChild("dynamicContainer", { read: ViewContainerRef })
     public dynamicContainer: MaybeNull<ViewContainerRef>;
 
-    constructor(private blockService: BlockService) {}
+    constructor(private blockService: BlockService) {
+        super();
+    }
 
-    ngAfterViewChecked(): void {
-        if (this.dynamicContainer) {
-            this.dynamicContainer.clear();
-            const componentRef = this.dynamicContainer.createComponent<BaseComponent>(
-                this.componentEventTypeFactory[this.currentBlock.event.__typename as SupportedEvents] ??
-                    UnsupportedEventComponent,
-            );
-            componentRef.setInput("event", this.currentBlock.event);
-            componentRef.changeDetectorRef.detectChanges();
-        }
+    ngAfterViewInit(): void {
+        this.trackSubscription(
+            this.blockService.metadataBlockChanges.subscribe((block: MetadataBlockFragment) => {
+                if (this.dynamicContainer) {
+                    this.dynamicContainer.clear();
+                    const componentRef = this.dynamicContainer.createComponent<BaseComponent>(
+                        this.componentEventTypeFactory[block.event.__typename as SupportedEvents] ??
+                            UnsupportedEventComponent,
+                    );
+                    componentRef.setInput("event", block.event);
+                    componentRef.changeDetectorRef.detectChanges();
+                }
+            }),
+        );
     }
 
     private componentEventTypeFactory: { [key in SupportedEvents]: MaybeUndefined<Type<BaseComponent>> } = {
@@ -66,8 +72,4 @@ export class EventDetailsComponent implements AfterViewChecked {
         [SupportedEvents.AddData]: AddDataEventComponent,
         [SupportedEvents.SetLicense]: SetLicenseEventComponent,
     };
-
-    public get currentBlock(): MetadataBlockFragment {
-        return this.blockService.currentBlock;
-    }
 }

@@ -1,0 +1,10 @@
+fragment FetchStepMqttData on FetchStepMqtt {
+  host
+  port
+  username
+  password
+  topics {
+    path
+    qos
+  }
+}

@@ -160,4 +160,62 @@ export const FETCH_FORM_DATA: JsonFormData = {
             },
         ],
     },
+    Mqtt: {
+        controls: [
+            {
+                name: "host",
+                label: "Host",
+                value: "",
+                type: ControlType.TEXT,
+                placeholder: "Enter host",
+                tooltip: SetPollingSourceTooltipsTexts.MQTT_HOST,
+                validators: {
+                    required: true,
+                },
+            },
+            {
+                name: "port",
+                label: "Port",
+                value: "",
+                type: ControlType.NUMBER,
+                placeholder: "Enter port",
+                tooltip: SetPollingSourceTooltipsTexts.MQTT_PORT,
+                validators: {
+                    required: true,
+                },
+            },
+            {
+                name: "username",
+                label: "Username",
+                value: "",
+                type: ControlType.TEXT,
+                placeholder: "Enter username",
+                tooltip: SetPollingSourceTooltipsTexts.MQTT_USERNAME,
+                validators: {},
+            },
+            {
+                name: "password",
+                label: "Password",
+                value: "",
+                type: ControlType.TEXT,
+                placeholder: "Enter password",
+                tooltip: SetPollingSourceTooltipsTexts.MQTT_PASSWORD,
+                validators: {},
+            },
+            {
+                name: "topics",
+                value: [],
+                label: "Topics",
+                type: ControlType.TOPICS,
+                tooltip: SetPollingSourceTooltipsTexts.MQTT_TOPICS,
+                options: {
+                    formArrayName: "topics",
+                    buttonText: "+ Add new topic",
+                },
+                validators: {
+                    required: true,
+                },
+            },
+        ],
+    },
 };

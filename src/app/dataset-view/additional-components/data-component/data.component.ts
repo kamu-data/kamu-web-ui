@@ -9,10 +9,8 @@ import {
 } from "@angular/core";
 import { Location } from "@angular/common";
 import { Observable, map, tap } from "rxjs";
-
 import AppValues from "src/app/common/app.values";
 import DataTabValues from "./mock.data";
-
 import { OffsetInterval } from "../../../api/kamu.graphql.interface";
 import { DataSqlErrorUpdate, DataUpdate, OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DataRow, DatasetRequestBySql } from "../../../interface/dataset.interface";
@@ -29,6 +27,8 @@ import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 })
 export class DataComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics: DatasetBasicsFragment;
+    @Input() public sqlLoading: boolean;
+    @Input() public resultTime: number;
     @Output() public runSQLRequestEmit = new EventEmitter<DatasetRequestBySql>();
 
     public savedQueries = DataTabValues.savedQueries;

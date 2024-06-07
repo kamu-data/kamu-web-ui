@@ -27,6 +27,8 @@ import { EditorModule } from "src/app/shared/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import _ from "lodash";
+import { RequestTimerComponent } from "./request-timer/request-timer.component";
+import { SqlEditorComponent } from "src/app/shared/editor/components/sql-editor/sql-editor.component";
 
 describe("DataComponent", () => {
     let component: DataComponent;
@@ -45,8 +47,9 @@ describe("DataComponent", () => {
                 DynamicTableModule,
                 EditorModule,
                 MatProgressBarModule,
+                CdkAccordionModule,
             ],
-            declarations: [DataComponent, LoadMoreComponent],
+            declarations: [DataComponent, LoadMoreComponent, RequestTimerComponent, SqlEditorComponent],
         }).compileComponents();
         fixture = TestBed.createComponent(DataComponent);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);

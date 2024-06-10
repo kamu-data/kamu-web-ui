@@ -5,6 +5,7 @@ import {
     DatasetFlowBatchingMutation,
     DatasetFlowCompactingMutation,
     DatasetFlowScheduleMutation,
+    DatasetFlowsInitiatorsQuery,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsMutation,
     DatasetTriggerFlowMutation,
@@ -489,7 +490,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
 
 export const mockFlowsTableData: FlowsTableData = {
     connectionData: mockGetDatasetListFlowsQuery.datasets.byId?.flows.runs.listFlows as FlowConnectionDataFragment,
-    flowOwners: [],
+    involvedDatasets: [],
 };
 
 export const mockDatasetTriggerFlowMutation: DatasetTriggerFlowMutation = {
@@ -801,5 +802,53 @@ export const mockDatasetFlowCompactingMutationError: DatasetFlowCompactingMutati
             __typename: "DatasetMut",
         },
         __typename: "DatasetsMut",
+    },
+};
+
+export const mockDatasetFlowsInitiatorsQuery: DatasetFlowsInitiatorsQuery = {
+    datasets: {
+        byId: {
+            flows: {
+                runs: {
+                    listFlowInitiators: {
+                        totalCount: 1,
+                        nodes: [
+                            {
+                                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+                                accountName: "kamu",
+                                displayName: "kamu",
+                                accountType: AccountType.User,
+                                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                                isAdmin: true,
+                                __typename: "Account",
+                            },
+                            {
+                                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+                                accountName: "bamu",
+                                displayName: "bamu",
+                                accountType: AccountType.User,
+                                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                                isAdmin: true,
+                                __typename: "Account",
+                            },
+                            {
+                                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+                                accountName: "kamu",
+                                displayName: "kamu",
+                                accountType: AccountType.User,
+                                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                                isAdmin: true,
+                                __typename: "Account",
+                            },
+                        ],
+                        __typename: "AccountConnection",
+                    },
+                    __typename: "DatasetFlowRuns",
+                },
+                __typename: "DatasetFlows",
+            },
+            __typename: "Dataset",
+        },
+        __typename: "Datasets",
     },
 };

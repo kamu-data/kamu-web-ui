@@ -83,13 +83,11 @@ export class AccountService {
     public getDatasetsWithFlows(accounName: string): Observable<Dataset[]> {
         return this.accountApi.accountDatasetsWithFlows(accounName).pipe(
             map((data: AccountListDatasetsWithFlowsQuery) => {
-                return (
-                    (data.accounts.byName?.flows?.runs.listDatasetsWithFlow.nodes.sort((a, b) => {
-                        if (a.name < b.name) return -1;
-                        if (a.name > b.name) return 1;
-                        return 0;
-                    }) as Dataset[]) ?? []
-                );
+                return data.accounts.byName?.flows?.runs.listDatasetsWithFlow.nodes.sort((a, b) => {
+                    if (a.name < b.name) return -1;
+                    if (a.name > b.name) return 1;
+                    return 0;
+                }) as Dataset[];
             }),
         );
     }

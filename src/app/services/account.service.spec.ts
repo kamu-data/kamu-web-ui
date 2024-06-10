@@ -5,22 +5,34 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { AccountApi } from "../api/account.api";
 import { TEST_LOGIN, TEST_PAGE_NUMBER, mockAccountDetails } from "../api/mock/auth.mock";
 import { first, of } from "rxjs";
-import { MaybeNull } from "../common/app.types";
-import { AccountFragment } from "../api/kamu.graphql.interface";
+import { MaybeNull, MaybeUndefined } from "../common/app.types";
+import { AccountFlowFilters, AccountFragment, Dataset } from "../api/kamu.graphql.interface";
 import { mockDatasetsByAccountNameQuery } from "../api/mock/dataset.mock";
 import { DatasetsAccountResponse } from "../interface/dataset.interface";
-import { ToastrModule } from "ngx-toastr";
+import { ToastrModule, ToastrService } from "ngx-toastr";
+import {
+    mockAccountDatasetFlowsPausedQuery,
+    mockAccountListDatasetsWithFlowsQuery,
+    mockAccountListFlowsQuery,
+    mockAccountPauseFlowsMutationError,
+    mockAccountPauseFlowsMutationSuccess,
+    mockAccountResumeFlowsMutationError,
+    mockAccountResumeFlowsMutationSuccess,
+} from "../api/mock/account.mock";
+import { FlowsTableData } from "../dataset-view/additional-components/flows-component/components/flows-table/flows-table.types";
 
 describe("AccountService", () => {
     let service: AccountService;
     let accountApi: AccountApi;
     let datasetApi: DatasetApi;
+    let toastService: ToastrService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [ApolloTestingModule, ToastrModule.forRoot()],
         });
         service = TestBed.inject(AccountService);
+        toastService = TestBed.inject(ToastrService);
         accountApi = TestBed.inject(AccountApi);
         datasetApi = TestBed.inject(DatasetApi);
     });
@@ -81,5 +93,102 @@ describe("AccountService", () => {
         expect(subscription$.closed).toBeTrue();
     });
 
-    // mockDatasetsAccountResponse
+    it("check getDatasetsWithFlows", () => {
+        const accountDatasetsWithFlowsSpy = spyOn(accountApi, "accountDatasetsWithFlows").and.returnValue(
+            of(mockAccountListDatasetsWithFlowsQuery),
+        );
+
+        const subscription$ = service
+            .getDatasetsWithFlows(TEST_LOGIN)
+            .pipe(first())
+            .subscribe((data: Dataset[]) => {
+                const listDatasets =
+                    mockAccountListDatasetsWithFlowsQuery.accounts.byName?.flows?.runs.listDatasetsWithFlow;
+                expect(data.length).toEqual(listDatasets?.nodes.length as number);
+                expect(data[0].name).toEqual("account.tokens.transfers");
+            });
+
+        expect(accountDatasetsWithFlowsSpy).toHaveBeenCalledTimes(1);
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should resumed all flows for account with success", () => {
+        spyOn(accountApi, "accountResumeFlows").and.returnValue(of(mockAccountResumeFlowsMutationSuccess));
+        const toastrServiceSuccessSpy = spyOn(toastService, "success");
+
+        const subscription$ = service.accountResumeFlows(TEST_LOGIN).subscribe(() => {
+            expect(toastrServiceSuccessSpy).toHaveBeenCalledWith("Flows resumed");
+        });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should resume all flows for account with error", () => {
+        spyOn(accountApi, "accountResumeFlows").and.returnValue(of(mockAccountResumeFlowsMutationError));
+        const toastrServiceErrorSpy = spyOn(toastService, "error");
+
+        const subscription$ = service.accountResumeFlows(TEST_LOGIN).subscribe(() => {
+            expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error, flows not resumed");
+        });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should pause all flows for account with success", () => {
+        spyOn(accountApi, "accountPauseFlows").and.returnValue(of(mockAccountPauseFlowsMutationSuccess));
+        const toastrServiceSuccessSpy = spyOn(toastService, "success");
+
+        const subscription$ = service.accountPauseFlows(TEST_LOGIN).subscribe(() => {
+            expect(toastrServiceSuccessSpy).toHaveBeenCalledWith("Flows paused");
+        });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should pause all flows for account with error", () => {
+        spyOn(accountApi, "accountPauseFlows").and.returnValue(of(mockAccountPauseFlowsMutationError));
+        const toastrServiceErrorSpy = spyOn(toastService, "error");
+
+        const subscription$ = service.accountPauseFlows(TEST_LOGIN).subscribe(() => {
+            expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error, flows not paused");
+        });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check state for all flows for account paused", () => {
+        spyOn(accountApi, "accountFlowsPaused").and.returnValue(of(mockAccountDatasetFlowsPausedQuery));
+
+        const subscription$ = service.accountAllFlowsPaused(TEST_LOGIN).subscribe((paused: MaybeUndefined<boolean>) => {
+            expect(paused).toEqual(true);
+        });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("check getAccountListFlows", () => {
+        spyOn(accountApi, "fetchAccountListFlows").and.returnValue(of(mockAccountListFlowsQuery));
+        spyOn(accountApi, "accountDatasetsWithFlows").and.returnValue(of(mockAccountListDatasetsWithFlowsQuery));
+        const PAGE = 1;
+        const PER_PAGE = 15;
+        const ACCOUNT_FILTERS: AccountFlowFilters = {
+            byDatasetIds: [],
+            byFlowType: null,
+            byInitiator: null,
+            byStatus: null,
+        };
+        const subscription$ = service
+            .getAccountListFlows({
+                accountName: TEST_LOGIN,
+                page: PAGE,
+                perPage: PER_PAGE,
+                filters: ACCOUNT_FILTERS,
+            })
+            .subscribe((data: FlowsTableData) => {
+                expect(data.connectionData.nodes.length).toEqual(1);
+                expect(data.involvedDatasets.length).toEqual(4);
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
 });

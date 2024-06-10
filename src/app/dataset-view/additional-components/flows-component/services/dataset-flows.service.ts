@@ -128,13 +128,11 @@ export class DatasetFlowsService {
     public flowsInitiators(datasetId: string): Observable<Account[]> {
         return this.datasetFlowApi.getDatasetFlowsInitiators(datasetId).pipe(
             map((data: DatasetFlowsInitiatorsQuery) => {
-                return (
-                    data.datasets.byId?.flows.runs.listFlowInitiators.nodes.sort((a, b) => {
-                        if (a.accountName < b.accountName) return -1;
-                        if (a.accountName > b.accountName) return 1;
-                        return 0;
-                    }) ?? []
-                );
+                return data.datasets.byId?.flows.runs.listFlowInitiators.nodes.sort((a, b) => {
+                    if (a.accountName < b.accountName) return -1;
+                    if (a.accountName > b.accountName) return 1;
+                    return 0;
+                }) as Account[];
             }),
         );
     }

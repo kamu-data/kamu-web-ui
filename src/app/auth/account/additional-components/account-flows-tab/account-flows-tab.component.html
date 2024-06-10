@@ -65,7 +65,7 @@
     </ng-container>
 
     <ng-container *ngIf="flowConnectionData$ | async as flowConnectionData">
-        <div *ngIf="!flowConnectionData.tileWidgetListFlowsData.connectionData.nodes.length">
+        <div data-test-id="empty-block" *ngIf="!flowConnectionData.tileWidgetListFlowsData.connectionData.nodes.length">
             No flows yet in datasets belonging to this account
         </div>
     </ng-container>

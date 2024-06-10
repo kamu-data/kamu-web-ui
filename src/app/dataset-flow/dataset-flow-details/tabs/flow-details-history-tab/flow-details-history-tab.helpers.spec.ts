@@ -10,9 +10,9 @@ import {
     mockFlowSummaryDataFragmentIngestResult,
     mockHistoryFragmentWithFinishedStatus,
 } from "./flow-details-history-tab.helpers.mock";
-import { mockDatasetExecuteTransformFlowSummaryData } from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table.helpers.mock";
 import moment from "moment";
 import { FlowStatus } from "src/app/api/kamu.graphql.interface";
+import { mockDatasetExecuteTransformFlowSummaryData } from "src/app/common/components/flows-table/flows-table.helpers.mock";
 
 describe("DatasetFlowDetailsHelpers", () => {
     beforeAll(() => {

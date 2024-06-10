@@ -64,10 +64,7 @@ import { MatInputModule } from "@angular/material/input";
 import { ReturnToCliComponent } from "../components/return-to-cli/return-to-cli.component";
 import { EditorModule } from "../shared/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { FlowsComponent } from "./additional-components/flows-component/flows.component";
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { TileBaseWidgetComponent } from "./additional-components/flows-component/components/tile-base-widget/tile-base-widget.component";
-import { FlowsTableComponent } from "./additional-components/flows-component/components/flows-table/flows-table.component";
 import { MatTableModule } from "@angular/material/table";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { AddPushSourceComponent } from "./additional-components/metadata-component/components/source-events/add-push-source/add-push-source.component";
@@ -80,6 +77,9 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { DataAccessPanelModule } from "../components/data-access-panel/data-access-panel.module";
 import { DatasetSettingsCompactingTabComponent } from "./additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.component";
 import { RequestTimerComponent } from "./additional-components/data-component/request-timer/request-timer.component";
+import { FlowsTableComponent } from "../common/components/flows-table/flows-table.component";
+import { TileBaseWidgetComponent } from "../common/components/tile-base-widget/tile-base-widget.component";
+import { FlowsComponent } from "./additional-components/flows-component/flows.component";
 
 @NgModule({
     imports: [

@@ -18,9 +18,9 @@ import {
     TaskStatus,
 } from "./../kamu.graphql.interface";
 import { GetDatasetFlowConfigsQuery, DatasetKind, TimeUnit, TimeDeltaInput } from "../kamu.graphql.interface";
-import { FlowsTableData } from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table.types";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { mockDatasetBasicsRootFragment, mockDatasetMainDataId } from "src/app/search/mock.data";
+import { FlowsTableData } from "src/app/common/components/flows-table/flows-table.types";
 
 export const mockTimeDeltaInput: TimeDeltaInput = {
     every: 10,

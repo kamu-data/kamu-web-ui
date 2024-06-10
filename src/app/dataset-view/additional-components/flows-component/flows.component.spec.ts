@@ -1,4 +1,3 @@
-import { TileBaseWidgetComponent } from "./components/tile-base-widget/tile-base-widget.component";
 import { MatRadioModule } from "@angular/material/radio";
 import { PaginationModule } from "./../../../components/pagination-component/pagination.module";
 import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, tick } from "@angular/core/testing";
@@ -12,7 +11,6 @@ import { findElementByDataTestId, routerMock } from "src/app/common/base-test.he
 import { DatasetFlowsService } from "./services/dataset-flows.service";
 import { of } from "rxjs";
 import { MatMenuModule } from "@angular/material/menu";
-import { FlowsTableComponent } from "./components/flows-table/flows-table.component";
 import { PaginationComponent } from "src/app/components/pagination-component/pagination.component";
 import { MatTableModule } from "@angular/material/table";
 import { DisplayTimeModule } from "src/app/components/display-time/display-time.module";
@@ -26,12 +24,14 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
 import { Account, FlowStatus } from "src/app/api/kamu.graphql.interface";
-import { FilterByInitiatorEnum } from "./components/flows-table/flows-table.types";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import _ from "lodash";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { mockMetadataDerivedUpdate, mockOverviewDataUpdate } from "../data-tabs.mock";
 import { mockAccountByNameResponse } from "src/app/api/mock/account.mock";
+import { TileBaseWidgetComponent } from "src/app/common/components/tile-base-widget/tile-base-widget.component";
+import { FlowsTableComponent } from "src/app/common/components/flows-table/flows-table.component";
+import { FilterByInitiatorEnum } from "src/app/common/components/flows-table/flows-table.types";
 import { mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
 
 describe("FlowsComponent", () => {

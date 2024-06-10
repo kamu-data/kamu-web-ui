@@ -1,7 +1,5 @@
 import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, tick } from "@angular/core/testing";
 import { AccountFlowsTabComponent } from "./account-flows-tab.component";
-import { TileBaseWidgetComponent } from "src/app/dataset-view/additional-components/flows-component/components/tile-base-widget/tile-base-widget.component";
-import { FlowsTableComponent } from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table.component";
 import { PaginationComponent } from "src/app/components/pagination-component/pagination.component";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { SharedTestModule } from "src/app/common/shared-test.module";
@@ -11,12 +9,14 @@ import { of } from "rxjs";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { AccountTabs } from "../../account.constants";
-import { mockDatasets } from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table.helpers.mock";
 import { Dataset } from "src/app/api/kamu.graphql.interface";
 import { AccountService } from "src/app/services/account.service";
 import { mockDatasetMainDataId } from "src/app/search/mock.data";
 import { mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
 import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { FlowsTableComponent } from "src/app/common/components/flows-table/flows-table.component";
+import { TileBaseWidgetComponent } from "src/app/common/components/tile-base-widget/tile-base-widget.component";
+import { mockDatasets } from "src/app/common/components/flows-table/flows-table.helpers.mock";
 
 describe("AccountFlowsTabComponent", () => {
     let component: AccountFlowsTabComponent;

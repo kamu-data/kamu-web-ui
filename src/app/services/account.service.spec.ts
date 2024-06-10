@@ -19,7 +19,7 @@ import {
     mockAccountResumeFlowsMutationError,
     mockAccountResumeFlowsMutationSuccess,
 } from "../api/mock/account.mock";
-import { FlowsTableData } from "../dataset-view/additional-components/flows-component/components/flows-table/flows-table.types";
+import { FlowsTableData } from "../common/components/flows-table/flows-table.types";
 
 describe("AccountService", () => {
     let service: AccountService;

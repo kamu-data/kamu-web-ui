@@ -4,10 +4,10 @@ import { BaseComponent } from "src/app/common/base.component";
 import { CancelFlowArgs, FilterByInitiatorEnum, FlowsTableData } from "./flows-table.types";
 import { Account, FlowStatus, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
 import { ChangeDetectorRef, Directive, inject } from "@angular/core";
-import { DatasetFlowsService } from "../../services/dataset-flows.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { requireValue } from "src/app/common/app.helpers";
 import ProjectLinks from "src/app/project-links";
+import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 
 @Directive()
 export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
@@ -30,7 +30,7 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
 
     protected flowsService = inject(DatasetFlowsService);
     protected navigationService = inject(NavigationService);
-    protected cdr = inject(ChangeDetectorRef)
+    protected cdr = inject(ChangeDetectorRef);
 
     abstract fetchTableData(
         page: number,

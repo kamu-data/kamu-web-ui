@@ -1,5 +1,4 @@
 import { NavigationService } from "src/app/services/navigation.service";
-import { MaybeNull } from "./../../../../../common/app.types";
 import { DataHelpers } from "src/app/common/data.helpers";
 import {
     ChangeDetectionStrategy,
@@ -31,6 +30,7 @@ import { CancelFlowArgs, FilterByInitiatorEnum, FlowsTableOptions } from "./flow
 import { ModalService } from "src/app/components/modal/modal.service";
 import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
 import { OperatorFunction, Observable, debounceTime, distinctUntilChanged, tap, map } from "rxjs";
+import { MaybeNull } from "../../app.types";
 
 @Component({
     selector: "app-flows-table",

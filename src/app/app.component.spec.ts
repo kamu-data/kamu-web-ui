@@ -1,4 +1,3 @@
-import { AccountTabs } from "./auth/account/account.constants";
 import { ModalComponent } from "./components/modal/modal.component";
 import { FormsModule } from "@angular/forms";
 import { mockAutocompleteItems } from "./search/mock.data";
@@ -25,6 +24,7 @@ import { SpinnerComponent } from "./components/spinner/spinner/spinner.component
 import { LoggedUserService } from "./auth/logged-user.service";
 import { LoginService } from "./auth/login/login.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { AccountTabs } from "./account/account.constants";
 
 describe("AppComponent", () => {
     let component: AppComponent;

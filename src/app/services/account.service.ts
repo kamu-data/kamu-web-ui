@@ -15,8 +15,8 @@ import { DatasetsByAccountNameQuery } from "../api/kamu.graphql.interface";
 import { DatasetsAccountResponse } from "../interface/dataset.interface";
 import { map } from "rxjs/operators";
 import { MaybeNull } from "../common/app.types";
-import { FlowsTableData } from "../dataset-view/additional-components/flows-component/components/flows-table/flows-table.types";
 import { ToastrService } from "ngx-toastr";
+import { FlowsTableData } from "../common/components/flows-table/flows-table.types";
 
 @Injectable({
     providedIn: "root",

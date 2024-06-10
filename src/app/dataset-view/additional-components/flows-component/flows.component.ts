@@ -12,9 +12,9 @@ import { MaybeNull } from "src/app/common/app.types";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
-import { OverviewUpdate } from "../../dataset.subscriptions.interface";
-import { FlowsTableProcessingBaseComponent } from "./components/flows-table/flows-table-processing-base.component";
 import { environment } from "src/environments/environment";
+import { FlowsTableProcessingBaseComponent } from "src/app/common/components/flows-table/flows-table-processing-base.component";
+import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 
 @Component({
     selector: "app-flows",

@@ -21,8 +21,8 @@ import {
     mockGetFlowByIdQuerySuccess,
 } from "src/app/api/mock/dataset-flow.mock";
 import { MaybeUndefined } from "src/app/common/app.types";
-import { FlowsTableData } from "../components/flows-table/flows-table.types";
 import { Account, DatasetFlowType } from "src/app/api/kamu.graphql.interface";
+import { FlowsTableData } from "src/app/common/components/flows-table/flows-table.types";
 
 describe("DatasetFlowsService", () => {
     let service: DatasetFlowsService;

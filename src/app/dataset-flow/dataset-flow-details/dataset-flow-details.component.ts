@@ -21,8 +21,8 @@ import { MaybeUndefined } from "src/app/common/app.types";
 import ProjectLinks from "src/app/project-links";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { DataHelpers } from "src/app/common/data.helpers";
-import { DatasetFlowTableHelpers } from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table.helpers";
 import { BaseDatasetDataComponent } from "src/app/common/base-dataset-data.component";
+import { DatasetFlowTableHelpers } from "src/app/common/components/flows-table/flows-table.helpers";
 
 @Component({
     selector: "app-dataset-flow-details",

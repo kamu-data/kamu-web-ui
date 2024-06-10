@@ -11,8 +11,8 @@ import {
 import { AccountService } from "src/app/services/account.service";
 import { AccountTabs } from "../../account.constants";
 import { environment } from "src/environments/environment";
-import { FlowsTableProcessingBaseComponent } from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table-processing-base.component";
 import { TEST_ACCOUNT_ID } from "src/app/search/mock.data";
+import { FlowsTableProcessingBaseComponent } from "src/app/common/components/flows-table/flows-table-processing-base.component";
 
 @Component({
     selector: "app-account-flows-tab",

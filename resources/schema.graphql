@@ -38,7 +38,34 @@ type Account {
   flows: AccountFlows
 }
 
+type AccountConnection {
+  """
+  A shorthand for `edges { node { ... } }`
+  """
+  nodes: [Account!]!
+  """
+  Approximate number of total nodes
+  """
+  totalCount: Int!
+  """
+  Page information
+  """
+  pageInfo: PageBasedInfo!
+  edges: [AccountEdge!]!
+}
+
 scalar AccountDisplayName
+
+type AccountEdge {
+  node: Account!
+}
+
+type AccountFlowConfigs {
+  """
+  Checks if all configs of all datasets in account are disabled
+  """
+  allPaused: Boolean!
+}
 
 type AccountFlowConfigsMut {
   resumeAccountDatasetFlows: Boolean!
@@ -49,11 +76,12 @@ input AccountFlowFilters {
   byFlowType: DatasetFlowType
   byStatus: FlowStatus
   byInitiator: InitiatorFilterInput
-  byDatasetName: DatasetName
+  byDatasetIds: [DatasetID!]!
 }
 
 type AccountFlowRuns {
   listFlows(page: Int, perPage: Int, filters: AccountFlowFilters): FlowConnection!
+  listDatasetsWithFlow: DatasetConnection!
 }
 
 type AccountFlows {
@@ -61,6 +89,10 @@ type AccountFlows {
   Returns interface for flow runs queries
   """
   runs: AccountFlowRuns!
+  """
+  Returns interface for flow configurations queries
+  """
+  configs: AccountFlowConfigs!
 }
 
 type AccountFlowsMut {
@@ -188,9 +220,27 @@ type CommitResultSuccess implements CommitResult & UpdateReadmeResult {
   message: String!
 }
 
-input CompactingConditionInput {
+input CompactingConditionFull {
   maxSliceSize: Int!
   maxSliceRecords: Int!
+}
+
+input CompactingConditionInput @oneOf {
+  full: CompactingConditionFull
+  metadataOnly: CompactingConditionMetadataOnly
+}
+
+input CompactingConditionMetadataOnly {
+  recursive: Boolean!
+}
+
+type CompactingFull {
+  maxSliceSize: Int!
+  maxSliceRecords: Int!
+}
+
+type CompactingMetadataOnly {
+  recursive: Boolean!
 }
 
 enum CompressionFormat {
@@ -454,10 +504,11 @@ input DatasetFlowFilters {
 type DatasetFlowRuns {
   getFlow(flowId: FlowID!): GetFlowResult!
   listFlows(page: Int, perPage: Int, filters: DatasetFlowFilters): FlowConnection!
+  listFlowInitiators: AccountConnection!
 }
 
 type DatasetFlowRunsMut {
-  triggerFlow(datasetFlowType: DatasetFlowType!): TriggerFlowResult!
+  triggerFlow(datasetFlowType: DatasetFlowType!, flowRunConfiguration: FlowRunConfiguration): TriggerFlowResult!
   cancelScheduledTasks(flowId: FlowID!): CancelScheduledTasksResult!
 }
 
@@ -785,6 +836,10 @@ type Flow {
   Start condition
   """
   startCondition: FlowStartCondition
+  """
+  Flow config snapshot
+  """
+  configSnapshot: FlowConfigurationSnapshot
 }
 
 type FlowAbortedResult {
@@ -803,12 +858,22 @@ type FlowConfigurationBatching {
   maxBatchingInterval: TimeDelta!
 }
 
-type FlowConfigurationCompacting {
-  maxSliceSize: Int!
-  maxSliceRecords: Int!
+union FlowConfigurationCompacting = CompactingFull | CompactingMetadataOnly
+
+type FlowConfigurationCompactingRule {
+  compactingRule: FlowConfigurationCompacting!
 }
 
 union FlowConfigurationSchedule = TimeDelta | Cron5ComponentExpression
+
+type FlowConfigurationScheduleRule {
+  scheduleRule: FlowConfigurationSchedule!
+}
+
+union FlowConfigurationSnapshot =
+  | FlowConfigurationBatching
+  | FlowConfigurationScheduleRule
+  | FlowConfigurationCompactingRule
 
 type FlowConnection {
   """
@@ -953,6 +1018,11 @@ type FlowInvalidCompactingConfig implements SetFlowCompactingConfigResult {
   message: String!
 }
 
+type FlowInvalidRunConfigurations implements TriggerFlowResult {
+  error: String!
+  message: String!
+}
+
 type FlowNotFound implements GetFlowResult & CancelScheduledTasksResult {
   flowId: FlowID!
   message: String!
@@ -963,6 +1033,12 @@ union FlowOutcome = FlowSuccessResult | FlowFailedError | FlowAbortedResult
 type FlowPreconditionsNotMet implements SetFlowConfigResult & SetFlowBatchingConfigResult & TriggerFlowResult {
   preconditions: String!
   message: String!
+}
+
+input FlowRunConfiguration @oneOf {
+  schedule: ScheduleInput
+  batching: BatchingConditionInput
+  compacting: CompactingConditionInput
 }
 
 union FlowStartCondition =
@@ -1053,7 +1129,7 @@ type GetFlowSuccess implements GetFlowResult {
 
 input InitiatorFilterInput @oneOf {
   system: Boolean
-  account: AccountName
+  accounts: [AccountID!]
 }
 
 type JdbcDesc {

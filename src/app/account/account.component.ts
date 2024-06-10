@@ -1,5 +1,4 @@
 import ProjectLinks from "src/app/project-links";
-import { ModalService } from "../../components/modal/modal.service";
 import { BaseComponent } from "src/app/common/base.component";
 import { NavigationService } from "src/app/services/navigation.service";
 import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from "@angular/core";
@@ -12,10 +11,11 @@ import { AccountService } from "src/app/services/account.service";
 import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
 import { distinctUntilChanged, map, shareReplay, switchMap } from "rxjs/operators";
 import { Observable, combineLatest } from "rxjs";
-import { LoggedUserService } from "../logged-user.service";
 import { MaybeNull } from "src/app/common/app.types";
 import { AccountNotFoundError } from "src/app/common/errors";
 import { AccountPageQueryParams } from "./account.component.model";
+import { LoggedUserService } from "../auth/logged-user.service";
+import { ModalService } from "../components/modal/modal.service";
 
 @Component({
     selector: "app-account",

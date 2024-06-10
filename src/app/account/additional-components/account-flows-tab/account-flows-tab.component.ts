@@ -1,8 +1,13 @@
-import { AccountType } from "./../../../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { combineLatest, map, of, switchMap, timer } from "rxjs";
 import { MaybeNull } from "src/app/common/app.types";
-import { Dataset, FlowStatus, FlowSummaryDataFragment, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
+import {
+    AccountType,
+    Dataset,
+    FlowStatus,
+    FlowSummaryDataFragment,
+    InitiatorFilterInput,
+} from "src/app/api/kamu.graphql.interface";
 import { AccountService } from "src/app/services/account.service";
 import { AccountTabs } from "../../account.constants";
 import { environment } from "src/environments/environment";

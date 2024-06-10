@@ -1,5 +1,4 @@
 import { NavigationService } from "src/app/services/navigation.service";
-import { TEST_AVATAR_URL, TEST_LOGIN, mockAccountDetails } from "../../api/mock/auth.mock";
 import { AccountTabs } from "./account.constants";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatIconModule } from "@angular/material/icon";
@@ -19,7 +18,6 @@ import AppValues from "src/app/common/app.values";
 import { DatasetListItemComponent } from "src/app/components/dataset-list-item/dataset-list-item.component";
 import { PaginationComponent } from "src/app/components/pagination-component/pagination.component";
 import { NgbPaginationModule, NgbPopoverModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
-import { LoggedUserService } from "../logged-user.service";
 import { DisplayTimeComponent } from "src/app/components/display-time/display-time.component";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
@@ -27,6 +25,8 @@ import { AccountNotFoundError } from "src/app/common/errors";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ToastrModule } from "ngx-toastr";
 import { AccountFlowsTabComponent } from "./additional-components/account-flows-tab/account-flows-tab.component";
+import { LoggedUserService } from "../auth/logged-user.service";
+import { mockAccountDetails, TEST_AVATAR_URL, TEST_LOGIN } from "../api/mock/auth.mock";
 
 describe("AccountComponent", () => {
     let component: AccountComponent;

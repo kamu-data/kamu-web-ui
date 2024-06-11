@@ -1,9 +1,9 @@
-import { NavigationService } from "../../../../services/navigation.service";
 import { ChangeDetectionStrategy, Input } from "@angular/core";
 import { Component } from "@angular/core";
 import { DatasetSearchOverviewFragment, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
 import { AccountTabs } from "../../account.constants";
 import _ from "lodash";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-datasets-tab",

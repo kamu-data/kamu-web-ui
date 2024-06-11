@@ -1,0 +1,11 @@
+mutation accountResumeFlows($accountName: AccountName!) {
+  accounts {
+    byName(accountName: $accountName) {
+      flows {
+        configs {
+          resumeAccountDatasetFlows
+        }
+      }
+    }
+  }
+}

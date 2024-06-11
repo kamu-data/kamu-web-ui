@@ -9,6 +9,7 @@ import {
     mockCancelScheduledTasksMutationError,
     mockCancelScheduledTasksMutationSuccess,
     mockDatasetAllFlowsPausedQuery,
+    mockDatasetFlowsInitiatorsQuery,
     mockDatasetPauseFlowsMutationError,
     mockDatasetPauseFlowsMutationSuccess,
     mockDatasetResumeFlowsMutationError,
@@ -20,8 +21,8 @@ import {
     mockGetFlowByIdQuerySuccess,
 } from "src/app/api/mock/dataset-flow.mock";
 import { MaybeUndefined } from "src/app/common/app.types";
-import { FlowsTableData } from "../components/flows-table/flows-table.types";
-import { DatasetFlowType } from "src/app/api/kamu.graphql.interface";
+import { Account, DatasetFlowType } from "src/app/api/kamu.graphql.interface";
+import { FlowsTableData } from "src/app/common/components/flows-table/flows-table.types";
 
 describe("DatasetFlowsService", () => {
     let service: DatasetFlowsService;
@@ -203,6 +204,19 @@ describe("DatasetFlowsService", () => {
             .subscribe(() => {
                 expect(toastrServiceErrorSpy).toHaveBeenCalledTimes(1);
             });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check flows initiators", () => {
+        spyOn(datasetFlowApi, "getDatasetFlowsInitiators").and.returnValue(of(mockDatasetFlowsInitiatorsQuery));
+
+        const subscription$ = service.flowsInitiators(MOCK_DATASET_ID).subscribe((data: Account[]) => {
+            expect(data.length).toEqual(
+                mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators.nodes.length as number,
+            );
+            expect(data[0].accountName).toEqual("bamu");
+        });
 
         expect(subscription$.closed).toBeTrue();
     });

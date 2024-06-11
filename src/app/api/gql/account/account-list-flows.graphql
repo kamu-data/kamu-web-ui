@@ -1,0 +1,13 @@
+query accountListFlows($name: AccountName!, $page: Int, $perPage: Int, $filters: AccountFlowFilters) {
+  accounts {
+    byName(name: $name) {
+      flows {
+        runs {
+          listFlows(page: $page, perPage: $perPage, filters: $filters) {
+            ...FlowConnectionData
+          }
+        }
+      }
+    }
+  }
+}

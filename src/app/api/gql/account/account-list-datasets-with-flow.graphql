@@ -1,0 +1,13 @@
+query accountListDatasetsWithFlows($name: AccountName!) {
+  accounts {
+    byName(name: $name) {
+      flows {
+        runs {
+          listDatasetsWithFlow {
+            ...DatasetConnectionData
+          }
+        }
+      }
+    }
+  }
+}

@@ -57,7 +57,6 @@
             <app-flows
                 *ngIf="datasetViewType === DatasetViewTypeEnum.Flows"
                 [datasetBasics]="datasetBasics"
-                (onPageChangeEmit)="onPageChange($event)"
             ></app-flows>
 
             <app-dataset-settings

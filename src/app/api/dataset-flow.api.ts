@@ -15,6 +15,8 @@ import {
     DatasetFlowScheduleGQL,
     DatasetFlowScheduleMutation,
     DatasetFlowType,
+    DatasetFlowsInitiatorsGQL,
+    DatasetFlowsInitiatorsQuery,
     DatasetPauseFlowsGQL,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsGQL,
@@ -48,6 +50,7 @@ export class DatasetFlowApi {
         private datasetFlowByIdGQL: GetFlowByIdGQL,
         private cancelScheduledTasksGQL: CancelScheduledTasksGQL,
         private datasetFlowCompactingGQL: DatasetFlowCompactingGQL,
+        private datasetFlowsInitiatorsGQL: DatasetFlowsInitiatorsGQL,
     ) {}
 
     public datasetTriggerFlow(params: {
@@ -261,5 +264,13 @@ export class DatasetFlowApi {
                     }
                 }),
             );
+    }
+
+    public getDatasetFlowsInitiators(datasetId: string): Observable<DatasetFlowsInitiatorsQuery> {
+        return this.datasetFlowsInitiatorsGQL.watch({ datasetId }, noCacheFetchPolicy).valueChanges.pipe(
+            map((result: ApolloQueryResult<DatasetFlowsInitiatorsQuery>) => {
+                return result.data;
+            }),
+        );
     }
 }

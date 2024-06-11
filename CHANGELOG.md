@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added MQTT polling source support 
 - Added MQTT metadata block support
 - Provided 2 mode for compaction: `Full` and `MetadataOnly`
+- Added ability to view summary of flowsfor all datasets of the account
 ### Fixed
 - Sql query timer improvements
 

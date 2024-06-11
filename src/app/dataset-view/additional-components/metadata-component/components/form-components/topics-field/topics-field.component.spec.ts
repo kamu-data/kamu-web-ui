@@ -29,4 +29,15 @@ describe("TopicsFieldComponent", () => {
     it("should create", () => {
         expect(component).toBeTruthy();
     });
+
+    it("should check add item", () => {
+        component.addItem();
+        expect(component.items.length).toEqual(1);
+    });
+
+    it("should check remove item", () => {
+        component.addItem();
+        component.removeItem(0);
+        expect(component.items.length).toEqual(0);
+    });
 });

@@ -1,5 +1,4 @@
 import { NavigationService } from "src/app/services/navigation.service";
-import { MaybeNull, MaybeUndefined } from "./../../../../../common/app.types";
 import { DataHelpers } from "src/app/common/data.helpers";
 import {
     ChangeDetectionStrategy,
@@ -17,9 +16,9 @@ import {
 import {
     FlowSummaryDataFragment,
     FlowStatus,
-    FetchStep,
     FlowStartCondition,
-    DatasetBasicsFragment,
+    Account,
+    Dataset,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { MatTableDataSource } from "@angular/material/table";
@@ -27,9 +26,11 @@ import { promiseWithCatch } from "src/app/common/app.helpers";
 import { MatMenuTrigger } from "@angular/material/menu";
 import { MatRadioChange } from "@angular/material/radio";
 import { DatasetFlowTableHelpers } from "./flows-table.helpers";
-import { FilterByInitiatorEnum, TransformDescriptionTableData } from "./flows-table.types";
+import { CancelFlowArgs, FilterByInitiatorEnum, FlowsTableOptions } from "./flows-table.types";
 import { ModalService } from "src/app/components/modal/modal.service";
 import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
+import { OperatorFunction, Observable, debounceTime, distinctUntilChanged, tap, map } from "rxjs";
+import { MaybeNull } from "../../app.types";
 
 @Component({
     selector: "app-flows-table",
@@ -41,22 +42,26 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     @Input() public nodes: FlowSummaryDataFragment[];
     @Input() public filterByStatus: MaybeNull<FlowStatus>;
     @Input() public filterByInitiator: FilterByInitiatorEnum;
-    @Input() public searchByAccountName: string;
-    @Input() public fetchStep: MaybeUndefined<FetchStep>;
-    @Input() public transformData: TransformDescriptionTableData;
-    @Input() public datasetBasics: DatasetBasicsFragment;
+    @Input() public searchByAccount: MaybeNull<Account>;
+    @Input() public searchByDataset: MaybeNull<Dataset>;
+    @Input() tableOptions: FlowsTableOptions;
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
     @Output() public filterByInitiatorChange = new EventEmitter<FilterByInitiatorEnum>();
-    @Output() public searchByAccountNameChange = new EventEmitter<string>();
-    @Output() public cancelFlowChange = new EventEmitter<string>();
-    public readonly DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"];
-    public readonly INITIATORS: string[] = Object.keys(FilterByInitiatorEnum);
+    @Output() public searchByAccountNameChange = new EventEmitter<MaybeNull<Account>>();
+    @Output() public searchByDatasetNameChange = new EventEmitter<MaybeNull<Dataset>>();
+    @Output() public cancelFlowChange = new EventEmitter<CancelFlowArgs>();
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly FilterByInitiatorEnum: typeof FilterByInitiatorEnum = FilterByInitiatorEnum;
+    public readonly SEARCH_DATASET_TYPEAHEAD_HEIGHT = 65;
+    public readonly TYPEAHEAD_ITEM_HEIGHT = 30;
+
     public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>();
     @ViewChildren(MatMenuTrigger) triggersMatMenu: QueryList<MatMenuTrigger>;
+    public searchAccountDatasetsLength: number;
+    @Input() public accountFlowInitiators: MaybeNull<Account[]> = null;
+    @Input() public involvedDatasets: Dataset[];
 
     constructor(
         private navigationService: NavigationService,
@@ -91,8 +96,8 @@ export class FlowsTableComponent implements OnInit, OnChanges {
         return DatasetFlowTableHelpers.descriptionEndOfMessage(element);
     }
 
-    public descriptionDatasetFlowSubMessage(element: FlowSummaryDataFragment): string {
-        return DatasetFlowTableHelpers.descriptionSubMessage(element, this.fetchStep, this.transformData);
+    public descriptionDatasetFlowSubMessage(element: FlowSummaryDataFragment, datasetId: string): string {
+        return DatasetFlowTableHelpers.descriptionSubMessage(element, this.involvedDatasets ?? [], datasetId);
     }
 
     public changeFilterByStatus(status: MaybeNull<FlowStatus>): void {
@@ -100,8 +105,13 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     }
 
     public onSearchByAccountName(): void {
-        this.searchByAccountNameChange.emit(this.searchByAccountName);
+        this.searchByAccountNameChange.emit(this.searchByAccount);
         this.triggersMatMenu.get(1)?.closeMenu();
+    }
+
+    public onSearchByDatasetName(): void {
+        this.searchByDatasetNameChange.emit(this.searchByDataset);
+        this.triggersMatMenu.get(2)?.closeMenu();
     }
 
     public changeFilterByInitiator(event: MatRadioChange): void {
@@ -128,7 +138,12 @@ export class FlowsTableComponent implements OnInit, OnChanges {
         return DatasetFlowTableHelpers.waitingBlockText(startCondition);
     }
 
-    public cancelFlow(flowId: string): void {
+    public datasetById(datasetId: string): Dataset {
+        const dataset = this.involvedDatasets.find((dataset) => dataset.id === datasetId) as Dataset;
+        return dataset;
+    }
+
+    public cancelFlow(flowId: string, datasetId: string): void {
         promiseWithCatch(
             this.modalService.error({
                 title: "Cancel flow",
@@ -137,22 +152,75 @@ export class FlowsTableComponent implements OnInit, OnChanges {
                 noButtonText: "Cancel",
                 handler: (ok) => {
                     if (ok) {
-                        this.cancelFlowChange.emit(flowId);
+                        this.cancelFlowChange.emit({ flowId, datasetId });
                     }
                 },
             }),
         );
     }
 
-    public navigateToFlowDetaisView(flowId: string): void {
+    public navigateToFlowDetaisView(flow: FlowSummaryDataFragment, datasetId: string): void {
         this.navigationService.navigateToFlowDetails({
-            accountName: this.datasetBasics.owner.accountName,
-            datasetName: this.datasetBasics.name,
-            flowId,
+            accountName: this.datasetById(datasetId).owner.accountName,
+            datasetName: this.datasetById(datasetId).name,
+            flowId: flow.flowId,
         });
     }
 
     public dynamicImgSrc(status: FlowStatus): string {
         return DatasetFlowDetailsHelpers.dynamicImgSrc(status);
+    }
+
+    public accountFormatter(x: Account | string): string {
+        return typeof x !== "string" ? x.accountName : x;
+    }
+
+    public searchByAccountName: OperatorFunction<string, readonly Account[]> = (text$: Observable<string>) =>
+        text$.pipe(
+            debounceTime(200),
+            distinctUntilChanged(),
+            map((term) =>
+                (term === "" || !this.accountFlowInitiators
+                    ? []
+                    : this.accountFlowInitiators.filter(
+                          (initiator) => initiator.accountName.toLowerCase().indexOf(term.toLowerCase()) > -1,
+                      )
+                ).slice(0, 10),
+            ),
+        );
+
+    public searchByDatasetName: OperatorFunction<string, readonly Dataset[]> = (text$: Observable<string>) =>
+        text$.pipe(
+            debounceTime(200),
+            distinctUntilChanged(),
+            map((term) =>
+                (term === "" || !this.involvedDatasets
+                    ? []
+                    : this.involvedDatasets.filter(
+                          (initiator) => initiator.name.toLowerCase().indexOf(term.toLowerCase()) > -1,
+                      )
+                ).slice(0, 10),
+            ),
+            tap((result) => (this.searchAccountDatasetsLength = result.length)),
+        );
+
+    public datasetFormatter(x: Dataset | string): string {
+        return typeof x !== "string" ? x.name : x;
+    }
+
+    public onClickDataset(datasetId: string): void {
+        this.navigationService.navigateToDatasetView({
+            accountName: this.datasetById(datasetId).owner.accountName,
+            datasetName: this.datasetById(datasetId).name,
+        });
+    }
+
+    public clearSearchByDatasetName(): void {
+        this.searchByDataset = null;
+        this.searchByDatasetNameChange.emit(this.searchByDataset);
+    }
+
+    public get hasDatasetColumn(): boolean {
+        return this.tableOptions.displayColumns.includes("dataset");
     }
 }

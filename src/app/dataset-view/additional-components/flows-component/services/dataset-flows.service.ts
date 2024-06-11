@@ -3,11 +3,13 @@ import { ToastrService } from "ngx-toastr";
 import { Observable, map } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
+    Account,
     CancelScheduledTasksMutation,
+    Dataset,
     DatasetAllFlowsPausedQuery,
     DatasetFlowFilters,
     DatasetFlowType,
-    DatasetMetadata,
+    DatasetFlowsInitiatorsQuery,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsMutation,
     DatasetTriggerFlowMutation,
@@ -16,7 +18,7 @@ import {
     GetFlowByIdQuery,
 } from "src/app/api/kamu.graphql.interface";
 import { MaybeUndefined } from "src/app/common/app.types";
-import { FlowsTableData } from "../components/flows-table/flows-table.types";
+import { FlowsTableData } from "src/app/common/components/flows-table/flows-table.types";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 
 @Injectable({
@@ -67,14 +69,9 @@ export class DatasetFlowsService {
     }): Observable<FlowsTableData> {
         return this.datasetFlowApi.getDatasetListFlows(params).pipe(
             map((data: GetDatasetListFlowsQuery) => {
-                const metadata = data.datasets.byId?.metadata as DatasetMetadata;
                 return {
                     connectionData: data.datasets.byId?.flows.runs.listFlows as FlowConnectionDataFragment,
-                    source: metadata.currentPollingSource?.fetch,
-                    transformData: {
-                        numInputs: metadata.currentTransform?.inputs.length ?? 0,
-                        engine: metadata.currentTransform?.transform.engine ?? "",
-                    },
+                    involvedDatasets: [data.datasets.byId as Dataset],
                 };
             }),
         );
@@ -124,6 +121,18 @@ export class DatasetFlowsService {
                 } else if (data.datasets.byId?.flows.runs.getFlow.__typename === "FlowNotFound") {
                     this.toastrService.error(data.datasets.byId.flows.runs.getFlow.message);
                 }
+            }),
+        );
+    }
+
+    public flowsInitiators(datasetId: string): Observable<Account[]> {
+        return this.datasetFlowApi.getDatasetFlowsInitiators(datasetId).pipe(
+            map((data: DatasetFlowsInitiatorsQuery) => {
+                return data.datasets.byId?.flows.runs.listFlowInitiators.nodes.sort((a, b) => {
+                    if (a.accountName < b.accountName) return -1;
+                    if (a.accountName > b.accountName) return 1;
+                    return 0;
+                }) as Account[];
             }),
         );
     }

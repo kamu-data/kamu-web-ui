@@ -1,4 +1,5 @@
-import { FlowStatus, FlowSummaryDataFragment, TimeUnit } from "src/app/api/kamu.graphql.interface";
+import { DatasetKind, FlowStatus, FlowSummaryDataFragment, TimeUnit } from "src/app/api/kamu.graphql.interface";
+import { mockDatasetMainDataId } from "src/app/search/mock.data";
 
 export const expectationsDesriptionColumnOptions = [
     {
@@ -427,4 +428,114 @@ export const tooltipTextResults: string[] = [
     "Completed time: Mar 14th 2024, 2:24:29 PM",
     "Aborted time: Mar 14th 2024, 11:24:29 AM",
     "Start running time: Mar 14th 2024, 11:24:29 AM",
+];
+
+export const mockDatasets = [
+    {
+        id: mockDatasetMainDataId,
+        kind: DatasetKind.Root,
+        name: "account.tokens.transfers",
+        owner: {
+            id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+            accountName: "kamu",
+            __typename: "Account",
+        },
+        alias: "account.tokens.transfers",
+        __typename: "Dataset",
+        metadata: {
+            currentPollingSource: {
+                fetch: {
+                    url: "https://api.etherscan.io/api?module=account&action=tokentx&address=0xeadb3840596cabf312f2bc88a4bb0b93a4e1ff5f&page=1&offset=1000&startblock=0&endblock=99999999&apikey=${{ env.ETHERSCAN_API_KEY }}",
+                    eventTime: null,
+                    headers: null,
+                    cache: null,
+                    __typename: "FetchStepUrl",
+                },
+                __typename: "SetPollingSource",
+            },
+            currentTransform: null,
+            __typename: "DatasetMetadata",
+        },
+    },
+    {
+        id: "did:odf:fed014aee1c33d51f36c21fab6f13444bdce6fe3d5762cbb889adead63498f57f4101",
+        kind: DatasetKind.Root,
+        name: "account.tokens.transfers",
+        owner: {
+            id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+            accountName: "kamu",
+            __typename: "Account",
+        },
+        alias: "account.tokens.transfers",
+        __typename: "Dataset",
+        metadata: {
+            currentPollingSource: {
+                fetch: {
+                    image: "mockImage",
+                    __typename: "FetchStepContainer",
+                },
+                __typename: "SetPollingSource",
+            },
+            currentTransform: null,
+            __typename: "DatasetMetadata",
+        },
+    },
+    {
+        id: "did:odf:fed014aee1c33d51f36c21fab6f13444bdce6fe3d5762cbb889adead63498f57f4102",
+        kind: DatasetKind.Root,
+        name: "account.tokens.transfers",
+        owner: {
+            id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+            accountName: "kamu",
+            __typename: "Account",
+        },
+        alias: "account.tokens.transfers",
+        __typename: "Dataset",
+        metadata: {
+            currentPollingSource: {
+                fetch: {
+                    path: "c:/mock-path",
+                    __typename: "FetchStepFilesGlob",
+                },
+                __typename: "SetPollingSource",
+            },
+            currentTransform: null,
+            __typename: "DatasetMetadata",
+        },
+    },
+
+    {
+        id: "did:odf:fed014aee1c33d51f36c21fab6f13444bdce6fe3d5762cbb889adead63498f57f4103",
+        kind: DatasetKind.Root,
+        name: "account.tokens.transfers",
+        owner: {
+            id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+            accountName: "kamu",
+            __typename: "Account",
+        },
+        alias: "account.tokens.transfers",
+        __typename: "Dataset",
+        metadata: {
+            currentPollingSource: null,
+            currentTransform: {
+                inputs: [
+                    {
+                        __typename: "TransformInput",
+                    },
+                    {
+                        __typename: "TransformInput",
+                    },
+                    {
+                        __typename: "TransformInput",
+                    },
+                ],
+                transform: {
+                    engine: "flink",
+                    __typename: "TransformSql",
+                },
+                __typename: "SetTransform",
+            },
+            __typename: "DatasetMetadata",
+        },
+    },
 ];

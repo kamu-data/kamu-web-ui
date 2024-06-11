@@ -1,4 +1,4 @@
-import { FlowSummaryDataFragment, TimeUnit } from "src/app/api/kamu.graphql.interface";
+import { Dataset, FlowSummaryDataFragment, TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowTableHelpers } from "./flows-table.helpers";
 import { mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import {
@@ -6,12 +6,14 @@ import {
     expectationsDescriptionEndOfMessage,
     expectationsDesriptionColumnOptions,
     mockDatasetExecuteTransformFlowSummaryData,
+    mockDatasets,
     mockFlowSummaryDataFragmentTooltipAndDurationText,
     mockTableFlowSummaryDataFragments,
     tooltipTextResults,
 } from "./flows-table.helpers.mock";
 import timekeeper from "timekeeper";
 import moment from "moment";
+import { mockDatasetMainDataId } from "src/app/search/mock.data";
 
 describe("DatasetFlowTableHelpers", () => {
     beforeAll(() => {
@@ -105,57 +107,59 @@ describe("DatasetFlowTableHelpers", () => {
         expect(
             DatasetFlowTableHelpers.descriptionSubMessage(
                 mockTableFlowSummaryDataFragments[0],
-                { __typename: "FetchStepUrl", url: "http://test.com" },
-                { numInputs: 0, engine: "" },
+                mockDatasets as Dataset[],
+                mockDatasets[0].id,
             ),
-        ).toEqual("Polling data from url: http://test.com");
+        ).toEqual(`Polling data from url: ${mockDatasets[0].metadata.currentPollingSource?.fetch.url}`);
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and FetchStepContainer`, () => {
         expect(
             DatasetFlowTableHelpers.descriptionSubMessage(
                 mockTableFlowSummaryDataFragments[0],
-                { __typename: "FetchStepContainer", image: "mockImage" },
-                { numInputs: 0, engine: "" },
+                mockDatasets as Dataset[],
+                mockDatasets[1].id,
             ),
-        ).toEqual("Polling data from image: mockImage");
+        ).toEqual(`Polling data from image: ${mockDatasets[1].metadata.currentPollingSource?.fetch.image}`);
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and FetchStepFilesGlob`, () => {
         expect(
             DatasetFlowTableHelpers.descriptionSubMessage(
                 mockTableFlowSummaryDataFragments[0],
-                { __typename: "FetchStepFilesGlob", path: "c:/mock-path" },
-                { numInputs: 0, engine: "" },
+                mockDatasets as Dataset[],
+                mockDatasets[2].id,
             ),
-        ).toEqual("Polling data from file: c:/mock-path");
+        ).toEqual(`Polling data from file: ${mockDatasets[2].metadata.currentPollingSource?.fetch.path}`);
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetExecuteTransform typename `, () => {
         expect(
-            DatasetFlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[4], undefined, {
-                numInputs: 10,
-                engine: "spark",
-            }),
-        ).toEqual(`Transforming 10 input datasets using "Apache Spark" engine`);
+            DatasetFlowTableHelpers.descriptionSubMessage(
+                mockTableFlowSummaryDataFragments[4],
+                mockDatasets as Dataset[],
+                mockDatasets[3].id,
+            ),
+        ).toEqual(`Transforming 3 input datasets using "Apache Flink" engine`);
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and waiting status `, () => {
         expect(
             DatasetFlowTableHelpers.descriptionSubMessage(
                 mockTableFlowSummaryDataFragments[3],
-                { __typename: "FetchStepFilesGlob", path: "c:/mock-path" },
-                { numInputs: 0, engine: "" },
+                mockDatasets as Dataset[],
+                mockDatasets[2].id,
             ),
-        ).toEqual("Polling data from file: c:/mock-path");
+        ).toEqual(`Polling data from file: ${mockDatasets[2].metadata.currentPollingSource?.fetch.path}`);
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetExecuteTransform typename and success outcome `, () => {
         expect(
-            DatasetFlowTableHelpers.descriptionSubMessage(mockDatasetExecuteTransformFlowSummaryData, undefined, {
-                numInputs: 2,
-                engine: "spark",
-            }),
+            DatasetFlowTableHelpers.descriptionSubMessage(
+                mockDatasetExecuteTransformFlowSummaryData,
+                mockDatasets as Dataset[],
+                mockDatasets[3].id,
+            ),
         ).toEqual(`Transformed 10 new records in 2 new blocks`);
     });
 
@@ -163,11 +167,8 @@ describe("DatasetFlowTableHelpers", () => {
         expect(
             DatasetFlowTableHelpers.descriptionSubMessage(
                 mockTableFlowSummaryDataFragments[5],
-                { __typename: "FetchStepFilesGlob", path: "c:/mock-path" },
-                {
-                    numInputs: 0,
-                    engine: "",
-                },
+                mockDatasets as Dataset[],
+                mockDatasets[3].id,
             ),
         ).toEqual("Ingested 30 new records in 4 new blocks");
     });
@@ -176,11 +177,8 @@ describe("DatasetFlowTableHelpers", () => {
         expect(
             DatasetFlowTableHelpers.descriptionSubMessage(
                 mockTableFlowSummaryDataFragments[6],
-                { __typename: "FetchStepFilesGlob", path: "c:/mock-path" },
-                {
-                    numInputs: 0,
-                    engine: "",
-                },
+                mockDatasets as Dataset[],
+                mockDatasets[3].id,
             ),
         ).toContain("Aborted at");
     });
@@ -189,11 +187,8 @@ describe("DatasetFlowTableHelpers", () => {
         expect(
             DatasetFlowTableHelpers.descriptionSubMessage(
                 mockTableFlowSummaryDataFragments[7],
-                { __typename: "FetchStepFilesGlob", path: "c:/mock-path" },
-                {
-                    numInputs: 0,
-                    engine: "",
-                },
+                mockDatasets as Dataset[],
+                mockDatasetMainDataId,
             ),
         ).toEqual("An error occurred, see logs for more details");
     });

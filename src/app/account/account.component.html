@@ -91,6 +91,15 @@
                         }}</span>
                     </mat-button-toggle>
                     <mat-button-toggle
+                        data-test-id="account-flows-tab"
+                        value="flows"
+                        [checked]="activeTab === AccountTabs.FLOWS"
+                        (click)="onSelectFlowsTab(user)"
+                    >
+                        <mat-icon class="text-muted fs-4">add_task</mat-icon>
+                        <span class="mx-2">Flows </span>
+                    </mat-button-toggle>
+                    <mat-button-toggle
                         data-test-id="account-organizations-tab"
                         value="organizations"
                         [checked]="activeTab === AccountTabs.ORGANIZATIONS"
@@ -135,6 +144,9 @@
                     [accountName]="user.accountName"
                     [pageInfo]="datasetsData.pageInfo"
                 ></app-datasets-tab>
+            </ng-container>
+            <ng-container *ngIf="activeTab === AccountTabs.FLOWS">
+                <app-account-flows-tab [accountName]="user.accountName"></app-account-flows-tab>
             </ng-container>
             <ng-container *ngIf="activeTab === AccountTabs.ORGANIZATIONS">
                 <div>Organizations</div>

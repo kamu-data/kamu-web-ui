@@ -1,0 +1,16 @@
+query datasetFlowsInitiators($datasetId: DatasetID!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      flows {
+        runs {
+          listFlowInitiators {
+            totalCount
+            nodes {
+              ...Account
+            }
+          }
+        }
+      }
+    }
+  }
+}

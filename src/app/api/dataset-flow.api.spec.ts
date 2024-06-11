@@ -13,6 +13,8 @@ import {
     DatasetFlowScheduleDocument,
     DatasetFlowScheduleMutation,
     DatasetFlowType,
+    DatasetFlowsInitiatorsDocument,
+    DatasetFlowsInitiatorsQuery,
     DatasetPauseFlowsDocument,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsDocument,
@@ -42,6 +44,7 @@ import {
     mockDatasetResumeFlowsMutationSuccess,
     mockDatasetAllFlowsPausedQuery,
     mockGetFlowByIdQuerySuccess,
+    mockDatasetFlowsInitiatorsQuery,
 } from "./mock/dataset-flow.mock";
 
 describe("DatasetFlowApi", () => {
@@ -215,8 +218,10 @@ describe("DatasetFlowApi", () => {
                 datasetId: TEST_DATASET_ID,
                 datasetFlowType: DatasetFlowType.HardCompacting,
                 compactingArgs: {
-                    maxSliceSize: MOCK_SLICE_SIZE,
-                    maxSliceRecords: MOCK_SLICE_RECORDS,
+                    full: {
+                        maxSliceSize: MOCK_SLICE_SIZE,
+                        maxSliceRecords: MOCK_SLICE_RECORDS,
+                    },
                 },
             })
             .subscribe((res: DatasetFlowCompactingMutation) => {
@@ -311,6 +316,20 @@ describe("DatasetFlowApi", () => {
         expect(op.operation.variables.flowId).toEqual(MOCK_FLOW_ID);
         op.flush({
             data: mockGetFlowByIdQuerySuccess,
+        });
+    });
+
+    it("should check getDatasetFlowsInitiators", () => {
+        service.getDatasetFlowsInitiators(TEST_DATASET_ID).subscribe((res: DatasetFlowsInitiatorsQuery) => {
+            expect(res.datasets.byId?.flows.runs.listFlowInitiators.nodes.length).toEqual(
+                mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators.nodes.length,
+            );
+        });
+
+        const op = controller.expectOne(DatasetFlowsInitiatorsDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        op.flush({
+            data: mockDatasetFlowsInitiatorsQuery,
         });
     });
 });

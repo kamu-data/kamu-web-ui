@@ -46,11 +46,12 @@
                         {{ flowTypeDescription(element) }}
                         <span>{{ descriptionDatasetFlowEndOfMessage(element) }}</span>
                     </span>
-                    <br />
-                    <span
-                        class="text-small d-block pe-4"
-                        [innerHTML]="descriptionDatasetFlowSubMessage(element) | safeHtml"
-                    ></span>
+                    <div
+                        class="text-small d-block pe-4 truncate-sub-message"
+                        [innerHTML]="
+                            descriptionDatasetFlowSubMessage(element, element.description.datasetId) | safeHtml
+                        "
+                    ></div>
                 </div>
             </div>
         </td>
@@ -86,15 +87,15 @@
 
     <!-- Creator Column -->
     <ng-container matColumnDef="creator">
-        <th mat-header-cell *matHeaderCellDef>
+        <th mat-header-cell *matHeaderCellDef style="width: 15%">
             <div class="d-inline-block">
                 <button mat-button [matMenuTriggerFor]="creatorByMenu">
                     <span class="text-dark"> Initiated By <span class="carpet"></span> </span>
                 </button>
 
                 <mat-menu #creatorByMenu="matMenu" xPosition="after" [hasBackdrop]="true">
-                    <div (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" class="test">
-                        <div class="px-4 py-2 border-bottom d-flex align-items-center">
+                    <div (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+                        <div class="px-4 py-2 border-bottom d-flex align-items-center overflow-hidden">
                             <mat-radio-group
                                 color="primary"
                                 class="example-radio-group d-flex flex-column gap-2"
@@ -104,7 +105,7 @@
                                 <mat-radio-button
                                     [disableRipple]="true"
                                     class="example-radio-button"
-                                    *ngFor="let initiator of INITIATORS"
+                                    *ngFor="let initiator of tableOptions.initiatorsTypes"
                                     [value]="initiator"
                                 >
                                     <span class="text-small">
@@ -113,18 +114,30 @@
                                 </mat-radio-button>
                             </mat-radio-group>
                         </div>
-                        <div class="select-item d-flex">
+                        <div class="select-item d-flex position-relative">
                             <input
                                 class="form-control search-creator color-bg-subtle"
                                 type="text"
-                                [(ngModel)]="searchByAccountName"
+                                #searchAccount
+                                autocomplete="on"
+                                [(ngModel)]="searchByAccount"
                                 placeholder="Enter name..."
                                 data-test-id="searchByAccountName"
+                                [inputFormatter]="accountFormatter"
+                                [ngbTypeahead]="searchByAccountName"
+                                [resultTemplate]="rt"
+                                [editable]="false"
                                 [disabled]="filterByInitiator !== FilterByInitiatorEnum.Account"
                             />
+                            <ng-template #rt let-r="result" let-t="term">
+                                <div class="d-flex flex-row" [style.width.px]="searchAccount.clientWidth - 28">
+                                    <img [src]="r.avatarUrl ?? DEFAULT_AVATAR_URL" class="me-2" style="width: 18px" />
+                                    <ngb-highlight [result]="r.accountName" [term]="t"></ngb-highlight>
+                                </div>
+                            </ng-template>
                             <button
                                 (click)="onSearchByAccountName()"
-                                [disabled]="!searchByAccountName"
+                                [disabled]="!searchByAccount"
                                 class="btn btn-sm btn-gray rounded-0 search-creator-button position-relative"
                             >
                                 <mat-icon class="text-muted fs-4 search-creator-icon">search</mat-icon>
@@ -137,7 +150,7 @@
         <td mat-cell *matCellDef="let element">
             <div class="d-flex align-items-center ps-3">
                 <ng-container *ngIf="element.initiator; else noInitiator">
-                    <img class="img-creator" [src]="element.initiator.avatarUrl || DEFAULT_AVATAR_URL" />
+                    <img class="img-creator" [src]="element.initiator.avatarUrl ?? DEFAULT_AVATAR_URL" />
                     <span class="ms-2 text-small"> {{ element.initiator.displayName }}</span>
                 </ng-container>
                 <ng-template #noInitiator>
@@ -147,17 +160,86 @@
         </td>
     </ng-container>
 
+    <ng-container matColumnDef="dataset" *ngIf="hasDatasetColumn">
+        <th mat-header-cell *matHeaderCellDef style="width: 20%">
+            <div class="d-inline-block">
+                <button mat-button [matMenuTriggerFor]="datasetName">
+                    <span class="text-dark"> Dataset <span class="carpet"></span> </span>
+                </button>
+
+                <mat-menu #datasetName="matMenu" class="search-dataset" xPosition="before" [hasBackdrop]="true">
+                    <div
+                        (click)="$event.stopPropagation()"
+                        (keydown)="$event.stopPropagation()"
+                        [style.height.px]="
+                            searchByDataset
+                                ? SEARCH_DATASET_TYPEAHEAD_HEIGHT
+                                : SEARCH_DATASET_TYPEAHEAD_HEIGHT + searchAccountDatasetsLength * TYPEAHEAD_ITEM_HEIGHT
+                        "
+                    >
+                        <div class="d-flex select-item position-relative">
+                            <input
+                                class="form-control search-creator color-bg-subtle"
+                                type="text"
+                                [(ngModel)]="searchByDataset"
+                                placeholder="Enter dataset name ..."
+                                autocomplete="on"
+                                [inputFormatter]="datasetFormatter"
+                                [ngbTypeahead]="searchByDatasetName"
+                                data-test-id="searchByDatasetName"
+                                [editable]="false"
+                                [resultTemplate]="dr"
+                            />
+                            <ng-template #dr let-r="result" let-t="term">
+                                <div class="d-flex flex-row">
+                                    <ngb-highlight
+                                        class="truncate-dataset-search"
+                                        [result]="r.name"
+                                        [term]="t"
+                                    ></ngb-highlight>
+                                </div>
+                            </ng-template>
+                            <button
+                                (click)="clearSearchByDatasetName()"
+                                [disabled]="!searchByDataset"
+                                class="btn btn-sm btn-gray rounded-0 position-relative"
+                            >
+                                Clear
+                            </button>
+                            <button
+                                [disabled]="!searchByDataset"
+                                (click)="onSearchByDatasetName()"
+                                class="btn btn-sm btn-gray rounded-0 search-creator-button position-relative"
+                            >
+                                <mat-icon class="text-muted fs-4 search-creator-icon">search</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </mat-menu>
+            </div>
+        </th>
+        <td mat-cell *matCellDef="let element">
+            <div class="d-flex align-items-center ps-3">
+                <a (click)="onClickDataset(element.description.datasetId)" class="text-small">{{
+                    datasetById(element.description.datasetId).name
+                }}</a>
+            </div>
+        </td>
+    </ng-container>
+
     <!-- Options Column -->
     <ng-container matColumnDef="options">
-        <th mat-header-cell *matHeaderCellDef></th>
+        <th mat-header-cell *matHeaderCellDef style="width: 20%"></th>
         <td mat-cell *matCellDef="let element">
             <div class="pe-2">
                 <button mat-button [matMenuTriggerFor]="tableOptions"><svg-icon name="show-options"></svg-icon></button>
                 <mat-menu #tableOptions="matMenu" xPosition="before" [hasBackdrop]="true">
-                    <button mat-menu-item (click)="navigateToFlowDetaisView(element.flowId)">Details</button>
+                    <button mat-menu-item (click)="navigateToFlowDetaisView(element, element.description.datasetId)">
+                        Details
+                    </button>
                     <mat-divider></mat-divider>
                     <button
-                        (click)="cancelFlow(element.flowId)"
+                        (click)="cancelFlow(element.flowId, element.description.datasetId)"
                         mat-menu-item
                         [disabled]="element.status === FlowStatus.Finished"
                     >
@@ -170,9 +252,11 @@
 
     <!-- Row shown when there is no matching data. -->
     <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell text-center" colspan="4">No data matching the filter</td>
+        <td class="mat-cell text-center" [attr.colspan]="tableOptions.displayColumns.length">
+            No data matching the filter
+        </td>
     </tr>
 
-    <tr mat-header-row *matHeaderRowDef="DISPLAY_COLUMNS"></tr>
-    <tr mat-row *matRowDef="let row; columns: DISPLAY_COLUMNS"></tr>
+    <tr mat-header-row *matHeaderRowDef="tableOptions.displayColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: tableOptions.displayColumns"></tr>
 </table>

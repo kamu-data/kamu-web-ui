@@ -1,12 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import {
     DatasetBasicsFragment,
     DatasetFlowType,
@@ -15,18 +7,13 @@ import {
     FlowStatus,
     InitiatorFilterInput,
 } from "src/app/api/kamu.graphql.interface";
-import { DatasetFlowsService } from "./services/dataset-flows.service";
-import { Observable, Subject, filter, map, switchMap, tap, timer } from "rxjs";
-import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
-import { BaseComponent } from "src/app/common/base.component";
-import { NavigationEnd, Router, RouterEvent } from "@angular/router";
-import { requireValue } from "src/app/common/app.helpers";
-import ProjectLinks from "src/app/project-links";
-import { NavigationService } from "src/app/services/navigation.service";
+import { combineLatest, map, switchMap, timer } from "rxjs";
+import { MaybeNull } from "src/app/common/app.types";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
-import { FilterByInitiatorEnum, FlowsTableData } from "./components/flows-table/flows-table.types";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
+import { environment } from "src/environments/environment";
+import { FlowsTableProcessingBaseComponent } from "src/app/common/components/flows-table/flows-table-processing-base.component";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 
 @Component({
@@ -35,51 +22,52 @@ import { OverviewUpdate } from "../../dataset.subscriptions.interface";
     styleUrls: ["./flows.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FlowsComponent extends BaseComponent implements OnInit {
+export class FlowsComponent extends FlowsTableProcessingBaseComponent implements OnInit {
     @Input() public datasetBasics: DatasetBasicsFragment;
-    @Output() onPageChangeEmit = new EventEmitter<number>();
     public searchFilter = "";
-    public tileWidgetData$: Observable<MaybeUndefined<FlowsTableData>>;
-    public flowConnectionData$: Observable<MaybeUndefined<FlowsTableData>>;
-    public allFlowsPaused$: Observable<MaybeUndefined<boolean>>;
-    public filterByStatus: MaybeNull<FlowStatus> = null;
-    public filterByInitiator = FilterByInitiatorEnum.All;
-    public searchByAccountName = "";
-    public currentPage = 1;
     public overview: DatasetOverviewFragment;
-    public readonly WIDGET_FLOW_RUNS_PER_PAGE: number = 150;
-    public readonly TABLE_FLOW_RUNS_PER_PAGE: number = 15;
-    public readonly FlowStatus: typeof FlowStatus = FlowStatus;
-    public readonly TIMEOUT_REFRESH_FLOW = 800;
-    private readonly loadingFlowsList = new Subject<boolean>();
+    public readonly DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"]; //1
 
-    constructor(
-        private flowsService: DatasetFlowsService,
-        private router: Router,
-        private navigationService: NavigationService,
-        private cdr: ChangeDetectorRef,
-        private datasetSubsService: DatasetSubscriptionsService,
-    ) {
+    constructor(private datasetSubsService: DatasetSubscriptionsService) {
         super();
     }
 
-    public get loadingFlowsList$(): Observable<boolean> {
-        return this.loadingFlowsList;
-    }
-
     ngOnInit(): void {
-        this.getTileWidgetData();
-        this.datasetFlowListByPage();
-        this.allFlowsPaused$ = this.flowsService.allFlowsPaused(this.datasetBasics.id);
+        this.getPageFromUrl();
+        this.fetchTableData(this.currentPage);
         this.trackSubscriptions(
-            this.router.events
-                .pipe(
-                    filter((event) => event instanceof NavigationEnd),
-                    map((event) => event as RouterEvent),
-                )
-                .subscribe(() => this.datasetFlowListByPage()),
             this.datasetSubsService.overviewChanges.subscribe((overviewUpdate: OverviewUpdate) => {
                 this.overview = overviewUpdate.overview;
+            }),
+        );
+    }
+
+    public fetchTableData(
+        page: number,
+        filterByStatus?: MaybeNull<FlowStatus>,
+        filterByInitiator?: MaybeNull<InitiatorFilterInput>,
+    ): void {
+        this.flowConnectionData$ = timer(0, environment.delay_polling_ms).pipe(
+            switchMap(() =>
+                combineLatest([
+                    this.flowsService.datasetFlowsList({
+                        datasetId: this.datasetBasics.id,
+                        page: page - 1,
+                        perPage: this.TABLE_FLOW_RUNS_PER_PAGE,
+                        filters: { byStatus: filterByStatus, byInitiator: filterByInitiator },
+                    }),
+                    this.flowsService.datasetFlowsList({
+                        datasetId: this.datasetBasics.id,
+                        page: 0,
+                        perPage: this.WIDGET_FLOW_RUNS_PER_PAGE,
+                        filters: {},
+                    }),
+                    this.flowsService.allFlowsPaused(this.datasetBasics.id),
+                    this.flowsService.flowsInitiators(this.datasetBasics.id),
+                ]),
+            ),
+            map(([mainTableFlowsData, tileWidgetListFlowsData, allFlowsPaused, flowInitiators]) => {
+                return { mainTableFlowsData, tileWidgetListFlowsData, allFlowsPaused, flowInitiators };
             }),
         );
     }
@@ -106,51 +94,22 @@ export class FlowsComponent extends BaseComponent implements OnInit {
         });
     }
 
-    public getFlowConnectionData(
-        page: number,
-        filterByStatus?: MaybeNull<FlowStatus>,
-        filterByInitiator?: MaybeNull<InitiatorFilterInput>,
-    ): void {
-        this.flowConnectionData$ = timer(0, 10000).pipe(
-            switchMap(() =>
-                this.flowsService.datasetFlowsList({
-                    datasetId: this.datasetBasics.id,
-                    page: page - 1,
-                    perPage: this.TABLE_FLOW_RUNS_PER_PAGE,
-                    filters: { byStatus: filterByStatus, byInitiator: filterByInitiator },
-                }),
-            ),
-        );
-    }
-
-    public getTileWidgetData(): void {
-        this.tileWidgetData$ = timer(0, 10000).pipe(
-            tap(() => this.loadingFlowsList.next(false)),
-            switchMap(() =>
-                this.flowsService.datasetFlowsList({
-                    datasetId: this.datasetBasics.id,
-                    page: 0,
-                    perPage: this.WIDGET_FLOW_RUNS_PER_PAGE,
-                    filters: {},
-                }),
-            ),
-            tap(() => this.loadingFlowsList.next(true)),
-        );
-    }
-
     public onPageChange(page: number): void {
-        this.onPageChangeEmit.emit(page);
-    }
-
-    public datasetFlowListByPage(): void {
-        const pageParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE);
-        if (pageParam) {
-            this.currentPage = +requireValue(pageParam);
-            this.getFlowConnectionData(this.currentPage, this.filterByStatus);
+        if (page === 1) {
+            this.navigationService.navigateToDatasetView({
+                accountName: this.datasetBasics.owner.accountName,
+                datasetName: this.datasetBasics.name,
+                tab: DatasetViewTypeEnum.Flows,
+            });
         } else {
-            this.currentPage = 1;
-            this.getFlowConnectionData(this.currentPage, this.filterByStatus);
+            this.navigationService.navigateToDatasetView({
+                accountName: this.datasetBasics.owner.accountName,
+                datasetName: this.datasetBasics.name,
+                tab: DatasetViewTypeEnum.Flows,
+                page,
+            });
         }
+        this.fetchTableData(page);
     }
 
     public updateSettings(): void {
@@ -183,28 +142,6 @@ export class FlowsComponent extends BaseComponent implements OnInit {
         );
     }
 
-    public onChangeFilterByStatus(status: MaybeNull<FlowStatus>): void {
-        this.getFlowConnectionData(this.currentPage, status);
-        this.filterByStatus = status;
-    }
-
-    public onChangeFilterByInitiator(initiator: FilterByInitiatorEnum): void {
-        if (initiator !== FilterByInitiatorEnum.Account) {
-            let filterOptions: MaybeNull<InitiatorFilterInput> = null;
-            if (initiator === FilterByInitiatorEnum.System) {
-                filterOptions = { system: true };
-            }
-            this.getFlowConnectionData(this.currentPage, this.filterByStatus, filterOptions);
-            this.resetSearchByAccountName();
-        }
-        this.filterByInitiator = initiator;
-    }
-
-    public onSearchByAccountName(accountName: string): void {
-        this.getFlowConnectionData(this.currentPage, this.filterByStatus, { account: accountName });
-        this.searchByAccountName = accountName;
-    }
-
     public toggleStateDatasetFlowConfigs(paused: boolean): void {
         if (!paused) {
             this.trackSubscription(
@@ -224,40 +161,8 @@ export class FlowsComponent extends BaseComponent implements OnInit {
             );
         }
         setTimeout(() => {
-            this.updateStateComponent();
+            this.refreshFlow();
             this.cdr.detectChanges();
         }, this.TIMEOUT_REFRESH_FLOW);
-    }
-
-    private updateStateComponent(): void {
-        this.allFlowsPaused$ = this.flowsService.allFlowsPaused(this.datasetBasics.id);
-        this.getTileWidgetData();
-        this.getFlowConnectionData(this.currentPage, this.filterByStatus);
-    }
-
-    private resetSearchByAccountName(): void {
-        this.searchByAccountName = "";
-    }
-
-    public refreshFlow(): void {
-        this.getTileWidgetData();
-        this.getFlowConnectionData(this.currentPage, this.filterByStatus);
-    }
-
-    public onCancelFlow(flowId: string): void {
-        this.trackSubscription(
-            this.flowsService
-                .cancelScheduledTasks({
-                    datasetId: this.datasetBasics.id,
-                    flowId,
-                })
-                .subscribe((success: boolean) => {
-                    if (success) {
-                        setTimeout(() => {
-                            this.refreshFlow();
-                        }, this.TIMEOUT_REFRESH_FLOW);
-                    }
-                }),
-        );
     }
 }

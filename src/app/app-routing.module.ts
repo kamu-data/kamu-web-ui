@@ -9,7 +9,6 @@ import { SearchComponent } from "./search/search.component";
 import { LoginComponent } from "./auth/login/login.component";
 import { DatasetComponent } from "./dataset-view/dataset.component";
 import { DatasetCreateComponent } from "./dataset-create/dataset-create.component";
-import { AccountComponent } from "./auth/account/account.component";
 import { GithubCallbackComponent } from "./auth/github-callback/github.callback";
 import ProjectLinks from "./project-links";
 import { SetTransformComponent } from "./dataset-view/additional-components/metadata-component/components/set-transform/set-transform.component";
@@ -19,6 +18,7 @@ import { AddPushSourceComponent } from "./dataset-view/additional-components/met
 import { AdminGuard } from "./auth/guards/admin.guard";
 import { AdminDashboardComponent } from "./admin-view/admin-dashboard/admin-dashboard.component";
 import { DatasetFlowDetailsComponent } from "./dataset-flow/dataset-flow-details/dataset-flow-details.component";
+import { AccountComponent } from "./account/account.component";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },

@@ -1,9 +1,9 @@
-import { MaybeNullOrUndefined } from "./../../../../../common/app.types";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FlowOutcomeDataFragment, FlowStatus, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
 import { TileBaseWidgetHelpers } from "./tile-base-widget.helpers";
 import { DataHelpers } from "src/app/common/data.helpers";
 import AppValues from "src/app/common/app.values";
+import { MaybeNullOrUndefined } from "../../app.types";
 
 @Component({
     selector: "app-tile-base-widget",

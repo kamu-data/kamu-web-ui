@@ -51,6 +51,28 @@ export type Account = {
     isAdmin: Scalars["Boolean"];
 };
 
+export type AccountConnection = {
+    __typename?: "AccountConnection";
+    edges: Array<AccountEdge>;
+    /** A shorthand for `edges { node { ... } }` */
+    nodes: Array<Account>;
+    /** Page information */
+    pageInfo: PageBasedInfo;
+    /** Approximate number of total nodes */
+    totalCount: Scalars["Int"];
+};
+
+export type AccountEdge = {
+    __typename?: "AccountEdge";
+    node: Account;
+};
+
+export type AccountFlowConfigs = {
+    __typename?: "AccountFlowConfigs";
+    /** Checks if all configs of all datasets in account are disabled */
+    allPaused: Scalars["Boolean"];
+};
+
 export type AccountFlowConfigsMut = {
     __typename?: "AccountFlowConfigsMut";
     pauseAccountDatasetFlows: Scalars["Boolean"];
@@ -58,7 +80,7 @@ export type AccountFlowConfigsMut = {
 };
 
 export type AccountFlowFilters = {
-    byDatasetName?: InputMaybe<Scalars["DatasetName"]>;
+    byDatasetIds: Array<Scalars["DatasetID"]>;
     byFlowType?: InputMaybe<DatasetFlowType>;
     byInitiator?: InputMaybe<InitiatorFilterInput>;
     byStatus?: InputMaybe<FlowStatus>;
@@ -66,6 +88,7 @@ export type AccountFlowFilters = {
 
 export type AccountFlowRuns = {
     __typename?: "AccountFlowRuns";
+    listDatasetsWithFlow: DatasetConnection;
     listFlows: FlowConnection;
 };
 
@@ -77,6 +100,8 @@ export type AccountFlowRunsListFlowsArgs = {
 
 export type AccountFlows = {
     __typename?: "AccountFlows";
+    /** Returns interface for flow configurations queries */
+    configs: AccountFlowConfigs;
     /** Returns interface for flow runs queries */
     runs: AccountFlowRuns;
 };
@@ -236,9 +261,28 @@ export type CommitResultSuccess = CommitResult &
         oldHead?: Maybe<Scalars["Multihash"]>;
     };
 
-export type CompactingConditionInput = {
+export type CompactingConditionFull = {
     maxSliceRecords: Scalars["Int"];
     maxSliceSize: Scalars["Int"];
+};
+
+export type CompactingConditionInput =
+    | { full: CompactingConditionFull; metadataOnly?: never }
+    | { full?: never; metadataOnly: CompactingConditionMetadataOnly };
+
+export type CompactingConditionMetadataOnly = {
+    recursive: Scalars["Boolean"];
+};
+
+export type CompactingFull = {
+    __typename?: "CompactingFull";
+    maxSliceRecords: Scalars["Int"];
+    maxSliceSize: Scalars["Int"];
+};
+
+export type CompactingMetadataOnly = {
+    __typename?: "CompactingMetadataOnly";
+    recursive: Scalars["Boolean"];
 };
 
 export enum CompressionFormat {
@@ -511,6 +555,7 @@ export type DatasetFlowFilters = {
 export type DatasetFlowRuns = {
     __typename?: "DatasetFlowRuns";
     getFlow: GetFlowResult;
+    listFlowInitiators: AccountConnection;
     listFlows: FlowConnection;
 };
 
@@ -536,6 +581,7 @@ export type DatasetFlowRunsMutCancelScheduledTasksArgs = {
 
 export type DatasetFlowRunsMutTriggerFlowArgs = {
     datasetFlowType: DatasetFlowType;
+    flowRunConfiguration?: InputMaybe<FlowRunConfiguration>;
 };
 
 export enum DatasetFlowType {
@@ -829,6 +875,8 @@ export type FlightSqlDesc = {
 
 export type Flow = {
     __typename?: "Flow";
+    /** Flow config snapshot */
+    configSnapshot?: Maybe<FlowConfigurationSnapshot>;
     /** Description of key flow parameters */
     description: FlowDescription;
     /** Unique identifier of the flow */
@@ -870,13 +918,24 @@ export type FlowConfigurationBatching = {
     minRecordsToAwait: Scalars["Int"];
 };
 
-export type FlowConfigurationCompacting = {
-    __typename?: "FlowConfigurationCompacting";
-    maxSliceRecords: Scalars["Int"];
-    maxSliceSize: Scalars["Int"];
+export type FlowConfigurationCompacting = CompactingFull | CompactingMetadataOnly;
+
+export type FlowConfigurationCompactingRule = {
+    __typename?: "FlowConfigurationCompactingRule";
+    compactingRule: FlowConfigurationCompacting;
 };
 
 export type FlowConfigurationSchedule = Cron5ComponentExpression | TimeDelta;
+
+export type FlowConfigurationScheduleRule = {
+    __typename?: "FlowConfigurationScheduleRule";
+    scheduleRule: FlowConfigurationSchedule;
+};
+
+export type FlowConfigurationSnapshot =
+    | FlowConfigurationBatching
+    | FlowConfigurationCompactingRule
+    | FlowConfigurationScheduleRule;
 
 export type FlowConnection = {
     __typename?: "FlowConnection";
@@ -1037,6 +1096,12 @@ export type FlowInvalidCompactingConfig = SetFlowCompactingConfigResult & {
     reason: Scalars["String"];
 };
 
+export type FlowInvalidRunConfigurations = TriggerFlowResult & {
+    __typename?: "FlowInvalidRunConfigurations";
+    error: Scalars["String"];
+    message: Scalars["String"];
+};
+
 export type FlowNotFound = CancelScheduledTasksResult &
     GetFlowResult & {
         __typename?: "FlowNotFound";
@@ -1053,6 +1118,11 @@ export type FlowPreconditionsNotMet = SetFlowBatchingConfigResult &
         message: Scalars["String"];
         preconditions: Scalars["String"];
     };
+
+export type FlowRunConfiguration =
+    | { batching: BatchingConditionInput; compacting?: never; schedule?: never }
+    | { batching?: never; compacting: CompactingConditionInput; schedule?: never }
+    | { batching?: never; compacting?: never; schedule: ScheduleInput };
 
 export type FlowStartCondition =
     | FlowStartConditionBatching
@@ -1151,8 +1221,8 @@ export type GetFlowSuccess = GetFlowResult & {
 };
 
 export type InitiatorFilterInput =
-    | { account: Scalars["AccountName"]; system?: never }
-    | { account?: never; system: Scalars["Boolean"] };
+    | { accounts: Array<Scalars["AccountID"]>; system?: never }
+    | { accounts?: never; system: Scalars["Boolean"] };
 
 export type JdbcDesc = {
     __typename?: "JdbcDesc";
@@ -1852,6 +1922,156 @@ export type AccountByNameQuery = {
     accounts: { __typename?: "Accounts"; byName?: ({ __typename?: "Account" } & AccountFragment) | null };
 };
 
+export type AccountDatasetFlowsPausedQueryVariables = Exact<{
+    accountName: Scalars["AccountName"];
+}>;
+
+export type AccountDatasetFlowsPausedQuery = {
+    __typename?: "Query";
+    accounts: {
+        __typename?: "Accounts";
+        byName?: {
+            __typename?: "Account";
+            flows?: {
+                __typename?: "AccountFlows";
+                configs: { __typename?: "AccountFlowConfigs"; allPaused: boolean };
+            } | null;
+        } | null;
+    };
+};
+
+export type AccountListDatasetsWithFlowsQueryVariables = Exact<{
+    name: Scalars["AccountName"];
+}>;
+
+export type AccountListDatasetsWithFlowsQuery = {
+    __typename?: "Query";
+    accounts: {
+        __typename?: "Accounts";
+        byName?: {
+            __typename?: "Account";
+            flows?: {
+                __typename?: "AccountFlows";
+                runs: {
+                    __typename?: "AccountFlowRuns";
+                    listDatasetsWithFlow: { __typename?: "DatasetConnection" } & DatasetConnectionDataFragment;
+                };
+            } | null;
+        } | null;
+    };
+};
+
+export type AccountListFlowsQueryVariables = Exact<{
+    name: Scalars["AccountName"];
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+    filters?: InputMaybe<AccountFlowFilters>;
+}>;
+
+export type AccountListFlowsQuery = {
+    __typename?: "Query";
+    accounts: {
+        __typename?: "Accounts";
+        byName?: {
+            __typename?: "Account";
+            flows?: {
+                __typename?: "AccountFlows";
+                runs: {
+                    __typename?: "AccountFlowRuns";
+                    listFlows: { __typename?: "FlowConnection" } & FlowConnectionDataFragment;
+                };
+            } | null;
+        } | null;
+    };
+};
+
+export type AccountPauseFlowsMutationVariables = Exact<{
+    accountName: Scalars["AccountName"];
+}>;
+
+export type AccountPauseFlowsMutation = {
+    __typename?: "Mutation";
+    accounts: {
+        __typename?: "AccountsMut";
+        byName?: {
+            __typename?: "AccountMut";
+            flows: {
+                __typename?: "AccountFlowsMut";
+                configs: { __typename?: "AccountFlowConfigsMut"; pauseAccountDatasetFlows: boolean };
+            };
+        } | null;
+    };
+};
+
+export type AccountResumeFlowsMutationVariables = Exact<{
+    accountName: Scalars["AccountName"];
+}>;
+
+export type AccountResumeFlowsMutation = {
+    __typename?: "Mutation";
+    accounts: {
+        __typename?: "AccountsMut";
+        byName?: {
+            __typename?: "AccountMut";
+            flows: {
+                __typename?: "AccountFlowsMut";
+                configs: { __typename?: "AccountFlowConfigsMut"; resumeAccountDatasetFlows: boolean };
+            };
+        } | null;
+    };
+};
+
+export type DatasetConnectionDataFragment = {
+    __typename?: "DatasetConnection";
+    nodes: Array<
+        {
+            __typename?: "Dataset";
+            metadata: {
+                __typename?: "DatasetMetadata";
+                currentPollingSource?: {
+                    __typename?: "SetPollingSource";
+                    fetch:
+                        | ({ __typename?: "FetchStepContainer" } & FetchStepContainerDataFragment)
+                        | ({ __typename?: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment)
+                        | { __typename?: "FetchStepMqtt" }
+                        | ({ __typename?: "FetchStepUrl" } & FetchStepUrlDataFragment);
+                } | null;
+                currentTransform?: {
+                    __typename?: "SetTransform";
+                    inputs: Array<{ __typename: "TransformInput" }>;
+                    transform: { __typename?: "TransformSql"; engine: string };
+                } | null;
+            };
+        } & DatasetBasicsFragment
+    >;
+};
+
+export type LoginMutationVariables = Exact<{
+    login_method: Scalars["String"];
+    login_credentials_json: Scalars["String"];
+}>;
+
+export type LoginMutation = {
+    __typename?: "Mutation";
+    auth: {
+        __typename?: "AuthMut";
+        login: {
+            __typename?: "LoginResponse";
+            accessToken: string;
+            account: { __typename?: "Account" } & AccountFragment;
+        };
+    };
+};
+
+export type FetchAccountDetailsMutationVariables = Exact<{
+    accessToken: Scalars["String"];
+}>;
+
+export type FetchAccountDetailsMutation = {
+    __typename?: "Mutation";
+    auth: { __typename?: "AuthMut"; accountDetails: { __typename?: "Account" } & AccountFragment };
+};
+
 export type DatasetFlowCompactingMutationVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     datasetFlowType: DatasetFlowType;
@@ -1882,11 +2102,10 @@ export type DatasetFlowCompactingMutation = {
                               message: string;
                               config: {
                                   __typename?: "FlowConfiguration";
-                                  compacting?: {
-                                      __typename?: "FlowConfigurationCompacting";
-                                      maxSliceSize: number;
-                                      maxSliceRecords: number;
-                                  } | null;
+                                  compacting?:
+                                      | { __typename?: "CompactingFull"; maxSliceSize: number; maxSliceRecords: number }
+                                      | { __typename?: "CompactingMetadataOnly"; recursive: boolean }
+                                      | null;
                               };
                           };
                 };
@@ -2313,6 +2532,31 @@ export type GetFlowByIdQuery = {
     };
 };
 
+export type DatasetFlowsInitiatorsQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+}>;
+
+export type DatasetFlowsInitiatorsQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            flows: {
+                __typename?: "DatasetFlows";
+                runs: {
+                    __typename?: "DatasetFlowRuns";
+                    listFlowInitiators: {
+                        __typename?: "AccountConnection";
+                        totalCount: number;
+                        nodes: Array<{ __typename?: "Account" } & AccountFragment>;
+                    };
+                };
+            };
+        } | null;
+    };
+};
+
 export type GetDatasetListFlowsQueryVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     page?: InputMaybe<Scalars["Int"]>;
@@ -2324,32 +2568,34 @@ export type GetDatasetListFlowsQuery = {
     __typename?: "Query";
     datasets: {
         __typename?: "Datasets";
-        byId?: {
-            __typename?: "Dataset";
-            metadata: {
-                __typename?: "DatasetMetadata";
-                currentPollingSource?: {
-                    __typename?: "SetPollingSource";
-                    fetch:
-                        | ({ __typename?: "FetchStepContainer" } & FetchStepContainerDataFragment)
-                        | ({ __typename?: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment)
-                        | { __typename?: "FetchStepMqtt" }
-                        | ({ __typename?: "FetchStepUrl" } & FetchStepUrlDataFragment);
-                } | null;
-                currentTransform?: {
-                    __typename?: "SetTransform";
-                    inputs: Array<{ __typename: "TransformInput" }>;
-                    transform: { __typename?: "TransformSql"; engine: string };
-                } | null;
-            };
-            flows: {
-                __typename?: "DatasetFlows";
-                runs: {
-                    __typename?: "DatasetFlowRuns";
-                    listFlows: { __typename?: "FlowConnection" } & FlowConnectionDataFragment;
-                };
-            };
-        } | null;
+        byId?:
+            | ({
+                  __typename?: "Dataset";
+                  metadata: {
+                      __typename?: "DatasetMetadata";
+                      currentPollingSource?: {
+                          __typename?: "SetPollingSource";
+                          fetch:
+                              | ({ __typename?: "FetchStepContainer" } & FetchStepContainerDataFragment)
+                              | ({ __typename?: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment)
+                              | { __typename?: "FetchStepMqtt" }
+                              | ({ __typename?: "FetchStepUrl" } & FetchStepUrlDataFragment);
+                      } | null;
+                      currentTransform?: {
+                          __typename?: "SetTransform";
+                          inputs: Array<{ __typename: "TransformInput" }>;
+                          transform: { __typename?: "TransformSql"; engine: string };
+                      } | null;
+                  };
+                  flows: {
+                      __typename?: "DatasetFlows";
+                      runs: {
+                          __typename?: "DatasetFlowRuns";
+                          listFlows: { __typename?: "FlowConnection" } & FlowConnectionDataFragment;
+                      };
+                  };
+              } & DatasetBasicsFragment)
+            | null;
     };
 };
 
@@ -2413,6 +2659,7 @@ export type DatasetTriggerFlowMutation = {
                               actualDatasetKind: DatasetKind;
                               message: string;
                           }
+                        | { __typename?: "FlowInvalidRunConfigurations"; error: string; message: string }
                         | { __typename?: "FlowPreconditionsNotMet"; message: string }
                         | {
                               __typename?: "TriggerFlowSuccess";
@@ -3134,32 +3381,6 @@ export type MetadataBlockFragment = {
         | ({ __typename: "SetVocab" } & SetVocabEventFragment);
 };
 
-export type LoginMutationVariables = Exact<{
-    login_method: Scalars["String"];
-    login_credentials_json: Scalars["String"];
-}>;
-
-export type LoginMutation = {
-    __typename?: "Mutation";
-    auth: {
-        __typename?: "AuthMut";
-        login: {
-            __typename?: "LoginResponse";
-            accessToken: string;
-            account: { __typename?: "Account" } & AccountFragment;
-        };
-    };
-};
-
-export type FetchAccountDetailsMutationVariables = Exact<{
-    accessToken: Scalars["String"];
-}>;
-
-export type FetchAccountDetailsMutation = {
-    __typename?: "Mutation";
-    auth: { __typename?: "AuthMut"; accountDetails: { __typename?: "Account" } & AccountFragment };
-};
-
 export type GetMetadataBlockQueryVariables = Exact<{
     accountName: Scalars["AccountName"];
     datasetName: Scalars["DatasetName"];
@@ -3367,16 +3588,6 @@ export type SearchDatasetsOverviewQuery = {
     };
 };
 
-export const AccountFragmentDoc = gql`
-    fragment Account on Account {
-        id
-        accountName
-        displayName
-        accountType
-        avatarUrl
-        isAdmin
-    }
-`;
 export const AccountBasicsFragmentDoc = gql`
     fragment AccountBasics on Account {
         id
@@ -3394,6 +3605,102 @@ export const DatasetBasicsFragmentDoc = gql`
         alias
     }
     ${AccountBasicsFragmentDoc}
+`;
+export const FetchStepUrlDataFragmentDoc = gql`
+    fragment FetchStepUrlData on FetchStepUrl {
+        url
+        eventTime {
+            ... on EventTimeSourceFromPath {
+                pattern
+                timestampFormat
+            }
+            ... on EventTimeSourceFromMetadata {
+                __typename
+            }
+            ... on EventTimeSourceFromSystemTime {
+                __typename
+            }
+        }
+        headers {
+            name
+            value
+        }
+        cache {
+            __typename
+        }
+    }
+`;
+export const FetchStepFilesGlobDataFragmentDoc = gql`
+    fragment FetchStepFilesGlobData on FetchStepFilesGlob {
+        path
+        eventTime {
+            ... on EventTimeSourceFromPath {
+                pattern
+                timestampFormat
+            }
+            ... on EventTimeSourceFromMetadata {
+                __typename
+            }
+            ... on EventTimeSourceFromSystemTime {
+                __typename
+            }
+        }
+        cache {
+            __typename
+        }
+        order
+    }
+`;
+export const FetchStepContainerDataFragmentDoc = gql`
+    fragment FetchStepContainerData on FetchStepContainer {
+        image
+        command
+        args
+        env {
+            name
+            value
+        }
+    }
+`;
+export const DatasetConnectionDataFragmentDoc = gql`
+    fragment DatasetConnectionData on DatasetConnection {
+        nodes {
+            ...DatasetBasics
+            metadata {
+                currentPollingSource {
+                    fetch {
+                        ...FetchStepUrlData
+                        ...FetchStepFilesGlobData
+                        ...FetchStepContainerData
+                    }
+                }
+                currentTransform {
+                    inputs {
+                        __typename
+                    }
+                    transform {
+                        ... on TransformSql {
+                            engine
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+    ${FetchStepUrlDataFragmentDoc}
+    ${FetchStepFilesGlobDataFragmentDoc}
+    ${FetchStepContainerDataFragmentDoc}
+`;
+export const AccountFragmentDoc = gql`
+    fragment Account on Account {
+        id
+        accountName
+        displayName
+        accountType
+        avatarUrl
+        isAdmin
+    }
 `;
 export const FlowOutcomeDataFragmentDoc = gql`
     fragment FlowOutcomeData on FlowOutcome {
@@ -3782,62 +4089,6 @@ export const DatasetCurrentInfoFragmentDoc = gql`
     fragment DatasetCurrentInfo on SetInfo {
         description
         keywords
-    }
-`;
-export const FetchStepUrlDataFragmentDoc = gql`
-    fragment FetchStepUrlData on FetchStepUrl {
-        url
-        eventTime {
-            ... on EventTimeSourceFromPath {
-                pattern
-                timestampFormat
-            }
-            ... on EventTimeSourceFromMetadata {
-                __typename
-            }
-            ... on EventTimeSourceFromSystemTime {
-                __typename
-            }
-        }
-        headers {
-            name
-            value
-        }
-        cache {
-            __typename
-        }
-    }
-`;
-export const FetchStepFilesGlobDataFragmentDoc = gql`
-    fragment FetchStepFilesGlobData on FetchStepFilesGlob {
-        path
-        eventTime {
-            ... on EventTimeSourceFromPath {
-                pattern
-                timestampFormat
-            }
-            ... on EventTimeSourceFromMetadata {
-                __typename
-            }
-            ... on EventTimeSourceFromSystemTime {
-                __typename
-            }
-        }
-        cache {
-            __typename
-        }
-        order
-    }
-`;
-export const FetchStepContainerDataFragmentDoc = gql`
-    fragment FetchStepContainerData on FetchStepContainer {
-        image
-        command
-        args
-        env {
-            name
-            value
-        }
     }
 `;
 export const FetchStepMqttDataFragmentDoc = gql`
@@ -4373,6 +4624,192 @@ export class AccountByNameGQL extends Apollo.Query<AccountByNameQuery, AccountBy
         super(apollo);
     }
 }
+export const AccountDatasetFlowsPausedDocument = gql`
+    query accountDatasetFlowsPaused($accountName: AccountName!) {
+        accounts {
+            byName(name: $accountName) {
+                flows {
+                    configs {
+                        allPaused
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class AccountDatasetFlowsPausedGQL extends Apollo.Query<
+    AccountDatasetFlowsPausedQuery,
+    AccountDatasetFlowsPausedQueryVariables
+> {
+    document = AccountDatasetFlowsPausedDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const AccountListDatasetsWithFlowsDocument = gql`
+    query accountListDatasetsWithFlows($name: AccountName!) {
+        accounts {
+            byName(name: $name) {
+                flows {
+                    runs {
+                        listDatasetsWithFlow {
+                            ...DatasetConnectionData
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${DatasetConnectionDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class AccountListDatasetsWithFlowsGQL extends Apollo.Query<
+    AccountListDatasetsWithFlowsQuery,
+    AccountListDatasetsWithFlowsQueryVariables
+> {
+    document = AccountListDatasetsWithFlowsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const AccountListFlowsDocument = gql`
+    query accountListFlows($name: AccountName!, $page: Int, $perPage: Int, $filters: AccountFlowFilters) {
+        accounts {
+            byName(name: $name) {
+                flows {
+                    runs {
+                        listFlows(page: $page, perPage: $perPage, filters: $filters) {
+                            ...FlowConnectionData
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${FlowConnectionDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class AccountListFlowsGQL extends Apollo.Query<AccountListFlowsQuery, AccountListFlowsQueryVariables> {
+    document = AccountListFlowsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const AccountPauseFlowsDocument = gql`
+    mutation accountPauseFlows($accountName: AccountName!) {
+        accounts {
+            byName(accountName: $accountName) {
+                flows {
+                    configs {
+                        pauseAccountDatasetFlows
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class AccountPauseFlowsGQL extends Apollo.Mutation<
+    AccountPauseFlowsMutation,
+    AccountPauseFlowsMutationVariables
+> {
+    document = AccountPauseFlowsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const AccountResumeFlowsDocument = gql`
+    mutation accountResumeFlows($accountName: AccountName!) {
+        accounts {
+            byName(accountName: $accountName) {
+                flows {
+                    configs {
+                        resumeAccountDatasetFlows
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class AccountResumeFlowsGQL extends Apollo.Mutation<
+    AccountResumeFlowsMutation,
+    AccountResumeFlowsMutationVariables
+> {
+    document = AccountResumeFlowsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const LoginDocument = gql`
+    mutation Login($login_method: String!, $login_credentials_json: String!) {
+        auth {
+            login(loginMethod: $login_method, loginCredentialsJson: $login_credentials_json) {
+                accessToken
+                account {
+                    ...Account
+                }
+            }
+        }
+    }
+    ${AccountFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class LoginGQL extends Apollo.Mutation<LoginMutation, LoginMutationVariables> {
+    document = LoginDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const FetchAccountDetailsDocument = gql`
+    mutation FetchAccountDetails($accessToken: String!) {
+        auth {
+            accountDetails(accessToken: $accessToken) {
+                ...Account
+            }
+        }
+    }
+    ${AccountFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class FetchAccountDetailsGQL extends Apollo.Mutation<
+    FetchAccountDetailsMutation,
+    FetchAccountDetailsMutationVariables
+> {
+    document = FetchAccountDetailsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
 export const DatasetFlowCompactingDocument = gql`
     mutation datasetFlowCompacting(
         $datasetId: DatasetID!
@@ -4388,8 +4825,13 @@ export const DatasetFlowCompactingDocument = gql`
                                 message
                                 config {
                                     compacting {
-                                        maxSliceSize
-                                        maxSliceRecords
+                                        ... on CompactingFull {
+                                            maxSliceSize
+                                            maxSliceRecords
+                                        }
+                                        ... on CompactingMetadataOnly {
+                                            recursive
+                                        }
                                     }
                                 }
                             }
@@ -5076,10 +5518,44 @@ export class GetFlowByIdGQL extends Apollo.Query<GetFlowByIdQuery, GetFlowByIdQu
         super(apollo);
     }
 }
+export const DatasetFlowsInitiatorsDocument = gql`
+    query datasetFlowsInitiators($datasetId: DatasetID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    runs {
+                        listFlowInitiators {
+                            totalCount
+                            nodes {
+                                ...Account
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${AccountFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetFlowsInitiatorsGQL extends Apollo.Query<
+    DatasetFlowsInitiatorsQuery,
+    DatasetFlowsInitiatorsQueryVariables
+> {
+    document = DatasetFlowsInitiatorsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
 export const GetDatasetListFlowsDocument = gql`
     query getDatasetListFlows($datasetId: DatasetID!, $page: Int, $perPage: Int, $filters: DatasetFlowFilters) {
         datasets {
             byId(datasetId: $datasetId) {
+                ...DatasetBasics
                 metadata {
                     currentPollingSource {
                         fetch {
@@ -5109,6 +5585,7 @@ export const GetDatasetListFlowsDocument = gql`
             }
         }
     }
+    ${DatasetBasicsFragmentDoc}
     ${FetchStepUrlDataFragmentDoc}
     ${FetchStepFilesGlobDataFragmentDoc}
     ${FetchStepContainerDataFragmentDoc}
@@ -5200,6 +5677,10 @@ export const DatasetTriggerFlowDocument = gql`
                             ... on FlowPreconditionsNotMet {
                                 message
                             }
+                            ... on FlowInvalidRunConfigurations {
+                                error
+                                message
+                            }
                         }
                     }
                 }
@@ -5217,54 +5698,6 @@ export class DatasetTriggerFlowGQL extends Apollo.Mutation<
     DatasetTriggerFlowMutationVariables
 > {
     document = DatasetTriggerFlowDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
-export const LoginDocument = gql`
-    mutation Login($login_method: String!, $login_credentials_json: String!) {
-        auth {
-            login(loginMethod: $login_method, loginCredentialsJson: $login_credentials_json) {
-                accessToken
-                account {
-                    ...Account
-                }
-            }
-        }
-    }
-    ${AccountFragmentDoc}
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class LoginGQL extends Apollo.Mutation<LoginMutation, LoginMutationVariables> {
-    document = LoginDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
-export const FetchAccountDetailsDocument = gql`
-    mutation FetchAccountDetails($accessToken: String!) {
-        auth {
-            accountDetails(accessToken: $accessToken) {
-                ...Account
-            }
-        }
-    }
-    ${AccountFragmentDoc}
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class FetchAccountDetailsGQL extends Apollo.Mutation<
-    FetchAccountDetailsMutation,
-    FetchAccountDetailsMutationVariables
-> {
-    document = FetchAccountDetailsDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

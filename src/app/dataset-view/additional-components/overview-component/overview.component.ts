@@ -38,7 +38,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     @Output() toggleReadmeViewEmit = new EventEmitter<null>();
     @Output() selectTopicEmit = new EventEmitter<string>();
     public editingReadme = false;
-    public files: FileList;
+    public droppedFile: File;
 
     public currentState?: {
         schema: MaybeNull<DatasetSchema>;
@@ -281,11 +281,10 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     public addData(): void {
         const modalRef: NgbModalRef = this.modalService.open(AddDataModalComponent);
         const modalRefInstance = modalRef.componentInstance as AddDataModalComponent;
-        // modalRefInstance.currentWatermark = this.currentState?.overview.metadata.currentWatermark;
         modalRefInstance.datasetBasics = this.datasetBasics;
     }
 
     public onFileDropped(files: FileList): void {
-        this.files = files;
+        this.droppedFile = files[0];
     }
 }

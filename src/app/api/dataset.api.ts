@@ -82,7 +82,7 @@ export class DatasetApi {
                     limit: params.numRecords ?? AppValues.SAMPLE_DATA_LIMIT,
                 },
                 {
-                    fetchPolicy: "cache-first",
+                    fetchPolicy: "no-cache",
                     errorPolicy: "all",
                 },
             )

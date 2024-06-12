@@ -25,6 +25,22 @@ export class AppConfigService {
         return this.appConfig.apiServerGqlUrl;
     }
 
+    get apiServerHttpUrl(): string {
+        if (!this.appConfig) {
+            this.appConfig = AppConfigService.loadAppConfig();
+        }
+
+        return this.appConfig.apiServerHttpUrl;
+    }
+
+    get singleTenant(): boolean {
+        if (!this.appConfig) {
+            this.appConfig = AppConfigService.loadAppConfig();
+        }
+
+        return this.appConfig.singleTenant;
+    }
+
     get githubClientId(): MaybeUndefined<string> {
         if (!this.appConfig) {
             this.appConfig = AppConfigService.loadAppConfig();

@@ -1,5 +1,5 @@
 import { NavigationService } from "src/app/services/navigation.service";
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Injector, Input, OnInit } from "@angular/core";
 import { NgbActiveModal, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { BaseComponent } from "src/app/common/base.component";
 import { FileFromUrlModalComponent } from "../file-from-url-modal/file-from-url-modal.component";
@@ -10,6 +10,8 @@ import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { FileUploadService } from "src/app/services/file-upload.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { APOLLO_OPTIONS } from "apollo-angular";
+import { DatasetApi } from "src/app/api/dataset.api";
 
 @Component({
     selector: "app-add-data-modal",
@@ -27,6 +29,7 @@ export class AddDataModalComponent extends BaseComponent implements OnInit {
         private fileUploadService: FileUploadService,
         private navigationService: NavigationService,
         private datasetService: DatasetService,
+        private injector: Injector,
     ) {
         super();
     }
@@ -72,6 +75,7 @@ export class AddDataModalComponent extends BaseComponent implements OnInit {
     }
 
     private updatePage(accountName: string, datasetName: string): void {
+        this.updateCache();
         this.datasetService
             .requestDatasetMainData({
                 accountName,
@@ -83,6 +87,20 @@ export class AddDataModalComponent extends BaseComponent implements OnInit {
             datasetName,
             tab: DatasetViewTypeEnum.Overview,
         });
+    }
+
+    private updateCache(): void {
+        const cache = this.injector.get(APOLLO_OPTIONS).cache;
+        if (cache) {
+            const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
+                cache.identify(DatasetApi.generateAccountKeyFragment(this.datasetBasics.owner.id)),
+                this.datasetBasics.id,
+            );
+            cache.evict({
+                id: cache.identify(datasetKeyFragment),
+                fieldName: "data",
+            });
+        }
     }
 
     public onAddUrl(): void {

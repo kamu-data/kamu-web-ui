@@ -1,3 +1,4 @@
+import { AppConfigService } from "src/app/app-config.service";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
@@ -15,13 +16,14 @@ export class FileUploadService {
     constructor(
         private http: HttpClient,
         private localStorageService: LocalStorageService,
+        private appConfigService: AppConfigService,
     ) {
         this.authHeaders = { Authorization: `Bearer ${this.localStorageService.accessToken}` };
     }
 
     public uploadFilePrepare(file: File): Observable<UploadPrepareResponse> {
         return this.http.post<UploadPrepareResponse>(
-            "http://localhost:8080/platform/file/upload/prepare?fileName=" +
+            `${this.appConfigService.apiServerHttpUrl}/platform/file/upload/prepare?fileName=` +
                 file.name +
                 "&contentLength=" +
                 file.size +
@@ -45,8 +47,11 @@ export class FileUploadService {
     }
 
     public ingestDataToDataset(datasetInfo: DatasetInfo, uploadToken: string): Observable<object> {
+        const datasetAlias = this.appConfigService.singleTenant
+            ? datasetInfo.datasetName
+            : `${datasetInfo.accountName}/${datasetInfo.datasetName}`;
         return this.http.post<object>(
-            `http://localhost:8080/${datasetInfo.datasetName}/ingest?uploadToken=${uploadToken}`,
+            `${this.appConfigService.apiServerHttpUrl}/${datasetAlias}/ingest?uploadToken=${uploadToken}`,
             null,
             { headers: this.authHeaders },
         );

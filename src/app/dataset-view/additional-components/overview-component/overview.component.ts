@@ -25,6 +25,7 @@ import _ from "lodash";
 import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { AddDataModalComponent } from "./components/add-data-modal/add-data-modal.component";
+import { FileUploadService } from "src/app/services/file-upload.service";
 
 @Component({
     selector: "app-overview",
@@ -52,6 +53,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         private navigationService: NavigationService,
         private modalService: NgbModal,
         private datasetFlowsService: DatasetFlowsService,
+        private fileUploadService: FileUploadService,
     ) {
         super();
     }
@@ -286,5 +288,6 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     public onFileDropped(files: FileList): void {
         this.droppedFile = files[0];
+        this.trackSubscription(this.fileUploadService.uploadFile(this.droppedFile, this.datasetBasics).subscribe());
     }
 }

@@ -2,7 +2,6 @@
   "apiServerGqlUrl": "http://localhost:8080/graphql",
   "apiServerHttpUrl": "http://localhost:8080",
   "githubClientId": "361a3b4fda86d0234d2f",
-  "singleTenant": false,
   "featureFlags": {
     "enableLogout": true,
     "enableScheduling": true

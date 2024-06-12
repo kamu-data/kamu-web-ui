@@ -6,7 +6,6 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 @Component({
     selector: "app-file-from-url-modal",
     templateUrl: "./file-from-url-modal.component.html",
-    styleUrls: ["./file-from-url-modal.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileFromUrlModalComponent extends BaseComponent implements OnInit {

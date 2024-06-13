@@ -1,7 +1,8 @@
 {
-    "apiServerGqlUrl": "http://localhost:8080/graphql",
-    "githubClientId": "361a3b4fda86d0234d2f",
-    "featureFlags": {
-        "enableLogout": true
-    }
+  "apiServerGqlUrl": "http://localhost:8080/graphql",
+  "githubClientId": "361a3b4fda86d0234d2f",
+  "ingestUploadFileLimitMb": 50,
+  "featureFlags": {
+    "enableLogout": true
+  }
 }

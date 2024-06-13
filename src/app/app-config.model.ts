@@ -2,6 +2,7 @@ export interface AppConfig {
     apiServerGqlUrl: string;
     apiServerHttpUrl: string;
     githubClientId?: string;
+    ingestUploadFileLimitMb: number;
     featureFlags: AppConfigFeatureFlags;
     loginInstructions?: AppConfigLoginInstructions;
 }

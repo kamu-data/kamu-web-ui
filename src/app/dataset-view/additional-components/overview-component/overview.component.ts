@@ -26,6 +26,7 @@ import { DatasetFlowsService } from "../flows-component/services/dataset-flows.s
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { AddDataModalComponent } from "./components/add-data-modal/add-data-modal.component";
 import { FileUploadService } from "src/app/services/file-upload.service";
+import { Observable } from "rxjs";
 
 @Component({
     selector: "app-overview",
@@ -40,6 +41,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     @Output() selectTopicEmit = new EventEmitter<string>();
     public editingReadme = false;
     public droppedFile: File;
+    public uploadFileLoading$: Observable<boolean>;
 
     public currentState?: {
         schema: MaybeNull<DatasetSchema>;
@@ -59,6 +61,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        this.uploadFileLoading$ = this.fileUploadService.isUploadFile;
         this.trackSubscription(
             this.datasetSubsService.overviewChanges.subscribe((overviewUpdate: OverviewUpdate) => {
                 this.currentState = {
@@ -202,6 +205,10 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     public get hasSetPollingSource(): boolean {
         return !_.isNil(this.currentState?.overview.metadata.currentPollingSource);
+    }
+
+    public get showDragAndDropBlock(): boolean {
+        return !this.hasSetPollingSource && this.datasetBasics.kind === DatasetKind.Root;
     }
 
     public get hasCurrentTransform(): boolean {

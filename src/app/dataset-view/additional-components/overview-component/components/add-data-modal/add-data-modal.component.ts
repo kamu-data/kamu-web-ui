@@ -23,14 +23,11 @@ export class AddDataModalComponent extends BaseComponent {
     }
 
     public onFileSelected(event: Event): void {
+        this.activeModal.close();
         const input = event.target as HTMLInputElement;
         if (input.files?.length) {
             const file: File = input.files[0];
-            this.trackSubscription(
-                this.fileUploadService.uploadFile(file, this.datasetBasics).subscribe(() => {
-                    this.activeModal.close();
-                }),
-            );
+            this.fileUploadService.uploadFile(file, this.datasetBasics).subscribe();
         }
     }
 

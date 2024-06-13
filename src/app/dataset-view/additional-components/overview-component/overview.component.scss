@@ -7,6 +7,7 @@
 }
 
 .upload-file-container {
+    height: 185px;
     position: relative;
     padding: 2rem;
     width: 100%;
@@ -26,6 +27,10 @@
         cursor: pointer;
     }
 
+    .upload-file-loading {
+        width: 50px;
+    }
+
     .upload-file-icon {
         z-index: 10;
     }
@@ -38,6 +43,7 @@
     .add-data-button-container {
         .add-data-button {
             width: 140px;
+            margin: auto;
         }
     }
 

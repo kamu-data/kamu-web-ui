@@ -1,7 +1,7 @@
 import { AppConfigService } from "src/app/app-config.service";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable, Injector } from "@angular/core";
-import { Observable, finalize, of, switchMap, tap } from "rxjs";
+import { Observable, Subject, finalize, first, of, switchMap, tap } from "rxjs";
 import { MaybeUndefined } from "../common/app.types";
 import { LocalStorageService } from "./local-storage.service";
 import { DatasetInfo } from "../interface/navigation.interface";
@@ -28,11 +28,18 @@ export class FileUploadService {
         private protocolsService: ProtocolsService,
     ) {}
 
+    private uploadFileLoading$ = new Subject<boolean>();
+
+    public get isUploadFile(): Observable<boolean> {
+        return this.uploadFileLoading$.asObservable();
+    }
+
     public uploadFile(file: File, datasetBasics: DatasetBasicsFragment): Observable<object> {
         const uploadPrepare$: Observable<UploadPrepareResponse> = this.uploadFilePrepare(file);
         let uploadToken = "";
         return uploadPrepare$.pipe(
             tap((data) => (uploadToken = data.uploadToken)),
+            tap(() => this.uploadFileLoading$.next(true)),
             switchMap((uploadPrepareResponse: UploadPrepareResponse) =>
                 this.prepareUploadData(uploadPrepareResponse, file),
             ),
@@ -53,7 +60,9 @@ export class FileUploadService {
                     uploadToken,
                 );
             }),
+            first(),
             finalize(() => {
+                this.uploadFileLoading$.next(false);
                 this.updatePage(datasetBasics);
             }),
         );

@@ -833,7 +833,7 @@ export type ExecuteTransformInput = {
     prevOffset?: Maybe<Scalars["Int"]>;
 };
 
-export type FetchStep = FetchStepContainer | FetchStepFilesGlob | FetchStepMqtt | FetchStepUrl;
+export type FetchStep = FetchStepContainer | FetchStepEthereumLogs | FetchStepFilesGlob | FetchStepMqtt | FetchStepUrl;
 
 export type FetchStepContainer = {
     __typename?: "FetchStepContainer";
@@ -841,6 +841,14 @@ export type FetchStepContainer = {
     command?: Maybe<Array<Scalars["String"]>>;
     env?: Maybe<Array<EnvVar>>;
     image: Scalars["String"];
+};
+
+export type FetchStepEthereumLogs = {
+    __typename?: "FetchStepEthereumLogs";
+    chainId?: Maybe<Scalars["Int"]>;
+    filter?: Maybe<Scalars["String"]>;
+    nodeUrl?: Maybe<Scalars["String"]>;
+    signature?: Maybe<Scalars["String"]>;
 };
 
 export type FetchStepFilesGlob = {
@@ -2032,6 +2040,7 @@ export type DatasetConnectionDataFragment = {
                     __typename?: "SetPollingSource";
                     fetch:
                         | ({ __typename?: "FetchStepContainer" } & FetchStepContainerDataFragment)
+                        | { __typename?: "FetchStepEthereumLogs" }
                         | ({ __typename?: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment)
                         | { __typename?: "FetchStepMqtt" }
                         | ({ __typename?: "FetchStepUrl" } & FetchStepUrlDataFragment);
@@ -2577,6 +2586,7 @@ export type GetDatasetListFlowsQuery = {
                           __typename?: "SetPollingSource";
                           fetch:
                               | ({ __typename?: "FetchStepContainer" } & FetchStepContainerDataFragment)
+                              | { __typename?: "FetchStepEthereumLogs" }
                               | ({ __typename?: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment)
                               | { __typename?: "FetchStepMqtt" }
                               | ({ __typename?: "FetchStepUrl" } & FetchStepUrlDataFragment);
@@ -2934,6 +2944,7 @@ export type SetPollingSourceEventFragment = {
     __typename?: "SetPollingSource";
     fetch:
         | ({ __typename?: "FetchStepContainer" } & FetchStepContainerDataFragment)
+        | { __typename?: "FetchStepEthereumLogs" }
         | ({ __typename?: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment)
         | ({ __typename?: "FetchStepMqtt" } & FetchStepMqttDataFragment)
         | ({ __typename?: "FetchStepUrl" } & FetchStepUrlDataFragment);
@@ -3099,6 +3110,7 @@ export type CurrentSourceFetchUrlFragment = {
         __typename?: "SetPollingSource";
         fetch:
             | { __typename?: "FetchStepContainer" }
+            | { __typename?: "FetchStepEthereumLogs" }
             | { __typename?: "FetchStepFilesGlob" }
             | { __typename?: "FetchStepMqtt"; host: string; port: number }
             | { __typename?: "FetchStepUrl"; url: string };

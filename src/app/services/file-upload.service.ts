@@ -2,25 +2,22 @@ import { AppConfigService } from "src/app/app-config.service";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable, Injector } from "@angular/core";
 import { Observable, finalize, of, switchMap, tap } from "rxjs";
-import { MaybeUndefined, UploadAvailableMethod, UploadPerareData, UploadPrepareResponse } from "../common/app.types";
+import { MaybeUndefined } from "../common/app.types";
 import { LocalStorageService } from "./local-storage.service";
 import { DatasetInfo } from "../interface/navigation.interface";
-import { DatasetBasicsFragment } from "../api/kamu.graphql.interface";
+import { DatasetBasicsFragment, DatasetEndpoints } from "../api/kamu.graphql.interface";
 import { APOLLO_OPTIONS } from "apollo-angular";
 import { DatasetApi } from "../api/dataset.api";
 import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
 import { DatasetService } from "../dataset-view/dataset.service";
 import { NavigationService } from "./navigation.service";
+import { ProtocolsService } from "./protocols.service";
+import { UploadPrepareResponse, UploadPerareData, UploadAvailableMethod } from "../common/ingest-via-file-upload.types";
 
 @Injectable({
     providedIn: "root",
 })
 export class FileUploadService {
-    private authHeaders: MaybeUndefined<{
-        [header: string]: string | string[];
-    }>;
-    private uploadToken: string;
-
     constructor(
         private http: HttpClient,
         private localStorageService: LocalStorageService,
@@ -28,14 +25,14 @@ export class FileUploadService {
         private navigationService: NavigationService,
         private datasetService: DatasetService,
         private injector: Injector,
-    ) {
-        this.authHeaders = { Authorization: `Bearer ${this.localStorageService.accessToken}` };
-    }
+        private protocolsService: ProtocolsService,
+    ) {}
 
     public uploadFile(file: File, datasetBasics: DatasetBasicsFragment): Observable<object> {
         const uploadPrepare$: Observable<UploadPrepareResponse> = this.uploadFilePrepare(file);
+        let uploadToken = "";
         return uploadPrepare$.pipe(
-            tap((data) => (this.uploadToken = data.uploadToken)),
+            tap((data) => (uploadToken = data.uploadToken)),
             switchMap((uploadPrepareResponse: UploadPrepareResponse) =>
                 this.prepareUploadData(uploadPrepareResponse, file),
             ),
@@ -47,15 +44,15 @@ export class FileUploadService {
                     uploadHeaders,
                 ),
             ),
-            switchMap(() =>
-                this.ingestDataToDataset(
+            switchMap(() => {
+                return this.ingestDataToDataset(
                     {
                         accountName: datasetBasics.owner.accountName,
                         datasetName: datasetBasics.name,
                     },
-                    this.uploadToken,
-                ),
-            ),
+                    uploadToken,
+                );
+            }),
             finalize(() => {
                 this.updatePage(datasetBasics);
             }),
@@ -86,7 +83,7 @@ export class FileUploadService {
             );
             cache.evict({
                 id: cache.identify(datasetKeyFragment),
-                fieldName: "data",
+                fieldName: "metadata",
             });
         }
     }
@@ -100,7 +97,7 @@ export class FileUploadService {
                 "&contentType=" +
                 file.type,
             null,
-            { headers: this.authHeaders },
+            { headers: { Authorization: `Bearer ${this.localStorageService.accessToken}` } },
         );
     }
 
@@ -117,13 +114,12 @@ export class FileUploadService {
     }
 
     private ingestDataToDataset(datasetInfo: DatasetInfo, uploadToken: string): Observable<object> {
-        const datasetAlias = this.appConfigService.featureFlags.enableLogout
-            ? datasetInfo.datasetName
-            : `${datasetInfo.accountName}/${datasetInfo.datasetName}`;
-        return this.http.post<object>(
-            `${this.appConfigService.apiServerHttpUrl}/${datasetAlias}/ingest?uploadToken=${uploadToken}`,
-            null,
-            { headers: this.authHeaders },
+        return this.protocolsService.getProtocols(datasetInfo).pipe(
+            switchMap((protocols: MaybeUndefined<DatasetEndpoints>) =>
+                this.http.post<object>(`${protocols?.rest.pushUrl}?uploadToken=${uploadToken}`, null, {
+                    headers: { Authorization: `Bearer ${this.localStorageService.accessToken}` },
+                }),
+            ),
         );
     }
 

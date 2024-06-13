@@ -21,8 +21,4 @@ export class FileFromUrlModalComponent extends BaseComponent implements OnInit {
     }
 
     ngOnInit(): void {}
-
-    public saveFileUrl(): void {
-        console.log("form=", this.fileUrlForm.value);
-    }
 }

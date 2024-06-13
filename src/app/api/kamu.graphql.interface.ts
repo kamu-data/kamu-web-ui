@@ -2944,7 +2944,7 @@ export type SetPollingSourceEventFragment = {
     __typename?: "SetPollingSource";
     fetch:
         | ({ __typename?: "FetchStepContainer" } & FetchStepContainerDataFragment)
-        | { __typename?: "FetchStepEthereumLogs" }
+        | ({ __typename?: "FetchStepEthereumLogs" } & FetchStepEthereumLogsDataFragment)
         | ({ __typename?: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment)
         | ({ __typename?: "FetchStepMqtt" } & FetchStepMqttDataFragment)
         | ({ __typename?: "FetchStepUrl" } & FetchStepUrlDataFragment);
@@ -2981,6 +2981,14 @@ export type FetchStepContainerDataFragment = {
     command?: Array<string> | null;
     args?: Array<string> | null;
     env?: Array<{ __typename?: "EnvVar"; name: string; value?: string | null }> | null;
+};
+
+export type FetchStepEthereumLogsDataFragment = {
+    __typename?: "FetchStepEthereumLogs";
+    chainId?: number | null;
+    nodeUrl?: string | null;
+    filter?: string | null;
+    signature?: string | null;
 };
 
 export type FetchStepFilesGlobDataFragment = {
@@ -4115,6 +4123,14 @@ export const FetchStepMqttDataFragmentDoc = gql`
         }
     }
 `;
+export const FetchStepEthereumLogsDataFragmentDoc = gql`
+    fragment FetchStepEthereumLogsData on FetchStepEthereumLogs {
+        chainId
+        nodeUrl
+        filter
+        signature
+    }
+`;
 export const ReadStepCsvDataFragmentDoc = gql`
     fragment ReadStepCsvData on ReadStepCsv {
         schema
@@ -4215,6 +4231,7 @@ export const SetPollingSourceEventFragmentDoc = gql`
             ...FetchStepFilesGlobData
             ...FetchStepContainerData
             ...FetchStepMqttData
+            ...FetchStepEthereumLogsData
         }
         read {
             ...ReadStepCsvData
@@ -4242,6 +4259,7 @@ export const SetPollingSourceEventFragmentDoc = gql`
     ${FetchStepFilesGlobDataFragmentDoc}
     ${FetchStepContainerDataFragmentDoc}
     ${FetchStepMqttDataFragmentDoc}
+    ${FetchStepEthereumLogsDataFragmentDoc}
     ${ReadStepCsvDataFragmentDoc}
     ${ReadStepJsonDataFragmentDoc}
     ${ReadStepNdJsonDataFragmentDoc}

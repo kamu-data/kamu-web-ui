@@ -1,0 +1,6 @@
+fragment FetchStepEthereumLogsData on FetchStepEthereumLogs {
+  chainId
+  nodeUrl
+  filter
+  signature
+}

@@ -1,7 +1,7 @@
 import { AppConfigService } from "src/app/app-config.service";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable, Injector } from "@angular/core";
-import { Observable, Subject, finalize, first, of, switchMap, tap } from "rxjs";
+import { Observable, Subject, catchError, finalize, first, of, switchMap, tap } from "rxjs";
 import { MaybeUndefined } from "../common/app.types";
 import { LocalStorageService } from "./local-storage.service";
 import { DatasetInfo } from "../interface/navigation.interface";
@@ -13,6 +13,7 @@ import { DatasetService } from "../dataset-view/dataset.service";
 import { NavigationService } from "./navigation.service";
 import { ProtocolsService } from "./protocols.service";
 import { UploadPrepareResponse, UploadPerareData, UploadAvailableMethod } from "../common/ingest-via-file-upload.types";
+import { DatasetOperationError } from "../common/errors";
 
 @Injectable({
     providedIn: "root",
@@ -59,6 +60,9 @@ export class FileUploadService {
                     },
                     uploadToken,
                 );
+            }),
+            catchError(() => {
+                throw new DatasetOperationError([new Error("File could not be loaded")]);
             }),
             first(),
             finalize(() => {

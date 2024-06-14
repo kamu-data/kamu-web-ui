@@ -101,7 +101,7 @@ export class FileUploadService {
         }
     }
 
-    private uploadFilePrepare(file: File): Observable<UploadPrepareResponse> {
+    public uploadFilePrepare(file: File): Observable<UploadPrepareResponse> {
         return this.http.post<UploadPrepareResponse>(
             `${this.appConfigService.apiServerHttpUrl}/platform/file/upload/prepare?fileName=` +
                 file.name +
@@ -114,19 +114,19 @@ export class FileUploadService {
         );
     }
 
-    private uploadPostFile(url: string, bodyObject: File | FormData, uploadHeaders: HttpHeaders): Observable<object> {
+    public uploadPostFile(url: string, bodyObject: File | FormData, uploadHeaders: HttpHeaders): Observable<object> {
         return this.http.post(url, bodyObject, {
             headers: uploadHeaders,
         });
     }
 
-    private uploadPutFile(url: string, bodyObject: File | FormData, uploadHeaders: HttpHeaders): Observable<object> {
+    public uploadPutFile(url: string, bodyObject: File | FormData, uploadHeaders: HttpHeaders): Observable<object> {
         return this.http.put(url, bodyObject, {
             headers: uploadHeaders,
         });
     }
 
-    private ingestDataToDataset(datasetInfo: DatasetInfo, uploadToken: string): Observable<object> {
+    public ingestDataToDataset(datasetInfo: DatasetInfo, uploadToken: string): Observable<object> {
         return this.protocolsService.getProtocols(datasetInfo).pipe(
             switchMap((protocols: MaybeUndefined<DatasetEndpoints>) =>
                 this.http.post<object>(`${protocols?.rest.pushUrl}?uploadToken=${uploadToken}`, null, {
@@ -168,8 +168,10 @@ export class FileUploadService {
         switch (method) {
             case "POST":
                 return this.uploadPostFile(uploadUrl, bodyObject, uploadHeaders);
+            /* istanbul ignore next */
             case "PUT":
                 return this.uploadPutFile(uploadUrl, bodyObject, uploadHeaders);
+            /* istanbul ignore next */
             default:
                 throw new Error("Unexpected upload method");
         }

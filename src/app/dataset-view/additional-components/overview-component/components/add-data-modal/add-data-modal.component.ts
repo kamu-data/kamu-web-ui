@@ -4,6 +4,9 @@ import { BaseComponent } from "src/app/common/base.component";
 import { FileFromUrlModalComponent } from "../file-from-url-modal/file-from-url-modal.component";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { FileUploadService } from "src/app/services/file-upload.service";
+import { ModalService } from "src/app/components/modal/modal.service";
+import { AppConfigService } from "src/app/app-config.service";
+import { promiseWithCatch } from "src/app/common/app.helpers";
 
 @Component({
     selector: "app-add-data-modal",
@@ -15,24 +18,37 @@ export class AddDataModalComponent extends BaseComponent {
     @Input() public datasetBasics: DatasetBasicsFragment;
 
     constructor(
-        public activeModal: NgbActiveModal,
-        private modalService: NgbModal,
+        public ngbActiveModal: NgbActiveModal,
+        private ngbModalService: NgbModal,
         private fileUploadService: FileUploadService,
+        private configService: AppConfigService,
+        private modalService: ModalService,
     ) {
         super();
     }
 
     public onFileSelected(event: Event): void {
-        this.activeModal.close();
+        this.ngbActiveModal.close();
         const input = event.target as HTMLInputElement;
         if (input.files?.length) {
             const file: File = input.files[0];
-            this.fileUploadService.uploadFile(file, this.datasetBasics).subscribe();
+            const fileSizeMb = file.size * Math.pow(10, -6);
+            if (fileSizeMb <= this.configService.ingestUploadFileLimitMb) {
+                this.fileUploadService.uploadFile(file, this.datasetBasics).subscribe();
+            } else {
+                promiseWithCatch(
+                    this.modalService.warning({
+                        title: "Warning",
+                        message: `Maximum file size ${this.configService.ingestUploadFileLimitMb} MB`,
+                        yesButtonText: "Ok",
+                    }),
+                );
+            }
         }
     }
 
     public onAddUrl(): void {
-        this.modalService.open(FileFromUrlModalComponent);
-        this.activeModal.close();
+        this.ngbModalService.open(FileFromUrlModalComponent);
+        this.ngbActiveModal.close();
     }
 }

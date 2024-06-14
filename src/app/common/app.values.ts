@@ -27,6 +27,7 @@ export default class AppValues {
     public static readonly DEFAULT_FLOW_INITIATOR = "system process";
     public static readonly HEADERS_SKIP_LOADING_KEY = "Skip-loading";
     public static readonly HEADERS_AUTHORIZATION_KEY = "Authorization";
+    public static readonly UPLOAD_FILE_IMAGE = "assets/images/upload-file-gear.gif";
 
     public static readonly MARKDOWN_CONTAIN = `## Markdown __rulez__!
 ---

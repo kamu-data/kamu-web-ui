@@ -137,6 +137,9 @@ export class DataHelpers {
             case "MergeStrategySnapshot": {
                 return "Snapshot";
             }
+            case "FetchStepEthereumLogs": {
+                return "Ethereum Logs";
+            }
             default:
                 return "Unknown type";
         }

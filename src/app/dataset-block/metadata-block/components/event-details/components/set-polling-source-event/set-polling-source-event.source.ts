@@ -102,6 +102,46 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         dataTestId: "setPollingSource-FetchStepMqtt-topics",
     },
 
+    "SetPollingSource.FetchStepEthereumLogs.__typename": {
+        label: "Type:",
+        tooltip: SetPollingSourceTooltipsTexts.FROM_ETHEREUM_LOGS,
+        presentationComponent: StepTypePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-FetchStepEthereumLogs-__typename",
+    },
+
+    "SetPollingSource.FetchStepEthereumLogs.chainId": {
+        label: "Chain ID:",
+        tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_CHAIN_ID,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-FetchStepEthereumLogs-chainId",
+    },
+
+    "SetPollingSource.FetchStepEthereumLogs.filter": {
+        label: "Filter:",
+        tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_FILTER,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-FetchStepEthereumLogs-filter",
+    },
+
+    "SetPollingSource.FetchStepEthereumLogs.signature": {
+        label: "Signature:",
+        tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_SIGNATURE,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-FetchStepEthereumLogs-signature",
+    },
+
+    "SetPollingSource.FetchStepEthereumLogs.nodeUrl": {
+        label: "Node url:",
+        tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_NODE_URL,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "setPollingSource-FetchStepEthereumLogs-nodeUrl",
+    },
+
     "SetPollingSource.FetchStepFilesGlob.__typename": {
         label: "Type:",
         tooltip: SetPollingSourceTooltipsTexts.FROM_FILES_GLOB,

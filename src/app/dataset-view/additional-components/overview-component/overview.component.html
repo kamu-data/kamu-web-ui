@@ -116,6 +116,13 @@
                 ></app-dynamic-table>
                 <ng-template #noData>
                     <div
+                        *ngIf="!showDragAndDropBlock"
+                        class="mt-4 p-3 text-center no-data-container border border-2"
+                        data-test-id="no-data-tail-block"
+                    >
+                        No data
+                    </div>
+                    <div
                         class="upload-file-container my-4"
                         appDragAndDrop
                         (click)="addData()"

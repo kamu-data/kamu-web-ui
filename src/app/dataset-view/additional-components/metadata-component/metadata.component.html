@@ -120,6 +120,15 @@
                                 <span>{{ currentPollingSource.fetch.port }}</span>
                             </app-block-row-data>
                         </div>
+
+                        <div class="mx-4" *ngIf="currentPollingSource.fetch.__typename === 'FetchStepEthereumLogs'">
+                            <app-block-row-data
+                                [tooltip]="'Connects to an Ethereum node to stream transaction logs.'"
+                                [label]="'Type:'"
+                            >
+                                <span>Ethereum Logs</span>
+                            </app-block-row-data>
+                        </div>
                     </div>
 
                     <ng-container

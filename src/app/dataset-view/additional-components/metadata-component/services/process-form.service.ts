@@ -30,9 +30,17 @@ export class ProcessFormService {
             this.processEventTimeControl(formGroup);
             this.processPipeCommandControl(formGroup);
             this.removePollingSourceEmptyControls(formGroup);
+            this.changeTypeChainIdControl(formGroup);
             return;
         }
         this.removePushSourceEmptyControls(formGroup);
+    }
+
+    private changeTypeChainIdControl(formGroup: FormGroup): void {
+        const form = formGroup.value as AddPollingSourceEditFormType;
+        if (form.fetch.chainId) {
+            form.fetch.chainId = +form.fetch.chainId;
+        }
     }
 
     private transformSchema(formGroup: FormGroup): void {
@@ -67,7 +75,10 @@ export class ProcessFormService {
 
     private processEventTimeControl(formGroup: FormGroup): void {
         const form = formGroup.value as OrderControlType;
-        if (form.fetch.eventTime && [FetchKind.CONTAINER, FetchKind.MQTT].includes(form.fetch.kind)) {
+        if (
+            form.fetch.eventTime &&
+            [FetchKind.CONTAINER, FetchKind.MQTT, FetchKind.ETHEREUM_LOGS].includes(form.fetch.kind)
+        ) {
             delete form.fetch.eventTime;
         }
         if (form.fetch.eventTime?.kind !== EventTimeSourceKind.FROM_PATH) {

@@ -61,6 +61,7 @@ export enum FetchKind {
     FILES_GLOB = "FilesGlob",
     CONTAINER = "Container",
     MQTT = "Mqtt",
+    ETHEREUM_LOGS = "EthereumLogs",
 }
 
 export enum ReadKind {
@@ -118,6 +119,10 @@ export interface AddPollingSourceEditFormType {
         url?: string;
         order?: string;
         topics?: TopicsType[];
+        chainId?: number;
+        nodeUrl?: string;
+        filter?: string;
+        signature?: string;
     };
     read: {
         kind: ReadKind;

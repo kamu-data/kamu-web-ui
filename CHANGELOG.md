@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - Added ingest via file upload
+- Added `EthereumLogs` polling source and metadata block support 
 
 ## [0.20.0] - 2024-06-10
 ### Added

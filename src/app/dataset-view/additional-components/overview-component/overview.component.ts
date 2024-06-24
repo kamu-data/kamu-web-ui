@@ -32,6 +32,7 @@ import { promiseWithCatch } from "src/app/common/app.helpers";
 import { ModalService } from "src/app/components/modal/modal.service";
 import AppValues from "src/app/common/app.values";
 import { FileUploadService } from "src/app/services/file-upload.service";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 @Component({
     selector: "app-overview",
@@ -64,6 +65,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         private fileUploadService: FileUploadService,
         private configService: AppConfigService,
         private modalService: ModalService,
+        private loggedUserService: LoggedUserService,
     ) {
         super();
     }

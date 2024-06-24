@@ -15,6 +15,7 @@ import { MaybeNull } from "src/app/common/app.types";
 import { AccountNotFoundError } from "src/app/common/errors";
 import { AccountPageQueryParams } from "./account.component.model";
 import { ModalService } from "../components/modal/modal.service";
+import { LoggedUserService } from "../auth/logged-user.service";
 
 @Component({
     selector: "app-account",
@@ -39,6 +40,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
         private navigationService: NavigationService,
         private modalService: ModalService,
         private accountService: AccountService,
+        private loggedUserService: LoggedUserService,
     ) {
         super();
     }

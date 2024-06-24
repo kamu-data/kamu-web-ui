@@ -8,6 +8,7 @@ import { BaseComponent } from "src/app/common/base.component";
 import AppValues from "src/app/common/app.values";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import { Observable } from "rxjs";
+import { LoggedUserService } from "../logged-user.service";
 
 @Component({
     selector: "app-settings",
@@ -25,6 +26,7 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
     constructor(
         private router: Router,
         private route: ActivatedRoute,
+        private loggedUserService: LoggedUserService,
     ) {
         super();
     }

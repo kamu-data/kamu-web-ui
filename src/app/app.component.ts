@@ -20,6 +20,7 @@ import { loadErrorMessages } from "@apollo/client/dev";
 import { isDevMode } from "@angular/core";
 import moment from "moment";
 import { AccountTabs } from "./account/account.constants";
+import { LoggedUserService } from "./auth/logged-user.service";
 
 export const ALL_URLS_WITHOUT_HEADER: string[] = [ProjectLinks.URL_LOGIN, ProjectLinks.URL_GITHUB_CALLBACK];
 
@@ -62,6 +63,7 @@ export class AppComponent extends BaseComponent implements OnInit {
         private navigationService: NavigationService,
         private appConfigService: AppConfigService,
         private cdr: ChangeDetectorRef,
+        private loggedUserService: LoggedUserService,
     ) {
         super();
         // apollo client error messages

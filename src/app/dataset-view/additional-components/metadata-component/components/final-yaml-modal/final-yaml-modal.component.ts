@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 @Component({
     selector: "app-final-yaml-modal",
@@ -17,6 +18,7 @@ export class FinalYamlModalComponent extends BaseComponent {
     constructor(
         public activeModal: NgbActiveModal,
         private datasetCommitService: DatasetCommitService,
+        private loggedUserService: LoggedUserService,
     ) {
         super();
     }

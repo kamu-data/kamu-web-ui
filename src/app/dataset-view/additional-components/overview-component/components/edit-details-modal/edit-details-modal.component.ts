@@ -12,6 +12,7 @@ import { BaseComponent } from "src/app/common/base.component";
 import { DatasetSchema, DataRow } from "src/app/interface/dataset.interface";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 @Component({
     selector: "app-details-modal",
@@ -33,6 +34,7 @@ export class EditDetailsModalComponent extends BaseComponent implements OnInit {
         private datasetCommitService: DatasetCommitService,
         private yamlEventService: TemplatesYamlEventsService,
         public activeModal: NgbActiveModal,
+        private loggedUserService: LoggedUserService,
     ) {
         super();
     }

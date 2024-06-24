@@ -4,6 +4,7 @@ import { MaybeNull } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
 import { EditMode } from "./readme-section.types";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 @Component({
     selector: "app-readme-section",
@@ -26,7 +27,10 @@ export class ReadmeSectionComponent extends BaseComponent implements OnInit {
         return this.currentReadme !== this.readmeState;
     }
 
-    constructor(private datasetCommitService: DatasetCommitService) {
+    constructor(
+        private datasetCommitService: DatasetCommitService,
+        private loggedUserService: LoggedUserService,
+    ) {
         super();
     }
 

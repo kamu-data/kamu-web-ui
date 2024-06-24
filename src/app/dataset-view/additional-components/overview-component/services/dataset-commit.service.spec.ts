@@ -238,7 +238,12 @@ describe("DatasetCommitService", () => {
         const README_CONTENT = "readme content";
 
         commitService
-            .updateReadme(TEST_ACCOUNT_NAME, TEST_DATASET_NAME, README_CONTENT, TEST_ACCOUNT_ID)
+            .updateReadme({
+                accountId: TEST_ACCOUNT_ID,
+                accountName: TEST_ACCOUNT_NAME,
+                datasetName: TEST_DATASET_NAME,
+                content: README_CONTENT,
+            })
             .subscribe(() => {
                 tick();
             });
@@ -259,7 +264,12 @@ describe("DatasetCommitService", () => {
 
         const README_CONTENT = "readme content";
         const subscription$ = commitService
-            .updateReadme(TEST_ACCOUNT_NAME, TEST_DATASET_NAME, README_CONTENT, TEST_ACCOUNT_ID)
+            .updateReadme({
+                accountId: TEST_ACCOUNT_ID,
+                accountName: TEST_ACCOUNT_NAME,
+                datasetName: TEST_DATASET_NAME,
+                content: README_CONTENT,
+            })
             .subscribe({
                 next: () => fail("unexpected success"),
                 error: (e: unknown) => {
@@ -276,7 +286,12 @@ describe("DatasetCommitService", () => {
 
         const README_CONTENT = "readme content";
         const subscription$ = commitService
-            .updateReadme(TEST_ACCOUNT_NAME, TEST_DATASET_NAME, README_CONTENT, TEST_ACCOUNT_ID)
+            .updateReadme({
+                accountId: TEST_ACCOUNT_ID,
+                accountName: TEST_ACCOUNT_NAME,
+                datasetName: TEST_DATASET_NAME,
+                content: README_CONTENT,
+            })
             .subscribe({
                 next: () => fail("unexpected success"),
                 error: (e: unknown) => {
@@ -292,7 +307,12 @@ describe("DatasetCommitService", () => {
 
         const README_CONTENT = "readme content";
         expect(() =>
-            commitService.updateReadme(TEST_ACCOUNT_NAME, TEST_DATASET_NAME, README_CONTENT, TEST_ACCOUNT_ID),
+            commitService.updateReadme({
+                accountId: TEST_ACCOUNT_ID,
+                accountName: TEST_ACCOUNT_NAME,
+                datasetName: TEST_DATASET_NAME,
+                content: README_CONTENT,
+            }),
         ).toThrow(new DatasetOperationError([new Error(DatasetCommitService.NOT_LOGGED_USER_ERROR)]));
     });
 });

@@ -31,6 +31,7 @@ import { AppConfigService } from "src/app/app-config.service";
 import { promiseWithCatch } from "src/app/common/app.helpers";
 import { ModalService } from "src/app/components/modal/modal.service";
 import AppValues from "src/app/common/app.values";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 @Component({
     selector: "app-overview",
@@ -63,6 +64,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         private fileUploadService: FileUploadService,
         private configService: AppConfigService,
         private modalService: ModalService,
+        private loggedUserService: LoggedUserService,
     ) {
         super();
     }
@@ -208,6 +210,10 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     public get canRefresh(): boolean {
         return this.hasSetPollingSource || this.hasCurrentTransform;
+    }
+
+    public get isUserLogged(): boolean {
+        return this.loggedUserService.isAuthenticated;
     }
 
     public get hasSetPollingSource(): boolean {

@@ -224,10 +224,10 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 name: "chainId",
                 label: "Chain ID",
                 value: "",
-                type: ControlType.TEXT,
+                type: ControlType.NUMBER,
                 placeholder: "Enter id",
                 tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_CHAIN_ID,
-                validators: {},
+                validators: { min: 0, pattern: AppValues.ONLY_POSITIVE_NUMBERS_PATTERN },
             },
             {
                 name: "nodeUrl",

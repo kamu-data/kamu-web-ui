@@ -5,6 +5,7 @@ export interface JsonFormValidators {
     minLength?: number;
     maxLength?: number;
     pattern?: string | RegExp;
+    min?: number;
 }
 
 interface JsonFormControlOptions {

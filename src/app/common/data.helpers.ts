@@ -247,6 +247,10 @@ export const getValidators = (validators: JsonFormValidators): ValidatorFn[] => 
                     validatorsToAdd.push(Validators.maxLength(value as number));
                 }
                 break;
+            case "min": {
+                validatorsToAdd.push(Validators.min(value as number));
+                break;
+            }
             default:
                 break;
         }

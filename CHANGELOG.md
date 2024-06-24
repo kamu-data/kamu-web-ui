@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+### Fixed
+- Fixed cache issue for mutation methods
+
 ## [0.21.1] - 2024-06-24
 ### Added
 - Support `EthereumLogs` as a new kind of polling source type (wizard, block history, metadata)
@@ -19,8 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.21.0] - 2024-06-24
 ### Added
 - Added ingest via file upload
-### Fixed
-- Fixed cache issue for mutation methods
 
 ## [0.20.0] - 2024-06-10
 ### Added

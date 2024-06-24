@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - Added ingest via file upload
+### Fixed
+- Fixed cache issue for mutation methods
 
 ## [0.20.0] - 2024-06-10
 ### Added

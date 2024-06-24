@@ -43,7 +43,7 @@ export const FETCH_STEP_RADIO_CONTROLS: RadioControlType[] = [
         id: "from-ethereumLogs",
         value: FetchKind.ETHEREUM_LOGS,
         icon: "diamond",
-        label: "Sync from ethereum logs",
+        label: "Sync from Ethereum logs",
         tooltip: SetPollingSourceTooltipsTexts.FROM_ETHEREUM_LOGS,
     },
 ];

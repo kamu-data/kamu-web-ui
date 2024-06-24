@@ -127,7 +127,7 @@
                         appDragAndDrop
                         (click)="addData()"
                         (fileDropped)="onFileDropped($event)"
-                        *ngIf="showDragAndDropBlock"
+                        *ngIf="showDragAndDropBlock && isUserLogged"
                     >
                         <div class="upload-file-icon">
                             <mat-icon class="text-muted">cloud_upload</mat-icon>

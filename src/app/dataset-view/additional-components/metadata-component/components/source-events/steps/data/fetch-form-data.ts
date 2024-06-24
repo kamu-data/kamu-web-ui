@@ -227,7 +227,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 type: ControlType.NUMBER,
                 placeholder: "Enter id",
                 tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_CHAIN_ID,
-                validators: { min: 0, pattern: AppValues.ONLY_POSITIVE_NUMBERS_PATTERN },
+                validators: { min: 0, pattern: AppValues.ZERO_OR_POSITIVE_PATTERN },
             },
             {
                 name: "nodeUrl",

@@ -466,7 +466,7 @@ export class DatasetApi {
         };
     }
 
-    private static generateAccountKeyFragment(accountId: string): StoreObject {
+    public static generateAccountKeyFragment(accountId: string): StoreObject {
         return {
             __typename: "Account",
             id: accountId,

@@ -9,6 +9,7 @@ export default class AppValues {
     public static readonly DEFAULT_USER_DISPLAY_NAME = "anonymous";
     public static readonly DEFAULT_AVATAR_URL = "https://avatars.githubusercontent.com/u/11951648?v=4";
     public static readonly URL_PATTERN = /^(http:\/\/)|(https:\/\/)/i;
+    public static readonly ZERO_OR_POSITIVE_PATTERN = /^[0-9]*$/i;
     public static readonly SCHEMA_NAME_PATTERN = /^[a-zA-Z0-9]+[a-zA-Z0-9\s(_)]*$/i;
     public static readonly SPLIT_ARGUMENTS_PATTERN = /[^\s"']+|"([^"]*)"+|'([^']*)'/g;
 

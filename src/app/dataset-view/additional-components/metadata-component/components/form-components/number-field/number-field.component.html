@@ -17,5 +17,16 @@
                 Field is required</span
             >
         </div>
+        <div *ngIf="form?.get(controlName)?.errors?.min" class="mt-1">
+            <span class="text-danger fs-12" attr.data-test-id="error-{{ controlName }}-min">
+                Minimum field value {{ form.get(controlName)?.errors?.min.min }}</span
+            >
+        </div>
+        <pre>{{ form.get(controlName)?.errors | json }}</pre>
+        <div *ngIf="form?.get(controlName)?.errors?.pattern" class="mt-1">
+            <span class="text-danger fs-12" attr.data-test-id="error-{{ controlName }}-pattern">
+                Field must be an integer</span
+            >
+        </div>
     </div>
 </div>

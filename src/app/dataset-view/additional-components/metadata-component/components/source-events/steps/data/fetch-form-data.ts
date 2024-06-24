@@ -218,4 +218,46 @@ export const FETCH_FORM_DATA: JsonFormData = {
             },
         ],
     },
+    EthereumLogs: {
+        controls: [
+            {
+                name: "chainId",
+                label: "Chain ID",
+                value: "",
+                type: ControlType.NUMBER,
+                placeholder: "Enter id",
+                tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_CHAIN_ID,
+                validators: { min: 0, pattern: AppValues.ZERO_OR_POSITIVE_PATTERN },
+            },
+            {
+                name: "nodeUrl",
+                label: "Node url",
+                value: "",
+                type: ControlType.TEXT,
+                placeholder: "Enter url",
+                tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_NODE_URL,
+                validators: {
+                    pattern: AppValues.URL_PATTERN,
+                },
+            },
+            {
+                name: "filter",
+                label: "Filter",
+                value: "",
+                type: ControlType.TEXT,
+                placeholder: "Enter filter",
+                tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_FILTER,
+                validators: {},
+            },
+            {
+                name: "signature",
+                label: "Signature",
+                value: "",
+                type: ControlType.TEXT,
+                placeholder: "Enter signature",
+                tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_SIGNATURE,
+                validators: {},
+            },
+        ],
+    },
 };

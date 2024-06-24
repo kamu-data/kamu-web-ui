@@ -137,6 +137,9 @@ export class DataHelpers {
             case "MergeStrategySnapshot": {
                 return "Snapshot";
             }
+            case "FetchStepEthereumLogs": {
+                return "Ethereum Logs";
+            }
             default:
                 return "Unknown type";
         }
@@ -244,6 +247,10 @@ export const getValidators = (validators: JsonFormValidators): ValidatorFn[] => 
                     validatorsToAdd.push(Validators.maxLength(value as number));
                 }
                 break;
+            case "min": {
+                validatorsToAdd.push(Validators.min(value as number));
+                break;
+            }
             default:
                 break;
         }

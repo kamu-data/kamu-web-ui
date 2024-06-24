@@ -168,7 +168,6 @@ export class FileUploadService {
         switch (method) {
             case "POST":
                 return this.uploadPostFile(uploadUrl, bodyObject, uploadHeaders);
-            /* istanbul ignore next */
             case "PUT":
                 return this.uploadPutFile(uploadUrl, bodyObject, uploadHeaders);
             /* istanbul ignore next */

@@ -41,12 +41,17 @@ export class DatasetCommitService {
         private loggedUserService: LoggedUserService,
     ) {}
 
-    public commitEventToDataset(accountName: string, datasetName: string, event: string): Observable<void> {
+    public commitEventToDataset(
+        accountName: string,
+        datasetName: string,
+        event: string,
+        accountId: string,
+    ): Observable<void> {
         if (this.loggedUserService.isAuthenticated) {
             return this.getIdByAccountNameAndDatasetName(accountName, datasetName).pipe(
                 switchMap((datasetId: string) =>
                     this.datasetApi.commitEvent({
-                        accountName,
+                        accountId,
                         datasetId,
                         event,
                     }),
@@ -95,10 +100,15 @@ export class DatasetCommitService {
         }
     }
 
-    public updateReadme(accountName: string, datasetName: string, content: string): Observable<void> {
+    public updateReadme(
+        accountName: string,
+        datasetName: string,
+        content: string,
+        accountId: string,
+    ): Observable<void> {
         if (this.loggedUserService.isAuthenticated) {
             return this.getIdByAccountNameAndDatasetName(accountName, datasetName).pipe(
-                switchMap((datasetId: string) => this.datasetApi.updateReadme({ accountName, datasetId, content })),
+                switchMap((datasetId: string) => this.datasetApi.updateReadme({ accountId, datasetId, content })),
                 map((data: UpdateReadmeMutation) => {
                     if (data.datasets.byId) {
                         if (data.datasets.byId.metadata.updateReadme.__typename === "CommitResultSuccess") {
@@ -122,13 +132,14 @@ export class DatasetCommitService {
         datasetId: string;
         watermark: string;
         datasetInfo: DatasetInfo;
+        accountId: string;
     }): Observable<void> {
         if (this.loggedUserService.isAuthenticated) {
             return this.datasetApi
                 .setWatermark({
                     datasetId: params.datasetId,
                     watermark: params.watermark,
-                    accountName: params.datasetInfo.accountName,
+                    accountId: params.accountId,
                 })
                 .pipe(
                     map((data: UpdateWatermarkMutation) => {

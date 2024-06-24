@@ -63,6 +63,7 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
                     this.yamlEventService.buildYamlSetLicenseEvent(
                         this.licenseForm.value as Omit<SetLicense, "__typename">,
                     ),
+                    this.localStorageService.accountId ?? "",
                 )
                 .subscribe(),
         );

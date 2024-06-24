@@ -61,7 +61,12 @@ export class ReadmeSectionComponent extends BaseComponent implements OnInit {
     public saveChanges(): void {
         this.trackSubscription(
             this.datasetCommitService
-                .updateReadme(this.datasetBasics.owner.accountName, this.datasetBasics.name, this.readmeState)
+                .updateReadme(
+                    this.datasetBasics.owner.accountName,
+                    this.datasetBasics.name,
+                    this.readmeState,
+                    this.localStorageService.accountId ?? "",
+                )
                 .subscribe(() => {
                     this.reset();
                 }),

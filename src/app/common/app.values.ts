@@ -5,6 +5,7 @@ export default class AppValues {
     public static readonly APP_LOGO = "assets/icons/kamu_logo_icon.svg";
     public static readonly LOCAL_STORAGE_ACCESS_TOKEN = "access_token";
     public static readonly LOCAL_STORAGE_LOGIN_CALLBACK_URL = "login_callback_url";
+    public static readonly LOCAL_STORAGE_ACCOUNT_ID = "account_id";
     public static readonly SESSION_STORAGE_SIDE_PANEL_VISIBLE = "side_panel_visible";
     public static readonly DEFAULT_USER_DISPLAY_NAME = "anonymous";
     public static readonly DEFAULT_AVATAR_URL = "https://avatars.githubusercontent.com/u/11951648?v=4";

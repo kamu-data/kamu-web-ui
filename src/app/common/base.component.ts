@@ -5,9 +5,11 @@ import ProjectLinks from "../project-links";
 import { requireValue } from "./app.helpers";
 import { UnsubscribeOnDestroyAdapter } from "./unsubscribe.ondestroy.adapter";
 import { Observable, map } from "rxjs";
+import { LocalStorageService } from "../services/local-storage.service";
 
 export abstract class BaseComponent extends UnsubscribeOnDestroyAdapter {
     protected activatedRoute = inject(ActivatedRoute);
+    protected localStorageService = inject(LocalStorageService);
 
     public get searchString(): string {
         return window.location.search;

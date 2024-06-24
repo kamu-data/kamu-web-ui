@@ -72,6 +72,7 @@ export class EditDetailsModalComponent extends BaseComponent implements OnInit {
                     this.datasetBasics.owner.accountName,
                     this.datasetBasics.name,
                     this.yamlEventService.buildYamlSetInfoEvent(this.description, this.keywords),
+                    this.localStorageService.accountId ?? "",
                 )
                 .subscribe(),
         );

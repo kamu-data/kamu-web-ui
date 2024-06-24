@@ -128,6 +128,7 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
                     this.yamlEventService.buildYamlSetTransformEvent(
                         this.editService.transformEventAsObject(this.inputDatasets, this.selectedEngine, this.queries),
                     ),
+                    this.localStorageService.accountId ?? "",
                 )
                 .subscribe(),
         );

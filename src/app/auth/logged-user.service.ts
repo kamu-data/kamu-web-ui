@@ -72,6 +72,7 @@ export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
     public terminateSession(): void {
         this.changeUser(null);
         this.resetAccessToken();
+        this.resetAccountId();
         this.clearGraphQLCache();
     }
 
@@ -101,6 +102,10 @@ export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
 
     private resetAccessToken(): void {
         this.localStorageService.setAccessToken(null);
+    }
+
+    private resetAccountId(): void {
+        this.localStorageService.setAccountId(null);
     }
 
     private saveAccessToken(token: string): void {

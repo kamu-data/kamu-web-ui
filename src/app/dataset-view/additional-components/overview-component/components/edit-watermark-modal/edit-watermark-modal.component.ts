@@ -64,6 +64,7 @@ export class EditWatermarkModalComponent extends BaseComponent implements OnInit
                         accountName: this.datasetBasics.owner.accountName,
                         datasetName: this.datasetBasics.name,
                     },
+                    accountId: this.localStorageService.accountId ?? "",
                 })
 
                 .subscribe(),

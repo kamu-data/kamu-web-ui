@@ -9,7 +9,6 @@ import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import { Observable, shareReplay } from "rxjs";
 import { ActivatedRoute, Params } from "@angular/router";
 import { BaseComponent } from "src/app/common/base.component";
-import { LocalStorageService } from "src/app/services/local-storage.service";
 
 @Component({
     selector: "app-login",
@@ -33,7 +32,6 @@ export class LoginComponent extends BaseComponent implements OnInit {
         private route: ActivatedRoute,
         private fb: FormBuilder,
         private loginService: LoginService,
-        private localStorageService: LocalStorageService,
     ) {
         super();
 

@@ -38,10 +38,8 @@ import {
 import AppValues from "src/app/common/app.values";
 import { ApolloQueryResult } from "@apollo/client/core";
 import { Injectable } from "@angular/core";
-
 import { map, first } from "rxjs/operators";
 import { Observable } from "rxjs";
-
 import { MutationResult } from "apollo-angular";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { DatasetOperationError } from "../common/errors";
@@ -458,7 +456,7 @@ export class DatasetApi {
             );
     }
 
-    private static generateDatasetKeyFragment(ownerRef: string | undefined, datasetId: string): StoreObject {
+    public static generateDatasetKeyFragment(ownerRef: string | undefined, datasetId: string): StoreObject {
         return {
             __typename: "Dataset",
             owner: {
@@ -468,10 +466,10 @@ export class DatasetApi {
         };
     }
 
-    private static generateAccountKeyFragment(accountName: string): StoreObject {
+    public static generateAccountKeyFragment(accountId: string): StoreObject {
         return {
             __typename: "Account",
-            accountName,
+            id: accountId,
         };
     }
 }

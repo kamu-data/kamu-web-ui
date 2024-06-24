@@ -77,6 +77,8 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { DataAccessPanelModule } from "../components/data-access-panel/data-access-panel.module";
 import { DatasetSettingsCompactingTabComponent } from "./additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.component";
 import { RequestTimerComponent } from "./additional-components/data-component/request-timer/request-timer.component";
+import { AddDataModalComponent } from "./additional-components/overview-component/components/add-data-modal/add-data-modal.component";
+import { FileFromUrlModalComponent } from "./additional-components/overview-component/components/file-from-url-modal/file-from-url-modal.component";
 import { FlowsTableComponent } from "../common/components/flows-table/flows-table.component";
 import { TileBaseWidgetComponent } from "../common/components/tile-base-widget/tile-base-widget.component";
 import { FlowsComponent } from "./additional-components/flows-component/flows.component";
@@ -195,6 +197,8 @@ import { FlowsComponent } from "./additional-components/flows-component/flows.co
         DatasetSettingsSchedulingTabComponent,
         DatasetSettingsCompactingTabComponent,
         RequestTimerComponent,
+        AddDataModalComponent,
+        FileFromUrlModalComponent,
     ],
 })
 export class DatasetModule {

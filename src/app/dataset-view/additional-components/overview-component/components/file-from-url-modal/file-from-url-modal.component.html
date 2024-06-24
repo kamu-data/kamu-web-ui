@@ -1,0 +1,30 @@
+<div class="d-flex p-4">
+    <div class="flex-grow-1 ms-2">
+        <span class="fs-5 fw-bold"> Add file from URL</span>
+    </div>
+    <div>
+        <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.close()"></button>
+    </div>
+</div>
+<div class="px-4">
+    <mat-divider></mat-divider>
+</div>
+<div class="body p-4">
+    <form [formGroup]="fileUrlForm">
+        <div class="mt-4">
+            <label for="file-url" class="form-label">Source URL <span class="text-danger">*</span></label>
+            <input class="form-control" id="file-url" formControlName="fileUrl" data-test-id="file-url" />
+        </div>
+    </form>
+</div>
+<div class="p-4 d-flex justify-content-end">
+    <button
+        type="button"
+        class="btn btn-success"
+        (click)="activeModal.close()"
+        data-test-id="save-file-url"
+        [disabled]="fileUrlForm.invalid"
+    >
+        Save
+    </button>
+</div>

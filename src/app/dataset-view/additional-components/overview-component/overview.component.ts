@@ -24,6 +24,14 @@ import { EditWatermarkModalComponent } from "./components/edit-watermark-modal/e
 import _ from "lodash";
 import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
+import { AddDataModalComponent } from "./components/add-data-modal/add-data-modal.component";
+import { FileUploadService } from "src/app/services/file-upload.service";
+import { Observable } from "rxjs";
+import { AppConfigService } from "src/app/app-config.service";
+import { promiseWithCatch } from "src/app/common/app.helpers";
+import { ModalService } from "src/app/components/modal/modal.service";
+import AppValues from "src/app/common/app.values";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 @Component({
     selector: "app-overview",
@@ -37,6 +45,9 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     @Output() toggleReadmeViewEmit = new EventEmitter<null>();
     @Output() selectTopicEmit = new EventEmitter<string>();
     public editingReadme = false;
+    public droppedFile: File;
+    public uploadFileLoading$: Observable<boolean>;
+    public readonly UPLOAD_FILE_IMAGE = AppValues.UPLOAD_FILE_IMAGE;
 
     public currentState?: {
         schema: MaybeNull<DatasetSchema>;
@@ -48,13 +59,18 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     constructor(
         private datasetSubsService: DatasetSubscriptionsService,
         private navigationService: NavigationService,
-        private modalService: NgbModal,
+        private ngbModalService: NgbModal,
         private datasetFlowsService: DatasetFlowsService,
+        private fileUploadService: FileUploadService,
+        private configService: AppConfigService,
+        private modalService: ModalService,
+        private loggedUserService: LoggedUserService,
     ) {
         super();
     }
 
     public ngOnInit(): void {
+        this.uploadFileLoading$ = this.fileUploadService.isUploadFile;
         this.trackSubscription(
             this.datasetSubsService.overviewChanges.subscribe((overviewUpdate: OverviewUpdate) => {
                 this.currentState = {
@@ -196,8 +212,16 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         return this.hasSetPollingSource || this.hasCurrentTransform;
     }
 
+    public get isUserLogged(): boolean {
+        return this.loggedUserService.isAuthenticated;
+    }
+
     public get hasSetPollingSource(): boolean {
         return !_.isNil(this.currentState?.overview.metadata.currentPollingSource);
+    }
+
+    public get showDragAndDropBlock(): boolean {
+        return !this.hasSetPollingSource && this.datasetBasics.kind === DatasetKind.Root;
     }
 
     public get hasCurrentTransform(): boolean {
@@ -209,21 +233,21 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public openInformationModal() {
-        const modalRef: NgbModalRef = this.modalService.open(EditDetailsModalComponent);
+        const modalRef: NgbModalRef = this.ngbModalService.open(EditDetailsModalComponent);
         const modalRefInstance = modalRef.componentInstance as EditDetailsModalComponent;
         modalRefInstance.currentState = this.currentState;
         modalRefInstance.datasetBasics = this.datasetBasics;
     }
 
     public openLicenseModal(): void {
-        const modalRef: NgbModalRef = this.modalService.open(EditLicenseModalComponent);
+        const modalRef: NgbModalRef = this.ngbModalService.open(EditLicenseModalComponent);
         const modalRefInstance = modalRef.componentInstance as EditLicenseModalComponent;
         modalRefInstance.currentState = this.currentState;
         modalRefInstance.datasetBasics = this.datasetBasics;
     }
 
     public openWatermarkModal(): void {
-        const modalRef: NgbModalRef = this.modalService.open(EditWatermarkModalComponent);
+        const modalRef: NgbModalRef = this.ngbModalService.open(EditWatermarkModalComponent);
         const modalRefInstance = modalRef.componentInstance as EditWatermarkModalComponent;
         modalRefInstance.currentWatermark = this.currentState?.overview.metadata.currentWatermark;
         modalRefInstance.datasetBasics = this.datasetBasics;
@@ -274,5 +298,27 @@ export class OverviewComponent extends BaseComponent implements OnInit {
                     }
                 }),
         );
+    }
+
+    public addData(): void {
+        const modalRef: NgbModalRef = this.ngbModalService.open(AddDataModalComponent);
+        const modalRefInstance = modalRef.componentInstance as AddDataModalComponent;
+        modalRefInstance.datasetBasics = this.datasetBasics;
+    }
+
+    public onFileDropped(files: FileList): void {
+        this.droppedFile = files[0];
+        const fileSizeMb = this.droppedFile.size * Math.pow(10, -6);
+        if (fileSizeMb <= this.configService.ingestUploadFileLimitMb) {
+            this.trackSubscription(this.fileUploadService.uploadFile(this.droppedFile, this.datasetBasics).subscribe());
+        } else {
+            promiseWithCatch(
+                this.modalService.warning({
+                    title: "Warning",
+                    message: `Maximum file size ${this.configService.ingestUploadFileLimitMb} MB`,
+                    yesButtonText: "Ok",
+                }),
+            );
+        }
     }
 }

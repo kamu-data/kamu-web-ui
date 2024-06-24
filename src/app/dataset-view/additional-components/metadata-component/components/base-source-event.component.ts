@@ -79,12 +79,12 @@ export abstract class BaseSourceEventComponent extends BaseMainEventComponent im
     public saveSourceEvent(form: FormGroup, sourceEvent: SourcesEvents): void {
         this.trackSubscription(
             this.datasetCommitService
-                .commitEventToDataset(
-                    this.getDatasetInfoFromUrl().accountName,
-                    this.getDatasetInfoFromUrl().datasetName,
-                    this.selectSourceEvent(form, sourceEvent),
-                    this.localStorageService.accountId ?? "",
-                )
+                .commitEventToDataset({
+                    accountId: this.loggedUserService.currentlyLoggedInUser?.id ?? "",
+                    accountName: this.getDatasetInfoFromUrl().accountName,
+                    datasetName: this.getDatasetInfoFromUrl().datasetName,
+                    event: this.selectSourceEvent(form, sourceEvent),
+                })
                 .subscribe(),
         );
     }

@@ -24,12 +24,12 @@ export class FinalYamlModalComponent extends BaseComponent {
     public saveEvent(): void {
         this.trackSubscription(
             this.datasetCommitService
-                .commitEventToDataset(
-                    this.datasetInfo.accountName,
-                    this.datasetInfo.datasetName,
-                    this.yamlTemplate,
-                    this.localStorageService.accountId ?? "",
-                )
+                .commitEventToDataset({
+                    accountId: this.loggedUserService.currentlyLoggedInUser?.id ?? "",
+                    accountName: this.datasetInfo.accountName,
+                    datasetName: this.datasetInfo.datasetName,
+                    event: this.yamlTemplate,
+                })
                 .subscribe(),
         );
         this.activeModal.close(this.yamlTemplate);

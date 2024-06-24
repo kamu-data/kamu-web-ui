@@ -6,10 +6,12 @@ import { requireValue } from "./app.helpers";
 import { UnsubscribeOnDestroyAdapter } from "./unsubscribe.ondestroy.adapter";
 import { Observable, map } from "rxjs";
 import { LocalStorageService } from "../services/local-storage.service";
+import { LoggedUserService } from "../auth/logged-user.service";
 
 export abstract class BaseComponent extends UnsubscribeOnDestroyAdapter {
     protected activatedRoute = inject(ActivatedRoute);
     protected localStorageService = inject(LocalStorageService);
+    protected loggedUserService = inject(LoggedUserService);
 
     public get searchString(): string {
         return window.location.search;

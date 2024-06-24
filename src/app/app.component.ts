@@ -14,7 +14,6 @@ import { MaybeNull } from "./common/app.types";
 import _ from "lodash";
 import { isMobileView, promiseWithCatch } from "./common/app.helpers";
 import { AppConfigService } from "./app-config.service";
-import { LoggedUserService } from "./auth/logged-user.service";
 import { AppConfigFeatureFlags, LoginMethod } from "./app-config.model";
 import { LoginService } from "./auth/login/login.service";
 import { loadErrorMessages } from "@apollo/client/dev";
@@ -59,7 +58,6 @@ export class AppComponent extends BaseComponent implements OnInit {
     constructor(
         private router: Router,
         private loginService: LoginService,
-        private loggedUserService: LoggedUserService,
         private modalService: ModalService,
         private navigationService: NavigationService,
         private appConfigService: AppConfigService,

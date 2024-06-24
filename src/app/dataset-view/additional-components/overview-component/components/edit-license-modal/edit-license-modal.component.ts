@@ -57,14 +57,14 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
     public onEditLicense(): void {
         this.trackSubscription(
             this.datasetCommitService
-                .commitEventToDataset(
-                    this.datasetBasics.owner.accountName,
-                    this.datasetBasics.name,
-                    this.yamlEventService.buildYamlSetLicenseEvent(
+                .commitEventToDataset({
+                    accountId: this.loggedUserService.currentlyLoggedInUser?.id ?? "",
+                    accountName: this.datasetBasics.owner.accountName,
+                    datasetName: this.datasetBasics.name,
+                    event: this.yamlEventService.buildYamlSetLicenseEvent(
                         this.licenseForm.value as Omit<SetLicense, "__typename">,
                     ),
-                    this.localStorageService.accountId ?? "",
-                )
+                })
                 .subscribe(),
         );
     }

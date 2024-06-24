@@ -58,13 +58,13 @@ export class EditWatermarkModalComponent extends BaseComponent implements OnInit
         this.trackSubscription(
             this.datasetCommitService
                 .updateWatermark({
+                    accountId: this.loggedUserService.currentlyLoggedInUser?.id ?? "",
                     datasetId: this.datasetBasics.id,
                     watermark: date,
                     datasetInfo: {
                         accountName: this.datasetBasics.owner.accountName,
                         datasetName: this.datasetBasics.name,
                     },
-                    accountId: this.localStorageService.accountId ?? "",
                 })
 
                 .subscribe(),

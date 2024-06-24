@@ -14,7 +14,6 @@ import { Observable, combineLatest } from "rxjs";
 import { MaybeNull } from "src/app/common/app.types";
 import { AccountNotFoundError } from "src/app/common/errors";
 import { AccountPageQueryParams } from "./account.component.model";
-import { LoggedUserService } from "../auth/logged-user.service";
 import { ModalService } from "../components/modal/modal.service";
 
 @Component({
@@ -40,7 +39,6 @@ export class AccountComponent extends BaseComponent implements OnInit {
         private navigationService: NavigationService,
         private modalService: ModalService,
         private accountService: AccountService,
-        private loggedUserService: LoggedUserService,
     ) {
         super();
     }

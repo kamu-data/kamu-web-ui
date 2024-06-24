@@ -6,7 +6,6 @@ import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { filter } from "rxjs/operators";
 import { BaseComponent } from "src/app/common/base.component";
 import AppValues from "src/app/common/app.values";
-import { LoggedUserService } from "../logged-user.service";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import { Observable } from "rxjs";
 
@@ -26,7 +25,6 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
     constructor(
         private router: Router,
         private route: ActivatedRoute,
-        private loggedUserService: LoggedUserService,
     ) {
         super();
     }

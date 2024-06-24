@@ -68,12 +68,12 @@ export class EditDetailsModalComponent extends BaseComponent implements OnInit {
     public commitSetInfoEvent(): void {
         this.trackSubscription(
             this.datasetCommitService
-                .commitEventToDataset(
-                    this.datasetBasics.owner.accountName,
-                    this.datasetBasics.name,
-                    this.yamlEventService.buildYamlSetInfoEvent(this.description, this.keywords),
-                    this.localStorageService.accountId ?? "",
-                )
+                .commitEventToDataset({
+                    accountId: this.loggedUserService.currentlyLoggedInUser?.id ?? "",
+                    accountName: this.datasetBasics.owner.accountName,
+                    datasetName: this.datasetBasics.name,
+                    event: this.yamlEventService.buildYamlSetInfoEvent(this.description, this.keywords),
+                })
                 .subscribe(),
         );
     }

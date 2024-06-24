@@ -125,7 +125,6 @@ export class LoginService {
     }
 
     private redirectUrlLoginCallback(loginResponse: LoginResponse): void {
-        this.localStorageService.setAccountId(loginResponse.account.id);
         const callbackUrl: MaybeNull<string> = this.localStorageService.loginCallbackUrl;
         if (callbackUrl) {
             this.localStorageService.setLoginCallbackUrl(null);

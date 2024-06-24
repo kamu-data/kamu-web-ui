@@ -5,7 +5,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { DatasetCreateService } from "./dataset-create.service";
 import { Observable } from "rxjs";
-import { LoggedUserService } from "../auth/logged-user.service";
 
 @Component({
     selector: "app-dataset-create",
@@ -37,7 +36,6 @@ export class DatasetCreateComponent extends BaseComponent {
         private cdr: ChangeDetectorRef,
         private fb: FormBuilder,
         private datasetCreateService: DatasetCreateService,
-        private loggedUserService: LoggedUserService,
     ) {
         super();
         this.errorMessage$ = this.datasetCreateService.errorMessageChanges;

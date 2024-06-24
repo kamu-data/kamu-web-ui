@@ -75,12 +75,12 @@ describe("DatasetCommitService", () => {
     }
 
     function requestCommitEvent(): Observable<void> {
-        return commitService.commitEventToDataset(
-            TEST_ACCOUNT_NAME,
-            TEST_DATASET_NAME,
-            TEST_EVENT_CONTENT,
-            TEST_ACCOUNT_ID,
-        );
+        return commitService.commitEventToDataset({
+            accountId: TEST_ACCOUNT_ID,
+            accountName: TEST_ACCOUNT_NAME,
+            datasetName: TEST_DATASET_NAME,
+            event: TEST_EVENT_CONTENT,
+        });
     }
 
     function expectNavigatedToDatasetOverview() {

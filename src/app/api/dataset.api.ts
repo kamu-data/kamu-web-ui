@@ -44,6 +44,7 @@ import { MutationResult } from "apollo-angular";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { DatasetOperationError } from "../common/errors";
 import { StoreObject } from "@apollo/client/cache";
+import { noCacheFetchPolicy } from "../common/data.helpers";
 
 @Injectable({ providedIn: "root" })
 export class DatasetApi {
@@ -97,6 +98,7 @@ export class DatasetApi {
             .watch(
                 { query: params.query, limit: params.limit ?? AppValues.SQL_QUERY_LIMIT, skip: params.skip },
                 {
+                    ...noCacheFetchPolicy,
                     context: {
                         skipLoading: true,
                     },

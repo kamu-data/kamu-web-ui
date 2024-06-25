@@ -95,7 +95,7 @@
                     data-test-id="runSqlQueryButton"
                     name="run sql button"
                     (click)="runSQLRequest({ query: sqlRequestCode }, true)"
-                    [disabled]="!dataUpdate.content.length"
+                    [disabled]="!dataUpdate.schema?.fields?.length"
                     class="sql-run-button border border-1 rounded-left-2 border-right-0 btn-group-item btn d-flex justify-content-center align-items-center"
                 >
                     <span>Run</span><mat-icon>play_arrow</mat-icon>
@@ -168,31 +168,35 @@
             <p class="sql-error-message" data-test-id="sql-error-message">{{ sqlErrorMarker }}</p>
         </ng-container>
         <ng-container *ngIf="dataUpdate$ | async as dataUpdate">
-            <ng-container *ngIf="!(sqlErrorMarker$ | async) && dataUpdate.schema && currentData.length">
+            <ng-container *ngIf="!(sqlErrorMarker$ | async) && dataUpdate.schema?.fields?.length">
                 <div class="d-flex justify-content-between align-items-center">
                     <h2 class="box-title align-items-center pb-3 m-0">Result:</h2>
                 </div>
+                <ng-container *ngIf="currentData.length; else noRecords">
+                    <app-dynamic-table
+                        [hasTableHeader]="true"
+                        [schemaFields]="dataUpdate.schema ? dataUpdate.schema.fields : []"
+                        [dataRows]="currentData"
+                        [idTable]="'result-query-table'"
+                    ></app-dynamic-table>
 
-                <app-dynamic-table
-                    [hasTableHeader]="true"
-                    [schemaFields]="dataUpdate.schema ? dataUpdate.schema.fields : []"
-                    [dataRows]="currentData || []"
-                    [idTable]="'result-query-table'"
-                ></app-dynamic-table>
-
-                <app-load-more
-                    [isAllDataLoaded]="isAllDataLoaded"
-                    (loadMoreEmit)="loadMore($event)"
-                    class="mt-4"
-                ></app-load-more>
+                    <app-load-more
+                        [isAllDataLoaded]="isAllDataLoaded"
+                        (loadMoreEmit)="loadMore($event)"
+                        class="mt-4"
+                    ></app-load-more>
+                </ng-container>
+                <ng-template #noRecords>
+                    <h3>0 records</h3>
+                </ng-template>
             </ng-container>
         </ng-container>
         <p
-            *ngIf="!currentData.length && !sqlLoading && !(sqlErrorMarker$ | async)"
+            *ngIf="!(dataUpdate$ | async)?.schema?.fields?.length && !sqlLoading && !(sqlErrorMarker$ | async)"
             class="search-result-container__content mt-4"
         >
             The current dataset does not contain any data. Need to
-            <a class="add-link"> add data</a>
+            <a class="add-link" (click)="addData()"> add data</a>
         </p>
     </div>
 </div>

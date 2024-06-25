@@ -80,7 +80,7 @@ export abstract class BaseSourceEventComponent extends BaseMainEventComponent im
         this.trackSubscription(
             this.datasetCommitService
                 .commitEventToDataset({
-                    accountId: this.loggedUserService.currentlyLoggedInUser?.id ?? "",
+                    accountId: this.loggedUserService.currentlyLoggedInUser.id,
                     accountName: this.getDatasetInfoFromUrl().accountName,
                     datasetName: this.getDatasetInfoFromUrl().datasetName,
                     event: this.selectSourceEvent(form, sourceEvent),

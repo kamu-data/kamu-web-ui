@@ -74,7 +74,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
     }
 
     public isLoggedUser(user: AccountFragment): boolean {
-        return this.loggedUserService.currentlyLoggedInUser?.accountName === user.accountName;
+        return this.loggedUserService.maybeCurrentlyLoggedInUser?.accountName === user.accountName;
     }
 
     public onEditProfile(): void {

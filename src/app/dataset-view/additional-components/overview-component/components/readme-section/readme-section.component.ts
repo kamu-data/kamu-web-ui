@@ -66,7 +66,7 @@ export class ReadmeSectionComponent extends BaseComponent implements OnInit {
         this.trackSubscription(
             this.datasetCommitService
                 .updateReadme({
-                    accountId: this.loggedUserService.currentlyLoggedInUser?.id ?? "",
+                    accountId: this.loggedUserService.currentlyLoggedInUser.id,
                     accountName: this.datasetBasics.owner.accountName,
                     datasetName: this.datasetBasics.name,
                     content: this.readmeState,

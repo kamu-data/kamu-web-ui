@@ -115,7 +115,7 @@ describe("AccountComponent", () => {
     it("should check isLoggedUser property", () => {
         expect(component.isLoggedUser(mockAccountDetails)).toEqual(false);
 
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
         mockParams.next({ [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: mockAccountDetails.accountName });
 
         expect(component.isLoggedUser(mockAccountDetails)).toEqual(true);

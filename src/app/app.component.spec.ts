@@ -127,7 +127,7 @@ describe("AppComponent", () => {
 
     it("should check call onUserProfile", () => {
         const navigationServiceSpy = spyOn(navigationService, "navigateToOwnerView").and.returnValue();
-        const currentUserSpy = spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(
+        const currentUserSpy = spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(
             mockAccountDetails,
         );
         component.onUserProfile();

@@ -44,7 +44,7 @@ describe("DatasetCreateService", () => {
             },
         };
         spyOn(datasetApi, "createEmptyDataset").and.returnValue(of(mockResponseSuccess));
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
         const spyNavigateToDatasetView = spyOn(navigationService, "navigateToDatasetView");
 
         const datasetName = "my-test";
@@ -58,7 +58,7 @@ describe("DatasetCreateService", () => {
     });
 
     it("should check creating empty dataset needs a logged user", () => {
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(null);
+        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(null);
 
         const datasetName = "my-test";
         expect(() => service.createEmptyDataset(DatasetKind.Root, datasetName)).toThrow(
@@ -76,7 +76,7 @@ describe("DatasetCreateService", () => {
             },
         };
         spyOn(datasetApi, "createEmptyDataset").and.returnValue(of(mockResponseError));
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
         const spyNavigateToDatasetView = spyOn(navigationService, "navigateToDatasetView");
 
         const datasetName = "my-test";
@@ -101,7 +101,7 @@ describe("DatasetCreateService", () => {
             },
         };
         spyOn(datasetApi, "createDatasetFromSnapshot").and.returnValue(of(mockResponseSuccess));
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
         const spyNavigateToDatasetView = spyOn(navigationService, "navigateToDatasetView");
 
         service.createDatasetFromSnapshot("mockSnapshot").subscribe();
@@ -114,7 +114,7 @@ describe("DatasetCreateService", () => {
     });
 
     it("should check creating dataset from snapshot needs a logged user", () => {
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(null);
+        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(null);
 
         expect(() => service.createDatasetFromSnapshot("mockSnapshot")).toThrow(
             new DatasetOperationError([new Error(DatasetCreateService.NOT_LOGGED_USER_ERROR)]),
@@ -131,7 +131,7 @@ describe("DatasetCreateService", () => {
             },
         };
         spyOn(datasetApi, "createDatasetFromSnapshot").and.returnValue(of(mockResponseError));
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
         const spyNavigateToDatasetView = spyOn(navigationService, "navigateToDatasetView");
 
         service.createDatasetFromSnapshot("mockSnapshot").subscribe();

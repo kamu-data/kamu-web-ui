@@ -44,7 +44,7 @@ export class DatasetCreateComponent extends BaseComponent {
     }
 
     public ngOnInit(): void {
-        const currentUser = this.loggedUserService.currentlyLoggedInUser;
+        const currentUser = this.loggedUserService.maybeCurrentlyLoggedInUser;
         if (currentUser) {
             this.owners = [currentUser.accountName];
             this.createDatasetForm.controls.owner.setValue(currentUser.accountName);

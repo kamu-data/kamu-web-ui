@@ -145,9 +145,9 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onUserProfile(): void {
-        if (this.loggedUserService.currentlyLoggedInUser?.accountName) {
+        if (this.loggedUserService.maybeCurrentlyLoggedInUser?.accountName) {
             this.navigationService.navigateToOwnerView(
-                this.loggedUserService.currentlyLoggedInUser.accountName,
+                this.loggedUserService.maybeCurrentlyLoggedInUser.accountName,
                 AccountTabs.OVERVIEW,
             );
         } else {
@@ -156,9 +156,9 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onUserDatasets(): void {
-        if (this.loggedUserService.currentlyLoggedInUser?.accountName) {
+        if (this.loggedUserService.maybeCurrentlyLoggedInUser?.accountName) {
             this.navigationService.navigateToOwnerView(
-                this.loggedUserService.currentlyLoggedInUser.accountName,
+                this.loggedUserService.maybeCurrentlyLoggedInUser.accountName,
                 AccountTabs.DATASETS,
             );
         } else {
@@ -185,7 +185,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onSettings(): void {
-        if (this.loggedUserService.currentlyLoggedInUser?.accountName) {
+        if (this.loggedUserService.maybeCurrentlyLoggedInUser?.accountName) {
             this.navigationService.navigateToSettings();
         } else {
             throwError(() => new AuthenticationError([new Error("Login is undefined")]));

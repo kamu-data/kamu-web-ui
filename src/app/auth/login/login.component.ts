@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit, inject } from "@angular/core";
 import ProjectLinks from "src/app/project-links";
 import AppValues from "src/app/common/app.values";
 import { LoginMethod } from "src/app/app-config.model";
@@ -9,6 +9,7 @@ import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import { Observable, shareReplay } from "rxjs";
 import { ActivatedRoute, Params } from "@angular/router";
 import { BaseComponent } from "src/app/common/base.component";
+import { LocalStorageService } from "src/app/services/local-storage.service";
 
 @Component({
     selector: "app-login",
@@ -19,6 +20,8 @@ import { BaseComponent } from "src/app/common/base.component";
 export class LoginComponent extends BaseComponent implements OnInit {
     public static readonly ERROR_ZERO_METHODS_IN_CONFIG =
         "LoginComponent requires at least 1 login method in configuration";
+
+    private localStorageService = inject(LocalStorageService);
 
     public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;
     public readonly LoginMethod = LoginMethod;

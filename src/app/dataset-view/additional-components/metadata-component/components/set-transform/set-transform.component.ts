@@ -123,7 +123,7 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
         this.trackSubscription(
             this.datasetCommitService
                 .commitEventToDataset({
-                    accountId: this.loggedUserService.currentlyLoggedInUser?.id ?? "",
+                    accountId: this.loggedUserService.currentlyLoggedInUser.id,
                     accountName: this.getDatasetInfoFromUrl().accountName,
                     datasetName: this.getDatasetInfoFromUrl().datasetName,
                     event: this.yamlEventService.buildYamlSetTransformEvent(

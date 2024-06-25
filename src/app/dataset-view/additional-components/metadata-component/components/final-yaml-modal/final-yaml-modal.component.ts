@@ -27,7 +27,7 @@ export class FinalYamlModalComponent extends BaseComponent {
         this.trackSubscription(
             this.datasetCommitService
                 .commitEventToDataset({
-                    accountId: this.loggedUserService.currentlyLoggedInUser?.id ?? "",
+                    accountId: this.loggedUserService.currentlyLoggedInUser.id,
                     accountName: this.datasetInfo.accountName,
                     datasetName: this.datasetInfo.datasetName,
                     event: this.yamlTemplate,

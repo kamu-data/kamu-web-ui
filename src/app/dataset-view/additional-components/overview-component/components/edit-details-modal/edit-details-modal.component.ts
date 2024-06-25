@@ -71,7 +71,7 @@ export class EditDetailsModalComponent extends BaseComponent implements OnInit {
         this.trackSubscription(
             this.datasetCommitService
                 .commitEventToDataset({
-                    accountId: this.loggedUserService.currentlyLoggedInUser?.id ?? "",
+                    accountId: this.loggedUserService.currentlyLoggedInUser.id,
                     accountName: this.datasetBasics.owner.accountName,
                     datasetName: this.datasetBasics.name,
                     event: this.yamlEventService.buildYamlSetInfoEvent(this.description, this.keywords),

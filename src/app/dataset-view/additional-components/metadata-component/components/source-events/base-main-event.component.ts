@@ -11,7 +11,6 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { combineLatest } from "rxjs";
-import { LocalStorageService } from "src/app/services/local-storage.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 export abstract class BaseMainEventComponent extends BaseComponent {
@@ -22,7 +21,6 @@ export abstract class BaseMainEventComponent extends BaseComponent {
     protected datasetService = inject(DatasetService);
     protected datasetSubsService = inject(DatasetSubscriptionsService);
     protected navigationServices = inject(NavigationService);
-    protected localStorageService = inject(LocalStorageService);
     protected loggedUserService = inject(LoggedUserService);
 
     public eventYamlByHash: MaybeNull<string> = null;

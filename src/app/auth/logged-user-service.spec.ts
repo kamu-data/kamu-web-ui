@@ -51,7 +51,7 @@ describe("LoggedUserService", () => {
 
         function checkUserIsLogged(user: AccountFragment): void {
             expect(service.isAuthenticated).toBeTrue();
-            expect(service.currentlyLoggedInUser).toEqual(user);
+            expect(service.maybeCurrentlyLoggedInUser).toEqual(user);
         }
 
         function attemptSuccessfulLoginViaAccessToken(): void {
@@ -98,7 +98,7 @@ describe("LoggedUserService", () => {
 
         it("should check user is initially non-authenticated", () => {
             expect(service.isAuthenticated).toBeFalse();
-            expect(service.currentlyLoggedInUser).toBeNull();
+            expect(service.maybeCurrentlyLoggedInUser).toBeNull();
         });
 
         it("should check user is non-authenticated if no access token exists", () => {
@@ -170,7 +170,7 @@ describe("LoggedUserService", () => {
 
             service.logout();
 
-            expect(service.currentlyLoggedInUser).toBeNull();
+            expect(service.maybeCurrentlyLoggedInUser).toBeNull();
             expect(navigationServiceSpy).toHaveBeenCalledWith();
             expect(apolloClientSpy).toHaveBeenCalledTimes(1);
             flush();
@@ -184,7 +184,7 @@ describe("LoggedUserService", () => {
 
             service.terminateSession();
 
-            expect(service.currentlyLoggedInUser).toBeNull();
+            expect(service.maybeCurrentlyLoggedInUser).toBeNull();
             expect(navigationServiceSpy).not.toHaveBeenCalled();
             flush();
         }));

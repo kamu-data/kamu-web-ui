@@ -55,7 +55,12 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
         const accountId = this.datasetBasics.owner.id;
         this.trackSubscription(
             this.datasetSettingsService
-                .renameDataset(accountName, datasetId, this.datasetNameControl.value as string, accountId)
+                .renameDataset({
+                    accountId,
+                    accountName,
+                    datasetId,
+                    newName: this.datasetNameControl.value as string,
+                })
                 .subscribe(),
         );
     }

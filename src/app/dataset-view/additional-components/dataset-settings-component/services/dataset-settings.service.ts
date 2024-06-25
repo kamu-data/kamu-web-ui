@@ -52,34 +52,41 @@ export class DatasetSettingsService {
         }
     }
 
-    public renameDataset(accountName: string, datasetId: string, newName: string, accountId: string): Observable<void> {
+    public renameDataset(params: {
+        accountId: string;
+        accountName: string;
+        datasetId: string;
+        newName: string;
+    }): Observable<void> {
         if (this.loggedUserService.isAuthenticated) {
-            return this.datasetApi.renameDataset({ datasetId, newName, accountId }).pipe(
-                map((data: RenameDatasetMutation) => {
-                    if (data.datasets.byId) {
-                        const renameType = data.datasets.byId.rename.__typename;
-                        if (renameType === "RenameResultSuccess") {
-                            this.datasetService
-                                .requestDatasetMainData({
-                                    accountName,
-                                    datasetName: newName,
-                                })
-                                .subscribe();
-                            this.navigationService.navigateToDatasetView({
-                                accountName,
-                                datasetName: newName,
-                                tab: DatasetViewTypeEnum.Overview,
-                            });
+            return this.datasetApi
+                .renameDataset({ datasetId: params.datasetId, newName: params.newName, accountId: params.accountId })
+                .pipe(
+                    map((data: RenameDatasetMutation) => {
+                        if (data.datasets.byId) {
+                            const renameType = data.datasets.byId.rename.__typename;
+                            if (renameType === "RenameResultSuccess") {
+                                this.datasetService
+                                    .requestDatasetMainData({
+                                        accountName: params.accountName,
+                                        datasetName: params.newName,
+                                    })
+                                    .subscribe();
+                                this.navigationService.navigateToDatasetView({
+                                    accountName: params.accountName,
+                                    datasetName: params.newName,
+                                    tab: DatasetViewTypeEnum.Overview,
+                                });
+                            } else {
+                                // RenameResultNameCollision
+                                // RenameResultNoChanges
+                                this.emitRenameDatasetErrorOccurred(data.datasets.byId.rename.message);
+                            }
                         } else {
-                            // RenameResultNameCollision
-                            // RenameResultNoChanges
-                            this.emitRenameDatasetErrorOccurred(data.datasets.byId.rename.message);
+                            throw new DatasetNotFoundError();
                         }
-                    } else {
-                        throw new DatasetNotFoundError();
-                    }
-                }),
-            );
+                    }),
+                );
         } else {
             throw new DatasetOperationError([new Error(DatasetSettingsService.NOT_LOGGED_USER_ERROR)]);
         }

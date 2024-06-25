@@ -32,9 +32,9 @@ export class DatasetSettingsService {
         private datasetService: DatasetService,
     ) {}
 
-    public deleteDataset(accountName: string, datasetId: string): Observable<void> {
+    public deleteDataset(accountId: string, datasetId: string): Observable<void> {
         if (this.loggedUserService.isAuthenticated) {
-            return this.datasetApi.deleteDataset({ accountName, datasetId }).pipe(
+            return this.datasetApi.deleteDataset({ accountId, datasetId }).pipe(
                 map((data: DeleteDatasetMutation) => {
                     if (data.datasets.byId) {
                         if (data.datasets.byId.delete.__typename === "DeleteResultSuccess") {
@@ -52,34 +52,41 @@ export class DatasetSettingsService {
         }
     }
 
-    public renameDataset(accountName: string, datasetId: string, newName: string): Observable<void> {
+    public renameDataset(params: {
+        accountId: string;
+        accountName: string;
+        datasetId: string;
+        newName: string;
+    }): Observable<void> {
         if (this.loggedUserService.isAuthenticated) {
-            return this.datasetApi.renameDataset({ accountName, datasetId, newName }).pipe(
-                map((data: RenameDatasetMutation) => {
-                    if (data.datasets.byId) {
-                        const renameType = data.datasets.byId.rename.__typename;
-                        if (renameType === "RenameResultSuccess") {
-                            this.datasetService
-                                .requestDatasetMainData({
-                                    accountName,
-                                    datasetName: newName,
-                                })
-                                .subscribe();
-                            this.navigationService.navigateToDatasetView({
-                                accountName,
-                                datasetName: newName,
-                                tab: DatasetViewTypeEnum.Overview,
-                            });
+            return this.datasetApi
+                .renameDataset({ datasetId: params.datasetId, newName: params.newName, accountId: params.accountId })
+                .pipe(
+                    map((data: RenameDatasetMutation) => {
+                        if (data.datasets.byId) {
+                            const renameType = data.datasets.byId.rename.__typename;
+                            if (renameType === "RenameResultSuccess") {
+                                this.datasetService
+                                    .requestDatasetMainData({
+                                        accountName: params.accountName,
+                                        datasetName: params.newName,
+                                    })
+                                    .subscribe();
+                                this.navigationService.navigateToDatasetView({
+                                    accountName: params.accountName,
+                                    datasetName: params.newName,
+                                    tab: DatasetViewTypeEnum.Overview,
+                                });
+                            } else {
+                                // RenameResultNameCollision
+                                // RenameResultNoChanges
+                                this.emitRenameDatasetErrorOccurred(data.datasets.byId.rename.message);
+                            }
                         } else {
-                            // RenameResultNameCollision
-                            // RenameResultNoChanges
-                            this.emitRenameDatasetErrorOccurred(data.datasets.byId.rename.message);
+                            throw new DatasetNotFoundError();
                         }
-                    } else {
-                        throw new DatasetNotFoundError();
-                    }
-                }),
-            );
+                    }),
+                );
         } else {
             throw new DatasetOperationError([new Error(DatasetSettingsService.NOT_LOGGED_USER_ERROR)]);
         }

@@ -52,16 +52,22 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     public renameDataset(): void {
         const datasetId = this.datasetBasics.id;
         const accountName = this.datasetBasics.owner.accountName;
+        const accountId = this.datasetBasics.owner.id;
         this.trackSubscription(
             this.datasetSettingsService
-                .renameDataset(accountName, datasetId, this.datasetNameControl.value as string)
+                .renameDataset({
+                    accountId,
+                    accountName,
+                    datasetId,
+                    newName: this.datasetNameControl.value as string,
+                })
                 .subscribe(),
         );
     }
 
     public deleteDataset(): void {
         const datasetId = this.datasetBasics.id;
-        const accountName = this.datasetBasics.owner.accountName;
+        const accountId = this.datasetBasics.owner.id;
         promiseWithCatch(
             this.modalService.error({
                 title: "Delete",
@@ -71,7 +77,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                 handler: (ok) => {
                     if (ok) {
                         this.trackSubscription(
-                            this.datasetSettingsService.deleteDataset(accountName, datasetId).subscribe(),
+                            this.datasetSettingsService.deleteDataset(accountId, datasetId).subscribe(),
                         );
                     }
                 },

@@ -122,13 +122,14 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
     public onSaveEvent(): void {
         this.trackSubscription(
             this.datasetCommitService
-                .commitEventToDataset(
-                    this.getDatasetInfoFromUrl().accountName,
-                    this.getDatasetInfoFromUrl().datasetName,
-                    this.yamlEventService.buildYamlSetTransformEvent(
+                .commitEventToDataset({
+                    accountId: this.loggedUserService.currentlyLoggedInUser.id,
+                    accountName: this.getDatasetInfoFromUrl().accountName,
+                    datasetName: this.getDatasetInfoFromUrl().datasetName,
+                    event: this.yamlEventService.buildYamlSetTransformEvent(
                         this.editService.transformEventAsObject(this.inputDatasets, this.selectedEngine, this.queries),
                     ),
-                )
+                })
                 .subscribe(),
         );
     }

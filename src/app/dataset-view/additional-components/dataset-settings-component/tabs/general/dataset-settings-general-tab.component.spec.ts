@@ -21,6 +21,7 @@ import {
     emitClickOnElementByDataTestId,
     getInputElementByDataTestId,
 } from "../../../../../common/base-test.helpers.spec";
+import { TEST_ACCOUNT_ID } from "src/app/api/mock/auth.mock";
 
 describe("DatasetSettingsGeneralTabComponent", () => {
     let component: DatasetSettingsGeneralTabComponent;
@@ -95,11 +96,12 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         dispatchInputEvent(fixture, Elements.RenameDatasetInput, "someName");
         emitClickOnElementByDataTestId(fixture, Elements.RenameDatasetButton);
 
-        expect(renameDatasetSpy).toHaveBeenCalledOnceWith(
-            component.datasetBasics.owner.accountName,
-            component.datasetBasics.id,
-            "someName",
-        );
+        expect(renameDatasetSpy).toHaveBeenCalledOnceWith({
+            accountId: TEST_ACCOUNT_ID,
+            accountName: component.datasetBasics.owner.accountName,
+            datasetId: component.datasetBasics.id,
+            newName: "someName",
+        });
         checkVisible(fixture, Elements.RenameDatasetErrorNameRequired, false);
         checkVisible(fixture, Elements.RenameDatasetErrorPattern, false);
         checkVisible(fixture, Elements.RenameDatasetErrorCustom, false);
@@ -175,10 +177,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
         tick();
 
-        expect(deleteDatasetSpy).toHaveBeenCalledOnceWith(
-            component.datasetBasics.owner.accountName,
-            component.datasetBasics.id,
-        );
+        expect(deleteDatasetSpy).toHaveBeenCalledOnceWith(component.datasetBasics.owner.id, component.datasetBasics.id);
 
         flush();
     }));

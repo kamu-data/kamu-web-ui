@@ -25,12 +25,13 @@ import _ from "lodash";
 import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { AddDataModalComponent } from "./components/add-data-modal/add-data-modal.component";
-import { FileUploadService } from "src/app/services/file-upload.service";
+
 import { Observable } from "rxjs";
 import { AppConfigService } from "src/app/app-config.service";
 import { promiseWithCatch } from "src/app/common/app.helpers";
 import { ModalService } from "src/app/components/modal/modal.service";
 import AppValues from "src/app/common/app.values";
+import { FileUploadService } from "src/app/services/file-upload.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 @Component({

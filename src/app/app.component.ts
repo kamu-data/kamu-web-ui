@@ -14,13 +14,13 @@ import { MaybeNull } from "./common/app.types";
 import _ from "lodash";
 import { isMobileView, promiseWithCatch } from "./common/app.helpers";
 import { AppConfigService } from "./app-config.service";
-import { LoggedUserService } from "./auth/logged-user.service";
 import { AppConfigFeatureFlags, LoginMethod } from "./app-config.model";
 import { LoginService } from "./auth/login/login.service";
 import { loadErrorMessages } from "@apollo/client/dev";
 import { isDevMode } from "@angular/core";
 import moment from "moment";
 import { AccountTabs } from "./account/account.constants";
+import { LoggedUserService } from "./auth/logged-user.service";
 
 export const ALL_URLS_WITHOUT_HEADER: string[] = [ProjectLinks.URL_LOGIN, ProjectLinks.URL_GITHUB_CALLBACK];
 
@@ -59,11 +59,11 @@ export class AppComponent extends BaseComponent implements OnInit {
     constructor(
         private router: Router,
         private loginService: LoginService,
-        private loggedUserService: LoggedUserService,
         private modalService: ModalService,
         private navigationService: NavigationService,
         private appConfigService: AppConfigService,
         private cdr: ChangeDetectorRef,
+        private loggedUserService: LoggedUserService,
     ) {
         super();
         // apollo client error messages
@@ -145,9 +145,9 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onUserProfile(): void {
-        if (this.loggedUserService.currentlyLoggedInUser?.accountName) {
+        if (this.loggedUserService.maybeCurrentlyLoggedInUser?.accountName) {
             this.navigationService.navigateToOwnerView(
-                this.loggedUserService.currentlyLoggedInUser.accountName,
+                this.loggedUserService.maybeCurrentlyLoggedInUser.accountName,
                 AccountTabs.OVERVIEW,
             );
         } else {
@@ -156,9 +156,9 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onUserDatasets(): void {
-        if (this.loggedUserService.currentlyLoggedInUser?.accountName) {
+        if (this.loggedUserService.maybeCurrentlyLoggedInUser?.accountName) {
             this.navigationService.navigateToOwnerView(
-                this.loggedUserService.currentlyLoggedInUser.accountName,
+                this.loggedUserService.maybeCurrentlyLoggedInUser.accountName,
                 AccountTabs.DATASETS,
             );
         } else {
@@ -185,7 +185,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onSettings(): void {
-        if (this.loggedUserService.currentlyLoggedInUser?.accountName) {
+        if (this.loggedUserService.maybeCurrentlyLoggedInUser?.accountName) {
             this.navigationService.navigateToSettings();
         } else {
             throwError(() => new AuthenticationError([new Error("Login is undefined")]));

@@ -14,8 +14,8 @@ import { Observable, combineLatest } from "rxjs";
 import { MaybeNull } from "src/app/common/app.types";
 import { AccountNotFoundError } from "src/app/common/errors";
 import { AccountPageQueryParams } from "./account.component.model";
-import { LoggedUserService } from "../auth/logged-user.service";
 import { ModalService } from "../components/modal/modal.service";
+import { LoggedUserService } from "../auth/logged-user.service";
 
 @Component({
     selector: "app-account",
@@ -74,7 +74,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
     }
 
     public isLoggedUser(user: AccountFragment): boolean {
-        return this.loggedUserService.currentlyLoggedInUser?.accountName === user.accountName;
+        return this.loggedUserService.maybeCurrentlyLoggedInUser?.accountName === user.accountName;
     }
 
     public onEditProfile(): void {

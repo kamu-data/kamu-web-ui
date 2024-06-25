@@ -27,6 +27,8 @@ import {
 } from "src/app/search/mock.data";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { EditorModule } from "../../../../../shared/editor/editor.module";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 
 describe("SetTransformComponent", () => {
     let component: SetTransformComponent;
@@ -37,6 +39,7 @@ describe("SetTransformComponent", () => {
     let datasetService: DatasetService;
     let datasetSubsService: DatasetSubscriptionsService;
     let navigationService: NavigationService;
+    let loggedUserService: LoggedUserService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -85,6 +88,7 @@ describe("SetTransformComponent", () => {
         datasetCommitService = TestBed.inject(DatasetCommitService);
         datasetService = TestBed.inject(DatasetService);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
+        loggedUserService = TestBed.inject(LoggedUserService);
 
         fixture = TestBed.createComponent(SetTransformComponent);
         component = fixture.componentInstance;
@@ -93,7 +97,7 @@ describe("SetTransformComponent", () => {
         component.inputDatasets = new Set<string>([
             '{"id":"did:odf:z4k88e8ctFydBwcEhtvaB9AuBL6L2kfGnNvS1LjPGLA51owXkxX","name":"account.tokens.portfolio.usd"}',
         ]);
-
+        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
         fixture.detectChanges();
     });
 

@@ -35,7 +35,7 @@ export class DatasetCreateService {
     ) {}
 
     public createEmptyDataset(datasetKind: DatasetKind, datasetName: string): Observable<void> {
-        const loggedUser: MaybeNull<AccountFragment> = this.loggedUserService.currentlyLoggedInUser;
+        const loggedUser: MaybeNull<AccountFragment> = this.loggedUserService.maybeCurrentlyLoggedInUser;
         if (loggedUser) {
             return this.datasetApi.createEmptyDataset(datasetKind, datasetName).pipe(
                 map((data: CreateEmptyDatasetMutation) => {
@@ -56,7 +56,7 @@ export class DatasetCreateService {
     }
 
     public createDatasetFromSnapshot(snapshot: string): Observable<void> {
-        const loggedUser: MaybeNull<AccountFragment> = this.loggedUserService.currentlyLoggedInUser;
+        const loggedUser: MaybeNull<AccountFragment> = this.loggedUserService.maybeCurrentlyLoggedInUser;
         if (loggedUser) {
             return this.datasetApi.createDatasetFromSnapshot(snapshot).pipe(
                 map((data: CreateDatasetFromSnapshotMutation) => {

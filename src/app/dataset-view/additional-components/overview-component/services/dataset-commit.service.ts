@@ -41,20 +41,25 @@ export class DatasetCommitService {
         private loggedUserService: LoggedUserService,
     ) {}
 
-    public commitEventToDataset(accountName: string, datasetName: string, event: string): Observable<void> {
+    public commitEventToDataset(params: {
+        accountId: string;
+        accountName: string;
+        datasetName: string;
+        event: string;
+    }): Observable<void> {
         if (this.loggedUserService.isAuthenticated) {
-            return this.getIdByAccountNameAndDatasetName(accountName, datasetName).pipe(
+            return this.getIdByAccountNameAndDatasetName(params.accountName, params.datasetName).pipe(
                 switchMap((datasetId: string) =>
                     this.datasetApi.commitEvent({
-                        accountName,
+                        accountId: params.accountId,
                         datasetId,
-                        event,
+                        event: params.event,
                     }),
                 ),
                 map((data: CommitEventToDatasetMutation) => {
                     if (data.datasets.byId) {
                         if (data.datasets.byId.metadata.chain.commitEvent.__typename === "CommitResultSuccess") {
-                            this.updatePage(accountName, datasetName);
+                            this.updatePage(params.accountName, params.datasetName);
                         } else if (
                             data.datasets.byId.metadata.chain.commitEvent.__typename === "CommitResultAppendError" ||
                             data.datasets.byId.metadata.chain.commitEvent.__typename === "MetadataManifestMalformed"
@@ -95,14 +100,21 @@ export class DatasetCommitService {
         }
     }
 
-    public updateReadme(accountName: string, datasetName: string, content: string): Observable<void> {
+    public updateReadme(params: {
+        accountId: string;
+        accountName: string;
+        datasetName: string;
+        content: string;
+    }): Observable<void> {
         if (this.loggedUserService.isAuthenticated) {
-            return this.getIdByAccountNameAndDatasetName(accountName, datasetName).pipe(
-                switchMap((datasetId: string) => this.datasetApi.updateReadme({ accountName, datasetId, content })),
+            return this.getIdByAccountNameAndDatasetName(params.accountName, params.datasetName).pipe(
+                switchMap((datasetId: string) =>
+                    this.datasetApi.updateReadme({ accountId: params.accountId, datasetId, content: params.content }),
+                ),
                 map((data: UpdateReadmeMutation) => {
                     if (data.datasets.byId) {
                         if (data.datasets.byId.metadata.updateReadme.__typename === "CommitResultSuccess") {
-                            this.updatePage(accountName, datasetName);
+                            this.updatePage(params.accountName, params.datasetName);
                         } else {
                             throw new DatasetOperationError([
                                 new Error(data.datasets.byId.metadata.updateReadme.message),
@@ -119,6 +131,7 @@ export class DatasetCommitService {
     }
 
     public updateWatermark(params: {
+        accountId: string;
         datasetId: string;
         watermark: string;
         datasetInfo: DatasetInfo;
@@ -128,7 +141,7 @@ export class DatasetCommitService {
                 .setWatermark({
                     datasetId: params.datasetId,
                     watermark: params.watermark,
-                    accountName: params.datasetInfo.accountName,
+                    accountId: params.accountId,
                 })
                 .pipe(
                     map((data: UpdateWatermarkMutation) => {

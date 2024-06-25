@@ -5,7 +5,6 @@ import {
     mockDatasetsByAccountNameQuery,
     mockDatasetByIdQuery,
     mockGetMetadataBlockQuery,
-    TEST_ACCOUNT_NAME,
     TEST_BLOCK_HASH,
     TEST_DATASET_ID,
     TEST_DATASET_NAME,
@@ -67,7 +66,7 @@ import {
     UpdateWatermarkDocument,
     UpdateWatermarkMutation,
 } from "./kamu.graphql.interface";
-import { TEST_LOGIN } from "./mock/auth.mock";
+import { TEST_ACCOUNT_ID, TEST_LOGIN } from "./mock/auth.mock";
 import { first, Observable } from "rxjs";
 import { DocumentNode } from "graphql";
 import { mockGetDatasetSchemaQuery } from "../dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
@@ -431,7 +430,7 @@ describe("DatasetApi", () => {
         const mockEvent = "mock event";
         service
             .commitEvent({
-                accountName: TEST_DATASET_NAME,
+                accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
                 event: mockEvent,
             })
@@ -450,7 +449,7 @@ describe("DatasetApi", () => {
     it("should successfully update dataset's readme", () => {
         const mockReadmeContent = "someReadme";
         service
-            .updateReadme({ accountName: TEST_ACCOUNT_NAME, datasetId: TEST_DATASET_ID, content: mockReadmeContent })
+            .updateReadme({ accountId: TEST_ACCOUNT_ID, datasetId: TEST_DATASET_ID, content: mockReadmeContent })
             .subscribe((res: UpdateReadmeMutation) => {
                 expect(res.datasets.byId?.metadata.updateReadme.__typename).toEqual("CommitResultSuccess");
             });
@@ -465,7 +464,7 @@ describe("DatasetApi", () => {
 
     it("should successfully delete dataset", () => {
         service
-            .deleteDataset({ accountName: TEST_ACCOUNT_NAME, datasetId: TEST_DATASET_ID })
+            .deleteDataset({ accountId: TEST_ACCOUNT_ID, datasetId: TEST_DATASET_ID })
             .subscribe((res: DeleteDatasetMutation) => {
                 expect(res.datasets.byId?.delete.message).toEqual("Success");
             });
@@ -480,7 +479,7 @@ describe("DatasetApi", () => {
     it("should successfully rename dataset", () => {
         service
             .renameDataset({
-                accountName: TEST_ACCOUNT_NAME,
+                accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
                 newName: MOCK_NEW_DATASET_NAME,
             })
@@ -501,7 +500,7 @@ describe("DatasetApi", () => {
             .setWatermark({
                 datasetId: TEST_DATASET_ID,
                 watermark: TEST_WATERMARK,
-                accountName: TEST_ACCOUNT_NAME,
+                accountId: TEST_ACCOUNT_ID,
             })
             .subscribe((res: UpdateWatermarkMutation) => {
                 expect(res.datasets.byId?.setWatermark.message).toEqual("Success");
@@ -541,7 +540,7 @@ describe("DatasetApi", () => {
             expectedGqlQuery: RenameDatasetDocument,
             action: (): Observable<unknown> => {
                 return service.renameDataset({
-                    accountName: TEST_ACCOUNT_NAME,
+                    accountId: TEST_ACCOUNT_ID,
                     datasetId: TEST_DATASET_ID,
                     newName: MOCK_NEW_DATASET_NAME,
                 });
@@ -551,14 +550,14 @@ describe("DatasetApi", () => {
             operationName: "delete",
             expectedGqlQuery: DeleteDatasetDocument,
             action: (): Observable<unknown> =>
-                service.deleteDataset({ accountName: TEST_ACCOUNT_NAME, datasetId: TEST_DATASET_ID }),
+                service.deleteDataset({ accountId: TEST_ACCOUNT_ID, datasetId: TEST_DATASET_ID }),
         },
         {
             operationName: "updateReadme",
             expectedGqlQuery: UpdateReadmeDocument,
             action: (): Observable<unknown> =>
                 service.updateReadme({
-                    accountName: TEST_ACCOUNT_NAME,
+                    accountId: TEST_ACCOUNT_ID,
                     datasetId: TEST_DATASET_ID,
                     content: "someReadmeCntent",
                 }),
@@ -567,7 +566,7 @@ describe("DatasetApi", () => {
             operationName: "commitEvent",
             expectedGqlQuery: CommitEventToDatasetDocument,
             action: (): Observable<unknown> =>
-                service.commitEvent({ accountName: TEST_DATASET_NAME, datasetId: TEST_DATASET_ID, event: "someEvent" }),
+                service.commitEvent({ accountId: TEST_ACCOUNT_ID, datasetId: TEST_DATASET_ID, event: "someEvent" }),
         },
     ].forEach((testCase: RuntimeFailureTestCase) => {
         it(`should check how operation #${testCase.operationName} is handling runtime error`, fakeAsync(() => {

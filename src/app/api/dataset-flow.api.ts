@@ -4,13 +4,13 @@ import {
     BatchingConditionInput,
     CancelScheduledTasksGQL,
     CancelScheduledTasksMutation,
-    CompactingConditionInput,
+    CompactionConditionInput,
     DatasetAllFlowsPausedGQL,
     DatasetAllFlowsPausedQuery,
     DatasetFlowBatchingGQL,
     DatasetFlowBatchingMutation,
-    DatasetFlowCompactingGQL,
-    DatasetFlowCompactingMutation,
+    DatasetFlowCompactionGQL,
+    DatasetFlowCompactionMutation,
     DatasetFlowFilters,
     DatasetFlowScheduleGQL,
     DatasetFlowScheduleMutation,
@@ -49,7 +49,7 @@ export class DatasetFlowApi {
         private datasetTriggerFlowGQL: DatasetTriggerFlowGQL,
         private datasetFlowByIdGQL: GetFlowByIdGQL,
         private cancelScheduledTasksGQL: CancelScheduledTasksGQL,
-        private datasetFlowCompactingGQL: DatasetFlowCompactingGQL,
+        private datasetFlowCompactionGQL: DatasetFlowCompactionGQL,
         private datasetFlowsInitiatorsGQL: DatasetFlowsInitiatorsGQL,
     ) {}
 
@@ -242,20 +242,20 @@ export class DatasetFlowApi {
             );
     }
 
-    public setDatasetFlowCompacting(params: {
+    public setDatasetFlowCompaction(params: {
         datasetId: string;
         datasetFlowType: DatasetFlowType;
-        compactingArgs: CompactingConditionInput;
-    }): Observable<DatasetFlowCompactingMutation> {
-        return this.datasetFlowCompactingGQL
+        compactionArgs: CompactionConditionInput;
+    }): Observable<DatasetFlowCompactionMutation> {
+        return this.datasetFlowCompactionGQL
             .mutate({
                 datasetId: params.datasetId,
                 datasetFlowType: params.datasetFlowType,
-                compactingArgs: params.compactingArgs,
+                compactionArgs: params.compactionArgs,
             })
             .pipe(
                 first(),
-                map((result: MutationResult<DatasetFlowCompactingMutation>) => {
+                map((result: MutationResult<DatasetFlowCompactionMutation>) => {
                     /* istanbul ignore else */
                     if (result.data) {
                         return result.data;

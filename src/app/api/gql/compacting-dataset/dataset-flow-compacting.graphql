@@ -1,23 +1,23 @@
-mutation datasetFlowCompacting(
+mutation datasetFlowCompaction(
   $datasetId: DatasetID!
   $datasetFlowType: DatasetFlowType!
-  $compactingArgs: CompactingConditionInput!
+  $compactionArgs: CompactionConditionInput!
 ) {
   datasets {
     byId(datasetId: $datasetId) {
       flows {
         configs {
-          setConfigCompacting(datasetFlowType: $datasetFlowType, compactingArgs: $compactingArgs) {
+          setConfigCompaction(datasetFlowType: $datasetFlowType, compactionArgs: $compactionArgs) {
             ... on SetFlowConfigSuccess {
               message
               config {
-                compacting {
-                  ... on CompactingFull {
+                compaction {
+                  ... on CompactionFull {
                     maxSliceSize
                     maxSliceRecords
                   }
 
-                  ... on CompactingMetadataOnly {
+                  ... on CompactionMetadataOnly {
                     recursive
                   }
                 }
@@ -34,7 +34,7 @@ mutation datasetFlowCompacting(
               message
             }
 
-            ... on FlowInvalidCompactingConfig {
+            ... on FlowInvalidCompactionConfig {
               reason
               message
             }

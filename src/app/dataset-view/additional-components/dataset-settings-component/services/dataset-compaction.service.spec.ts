@@ -1,5 +1,5 @@
 import { TestBed } from "@angular/core/testing";
-import { DatasetCompactingService } from "./dataset-compacting.service";
+import { DatasetCompactionService } from "./dataset-compaction.service";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ToastrModule, ToastrService } from "ngx-toastr";
@@ -9,12 +9,12 @@ import { of } from "rxjs";
 import { TEST_DATASET_ID } from "src/app/api/mock/dataset.mock";
 import { DatasetFlowType } from "src/app/api/kamu.graphql.interface";
 import {
-    mockDatasetFlowCompactingMutationError,
-    mockDatasetFlowCompactingMutationSuccess,
+    mockDatasetFlowCompactionMutationError,
+    mockDatasetFlowCompactionMutationSuccess,
 } from "src/app/api/mock/dataset-flow.mock";
 
-describe("DatasetCompactingService", () => {
-    let service: DatasetCompactingService;
+describe("DatasetCompactionService", () => {
+    let service: DatasetCompactionService;
     let datasetFlowApi: DatasetFlowApi;
     let toastService: ToastrService;
     let flowsService: DatasetFlowsService;
@@ -26,7 +26,7 @@ describe("DatasetCompactingService", () => {
             providers: [Apollo],
             imports: [ApolloTestingModule, ToastrModule.forRoot()],
         });
-        service = TestBed.inject(DatasetCompactingService);
+        service = TestBed.inject(DatasetCompactionService);
         datasetFlowApi = TestBed.inject(DatasetFlowApi);
         toastService = TestBed.inject(ToastrService);
         flowsService = TestBed.inject(DatasetFlowsService);
@@ -36,15 +36,15 @@ describe("DatasetCompactingService", () => {
         expect(service).toBeTruthy();
     });
 
-    it("should check runHardCompacting with success", () => {
+    it("should check runHardCompaction with success", () => {
         spyOn(flowsService, "datasetTriggerFlow").and.returnValue(of(true));
-        spyOn(datasetFlowApi, "setDatasetFlowCompacting").and.returnValue(of(mockDatasetFlowCompactingMutationSuccess));
+        spyOn(datasetFlowApi, "setDatasetFlowCompaction").and.returnValue(of(mockDatasetFlowCompactionMutationSuccess));
 
         const subscription$ = service
-            .runHardCompacting({
+            .runHardCompaction({
                 datasetId: TEST_DATASET_ID,
-                datasetFlowType: DatasetFlowType.HardCompacting,
-                compactingArgs: {
+                datasetFlowType: DatasetFlowType.HardCompaction,
+                compactionArgs: {
                     full: {
                         maxSliceSize: MOCK_SLICE_SIZE,
                         maxSliceRecords: MOCK_SLICE_RECORDS,
@@ -58,15 +58,15 @@ describe("DatasetCompactingService", () => {
         expect(subscription$.closed).toBeTrue();
     });
 
-    it("should check runHardCompacting with error", () => {
-        spyOn(datasetFlowApi, "setDatasetFlowCompacting").and.returnValue(of(mockDatasetFlowCompactingMutationError));
+    it("should check runHardCompaction with error", () => {
+        spyOn(datasetFlowApi, "setDatasetFlowCompaction").and.returnValue(of(mockDatasetFlowCompactionMutationError));
         const toastrServiceErrorSpy = spyOn(toastService, "error");
 
         const subscription$ = service
-            .runHardCompacting({
+            .runHardCompaction({
                 datasetId: TEST_DATASET_ID,
-                datasetFlowType: DatasetFlowType.HardCompacting,
-                compactingArgs: {
+                datasetFlowType: DatasetFlowType.HardCompaction,
+                compactionArgs: {
                     full: {
                         maxSliceSize: MOCK_SLICE_SIZE,
                         maxSliceRecords: MOCK_SLICE_RECORDS,

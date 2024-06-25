@@ -29,14 +29,20 @@ import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import _ from "lodash";
 import { RequestTimerComponent } from "./request-timer/request-timer.component";
 import { SqlEditorComponent } from "src/app/shared/editor/components/sql-editor/sql-editor.component";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { HttpClientModule } from "@angular/common/http";
+import { Apollo } from "apollo-angular";
 
 describe("DataComponent", () => {
     let component: DataComponent;
     let fixture: ComponentFixture<DataComponent>;
     let datasetSubsService: DatasetSubscriptionsService;
     let location: Location;
+    let ngbModalService: NgbModal;
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
+            providers: [Apollo],
             imports: [
                 CdkAccordionModule,
                 MatIconModule,
@@ -48,12 +54,14 @@ describe("DataComponent", () => {
                 EditorModule,
                 MatProgressBarModule,
                 CdkAccordionModule,
+                HttpClientModule,
             ],
             declarations: [DataComponent, LoadMoreComponent, RequestTimerComponent, SqlEditorComponent],
         }).compileComponents();
         fixture = TestBed.createComponent(DataComponent);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         location = TestBed.inject(Location);
+        ngbModalService = TestBed.inject(NgbModal);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
         spyOn(location, "getState").and.returnValue({ start: 0, end: 100 });
@@ -160,4 +168,10 @@ describe("DataComponent", () => {
         });
         flush();
     }));
+
+    it("should check add data", () => {
+        const ngbModalServiceSpy = spyOn(ngbModalService, "open").and.callThrough();
+        component.addData();
+        expect(ngbModalServiceSpy).toHaveBeenCalledTimes(1);
+    });
 });

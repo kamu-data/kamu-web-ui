@@ -151,13 +151,13 @@ export class DatasetFlowDetailsHelpers {
                                               }`
                                             : "Dataset is up-to-date";
 
-                                    case "FlowDescriptionDatasetHardCompacting":
-                                        switch (flowDetails.description.compactingResult?.__typename) {
-                                            case "FlowDescriptionHardCompactingSuccess":
-                                                return `Compacted ${flowDetails.description.compactingResult.originalBlocksCount} original blocks to ${flowDetails.description.compactingResult.resultingBlocksCount} resulting blocks`;
+                                    case "FlowDescriptionDatasetHardCompaction":
+                                        switch (flowDetails.description.compactionResult?.__typename) {
+                                            case "FlowDescriptionHardCompactionSuccess":
+                                                return `Compacted ${flowDetails.description.compactionResult.originalBlocksCount} original blocks to ${flowDetails.description.compactionResult.resultingBlocksCount} resulting blocks`;
 
-                                            case "FlowDescriptionHardCompactingNothingToDo":
-                                                return flowDetails.description.compactingResult.message;
+                                            case "FlowDescriptionHardCompactionNothingToDo":
+                                                return flowDetails.description.compactionResult.message;
                                             /* istanbul ignore next */
                                             default:
                                                 return "Unknown compacting result typename";

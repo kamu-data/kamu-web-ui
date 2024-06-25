@@ -99,13 +99,13 @@ export class DatasetFlowTableHelpers {
                                       }`
                                     : "Dataset is up-to-date";
 
-                            case "FlowDescriptionDatasetHardCompacting":
-                                switch (element.description.compactingResult?.__typename) {
-                                    case "FlowDescriptionHardCompactingSuccess":
-                                        return `Compacted ${element.description.compactingResult.originalBlocksCount} original blocks to ${element.description.compactingResult.resultingBlocksCount} resulting blocks`;
+                            case "FlowDescriptionDatasetHardCompaction":
+                                switch (element.description.compactionResult?.__typename) {
+                                    case "FlowDescriptionHardCompactionSuccess":
+                                        return `Compacted ${element.description.compactionResult.originalBlocksCount} original blocks to ${element.description.compactionResult.resultingBlocksCount} resulting blocks`;
 
-                                    case "FlowDescriptionHardCompactingNothingToDo":
-                                        return element.description.compactingResult.message;
+                                    case "FlowDescriptionHardCompactionNothingToDo":
+                                        return element.description.compactionResult.message;
                                     /* istanbul ignore next */
                                     default:
                                         return "Unknown compacting result typename";
@@ -142,7 +142,7 @@ export class DatasetFlowTableHelpers {
             case FlowStatus.Waiting:
             case FlowStatus.Running:
                 switch (element.description.__typename) {
-                    case "FlowDescriptionDatasetHardCompacting":
+                    case "FlowDescriptionDatasetHardCompaction":
                         return "Running hard compacting";
                     case "FlowDescriptionDatasetPollingIngest":
                         /* istanbul ignore next */

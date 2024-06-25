@@ -10,7 +10,7 @@ export const sliceSizeMapper: Record<SliceUnit, number> = {
     [SliceUnit.GB]: Math.pow(2, 30),
 };
 
-export enum CompactingMode {
+export enum CompactionMode {
     FULL = "Full",
     METADATA_ONLY = "MetadataOnly",
 }

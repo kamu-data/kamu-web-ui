@@ -4,7 +4,7 @@ import {
     BatchingConditionInput,
     CancelScheduledTasksGQL,
     CancelScheduledTasksMutation,
-    CompactingConditionInput,
+    CompactionConditionInput,
     DatasetAllFlowsPausedGQL,
     DatasetAllFlowsPausedQuery,
     DatasetFlowBatchingGQL,
@@ -245,13 +245,13 @@ export class DatasetFlowApi {
     public setDatasetFlowCompacting(params: {
         datasetId: string;
         datasetFlowType: DatasetFlowType;
-        compactingArgs: CompactingConditionInput;
+        compactingArgs: CompactionConditionInput;
     }): Observable<DatasetFlowCompactingMutation> {
         return this.datasetFlowCompactingGQL
             .mutate({
                 datasetId: params.datasetId,
                 datasetFlowType: params.datasetFlowType,
-                compactingArgs: params.compactingArgs,
+                compactionArgs: params.compactingArgs,
             })
             .pipe(
                 first(),

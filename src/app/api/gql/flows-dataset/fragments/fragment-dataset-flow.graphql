@@ -26,16 +26,16 @@ fragment FlowSummaryData on Flow {
       }
     }
 
-    ... on FlowDescriptionDatasetHardCompacting {
+    ... on FlowDescriptionDatasetHardCompaction {
       datasetId
-      compactingResult {
-        ... on FlowDescriptionHardCompactingSuccess {
+      compactionResult {
+        ... on FlowDescriptionHardCompactionSuccess {
           originalBlocksCount
           resultingBlocksCount
           newHead
         }
 
-        ... on FlowDescriptionHardCompactingNothingToDo {
+        ... on FlowDescriptionHardCompactionNothingToDo {
           message
           dummy
         }

@@ -216,7 +216,7 @@ describe("DatasetFlowApi", () => {
         service
             .setDatasetFlowCompacting({
                 datasetId: TEST_DATASET_ID,
-                datasetFlowType: DatasetFlowType.HardCompacting,
+                datasetFlowType: DatasetFlowType.HardCompaction,
                 compactingArgs: {
                     full: {
                         maxSliceSize: MOCK_SLICE_SIZE,
@@ -225,12 +225,12 @@ describe("DatasetFlowApi", () => {
                 },
             })
             .subscribe((res: DatasetFlowCompactingMutation) => {
-                expect(res.datasets.byId?.flows.configs.setConfigCompacting.message).toEqual("Success");
+                expect(res.datasets.byId?.flows.configs.setConfigCompaction.message).toEqual("Success");
             });
 
         const op = controller.expectOne(DatasetFlowCompactingDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
-        expect(op.operation.variables.datasetFlowType).toEqual(DatasetFlowType.HardCompacting);
+        expect(op.operation.variables.datasetFlowType).toEqual(DatasetFlowType.HardCompaction);
         op.flush({
             data: mockDatasetFlowCompactingMutationSuccess,
         });

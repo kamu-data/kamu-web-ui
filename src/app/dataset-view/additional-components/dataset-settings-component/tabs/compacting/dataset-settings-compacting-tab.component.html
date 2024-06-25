@@ -4,7 +4,7 @@
 
     <div class="box p-4 mt-3">
         <h4 class="subtitle">Hard compaction</h4>
-        <form [formGroup]="hardCompactingForm">
+        <form [formGroup]="hardCompactionForm">
             <mat-radio-group
                 class="d-flex flex-column row-gap-4"
                 formControlName="mode"
@@ -113,11 +113,11 @@
                     <strong>break all downstream datasets</strong> that depend on them.
                 </div>
                 <button
-                    (click)="onRunCompacting()"
-                    [disabled]="hardCompactingForm.invalid"
+                    (click)="onRunCompaction()"
+                    [disabled]="hardCompactionForm.invalid"
                     class="d-block"
                     type="button"
-                    data-test-id="run-compacting-btn"
+                    data-test-id="run-compaction-btn"
                 >
                     Run compaction
                 </button>

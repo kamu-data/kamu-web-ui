@@ -4,10 +4,10 @@ import { AbstractControl, FormBuilder, Validators } from "@angular/forms";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { CompactionConditionInput, DatasetBasicsFragment, DatasetFlowType } from "src/app/api/kamu.graphql.interface";
 import { logError, promiseWithCatch } from "src/app/common/app.helpers";
-import { CompactingTooltipsTexts } from "src/app/common/tooltips/compacting.text";
+import { CompactionTooltipsTexts } from "src/app/common/tooltips/compacting.text";
 import { ModalService } from "src/app/components/modal/modal.service";
 import { CompactionMode, SliceUnit, sliceSizeMapper } from "./dataset-settings-compacting-tab.types";
-import { DatasetCompactingService } from "../../services/dataset-compacting.service";
+import { DatasetCompactionService } from "../../services/dataset-compaction.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import AppValues from "src/app/common/app.values";
 import { BaseComponent } from "src/app/common/base.component";
@@ -20,7 +20,7 @@ import { BaseComponent } from "src/app/common/base.component";
 })
 export class DatasetSettingsCompactingTabComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics: DatasetBasicsFragment;
-    public hardCompactingForm = this.fb.group({
+    public hardCompactionForm = this.fb.group({
         mode: [CompactionMode.FULL, [Validators.required]],
         sliceUnit: [SliceUnit.MB, [Validators.required]],
         sliceSize: [300, [Validators.required, RxwebValidators.minNumber({ value: 1 })]],
@@ -28,63 +28,62 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent impleme
         recursive: [{ value: true, disabled: true }],
     });
     public readonly SliceUnit: typeof SliceUnit = SliceUnit;
-    public readonly MAX_SLICE_SIZE_TOOLTIP = CompactingTooltipsTexts.MAX_SLICE_SIZE;
-    public readonly MAX_SLICE_RECORDS_TOOLTIP = CompactingTooltipsTexts.MAX_SLICE_RECORDS;
+    public readonly MAX_SLICE_SIZE_TOOLTIP = CompactionTooltipsTexts.MAX_SLICE_SIZE;
+    public readonly MAX_SLICE_RECORDS_TOOLTIP = CompactionTooltipsTexts.MAX_SLICE_RECORDS;
     public readonly MIN_VALUE_ERROR_TEXT = "The value must be positive";
     public readonly CompactionMode: typeof CompactionMode = CompactionMode;
-    public compactingArgs: CompactionConditionInput;
 
     constructor(
         public modalService: ModalService,
         private fb: FormBuilder,
-        private datasetCompactingService: DatasetCompactingService,
+        private datasetCompactionService: DatasetCompactionService,
         private navigationService: NavigationService,
     ) {
         super();
     }
 
     ngOnInit(): void {
-        this.hardCompactingModeChanges();
+        this.hardCompactionModeChanges();
     }
 
-    public get hardCompactingMode(): AbstractControl {
-        return this.hardCompactingForm.controls.mode;
+    public get hardCompactionMode(): AbstractControl {
+        return this.hardCompactionForm.controls.mode;
     }
 
     public get recursive(): AbstractControl {
-        return this.hardCompactingForm.controls.recursive;
+        return this.hardCompactionForm.controls.recursive;
     }
 
     public get sliceUnit(): AbstractControl {
-        return this.hardCompactingForm.controls.sliceUnit;
+        return this.hardCompactionForm.controls.sliceUnit;
     }
 
     public get recordsCount(): AbstractControl {
-        return this.hardCompactingForm.controls.recordsCount;
+        return this.hardCompactionForm.controls.recordsCount;
     }
 
     public get sliceSize(): AbstractControl {
-        return this.hardCompactingForm.controls.sliceSize;
+        return this.hardCompactionForm.controls.sliceSize;
     }
 
     public get sliceSizeInBytes(): number {
         return (
-            (this.hardCompactingForm.controls.sliceSize.value as number) *
-            sliceSizeMapper[this.hardCompactingForm.controls.sliceUnit.value as SliceUnit]
+            (this.hardCompactionForm.controls.sliceSize.value as number) *
+            sliceSizeMapper[this.hardCompactionForm.controls.sliceUnit.value as SliceUnit]
         );
     }
 
     public get sliceSizeControl(): AbstractControl {
-        return this.hardCompactingForm.controls.sliceSize;
+        return this.hardCompactionForm.controls.sliceSize;
     }
 
     public get recordsCountControl(): AbstractControl {
-        return this.hardCompactingForm.controls.recordsCount;
+        return this.hardCompactionForm.controls.recordsCount;
     }
 
-    private hardCompactingModeChanges(): void {
+    private hardCompactionModeChanges(): void {
         this.trackSubscription(
-            this.hardCompactingMode.valueChanges.subscribe((value: CompactionMode) => {
+            this.hardCompactionMode.valueChanges.subscribe((value: CompactionMode) => {
                 switch (value) {
                     case CompactionMode.FULL: {
                         this.disableAndClearControl(this.recursive);
@@ -101,29 +100,29 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent impleme
                         break;
                     }
                     default: {
-                        logError("Unknown CompactingMode key");
+                        logError("Unknown CompactionMode key");
                     }
                 }
             }),
         );
     }
 
-    public onRunCompacting(): void {
+    public onRunCompaction(): void {
         promiseWithCatch(
             this.modalService.error({
-                title: "Run compacting",
-                message: "Do you want to run hard compacting?",
+                title: "Run compaction",
+                message: "Do you want to run hard compaction?",
                 yesButtonText: "Ok",
                 noButtonText: "Cancel",
                 handler: (ok) => {
                     if (ok) {
                         this.trackSubscription(
-                            this.datasetCompactingService
-                                .runHardCompacting({
+                            this.datasetCompactionService
+                                .runHardCompaction({
                                     datasetId: this.datasetBasics.id,
                                     datasetFlowType: DatasetFlowType.HardCompaction,
-                                    compactingArgs: this.setCompactingArgs(
-                                        this.hardCompactingMode.value as CompactionMode,
+                                    compactionArgs: this.setCompactionArgs(
+                                        this.hardCompactionMode.value as CompactionMode,
                                     ),
                                 })
                                 .subscribe((result: boolean) => {
@@ -150,13 +149,13 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent impleme
         control.markAsPristine();
     }
 
-    private setCompactingArgs(mode: CompactionMode): CompactionConditionInput {
+    private setCompactionArgs(mode: CompactionMode): CompactionConditionInput {
         switch (mode) {
             case CompactionMode.FULL:
                 return {
                     full: {
                         maxSliceSize: this.sliceSizeInBytes,
-                        maxSliceRecords: this.hardCompactingForm.controls.recordsCount.value as number,
+                        maxSliceRecords: this.hardCompactionForm.controls.recordsCount.value as number,
                     },
                 };
             case CompactionMode.METADATA_ONLY:

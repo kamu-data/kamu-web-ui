@@ -2148,13 +2148,13 @@ export type FetchAccountDetailsMutation = {
     auth: { __typename?: "AuthMut"; accountDetails: { __typename?: "Account" } & AccountFragment };
 };
 
-export type DatasetFlowCompactingMutationVariables = Exact<{
+export type DatasetFlowCompactionMutationVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     datasetFlowType: DatasetFlowType;
     compactionArgs: CompactionConditionInput;
 }>;
 
-export type DatasetFlowCompactingMutation = {
+export type DatasetFlowCompactionMutation = {
     __typename?: "Mutation";
     datasets: {
         __typename?: "DatasetsMut";
@@ -4907,8 +4907,8 @@ export class FetchAccountDetailsGQL extends Apollo.Mutation<
         super(apollo);
     }
 }
-export const DatasetFlowCompactingDocument = gql`
-    mutation datasetFlowCompacting(
+export const DatasetFlowCompactionDocument = gql`
+    mutation datasetFlowCompaction(
         $datasetId: DatasetID!
         $datasetFlowType: DatasetFlowType!
         $compactionArgs: CompactionConditionInput!
@@ -4955,11 +4955,11 @@ export const DatasetFlowCompactingDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class DatasetFlowCompactingGQL extends Apollo.Mutation<
-    DatasetFlowCompactingMutation,
-    DatasetFlowCompactingMutationVariables
+export class DatasetFlowCompactionGQL extends Apollo.Mutation<
+    DatasetFlowCompactionMutation,
+    DatasetFlowCompactionMutationVariables
 > {
-    document = DatasetFlowCompactingDocument;
+    document = DatasetFlowCompactionDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

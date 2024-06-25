@@ -63,8 +63,8 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
         return this.isSchedulingAvailable && this.activeTab === SettingsTabsEnum.SCHEDULING;
     }
 
-    public get showCompactingTab(): boolean {
-        return this.datasetBasics.kind === DatasetKind.Root && this.activeTab === SettingsTabsEnum.COMPACTING;
+    public get showCompactionTab(): boolean {
+        return this.datasetBasics.kind === DatasetKind.Root && this.activeTab === SettingsTabsEnum.COMPACTION;
     }
 
     ngOnInit(): void {
@@ -95,7 +95,7 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
         switch (item.activeTab) {
             case SettingsTabsEnum.SCHEDULING:
                 return this.isSchedulingAvailable;
-            case SettingsTabsEnum.COMPACTING:
+            case SettingsTabsEnum.COMPACTION:
                 return this.datasetBasics.kind === DatasetKind.Root;
             default:
                 return Boolean(item.visible);

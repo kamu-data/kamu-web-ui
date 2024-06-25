@@ -8,8 +8,8 @@ import {
     DatasetAllFlowsPausedQuery,
     DatasetFlowBatchingDocument,
     DatasetFlowBatchingMutation,
-    DatasetFlowCompactingDocument,
-    DatasetFlowCompactingMutation,
+    DatasetFlowCompactionDocument,
+    DatasetFlowCompactionMutation,
     DatasetFlowScheduleDocument,
     DatasetFlowScheduleMutation,
     DatasetFlowType,
@@ -38,13 +38,13 @@ import {
     mockSetDatasetFlowBatchingSuccess,
     mockDatasetTriggerFlowMutation,
     mockCancelScheduledTasksMutationSuccess,
-    mockDatasetFlowCompactingMutationSuccess,
     mockGetDatasetListFlowsQuery,
     mockDatasetPauseFlowsMutationSuccess,
     mockDatasetResumeFlowsMutationSuccess,
     mockDatasetAllFlowsPausedQuery,
     mockGetFlowByIdQuerySuccess,
     mockDatasetFlowsInitiatorsQuery,
+    mockDatasetFlowCompactionMutationSuccess,
 } from "./mock/dataset-flow.mock";
 
 describe("DatasetFlowApi", () => {
@@ -212,27 +212,27 @@ describe("DatasetFlowApi", () => {
         });
     });
 
-    it("should check setDatasetFlowCompacting", () => {
+    it("should check setDatasetFlowCompaction", () => {
         service
-            .setDatasetFlowCompacting({
+            .setDatasetFlowCompaction({
                 datasetId: TEST_DATASET_ID,
                 datasetFlowType: DatasetFlowType.HardCompaction,
-                compactingArgs: {
+                compactionArgs: {
                     full: {
                         maxSliceSize: MOCK_SLICE_SIZE,
                         maxSliceRecords: MOCK_SLICE_RECORDS,
                     },
                 },
             })
-            .subscribe((res: DatasetFlowCompactingMutation) => {
+            .subscribe((res: DatasetFlowCompactionMutation) => {
                 expect(res.datasets.byId?.flows.configs.setConfigCompaction.message).toEqual("Success");
             });
 
-        const op = controller.expectOne(DatasetFlowCompactingDocument);
+        const op = controller.expectOne(DatasetFlowCompactionDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
         expect(op.operation.variables.datasetFlowType).toEqual(DatasetFlowType.HardCompaction);
         op.flush({
-            data: mockDatasetFlowCompactingMutationSuccess,
+            data: mockDatasetFlowCompactionMutationSuccess,
         });
     });
 

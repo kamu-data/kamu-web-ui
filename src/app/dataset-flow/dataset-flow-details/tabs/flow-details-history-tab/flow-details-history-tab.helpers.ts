@@ -160,7 +160,7 @@ export class DatasetFlowDetailsHelpers {
                                                 return flowDetails.description.compactionResult.message;
                                             /* istanbul ignore next */
                                             default:
-                                                return "Unknown compacting result typename";
+                                                return "Unknown compaction result typename";
                                         }
 
                                     // TODO

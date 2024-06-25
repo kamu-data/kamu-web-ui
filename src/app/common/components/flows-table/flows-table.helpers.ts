@@ -108,7 +108,7 @@ export class DatasetFlowTableHelpers {
                                         return element.description.compactionResult.message;
                                     /* istanbul ignore next */
                                     default:
-                                        return "Unknown compacting result typename";
+                                        return "Unknown compaction result typename";
                                 }
                             // TODO
                             //  - GC
@@ -143,7 +143,7 @@ export class DatasetFlowTableHelpers {
             case FlowStatus.Running:
                 switch (element.description.__typename) {
                     case "FlowDescriptionDatasetHardCompaction":
-                        return "Running hard compacting";
+                        return "Running hard compaction";
                     case "FlowDescriptionDatasetPollingIngest":
                         /* istanbul ignore next */
                         if (_.isNil(fetchStep)) {

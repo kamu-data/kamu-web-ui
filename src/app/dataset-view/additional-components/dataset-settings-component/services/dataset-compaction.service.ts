@@ -4,7 +4,7 @@ import { Observable, map, of, switchMap } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
     CompactionConditionInput,
-    DatasetFlowCompactingMutation,
+    DatasetFlowCompactionMutation,
     DatasetFlowType,
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowsService } from "../../flows-component/services/dataset-flows.service";
@@ -12,20 +12,20 @@ import { DatasetFlowsService } from "../../flows-component/services/dataset-flow
 @Injectable({
     providedIn: "root",
 })
-export class DatasetCompactingService {
+export class DatasetCompactionService {
     constructor(
         private datasetFlowApi: DatasetFlowApi,
         private toastrService: ToastrService,
         private flowsService: DatasetFlowsService,
     ) {}
 
-    public runHardCompacting(params: {
+    public runHardCompaction(params: {
         datasetId: string;
         datasetFlowType: DatasetFlowType;
-        compactingArgs: CompactionConditionInput;
+        compactionArgs: CompactionConditionInput;
     }): Observable<boolean> {
-        return this.datasetFlowApi.setDatasetFlowCompacting(params).pipe(
-            map((data: DatasetFlowCompactingMutation) => {
+        return this.datasetFlowApi.setDatasetFlowCompaction(params).pipe(
+            map((data: DatasetFlowCompactionMutation) => {
                 if (data.datasets.byId?.flows.configs.setConfigCompaction.__typename === "SetFlowConfigSuccess") {
                     return true;
                 } else {

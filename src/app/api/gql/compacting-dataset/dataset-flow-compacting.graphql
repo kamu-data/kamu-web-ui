@@ -1,4 +1,4 @@
-mutation datasetFlowCompacting(
+mutation datasetFlowCompaction(
   $datasetId: DatasetID!
   $datasetFlowType: DatasetFlowType!
   $compactionArgs: CompactionConditionInput!

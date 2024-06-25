@@ -3,7 +3,7 @@ import {
     CancelScheduledTasksMutation,
     DatasetAllFlowsPausedQuery,
     DatasetFlowBatchingMutation,
-    DatasetFlowCompactingMutation,
+    DatasetFlowCompactionMutation,
     DatasetFlowScheduleMutation,
     DatasetFlowsInitiatorsQuery,
     DatasetPauseFlowsMutation,
@@ -758,18 +758,18 @@ export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
     },
 };
 
-export const mockDatasetFlowCompactingMutationSuccess: DatasetFlowCompactingMutation = {
+export const mockDatasetFlowCompactionMutationSuccess: DatasetFlowCompactionMutation = {
     datasets: {
         byId: {
             flows: {
                 configs: {
-                    setConfigCompacting: {
+                    setConfigCompaction: {
                         message: "Success",
                         config: {
-                            compacting: {
+                            compaction: {
                                 maxSliceSize: 10485760,
                                 maxSliceRecords: 10000,
-                                __typename: "CompactingFull",
+                                __typename: "CompactionFull",
                             },
                             __typename: "FlowConfiguration",
                         },
@@ -785,15 +785,15 @@ export const mockDatasetFlowCompactingMutationSuccess: DatasetFlowCompactingMuta
     },
 };
 
-export const mockDatasetFlowCompactingMutationError: DatasetFlowCompactingMutation = {
+export const mockDatasetFlowCompactionMutationError: DatasetFlowCompactionMutation = {
     datasets: {
         byId: {
             flows: {
                 configs: {
-                    setConfigCompacting: {
+                    setConfigCompaction: {
                         message: "Error",
                         reason: "Failed",
-                        __typename: "FlowInvalidCompactingConfig",
+                        __typename: "FlowInvalidCompactionConfig",
                     },
                     __typename: "DatasetFlowConfigsMut",
                 },

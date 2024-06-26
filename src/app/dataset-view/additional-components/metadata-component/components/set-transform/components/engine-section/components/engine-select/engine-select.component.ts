@@ -46,16 +46,18 @@ export class EngineSelectComponent implements OnInit {
             this.clickShowDropdown(defaultEngine);
         }
     }
+
     public get value(): string {
-        return DataHelpers.descriptionForEngine(this.engine.toLowerCase()).label ?? "";
+        const engineDesc = DataHelpers.descriptionForEngine(this.engine);
+        return engineDesc.label ?? engineDesc.name;
     }
 
     public getLogo(name: string): EventPropertyLogo {
-        return DataHelpers.descriptionForEngine(name.toUpperCase().toLowerCase());
+        return DataHelpers.descriptionForEngine(name);
     }
 
     public clickShowDropdown(item: EngineDesc): void {
-        const description = item.name.toUpperCase().toLowerCase();
+        const description = item.name.toLowerCase();
         this.render.setAttribute(this.selectedImage.nativeElement, "src", this.getLogo(description).url_logo ?? "");
         this.selectedEngineEmitter.emit(description);
     }

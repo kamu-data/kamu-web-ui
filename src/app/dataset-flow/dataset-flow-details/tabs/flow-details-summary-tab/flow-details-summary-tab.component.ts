@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { FlowOutcome, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
-import { MaybeNullOrUndefined } from "src/app/common/app.types";
+import { FlowOutcomeDataFragment, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { DataHelpers } from "src/app/common/data.helpers";
 import { DatasetFlowDetailsHelpers } from "../flow-details-history-tab/flow-details-history-tab.helpers";
@@ -12,11 +11,10 @@ import { DatasetFlowDetailsHelpers } from "../flow-details-history-tab/flow-deta
 })
 export class FlowDetailsSummaryTabComponent {
     @Input() flowDetails: FlowSummaryDataFragment;
-    public readonly FlowOutcome: typeof FlowOutcome = FlowOutcome;
     public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;
-    public readonly DATE_FORMAT = AppValues.CRON_EXPRESSION_DATE_FORMAT;
+    public readonly DATE_FORMAT = AppValues.DISPLAY_FLOW_DATE_FORMAT;
 
-    public outcomeClass(flowOutcome: MaybeNullOrUndefined<FlowOutcome>): string {
+    public outcomeClass(flowOutcome: FlowOutcomeDataFragment): string {
         return DatasetFlowDetailsHelpers.flowOutcomeOptions(flowOutcome).class;
     }
 
@@ -27,4 +25,10 @@ export class FlowDetailsSummaryTabComponent {
     public durationFlowEvent(startEventTime: string, endEventTime: string): string {
         return DataHelpers.durationTask(startEventTime, endEventTime);
     }
+
+    public flowOutcomeMessage: Record<string, string> = {
+        FlowSuccessResult: "success",
+        FlowFailedError: "failed",
+        FlowAbortedResult: "aborted",
+    };
 }

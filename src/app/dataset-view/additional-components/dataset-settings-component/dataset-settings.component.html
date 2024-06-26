@@ -8,11 +8,7 @@
                             <li
                                 [class.action-list-item--nav-active]="activeTab === navItem.activeTab"
                                 class="action-list-item"
-                                *ngIf="
-                                    navItem.activeTab === settingsTabsEnum.SCHEDULING
-                                        ? isSchedulingAvailable
-                                        : navItem.visible
-                                "
+                                *ngIf="visibilitySettingsMenuItem(navItem)"
                             >
                                 <a
                                     class="action-list-content align-items-center"
@@ -40,12 +36,15 @@
                 data-test-id="settings-general-tab"
             ></app-dataset-settings-general-tab>
         </ng-container>
-        <ng-container *ngIf="isSchedulingAvailable && activeTab === settingsTabsEnum.SCHEDULING">
+        <ng-container *ngIf="showSchedulingTab">
             <app-dataset-settings-scheduling-tab
                 [datasetBasics]="datasetBasics"
                 [datasetPermissions]="datasetPermissions"
                 data-test-id="settings-scheduling-tab"
             ></app-dataset-settings-scheduling-tab>
+        </ng-container>
+        <ng-container *ngIf="showCompactionTab">
+            <app-dataset-settings-compacting-tab [datasetBasics]="datasetBasics"></app-dataset-settings-compacting-tab>
         </ng-container>
     </div>
 </div>

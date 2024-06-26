@@ -4,14 +4,19 @@ import {
     BatchingConditionInput,
     CancelScheduledTasksGQL,
     CancelScheduledTasksMutation,
+    CompactionConditionInput,
     DatasetAllFlowsPausedGQL,
     DatasetAllFlowsPausedQuery,
     DatasetFlowBatchingGQL,
     DatasetFlowBatchingMutation,
+    DatasetFlowCompactionGQL,
+    DatasetFlowCompactionMutation,
     DatasetFlowFilters,
     DatasetFlowScheduleGQL,
     DatasetFlowScheduleMutation,
     DatasetFlowType,
+    DatasetFlowsInitiatorsGQL,
+    DatasetFlowsInitiatorsQuery,
     DatasetPauseFlowsGQL,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsGQL,
@@ -44,6 +49,8 @@ export class DatasetFlowApi {
         private datasetTriggerFlowGQL: DatasetTriggerFlowGQL,
         private datasetFlowByIdGQL: GetFlowByIdGQL,
         private cancelScheduledTasksGQL: CancelScheduledTasksGQL,
+        private datasetFlowCompactionGQL: DatasetFlowCompactionGQL,
+        private datasetFlowsInitiatorsGQL: DatasetFlowsInitiatorsGQL,
     ) {}
 
     public datasetTriggerFlow(params: {
@@ -233,5 +240,37 @@ export class DatasetFlowApi {
                     }
                 }),
             );
+    }
+
+    public setDatasetFlowCompaction(params: {
+        datasetId: string;
+        datasetFlowType: DatasetFlowType;
+        compactionArgs: CompactionConditionInput;
+    }): Observable<DatasetFlowCompactionMutation> {
+        return this.datasetFlowCompactionGQL
+            .mutate({
+                datasetId: params.datasetId,
+                datasetFlowType: params.datasetFlowType,
+                compactionArgs: params.compactionArgs,
+            })
+            .pipe(
+                first(),
+                map((result: MutationResult<DatasetFlowCompactionMutation>) => {
+                    /* istanbul ignore else */
+                    if (result.data) {
+                        return result.data;
+                    } else {
+                        throw new DatasetOperationError(result.errors ?? []);
+                    }
+                }),
+            );
+    }
+
+    public getDatasetFlowsInitiators(datasetId: string): Observable<DatasetFlowsInitiatorsQuery> {
+        return this.datasetFlowsInitiatorsGQL.watch({ datasetId }, noCacheFetchPolicy).valueChanges.pipe(
+            map((result: ApolloQueryResult<DatasetFlowsInitiatorsQuery>) => {
+                return result.data;
+            }),
+        );
     }
 }

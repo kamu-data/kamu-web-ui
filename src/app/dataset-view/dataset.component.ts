@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { NavigationEnd, Router } from "@angular/router";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
-import { filter, first, switchMap, tap } from "rxjs/operators";
+import { filter, finalize, first, switchMap, tap } from "rxjs/operators";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "../api/kamu.graphql.interface";
 import ProjectLinks from "../project-links";
 import { DatasetInfo } from "../interface/navigation.interface";
@@ -22,8 +22,10 @@ import { BaseDatasetDataComponent } from "../common/base-dataset-data.component"
 })
 export class DatasetComponent extends BaseDatasetDataComponent implements OnInit, OnDestroy {
     public datasetBasics: MaybeUndefined<DatasetBasicsFragment>;
+    public datasetInfo: DatasetInfo;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
     public readonly DatasetViewTypeEnum = DatasetViewTypeEnum;
+    public sqlLoading: boolean = false;
 
     private mainDatasetQueryComplete$: Subject<DatasetInfo> = new ReplaySubject<DatasetInfo>(1 /* bufferSize */);
 
@@ -47,6 +49,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
             }),
             this.datasetService.datasetChanges.subscribe((basics: DatasetBasicsFragment) => {
                 this.datasetBasics = basics;
+                this.datasetInfo = { accountName: basics.owner.accountName, datasetName: basics.name };
                 this.cdr.markForCheck();
             }),
         );
@@ -279,8 +282,16 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
     }
 
     public onRunSQLRequest(params: DatasetRequestBySql): void {
+        this.sqlLoading = true;
         this.datasetService
-            .requestDatasetDataSqlRun(params) // TODO: Propagate limit from UI and display when it was reached
+            // TODO: Propagate limit from UI and display when it was reached
+            .requestDatasetDataSqlRun(params)
+            .pipe(
+                finalize(() => {
+                    this.sqlLoading = false;
+                }),
+            )
             .subscribe();
+        this.cdr.detectChanges();
     }
 }

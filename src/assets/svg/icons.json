@@ -131,6 +131,10 @@
     {
       "iconName": "access-token",
       "iconPath": "/assets/svg/access-token.svg"
+    },
+    {
+      "iconName": "compact",
+      "iconPath": "/assets/svg/compress.svg"
     }
   ],
   "customIcons": []

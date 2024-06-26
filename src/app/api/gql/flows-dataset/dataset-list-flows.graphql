@@ -1,6 +1,7 @@
 query getDatasetListFlows($datasetId: DatasetID!, $page: Int, $perPage: Int, $filters: DatasetFlowFilters) {
   datasets {
     byId(datasetId: $datasetId) {
+      ...DatasetBasics
       metadata {
         currentPollingSource {
           fetch {

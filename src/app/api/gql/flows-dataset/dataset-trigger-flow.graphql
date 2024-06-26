@@ -16,6 +16,15 @@ mutation datasetTriggerFlow($datasetId: DatasetID!, $datasetFlowType: DatasetFlo
               actualDatasetKind
               message
             }
+
+            ... on FlowPreconditionsNotMet {
+              message
+            }
+
+            ... on FlowInvalidRunConfigurations {
+              error
+              message
+            }
           }
         }
       }

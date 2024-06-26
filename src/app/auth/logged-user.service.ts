@@ -52,8 +52,16 @@ export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
         return this.loggedInUser$.asObservable();
     }
 
-    public get currentlyLoggedInUser(): MaybeNull<AccountFragment> {
+    public get maybeCurrentlyLoggedInUser(): MaybeNull<AccountFragment> {
         return this.loggedInUser;
+    }
+
+    public get currentlyLoggedInUser(): AccountFragment {
+        if (this.loggedInUser) {
+            return this.loggedInUser;
+        } else {
+            throw new Error("No currently logged in user");
+        }
     }
 
     public get isAuthenticated(): boolean {
@@ -61,7 +69,7 @@ export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
     }
 
     public get isAdmin(): boolean {
-        return this.currentlyLoggedInUser?.isAdmin ?? false;
+        return this.maybeCurrentlyLoggedInUser?.isAdmin ?? false;
     }
 
     public logout(): void {

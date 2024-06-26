@@ -610,7 +610,8 @@ router-outlet {
 #set-polling-source-env-variables,
 #result-query-table,
 #overview-data-table,
-#set-data-schema-event {
+#set-data-schema-event,
+#set-polling-source-topics {
     * {
         padding: 0 8px;
         font-size: 12px;
@@ -1350,7 +1351,7 @@ pre {
     .input-container {
         position: relative;
         height: 6rem;
-        width: 12rem;
+        width: 12.5rem;
 
         .radio-input {
             position: absolute;

@@ -1,9 +1,9 @@
-import { FetchStepUrl, PrepStepDecompress } from "../../../../../../api/kamu.graphql.interface";
+import { FetchStepMqtt, FetchStepUrl, PrepStepDecompress } from "../../../../../../api/kamu.graphql.interface";
 import { getElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { mockSetPollingSourceEvent } from "../../mock.events";
+import { mockSetPollingSourceEvent, mockSetPollingSourceEventWithFetchStepMqtt } from "../../mock.events";
 import { SetPollingSourceEventComponent } from "./set-polling-source-event.component";
 import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-viewer.component";
 import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
@@ -43,10 +43,6 @@ describe("SetPollingSourceEventComponent", () => {
 
         fixture = TestBed.createComponent(SetPollingSourceEventComponent);
         component = fixture.componentInstance;
-        component.event = Object.assign({}, mockSetPollingSourceEvent, {
-            unsupportedKey: { name: "" },
-        });
-        fixture.detectChanges();
     });
 
     it("should create", () => {
@@ -54,6 +50,10 @@ describe("SetPollingSourceEventComponent", () => {
     });
 
     it("should check render event data", () => {
+        component.event = Object.assign({}, mockSetPollingSourceEvent, {
+            unsupportedKey: { name: "" },
+        });
+        fixture.detectChanges();
         const url = getElementByDataTestId(fixture, "setPollingSource-fetchStepUrl-url");
         expect(url.innerText).toEqual((mockSetPollingSourceEvent.fetch as FetchStepUrl).url);
 
@@ -70,7 +70,7 @@ describe("SetPollingSourceEventComponent", () => {
         expect(primaryKey.textContent).toEqual("id ");
 
         const engine = getElementByDataTestId(fixture, "setPollingSource-transformSql-engine");
-        expect(engine.textContent).toEqual("(Apache Spark)");
+        expect(engine.textContent).toEqual("Apache Spark (spark)");
 
         const queries = getElementByDataTestId(fixture, "setPollingSource-transformSql-queries");
         expect(queries).toBeDefined();
@@ -84,10 +84,34 @@ describe("SetPollingSourceEventComponent", () => {
         expect(prepareSubPath.textContent).toEqual(
             (mockSetPollingSourceEvent.prepare as PrepStepDecompress[])[0].subPath ?? "",
         );
+
+        const unsupportedSection = getElementByDataTestId(fixture, "unsupported-section");
+        expect(unsupportedSection).toBeDefined();
     });
 
     it("should check render unsupported section", () => {
+        component.event = Object.assign({}, mockSetPollingSourceEvent, {
+            unsupportedKey: { name: "" },
+        });
+        fixture.detectChanges();
         const unsupportedSection = getElementByDataTestId(fixture, "unsupported-section");
         expect(unsupportedSection).toBeDefined();
+    });
+
+    it("should check render event data with FetchStepMqtt", () => {
+        const fetchStep = mockSetPollingSourceEventWithFetchStepMqtt.fetch as FetchStepMqtt;
+        component.event = mockSetPollingSourceEventWithFetchStepMqtt;
+        fixture.detectChanges();
+        const host = getElementByDataTestId(fixture, "setPollingSource-FetchStepMqtt-host");
+        expect(host.innerText).toEqual(fetchStep.host);
+
+        const port = getElementByDataTestId(fixture, "setPollingSource-FetchStepMqtt-port");
+        expect(port.innerText).toEqual(fetchStep.port.toString());
+
+        const username = getElementByDataTestId(fixture, "setPollingSource-FetchStepMqtt-username");
+        expect(username.innerText).toEqual(fetchStep.username as string);
+
+        const password = getElementByDataTestId(fixture, "setPollingSource-FetchStepMqtt-password");
+        expect(password.innerText).toEqual(fetchStep.password as string);
     });
 });

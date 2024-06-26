@@ -172,7 +172,7 @@ it("should check description for SetTransform block", () => {
                         name: "quebec.case-details",
                         owner: {
                             __typename: "Account",
-                            id: "1",
+                            id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
                             accountName: "kamu",
                         },
                         alias: "kamu/quebec.case-details",
@@ -336,12 +336,19 @@ it("should check description for ExecuteTransform block (no data)", () => {
 [
     { engine: "spark", label: "Apache Spark" },
     { engine: "flink", label: "Apache Flink" },
-    { engine: "datafusion", label: "DataFusion" },
-    { engine: "unknown", label: "Unknown engine" },
+    { engine: "datafusion", label: "Apache DataFusion" },
+    { engine: "risingwave", label: "RisingWave" },
 ].forEach((item: { engine: string; label: string }) => {
     it(`should check label for ${item.engine} engine`, () => {
         expect(DataHelpers.descriptionForEngine(item.engine).label).toEqual(item.label);
     });
+});
+
+it(`should propagate the name for unknown engines`, () => {
+    const engineDesc = DataHelpers.descriptionForEngine("foobar");
+    expect(engineDesc.name).toEqual("foobar");
+    expect(engineDesc.label).toBeUndefined();
+    expect(engineDesc.url_logo).toBeUndefined();
 });
 
 [

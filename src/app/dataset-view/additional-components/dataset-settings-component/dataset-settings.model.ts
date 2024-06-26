@@ -1,6 +1,7 @@
 export enum SettingsTabsEnum {
     GENERAL = "general",
     SCHEDULING = "scheduling",
+    COMPACTION = "compaction",
 }
 
 export enum PollingGroupEnum {
@@ -36,6 +37,13 @@ export const datasetSettingsSidePanelData: DatasetSettingsSidePanelItem[] = [
         iconName: "clock",
         showDivider: false,
         activeTab: SettingsTabsEnum.SCHEDULING,
+        iconClassName: "mr-1",
+    },
+    {
+        name: "Compaction",
+        iconName: "compact",
+        showDivider: false,
+        activeTab: SettingsTabsEnum.COMPACTION,
         iconClassName: "mr-2",
     },
 ];

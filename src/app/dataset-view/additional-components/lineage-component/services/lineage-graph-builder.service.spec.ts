@@ -1,7 +1,11 @@
 import { TestBed } from "@angular/core/testing";
 import { LineageGraphBuilderService } from "./lineage-graph-builder.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { mockBuildGraphNodesResult, mockLineageGraphUpdate } from "../../data-tabs.mock";
+import {
+    mockBuildGraphNodesResult,
+    mockLineageGraphUpdate,
+    mockLineageGraphUpdateWithMqttSource,
+} from "../../data-tabs.mock";
 import { LineageGraphNodeData, LineageGraphNodeKind, LineageGraphUpdate } from "../lineage-model";
 import { MaybeNull } from "src/app/common/app.types";
 
@@ -46,17 +50,33 @@ describe("LineageGraphBuilderService", () => {
         });
     });
 
-    it("should check source nodes length", () => {
+    it("should check source nodes length with URL", () => {
         service.buildGraph().subscribe((update: MaybeNull<LineageGraphUpdate>) => {
             expect(update).toBeDefined();
             if (update) {
-                const dataSource = mockLineageGraphUpdate.nodes.filter(
+                const dataSourceUrl = mockLineageGraphUpdate.nodes.filter(
                     (node) => node.metadata.currentPollingSource?.fetch.__typename === "FetchStepUrl",
                 );
-                const graphSourceNodes = update.graph.nodes.filter(
+                const graphSourceNodesUrl = update.graph.nodes.filter(
                     (node) => (node.data as LineageGraphNodeData).kind === LineageGraphNodeKind.Source,
                 );
-                expect(dataSource.length).toEqual(graphSourceNodes.length);
+                expect(dataSourceUrl.length).toEqual(graphSourceNodesUrl.length);
+            }
+        });
+    });
+
+    it("should check source nodes length with MQTT", () => {
+        datasetSubsService.emitLineageChanged(mockLineageGraphUpdateWithMqttSource);
+        service.buildGraph().subscribe((update: MaybeNull<LineageGraphUpdate>) => {
+            expect(update).toBeDefined();
+            if (update) {
+                const dataSourceMqtt = mockLineageGraphUpdateWithMqttSource.nodes.filter(
+                    (node) => node.metadata.currentPollingSource?.fetch.__typename === "FetchStepMqtt",
+                );
+                const graphSourceNodesMqtt = update.graph.nodes.filter(
+                    (node) => (node.data as LineageGraphNodeData).kind === LineageGraphNodeKind.Mqtt,
+                );
+                expect(dataSourceMqtt.length).toEqual(graphSourceNodesMqtt.length);
             }
         });
     });

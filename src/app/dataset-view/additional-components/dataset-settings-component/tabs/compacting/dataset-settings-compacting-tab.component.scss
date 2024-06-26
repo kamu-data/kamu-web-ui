@@ -1,0 +1,70 @@
+@import "var";
+
+:host {
+    ::ng-deep {
+        .mat-radio-label {
+            align-items: start;
+        }
+    }
+}
+
+.content-container {
+    padding-bottom: 100px;
+
+    input,
+    select {
+        height: 33px;
+    }
+
+    .subtitle {
+        margin-bottom: 35px;
+    }
+
+    h4 {
+        font-weight: 500;
+    }
+
+    .form-control-width {
+        width: 132px;
+    }
+
+    .action-area {
+        margin-bottom: 0;
+        padding: 15px 0;
+
+        .description {
+            padding-right: 50px;
+        }
+
+        button {
+            color: #cf222e;
+            padding: 3px 12px;
+            font-size: 14px;
+            height: 32px;
+            border: 1px solid rgb(27 31 36 / 25%);
+            border-radius: 6px;
+            white-space: nowrap;
+
+            &:hover {
+                background: rgb(27 31 36 / 16%);
+            }
+
+            &:disabled {
+                color: rgb(27 31 36 / 25%);
+                background: $app-alice-blue;
+            }
+        }
+    }
+}
+
+.content-bg {
+    background: $app-alice-blue;
+}
+
+.box-margin-left {
+    margin-left: 30px;
+}
+
+.recursive-control {
+    height: 14px !important;
+}

@@ -111,6 +111,24 @@
                                 <span>{{ currentPollingSource.fetch.path }}</span>
                             </app-block-row-data>
                         </div>
+
+                        <div class="mx-4" *ngIf="currentPollingSource.fetch.__typename === 'FetchStepMqtt'">
+                            <app-block-row-data [tooltip]="'Hostname of the MQTT broker.'" [label]="'Hostname:'">
+                                <span>{{ currentPollingSource.fetch.host }}</span>
+                            </app-block-row-data>
+                            <app-block-row-data [tooltip]="'Port of the MQTT broker.'" [label]="'Port:'">
+                                <span>{{ currentPollingSource.fetch.port }}</span>
+                            </app-block-row-data>
+                        </div>
+
+                        <div class="mx-4" *ngIf="currentPollingSource.fetch.__typename === 'FetchStepEthereumLogs'">
+                            <app-block-row-data
+                                [tooltip]="'Connects to an Ethereum node to stream transaction logs.'"
+                                [label]="'Type:'"
+                            >
+                                <span>Ethereum Logs</span>
+                            </app-block-row-data>
+                        </div>
                     </div>
 
                     <ng-container

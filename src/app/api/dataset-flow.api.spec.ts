@@ -4,15 +4,29 @@ import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/tes
 import {
     CancelScheduledTasksDocument,
     CancelScheduledTasksMutation,
+    DatasetAllFlowsPausedDocument,
+    DatasetAllFlowsPausedQuery,
     DatasetFlowBatchingDocument,
     DatasetFlowBatchingMutation,
+    DatasetFlowCompactionDocument,
+    DatasetFlowCompactionMutation,
     DatasetFlowScheduleDocument,
     DatasetFlowScheduleMutation,
     DatasetFlowType,
+    DatasetFlowsInitiatorsDocument,
+    DatasetFlowsInitiatorsQuery,
+    DatasetPauseFlowsDocument,
+    DatasetPauseFlowsMutation,
+    DatasetResumeFlowsDocument,
+    DatasetResumeFlowsMutation,
     DatasetTriggerFlowDocument,
     DatasetTriggerFlowMutation,
     GetDatasetFlowConfigsDocument,
     GetDatasetFlowConfigsQuery,
+    GetDatasetListFlowsDocument,
+    GetDatasetListFlowsQuery,
+    GetFlowByIdDocument,
+    GetFlowByIdQuery,
 } from "./kamu.graphql.interface";
 import { TEST_DATASET_ID } from "./mock/dataset.mock";
 import { DatasetFlowApi } from "./dataset-flow.api";
@@ -24,6 +38,13 @@ import {
     mockSetDatasetFlowBatchingSuccess,
     mockDatasetTriggerFlowMutation,
     mockCancelScheduledTasksMutationSuccess,
+    mockGetDatasetListFlowsQuery,
+    mockDatasetPauseFlowsMutationSuccess,
+    mockDatasetResumeFlowsMutationSuccess,
+    mockDatasetAllFlowsPausedQuery,
+    mockGetFlowByIdQuerySuccess,
+    mockDatasetFlowsInitiatorsQuery,
+    mockDatasetFlowCompactionMutationSuccess,
 } from "./mock/dataset-flow.mock";
 
 describe("DatasetFlowApi", () => {
@@ -32,6 +53,11 @@ describe("DatasetFlowApi", () => {
     const MOCK_PAUSED = true;
     const MOCK_MIN_RECORDS_TO_AWAIT = 12;
     const MOCK_FLOW_ID = "10";
+    const MOCK_SLICE_SIZE = 10 * Math.pow(2, 10);
+    const MOCK_SLICE_RECORDS = 100000;
+    const MOCK_PAGE = 1;
+    const MOCK_PER_PAGE = 15;
+    const MOCK_FILTERS = {};
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -183,6 +209,127 @@ describe("DatasetFlowApi", () => {
         expect(op.operation.variables.flowId).toEqual(MOCK_FLOW_ID);
         op.flush({
             data: mockCancelScheduledTasksMutationSuccess,
+        });
+    });
+
+    it("should check setDatasetFlowCompaction", () => {
+        service
+            .setDatasetFlowCompaction({
+                datasetId: TEST_DATASET_ID,
+                datasetFlowType: DatasetFlowType.HardCompaction,
+                compactionArgs: {
+                    full: {
+                        maxSliceSize: MOCK_SLICE_SIZE,
+                        maxSliceRecords: MOCK_SLICE_RECORDS,
+                    },
+                },
+            })
+            .subscribe((res: DatasetFlowCompactionMutation) => {
+                expect(res.datasets.byId?.flows.configs.setConfigCompaction.message).toEqual("Success");
+            });
+
+        const op = controller.expectOne(DatasetFlowCompactionDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        expect(op.operation.variables.datasetFlowType).toEqual(DatasetFlowType.HardCompaction);
+        op.flush({
+            data: mockDatasetFlowCompactionMutationSuccess,
+        });
+    });
+
+    it("should check getDatasetListFlows", () => {
+        service
+            .getDatasetListFlows({
+                datasetId: TEST_DATASET_ID,
+                page: MOCK_PAGE,
+                perPage: MOCK_PER_PAGE,
+                filters: MOCK_FILTERS,
+            })
+            .subscribe((res: GetDatasetListFlowsQuery) => {
+                expect(res.datasets.byId?.flows.runs.listFlows.totalCount).toEqual(2);
+            });
+
+        const op = controller.expectOne(GetDatasetListFlowsDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        expect(op.operation.variables.page).toEqual(MOCK_PAGE);
+        expect(op.operation.variables.perPage).toEqual(MOCK_PER_PAGE);
+        expect(op.operation.variables.filters).toEqual(MOCK_FILTERS);
+        op.flush({
+            data: mockGetDatasetListFlowsQuery,
+        });
+    });
+
+    it("should check datasetPauseFlows", () => {
+        service
+            .datasetPauseFlows({
+                datasetId: TEST_DATASET_ID,
+                datasetFlowType: DatasetFlowType.Ingest,
+            })
+            .subscribe((res: DatasetPauseFlowsMutation) => {
+                expect(res.datasets.byId?.flows.configs.pauseFlows).toEqual(true);
+            });
+
+        const op = controller.expectOne(DatasetPauseFlowsDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        expect(op.operation.variables.datasetFlowType).toEqual(DatasetFlowType.Ingest);
+        op.flush({
+            data: mockDatasetPauseFlowsMutationSuccess,
+        });
+    });
+
+    it("should check datasetResumeFlows", () => {
+        service
+            .datasetResumeFlows({
+                datasetId: TEST_DATASET_ID,
+                datasetFlowType: DatasetFlowType.Ingest,
+            })
+            .subscribe((res: DatasetResumeFlowsMutation) => {
+                expect(res.datasets.byId?.flows.configs.resumeFlows).toEqual(true);
+            });
+
+        const op = controller.expectOne(DatasetResumeFlowsDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        expect(op.operation.variables.datasetFlowType).toEqual(DatasetFlowType.Ingest);
+        op.flush({
+            data: mockDatasetResumeFlowsMutationSuccess,
+        });
+    });
+
+    it("should check allFlowsPaused", () => {
+        service.allFlowsPaused(TEST_DATASET_ID).subscribe((res: DatasetAllFlowsPausedQuery) => {
+            expect(res.datasets.byId?.flows.configs.allPaused).toEqual(true);
+        });
+
+        const op = controller.expectOne(DatasetAllFlowsPausedDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        op.flush({
+            data: mockDatasetAllFlowsPausedQuery,
+        });
+    });
+
+    it("should check getFlowById", () => {
+        service.getFlowById({ datasetId: TEST_DATASET_ID, flowId: MOCK_FLOW_ID }).subscribe((res: GetFlowByIdQuery) => {
+            expect(res.datasets.byId?.flows.runs.getFlow.__typename).toEqual("GetFlowSuccess");
+        });
+
+        const op = controller.expectOne(GetFlowByIdDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        expect(op.operation.variables.flowId).toEqual(MOCK_FLOW_ID);
+        op.flush({
+            data: mockGetFlowByIdQuerySuccess,
+        });
+    });
+
+    it("should check getDatasetFlowsInitiators", () => {
+        service.getDatasetFlowsInitiators(TEST_DATASET_ID).subscribe((res: DatasetFlowsInitiatorsQuery) => {
+            expect(res.datasets.byId?.flows.runs.listFlowInitiators.nodes.length).toEqual(
+                mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators.nodes.length,
+            );
+        });
+
+        const op = controller.expectOne(DatasetFlowsInitiatorsDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        op.flush({
+            data: mockDatasetFlowsInitiatorsQuery,
         });
     });
 });

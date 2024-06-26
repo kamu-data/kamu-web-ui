@@ -9,10 +9,8 @@ import {
 } from "@angular/core";
 import { Location } from "@angular/common";
 import { Observable, map, tap } from "rxjs";
-
 import AppValues from "src/app/common/app.values";
 import DataTabValues from "./mock.data";
-
 import { OffsetInterval } from "../../../api/kamu.graphql.interface";
 import { DataSqlErrorUpdate, DataUpdate, OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DataRow, DatasetRequestBySql } from "../../../interface/dataset.interface";
@@ -20,6 +18,8 @@ import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service
 import { BaseComponent } from "src/app/common/base.component";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { AddDataModalComponent } from "../overview-component/components/add-data-modal/add-data-modal.component";
 
 @Component({
     selector: "app-data",
@@ -29,6 +29,8 @@ import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 })
 export class DataComponent extends BaseComponent implements OnInit {
     @Input() public datasetBasics: DatasetBasicsFragment;
+    @Input() public sqlLoading: boolean;
+    @Input() public resultTime: number;
     @Output() public runSQLRequestEmit = new EventEmitter<DatasetRequestBySql>();
 
     public savedQueries = DataTabValues.savedQueries;
@@ -47,6 +49,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     constructor(
         private datasetSubsService: DatasetSubscriptionsService,
         private location: Location,
+        private ngbModalService: NgbModal,
         private cdr: ChangeDetectorRef,
     ) {
         super();
@@ -106,6 +109,12 @@ export class DataComponent extends BaseComponent implements OnInit {
         if (offset && typeof offset.start !== "undefined" && typeof offset.end !== "undefined") {
             this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;
         }
+    }
+
+    public addData(): void {
+        const modalRef: NgbModalRef = this.ngbModalService.open(AddDataModalComponent);
+        const modalRefInstance = modalRef.componentInstance as AddDataModalComponent;
+        modalRefInstance.datasetBasics = this.datasetBasics;
     }
 
     private resetRowsLimits(): void {

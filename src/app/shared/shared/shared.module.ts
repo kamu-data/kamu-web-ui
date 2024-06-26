@@ -16,6 +16,8 @@ import { MergeStrategyPropertyComponent } from "src/app/dataset-block/metadata-b
 import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
 import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
 import { MarkdownModule } from "ngx-markdown";
+import { SafeHtmlPipe } from "src/app/common/pipes/safe-html.pipe";
+import { DragAndDropDirective } from "src/app/common/directives/drag-and-drop.directive";
 
 @NgModule({
     declarations: [
@@ -29,6 +31,8 @@ import { MarkdownModule } from "ngx-markdown";
         SchemaPropertyComponent,
         MergeStrategyPropertyComponent,
         CardsPropertyComponent,
+        SafeHtmlPipe,
+        DragAndDropDirective,
     ],
     imports: [
         CommonModule,
@@ -53,6 +57,8 @@ import { MarkdownModule } from "ngx-markdown";
         TooltipIconComponent,
         MarkdownModule,
         DisplaySizeModule,
+        SafeHtmlPipe,
+        DragAndDropDirective,
     ],
 })
 export class SharedModule {}

@@ -6,6 +6,50 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Fixed
+- Fixed GraphQL cache issue upon mutation methods
+- Show an empty result block instead of a block add data(Data tab)
+- Renamed term compacting to compaction
+
+## [0.21.1] - 2024-06-24
+### Added
+- Support `EthereumLogs` as a new kind of polling source type (wizard, block history, metadata)
+### Fixed
+- Closed security error with initial drag & drop area for data displayed to anonymous users
+
+
+## [0.21.0] - 2024-06-24
+### Added
+- Added `EthereumLogs` polling source and metadata block support 
+
+## [0.21.0] - 2024-06-24
+### Added
+- Added ingest via file upload
+
+## [0.20.0] - 2024-06-10
+### Added
+- Added MQTT polling source support 
+- Added MQTT metadata block support
+- Provided 2 mode for compaction: `Full` and `MetadataOnly`
+- Added ability to view summary of flowsfor all datasets of the account
+### Fixed
+- Sql query timer improvements
+
+## [0.19.0] - 2024-05-14
+### Added
+- Display dataset ID in Details section(Overview tab)
+- Added visual feedback on query execution(Data tab)
+
+## [0.18.1] - 2024-04-18
+### Fixed
+- Fixed icon size for `RisingWave` engine
+
+## [0.18.0] - 2024-04-18
+### Added
+- Support `RisingWave` engine
+- Added `Compacting` tab in the root dataset settings
+### Fixed
+- Hide the Scheduling tab when `SetPollingSource` or `SetTransform` undefined
 ### Changed
 - Dataset Overview: adding a small indentation to block history icon
 

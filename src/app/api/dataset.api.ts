@@ -38,14 +38,13 @@ import {
 import AppValues from "src/app/common/app.values";
 import { ApolloQueryResult } from "@apollo/client/core";
 import { Injectable } from "@angular/core";
-
 import { map, first } from "rxjs/operators";
 import { Observable } from "rxjs";
-
 import { MutationResult } from "apollo-angular";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { DatasetOperationError } from "../common/errors";
 import { StoreObject } from "@apollo/client/cache";
+import { noCacheFetchPolicy } from "../common/data.helpers";
 
 @Injectable({ providedIn: "root" })
 export class DatasetApi {
@@ -96,7 +95,15 @@ export class DatasetApi {
 
     public getDatasetDataSqlRun(params: DatasetRequestBySql): Observable<GetDatasetDataSqlRunQuery> {
         return this.datasetDataSqlRunGQL
-            .watch({ query: params.query, limit: params.limit ?? AppValues.SQL_QUERY_LIMIT, skip: params.skip })
+            .watch(
+                { query: params.query, limit: params.limit ?? AppValues.SQL_QUERY_LIMIT, skip: params.skip },
+                {
+                    ...noCacheFetchPolicy,
+                    context: {
+                        skipLoading: true,
+                    },
+                },
+            )
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<GetDatasetDataSqlRunQuery>) => {
@@ -261,7 +268,7 @@ export class DatasetApi {
     }
 
     public commitEvent(params: {
-        accountName: string;
+        accountId: string;
         datasetId: string;
         event: string;
     }): Observable<CommitEventToDatasetMutation> {
@@ -276,7 +283,7 @@ export class DatasetApi {
                         // New events affect metadata chain in unpredictable manner
                         // Open question: future impact on "data" field, if new event brings schema evolution
                         const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
-                            cache.identify(DatasetApi.generateAccountKeyFragment(params.accountName)),
+                            cache.identify(DatasetApi.generateAccountKeyFragment(params.accountId)),
                             params.datasetId,
                         );
                         cache.evict({
@@ -300,7 +307,7 @@ export class DatasetApi {
     }
 
     public updateReadme(params: {
-        accountName: string;
+        accountId: string;
         datasetId: string;
         content: string;
     }): Observable<UpdateReadmeMutation> {
@@ -316,7 +323,7 @@ export class DatasetApi {
                         // but any change to readme affects the state of the metadata chain nodes,
                         // so dropping metadata field completely is a valid and safe option
                         const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
-                            cache.identify(DatasetApi.generateAccountKeyFragment(params.accountName)),
+                            cache.identify(DatasetApi.generateAccountKeyFragment(params.accountId)),
                             params.datasetId,
                         );
                         cache.evict({
@@ -339,7 +346,7 @@ export class DatasetApi {
             );
     }
 
-    public deleteDataset(params: { accountName: string; datasetId: string }): Observable<DeleteDatasetMutation> {
+    public deleteDataset(params: { accountId: string; datasetId: string }): Observable<DeleteDatasetMutation> {
         return this.deleteDatasetGQL
             .mutate(
                 {
@@ -349,7 +356,7 @@ export class DatasetApi {
                     update: (cache) => {
                         // Drop entire dataset object
                         const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
-                            cache.identify(DatasetApi.generateAccountKeyFragment(params.accountName)),
+                            cache.identify(DatasetApi.generateAccountKeyFragment(params.accountId)),
                             params.datasetId,
                         );
                         cache.evict({
@@ -372,9 +379,9 @@ export class DatasetApi {
     }
 
     public renameDataset(params: {
-        accountName: string;
         datasetId: string;
         newName: string;
+        accountId: string;
     }): Observable<RenameDatasetMutation> {
         return this.renameDatasetGQL
             .mutate(
@@ -386,7 +393,7 @@ export class DatasetApi {
                     update: (cache) => {
                         const datasetCacheId = cache.identify(
                             DatasetApi.generateDatasetKeyFragment(
-                                cache.identify(DatasetApi.generateAccountKeyFragment(params.accountName)),
+                                cache.identify(DatasetApi.generateAccountKeyFragment(params.accountId)),
                                 params.datasetId,
                             ),
                         );
@@ -417,7 +424,7 @@ export class DatasetApi {
     public setWatermark(params: {
         datasetId: string;
         watermark: string;
-        accountName: string;
+        accountId: string;
     }): Observable<UpdateWatermarkMutation> {
         return this.updateWatermarkGQL
             .mutate(
@@ -428,7 +435,7 @@ export class DatasetApi {
                 {
                     update: (cache) => {
                         const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
-                            cache.identify(DatasetApi.generateAccountKeyFragment(params.accountName)),
+                            cache.identify(DatasetApi.generateAccountKeyFragment(params.accountId)),
                             params.datasetId,
                         );
                         cache.evict({
@@ -451,7 +458,7 @@ export class DatasetApi {
             );
     }
 
-    private static generateDatasetKeyFragment(ownerRef: string | undefined, datasetId: string): StoreObject {
+    public static generateDatasetKeyFragment(ownerRef: string | undefined, datasetId: string): StoreObject {
         return {
             __typename: "Dataset",
             owner: {
@@ -461,10 +468,10 @@ export class DatasetApi {
         };
     }
 
-    private static generateAccountKeyFragment(accountName: string): StoreObject {
+    public static generateAccountKeyFragment(accountId: string): StoreObject {
         return {
             __typename: "Account",
-            accountName,
+            id: accountId,
         };
     }
 }

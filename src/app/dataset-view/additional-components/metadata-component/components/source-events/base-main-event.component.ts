@@ -11,6 +11,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { combineLatest } from "rxjs";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 export abstract class BaseMainEventComponent extends BaseComponent {
     protected modalService = inject(NgbModal);
@@ -20,6 +21,7 @@ export abstract class BaseMainEventComponent extends BaseComponent {
     protected datasetService = inject(DatasetService);
     protected datasetSubsService = inject(DatasetSubscriptionsService);
     protected navigationServices = inject(NavigationService);
+    protected loggedUserService = inject(LoggedUserService);
 
     public eventYamlByHash: MaybeNull<string> = null;
     public history: DatasetHistoryUpdate;

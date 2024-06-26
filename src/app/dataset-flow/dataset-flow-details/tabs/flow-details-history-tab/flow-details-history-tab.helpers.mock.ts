@@ -2,7 +2,6 @@ import {
     AccountType,
     DatasetFlowType,
     FlowHistoryDataFragment,
-    FlowOutcome,
     FlowStatus,
     FlowSummaryDataFragment,
     TaskStatus,
@@ -31,7 +30,10 @@ export const mockFlowSummaryDataFragmentIngestResult: FlowSummaryDataFragment = 
     flowId: "414",
     status: FlowStatus.Finished,
     initiator: null,
-    outcome: FlowOutcome.Success,
+    outcome: {
+        __typename: "FlowSuccessResult",
+        message: "Succes",
+    },
     startCondition: null,
     timing: {
         awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
@@ -77,7 +79,7 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         trigger: {
             __typename: "FlowTriggerManual",
             initiator: {
-                id: "12345",
+                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
                 accountName: "kamu",
                 displayName: "kamu",
                 accountType: AccountType.User,
@@ -231,7 +233,7 @@ export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[
         trigger: {
             __typename: "FlowTriggerManual",
             initiator: {
-                id: "12345",
+                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
                 accountName: "kamu",
                 displayName: "kamu",
                 accountType: AccountType.User,

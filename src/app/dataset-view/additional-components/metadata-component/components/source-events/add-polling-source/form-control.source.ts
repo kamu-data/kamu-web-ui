@@ -32,6 +32,20 @@ export const FETCH_STEP_RADIO_CONTROLS: RadioControlType[] = [
         label: "Sync from container",
         tooltip: SetPollingSourceTooltipsTexts.FROM_CONTAINER,
     },
+    {
+        id: "from-mqtt",
+        value: FetchKind.MQTT,
+        icon: "rss_feed",
+        label: "Sync from MQTT",
+        tooltip: SetPollingSourceTooltipsTexts.FROM_MQTT,
+    },
+    {
+        id: "from-ethereumLogs",
+        value: FetchKind.ETHEREUM_LOGS,
+        icon: "diamond",
+        label: "Sync from Ethereum logs",
+        tooltip: SetPollingSourceTooltipsTexts.FROM_ETHEREUM_LOGS,
+    },
 ];
 
 export const READ_STEP_RADIO_CONTROLS: RadioControlType[] = [

@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { DataHelpers } from "src/app/common/data.helpers";
-import { EventPropertyLogo } from "../../../supported.events";
 import { BasePropertyComponent } from "../base-property/base-property.component";
 
 @Component({
@@ -12,7 +11,16 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
 export class EnginePropertyComponent extends BasePropertyComponent {
     @Input() public data: string;
 
-    public get descriptionEngine(): EventPropertyLogo {
-        return DataHelpers.descriptionForEngine(this.data);
+    public get engineLogo(): string | undefined {
+        return DataHelpers.descriptionForEngine(this.data).url_logo;
+    }
+
+    public get engineDescription(): string {
+        const engineDesc = DataHelpers.descriptionForEngine(this.data);
+        if (engineDesc.label && engineDesc.label.toLowerCase() != engineDesc.name.toLowerCase()) {
+            return `${engineDesc.label} (${engineDesc.name})`;
+        } else {
+            return engineDesc.name;
+        }
     }
 }

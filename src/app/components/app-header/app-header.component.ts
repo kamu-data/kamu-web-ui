@@ -114,6 +114,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
             switchMap((term: string) => this.appSearchAPI.autocompleteDatasetSearch(term)),
             tap(() => {
                 this.searching = false;
+                this.cdr.detectChanges();
             }),
         );
     };

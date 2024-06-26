@@ -1,4 +1,4 @@
-import { mockDatasetBasicsDerivedFragment } from "../../../search/mock.data";
+import { mockDatasetBasicsDerivedFragment, mockDatasetBasicsRootFragment } from "../../../search/mock.data";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { MatIconModule } from "@angular/material/icon";
@@ -15,6 +15,7 @@ import {
     mockDataUpdate,
     mockMetadataDerivedUpdate,
     mockOverviewDataUpdate,
+    mockOverviewDataUpdateNullable,
     mockSqlErrorUpdate,
 } from "../data-tabs.mock";
 import { RouterTestingModule } from "@angular/router/testing";
@@ -32,6 +33,7 @@ import { SqlEditorComponent } from "src/app/shared/editor/components/sql-editor/
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { HttpClientModule } from "@angular/common/http";
 import { Apollo } from "apollo-angular";
+import { ToastrModule } from "ngx-toastr";
 
 describe("DataComponent", () => {
     let component: DataComponent;
@@ -55,6 +57,7 @@ describe("DataComponent", () => {
                 MatProgressBarModule,
                 CdkAccordionModule,
                 HttpClientModule,
+                ToastrModule.forRoot(),
             ],
             declarations: [DataComponent, LoadMoreComponent, RequestTimerComponent, SqlEditorComponent],
         }).compileComponents();
@@ -171,7 +174,14 @@ describe("DataComponent", () => {
 
     it("should check add data", () => {
         const ngbModalServiceSpy = spyOn(ngbModalService, "open").and.callThrough();
-        component.addData();
+        component.datasetBasics = mockDatasetBasicsRootFragment;
+
+        component.addData({
+            schema: mockMetadataDerivedUpdate.schema,
+            content: mockOverviewDataUpdate.content,
+            overview: _.cloneDeep(mockOverviewDataUpdateNullable.overview),
+            size: mockOverviewDataUpdate.size,
+        } as OverviewUpdate);
         expect(ngbModalServiceSpy).toHaveBeenCalledTimes(1);
     });
 });

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed GraphQL cache issue upon mutation methods
 - Show an empty result block instead of a block add data(Data tab)
 - Renamed term compacting to compaction
+- Fixed a bug with the loader in the header when searching
 
 ## [0.21.1] - 2024-06-24
 ### Added

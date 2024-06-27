@@ -222,7 +222,7 @@ export type AuthListAccessTokensArgs = {
 export type AuthMut = {
     __typename?: "AuthMut";
     accountDetails: Account;
-    createAccessToken: CreatedAccessToken;
+    createAccessToken: CreateTokenResult;
     login: LoginResponse;
     revokeAccessToken: RevokeResult;
 };
@@ -325,6 +325,18 @@ export enum CompressionFormat {
     Zip = "ZIP",
 }
 
+export type CreateAccessTokenResultDuplicate = CreateTokenResult & {
+    __typename?: "CreateAccessTokenResultDuplicate";
+    message: Scalars["String"];
+    tokenName: Scalars["String"];
+};
+
+export type CreateAccessTokenResultSuccess = CreateTokenResult & {
+    __typename?: "CreateAccessTokenResultSuccess";
+    message: Scalars["String"];
+    token: CreatedAccessToken;
+};
+
 export type CreateDatasetFromSnapshotResult = {
     message: Scalars["String"];
 };
@@ -358,6 +370,10 @@ export type CreateDatasetResultSuccess = CreateDatasetFromSnapshotResult &
         dataset: Dataset;
         message: Scalars["String"];
     };
+
+export type CreateTokenResult = {
+    message: Scalars["String"];
+};
 
 export type CreatedAccessToken = {
     __typename?: "CreatedAccessToken";

@@ -19,14 +19,20 @@
     </p>
     <div class="d-flex justify-content-between">
         <div class="file-uploader-container">
-            <input type="file" (change)="onFileSelected($event)" class="file-uploader" title="" />
+            <input
+                type="file"
+                [disabled]="hasPollingSource"
+                (change)="onFileSelected($event)"
+                class="file-uploader"
+                title=""
+            />
             <div class="position-relative button-content">
                 <mat-icon class="text-muted cloud-icon">cloud_upload</mat-icon>
                 <span class="d-block button-label mt-2"> Upload from computer</span>
                 <span class="d-block mt-2 text-muted fs-10">Choose file</span>
             </div>
         </div>
-        <button type="button" [disabled]="true" class="source-button" (click)="onAddUrl()">
+        <button type="button" [disabled]="hasPushSource" class="source-button" (click)="onAddUrl()">
             <mat-icon class="text-muted link-icon">link</mat-icon>
             <span class="d-block button-label"> Sync from URL</span>
             <span class="d-block mt-2 text-muted fs-10">Import data from the web, portals, cloud storage and more</span>

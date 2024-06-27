@@ -822,6 +822,112 @@ export const mockOverviewDataUpdate = {
     },
 };
 
+export const mockOverviewDataUpdateNullable = {
+    content: [
+        {
+            offset: 6908,
+            system_time: "2022-08-05 21:15:03.947",
+            block_time: "2022-08-05 20:24:55",
+            token_symbol: "rETH",
+            event_name: "TokensMinted",
+            amount: 0.009679238156255232,
+            eth_amount: 0.010000000272564223,
+            block_number: 15284454,
+            block_hash: "0x887569ff02456b8cde2ade8e0ee5b48d441800c8c6d92d1414a9648902807558",
+            transaction_index: 224,
+            transaction_hash: "0xa88698d288550d09653e6cec3038ea30fe8f74eb40941eba93b05024037426d7",
+            log_index: 355,
+        },
+    ],
+    overview: {
+        __typename: "Dataset",
+        id: "did:odf:z4k88e8u3rDWqP6sq96Z7gfYdHXiuG9ZDGkdPxbtqFw8VCVJvEu",
+        kind: DatasetKind.Root,
+        name: "net.rocketpool.reth.mint-burn",
+        owner: {
+            __typename: "Account",
+            id: TEST_ACCOUNT_ID,
+            accountName: "kamu",
+        },
+        alias: "kamu/net.rocketpool.reth.mint-burn",
+        data: {
+            __typename: "DatasetData",
+            numRecordsTotal: 6909,
+            estimatedSize: 1102418,
+        },
+        metadata: {
+            __typename: "DatasetMetadata",
+            currentInfo: {
+                __typename: "SetInfo",
+                description: null,
+                keywords: null,
+            },
+            currentLicense: null,
+            currentWatermark: "2022-08-05T20:24:55+00:00",
+            currentTransform: null,
+            currentPushSources: [],
+            currentPollingSource: null,
+            currentSchema: {
+                __typename: "DataSchema",
+                format: "PARQUET_JSON",
+                content:
+                    '{"name": "spark_schema", "type": "struct", "fields": [{"name": "offset", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "system_time", "repetition": "REQUIRED", "type": "INT96"}, {"name": "block_time", "repetition": "OPTIONAL", "type": "INT96"}, {"name": "token_symbol", "repetition": "REQUIRED", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "event_name", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "amount", "repetition": "OPTIONAL", "type": "DOUBLE"}, {"name": "eth_amount", "repetition": "OPTIONAL", "type": "DOUBLE"}, {"name": "block_number", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "block_hash", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "transaction_index", "repetition": "OPTIONAL", "type": "INT32"}, {"name": "transaction_hash", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "log_index", "repetition": "OPTIONAL", "type": "INT32"}]}',
+            },
+            currentUpstreamDependencies: [],
+            currentDownstreamDependencies: [],
+            currentReadme: null,
+            chain: {
+                __typename: "MetadataChain",
+                blocks: {
+                    __typename: "MetadataBlockConnection",
+                    nodes: [
+                        {
+                            __typename: "MetadataBlockExtended",
+                            blockHash: "zW1fSULqRHyTyhGXeCP4f8zX8QxcNVKNhVui42BWRdzHet3",
+                            prevBlockHash: "zW1prmMP3XKbMfdWn9MQWpy4WaT8u8LADxXb8us7CTVb1Vu",
+                            systemTime: "2022-08-05T21:15:03.947245004+00:00",
+                            sequenceNumber: 14,
+                            author: {
+                                __typename: "Account",
+                                id: TEST_ACCOUNT_ID,
+                                accountName: "kamu",
+                            },
+                            event: {
+                                __typename: "AddData",
+                                addedOutputData: {
+                                    __typename: "DataSlice",
+                                    interval: {
+                                        __typename: "OffsetInterval",
+                                        start: 0,
+                                        end: 6908,
+                                    },
+                                    logicalHash: "z63ZND5BE6FyKyd9Wa2avVDuJXJWs79CrhCpu51J8v6vEPDZs7dW",
+                                    physicalHash: "zW1ZWFc65JcCqbCWCqqaWVnwcoY13t1MdHZ5fNifD94pv8w",
+                                },
+                            },
+                        },
+                    ],
+                    totalCount: 4,
+                    pageInfo: {
+                        __typename: "PageBasedInfo",
+                        hasNextPage: true,
+                        hasPreviousPage: false,
+                        currentPage: 0,
+                        totalPages: 4,
+                    },
+                },
+            },
+        },
+        createdAt: "2022-08-05T21:10:57.332924745+00:00",
+        lastUpdatedAt: "2022-08-05T21:15:03.947245004+00:00",
+    },
+    size: {
+        __typename: "DatasetData",
+        numRecordsTotal: 6909,
+        estimatedSize: 1102418,
+    },
+};
+
 export const mockMetadataRootUpdate: MetadataSchemaUpdate = {
     schema: {
         name: "spark_schema",

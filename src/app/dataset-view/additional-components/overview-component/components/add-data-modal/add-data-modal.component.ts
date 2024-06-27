@@ -7,6 +7,7 @@ import { FileUploadService } from "src/app/services/file-upload.service";
 import { ModalService } from "src/app/components/modal/modal.service";
 import { AppConfigService } from "src/app/app-config.service";
 import { promiseWithCatch } from "src/app/common/app.helpers";
+import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 
 @Component({
     selector: "app-add-data-modal",
@@ -16,6 +17,7 @@ import { promiseWithCatch } from "src/app/common/app.helpers";
 })
 export class AddDataModalComponent extends BaseComponent {
     @Input() public datasetBasics: DatasetBasicsFragment;
+    @Input() public overview?: OverviewUpdate;
 
     constructor(
         public ngbActiveModal: NgbActiveModal,
@@ -25,6 +27,14 @@ export class AddDataModalComponent extends BaseComponent {
         private modalService: ModalService,
     ) {
         super();
+    }
+
+    public get hasPollingSource(): boolean {
+        return Boolean(this.overview?.overview.metadata.currentPollingSource);
+    }
+
+    public get hasPushSource(): boolean {
+        return Boolean(this.overview?.overview.metadata.currentPushSources.length);
     }
 
     public onFileSelected(event: Event): void {

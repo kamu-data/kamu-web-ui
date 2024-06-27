@@ -118,7 +118,7 @@ export class DataComponent extends BaseComponent implements OnInit {
 
     public addData(overviewUpdate: OverviewUpdate): void {
         const metadata = overviewUpdate.overview.metadata;
-        if (metadata.currentPollingSource || metadata.currentPushSources.length || metadata.currentTransform) {
+        if (metadata.currentPollingSource || metadata.currentTransform) {
             this.updateNow();
         } else if (this.datasetBasics.kind === DatasetKind.Derivative) {
             this.navigationService.navigateToSetTransform({

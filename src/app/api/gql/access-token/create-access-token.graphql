@@ -1,0 +1,22 @@
+mutation createAccessToken($accountId: AccountID!, $tokenName: String!) {
+  auth {
+    createAccessToken(accountId: $accountId, tokenName: $tokenName) {
+      ... on CreateAccessTokenResultSuccess {
+        message
+        token {
+          id
+          name
+          composed
+          account {
+            ...Account
+          }
+        }
+      }
+
+      ... on CreateAccessTokenResultDuplicate {
+        message
+        tokenName
+      }
+    }
+  }
+}

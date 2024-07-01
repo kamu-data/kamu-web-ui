@@ -1,5 +1,10 @@
-import { PageBasedInfo } from "src/app/api/kamu.graphql.interface";
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from "@angular/core";
+import {
+    AccessTokenConnection,
+    AccountFragment,
+    PageBasedInfo,
+    ViewAccessToken,
+} from "src/app/api/kamu.graphql.interface";
+import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from "@angular/core";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { TokenCreateStep } from "../../account-settings.constants";
@@ -8,17 +13,9 @@ import { ModalService } from "src/app/components/modal/modal.service";
 import { promiseWithCatch } from "src/app/common/app.helpers";
 import { Clipboard } from "@angular/cdk/clipboard";
 import AppValues from "src/app/common/app.values";
-
-export interface TokenElement {
-    name: string;
-    last_used: string;
-    added: string;
-}
-
-const ELEMENT_DATA: TokenElement[] = [
-    { name: "pet-token-1", added: "3 minutes ago", last_used: "1 minute ago" },
-    { name: "test-token-2", added: "2 minutes ago", last_used: "4 minute ago" },
-];
+import { AccessTokenService } from "src/app/services/access-token.service";
+import { Observable } from "rxjs";
+import { BaseComponent } from "src/app/common/base.component";
 
 @Component({
     selector: "app-aceess-tokens-tab",
@@ -26,22 +23,23 @@ const ELEMENT_DATA: TokenElement[] = [
     styleUrls: ["./aceess-tokens-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AceessTokensTabComponent implements OnInit {
+export class AceessTokensTabComponent extends BaseComponent implements OnInit {
+    @Input() public account: AccountFragment;
     public searchTokenName: string = "";
-    public readonly DISPLAY_COLUMNS: string[] = ["name", "added", "last_used", "actions"];
-    public dataSource = new MatTableDataSource(ELEMENT_DATA);
+    public dataSource = new MatTableDataSource();
     public currentPage = 1;
-    public readonly TokenCreateStep: typeof TokenCreateStep = TokenCreateStep;
+    public composedToken = "";
     public currentCreateStep = TokenCreateStep.INITIAL;
-    public pageBasedInfo: PageBasedInfo = {
-        currentPage: 1,
-        hasNextPage: false,
-        hasPreviousPage: false,
-        totalPages: 1,
-    };
+    public pageBasedInfo: PageBasedInfo;
     public createTokenForm: FormGroup = this.fb.group({
         name: ["", [Validators.required]],
     });
+    public listAccessTokens$: Observable<AccessTokenConnection>;
+    public readonly DISPLAY_COLUMNS: string[] = ["name", "createdAt", "revokedAt", "actions"];
+    public readonly TokenCreateStep: typeof TokenCreateStep = TokenCreateStep;
+    public readonly PER_PAGE = 15;
+    public readonly DATE_FORMAT = AppValues.DISPLAY_FLOW_DATE_FORMAT;
+    public data: ViewAccessToken[];
 
     @ViewChild(MatSort) sort: MatSort;
 
@@ -49,29 +47,47 @@ export class AceessTokensTabComponent implements OnInit {
         private fb: FormBuilder,
         private modalService: ModalService,
         private clipboard: Clipboard,
-    ) {}
+        private accessTokenService: AccessTokenService,
+    ) {
+        super();
+    }
 
-    ngOnInit(): void {}
-
-    ngAfterViewInit() {
-        this.dataSource.sort = this.sort;
+    ngOnInit(): void {
+        this.updateTable();
     }
 
     public refreshSearchByName(): void {
         this.searchTokenName = "";
+        this.dataSource.filter = "";
     }
 
-    public deleteToken(index: number): void {
+    private updateTable(): void {
+        this.accessTokenService
+            .listAccessTokens({
+                accountId: this.account.id,
+                page: this.currentPage - 1,
+                perPage: this.PER_PAGE,
+            })
+            .subscribe((result: AccessTokenConnection) => {
+                this.dataSource.data = result.nodes;
+                this.dataSource.sort = this.sort;
+                this.pageBasedInfo = result.pageInfo;
+                this.dataSource.filterPredicate = (data: unknown, filter: string): boolean => {
+                    return (data as ViewAccessToken).name.toLowerCase().includes(filter);
+                };
+            });
+    }
+
+    public deleteToken(tokenId: string): void {
         promiseWithCatch(
             this.modalService.error({
-                title: "Delete",
-                message: "Do you want to delete a token?",
+                title: "Revoke",
+                message: "Do you want to revoke a token?",
                 yesButtonText: "Ok",
                 noButtonText: "Cancel",
                 handler: (ok) => {
                     if (ok) {
-                        ELEMENT_DATA.splice(index, 1);
-                        this.dataSource.data = ELEMENT_DATA;
+                        this.accessTokenService.revokeAccessTokens(tokenId).subscribe(() => this.updateTable());
                     }
                 },
             }),
@@ -83,18 +99,16 @@ export class AceessTokensTabComponent implements OnInit {
     }
 
     public onGenerateToken(): void {
-        ELEMENT_DATA.push({
-            name: this.createTokenForm.controls.name?.value as string,
-            added: "1 minutes ago",
-            last_used: "2 minute ago",
-        });
         this.createTokenForm.controls.name.reset();
-        this.dataSource.data = ELEMENT_DATA;
         this.currentCreateStep = TokenCreateStep.FINISH;
     }
 
     public onCancel(): void {
         this.currentCreateStep = TokenCreateStep.INITIAL;
+    }
+
+    public applyFilter(searchToken: string): void {
+        this.dataSource.filter = searchToken.trim().toLowerCase();
     }
 
     public copyToClipboard(event: MouseEvent, text: string): void {

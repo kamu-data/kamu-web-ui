@@ -285,7 +285,7 @@
         </div>
         <div class="content">
             <ng-container *ngIf="activeTab === AccountSettingsTabs.ACCESS_TOKENS">
-                <app-aceess-tokens-tab></app-aceess-tokens-tab>
+                <app-aceess-tokens-tab [account]="user"></app-aceess-tokens-tab>
             </ng-container>
         </div>
     </div>

@@ -11,6 +11,7 @@ import {
 import { ApolloQueryResult } from "@apollo/client";
 import { MutationResult } from "apollo-angular";
 import { DatasetOperationError } from "../common/errors";
+import { noCacheFetchPolicy } from "../common/data.helpers";
 
 @Injectable({
     providedIn: "root",
@@ -28,7 +29,12 @@ export class AccessTokenApi {
         perPage: number;
     }): Observable<ListAccessTokensQuery> {
         return this.listAccessTokensGQL
-            .watch({ accountId: params.accountId, page: params.page, perPage: params.perPage })
+            .watch(
+                { accountId: params.accountId, page: params.page, perPage: params.perPage },
+                {
+                    ...noCacheFetchPolicy,
+                },
+            )
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<ListAccessTokensQuery>) => {

@@ -56,6 +56,8 @@
                 type="text"
                 autocomplete="off"
                 placeholder="Search by name"
+                #tokenSearch
+                (keyup)="applyFilter(tokenSearch.value)"
                 [(ngModel)]="searchTokenName"
             />
             <svg-icon name="search"></svg-icon>
@@ -68,40 +70,49 @@
         </div>
     </div>
     <div *ngIf="currentStep === TokenCreateStep.FINISH" class="mb-4 mt-30 d-flex flex-column align-items-center">
-        <div class="alert alert-primary text-center w-75" role="alert">
-            Make sure to copy your personal access token now. You won’t be able to see it again!
-        </div>
-        <div
-            class="alert alert-light w-75 mt-2 border-dashed d-flex align-items-center justify-content-between"
-            role="alert"
-        >
-            <div class="d-flex align-items-center">
-                <input type="text" class="form-control fs-12 w-300" data-autoselect="" #clipboardToken readonly />
-                <div class="input-group-button ms-1">
-                    <button
-                        (click)="copyToClipboard($event, clipboardToken.value)"
-                        data-test-id="copyToClipboard"
-                        aria-label="Copy to clipboard"
-                        class="copy-button ms-1"
-                        data-copy-feedback="Copied!"
-                        tabindex="0"
-                        role="button"
-                    >
-                        <div style="position: relative; display: inline-block">
-                            <svg-icon name="copy"></svg-icon>
-                        </div>
-                        <div style="position: relative; display: none">
-                            <svg-icon name="checked"></svg-icon>
-                        </div>
+        <ng-container *ngIf="true">
+            <div class="alert alert-primary text-center w-75" role="alert">
+                Make sure to copy your personal access token now. You won’t be able to see it again!
+            </div>
+            <div
+                class="alert alert-light w-75 mt-2 border-dashed d-flex align-items-center justify-content-between"
+                role="alert"
+            >
+                <div class="d-flex align-items-center">
+                    <input
+                        type="text"
+                        [(ngModel)]="composedToken"
+                        class="form-control fs-12 w-300"
+                        data-autoselect=""
+                        #clipboardToken
+                        readonly
+                    />
+                    <div class="input-group-button ms-1">
+                        <button
+                            (click)="copyToClipboard($event, clipboardToken.value)"
+                            data-test-id="copyToClipboard"
+                            aria-label="Copy to clipboard"
+                            class="copy-button ms-1"
+                            data-copy-feedback="Copied!"
+                            tabindex="0"
+                            role="button"
+                        >
+                            <div style="position: relative; display: inline-block">
+                                <svg-icon name="copy"></svg-icon>
+                            </div>
+                            <div style="position: relative; display: none">
+                                <svg-icon name="checked"></svg-icon>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <button class="delete-token-button">
+                        <mat-icon class="fs-4">delete</mat-icon>
                     </button>
                 </div>
             </div>
-            <div>
-                <button class="delete-token-button">
-                    <mat-icon class="fs-4">delete</mat-icon>
-                </button>
-            </div>
-        </div>
+        </ng-container>
     </div>
     <div class="content-table mt-4">
         <table mat-table [dataSource]="dataSource" class="w-100 tokens-table" matSort>
@@ -111,27 +122,32 @@
                 <td mat-cell *matCellDef="let element">{{ element.name }}</td>
             </ng-container>
 
-            <!-- Added Column -->
-            <ng-container matColumnDef="added">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Added</th>
-                <td mat-cell *matCellDef="let element">{{ element.added }}</td>
+            <!-- Created Column -->
+            <ng-container matColumnDef="createdAt">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Created</th>
+                <td mat-cell *matCellDef="let element">{{ element.createdAt | date: DATE_FORMAT }}</td>
             </ng-container>
 
-            <!-- Last used Column -->
-            <ng-container matColumnDef="last_used">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Last used</th>
-                <td mat-cell *matCellDef="let element">{{ element.last_used }}</td>
+            <!-- Revoked Column -->
+            <ng-container matColumnDef="revokedAt">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Revoked</th>
+                <td mat-cell *matCellDef="let element">{{ element.revokedAt | date: DATE_FORMAT }}</td>
             </ng-container>
 
             <!-- Actions Column -->
             <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef></th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
                 <td mat-cell *matCellDef="let element; let i = index">
-                    <button class="delete-token-button" (click)="deleteToken(i)">
+                    <button *ngIf="!element.revokedAt" class="delete-token-button" (click)="deleteToken(element.id)">
                         <mat-icon class="fs-4 pt-1">delete</mat-icon>
                     </button>
                 </td>
             </ng-container>
+
+            <!-- Row shown when there is no matching data. -->
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell text-center" [attr.colspan]="4">No data</td>
+            </tr>
 
             <tr mat-header-row *matHeaderRowDef="DISPLAY_COLUMNS"></tr>
             <tr mat-row *matRowDef="let row; columns: DISPLAY_COLUMNS"></tr>

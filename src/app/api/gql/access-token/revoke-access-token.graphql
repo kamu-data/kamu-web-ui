@@ -1,0 +1,15 @@
+mutation revokeAccessToken($tokenId: AccessTokenID!) {
+  auth {
+    revokeAccessToken(tokenId: $tokenId) {
+      ... on RevokeResultSuccess {
+        tokenId
+        message
+      }
+
+      ... on RevokeResultAlreadyRevoked {
+        tokenId
+        message
+      }
+    }
+  }
+}

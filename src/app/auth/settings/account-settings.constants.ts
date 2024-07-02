@@ -8,4 +8,11 @@ export enum AccountSettingsTabs {
     EMAILS = "emails",
     SECURITY = "security",
     ORGANIZATIONS = "organizations",
+    ACCESS_TOKENS = "access-tokens",
+}
+
+export enum TokenCreateStep {
+    INITIAL = "initial",
+    GENERATE = "generate",
+    FINISH = "finish",
 }

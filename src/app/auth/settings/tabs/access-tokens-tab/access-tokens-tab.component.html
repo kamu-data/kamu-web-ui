@@ -156,8 +156,9 @@
     <div class="mt-60">
         <app-pagination
             *ngIf="dataSource.data.length"
-            [currentPage]="currentPage - 1"
+            [currentPage]="currentPage"
             [pageInfo]="pageBasedInfo"
+            (pageChangeEvent)="onPageChange($event)"
         ></app-pagination>
     </div>
 </ng-template>

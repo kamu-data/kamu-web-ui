@@ -1,3 +1,4 @@
+import { NavigationService } from "./../../../../services/navigation.service";
 import { MaybeNull } from "../../../../common/app.types";
 import {
     AccessTokenConnection,
@@ -9,14 +10,15 @@ import {
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from "@angular/core";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
-import { TokenCreateStep } from "../../account-settings.constants";
+import { AccountSettingsTabs, TokenCreateStep } from "../../account-settings.constants";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ModalService } from "src/app/components/modal/modal.service";
-import { promiseWithCatch } from "src/app/common/app.helpers";
+import { promiseWithCatch, requireValue } from "src/app/common/app.helpers";
 import { Clipboard } from "@angular/cdk/clipboard";
 import AppValues from "src/app/common/app.values";
 import { AccessTokenService } from "src/app/services/access-token.service";
 import { BaseComponent } from "src/app/common/base.component";
+import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-access-tokens-tab",
@@ -46,12 +48,21 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
         private modalService: ModalService,
         private clipboard: Clipboard,
         private accessTokenService: AccessTokenService,
+        private navigationService: NavigationService,
     ) {
         super();
     }
 
     ngOnInit(): void {
-        this.updateTable();
+        this.getPageFromUrl();
+        this.updateTable(this.currentPage);
+    }
+
+    public getPageFromUrl(): void {
+        const pageParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE);
+        if (pageParam) {
+            this.currentPage = +requireValue(pageParam);
+        }
     }
 
     public refreshSearchByName(): void {
@@ -75,7 +86,9 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
                     if (ok) {
                         this.deleteComposedToken();
                         this.trackSubscription(
-                            this.accessTokenService.revokeAccessTokens(tokenId).subscribe(() => this.updateTable()),
+                            this.accessTokenService
+                                .revokeAccessTokens(tokenId)
+                                .subscribe(() => this.updateTable(this.currentPage)),
                         );
                     }
                 },
@@ -97,7 +110,7 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
                     this.deleteComposedToken();
                     this.createTokenForm.controls.name.reset();
                     this.composedToken = newToken.composed;
-                    this.updateTable();
+                    this.updateTable(this.currentPage);
                 }
             });
     }
@@ -127,12 +140,12 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
         }
     }
 
-    private updateTable(): void {
+    private updateTable(page: number): void {
         this.trackSubscription(
             this.accessTokenService
                 .listAccessTokens({
                     accountId: this.account.id,
-                    page: this.currentPage - 1,
+                    page: page - 1,
                     perPage: this.PER_PAGE,
                 })
                 .subscribe((result: AccessTokenConnection) => {
@@ -144,5 +157,11 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
                     };
                 }),
         );
+    }
+
+    public onPageChange(page: number): void {
+        this.currentPage = page;
+        this.navigationService.navigateToSettings(AccountSettingsTabs.ACCESS_TOKENS, this.currentPage);
+        this.updateTable(this.currentPage);
     }
 }

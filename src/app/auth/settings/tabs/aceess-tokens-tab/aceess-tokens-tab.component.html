@@ -8,6 +8,7 @@
 <ng-container *ngIf="currentCreateStep === TokenCreateStep.GENERATE">
     <h2>New personal access token</h2>
     <mat-divider></mat-divider>
+
     <p class="text-muted mt-3">Personal access tokens  can be used instead of a password for Kamu over HTTPS</p>
     <form class="mt-60" [formGroup]="createTokenForm" (ngSubmit)="onGenerateToken()">
         <label for="token-name" class="form-label">Name</label>
@@ -70,7 +71,7 @@
         </div>
     </div>
     <div *ngIf="currentStep === TokenCreateStep.FINISH" class="mb-4 mt-30 d-flex flex-column align-items-center">
-        <ng-container *ngIf="true">
+        <ng-container *ngIf="composedToken">
             <div class="alert alert-primary text-center w-75" role="alert">
                 Make sure to copy your personal access token now. You won’t be able to see it again!
             </div>
@@ -82,8 +83,7 @@
                     <input
                         type="text"
                         [(ngModel)]="composedToken"
-                        class="form-control fs-12 w-300"
-                        data-autoselect=""
+                        class="form-control fs-12 w-500"
                         #clipboardToken
                         readonly
                     />
@@ -107,7 +107,7 @@
                     </div>
                 </div>
                 <div>
-                    <button class="delete-token-button">
+                    <button class="delete-token-button" (click)="deleteComposedToken()">
                         <mat-icon class="fs-4">delete</mat-icon>
                     </button>
                 </div>

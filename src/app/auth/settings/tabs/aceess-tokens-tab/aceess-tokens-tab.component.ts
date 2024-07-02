@@ -1,6 +1,8 @@
+import { MaybeNull } from "./../../../../common/app.types";
 import {
     AccessTokenConnection,
     AccountFragment,
+    CreatedAccessToken,
     PageBasedInfo,
     ViewAccessToken,
 } from "src/app/api/kamu.graphql.interface";
@@ -14,7 +16,6 @@ import { promiseWithCatch } from "src/app/common/app.helpers";
 import { Clipboard } from "@angular/cdk/clipboard";
 import AppValues from "src/app/common/app.values";
 import { AccessTokenService } from "src/app/services/access-token.service";
-import { Observable } from "rxjs";
 import { BaseComponent } from "src/app/common/base.component";
 
 @Component({
@@ -25,6 +26,7 @@ import { BaseComponent } from "src/app/common/base.component";
 })
 export class AceessTokensTabComponent extends BaseComponent implements OnInit {
     @Input() public account: AccountFragment;
+    @ViewChild(MatSort) sort: MatSort;
     public searchTokenName: string = "";
     public dataSource = new MatTableDataSource();
     public currentPage = 1;
@@ -34,14 +36,10 @@ export class AceessTokensTabComponent extends BaseComponent implements OnInit {
     public createTokenForm: FormGroup = this.fb.group({
         name: ["", [Validators.required]],
     });
-    public listAccessTokens$: Observable<AccessTokenConnection>;
     public readonly DISPLAY_COLUMNS: string[] = ["name", "createdAt", "revokedAt", "actions"];
     public readonly TokenCreateStep: typeof TokenCreateStep = TokenCreateStep;
     public readonly PER_PAGE = 15;
     public readonly DATE_FORMAT = AppValues.DISPLAY_FLOW_DATE_FORMAT;
-    public data: ViewAccessToken[];
-
-    @ViewChild(MatSort) sort: MatSort;
 
     constructor(
         private fb: FormBuilder,
@@ -58,24 +56,12 @@ export class AceessTokensTabComponent extends BaseComponent implements OnInit {
 
     public refreshSearchByName(): void {
         this.searchTokenName = "";
+        this.deleteComposedToken();
         this.dataSource.filter = "";
     }
 
-    private updateTable(): void {
-        this.accessTokenService
-            .listAccessTokens({
-                accountId: this.account.id,
-                page: this.currentPage - 1,
-                perPage: this.PER_PAGE,
-            })
-            .subscribe((result: AccessTokenConnection) => {
-                this.dataSource.data = result.nodes;
-                this.dataSource.sort = this.sort;
-                this.pageBasedInfo = result.pageInfo;
-                this.dataSource.filterPredicate = (data: unknown, filter: string): boolean => {
-                    return (data as ViewAccessToken).name.toLowerCase().includes(filter);
-                };
-            });
+    public deleteComposedToken(): void {
+        this.composedToken = "";
     }
 
     public deleteToken(tokenId: string): void {
@@ -87,7 +73,10 @@ export class AceessTokensTabComponent extends BaseComponent implements OnInit {
                 noButtonText: "Cancel",
                 handler: (ok) => {
                     if (ok) {
-                        this.accessTokenService.revokeAccessTokens(tokenId).subscribe(() => this.updateTable());
+                        this.deleteComposedToken();
+                        this.trackSubscription(
+                            this.accessTokenService.revokeAccessTokens(tokenId).subscribe(() => this.updateTable()),
+                        );
                     }
                 },
             }),
@@ -96,11 +85,21 @@ export class AceessTokensTabComponent extends BaseComponent implements OnInit {
 
     public addNewToken(): void {
         this.currentCreateStep = TokenCreateStep.GENERATE;
+        this.deleteComposedToken();
     }
 
     public onGenerateToken(): void {
-        this.createTokenForm.controls.name.reset();
         this.currentCreateStep = TokenCreateStep.FINISH;
+        this.accessTokenService
+            .createAccessTokens(this.account.id, this.createTokenForm.controls.name.value as string)
+            .subscribe((newToken: MaybeNull<CreatedAccessToken>) => {
+                if (newToken) {
+                    this.deleteComposedToken();
+                    this.createTokenForm.controls.name.reset();
+                    this.composedToken = newToken.composed;
+                    this.updateTable();
+                }
+            });
     }
 
     public onCancel(): void {
@@ -126,5 +125,24 @@ export class AceessTokensTabComponent extends BaseComponent implements OnInit {
             currentElementChildren[1].style.display = "inline-block";
             currentElement.classList.add("clipboard-btn--success");
         }
+    }
+
+    private updateTable(): void {
+        this.trackSubscription(
+            this.accessTokenService
+                .listAccessTokens({
+                    accountId: this.account.id,
+                    page: this.currentPage - 1,
+                    perPage: this.PER_PAGE,
+                })
+                .subscribe((result: AccessTokenConnection) => {
+                    this.dataSource.data = result.nodes;
+                    this.dataSource.sort = this.sort;
+                    this.pageBasedInfo = result.pageInfo;
+                    this.dataSource.filterPredicate = (data: unknown, filter: string): boolean => {
+                        return (data as ViewAccessToken).name.toLowerCase().includes(filter.trim().toLowerCase());
+                    };
+                }),
+        );
     }
 }

@@ -1,9 +1,11 @@
+import { MaybeNull } from "./../common/app.types";
 import { Injectable } from "@angular/core";
 import { AccessTokenApi } from "../api/access-token.api";
 import { Observable, map } from "rxjs";
 import {
     AccessTokenConnection,
     CreateAccessTokenMutation,
+    CreatedAccessToken,
     ListAccessTokensQuery,
     RevokeAccessTokenMutation,
 } from "../api/kamu.graphql.interface";
@@ -28,14 +30,16 @@ export class AccessTokenService {
             .pipe(map((result: ListAccessTokensQuery) => result.auth.listAccessTokens as AccessTokenConnection));
     }
 
-    public createAccessTokens(accountId: string, tokenName: string): Observable<void> {
+    public createAccessTokens(accountId: string, tokenName: string): Observable<MaybeNull<CreatedAccessToken>> {
         return this.accessTokenApi.createAccessToken(accountId, tokenName).pipe(
             map((result: CreateAccessTokenMutation) => {
                 const typename = result.auth.createAccessToken.__typename;
                 if (typename === "CreateAccessTokenResultSuccess") {
                     this.toastrService.success(result.auth.createAccessToken.message);
+                    return result.auth.createAccessToken.token;
                 } else {
                     this.toastrService.error(result.auth.createAccessToken.message);
+                    return null;
                 }
             }),
         );

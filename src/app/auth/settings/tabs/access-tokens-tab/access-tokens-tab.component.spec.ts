@@ -1,6 +1,6 @@
 import { MatTableModule } from "@angular/material/table";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { AceessTokensTabComponent } from "./aceess-tokens-tab.component";
+import { AccessTokensTabComponent } from "./access-tokens-tab.component";
 import { FormBuilder, FormsModule } from "@angular/forms";
 import { Apollo } from "apollo-angular";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
@@ -13,12 +13,12 @@ import { MatDividerModule } from "@angular/material/divider";
 import { HttpClientModule } from "@angular/common/http";
 
 describe("AccessTokensTabComponent", () => {
-    let component: AceessTokensTabComponent;
-    let fixture: ComponentFixture<AceessTokensTabComponent>;
+    let component: AccessTokensTabComponent;
+    let fixture: ComponentFixture<AccessTokensTabComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [AceessTokensTabComponent],
+            declarations: [AccessTokensTabComponent],
             providers: [FormBuilder, Apollo],
             imports: [
                 ToastrModule.forRoot(),

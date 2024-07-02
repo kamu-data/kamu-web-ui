@@ -1,4 +1,4 @@
-import { MaybeNull } from "./../../../../common/app.types";
+import { MaybeNull } from "../../../../common/app.types";
 import {
     AccessTokenConnection,
     AccountFragment,
@@ -19,12 +19,12 @@ import { AccessTokenService } from "src/app/services/access-token.service";
 import { BaseComponent } from "src/app/common/base.component";
 
 @Component({
-    selector: "app-aceess-tokens-tab",
-    templateUrl: "./aceess-tokens-tab.component.html",
-    styleUrls: ["./aceess-tokens-tab.component.scss"],
+    selector: "app-access-tokens-tab",
+    templateUrl: "./access-tokens-tab.component.html",
+    styleUrls: ["./access-tokens-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AceessTokensTabComponent extends BaseComponent implements OnInit {
+export class AccessTokensTabComponent extends BaseComponent implements OnInit {
     @Input() public account: AccountFragment;
     @ViewChild(MatSort) sort: MatSort;
     public searchTokenName: string = "";

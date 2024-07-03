@@ -1,7 +1,7 @@
 @import "var";
 
 .p-responsive {
-    padding-left: 16px;
+    padding: 0 60px;
 
     a {
         text-decoration: none;
@@ -94,4 +94,10 @@
             border: 0;
         }
     }
+}
+
+.content {
+    width: 100%;
+    padding: 0 45px;
+    background-color: $app-color-canvas-subtle;
 }

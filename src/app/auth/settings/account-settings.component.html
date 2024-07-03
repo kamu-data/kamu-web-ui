@@ -1,4 +1,4 @@
-<div class="pt-4 container-xl p-responsive clearfix" *ngIf="user$ | async as user">
+<div class="pt-4 p-responsive clearfix" *ngIf="user$ | async as user">
     <div class="d-md-flex align-items-center justify-content-between mt-1 mb-4">
         <div class="d-flex align-items-center mb-2 mb-md-0">
             <img
@@ -16,7 +16,7 @@
                     class="color-fg-default fw-bold-custom fs-5"
                     data-test-id="user-name-link"
                 >
-                    {{ user.displayName }}
+                    {{ user.displayName }} <span class="text-muted">({{ user.accountName }})</span>
                 </a>
                 <div class="d-flex align-items-center flex-wrap">
                     <p class="color-fg-muted">Your personal account</p>
@@ -56,8 +56,6 @@
                                 </a>
                             </li>
                             <li
-                                data-item-id=""
-                                data-view-component="true"
                                 [ngClass]="{
                                     'action-list-item--nav__active': activeTab === AccountSettingsTabs.ACCOUNT
                                 }"
@@ -253,6 +251,29 @@
                                             <span class="action-list-item-label"> Organizations </span>
                                         </a>
                                     </li>
+                                    <li
+                                        data-item-id=""
+                                        data-view-component="true"
+                                        class="action-list-item"
+                                        [ngClass]="{
+                                            'action-list-item--nav__active':
+                                                activeTab === AccountSettingsTabs.ACCESS_TOKENS
+                                        }"
+                                    >
+                                        <a
+                                            routerLinkActive="active"
+                                            [routerLink]="getRouteLink(AccountSettingsTabs.ACCESS_TOKENS)"
+                                            data-view-component="true"
+                                            class="action-list-content"
+                                        >
+                                            <span
+                                                class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
+                                            >
+                                                <svg-icon name="access-token"></svg-icon>
+                                            </span>
+                                            <span class="action-list-item-label"> Access tokens </span>
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                         </ul>
@@ -260,6 +281,10 @@
                 </div>
             </div>
         </div>
-        <div class="app-content"></div>
+        <div class="content">
+            <ng-container *ngIf="activeTab === AccountSettingsTabs.ACCESS_TOKENS">
+                <app-access-tokens-tab [account]="user"></app-access-tokens-tab>
+            </ng-container>
+        </div>
     </div>
 </div>

@@ -48,7 +48,9 @@ describe("NavigationService", () => {
     it("should test navigate to settings", () => {
         const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
         service.navigateToSettings();
-        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_SETTINGS, AccountSettingsTabs.PROFILE]);
+        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_SETTINGS, AccountSettingsTabs.PROFILE], {
+            queryParams: {},
+        });
     });
 
     it("should test navigate to metadata block", () => {

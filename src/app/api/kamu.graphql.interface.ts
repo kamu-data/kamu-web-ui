@@ -222,7 +222,7 @@ export type AuthListAccessTokensArgs = {
 export type AuthMut = {
     __typename?: "AuthMut";
     accountDetails: Account;
-    createAccessToken: CreatedAccessToken;
+    createAccessToken: CreateTokenResult;
     login: LoginResponse;
     revokeAccessToken: RevokeResult;
 };
@@ -325,6 +325,18 @@ export enum CompressionFormat {
     Zip = "ZIP",
 }
 
+export type CreateAccessTokenResultDuplicate = CreateTokenResult & {
+    __typename?: "CreateAccessTokenResultDuplicate";
+    message: Scalars["String"];
+    tokenName: Scalars["String"];
+};
+
+export type CreateAccessTokenResultSuccess = CreateTokenResult & {
+    __typename?: "CreateAccessTokenResultSuccess";
+    message: Scalars["String"];
+    token: CreatedAccessToken;
+};
+
 export type CreateDatasetFromSnapshotResult = {
     message: Scalars["String"];
 };
@@ -358,6 +370,10 @@ export type CreateDatasetResultSuccess = CreateDatasetFromSnapshotResult &
         dataset: Dataset;
         message: Scalars["String"];
     };
+
+export type CreateTokenResult = {
+    message: Scalars["String"];
+};
 
 export type CreatedAccessToken = {
     __typename?: "CreatedAccessToken";
@@ -1645,11 +1661,21 @@ export type RestProtocolDesc = {
     tailUrl: Scalars["String"];
 };
 
-export enum RevokeResult {
-    AlreadyRevoked = "ALREADY_REVOKED",
-    NotFound = "NOT_FOUND",
-    Success = "SUCCESS",
-}
+export type RevokeResult = {
+    message: Scalars["String"];
+};
+
+export type RevokeResultAlreadyRevoked = RevokeResult & {
+    __typename?: "RevokeResultAlreadyRevoked";
+    message: Scalars["String"];
+    tokenId: Scalars["AccessTokenID"];
+};
+
+export type RevokeResultSuccess = RevokeResult & {
+    __typename?: "RevokeResultSuccess";
+    message: Scalars["String"];
+    tokenId: Scalars["AccessTokenID"];
+};
 
 export type ScheduleInput =
     | { cron5ComponentExpression: Scalars["String"]; timeDelta?: never }
@@ -1986,6 +2012,64 @@ export type ViewAccessToken = {
 export type WebSocketProtocolDesc = {
     __typename?: "WebSocketProtocolDesc";
     url: Scalars["String"];
+};
+
+export type CreateAccessTokenMutationVariables = Exact<{
+    accountId: Scalars["AccountID"];
+    tokenName: Scalars["String"];
+}>;
+
+export type CreateAccessTokenMutation = {
+    __typename?: "Mutation";
+    auth: {
+        __typename?: "AuthMut";
+        createAccessToken:
+            | { __typename?: "CreateAccessTokenResultDuplicate"; message: string; tokenName: string }
+            | {
+                  __typename?: "CreateAccessTokenResultSuccess";
+                  message: string;
+                  token: {
+                      __typename?: "CreatedAccessToken";
+                      id: string;
+                      name: string;
+                      composed: string;
+                      account: { __typename?: "Account" } & AccountFragment;
+                  };
+              };
+    };
+};
+
+export type ListAccessTokensQueryVariables = Exact<{
+    accountId: Scalars["AccountID"];
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+}>;
+
+export type ListAccessTokensQuery = {
+    __typename?: "Query";
+    auth: {
+        __typename?: "Auth";
+        listAccessTokens: {
+            __typename?: "AccessTokenConnection";
+            totalCount: number;
+            nodes: Array<{ __typename?: "ViewAccessToken" } & AccessTokenDataFragment>;
+            pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
+        };
+    };
+};
+
+export type RevokeAccessTokenMutationVariables = Exact<{
+    tokenId: Scalars["AccessTokenID"];
+}>;
+
+export type RevokeAccessTokenMutation = {
+    __typename?: "Mutation";
+    auth: {
+        __typename?: "AuthMut";
+        revokeAccessToken:
+            | { __typename?: "RevokeResultAlreadyRevoked"; tokenId: string; message: string }
+            | { __typename?: "RevokeResultSuccess"; tokenId: string; message: string };
+    };
 };
 
 export type AccountByNameQueryVariables = Exact<{
@@ -3160,6 +3244,15 @@ export type ReadStepNdJsonDataFragment = {
 
 export type ReadStepParquetDataFragment = { __typename?: "ReadStepParquet"; schema?: Array<string> | null };
 
+export type AccessTokenDataFragment = {
+    __typename?: "ViewAccessToken";
+    id: string;
+    name: string;
+    createdAt: string;
+    revokedAt?: string | null;
+    account: { __typename?: "Account" } & AccountFragment;
+};
+
 export type AccountBasicsFragment = { __typename?: "Account"; id: string; accountName: string };
 
 export type AccountExtendedFragment = {
@@ -4023,6 +4116,18 @@ export const FlowHistoryDataFragmentDoc = gql`
     ${DatasetBasicsFragmentDoc}
     ${TimeDeltaDataFragmentDoc}
 `;
+export const AccessTokenDataFragmentDoc = gql`
+    fragment AccessTokenData on ViewAccessToken {
+        id
+        name
+        createdAt
+        revokedAt
+        account {
+            ...Account
+        }
+    }
+    ${AccountFragmentDoc}
+`;
 export const DatasetDataSizeFragmentDoc = gql`
     fragment DatasetDataSize on DatasetData {
         numRecordsTotal
@@ -4700,6 +4805,102 @@ export const DatasetSearchOverviewFragmentDoc = gql`
     ${DatasetCurrentInfoFragmentDoc}
     ${LicenseFragmentDoc}
 `;
+export const CreateAccessTokenDocument = gql`
+    mutation createAccessToken($accountId: AccountID!, $tokenName: String!) {
+        auth {
+            createAccessToken(accountId: $accountId, tokenName: $tokenName) {
+                ... on CreateAccessTokenResultSuccess {
+                    message
+                    token {
+                        id
+                        name
+                        composed
+                        account {
+                            ...Account
+                        }
+                    }
+                }
+                ... on CreateAccessTokenResultDuplicate {
+                    message
+                    tokenName
+                }
+            }
+        }
+    }
+    ${AccountFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class CreateAccessTokenGQL extends Apollo.Mutation<
+    CreateAccessTokenMutation,
+    CreateAccessTokenMutationVariables
+> {
+    document = CreateAccessTokenDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const ListAccessTokensDocument = gql`
+    query listAccessTokens($accountId: AccountID!, $page: Int, $perPage: Int) {
+        auth {
+            listAccessTokens(accountId: $accountId, page: $page, perPage: $perPage) {
+                nodes {
+                    ...AccessTokenData
+                }
+                totalCount
+                pageInfo {
+                    ...DatasetPageInfo
+                }
+            }
+        }
+    }
+    ${AccessTokenDataFragmentDoc}
+    ${DatasetPageInfoFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class ListAccessTokensGQL extends Apollo.Query<ListAccessTokensQuery, ListAccessTokensQueryVariables> {
+    document = ListAccessTokensDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const RevokeAccessTokenDocument = gql`
+    mutation revokeAccessToken($tokenId: AccessTokenID!) {
+        auth {
+            revokeAccessToken(tokenId: $tokenId) {
+                ... on RevokeResultSuccess {
+                    tokenId
+                    message
+                }
+                ... on RevokeResultAlreadyRevoked {
+                    tokenId
+                    message
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class RevokeAccessTokenGQL extends Apollo.Mutation<
+    RevokeAccessTokenMutation,
+    RevokeAccessTokenMutationVariables
+> {
+    document = RevokeAccessTokenDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
 export const AccountByNameDocument = gql`
     query accountByName($accountName: AccountName!) {
         accounts {

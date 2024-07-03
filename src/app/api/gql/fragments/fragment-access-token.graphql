@@ -1,0 +1,9 @@
+fragment AccessTokenData on ViewAccessToken {
+  id
+  name
+  createdAt
+  revokedAt
+  account {
+    ...Account
+  }
+}

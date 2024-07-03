@@ -198,7 +198,7 @@ type Auth {
 type AuthMut {
   login(loginMethod: String!, loginCredentialsJson: String!): LoginResponse!
   accountDetails(accessToken: String!): Account!
-  createAccessToken(accountId: AccountID!, tokenName: String!): CreatedAccessToken!
+  createAccessToken(accountId: AccountID!, tokenName: String!): CreateTokenResult!
   revokeAccessToken(tokenId: AccessTokenID!): RevokeResult!
 }
 
@@ -273,6 +273,16 @@ enum CompressionFormat {
   ZIP
 }
 
+type CreateAccessTokenResultDuplicate implements CreateTokenResult {
+  tokenName: String!
+  message: String!
+}
+
+type CreateAccessTokenResultSuccess implements CreateTokenResult {
+  token: CreatedAccessToken!
+  message: String!
+}
+
 interface CreateDatasetFromSnapshotResult {
   message: String!
 }
@@ -298,6 +308,10 @@ type CreateDatasetResultNameCollision implements CreateDatasetResult & CreateDat
 
 type CreateDatasetResultSuccess implements CreateDatasetResult & CreateDatasetFromSnapshotResult {
   dataset: Dataset!
+  message: String!
+}
+
+interface CreateTokenResult {
   message: String!
 }
 
@@ -1525,10 +1539,18 @@ type RestProtocolDesc {
   pushUrl: String!
 }
 
-enum RevokeResult {
-  SUCCESS
-  ALREADY_REVOKED
-  NOT_FOUND
+interface RevokeResult {
+  message: String!
+}
+
+type RevokeResultAlreadyRevoked implements RevokeResult {
+  tokenId: AccessTokenID!
+  message: String!
+}
+
+type RevokeResultSuccess implements RevokeResult {
+  tokenId: AccessTokenID!
+  message: String!
 }
 
 input ScheduleInput @oneOf {

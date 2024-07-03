@@ -1,3 +1,7 @@
+.mat-column-name {
+    max-width: 350px;
+}
+
 a {
     color: #0969da;
 }
@@ -28,6 +32,25 @@ a {
     height: 32px;
     border: 1px solid rgb(27 31 36 / 25%);
     border-radius: 6px;
+
+    &:hover {
+        background: rgb(27 31 36 / 16%);
+    }
+}
+
+.token-name {
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 85%;
+}
+
+.revoke-token-button {
+    padding: 2px 12px;
+    font-size: 14px;
+    border: 1px solid rgb(27 31 36 / 25%);
+    border-radius: 6px;
+    color: #cf222e;
 
     &:hover {
         background: rgb(27 31 36 / 16%);

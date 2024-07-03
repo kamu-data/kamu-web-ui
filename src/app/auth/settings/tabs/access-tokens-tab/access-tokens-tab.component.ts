@@ -11,7 +11,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from "@a
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { AccountSettingsTabs, TokenCreateStep } from "../../account-settings.constants";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ModalService } from "src/app/components/modal/modal.service";
 import { promiseWithCatch, requireValue } from "src/app/common/app.helpers";
 import { Clipboard } from "@angular/cdk/clipboard";
@@ -36,7 +36,7 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
     public currentCreateStep = TokenCreateStep.INITIAL;
     public pageBasedInfo: PageBasedInfo;
     public createTokenForm: FormGroup = this.fb.group({
-        name: ["", [Validators.required]],
+        name: ["", [Validators.required, Validators.maxLength(100)]],
     });
     public readonly DISPLAY_COLUMNS: string[] = ["name", "createdAt", "revokedAt", "actions"];
     public readonly TokenCreateStep: typeof TokenCreateStep = TokenCreateStep;
@@ -63,6 +63,10 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
         if (pageParam) {
             this.currentPage = +requireValue(pageParam);
         }
+    }
+
+    public get tokenNameControl(): AbstractControl {
+        return this.createTokenForm.controls.name;
     }
 
     public refreshSearchByName(): void {

@@ -29,11 +29,13 @@
                 type="button"
                 class="generate-token-btn"
                 [disabled]="!createTokenForm.valid"
-                data-test-id="create-dataset"
+                data-test-id="generate-new-token"
             >
                 Generate token
             </button>
-            <button (click)="onCancel()" type="button" class="btn btn-light ms-4">Cancel</button>
+            <button (click)="onCancel()" type="button" class="btn btn-light ms-4" data-test-id="cancel-button">
+                Cancel
+            </button>
         </div>
     </form>
 </ng-container>
@@ -55,7 +57,11 @@
         >
     </p>
     <div class="d-flex justify-content-between align-items-center mt-60">
-        <button (click)="addNewToken()" class="new-token-button d-flex justify-content-between align-items-center">
+        <button
+            (click)="addNewToken()"
+            class="new-token-button d-flex justify-content-between align-items-center"
+            data-test-id="new-token-button"
+        >
             <mat-icon class="text-muted fs-4 d-block pt-2px pe-1">add</mat-icon>
             <span class="fs-12 me-2 d-block"> New token</span>
         </button>

@@ -127,6 +127,7 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
         this.dataSource.filter = searchToken.trim().toLowerCase();
     }
 
+    /* istanbul ignore next */
     public copyToClipboard(event: MouseEvent, text: string): void {
         this.clipboard.copy(text);
         if (event.currentTarget !== null) {

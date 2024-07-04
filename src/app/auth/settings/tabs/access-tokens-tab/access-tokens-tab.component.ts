@@ -7,7 +7,7 @@ import {
     PageBasedInfo,
     ViewAccessToken,
 } from "src/app/api/kamu.graphql.interface";
-import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from "@angular/core";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { AccountSettingsTabs, TokenCreateStep } from "../../account-settings.constants";
@@ -19,6 +19,7 @@ import AppValues from "src/app/common/app.values";
 import { AccessTokenService } from "src/app/services/access-token.service";
 import { BaseComponent } from "src/app/common/base.component";
 import ProjectLinks from "src/app/project-links";
+import { MatSlideToggleChange } from "@angular/material/slide-toggle";
 
 @Component({
     selector: "app-access-tokens-tab",
@@ -38,7 +39,7 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
     public createTokenForm: FormGroup = this.fb.group({
         name: ["", [Validators.required, Validators.maxLength(100)]],
     });
-    public readonly DISPLAY_COLUMNS: string[] = ["name", "createdAt", "revokedAt", "actions"];
+    public readonly DISPLAY_COLUMNS: string[] = ["status", "name", "createdAt", "revokedAt", "actions"];
     public readonly TokenCreateStep: typeof TokenCreateStep = TokenCreateStep;
     public readonly PER_PAGE = 15;
     public readonly DATE_FORMAT = AppValues.DISPLAY_FLOW_DATE_FORMAT;
@@ -49,6 +50,7 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
         private clipboard: Clipboard,
         private accessTokenService: AccessTokenService,
         private navigationService: NavigationService,
+        private cdr: ChangeDetectorRef,
     ) {
         super();
     }
@@ -79,10 +81,23 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
         this.composedToken = "";
     }
 
+    public toggleTokens(event: MatSlideToggleChange): void {
+        this.dataSource.filterPredicate = (data: unknown, filter: string): boolean => {
+            return String(Boolean((data as ViewAccessToken).revokedAt)) === filter;
+        };
+        if (event.checked) {
+            this.dataSource.filter = String(event.checked);
+        } else {
+            this.dataSource.filter = "";
+        }
+    }
+
     public deleteToken(tokenId: string): void {
         promiseWithCatch(
             this.modalService.error({
                 title: "Revoke",
+                description:
+                    "Revoking a token will disable all API access for that token. The effect is immediate and final - you will not be able to re-enable the token once it's revoked and will need to generate a new one.",
                 message: "Do you want to revoke a token?",
                 yesButtonText: "Ok",
                 noButtonText: "Cancel",
@@ -106,7 +121,6 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
     }
 
     public onGenerateToken(): void {
-        this.currentCreateStep = TokenCreateStep.FINISH;
         this.accessTokenService
             .createAccessTokens(this.account.id, this.createTokenForm.controls.name.value as string)
             .subscribe((newToken: MaybeNull<CreatedAccessToken>) => {
@@ -114,9 +128,14 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
                     this.deleteComposedToken();
                     this.createTokenForm.controls.name.reset();
                     this.composedToken = newToken.composed;
-                    this.updateTable(this.currentPage);
+                    this.cdr.detectChanges();
                 }
             });
+    }
+
+    public onDone(): void {
+        this.currentCreateStep = TokenCreateStep.FINISH;
+        this.updateTable(this.currentPage);
     }
 
     public onCancel(): void {
@@ -124,6 +143,9 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
     }
 
     public applyFilter(searchToken: string): void {
+        this.dataSource.filterPredicate = (data: unknown, filter: string): boolean => {
+            return (data as ViewAccessToken).name.toLowerCase().includes(filter.trim().toLowerCase());
+        };
         this.dataSource.filter = searchToken.trim().toLowerCase();
     }
 
@@ -157,9 +179,6 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
                     this.dataSource.data = result.nodes;
                     this.dataSource.sort = this.sort;
                     this.pageBasedInfo = result.pageInfo;
-                    this.dataSource.filterPredicate = (data: unknown, filter: string): boolean => {
-                        return (data as ViewAccessToken).name.toLowerCase().includes(filter.trim().toLowerCase());
-                    };
                 }),
         );
     }

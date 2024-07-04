@@ -10,9 +10,6 @@ export function apolloCache(): InMemoryCache {
                     },
                 },
             },
-            DataQueries: {
-                merge: false,
-            },
             Dataset: {
                 // Use owner, as ID might be the same between 2 accounts who synchronized
                 keyFields: ["owner", "id"],

@@ -71,6 +71,7 @@ import { AccountFlowsTabComponent } from "./account/additional-components/accoun
 import { AccountComponent } from "./account/account.component";
 import { DatasetsTabComponent } from "./account/additional-components/datasets-tab/datasets-tab.component";
 import { AccessTokensTabComponent } from "./auth/settings/tabs/access-tokens-tab/access-tokens-tab.component";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 const Services = [
     {
@@ -186,6 +187,7 @@ const MatModules = [
     MatProgressSpinnerModule,
     MatButtonToggleModule,
     MatSortModule,
+    MatSlideToggleModule,
 ];
 
 @NgModule({

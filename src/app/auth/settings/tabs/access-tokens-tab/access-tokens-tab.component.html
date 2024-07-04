@@ -9,7 +9,9 @@
     <h2>New personal access token</h2>
     <mat-divider></mat-divider>
 
-    <p class="text-muted mt-3">Personal access tokens  can be used instead of a password for Kamu over HTTPS</p>
+    <p class="text-muted mt-3">
+        Personal access tokens can be used to access Kamu API from tools, scripts, and other applications
+    </p>
     <form class="mt-60" [formGroup]="createTokenForm" (ngSubmit)="onGenerateToken()">
         <label for="token-name" class="form-label">Name</label>
         <div class="d-flex align-items-center">
@@ -38,68 +40,23 @@
             </button>
         </div>
     </form>
-</ng-container>
-
-<ng-container
-    *ngIf="currentCreateStep === TokenCreateStep.FINISH"
-    [ngTemplateOutlet]="createTokenTemplate"
-    [ngTemplateOutletContext]="{ $implicit: TokenCreateStep.FINISH }"
->
-</ng-container>
-
-<ng-template #createTokenTemplate let-currentStep>
-    <h2>Access tokens</h2>
-    <mat-divider></mat-divider>
-    <p class="text-muted mt-3">
-        Learn how to
-        <a href="https://docs.kamu.dev/cli/cli-reference/#kamu-system-generate-token" target="_blank"
-            >generate access token</a
-        >
-    </p>
-    <div class="d-flex justify-content-between align-items-center mt-60">
-        <button
-            (click)="addNewToken()"
-            class="new-token-button d-flex justify-content-between align-items-center"
-            data-test-id="new-token-button"
-        >
-            <mat-icon class="text-muted fs-4 d-block pt-2px pe-1">add</mat-icon>
-            <span class="fs-12 me-2 d-block"> New token</span>
-        </button>
-        <div class="text-center position-relative align-items-center">
-            <input
-                class="form-control placeholder-padding-left"
-                type="text"
-                autocomplete="off"
-                placeholder="Search by name"
-                #tokenSearch
-                (keyup)="applyFilter(tokenSearch.value)"
-                [(ngModel)]="searchTokenName"
-            />
-            <svg-icon name="search"></svg-icon>
-            <mat-icon
-                *ngIf="searchTokenName"
-                (click)="refreshSearchByName()"
-                class="fs-5 d-inline position-absolute close-position"
-                >close</mat-icon
-            >
+    <div class="d-flex flex-column align-items-center mt-4" *ngIf="composedToken">
+        <div class="alert alert-primary text-center w-75" role="alert">
+            Make sure to copy your personal access token now. You won’t be able to see it again!
         </div>
-    </div>
-    <div *ngIf="currentStep === TokenCreateStep.FINISH" class="mb-4 mt-30 d-flex flex-column align-items-center">
-        <ng-container *ngIf="composedToken">
-            <div class="alert alert-primary text-center w-75" role="alert">
-                Make sure to copy your personal access token now. You won’t be able to see it again!
-            </div>
-            <div
-                class="alert alert-light w-75 mt-2 border-dashed d-flex align-items-center justify-content-between"
-                role="alert"
-            >
-                <div class="d-flex align-items-center">
+        <div
+            class="alert alert-light w-75 mt-2 border-dashed d-flex align-items-center justify-content-between"
+            role="alert"
+        >
+            <div class="d-flex align-items-center justify-content-between w-100">
+                <div class="d-flex">
                     <input
                         type="text"
                         [(ngModel)]="composedToken"
                         class="form-control fs-12 w-500"
                         #clipboardToken
                         readonly
+                        [ngModelOptions]="{ standalone: true }"
                     />
                     <div class="input-group-button ms-1">
                         <button
@@ -120,22 +77,80 @@
                         </button>
                     </div>
                 </div>
+                <div>
+                    <button class="done-button" data-test-id="done-button" (click)="onDone()">
+                        <span class="fs-12 me-2 d-block"> Done</span>
+                    </button>
+                </div>
             </div>
-        </ng-container>
+        </div>
     </div>
+</ng-container>
+
+<ng-container
+    *ngIf="currentCreateStep === TokenCreateStep.FINISH"
+    [ngTemplateOutlet]="createTokenTemplate"
+    [ngTemplateOutletContext]="{ $implicit: TokenCreateStep.FINISH }"
+>
+</ng-container>
+
+<ng-template #createTokenTemplate let-currentStep>
+    <h2>Access tokens</h2>
+    <mat-divider></mat-divider>
+    <p class="text-muted mt-3">
+        Personal access tokens can be used to access Kamu API from tools, scripts, and other applications
+    </p>
+    <div class="d-flex justify-content-between align-items-center mt-60">
+        <div class="d-flex flex-row">
+            <button
+                (click)="addNewToken()"
+                class="new-token-button d-flex justify-content-between align-items-center"
+                data-test-id="new-token-button"
+            >
+                <mat-icon class="text-muted fs-4 d-block pt-2px pe-1">add</mat-icon>
+                <span class="fs-12 me-2 d-block"> New token</span>
+            </button>
+            <mat-slide-toggle color="primary" (change)="toggleTokens($event)" class="mat-elevation-z0 ms-4">
+                Show revoked tokens
+            </mat-slide-toggle>
+        </div>
+        <div class="text-center position-relative align-items-center">
+            <input
+                class="form-control placeholder-padding-left"
+                type="text"
+                autocomplete="off"
+                placeholder="Search by name"
+                #tokenSearch
+                (keyup)="applyFilter(tokenSearch.value)"
+                [(ngModel)]="searchTokenName"
+            />
+            <svg-icon name="search"></svg-icon>
+            <mat-icon
+                *ngIf="searchTokenName"
+                (click)="refreshSearchByName()"
+                class="fs-5 d-inline position-absolute close-position"
+                >close</mat-icon
+            >
+        </div>
+    </div>
+
     <div class="content-table mt-4">
         <table mat-table [dataSource]="dataSource" class="w-100 tokens-table" matSort>
+            <!-- Status Column -->
+            <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                <td mat-cell *matCellDef="let element">
+                    <span *ngIf="element.revokedAt" class="badge bg-danger">revoked</span>
+                    <span *ngIf="!element.revokedAt" class="badge bg-success">active</span>
+                </td>
+            </ng-container>
+
             <!-- Name Column -->
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="max-width: 200px">Token name</th>
                 <td mat-cell *matCellDef="let element">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="token-name">
-                            {{ element.name }}
-                        </div>
-                        <div *ngIf="element.revokedAt" class="mx-4">
-                            <span class="badge bg-danger">revoked</span>
-                        </div>
+                    <div class="token-name">
+                        {{ element.name }}
                     </div>
                 </td>
             </ng-container>
@@ -166,7 +181,7 @@
 
             <!-- Row shown when there is no matching data. -->
             <tr class="mat-row" *matNoDataRow>
-                <td class="mat-cell text-center" [attr.colspan]="4">No data</td>
+                <td class="mat-cell text-center" [attr.colspan]="5">No data</td>
             </tr>
 
             <tr mat-header-row *matHeaderRowDef="DISPLAY_COLUMNS"></tr>

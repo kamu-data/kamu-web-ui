@@ -1,5 +1,26 @@
+:host {
+    ::ng-deep {
+        .mat-slide-toggle {
+            .mat-slide-toggle-ripple {
+                position: relative;
+            }
+        }
+    }
+}
+
 .mat-column-name {
     max-width: 350px;
+}
+
+%base-button {
+    padding: 2px 12px;
+    font-size: 14px;
+    border: 1px solid rgb(27 31 36 / 25%);
+    border-radius: 6px;
+
+    &:hover {
+        background: rgb(27 31 36 / 16%);
+    }
 }
 
 a {
@@ -46,15 +67,13 @@ a {
 }
 
 .revoke-token-button {
-    padding: 2px 12px;
-    font-size: 14px;
-    border: 1px solid rgb(27 31 36 / 25%);
-    border-radius: 6px;
-    color: #cf222e;
+    @extend %base-button;
 
-    &:hover {
-        background: rgb(27 31 36 / 16%);
-    }
+    color: #cf222e;
+}
+
+.done-button {
+    @extend %base-button;
 }
 
 .placeholder-padding-left {

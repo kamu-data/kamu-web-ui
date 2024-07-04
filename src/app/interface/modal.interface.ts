@@ -11,6 +11,7 @@ export interface ModalCommandInterface {
 export interface ModalArgumentsInterface {
     title?: string;
     message?: string;
+    description?: string;
     bigTextBlock?: string;
     status?: string;
     yesButtonText?: string;

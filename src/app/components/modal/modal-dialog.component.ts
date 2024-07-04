@@ -20,7 +20,17 @@ import { DynamicComponent } from "./dynamic.component";
                         {{ context && context.title }}
                     </h2>
 
-                    <p *ngIf="context && context.message" class="modal__msg" data-test-id="modalMessage">
+                    <p
+                        *ngIf="context && context.description"
+                        style="text-align:left; font-size:12px;"
+                        class="modal__msg"
+                        data-test-id="modalDescription"
+                    >
+                        <img src="assets/images/information.png" alt="" width="14" height="14" />
+                        {{ context.description }}
+                    </p>
+
+                    <p *ngIf="context && context.message" class="modal__msg mt-4" data-test-id="modalMessage">
                         {{ context.message }}
                     </p>
                 </div>

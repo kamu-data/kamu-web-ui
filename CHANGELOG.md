@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ## Added
 - Added access token feature
+## Fixed
 - Fixed bug with cache(Data tab) on the deployment version
 
 ## [0.22.0] -2024-06-27

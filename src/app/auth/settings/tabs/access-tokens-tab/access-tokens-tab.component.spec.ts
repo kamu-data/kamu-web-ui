@@ -21,6 +21,7 @@ import { PaginationComponent } from "src/app/components/pagination-component/pag
 import { NgbPaginationModule } from "@ng-bootstrap/ng-bootstrap";
 import { TokenCreateStep } from "../../account-settings.constants";
 import { ModalService } from "src/app/components/modal/modal.service";
+import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 describe("AccessTokensTabComponent", () => {
     let component: AccessTokensTabComponent;
@@ -73,6 +74,7 @@ describe("AccessTokensTabComponent", () => {
                 MatDividerModule,
                 HttpClientModule,
                 NgbPaginationModule,
+                MatSlideToggleModule,
             ],
         }).compileComponents();
 
@@ -114,7 +116,7 @@ describe("AccessTokensTabComponent", () => {
 
         emitClickOnElementByDataTestId(fixture, "generate-new-token");
 
-        expect(component.currentCreateStep).toEqual(TokenCreateStep.FINISH);
+        expect(component.currentCreateStep).toEqual(TokenCreateStep.GENERATE);
         expect(createAccessTokensSpy).toHaveBeenCalledTimes(1);
     });
 
@@ -149,5 +151,21 @@ describe("AccessTokensTabComponent", () => {
 
         expect(revokeAccessTokensSpy).toHaveBeenCalledTimes(1);
         expect(modalWindowSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check done button", () => {
+        component.currentCreateStep = TokenCreateStep.GENERATE;
+        component.onDone();
+        expect(component.currentCreateStep).toEqual(TokenCreateStep.FINISH);
+    });
+
+    it("should check toggle status tokens", () => {
+        let matSlideToggleEvent = { checked: true } as MatSlideToggleChange;
+        component.toggleTokens(matSlideToggleEvent);
+        expect(component.dataSource.filter).toEqual("true");
+
+        matSlideToggleEvent = { checked: false } as MatSlideToggleChange;
+        component.toggleTokens(matSlideToggleEvent);
+        expect(component.dataSource.filter).toEqual("");
     });
 });

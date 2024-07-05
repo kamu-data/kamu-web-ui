@@ -12,7 +12,7 @@ import { StepTypePropertyComponent } from "../common/step-type-property/step-typ
 import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
 import { getSourcesDescriptors } from "../common-sources/sources-event.source";
 import { TopicsPropertyComponent } from "../common/topics-property/topics-property.component";
-import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-viewer.component";
+import { YamlEventViewerComponent } from "../common/yaml-event-viewer/yaml-event-viewer.component";
 
 export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetPollingSource.FetchStepUrl.__typename": {
@@ -122,7 +122,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetPollingSource.FetchStepEthereumLogs.filter": {
         label: "Filter:",
         tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_FILTER,
-        presentationComponent: SqlQueryViewerComponent,
+        presentationComponent: YamlEventViewerComponent,
         separateRowForValue: true,
         dataTestId: "setPollingSource-FetchStepEthereumLogs-filter",
     },
@@ -130,7 +130,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetPollingSource.FetchStepEthereumLogs.signature": {
         label: "Signature:",
         tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_SIGNATURE,
-        presentationComponent: SqlQueryViewerComponent,
+        presentationComponent: YamlEventViewerComponent,
         separateRowForValue: true,
         dataTestId: "setPollingSource-FetchStepEthereumLogs-signature",
     },

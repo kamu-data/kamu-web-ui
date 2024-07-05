@@ -14,7 +14,7 @@ describe("YamlEventViewerComponent with SetTransform", () => {
 
         fixture = TestBed.createComponent<YamlEventViewerComponent>(YamlEventViewerComponent);
         component = fixture.componentInstance;
-        component.event = "test";
+        component.data = "test";
         fixture.detectChanges();
     });
 

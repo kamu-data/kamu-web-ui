@@ -128,6 +128,42 @@
                             >
                                 <span>Ethereum Logs</span>
                             </app-block-row-data>
+                            <app-block-row-data
+                                *ngIf="currentPollingSource.fetch.chainId"
+                                [tooltip]="'Identifier of the chain to scan logs from.'"
+                                [label]="'Chain ID:'"
+                            >
+                                <span>{{ currentPollingSource.fetch.chainId }}</span>
+                            </app-block-row-data>
+                            <app-block-row-data
+                                *ngIf="currentPollingSource.fetch.nodeUrl"
+                                [tooltip]="'Url of the node.'"
+                                [label]="'Node url:'"
+                            >
+                                <a class="simple-link" [href]="currentPollingSource.fetch.nodeUrl">{{
+                                    currentPollingSource.fetch.nodeUrl
+                                }}</a>
+                            </app-block-row-data>
+                            <app-block-row-data
+                                *ngIf="currentPollingSource.fetch.filter"
+                                [tooltip]="
+                                    'An SQL WHERE clause that can be used to pre-filter the logs before fetching them from the ETH node.'
+                                "
+                                [label]="'Filter:'"
+                            >
+                                <app-sql-query-viewer [data]="currentPollingSource.fetch.filter"></app-sql-query-viewer>
+                            </app-block-row-data>
+                            <app-block-row-data
+                                *ngIf="currentPollingSource.fetch.signature"
+                                [tooltip]="
+                                    'Solidity log event signature to use for decoding. Using this field adds event to the output containing decoded log as JSON.'
+                                "
+                                [label]="'Signature:'"
+                            >
+                                <app-sql-query-viewer
+                                    [data]="currentPollingSource.fetch.signature"
+                                ></app-sql-query-viewer>
+                            </app-block-row-data>
                         </div>
                     </div>
 

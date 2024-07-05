@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added access token feature
 ## Fixed
 - Fixed bug with cache(Data tab) on the deployment version
+- Extended full source info for EthereumLogs(Metadata tab)
 
 ## [0.22.0] -2024-06-27
 ### Fixed

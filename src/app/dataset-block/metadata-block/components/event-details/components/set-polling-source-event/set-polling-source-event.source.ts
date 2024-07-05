@@ -138,7 +138,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetPollingSource.FetchStepEthereumLogs.nodeUrl": {
         label: "Node url:",
         tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_NODE_URL,
-        presentationComponent: SimplePropertyComponent,
+        presentationComponent: LinkPropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-FetchStepEthereumLogs-nodeUrl",
     },

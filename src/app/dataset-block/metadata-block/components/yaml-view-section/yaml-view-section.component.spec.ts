@@ -6,6 +6,7 @@ import { ChangeDetectionStrategy, NO_ERRORS_SCHEMA } from "@angular/core";
 import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { metadataBlockSetVocab } from "src/app/common/data.helpers.spec";
 import { YamlEventViewerComponent } from "../event-details/components/common/yaml-event-viewer/yaml-event-viewer.component";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("YamlViewSectionComponent", () => {
     let component: YamlViewSectionComponent;
@@ -17,7 +18,7 @@ describe("YamlViewSectionComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [YamlViewSectionComponent, YamlEventViewerComponent],
-            imports: [ApolloTestingModule],
+            imports: [ApolloTestingModule, SharedTestModule],
             schemas: [NO_ERRORS_SCHEMA],
         })
             .overrideComponent(YamlViewSectionComponent, {

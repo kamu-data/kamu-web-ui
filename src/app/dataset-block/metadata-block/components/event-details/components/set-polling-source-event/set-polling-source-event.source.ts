@@ -12,6 +12,7 @@ import { StepTypePropertyComponent } from "../common/step-type-property/step-typ
 import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
 import { getSourcesDescriptors } from "../common-sources/sources-event.source";
 import { TopicsPropertyComponent } from "../common/topics-property/topics-property.component";
+import { YamlEventViewerComponent } from "../common/yaml-event-viewer/yaml-event-viewer.component";
 
 export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetPollingSource.FetchStepUrl.__typename": {
@@ -121,23 +122,23 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetPollingSource.FetchStepEthereumLogs.filter": {
         label: "Filter:",
         tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_FILTER,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
+        presentationComponent: YamlEventViewerComponent,
+        separateRowForValue: true,
         dataTestId: "setPollingSource-FetchStepEthereumLogs-filter",
     },
 
     "SetPollingSource.FetchStepEthereumLogs.signature": {
         label: "Signature:",
         tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_SIGNATURE,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
+        presentationComponent: YamlEventViewerComponent,
+        separateRowForValue: true,
         dataTestId: "setPollingSource-FetchStepEthereumLogs-signature",
     },
 
     "SetPollingSource.FetchStepEthereumLogs.nodeUrl": {
         label: "Node url:",
         tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_NODE_URL,
-        presentationComponent: SimplePropertyComponent,
+        presentationComponent: LinkPropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-FetchStepEthereumLogs-nodeUrl",
     },

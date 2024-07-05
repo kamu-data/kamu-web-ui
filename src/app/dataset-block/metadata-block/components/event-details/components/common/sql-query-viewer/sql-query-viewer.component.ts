@@ -8,5 +8,17 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SqlQueryViewerComponent extends BasePropertyComponent {
-    @Input() public data: SqlQueryStep[];
+    @Input() public data: SqlQueryStep[] | string;
+
+    public get dataAsArray(): SqlQueryStep[] {
+        return this.data as SqlQueryStep[];
+    }
+
+    public get dataAsString(): string {
+        return this.data as string;
+    }
+
+    public get isArray(): boolean {
+        return Array.isArray(this.data);
+    }
 }

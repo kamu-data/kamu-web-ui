@@ -135,7 +135,6 @@ import { FlowsComponent } from "./additional-components/flows-component/flows.co
         MatCheckboxModule,
         MatDividerModule,
         DataAccessPanelModule,
-        SharedModule,
     ],
     exports: [
         DatasetViewHeaderComponent,

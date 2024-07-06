@@ -151,7 +151,9 @@
                                 "
                                 [label]="'Filter:'"
                             >
-                                <app-sql-query-viewer [data]="currentPollingSource.fetch.filter"></app-sql-query-viewer>
+                                <app-yaml-event-viewer
+                                    [data]="currentPollingSource.fetch.filter"
+                                ></app-yaml-event-viewer>
                             </app-block-row-data>
                             <app-block-row-data
                                 *ngIf="currentPollingSource.fetch.signature"
@@ -160,9 +162,9 @@
                                 "
                                 [label]="'Signature:'"
                             >
-                                <app-sql-query-viewer
+                                <app-yaml-event-viewer
                                     [data]="currentPollingSource.fetch.signature"
-                                ></app-sql-query-viewer>
+                                ></app-yaml-event-viewer>
                             </app-block-row-data>
                         </div>
                     </div>

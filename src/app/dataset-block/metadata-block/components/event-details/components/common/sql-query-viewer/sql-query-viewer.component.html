@@ -1,9 +1,4 @@
-<ng-container *ngIf="isArray; else noArrayTemplate">
-    <div *ngFor="let query of dataAsArray" class="mb-4">
-        <p *ngIf="query.alias">Alias: {{ query.alias }}</p>
-        <pre><code [highlight]="query.query" [languages]="['sql'] "  [attr.data-test-id]="dataTestId"></code></pre>
-    </div>
-</ng-container>
-<ng-template #noArrayTemplate>
-    <pre><code [highlight]="dataAsString" [languages]="['sql'] "  [attr.data-test-id]="dataTestId"></code></pre>
-</ng-template>
+<div *ngFor="let query of data" class="mb-4">
+    <p *ngIf="query.alias">Alias: {{ query.alias }}</p>
+    <pre><code [highlight]="query.query" [languages]="['sql'] "  [attr.data-test-id]="dataTestId"></code></pre>
+</div>

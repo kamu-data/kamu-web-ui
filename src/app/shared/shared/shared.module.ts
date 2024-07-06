@@ -18,6 +18,7 @@ import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
 import { MarkdownModule } from "ngx-markdown";
 import { SafeHtmlPipe } from "src/app/common/pipes/safe-html.pipe";
 import { DragAndDropDirective } from "src/app/common/directives/drag-and-drop.directive";
+import { YamlEventViewerComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/yaml-event-viewer/yaml-event-viewer.component";
 
 @NgModule({
     declarations: [
@@ -33,6 +34,7 @@ import { DragAndDropDirective } from "src/app/common/directives/drag-and-drop.di
         CardsPropertyComponent,
         SafeHtmlPipe,
         DragAndDropDirective,
+        YamlEventViewerComponent,
     ],
     imports: [
         CommonModule,
@@ -59,6 +61,7 @@ import { DragAndDropDirective } from "src/app/common/directives/drag-and-drop.di
         DisplaySizeModule,
         SafeHtmlPipe,
         DragAndDropDirective,
+        YamlEventViewerComponent,
     ],
 })
 export class SharedModule {}

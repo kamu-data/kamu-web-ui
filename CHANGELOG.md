@@ -11,7 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Fixed
 - Fixed bug with cache(Data tab) on the deployment version
 - Extended full source info for EthereumLogs(Metadata tab)
-- Added multi-line fields for ETH filter & signature(Metadata block) 
+- Added multi-line fields for ETH filter & signature(Metadata block)
+- Fixed styles for the mobile version(portrait view) of the lineage graph
 
 ## [0.22.0] -2024-06-27
 ### Fixed

@@ -29,7 +29,6 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
     public readonly DatasetKind: typeof DatasetKind = DatasetKind;
     public activeTab: SettingsTabsEnum;
     public sidePanelData: DatasetSettingsSidePanelItem[] = datasetSettingsSidePanelData;
-    public readonly DatasetKind: typeof DatasetKind = DatasetKind;
     public overview: MaybeNull<DatasetOverviewFragment>;
 
     constructor(

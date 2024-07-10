@@ -1,0 +1,17 @@
+query listEnvVariables($accountName: AccountName!, $datasetName: DatasetName!, $page: Int, $perPage: Int) {
+  datasets {
+    byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+      envVars {
+        listEnvVariables(page: $page, perPage: $perPage) {
+          totalCount
+          nodes {
+            ...ViewDatasetEnvVarData
+          }
+          pageInfo {
+            ...DatasetPageInfo
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+fragment ViewDatasetEnvVarData on ViewDatasetEnvVar {
+  id
+  key
+  value
+  isSecret
+}

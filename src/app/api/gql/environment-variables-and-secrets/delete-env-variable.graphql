@@ -1,0 +1,19 @@
+mutation deleteEnvVariable($datasetId: DatasetID!, $datasetEnvVarId: DatasetEnvVarID!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      envVars {
+        deleteEnvVariable(id: $datasetEnvVarId) {
+          ... on DeleteDatasetEnvVarResultSuccess {
+            message
+            envVarId
+          }
+
+          ... on DeleteDatasetEnvVarResultNotFound {
+            message
+            envVarId
+          }
+        }
+      }
+    }
+  }
+}

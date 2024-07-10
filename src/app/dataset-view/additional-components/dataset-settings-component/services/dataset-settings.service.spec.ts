@@ -16,6 +16,7 @@ import {
 } from "src/app/search/mock.data";
 import { DeleteDatasetMutation, RenameDatasetMutation } from "src/app/api/kamu.graphql.interface";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { TEST_ACCOUNT_ID } from "src/app/api/mock/auth.mock";
 
 describe("DatasetSettingsService", () => {
     let service: DatasetSettingsService;
@@ -97,42 +98,70 @@ describe("DatasetSettingsService", () => {
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         const deleteDatasetSpy = spyOn(datasetApi, "renameDataset").and.returnValue(of(mockRenameSuccessResponse));
-        service.renameDataset(ACCOUNT_NAME, DATASET_ID, NEW_NAME).subscribe(() => {
-            expect(deleteDatasetSpy).toHaveBeenCalledTimes(1);
-            expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
-        });
+        service
+            .renameDataset({
+                accountId: TEST_ACCOUNT_ID,
+                accountName: ACCOUNT_NAME,
+                datasetId: DATASET_ID,
+                newName: NEW_NAME,
+            })
+            .subscribe(() => {
+                expect(deleteDatasetSpy).toHaveBeenCalledTimes(1);
+                expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
+            });
     });
 
     it("should check rename dataset with name collision", () => {
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
         const emitRenameDatasetErrorOccurredSpy = spyOn(service, "emitRenameDatasetErrorOccurred").and.callThrough();
         const deleteDatasetSpy = spyOn(datasetApi, "renameDataset").and.returnValue(of(mockRenameResultNameCollision));
-        service.renameDataset(ACCOUNT_NAME, DATASET_ID, NEW_NAME).subscribe(() => {
-            expect(deleteDatasetSpy).toHaveBeenCalledTimes(1);
-            expect(emitRenameDatasetErrorOccurredSpy).toHaveBeenCalledTimes(1);
-        });
+        service
+            .renameDataset({
+                accountId: TEST_ACCOUNT_ID,
+                accountName: ACCOUNT_NAME,
+                datasetId: DATASET_ID,
+                newName: NEW_NAME,
+            })
+            .subscribe(() => {
+                expect(deleteDatasetSpy).toHaveBeenCalledTimes(1);
+                expect(emitRenameDatasetErrorOccurredSpy).toHaveBeenCalledTimes(1);
+            });
     });
 
     it("should check rename dataset with no changes", () => {
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
         const emitRenameDatasetErrorOccurredSpy = spyOn(service, "emitRenameDatasetErrorOccurred").and.callThrough();
         const deleteDatasetSpy = spyOn(datasetApi, "renameDataset").and.returnValue(of(mockRenameResultNoChanges));
-        service.renameDataset(ACCOUNT_NAME, DATASET_ID, NEW_NAME).subscribe(() => {
-            expect(deleteDatasetSpy).toHaveBeenCalledTimes(1);
-            expect(emitRenameDatasetErrorOccurredSpy).toHaveBeenCalledTimes(1);
-        });
+        service
+            .renameDataset({
+                accountId: TEST_ACCOUNT_ID,
+                accountName: ACCOUNT_NAME,
+                datasetId: DATASET_ID,
+                newName: NEW_NAME,
+            })
+            .subscribe(() => {
+                expect(deleteDatasetSpy).toHaveBeenCalledTimes(1);
+                expect(emitRenameDatasetErrorOccurredSpy).toHaveBeenCalledTimes(1);
+            });
     });
 
     it("should check rename dataset when not found", () => {
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
         spyOn(datasetApi, "renameDataset").and.returnValue(of({ datasets: {} } as RenameDatasetMutation));
 
-        const subscription$ = service.renameDataset(ACCOUNT_NAME, DATASET_ID, NEW_NAME).subscribe({
-            next: () => fail("unexpected success"),
-            error: (e: unknown) => {
-                expect(e).toEqual(new DatasetNotFoundError());
-            },
-        });
+        const subscription$ = service
+            .renameDataset({
+                accountId: TEST_ACCOUNT_ID,
+                accountName: ACCOUNT_NAME,
+                datasetId: DATASET_ID,
+                newName: NEW_NAME,
+            })
+            .subscribe({
+                next: () => fail("unexpected success"),
+                error: (e: unknown) => {
+                    expect(e).toEqual(new DatasetNotFoundError());
+                },
+            });
 
         expect(subscription$.closed).toEqual(true);
     });
@@ -140,8 +169,13 @@ describe("DatasetSettingsService", () => {
     it("renaming dataset without logged user results in exception", () => {
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(false);
 
-        expect(() => service.renameDataset(ACCOUNT_NAME, DATASET_ID, NEW_NAME)).toThrow(
-            new DatasetOperationError([new Error(DatasetSettingsService.NOT_LOGGED_USER_ERROR)]),
-        );
+        expect(() =>
+            service.renameDataset({
+                accountId: TEST_ACCOUNT_ID,
+                accountName: ACCOUNT_NAME,
+                datasetId: DATASET_ID,
+                newName: NEW_NAME,
+            }),
+        ).toThrow(new DatasetOperationError([new Error(DatasetSettingsService.NOT_LOGGED_USER_ERROR)]));
     });
 });

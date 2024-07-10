@@ -1,9 +1,4 @@
 <div class="d-flex align-items-end">
-    <img
-        *ngIf="descriptionEngine.url_logo"
-        class="engine-logo me-3"
-        [src]="descriptionEngine.url_logo"
-        [alt]="descriptionEngine.label"
-    />
-    <span [attr.data-test-id]="dataTestId">({{ descriptionEngine.label }})</span>
+    <img *ngIf="engineLogo" class="engine-logo me-3" [src]="engineLogo" [alt]="data" />
+    <span [attr.data-test-id]="dataTestId">{{ engineDescription }}</span>
 </div>

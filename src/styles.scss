@@ -454,7 +454,7 @@ a:visited {
 
 .app-content {
     display: grid;
-    padding: 0 16px;
+    padding: 0 16px 16px;
     flex-direction: row;
     width: 100%;
     grid-template-columns: 1fr;
@@ -610,7 +610,8 @@ router-outlet {
 #set-polling-source-env-variables,
 #result-query-table,
 #overview-data-table,
-#set-data-schema-event {
+#set-data-schema-event,
+#set-polling-source-topics {
     * {
         padding: 0 8px;
         font-size: 12px;
@@ -1341,6 +1342,10 @@ pre {
     color: #0969da;
 }
 
+.simple-link {
+    color: #0969da !important;
+}
+
 .radio-group {
     display: flex;
     flex-wrap: wrap;
@@ -1350,7 +1355,7 @@ pre {
     .input-container {
         position: relative;
         height: 6rem;
-        width: 12rem;
+        width: 12.5rem;
 
         .radio-input {
             position: absolute;

@@ -1,4 +1,4 @@
-import { mockDatasetBasicsDerivedFragment } from "../../../search/mock.data";
+import { mockDatasetBasicsDerivedFragment, mockDatasetBasicsRootFragment } from "../../../search/mock.data";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { MatIconModule } from "@angular/material/icon";
@@ -15,6 +15,7 @@ import {
     mockDataUpdate,
     mockMetadataDerivedUpdate,
     mockOverviewDataUpdate,
+    mockOverviewDataUpdateNullable,
     mockSqlErrorUpdate,
 } from "../data-tabs.mock";
 import { RouterTestingModule } from "@angular/router/testing";
@@ -27,14 +28,23 @@ import { EditorModule } from "src/app/shared/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import _ from "lodash";
+import { RequestTimerComponent } from "./request-timer/request-timer.component";
+import { SqlEditorComponent } from "src/app/shared/editor/components/sql-editor/sql-editor.component";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { HttpClientModule } from "@angular/common/http";
+import { Apollo } from "apollo-angular";
+import { ToastrModule } from "ngx-toastr";
 
 describe("DataComponent", () => {
     let component: DataComponent;
     let fixture: ComponentFixture<DataComponent>;
     let datasetSubsService: DatasetSubscriptionsService;
     let location: Location;
+    let ngbModalService: NgbModal;
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
+            providers: [Apollo],
             imports: [
                 CdkAccordionModule,
                 MatIconModule,
@@ -45,12 +55,16 @@ describe("DataComponent", () => {
                 DynamicTableModule,
                 EditorModule,
                 MatProgressBarModule,
+                CdkAccordionModule,
+                HttpClientModule,
+                ToastrModule.forRoot(),
             ],
-            declarations: [DataComponent, LoadMoreComponent],
+            declarations: [DataComponent, LoadMoreComponent, RequestTimerComponent, SqlEditorComponent],
         }).compileComponents();
         fixture = TestBed.createComponent(DataComponent);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         location = TestBed.inject(Location);
+        ngbModalService = TestBed.inject(NgbModal);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
         spyOn(location, "getState").and.returnValue({ start: 0, end: 100 });
@@ -157,4 +171,17 @@ describe("DataComponent", () => {
         });
         flush();
     }));
+
+    it("should check add data", () => {
+        const ngbModalServiceSpy = spyOn(ngbModalService, "open").and.callThrough();
+        component.datasetBasics = mockDatasetBasicsRootFragment;
+
+        component.addData({
+            schema: mockMetadataDerivedUpdate.schema,
+            content: mockOverviewDataUpdate.content,
+            overview: _.cloneDeep(mockOverviewDataUpdateNullable.overview),
+            size: mockOverviewDataUpdate.size,
+        } as OverviewUpdate);
+        expect(ngbModalServiceSpy).toHaveBeenCalledTimes(1);
+    });
 });

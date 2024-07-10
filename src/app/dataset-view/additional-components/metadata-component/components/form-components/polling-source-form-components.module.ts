@@ -18,6 +18,9 @@ import { TypeaheadFieldComponent } from "./typeahead-field/typeahead-field.compo
 import { SharedModule } from "src/app/shared/shared/shared.module";
 import { SelectDateFormatFieldComponent } from "./select-date-format-field/select-date-format-field.component";
 import { JsonKindFieldComponent } from "./json-kind-field/json-kind-field.component";
+import { NumberFieldComponent } from "./number-field/number-field.component";
+import { TopicsFieldComponent } from "./topics-field/topics-field.component";
+
 @NgModule({
     declarations: [
         InputFieldComponent,
@@ -31,6 +34,8 @@ import { JsonKindFieldComponent } from "./json-kind-field/json-kind-field.compon
         OrderFieldComponent,
         TypeaheadFieldComponent,
         JsonKindFieldComponent,
+        NumberFieldComponent,
+        TopicsFieldComponent,
     ],
     exports: [
         InputFieldComponent,
@@ -44,6 +49,8 @@ import { JsonKindFieldComponent } from "./json-kind-field/json-kind-field.compon
         OrderFieldComponent,
         TypeaheadFieldComponent,
         JsonKindFieldComponent,
+        NumberFieldComponent,
+        TopicsFieldComponent,
     ],
     imports: [
         CommonModule,

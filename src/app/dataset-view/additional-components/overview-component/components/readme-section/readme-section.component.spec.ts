@@ -14,11 +14,14 @@ import { MarkdownModule } from "ngx-markdown";
 import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { EditMode } from "./readme-section.types";
 import { of } from "rxjs";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 
 describe("ReadmeSectionComponent", () => {
     let component: ReadmeSectionComponent;
     let fixture: ComponentFixture<ReadmeSectionComponent>;
     let datasetCommitService: DatasetCommitService;
+    let loggedUserService: LoggedUserService;
 
     const mockReadmeContent = "Mock README.md content";
 
@@ -43,8 +46,10 @@ describe("ReadmeSectionComponent", () => {
         fixture = TestBed.createComponent(ReadmeSectionComponent);
         component = fixture.componentInstance;
         datasetCommitService = TestBed.inject(DatasetCommitService);
+        loggedUserService = TestBed.inject(LoggedUserService);
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
         component.currentReadme = mockReadmeContent;
+        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
 
         fixture.detectChanges();
     });

@@ -1,0 +1,162 @@
+<div class="p-4 p-responsive clearfix" *ngIf="user$ | async as user">
+    <div class="custom-container" *ngIf="activeTab$ | async as activeTab">
+        <div class="container-sidebar">
+            <div class="d-flex mb-3 justify-content-center align-items-center">
+                <a *ngIf="isLoggedUser; else notLoggedUserLink" routerLink="/v/settings/profile">
+                    <img
+                        alt="avatar"
+                        width="260"
+                        height="260"
+                        class="avatar avatar-user border color-bg-default"
+                        [src]="avatarLink(user)"
+                    />
+                </a>
+                <ng-template #notLoggedUserLink>
+                    <a [href]="avatarLink(user)">
+                        <img
+                            alt="avatar"
+                            width="260"
+                            height="260"
+                            class="avatar avatar-user border color-bg-default"
+                            [src]="avatarLink(user)"
+                        />
+                    </a>
+                </ng-template>
+            </div>
+            <span class="vcard-username d-block p-2" itemprop="additionalName">
+                {{ user.displayName }}
+            </span>
+            <div class="my-3 text-center me-4">
+                <button
+                    name="button"
+                    type="button"
+                    class="btn btn-outline-secondary w-100 btn-custom"
+                    (click)="isLoggedUser(user) ? onEditProfile() : onFollow()"
+                >
+                    {{ isLoggedUser(user) ? "Edit profile" : "Follow" }}
+                </button>
+            </div>
+            <div class="border-top mt-5 me-4">
+                <h2 class="text-start pt-3 px-3 h6 organization">Organizations</h2>
+                <div class="d-flex flex-row gap-2 text-start px-3">
+                    <img
+                        src="https://avatars.githubusercontent.com/u/50896974?s=64&amp;v=4"
+                        alt="@kamu-data"
+                        size="32"
+                        height="32"
+                        width="32"
+                        data-view-component="true"
+                        class="avatar"
+                    />
+                    <img
+                        src="https://avatars.githubusercontent.com/u/50896974?s=64&amp;v=4"
+                        alt="@kamu-data"
+                        size="32"
+                        height="32"
+                        width="32"
+                        data-view-component="true"
+                        class="avatar"
+                    />
+                </div>
+            </div>
+        </div>
+        <div class="container-content px-4" *ngIf="datasetsAccount$ | async as datasetsData">
+            <div>
+                <mat-button-toggle-group
+                    name="activeTab"
+                    aria-label="Account View Type"
+                    class="toggle-group"
+                    [value]="activeTab"
+                >
+                    <mat-button-toggle
+                        data-test-id="account-overview-tab"
+                        value="overview"
+                        [checked]="activeTab === AccountTabs.OVERVIEW"
+                        (click)="onSelectOverviewTab(user)"
+                        [disabled]="true"
+                    >
+                        <mat-icon class="text-muted fs-4">my_library_books</mat-icon>
+                        <span class="mx-2"> Overview</span>
+                    </mat-button-toggle>
+                    <mat-button-toggle
+                        data-test-id="account-datasets-tab"
+                        value="datasets"
+                        [checked]="activeTab === AccountTabs.DATASETS"
+                        (click)="onSelectDatasetsTab(user)"
+                    >
+                        <mat-icon class="text-muted fs-4">book</mat-icon>
+                        <span class="mx-2">Datasets</span>
+                        <span title="1" data-view-component="true" class="counter">{{
+                            datasetsData.datasetTotalCount
+                        }}</span>
+                    </mat-button-toggle>
+                    <mat-button-toggle
+                        data-test-id="account-flows-tab"
+                        value="flows"
+                        [checked]="activeTab === AccountTabs.FLOWS"
+                        (click)="onSelectFlowsTab(user)"
+                    >
+                        <mat-icon class="text-muted fs-4">add_task</mat-icon>
+                        <span class="mx-2">Flows </span>
+                    </mat-button-toggle>
+                    <mat-button-toggle
+                        data-test-id="account-organizations-tab"
+                        value="organizations"
+                        [checked]="activeTab === AccountTabs.ORGANIZATIONS"
+                        (click)="onSelectOrganizationsTab(user)"
+                        [disabled]="true"
+                    >
+                        <mat-icon class="text-muted fs-4">people</mat-icon>
+                        <span class="mx-2">Organizations </span>
+                        <span title="1" data-view-component="true" class="counter">2</span>
+                    </mat-button-toggle>
+
+                    <mat-button-toggle
+                        data-test-id="account-inbox-tab"
+                        value="inbox"
+                        [checked]="activeTab === AccountTabs.INBOX"
+                        (click)="onSelectInboxTab(user)"
+                        [disabled]="true"
+                    >
+                        <mat-icon class="text-muted fs-4">inbox</mat-icon>
+                        <span class="mx-2">Inbox</span>
+                        <span title="1" data-view-component="true" class="counter">2</span>
+                    </mat-button-toggle>
+                    <mat-button-toggle
+                        data-test-id="account-stars-tab"
+                        value="Stars"
+                        [checked]="activeTab === AccountTabs.STARS"
+                        (click)="onSelectStarsTab(user)"
+                        [disabled]="true"
+                    >
+                        <mat-icon class="text-muted fs-4">star_border</mat-icon>
+                        <span class="mx-2">Stars</span>
+                        <span title="1" data-view-component="true" class="counter">2</span>
+                    </mat-button-toggle>
+                </mat-button-toggle-group>
+            </div>
+            <ng-container *ngIf="activeTab === AccountTabs.OVERVIEW">
+                <div>Overview</div>
+            </ng-container>
+            <ng-container *ngIf="activeTab === AccountTabs.DATASETS">
+                <app-datasets-tab
+                    [datasets]="datasetsData.datasets"
+                    [accountName]="user.accountName"
+                    [pageInfo]="datasetsData.pageInfo"
+                ></app-datasets-tab>
+            </ng-container>
+            <ng-container *ngIf="activeTab === AccountTabs.FLOWS">
+                <app-account-flows-tab [accountName]="user.accountName"></app-account-flows-tab>
+            </ng-container>
+            <ng-container *ngIf="activeTab === AccountTabs.ORGANIZATIONS">
+                <div>Organizations</div>
+            </ng-container>
+            <ng-container *ngIf="activeTab === AccountTabs.INBOX">
+                <div>Inbox</div>
+            </ng-container>
+            <ng-container *ngIf="activeTab === AccountTabs.STARS">
+                <div>Stars</div>
+            </ng-container>
+        </div>
+    </div>
+</div>

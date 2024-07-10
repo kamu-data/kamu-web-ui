@@ -35,6 +35,11 @@ mutation datasetFlowBatching(
 
             ... on FlowPreconditionsNotMet {
               message
+              preconditions
+            }
+
+            ... on FlowTypeIsNotSupported {
+              message
             }
           }
         }

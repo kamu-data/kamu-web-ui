@@ -24,6 +24,8 @@ import { PreprocessStepComponent } from "../steps/preprocess-step/preprocess-ste
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NavigationService } from "src/app/services/navigation.service";
 import { MergeKind, ReadKind } from "../add-polling-source/add-polling-source-form.types";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 
 const providersSection = (name: string) => {
     return [
@@ -61,6 +63,7 @@ describe("AddPushSourceComponent with query parameter name", () => {
     let datasetCommitService: DatasetCommitService;
     let editService: EditAddPushSourceService;
     let navigationService: NavigationService;
+    let loggedUserService: LoggedUserService;
     let modalService: NgbModal;
     let modalRef: NgbModalRef;
     const datasetHistoryResponse = mockDatasetHistoryResponse.datasets.byOwnerAndName?.metadata.chain.blocks;
@@ -94,6 +97,7 @@ describe("AddPushSourceComponent with query parameter name", () => {
         datasetCommitService = TestBed.inject(DatasetCommitService);
         editService = TestBed.inject(EditAddPushSourceService);
         navigationService = TestBed.inject(NavigationService);
+        loggedUserService = TestBed.inject(LoggedUserService);
         component = fixture.componentInstance;
         editService.history = {
             history: datasetHistoryResponse?.nodes as MetadataBlockFragment[],
@@ -115,6 +119,7 @@ describe("AddPushSourceComponent with query parameter name", () => {
             }),
             prepare: new FormArray([]),
         });
+        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
         fixture.detectChanges();
     });
 

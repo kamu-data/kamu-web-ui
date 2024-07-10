@@ -24,7 +24,7 @@ export class DataHelpers {
     private static readonly SHIFT_ATTACHMENTS_VIEW = "\u00A0".repeat(12);
 
     public static descriptionForEngine(name: string): EventPropertyLogo {
-        switch (name) {
+        switch (name.toLowerCase()) {
             case "flink":
                 return {
                     name: "flink",
@@ -42,13 +42,18 @@ export class DataHelpers {
             case "datafusion":
                 return {
                     name: "datafusion",
-                    label: "DataFusion",
+                    label: "Apache DataFusion",
                     url_logo: "assets/images/datafusion-logo.png",
+                };
+            case "risingwave":
+                return {
+                    name: "risingwave",
+                    label: "RisingWave",
+                    url_logo: "assets/images/risingwave-logo.png",
                 };
             default:
                 return {
-                    name: "Engine is not defined",
-                    label: "Unknown engine",
+                    name: name,
                 };
         }
     }
@@ -120,6 +125,9 @@ export class DataHelpers {
             case "FetchStepFilesGlob": {
                 return "Files Glob";
             }
+            case "FetchStepMqtt": {
+                return "Mqtt";
+            }
             case "MergeStrategyLedger": {
                 return "Ledger";
             }
@@ -128,6 +136,9 @@ export class DataHelpers {
             }
             case "MergeStrategySnapshot": {
                 return "Snapshot";
+            }
+            case "FetchStepEthereumLogs": {
+                return "Ethereum Logs";
             }
             default:
                 return "Unknown type";
@@ -187,8 +198,8 @@ export class DataHelpers {
                 return `Push ingest`;
             case "FlowDescriptionDatasetExecuteTransform":
                 return `Execute transformation`;
-            case "FlowDescriptionDatasetCompaction":
-                return `Compacting`;
+            case "FlowDescriptionDatasetHardCompaction":
+                return `Hard compaction`;
             case "FlowDescriptionSystemGC":
                 return `Garbage collector`;
             default:
@@ -236,6 +247,10 @@ export const getValidators = (validators: JsonFormValidators): ValidatorFn[] => 
                     validatorsToAdd.push(Validators.maxLength(value as number));
                 }
                 break;
+            case "min": {
+                validatorsToAdd.push(Validators.min(value as number));
+                break;
+            }
             default:
                 break;
         }

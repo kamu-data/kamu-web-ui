@@ -54,7 +54,9 @@ describe("AccountSettingsComponent", () => {
 
     it("should see logged user", () => {
         const userNameLinKElement: HTMLElement = getElementByDataTestId(fixture, Elements.UserNameLink);
-        expect(userNameLinKElement.innerText).toEqual(mockAccountDetails.displayName);
+        expect(userNameLinKElement.innerText).toEqual(
+            `${mockAccountDetails.displayName} (${mockAccountDetails.accountName})`,
+        );
     });
 
     it("should not show user data for logged off case", () => {

@@ -26,7 +26,6 @@ import { HighlightModule } from "ngx-highlightjs";
 import { DynamicTableModule } from "src/app/components/dynamic-table/dynamic-table.module";
 import { EnvVariablesPropertyComponent } from "./components/event-details/components/common/env-variables-property/env-variables-property.component";
 import { UnsupportedPropertyComponent } from "./components/event-details/components/common/unsupported-property/unsupported-property.component";
-import { YamlEventViewerComponent } from "./components/event-details/components/common/yaml-event-viewer/yaml-event-viewer.component";
 import { SetTransformEventComponent } from "./components/event-details/components/set-transform-event/set-transform-event.component";
 import { BaseDynamicEventComponent } from "./components/event-details/components/base-dynamic-event/base-dynamic-event.component";
 import { YamlViewSectionComponent } from "./components/yaml-view-section/yaml-view-section.component";
@@ -48,6 +47,7 @@ import { StepTypePropertyComponent } from "./components/event-details/components
 import { AddPushSourceEventComponent } from "./components/event-details/components/add-push-source-event/add-push-source-event.component";
 import { SetDataSchemaEventComponent } from "./components/event-details/components/set-data-schema-event/set-data-schema-event.component";
 import { UnsupportedEventComponent } from "./components/event-details/components/unsupported-event/unsupported-event.component";
+import { TopicsPropertyComponent } from "./components/event-details/components/common/topics-property/topics-property.component";
 
 @NgModule({
     declarations: [
@@ -66,7 +66,6 @@ import { UnsupportedEventComponent } from "./components/event-details/components
         SeparatorPropertyComponent,
         EnvVariablesPropertyComponent,
         UnsupportedPropertyComponent,
-        YamlEventViewerComponent,
         OffsetIntervalPropertyComponent,
         BaseDynamicEventComponent,
         ExecuteTransformEventComponent,
@@ -87,6 +86,7 @@ import { UnsupportedEventComponent } from "./components/event-details/components
         AddPushSourceEventComponent,
         SetDataSchemaEventComponent,
         UnsupportedEventComponent,
+        TopicsPropertyComponent,
     ],
     imports: [
         CommonModule,

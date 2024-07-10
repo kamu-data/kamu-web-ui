@@ -13,6 +13,7 @@ import {
     EventTimeSourceKind,
     FetchKind,
     PrepareKind,
+    TopicsType,
 } from "../components/source-events/add-polling-source/add-polling-source-form.types";
 import AppValues from "src/app/common/app.values";
 import { has } from "lodash";
@@ -29,9 +30,17 @@ export class ProcessFormService {
             this.processEventTimeControl(formGroup);
             this.processPipeCommandControl(formGroup);
             this.removePollingSourceEmptyControls(formGroup);
+            this.changeTypeChainIdControl(formGroup);
             return;
         }
         this.removePushSourceEmptyControls(formGroup);
+    }
+
+    private changeTypeChainIdControl(formGroup: FormGroup): void {
+        const form = formGroup.value as AddPollingSourceEditFormType;
+        if (form.fetch.chainId) {
+            form.fetch.chainId = +form.fetch.chainId;
+        }
     }
 
     private transformSchema(formGroup: FormGroup): void {
@@ -66,7 +75,10 @@ export class ProcessFormService {
 
     private processEventTimeControl(formGroup: FormGroup): void {
         const form = formGroup.value as OrderControlType;
-        if (form.fetch.eventTime && form.fetch.kind === FetchKind.CONTAINER) {
+        if (
+            form.fetch.eventTime &&
+            [FetchKind.CONTAINER, FetchKind.MQTT, FetchKind.ETHEREUM_LOGS].includes(form.fetch.kind)
+        ) {
             delete form.fetch.eventTime;
         }
         if (form.fetch.eventTime?.kind !== EventTimeSourceKind.FROM_PATH) {
@@ -117,10 +129,26 @@ export class ProcessFormService {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             formGroup.value[SetPollingSourceSection.FETCH].kind !== FetchKind.CONTAINER &&
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            formGroup.value[SetPollingSourceSection.FETCH].eventTime &&
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             !formGroup.value[SetPollingSourceSection.FETCH].eventTime.timestampFormat
         ) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             delete formGroup.value[SetPollingSourceSection.FETCH].eventTime.timestampFormat;
+        }
+
+        if (
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            formGroup.value[SetPollingSourceSection.FETCH].kind === FetchKind.MQTT &&
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            formGroup.value[SetPollingSourceSection.FETCH].topics
+        ) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            (formGroup.value[SetPollingSourceSection.FETCH].topics as TopicsType[]).forEach((item: TopicsType) => {
+                if (!item.qos) {
+                    delete item.qos;
+                }
+            });
         }
     }
 

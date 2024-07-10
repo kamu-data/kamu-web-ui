@@ -2,15 +2,47 @@ import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/tes
 import { AccountApi } from "./account.api";
 import { TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
-import { AccountByNameDocument, AccountByNameQuery, AccountFragment } from "./kamu.graphql.interface";
+import {
+    AccountByNameDocument,
+    AccountByNameQuery,
+    AccountDatasetFlowsPausedDocument,
+    AccountDatasetFlowsPausedQuery,
+    AccountFlowFilters,
+    AccountFragment,
+    AccountListDatasetsWithFlowsDocument,
+    AccountListDatasetsWithFlowsQuery,
+    AccountListFlowsDocument,
+    AccountListFlowsQuery,
+    AccountPauseFlowsDocument,
+    AccountPauseFlowsMutation,
+    AccountResumeFlowsDocument,
+    AccountResumeFlowsMutation,
+} from "./kamu.graphql.interface";
 import { TEST_LOGIN, mockAccountDetails } from "./mock/auth.mock";
 import { first } from "rxjs";
 import { MaybeNull } from "../common/app.types";
-import { mockAccountByNameNotFoundResponse, mockAccountByNameResponse } from "./mock/account.mock";
+import {
+    mockAccountByNameNotFoundResponse,
+    mockAccountByNameResponse,
+    mockAccountDatasetFlowsPausedQuery,
+    mockAccountListDatasetsWithFlowsQuery,
+    mockAccountListFlowsQuery,
+    mockAccountPauseFlowsMutationSuccess,
+    mockAccountResumeFlowsMutationSuccess,
+} from "./mock/account.mock";
 
 describe("AccountApi", () => {
     let service: AccountApi;
     let controller: ApolloTestingController;
+    const ACCOUNT_NAME = "accountName";
+    const PAGE = 1;
+    const PER_PAGE = 15;
+    const ACCOUNT_FILTERS: AccountFlowFilters = {
+        byDatasetIds: [],
+        byFlowType: null,
+        byInitiator: null,
+        byStatus: null,
+    };
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -65,5 +97,90 @@ describe("AccountApi", () => {
 
             flush();
         }));
+    });
+
+    it("should check fetch account list flows", () => {
+        service
+            .fetchAccountListFlows({
+                accountName: ACCOUNT_NAME,
+                page: PAGE,
+                perPage: PER_PAGE,
+                filters: ACCOUNT_FILTERS,
+            })
+            .subscribe((list: AccountListFlowsQuery) => {
+                expect(list.accounts.byName?.flows?.runs.listFlows.totalCount).toEqual(
+                    mockAccountListFlowsQuery.accounts.byName?.flows?.runs.listFlows.totalCount,
+                );
+            });
+
+        const op = controller.expectOne(AccountListFlowsDocument);
+        expect(op.operation.variables.name).toEqual(ACCOUNT_NAME);
+        expect(op.operation.variables.page).toEqual(PAGE);
+        expect(op.operation.variables.perPage).toEqual(PER_PAGE);
+        expect(op.operation.variables.filters).toEqual(ACCOUNT_FILTERS);
+
+        op.flush({
+            data: mockAccountListFlowsQuery,
+        });
+    });
+
+    it("should check fetch account datasets with flows", () => {
+        service.accountDatasetsWithFlows(ACCOUNT_NAME).subscribe((list: AccountListDatasetsWithFlowsQuery) => {
+            expect(list.accounts.byName?.flows?.runs.listDatasetsWithFlow.nodes).toEqual(
+                mockAccountListDatasetsWithFlowsQuery.accounts.byName?.flows?.runs.listDatasetsWithFlow.nodes,
+            );
+        });
+
+        const op = controller.expectOne(AccountListDatasetsWithFlowsDocument);
+        expect(op.operation.variables.name).toEqual(ACCOUNT_NAME);
+
+        op.flush({
+            data: mockAccountListDatasetsWithFlowsQuery,
+        });
+    });
+
+    it("should check account flows paused", () => {
+        service.accountFlowsPaused(ACCOUNT_NAME).subscribe((state: AccountDatasetFlowsPausedQuery) => {
+            expect(state.accounts.byName?.flows?.configs.allPaused).toEqual(
+                mockAccountDatasetFlowsPausedQuery.accounts.byName?.flows?.configs.allPaused,
+            );
+        });
+
+        const op = controller.expectOne(AccountDatasetFlowsPausedDocument);
+        expect(op.operation.variables.accountName).toEqual(ACCOUNT_NAME);
+
+        op.flush({
+            data: mockAccountDatasetFlowsPausedQuery,
+        });
+    });
+
+    it("should check account pause flows", () => {
+        service.accountPauseFlows(ACCOUNT_NAME).subscribe((state: AccountPauseFlowsMutation) => {
+            expect(state.accounts.byName?.flows.configs.pauseAccountDatasetFlows).toEqual(
+                mockAccountPauseFlowsMutationSuccess.accounts.byName?.flows.configs.pauseAccountDatasetFlows,
+            );
+        });
+
+        const op = controller.expectOne(AccountPauseFlowsDocument);
+        expect(op.operation.variables.accountName).toEqual(ACCOUNT_NAME);
+
+        op.flush({
+            data: mockAccountPauseFlowsMutationSuccess,
+        });
+    });
+
+    it("should check account resume flows", () => {
+        service.accountResumeFlows(ACCOUNT_NAME).subscribe((state: AccountResumeFlowsMutation) => {
+            expect(state.accounts.byName?.flows.configs.resumeAccountDatasetFlows).toEqual(
+                mockAccountResumeFlowsMutationSuccess.accounts.byName?.flows.configs.resumeAccountDatasetFlows,
+            );
+        });
+
+        const op = controller.expectOne(AccountResumeFlowsDocument);
+        expect(op.operation.variables.accountName).toEqual(ACCOUNT_NAME);
+
+        op.flush({
+            data: mockAccountResumeFlowsMutationSuccess,
+        });
     });
 });

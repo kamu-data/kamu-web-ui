@@ -28,6 +28,7 @@ import { first } from "rxjs/operators";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DatasetNotFoundError, DatasetOperationError } from "src/app/common/errors";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { TEST_ACCOUNT_ID } from "src/app/api/mock/auth.mock";
 
 describe("DatasetCommitService", () => {
     let commitService: DatasetCommitService;
@@ -74,7 +75,12 @@ describe("DatasetCommitService", () => {
     }
 
     function requestCommitEvent(): Observable<void> {
-        return commitService.commitEventToDataset(TEST_ACCOUNT_NAME, TEST_DATASET_NAME, TEST_EVENT_CONTENT);
+        return commitService.commitEventToDataset({
+            accountId: TEST_ACCOUNT_ID,
+            accountName: TEST_ACCOUNT_NAME,
+            datasetName: TEST_DATASET_NAME,
+            event: TEST_EVENT_CONTENT,
+        });
     }
 
     function expectNavigatedToDatasetOverview() {
@@ -151,7 +157,7 @@ describe("DatasetCommitService", () => {
         expect(commitEventSpy).toHaveBeenCalledOnceWith({
             datasetId: TEST_DATASET_ID,
             event: TEST_EVENT_CONTENT,
-            accountName: TEST_ACCOUNT_NAME,
+            accountId: TEST_ACCOUNT_ID,
         });
         expectNavigatedToDatasetOverview();
         expectRequestedDatasetMainData();
@@ -177,7 +183,7 @@ describe("DatasetCommitService", () => {
                 expect(commitEventSpy).toHaveBeenCalledOnceWith({
                     datasetId: TEST_DATASET_ID,
                     event: TEST_EVENT_CONTENT,
-                    accountName: TEST_ACCOUNT_NAME,
+                    accountId: TEST_ACCOUNT_ID,
                 });
                 expect(navigationServiceSpy).not.toHaveBeenCalled();
                 expect(requestDatasetMainDataSpy).not.toHaveBeenCalled();
@@ -231,13 +237,20 @@ describe("DatasetCommitService", () => {
         const updateReadmeSpy = spyOn(datasetApi, "updateReadme").and.returnValue(of(mockUpdateReadmeSuccessResponse));
         const README_CONTENT = "readme content";
 
-        commitService.updateReadme(TEST_ACCOUNT_NAME, TEST_DATASET_NAME, README_CONTENT).subscribe(() => {
-            tick();
-        });
+        commitService
+            .updateReadme({
+                accountId: TEST_ACCOUNT_ID,
+                accountName: TEST_ACCOUNT_NAME,
+                datasetName: TEST_DATASET_NAME,
+                content: README_CONTENT,
+            })
+            .subscribe(() => {
+                tick();
+            });
         flush();
 
         expect(updateReadmeSpy).toHaveBeenCalledOnceWith({
-            accountName: TEST_ACCOUNT_NAME,
+            accountId: TEST_ACCOUNT_ID,
             datasetId: TEST_DATASET_ID,
             content: README_CONTENT,
         });
@@ -251,7 +264,12 @@ describe("DatasetCommitService", () => {
 
         const README_CONTENT = "readme content";
         const subscription$ = commitService
-            .updateReadme(TEST_ACCOUNT_NAME, TEST_DATASET_NAME, README_CONTENT)
+            .updateReadme({
+                accountId: TEST_ACCOUNT_ID,
+                accountName: TEST_ACCOUNT_NAME,
+                datasetName: TEST_DATASET_NAME,
+                content: README_CONTENT,
+            })
             .subscribe({
                 next: () => fail("unexpected success"),
                 error: (e: unknown) => {
@@ -268,7 +286,12 @@ describe("DatasetCommitService", () => {
 
         const README_CONTENT = "readme content";
         const subscription$ = commitService
-            .updateReadme(TEST_ACCOUNT_NAME, TEST_DATASET_NAME, README_CONTENT)
+            .updateReadme({
+                accountId: TEST_ACCOUNT_ID,
+                accountName: TEST_ACCOUNT_NAME,
+                datasetName: TEST_DATASET_NAME,
+                content: README_CONTENT,
+            })
             .subscribe({
                 next: () => fail("unexpected success"),
                 error: (e: unknown) => {
@@ -283,8 +306,13 @@ describe("DatasetCommitService", () => {
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(false);
 
         const README_CONTENT = "readme content";
-        expect(() => commitService.updateReadme(TEST_ACCOUNT_NAME, TEST_DATASET_NAME, README_CONTENT)).toThrow(
-            new DatasetOperationError([new Error(DatasetCommitService.NOT_LOGGED_USER_ERROR)]),
-        );
+        expect(() =>
+            commitService.updateReadme({
+                accountId: TEST_ACCOUNT_ID,
+                accountName: TEST_ACCOUNT_NAME,
+                datasetName: TEST_DATASET_NAME,
+                content: README_CONTENT,
+            }),
+        ).toThrow(new DatasetOperationError([new Error(DatasetCommitService.NOT_LOGGED_USER_ERROR)]));
     });
 });

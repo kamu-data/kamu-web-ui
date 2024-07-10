@@ -1,11 +1,12 @@
 import { DatasetInfo, FlowDetailsNavigationParams } from "../interface/navigation.interface";
-import { AccountTabs } from "../auth/account/account.constants";
 import { promiseWithCatch } from "src/app/common/app.helpers";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { DatasetNavigationParams, MetadataBlockNavigationParams } from "../interface/navigation.interface";
 import ProjectLinks from "../project-links";
 import { FlowDetailsTabs } from "../dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { AccountTabs } from "../account/account.constants";
+import { AccountSettingsTabs } from "../auth/settings/account-settings.constants";
 
 @Injectable({ providedIn: "root" })
 export class NavigationService {
@@ -32,8 +33,12 @@ export class NavigationService {
         promiseWithCatch(this.router.navigate([ProjectLinks.URL_DATASET_CREATE]));
     }
 
-    public navigateToSettings(): void {
-        promiseWithCatch(this.router.navigate([ProjectLinks.URL_SETTINGS, "profile"]));
+    public navigateToSettings(tab?: AccountSettingsTabs, page?: number): void {
+        promiseWithCatch(
+            this.router.navigate([ProjectLinks.URL_SETTINGS, tab ? tab : AccountSettingsTabs.PROFILE], {
+                queryParams: page && page > 1 ? { page } : {},
+            }),
+        );
     }
 
     public navigateToMetadataBlock(params: MetadataBlockNavigationParams): void {

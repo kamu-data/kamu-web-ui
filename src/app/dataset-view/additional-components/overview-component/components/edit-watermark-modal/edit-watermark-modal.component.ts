@@ -6,8 +6,8 @@ import moment from "moment-timezone";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import { MY_MOMENT_FORMATS } from "src/app/common/data.helpers";
-import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 @Component({
     selector: "app-edit-watermark-modal",
@@ -24,8 +24,8 @@ export class EditWatermarkModalComponent extends BaseComponent implements OnInit
 
     constructor(
         public activeModal: NgbActiveModal,
-        private yamlEventService: TemplatesYamlEventsService,
         private datasetCommitService: DatasetCommitService,
+        private loggedUserService: LoggedUserService,
     ) {
         super();
     }
@@ -58,6 +58,7 @@ export class EditWatermarkModalComponent extends BaseComponent implements OnInit
         this.trackSubscription(
             this.datasetCommitService
                 .updateWatermark({
+                    accountId: this.loggedUserService.currentlyLoggedInUser.id,
                     datasetId: this.datasetBasics.id,
                     watermark: date,
                     datasetInfo: {

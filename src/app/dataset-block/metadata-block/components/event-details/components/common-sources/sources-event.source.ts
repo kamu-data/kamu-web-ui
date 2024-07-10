@@ -248,6 +248,13 @@ export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
         separateRowForValue: false,
         dataTestId: "readStepNdJson-__typename",
     },
+    "ReadStepNdJson.schema": {
+        label: "Schema:",
+        tooltip: SourcesTooltipsTexts.SCHEMA,
+        presentationComponent: SchemaPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "ReadStepNdJson-schema",
+    },
     "ReadStepNdGeoJson.schema": {
         label: "Schema:",
         tooltip: SourcesTooltipsTexts.SCHEMA,

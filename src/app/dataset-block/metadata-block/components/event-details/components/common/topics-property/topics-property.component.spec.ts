@@ -1,0 +1,27 @@
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { TopicsPropertyComponent } from "./topics-property.component";
+import { DynamicTableComponent } from "src/app/components/dynamic-table/dynamic-table.component";
+import { MatTableModule } from "@angular/material/table";
+import { SharedTestModule } from "src/app/common/shared-test.module";
+import { MqttQos } from "src/app/api/kamu.graphql.interface";
+
+describe("TopicsPropertyComponent", () => {
+    let component: TopicsPropertyComponent;
+    let fixture: ComponentFixture<TopicsPropertyComponent>;
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [TopicsPropertyComponent, DynamicTableComponent],
+            imports: [MatTableModule, SharedTestModule],
+        }).compileComponents();
+
+        fixture = TestBed.createComponent(TopicsPropertyComponent);
+        component = fixture.componentInstance;
+        component.data = [{ path: "test.com", qos: MqttQos.AtMostOnce }];
+        fixture.detectChanges();
+    });
+
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
+});

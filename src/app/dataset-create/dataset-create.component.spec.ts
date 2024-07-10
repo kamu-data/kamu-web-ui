@@ -29,7 +29,7 @@ describe("DatasetCreateComponent", () => {
             .compileComponents();
 
         loggedUserService = TestBed.inject(LoggedUserService);
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
 
         fixture = TestBed.createComponent(DatasetCreateComponent);
         component = fixture.componentInstance;

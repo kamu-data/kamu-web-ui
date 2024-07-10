@@ -111,6 +111,62 @@
                                 <span>{{ currentPollingSource.fetch.path }}</span>
                             </app-block-row-data>
                         </div>
+
+                        <div class="mx-4" *ngIf="currentPollingSource.fetch.__typename === 'FetchStepMqtt'">
+                            <app-block-row-data [tooltip]="'Hostname of the MQTT broker.'" [label]="'Hostname:'">
+                                <span>{{ currentPollingSource.fetch.host }}</span>
+                            </app-block-row-data>
+                            <app-block-row-data [tooltip]="'Port of the MQTT broker.'" [label]="'Port:'">
+                                <span>{{ currentPollingSource.fetch.port }}</span>
+                            </app-block-row-data>
+                        </div>
+
+                        <div class="mx-4" *ngIf="currentPollingSource.fetch.__typename === 'FetchStepEthereumLogs'">
+                            <app-block-row-data
+                                [tooltip]="'Connects to an Ethereum node to stream transaction logs.'"
+                                [label]="'Type:'"
+                            >
+                                <span>Ethereum Logs</span>
+                            </app-block-row-data>
+                            <app-block-row-data
+                                *ngIf="currentPollingSource.fetch.chainId"
+                                [tooltip]="'Identifier of the chain to scan logs from.'"
+                                [label]="'Chain ID:'"
+                            >
+                                <span>{{ currentPollingSource.fetch.chainId }}</span>
+                            </app-block-row-data>
+                            <app-block-row-data
+                                *ngIf="currentPollingSource.fetch.nodeUrl"
+                                [tooltip]="'Url of the node.'"
+                                [label]="'Node url:'"
+                            >
+                                <a class="simple-link" [href]="currentPollingSource.fetch.nodeUrl">{{
+                                    currentPollingSource.fetch.nodeUrl
+                                }}</a>
+                            </app-block-row-data>
+                            <app-block-row-data
+                                *ngIf="currentPollingSource.fetch.filter"
+                                [tooltip]="
+                                    'An SQL WHERE clause that can be used to pre-filter the logs before fetching them from the ETH node.'
+                                "
+                                [label]="'Filter:'"
+                            >
+                                <app-yaml-event-viewer
+                                    [data]="currentPollingSource.fetch.filter"
+                                ></app-yaml-event-viewer>
+                            </app-block-row-data>
+                            <app-block-row-data
+                                *ngIf="currentPollingSource.fetch.signature"
+                                [tooltip]="
+                                    'Solidity log event signature to use for decoding. Using this field adds event to the output containing decoded log as JSON.'
+                                "
+                                [label]="'Signature:'"
+                            >
+                                <app-yaml-event-viewer
+                                    [data]="currentPollingSource.fetch.signature"
+                                ></app-yaml-event-viewer>
+                            </app-block-row-data>
+                        </div>
                     </div>
 
                     <ng-container

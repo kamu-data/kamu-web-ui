@@ -1,0 +1,24 @@
+fragment FlowOutcomeData on FlowOutcome {
+  ... on FlowSuccessResult {
+    message
+  }
+
+  ... on FlowFailedError {
+    reason {
+      ... on FlowFailedMessage {
+        message
+      }
+
+      ... on FlowDatasetCompactedFailedError {
+        message
+        rootDataset {
+          ...DatasetBasics
+        }
+      }
+    }
+  }
+
+  ... on FlowAbortedResult {
+    message
+  }
+}

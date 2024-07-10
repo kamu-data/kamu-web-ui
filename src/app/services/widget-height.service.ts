@@ -6,6 +6,7 @@ import { Injectable } from "@angular/core";
 export class WidgetHeightService {
     // Margin top and bottom for the lineage graph
     private readonly WIDGET_MARGIN_Y = 30;
+    private readonly WIDGET_MIN_HEIGHT = 200;
     private widgetOffsetTop = 0;
 
     public setWidgetOffsetTop(value: number): void {
@@ -13,6 +14,10 @@ export class WidgetHeightService {
     }
 
     public get widgetHeight(): number {
-        return window.innerHeight - this.widgetOffsetTop - 2 * this.WIDGET_MARGIN_Y;
+        const height = window.innerHeight - this.widgetOffsetTop - 2 * this.WIDGET_MARGIN_Y;
+        if (height <= 150) {
+            return this.WIDGET_MIN_HEIGHT;
+        }
+        return height;
     }
 }

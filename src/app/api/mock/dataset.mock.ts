@@ -23,6 +23,7 @@ import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
 
 export const TEST_DATASET_ID = "did:odf:z4k88e8kmp7wTEePmNDSprhY2TqwDxSiFwHiau8fnUk4V4Cpgu7";
 export const TEST_DATASET_NAME = "test-dataset";
+export const TEST_ACCOUNT_ID = "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f";
 export const TEST_ACCOUNT_NAME = "test-account-name";
 export const TEST_BLOCK_HASH = "zW1hNbxPz28K1oLNGbddudUzKKLT9LDPh8chjksEo6HcDev";
 export const TEST_WATERMARK = "2023-06-02T08:44:28.324101693+00:00";
@@ -83,7 +84,7 @@ export const mockDatasetListItem: DatasetSearchOverviewFragment = {
                 name: "alberta.case-details.hm",
                 owner: {
                     __typename: "Account",
-                    id: "1",
+                    id: TEST_ACCOUNT_ID,
                     accountName: "kamu",
                 },
                 kind: DatasetKind.Derivative,
@@ -96,7 +97,7 @@ export const mockDatasetListItem: DatasetSearchOverviewFragment = {
     name: "alberta.case-details",
     owner: {
         __typename: "Account",
-        id: "1",
+        id: TEST_ACCOUNT_ID,
         accountName: "kamu",
     },
     alias: "kamu/alberta.case-details",
@@ -124,7 +125,7 @@ export const mockDatasetByAccountAndDatasetNameQuery: DatasetByAccountAndDataset
             name: TEST_DATASET_NAME,
             owner: {
                 __typename: "Account",
-                id: "1",
+                id: TEST_ACCOUNT_ID,
                 accountName: TEST_LOGIN,
             },
             alias: TEST_LOGIN + "/" + TEST_DATASET_NAME,
@@ -142,7 +143,7 @@ export const mockDatasetByIdQuery: DatasetByIdQuery = {
             name: TEST_DATASET_NAME,
             owner: {
                 __typename: "Account",
-                id: "1",
+                id: TEST_ACCOUNT_ID,
                 accountName: TEST_LOGIN,
             },
             alias: TEST_LOGIN + "/" + TEST_DATASET_NAME,
@@ -160,7 +161,7 @@ export const mockDatasetBasicsWithPermissionQuery: GetDatasetBasicsWithPermissio
             name: TEST_DATASET_NAME,
             owner: {
                 __typename: "Account",
-                id: "1",
+                id: TEST_ACCOUNT_ID,
                 accountName: TEST_LOGIN,
             },
             alias: TEST_LOGIN + "/" + TEST_DATASET_NAME,
@@ -213,7 +214,7 @@ export const mockDatasetsByAccountNameQuery: DatasetsByAccountNameQuery = {
                                 name: "alberta.case-details.hm",
                                 owner: {
                                     __typename: "Account",
-                                    id: "1",
+                                    id: TEST_ACCOUNT_ID,
                                     accountName: "kamu",
                                 },
                             },
@@ -224,7 +225,7 @@ export const mockDatasetsByAccountNameQuery: DatasetsByAccountNameQuery = {
                     name: "alberta.case-details",
                     owner: {
                         __typename: "Account",
-                        id: "1",
+                        id: TEST_ACCOUNT_ID,
                         accountName: "kamu",
                     },
                     alias: "kamu/alberta.case-details",
@@ -261,7 +262,7 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
                         sequenceNumber: 6,
                         author: {
                             __typename: "Account",
-                            id: "1",
+                            id: TEST_ACCOUNT_ID,
                             accountName: "kamu",
                             avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
                         },
@@ -305,7 +306,7 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
             kind: DatasetKind.Root,
             alias: "kamu/com.naturalearthdata.admin0.countries.50m",
             owner: {
-                id: "",
+                id: TEST_ACCOUNT_ID,
                 accountName: "alias",
             },
         },

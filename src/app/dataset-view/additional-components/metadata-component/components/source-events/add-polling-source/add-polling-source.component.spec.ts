@@ -33,6 +33,8 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { EditorModule } from "src/app/shared/editor/editor.module";
 import { EventTimeSourceKind, FetchKind, MergeKind, ReadKind } from "./add-polling-source-form.types";
 import { OdfDefaultValues } from "src/app/common/app-odf-default.values";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 
 describe("AddPollingSourceComponent", () => {
     let component: AddPollingSourceComponent;
@@ -45,6 +47,7 @@ describe("AddPollingSourceComponent", () => {
     let datasetSubsService: DatasetSubscriptionsService;
     let editService: EditPollingSourceService;
     let navigationService: NavigationService;
+    let loggedUserService: LoggedUserService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -81,6 +84,7 @@ describe("AddPollingSourceComponent", () => {
         datasetCommitService = TestBed.inject(DatasetCommitService);
         datasetService = TestBed.inject(DatasetService);
         navigationService = TestBed.inject(NavigationService);
+        loggedUserService = TestBed.inject(LoggedUserService);
 
         modalRef = modalService.open(FinalYamlModalComponent);
         component = fixture.componentInstance;
@@ -127,6 +131,7 @@ describe("AddPollingSourceComponent", () => {
             }),
             prepare: new FormArray([]),
         });
+        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
         component.ngOnInit();
         fixture.detectChanges();
     });

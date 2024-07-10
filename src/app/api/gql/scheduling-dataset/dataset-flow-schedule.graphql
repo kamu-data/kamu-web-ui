@@ -33,6 +33,10 @@ mutation DatasetFlowSchedule(
             ... on FlowPreconditionsNotMet {
               message
             }
+
+            ... on FlowTypeIsNotSupported {
+              message
+            }
           }
         }
       }

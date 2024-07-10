@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit, inject } from "@angular/core";
 import ProjectLinks from "src/app/project-links";
 import AppValues from "src/app/common/app.values";
 import { LoginMethod } from "src/app/app-config.model";
@@ -21,6 +21,8 @@ export class LoginComponent extends BaseComponent implements OnInit {
     public static readonly ERROR_ZERO_METHODS_IN_CONFIG =
         "LoginComponent requires at least 1 login method in configuration";
 
+    private localStorageService = inject(LocalStorageService);
+
     public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;
     public readonly LoginMethod = LoginMethod;
 
@@ -33,7 +35,6 @@ export class LoginComponent extends BaseComponent implements OnInit {
         private route: ActivatedRoute,
         private fb: FormBuilder,
         private loginService: LoginService,
-        private localStorageService: LocalStorageService,
     ) {
         super();
 

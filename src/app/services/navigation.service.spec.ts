@@ -1,5 +1,4 @@
 import { AccountSettingsTabs } from "../auth/settings/account-settings.constants";
-import { AccountTabs } from "../auth/account/account.constants";
 import { RouterTestingModule } from "@angular/router/testing";
 import { TestBed } from "@angular/core/testing";
 import { NavigationService } from "./navigation.service";
@@ -12,6 +11,7 @@ import {
 import { Router } from "@angular/router";
 import { mockDatasetInfo } from "../search/mock.data";
 import { FlowDetailsTabs } from "../dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { AccountTabs } from "../account/account.constants";
 
 describe("NavigationService", () => {
     let service: NavigationService;
@@ -48,7 +48,9 @@ describe("NavigationService", () => {
     it("should test navigate to settings", () => {
         const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
         service.navigateToSettings();
-        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_SETTINGS, AccountSettingsTabs.PROFILE]);
+        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_SETTINGS, AccountSettingsTabs.PROFILE], {
+            queryParams: {},
+        });
     });
 
     it("should test navigate to metadata block", () => {

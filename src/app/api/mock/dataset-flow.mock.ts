@@ -3,13 +3,14 @@ import {
     CancelScheduledTasksMutation,
     DatasetAllFlowsPausedQuery,
     DatasetFlowBatchingMutation,
+    DatasetFlowCompactionMutation,
     DatasetFlowScheduleMutation,
+    DatasetFlowsInitiatorsQuery,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsMutation,
     DatasetTriggerFlowMutation,
     FlowConnectionDataFragment,
     FlowHistoryDataFragment,
-    FlowOutcome,
     FlowStatus,
     FlowSummaryDataFragment,
     GetDatasetListFlowsQuery,
@@ -17,8 +18,9 @@ import {
     TaskStatus,
 } from "./../kamu.graphql.interface";
 import { GetDatasetFlowConfigsQuery, DatasetKind, TimeUnit, TimeDeltaInput } from "../kamu.graphql.interface";
-import { FlowsTableData } from "src/app/dataset-view/additional-components/flows-component/components/flows-table/flows-table.types";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { mockDatasetBasicsRootFragment, mockDatasetMainDataId } from "src/app/search/mock.data";
+import { FlowsTableData } from "src/app/common/components/flows-table/flows-table.types";
 
 export const mockTimeDeltaInput: TimeDeltaInput = {
     every: 10,
@@ -32,7 +34,7 @@ export const mockIngestGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQuery 
             kind: DatasetKind.Root,
             name: "account.transactions",
             owner: {
-                id: "12345",
+                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
                 accountName: "kamu",
                 __typename: "Account",
             },
@@ -66,7 +68,7 @@ export const mockBatchingGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQuer
             kind: DatasetKind.Derivative,
             name: "account.tokens.portfolio",
             owner: {
-                id: "12345",
+                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
                 accountName: "kamu",
                 __typename: "Account",
             },
@@ -200,14 +202,17 @@ export const mockSetDatasetFlowBatchingError: DatasetFlowBatchingMutation = {
 export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
     {
         description: {
-            datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+            datasetId: mockDatasetMainDataId,
             ingestResult: null,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "414",
         status: FlowStatus.Finished,
         initiator: null,
-        outcome: FlowOutcome.Success,
+        outcome: {
+            __typename: "FlowSuccessResult",
+            message: "Succes",
+        },
         startCondition: null,
         timing: {
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
@@ -219,7 +224,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
     },
     {
         description: {
-            datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+            datasetId: mockDatasetMainDataId,
             ingestResult: null,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
@@ -237,7 +242,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
     },
     {
         description: {
-            datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+            datasetId: mockDatasetMainDataId,
             ingestResult: null,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
@@ -259,14 +264,17 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
     },
     {
         description: {
-            datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+            datasetId: mockDatasetMainDataId,
             ingestResult: null,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "414",
         status: FlowStatus.Finished,
         initiator: null,
-        outcome: FlowOutcome.Aborted,
+        outcome: {
+            __typename: "FlowAbortedResult",
+            message: "Aborted",
+        },
         startCondition: null,
         timing: {
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
@@ -278,14 +286,20 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
     },
     {
         description: {
-            datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+            datasetId: mockDatasetMainDataId,
             ingestResult: null,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "414",
         status: FlowStatus.Finished,
         initiator: null,
-        outcome: FlowOutcome.Failed,
+        outcome: {
+            __typename: "FlowFailedError",
+            reason: {
+                __typename: "FlowFailedMessage",
+                message: "Failed",
+            },
+        },
         startCondition: null,
         timing: {
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
@@ -348,6 +362,7 @@ export const mockDatasetResumeFlowsMutationError: DatasetResumeFlowsMutation = {
 export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
     datasets: {
         byId: {
+            ...mockDatasetBasicsRootFragment,
             metadata: {
                 currentPollingSource: {
                     __typename: "SetPollingSource",
@@ -391,7 +406,10 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                 flowId: "88",
                                 status: FlowStatus.Finished,
                                 initiator: null,
-                                outcome: FlowOutcome.Success,
+                                outcome: {
+                                    __typename: "FlowSuccessResult",
+                                    message: "Succes",
+                                },
                                 timing: {
                                     awaitingExecutorSince: "2024-02-13T10:10:25+00:00",
                                     runningSince: "2024-02-13T10:10:25.468811294+00:00",
@@ -443,7 +461,10 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     flowId: "88",
                                     status: FlowStatus.Finished,
                                     initiator: null,
-                                    outcome: FlowOutcome.Success,
+                                    outcome: {
+                                        __typename: "FlowSuccessResult",
+                                        message: "Succes",
+                                    },
                                     timing: {
                                         awaitingExecutorSince: "2024-02-13T10:10:25+00:00",
                                         runningSince: "2024-02-13T10:10:25.468811294+00:00",
@@ -469,14 +490,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
 
 export const mockFlowsTableData: FlowsTableData = {
     connectionData: mockGetDatasetListFlowsQuery.datasets.byId?.flows.runs.listFlows as FlowConnectionDataFragment,
-    source: {
-        __typename: "FetchStepUrl",
-        url: "http://mock.com",
-    },
-    transformData: {
-        numInputs: 0,
-        engine: "",
-    },
+    involvedDatasets: [],
 };
 
 export const mockDatasetTriggerFlowMutation: DatasetTriggerFlowMutation = {
@@ -495,7 +509,7 @@ export const mockDatasetTriggerFlowMutation: DatasetTriggerFlowMutation = {
                             flowId: "0",
                             status: FlowStatus.Waiting,
                             initiator: {
-                                id: "12345",
+                                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
                                 accountName: "kamu",
                                 displayName: "kamu",
                                 accountType: AccountType.User,
@@ -564,7 +578,10 @@ export const mockCancelScheduledTasksMutationSuccess: CancelScheduledTasksMutati
                             flowId: "17",
                             status: FlowStatus.Finished,
                             initiator: null,
-                            outcome: FlowOutcome.Aborted,
+                            outcome: {
+                                __typename: "FlowAbortedResult",
+                                message: "Aborted",
+                            },
                             timing: {
                                 awaitingExecutorSince: null,
                                 runningSince: null,
@@ -680,7 +697,10 @@ export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
                             flowId: "595",
                             status: FlowStatus.Finished,
                             initiator: null,
-                            outcome: FlowOutcome.Success,
+                            outcome: {
+                                __typename: "FlowSuccessResult",
+                                message: "Succes",
+                            },
                             timing: {
                                 awaitingExecutorSince: "2024-03-15T19:43:38+00:00",
                                 runningSince: "2024-03-15T19:43:39.414651763+00:00",
@@ -735,5 +755,100 @@ export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
                 },
             },
         },
+    },
+};
+
+export const mockDatasetFlowCompactionMutationSuccess: DatasetFlowCompactionMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                configs: {
+                    setConfigCompaction: {
+                        message: "Success",
+                        config: {
+                            compaction: {
+                                maxSliceSize: 10485760,
+                                maxSliceRecords: 10000,
+                                __typename: "CompactionFull",
+                            },
+                            __typename: "FlowConfiguration",
+                        },
+                        __typename: "SetFlowConfigSuccess",
+                    },
+                    __typename: "DatasetFlowConfigsMut",
+                },
+                __typename: "DatasetFlowsMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockDatasetFlowCompactionMutationError: DatasetFlowCompactionMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                configs: {
+                    setConfigCompaction: {
+                        message: "Error",
+                        reason: "Failed",
+                        __typename: "FlowInvalidCompactionConfig",
+                    },
+                    __typename: "DatasetFlowConfigsMut",
+                },
+                __typename: "DatasetFlowsMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockDatasetFlowsInitiatorsQuery: DatasetFlowsInitiatorsQuery = {
+    datasets: {
+        byId: {
+            flows: {
+                runs: {
+                    listFlowInitiators: {
+                        totalCount: 1,
+                        nodes: [
+                            {
+                                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+                                accountName: "kamu",
+                                displayName: "kamu",
+                                accountType: AccountType.User,
+                                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                                isAdmin: true,
+                                __typename: "Account",
+                            },
+                            {
+                                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+                                accountName: "bamu",
+                                displayName: "bamu",
+                                accountType: AccountType.User,
+                                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                                isAdmin: true,
+                                __typename: "Account",
+                            },
+                            {
+                                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+                                accountName: "kamu",
+                                displayName: "kamu",
+                                accountType: AccountType.User,
+                                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                                isAdmin: true,
+                                __typename: "Account",
+                            },
+                        ],
+                        __typename: "AccountConnection",
+                    },
+                    __typename: "DatasetFlowRuns",
+                },
+                __typename: "DatasetFlows",
+            },
+            __typename: "Dataset",
+        },
+        __typename: "Datasets",
     },
 };

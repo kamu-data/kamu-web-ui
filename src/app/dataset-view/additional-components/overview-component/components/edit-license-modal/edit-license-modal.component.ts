@@ -13,6 +13,7 @@ import { MaybeNull } from "src/app/common/app.types";
 import { DatasetSchema, DataRow } from "src/app/interface/dataset.interface";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 @Component({
     selector: "app-edit-license-modal",
@@ -38,6 +39,7 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
         private fb: FormBuilder,
         private datasetCommitService: DatasetCommitService,
         private yamlEventService: TemplatesYamlEventsService,
+        private loggedUserService: LoggedUserService,
     ) {
         super();
     }
@@ -57,13 +59,14 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
     public onEditLicense(): void {
         this.trackSubscription(
             this.datasetCommitService
-                .commitEventToDataset(
-                    this.datasetBasics.owner.accountName,
-                    this.datasetBasics.name,
-                    this.yamlEventService.buildYamlSetLicenseEvent(
+                .commitEventToDataset({
+                    accountId: this.loggedUserService.currentlyLoggedInUser.id,
+                    accountName: this.datasetBasics.owner.accountName,
+                    datasetName: this.datasetBasics.name,
+                    event: this.yamlEventService.buildYamlSetLicenseEvent(
                         this.licenseForm.value as Omit<SetLicense, "__typename">,
                     ),
-                )
+                })
                 .subscribe(),
         );
     }

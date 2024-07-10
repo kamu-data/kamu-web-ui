@@ -8,6 +8,7 @@ import { SharedTestModule } from "src/app/common/shared-test.module";
 import { ApolloModule } from "apollo-angular";
 import { AccountService } from "src/app/services/account.service";
 import { of } from "rxjs";
+import { ToastrModule } from "ngx-toastr";
 
 describe("LineageComponent", () => {
     let component: LineageComponent;
@@ -17,7 +18,7 @@ describe("LineageComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [LineageComponent],
-            imports: [ApolloModule, SharedTestModule],
+            imports: [ApolloModule, SharedTestModule, ToastrModule.forRoot()],
         }).compileComponents();
 
         accountService = TestBed.inject(AccountService);

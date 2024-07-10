@@ -14,11 +14,14 @@ import { of } from "rxjs";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 
 describe("EditWatermarkModalComponent", () => {
     let component: EditWatermarkModalComponent;
     let fixture: ComponentFixture<EditWatermarkModalComponent>;
     let datasetCommitService: DatasetCommitService;
+    let loggedUserService: LoggedUserService;
     const FROZEN_TIME = new Date("2022-10-01 12:00:00");
 
     beforeEach(async () => {
@@ -40,7 +43,9 @@ describe("EditWatermarkModalComponent", () => {
         fixture = TestBed.createComponent(EditWatermarkModalComponent);
         component = fixture.componentInstance;
         datasetCommitService = TestBed.inject(DatasetCommitService);
+        loggedUserService = TestBed.inject(LoggedUserService);
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
+        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
     });
 
     it("should create", () => {

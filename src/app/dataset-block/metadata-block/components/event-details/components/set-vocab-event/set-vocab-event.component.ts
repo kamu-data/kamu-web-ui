@@ -13,6 +13,6 @@ export class SetVocabEventComponent extends BaseComponent {
         offsetColumn: { label: "Offset column:", tooltip: "Name of the offset column." },
         operationTypeColumn: { label: "Operation type column:", tooltip: "Name of the operation type column." },
         systemTimeColumn: { label: "System time column:", tooltip: "Name of the system time column." },
-        eventTimeColumn: { label: "Event time column:", tooltip: "ame of the event time column." },
+        eventTimeColumn: { label: "Event time column:", tooltip: "Name of the event time column." },
     };
 }

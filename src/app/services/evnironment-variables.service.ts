@@ -1,4 +1,3 @@
-import { MaybeNullOrUndefined } from "./../common/app.types";
 import { Injectable } from "@angular/core";
 import { EnvironmentVariablesApi } from "../api/environment-variables.api";
 import { map, Observable } from "rxjs";
@@ -8,11 +7,10 @@ import {
     ListEnvVariablesQuery,
     ModifyEnvVariableMutation,
     SaveEnvVariableMutation,
-    ViewDatasetEnvVar,
-    ViewDatasetEnvVarDataFragment,
+    ViewDatasetEnvVarConnection,
 } from "../api/kamu.graphql.interface";
 import { ToastrService } from "ngx-toastr";
-import { MaybeNull } from "../common/app.types";
+import { NavigationService } from "./navigation.service";
 
 @Injectable({
     providedIn: "root",
@@ -20,8 +18,8 @@ import { MaybeNull } from "../common/app.types";
 export class EvnironmentVariablesService {
     constructor(
         private environmentVariablesApi: EnvironmentVariablesApi,
-
         private toastrService: ToastrService,
+        private navigationService: NavigationService,
     ) {}
 
     public listEnvVariables(params: {
@@ -29,32 +27,30 @@ export class EvnironmentVariablesService {
         datasetName: string;
         page: number;
         perPage: number;
-    }): Observable<ViewDatasetEnvVarDataFragment[]> {
+    }): Observable<ViewDatasetEnvVarConnection> {
         return this.environmentVariablesApi
             .listEnvironmentVariables(params)
             .pipe(
                 map(
                     (result: ListEnvVariablesQuery) =>
-                        result.datasets.byOwnerAndName?.envVars.listEnvVariables
-                            .nodes as ViewDatasetEnvVarDataFragment[],
+                        result.datasets.byOwnerAndName?.envVars.listEnvVariables as ViewDatasetEnvVarConnection,
                 ),
             );
     }
 
     public saveEnvVariable(params: {
+        accountId: string;
         datasetId: string;
         key: string;
         value: string;
         isSecret: boolean;
-    }): Observable<MaybeNull<ViewDatasetEnvVar>> {
+    }): Observable<void> {
         return this.environmentVariablesApi.saveEnvironmentVariable(params).pipe(
             map((result: SaveEnvVariableMutation) => {
                 if (result.datasets.byId?.envVars.saveEnvVariable.__typename === "SaveDatasetEnvVarResultSuccess") {
                     this.toastrService.success(result.datasets.byId.envVars.saveEnvVariable.message);
-                    return result.datasets.byId.envVars.saveEnvVariable.envVar as ViewDatasetEnvVar;
                 } else {
                     this.toastrService.error(result.datasets.byId?.envVars.saveEnvVariable.message);
-                    return null;
                 }
             }),
         );
@@ -93,9 +89,14 @@ export class EvnironmentVariablesService {
         accountName: string;
         datasetName: string;
         datasetEnvVarId: string;
-    }): Observable<MaybeNullOrUndefined<string>> {
+    }): Observable<string> {
         return this.environmentVariablesApi
             .exposedEnvVariableValue(params)
-            .pipe(map((result: ExposedEnvVariableValueQuery) => result.datasets.byOwnerAndName?.envVars.exposedValue));
+            .pipe(
+                map(
+                    (result: ExposedEnvVariableValueQuery) =>
+                        result.datasets.byOwnerAndName?.envVars.exposedValue ?? "",
+                ),
+            );
     }
 }

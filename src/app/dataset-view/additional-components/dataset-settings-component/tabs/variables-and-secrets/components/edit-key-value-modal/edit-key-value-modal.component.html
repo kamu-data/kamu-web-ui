@@ -1,6 +1,6 @@
 <div class="d-flex p-4">
     <div class="flex-grow-1 ms-2 text-center">
-        <span class="fs-5 fw-bold">Add variable</span>
+        <span class="fs-5 fw-bold">{{ row ? "Edit" : "Add" }} variable</span>
     </div>
     <div>
         <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.close()"></button>
@@ -13,9 +13,6 @@
 <div class="body p-4">
     <form [formGroup]="keyValueForm" (ngSubmit)="onEditRow()">
         <div class="mt-4">
-            <mat-checkbox color="primary" class="example-margin" formControlName="secretKey">Secret value</mat-checkbox>
-        </div>
-        <div class="mt-4">
             <label for="key" class="form-label">Key <span class="text-danger">*</span></label>
             <input
                 class="form-control"
@@ -25,16 +22,30 @@
                 data-test-id="key"
             />
         </div>
-        <div class="mt-4">
+        <div class="mt-4 form-group">
             <label for="value" class="form-label">Value <span class="text-danger">*</span></label>
-            <input
-                [type]="!!keyValueForm.controls.secretKey.value ? 'password' : 'text'"
-                class="form-control"
-                id="value"
-                placeholder="Please enter value..."
-                formControlName="value"
-                data-test-id="value"
-            />
+            <div class="input-group">
+                <input
+                    [type]="row?.isSecret && !exposedValue ? 'password' : 'text'"
+                    class="form-control"
+                    id="value"
+                    placeholder="Please enter value..."
+                    formControlName="value"
+                    data-test-id="value"
+                />
+                <div class="input-group-addon pt-2 px-2 eye-icon" *ngIf="row?.isSecret">
+                    <a *ngIf="exposedValue; else visibilityOff" (click)="hideExposedValue()">
+                        <mat-icon class="text-muted fs-4">visibility</mat-icon></a
+                    >
+                    <ng-template #visibilityOff>
+                        <a (click)="showExposedValue()"> <mat-icon class="text-muted fs-4">visibility_off</mat-icon></a>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <mat-checkbox color="primary" class="example-margin" formControlName="isSecret">Secret value</mat-checkbox>
         </div>
     </form>
 </div>
@@ -44,7 +55,7 @@
         type="button"
         class="btn btn-success"
         data-test-id="save-row"
-        (click)="onEditRow(); activeModal.close()"
+        (click)="onEditRow()"
         [disabled]="!keyValueForm.valid"
     >
         Save

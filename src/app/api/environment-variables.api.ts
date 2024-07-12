@@ -16,6 +16,7 @@ import { noCacheFetchPolicy } from "../common/data.helpers";
 import { ApolloQueryResult } from "@apollo/client";
 import { DatasetOperationError } from "../common/errors";
 import { MutationResult } from "apollo-angular";
+import { DatasetApi } from "./dataset.api";
 
 @Injectable({
     providedIn: "root",
@@ -44,22 +45,39 @@ export class EnvironmentVariablesApi {
     }
 
     public saveEnvironmentVariable(params: {
+        accountId: string;
         datasetId: string;
         key: string;
         value: string;
         isSecret: boolean;
     }): Observable<SaveEnvVariableMutation> {
-        return this.saveEnvVariableGQL.mutate({ ...params }).pipe(
-            first(),
-            map((result: MutationResult<SaveEnvVariableMutation>) => {
-                /* istanbul ignore else */
-                if (result.data) {
-                    return result.data;
-                } else {
-                    throw new DatasetOperationError(result.errors ?? []);
-                }
-            }),
-        );
+        return this.saveEnvVariableGQL
+            .mutate(
+                { ...params },
+                {
+                    update: (cache) => {
+                        const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
+                            cache.identify(DatasetApi.generateAccountKeyFragment(params.accountId)),
+                            params.datasetId,
+                        );
+                        cache.evict({
+                            id: cache.identify(datasetKeyFragment),
+                            fieldName: "envVars",
+                        });
+                    },
+                },
+            )
+            .pipe(
+                first(),
+                map((result: MutationResult<SaveEnvVariableMutation>) => {
+                    /* istanbul ignore else */
+                    if (result.data) {
+                        return result.data;
+                    } else {
+                        throw new DatasetOperationError(result.errors ?? []);
+                    }
+                }),
+            );
     }
 
     public modifyEnvironmentVariable(params: {

@@ -10,7 +10,6 @@ import {
     ViewDatasetEnvVarConnection,
 } from "../api/kamu.graphql.interface";
 import { ToastrService } from "ngx-toastr";
-import { NavigationService } from "./navigation.service";
 
 @Injectable({
     providedIn: "root",
@@ -19,7 +18,6 @@ export class EvnironmentVariablesService {
     constructor(
         private environmentVariablesApi: EnvironmentVariablesApi,
         private toastrService: ToastrService,
-        private navigationService: NavigationService,
     ) {}
 
     public listEnvVariables(params: {

@@ -38,7 +38,7 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
     public currentPage = 1;
     @ViewChild(MatSort) sort: MatSort;
     public pageBasedInfo: PageBasedInfo;
-    public readonly PER_PAGE = 2;
+    public readonly PER_PAGE = 15;
     public searchByKey = "";
 
     constructor(

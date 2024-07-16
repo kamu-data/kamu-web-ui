@@ -7,7 +7,6 @@ import { LocalStorageService } from "./local-storage.service";
 import { DatasetInfo } from "../interface/navigation.interface";
 import { DatasetBasicsFragment, DatasetEndpoints } from "../api/kamu.graphql.interface";
 import { APOLLO_OPTIONS } from "apollo-angular";
-import { DatasetApi } from "../api/dataset.api";
 import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
 import { DatasetService } from "../dataset-view/dataset.service";
 import { NavigationService } from "./navigation.service";

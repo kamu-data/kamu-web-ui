@@ -104,7 +104,11 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
                 handler: (ok) => {
                     if (ok) {
                         this.evnironmentVariablesService
-                            .deleteEnvVariable({ datasetId: this.datasetBasics.id, datasetEnvVarId })
+                            .deleteEnvVariable({
+                                accountId: this.datasetBasics.owner.id,
+                                datasetId: this.datasetBasics.id,
+                                datasetEnvVarId,
+                            })
                             .subscribe(() => this.updateTable(this.currentPage));
                     }
                 },

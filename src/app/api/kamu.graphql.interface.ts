@@ -2781,18 +2781,20 @@ export type ListEnvVariablesQuery = {
     __typename?: "Query";
     datasets: {
         __typename?: "Datasets";
-        byOwnerAndName?: {
-            __typename?: "Dataset";
-            envVars: {
-                __typename?: "DatasetEnvVars";
-                listEnvVariables: {
-                    __typename?: "ViewDatasetEnvVarConnection";
-                    totalCount: number;
-                    nodes: Array<{ __typename?: "ViewDatasetEnvVar" } & ViewDatasetEnvVarDataFragment>;
-                    pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
-                };
-            };
-        } | null;
+        byOwnerAndName?:
+            | ({
+                  __typename?: "Dataset";
+                  envVars: {
+                      __typename?: "DatasetEnvVars";
+                      listEnvVariables: {
+                          __typename?: "ViewDatasetEnvVarConnection";
+                          totalCount: number;
+                          nodes: Array<{ __typename?: "ViewDatasetEnvVar" } & ViewDatasetEnvVarDataFragment>;
+                          pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
+                      };
+                  };
+              } & DatasetBasicsFragment)
+            | null;
     };
 };
 
@@ -6029,6 +6031,7 @@ export const ListEnvVariablesDocument = gql`
     query listEnvVariables($accountName: AccountName!, $datasetName: DatasetName!, $page: Int, $perPage: Int) {
         datasets {
             byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+                ...DatasetBasics
                 envVars {
                     listEnvVariables(page: $page, perPage: $perPage) {
                         totalCount
@@ -6043,6 +6046,7 @@ export const ListEnvVariablesDocument = gql`
             }
         }
     }
+    ${DatasetBasicsFragmentDoc}
     ${ViewDatasetEnvVarDataFragmentDoc}
     ${DatasetPageInfoFragmentDoc}
 `;

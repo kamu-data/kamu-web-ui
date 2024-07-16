@@ -31,9 +31,9 @@ export function apolloCache(): InMemoryCache {
             Search: {
                 merge: true,
             },
-            // DatasetEnvVars: {
-            //     merge: true,
-            // },
+            DatasetEnvVars: {
+                merge: true,
+            },
         },
     });
 }

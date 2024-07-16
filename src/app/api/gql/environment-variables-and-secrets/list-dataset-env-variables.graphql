@@ -1,6 +1,7 @@
 query listEnvVariables($accountName: AccountName!, $datasetName: DatasetName!, $page: Int, $perPage: Int) {
   datasets {
     byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+      ...DatasetBasics
       envVars {
         listEnvVariables(page: $page, perPage: $perPage) {
           totalCount

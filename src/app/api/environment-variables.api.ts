@@ -35,7 +35,7 @@ export class EnvironmentVariablesApi {
         page: number;
         perPage: number;
     }): Observable<ListEnvVariablesQuery> {
-        return this.listEnvVariablesGQL.watch({ ...params }, noCacheFetchPolicy).valueChanges.pipe(
+        return this.listEnvVariablesGQL.watch({ ...params }).valueChanges.pipe(
             first(),
             map((result: ApolloQueryResult<ListEnvVariablesQuery>) => {
                 return result.data;
@@ -77,39 +77,67 @@ export class EnvironmentVariablesApi {
     }
 
     public modifyEnvironmentVariable(params: {
+        accountId: string;
         datasetId: string;
         id: string;
         newValue: string;
         isSecret: boolean;
     }): Observable<ModifyEnvVariableMutation> {
-        return this.modifyEnvVariableGQL.mutate({ ...params }).pipe(
-            first(),
-            map((result: MutationResult<ModifyEnvVariableMutation>) => {
-                /* istanbul ignore else */
-                if (result.data) {
-                    return result.data;
-                } else {
-                    throw new DatasetOperationError(result.errors ?? []);
-                }
-            }),
-        );
+        return this.modifyEnvVariableGQL
+            .mutate(
+                { ...params },
+                {
+                    update: (cache) => {
+                        updateCacheHelper(cache, {
+                            accountId: params.accountId,
+                            datasetId: params.datasetId,
+                            fieldNames: ["envVars"],
+                        });
+                    },
+                },
+            )
+            .pipe(
+                first(),
+                map((result: MutationResult<ModifyEnvVariableMutation>) => {
+                    /* istanbul ignore else */
+                    if (result.data) {
+                        return result.data;
+                    } else {
+                        throw new DatasetOperationError(result.errors ?? []);
+                    }
+                }),
+            );
     }
 
     public deleteEnvironmentVariable(params: {
+        accountId: string;
         datasetId: string;
         datasetEnvVarId: string;
     }): Observable<DeleteEnvVariableMutation> {
-        return this.deleteEnvVariableGQL.mutate({ ...params }).pipe(
-            first(),
-            map((result: MutationResult<DeleteEnvVariableMutation>) => {
-                /* istanbul ignore else */
-                if (result.data) {
-                    return result.data;
-                } else {
-                    throw new DatasetOperationError(result.errors ?? []);
-                }
-            }),
-        );
+        return this.deleteEnvVariableGQL
+            .mutate(
+                { ...params },
+                {
+                    update: (cache) => {
+                        updateCacheHelper(cache, {
+                            accountId: params.accountId,
+                            datasetId: params.datasetId,
+                            fieldNames: ["envVars"],
+                        });
+                    },
+                },
+            )
+            .pipe(
+                first(),
+                map((result: MutationResult<DeleteEnvVariableMutation>) => {
+                    /* istanbul ignore else */
+                    if (result.data) {
+                        return result.data;
+                    } else {
+                        throw new DatasetOperationError(result.errors ?? []);
+                    }
+                }),
+            );
     }
 
     public exposedEnvVariableValue(params: {

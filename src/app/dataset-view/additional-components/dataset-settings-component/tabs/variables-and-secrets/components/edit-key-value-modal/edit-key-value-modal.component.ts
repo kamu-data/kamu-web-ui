@@ -69,6 +69,7 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
             this.trackSubscription(
                 this.evnironmentVariablesService
                     .modifyEnvVariable({
+                        accountId: this.datasetBasics.owner.id,
                         datasetId: this.datasetBasics.id,
                         id: this.row.id,
                         newValue: this.keyValueForm.controls.value.value as string,

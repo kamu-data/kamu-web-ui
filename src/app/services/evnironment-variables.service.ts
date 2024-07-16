@@ -55,6 +55,7 @@ export class EvnironmentVariablesService {
     }
 
     public modifyEnvVariable(params: {
+        accountId: string;
         datasetId: string;
         id: string;
         newValue: string;
@@ -71,7 +72,11 @@ export class EvnironmentVariablesService {
         );
     }
 
-    public deleteEnvVariable(params: { datasetId: string; datasetEnvVarId: string }): Observable<void> {
+    public deleteEnvVariable(params: {
+        accountId: string;
+        datasetId: string;
+        datasetEnvVarId: string;
+    }): Observable<void> {
         return this.environmentVariablesApi.deleteEnvironmentVariable(params).pipe(
             map((result: DeleteEnvVariableMutation) => {
                 if (result.datasets.byId?.envVars.deleteEnvVariable.__typename === "DeleteDatasetEnvVarResultSuccess") {

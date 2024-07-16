@@ -10,7 +10,6 @@ import { ApolloCache, ErrorPolicy, WatchQueryFetchPolicy } from "@apollo/client"
 import moment from "moment";
 import { convertSecondsToHumanReadableFormat } from "./app.helpers";
 import { DatasetApi } from "../api/dataset.api";
-import { forEach } from "lodash";
 
 export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";

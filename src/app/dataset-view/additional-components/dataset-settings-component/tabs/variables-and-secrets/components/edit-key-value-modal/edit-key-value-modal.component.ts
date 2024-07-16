@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetBasicsFragment, ViewDatasetEnvVar } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/common/app.types";
@@ -15,26 +15,36 @@ import { EvnironmentVariablesService } from "src/app/services/evnironment-variab
 export class EditKeyValueModalComponent extends BaseComponent implements OnInit {
     @Input() public row: MaybeNull<ViewDatasetEnvVar>;
     @Input() public datasetBasics: DatasetBasicsFragment;
+    public readonly KEY_MAX_LENGTH = 200;
     public keyValueForm: FormGroup = this.fb.group({
-        key: ["", [Validators.required]],
+        key: ["", [Validators.required, Validators.maxLength(this.KEY_MAX_LENGTH)]],
         value: ["", [Validators.required]],
         isSecret: [false],
     });
 
     public exposedValue: string;
+    public isShowExposedValue: boolean = false;
     public readonly STUB_VALUE = "stub-value";
 
     constructor(
         public activeModal: NgbActiveModal,
         private fb: FormBuilder,
         private evnironmentVariablesService: EvnironmentVariablesService,
-        private cdr: ChangeDetectorRef,
     ) {
         super();
     }
 
     ngOnInit(): void {
         this.setInitialFormValue();
+        this.fetchExposedValue();
+    }
+
+    public get keyControl(): AbstractControl {
+        return this.keyValueForm.controls.key;
+    }
+
+    public get valueControl(): AbstractControl {
+        return this.keyValueForm.controls.value;
     }
 
     public onEditRow(): void {
@@ -45,7 +55,9 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
                         accountId: this.datasetBasics.owner.id,
                         datasetId: this.datasetBasics.id,
                         key: this.keyValueForm.controls.key.value as string,
-                        value: this.keyValueForm.controls.value.value as string,
+                        value: this.exposedValue
+                            ? this.exposedValue
+                            : (this.keyValueForm.controls.value.value as string),
                         isSecret: this.keyValueForm.controls.isSecret.value ? true : false,
                     })
                     .subscribe(() => {
@@ -68,29 +80,27 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
         }
     }
 
-    public showExposedValue(): void {
-        this.trackSubscription(
-            this.evnironmentVariablesService
-                .exposedEnvVariableValue({
-                    accountName: this.datasetBasics.owner.accountName,
-                    datasetName: this.datasetBasics.name,
-                    datasetEnvVarId: this.row?.id as string,
-                })
-                .subscribe((data) => {
-                    this.keyValueForm.patchValue({
-                        value: data,
-                    });
-                    this.exposedValue = data;
-                    this.cdr.detectChanges();
-                }),
-        );
+    public toggleExposedValue(): void {
+        this.isShowExposedValue = !this.isShowExposedValue;
+        this.keyValueForm.patchValue({
+            value: this.isShowExposedValue ? this.exposedValue : (this.valueControl.value as string),
+        });
     }
 
-    public hideExposedValue(): void {
-        this.keyValueForm.patchValue({
-            value: this.STUB_VALUE,
-        });
-        this.exposedValue = "";
+    private fetchExposedValue(): void {
+        if (this.row?.isSecret) {
+            this.trackSubscription(
+                this.evnironmentVariablesService
+                    .exposedEnvVariableValue({
+                        accountName: this.datasetBasics.owner.accountName,
+                        datasetName: this.datasetBasics.name,
+                        datasetEnvVarId: this.row?.id,
+                    })
+                    .subscribe((data) => {
+                        this.exposedValue = data;
+                    }),
+            );
+        }
     }
 
     private setInitialFormValue(): void {

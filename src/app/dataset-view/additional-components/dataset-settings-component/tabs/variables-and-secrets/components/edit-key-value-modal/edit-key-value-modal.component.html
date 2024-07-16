@@ -13,33 +13,51 @@
 <div class="body p-4">
     <form [formGroup]="keyValueForm" (ngSubmit)="onEditRow()">
         <div class="mt-4">
-            <label for="key" class="form-label">Key <span class="text-danger">*</span></label>
+            <label for="" class="form-label">Key <span class="text-danger">*</span></label>
             <input
                 class="form-control"
-                id="key"
                 placeholder="Please enter key..."
                 formControlName="key"
                 data-test-id="key"
+                [readonly]="row ? true : false"
             />
+            <div *ngIf="keyControl?.invalid && (keyControl?.touched || keyControl?.dirty)">
+                <div *ngIf="keyControl?.errors?.maxlength" class="mt-1">
+                    <span class="text-danger fs-12" data-test-id="error-name-maxLength">
+                        Max length {{ KEY_MAX_LENGTH }} characters</span
+                    >
+                </div>
+                <div *ngIf="keyControl?.errors?.required" class="mt-1">
+                    <span class="text-danger fs-12" data-test-id="error-key-required"> Key is required</span>
+                </div>
+            </div>
         </div>
         <div class="mt-4 form-group">
-            <label for="value" class="form-label">Value <span class="text-danger">*</span></label>
+            <label for="" class="form-label">Value <span class="text-danger">*</span></label>
             <div class="input-group">
                 <input
-                    [type]="row?.isSecret && !exposedValue ? 'password' : 'text'"
+                    [type]="row?.isSecret && !isShowExposedValue ? 'password' : 'text'"
                     class="form-control"
-                    id="value"
                     placeholder="Please enter value..."
                     formControlName="value"
                     data-test-id="value"
+                    [readonly]="row?.isSecret && !isShowExposedValue ? true : false"
                 />
                 <div class="input-group-addon pt-2 px-2 eye-icon" *ngIf="row?.isSecret">
-                    <a *ngIf="exposedValue; else visibilityOff" (click)="hideExposedValue()">
-                        <mat-icon class="text-muted fs-4">visibility</mat-icon></a
+                    <a *ngIf="exposedValue; else visibilityOff" (click)="toggleExposedValue()">
+                        <mat-icon *ngIf="exposedValue" class="text-muted fs-4">visibility</mat-icon></a
                     >
+
                     <ng-template #visibilityOff>
-                        <a (click)="showExposedValue()"> <mat-icon class="text-muted fs-4">visibility_off</mat-icon></a>
+                        <a (click)="toggleExposedValue()">
+                            <mat-icon class="text-muted fs-4">visibility_off</mat-icon></a
+                        >
                     </ng-template>
+                </div>
+            </div>
+            <div *ngIf="valueControl?.invalid && (valueControl?.touched || valueControl?.dirty)">
+                <div *ngIf="valueControl?.errors?.required" class="mt-1">
+                    <span class="text-danger fs-12" data-test-id="error-value-required"> Value is required</span>
                 </div>
             </div>
         </div>

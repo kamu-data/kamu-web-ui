@@ -12,11 +12,10 @@ import {
     SaveEnvVariableMutation,
 } from "./kamu.graphql.interface";
 import { Injectable } from "@angular/core";
-import { noCacheFetchPolicy } from "../common/data.helpers";
+import { noCacheFetchPolicy, updateCacheHelper } from "../common/data.helpers";
 import { ApolloQueryResult } from "@apollo/client";
 import { DatasetOperationError } from "../common/errors";
 import { MutationResult } from "apollo-angular";
-import { DatasetApi } from "./dataset.api";
 
 @Injectable({
     providedIn: "root",
@@ -56,13 +55,10 @@ export class EnvironmentVariablesApi {
                 { ...params },
                 {
                     update: (cache) => {
-                        const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
-                            cache.identify(DatasetApi.generateAccountKeyFragment(params.accountId)),
-                            params.datasetId,
-                        );
-                        cache.evict({
-                            id: cache.identify(datasetKeyFragment),
-                            fieldName: "envVars",
+                        updateCacheHelper(cache, {
+                            accountId: params.accountId,
+                            datasetId: params.datasetId,
+                            fieldNames: ["envVars"],
                         });
                     },
                 },

@@ -14,6 +14,7 @@ import { NavigationService } from "./navigation.service";
 import { ProtocolsService } from "./protocols.service";
 import { UploadPrepareResponse, UploadPerareData, UploadAvailableMethod } from "../common/ingest-via-file-upload.types";
 import { DatasetOperationError } from "../common/errors";
+import { updateCacheHelper } from "../common/data.helpers";
 
 @Injectable({
     providedIn: "root",
@@ -90,13 +91,10 @@ export class FileUploadService {
     private updateCache(datasetBasics: DatasetBasicsFragment): void {
         const cache = this.injector.get(APOLLO_OPTIONS).cache;
         if (cache) {
-            const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
-                cache.identify(DatasetApi.generateAccountKeyFragment(datasetBasics.owner.id)),
-                datasetBasics.id,
-            );
-            cache.evict({
-                id: cache.identify(datasetKeyFragment),
-                fieldName: "metadata",
+            updateCacheHelper(cache, {
+                accountId: datasetBasics.owner.id,
+                datasetId: datasetBasics.id,
+                fieldNames: ["metadata"],
             });
         }
     }

@@ -6,9 +6,11 @@ import { JsonFormValidators } from "../dataset-view/additional-components/metada
 import { MaybeUndefined } from "./app.types";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { isValidCronExpression } from "./cron-expression-validator.helper";
-import { ErrorPolicy, WatchQueryFetchPolicy } from "@apollo/client";
+import { ApolloCache, ErrorPolicy, WatchQueryFetchPolicy } from "@apollo/client";
 import moment from "moment";
 import { convertSecondsToHumanReadableFormat } from "./app.helpers";
+import { DatasetApi } from "../api/dataset.api";
+import { forEach } from "lodash";
 
 export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";
@@ -308,4 +310,20 @@ export const noCacheFetchPolicy: {
 export const noWhitespaceValidator = (control: FormControl): ValidationErrors | null => {
     const isSpace = ((control.value as string) || "").match(/\s/g);
     return isSpace ? { whitespace: true } : null;
+};
+
+export const updateCacheHelper = (
+    cache: ApolloCache<unknown>,
+    params: { accountId: string; datasetId: string; fieldNames: string[] },
+): void => {
+    const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
+        cache.identify(DatasetApi.generateAccountKeyFragment(params.accountId)),
+        params.datasetId,
+    );
+    params.fieldNames.forEach((fieldName: string) => {
+        cache.evict({
+            id: cache.identify(datasetKeyFragment),
+            fieldName,
+        });
+    });
 };

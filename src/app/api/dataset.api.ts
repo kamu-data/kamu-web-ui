@@ -44,7 +44,7 @@ import { MutationResult } from "apollo-angular";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { DatasetOperationError } from "../common/errors";
 import { StoreObject } from "@apollo/client/cache";
-import { noCacheFetchPolicy } from "../common/data.helpers";
+import { noCacheFetchPolicy, updateCacheHelper } from "../common/data.helpers";
 
 @Injectable({ providedIn: "root" })
 export class DatasetApi {
@@ -282,13 +282,10 @@ export class DatasetApi {
                     update: (cache) => {
                         // New events affect metadata chain in unpredictable manner
                         // Open question: future impact on "data" field, if new event brings schema evolution
-                        const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
-                            cache.identify(DatasetApi.generateAccountKeyFragment(params.accountId)),
-                            params.datasetId,
-                        );
-                        cache.evict({
-                            id: cache.identify(datasetKeyFragment),
-                            fieldName: "metadata",
+                        updateCacheHelper(cache, {
+                            accountId: params.accountId,
+                            datasetId: params.datasetId,
+                            fieldNames: ["metadata"],
                         });
                     },
                 },
@@ -322,13 +319,10 @@ export class DatasetApi {
                         // Note: dropping readme on its own via `cache.modify` could have been an option,
                         // but any change to readme affects the state of the metadata chain nodes,
                         // so dropping metadata field completely is a valid and safe option
-                        const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
-                            cache.identify(DatasetApi.generateAccountKeyFragment(params.accountId)),
-                            params.datasetId,
-                        );
-                        cache.evict({
-                            id: cache.identify(datasetKeyFragment),
-                            fieldName: "metadata",
+                        updateCacheHelper(cache, {
+                            accountId: params.accountId,
+                            datasetId: params.datasetId,
+                            fieldNames: ["metadata"],
                         });
                     },
                 },
@@ -391,19 +385,10 @@ export class DatasetApi {
                 },
                 {
                     update: (cache) => {
-                        const datasetCacheId = cache.identify(
-                            DatasetApi.generateDatasetKeyFragment(
-                                cache.identify(DatasetApi.generateAccountKeyFragment(params.accountId)),
-                                params.datasetId,
-                            ),
-                        );
-                        cache.evict({
-                            id: datasetCacheId,
-                            fieldName: "alias",
-                        });
-                        cache.evict({
-                            id: datasetCacheId,
-                            fieldName: "name",
+                        updateCacheHelper(cache, {
+                            accountId: params.accountId,
+                            datasetId: params.datasetId,
+                            fieldNames: ["alias", "name"],
                         });
                     },
                 },
@@ -434,13 +419,10 @@ export class DatasetApi {
                 },
                 {
                     update: (cache) => {
-                        const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
-                            cache.identify(DatasetApi.generateAccountKeyFragment(params.accountId)),
-                            params.datasetId,
-                        );
-                        cache.evict({
-                            id: cache.identify(datasetKeyFragment),
-                            fieldName: "metadata",
+                        updateCacheHelper(cache, {
+                            accountId: params.accountId,
+                            datasetId: params.datasetId,
+                            fieldNames: ["metadata"],
                         });
                     },
                 },

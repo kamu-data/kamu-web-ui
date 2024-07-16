@@ -1,4 +1,5 @@
 import {
+    DatasetKind,
     DeleteEnvVariableMutation,
     ExposedEnvVariableValueQuery,
     ListEnvVariablesQuery,
@@ -17,6 +18,15 @@ export const MOCK_NEW_VALUE = "mock-new-value";
 export const mockListEnvVariablesQuery: ListEnvVariablesQuery = {
     datasets: {
         byOwnerAndName: {
+            id: "did:odf:fed016c0070664336545c0f49dc6a7a860c6862ab3336b630c2d7e779394a26da2e1e",
+            kind: DatasetKind.Derivative,
+            name: "account.tokens.portfolio",
+            owner: {
+                __typename: "Account",
+                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+                accountName: "kamu",
+            },
+            alias: "kamu/account.tokens.portfolio",
             envVars: {
                 listEnvVariables: {
                     totalCount: 5,

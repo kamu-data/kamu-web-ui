@@ -5,7 +5,7 @@ import { DatasetBasicsFragment, ViewDatasetEnvVar } from "src/app/api/kamu.graph
 import { MaybeNull } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
 import { noWhitespaceValidator } from "src/app/common/data.helpers";
-import { EvnironmentVariablesService } from "src/app/services/evnironment-variables.service";
+import { DatasetEvnironmentVariablesService } from "src/app/services/dataset-evnironment-variables.service";
 
 @Component({
     selector: "app-edit-key-value-modal",
@@ -30,7 +30,7 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
     constructor(
         public activeModal: NgbActiveModal,
         private fb: FormBuilder,
-        private evnironmentVariablesService: EvnironmentVariablesService,
+        private evnironmentVariablesService: DatasetEvnironmentVariablesService,
     ) {
         super();
     }

@@ -13,7 +13,7 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import ProjectLinks from "src/app/project-links";
-import { EvnironmentVariablesService } from "src/app/services/evnironment-variables.service";
+import { DatasetEvnironmentVariablesService } from "src/app/services/dataset-evnironment-variables.service";
 import { from } from "rxjs";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
@@ -44,7 +44,7 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
     constructor(
         private ngbModalService: NgbModal,
         private modalService: ModalService,
-        private evnironmentVariablesService: EvnironmentVariablesService,
+        private evnironmentVariablesService: DatasetEvnironmentVariablesService,
         private navigationService: NavigationService,
     ) {
         super();

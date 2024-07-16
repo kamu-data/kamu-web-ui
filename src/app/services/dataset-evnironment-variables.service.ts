@@ -14,7 +14,7 @@ import { ToastrService } from "ngx-toastr";
 @Injectable({
     providedIn: "root",
 })
-export class EvnironmentVariablesService {
+export class DatasetEvnironmentVariablesService {
     constructor(
         private environmentVariablesApi: EnvironmentVariablesApi,
         private toastrService: ToastrService,

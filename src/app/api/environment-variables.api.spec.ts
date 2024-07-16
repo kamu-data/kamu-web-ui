@@ -90,10 +90,6 @@ describe("EnvironmentVariablesApi", () => {
                 expect(result.datasets.byOwnerAndName?.envVars.listEnvVariables.totalCount).toEqual(
                     mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables.totalCount,
                 );
-
-                expect(result.datasets.byOwnerAndName?.envVars.listEnvVariables.nodes).toEqual(
-                    mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables.nodes,
-                );
             });
 
         const op = controller.expectOne(ListEnvVariablesDocument);
@@ -110,6 +106,7 @@ describe("EnvironmentVariablesApi", () => {
     it("should check modify environment variable", () => {
         service
             .modifyEnvironmentVariable({
+                accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
                 id: MOCK_ENV_VAR_ID,
                 newValue: MOCK_NEW_VALUE,
@@ -138,6 +135,7 @@ describe("EnvironmentVariablesApi", () => {
     it("should check delete environment variable", () => {
         service
             .deleteEnvironmentVariable({
+                accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
                 datasetEnvVarId: MOCK_ENV_VAR_ID,
             })

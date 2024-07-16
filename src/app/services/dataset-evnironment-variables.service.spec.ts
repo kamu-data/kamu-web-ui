@@ -1,5 +1,5 @@
 import { TestBed } from "@angular/core/testing";
-import { EvnironmentVariablesService } from "./evnironment-variables.service";
+import { DatasetEvnironmentVariablesService } from "./dataset-evnironment-variables.service";
 import { Apollo } from "apollo-angular";
 import { ToastrModule, ToastrService } from "ngx-toastr";
 import { EnvironmentVariablesApi } from "../api/environment-variables.api";
@@ -25,7 +25,7 @@ import { TEST_ACCOUNT_ID, TEST_ACCOUNT_NAME, TEST_DATASET_ID, TEST_DATASET_NAME 
 import { ViewDatasetEnvVar, ViewDatasetEnvVarConnection } from "../api/kamu.graphql.interface";
 
 describe("EvnironmentVariablesService", () => {
-    let service: EvnironmentVariablesService;
+    let service: DatasetEvnironmentVariablesService;
     let environmentVariablesApi: EnvironmentVariablesApi;
     let toastrService: ToastrService;
 
@@ -34,7 +34,7 @@ describe("EvnironmentVariablesService", () => {
             providers: [Apollo],
             imports: [ToastrModule.forRoot()],
         });
-        service = TestBed.inject(EvnironmentVariablesService);
+        service = TestBed.inject(DatasetEvnironmentVariablesService);
         environmentVariablesApi = TestBed.inject(EnvironmentVariablesApi);
         toastrService = TestBed.inject(ToastrService);
     });
@@ -117,6 +117,7 @@ describe("EvnironmentVariablesService", () => {
 
         const subscription$ = service
             .modifyEnvVariable({
+                accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
                 id: MOCK_ENV_VAR_ID,
                 newValue: MOCK_NEW_VALUE,
@@ -138,6 +139,7 @@ describe("EvnironmentVariablesService", () => {
 
         const subscription$ = service
             .modifyEnvVariable({
+                accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
                 id: MOCK_ENV_VAR_ID,
                 newValue: MOCK_NEW_VALUE,
@@ -159,6 +161,7 @@ describe("EvnironmentVariablesService", () => {
 
         const subscription$ = service
             .deleteEnvVariable({
+                accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
                 datasetEnvVarId: MOCK_ENV_VAR_ID,
             })
@@ -178,6 +181,7 @@ describe("EvnironmentVariablesService", () => {
 
         const subscription$ = service
             .deleteEnvVariable({
+                accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
                 datasetEnvVarId: MOCK_ENV_VAR_ID,
             })

@@ -1,5 +1,5 @@
 import { MaybeNull } from "src/app/common/app.types";
-import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
+import { AbstractControl, FormControl, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
 import { FlowSummaryDataFragment, MetadataBlockFragment, TimeUnit } from "../api/kamu.graphql.interface";
 import { EventPropertyLogo } from "../dataset-block/metadata-block/components/event-details/supported.events";
 import { JsonFormValidators } from "../dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
@@ -303,4 +303,9 @@ export const noCacheFetchPolicy: {
 } = {
     fetchPolicy: "no-cache",
     errorPolicy: "all",
+};
+
+export const noWhitespaceValidator = (control: FormControl): ValidationErrors | null => {
+    const isSpace = ((control.value as string) || "").match(/\s/g);
+    return isSpace ? { whitespace: true } : null;
 };

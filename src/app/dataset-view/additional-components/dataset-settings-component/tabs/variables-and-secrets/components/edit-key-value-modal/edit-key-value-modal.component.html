@@ -3,7 +3,13 @@
         <span class="fs-5 fw-bold">{{ row ? "Edit" : "Add" }} variable</span>
     </div>
     <div>
-        <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.close()"></button>
+        <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            (keydown.esc)="activeModal.close()"
+            (click)="activeModal.close()"
+        ></button>
     </div>
 </div>
 <div class="px-4">
@@ -28,7 +34,12 @@
                     >
                 </div>
                 <div *ngIf="keyControl?.errors?.required" class="mt-1">
-                    <span class="text-danger fs-12" data-test-id="error-key-required"> Key is required</span>
+                    <span class="text-danger fs-12" data-test-id="error-key-required"> The key is required</span>
+                </div>
+                <div *ngIf="keyControl?.errors?.whitespace" class="mt-1">
+                    <span class="text-danger fs-12" data-test-id="error-key-whitespace">
+                        The key cannot contain spaces</span
+                    >
                 </div>
             </div>
         </div>
@@ -57,7 +68,7 @@
             </div>
             <div *ngIf="valueControl?.invalid && (valueControl?.touched || valueControl?.dirty)">
                 <div *ngIf="valueControl?.errors?.required" class="mt-1">
-                    <span class="text-danger fs-12" data-test-id="error-value-required"> Value is required</span>
+                    <span class="text-danger fs-12" data-test-id="error-value-required"> The value is required</span>
                 </div>
             </div>
         </div>

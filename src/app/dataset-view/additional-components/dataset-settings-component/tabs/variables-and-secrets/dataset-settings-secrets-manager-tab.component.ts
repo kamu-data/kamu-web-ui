@@ -71,11 +71,14 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
             modalRefInstance.row = envVar;
         }
         this.trackSubscription(
-            from(modalRef.result).subscribe((result: string) => {
-                if (result === "Success") {
-                    this.updateTable(this.currentPage);
-                }
-            }),
+            from(modalRef.result).subscribe(
+                (result: string) => {
+                    if (result === "Success") {
+                        this.updateTable(this.currentPage);
+                    }
+                },
+                () => null,
+            ),
         );
     }
 

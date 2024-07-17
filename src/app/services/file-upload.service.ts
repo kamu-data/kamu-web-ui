@@ -64,7 +64,7 @@ export class FileUploadService {
             catchError(() => {
                 throw new FileUploadError([
                     new Error(
-                        "File could not be loaded.\nSupported file type: CSV, JSON, Newline-delimited JSON, Geo JSON, Newline-delimited Geo JSON, ESRI Shapefile, Parquet",
+                        "File could not be loaded. Supported file types: CSV, JSON, Newline-delimited JSON, Geo JSON, Newline-delimited Geo JSON, ESRI Shapefile, Parquet",
                     ),
                 ]);
             }),

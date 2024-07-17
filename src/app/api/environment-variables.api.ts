@@ -118,12 +118,12 @@ export class EnvironmentVariablesApi {
             .mutate(
                 { ...params },
                 {
-                    update: (cache) => {
-                        updateCacheHelper(cache, {
-                            accountId: params.accountId,
-                            datasetId: params.datasetId,
-                            fieldNames: ["envVars"],
+                    update: (cache, { data }) => {
+                        const id = cache.identify({
+                            __typename: "ViewDatasetEnvVar",
+                            id: (data as DeleteEnvVariableMutation).datasets.byId?.envVars.deleteEnvVariable.envVarId,
                         });
+                        cache.evict({ id });
                     },
                 },
             )

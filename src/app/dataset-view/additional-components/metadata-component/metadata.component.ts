@@ -170,15 +170,15 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         );
     }
 
-    public navigateToEditSetTransform(): void {
-        this.navigationService.navigateToSetTransform({
+    public navigateToAddPushSource(): void {
+        this.navigationService.navigateToAddPushSource({
             accountName: this.datasetBasics.owner.accountName,
             datasetName: this.datasetBasics.name,
         });
     }
 
-    public navigateToAddPushSource(): void {
-        this.navigationService.navigateToAddPushSource({
+    public navigateToEditSetTransform(): void {
+        this.navigationService.navigateToSetTransform({
             accountName: this.datasetBasics.owner.accountName,
             datasetName: this.datasetBasics.name,
         });

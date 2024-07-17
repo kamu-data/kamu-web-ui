@@ -13,7 +13,7 @@ import { DatasetService } from "../dataset-view/dataset.service";
 import { NavigationService } from "./navigation.service";
 import { ProtocolsService } from "./protocols.service";
 import { UploadPrepareResponse, UploadPerareData, UploadAvailableMethod } from "../common/ingest-via-file-upload.types";
-import { DatasetOperationError } from "../common/errors";
+import { FileUploadError } from "../common/errors";
 
 @Injectable({
     providedIn: "root",
@@ -62,7 +62,11 @@ export class FileUploadService {
                 );
             }),
             catchError(() => {
-                throw new DatasetOperationError([new Error("File could not be loaded")]);
+                throw new FileUploadError([
+                    new Error(
+                        "File could not be loaded.\nSupported file type: CSV, JSON, Newline-delimited JSON, Geo JSON, Newline-delimited Geo JSON, ESRI Shapefile, Parquet",
+                    ),
+                ]);
             }),
             first(),
             finalize(() => {

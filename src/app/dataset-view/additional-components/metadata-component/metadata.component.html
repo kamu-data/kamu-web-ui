@@ -43,7 +43,55 @@
         </div>
 
         <ng-container *ngIf="currentState">
+            <div class="d-flex justify-content-end">
+                <button
+                    class="border-1 bg-light border rounded-2 btn btn-sm d-flex justify-content-between align-items-center"
+                    data-test-id="'add-new-push-source'"
+                    (click)="navigateToAddPushSource()"
+                >
+                    <mat-icon class="text-muted fs-4 d-block">add</mat-icon>
+                    <span class="fs-12 me-2">New push source</span>
+                </button>
+            </div>
             <div class="d-flex flex-column gap-4 mt-4">
+                <ng-container *ngIf="currentPushSources?.length">
+                    <div
+                        class="position-relative border border-1 p-4 rounded-3"
+                        *ngFor="let source of currentPushSources; let i = index"
+                    >
+                        <span class="position-absolute text-muted group-box-label text-uppercase"
+                            >#{{ i + 1 }} Push source &lt;
+                            <span class="text-normal text-muted fs-10">
+                                {{ !source.sourceName ? "default" : source.sourceName }}</span
+                            >
+                            &gt;</span
+                        >
+                        <div class="d-flex justify-content-end" *ngIf="canEditAddPushSource">
+                            <button
+                                class="border-1 bg-light border rounded-2 me-3 btn btn-sm d-flex justify-content-between align-items-center"
+                                data-test-id="'edit-source-link'"
+                                (click)="navigateToEditAddPushSource(source.sourceName!)"
+                            >
+                                <svg-icon name="pencil" class="me-2 text-muted"></svg-icon>
+                                <span class="fs-12 me-2">Edit push source</span>
+                            </button>
+                            <button
+                                class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
+                                data-test-id="'edit-source-link'"
+                                (click)="onDeletePushSource()"
+                            >
+                                <mat-icon class="text-muted fs-4 d-block">delete</mat-icon>
+                                <span class="fs-12 me-2 d-block"> Delete push source</span>
+                            </button>
+                        </div>
+                        <div class="mt-4">
+                            <ng-container
+                                [ngTemplateOutlet]="sourceTemplate"
+                                [ngTemplateOutletContext]="{ $implicit: source }"
+                            ></ng-container>
+                        </div>
+                    </div>
+                </ng-container>
                 <div class="position-relative border border-1 p-2 rounded-3" *ngIf="currentState.schema">
                     <span class="position-absolute text-muted group-box-label text-uppercase">Schema</span>
                     <div class="mx-4">
@@ -255,45 +303,6 @@
                                     [data]="currentTransform.transform.queries"
                                 ></app-sql-query-viewer>
                             </div>
-                        </div>
-                    </div>
-                </ng-container>
-
-                <ng-container *ngIf="currentPushSources?.length">
-                    <div
-                        class="position-relative border border-1 p-4 rounded-3"
-                        *ngFor="let source of currentPushSources; let i = index"
-                    >
-                        <span class="position-absolute text-muted group-box-label text-uppercase"
-                            >#{{ i + 1 }} Push source &lt;
-                            <span class="text-normal text-muted fs-10">
-                                {{ !source.sourceName ? "default" : source.sourceName }}</span
-                            >
-                            &gt;</span
-                        >
-                        <div class="d-flex justify-content-end" *ngIf="canEditAddPushSource">
-                            <button
-                                class="border-1 bg-light border rounded-2 me-3 btn btn-sm d-flex justify-content-between align-items-center"
-                                data-test-id="'edit-source-link'"
-                                (click)="navigateToEditAddPushSource(source.sourceName!)"
-                            >
-                                <svg-icon name="pencil" class="me-2 text-muted"></svg-icon>
-                                <span class="fs-12 me-2">Edit push source</span>
-                            </button>
-                            <button
-                                class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
-                                data-test-id="'edit-source-link'"
-                                (click)="onDeletePushSource()"
-                            >
-                                <mat-icon class="text-muted fs-4 d-block">delete</mat-icon>
-                                <span class="fs-12 me-2 d-block"> Delete push source</span>
-                            </button>
-                        </div>
-                        <div class="mt-4">
-                            <ng-container
-                                [ngTemplateOutlet]="sourceTemplate"
-                                [ngTemplateOutletContext]="{ $implicit: source }"
-                            ></ng-container>
                         </div>
                     </div>
                 </ng-container>

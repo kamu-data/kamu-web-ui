@@ -177,6 +177,13 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         });
     }
 
+    public navigateToAddPushSource(): void {
+        this.navigationService.navigateToAddPushSource({
+            accountName: this.datasetBasics.owner.accountName,
+            datasetName: this.datasetBasics.name,
+        });
+    }
+
     public onDeletePollingSource(): void {
         promiseWithCatch(
             this.modalService.warning({

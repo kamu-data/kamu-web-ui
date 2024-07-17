@@ -29,7 +29,7 @@
             />
             <div *ngIf="keyControl?.invalid && (keyControl?.touched || keyControl?.dirty)">
                 <div *ngIf="keyControl?.errors?.maxlength" class="mt-1">
-                    <span class="text-danger fs-12" data-test-id="error-name-maxLength">
+                    <span class="text-danger fs-12" data-test-id="error-key-maxLength">
                         Max length {{ KEY_MAX_LENGTH }} characters</span
                     >
                 </div>

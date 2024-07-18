@@ -53,7 +53,9 @@ export class AddPushSourceComponent extends BaseSourceEventComponent {
                     if (result) {
                         this.eventYamlByHash = result;
                         const currentPushSourceEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
-                        this.addPushSourceForm.patchValue({ sourceName: currentPushSourceEvent.sourceName });
+                        this.addPushSourceForm.patchValue({
+                            sourceName: this.queryParamName ? currentPushSourceEvent.sourceName : "",
+                        });
                     }
                     if (!this.queryParamName) {
                         this.addPushSourceForm.controls.sourceName.addValidators(
@@ -102,6 +104,7 @@ export class AddPushSourceComponent extends BaseSourceEventComponent {
 
     public onSaveEvent(): void {
         this.saveSourceEvent(this.addPushSourceForm, SupportedEvents.AddPushSource);
+        this.addPushSourceForm.reset();
     }
 
     public get queryParamName(): MaybeNull<string> {

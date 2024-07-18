@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Added
 - Added access token feature
 - Added environment variables and secrets for the dataset
+- Added new flag(enableDatasetEnvVarsManagment) in the runtime configuration
 ## Fixed
 - Fixed bug with cache(Data tab) on the deployment version
 - Extended full source info for EthereumLogs(Metadata tab)

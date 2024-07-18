@@ -13,7 +13,7 @@ import { DatasetService } from "../dataset-view/dataset.service";
 import { NavigationService } from "./navigation.service";
 import { ProtocolsService } from "./protocols.service";
 import { UploadPrepareResponse, UploadPerareData, UploadAvailableMethod } from "../common/ingest-via-file-upload.types";
-import { DatasetOperationError, FileUploadError } from "../common/errors";
+import { FileUploadError } from "../common/errors";
 
 @Injectable({
     providedIn: "root",
@@ -70,7 +70,7 @@ export class FileUploadService {
                         ),
                     ]);
                 } else {
-                    throw new DatasetOperationError([new Error("File could not be loaded")]);
+                    throw new FileUploadError([new Error("File could not be loaded")]);
                 }
             }),
             first(),

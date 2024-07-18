@@ -127,7 +127,8 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         if (this.currentState && this.datasetPermissions.permissions.canCommit) {
             return (
                 !this.currentState.overview.metadata.currentPollingSource &&
-                this.datasetBasics.kind === DatasetKind.Root
+                this.datasetBasics.kind === DatasetKind.Root &&
+                !this.currentState.overview.metadata.currentPushSources.length
             );
         } else {
             return false;

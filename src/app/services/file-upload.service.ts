@@ -7,12 +7,12 @@ import { LocalStorageService } from "./local-storage.service";
 import { DatasetInfo } from "../interface/navigation.interface";
 import { DatasetBasicsFragment, DatasetEndpoints } from "../api/kamu.graphql.interface";
 import { APOLLO_OPTIONS } from "apollo-angular";
-import { DatasetApi } from "../api/dataset.api";
 import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
 import { DatasetService } from "../dataset-view/dataset.service";
 import { NavigationService } from "./navigation.service";
 import { ProtocolsService } from "./protocols.service";
 import { UploadPrepareResponse, UploadPerareData, UploadAvailableMethod } from "../common/ingest-via-file-upload.types";
+import { updateCacheHelper } from "../apollo-cache.helper";
 import { FileUploadError } from "../common/errors";
 
 @Injectable({
@@ -99,13 +99,10 @@ export class FileUploadService {
     private updateCache(datasetBasics: DatasetBasicsFragment): void {
         const cache = this.injector.get(APOLLO_OPTIONS).cache;
         if (cache) {
-            const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
-                cache.identify(DatasetApi.generateAccountKeyFragment(datasetBasics.owner.id)),
-                datasetBasics.id,
-            );
-            cache.evict({
-                id: cache.identify(datasetKeyFragment),
-                fieldName: "metadata",
+            updateCacheHelper(cache, {
+                accountId: datasetBasics.owner.id,
+                datasetId: datasetBasics.id,
+                fieldNames: ["metadata"],
             });
         }
     }

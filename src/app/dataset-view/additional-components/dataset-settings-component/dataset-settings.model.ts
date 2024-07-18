@@ -1,6 +1,7 @@
 export enum SettingsTabsEnum {
     GENERAL = "general",
     SCHEDULING = "scheduling",
+    VARIABLES_AND_SECRETS = "variables-and-secrets",
     COMPACTION = "compaction",
 }
 
@@ -45,5 +46,13 @@ export const datasetSettingsSidePanelData: DatasetSettingsSidePanelItem[] = [
         showDivider: false,
         activeTab: SettingsTabsEnum.COMPACTION,
         iconClassName: "mr-2",
+    },
+    {
+        name: "Variables and secrets",
+        iconName: "security",
+        showDivider: false,
+        activeTab: SettingsTabsEnum.VARIABLES_AND_SECRETS,
+        iconClassName: "mr-2 ms-3px",
+        visible: true,
     },
 ];

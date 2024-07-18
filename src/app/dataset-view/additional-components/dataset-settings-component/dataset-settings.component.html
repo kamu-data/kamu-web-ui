@@ -43,6 +43,11 @@
                 data-test-id="settings-scheduling-tab"
             ></app-dataset-settings-scheduling-tab>
         </ng-container>
+        <ng-container *ngIf="activeTab === settingsTabsEnum.VARIABLES_AND_SECRETS">
+            <app-dataset-settings-secrets-manager-tab
+                [datasetBasics]="datasetBasics"
+            ></app-dataset-settings-secrets-manager-tab>
+        </ng-container>
         <ng-container *ngIf="showCompactionTab">
             <app-dataset-settings-compacting-tab [datasetBasics]="datasetBasics"></app-dataset-settings-compacting-tab>
         </ng-container>

@@ -1,4 +1,5 @@
-import { InMemoryCache } from "@apollo/client/core";
+import { ApolloCache, InMemoryCache } from "@apollo/client/core";
+import { DatasetApi } from "./api/dataset.api";
 
 export function apolloCache(): InMemoryCache {
     return new InMemoryCache({
@@ -31,6 +32,25 @@ export function apolloCache(): InMemoryCache {
             Search: {
                 merge: true,
             },
+            DatasetEnvVars: {
+                merge: true,
+            },
         },
     });
 }
+
+export const updateCacheHelper = (
+    cache: ApolloCache<unknown>,
+    params: { accountId: string; datasetId: string; fieldNames: string[] },
+): void => {
+    const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
+        cache.identify(DatasetApi.generateAccountKeyFragment(params.accountId)),
+        params.datasetId,
+    );
+    params.fieldNames.forEach((fieldName: string) => {
+        cache.evict({
+            id: cache.identify(datasetKeyFragment),
+            fieldName,
+        });
+    });
+};

@@ -1,0 +1,13 @@
+query exposedEnvVariableValue(
+  $accountName: AccountName!
+  $datasetName: DatasetName!
+  $datasetEnvVarId: DatasetEnvVarID!
+) {
+  datasets {
+    byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+      envVars {
+        exposedValue(datasetEnvVarId: $datasetEnvVarId)
+      }
+    }
+  }
+}

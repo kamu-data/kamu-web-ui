@@ -144,6 +144,7 @@ describe("DatasetComponent", () => {
         const iconRegistryService: SvgIconRegistryService = TestBed.inject(SvgIconRegistryService);
         iconRegistryService.addSvg("account", "");
         iconRegistryService.addSvg("clock", "");
+        iconRegistryService.addSvg("security", "");
 
         datasetSubsServices = TestBed.inject(DatasetSubscriptionsService);
         datasetSubsServices.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);

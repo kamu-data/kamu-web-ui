@@ -19,6 +19,7 @@ export type Scalars = {
     AccountID: string;
     AccountName: string;
     DatasetAlias: string;
+    DatasetEnvVarID: string;
     DatasetID: string;
     DatasetName: string;
     DatasetRef: string;
@@ -477,6 +478,8 @@ export type Dataset = {
     data: DatasetData;
     /** Various endpoints for interacting with data */
     endpoints: DatasetEndpoints;
+    /** Access to the environment variable of this dataset */
+    envVars: DatasetEnvVars;
     /** Access to the flow configurations of this dataset */
     flows: DatasetFlows;
     /** Unique identifier of the dataset */
@@ -561,6 +564,44 @@ export type DatasetEndpoints = {
     rest: RestProtocolDesc;
     webLink: LinkProtocolDesc;
     websocket: WebSocketProtocolDesc;
+};
+
+export type DatasetEnvVars = {
+    __typename?: "DatasetEnvVars";
+    exposedValue: Scalars["String"];
+    listEnvVariables: ViewDatasetEnvVarConnection;
+};
+
+export type DatasetEnvVarsExposedValueArgs = {
+    datasetEnvVarId: Scalars["DatasetEnvVarID"];
+};
+
+export type DatasetEnvVarsListEnvVariablesArgs = {
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+};
+
+export type DatasetEnvVarsMut = {
+    __typename?: "DatasetEnvVarsMut";
+    deleteEnvVariable: DeleteDatasetEnvVarResult;
+    modifyEnvVariable: ModifyDatasetEnvVarResult;
+    saveEnvVariable: SaveDatasetEnvVarResult;
+};
+
+export type DatasetEnvVarsMutDeleteEnvVariableArgs = {
+    id: Scalars["DatasetEnvVarID"];
+};
+
+export type DatasetEnvVarsMutModifyEnvVariableArgs = {
+    id: Scalars["DatasetEnvVarID"];
+    isSecret: Scalars["Boolean"];
+    newValue: Scalars["String"];
+};
+
+export type DatasetEnvVarsMutSaveEnvVariableArgs = {
+    isSecret: Scalars["Boolean"];
+    key: Scalars["String"];
+    value: Scalars["String"];
 };
 
 export type DatasetFlowConfigs = {
@@ -724,6 +765,8 @@ export type DatasetMut = {
     /** Delete the dataset */
     delete: DeleteResult;
     /** Access to the mutable flow configurations of this dataset */
+    envVars: DatasetEnvVarsMut;
+    /** Access to the mutable flow configurations of this dataset */
     flows: DatasetFlowsMut;
     /** Access to the mutable metadata of the dataset */
     metadata: DatasetMetadataMut;
@@ -805,6 +848,22 @@ export type DatasetsMutCreateEmptyArgs = {
 export type DatasetsMutCreateFromSnapshotArgs = {
     snapshot: Scalars["String"];
     snapshotFormat: MetadataManifestFormat;
+};
+
+export type DeleteDatasetEnvVarResult = {
+    message: Scalars["String"];
+};
+
+export type DeleteDatasetEnvVarResultNotFound = DeleteDatasetEnvVarResult & {
+    __typename?: "DeleteDatasetEnvVarResultNotFound";
+    envVarId: Scalars["DatasetEnvVarID"];
+    message: Scalars["String"];
+};
+
+export type DeleteDatasetEnvVarResultSuccess = DeleteDatasetEnvVarResult & {
+    __typename?: "DeleteDatasetEnvVarResultSuccess";
+    envVarId: Scalars["DatasetEnvVarID"];
+    message: Scalars["String"];
 };
 
 export type DeleteResult = {
@@ -1431,6 +1490,22 @@ export type MetadataManifestUnsupportedVersion = CommitResult &
         message: Scalars["String"];
     };
 
+export type ModifyDatasetEnvVarResult = {
+    message: Scalars["String"];
+};
+
+export type ModifyDatasetEnvVarResultNotFound = ModifyDatasetEnvVarResult & {
+    __typename?: "ModifyDatasetEnvVarResultNotFound";
+    envVarId: Scalars["DatasetEnvVarID"];
+    message: Scalars["String"];
+};
+
+export type ModifyDatasetEnvVarResultSuccess = ModifyDatasetEnvVarResult & {
+    __typename?: "ModifyDatasetEnvVarResultSuccess";
+    envVarId: Scalars["DatasetEnvVarID"];
+    message: Scalars["String"];
+};
+
 export enum MqttQos {
     AtLeastOnce = "AT_LEAST_ONCE",
     AtMostOnce = "AT_MOST_ONCE",
@@ -1675,6 +1750,23 @@ export type RevokeResultSuccess = RevokeResult & {
     __typename?: "RevokeResultSuccess";
     message: Scalars["String"];
     tokenId: Scalars["AccessTokenID"];
+};
+
+export type SaveDatasetEnvVarResult = {
+    message: Scalars["String"];
+};
+
+export type SaveDatasetEnvVarResultDuplicate = SaveDatasetEnvVarResult & {
+    __typename?: "SaveDatasetEnvVarResultDuplicate";
+    datasetEnvVarKey: Scalars["String"];
+    datasetName: Scalars["DatasetName"];
+    message: Scalars["String"];
+};
+
+export type SaveDatasetEnvVarResultSuccess = SaveDatasetEnvVarResult & {
+    __typename?: "SaveDatasetEnvVarResultSuccess";
+    envVar: ViewDatasetEnvVar;
+    message: Scalars["String"];
 };
 
 export type ScheduleInput =
@@ -2007,6 +2099,35 @@ export type ViewAccessToken = {
     name: Scalars["String"];
     /** Date of token revokation */
     revokedAt?: Maybe<Scalars["DateTime"]>;
+};
+
+export type ViewDatasetEnvVar = {
+    __typename?: "ViewDatasetEnvVar";
+    /** Date of the dataset environment variable creation */
+    createdAt: Scalars["DateTime"];
+    /** Unique identifier of the dataset environment variable */
+    id: Scalars["DatasetEnvVarID"];
+    isSecret: Scalars["Boolean"];
+    /** Key of the dataset environment variable */
+    key: Scalars["String"];
+    /** Non sercret value of dataset environment variable */
+    value?: Maybe<Scalars["String"]>;
+};
+
+export type ViewDatasetEnvVarConnection = {
+    __typename?: "ViewDatasetEnvVarConnection";
+    edges: Array<ViewDatasetEnvVarEdge>;
+    /** A shorthand for `edges { node { ... } }` */
+    nodes: Array<ViewDatasetEnvVar>;
+    /** Page information */
+    pageInfo: PageBasedInfo;
+    /** Approximate number of total nodes */
+    totalCount: Scalars["Int"];
+};
+
+export type ViewDatasetEnvVarEdge = {
+    __typename?: "ViewDatasetEnvVarEdge";
+    node: ViewDatasetEnvVar;
 };
 
 export type WebSocketProtocolDesc = {
@@ -2600,6 +2721,130 @@ export type EnginesQuery = {
     data: {
         __typename?: "DataQueries";
         knownEngines: Array<{ __typename?: "EngineDesc"; name: string; dialect: QueryDialect; latestImage: string }>;
+    };
+};
+
+export type DeleteEnvVariableMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    datasetEnvVarId: Scalars["DatasetEnvVarID"];
+}>;
+
+export type DeleteEnvVariableMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            envVars: {
+                __typename?: "DatasetEnvVarsMut";
+                deleteEnvVariable:
+                    | { __typename?: "DeleteDatasetEnvVarResultNotFound"; message: string; envVarId: string }
+                    | { __typename?: "DeleteDatasetEnvVarResultSuccess"; message: string; envVarId: string };
+            };
+        } | null;
+    };
+};
+
+export type ExposedEnvVariableValueQueryVariables = Exact<{
+    accountName: Scalars["AccountName"];
+    datasetName: Scalars["DatasetName"];
+    datasetEnvVarId: Scalars["DatasetEnvVarID"];
+}>;
+
+export type ExposedEnvVariableValueQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byOwnerAndName?: {
+            __typename?: "Dataset";
+            envVars: { __typename?: "DatasetEnvVars"; exposedValue: string };
+        } | null;
+    };
+};
+
+export type ViewDatasetEnvVarDataFragment = {
+    __typename?: "ViewDatasetEnvVar";
+    id: string;
+    key: string;
+    value?: string | null;
+    isSecret: boolean;
+};
+
+export type ListEnvVariablesQueryVariables = Exact<{
+    accountName: Scalars["AccountName"];
+    datasetName: Scalars["DatasetName"];
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+}>;
+
+export type ListEnvVariablesQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byOwnerAndName?:
+            | ({
+                  __typename?: "Dataset";
+                  envVars: {
+                      __typename?: "DatasetEnvVars";
+                      listEnvVariables: {
+                          __typename?: "ViewDatasetEnvVarConnection";
+                          totalCount: number;
+                          nodes: Array<{ __typename?: "ViewDatasetEnvVar" } & ViewDatasetEnvVarDataFragment>;
+                          pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
+                      };
+                  };
+              } & DatasetBasicsFragment)
+            | null;
+    };
+};
+
+export type ModifyEnvVariableMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    id: Scalars["DatasetEnvVarID"];
+    newValue: Scalars["String"];
+    isSecret: Scalars["Boolean"];
+}>;
+
+export type ModifyEnvVariableMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            envVars: {
+                __typename?: "DatasetEnvVarsMut";
+                modifyEnvVariable:
+                    | { __typename?: "ModifyDatasetEnvVarResultNotFound"; message: string; envVarId: string }
+                    | { __typename?: "ModifyDatasetEnvVarResultSuccess"; message: string; envVarId: string };
+            };
+        } | null;
+    };
+};
+
+export type SaveEnvVariableMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    key: Scalars["String"];
+    value: Scalars["String"];
+    isSecret: Scalars["Boolean"];
+}>;
+
+export type SaveEnvVariableMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            envVars: {
+                __typename?: "DatasetEnvVarsMut";
+                saveEnvVariable:
+                    | { __typename?: "SaveDatasetEnvVarResultDuplicate"; message: string; datasetEnvVarKey: string }
+                    | {
+                          __typename?: "SaveDatasetEnvVarResultSuccess";
+                          message: string;
+                          envVar: { __typename?: "ViewDatasetEnvVar" } & ViewDatasetEnvVarDataFragment;
+                      };
+            };
+        } | null;
     };
 };
 
@@ -3871,6 +4116,14 @@ export const DatasetConnectionDataFragmentDoc = gql`
     ${FetchStepUrlDataFragmentDoc}
     ${FetchStepFilesGlobDataFragmentDoc}
     ${FetchStepContainerDataFragmentDoc}
+`;
+export const ViewDatasetEnvVarDataFragmentDoc = gql`
+    fragment ViewDatasetEnvVarData on ViewDatasetEnvVar {
+        id
+        key
+        value
+        isSecret
+    }
 `;
 export const AccountFragmentDoc = gql`
     fragment Account on Account {
@@ -5706,6 +5959,172 @@ export const EnginesDocument = gql`
 })
 export class EnginesGQL extends Apollo.Query<EnginesQuery, EnginesQueryVariables> {
     document = EnginesDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DeleteEnvVariableDocument = gql`
+    mutation deleteEnvVariable($datasetId: DatasetID!, $datasetEnvVarId: DatasetEnvVarID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                envVars {
+                    deleteEnvVariable(id: $datasetEnvVarId) {
+                        ... on DeleteDatasetEnvVarResultSuccess {
+                            message
+                            envVarId
+                        }
+                        ... on DeleteDatasetEnvVarResultNotFound {
+                            message
+                            envVarId
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DeleteEnvVariableGQL extends Apollo.Mutation<
+    DeleteEnvVariableMutation,
+    DeleteEnvVariableMutationVariables
+> {
+    document = DeleteEnvVariableDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const ExposedEnvVariableValueDocument = gql`
+    query exposedEnvVariableValue(
+        $accountName: AccountName!
+        $datasetName: DatasetName!
+        $datasetEnvVarId: DatasetEnvVarID!
+    ) {
+        datasets {
+            byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+                envVars {
+                    exposedValue(datasetEnvVarId: $datasetEnvVarId)
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class ExposedEnvVariableValueGQL extends Apollo.Query<
+    ExposedEnvVariableValueQuery,
+    ExposedEnvVariableValueQueryVariables
+> {
+    document = ExposedEnvVariableValueDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const ListEnvVariablesDocument = gql`
+    query listEnvVariables($accountName: AccountName!, $datasetName: DatasetName!, $page: Int, $perPage: Int) {
+        datasets {
+            byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+                ...DatasetBasics
+                envVars {
+                    listEnvVariables(page: $page, perPage: $perPage) {
+                        totalCount
+                        nodes {
+                            ...ViewDatasetEnvVarData
+                        }
+                        pageInfo {
+                            ...DatasetPageInfo
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+    ${ViewDatasetEnvVarDataFragmentDoc}
+    ${DatasetPageInfoFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class ListEnvVariablesGQL extends Apollo.Query<ListEnvVariablesQuery, ListEnvVariablesQueryVariables> {
+    document = ListEnvVariablesDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const ModifyEnvVariableDocument = gql`
+    mutation modifyEnvVariable($datasetId: DatasetID!, $id: DatasetEnvVarID!, $newValue: String!, $isSecret: Boolean!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                envVars {
+                    modifyEnvVariable(id: $id, newValue: $newValue, isSecret: $isSecret) {
+                        ... on ModifyDatasetEnvVarResultSuccess {
+                            message
+                            envVarId
+                        }
+                        ... on ModifyDatasetEnvVarResultNotFound {
+                            message
+                            envVarId
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class ModifyEnvVariableGQL extends Apollo.Mutation<
+    ModifyEnvVariableMutation,
+    ModifyEnvVariableMutationVariables
+> {
+    document = ModifyEnvVariableDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const SaveEnvVariableDocument = gql`
+    mutation saveEnvVariable($datasetId: DatasetID!, $key: String!, $value: String!, $isSecret: Boolean!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                envVars {
+                    saveEnvVariable(key: $key, value: $value, isSecret: $isSecret) {
+                        ... on SaveDatasetEnvVarResultSuccess {
+                            message
+                            envVar {
+                                ...ViewDatasetEnvVarData
+                            }
+                        }
+                        ... on SaveDatasetEnvVarResultDuplicate {
+                            message
+                            datasetEnvVarKey
+                            datasetEnvVarKey
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${ViewDatasetEnvVarDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class SaveEnvVariableGQL extends Apollo.Mutation<SaveEnvVariableMutation, SaveEnvVariableMutationVariables> {
+    document = SaveEnvVariableDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

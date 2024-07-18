@@ -44,7 +44,8 @@ import { MutationResult } from "apollo-angular";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { DatasetOperationError } from "../common/errors";
 import { StoreObject } from "@apollo/client/cache";
-import { noCacheFetchPolicy, updateCacheHelper } from "../common/data.helpers";
+import { noCacheFetchPolicy } from "../common/data.helpers";
+import { updateCacheHelper } from "../apollo-cache.helper";
 
 @Injectable({ providedIn: "root" })
 export class DatasetApi {

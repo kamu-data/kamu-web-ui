@@ -13,7 +13,7 @@ import { NavigationService } from "./navigation.service";
 import { ProtocolsService } from "./protocols.service";
 import { UploadPrepareResponse, UploadPerareData, UploadAvailableMethod } from "../common/ingest-via-file-upload.types";
 import { DatasetOperationError } from "../common/errors";
-import { updateCacheHelper } from "../common/data.helpers";
+import { updateCacheHelper } from "../apollo-cache.helper";
 
 @Injectable({
     providedIn: "root",

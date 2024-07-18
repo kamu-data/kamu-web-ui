@@ -5,6 +5,7 @@
   "ingestUploadFileLimitMb": 50,
   "featureFlags": {
     "enableLogout": true,
-    "enableScheduling": true
+    "enableScheduling": true,
+    "enableDatasetEnvVarsManagment": true
   }
 }

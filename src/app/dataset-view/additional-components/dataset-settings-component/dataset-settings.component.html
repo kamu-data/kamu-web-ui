@@ -43,7 +43,7 @@
                 data-test-id="settings-scheduling-tab"
             ></app-dataset-settings-scheduling-tab>
         </ng-container>
-        <ng-container *ngIf="activeTab === settingsTabsEnum.VARIABLES_AND_SECRETS">
+        <ng-container *ngIf="showSecretsManagerTab">
             <app-dataset-settings-secrets-manager-tab
                 [datasetBasics]="datasetBasics"
             ></app-dataset-settings-secrets-manager-tab>

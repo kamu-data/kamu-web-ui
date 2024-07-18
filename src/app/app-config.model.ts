@@ -20,4 +20,5 @@ export enum LoginMethod {
 export interface AppConfigFeatureFlags {
     enableLogout: boolean;
     enableScheduling: boolean;
+    enableDatasetEnvVarsManagment: boolean;
 }

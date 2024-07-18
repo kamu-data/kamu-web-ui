@@ -101,6 +101,7 @@ describe("LoginComponent", () => {
             spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue({
                 enableLogout: true,
                 enableScheduling: true,
+                enableDatasetEnvVarsManagment: true,
             });
             spyOnProperty(loginService, "loginMethods", "get").and.returnValue([
                 LoginMethod.GITHUB,
@@ -268,6 +269,7 @@ describe("LoginComponent", () => {
                 spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue({
                     enableLogout: true,
                     enableScheduling: true,
+                    enableDatasetEnvVarsManagment: true,
                 });
                 spyOnProperty(loginService, "loginMethods", "get").and.returnValue([loginMethod]);
 
@@ -298,6 +300,7 @@ describe("LoginComponent", () => {
             spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue({
                 enableLogout: true,
                 enableScheduling: true,
+                enableDatasetEnvVarsManagment: true,
             });
             spyOnProperty(loginService, "loginMethods", "get").and.returnValue([]);
         });

@@ -67,6 +67,13 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
         return this.datasetBasics.kind === DatasetKind.Root && this.activeTab === SettingsTabsEnum.COMPACTION;
     }
 
+    public get showSecretsManagerTab(): boolean {
+        return (
+            this.appConfigService.featureFlags.enableDatasetEnvVarsManagment &&
+            this.activeTab === SettingsTabsEnum.VARIABLES_AND_SECRETS
+        );
+    }
+
     ngOnInit(): void {
         this.activeTab = this.getSectionFromUrl() ?? SettingsTabsEnum.GENERAL;
         this.trackSubscription(
@@ -97,6 +104,8 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
                 return this.isSchedulingAvailable;
             case SettingsTabsEnum.COMPACTION:
                 return this.datasetBasics.kind === DatasetKind.Root;
+            case SettingsTabsEnum.VARIABLES_AND_SECRETS:
+                return this.appConfigService.featureFlags.enableDatasetEnvVarsManagment;
             default:
                 return Boolean(item.visible);
         }

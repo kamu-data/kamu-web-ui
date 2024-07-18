@@ -76,6 +76,12 @@ export class AuthenticationError extends KamuMultiError {
     }
 }
 
+export class FileUploadError extends KamuMultiError {
+    public accept(visitor: KamuErrorVisitor): void {
+        visitor.visitFileUploadError(this);
+    }
+}
+
 interface KamuErrorVisitor {
     visitSqlExecutionError(e: SqlExecutionError): void;
     visitInvalidSqlError(e: InvalidSqlError): void;
@@ -84,6 +90,7 @@ interface KamuErrorVisitor {
     visitDatasetOperationError(e: DatasetOperationError): void;
     visitApolloError(e: ApolloError): void;
     visitAuthenticationError(e: AuthenticationError): void;
+    visitFileUploadError(e: FileUploadError): void;
 }
 
 export class KamuErrorHandler implements KamuErrorVisitor {
@@ -140,5 +147,9 @@ export class KamuErrorHandler implements KamuErrorVisitor {
             logError(ErrorTexts.ERROR_UNKNOWN_AUTHENTICATION);
             this.toastrService.error(ErrorTexts.ERROR_UNKNOWN_AUTHENTICATION);
         }
+    }
+
+    public visitFileUploadError(e: FileUploadError): void {
+        this.toastrService.error(e.compactMessage, "", { disableTimeOut: "timeOut" });
     }
 }

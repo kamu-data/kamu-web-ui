@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended full source info for EthereumLogs(Metadata tab)
 - Added multi-line fields for ETH filter & signature(Metadata block)
 - Fixed styles for the mobile version(portrait view) of the lineage graph
+- Removed initial links when push source exist(Overview tab)
 
 ## [0.22.0] -2024-06-27
 ### Fixed

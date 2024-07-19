@@ -21,6 +21,7 @@ import { isDevMode } from "@angular/core";
 import moment from "moment";
 import { AccountTabs } from "./account/account.constants";
 import { LoggedUserService } from "./auth/logged-user.service";
+import packageFile from "../../package.json";
 
 export const ALL_URLS_WITHOUT_HEADER: string[] = [ProjectLinks.URL_LOGIN, ProjectLinks.URL_GITHUB_CALLBACK];
 
@@ -71,6 +72,7 @@ export class AppComponent extends BaseComponent implements OnInit {
         if (isDevMode()) {
             loadErrorMessages();
         }
+        this.outputAppVersion();
         this.setMomentOptions();
     }
 
@@ -112,6 +114,11 @@ export class AppComponent extends BaseComponent implements OnInit {
 
     private shouldHeaderBeVisible(url: string): boolean {
         return !ALL_URLS_WITHOUT_HEADER.some((item) => url.toLowerCase().includes(item));
+    }
+
+    private outputAppVersion(): void {
+        // eslint-disable-next-line no-console
+        console.info(`%c Kamu UI v${packageFile.version} `, "background-color: rgb(105, 228, 187); font-size: 18px;");
     }
 
     public onSelectedDataset(item: DatasetAutocompleteItem): void {

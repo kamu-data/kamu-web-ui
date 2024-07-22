@@ -5,6 +5,10 @@
     grid-template-columns: 300px 1fr;
 }
 
+.overflow-unset {
+    overflow: unset;
+}
+
 .vcard-username {
     font-size: 20px;
     font-style: normal;

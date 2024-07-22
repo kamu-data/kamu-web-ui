@@ -23,7 +23,7 @@ import { FlowsTableProcessingBaseComponent } from "src/app/common/components/flo
 export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent implements OnInit {
     @Input() accountName: string;
     public nodes: FlowSummaryDataFragment[] = [];
-    public searchByDataset: MaybeNull<Dataset> = null;
+    public searchByDataset: Dataset[] = [];
     public readonly DISPLAY_COLUMNS = ["description", "information", "creator", "dataset", "options"];
 
     constructor(private accountService: AccountService) {
@@ -89,9 +89,14 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
         this.fetchTableData(page);
     }
 
-    public onSearchByDatasetName(dataset: MaybeNull<Dataset>): void {
-        this.fetchTableData(this.currentPage, this.filterByStatus, null, dataset ? [dataset.id] : []);
-        this.searchByDataset = dataset;
+    public onSearchByDatasetName(datasets: Dataset[]): void {
+        this.fetchTableData(
+            this.currentPage,
+            this.filterByStatus,
+            null,
+            datasets.map((item) => item.id),
+        );
+        this.searchByDataset = datasets;
     }
 
     public toggleStateAccountFlowConfigs(paused: boolean): void {

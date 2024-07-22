@@ -29,8 +29,9 @@ import { DatasetFlowTableHelpers } from "./flows-table.helpers";
 import { CancelFlowArgs, FilterByInitiatorEnum, FlowsTableOptions } from "./flows-table.types";
 import { ModalService } from "src/app/components/modal/modal.service";
 import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
-import { OperatorFunction, Observable, debounceTime, distinctUntilChanged, tap, map } from "rxjs";
+import { OperatorFunction, Observable, debounceTime, distinctUntilChanged, map } from "rxjs";
 import { MaybeNull } from "../../app.types";
+import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.interface";
 
 @Component({
     selector: "app-flows-table",
@@ -43,25 +44,41 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     @Input() public filterByStatus: MaybeNull<FlowStatus>;
     @Input() public filterByInitiator: FilterByInitiatorEnum;
     @Input() public searchByAccount: MaybeNull<Account>;
-    @Input() public searchByDataset: MaybeNull<Dataset>;
+    @Input() public searchByDataset: Dataset[];
     @Input() tableOptions: FlowsTableOptions;
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
     @Output() public filterByInitiatorChange = new EventEmitter<FilterByInitiatorEnum>();
     @Output() public searchByAccountNameChange = new EventEmitter<MaybeNull<Account>>();
-    @Output() public searchByDatasetNameChange = new EventEmitter<MaybeNull<Dataset>>();
+    @Output() public searchByDatasetNameChange = new EventEmitter<Dataset[]>();
     @Output() public cancelFlowChange = new EventEmitter<CancelFlowArgs>();
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly FilterByInitiatorEnum: typeof FilterByInitiatorEnum = FilterByInitiatorEnum;
-    public readonly SEARCH_DATASET_TYPEAHEAD_HEIGHT = 65;
-    public readonly TYPEAHEAD_ITEM_HEIGHT = 30;
+    public searchDatasetTypeAheadHeight: number;
+    private readonly TYPEAHEAD_ITEM_HEIGHT = 50;
+    private readonly FILTERED_ITEMS_COUNT = 10;
+    private readonly INITIAL_TYPEAHEAD_HEIGHT = 65;
 
     public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>();
     @ViewChildren(MatMenuTrigger) triggersMatMenu: QueryList<MatMenuTrigger>;
-    public searchAccountDatasetsLength: number;
     @Input() public accountFlowInitiators: MaybeNull<Account[]> = null;
     @Input() public involvedDatasets: Dataset[];
+
+    public dropdownSettings: DropdownSettings = {
+        singleSelection: false,
+        labelKey: "name",
+        enableCheckAll: true,
+        enableSearchFilter: true,
+        badgeShowLimit: 1,
+        enableFilterSelectAll: false,
+        tagToBody: false,
+        position: "bottom",
+        autoPosition: false,
+        maxHeight: 400,
+    };
+    public dropdownDatasetList: Dataset[] = [];
+    public selectedDatasetItems: Dataset[] = [];
 
     constructor(
         private navigationService: NavigationService,
@@ -78,6 +95,9 @@ export class FlowsTableComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
         this.dataSource.data = this.nodes;
+        this.dropdownDatasetList = this.involvedDatasets.slice(0, this.FILTERED_ITEMS_COUNT);
+        this.selectedDatasetItems = this.searchByDataset;
+        this.searchDatasetTypeAheadHeight = this.INITIAL_TYPEAHEAD_HEIGHT;
     }
 
     public durationTask(d1: string, d2: string): string {
@@ -110,7 +130,7 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     }
 
     public onSearchByDatasetName(): void {
-        this.searchByDatasetNameChange.emit(this.searchByDataset);
+        this.searchByDatasetNameChange.emit(this.selectedDatasetItems);
         this.triggersMatMenu.get(2)?.closeMenu();
     }
 
@@ -189,21 +209,6 @@ export class FlowsTableComponent implements OnInit, OnChanges {
             ),
         );
 
-    public searchByDatasetName: OperatorFunction<string, readonly Dataset[]> = (text$: Observable<string>) =>
-        text$.pipe(
-            debounceTime(200),
-            distinctUntilChanged(),
-            map((term) =>
-                (term === "" || !this.involvedDatasets
-                    ? []
-                    : this.involvedDatasets.filter(
-                          (initiator) => initiator.name.toLowerCase().indexOf(term.toLowerCase()) > -1,
-                      )
-                ).slice(0, 10),
-            ),
-            tap((result) => (this.searchAccountDatasetsLength = result.length)),
-        );
-
     public datasetFormatter(x: Dataset | string): string {
         return typeof x !== "string" ? x.name : x;
     }
@@ -216,11 +221,19 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     }
 
     public clearSearchByDatasetName(): void {
-        this.searchByDataset = null;
-        this.searchByDatasetNameChange.emit(this.searchByDataset);
+        this.searchByDatasetNameChange.emit([]);
     }
 
     public get hasDatasetColumn(): boolean {
         return this.tableOptions.displayColumns.includes("dataset");
+    }
+
+    public onOpenMultiselect(): void {
+        this.searchDatasetTypeAheadHeight =
+            this.INITIAL_TYPEAHEAD_HEIGHT * 2 + this.dropdownDatasetList.length * this.TYPEAHEAD_ITEM_HEIGHT;
+    }
+
+    public onCloseMultiselect(): void {
+        this.searchDatasetTypeAheadHeight = this.INITIAL_TYPEAHEAD_HEIGHT;
     }
 }

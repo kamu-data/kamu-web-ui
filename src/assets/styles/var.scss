@@ -271,7 +271,6 @@ $app-color-tooltip-border: #ced4da;
     &.btn-gray {
         background-color: $app-background-btn;
         border-color: $app-color-btn-border !important;
-        height: auto;
 
         &:hover {
             background-color: $app-color-btn-hover-border;

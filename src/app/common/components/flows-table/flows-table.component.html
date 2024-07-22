@@ -1,3 +1,31 @@
+<div class="my-4 w-500 d-flex align-items-end">
+    <div>
+        <label class="form-label">Search by dataset</label>
+        <angular2-multiselect
+            class="mt-2"
+            [settings]="dropdownSettings"
+            [data]="dropdownDatasetList"
+            [(ngModel)]="selectedDatasetItems"
+        >
+        </angular2-multiselect>
+    </div>
+    <div class="d-flex ms-1">
+        <button
+            (click)="clearSearchByDatasetName()"
+            class="btn btn-sm ms-2 btn-gray clear-button rounded-0 position-relative"
+        >
+            Reset
+        </button>
+        <button
+            [disabled]="!selectedDatasetItems.length"
+            (click)="onSearchByDatasetName()"
+            class="btn btn-sm btn-gray rounded-0 search-creator-button position-relative"
+        >
+            <mat-icon class="text-muted fs-4 search-creator-icon">search</mat-icon>
+        </button>
+    </div>
+</div>
+
 <table mat-table [dataSource]="dataSource">
     <!-- Description Column -->
     <ng-container matColumnDef="description">
@@ -164,7 +192,10 @@
     </ng-container>
 
     <ng-container matColumnDef="dataset" *ngIf="hasDatasetColumn">
-        <th mat-header-cell *matHeaderCellDef style="width: 20%">
+        <th mat-header-cell *matHeaderCellDef>
+            <div class="text-dark mt-1 ps-4">Dataset</div>
+        </th>
+        <!-- <th mat-header-cell *matHeaderCellDef style="width: 20%">
             <div class="d-inline-block">
                 <button mat-button [matMenuTriggerFor]="datasetName">
                     <span class="text-dark"> Dataset <span class="carpet"></span> </span>
@@ -172,45 +203,29 @@
 
                 <mat-menu #datasetName="matMenu" class="search-dataset" xPosition="before" [hasBackdrop]="true">
                     <div
+                        [style.height.px]="searchDatasetTypeAheadHeight"
                         (click)="$event.stopPropagation()"
                         (keydown)="$event.stopPropagation()"
-                        [style.height.px]="
-                            searchByDataset
-                                ? SEARCH_DATASET_TYPEAHEAD_HEIGHT
-                                : SEARCH_DATASET_TYPEAHEAD_HEIGHT + searchAccountDatasetsLength * TYPEAHEAD_ITEM_HEIGHT
-                        "
+                        class="select-menu-modal notifications-component-menu-modal"
                     >
-                        <div class="d-flex select-item position-relative">
-                            <input
-                                class="form-control search-creator color-bg-subtle"
-                                type="text"
-                                [(ngModel)]="searchByDataset"
-                                placeholder="Enter dataset name ..."
-                                autocomplete="on"
-                                [inputFormatter]="datasetFormatter"
-                                [ngbTypeahead]="searchByDatasetName"
-                                data-test-id="searchByDatasetName"
-                                [editable]="false"
-                                [resultTemplate]="dr"
-                            />
-                            <ng-template #dr let-r="result" let-t="term">
-                                <div class="d-flex flex-row">
-                                    <ngb-highlight
-                                        class="truncate-dataset-search"
-                                        [result]="r.name"
-                                        [term]="t"
-                                    ></ngb-highlight>
-                                </div>
-                            </ng-template>
+                        <div class="d-flex select-item">
+                            <angular2-multiselect
+                                class="search-creator"
+                                [settings]="dropdownSettings"
+                                [data]="dropdownDatasetList"
+                                [(ngModel)]="selectedDatasetItems"
+                                (onOpen)="onOpenMultiselect()"
+                                (onClose)="onCloseMultiselect()"
+                            >
+                            </angular2-multiselect>
                             <button
                                 (click)="clearSearchByDatasetName()"
-                                [disabled]="!searchByDataset"
-                                class="btn btn-sm btn-gray rounded-0 position-relative"
+                                class="btn btn-sm ms-2 btn-gray clear-button rounded-0 position-relative"
                             >
-                                Clear
+                                Reset
                             </button>
                             <button
-                                [disabled]="!searchByDataset"
+                                [disabled]="!selectedDatasetItems.length"
                                 (click)="onSearchByDatasetName()"
                                 class="btn btn-sm btn-gray rounded-0 search-creator-button position-relative"
                             >
@@ -220,7 +235,7 @@
                     </div>
                 </mat-menu>
             </div>
-        </th>
+        </th> -->
         <td mat-cell *matCellDef="let element">
             <div class="d-flex align-items-center ps-3">
                 <a (click)="onClickDataset(element.description.datasetId)" class="text-small">{{

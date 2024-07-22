@@ -26,7 +26,8 @@
               "fast-json-stable-stringify",
               "marked",
               "moment",
-              "cron-parser"
+              "cron-parser",
+              "@tweenjs/tween.js"
             ],
             "outputPath": "dist/kamu-platform",
             "index": "src/index.html",
@@ -54,7 +55,8 @@
               "node_modules/prismjs/plugins/command-line/prism-command-line.css",
               "node_modules/katex/dist/katex.min.css",
               "node_modules/highlight.js/styles/atom-one-light.css",
-              "node_modules/ngx-toastr/toastr.css"
+              "node_modules/ngx-toastr/toastr.css",
+              "node_modules/angular2-multiselect-dropdown/themes/default.theme.css"
             ],
             "scripts": [
               "node_modules/prismjs/prism.js",

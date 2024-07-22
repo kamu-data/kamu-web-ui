@@ -96,12 +96,6 @@ describe("FlowsTableComponent", () => {
         expect(filterByInitiatorChangeSpy).toHaveBeenCalledWith(FilterByInitiatorEnum.System);
     });
 
-    it("should check search by accountName emits value", () => {
-        const searchByAccountNameChangeSpy = spyOn(component.searchByAccountNameChange, "emit");
-        component.onSearchByAccountName();
-        expect(searchByAccountNameChangeSpy).toHaveBeenCalledWith([]);
-    });
-
     it("should check table rows length", async () => {
         const table = await loader.getHarness<MatTableHarness>(MatTableHarness);
         expect((await table.getRows()).length).toBe(5);

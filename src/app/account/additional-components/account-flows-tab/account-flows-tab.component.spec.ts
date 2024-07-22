@@ -9,14 +9,12 @@ import { of } from "rxjs";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { AccountTabs } from "../../account.constants";
-import { Dataset } from "src/app/api/kamu.graphql.interface";
 import { AccountService } from "src/app/services/account.service";
 import { mockDatasetMainDataId } from "src/app/search/mock.data";
 import { mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
 import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { FlowsTableComponent } from "src/app/common/components/flows-table/flows-table.component";
 import { TileBaseWidgetComponent } from "src/app/common/components/tile-base-widget/tile-base-widget.component";
-import { mockDatasets } from "src/app/common/components/flows-table/flows-table.helpers.mock";
 
 describe("AccountFlowsTabComponent", () => {
     let component: AccountFlowsTabComponent;
@@ -71,26 +69,6 @@ describe("AccountFlowsTabComponent", () => {
         const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
         component.onPageChange(2);
         expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(component.accountName, AccountTabs.FLOWS, 2);
-    });
-
-    it("should check search by dataset name with dataset equal null", () => {
-        const fetchTableDataSpy = spyOn(component, "fetchTableData");
-        component.onSearchByDatasetName([]);
-        expect(fetchTableDataSpy).toHaveBeenCalledOnceWith(1, null, null, []);
-        expect(component.searchByDataset).toEqual([]);
-    });
-
-    it("should check search by dataset name with dataset not equal null", () => {
-        const fetchTableDataSpy = spyOn(component, "fetchTableData");
-        const datasets = mockDatasets as Dataset[];
-        component.onSearchByDatasetName(datasets);
-        expect(fetchTableDataSpy).toHaveBeenCalledOnceWith(
-            1,
-            null,
-            null,
-            datasets.map((dataset: Dataset) => dataset.id),
-        );
-        expect(component.searchByDataset).toEqual(datasets);
     });
 
     it("should check cancel flow button", fakeAsync(() => {

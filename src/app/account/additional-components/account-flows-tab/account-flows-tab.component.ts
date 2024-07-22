@@ -13,6 +13,7 @@ import { AccountTabs } from "../../account.constants";
 import { environment } from "src/environments/environment";
 import { TEST_ACCOUNT_ID } from "src/app/search/mock.data";
 import { FlowsTableProcessingBaseComponent } from "src/app/common/components/flows-table/flows-table-processing-base.component";
+import { FlowsTableFiltersOptions } from "src/app/common/components/flows-table/flows-table.types";
 
 @Component({
     selector: "app-account-flows-tab",
@@ -89,16 +90,6 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
         this.fetchTableData(page);
     }
 
-    public onSearchByDatasetName(datasets: Dataset[]): void {
-        this.fetchTableData(
-            this.currentPage,
-            this.filterByStatus,
-            null,
-            datasets.map((item) => item.id),
-        );
-        this.searchByDataset = datasets;
-    }
-
     public toggleStateAccountFlowConfigs(paused: boolean): void {
         if (!paused) {
             this.accountService.accountPauseFlows(this.accountName).subscribe();
@@ -109,5 +100,13 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
             this.refreshFlow();
             this.cdr.detectChanges();
         }, this.TIMEOUT_REFRESH_FLOW);
+    }
+
+    public onSearchByFiltersChange(filters: MaybeNull<FlowsTableFiltersOptions>): void {
+        if (!filters) {
+            this.searchByAccount = [];
+            this.searchByDataset = [];
+        }
+        this.searchByFilters(filters);
     }
 }

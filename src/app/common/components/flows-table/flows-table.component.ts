@@ -26,7 +26,13 @@ import { promiseWithCatch } from "src/app/common/app.helpers";
 import { MatMenuTrigger } from "@angular/material/menu";
 import { MatRadioChange } from "@angular/material/radio";
 import { DatasetFlowTableHelpers } from "./flows-table.helpers";
-import { CancelFlowArgs, dropdownSetting, FilterByInitiatorEnum, FlowsTableOptions } from "./flows-table.types";
+import {
+    CancelFlowArgs,
+    dropdownSetting,
+    FilterByInitiatorEnum,
+    FlowsTableFiltersOptions,
+    FlowsTableOptions,
+} from "./flows-table.types";
 import { ModalService } from "src/app/components/modal/modal.service";
 import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
 import { MaybeNull } from "../../app.types";
@@ -42,13 +48,12 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     @Input() public nodes: FlowSummaryDataFragment[];
     @Input() public filterByStatus: MaybeNull<FlowStatus>;
     @Input() public filterByInitiator: FilterByInitiatorEnum;
-    @Input() public searchByAccount: Account[];
-    @Input() public searchByDataset: Dataset[];
+    @Input() public searchByAccount: Account[] = [];
+    @Input() public searchByDataset: Dataset[] = [];
     @Input() tableOptions: FlowsTableOptions;
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
     @Output() public filterByInitiatorChange = new EventEmitter<FilterByInitiatorEnum>();
-    @Output() public searchByAccountNameChange = new EventEmitter<Account[]>();
-    @Output() public searchByDatasetNameChange = new EventEmitter<Dataset[]>();
+    @Output() public searchByFiltersChange = new EventEmitter<MaybeNull<FlowsTableFiltersOptions>>();
     @Output() public cancelFlowChange = new EventEmitter<CancelFlowArgs>();
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;
@@ -63,10 +68,12 @@ export class FlowsTableComponent implements OnInit, OnChanges {
 
     public dropdownDatasetSettings: DropdownSettings = {
         labelKey: "name",
+        text: "Filter by dataset",
         ...dropdownSetting,
     };
     public dropdownAccountSettings: DropdownSettings = {
         labelKey: "accountName",
+        text: "Filter by initiator",
         ...dropdownSetting,
     };
     public dropdownDatasetList: Dataset[] = [];
@@ -89,6 +96,7 @@ export class FlowsTableComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
         this.dataSource.data = this.nodes;
+
         this.dropdownDatasetList = this.involvedDatasets.slice(0, this.FILTERED_ITEMS_COUNT);
         this.selectedDatasetItems = this.searchByDataset;
 
@@ -120,14 +128,20 @@ export class FlowsTableComponent implements OnInit, OnChanges {
         this.filterByStatusChange.emit(status);
     }
 
-    public onSearchByAccountName(): void {
-        this.searchByAccountNameChange.emit(this.searchByAccount);
-        this.triggersMatMenu.get(1)?.closeMenu();
-    }
+    // public onSearchByAccountName(): void {
+    //     this.searchByAccountNameChange.emit(this.searchByAccount);
+    //     this.triggersMatMenu.get(1)?.closeMenu();
+    // }
 
-    public onSearchByDatasetName(): void {
-        this.searchByDatasetNameChange.emit(this.selectedDatasetItems);
+    // public onSearchByDatasetName(): void {
+    //     this.searchByDatasetNameChange.emit(this.selectedDatasetItems);
+    //     this.triggersMatMenu.get(2)?.closeMenu();
+    // }
+
+    public onSearch(): void {
+        this.triggersMatMenu.get(1)?.closeMenu();
         this.triggersMatMenu.get(2)?.closeMenu();
+        this.searchByFiltersChange.emit({ accounts: this.searchByAccount, datasets: this.selectedDatasetItems });
     }
 
     public changeFilterByInitiator(event: MatRadioChange): void {
@@ -194,12 +208,16 @@ export class FlowsTableComponent implements OnInit, OnChanges {
         });
     }
 
-    public clearSearchByDatasetName(): void {
-        this.searchByDatasetNameChange.emit([]);
-    }
+    // public clearSearchByDatasetName(): void {
+    //     this.searchByDatasetNameChange.emit([]);
+    // }
 
-    public clearSearchByAccountName(): void {
-        this.searchByAccountNameChange.emit([]);
+    // public clearSearchByAccountName(): void {
+    //     this.searchByAccountNameChange.emit([]);
+    // }
+
+    public onResetFilters(): void {
+        this.searchByFiltersChange.emit(null);
     }
 
     public get hasDatasetColumn(): boolean {

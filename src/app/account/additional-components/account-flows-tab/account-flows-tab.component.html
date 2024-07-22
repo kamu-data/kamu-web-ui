@@ -50,8 +50,7 @@
                 [involvedDatasets]="flowConnectionData.mainTableFlowsData.involvedDatasets"
                 (filterByStatusChange)="onChangeFilterByStatus($event)"
                 (filterByInitiatorChange)="onChangeFilterByInitiator($event)"
-                (searchByAccountNameChange)="onSearchByAccountName($event)"
-                (searchByDatasetNameChange)="onSearchByDatasetName($event)"
+                (searchByFiltersChange)="onSearchByFiltersChange($event)"
                 (cancelFlowChange)="onCancelFlow($event)"
             ></app-flows-table>
             <div class="mt-50px">

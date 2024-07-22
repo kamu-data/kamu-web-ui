@@ -1,7 +1,7 @@
 import { Observable } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
-import { CancelFlowArgs, FilterByInitiatorEnum, FlowsTableData } from "./flows-table.types";
+import { CancelFlowArgs, FilterByInitiatorEnum, FlowsTableData, FlowsTableFiltersOptions } from "./flows-table.types";
 import { Account, FlowStatus, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
 import { ChangeDetectorRef, Directive, inject } from "@angular/core";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -82,17 +82,35 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
         this.filterByInitiator = initiator;
     }
 
-    public onSearchByAccountName(accounts: Account[]): void {
-        this.fetchTableData(
-            this.currentPage,
-            this.filterByStatus,
-            accounts.length
-                ? {
-                      accounts: accounts.map((item: Account) => item.id),
-                  }
-                : null,
-            [],
-        );
-        this.searchByAccount = accounts;
+    public searchByFilters(filters: MaybeNull<FlowsTableFiltersOptions>): void {
+        if (!filters) {
+            this.fetchTableData(this.currentPage, this.filterByStatus, null, []);
+        } else {
+            const { accounts, datasets } = filters;
+            this.fetchTableData(
+                this.currentPage,
+                this.filterByStatus,
+                filters.accounts.length
+                    ? {
+                          accounts: accounts.map((item: Account) => item.id),
+                      }
+                    : null,
+                datasets && datasets.length ? datasets.map((item) => item.id) : [],
+            );
+        }
     }
+
+    // public onSearchByAccountName(accounts: Account[]): void {
+    //     this.fetchTableData(
+    //         this.currentPage,
+    //         this.filterByStatus,
+    //         accounts.length
+    //             ? {
+    //                   accounts: accounts.map((item: Account) => item.id),
+    //               }
+    //             : null,
+    //         [],
+    //     );
+    //     this.searchByAccount = accounts;
+    // }
 }

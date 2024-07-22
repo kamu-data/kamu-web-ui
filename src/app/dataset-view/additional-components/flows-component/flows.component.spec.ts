@@ -23,12 +23,11 @@ import { NgbPopoverModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
-import { Account, FlowStatus } from "src/app/api/kamu.graphql.interface";
+import { FlowStatus } from "src/app/api/kamu.graphql.interface";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import _ from "lodash";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { mockMetadataDerivedUpdate, mockOverviewDataUpdate } from "../data-tabs.mock";
-import { mockAccountByNameResponse } from "src/app/api/mock/account.mock";
 import { TileBaseWidgetComponent } from "src/app/common/components/tile-base-widget/tile-base-widget.component";
 import { FlowsTableComponent } from "src/app/common/components/flows-table/flows-table.component";
 import { FilterByInitiatorEnum } from "src/app/common/components/flows-table/flows-table.types";
@@ -134,13 +133,6 @@ describe("FlowsComponent", () => {
         component.onChangeFilterByStatus(changedFlowStatus);
         expect(fetchTableDataSpy).toHaveBeenCalledTimes(1);
         expect(component.filterByStatus).toEqual(changedFlowStatus);
-    });
-
-    it("should check search by account name", () => {
-        const fetchTableDataSpy = spyOn(component, "fetchTableData");
-        component.onSearchByAccountName([mockAccountByNameResponse.accounts.byName as Account]);
-        expect(fetchTableDataSpy).toHaveBeenCalledTimes(1);
-        expect(component.searchByAccount).toEqual([mockAccountByNameResponse.accounts.byName as Account]);
     });
 
     it("should empty block is visible", fakeAsync(() => {

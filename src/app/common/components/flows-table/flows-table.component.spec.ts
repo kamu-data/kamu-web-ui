@@ -6,10 +6,10 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatRadioChange, MatRadioModule } from "@angular/material/radio";
 import { MatIconModule } from "@angular/material/icon";
 import { FormsModule } from "@angular/forms";
-import { mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
+import { mockDatasetFlowsInitiatorsQuery, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import { FilterByInitiatorEnum } from "./flows-table.types";
 import { DisplayTimeModule } from "src/app/components/display-time/display-time.module";
-import { Dataset, FlowStatus } from "src/app/api/kamu.graphql.interface";
+import { Account, Dataset, FlowStatus } from "src/app/api/kamu.graphql.interface";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { AngularSvgIconModule, SvgIconRegistryService } from "angular-svg-icon";
 import { HarnessLoader } from "@angular/cdk/testing";
@@ -23,6 +23,7 @@ import { SharedModule } from "src/app/shared/shared/shared.module";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { mockDatasets } from "./flows-table.helpers.mock";
 import { mockDatasetMainDataId } from "src/app/search/mock.data";
+import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 
 describe("FlowsTableComponent", () => {
     let component: FlowsTableComponent;
@@ -48,6 +49,7 @@ describe("FlowsTableComponent", () => {
                 SharedTestModule,
                 SharedModule,
                 NgbTypeaheadModule,
+                AngularMultiSelectModule,
             ],
         }).compileComponents();
 
@@ -65,12 +67,16 @@ describe("FlowsTableComponent", () => {
         component.nodes = mockFlowSummaryDataFragments;
         component.filterByStatus = null;
         component.filterByInitiator = FilterByInitiatorEnum.All;
-        component.searchByAccount = null;
+        component.searchByAccount = [];
         component.tableOptions = {
             displayColumns: ["description", "information", "creator", "options"],
             initiatorsTypes: Object.keys(FilterByInitiatorEnum),
         };
-        component.involvedDatasets = [mockDatasets[0]] as Dataset[];
+        component.involvedDatasets = mockDatasets as Dataset[];
+        component.dropdownDatasetList = mockDatasets as Dataset[];
+
+        component.accountFlowInitiators = mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators
+            .nodes as Account[];
         fixture.detectChanges();
     });
 
@@ -93,7 +99,7 @@ describe("FlowsTableComponent", () => {
     it("should check search by accountName emits value", () => {
         const searchByAccountNameChangeSpy = spyOn(component.searchByAccountNameChange, "emit");
         component.onSearchByAccountName();
-        expect(searchByAccountNameChangeSpy).toHaveBeenCalledWith(null);
+        expect(searchByAccountNameChangeSpy).toHaveBeenCalledWith([]);
     });
 
     it("should check table rows length", async () => {

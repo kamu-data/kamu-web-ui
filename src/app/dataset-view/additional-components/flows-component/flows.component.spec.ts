@@ -138,9 +138,9 @@ describe("FlowsComponent", () => {
 
     it("should check search by account name", () => {
         const fetchTableDataSpy = spyOn(component, "fetchTableData");
-        component.onSearchByAccountName(mockAccountByNameResponse.accounts.byName as Account);
+        component.onSearchByAccountName([mockAccountByNameResponse.accounts.byName as Account]);
         expect(fetchTableDataSpy).toHaveBeenCalledTimes(1);
-        expect(component.searchByAccount).toEqual(mockAccountByNameResponse.accounts.byName as Account);
+        expect(component.searchByAccount).toEqual([mockAccountByNameResponse.accounts.byName as Account]);
     });
 
     it("should empty block is visible", fakeAsync(() => {

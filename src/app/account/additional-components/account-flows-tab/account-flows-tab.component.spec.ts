@@ -75,17 +75,22 @@ describe("AccountFlowsTabComponent", () => {
 
     it("should check search by dataset name with dataset equal null", () => {
         const fetchTableDataSpy = spyOn(component, "fetchTableData");
-        component.onSearchByDatasetName(null);
+        component.onSearchByDatasetName([]);
         expect(fetchTableDataSpy).toHaveBeenCalledOnceWith(1, null, null, []);
-        expect(component.searchByDataset).toEqual(null);
+        expect(component.searchByDataset).toEqual([]);
     });
 
     it("should check search by dataset name with dataset not equal null", () => {
         const fetchTableDataSpy = spyOn(component, "fetchTableData");
-        const dataset = mockDatasets[0] as Dataset;
-        component.onSearchByDatasetName(dataset);
-        expect(fetchTableDataSpy).toHaveBeenCalledOnceWith(1, null, null, [dataset.id]);
-        expect(component.searchByDataset).toEqual(dataset);
+        const datasets = mockDatasets as Dataset[];
+        component.onSearchByDatasetName(datasets);
+        expect(fetchTableDataSpy).toHaveBeenCalledOnceWith(
+            1,
+            null,
+            null,
+            datasets.map((dataset: Dataset) => dataset.id),
+        );
+        expect(component.searchByDataset).toEqual(datasets);
     });
 
     it("should check cancel flow button", fakeAsync(() => {

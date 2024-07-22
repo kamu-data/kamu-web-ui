@@ -1,9 +1,9 @@
+import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.interface";
 import { Dataset, FlowConnectionDataFragment } from "src/app/api/kamu.graphql.interface";
 
 export enum FilterByInitiatorEnum {
     All = "All",
     System = "System",
-    Account = "Account",
 }
 
 export interface FlowsTableData {
@@ -25,3 +25,15 @@ export interface FlowsTableOptions {
     displayColumns: string[];
     initiatorsTypes: string[];
 }
+
+export const dropdownSetting: DropdownSettings = {
+    singleSelection: false,
+    enableCheckAll: true,
+    enableSearchFilter: true,
+    badgeShowLimit: 1,
+    enableFilterSelectAll: false,
+    tagToBody: false,
+    position: "bottom",
+    autoPosition: false,
+    maxHeight: 400,
+};

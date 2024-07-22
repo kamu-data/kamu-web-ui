@@ -14,7 +14,7 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
     public tileWidgetData$: Observable<MaybeUndefined<FlowsTableData>>;
     public filterByStatus: MaybeNull<FlowStatus> = null;
     public filterByInitiator = FilterByInitiatorEnum.All;
-    public searchByAccount: MaybeNull<Account>;
+    public searchByAccount: Account[] = [];
     public currentPage = 1;
     public readonly WIDGET_FLOW_RUNS_PER_PAGE: number = 150;
     public readonly TABLE_FLOW_RUNS_PER_PAGE: number = 15;
@@ -74,25 +74,25 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
     }
 
     public onChangeFilterByInitiator(initiator: FilterByInitiatorEnum): void {
-        if (initiator !== FilterByInitiatorEnum.Account) {
-            let filterOptions: MaybeNull<InitiatorFilterInput> = null;
-            if (initiator === FilterByInitiatorEnum.System) {
-                filterOptions = { system: true };
-            }
-            this.fetchTableData(this.currentPage, this.filterByStatus, filterOptions);
-            this.resetSearchByAccount();
+        let filterOptions: MaybeNull<InitiatorFilterInput> = null;
+        if (initiator === FilterByInitiatorEnum.System) {
+            filterOptions = { system: true };
         }
+        this.fetchTableData(this.currentPage, this.filterByStatus, filterOptions);
         this.filterByInitiator = initiator;
     }
 
-    public onSearchByAccountName(account: MaybeNull<Account>): void {
-        if (account) {
-            this.fetchTableData(this.currentPage, this.filterByStatus, { accounts: [account.id] });
-            this.searchByAccount = account;
-        }
-    }
-
-    private resetSearchByAccount(): void {
-        this.searchByAccount = null;
+    public onSearchByAccountName(accounts: Account[]): void {
+        this.fetchTableData(
+            this.currentPage,
+            this.filterByStatus,
+            accounts.length
+                ? {
+                      accounts: accounts.map((item: Account) => item.id),
+                  }
+                : null,
+            [],
+        );
+        this.searchByAccount = accounts;
     }
 }

@@ -14,6 +14,7 @@ import { DatasetSchema, DataRow } from "src/app/interface/dataset.interface";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { finalize } from "rxjs";
 
 @Component({
     selector: "app-edit-license-modal",
@@ -67,6 +68,7 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
                         this.licenseForm.value as Omit<SetLicense, "__typename">,
                     ),
                 })
+                .pipe(finalize(() => this.activeModal.close()))
                 .subscribe(),
         );
     }

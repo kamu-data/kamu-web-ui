@@ -8,6 +8,7 @@ import { BaseComponent } from "src/app/common/base.component";
 import { MY_MOMENT_FORMATS } from "src/app/common/data.helpers";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { finalize } from "rxjs";
 
 @Component({
     selector: "app-edit-watermark-modal",
@@ -66,7 +67,7 @@ export class EditWatermarkModalComponent extends BaseComponent implements OnInit
                         datasetName: this.datasetBasics.name,
                     },
                 })
-
+                .pipe(finalize(() => this.activeModal.close()))
                 .subscribe(),
         );
     }

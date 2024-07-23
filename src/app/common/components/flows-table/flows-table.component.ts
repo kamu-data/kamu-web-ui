@@ -128,16 +128,6 @@ export class FlowsTableComponent implements OnInit, OnChanges {
         this.filterByStatusChange.emit(status);
     }
 
-    // public onSearchByAccountName(): void {
-    //     this.searchByAccountNameChange.emit(this.searchByAccount);
-    //     this.triggersMatMenu.get(1)?.closeMenu();
-    // }
-
-    // public onSearchByDatasetName(): void {
-    //     this.searchByDatasetNameChange.emit(this.selectedDatasetItems);
-    //     this.triggersMatMenu.get(2)?.closeMenu();
-    // }
-
     public onSearch(): void {
         this.triggersMatMenu.get(1)?.closeMenu();
         this.triggersMatMenu.get(2)?.closeMenu();
@@ -207,14 +197,6 @@ export class FlowsTableComponent implements OnInit, OnChanges {
             datasetName: this.datasetById(datasetId).name,
         });
     }
-
-    // public clearSearchByDatasetName(): void {
-    //     this.searchByDatasetNameChange.emit([]);
-    // }
-
-    // public clearSearchByAccountName(): void {
-    //     this.searchByAccountNameChange.emit([]);
-    // }
 
     public onResetFilters(): void {
         this.searchByFiltersChange.emit(null);

@@ -99,18 +99,4 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
             );
         }
     }
-
-    // public onSearchByAccountName(accounts: Account[]): void {
-    //     this.fetchTableData(
-    //         this.currentPage,
-    //         this.filterByStatus,
-    //         accounts.length
-    //             ? {
-    //                   accounts: accounts.map((item: Account) => item.id),
-    //               }
-    //             : null,
-    //         [],
-    //     );
-    //     this.searchByAccount = accounts;
-    // }
 }

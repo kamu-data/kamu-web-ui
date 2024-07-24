@@ -22,14 +22,15 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { MatTableDataSource } from "@angular/material/table";
-import { promiseWithCatch } from "src/app/common/app.helpers";
+import { capitalizeString, promiseWithCatch } from "src/app/common/app.helpers";
 import { MatMenuTrigger } from "@angular/material/menu";
-import { MatRadioChange } from "@angular/material/radio";
 import { DatasetFlowTableHelpers } from "./flows-table.helpers";
 import {
     CancelFlowArgs,
-    dropdownSetting,
-    FilterByInitiatorEnum,
+    DROPDOWN_ACCOUNT_SETTINGS,
+    DROPDOWN_DATASET_SETTINGS,
+    DROPDOWN_STATUS_SETTINGS,
+    FilterStatusType,
     FlowsTableFiltersOptions,
     FlowsTableOptions,
 } from "./flows-table.types";
@@ -47,18 +48,17 @@ import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.
 export class FlowsTableComponent implements OnInit, OnChanges {
     @Input() public nodes: FlowSummaryDataFragment[];
     @Input() public filterByStatus: MaybeNull<FlowStatus>;
-    @Input() public filterByInitiator: FilterByInitiatorEnum;
+    @Input() public onlySystemFlows: boolean;
     @Input() public searchByAccount: Account[] = [];
     @Input() public searchByDataset: Dataset[] = [];
     @Input() tableOptions: FlowsTableOptions;
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
-    @Output() public filterByInitiatorChange = new EventEmitter<FilterByInitiatorEnum>();
+    @Output() public filterByInitiatorChange = new EventEmitter<boolean>();
     @Output() public searchByFiltersChange = new EventEmitter<MaybeNull<FlowsTableFiltersOptions>>();
     @Output() public cancelFlowChange = new EventEmitter<CancelFlowArgs>();
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
-    public readonly FilterByInitiatorEnum: typeof FilterByInitiatorEnum = FilterByInitiatorEnum;
     private readonly FILTERED_ITEMS_COUNT = 10;
 
     public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>();
@@ -66,21 +66,15 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     @Input() public accountFlowInitiators: Account[];
     @Input() public involvedDatasets: Dataset[];
 
-    public dropdownDatasetSettings: DropdownSettings = {
-        labelKey: "name",
-        text: "Filter by dataset",
-        ...dropdownSetting,
-    };
-    public dropdownAccountSettings: DropdownSettings = {
-        labelKey: "accountName",
-        text: "Filter by initiator",
-        ...dropdownSetting,
-    };
+    public readonly FILTER_DATASET_SETTINGS: DropdownSettings = DROPDOWN_DATASET_SETTINGS;
+    public readonly FILTER_STATUS_SETTINGS: DropdownSettings = DROPDOWN_STATUS_SETTINGS;
+    public filterAccountSettings: DropdownSettings = DROPDOWN_ACCOUNT_SETTINGS;
     public dropdownDatasetList: Dataset[] = [];
     public selectedDatasetItems: Dataset[] = [];
-
     public dropdownAccountList: Account[] = [];
     public selectedAccountItems: Account[] = [];
+    public dropdownStatustList: FilterStatusType[] = [];
+    public selectedStatusItems: FilterStatusType[] = [];
 
     constructor(
         private navigationService: NavigationService,
@@ -96,12 +90,7 @@ export class FlowsTableComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
         this.dataSource.data = this.nodes;
-
-        this.dropdownDatasetList = this.involvedDatasets.slice(0, this.FILTERED_ITEMS_COUNT);
-        this.selectedDatasetItems = this.searchByDataset;
-
-        this.dropdownAccountList = this.accountFlowInitiators.slice(0, this.FILTERED_ITEMS_COUNT);
-        this.selectedAccountItems = this.searchByAccount;
+        this.initializeFilters();
     }
 
     public durationTask(d1: string, d2: string): string {
@@ -124,18 +113,21 @@ export class FlowsTableComponent implements OnInit, OnChanges {
         return DatasetFlowTableHelpers.descriptionSubMessage(element, this.involvedDatasets ?? [], datasetId);
     }
 
-    public changeFilterByStatus(status: MaybeNull<FlowStatus>): void {
-        this.filterByStatusChange.emit(status);
-    }
-
     public onSearch(): void {
         this.triggersMatMenu.get(1)?.closeMenu();
         this.triggersMatMenu.get(2)?.closeMenu();
-        this.searchByFiltersChange.emit({ accounts: this.searchByAccount, datasets: this.selectedDatasetItems });
+        this.searchByFiltersChange.emit({
+            accounts: this.searchByAccount,
+            datasets: this.selectedDatasetItems,
+            status:
+                !this.selectedStatusItems.length || this.selectedStatusItems[0].status === "All"
+                    ? null
+                    : (this.selectedStatusItems[0].status.toUpperCase() as FlowStatus),
+        });
     }
 
-    public changeFilterByInitiator(event: MatRadioChange): void {
-        this.filterByInitiatorChange.emit(event.value as FilterByInitiatorEnum);
+    public onToggleSystemFlows(): void {
+        this.filterByInitiatorChange.emit(this.onlySystemFlows);
     }
 
     public durationBlockVisible(node: FlowSummaryDataFragment): boolean {
@@ -200,9 +192,27 @@ export class FlowsTableComponent implements OnInit, OnChanges {
 
     public onResetFilters(): void {
         this.searchByFiltersChange.emit(null);
+        this.filterAccountSettings.disabled = false;
     }
 
     public get hasDatasetColumn(): boolean {
         return this.tableOptions.displayColumns.includes("dataset");
+    }
+
+    private initializeFilters(): void {
+        this.dropdownDatasetList = this.involvedDatasets.slice(0, this.FILTERED_ITEMS_COUNT);
+        this.selectedDatasetItems = this.searchByDataset;
+
+        this.dropdownAccountList = this.accountFlowInitiators.slice(0, this.FILTERED_ITEMS_COUNT);
+        this.selectedAccountItems = this.searchByAccount;
+
+        this.dropdownStatustList = Object.entries(FlowStatus).map(([key]) => {
+            return { id: key, status: key };
+        });
+        this.dropdownStatustList = [{ id: "All", status: "All" }, ...this.dropdownStatustList];
+        this.selectedStatusItems = this.filterByStatus
+            ? [{ id: capitalizeString(this.filterByStatus), status: capitalizeString(this.filterByStatus) }]
+            : [];
+        this.filterAccountSettings.disabled = this.onlySystemFlows;
     }
 }

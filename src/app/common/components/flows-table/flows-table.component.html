@@ -1,7 +1,7 @@
-<div class="my-4 d-flex">
-    <div>
+<div class="mt-4 d-flex">
+    <div class="w-250px">
         <angular2-multiselect
-            [settings]="dropdownAccountSettings"
+            [settings]="filterAccountSettings"
             [data]="dropdownAccountList"
             [(ngModel)]="selectedAccountItems"
         >
@@ -10,59 +10,53 @@
 
     <div class="ms-4" *ngIf="hasDatasetColumn">
         <angular2-multiselect
-            [settings]="dropdownDatasetSettings"
+            [settings]="FILTER_DATASET_SETTINGS"
             [data]="dropdownDatasetList"
             [(ngModel)]="selectedDatasetItems"
         >
         </angular2-multiselect>
     </div>
 
-    <div class="d-flex ms-4">
-        <button (click)="onResetFilters()" class="btn btn-sm ms-2 btn-gray clear-button rounded-0 position-relative">
-            Reset filters
-        </button>
+    <div class="ms-4">
+        <angular2-multiselect
+            [settings]="FILTER_STATUS_SETTINGS"
+            [data]="dropdownStatustList"
+            [(ngModel)]="selectedStatusItems"
+        >
+        </angular2-multiselect>
+    </div>
+
+    <div class="d-flex ms-4 align-items-center">
         <button
-            [disabled]="!selectedDatasetItems.length && !selectedAccountItems.length"
-            class="btn btn-sm btn-gray rounded-0 search-creator-button position-relative"
+            type="button"
+            [disabled]="!selectedDatasetItems.length && !selectedAccountItems.length && !selectedStatusItems.length"
+            class="border-1 bg-light border search-creator-button rounded-2 ps-2 pe-4 btn btn-sm d-flex justify-content-between align-items-center"
             (click)="onSearch()"
         >
-            <mat-icon class="text-muted fs-4 search-creator-icon">search</mat-icon>
+            <mat-icon class="fs-4 search-creator-icon d-block me-2">search</mat-icon>
+            <span class="d-block">Search</span>
         </button>
+
+        <a (click)="onResetFilters()" class="ms-4"> Reset filters </a>
     </div>
+</div>
+
+<div class="form-check my-3 d-flex gap-2">
+    <input
+        class="form-check-input"
+        type="checkbox"
+        (change)="onToggleSystemFlows()"
+        [(ngModel)]="onlySystemFlows"
+        [attr.data-test-id]="'only-system-flow'"
+    />
+    <label class="form-check-label"> Only system flows </label>
 </div>
 
 <table mat-table [dataSource]="dataSource">
     <!-- Description Column -->
     <ng-container matColumnDef="description">
         <th mat-header-cell *matHeaderCellDef>
-            <div class="d-inline-block text-muted">
-                <button mat-button [matMenuTriggerFor]="statusMenu">
-                    <span class="text-dark"> Status <span class="carpet"></span> </span>
-                </button>
-                <mat-menu #statusMenu="matMenu" xPosition="after" [hasBackdrop]="true">
-                    <button
-                        mat-menu-item
-                        [class.selected-status]="!filterByStatus"
-                        (click)="changeFilterByStatus(null)"
-                    >
-                        <span class="text-small"> All </span>
-                    </button>
-                    <mat-divider></mat-divider>
-
-                    <ng-container *ngFor="let status of FlowStatus | keyvalue">
-                        <button
-                            mat-menu-item
-                            [class.selected-status]="filterByStatus === status.value"
-                            (click)="changeFilterByStatus(status.value)"
-                        >
-                            <span class="text-small">
-                                {{ status.value | lowercase | titlecase }}
-                            </span>
-                        </button>
-                        <mat-divider></mat-divider>
-                    </ng-container>
-                </mat-menu>
-            </div>
+            <span class="text-dark"> Status </span>
         </th>
         <td mat-cell *matCellDef="let element" style="height: 62px">
             <div class="d-flex py-1 ps-3">
@@ -124,35 +118,7 @@
     <!-- Creator Column -->
     <ng-container matColumnDef="creator">
         <th mat-header-cell *matHeaderCellDef style="width: 15%">
-            <div class="d-inline-block">
-                <button mat-button [matMenuTriggerFor]="creatorByMenu">
-                    <span class="text-dark"> Initiated By <span class="carpet"></span> </span>
-                </button>
-
-                <mat-menu #creatorByMenu="matMenu" xPosition="after" [hasBackdrop]="true">
-                    <div (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
-                        <div class="px-4 py-2 border-bottom d-flex align-items-center overflow-hidden">
-                            <mat-radio-group
-                                color="primary"
-                                class="example-radio-group d-flex flex-column gap-2"
-                                [(ngModel)]="filterByInitiator"
-                                (change)="changeFilterByInitiator($event)"
-                            >
-                                <mat-radio-button
-                                    [disableRipple]="true"
-                                    class="example-radio-button"
-                                    *ngFor="let initiator of tableOptions.initiatorsTypes"
-                                    [value]="initiator"
-                                >
-                                    <span class="text-small">
-                                        {{ initiator }}
-                                    </span>
-                                </mat-radio-button>
-                            </mat-radio-group>
-                        </div>
-                    </div>
-                </mat-menu>
-            </div>
+            <span class="text-dark"> Initiated By </span>
         </th>
         <td mat-cell *matCellDef="let element" style="height: 62px">
             <div class="d-flex align-items-center ps-3">

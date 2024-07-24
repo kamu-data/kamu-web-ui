@@ -39,16 +39,14 @@
             <app-flows-table
                 [nodes]="flowConnectionData.mainTableFlowsData.connectionData.nodes"
                 [filterByStatus]="filterByStatus"
-                [filterByInitiator]="filterByInitiator"
+                [onlySystemFlows]="onlySystemFlows"
                 [searchByDataset]="searchByDataset"
                 [searchByAccount]="searchByAccount"
                 [tableOptions]="{
-                    displayColumns: DISPLAY_COLUMNS,
-                    initiatorsTypes: INITIATORS
+                    displayColumns: DISPLAY_COLUMNS
                 }"
                 [accountFlowInitiators]="flowConnectionData.flowInitiators"
                 [involvedDatasets]="flowConnectionData.mainTableFlowsData.involvedDatasets"
-                (filterByStatusChange)="onChangeFilterByStatus($event)"
                 (filterByInitiatorChange)="onChangeFilterByInitiator($event)"
                 (searchByFiltersChange)="onSearchByFiltersChange($event)"
                 (cancelFlowChange)="onCancelFlow($event)"

@@ -120,13 +120,7 @@ td.mat-cell {
 }
 
 .search-creator-button {
-    border-top-right-radius: 5px !important;
-    border-bottom-right-radius: 5px !important;
     height: 38px;
-
-    .search-creator-icon {
-        padding-top: 3px;
-    }
 }
 
 .truncate-sub-message {
@@ -173,11 +167,11 @@ td.mat-cell {
     }
 
     .cuppa-dropdown {
-        width: 350px;
+        width: 260px;
         height: 38px;
 
         .c-label {
-            width: 230px;
+            width: 140px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;

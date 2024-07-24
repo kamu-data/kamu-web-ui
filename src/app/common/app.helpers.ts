@@ -82,3 +82,7 @@ export function convertSecondsToHumanReadableFormat(seconds: number): string {
 
     return secondString;
 }
+
+export function capitalizeString(value: string): string {
+    return value[0].toUpperCase() + value.slice(1).toLowerCase();
+}

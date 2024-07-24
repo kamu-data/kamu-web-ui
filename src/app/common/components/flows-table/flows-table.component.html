@@ -42,10 +42,13 @@
                         [src]="dynamicImgSrc(element.status)"
                         class="dynamic-icon"
                     />
-                    <span class="fw-500">
+                    <a
+                        (click)="navigateToFlowDetaisView(element, element.description.datasetId)"
+                        class="fw-500 description-link text-dark"
+                    >
                         {{ flowTypeDescription(element) }}
                         <span>{{ descriptionDatasetFlowEndOfMessage(element) }}</span>
-                    </span>
+                    </a>
                     <div
                         class="text-small d-block pe-4 truncate-sub-message"
                         [innerHTML]="

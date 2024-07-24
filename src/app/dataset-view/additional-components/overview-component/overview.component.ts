@@ -292,11 +292,13 @@ export class OverviewComponent extends BaseComponent implements OnInit {
                 })
                 .subscribe((success: boolean) => {
                     if (success) {
-                        this.navigationService.navigateToDatasetView({
-                            accountName: this.datasetBasics.owner.accountName,
-                            datasetName: this.datasetBasics.name,
-                            tab: DatasetViewTypeEnum.Flows,
-                        });
+                        setTimeout(() => {
+                            this.navigationService.navigateToDatasetView({
+                                accountName: this.datasetBasics.owner.accountName,
+                                datasetName: this.datasetBasics.name,
+                                tab: DatasetViewTypeEnum.Flows,
+                            });
+                        }, AppValues.SIMULATION_START_CONDITION_DELAY_MS);
                     }
                 }),
         );

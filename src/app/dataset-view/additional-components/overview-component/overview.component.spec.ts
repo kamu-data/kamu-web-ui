@@ -3,7 +3,7 @@ import { ApolloModule } from "apollo-angular";
 import { Apollo } from "apollo-angular";
 import { mockFullPowerDatasetPermissionsFragment } from "../../../search/mock.data";
 import { mockMetadataDerivedUpdate, mockOverviewDataUpdate } from "../data-tabs.mock";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { OverviewComponent } from "./overview.component";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
@@ -37,6 +37,7 @@ import { of } from "rxjs";
 import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import AppValues from "src/app/common/app.values";
 
 describe("OverviewComponent", () => {
     let component: OverviewComponent;
@@ -198,18 +199,20 @@ describe("OverviewComponent", () => {
         expect(openModalSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should check navigate to flows tab when 'refresh now' button was clicked", () => {
+    it("should check navigate to flows tab when 'refresh now' button was clicked", fakeAsync(() => {
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
         const datasetTriggerFlowSpy = spyOn(datasetFlowsService, "datasetTriggerFlow").and.returnValue(of(true));
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "refresh-now-button");
+        tick(AppValues.SIMULATION_START_CONDITION_DELAY_MS);
 
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({ tab: DatasetViewTypeEnum.Flows }),
         );
         expect(datasetTriggerFlowSpy).toHaveBeenCalledTimes(1);
-    });
+        flush();
+    }));
 
     describe("AddPushSource", () => {
         it("should navigate to create AddPushSource event page", () => {

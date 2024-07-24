@@ -36,6 +36,7 @@ import { DatasetFlowsService } from "../flows-component/services/dataset-flows.s
 import { of } from "rxjs";
 import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 describe("OverviewComponent", () => {
     let component: OverviewComponent;
@@ -44,6 +45,7 @@ describe("OverviewComponent", () => {
     let navigationService: NavigationService;
     let modalService: NgbModal;
     let datasetFlowsService: DatasetFlowsService;
+    let loggedUserService: LoggedUserService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -94,6 +96,7 @@ describe("OverviewComponent", () => {
         navigationService = TestBed.inject(NavigationService);
         datasetFlowsService = TestBed.inject(DatasetFlowsService);
         modalService = TestBed.inject(NgbModal);
+        loggedUserService = TestBed.inject(LoggedUserService);
 
         fixture = TestBed.createComponent(OverviewComponent);
         component = fixture.componentInstance;
@@ -182,6 +185,13 @@ describe("OverviewComponent", () => {
         expect(openModalSpy).toHaveBeenCalledTimes(1);
     });
 
+    it("should check Update now button is not visible", () => {
+        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(false);
+        fixture.detectChanges();
+        const updateButton = findElementByDataTestId(fixture, "refresh-now-button");
+        expect(updateButton).toBe(undefined);
+    });
+
     it("should open set watermark window", () => {
         const openModalSpy = spyOn(modalService, "open").and.callThrough();
         component.openWatermarkModal();
@@ -190,8 +200,9 @@ describe("OverviewComponent", () => {
 
     it("should check navigate to flows tab when 'refresh now' button was clicked", () => {
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
         const datasetTriggerFlowSpy = spyOn(datasetFlowsService, "datasetTriggerFlow").and.returnValue(of(true));
-
+        fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "refresh-now-button");
 
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
@@ -252,6 +263,7 @@ describe("OverviewComponent", () => {
 
         it("should check refresh button is disabled when currentPollingSource=undefined=null ", () => {
             currentOverview().metadata.currentPollingSource = null;
+            spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
             fixture.detectChanges();
 
             const refreshButton = findElementByDataTestId(fixture, "refresh-now-button") as HTMLButtonElement;
@@ -295,6 +307,7 @@ describe("OverviewComponent", () => {
 
         it("should check refresh button is disabled when currentTransform=null", () => {
             currentOverview().metadata.currentTransform = null;
+            spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
             fixture.detectChanges();
 
             const refreshButton = findElementByDataTestId(fixture, "refresh-now-button") as HTMLButtonElement;

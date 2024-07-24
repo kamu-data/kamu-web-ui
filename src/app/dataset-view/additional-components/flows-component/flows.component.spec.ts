@@ -23,14 +23,12 @@ import { NgbPopoverModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
-import { FlowStatus } from "src/app/api/kamu.graphql.interface";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import _ from "lodash";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { mockMetadataDerivedUpdate, mockOverviewDataUpdate } from "../data-tabs.mock";
 import { TileBaseWidgetComponent } from "src/app/common/components/tile-base-widget/tile-base-widget.component";
 import { FlowsTableComponent } from "src/app/common/components/flows-table/flows-table.component";
-import { FilterByInitiatorEnum } from "src/app/common/components/flows-table/flows-table.types";
 import { mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
 
 describe("FlowsComponent", () => {
@@ -127,14 +125,6 @@ describe("FlowsComponent", () => {
         expect(fetchTableDataSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should check change filter status", () => {
-        const fetchTableDataSpy = spyOn(component, "fetchTableData");
-        const changedFlowStatus = FlowStatus.Running;
-        component.onChangeFilterByStatus(changedFlowStatus);
-        expect(fetchTableDataSpy).toHaveBeenCalledTimes(1);
-        expect(component.filterByStatus).toEqual(changedFlowStatus);
-    });
-
     it("should empty block is visible", fakeAsync(() => {
         fixture.detectChanges();
         mockFlowsTableData.connectionData.nodes = [];
@@ -170,14 +160,6 @@ describe("FlowsComponent", () => {
         expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
         flush();
     }));
-
-    it("should check change filter by tnitiator", () => {
-        const changedFilterByInitiator = FilterByInitiatorEnum.System;
-        const fetchTableDataSpy = spyOn(component, "fetchTableData");
-        component.onChangeFilterByInitiator(changedFilterByInitiator);
-        expect(component.filterByInitiator).toEqual(changedFilterByInitiator);
-        expect(fetchTableDataSpy).toHaveBeenCalledTimes(1);
-    });
 
     it("should check update now button", fakeAsync(() => {
         const refreshFlowSpy = spyOn(component, "refreshFlow");

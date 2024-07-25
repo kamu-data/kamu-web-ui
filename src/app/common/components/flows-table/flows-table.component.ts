@@ -53,7 +53,6 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     @Input() public searchByDataset: Dataset[] = [];
     @Input() tableOptions: FlowsTableOptions;
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
-    @Output() public filterByInitiatorChange = new EventEmitter<boolean>();
     @Output() public searchByFiltersChange = new EventEmitter<MaybeNull<FlowsTableFiltersOptions>>();
     @Output() public cancelFlowChange = new EventEmitter<CancelFlowArgs>();
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
@@ -123,11 +122,8 @@ export class FlowsTableComponent implements OnInit, OnChanges {
                 !this.selectedStatusItems.length || this.selectedStatusItems[0].status === "All"
                     ? null
                     : (this.selectedStatusItems[0].status.toUpperCase() as FlowStatus),
+            onlySystemFlows: this.onlySystemFlows,
         });
-    }
-
-    public onToggleSystemFlows(): void {
-        this.filterByInitiatorChange.emit(this.onlySystemFlows);
     }
 
     public durationBlockVisible(node: FlowSummaryDataFragment): boolean {

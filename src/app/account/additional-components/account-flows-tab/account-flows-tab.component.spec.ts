@@ -134,6 +134,7 @@ describe("AccountFlowsTabComponent", () => {
             accounts: mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators.nodes as Account[],
             datasets: mockDatasets as Dataset[],
             status: FlowStatus.Finished,
+            onlySystemFlows: false,
         };
         const { accounts, datasets, status } = filterOptions;
         component.currentPage = 2;
@@ -154,6 +155,7 @@ describe("AccountFlowsTabComponent", () => {
             accounts: [],
             datasets: [],
             status: FlowStatus.Finished,
+            onlySystemFlows: true,
         };
         const { status } = filterOptions;
         component.currentPage = 1;
@@ -163,14 +165,5 @@ describe("AccountFlowsTabComponent", () => {
         component.onSearchByFiltersChange(filterOptions);
 
         expect(fetchTableDataSpy).toHaveBeenCalledWith(component.currentPage, status, { system: true }, []);
-    });
-
-    it("should check change filter by initiator", () => {
-        component.onlySystemFlows = false;
-        const fetchTableDataSpy = spyOn(component, "fetchTableData");
-        component.onChangeFilterByInitiator(true);
-
-        expect(component.onlySystemFlows).toEqual(true);
-        expect(fetchTableDataSpy).toHaveBeenCalledTimes(1);
     });
 });

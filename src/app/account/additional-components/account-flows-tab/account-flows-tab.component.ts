@@ -107,6 +107,7 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
             this.searchByAccount = [];
             this.searchByDataset = [];
             this.filterByStatus = null;
+            this.onlySystemFlows = false;
         }
         this.searchByFilters(filters);
     }

@@ -114,12 +114,6 @@ describe("FlowsTableComponent", () => {
         expect(navigateToFlowDetailsSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should check toggle system flows", () => {
-        const filterByInitiatorChangeSpy = spyOn(component.filterByInitiatorChange, "emit");
-        component.onToggleSystemFlows();
-        expect(filterByInitiatorChangeSpy).toHaveBeenCalledTimes(1);
-    });
-
     it("should check search method", () => {
         const searchByFiltersChangeSpy = spyOn(component.searchByFiltersChange, "emit");
         component.onSearch();

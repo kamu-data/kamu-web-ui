@@ -25,6 +25,7 @@ export interface FlowsTableFiltersOptions {
     accounts: Account[];
     datasets: Dataset[];
     status: MaybeNull<FlowStatus>;
+    onlySystemFlows: boolean;
 }
 
 export interface FilterStatusType {

@@ -47,7 +47,6 @@
                 }"
                 [accountFlowInitiators]="flowConnectionData.flowInitiators"
                 [involvedDatasets]="flowConnectionData.mainTableFlowsData.involvedDatasets"
-                (filterByInitiatorChange)="onChangeFilterByInitiator($event)"
                 (searchByFiltersChange)="onSearchByFiltersChange($event)"
                 (cancelFlowChange)="onCancelFlow($event)"
             ></app-flows-table>

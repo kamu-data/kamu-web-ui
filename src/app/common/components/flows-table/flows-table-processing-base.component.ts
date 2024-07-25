@@ -67,23 +67,15 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
         this.fetchTableData(this.currentPage);
     }
 
-    public onChangeFilterByInitiator(showSystemFlows: boolean): void {
-        let filterOptions: MaybeNull<InitiatorFilterInput> = null;
-        if (showSystemFlows) {
-            filterOptions = { system: true };
-        }
-        this.fetchTableData(this.currentPage, this.filterByStatus, filterOptions);
-        this.onlySystemFlows = showSystemFlows;
-    }
-
     public searchByFilters(filters: MaybeNull<FlowsTableFiltersOptions>): void {
         this.filterByStatus = filters?.status ?? null;
+        this.onlySystemFlows = filters?.onlySystemFlows ?? false;
         if (!filters) {
             this.fetchTableData(this.currentPage, null, null, []);
             this.onlySystemFlows = false;
         } else {
-            const { accounts, datasets, status } = filters;
-            const filterInitiatorOptions: MaybeNull<InitiatorFilterInput> = this.onlySystemFlows
+            const { accounts, datasets, status, onlySystemFlows } = filters;
+            const filterInitiatorOptions: MaybeNull<InitiatorFilterInput> = onlySystemFlows
                 ? { system: true }
                 : accounts.length
                   ? {

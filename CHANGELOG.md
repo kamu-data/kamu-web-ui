@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ## Fixed
 - "Update now" button is present when user is not logged in 
+## Added
+- Improved UX of flows table:
+  - Main description message is clickable
+  - Duration block displayed correctly(added delay)
 
 ## [0.23.2] -2024-07-23
 ## Fixed

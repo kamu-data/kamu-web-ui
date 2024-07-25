@@ -116,7 +116,7 @@ export class FlowsTableComponent implements OnInit, OnChanges {
         this.triggersMatMenu.get(1)?.closeMenu();
         this.triggersMatMenu.get(2)?.closeMenu();
         this.searchByFiltersChange.emit({
-            accounts: this.searchByAccount,
+            accounts: this.selectedAccountItems,
             datasets: this.selectedDatasetItems,
             status:
                 !this.selectedStatusItems.length || this.selectedStatusItems[0].status === "All"

@@ -70,6 +70,7 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
     public searchByFilters(filters: MaybeNull<FlowsTableFiltersOptions>): void {
         this.filterByStatus = filters?.status ?? null;
         this.onlySystemFlows = filters?.onlySystemFlows ?? false;
+        this.searchByAccount = filters?.accounts ?? [];
         if (!filters) {
             this.fetchTableData(this.currentPage, null, null, []);
             this.onlySystemFlows = false;

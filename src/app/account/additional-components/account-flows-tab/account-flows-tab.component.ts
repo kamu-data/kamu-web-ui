@@ -103,12 +103,7 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
     }
 
     public onSearchByFiltersChange(filters: MaybeNull<FlowsTableFiltersOptions>): void {
-        if (!filters) {
-            this.searchByAccount = [];
-            this.searchByDataset = [];
-            this.filterByStatus = null;
-            this.onlySystemFlows = false;
-        }
+        this.searchByDataset = filters?.datasets ?? [];
         this.searchByFilters(filters);
     }
 }

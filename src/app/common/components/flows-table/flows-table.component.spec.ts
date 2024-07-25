@@ -3,13 +3,12 @@ import { FlowsTableComponent } from "./flows-table.component";
 import { MatTableModule } from "@angular/material/table";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatDividerModule } from "@angular/material/divider";
-import { MatRadioChange, MatRadioModule } from "@angular/material/radio";
+import { MatRadioModule } from "@angular/material/radio";
 import { MatIconModule } from "@angular/material/icon";
 import { FormsModule } from "@angular/forms";
-import { mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
-import { FilterByInitiatorEnum } from "./flows-table.types";
+import { mockDatasetFlowsInitiatorsQuery, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import { DisplayTimeModule } from "src/app/components/display-time/display-time.module";
-import { Dataset, FlowStatus } from "src/app/api/kamu.graphql.interface";
+import { Account, Dataset } from "src/app/api/kamu.graphql.interface";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { AngularSvgIconModule, SvgIconRegistryService } from "angular-svg-icon";
 import { HarnessLoader } from "@angular/cdk/testing";
@@ -23,6 +22,7 @@ import { SharedModule } from "src/app/shared/shared/shared.module";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { mockDatasets } from "./flows-table.helpers.mock";
 import { mockDatasetMainDataId } from "src/app/search/mock.data";
+import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 
 describe("FlowsTableComponent", () => {
     let component: FlowsTableComponent;
@@ -48,6 +48,7 @@ describe("FlowsTableComponent", () => {
                 SharedTestModule,
                 SharedModule,
                 NgbTypeaheadModule,
+                AngularMultiSelectModule,
             ],
         }).compileComponents();
 
@@ -64,36 +65,20 @@ describe("FlowsTableComponent", () => {
         loader = TestbedHarnessEnvironment.loader(fixture);
         component.nodes = mockFlowSummaryDataFragments;
         component.filterByStatus = null;
-        component.filterByInitiator = FilterByInitiatorEnum.All;
-        component.searchByAccount = null;
+        component.searchByAccount = [];
         component.tableOptions = {
             displayColumns: ["description", "information", "creator", "options"],
-            initiatorsTypes: Object.keys(FilterByInitiatorEnum),
         };
-        component.involvedDatasets = [mockDatasets[0]] as Dataset[];
+        component.involvedDatasets = mockDatasets as Dataset[];
+        component.dropdownDatasetList = mockDatasets as Dataset[];
+
+        component.accountFlowInitiators = mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators
+            .nodes as Account[];
         fixture.detectChanges();
     });
 
     it("should create", () => {
         expect(component).toBeTruthy();
-    });
-
-    it("should check change filter by status", () => {
-        const filterByStatusChangeSpy = spyOn(component.filterByStatusChange, "emit");
-        component.changeFilterByStatus(FlowStatus.Finished);
-        expect(filterByStatusChangeSpy).toHaveBeenCalledWith(FlowStatus.Finished);
-    });
-
-    it("should check change filter by initiator", () => {
-        const filterByInitiatorChangeSpy = spyOn(component.filterByInitiatorChange, "emit");
-        component.changeFilterByInitiator({ value: FilterByInitiatorEnum.System } as MatRadioChange);
-        expect(filterByInitiatorChangeSpy).toHaveBeenCalledWith(FilterByInitiatorEnum.System);
-    });
-
-    it("should check search by accountName emits value", () => {
-        const searchByAccountNameChangeSpy = spyOn(component.searchByAccountNameChange, "emit");
-        component.onSearchByAccountName();
-        expect(searchByAccountNameChangeSpy).toHaveBeenCalledWith(null);
     });
 
     it("should check table rows length", async () => {
@@ -127,5 +112,23 @@ describe("FlowsTableComponent", () => {
         const navigateToFlowDetailsSpy = spyOn(navigationService, "navigateToFlowDetails");
         component.navigateToFlowDetaisView(mockFlowSummaryDataFragments[0], mockDatasetMainDataId);
         expect(navigateToFlowDetailsSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check search method", () => {
+        const searchByFiltersChangeSpy = spyOn(component.searchByFiltersChange, "emit");
+        component.onSearch();
+        expect(searchByFiltersChangeSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check click on dataset name", () => {
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        component.onClickDataset(mockDatasetMainDataId);
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check reset filters", () => {
+        const searchByFiltersChangeSpy = spyOn(component.searchByFiltersChange, "emit");
+        component.onResetFilters();
+        expect(searchByFiltersChangeSpy).toHaveBeenCalledTimes(1);
     });
 });

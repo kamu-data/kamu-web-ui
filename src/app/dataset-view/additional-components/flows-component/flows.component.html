@@ -36,28 +36,10 @@
                             </button>
                         </mat-menu>
                     </div>
-                    <div class="mt-4 position-relative">
-                        <input
-                            class="form-control placeholder-padding-left d-inline custom-border w-300"
-                            type="text"
-                            [(ngModel)]="searchFilter"
-                            autocomplete="off"
-                            placeholder="Search"
-                            data-test-id="search"
-                            [disabled]="true"
-                        />
-                        <svg-icon name="search"></svg-icon>
-                        <mat-icon
-                            *ngIf="searchFilter"
-                            class="fs-5 d-inline position-absolute close-position"
-                            data-test-id="clearSearch"
-                            >close</mat-icon
-                        >
-                    </div>
                 </div>
             </div>
 
-            <div class="d-flex justify-content-end mt-4 mb-2">
+            <div class="d-flex justify-content-end my-4">
                 <button
                     (click)="refreshFlow()"
                     class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
@@ -77,17 +59,14 @@
                 <app-flows-table
                     [nodes]="flowConnectionData.mainTableFlowsData.connectionData.nodes"
                     [filterByStatus]="filterByStatus"
-                    [filterByInitiator]="filterByInitiator"
+                    [onlySystemFlows]="onlySystemFlows"
                     [searchByAccount]="searchByAccount"
                     [accountFlowInitiators]="flowConnectionData.flowInitiators"
                     [involvedDatasets]="flowConnectionData.mainTableFlowsData.involvedDatasets"
                     [tableOptions]="{
-                        displayColumns: DISPLAY_COLUMNS,
-                        initiatorsTypes: INITIATORS
+                        displayColumns: DISPLAY_COLUMNS
                     }"
-                    (filterByStatusChange)="onChangeFilterByStatus($event)"
-                    (filterByInitiatorChange)="onChangeFilterByInitiator($event)"
-                    (searchByAccountNameChange)="onSearchByAccountName($event)"
+                    (searchByFiltersChange)="onSearchByFiltersChange($event)"
                     (cancelFlowChange)="onCancelFlow($event)"
                 ></app-flows-table>
                 <div class="mt-50px">

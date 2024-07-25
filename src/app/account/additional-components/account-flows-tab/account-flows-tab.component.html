@@ -1,4 +1,4 @@
-<div class="container-content mt-4">
+<div class="container-content overflow-unset mt-4">
     <ng-container *ngIf="flowConnectionData$ | async as flowConnectionData">
         <ng-container *ngIf="flowConnectionData.tileWidgetListFlowsData.connectionData.nodes.length">
             <div class="d-flex justify-content-between">
@@ -39,19 +39,15 @@
             <app-flows-table
                 [nodes]="flowConnectionData.mainTableFlowsData.connectionData.nodes"
                 [filterByStatus]="filterByStatus"
-                [filterByInitiator]="filterByInitiator"
+                [onlySystemFlows]="onlySystemFlows"
                 [searchByDataset]="searchByDataset"
                 [searchByAccount]="searchByAccount"
                 [tableOptions]="{
-                    displayColumns: DISPLAY_COLUMNS,
-                    initiatorsTypes: INITIATORS
+                    displayColumns: DISPLAY_COLUMNS
                 }"
                 [accountFlowInitiators]="flowConnectionData.flowInitiators"
                 [involvedDatasets]="flowConnectionData.mainTableFlowsData.involvedDatasets"
-                (filterByStatusChange)="onChangeFilterByStatus($event)"
-                (filterByInitiatorChange)="onChangeFilterByInitiator($event)"
-                (searchByAccountNameChange)="onSearchByAccountName($event)"
-                (searchByDatasetNameChange)="onSearchByDatasetName($event)"
+                (searchByFiltersChange)="onSearchByFiltersChange($event)"
                 (cancelFlowChange)="onCancelFlow($event)"
             ></app-flows-table>
             <div class="mt-50px">

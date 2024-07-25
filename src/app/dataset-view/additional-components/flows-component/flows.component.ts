@@ -15,6 +15,7 @@ import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service
 import { environment } from "src/environments/environment";
 import { FlowsTableProcessingBaseComponent } from "src/app/common/components/flows-table/flows-table-processing-base.component";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
+import { FlowsTableFiltersOptions } from "src/app/common/components/flows-table/flows-table.types";
 
 @Component({
     selector: "app-flows",
@@ -164,5 +165,12 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             this.refreshFlow();
             this.cdr.detectChanges();
         }, this.TIMEOUT_REFRESH_FLOW);
+    }
+
+    public onSearchByFiltersChange(filters: MaybeNull<FlowsTableFiltersOptions>): void {
+        if (!filters) {
+            this.searchByAccount = [];
+        }
+        this.searchByFilters(filters);
     }
 }

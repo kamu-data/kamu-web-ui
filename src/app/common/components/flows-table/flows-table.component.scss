@@ -113,13 +113,14 @@ td.mat-cell {
     }
 }
 
-.search-creator-button {
-    border-top-right-radius: 5px !important;
-    border-bottom-right-radius: 5px !important;
+.clear-button {
+    border-top-left-radius: 5px !important;
+    border-bottom-left-radius: 5px !important;
+    height: 38px;
+}
 
-    .search-creator-icon {
-        padding-top: 3px;
-    }
+.search-creator-button {
+    height: 38px;
 }
 
 .truncate-sub-message {
@@ -164,13 +165,30 @@ td.mat-cell {
     .mat-menu-panel {
         min-width: fit-content;
     }
+
+    .cuppa-dropdown {
+        width: 260px;
+        height: 38px;
+
+        .c-label {
+            width: 140px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .list-area {
+            margin-bottom: 20px;
+        }
+    }
 }
 
-.truncate-dataset-search {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 300px;
+.w-500 {
+    width: 500px !important;
+}
+
+.w-350 {
+    width: 350px !important;
 }
 
 .description-link {

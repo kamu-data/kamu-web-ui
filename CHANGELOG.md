@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved UX of flows table:
   - Main description message is clickable
   - Duration block displayed correctly(added delay)
+- Added multiple filters selection for the flows table
 
 ## [0.23.2] -2024-07-23
 ## Fixed

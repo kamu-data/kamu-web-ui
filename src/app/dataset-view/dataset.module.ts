@@ -85,6 +85,7 @@ import { FileFromUrlModalComponent } from "./additional-components/overview-comp
 import { FlowsTableComponent } from "../common/components/flows-table/flows-table.component";
 import { TileBaseWidgetComponent } from "../common/components/tile-base-widget/tile-base-widget.component";
 import { FlowsComponent } from "./additional-components/flows-component/flows.component";
+import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 
 @NgModule({
     imports: [
@@ -139,6 +140,7 @@ import { FlowsComponent } from "./additional-components/flows-component/flows.co
         MatDividerModule,
         DataAccessPanelModule,
         MatSortModule,
+        AngularMultiSelectModule,
     ],
     exports: [
         DatasetViewHeaderComponent,
@@ -161,6 +163,7 @@ import { FlowsComponent } from "./additional-components/flows-component/flows.co
         SharedModule,
         TileBaseWidgetComponent,
         FlowsTableComponent,
+        AngularMultiSelectModule,
     ],
     declarations: [
         DatasetViewHeaderComponent,

@@ -13,6 +13,7 @@ import { AccountTabs } from "../../account.constants";
 import { environment } from "src/environments/environment";
 import { TEST_ACCOUNT_ID } from "src/app/search/mock.data";
 import { FlowsTableProcessingBaseComponent } from "src/app/common/components/flows-table/flows-table-processing-base.component";
+import { FlowsTableFiltersOptions } from "src/app/common/components/flows-table/flows-table.types";
 
 @Component({
     selector: "app-account-flows-tab",
@@ -23,7 +24,7 @@ import { FlowsTableProcessingBaseComponent } from "src/app/common/components/flo
 export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent implements OnInit {
     @Input() accountName: string;
     public nodes: FlowSummaryDataFragment[] = [];
-    public searchByDataset: MaybeNull<Dataset> = null;
+    public searchByDataset: Dataset[] = [];
     public readonly DISPLAY_COLUMNS = ["description", "information", "creator", "dataset", "options"];
 
     constructor(private accountService: AccountService) {
@@ -89,11 +90,6 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
         this.fetchTableData(page);
     }
 
-    public onSearchByDatasetName(dataset: MaybeNull<Dataset>): void {
-        this.fetchTableData(this.currentPage, this.filterByStatus, null, dataset ? [dataset.id] : []);
-        this.searchByDataset = dataset;
-    }
-
     public toggleStateAccountFlowConfigs(paused: boolean): void {
         if (!paused) {
             this.accountService.accountPauseFlows(this.accountName).subscribe();
@@ -104,5 +100,10 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
             this.refreshFlow();
             this.cdr.detectChanges();
         }, this.TIMEOUT_REFRESH_FLOW);
+    }
+
+    public onSearchByFiltersChange(filters: MaybeNull<FlowsTableFiltersOptions>): void {
+        this.searchByDataset = filters?.datasets ?? [];
+        this.searchByFilters(filters);
     }
 }

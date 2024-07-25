@@ -43,7 +43,7 @@
         </div>
 
         <ng-container *ngIf="currentState">
-            <div class="d-flex justify-content-end">
+            <div class="d-flex justify-content-end" *ngIf="currentPushSources?.length">
                 <button
                     class="border-1 bg-light border rounded-2 btn btn-sm d-flex justify-content-between align-items-center"
                     data-test-id="'add-new-push-source'"

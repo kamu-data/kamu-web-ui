@@ -26,6 +26,7 @@ export class BlockNavigationComponent {
         defaultOpen: false,
         textField: "value",
         enableCheckAll: false,
+        allowSearchFilter: false,
     };
 
     public highlightHash(hash: string, searchHash: string): string {

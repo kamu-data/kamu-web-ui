@@ -9,14 +9,15 @@ import { of } from "rxjs";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { AccountTabs } from "../../account.constants";
-import { Dataset } from "src/app/api/kamu.graphql.interface";
 import { AccountService } from "src/app/services/account.service";
 import { mockDatasetMainDataId } from "src/app/search/mock.data";
-import { mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
+import { mockDatasetFlowsInitiatorsQuery, mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
 import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { FlowsTableComponent } from "src/app/common/components/flows-table/flows-table.component";
 import { TileBaseWidgetComponent } from "src/app/common/components/tile-base-widget/tile-base-widget.component";
+import { Account, Dataset, FlowStatus } from "src/app/api/kamu.graphql.interface";
 import { mockDatasets } from "src/app/common/components/flows-table/flows-table.helpers.mock";
+import { FlowsTableFiltersOptions } from "src/app/common/components/flows-table/flows-table.types";
 
 describe("AccountFlowsTabComponent", () => {
     let component: AccountFlowsTabComponent;
@@ -73,21 +74,6 @@ describe("AccountFlowsTabComponent", () => {
         expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(component.accountName, AccountTabs.FLOWS, 2);
     });
 
-    it("should check search by dataset name with dataset equal null", () => {
-        const fetchTableDataSpy = spyOn(component, "fetchTableData");
-        component.onSearchByDatasetName(null);
-        expect(fetchTableDataSpy).toHaveBeenCalledOnceWith(1, null, null, []);
-        expect(component.searchByDataset).toEqual(null);
-    });
-
-    it("should check search by dataset name with dataset not equal null", () => {
-        const fetchTableDataSpy = spyOn(component, "fetchTableData");
-        const dataset = mockDatasets[0] as Dataset;
-        component.onSearchByDatasetName(dataset);
-        expect(fetchTableDataSpy).toHaveBeenCalledOnceWith(1, null, null, [dataset.id]);
-        expect(component.searchByDataset).toEqual(dataset);
-    });
-
     it("should check cancel flow button", fakeAsync(() => {
         const refreshFlowSpy = spyOn(component, "refreshFlow");
         spyOn(datasetFlowsService, "cancelScheduledTasks").and.returnValue(of(true));
@@ -131,4 +117,53 @@ describe("AccountFlowsTabComponent", () => {
         expect(emptyBlock).toBeDefined();
         discardPeriodicTasks();
     }));
+
+    it("should check search by filters with filters=null", () => {
+        component.searchByAccount = mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators
+            .nodes as Account[];
+        component.searchByDataset = mockDatasets as Dataset[];
+        fixture.detectChanges();
+        component.onSearchByFiltersChange(null);
+
+        expect(component.searchByAccount).toEqual([]);
+        expect(component.searchByDataset).toEqual([]);
+    });
+
+    it("should check search by filters with filters options", () => {
+        const filterOptions: FlowsTableFiltersOptions = {
+            accounts: mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators.nodes as Account[],
+            datasets: mockDatasets as Dataset[],
+            status: FlowStatus.Finished,
+            onlySystemFlows: false,
+        };
+        const { accounts, datasets, status } = filterOptions;
+        component.currentPage = 2;
+        const fetchTableDataSpy = spyOn(component, "fetchTableData");
+        fixture.detectChanges();
+        component.onSearchByFiltersChange(filterOptions);
+
+        expect(fetchTableDataSpy).toHaveBeenCalledWith(
+            component.currentPage,
+            status,
+            { accounts: accounts.map((item: Account) => item.id) },
+            datasets.map((item) => item.id),
+        );
+    });
+
+    it("should check search by filters with filters options and only system flows", () => {
+        const filterOptions: FlowsTableFiltersOptions = {
+            accounts: [],
+            datasets: [],
+            status: FlowStatus.Finished,
+            onlySystemFlows: true,
+        };
+        const { status } = filterOptions;
+        component.currentPage = 1;
+        component.onlySystemFlows = true;
+        const fetchTableDataSpy = spyOn(component, "fetchTableData");
+        fixture.detectChanges();
+        component.onSearchByFiltersChange(filterOptions);
+
+        expect(fetchTableDataSpy).toHaveBeenCalledWith(component.currentPage, status, { system: true }, []);
+    });
 });

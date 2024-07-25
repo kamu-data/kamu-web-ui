@@ -1,7 +1,7 @@
 import { Observable } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
-import { CancelFlowArgs, FilterByInitiatorEnum, FlowsTableData } from "./flows-table.types";
+import { CancelFlowArgs, FlowsTableData, FlowsTableFiltersOptions } from "./flows-table.types";
 import { Account, FlowStatus, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
 import { ChangeDetectorRef, Directive, inject } from "@angular/core";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -13,14 +13,13 @@ import { DatasetFlowsService } from "src/app/dataset-view/additional-components/
 export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
     public tileWidgetData$: Observable<MaybeUndefined<FlowsTableData>>;
     public filterByStatus: MaybeNull<FlowStatus> = null;
-    public filterByInitiator = FilterByInitiatorEnum.All;
-    public searchByAccount: MaybeNull<Account>;
+    public onlySystemFlows = false;
+    public searchByAccount: Account[] = [];
     public currentPage = 1;
     public readonly WIDGET_FLOW_RUNS_PER_PAGE: number = 150;
     public readonly TABLE_FLOW_RUNS_PER_PAGE: number = 15;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly TIMEOUT_REFRESH_FLOW = 800;
-    public readonly INITIATORS = Object.keys(FilterByInitiatorEnum);
     public flowConnectionData$: Observable<{
         mainTableFlowsData: FlowsTableData;
         tileWidgetListFlowsData: FlowsTableData;
@@ -68,31 +67,29 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
         this.fetchTableData(this.currentPage);
     }
 
-    public onChangeFilterByStatus(status: MaybeNull<FlowStatus>): void {
-        this.fetchTableData(this.currentPage, status);
-        this.filterByStatus = status;
-    }
+    public searchByFilters(filters: MaybeNull<FlowsTableFiltersOptions>): void {
+        this.filterByStatus = filters?.status ?? null;
+        this.onlySystemFlows = filters?.onlySystemFlows ?? false;
+        this.searchByAccount = filters?.accounts ?? [];
+        if (!filters) {
+            this.fetchTableData(this.currentPage, null, null, []);
+            this.onlySystemFlows = false;
+        } else {
+            const { accounts, datasets, status, onlySystemFlows } = filters;
+            const filterInitiatorOptions: MaybeNull<InitiatorFilterInput> = onlySystemFlows
+                ? { system: true }
+                : accounts.length
+                  ? {
+                        accounts: accounts.map((item: Account) => item.id),
+                    }
+                  : null;
 
-    public onChangeFilterByInitiator(initiator: FilterByInitiatorEnum): void {
-        if (initiator !== FilterByInitiatorEnum.Account) {
-            let filterOptions: MaybeNull<InitiatorFilterInput> = null;
-            if (initiator === FilterByInitiatorEnum.System) {
-                filterOptions = { system: true };
-            }
-            this.fetchTableData(this.currentPage, this.filterByStatus, filterOptions);
-            this.resetSearchByAccount();
+            this.fetchTableData(
+                this.currentPage,
+                status,
+                filterInitiatorOptions,
+                datasets && datasets.length ? datasets.map((item) => item.id) : [],
+            );
         }
-        this.filterByInitiator = initiator;
-    }
-
-    public onSearchByAccountName(account: MaybeNull<Account>): void {
-        if (account) {
-            this.fetchTableData(this.currentPage, this.filterByStatus, { accounts: [account.id] });
-            this.searchByAccount = account;
-        }
-    }
-
-    private resetSearchByAccount(): void {
-        this.searchByAccount = null;
     }
 }

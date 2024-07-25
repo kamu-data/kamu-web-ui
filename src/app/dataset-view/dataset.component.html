@@ -14,12 +14,6 @@
                 [datasetBasics]="datasetBasics"
                 [datasetPermissions]="datasetPermissions"
                 [datasetViewType]="datasetViewType"
-                [datasetNavigation]="
-                    getDatasetNavigation({
-                        accountName: getDatasetInfoFromUrl().accountName,
-                        datasetName: getDatasetInfoFromUrl().datasetName
-                    })
-                "
             ></app-dataset-view-menu>
 
             <app-overview

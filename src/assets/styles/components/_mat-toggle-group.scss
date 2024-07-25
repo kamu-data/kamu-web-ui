@@ -57,3 +57,9 @@ mat-button-toggle {
     background-color: transparent !important;
     padding-left: 32px !important;
 }
+
+.mat-button-toggle-appearance-standard {
+    .mat-button-toggle-label-content {
+        padding: 0 !important;
+    }
+}

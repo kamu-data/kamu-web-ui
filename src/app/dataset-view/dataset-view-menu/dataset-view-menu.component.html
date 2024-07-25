@@ -5,83 +5,78 @@
     #datasetViewMenu
 >
     <div class="dataset-view-type-toggle-group">
-        <mat-button-toggle-group
-            name="datasetViewType"
-            class="mat-button-toggle-group"
-            aria-label="Dataset View Type"
-            [value]="datasetViewType"
-        >
-            <mat-button-toggle
-                data-test-id="navigateToOverview"
-                value="overview"
-                [checked]="isDatasetViewTypeOverview"
-                (click)="onNavigateToOverview()"
-            >
-                <mat-icon class="fs-4">visibility</mat-icon>
-                Overview
+        <mat-button-toggle-group name="datasetViewType" class="mat-button-toggle-group" aria-label="Dataset View Type">
+            <mat-button-toggle data-test-id="navigateToOverview" value="overview" [checked]="isDatasetViewTypeOverview">
+                <a [routerLink]="[datasetLink]" class="menu-link">
+                    <div class="d-flex align-items-center">
+                        <mat-icon class="fs-4 d-block me-1">visibility</mat-icon>
+                        <span class="d-block">Overview</span>
+                    </div>
+                </a>
             </mat-button-toggle>
-            <mat-button-toggle
-                data-test-id="navigateToData"
-                value="data"
-                [checked]="isDatasetViewTypeData"
-                (click)="onNavigateToData()"
-            >
-                <mat-icon class="fs-4">dataset</mat-icon>
-                Data
+            <mat-button-toggle data-test-id="navigateToData" value="data" [checked]="isDatasetViewTypeData">
+                <a [routerLink]="[datasetLink]" [queryParams]="{ tab: DatasetViewTypeEnum.Data }" class="menu-link">
+                    <div class="d-flex align-items-center">
+                        <mat-icon class="fs-4 d-block me-1">dataset</mat-icon>
+                        <span class="d-block">Data</span>
+                    </div>
+                </a>
             </mat-button-toggle>
-            <mat-button-toggle
-                data-test-id="navigateToMetadata"
-                value="metadata"
-                [checked]="isDatasetViewTypeMetadata"
-                (click)="onNavigateToMetadata()"
-            >
-                <mat-icon class="fs-4">dataset_linked</mat-icon>
-                Metadata
+            <mat-button-toggle data-test-id="navigateToMetadata" value="metadata" [checked]="isDatasetViewTypeMetadata">
+                <a [routerLink]="[datasetLink]" [queryParams]="{ tab: DatasetViewTypeEnum.Metadata }" class="menu-link">
+                    <div class="d-flex align-items-center">
+                        <mat-icon class="fs-4 d-block me-1">dataset_linked</mat-icon>
+                        <span class="d-block">Metadata</span>
+                    </div>
+                </a>
             </mat-button-toggle>
-            <mat-button-toggle
-                data-test-id="navigateToHistory"
-                value="history"
-                [checked]="isDatasetViewTypeHistory"
-                (click)="onNavigateToHistory()"
-            >
-                <mat-icon class="fs-4">manage_history</mat-icon>
-                History
+            <mat-button-toggle data-test-id="navigateToHistory" value="history" [checked]="isDatasetViewTypeHistory">
+                <a [routerLink]="[datasetLink]" [queryParams]="{ tab: DatasetViewTypeEnum.History }" class="menu-link">
+                    <div class="d-flex align-items-center">
+                        <mat-icon class="fs-4 d-block me-1">manage_history</mat-icon>
+                        <span class="d-block">History</span>
+                    </div>
+                </a>
             </mat-button-toggle>
-            <mat-button-toggle
-                data-test-id="navigateToLineage"
-                value="lineage"
-                [checked]="isDatasetViewTypeLineage"
-                (click)="onNavigateToLineage()"
-            >
-                <mat-icon class="fs-4">account_tree</mat-icon>
-                Lineage
+            <mat-button-toggle data-test-id="navigateToLineage" value="lineage" [checked]="isDatasetViewTypeLineage">
+                <a [routerLink]="[datasetLink]" [queryParams]="{ tab: DatasetViewTypeEnum.Lineage }" class="menu-link">
+                    <div class="d-flex align-items-center">
+                        <mat-icon class="fs-4 d-block me-1">account_tree</mat-icon>
+                        <span class="d-block">Lineage</span>
+                    </div>
+                </a>
             </mat-button-toggle>
-            <mat-button-toggle
-                data-test-id="navigateToDiscussions"
-                value="discussions"
-                [checked]="isDatasetViewTypeDiscussions"
-                (click)="onNavigateToDiscussions()"
-                disabled
-            >
-                <mat-icon class="fs-4">message</mat-icon>
-                Discussions
+            <mat-button-toggle data-test-id="navigateToDiscussions" value="discussions" disabled>
+                <div class="d-flex align-items-center">
+                    <mat-icon class="fs-4 d-block me-1">message</mat-icon>
+                    <span class="d-block">Discussions</span>
+                </div>
             </mat-button-toggle>
             <mat-button-toggle
                 data-test-id="navigateToFlows"
                 value="flows"
-                [checked]="isDatasetViewTypeFlows"
-                (click)="onNavigateToFlows()"
                 *ngIf="shouldAllowSettingsTab"
+                [checked]="isDatasetViewTypeFlows"
             >
-                <mat-icon class="fs-4 me-1">add_task</mat-icon>Flows
+                <a [routerLink]="[datasetLink]" [queryParams]="{ tab: DatasetViewTypeEnum.Flows }" class="menu-link">
+                    <div class="d-flex align-items-center">
+                        <mat-icon class="fs-4 d-block me-1">add_task</mat-icon>
+                        <span class="d-block">Flows</span>
+                    </div>
+                </a>
             </mat-button-toggle>
             <mat-button-toggle
                 data-test-id="navigateToSettings"
                 value="settings"
-                [checked]="isDatasetViewTypeSettings"
-                (click)="onNavigateToSettings()"
                 *ngIf="shouldAllowSettingsTab"
-                ><span class="d-flex"> <svg-icon name="account" class="mr-1"></svg-icon>Settings </span>
+                [checked]="isDatasetViewTypeSettings"
+            >
+                <a [routerLink]="[datasetLink]" [queryParams]="{ tab: DatasetViewTypeEnum.Settings }" class="menu-link">
+                    <div class="d-flex align-items-center">
+                        <svg-icon name="account" class="me-1"></svg-icon>
+                        <span class="d-block">Settings</span>
+                    </div>
+                </a>
             </mat-button-toggle>
         </mat-button-toggle-group>
     </div>

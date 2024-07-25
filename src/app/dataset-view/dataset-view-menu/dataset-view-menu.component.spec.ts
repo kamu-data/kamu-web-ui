@@ -1,9 +1,7 @@
-import { DatasetNavigationInterface } from "../dataset-view.interface";
 import { FormsModule } from "@angular/forms";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatMenuModule } from "@angular/material/menu";
 import { DatasetViewMenuComponent } from "./dataset-view-menu.component";
-import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { AngularSvgIconModule } from "angular-svg-icon";
@@ -21,17 +19,6 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 describe("DatasetViewMenuComponent", () => {
     let component: DatasetViewMenuComponent;
     let fixture: ComponentFixture<DatasetViewMenuComponent>;
-
-    const mockNavigationObject = {
-        navigateToOverview: () => null,
-        navigateToData: () => null,
-        navigateToMetadata: () => null,
-        navigateToHistory: () => null,
-        navigateToLineage: () => null,
-        navigateToDiscussions: () => null,
-        navigateToSettings: () => null,
-        navigateToFlows: () => null,
-    };
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -57,7 +44,6 @@ describe("DatasetViewMenuComponent", () => {
         fixture = TestBed.createComponent(DatasetViewMenuComponent);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
-        component.datasetNavigation = mockNavigationObject;
         component.datasetPermissions = mockFullPowerDatasetPermissionsFragment;
 
         fixture.detectChanges();
@@ -65,21 +51,5 @@ describe("DatasetViewMenuComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
-    });
-
-    Object.keys(mockNavigationObject).forEach((item) => {
-        it(`should check ${item} on click button`, () => {
-            const navigateSpy = spyOn(
-                component.datasetNavigation,
-                item as keyof DatasetNavigationInterface,
-            ).and.callThrough();
-            emitClickOnElementByDataTestId(fixture, `${item}`);
-            fixture.detectChanges();
-            if (item === "navigateToHistory" || item === "navigateToMetadata") {
-                expect(navigateSpy).toHaveBeenCalledWith(1);
-            } else {
-                expect(navigateSpy).toHaveBeenCalledWith();
-            }
-        });
     });
 });

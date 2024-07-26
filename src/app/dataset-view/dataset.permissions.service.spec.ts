@@ -43,4 +43,16 @@ describe("DatasetPermissionsService", () => {
             } as DatasetPermissionsFragment),
         ).toEqual(false);
     });
+
+    it("check flows tab is allowed", () => {
+        expect(
+            service.shouldAllowFlowsTab({
+                permissions: {
+                    canDelete: false,
+                    canRename: true,
+                    canSchedule: true,
+                },
+            } as DatasetPermissionsFragment),
+        ).toEqual(true);
+    });
 });

@@ -15,6 +15,9 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
+import { DatasetViewTypeEnum } from "../dataset-view.interface";
+import { RouterModule } from "@angular/router";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("DatasetViewMenuComponent", () => {
     let component: DatasetViewMenuComponent;
@@ -37,6 +40,8 @@ describe("DatasetViewMenuComponent", () => {
                 MatTooltipModule,
                 ApolloModule,
                 ApolloTestingModule,
+                RouterModule,
+                SharedTestModule,
             ],
             declarations: [DatasetViewMenuComponent, DataAccessPanelComponent],
         }).compileComponents();
@@ -45,6 +50,7 @@ describe("DatasetViewMenuComponent", () => {
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
         component.datasetPermissions = mockFullPowerDatasetPermissionsFragment;
+        component.datasetViewType = DatasetViewTypeEnum.Metadata;
 
         fixture.detectChanges();
     });

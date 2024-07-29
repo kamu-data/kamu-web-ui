@@ -1020,8 +1020,8 @@ router-outlet {
     border-radius: 4px;
     text-align: center;
     opacity: 0;
-    transition: transform 1s linear;
-    animation: ani 1.5s forwards;
+    transition: transform linear;
+    animation: ani forwards;
 }
 
 .modal__dialog__header-block {
@@ -1039,11 +1039,6 @@ router-outlet {
 }
 
 @keyframes ani {
-    0% {
-        opacity: 0;
-        transform: translateY(-50%);
-    }
-
     100% {
         opacity: 1;
         transform: translateY(0%);

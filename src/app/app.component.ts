@@ -22,6 +22,7 @@ import moment from "moment";
 import { AccountTabs } from "./account/account.constants";
 import { LoggedUserService } from "./auth/logged-user.service";
 import packageFile from "../../package.json";
+import { LocalStorageService } from "./services/local-storage.service";
 
 export const ALL_URLS_WITHOUT_HEADER: string[] = [ProjectLinks.URL_LOGIN, ProjectLinks.URL_GITHUB_CALLBACK];
 
@@ -66,6 +67,7 @@ export class AppComponent extends BaseComponent implements OnInit {
         private appConfigService: AppConfigService,
         private cdr: ChangeDetectorRef,
         private loggedUserService: LoggedUserService,
+        private localStorageService: LocalStorageService,
     ) {
         super();
         // apollo client error messages
@@ -145,6 +147,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onLogin(): void {
+        this.localStorageService.setRedirectAfterLoginUrl(this.router.url);
         this.navigationService.navigateToLogin();
     }
 

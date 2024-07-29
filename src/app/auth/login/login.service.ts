@@ -121,7 +121,13 @@ export class LoginService {
     private defaultLoginCallback(loginResponse: LoginResponse): void {
         this.accessToken$.next(loginResponse.accessToken);
         this.account$.next(loginResponse.account);
-        this.navigationService.navigateToHome();
+        const url = this.localStorageService.redirectAfterLoginUrl;
+        if (url) {
+            this.navigationService.navigateToPath(url);
+            this.localStorageService.setRedirectAfterLoginUrl(null);
+        } else {
+            this.navigationService.navigateToHome();
+        }
     }
 
     private redirectUrlLoginCallback(loginResponse: LoginResponse): void {

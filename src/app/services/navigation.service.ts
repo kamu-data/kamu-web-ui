@@ -20,6 +20,10 @@ export class NavigationService {
         promiseWithCatch(this.router.navigate([ProjectLinks.URL_HOME]));
     }
 
+    public navigateToPath(url: string): void {
+        promiseWithCatch(this.router.navigateByUrl(url));
+    }
+
     public navigateToAdminDashBoard(): void {
         promiseWithCatch(this.router.navigate([ProjectLinks.URL_ADMIN_DASHBOARD]));
     }

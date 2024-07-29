@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ## Fixed
 - "Update now" button is present when user is not logged in 
+- Changed tab size in the monaco editor
 ## Added
 - Improved UX of flows table:
   - Main description message is clickable

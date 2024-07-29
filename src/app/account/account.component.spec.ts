@@ -1,11 +1,9 @@
-import { NavigationService } from "src/app/services/navigation.service";
 import { AccountTabs } from "./account.constants";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatIconModule } from "@angular/material/icon";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, RouterModule } from "@angular/router";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { emitClickOnElementByDataTestId, routerMock } from "src/app/common/base-test.helpers.spec";
 import { AccountComponent } from "./account.component";
 import { BehaviorSubject, delay, of } from "rxjs";
 import { DatasetApi } from "src/app/api/dataset.api";
@@ -27,11 +25,11 @@ import { ToastrModule } from "ngx-toastr";
 import { AccountFlowsTabComponent } from "./additional-components/account-flows-tab/account-flows-tab.component";
 import { LoggedUserService } from "../auth/logged-user.service";
 import { mockAccountDetails, TEST_AVATAR_URL, TEST_LOGIN } from "../api/mock/auth.mock";
+import { findElementByDataTestId } from "../common/base-test.helpers.spec";
 
 describe("AccountComponent", () => {
     let component: AccountComponent;
     let fixture: ComponentFixture<AccountComponent>;
-    let navigationService: NavigationService;
     let accountService: AccountService;
     let loggedUserService: LoggedUserService;
 
@@ -67,10 +65,10 @@ describe("AccountComponent", () => {
                 NgbRatingModule,
                 HttpClientTestingModule,
                 ToastrModule.forRoot(),
+                RouterModule,
             ],
             providers: [
                 DatasetApi,
-                { provide: Router, useValue: routerMock },
                 {
                     provide: ActivatedRoute,
                     useValue: {
@@ -81,7 +79,6 @@ describe("AccountComponent", () => {
             ],
         }).compileComponents();
 
-        navigationService = TestBed.inject(NavigationService);
         accountService = TestBed.inject(AccountService);
 
         fetchAccountByNameSpy = spyOn(accountService, "fetchAccountByName").and.returnValue(of(mockAccountDetails));
@@ -166,19 +163,6 @@ describe("AccountComponent", () => {
         });
         expect(nCalls).toBeLessThan(3);
     });
-
-    Object.values(AccountTabs).forEach((tab: string) => {
-        it(`should check switch ${tab} tab`, () => {
-            const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
-
-            mockParams.next({ [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_LOGIN });
-
-            emitClickOnElementByDataTestId(fixture, `account-${tab}-tab`);
-
-            expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(mockAccountDetails.accountName, tab);
-        });
-    });
-
     // TODO: test wrong tab
 
     it("should check page when not specified in the query", () => {
@@ -195,5 +179,13 @@ describe("AccountComponent", () => {
         mockQueryParams.next({ tab: AccountTabs.DATASETS, page: 3 });
 
         expect(getDatasetsByAccountNameSpy).toHaveBeenCalledOnceWith(mockAccountDetails.accountName, 2 /* 3 - 1 */);
+    });
+
+    it("should check routers link ", () => {
+        const datasetsTabLink = findElementByDataTestId(fixture, "link-account-datasets-tab") as HTMLLinkElement;
+        expect(datasetsTabLink.href).toContain(`?tab=${AccountTabs.DATASETS}`);
+
+        const flowsTabLink = findElementByDataTestId(fixture, "link-account-flows-tab") as HTMLLinkElement;
+        expect(flowsTabLink.href).toContain(`?tab=${AccountTabs.FLOWS}`);
     });
 });

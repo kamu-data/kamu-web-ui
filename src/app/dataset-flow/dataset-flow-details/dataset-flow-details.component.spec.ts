@@ -1,7 +1,7 @@
 import { Apollo, ApolloModule } from "apollo-angular";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { DatasetFlowDetailsComponent } from "./dataset-flow-details.component";
-import { ActivatedRoute, NavigationEnd, Router, RouterEvent } from "@angular/router";
+import { ActivatedRoute, NavigationEnd, Router, RouterEvent, RouterModule } from "@angular/router";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ToastrModule } from "ngx-toastr";
 import { Subject, of, shareReplay } from "rxjs";
@@ -100,6 +100,7 @@ describe("DatasetFlowDetailsComponent", () => {
                 FormsModule,
                 BrowserAnimationsModule,
                 DataAccessPanelModule,
+                RouterModule,
             ],
         }).compileComponents();
 

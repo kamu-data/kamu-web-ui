@@ -35,6 +35,7 @@ export class TileBaseWidgetComponent {
                 return "failed";
             case "FlowAbortedResult":
                 return "aborted";
+            /* istanbul ignore next */
             default:
                 return "Unknown outcome typename";
         }

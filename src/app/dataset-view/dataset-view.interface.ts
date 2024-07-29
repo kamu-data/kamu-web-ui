@@ -8,14 +8,3 @@ export enum DatasetViewTypeEnum {
     Settings = "settings",
     Flows = "flows",
 }
-
-export interface DatasetNavigationInterface {
-    navigateToOverview: () => void;
-    navigateToData: () => void;
-    navigateToMetadata: (currentPage: number) => void;
-    navigateToHistory: (currentPage: number) => void;
-    navigateToLineage: () => void;
-    navigateToDiscussions: () => void;
-    navigateToSettings: () => void;
-    navigateToFlows: () => void;
-}

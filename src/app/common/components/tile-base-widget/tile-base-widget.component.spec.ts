@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { TileBaseWidgetComponent } from "./tile-base-widget.component";
-import { mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
+import { mockFlowsOutcome, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import { NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
+import { FlowOutcomeDataFragment } from "src/app/api/kamu.graphql.interface";
 
 describe("TileBaseWidgetComponent", () => {
     let component: TileBaseWidgetComponent;
@@ -35,5 +36,20 @@ describe("TileBaseWidgetComponent", () => {
         const finishedTime = mockFlowSummaryDataFragments[4].timing.finishedAt;
         const result = component.durationTask(runningTime, finishedTime);
         expect(result).toEqual("-");
+    });
+
+    interface TestCase {
+        case: FlowOutcomeDataFragment;
+        expectedResult: string;
+    }
+
+    [
+        { case: mockFlowsOutcome[0], expectedResult: "success" },
+        { case: mockFlowsOutcome[1], expectedResult: "aborted" },
+        { case: mockFlowsOutcome[2], expectedResult: "failed" },
+    ].forEach((testCase: TestCase) => {
+        it(`should check outcome message equal ${testCase.expectedResult}`, () => {
+            expect(component.tileOutcomeMessage(testCase.case)).toEqual(testCase.expectedResult);
+        });
     });
 });

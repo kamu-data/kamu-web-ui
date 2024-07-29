@@ -11,6 +11,7 @@ import {
     DatasetTriggerFlowMutation,
     FlowConnectionDataFragment,
     FlowHistoryDataFragment,
+    FlowOutcomeDataFragment,
     FlowStatus,
     FlowSummaryDataFragment,
     GetDatasetListFlowsQuery,
@@ -852,3 +853,18 @@ export const mockDatasetFlowsInitiatorsQuery: DatasetFlowsInitiatorsQuery = {
         __typename: "Datasets",
     },
 };
+
+export const mockFlowsOutcome: FlowOutcomeDataFragment[] = [
+    {
+        __typename: "FlowSuccessResult",
+        message: "success",
+    },
+    { __typename: "FlowAbortedResult", message: "Error" },
+    {
+        __typename: "FlowFailedError",
+        reason: {
+            __typename: "FlowFailedMessage",
+            message: "Error",
+        },
+    },
+];

@@ -1,6 +1,5 @@
 import ProjectLinks from "src/app/project-links";
 import { BaseComponent } from "src/app/common/base.component";
-import { NavigationService } from "src/app/services/navigation.service";
 import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import { AccountTabs } from "./account.constants";
@@ -37,7 +36,6 @@ export class AccountComponent extends BaseComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
-        private navigationService: NavigationService,
         private modalService: ModalService,
         private accountService: AccountService,
         private loggedUserService: LoggedUserService,
@@ -93,30 +91,6 @@ export class AccountComponent extends BaseComponent implements OnInit {
                 yesButtonText: "Ok",
             }),
         );
-    }
-
-    public onSelectOverviewTab(user: AccountFragment): void {
-        this.navigationService.navigateToOwnerView(user.accountName, AccountTabs.OVERVIEW);
-    }
-
-    public onSelectDatasetsTab(user: AccountFragment): void {
-        this.navigationService.navigateToOwnerView(user.accountName, AccountTabs.DATASETS);
-    }
-
-    public onSelectOrganizationsTab(user: AccountFragment): void {
-        this.navigationService.navigateToOwnerView(user.accountName, AccountTabs.ORGANIZATIONS);
-    }
-
-    public onSelectInboxTab(user: AccountFragment): void {
-        this.navigationService.navigateToOwnerView(user.accountName, AccountTabs.INBOX);
-    }
-
-    public onSelectStarsTab(user: AccountFragment): void {
-        this.navigationService.navigateToOwnerView(user.accountName, AccountTabs.STARS);
-    }
-
-    public onSelectFlowsTab(user: AccountFragment): void {
-        this.navigationService.navigateToOwnerView(user.accountName, AccountTabs.FLOWS);
     }
 
     private pipelineAccountByName(accountName$: Observable<string>): Observable<AccountFragment> {

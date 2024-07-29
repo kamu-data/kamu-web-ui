@@ -69,41 +69,57 @@
                     [value]="activeTab"
                 >
                     <mat-button-toggle
-                        data-test-id="account-overview-tab"
+                        data-test-id="navigateToOverview"
                         value="overview"
-                        [checked]="activeTab === AccountTabs.OVERVIEW"
-                        (click)="onSelectOverviewTab(user)"
                         [disabled]="true"
+                        [checked]="activeTab === AccountTabs.OVERVIEW"
                     >
-                        <mat-icon class="text-muted fs-4">my_library_books</mat-icon>
-                        <span class="mx-2"> Overview</span>
+                        <div class="d-flex align-items-center">
+                            <mat-icon class="fs-4 d-block me-1">my_library_books</mat-icon>
+                            <span class="d-block">Overview</span>
+                        </div>
                     </mat-button-toggle>
                     <mat-button-toggle
                         data-test-id="account-datasets-tab"
                         value="datasets"
                         [checked]="activeTab === AccountTabs.DATASETS"
-                        (click)="onSelectDatasetsTab(user)"
                     >
-                        <mat-icon class="text-muted fs-4">book</mat-icon>
-                        <span class="mx-2">Datasets</span>
-                        <span title="1" data-view-component="true" class="counter">{{
-                            datasetsData.datasetTotalCount
-                        }}</span>
+                        <a
+                            [routerLink]="['/', user.accountName]"
+                            [queryParams]="{ tab: AccountTabs.DATASETS }"
+                            data-test-id="link-account-datasets-tab"
+                            class="menu-link"
+                        >
+                            <div class="d-flex align-items-center">
+                                <mat-icon class="fs-4 d-block me-1">book</mat-icon>
+                                <span class="d-block me-2">Datasets</span>
+                                <span title="1" data-view-component="true" class="counter">{{
+                                    datasetsData.datasetTotalCount
+                                }}</span>
+                            </div>
+                        </a>
                     </mat-button-toggle>
                     <mat-button-toggle
                         data-test-id="account-flows-tab"
                         value="flows"
                         [checked]="activeTab === AccountTabs.FLOWS"
-                        (click)="onSelectFlowsTab(user)"
                     >
-                        <mat-icon class="text-muted fs-4">add_task</mat-icon>
-                        <span class="mx-2">Flows </span>
+                        <a
+                            [routerLink]="['/', user.accountName]"
+                            [queryParams]="{ tab: AccountTabs.FLOWS }"
+                            data-test-id="link-account-flows-tab"
+                            class="menu-link"
+                        >
+                            <div class="d-flex align-items-center">
+                                <mat-icon class="fs-4 d-block me-1">add_task</mat-icon>
+                                <span class="d-block ms-1">Flows</span>
+                            </div>
+                        </a>
                     </mat-button-toggle>
                     <mat-button-toggle
                         data-test-id="account-organizations-tab"
                         value="organizations"
                         [checked]="activeTab === AccountTabs.ORGANIZATIONS"
-                        (click)="onSelectOrganizationsTab(user)"
                         [disabled]="true"
                     >
                         <mat-icon class="text-muted fs-4">people</mat-icon>
@@ -115,7 +131,6 @@
                         data-test-id="account-inbox-tab"
                         value="inbox"
                         [checked]="activeTab === AccountTabs.INBOX"
-                        (click)="onSelectInboxTab(user)"
                         [disabled]="true"
                     >
                         <mat-icon class="text-muted fs-4">inbox</mat-icon>
@@ -126,7 +141,6 @@
                         data-test-id="account-stars-tab"
                         value="Stars"
                         [checked]="activeTab === AccountTabs.STARS"
-                        (click)="onSelectStarsTab(user)"
                         [disabled]="true"
                     >
                         <mat-icon class="text-muted fs-4">star_border</mat-icon>

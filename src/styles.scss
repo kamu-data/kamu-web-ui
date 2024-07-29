@@ -1521,3 +1521,15 @@ input {
     transform: scale(0.8);
     background: #ffff;
 }
+
+.menu-link {
+    color: black;
+
+    div {
+        padding: 0 12px;
+    }
+
+    &:hover {
+        text-decoration: none;
+    }
+}

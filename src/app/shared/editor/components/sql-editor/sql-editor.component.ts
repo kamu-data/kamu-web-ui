@@ -13,6 +13,7 @@ const SQL_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
         enabled: false,
     },
     scrollBeyondLastLine: false,
+    tabSize: 2,
 };
 
 @Component({

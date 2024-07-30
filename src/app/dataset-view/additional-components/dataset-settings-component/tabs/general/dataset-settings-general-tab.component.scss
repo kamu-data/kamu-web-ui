@@ -17,6 +17,10 @@
     border: 1px solid rgb(27 31 36 / 25%);
     border-radius: 6px;
 
+    .hint {
+        padding-right: 30px;
+    }
+
     .description {
         font-weight: 600;
     }
@@ -66,4 +70,8 @@
 
 .error-border-color {
     border-color: #dc3545;
+}
+
+.margin-bottom {
+    margin-bottom: 40px;
 }

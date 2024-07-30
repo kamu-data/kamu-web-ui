@@ -45,9 +45,43 @@
         <div class="error-block" data-test-id="rename-dataset-error-custom">{{ renameError }}</div>
     </div>
 </form>
-<div class="mt-4">
+<div class="mt-2 margin-bottom">
     <h2>Danger Zone</h2>
-    <div class="danger-zone__content d-flex justify-content-between align-items-center w-75 mt-2">
+    <div class="danger-zone__content d-flex justify-content-between align-items-center w-75 mt-4">
+        <div class="danger-zone__description">
+            <p class="description">Reset this dataset</p>
+            <p class="hint mt-2">
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab reprehenderit, asperiores quam sapiente hic
+                quasi mollitia officia totam ipsa odio velit voluptatem impedit, ad et sequi, earum ratione rem nihil
+                illo distinctio exercitationem soluta similique vel obcaecati. Dolor, adipisci odio?
+            </p>
+            <div class="row">
+                <div class="d-flex flex-row">
+                    <div class="d-flex align-items-center pt-1 hint">
+                        <span class="d-inline-block">Flatten metadata:</span>
+                        <input
+                            class="form-check-input recursive-control d-inline-block ms-3"
+                            type="checkbox"
+                            (change)="changeFlattenMetadata()"
+                            [(ngModel)]="flattenMetadata"
+                        />
+                    </div>
+                    <div class="d-flex align-items-center pt-1">
+                        <span class="d-inline-block">Recursive:</span>
+                        <input
+                            class="form-check-input recursive-control d-inline-block ms-3"
+                            type="checkbox"
+                            [disabled]="!flattenMetadata"
+                            [(ngModel)]="recursive"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" [disabled]="true" data-test-id="reset-dataset-button">Reset this dataset</button>
+    </div>
+
+    <div class="danger-zone__content d-flex justify-content-between align-items-center w-75 mt-4">
         <div class="danger-zone__description">
             <p class="description">Delete this dataset</p>
             <p class="hint mt-2">Once you delete a dataset, there is no going back. Please be certain.</p>

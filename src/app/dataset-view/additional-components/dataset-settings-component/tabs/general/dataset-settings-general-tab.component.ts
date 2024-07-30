@@ -19,6 +19,8 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
 
     public renameError$: Observable<string>;
     public renameDatasetForm: FormGroup;
+    public flattenMetadata: boolean = false;
+    public recursive: boolean = false;
 
     constructor(
         private datasetSettingsService: DatasetSettingsService,
@@ -87,5 +89,11 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
 
     public changeName(): void {
         this.datasetSettingsService.resetRenameError();
+    }
+
+    public changeFlattenMetadata(): void {
+        if (!this.flattenMetadata) {
+            this.recursive = false;
+        }
     }
 }

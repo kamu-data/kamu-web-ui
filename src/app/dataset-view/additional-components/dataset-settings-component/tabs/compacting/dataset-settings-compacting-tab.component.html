@@ -75,14 +75,17 @@
                 </div>
 
                 <div class="row mt-4">
-                    <div class="col-md-3">
-                        <div class="d-flex align-items-center pt-1">
+                    <div class="col">
+                        <div class="d-flex align-items-center">
                             <app-tooltip-icon class="mt-1" [tooltip]="RECURSIVE_TOOLTIP"></app-tooltip-icon>
-                            <span class="d-inline-block">Recursive:</span>
+                            <span class="d-inline-block">Reset downstream datasets recursively:</span>
+
+                            <input
+                                class="form-check-input recursive-control ms-4 d-inline-block"
+                                type="checkbox"
+                                formControlName="recursive"
+                            />
                         </div>
-                    </div>
-                    <div class="col-md-9 d-flex align-items-center">
-                        <input class="form-check-input recursive-control" type="checkbox" formControlName="recursive" />
                     </div>
                 </div>
             </div>

@@ -11,7 +11,7 @@ import { DatasetViewHeaderComponent } from "src/app/dataset-view/dataset-view-he
 import { FlowDetailsHistoryTabComponent } from "./tabs/flow-details-history-tab/flow-details-history-tab.component";
 import { SearchAdditionalButtonsComponent } from "src/app/components/search-additional-buttons/search-additional-buttons.component";
 import { SearchAdditionalButtonsNavComponent } from "src/app/components/search-additional-buttons/search-additional-buttons-nav.component";
-import { MatMenuModule } from "@angular/material/menu";
+import { MatLegacyMenuModule as MatMenuModule } from "@angular/material/legacy-menu";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
@@ -21,7 +21,7 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetViewMenuComponent } from "src/app/dataset-view/dataset-view-menu/dataset-view-menu.component";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { FormsModule } from "@angular/forms";
-import { MatTabsModule } from "@angular/material/tabs";
+import { MatLegacyTabsModule as MatTabsModule } from "@angular/material/legacy-tabs";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FlowDetailsTabs } from "./dataset-flow-details.types";
 import ProjectLinks from "src/app/project-links";

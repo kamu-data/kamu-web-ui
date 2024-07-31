@@ -15,13 +15,13 @@ import { EventDetailsComponent } from "./components/event-details/event-details.
 import { BlockHeaderComponent } from "./components/block-header/block-header.component";
 import { DatasetViewMenuComponent } from "src/app/dataset-view/dataset-view-menu/dataset-view-menu.component";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
-import { MatMenuModule } from "@angular/material/menu";
+import { MatLegacyMenuModule as MatMenuModule } from "@angular/material/legacy-menu";
 import { DatasetViewHeaderComponent } from "src/app/dataset-view/dataset-view-header/dataset-view-header.component";
 import { SearchAdditionalButtonsComponent } from "src/app/components/search-additional-buttons/search-additional-buttons.component";
 import { SearchAdditionalButtonsNavComponent } from "src/app/components/search-additional-buttons/search-additional-buttons-nav.component";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { AngularSvgIconModule } from "angular-svg-icon";
-import { MatTabsModule } from "@angular/material/tabs";
+import { MatLegacyTabsModule as MatTabsModule } from "@angular/material/legacy-tabs";
 import { YamlViewSectionComponent } from "./components/yaml-view-section/yaml-view-section.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { DataAccessPanelModule } from "src/app/components/data-access-panel/data-access-panel.module";

@@ -3,11 +3,11 @@ import { CommonModule } from "@angular/common";
 import { SearchSidenavComponent } from "./search-sidenav.component";
 import { NgbModule, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatSidenavModule } from "@angular/material/sidenav";
-import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatLegacyFormFieldModule as MatFormFieldModule } from "@angular/material/legacy-form-field";
 import { MatToolbarModule } from "@angular/material/toolbar";
-import { MatButtonModule } from "@angular/material/button";
+import { MatLegacyButtonModule as MatButtonModule } from "@angular/material/legacy-button";
 import { MatIconModule } from "@angular/material/icon";
-import { MatMenuModule } from "@angular/material/menu";
+import { MatLegacyMenuModule as MatMenuModule } from "@angular/material/legacy-menu";
 import { FormsModule } from "@angular/forms";
 
 @NgModule({

@@ -1,4 +1,4 @@
-import { MatChipsModule } from "@angular/material/chips";
+import { MatLegacyChipsModule as MatChipsModule } from "@angular/material/legacy-chips";
 import { DatasetInfo } from "../interface/navigation.interface";
 import { AuthApi } from "../api/auth.api";
 import { SearchApi } from "../api/search.api";
@@ -20,7 +20,7 @@ import {
     routerMock,
     routerMockEventSubject,
 } from "../common/base-test.helpers.spec";
-import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatLegacyCheckboxModule as MatCheckboxModule } from "@angular/material/legacy-checkbox";
 import { DatasetListComponent } from "../components/dataset-list-component/dataset-list.component";
 import { FormsModule } from "@angular/forms";
 import { DatasetListItemComponent } from "../components/dataset-list-item/dataset-list-item.component";

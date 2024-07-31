@@ -17,7 +17,7 @@ import { DatasetListItemComponent } from "src/app/components/dataset-list-item/d
 import { PaginationComponent } from "src/app/components/pagination-component/pagination.component";
 import { NgbPaginationModule, NgbPopoverModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
 import { DisplayTimeComponent } from "src/app/components/display-time/display-time.component";
-import { MatChipsModule } from "@angular/material/chips";
+import { MatLegacyChipsModule as MatChipsModule } from "@angular/material/legacy-chips";
 import { MatDividerModule } from "@angular/material/divider";
 import { AccountNotFoundError } from "src/app/common/errors";
 import { HttpClientTestingModule } from "@angular/common/http/testing";

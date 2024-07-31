@@ -16,12 +16,12 @@ import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { delay, of } from "rxjs";
 import { OverviewComponent } from "./additional-components/overview-component/overview.component";
 import { DatasetViewMenuComponent } from "./dataset-view-menu/dataset-view-menu.component";
-import { MatMenuModule } from "@angular/material/menu";
+import { MatLegacyMenuModule as MatMenuModule } from "@angular/material/legacy-menu";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { DatasetViewHeaderComponent } from "./dataset-view-header/dataset-view-header.component";
 import { SearchAdditionalButtonsComponent } from "../components/search-additional-buttons/search-additional-buttons.component";
-import { MatTabsModule } from "@angular/material/tabs";
+import { MatLegacyTabsModule as MatTabsModule } from "@angular/material/legacy-tabs";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { SearchAdditionalButtonsNavComponent } from "../components/search-additional-buttons/search-additional-buttons-nav.component";
 import { AngularSvgIconModule, SvgIconRegistryService } from "angular-svg-icon";
@@ -45,7 +45,7 @@ import { DataAccessPanelModule } from "../components/data-access-panel/data-acce
 import { SqlEditorComponent } from "../shared/editor/components/sql-editor/sql-editor.component";
 import { RequestTimerComponent } from "./additional-components/data-component/request-timer/request-timer.component";
 import { EditorModule } from "../shared/editor/editor.module";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { MatLegacyProgressBarModule as MatProgressBarModule } from "@angular/material/legacy-progress-bar";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { FlowsComponent } from "./additional-components/flows-component/flows.component";
 

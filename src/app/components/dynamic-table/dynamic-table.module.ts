@@ -1,11 +1,11 @@
 import { ModuleWithProviders, NgModule } from "@angular/core";
-import { MatMenuModule } from "@angular/material/menu";
+import { MatLegacyMenuModule as MatMenuModule } from "@angular/material/legacy-menu";
 import { MatIconModule } from "@angular/material/icon";
-import { MatButtonModule } from "@angular/material/button";
+import { MatLegacyButtonModule as MatButtonModule } from "@angular/material/legacy-button";
 import { CommonModule } from "@angular/common";
 import { MatToolbarModule } from "@angular/material/toolbar";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatTableModule } from "@angular/material/table";
+import { MatLegacyFormFieldModule as MatFormFieldModule } from "@angular/material/legacy-form-field";
+import { MatLegacyTableModule as MatTableModule } from "@angular/material/legacy-table";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormsModule } from "@angular/forms";

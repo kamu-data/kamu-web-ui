@@ -1,8 +1,8 @@
 import { NgModule } from "@angular/core";
 import { SearchAdditionalButtonsComponent } from "./search-additional-buttons.component";
-import { MatMenuModule } from "@angular/material/menu";
+import { MatLegacyMenuModule as MatMenuModule } from "@angular/material/legacy-menu";
 import { MatIconModule } from "@angular/material/icon";
-import { MatButtonModule } from "@angular/material/button";
+import { MatLegacyButtonModule as MatButtonModule } from "@angular/material/legacy-button";
 import { CommonModule } from "@angular/common";
 import { NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
 import { SearchAdditionalButtonsNavComponent } from "./search-additional-buttons-nav.component";

@@ -2,7 +2,7 @@ import { MaybeNull } from "../../../../../../common/app.types";
 import { AfterViewInit, ChangeDetectionStrategy, Component, QueryList, ViewChild, ViewChildren } from "@angular/core";
 import { BaseField } from "../base-field";
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from "@angular/forms";
-import { MatTable } from "@angular/material/table";
+import { MatLegacyTable as MatTable } from "@angular/material/legacy-table";
 import { Observable, OperatorFunction, Subject, merge } from "rxjs";
 import { NgbTypeahead } from "@ng-bootstrap/ng-bootstrap";
 import { debounceTime, distinctUntilChanged, map } from "rxjs/operators";

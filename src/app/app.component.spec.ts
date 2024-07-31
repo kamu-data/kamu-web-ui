@@ -2,7 +2,7 @@ import { ModalComponent } from "./components/modal/modal.component";
 import { FormsModule } from "@angular/forms";
 import { mockAutocompleteItems } from "./search/mock.data";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MatMenuModule } from "@angular/material/menu";
+import { MatLegacyMenuModule as MatMenuModule } from "@angular/material/legacy-menu";
 import { RouterTestingModule } from "@angular/router/testing";
 import { SearchApi } from "./api/search.api";
 import { ALL_URLS_WITHOUT_HEADER, AppComponent } from "./app.component";

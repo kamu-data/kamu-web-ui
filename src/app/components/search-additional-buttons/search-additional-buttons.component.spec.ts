@@ -4,7 +4,7 @@ import { SearchAdditionalButtonsNavComponent } from "./search-additional-buttons
 
 import { SearchAdditionalButtonsComponent } from "./search-additional-buttons.component";
 import { MatIconModule } from "@angular/material/icon";
-import { MatMenuModule } from "@angular/material/menu";
+import { MatLegacyMenuModule as MatMenuModule } from "@angular/material/legacy-menu";
 
 describe("SearchAdditionalButtonsComponent", () => {
     let component: SearchAdditionalButtonsComponent;

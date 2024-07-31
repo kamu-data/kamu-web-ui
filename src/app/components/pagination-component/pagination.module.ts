@@ -1,10 +1,10 @@
 import { ModuleWithProviders, NgModule } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
-import { MatButtonModule } from "@angular/material/button";
+import { MatLegacyButtonModule as MatButtonModule } from "@angular/material/legacy-button";
 import { CommonModule } from "@angular/common";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormsModule } from "@angular/forms";
-import { MatChipsModule } from "@angular/material/chips";
+import { MatLegacyChipsModule as MatChipsModule } from "@angular/material/legacy-chips";
 import { MatDividerModule } from "@angular/material/divider";
 import { PaginationComponent } from "./pagination.component";
 

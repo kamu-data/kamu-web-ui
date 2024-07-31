@@ -1,4 +1,4 @@
-import { MatRadioModule } from "@angular/material/radio";
+import { MatLegacyRadioModule as MatRadioModule } from "@angular/material/legacy-radio";
 import { PaginationModule } from "./../../../components/pagination-component/pagination.module";
 import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, tick } from "@angular/core/testing";
 import { FlowsComponent } from "./flows.component";
@@ -10,9 +10,9 @@ import { ToastrModule } from "ngx-toastr";
 import { findElementByDataTestId, routerMock } from "src/app/common/base-test.helpers.spec";
 import { DatasetFlowsService } from "./services/dataset-flows.service";
 import { of } from "rxjs";
-import { MatMenuModule } from "@angular/material/menu";
+import { MatLegacyMenuModule as MatMenuModule } from "@angular/material/legacy-menu";
 import { PaginationComponent } from "src/app/components/pagination-component/pagination.component";
-import { MatTableModule } from "@angular/material/table";
+import { MatLegacyTableModule as MatTableModule } from "@angular/material/legacy-table";
 import { DisplayTimeModule } from "src/app/components/display-time/display-time.module";
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";

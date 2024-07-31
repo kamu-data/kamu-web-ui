@@ -9,7 +9,7 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from "@angular/core";
 import { MatSort } from "@angular/material/sort";
-import { MatTableDataSource } from "@angular/material/table";
+import { MatLegacyTableDataSource as MatTableDataSource } from "@angular/material/legacy-table";
 import { AccountSettingsTabs, TokenCreateStep } from "../../account-settings.constants";
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ModalService } from "src/app/components/modal/modal.service";
@@ -19,7 +19,7 @@ import AppValues from "src/app/common/app.values";
 import { AccessTokenService } from "src/app/services/access-token.service";
 import { BaseComponent } from "src/app/common/base.component";
 import ProjectLinks from "src/app/project-links";
-import { MatSlideToggleChange } from "@angular/material/slide-toggle";
+import { MatLegacySlideToggleChange as MatSlideToggleChange } from "@angular/material/legacy-slide-toggle";
 
 @Component({
     selector: "app-access-tokens-tab",

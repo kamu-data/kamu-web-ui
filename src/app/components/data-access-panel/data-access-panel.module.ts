@@ -1,15 +1,15 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { DataAccessPanelComponent } from "./data-access-panel.component";
-import { MatMenuModule } from "@angular/material/menu";
-import { MatButtonModule } from "@angular/material/button";
+import { MatLegacyMenuModule as MatMenuModule } from "@angular/material/legacy-menu";
+import { MatLegacyButtonModule as MatButtonModule } from "@angular/material/legacy-button";
 import { MatIconModule } from "@angular/material/icon";
-import { MatTabsModule } from "@angular/material/tabs";
+import { MatLegacyTabsModule as MatTabsModule } from "@angular/material/legacy-tabs";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { AngularSvgIconModule } from "angular-svg-icon";
-import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatLegacyCheckboxModule as MatCheckboxModule } from "@angular/material/legacy-checkbox";
 import { MatDividerModule } from "@angular/material/divider";
-import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatLegacyTooltipModule as MatTooltipModule } from "@angular/material/legacy-tooltip";
 import { ClipboardModule } from "@angular/cdk/clipboard";
 
 @NgModule({

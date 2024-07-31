@@ -21,9 +21,9 @@ import {
     Dataset,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
-import { MatTableDataSource } from "@angular/material/table";
+import { MatLegacyTableDataSource as MatTableDataSource } from "@angular/material/legacy-table";
 import { capitalizeString, promiseWithCatch } from "src/app/common/app.helpers";
-import { MatMenuTrigger } from "@angular/material/menu";
+import { MatLegacyMenuTrigger as MatMenuTrigger } from "@angular/material/legacy-menu";
 import { DatasetFlowTableHelpers } from "./flows-table.helpers";
 import {
     CancelFlowArgs,

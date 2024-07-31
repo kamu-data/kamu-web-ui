@@ -14,8 +14,8 @@ import { DatasetSettingsGeneralTabComponent } from "./tabs/general/dataset-setti
 import { DatasetSettingsSchedulingTabComponent } from "./tabs/scheduling/dataset-settings-scheduling-tab.component";
 import { SettingsTabsEnum } from "./dataset-settings.model";
 import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
-import { MatRadioModule } from "@angular/material/radio";
-import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatLegacyRadioModule as MatRadioModule } from "@angular/material/legacy-radio";
+import { MatLegacySlideToggleModule as MatSlideToggleModule } from "@angular/material/legacy-slide-toggle";
 import { ChangeDetectionStrategy } from "@angular/core";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";

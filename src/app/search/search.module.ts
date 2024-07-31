@@ -5,11 +5,11 @@ import { SearchComponent } from "./search.component";
 import { SearchAdditionalButtonsModule } from "../components/search-additional-buttons/search-additional-buttons.module";
 import { FormsModule } from "@angular/forms";
 import { DynamicTableModule } from "../components/dynamic-table/dynamic-table.module";
-import { MatChipsModule } from "@angular/material/chips";
+import { MatLegacyChipsModule as MatChipsModule } from "@angular/material/legacy-chips";
 import { DatasetListModule } from "../components/dataset-list-component/dataset-list.module";
 import { PaginationModule } from "../components/pagination-component/pagination.module";
 import { ModalModule } from "../components/modal/modal.module";
-import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatLegacyCheckboxModule as MatCheckboxModule } from "@angular/material/legacy-checkbox";
 
 @NgModule({
     imports: [

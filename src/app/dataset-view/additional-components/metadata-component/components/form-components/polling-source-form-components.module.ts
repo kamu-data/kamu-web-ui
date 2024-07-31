@@ -8,7 +8,7 @@ import { ArrayKeysFieldComponent } from "./array-keys-field/array-keys-field.com
 import { KeyValueFieldComponent } from "./key-value-field/key-value-field.component";
 import { SelectKindFieldComponent } from "./select-kind-field/select-kind-field.component";
 import { SchemaFieldComponent } from "./schema-field/schema-field.component";
-import { MatTableModule } from "@angular/material/table";
+import { MatLegacyTableModule as MatTableModule } from "@angular/material/legacy-table";
 import { NgbTooltipModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { CacheFieldComponent } from "./cache-field/cache-field.component";

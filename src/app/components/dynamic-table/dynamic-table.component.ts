@@ -1,5 +1,5 @@
 import { AfterContentInit, ChangeDetectionStrategy, Component, Input, OnChanges, OnInit } from "@angular/core";
-import { MatTableDataSource } from "@angular/material/table";
+import { MatLegacyTableDataSource as MatTableDataSource } from "@angular/material/legacy-table";
 import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
 import { TableSourceRowInterface } from "./dynamic-table.interface";
 

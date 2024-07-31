@@ -11,7 +11,7 @@ import { DatasetCurrentInfoFragment, DatasetKind, DatasetOverviewFragment } from
 import { NavigationService } from "src/app/services/navigation.service";
 import { first } from "rxjs/operators";
 import { NgbModal, NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
-import { MatChipsModule } from "@angular/material/chips";
+import { MatLegacyChipsModule as MatChipsModule } from "@angular/material/legacy-chips";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { OverviewHistorySummaryHeaderComponent } from "src/app/components/overview-history-summary-header/overview-history-summary-header.component";
 import { ReadmeSectionComponent } from "./components/readme-section/readme-section.component";
@@ -22,7 +22,7 @@ import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ToastrModule } from "ngx-toastr";
 import { DynamicTableComponent } from "src/app/components/dynamic-table/dynamic-table.component";
-import { MatTableModule } from "@angular/material/table";
+import { MatLegacyTableModule as MatTableModule } from "@angular/material/legacy-table";
 import { RouterTestingModule } from "@angular/router/testing";
 import _ from "lodash";
 import { mockSetLicense } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";

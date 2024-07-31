@@ -20,7 +20,6 @@ import { MatButtonModule } from "@angular/material/button";
 import { MarkdownModule } from "ngx-markdown";
 import { MetadataComponent } from "./additional-components/metadata-component/metadata.component";
 import { ClipboardModule } from "@angular/cdk/clipboard";
-
 import { DataComponent } from "./additional-components/data-component/data.component";
 import { OverviewComponent } from "./additional-components/overview-component/overview.component";
 import { LineageComponent as LineageComponent } from "./additional-components/lineage-component/lineage.component";

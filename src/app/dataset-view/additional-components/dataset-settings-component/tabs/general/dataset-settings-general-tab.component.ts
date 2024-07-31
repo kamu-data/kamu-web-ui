@@ -6,6 +6,7 @@ import { ModalService } from "../../../../../components/modal/modal.service";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "../../../../../api/kamu.graphql.interface";
 import { DatasetSettingsService } from "../../services/dataset-settings.service";
 import { Observable, shareReplay } from "rxjs";
+import { CompactionTooltipsTexts } from "src/app/common/tooltips/compacting.text";
 
 @Component({
     selector: "app-dataset-settings-general-tab",
@@ -21,6 +22,9 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     public renameDatasetForm: FormGroup;
     public flattenMetadata: boolean = false;
     public recursive: boolean = false;
+
+    public readonly FLATTEN_METADATA_TOOLTIP = CompactionTooltipsTexts.RESET_BLOCK_FLATTEN_METADATA;
+    public readonly RECURSIVE_TOOLTIP = CompactionTooltipsTexts.RESET_BLOCK_RECURSIVE;
 
     constructor(
         private datasetSettingsService: DatasetSettingsService,
@@ -81,6 +85,22 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                         this.trackSubscription(
                             this.datasetSettingsService.deleteDataset(accountId, datasetId).subscribe(),
                         );
+                    }
+                },
+            }),
+        );
+    }
+
+    public resetDataset(): void {
+        promiseWithCatch(
+            this.modalService.error({
+                title: "Reset dataset",
+                message: "Do you want to reset a dataset?",
+                yesButtonText: "Ok",
+                noButtonText: "Cancel",
+                handler: (ok) => {
+                    if (ok) {
+                        //Call compaction service
                     }
                 },
             }),

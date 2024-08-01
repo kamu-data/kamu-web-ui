@@ -14,7 +14,7 @@
     "stylelint-fix": "stylelint '**/*.scss' --fix",
     "prettier": "prettier --write '**/*.{ts,scss,js,html,spec.ts}'",
     "prettier-check": "prettier --check '**/*.{ts,scss,js,html,spec.ts}'",
-    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
+    "postinstall": "",
     "gql-update-schema": "curl https://raw.githubusercontent.com/kamu-data/kamu-cli/master/resources/schema.gql > resources/schema.graphql",
     "gql-codegen": "graphql-codegen --config gql-codegen.yml && prettier --write src/app/api/kamu.graphql.interface.ts && sed -i 's/import { gql } from \"apollo-angular\"/import { gql } from \"@apollo\\/client\\/core\"/g' src/app/api/kamu.graphql.interface.ts",
     "prepare": "husky install",

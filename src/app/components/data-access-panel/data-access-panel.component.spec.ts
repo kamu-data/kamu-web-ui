@@ -5,13 +5,13 @@ import { emitClickOnElementByDataTestId, getElementByDataTestId } from "src/app/
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
-import { MatLegacyCheckboxModule as MatCheckboxModule } from "@angular/material/legacy-checkbox";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatIconModule } from "@angular/material/icon";
-import { MatLegacyTooltipModule as MatTooltipModule } from "@angular/material/legacy-tooltip";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { AngularSvgIconModule } from "angular-svg-icon";
-import { MatLegacyMenuModule as MatMenuModule } from "@angular/material/legacy-menu";
+import { MatMenuModule } from "@angular/material/menu";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { MatLegacyTabsModule as MatTabsModule } from "@angular/material/legacy-tabs";
+import { MatTabsModule } from "@angular/material/tabs";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";

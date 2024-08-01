@@ -164,6 +164,7 @@ import { MatChipsModule } from "@angular/material/chips";
         TileBaseWidgetComponent,
         FlowsTableComponent,
         AngularMultiSelectModule,
+        MatChipsModule,
     ],
     declarations: [
         DatasetViewHeaderComponent,

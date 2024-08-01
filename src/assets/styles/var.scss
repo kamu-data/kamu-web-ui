@@ -474,6 +474,7 @@ $app-color-tooltip-border: #ced4da;
     border: 1px solid $app-color-select-menu-backdrop-border;
     border-radius: 12px;
     animation: select-menu-modal-animation 0.12s cubic-bezier(0, 0.1, 0.1, 1) backwards;
+    letter-spacing: normal;
 }
 
 .select-menu-header {

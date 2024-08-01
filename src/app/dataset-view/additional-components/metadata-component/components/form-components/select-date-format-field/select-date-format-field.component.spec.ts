@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { SelectDateFormatFieldComponent } from "./select-date-format-field.component";
 import { MatIconModule } from "@angular/material/icon";
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { MatLegacyTableModule as MatTableModule } from "@angular/material/legacy-table";
+import { MatTableModule } from "@angular/material/table";
 import { NgbTooltipModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { EventTimeSourceKind } from "../../source-events/add-polling-source/add-polling-source-form.types";

@@ -9,7 +9,7 @@ import { DatasetsTabComponent } from "./datasets-tab.component";
 import { DatasetListItemComponent } from "src/app/components/dataset-list-item/dataset-list-item.component";
 import { NgbPopoverModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
 import { DisplayTimeModule } from "src/app/components/display-time/display-time.module";
-import { MatLegacyChipsModule as MatChipsModule } from "@angular/material/legacy-chips";
+import { MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 

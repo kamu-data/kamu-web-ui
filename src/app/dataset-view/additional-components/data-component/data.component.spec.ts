@@ -2,7 +2,7 @@ import { mockDatasetBasicsDerivedFragment, mockDatasetBasicsRootFragment } from 
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { MatIconModule } from "@angular/material/icon";
-import { MatLegacyMenuModule as MatMenuModule } from "@angular/material/legacy-menu";
+import { MatMenuModule } from "@angular/material/menu";
 import { DataComponent } from "./data.component";
 
 import {
@@ -25,7 +25,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { LoadMoreComponent } from "./load-more/load-more.component";
 import { DynamicTableModule } from "../../../components/dynamic-table/dynamic-table.module";
 import { EditorModule } from "src/app/shared/editor/editor.module";
-import { MatLegacyProgressBarModule as MatProgressBarModule } from "@angular/material/legacy-progress-bar";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import _ from "lodash";
 import { RequestTimerComponent } from "./request-timer/request-timer.component";

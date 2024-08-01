@@ -6,8 +6,8 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ToastrModule } from "ngx-toastr";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { MatDividerModule } from "@angular/material/divider";
-import { MatLegacySlideToggleModule as MatSlideToggleModule } from "@angular/material/legacy-slide-toggle";
-import { MatLegacyRadioModule as MatRadioModule } from "@angular/material/legacy-radio";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatRadioModule } from "@angular/material/radio";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetBasicsRootFragment,

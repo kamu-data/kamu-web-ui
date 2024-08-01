@@ -6,7 +6,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { ReadKind } from "../../source-events/add-polling-source/add-polling-source-form.types";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { MatIconModule } from "@angular/material/icon";
-import { MatLegacyTableModule as MatTableModule } from "@angular/material/legacy-table";
+import { MatTableModule } from "@angular/material/table";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { InputFieldComponent } from "../input-field/input-field.component";
 

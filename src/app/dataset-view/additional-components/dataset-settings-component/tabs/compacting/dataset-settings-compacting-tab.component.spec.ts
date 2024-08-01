@@ -1,4 +1,4 @@
-import { MatLegacyRadioModule as MatRadioModule } from "@angular/material/legacy-radio";
+import { MatRadioModule } from "@angular/material/radio";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { DatasetSettingsCompactingTabComponent } from "./dataset-settings-compacting-tab.component";
 import { Apollo } from "apollo-angular";

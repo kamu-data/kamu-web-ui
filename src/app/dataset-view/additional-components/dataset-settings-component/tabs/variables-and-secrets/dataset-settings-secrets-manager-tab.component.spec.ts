@@ -1,4 +1,4 @@
-import { MatLegacyTableModule as MatTableModule } from "@angular/material/legacy-table";
+import { MatTableModule } from "@angular/material/table";
 import { ToastrModule } from "ngx-toastr";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetSettingsSecretsManagerTabComponent } from "./dataset-settings-secrets-manager-tab.component";

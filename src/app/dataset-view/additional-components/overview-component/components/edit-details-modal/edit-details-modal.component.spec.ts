@@ -1,6 +1,6 @@
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { emitClickOnElementByDataTestId, getElementByDataTestId } from "src/app/common/base-test.helpers.spec";
-import { MatLegacyChipInputEvent as MatChipInputEvent, MatLegacyChipsModule as MatChipsModule } from "@angular/material/legacy-chips";
+import { MatChipInputEvent, MatChipsModule } from "@angular/material/chips";
 import { FormsModule } from "@angular/forms";
 import { mockDatasetBasicsDerivedFragment } from "../../../../../search/mock.data";
 import { ComponentFixture, TestBed } from "@angular/core/testing";

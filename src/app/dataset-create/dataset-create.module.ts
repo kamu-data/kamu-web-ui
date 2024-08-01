@@ -1,11 +1,11 @@
 import { ModuleWithProviders, NgModule } from "@angular/core";
-import { MatLegacyMenuModule as MatMenuModule } from "@angular/material/legacy-menu";
+import { MatMenuModule } from "@angular/material/menu";
 import { MatIconModule } from "@angular/material/icon";
-import { MatLegacyButtonModule as MatButtonModule } from "@angular/material/legacy-button";
+import { MatButtonModule } from "@angular/material/button";
 import { CommonModule } from "@angular/common";
 import { DatasetCreateComponent } from "./dataset-create.component";
 import { SearchAdditionalButtonsModule } from "../components/search-additional-buttons/search-additional-buttons.module";
-import { MatLegacyFormFieldModule as MatFormFieldModule } from "@angular/material/legacy-form-field";
+import { MatFormFieldModule } from "@angular/material/form-field";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";

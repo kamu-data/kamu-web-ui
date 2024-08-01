@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { MatLegacyChipInputEvent as MatChipInputEvent } from "@angular/material/legacy-chips";
+import { MatChipInputEvent } from "@angular/material/chips";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { isEqual } from "lodash";
 import {

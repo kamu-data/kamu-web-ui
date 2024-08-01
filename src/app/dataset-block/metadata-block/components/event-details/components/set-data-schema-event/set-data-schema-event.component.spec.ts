@@ -6,7 +6,7 @@ import { mockSetDataSchema } from "../../mock.events";
 import { MatIconModule } from "@angular/material/icon";
 import { DynamicTableComponent } from "src/app/components/dynamic-table/dynamic-table.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
-import { MatLegacyTableModule as MatTableModule } from "@angular/material/legacy-table";
+import { MatTableModule } from "@angular/material/table";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("SetDataSchemaEventComponent", () => {

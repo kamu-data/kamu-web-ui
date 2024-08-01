@@ -6,7 +6,7 @@ import { SearchAdditionalButtonsNavComponent } from "src/app/components/search-a
 import { MatIconModule } from "@angular/material/icon";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { MatLegacyMenuModule as MatMenuModule } from "@angular/material/legacy-menu";
+import { MatMenuModule } from "@angular/material/menu";
 import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { NavigationService } from "src/app/services/navigation.service";
 

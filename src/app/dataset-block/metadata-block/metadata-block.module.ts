@@ -11,14 +11,13 @@ import { MetadataBlockComponent } from "./metadata-block.component";
 import { DatasetModule } from "src/app/dataset-view/dataset.module";
 import { BlockHeaderComponent } from "./components/block-header/block-header.component";
 import { BlockNavigationComponent } from "./components/block-navigation/block-navigation.component";
-import { MatLegacyMenuModule as MatMenuModule } from "@angular/material/legacy-menu";
+import { MatMenuModule } from "@angular/material/menu";
 import { DisplayHashModule } from "src/app/components/display-hash/display-hash.module";
 import { AddDataEventComponent } from "./components/event-details/components/add-data-event/add-data-event.component";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { PaginationModule } from "src/app/components/pagination-component/pagination.module";
 import { BlockHashFilterPipe } from "./components/block-navigation/pipes/block-hash-filter.pipe";
 import { EventTypeFilterPipe } from "./components/block-navigation/pipes/event-type-filter.pipe";
-import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
 import { SetPollingSourceEventComponent } from "./components/event-details/components/set-polling-source-event/set-polling-source-event.component";
 import { ToggleComponent } from "src/app/components/toggle/toggle.component";
 import { SeedEventComponent } from "./components/event-details/components/seed-event/seed-event.component";
@@ -95,7 +94,6 @@ import { TopicsPropertyComponent } from "./components/event-details/components/c
         MatDividerModule,
         FormsModule,
         PaginationModule,
-        NgMultiSelectDropDownModule.forRoot(),
         AngularSvgIconModule,
         HighlightModule,
         DynamicTableModule,

@@ -1,7 +1,7 @@
 import { RouterTestingModule } from "@angular/router/testing";
 import { AccountFragment, AccountType } from "src/app/api/kamu.graphql.interface";
 import { FormsModule } from "@angular/forms";
-import { MatLegacyMenuModule as MatMenuModule } from "@angular/material/legacy-menu";
+import { MatMenuModule } from "@angular/material/menu";
 import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";

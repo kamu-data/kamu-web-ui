@@ -1,6 +1,6 @@
 import { NavigationService } from "../../services/navigation.service";
 import { MatIconModule } from "@angular/material/icon";
-import { MatLegacyChipsModule as MatChipsModule } from "@angular/material/legacy-chips";
+import { MatChipsModule } from "@angular/material/chips";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetListItemComponent } from "./dataset-list-item.component";
 import { NgbModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";

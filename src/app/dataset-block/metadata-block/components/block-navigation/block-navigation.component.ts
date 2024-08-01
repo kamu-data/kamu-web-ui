@@ -3,7 +3,7 @@ import { SupportedEvents } from "../event-details/supported.events";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { MaybeNull } from "src/app/common/app.types";
-import { IDropdownSettings } from "ng-multiselect-dropdown";
+import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.interface";
 
 @Component({
     selector: "app-block-navigation",
@@ -21,12 +21,11 @@ export class BlockNavigationComponent {
 
     public dropdownList = Object.keys(SupportedEvents);
     public eventTypeFilters: string[] = [];
-    public dropdownSettings: IDropdownSettings = {
+    public dropdownSettings: DropdownSettings = {
         singleSelection: false,
-        defaultOpen: false,
-        textField: "value",
+        text: "value",
         enableCheckAll: false,
-        allowSearchFilter: false,
+        enableSearchFilter: false,
     };
 
     public highlightHash(hash: string, searchHash: string): string {

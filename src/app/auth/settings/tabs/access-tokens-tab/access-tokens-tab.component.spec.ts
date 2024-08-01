@@ -1,5 +1,5 @@
 import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
-import { MatLegacyTableModule as MatTableModule } from "@angular/material/legacy-table";
+import { MatTableModule } from "@angular/material/table";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AccessTokensTabComponent } from "./access-tokens-tab.component";
 import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -21,7 +21,7 @@ import { PaginationComponent } from "src/app/components/pagination-component/pag
 import { NgbPaginationModule } from "@ng-bootstrap/ng-bootstrap";
 import { TokenCreateStep } from "../../account-settings.constants";
 import { ModalService } from "src/app/components/modal/modal.service";
-import { MatLegacySlideToggleChange as MatSlideToggleChange, MatLegacySlideToggleModule as MatSlideToggleModule } from "@angular/material/legacy-slide-toggle";
+import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 describe("AccessTokensTabComponent", () => {
     let component: AccessTokensTabComponent;

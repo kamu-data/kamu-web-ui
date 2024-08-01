@@ -5,7 +5,7 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { Apollo } from "apollo-angular";
 import { ToastrModule } from "ngx-toastr";
 import { ActivatedRoute } from "@angular/router";
-import { MatLegacyCheckboxModule as MatCheckboxModule } from "@angular/material/legacy-checkbox";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatDividerModule } from "@angular/material/divider";
 import { findElementByDataTestId, setFieldValue } from "src/app/common/base-test.helpers.spec";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";

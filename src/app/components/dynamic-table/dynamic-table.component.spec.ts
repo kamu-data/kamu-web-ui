@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MatLegacyTableModule as MatTableModule } from "@angular/material/legacy-table";
+import { MatTableModule } from "@angular/material/table";
 import { getElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { DynamicTableComponent } from "./dynamic-table.component";
 

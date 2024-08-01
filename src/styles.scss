@@ -7,18 +7,29 @@
 @import "components/index";
 @include mat.core;
 
-/* Importing Bootstrap SCSS file. */
+$light-theme: mat.define-light-theme(
+    (
+        color: (
+            primary: mat.define-palette(mat.$indigo-palette),
+            accent: mat.define-palette(mat.$blue-grey-palette),
+        ),
+        density: -2,
+        typography: mat.define-typography-config(),
+    )
+);
 
 // Use the desired palette
-$palette: mat.define-palette(mat.$indigo-palette);
+// $palette: mat.define-palette(mat.$indigo-palette);
 
-// Create the theme
-$theme: mat.define-light-theme($palette, $palette);
+// // Create the theme
+// $theme: mat.define-light-theme($palette, $palette);
 
-// Or wrap inside another selector to scope the styles to only one specific component
-app-add-polling-source {
-    @include mat.stepper-theme($theme);
-}
+// /* Importing Bootstrap SCSS file. */
+
+// // Or wrap inside another selector to scope the styles to only one specific component
+// app-add-polling-source {
+//     @include mat.stepper-theme($theme);
+// }
 
 body {
     font-size: 14px;

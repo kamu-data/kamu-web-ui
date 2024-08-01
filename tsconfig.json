@@ -17,10 +17,7 @@
     "target": "ES2022",
     "module": "esnext",
     "skipLibCheck": true,
-    "lib": [
-      "es2018",
-      "dom"
-    ],
+    "lib": ["es2018", "dom"],
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "useDefineForClassFields": false

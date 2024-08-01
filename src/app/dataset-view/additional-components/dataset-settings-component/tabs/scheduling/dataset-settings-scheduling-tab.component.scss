@@ -6,13 +6,13 @@
             }
         }
 
-        .mat-radio-button {
+        .mat-mdc-radio-button {
             .mat-radio-ripple {
-                position: relative;
+                position: relative !important;
             }
         }
 
-        .mat-radio-label {
+        .mat-mdc-radio-label {
             white-space: normal;
         }
     }
@@ -23,6 +23,7 @@
 
     h4 {
         font-weight: 500;
+        letter-spacing: normal;
     }
 
     .form-control-width {

@@ -1,14 +1,22 @@
 @import "var";
 
+ul {
+    padding-left: 15px;
+}
+
 :host {
     ::ng-deep {
-        .mat-checkbox-checked {
-            .mat-checkbox-background {
+        .mat-mdc--checkbox-checked {
+            .mat-mdc-checkbox-background {
                 background-color: $app-navy-blue;
             }
         }
 
-        .mat-checkbox-disabled {
+        .mdc-checkbox__ripple {
+            position: relative;
+        }
+
+        .mat-mdc-checkbox-disabled {
             color: $app-disabled;
         }
     }

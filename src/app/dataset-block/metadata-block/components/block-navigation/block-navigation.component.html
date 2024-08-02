@@ -19,40 +19,50 @@
         >
     </div>
     <div class="mb-4 position-relative">
-        <angular2-multiselect [settings]="dropdownSettings" [data]="dropdownList" [(ngModel)]="eventTypeFilters">
-        </angular2-multiselect>
-        <mat-icon *ngIf="!eventTypeFilters.length" class="fs-5 text-muted position-list-icon">list_alt</mat-icon>
-    </div>
-    <div class="d-flex flex-column gap-4" *ngIf="datasetHistory">
-        <ng-container
-            *ngIf="datasetHistory.history | eventTypeFilter: eventTypeFilters | blockHashFilter: searchHash as result"
-        >
-            <div *ngFor="let block of result" class="d-flex lh-lg align-items-center justify-content-between">
-                <div class="flex-grow-1 no-wrap lh-1">
-                    <mat-icon class="d-inline align-middle fs-4">tag</mat-icon>
-                    <app-display-hash
-                        [value]="block.blockHash"
-                        [navigationTargetDataset]="datasetInfo"
-                        [showCopyButton]="false"
-                    ></app-display-hash>
-                    <div [innerHTML]="highlightHash(block.blockHash, searchHash)" class="ms-4 fs-10 text-muted"></div>
+        <div class="mb-4">
+            <angular2-multiselect
+                [settings]="DROPDOWN_SETTINGS"
+                [data]="dropdownList"
+                [(ngModel)]="eventTypeFiltersSelected"
+            >
+            </angular2-multiselect>
+        </div>
+        <div class="d-flex flex-column gap-4" *ngIf="datasetHistory">
+            <ng-container
+                *ngIf="
+                    datasetHistory.history | eventTypeFilter: eventTypeFilters | blockHashFilter: searchHash as result
+                "
+            >
+                <div *ngFor="let block of result" class="d-flex lh-lg align-items-center justify-content-between">
+                    <div class="flex-grow-1 no-wrap lh-1">
+                        <mat-icon class="d-inline align-middle fs-4">tag</mat-icon>
+                        <app-display-hash
+                            [value]="block.blockHash"
+                            [navigationTargetDataset]="datasetInfo"
+                            [showCopyButton]="false"
+                        ></app-display-hash>
+                        <div
+                            [innerHTML]="highlightHash(block.blockHash, searchHash)"
+                            class="ms-4 fs-10 text-muted"
+                        ></div>
+                    </div>
+                    <div class="me-4 align-self-baseline" *ngIf="currentBlockHash === block.blockHash">
+                        <span class="badge bg-success">current</span>
+                    </div>
+                    <div class="">
+                        <p>{{ block.event.__typename }}</p>
+                    </div>
                 </div>
-                <div class="me-4 align-self-baseline" *ngIf="currentBlockHash === block.blockHash">
-                    <span class="badge bg-success">current</span>
-                </div>
-                <div class="">
-                    <p>{{ block.event.__typename }}</p>
-                </div>
-            </div>
-            <ng-container *ngIf="result.length === 0">
-                <p class="mt-4 text-center">No block matches</p>
+                <ng-container *ngIf="result.length === 0">
+                    <p class="mt-4 text-center">No block matches</p>
+                </ng-container>
+                <app-pagination
+                    *ngIf="result.length"
+                    [currentPage]="currentPage - 1"
+                    [pageInfo]="datasetHistory.pageInfo"
+                    (pageChangeEvent)="onPageChange($event)"
+                ></app-pagination>
             </ng-container>
-            <app-pagination
-                *ngIf="result.length"
-                [currentPage]="currentPage - 1"
-                [pageInfo]="datasetHistory.pageInfo"
-                (pageChangeEvent)="onPageChange($event)"
-            ></app-pagination>
-        </ng-container>
+        </div>
     </div>
 </div>

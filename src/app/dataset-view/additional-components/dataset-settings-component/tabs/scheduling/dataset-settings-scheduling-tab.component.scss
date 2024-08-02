@@ -6,10 +6,15 @@
             }
         }
 
-        .mat-mdc-radio-button {
-            .mat-radio-ripple {
-                position: relative !important;
+        .mdc-switch {
+            .mdc-switch__ripple {
+                display: none;
             }
+        }
+
+        .mat-mdc-radio-button {
+            --mat-radio-checked-ripple-color: transparent;
+            --mat-radio-ripple-color: transparent;
         }
 
         .mat-mdc-radio-label {

@@ -19,14 +19,21 @@ export class BlockNavigationComponent {
     public searchHash = "";
     public currentPage = 1;
 
-    public dropdownList = Object.keys(SupportedEvents);
-    public eventTypeFilters: string[] = [];
-    public dropdownSettings: DropdownSettings = {
+    public dropdownList = Object.entries(SupportedEvents).map(([key]) => {
+        return { id: key, value: key };
+    });
+    public eventTypeFiltersSelected: { id: string; value: string }[] = [];
+    public readonly DROPDOWN_SETTINGS: DropdownSettings = {
         singleSelection: false,
-        text: "value",
+        text: "Select event type",
+        labelKey: "value",
         enableCheckAll: false,
         enableSearchFilter: false,
     };
+
+    public get eventTypeFilters(): string[] {
+        return this.eventTypeFiltersSelected.map((item) => item.value);
+    }
 
     public highlightHash(hash: string, searchHash: string): string {
         return hash.replace(searchHash, `<span class="bg-warning fs-10">${searchHash}</span>`);

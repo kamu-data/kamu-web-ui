@@ -7,6 +7,7 @@
 @import "components/index";
 @include mat.core;
 
+$custom-font-family: '"Roboto", "Helvetica Neue", sans-serif';
 $light-theme: mat.define-light-theme(
     (
         color: (
@@ -14,22 +15,8 @@ $light-theme: mat.define-light-theme(
             accent: mat.define-palette(mat.$blue-grey-palette),
         ),
         density: -2,
-        typography: mat.define-typography-config(),
     )
 );
-
-// Use the desired palette
-// $palette: mat.define-palette(mat.$indigo-palette);
-
-// // Create the theme
-// $theme: mat.define-light-theme($palette, $palette);
-
-// /* Importing Bootstrap SCSS file. */
-
-// // Or wrap inside another selector to scope the styles to only one specific component
-// app-add-polling-source {
-//     @include mat.stepper-theme($theme);
-// }
 
 body {
     font-size: 14px;
@@ -53,6 +40,10 @@ a {
     &:hover {
         outline-width: 0;
     }
+}
+
+markdown {
+    line-height: normal;
 }
 
 .sr-only {
@@ -222,12 +213,12 @@ a {
     border: none;
 }
 
-.mat-menu-panel {
+.mat-mdc-menu-panel {
     &.app-header__user-menu {
         background-color: white;
         border: 1px solid $app-light-grayish-blue;
 
-        .mat-menu-item {
+        .mat-mdc-menu-item {
             background-color: white;
         }
     }

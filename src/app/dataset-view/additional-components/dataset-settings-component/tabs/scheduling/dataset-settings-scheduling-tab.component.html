@@ -5,7 +5,7 @@
         <div class="box p-4 mt-3">
             <h4>Enable/Disable updates</h4>
             <mat-slide-toggle color="primary" class="mat-elevation-z0" formControlName="updatesState">
-                {{ pollingForm.controls.updatesState.value ? "enabled" : "disabled" }}
+                <span class="ps-2"> {{ pollingForm.controls.updatesState.value ? "enabled" : "disabled" }}</span>
             </mat-slide-toggle>
         </div>
 
@@ -18,7 +18,7 @@
                 aria-label="Select an option"
                 color="primary"
             >
-                <mat-radio-button [value]="pollingGroupEnum.TIME_DELTA">
+                <mat-radio-button disableRipple="true" [value]="pollingGroupEnum.TIME_DELTA">
                     <div class="d-flex align-items-center" data-test-id="button-time-delta">
                         <span class="form-control-label">Update every:</span>
                         <select

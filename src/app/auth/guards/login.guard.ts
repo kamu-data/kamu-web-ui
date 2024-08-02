@@ -8,7 +8,7 @@ import { LoginService } from "../login/login.service";
 @Injectable({
     providedIn: "root",
 })
-export class LoginGuard  {
+export class LoginGuard {
     constructor(
         private navigationService: NavigationService,
         private loginService: LoginService,

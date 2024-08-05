@@ -10,6 +10,12 @@
     }
 }
 
+.mat-mdc-menu-item {
+    line-height: 35px;
+    height: 35px;
+    min-height: 35px;
+}
+
 .margin-top-5 {
     margin-top: 5px;
 }
@@ -35,11 +41,6 @@ table {
     .mat-column-options {
         text-align: end;
     }
-}
-
-.mat-menu-item {
-    line-height: 35px;
-    height: 35px;
 }
 
 .img-creator {

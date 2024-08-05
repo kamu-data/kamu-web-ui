@@ -1,16 +1,43 @@
 @import "var";
 
+ul {
+    padding-left: 15px;
+}
+
 :host {
     ::ng-deep {
-        .mat-checkbox-checked {
-            .mat-checkbox-background {
+        .mat-mdc--checkbox-checked {
+            .mat-mdc-checkbox-background {
                 background-color: $app-navy-blue;
             }
         }
 
-        .mat-checkbox-disabled {
+        .mdc-checkbox__ripple {
+            position: relative;
+        }
+
+        .mat-mdc-checkbox-disabled {
             color: $app-disabled;
         }
+
+        .mat-mdc-standard-chip {
+            --mdc-chip-elevated-container-color: #f6f8fa;
+
+            .mdc-evolution-chip__text-label {
+                color: #0969da !important;
+                font-size: 12px;
+                font-weight: 500;
+            }
+        }
+    }
+}
+
+.mat-mdc-checkbox {
+    --mdc-checkbox-state-layer-size: 25px;
+
+    .mdc-checkbox__background {
+        width: 16px;
+        height: 16px;
     }
 }
 

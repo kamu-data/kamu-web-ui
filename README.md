@@ -37,23 +37,24 @@ See [deployment manual](https://docs.kamu.dev/node/deploy/) on how to deploy the
 
 ### Technologies
 
-- TypeScript, version: 4.6.4;
+- TypeScript, version: 5.1.6;
 - [Node.js](https://nodejs.org/en/download/releases/), version: 16.20.2;
-- [Angular CLI](https://github.com/angular/angular-cli), version 14.2.0.
+- [Angular CLI](https://github.com/angular/angular-cli), version 16.2.14.
 
 ### Libraries
 
-- [Angular Material Design](https://material.angular.io/), version: 14.2.7;
-- [Angular Service Worker](https://www.npmjs.com/package/@angular/service-worker), version: 14.3.0;
-- [Apollo Angular (GQL client)](https://apollo-angular.com/docs/), version: 5.0.0;
-- [GraphQL](https://www.npmjs.com/package/graphql), version: 16.7.1;
-- [Bootstrap](https://www.npmjs.com/package/bootstrap), version: 5.2.0;
+- [Angular Material Design](https://material.angular.io/), version: 16.2.14;
+- [Angular Service Worker](https://www.npmjs.com/package/@angular/service-worker), version: 16.2.12;
+- [Apollo Angular (GQL client)](https://apollo-angular.com/docs/), version: 5.0.2;
+- [GraphQL](https://www.npmjs.com/package/graphql), version: 16.8.1;
+- [Bootstrap](https://www.npmjs.com/package/bootstrap), version: 5.3.3;
 - [Popper.js](https://www.npmjs.com/package/@popperjs/core), version: 2.11.8;
-- [Bootstrap Icons](https://www.npmjs.com/package/bootstrap-icons), version: 1.7.1;
-- [Angular powered Bootstrap widgets](https://www.npmjs.com/package/@ng-bootstrap/ng-bootstrap), version: 13.0.0;
-- [Prettier](https://www.npmjs.com/package/prettier), version: 2.5.1;
-- [ngx-markdown](https://www.npmjs.com/package/ngx-markdown), version: 14.0.1;
-- [Karma], version: 6.4.2; Jasmine, version: 5.0.2;
+- [Bootstrap Icons](https://www.npmjs.com/package/bootstrap-icons), version: 1.11.3;
+- [Angular powered Bootstrap widgets](https://www.npmjs.com/package/@ng-bootstrap/ng-bootstrap), version: 15.0.0;
+- [Prettier](https://www.npmjs.com/package/prettier), version: 3.2.5;
+- [ngx-markdown](https://www.npmjs.com/package/ngx-markdown), version: 16.0.0;
+- [Karma](https://www.npmjs.com/package/karma), version: 6.4.3;
+- [Jasmine](https://www.npmjs.com/package/jasmine), version: 5.0.2;
 
 ### Steps for running
 

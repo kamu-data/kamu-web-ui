@@ -2,10 +2,9 @@
 
 :host {
     ::ng-deep {
-        .multiselect-dropdown {
-            .dropdown-btn {
+        angular2-multiselect {
+            span {
                 color: #6c757d;
-                padding-left: 36px !important;
             }
         }
     }

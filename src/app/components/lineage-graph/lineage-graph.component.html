@@ -144,7 +144,7 @@
 
         <ng-template #linkTemplate let-link>
             <svg:g class="edge">
-                <svg:path class="line" stroke-width="2" marker-end="url(#arrow)"></svg:path>
+                <path class="line" stroke-width="2" [attr.d]="link.line" marker-end="url(#arrow)"></path>
             </svg:g>
         </ng-template>
     </ngx-graph>

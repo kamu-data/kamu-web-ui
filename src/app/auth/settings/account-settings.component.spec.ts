@@ -1,7 +1,7 @@
 import { mockAccountDetails } from "../../api/mock/auth.mock";
 import { RouterTestingModule } from "@angular/router/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ActivatedRoute, NavigationEnd, Router, RouterEvent } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { AccountSettingsComponent } from "./account-settings.component";
 import { AngularSvgIconModule } from "angular-svg-icon";
@@ -9,7 +9,7 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { LoggedUserService } from "../logged-user.service";
 import { findElementByDataTestId, getElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { AccountSettingsTabs } from "./account-settings.constants";
-import { Subject, of } from "rxjs";
+import { of } from "rxjs";
 import ProjectLinks from "src/app/project-links";
 import { LoginService } from "../login/login.service";
 
@@ -85,18 +85,16 @@ describe("AccountSettingsComponent", () => {
             activatedRoute.snapshot.params = {
                 [ProjectLinks.URL_PARAM_CATEGORY]: tab,
             };
-            (router.events as Subject<RouterEvent>).next(new NavigationEnd(1, "", ""));
-
+            component.ngOnInit();
             expect(component.activeTab).toEqual(tab);
         });
     });
 
-    it("should open profile tab for a wrong tab", () => {
+    it("should open profile tab for a wrong tab", async () => {
         activatedRoute.snapshot.params = {
             [ProjectLinks.URL_PARAM_CATEGORY]: "wrong",
         };
-        (router.events as Subject<RouterEvent>).next(new NavigationEnd(1, "", ""));
-
+        await router.navigate(["/"]);
         expect(component.activeTab).toEqual(AccountSettingsTabs.PROFILE);
     });
 });

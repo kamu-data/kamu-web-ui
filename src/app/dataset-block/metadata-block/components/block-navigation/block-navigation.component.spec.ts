@@ -12,6 +12,7 @@ import { DisplayHashModule } from "src/app/components/display-hash/display-hash.
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { ToastrModule } from "ngx-toastr";
+import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 
 describe("BlockNavigationComponent", () => {
     let component: BlockNavigationComponent;
@@ -29,6 +30,7 @@ describe("BlockNavigationComponent", () => {
                 HttpClientTestingModule,
                 DisplayHashModule,
                 ToastrModule.forRoot(),
+                AngularMultiSelectModule,
             ],
         }).compileComponents();
 

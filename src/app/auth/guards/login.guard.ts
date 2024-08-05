@@ -1,6 +1,6 @@
 import { NavigationService } from "src/app/services/navigation.service";
 import { Injectable } from "@angular/core";
-import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot } from "@angular/router";
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 import ProjectLinks from "src/app/project-links";
 import { LoggedUserService } from "../logged-user.service";
 import { LoginService } from "../login/login.service";
@@ -8,7 +8,7 @@ import { LoginService } from "../login/login.service";
 @Injectable({
     providedIn: "root",
 })
-export class LoginGuard implements CanActivate {
+export class LoginGuard {
     constructor(
         private navigationService: NavigationService,
         private loginService: LoginService,

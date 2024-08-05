@@ -6,7 +6,7 @@
     "start": "ng serve --watch",
     "build": "ng build",
     "build-prod": "ng build --configuration production",
-    "test": "ng test --no-progress --browsers ChromeHeadless --code-coverage --watch=false",
+    "test": "ng test --no-progress --no-watch --browsers ChromeHeadless --code-coverage",
     "test-firefox": "ng test --no-progress --browsers Firefox --code-coverage",
     "lint": "eslint . --ext .ts",
     "lint-and-fix": "eslint . --ext .ts --fix",

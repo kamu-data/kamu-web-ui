@@ -124,6 +124,7 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
                 value: this.row.isSecret ? this.exposedValue : this.row.value,
                 isSecret: this.row.isSecret,
             });
+            this.row.isSecret ? this.isSecretControl.disable() : this.isSecretControl.enable();
         }
     }
 }

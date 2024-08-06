@@ -18,6 +18,21 @@
 
 <div class="body p-4">
     <form [formGroup]="keyValueForm" (ngSubmit)="onEditRow()">
+        <div class="mt-4 d-flex align-items-center">
+            <mat-checkbox
+                [disabled]="!!row && row.isSecret"
+                color="primary"
+                class="example-margin"
+                formControlName="isSecret"
+                >Secret value</mat-checkbox
+            >
+            <mat-icon
+                class="text-muted fs-5 ms-1 mt-2"
+                matTooltip="Secret variables are encrypted variables that you can use without exposing their value. Secret variables can be used for private information like API keys, auth tokens, and other identifying data that you wouldn't want exposed."
+                [matTooltipPosition]="'right'"
+                >help_outline</mat-icon
+            >
+        </div>
         <div class="mt-4">
             <label for="" class="form-label">Key <span class="text-danger">*</span></label>
             <input
@@ -25,7 +40,7 @@
                 placeholder="Please enter key..."
                 formControlName="key"
                 data-test-id="key"
-                [readonly]="row ? true : false"
+                [readonly]="row && row.isSecret ? true : false"
             />
             <div *ngIf="keyControl?.invalid && (keyControl?.touched || keyControl?.dirty)">
                 <div *ngIf="keyControl?.errors?.maxlength" class="mt-1">
@@ -47,12 +62,12 @@
             <label for="" class="form-label">Value <span class="text-danger">*</span></label>
             <div class="input-group">
                 <input
-                    [type]="row?.isSecret && !isShowExposedValue ? 'password' : 'text'"
+                    [type]="isSecretControl.value && !isShowExposedValue ? 'password' : 'text'"
                     class="form-control"
                     placeholder="Please enter value..."
                     formControlName="value"
                     data-test-id="value"
-                    [readonly]="row?.isSecret && !isShowExposedValue ? true : false"
+                    [readonly]="row && row.isSecret ? true : false"
                 />
                 <div class="input-group-addon pt-2 px-2 eye-icon" *ngIf="row?.isSecret">
                     <a *ngIf="exposedValue; else visibilityOff" (click)="toggleExposedValue()">
@@ -71,10 +86,6 @@
                     <span class="text-danger fs-12" data-test-id="error-value-required"> The value is required</span>
                 </div>
             </div>
-        </div>
-
-        <div class="mt-4">
-            <mat-checkbox color="primary" class="example-margin" formControlName="isSecret">Secret value</mat-checkbox>
         </div>
     </form>
 </div>

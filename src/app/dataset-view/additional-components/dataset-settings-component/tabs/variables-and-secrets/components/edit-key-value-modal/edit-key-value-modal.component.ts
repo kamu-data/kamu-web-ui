@@ -48,6 +48,10 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
         return this.keyValueForm.controls.value;
     }
 
+    public get isSecretControl(): AbstractControl {
+        return this.keyValueForm.controls.isSecret;
+    }
+
     public onEditRow(): void {
         if (!this.row) {
             this.trackSubscription(
@@ -84,9 +88,14 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
 
     public toggleExposedValue(): void {
         this.isShowExposedValue = !this.isShowExposedValue;
-        this.keyValueForm.patchValue({
-            value: this.isShowExposedValue ? this.exposedValue : (this.valueControl.value as string),
-        });
+        if (!this.isShowExposedValue) {
+            this.exposedValue = "";
+        } else {
+            this.fetchExposedValue();
+            this.keyValueForm.patchValue({
+                value: this.isShowExposedValue ? this.exposedValue : (this.valueControl.value as string),
+            });
+        }
     }
 
     private fetchExposedValue(): void {

@@ -61,7 +61,6 @@
                     placeholder="Please enter value..."
                     formControlName="value"
                     data-test-id="value"
-                    [readonly]="row && row.isSecret ? true : false"
                 />
                 <div class="input-group-addon pt-2 px-2 eye-icon" *ngIf="row?.isSecret">
                     <a *ngIf="exposedValue; else visibilityOff" (click)="toggleExposedValue()">

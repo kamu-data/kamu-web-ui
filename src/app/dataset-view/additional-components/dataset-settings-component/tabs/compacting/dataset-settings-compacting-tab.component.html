@@ -27,12 +27,7 @@
                             formControlName="sliceSize"
                             data-test-id="slice-size"
                         />
-                        <ng-container
-                            *ngIf="
-                                sliceSizeControl.errors?.minNumber &&
-                                (sliceSizeControl.touched || sliceSizeControl.dirty)
-                            "
-                        >
+                        <ng-container *ngIf="sliceSize.errors?.minNumber && (sliceSize.touched || sliceSize.dirty)">
                             <span
                                 class="text-danger ms-4 fs-12 d-flex align-items-end text-break"
                                 data-test-id="slice-size-error"
@@ -59,10 +54,7 @@
                             data-test-id="records-count"
                         />
                         <ng-container
-                            *ngIf="
-                                recordsCountControl.errors?.minNumber &&
-                                (recordsCountControl.touched || recordsCountControl.dirty)
-                            "
+                            *ngIf="recordsCount.errors?.minNumber && (recordsCount.touched || recordsCount.dirty)"
                         >
                             <span
                                 class="text-danger ms-4 fs-12 d-flex align-items-end text-break"

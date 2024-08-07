@@ -64,14 +64,6 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent {
         );
     }
 
-    public get sliceSizeControl(): AbstractControl {
-        return this.hardCompactionForm.controls.sliceSize;
-    }
-
-    public get recordsCountControl(): AbstractControl {
-        return this.hardCompactionForm.controls.recordsCount;
-    }
-
     public onRunCompaction(): void {
         promiseWithCatch(
             this.modalService.error({
@@ -89,8 +81,8 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent {
                                     compactionArgs: {
                                         full: {
                                             maxSliceSize: this.sliceSizeInBytes,
-                                            maxSliceRecords: this.hardCompactionForm.controls.recordsCount
-                                                .value as number,
+                                            maxSliceRecords: this.recordsCount.value as number,
+                                            recursive: this.recursive.value as boolean,
                                         },
                                     },
                                 })

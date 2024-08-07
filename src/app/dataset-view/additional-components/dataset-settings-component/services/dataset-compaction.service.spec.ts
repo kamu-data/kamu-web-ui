@@ -48,6 +48,7 @@ describe("DatasetCompactionService", () => {
                     full: {
                         maxSliceSize: MOCK_SLICE_SIZE,
                         maxSliceRecords: MOCK_SLICE_RECORDS,
+                        recursive: true,
                     },
                 },
             })
@@ -70,6 +71,7 @@ describe("DatasetCompactionService", () => {
                     full: {
                         maxSliceSize: MOCK_SLICE_SIZE,
                         maxSliceRecords: MOCK_SLICE_RECORDS,
+                        recursive: true,
                     },
                 },
             })

@@ -300,6 +300,7 @@ export type CommitResultSuccess = CommitResult &
 export type CompactionConditionFull = {
     maxSliceRecords: Scalars["Int"];
     maxSliceSize: Scalars["Int"];
+    recursive: Scalars["Boolean"];
 };
 
 export type CompactionConditionInput =
@@ -314,6 +315,7 @@ export type CompactionFull = {
     __typename?: "CompactionFull";
     maxSliceRecords: Scalars["Int"];
     maxSliceSize: Scalars["Int"];
+    recursive: Scalars["Boolean"];
 };
 
 export type CompactionMetadataOnly = {
@@ -404,7 +406,7 @@ export enum DataBatchFormat {
     Csv = "CSV",
     Json = "JSON",
     JsonAoa = "JSON_AOA",
-    /** Deprecated: Use ND_JSON instead */
+    /** Deprecated: Use `ND_JSON` instead */
     JsonLd = "JSON_LD",
     JsonSoa = "JSON_SOA",
     NdJson = "ND_JSON",
@@ -1973,7 +1975,7 @@ export enum TaskOutcome {
 
 /** Life-cycle status of a task */
 export enum TaskStatus {
-    /** Task has reached a certain final outcome (see [TaskOutcome]) */
+    /** Task has reached a certain final outcome (see [`TaskOutcome`]) */
     Finished = "FINISHED",
     /** Task is waiting for capacity to be allocated to it */
     Queued = "QUEUED",

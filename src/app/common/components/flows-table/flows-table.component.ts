@@ -19,6 +19,7 @@ import {
     FlowStartCondition,
     Account,
     Dataset,
+    DatasetListFlowsDataFragment,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { MatTableDataSource } from "@angular/material/table";
@@ -50,7 +51,7 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     @Input() public filterByStatus: MaybeNull<FlowStatus>;
     @Input() public onlySystemFlows: boolean;
     @Input() public searchByAccount: Account[] = [];
-    @Input() public searchByDataset: Dataset[] = [];
+    @Input() public searchByDataset: DatasetListFlowsDataFragment[] = [];
     @Input() tableOptions: FlowsTableOptions;
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
     @Output() public searchByFiltersChange = new EventEmitter<MaybeNull<FlowsTableFiltersOptions>>();
@@ -63,13 +64,13 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>();
     @ViewChildren(MatMenuTrigger) triggersMatMenu: QueryList<MatMenuTrigger>;
     @Input() public accountFlowInitiators: Account[];
-    @Input() public involvedDatasets: Dataset[];
+    @Input() public involvedDatasets: DatasetListFlowsDataFragment[];
 
     public readonly FILTER_DATASET_SETTINGS: DropdownSettings = DROPDOWN_DATASET_SETTINGS;
     public readonly FILTER_STATUS_SETTINGS: DropdownSettings = DROPDOWN_STATUS_SETTINGS;
     public filterAccountSettings: DropdownSettings = DROPDOWN_ACCOUNT_SETTINGS;
-    public dropdownDatasetList: Dataset[] = [];
-    public selectedDatasetItems: Dataset[] = [];
+    public dropdownDatasetList: DatasetListFlowsDataFragment[] = [];
+    public selectedDatasetItems: DatasetListFlowsDataFragment[] = [];
     public dropdownAccountList: Account[] = [];
     public selectedAccountItems: Account[] = [];
     public dropdownStatustList: FilterStatusType[] = [];
@@ -147,7 +148,7 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     }
 
     public datasetById(datasetId: string): Dataset {
-        const dataset = this.involvedDatasets.find((dataset) => dataset.id === datasetId) as Dataset;
+        const dataset = (this.involvedDatasets as Dataset[]).find((dataset) => dataset.id === datasetId) as Dataset;
         return dataset;
     }
 

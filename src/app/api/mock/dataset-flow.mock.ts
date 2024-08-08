@@ -376,7 +376,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
             },
             flows: {
                 runs: {
-                    listFlows: {
+                    table: {
                         nodes: [
                             {
                                 description: {
@@ -479,6 +479,40 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                         ],
                         __typename: "FlowConnection",
                     },
+                    tiles: {
+                        nodes: [
+                            {
+                                status: FlowStatus.Running,
+
+                                outcome: null,
+                                timing: {
+                                    awaitingExecutorSince: "2024-02-13T10:11:25+00:00",
+                                    runningSince: null,
+                                    finishedAt: null,
+                                    __typename: "FlowTimingRecords",
+                                },
+                                __typename: "Flow",
+                            },
+                            {
+                                status: FlowStatus.Finished,
+
+                                outcome: {
+                                    __typename: "FlowSuccessResult",
+                                    message: "Succes",
+                                },
+                                timing: {
+                                    awaitingExecutorSince: "2024-02-13T10:10:25+00:00",
+                                    runningSince: "2024-02-13T10:10:25.468811294+00:00",
+                                    finishedAt: "2024-02-13T10:10:25.488660882+00:00",
+                                    __typename: "FlowTimingRecords",
+                                },
+                                __typename: "Flow",
+                            },
+                        ],
+                        totalCount: 2,
+
+                        __typename: "FlowConnection",
+                    },
                     __typename: "DatasetFlowRuns",
                 },
                 __typename: "DatasetFlows",
@@ -490,7 +524,8 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
 };
 
 export const mockFlowsTableData: FlowsTableData = {
-    connectionData: mockGetDatasetListFlowsQuery.datasets.byId?.flows.runs.listFlows as FlowConnectionDataFragment,
+    connectionDataForTable: mockGetDatasetListFlowsQuery.datasets.byId?.flows.runs.table as FlowConnectionDataFragment,
+    connectionDataForWidget: mockGetDatasetListFlowsQuery.datasets.byId?.flows.runs.tiles as FlowConnectionDataFragment,
     involvedDatasets: [],
 };
 

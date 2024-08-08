@@ -49,7 +49,8 @@ export class AccountApi {
     public fetchAccountListFlows(params: {
         accountName: string;
         page: number;
-        perPage: number;
+        perPageTable: number;
+        perPageTiles: number;
         filters: AccountFlowFilters;
     }): Observable<AccountListFlowsQuery> {
         return this.accountListFlowsGql
@@ -57,7 +58,8 @@ export class AccountApi {
                 {
                     name: params.accountName,
                     page: params.page,
-                    perPage: params.perPage,
+                    perPageTable: params.perPageTable,
+                    perPageTiles: params.perPageTiles,
                     filters: params.filters,
                 },
                 {

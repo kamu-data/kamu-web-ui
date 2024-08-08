@@ -19,7 +19,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { NgbPopoverModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
+import { NgbPaginationModule, NgbPopoverModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
@@ -88,6 +88,7 @@ describe("FlowsComponent", () => {
                 HttpClientTestingModule,
                 NgbPopoverModule,
                 NgbTypeaheadModule,
+                NgbPaginationModule,
             ],
         }).compileComponents();
 
@@ -127,7 +128,7 @@ describe("FlowsComponent", () => {
 
     it("should empty block is visible", fakeAsync(() => {
         fixture.detectChanges();
-        mockFlowsTableData.connectionData.nodes = [];
+        mockFlowsTableData.connectionDataForWidget.nodes = [];
         spyOn(datasetFlowsService, "allFlowsPaused").and.returnValue(of(false));
         spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData));
         spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));

@@ -138,12 +138,19 @@ export class DatasetFlowApi {
     public getDatasetListFlows(params: {
         datasetId: string;
         page: number;
-        perPage: number;
+        perPageTable: number;
+        perPageTiles: number;
         filters: DatasetFlowFilters;
     }): Observable<GetDatasetListFlowsQuery> {
         return this.getDatasetListFlowsGQL
             .watch(
-                { datasetId: params.datasetId, page: params.page, perPage: params.perPage, filters: params.filters },
+                {
+                    datasetId: params.datasetId,
+                    page: params.page,
+                    perPageTable: params.perPageTable,
+                    perPageTiles: params.perPageTiles,
+                    filters: params.filters,
+                },
                 {
                     ...noCacheFetchPolicy,
                     context: {

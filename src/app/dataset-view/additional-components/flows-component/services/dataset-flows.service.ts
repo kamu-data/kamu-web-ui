@@ -5,11 +5,11 @@ import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
     Account,
     CancelScheduledTasksMutation,
-    Dataset,
     DatasetAllFlowsPausedQuery,
     DatasetFlowFilters,
     DatasetFlowType,
     DatasetFlowsInitiatorsQuery,
+    DatasetListFlowsDataFragment,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsMutation,
     DatasetTriggerFlowMutation,
@@ -64,14 +64,16 @@ export class DatasetFlowsService {
     public datasetFlowsList(params: {
         datasetId: string;
         page: number;
-        perPage: number;
+        perPageTable: number;
+        perPageTiles: number;
         filters: DatasetFlowFilters;
     }): Observable<FlowsTableData> {
         return this.datasetFlowApi.getDatasetListFlows(params).pipe(
             map((data: GetDatasetListFlowsQuery) => {
                 return {
-                    connectionData: data.datasets.byId?.flows.runs.listFlows as FlowConnectionDataFragment,
-                    involvedDatasets: [data.datasets.byId as Dataset],
+                    connectionDataForTable: data.datasets.byId?.flows.runs.table as FlowConnectionDataFragment,
+                    connectionDataForWidget: data.datasets.byId?.flows.runs.tiles as FlowConnectionDataFragment,
+                    involvedDatasets: [data.datasets.byId] as DatasetListFlowsDataFragment[],
                 };
             }),
         );

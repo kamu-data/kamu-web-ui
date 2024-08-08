@@ -181,7 +181,8 @@ describe("AccountService", () => {
             .getAccountListFlows({
                 accountName: TEST_LOGIN,
                 page: PAGE,
-                perPage: PER_PAGE,
+                perPageTable: PER_PAGE,
+                perPageTiles: PER_PAGE,
                 filters: ACCOUNT_FILTERS,
             })
             .subscribe((data: FlowsTableData) => {

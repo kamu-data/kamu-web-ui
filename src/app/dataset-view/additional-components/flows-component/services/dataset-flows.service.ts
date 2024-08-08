@@ -64,7 +64,8 @@ export class DatasetFlowsService {
     public datasetFlowsList(params: {
         datasetId: string;
         page: number;
-        perPage: number;
+        perPageTable: number;
+        perPageTiles: number;
         filters: DatasetFlowFilters;
     }): Observable<FlowsTableData> {
         return this.datasetFlowApi.getDatasetListFlows(params).pipe(

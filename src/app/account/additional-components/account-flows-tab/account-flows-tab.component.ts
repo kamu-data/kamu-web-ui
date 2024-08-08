@@ -48,19 +48,14 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
                     this.accountService.getAccountListFlows({
                         accountName: this.accountName,
                         page: page - 1,
-                        perPage: this.TABLE_FLOW_RUNS_PER_PAGE,
+                        perPageTable: this.TABLE_FLOW_RUNS_PER_PAGE,
+                        perPageTiles: this.WIDGET_FLOW_RUNS_PER_PAGE,
                         filters: {
                             byFlowType: null,
                             byStatus: filterByStatus,
                             byInitiator: filterByInitiator,
                             byDatasetIds: datasetsIds ?? [],
                         },
-                    }),
-                    this.accountService.getAccountListFlows({
-                        accountName: this.accountName,
-                        page: 0,
-                        perPage: this.WIDGET_FLOW_RUNS_PER_PAGE,
-                        filters: { byFlowType: null, byStatus: null, byInitiator: null, byDatasetIds: [] },
                     }),
                     this.accountService.accountAllFlowsPaused(this.accountName),
                     // TODO: Implemented all accounts with flows from API
@@ -75,8 +70,8 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
                     ]),
                 ]),
             ),
-            map(([mainTableFlowsData, tileWidgetListFlowsData, allFlowsPaused, flowInitiators]) => {
-                return { mainTableFlowsData, tileWidgetListFlowsData, allFlowsPaused, flowInitiators };
+            map(([mainTableFlowsData, allFlowsPaused, flowInitiators]) => {
+                return { mainTableFlowsData, allFlowsPaused, flowInitiators };
             }),
         );
     }

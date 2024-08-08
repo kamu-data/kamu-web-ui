@@ -2244,7 +2244,8 @@ export type AccountListDatasetsWithFlowsQuery = {
 export type AccountListFlowsQueryVariables = Exact<{
     name: Scalars["AccountName"];
     page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    perPageTable?: InputMaybe<Scalars["Int"]>;
+    perPageTiles?: InputMaybe<Scalars["Int"]>;
     filters?: InputMaybe<AccountFlowFilters>;
 }>;
 
@@ -2984,7 +2985,8 @@ export type DatasetFlowsInitiatorsQuery = {
 export type GetDatasetListFlowsQueryVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    perPageTable?: InputMaybe<Scalars["Int"]>;
+    perPageTiles?: InputMaybe<Scalars["Int"]>;
     filters?: InputMaybe<DatasetFlowFilters>;
 }>;
 
@@ -5307,17 +5309,23 @@ export class AccountListDatasetsWithFlowsGQL extends Apollo.Query<
     }
 }
 export const AccountListFlowsDocument = gql`
-    query accountListFlows($name: AccountName!, $page: Int, $perPage: Int, $filters: AccountFlowFilters) {
+    query accountListFlows(
+        $name: AccountName!
+        $page: Int
+        $perPageTable: Int
+        $perPageTiles: Int
+        $filters: AccountFlowFilters
+    ) {
         accounts {
             byName(name: $name) {
                 flows {
                     runs {
-                        table: listFlows(page: $page, perPage: $perPage, filters: $filters) {
+                        table: listFlows(page: $page, perPage: $perPageTable, filters: $filters) {
                             ...FlowConnectionData
                         }
                         tiles: listFlows(
                             page: 0
-                            perPage: 150
+                            perPage: $perPageTiles
                             filters: { byFlowType: null, byStatus: null, byInitiator: null, byDatasetIds: [] }
                         ) {
                             nodes {
@@ -6362,18 +6370,24 @@ export class DatasetFlowsInitiatorsGQL extends Apollo.Query<
     }
 }
 export const GetDatasetListFlowsDocument = gql`
-    query getDatasetListFlows($datasetId: DatasetID!, $page: Int, $perPage: Int, $filters: DatasetFlowFilters) {
+    query getDatasetListFlows(
+        $datasetId: DatasetID!
+        $page: Int
+        $perPageTable: Int
+        $perPageTiles: Int
+        $filters: DatasetFlowFilters
+    ) {
         datasets {
             byId(datasetId: $datasetId) {
                 ...DatasetListFlowsData
                 flows {
                     runs {
-                        table: listFlows(page: $page, perPage: $perPage, filters: $filters) {
+                        table: listFlows(page: $page, perPage: $perPageTable, filters: $filters) {
                             ...FlowConnectionData
                         }
                         tiles: listFlows(
                             page: 0
-                            perPage: 150
+                            perPage: $perPageTiles
                             filters: { byFlowType: null, byStatus: null, byInitiator: null }
                         ) {
                             nodes {

@@ -65,7 +65,8 @@ export class AccountService {
     public getAccountListFlows(params: {
         accountName: string;
         page: number;
-        perPage: number;
+        perPageTable: number;
+        perPageTiles: number;
         filters: AccountFlowFilters;
     }): Observable<FlowsTableData> {
         return combineLatest([

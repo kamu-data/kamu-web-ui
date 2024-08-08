@@ -56,7 +56,8 @@ describe("DatasetFlowsService", () => {
             .datasetFlowsList({
                 datasetId: MOCK_DATASET_ID,
                 page: MOCK_PAGE,
-                perPage: MOCK_PER_PAGE,
+                perPageTable: MOCK_PER_PAGE,
+                perPageTiles: MOCK_PER_PAGE,
                 filters: MOCK_FILTERS,
             })
             .subscribe((data: MaybeUndefined<FlowsTableData>) => {

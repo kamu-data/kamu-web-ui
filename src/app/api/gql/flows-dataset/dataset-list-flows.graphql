@@ -1,13 +1,23 @@
-query getDatasetListFlows($datasetId: DatasetID!, $page: Int, $perPage: Int, $filters: DatasetFlowFilters) {
+query getDatasetListFlows(
+  $datasetId: DatasetID!
+  $page: Int
+  $perPageTable: Int
+  $perPageTiles: Int
+  $filters: DatasetFlowFilters
+) {
   datasets {
     byId(datasetId: $datasetId) {
       ...DatasetListFlowsData
       flows {
         runs {
-          table: listFlows(page: $page, perPage: $perPage, filters: $filters) {
+          table: listFlows(page: $page, perPage: $perPageTable, filters: $filters) {
             ...FlowConnectionData
           }
-          tiles: listFlows(page: 0, perPage: 150, filters: { byFlowType: null, byStatus: null, byInitiator: null }) {
+          tiles: listFlows(
+            page: 0
+            perPage: $perPageTiles
+            filters: { byFlowType: null, byStatus: null, byInitiator: null }
+          ) {
             nodes {
               status
               outcome {

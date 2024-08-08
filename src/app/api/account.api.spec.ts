@@ -105,7 +105,8 @@ describe("AccountApi", () => {
             .fetchAccountListFlows({
                 accountName: ACCOUNT_NAME,
                 page: PAGE,
-                perPage: PER_PAGE,
+                perPageTable: PER_PAGE,
+                perPageTiles: PER_PAGE,
                 filters: ACCOUNT_FILTERS,
             })
             .subscribe((list: AccountListFlowsQuery) => {
@@ -118,7 +119,8 @@ describe("AccountApi", () => {
         const op = controller.expectOne(AccountListFlowsDocument);
         expect(op.operation.variables.name).toEqual(ACCOUNT_NAME);
         expect(op.operation.variables.page).toEqual(PAGE);
-        expect(op.operation.variables.perPage).toEqual(PER_PAGE);
+        expect(op.operation.variables.perPageTable).toEqual(PER_PAGE);
+        expect(op.operation.variables.perPageTiles).toEqual(PER_PAGE);
         expect(op.operation.variables.filters).toEqual(ACCOUNT_FILTERS);
 
         op.flush({

@@ -1,10 +1,11 @@
 <div class="search-result-container__content mb-20">
     <ng-container *ngIf="flowConnectionData$ | async as flowConnectionData">
-        <ng-container *ngIf="flowConnectionData.tileWidgetListFlowsData.connectionData.nodes.length; else noRuns">
+        <ng-container *ngIf="flowConnectionData.mainTableFlowsData.connectionDataForWidget.nodes.length; else noRuns">
             <div class="d-flex justify-content-between">
                 <div class="mt-4">
                     <h2 class="title">
-                        {{ flowConnectionData.tileWidgetListFlowsData.connectionData.totalCount }} Dataset flow run(s)
+                        {{ flowConnectionData.mainTableFlowsData.connectionDataForWidget.totalCount }} Dataset flow
+                        run(s)
                     </h2>
                     <div>
                         <span class="text-muted"> Compute work associated with this dataset </span>
@@ -51,13 +52,13 @@
 
             <div class="search-result-container__content mt-2 mb-4">
                 <app-tile-base-widget
-                    [nodes]="flowConnectionData.tileWidgetListFlowsData.connectionData.nodes!"
+                    [nodes]="flowConnectionData.mainTableFlowsData.connectionDataForWidget.nodes"
                 ></app-tile-base-widget>
             </div>
 
-            <ng-container *ngIf="flowConnectionData$ | async as flowConnectionData">
+            <ng-container *ngIf="flowConnectionData">
                 <app-flows-table
-                    [nodes]="flowConnectionData.mainTableFlowsData.connectionData.nodes"
+                    [nodes]="flowConnectionData.mainTableFlowsData.connectionDataForTable.nodes"
                     [filterByStatus]="filterByStatus"
                     [onlySystemFlows]="onlySystemFlows"
                     [searchByAccount]="searchByAccount"
@@ -71,8 +72,10 @@
                 ></app-flows-table>
                 <div class="mt-50px">
                     <app-pagination
-                        [currentPage]="flowConnectionData.mainTableFlowsData.connectionData.pageInfo.currentPage + 1"
-                        [pageInfo]="flowConnectionData.mainTableFlowsData.connectionData.pageInfo"
+                        [currentPage]="
+                            flowConnectionData.mainTableFlowsData.connectionDataForTable.pageInfo.currentPage + 1
+                        "
+                        [pageInfo]="flowConnectionData.mainTableFlowsData.connectionDataForTable.pageInfo"
                         (pageChangeEvent)="onPageChange($event)"
                     ></app-pagination>
                 </div>

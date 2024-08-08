@@ -1,10 +1,11 @@
 <div class="container-content overflow-unset mt-4">
     <ng-container *ngIf="flowConnectionData$ | async as flowConnectionData">
-        <ng-container *ngIf="flowConnectionData.tileWidgetListFlowsData.connectionData.nodes.length">
+        <ng-container *ngIf="flowConnectionData.mainTableFlowsData.connectionDataForWidget.nodes.length">
             <div class="d-flex justify-content-between">
                 <div class="mt-4">
                     <h2 class="title">
-                        {{ flowConnectionData.tileWidgetListFlowsData.connectionData.totalCount }} Account flow run(s)
+                        {{ flowConnectionData.mainTableFlowsData.connectionDataForWidget.totalCount }} Account flow
+                        run(s)
                     </h2>
                     <div>
                         <span class="text-muted">
@@ -33,11 +34,11 @@
             </div>
             <div class="search-result-container__content my-4">
                 <app-tile-base-widget
-                    [nodes]="flowConnectionData.tileWidgetListFlowsData.connectionData.nodes"
+                    [nodes]="flowConnectionData.mainTableFlowsData.connectionDataForWidget.nodes"
                 ></app-tile-base-widget>
             </div>
             <app-flows-table
-                [nodes]="flowConnectionData.mainTableFlowsData.connectionData.nodes"
+                [nodes]="flowConnectionData.mainTableFlowsData.connectionDataForTable.nodes"
                 [filterByStatus]="filterByStatus"
                 [onlySystemFlows]="onlySystemFlows"
                 [searchByDataset]="searchByDataset"
@@ -52,16 +53,19 @@
             ></app-flows-table>
             <div class="mt-50px">
                 <app-pagination
-                    [currentPage]="flowConnectionData.mainTableFlowsData.connectionData.pageInfo.currentPage + 1"
-                    [pageInfo]="flowConnectionData.mainTableFlowsData.connectionData.pageInfo"
+                    [currentPage]="
+                        flowConnectionData.mainTableFlowsData.connectionDataForTable.pageInfo.currentPage + 1
+                    "
+                    [pageInfo]="flowConnectionData.mainTableFlowsData.connectionDataForTable.pageInfo"
                     (pageChangeEvent)="onPageChange($event)"
                 ></app-pagination>
             </div>
         </ng-container>
-    </ng-container>
 
-    <ng-container *ngIf="flowConnectionData$ | async as flowConnectionData">
-        <div data-test-id="empty-block" *ngIf="!flowConnectionData.tileWidgetListFlowsData.connectionData.nodes.length">
+        <div
+            data-test-id="empty-block"
+            *ngIf="!flowConnectionData.mainTableFlowsData.connectionDataForWidget.nodes.length"
+        >
             No flows yet in datasets belonging to this account
         </div>
     </ng-container>

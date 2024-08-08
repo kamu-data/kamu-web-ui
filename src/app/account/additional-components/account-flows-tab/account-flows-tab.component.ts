@@ -3,7 +3,7 @@ import { combineLatest, map, of, switchMap, timer } from "rxjs";
 import { MaybeNull } from "src/app/common/app.types";
 import {
     AccountType,
-    Dataset,
+    DatasetListFlowsDataFragment,
     FlowStatus,
     FlowSummaryDataFragment,
     InitiatorFilterInput,
@@ -24,7 +24,7 @@ import { FlowsTableFiltersOptions } from "src/app/common/components/flows-table/
 export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent implements OnInit {
     @Input() accountName: string;
     public nodes: FlowSummaryDataFragment[] = [];
-    public searchByDataset: Dataset[] = [];
+    public searchByDataset: DatasetListFlowsDataFragment[] = [];
     public readonly DISPLAY_COLUMNS = ["description", "information", "creator", "dataset", "options"];
 
     constructor(private accountService: AccountService) {

@@ -60,7 +60,9 @@ describe("DatasetFlowsService", () => {
                 filters: MOCK_FILTERS,
             })
             .subscribe((data: MaybeUndefined<FlowsTableData>) => {
-                expect(data?.connectionData).toEqual(mockGetDatasetListFlowsQuery.datasets.byId?.flows.runs.listFlows);
+                expect(data?.connectionDataForTable.nodes).toEqual(
+                    mockGetDatasetListFlowsQuery.datasets.byId?.flows.runs.table.nodes,
+                );
             });
 
         expect(subscription$.closed).toBeTrue();

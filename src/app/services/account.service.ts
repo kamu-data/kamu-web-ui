@@ -5,6 +5,7 @@ import {
     AccountPauseFlowsMutation,
     AccountResumeFlowsMutation,
     Dataset,
+    DatasetListFlowsDataFragment,
 } from "./../api/kamu.graphql.interface";
 import { AccountFlowFilters, AccountFragment, FlowConnectionDataFragment } from "../api/kamu.graphql.interface";
 import { AccountApi } from "../api/account.api";
@@ -73,8 +74,9 @@ export class AccountService {
         ]).pipe(
             map(([listFlows, datasetsWithFlows]) => {
                 return {
-                    connectionData: listFlows.accounts.byName?.flows?.runs.listFlows as FlowConnectionDataFragment,
-                    involvedDatasets: datasetsWithFlows,
+                    connectionDataForTable: listFlows.accounts.byName?.flows?.runs.table as FlowConnectionDataFragment,
+                    connectionDataForWidget: listFlows.accounts.byName?.flows?.runs.tiles as FlowConnectionDataFragment,
+                    involvedDatasets: datasetsWithFlows as DatasetListFlowsDataFragment[],
                 };
             }),
         );

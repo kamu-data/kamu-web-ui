@@ -57,18 +57,12 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                         perPage: this.TABLE_FLOW_RUNS_PER_PAGE,
                         filters: { byStatus: filterByStatus, byInitiator: filterByInitiator },
                     }),
-                    this.flowsService.datasetFlowsList({
-                        datasetId: this.datasetBasics.id,
-                        page: 0,
-                        perPage: this.WIDGET_FLOW_RUNS_PER_PAGE,
-                        filters: {},
-                    }),
                     this.flowsService.allFlowsPaused(this.datasetBasics.id),
                     this.flowsService.flowsInitiators(this.datasetBasics.id),
                 ]),
             ),
-            map(([mainTableFlowsData, tileWidgetListFlowsData, allFlowsPaused, flowInitiators]) => {
-                return { mainTableFlowsData, tileWidgetListFlowsData, allFlowsPaused, flowInitiators };
+            map(([mainTableFlowsData, allFlowsPaused, flowInitiators]) => {
+                return { mainTableFlowsData, allFlowsPaused, flowInitiators };
             }),
         );
     }

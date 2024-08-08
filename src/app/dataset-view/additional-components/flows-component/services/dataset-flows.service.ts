@@ -5,11 +5,11 @@ import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
     Account,
     CancelScheduledTasksMutation,
-    Dataset,
     DatasetAllFlowsPausedQuery,
     DatasetFlowFilters,
     DatasetFlowType,
     DatasetFlowsInitiatorsQuery,
+    DatasetListFlowsDataFragment,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsMutation,
     DatasetTriggerFlowMutation,
@@ -70,8 +70,9 @@ export class DatasetFlowsService {
         return this.datasetFlowApi.getDatasetListFlows(params).pipe(
             map((data: GetDatasetListFlowsQuery) => {
                 return {
-                    connectionData: data.datasets.byId?.flows.runs.listFlows as FlowConnectionDataFragment,
-                    involvedDatasets: [data.datasets.byId as Dataset],
+                    connectionDataForTable: data.datasets.byId?.flows.runs.table as FlowConnectionDataFragment,
+                    connectionDataForWidget: data.datasets.byId?.flows.runs.tiles as FlowConnectionDataFragment,
+                    involvedDatasets: [data.datasets.byId] as DatasetListFlowsDataFragment[],
                 };
             }),
         );

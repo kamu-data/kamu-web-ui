@@ -3,8 +3,26 @@ query accountListFlows($name: AccountName!, $page: Int, $perPage: Int, $filters:
     byName(name: $name) {
       flows {
         runs {
-          listFlows(page: $page, perPage: $perPage, filters: $filters) {
+          table: listFlows(page: $page, perPage: $perPage, filters: $filters) {
             ...FlowConnectionData
+          }
+          tiles: listFlows(
+            page: 0
+            perPage: 150
+            filters: { byFlowType: null, byStatus: null, byInitiator: null, byDatasetIds: [] }
+          ) {
+            nodes {
+              status
+              outcome {
+                ...FlowOutcomeData
+              }
+              timing {
+                awaitingExecutorSince
+                runningSince
+                finishedAt
+              }
+            }
+            totalCount
           }
         }
       }

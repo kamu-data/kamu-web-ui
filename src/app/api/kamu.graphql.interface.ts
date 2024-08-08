@@ -2258,7 +2258,26 @@ export type AccountListFlowsQuery = {
                 __typename?: "AccountFlows";
                 runs: {
                     __typename?: "AccountFlowRuns";
-                    listFlows: { __typename?: "FlowConnection" } & FlowConnectionDataFragment;
+                    table: { __typename?: "FlowConnection" } & FlowConnectionDataFragment;
+                    tiles: {
+                        __typename?: "FlowConnection";
+                        totalCount: number;
+                        nodes: Array<{
+                            __typename?: "Flow";
+                            status: FlowStatus;
+                            outcome?:
+                                | ({ __typename?: "FlowAbortedResult" } & FlowOutcomeData_FlowAbortedResult_Fragment)
+                                | ({ __typename?: "FlowFailedError" } & FlowOutcomeData_FlowFailedError_Fragment)
+                                | ({ __typename?: "FlowSuccessResult" } & FlowOutcomeData_FlowSuccessResult_Fragment)
+                                | null;
+                            timing: {
+                                __typename?: "FlowTimingRecords";
+                                awaitingExecutorSince?: string | null;
+                                runningSince?: string | null;
+                                finishedAt?: string | null;
+                            };
+                        }>;
+                    };
                 };
             } | null;
         } | null;
@@ -2976,31 +2995,37 @@ export type GetDatasetListFlowsQuery = {
         byId?:
             | ({
                   __typename?: "Dataset";
-                  metadata: {
-                      __typename?: "DatasetMetadata";
-                      currentPollingSource?: {
-                          __typename?: "SetPollingSource";
-                          fetch:
-                              | ({ __typename?: "FetchStepContainer" } & FetchStepContainerDataFragment)
-                              | { __typename?: "FetchStepEthereumLogs" }
-                              | ({ __typename?: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment)
-                              | { __typename?: "FetchStepMqtt" }
-                              | ({ __typename?: "FetchStepUrl" } & FetchStepUrlDataFragment);
-                      } | null;
-                      currentTransform?: {
-                          __typename?: "SetTransform";
-                          inputs: Array<{ __typename: "TransformInput" }>;
-                          transform: { __typename?: "TransformSql"; engine: string };
-                      } | null;
-                  };
                   flows: {
                       __typename?: "DatasetFlows";
                       runs: {
                           __typename?: "DatasetFlowRuns";
-                          listFlows: { __typename?: "FlowConnection" } & FlowConnectionDataFragment;
+                          table: { __typename?: "FlowConnection" } & FlowConnectionDataFragment;
+                          tiles: {
+                              __typename?: "FlowConnection";
+                              totalCount: number;
+                              nodes: Array<{
+                                  __typename?: "Flow";
+                                  status: FlowStatus;
+                                  outcome?:
+                                      | ({
+                                            __typename?: "FlowAbortedResult";
+                                        } & FlowOutcomeData_FlowAbortedResult_Fragment)
+                                      | ({ __typename?: "FlowFailedError" } & FlowOutcomeData_FlowFailedError_Fragment)
+                                      | ({
+                                            __typename?: "FlowSuccessResult";
+                                        } & FlowOutcomeData_FlowSuccessResult_Fragment)
+                                      | null;
+                                  timing: {
+                                      __typename?: "FlowTimingRecords";
+                                      awaitingExecutorSince?: string | null;
+                                      runningSince?: string | null;
+                                      finishedAt?: string | null;
+                                  };
+                              }>;
+                          };
                       };
                   };
-              } & DatasetBasicsFragment)
+              } & DatasetListFlowsDataFragment)
             | null;
     };
 };
@@ -3155,6 +3180,27 @@ export type FlowSummaryDataFragment = {
         | { __typename: "FlowStartConditionThrottling"; intervalSec: number; wakeUpAt: string; shiftedFrom: string }
         | null;
 };
+
+export type DatasetListFlowsDataFragment = {
+    __typename?: "Dataset";
+    metadata: {
+        __typename?: "DatasetMetadata";
+        currentPollingSource?: {
+            __typename?: "SetPollingSource";
+            fetch:
+                | ({ __typename?: "FetchStepContainer" } & FetchStepContainerDataFragment)
+                | { __typename?: "FetchStepEthereumLogs" }
+                | ({ __typename?: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment)
+                | { __typename?: "FetchStepMqtt" }
+                | ({ __typename?: "FetchStepUrl" } & FetchStepUrlDataFragment);
+        } | null;
+        currentTransform?: {
+            __typename?: "SetTransform";
+            inputs: Array<{ __typename: "TransformInput" }>;
+            transform: { __typename?: "TransformSql"; engine: string };
+        } | null;
+    };
+} & DatasetBasicsFragment;
 
 export type FlowConnectionDataFragment = {
     __typename?: "FlowConnection";
@@ -4124,6 +4170,34 @@ export const ViewDatasetEnvVarDataFragmentDoc = gql`
         value
         isSecret
     }
+`;
+export const DatasetListFlowsDataFragmentDoc = gql`
+    fragment DatasetListFlowsData on Dataset {
+        ...DatasetBasics
+        metadata {
+            currentPollingSource {
+                fetch {
+                    ...FetchStepUrlData
+                    ...FetchStepFilesGlobData
+                    ...FetchStepContainerData
+                }
+            }
+            currentTransform {
+                inputs {
+                    __typename
+                }
+                transform {
+                    ... on TransformSql {
+                        engine
+                    }
+                }
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+    ${FetchStepUrlDataFragmentDoc}
+    ${FetchStepFilesGlobDataFragmentDoc}
+    ${FetchStepContainerDataFragmentDoc}
 `;
 export const AccountFragmentDoc = gql`
     fragment Account on Account {
@@ -5238,8 +5312,26 @@ export const AccountListFlowsDocument = gql`
             byName(name: $name) {
                 flows {
                     runs {
-                        listFlows(page: $page, perPage: $perPage, filters: $filters) {
+                        table: listFlows(page: $page, perPage: $perPage, filters: $filters) {
                             ...FlowConnectionData
+                        }
+                        tiles: listFlows(
+                            page: 0
+                            perPage: 150
+                            filters: { byFlowType: null, byStatus: null, byInitiator: null, byDatasetIds: [] }
+                        ) {
+                            nodes {
+                                status
+                                outcome {
+                                    ...FlowOutcomeData
+                                }
+                                timing {
+                                    awaitingExecutorSince
+                                    runningSince
+                                    finishedAt
+                                }
+                            }
+                            totalCount
                         }
                     }
                 }
@@ -5247,6 +5339,7 @@ export const AccountListFlowsDocument = gql`
         }
     }
     ${FlowConnectionDataFragmentDoc}
+    ${FlowOutcomeDataFragmentDoc}
 `;
 
 @Injectable({
@@ -6272,41 +6365,38 @@ export const GetDatasetListFlowsDocument = gql`
     query getDatasetListFlows($datasetId: DatasetID!, $page: Int, $perPage: Int, $filters: DatasetFlowFilters) {
         datasets {
             byId(datasetId: $datasetId) {
-                ...DatasetBasics
-                metadata {
-                    currentPollingSource {
-                        fetch {
-                            ...FetchStepUrlData
-                            ...FetchStepFilesGlobData
-                            ...FetchStepContainerData
-                        }
-                    }
-                    currentTransform {
-                        inputs {
-                            __typename
-                        }
-                        transform {
-                            ... on TransformSql {
-                                engine
-                            }
-                        }
-                    }
-                }
+                ...DatasetListFlowsData
                 flows {
                     runs {
-                        listFlows(page: $page, perPage: $perPage, filters: $filters) {
+                        table: listFlows(page: $page, perPage: $perPage, filters: $filters) {
                             ...FlowConnectionData
+                        }
+                        tiles: listFlows(
+                            page: 0
+                            perPage: 150
+                            filters: { byFlowType: null, byStatus: null, byInitiator: null }
+                        ) {
+                            nodes {
+                                status
+                                outcome {
+                                    ...FlowOutcomeData
+                                }
+                                timing {
+                                    awaitingExecutorSince
+                                    runningSince
+                                    finishedAt
+                                }
+                            }
+                            totalCount
                         }
                     }
                 }
             }
         }
     }
-    ${DatasetBasicsFragmentDoc}
-    ${FetchStepUrlDataFragmentDoc}
-    ${FetchStepFilesGlobDataFragmentDoc}
-    ${FetchStepContainerDataFragmentDoc}
+    ${DatasetListFlowsDataFragmentDoc}
     ${FlowConnectionDataFragmentDoc}
+    ${FlowOutcomeDataFragmentDoc}
 `;
 
 @Injectable({

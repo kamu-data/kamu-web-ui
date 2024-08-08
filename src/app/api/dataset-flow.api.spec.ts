@@ -21,6 +21,7 @@ import {
     DatasetResumeFlowsMutation,
     DatasetTriggerFlowDocument,
     DatasetTriggerFlowMutation,
+    FlowConnectionDataFragment,
     GetDatasetFlowConfigsDocument,
     GetDatasetFlowConfigsQuery,
     GetDatasetListFlowsDocument,
@@ -245,7 +246,7 @@ describe("DatasetFlowApi", () => {
                 filters: MOCK_FILTERS,
             })
             .subscribe((res: GetDatasetListFlowsQuery) => {
-                expect(res.datasets.byId?.flows.runs.listFlows.totalCount).toEqual(2);
+                expect((res.datasets.byId?.flows.runs.table as FlowConnectionDataFragment).totalCount).toEqual(2);
             });
 
         const op = controller.expectOne(GetDatasetListFlowsDocument);

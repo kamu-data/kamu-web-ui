@@ -17,6 +17,7 @@ import {
     AccountPauseFlowsMutation,
     AccountResumeFlowsDocument,
     AccountResumeFlowsMutation,
+    FlowConnectionDataFragment,
 } from "./kamu.graphql.interface";
 import { TEST_LOGIN, mockAccountDetails } from "./mock/auth.mock";
 import { first } from "rxjs";
@@ -108,8 +109,9 @@ describe("AccountApi", () => {
                 filters: ACCOUNT_FILTERS,
             })
             .subscribe((list: AccountListFlowsQuery) => {
-                expect(list.accounts.byName?.flows?.runs.listFlows.totalCount).toEqual(
-                    mockAccountListFlowsQuery.accounts.byName?.flows?.runs.listFlows.totalCount,
+                expect((list.accounts.byName?.flows?.runs.table as FlowConnectionDataFragment).totalCount).toEqual(
+                    (mockAccountListFlowsQuery.accounts.byName?.flows?.runs.table as FlowConnectionDataFragment)
+                        .totalCount,
                 );
             });
 

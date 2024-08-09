@@ -15,18 +15,18 @@
                         </div>
                     </div>
                     <div class="col-md-9 d-flex">
-                        <select class="form-select me-4 form-control-width" formControlName="sliceUnit">
+                        <input
+                            type="number"
+                            min="1"
+                            class="form-control form-control-width me-4"
+                            formControlName="sliceSize"
+                            data-test-id="slice-size"
+                        />
+                        <select class="form-select form-control-width" formControlName="sliceUnit">
                             <option [value]="SliceUnit.KB">KB</option>
                             <option [value]="SliceUnit.MB">MB</option>
                             <option [value]="SliceUnit.GB">GB</option>
                         </select>
-                        <input
-                            type="number"
-                            min="1"
-                            class="form-control form-control-width"
-                            formControlName="sliceSize"
-                            data-test-id="slice-size"
-                        />
                         <ng-container *ngIf="sliceSize.errors?.minNumber && (sliceSize.touched || sliceSize.dirty)">
                             <span
                                 class="text-danger ms-4 fs-12 d-flex align-items-end text-break"

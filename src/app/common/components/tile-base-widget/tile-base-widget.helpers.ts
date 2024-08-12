@@ -1,7 +1,7 @@
-import { FlowStatus, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
+import { FlowItemWidgetDataFragment, FlowStatus } from "src/app/api/kamu.graphql.interface";
 
 export class TileBaseWidgetHelpers {
-    public static tileWidgetClass(node: FlowSummaryDataFragment): string {
+    public static tileWidgetClass(node: FlowItemWidgetDataFragment): string {
         switch (node.status) {
             case FlowStatus.Finished: {
                 return node.outcome ? flowOutcomeMapperClass[node.outcome.__typename as string] : "";

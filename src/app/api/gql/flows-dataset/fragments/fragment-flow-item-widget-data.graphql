@@ -1,0 +1,14 @@
+fragment FlowItemWidgetData on Flow {
+  status
+  initiator {
+    accountName
+  }
+  outcome {
+    ...FlowOutcomeData
+  }
+  timing {
+    awaitingExecutorSince
+    runningSince
+    finishedAt
+  }
+}

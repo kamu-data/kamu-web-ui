@@ -1,6 +1,11 @@
 import _ from "lodash";
 import moment from "moment";
-import { Dataset, FlowStartCondition, FlowStatus, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
+import {
+    DatasetListFlowsDataFragment,
+    FlowStartCondition,
+    FlowStatus,
+    FlowSummaryDataFragment,
+} from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/common/app.types";
 import AppValues from "src/app/common/app.values";
 import { DataHelpers } from "src/app/common/data.helpers";
@@ -65,7 +70,7 @@ export class DatasetFlowTableHelpers {
 
     public static descriptionSubMessage(
         element: FlowSummaryDataFragment,
-        datasets: Dataset[],
+        datasets: DatasetListFlowsDataFragment[],
         datasetId: string,
     ): string {
         const datasetWithFlow = datasets.find((dataset) => dataset.id === datasetId);

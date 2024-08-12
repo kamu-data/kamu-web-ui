@@ -181,11 +181,12 @@ describe("AccountService", () => {
             .getAccountListFlows({
                 accountName: TEST_LOGIN,
                 page: PAGE,
-                perPage: PER_PAGE,
+                perPageTable: PER_PAGE,
+                perPageTiles: PER_PAGE,
                 filters: ACCOUNT_FILTERS,
             })
             .subscribe((data: FlowsTableData) => {
-                expect(data.connectionData.nodes.length).toEqual(1);
+                expect(data.connectionDataForTable.nodes.length).toEqual(1);
                 expect(data.involvedDatasets.length).toEqual(4);
             });
 

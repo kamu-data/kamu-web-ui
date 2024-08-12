@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed tab size in the monaco editor
 - Removed sliding animation from pop-up windows
 - Minor modifications for variables and secrets tab
+- Optimized and modified the query for getting data for the flow list
 ## Added
 - Improved UX of flows table:
   - Main description message is clickable

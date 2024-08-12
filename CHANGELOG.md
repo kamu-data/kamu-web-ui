@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - "Update now" button is present when user is not logged in 
 - Changed tab size in the monaco editor
 - Removed sliding animation from pop-up windows
+- Minor modifications for variables and secrets tab
 - Optimized and modified the query for getting data for the flow list
 ## Added
 - Improved UX of flows table:
@@ -18,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added multiple filters selection for the flows table
 - Implemented links for the main menu of the dataset
 - Redirected to original URL after login flow
+- Added recursive flag for compaction for full mode
 
 ## [0.23.2] -2024-07-23
 ## Fixed

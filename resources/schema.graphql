@@ -248,6 +248,7 @@ type CommitResultSuccess implements CommitResult & UpdateReadmeResult {
 input CompactionConditionFull {
   maxSliceSize: Int!
   maxSliceRecords: Int!
+  recursive: Boolean!
 }
 
 input CompactionConditionInput @oneOf {
@@ -262,6 +263,7 @@ input CompactionConditionMetadataOnly {
 type CompactionFull {
   maxSliceSize: Int!
   maxSliceRecords: Int!
+  recursive: Boolean!
 }
 
 type CompactionMetadataOnly {
@@ -351,7 +353,7 @@ enum DataBatchFormat {
   ND_JSON
   CSV
   """
-  Deprecated: Use ND_JSON instead
+  Deprecated: Use `ND_JSON` instead
   """
   JSON_LD
 }
@@ -1842,7 +1844,7 @@ enum TaskStatus {
   """
   RUNNING
   """
-  Task has reached a certain final outcome (see [TaskOutcome])
+  Task has reached a certain final outcome (see [`TaskOutcome`])
   """
   FINISHED
 }

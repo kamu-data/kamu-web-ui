@@ -222,6 +222,7 @@ describe("DatasetFlowApi", () => {
                     full: {
                         maxSliceSize: MOCK_SLICE_SIZE,
                         maxSliceRecords: MOCK_SLICE_RECORDS,
+                        recursive: true,
                     },
                 },
             })

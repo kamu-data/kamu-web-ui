@@ -17,6 +17,8 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
     @Input() public row: MaybeNull<ViewDatasetEnvVar>;
     @Input() public datasetBasics: DatasetBasicsFragment;
     public readonly KEY_MAX_LENGTH = 200;
+    public readonly IS_SECRET_CONTROL_TOOLTIP =
+        "While both secrets and variables are stored encrypted, making value a secret ensures that is used without ever being exposed by the system in task logs and other places. Use secrets for sensitive information like API keys and auth tokens.";
     public keyValueForm: FormGroup = this.fb.group({
         key: ["", [Validators.required, Validators.maxLength(this.KEY_MAX_LENGTH), noWhitespaceValidator]],
         value: ["", [Validators.required]],
@@ -46,6 +48,10 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
 
     public get valueControl(): AbstractControl {
         return this.keyValueForm.controls.value;
+    }
+
+    public get isSecretControl(): AbstractControl {
+        return this.keyValueForm.controls.isSecret;
     }
 
     public onEditRow(): void {
@@ -84,9 +90,14 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
 
     public toggleExposedValue(): void {
         this.isShowExposedValue = !this.isShowExposedValue;
-        this.keyValueForm.patchValue({
-            value: this.isShowExposedValue ? this.exposedValue : (this.valueControl.value as string),
-        });
+        if (!this.isShowExposedValue) {
+            this.exposedValue = "";
+        } else {
+            this.fetchExposedValue();
+            this.keyValueForm.patchValue({
+                value: this.isShowExposedValue ? this.exposedValue : (this.valueControl.value as string),
+            });
+        }
     }
 
     private fetchExposedValue(): void {
@@ -115,6 +126,7 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
                 value: this.row.isSecret ? this.exposedValue : this.row.value,
                 isSecret: this.row.isSecret,
             });
+            this.row.isSecret ? this.isSecretControl.disable() : this.isSecretControl.enable();
         }
     }
 }

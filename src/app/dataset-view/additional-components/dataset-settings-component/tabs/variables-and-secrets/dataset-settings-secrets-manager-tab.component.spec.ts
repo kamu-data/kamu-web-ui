@@ -20,6 +20,7 @@ import { ViewDatasetEnvVarConnection } from "src/app/api/kamu.graphql.interface"
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ModalService } from "src/app/components/modal/modal.service";
 import { EditKeyValueModalComponent } from "./components/edit-key-value-modal/edit-key-value-modal.component";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 export class MockNgbModalRef {
     result: Promise<unknown> = new Promise((resolve) => resolve("x"));
@@ -75,6 +76,7 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
                 HttpClientModule,
                 MatIconModule,
                 FormsModule,
+                MatTooltipModule,
             ],
         }).compileComponents();
 

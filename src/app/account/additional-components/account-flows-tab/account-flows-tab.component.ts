@@ -70,8 +70,8 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
                     ]),
                 ]),
             ),
-            map(([mainTableFlowsData, allFlowsPaused, flowInitiators]) => {
-                return { mainTableFlowsData, allFlowsPaused, flowInitiators };
+            map(([flowsData, allFlowsPaused, flowInitiators]) => {
+                return { flowsData, allFlowsPaused, flowInitiators };
             }),
         );
     }

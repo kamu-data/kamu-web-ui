@@ -1,7 +1,6 @@
 import _ from "lodash";
 import moment from "moment";
 import {
-    Dataset,
     DatasetListFlowsDataFragment,
     FlowStartCondition,
     FlowStatus,
@@ -74,7 +73,7 @@ export class DatasetFlowTableHelpers {
         datasets: DatasetListFlowsDataFragment[],
         datasetId: string,
     ): string {
-        const datasetWithFlow = (datasets as Dataset[]).find((dataset) => dataset.id === datasetId);
+        const datasetWithFlow = datasets.find((dataset) => dataset.id === datasetId);
         const fetchStep = datasetWithFlow?.metadata.currentPollingSource?.fetch;
         const transformData = datasetWithFlow?.metadata.currentTransform;
         switch (element.status) {

@@ -2,7 +2,7 @@ import { Observable } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
 import { CancelFlowArgs, FlowsTableData, FlowsTableFiltersOptions } from "./flows-table.types";
-import { Account, Dataset, FlowStatus, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
+import { Account, FlowStatus, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
 import { ChangeDetectorRef, Directive, inject } from "@angular/core";
 import { NavigationService } from "src/app/services/navigation.service";
 import { requireValue } from "src/app/common/app.helpers";
@@ -21,7 +21,7 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly TIMEOUT_REFRESH_FLOW = 800;
     public flowConnectionData$: Observable<{
-        mainTableFlowsData: FlowsTableData;
+        flowsData: FlowsTableData;
         allFlowsPaused: MaybeUndefined<boolean>;
         flowInitiators: Account[];
     }>;
@@ -87,7 +87,7 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
                 this.currentPage,
                 status,
                 filterInitiatorOptions,
-                datasets && datasets.length ? (datasets as Dataset[]).map((item) => item.id) : [],
+                datasets && datasets.length ? datasets.map((item) => item.id) : [],
             );
         }
     }

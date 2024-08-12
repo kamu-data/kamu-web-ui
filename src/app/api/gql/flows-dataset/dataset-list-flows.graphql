@@ -18,18 +18,7 @@ query getDatasetListFlows(
             perPage: $perPageTiles
             filters: { byFlowType: null, byStatus: null, byInitiator: null }
           ) {
-            nodes {
-              status
-              outcome {
-                ...FlowOutcomeData
-              }
-              timing {
-                awaitingExecutorSince
-                runningSince
-                finishedAt
-              }
-            }
-            totalCount
+            ...FlowConnectionWidgetData
           }
         }
       }

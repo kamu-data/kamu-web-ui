@@ -4,12 +4,13 @@ import {
     Account,
     DatasetListFlowsDataFragment,
     FlowConnectionDataFragment,
+    FlowConnectionWidgetDataFragment,
     FlowStatus,
 } from "src/app/api/kamu.graphql.interface";
 
 export interface FlowsTableData {
     connectionDataForTable: FlowConnectionDataFragment;
-    connectionDataForWidget: FlowConnectionDataFragment;
+    connectionDataForWidget: FlowConnectionWidgetDataFragment;
     involvedDatasets: DatasetListFlowsDataFragment[];
 }
 

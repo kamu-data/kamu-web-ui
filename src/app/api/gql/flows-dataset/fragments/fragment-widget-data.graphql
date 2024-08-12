@@ -1,0 +1,6 @@
+fragment FlowConnectionWidgetData on FlowConnection {
+  nodes {
+    ...FlowItemWidgetData
+  }
+  totalCount
+}

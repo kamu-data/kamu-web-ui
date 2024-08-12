@@ -62,8 +62,8 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                     this.flowsService.flowsInitiators(this.datasetBasics.id),
                 ]),
             ),
-            map(([mainTableFlowsData, allFlowsPaused, flowInitiators]) => {
-                return { mainTableFlowsData, allFlowsPaused, flowInitiators };
+            map(([flowsData, allFlowsPaused, flowInitiators]) => {
+                return { flowsData, allFlowsPaused, flowInitiators };
             }),
         );
     }

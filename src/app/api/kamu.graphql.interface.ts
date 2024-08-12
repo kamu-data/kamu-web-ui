@@ -2262,25 +2262,7 @@ export type AccountListFlowsQuery = {
                 runs: {
                     __typename?: "AccountFlowRuns";
                     table: { __typename?: "FlowConnection" } & FlowConnectionDataFragment;
-                    tiles: {
-                        __typename?: "FlowConnection";
-                        totalCount: number;
-                        nodes: Array<{
-                            __typename?: "Flow";
-                            status: FlowStatus;
-                            outcome?:
-                                | ({ __typename?: "FlowAbortedResult" } & FlowOutcomeData_FlowAbortedResult_Fragment)
-                                | ({ __typename?: "FlowFailedError" } & FlowOutcomeData_FlowFailedError_Fragment)
-                                | ({ __typename?: "FlowSuccessResult" } & FlowOutcomeData_FlowSuccessResult_Fragment)
-                                | null;
-                            timing: {
-                                __typename?: "FlowTimingRecords";
-                                awaitingExecutorSince?: string | null;
-                                runningSince?: string | null;
-                                finishedAt?: string | null;
-                            };
-                        }>;
-                    };
+                    tiles: { __typename?: "FlowConnection" } & FlowConnectionWidgetDataFragment;
                 };
             } | null;
         } | null;
@@ -3004,29 +2986,7 @@ export type GetDatasetListFlowsQuery = {
                       runs: {
                           __typename?: "DatasetFlowRuns";
                           table: { __typename?: "FlowConnection" } & FlowConnectionDataFragment;
-                          tiles: {
-                              __typename?: "FlowConnection";
-                              totalCount: number;
-                              nodes: Array<{
-                                  __typename?: "Flow";
-                                  status: FlowStatus;
-                                  outcome?:
-                                      | ({
-                                            __typename?: "FlowAbortedResult";
-                                        } & FlowOutcomeData_FlowAbortedResult_Fragment)
-                                      | ({ __typename?: "FlowFailedError" } & FlowOutcomeData_FlowFailedError_Fragment)
-                                      | ({
-                                            __typename?: "FlowSuccessResult";
-                                        } & FlowOutcomeData_FlowSuccessResult_Fragment)
-                                      | null;
-                                  timing: {
-                                      __typename?: "FlowTimingRecords";
-                                      awaitingExecutorSince?: string | null;
-                                      runningSince?: string | null;
-                                      finishedAt?: string | null;
-                                  };
-                              }>;
-                          };
+                          tiles: { __typename?: "FlowConnection" } & FlowConnectionWidgetDataFragment;
                       };
                   };
               } & DatasetListFlowsDataFragment)
@@ -3284,6 +3244,23 @@ export type FlowHistoryDataFragment =
     | FlowHistoryData_FlowEventTaskChanged_Fragment
     | FlowHistoryData_FlowEventTriggerAdded_Fragment;
 
+export type FlowItemWidgetDataFragment = {
+    __typename?: "Flow";
+    status: FlowStatus;
+    initiator?: { __typename?: "Account"; accountName: string } | null;
+    outcome?:
+        | ({ __typename?: "FlowAbortedResult" } & FlowOutcomeData_FlowAbortedResult_Fragment)
+        | ({ __typename?: "FlowFailedError" } & FlowOutcomeData_FlowFailedError_Fragment)
+        | ({ __typename?: "FlowSuccessResult" } & FlowOutcomeData_FlowSuccessResult_Fragment)
+        | null;
+    timing: {
+        __typename?: "FlowTimingRecords";
+        awaitingExecutorSince?: string | null;
+        runningSince?: string | null;
+        finishedAt?: string | null;
+    };
+};
+
 type FlowOutcomeData_FlowAbortedResult_Fragment = { __typename?: "FlowAbortedResult"; message: string };
 
 type FlowOutcomeData_FlowFailedError_Fragment = {
@@ -3303,6 +3280,12 @@ export type FlowOutcomeDataFragment =
     | FlowOutcomeData_FlowAbortedResult_Fragment
     | FlowOutcomeData_FlowFailedError_Fragment
     | FlowOutcomeData_FlowSuccessResult_Fragment;
+
+export type FlowConnectionWidgetDataFragment = {
+    __typename?: "FlowConnection";
+    totalCount: number;
+    nodes: Array<{ __typename?: "Flow" } & FlowItemWidgetDataFragment>;
+};
 
 export type AddDataEventFragment = {
     __typename?: "AddData";
@@ -4447,6 +4430,32 @@ export const FlowHistoryDataFragmentDoc = gql`
     ${DatasetBasicsFragmentDoc}
     ${TimeDeltaDataFragmentDoc}
 `;
+export const FlowItemWidgetDataFragmentDoc = gql`
+    fragment FlowItemWidgetData on Flow {
+        status
+        initiator {
+            accountName
+        }
+        outcome {
+            ...FlowOutcomeData
+        }
+        timing {
+            awaitingExecutorSince
+            runningSince
+            finishedAt
+        }
+    }
+    ${FlowOutcomeDataFragmentDoc}
+`;
+export const FlowConnectionWidgetDataFragmentDoc = gql`
+    fragment FlowConnectionWidgetData on FlowConnection {
+        nodes {
+            ...FlowItemWidgetData
+        }
+        totalCount
+    }
+    ${FlowItemWidgetDataFragmentDoc}
+`;
 export const AccessTokenDataFragmentDoc = gql`
     fragment AccessTokenData on ViewAccessToken {
         id
@@ -5330,18 +5339,7 @@ export const AccountListFlowsDocument = gql`
                             perPage: $perPageTiles
                             filters: { byFlowType: null, byStatus: null, byInitiator: null, byDatasetIds: [] }
                         ) {
-                            nodes {
-                                status
-                                outcome {
-                                    ...FlowOutcomeData
-                                }
-                                timing {
-                                    awaitingExecutorSince
-                                    runningSince
-                                    finishedAt
-                                }
-                            }
-                            totalCount
+                            ...FlowConnectionWidgetData
                         }
                     }
                 }
@@ -5349,7 +5347,7 @@ export const AccountListFlowsDocument = gql`
         }
     }
     ${FlowConnectionDataFragmentDoc}
-    ${FlowOutcomeDataFragmentDoc}
+    ${FlowConnectionWidgetDataFragmentDoc}
 `;
 
 @Injectable({
@@ -6392,18 +6390,7 @@ export const GetDatasetListFlowsDocument = gql`
                             perPage: $perPageTiles
                             filters: { byFlowType: null, byStatus: null, byInitiator: null }
                         ) {
-                            nodes {
-                                status
-                                outcome {
-                                    ...FlowOutcomeData
-                                }
-                                timing {
-                                    awaitingExecutorSince
-                                    runningSince
-                                    finishedAt
-                                }
-                            }
-                            totalCount
+                            ...FlowConnectionWidgetData
                         }
                     }
                 }
@@ -6412,7 +6399,7 @@ export const GetDatasetListFlowsDocument = gql`
     }
     ${DatasetListFlowsDataFragmentDoc}
     ${FlowConnectionDataFragmentDoc}
-    ${FlowOutcomeDataFragmentDoc}
+    ${FlowConnectionWidgetDataFragmentDoc}
 `;
 
 @Injectable({

@@ -21,6 +21,7 @@ import {
     DatasetResumeFlowsMutation,
     DatasetTriggerFlowDocument,
     DatasetTriggerFlowMutation,
+    FlowConnectionDataFragment,
     GetDatasetFlowConfigsDocument,
     GetDatasetFlowConfigsQuery,
     GetDatasetListFlowsDocument,
@@ -221,6 +222,7 @@ describe("DatasetFlowApi", () => {
                     full: {
                         maxSliceSize: MOCK_SLICE_SIZE,
                         maxSliceRecords: MOCK_SLICE_RECORDS,
+                        recursive: true,
                     },
                 },
             })
@@ -241,17 +243,19 @@ describe("DatasetFlowApi", () => {
             .getDatasetListFlows({
                 datasetId: TEST_DATASET_ID,
                 page: MOCK_PAGE,
-                perPage: MOCK_PER_PAGE,
+                perPageTable: MOCK_PER_PAGE,
+                perPageTiles: MOCK_PER_PAGE,
                 filters: MOCK_FILTERS,
             })
             .subscribe((res: GetDatasetListFlowsQuery) => {
-                expect(res.datasets.byId?.flows.runs.listFlows.totalCount).toEqual(2);
+                expect((res.datasets.byId?.flows.runs.table as FlowConnectionDataFragment).totalCount).toEqual(2);
             });
 
         const op = controller.expectOne(GetDatasetListFlowsDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
         expect(op.operation.variables.page).toEqual(MOCK_PAGE);
-        expect(op.operation.variables.perPage).toEqual(MOCK_PER_PAGE);
+        expect(op.operation.variables.perPageTable).toEqual(MOCK_PER_PAGE);
+        expect(op.operation.variables.perPageTiles).toEqual(MOCK_PER_PAGE);
         expect(op.operation.variables.filters).toEqual(MOCK_FILTERS);
         op.flush({
             data: mockGetDatasetListFlowsQuery,

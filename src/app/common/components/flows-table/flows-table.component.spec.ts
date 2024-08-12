@@ -8,7 +8,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { FormsModule } from "@angular/forms";
 import { mockDatasetFlowsInitiatorsQuery, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import { DisplayTimeModule } from "src/app/components/display-time/display-time.module";
-import { Account, Dataset } from "src/app/api/kamu.graphql.interface";
+import { Account } from "src/app/api/kamu.graphql.interface";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { AngularSvgIconModule, SvgIconRegistryService } from "angular-svg-icon";
 import { HarnessLoader } from "@angular/cdk/testing";
@@ -69,8 +69,8 @@ describe("FlowsTableComponent", () => {
         component.tableOptions = {
             displayColumns: ["description", "information", "creator", "options"],
         };
-        component.involvedDatasets = mockDatasets as Dataset[];
-        component.dropdownDatasetList = mockDatasets as Dataset[];
+        component.involvedDatasets = mockDatasets;
+        component.dropdownDatasetList = mockDatasets;
 
         component.accountFlowInitiators = mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators
             .nodes as Account[];

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { FlowOutcomeDataFragment, FlowStatus, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
+import { FlowItemWidgetDataFragment, FlowOutcomeDataFragment, FlowStatus } from "src/app/api/kamu.graphql.interface";
 import { TileBaseWidgetHelpers } from "./tile-base-widget.helpers";
 import { DataHelpers } from "src/app/common/data.helpers";
 import AppValues from "src/app/common/app.values";
@@ -12,7 +12,7 @@ import { MaybeNullOrUndefined } from "../../app.types";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TileBaseWidgetComponent {
-    @Input() public nodes: FlowSummaryDataFragment[];
+    @Input() public nodes: FlowItemWidgetDataFragment[];
     public readonly LAST_RUNS_COUNT = 150;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;
@@ -22,7 +22,7 @@ export class TileBaseWidgetComponent {
         return DataHelpers.durationTask(d1, d2);
     }
 
-    public tileWidgetClass(node: FlowSummaryDataFragment): string {
+    public tileWidgetClass(node: FlowItemWidgetDataFragment): string {
         return TileBaseWidgetHelpers.tileWidgetClass(node);
     }
 

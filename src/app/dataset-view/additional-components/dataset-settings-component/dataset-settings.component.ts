@@ -105,7 +105,10 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
             case SettingsTabsEnum.COMPACTION:
                 return this.datasetBasics.kind === DatasetKind.Root;
             case SettingsTabsEnum.VARIABLES_AND_SECRETS:
-                return this.appConfigService.featureFlags.enableDatasetEnvVarsManagment;
+                return (
+                    this.appConfigService.featureFlags.enableDatasetEnvVarsManagment &&
+                    this.datasetBasics.kind === DatasetKind.Root
+                );
             default:
                 return Boolean(item.visible);
         }

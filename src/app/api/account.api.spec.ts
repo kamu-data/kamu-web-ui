@@ -17,6 +17,7 @@ import {
     AccountPauseFlowsMutation,
     AccountResumeFlowsDocument,
     AccountResumeFlowsMutation,
+    FlowConnectionDataFragment,
 } from "./kamu.graphql.interface";
 import { TEST_LOGIN, mockAccountDetails } from "./mock/auth.mock";
 import { first } from "rxjs";
@@ -104,19 +105,22 @@ describe("AccountApi", () => {
             .fetchAccountListFlows({
                 accountName: ACCOUNT_NAME,
                 page: PAGE,
-                perPage: PER_PAGE,
+                perPageTable: PER_PAGE,
+                perPageTiles: PER_PAGE,
                 filters: ACCOUNT_FILTERS,
             })
             .subscribe((list: AccountListFlowsQuery) => {
-                expect(list.accounts.byName?.flows?.runs.listFlows.totalCount).toEqual(
-                    mockAccountListFlowsQuery.accounts.byName?.flows?.runs.listFlows.totalCount,
+                expect((list.accounts.byName?.flows?.runs.table as FlowConnectionDataFragment).totalCount).toEqual(
+                    (mockAccountListFlowsQuery.accounts.byName?.flows?.runs.table as FlowConnectionDataFragment)
+                        .totalCount,
                 );
             });
 
         const op = controller.expectOne(AccountListFlowsDocument);
         expect(op.operation.variables.name).toEqual(ACCOUNT_NAME);
         expect(op.operation.variables.page).toEqual(PAGE);
-        expect(op.operation.variables.perPage).toEqual(PER_PAGE);
+        expect(op.operation.variables.perPageTable).toEqual(PER_PAGE);
+        expect(op.operation.variables.perPageTiles).toEqual(PER_PAGE);
         expect(op.operation.variables.filters).toEqual(ACCOUNT_FILTERS);
 
         op.flush({

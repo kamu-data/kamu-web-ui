@@ -1,10 +1,17 @@
 import { MaybeNull } from "src/app/common/app.types";
 import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.interface";
-import { Account, Dataset, FlowConnectionDataFragment, FlowStatus } from "src/app/api/kamu.graphql.interface";
+import {
+    Account,
+    DatasetListFlowsDataFragment,
+    FlowConnectionDataFragment,
+    FlowConnectionWidgetDataFragment,
+    FlowStatus,
+} from "src/app/api/kamu.graphql.interface";
 
 export interface FlowsTableData {
-    connectionData: FlowConnectionDataFragment;
-    involvedDatasets: Dataset[];
+    connectionDataForTable: FlowConnectionDataFragment;
+    connectionDataForWidget: FlowConnectionWidgetDataFragment;
+    involvedDatasets: DatasetListFlowsDataFragment[];
 }
 
 export interface TransformDescriptionTableData {
@@ -23,7 +30,7 @@ export interface FlowsTableOptions {
 
 export interface FlowsTableFiltersOptions {
     accounts: Account[];
-    datasets: Dataset[];
+    datasets: DatasetListFlowsDataFragment[];
     status: MaybeNull<FlowStatus>;
     onlySystemFlows: boolean;
 }

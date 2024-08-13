@@ -36,7 +36,6 @@ describe("DatasetFlowDetailsComponent", () => {
     let datasetSubsService: DatasetSubscriptionsService;
     let datasetService: DatasetService;
     let activatedRoute: ActivatedRoute;
-    //let router: Router;
     const MOCK_FLOW_ID = "3";
 
     beforeEach(async () => {
@@ -109,7 +108,6 @@ describe("DatasetFlowDetailsComponent", () => {
         datasetService = TestBed.inject(DatasetService);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         activatedRoute = TestBed.inject(ActivatedRoute);
-        //  router = TestBed.inject(Router);
         component = fixture.componentInstance;
         component.flowId = "5";
         spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(
@@ -134,26 +132,6 @@ describe("DatasetFlowDetailsComponent", () => {
         });
         flush();
     }));
-
-    [
-        FlowDetailsTabs.ADMIN,
-        FlowDetailsTabs.HISTORY,
-        FlowDetailsTabs.LOGS,
-        FlowDetailsTabs.SUMMARY,
-        FlowDetailsTabs.USAGE,
-    ].forEach((tab: FlowDetailsTabs) => {
-        // eslint-disable-next-line jasmine/no-disabled-tests
-        xit(`should activate ${tab} tab`, () => {
-            activatedRoute.snapshot.params = {
-                [ProjectLinks.URL_PARAM_CATEGORY]: tab,
-            };
-
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-            // router.events.next(new NavigationEnd(1, "", ""));
-
-            expect(component.activeTab).toEqual(tab);
-        });
-    });
 
     it(`should check extract flow id`, () => {
         activatedRoute.snapshot.params = {

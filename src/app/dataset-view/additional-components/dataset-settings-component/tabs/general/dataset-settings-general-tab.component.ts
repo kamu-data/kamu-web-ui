@@ -7,6 +7,7 @@ import { DatasetBasicsFragment, DatasetPermissionsFragment } from "../../../../.
 import { DatasetSettingsService } from "../../services/dataset-settings.service";
 import { Observable, shareReplay } from "rxjs";
 import { CompactionTooltipsTexts } from "src/app/common/tooltips/compacting.text";
+import { DatasetResetMode } from "./dataset-settings-general-tab.types";
 
 @Component({
     selector: "app-dataset-settings-general-tab",
@@ -20,12 +21,12 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
 
     public renameError$: Observable<string>;
     public renameDatasetForm: FormGroup;
-    public flattenMetadata: boolean = false;
-    public recursive: boolean = false;
+    public resetDatasetForm: FormGroup;
 
     public readonly FLATTEN_METADATA_TOOLTIP = CompactionTooltipsTexts.RESET_BLOCK_FLATTEN_METADATA;
+    public readonly SEED_TOOLTIP = CompactionTooltipsTexts.RESET_TO_SEED;
     public readonly RECURSIVE_TOOLTIP = CompactionTooltipsTexts.RESET_BLOCK_RECURSIVE;
-
+    public readonly DatasetResetMode: typeof DatasetResetMode = DatasetResetMode;
     constructor(
         private datasetSettingsService: DatasetSettingsService,
         private fb: FormBuilder,
@@ -38,6 +39,10 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                 this.getDatasetInfoFromUrl().datasetName,
                 [Validators.required, Validators.pattern(/^([a-zA-Z0-9][a-zA-Z0-9-]*)+(\.[a-zA-Z0-9][a-zA-Z0-9-]*)*$/)],
             ],
+        });
+        this.resetDatasetForm = this.fb.group({
+            mode: [DatasetResetMode.RESET_TO_SEED],
+            recursive: [false],
         });
     }
 
@@ -109,11 +114,5 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
 
     public changeName(): void {
         this.datasetSettingsService.resetRenameError();
-    }
-
-    public changeFlattenMetadata(): void {
-        if (!this.flattenMetadata) {
-            this.recursive = false;
-        }
     }
 }

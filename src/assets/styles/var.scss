@@ -1,5 +1,4 @@
 @use "@angular/material" as mat;
-@include mat.core;
 
 $app-primary: #f1f1f1;
 $app-dark: #1c1c1c;
@@ -16,11 +15,6 @@ $secondary: #57606a;
 $app-disabled: rgb(88 87 87 / 42%);
 $app-background-btn: #f3f4f6;
 $app-versatile-business-dark: rgb(221 221 221 / 25%);
-$app-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
-
-// The "warn" palette is optional and defaults to red if not specified.
-$app-warn: mat.define-palette(mat.$red-palette);
-$my-theme: mat.define-light-theme($app-primary, $app-accent, $app-warn);
 $very-light-grey: #ccc;
 $dark-green-tea: rgb(142 195 79);
 $app-success: #1a7f37;
@@ -475,6 +469,7 @@ $app-color-tooltip-border: #ced4da;
     border: 1px solid $app-color-select-menu-backdrop-border;
     border-radius: 12px;
     animation: select-menu-modal-animation 0.12s cubic-bezier(0, 0.1, 0.1, 1) backwards;
+    letter-spacing: normal;
 }
 
 .select-menu-header {

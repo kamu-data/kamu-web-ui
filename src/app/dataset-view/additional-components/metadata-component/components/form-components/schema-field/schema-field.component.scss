@@ -12,11 +12,13 @@
 table {
     width: 100%;
 
-    th.mat-header-cell {
+    th.mat-mdc-header-cell {
         padding-left: 14px;
+        border: 1px solid $app-color-border-default;
+        background: $app-alice-blue !important;
     }
 
-    & .mat-cell {
+    & .mat-mdc-cell {
         border: 1px solid $app-color-border-default;
         color: $app-color-fg-default;
         padding: 0;

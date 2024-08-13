@@ -18,10 +18,8 @@ import { PaginationModule } from "../components/pagination-component/pagination.
 import { MatMenuModule } from "@angular/material/menu";
 import { MatButtonModule } from "@angular/material/button";
 import { MarkdownModule } from "ngx-markdown";
-import { MatChipsModule } from "@angular/material/chips";
 import { MetadataComponent } from "./additional-components/metadata-component/metadata.component";
 import { ClipboardModule } from "@angular/cdk/clipboard";
-import { MatTabsModule } from "@angular/material/tabs";
 import { DataComponent } from "./additional-components/data-component/data.component";
 import { OverviewComponent } from "./additional-components/overview-component/overview.component";
 import { LineageComponent as LineageComponent } from "./additional-components/lineage-component/lineage.component";
@@ -86,6 +84,8 @@ import { FlowsTableComponent } from "../common/components/flows-table/flows-tabl
 import { TileBaseWidgetComponent } from "../common/components/tile-base-widget/tile-base-widget.component";
 import { FlowsComponent } from "./additional-components/flows-component/flows.component";
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
+import { MatTabsModule } from "@angular/material/tabs";
+import { MatChipsModule } from "@angular/material/chips";
 
 @NgModule({
     imports: [
@@ -164,6 +164,7 @@ import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
         TileBaseWidgetComponent,
         FlowsTableComponent,
         AngularMultiSelectModule,
+        MatChipsModule,
     ],
     declarations: [
         DatasetViewHeaderComponent,

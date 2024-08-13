@@ -14,11 +14,11 @@
                     </div>
                     <div class="app-mat-chip" *ngIf="currentState.overview.metadata.currentInfo?.keywords">
                         <h2 class="box-title align-items-center pt-3">Keywords</h2>
-                        <mat-chip-list aria-label="Tags selection">
+                        <mat-chip-set aria-label="Tags selection">
                             <div *ngFor="let keyword of currentState.overview.metadata.currentInfo?.keywords">
                                 <mat-chip (click)="selectTopic(datasetBasics.kind)">{{ keyword }}</mat-chip>
                             </div>
-                        </mat-chip-list>
+                        </mat-chip-set>
                     </div>
                 </div>
                 <div *ngIf="canEditDatasetInfo" data-test-id="dataset-edit-info-block">

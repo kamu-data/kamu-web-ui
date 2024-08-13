@@ -27,10 +27,37 @@ a {
 ::ng-deep.mat-menu-panel-custom {
     max-width: 650px;
 
-    .mat-tab-label {
+    mat-tab-header {
+        border-bottom: 1px solid $app-color-border-default;
+    }
+
+    .mat-mdc-checkbox {
+        --mdc-checkbox-state-layer-size: 25px;
+
+        .mdc-checkbox__background {
+            width: 16px;
+            height: 16px;
+        }
+    }
+
+    .mdc-tab__ripple {
+        display: none;
+    }
+
+    .mat-mdc-tab-header-pagination {
+        &-after,
+        &-before {
+            box-shadow:
+                0 2px 4px -1px #0003,
+                0 4px 5px #00000024,
+                0 1px 10px #0000001f;
+        }
+    }
+
+    .mdc-tab__content {
         min-width: 65px;
 
-        .mat-tab-label-content {
+        .mdc-tab__text-label {
             padding: 0 10px;
 
             &:hover {

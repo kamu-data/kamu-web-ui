@@ -25,14 +25,23 @@
     <div class="mt-5 mb-3">
         <label for="keywords" class="form-label mb-3">Keywords</label>
 
-        <mat-chip-list class="w-100" #chipList aria-label="Keyword selection">
+        <mat-chip-grid #chipList aria-label="Fruit selection">
+            <mat-chip-row *ngFor="let keyword of keywords" (removed)="removeKeyword(keyword)">
+                {{ keyword }}
+                <button matChipRemove>
+                    <mat-icon>cancel</mat-icon>
+                </button>
+            </mat-chip-row>
+        </mat-chip-grid>
+
+        <!-- <mat-chip-set class="w-100" #chipList aria-label="Keyword selection">
             <mat-chip class="custom-mat-chip" *ngFor="let keyword of keywords">
                 {{ keyword }}
                 <button matChipRemove (click)="removeKeyword(keyword)">
                     <mat-icon>cancel</mat-icon>
                 </button>
             </mat-chip>
-        </mat-chip-list>
+        </mat-chip-set> -->
         <div class="mt-3">
             <input
                 class="form-control w-100"

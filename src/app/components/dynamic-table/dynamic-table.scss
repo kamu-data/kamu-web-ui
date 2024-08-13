@@ -14,7 +14,7 @@
 table {
     width: 100%;
 
-    .mat-cell {
+    .mat-mdc-cell {
         border: 1px solid $app-color-border-default;
         color: $app-color-fg-default;
     }
@@ -27,20 +27,20 @@ table {
     }
 }
 
-.mat-header-cell {
+.mat-mdc-header-cell {
     color: $app-color-fg-default;
     border: 1px solid $app-color-border-default;
     font-size: 15px;
     text-align: left;
-    background: $app-alice-blue;
+    background: $app-alice-blue !important;
 }
 
-.dynamic-table th.mat-header-cell,
-.dynamic-table td.mat-cell,
-.dynamic-table td.mat-footer-cell,
-.dynamic-table th.mat-header-cell:first-of-type,
-.dynamic-table td.mat-cell:first-of-type,
-.dynamic-table td.mat-footer-cell:first-of-type {
+.dynamic-table th.mat-mdc-header-cell,
+.dynamic-table td.mat-mdc-cell,
+.dynamic-table td.mat-mdc-footer-cell,
+.dynamic-table th.mat-mdc-header-cell:first-of-type,
+.dynamic-table td.mat-mdc-cell:first-of-type,
+.dynamic-table td.mat-mdc-footer-cell:first-of-type {
     padding-left: 10px;
     padding-right: 10px;
 }

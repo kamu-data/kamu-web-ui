@@ -54,21 +54,16 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                     this.flowsService.datasetFlowsList({
                         datasetId: this.datasetBasics.id,
                         page: page - 1,
-                        perPage: this.TABLE_FLOW_RUNS_PER_PAGE,
+                        perPageTable: this.TABLE_FLOW_RUNS_PER_PAGE,
+                        perPageTiles: this.WIDGET_FLOW_RUNS_PER_PAGE,
                         filters: { byStatus: filterByStatus, byInitiator: filterByInitiator },
-                    }),
-                    this.flowsService.datasetFlowsList({
-                        datasetId: this.datasetBasics.id,
-                        page: 0,
-                        perPage: this.WIDGET_FLOW_RUNS_PER_PAGE,
-                        filters: {},
                     }),
                     this.flowsService.allFlowsPaused(this.datasetBasics.id),
                     this.flowsService.flowsInitiators(this.datasetBasics.id),
                 ]),
             ),
-            map(([mainTableFlowsData, tileWidgetListFlowsData, allFlowsPaused, flowInitiators]) => {
-                return { mainTableFlowsData, tileWidgetListFlowsData, allFlowsPaused, flowInitiators };
+            map(([flowsData, allFlowsPaused, flowInitiators]) => {
+                return { flowsData, allFlowsPaused, flowInitiators };
             }),
         );
     }

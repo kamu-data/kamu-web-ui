@@ -21,8 +21,7 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly TIMEOUT_REFRESH_FLOW = 800;
     public flowConnectionData$: Observable<{
-        mainTableFlowsData: FlowsTableData;
-        tileWidgetListFlowsData: FlowsTableData;
+        flowsData: FlowsTableData;
         allFlowsPaused: MaybeUndefined<boolean>;
         flowInitiators: Account[];
     }>;

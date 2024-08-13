@@ -15,9 +15,11 @@ import { mockDatasetFlowsInitiatorsQuery, mockFlowsTableData } from "src/app/api
 import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { FlowsTableComponent } from "src/app/common/components/flows-table/flows-table.component";
 import { TileBaseWidgetComponent } from "src/app/common/components/tile-base-widget/tile-base-widget.component";
-import { Account, Dataset, FlowStatus } from "src/app/api/kamu.graphql.interface";
+import { Account, FlowStatus } from "src/app/api/kamu.graphql.interface";
 import { mockDatasets } from "src/app/common/components/flows-table/flows-table.helpers.mock";
 import { FlowsTableFiltersOptions } from "src/app/common/components/flows-table/flows-table.types";
+import { NgbPaginationModule } from "@ng-bootstrap/ng-bootstrap";
+import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 
 describe("AccountFlowsTabComponent", () => {
     let component: AccountFlowsTabComponent;
@@ -29,7 +31,13 @@ describe("AccountFlowsTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [ApolloTestingModule, SharedTestModule, ToastrModule.forRoot()],
+            imports: [
+                ApolloTestingModule,
+                SharedTestModule,
+                ToastrModule.forRoot(),
+                NgbPaginationModule,
+                AngularMultiSelectModule,
+            ],
             declarations: [AccountFlowsTabComponent, TileBaseWidgetComponent, FlowsTableComponent, PaginationComponent],
             providers: [
                 {
@@ -107,7 +115,7 @@ describe("AccountFlowsTabComponent", () => {
 
     it("should empty block is visible", fakeAsync(() => {
         fixture.detectChanges();
-        mockFlowsTableData.connectionData.nodes = [];
+        mockFlowsTableData.connectionDataForWidget.nodes = [];
         spyOn(accountService, "accountAllFlowsPaused").and.returnValue(of(false));
         spyOn(accountService, "getAccountListFlows").and.returnValue(of(mockFlowsTableData));
         tick();
@@ -121,7 +129,7 @@ describe("AccountFlowsTabComponent", () => {
     it("should check search by filters with filters=null", () => {
         component.searchByAccount = mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators
             .nodes as Account[];
-        component.searchByDataset = mockDatasets as Dataset[];
+        component.searchByDataset = mockDatasets;
         fixture.detectChanges();
         component.onSearchByFiltersChange(null);
 
@@ -132,7 +140,7 @@ describe("AccountFlowsTabComponent", () => {
     it("should check search by filters with filters options", () => {
         const filterOptions: FlowsTableFiltersOptions = {
             accounts: mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators.nodes as Account[],
-            datasets: mockDatasets as Dataset[],
+            datasets: mockDatasets,
             status: FlowStatus.Finished,
             onlySystemFlows: false,
         };

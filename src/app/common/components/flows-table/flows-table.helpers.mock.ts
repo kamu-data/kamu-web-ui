@@ -1,4 +1,10 @@
-import { DatasetKind, FlowStatus, FlowSummaryDataFragment, TimeUnit } from "src/app/api/kamu.graphql.interface";
+import {
+    DatasetKind,
+    DatasetListFlowsDataFragment,
+    FlowStatus,
+    FlowSummaryDataFragment,
+    TimeUnit,
+} from "src/app/api/kamu.graphql.interface";
 import { mockDatasetMainDataId } from "src/app/search/mock.data";
 
 export const expectationsDesriptionColumnOptions = [
@@ -430,7 +436,7 @@ export const tooltipTextResults: string[] = [
     "Start running time: Mar 14th 2024, 11:24:29 AM",
 ];
 
-export const mockDatasets = [
+export const mockDatasets: DatasetListFlowsDataFragment[] = [
     {
         id: mockDatasetMainDataId,
         kind: DatasetKind.Root,

@@ -300,6 +300,7 @@ export type CommitResultSuccess = CommitResult &
 export type CompactionConditionFull = {
     maxSliceRecords: Scalars["Int"];
     maxSliceSize: Scalars["Int"];
+    recursive: Scalars["Boolean"];
 };
 
 export type CompactionConditionInput =
@@ -314,6 +315,7 @@ export type CompactionFull = {
     __typename?: "CompactionFull";
     maxSliceRecords: Scalars["Int"];
     maxSliceSize: Scalars["Int"];
+    recursive: Scalars["Boolean"];
 };
 
 export type CompactionMetadataOnly = {
@@ -404,7 +406,7 @@ export enum DataBatchFormat {
     Csv = "CSV",
     Json = "JSON",
     JsonAoa = "JSON_AOA",
-    /** Deprecated: Use ND_JSON instead */
+    /** Deprecated: Use `ND_JSON` instead */
     JsonLd = "JSON_LD",
     JsonSoa = "JSON_SOA",
     NdJson = "ND_JSON",
@@ -1973,7 +1975,7 @@ export enum TaskOutcome {
 
 /** Life-cycle status of a task */
 export enum TaskStatus {
-    /** Task has reached a certain final outcome (see [TaskOutcome]) */
+    /** Task has reached a certain final outcome (see [`TaskOutcome`]) */
     Finished = "FINISHED",
     /** Task is waiting for capacity to be allocated to it */
     Queued = "QUEUED",
@@ -2244,7 +2246,8 @@ export type AccountListDatasetsWithFlowsQuery = {
 export type AccountListFlowsQueryVariables = Exact<{
     name: Scalars["AccountName"];
     page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    perPageTable?: InputMaybe<Scalars["Int"]>;
+    perPageTiles?: InputMaybe<Scalars["Int"]>;
     filters?: InputMaybe<AccountFlowFilters>;
 }>;
 
@@ -2258,7 +2261,8 @@ export type AccountListFlowsQuery = {
                 __typename?: "AccountFlows";
                 runs: {
                     __typename?: "AccountFlowRuns";
-                    listFlows: { __typename?: "FlowConnection" } & FlowConnectionDataFragment;
+                    table: { __typename?: "FlowConnection" } & FlowConnectionDataFragment;
+                    tiles: { __typename?: "FlowConnection" } & FlowConnectionWidgetDataFragment;
                 };
             } | null;
         } | null;
@@ -2965,7 +2969,8 @@ export type DatasetFlowsInitiatorsQuery = {
 export type GetDatasetListFlowsQueryVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    perPageTable?: InputMaybe<Scalars["Int"]>;
+    perPageTiles?: InputMaybe<Scalars["Int"]>;
     filters?: InputMaybe<DatasetFlowFilters>;
 }>;
 
@@ -2976,31 +2981,15 @@ export type GetDatasetListFlowsQuery = {
         byId?:
             | ({
                   __typename?: "Dataset";
-                  metadata: {
-                      __typename?: "DatasetMetadata";
-                      currentPollingSource?: {
-                          __typename?: "SetPollingSource";
-                          fetch:
-                              | ({ __typename?: "FetchStepContainer" } & FetchStepContainerDataFragment)
-                              | { __typename?: "FetchStepEthereumLogs" }
-                              | ({ __typename?: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment)
-                              | { __typename?: "FetchStepMqtt" }
-                              | ({ __typename?: "FetchStepUrl" } & FetchStepUrlDataFragment);
-                      } | null;
-                      currentTransform?: {
-                          __typename?: "SetTransform";
-                          inputs: Array<{ __typename: "TransformInput" }>;
-                          transform: { __typename?: "TransformSql"; engine: string };
-                      } | null;
-                  };
                   flows: {
                       __typename?: "DatasetFlows";
                       runs: {
                           __typename?: "DatasetFlowRuns";
-                          listFlows: { __typename?: "FlowConnection" } & FlowConnectionDataFragment;
+                          table: { __typename?: "FlowConnection" } & FlowConnectionDataFragment;
+                          tiles: { __typename?: "FlowConnection" } & FlowConnectionWidgetDataFragment;
                       };
                   };
-              } & DatasetBasicsFragment)
+              } & DatasetListFlowsDataFragment)
             | null;
     };
 };
@@ -3156,6 +3145,27 @@ export type FlowSummaryDataFragment = {
         | null;
 };
 
+export type DatasetListFlowsDataFragment = {
+    __typename?: "Dataset";
+    metadata: {
+        __typename?: "DatasetMetadata";
+        currentPollingSource?: {
+            __typename?: "SetPollingSource";
+            fetch:
+                | ({ __typename?: "FetchStepContainer" } & FetchStepContainerDataFragment)
+                | { __typename?: "FetchStepEthereumLogs" }
+                | ({ __typename?: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment)
+                | { __typename?: "FetchStepMqtt" }
+                | ({ __typename?: "FetchStepUrl" } & FetchStepUrlDataFragment);
+        } | null;
+        currentTransform?: {
+            __typename?: "SetTransform";
+            inputs: Array<{ __typename: "TransformInput" }>;
+            transform: { __typename?: "TransformSql"; engine: string };
+        } | null;
+    };
+} & DatasetBasicsFragment;
+
 export type FlowConnectionDataFragment = {
     __typename?: "FlowConnection";
     totalCount: number;
@@ -3234,6 +3244,23 @@ export type FlowHistoryDataFragment =
     | FlowHistoryData_FlowEventTaskChanged_Fragment
     | FlowHistoryData_FlowEventTriggerAdded_Fragment;
 
+export type FlowItemWidgetDataFragment = {
+    __typename?: "Flow";
+    status: FlowStatus;
+    initiator?: { __typename?: "Account"; accountName: string } | null;
+    outcome?:
+        | ({ __typename?: "FlowAbortedResult" } & FlowOutcomeData_FlowAbortedResult_Fragment)
+        | ({ __typename?: "FlowFailedError" } & FlowOutcomeData_FlowFailedError_Fragment)
+        | ({ __typename?: "FlowSuccessResult" } & FlowOutcomeData_FlowSuccessResult_Fragment)
+        | null;
+    timing: {
+        __typename?: "FlowTimingRecords";
+        awaitingExecutorSince?: string | null;
+        runningSince?: string | null;
+        finishedAt?: string | null;
+    };
+};
+
 type FlowOutcomeData_FlowAbortedResult_Fragment = { __typename?: "FlowAbortedResult"; message: string };
 
 type FlowOutcomeData_FlowFailedError_Fragment = {
@@ -3253,6 +3280,12 @@ export type FlowOutcomeDataFragment =
     | FlowOutcomeData_FlowAbortedResult_Fragment
     | FlowOutcomeData_FlowFailedError_Fragment
     | FlowOutcomeData_FlowSuccessResult_Fragment;
+
+export type FlowConnectionWidgetDataFragment = {
+    __typename?: "FlowConnection";
+    totalCount: number;
+    nodes: Array<{ __typename?: "Flow" } & FlowItemWidgetDataFragment>;
+};
 
 export type AddDataEventFragment = {
     __typename?: "AddData";
@@ -4125,6 +4158,34 @@ export const ViewDatasetEnvVarDataFragmentDoc = gql`
         isSecret
     }
 `;
+export const DatasetListFlowsDataFragmentDoc = gql`
+    fragment DatasetListFlowsData on Dataset {
+        ...DatasetBasics
+        metadata {
+            currentPollingSource {
+                fetch {
+                    ...FetchStepUrlData
+                    ...FetchStepFilesGlobData
+                    ...FetchStepContainerData
+                }
+            }
+            currentTransform {
+                inputs {
+                    __typename
+                }
+                transform {
+                    ... on TransformSql {
+                        engine
+                    }
+                }
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+    ${FetchStepUrlDataFragmentDoc}
+    ${FetchStepFilesGlobDataFragmentDoc}
+    ${FetchStepContainerDataFragmentDoc}
+`;
 export const AccountFragmentDoc = gql`
     fragment Account on Account {
         id
@@ -4368,6 +4429,32 @@ export const FlowHistoryDataFragmentDoc = gql`
     ${AccountFragmentDoc}
     ${DatasetBasicsFragmentDoc}
     ${TimeDeltaDataFragmentDoc}
+`;
+export const FlowItemWidgetDataFragmentDoc = gql`
+    fragment FlowItemWidgetData on Flow {
+        status
+        initiator {
+            accountName
+        }
+        outcome {
+            ...FlowOutcomeData
+        }
+        timing {
+            awaitingExecutorSince
+            runningSince
+            finishedAt
+        }
+    }
+    ${FlowOutcomeDataFragmentDoc}
+`;
+export const FlowConnectionWidgetDataFragmentDoc = gql`
+    fragment FlowConnectionWidgetData on FlowConnection {
+        nodes {
+            ...FlowItemWidgetData
+        }
+        totalCount
+    }
+    ${FlowItemWidgetDataFragmentDoc}
 `;
 export const AccessTokenDataFragmentDoc = gql`
     fragment AccessTokenData on ViewAccessToken {
@@ -5233,13 +5320,26 @@ export class AccountListDatasetsWithFlowsGQL extends Apollo.Query<
     }
 }
 export const AccountListFlowsDocument = gql`
-    query accountListFlows($name: AccountName!, $page: Int, $perPage: Int, $filters: AccountFlowFilters) {
+    query accountListFlows(
+        $name: AccountName!
+        $page: Int
+        $perPageTable: Int
+        $perPageTiles: Int
+        $filters: AccountFlowFilters
+    ) {
         accounts {
             byName(name: $name) {
                 flows {
                     runs {
-                        listFlows(page: $page, perPage: $perPage, filters: $filters) {
+                        table: listFlows(page: $page, perPage: $perPageTable, filters: $filters) {
                             ...FlowConnectionData
+                        }
+                        tiles: listFlows(
+                            page: 0
+                            perPage: $perPageTiles
+                            filters: { byFlowType: null, byStatus: null, byInitiator: null, byDatasetIds: [] }
+                        ) {
+                            ...FlowConnectionWidgetData
                         }
                     }
                 }
@@ -5247,6 +5347,7 @@ export const AccountListFlowsDocument = gql`
         }
     }
     ${FlowConnectionDataFragmentDoc}
+    ${FlowConnectionWidgetDataFragmentDoc}
 `;
 
 @Injectable({
@@ -6269,44 +6370,36 @@ export class DatasetFlowsInitiatorsGQL extends Apollo.Query<
     }
 }
 export const GetDatasetListFlowsDocument = gql`
-    query getDatasetListFlows($datasetId: DatasetID!, $page: Int, $perPage: Int, $filters: DatasetFlowFilters) {
+    query getDatasetListFlows(
+        $datasetId: DatasetID!
+        $page: Int
+        $perPageTable: Int
+        $perPageTiles: Int
+        $filters: DatasetFlowFilters
+    ) {
         datasets {
             byId(datasetId: $datasetId) {
-                ...DatasetBasics
-                metadata {
-                    currentPollingSource {
-                        fetch {
-                            ...FetchStepUrlData
-                            ...FetchStepFilesGlobData
-                            ...FetchStepContainerData
-                        }
-                    }
-                    currentTransform {
-                        inputs {
-                            __typename
-                        }
-                        transform {
-                            ... on TransformSql {
-                                engine
-                            }
-                        }
-                    }
-                }
+                ...DatasetListFlowsData
                 flows {
                     runs {
-                        listFlows(page: $page, perPage: $perPage, filters: $filters) {
+                        table: listFlows(page: $page, perPage: $perPageTable, filters: $filters) {
                             ...FlowConnectionData
+                        }
+                        tiles: listFlows(
+                            page: 0
+                            perPage: $perPageTiles
+                            filters: { byFlowType: null, byStatus: null, byInitiator: null }
+                        ) {
+                            ...FlowConnectionWidgetData
                         }
                     }
                 }
             }
         }
     }
-    ${DatasetBasicsFragmentDoc}
-    ${FetchStepUrlDataFragmentDoc}
-    ${FetchStepFilesGlobDataFragmentDoc}
-    ${FetchStepContainerDataFragmentDoc}
+    ${DatasetListFlowsDataFragmentDoc}
     ${FlowConnectionDataFragmentDoc}
+    ${FlowConnectionWidgetDataFragmentDoc}
 `;
 
 @Injectable({

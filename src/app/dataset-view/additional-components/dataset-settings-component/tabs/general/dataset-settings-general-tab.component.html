@@ -58,8 +58,7 @@
             <form class="row" [formGroup]="resetDatasetForm">
                 <div class="d-flex flex-row">
                     <div class="d-flex align-items-center pt-1 hint">
-                        <mat-radio-group class="d-flex flex-column row-gap-2" formControlName="mode" color="primary">
-                            <!-- <mat-radio-button [value]="pollingGroupEnum.TIME_DELTA"> -->
+                        <mat-radio-group class="d-flex flex-column row-gap-1" formControlName="mode" color="primary">
                             <mat-radio-button [value]="DatasetResetMode.RESET_TO_SEED">
                                 <div class="d-flex align-items-center">
                                     Reset to seed
@@ -76,14 +75,6 @@
                                 </div>
                             </mat-radio-button>
                         </mat-radio-group>
-                        <!-- <app-tooltip-icon class="mt-1" [tooltip]="FLATTEN_METADATA_TOOLTIP"></app-tooltip-icon>
-                        <span class="d-inline-block">Flatten metadata:</span>
-                        <input
-                            class="form-check-input recursive-control d-inline-block ms-3"
-                            type="checkbox"
-                            (change)="changeFlattenMetadata()"
-                            [(ngModel)]="flattenMetadata"
-                        /> -->
                     </div>
                     <div class="d-flex align-items-center pt-1 ms-4">
                         <app-tooltip-icon class="mt-1" [tooltip]="RECURSIVE_TOOLTIP"></app-tooltip-icon>

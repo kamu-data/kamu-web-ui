@@ -1,5 +1,18 @@
 @import "var";
 
+:host {
+    ::ng-deep {
+        .mat-mdc-radio-button {
+            --mat-radio-checked-ripple-color: transparent;
+            --mat-radio-ripple-color: transparent;
+        }
+
+        .mat-mdc-radio-label {
+            white-space: normal;
+        }
+    }
+}
+
 .rename-btn {
     padding: 3px 12px;
     font-size: 14px;
@@ -13,7 +26,7 @@
 }
 
 .danger-zone__content {
-    padding: 15px;
+    padding: 15px 25px;
     border: 1px solid rgb(27 31 36 / 25%);
     border-radius: 6px;
 

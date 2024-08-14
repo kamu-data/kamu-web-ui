@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { BaseComponent } from "../../../../../common/base.component";
 import { promiseWithCatch } from "../../../../../common/app.helpers";
 import { ModalService } from "../../../../../components/modal/modal.service";
@@ -11,7 +11,7 @@ import {
 import { DatasetSettingsService } from "../../services/dataset-settings.service";
 import { Observable, shareReplay } from "rxjs";
 import { CompactionTooltipsTexts } from "src/app/common/tooltips/compacting.text";
-import { DatasetResetMode } from "./dataset-settings-general-tab.types";
+import { DatasetResetMode, ResetDatasetFormType } from "./dataset-settings-general-tab.types";
 import { DatasetCompactionService } from "../../services/dataset-compaction.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import AppValues from "src/app/common/app.values";
@@ -29,7 +29,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
 
     public renameError$: Observable<string>;
     public renameDatasetForm: FormGroup;
-    public resetDatasetForm: FormGroup;
+    public resetDatasetForm: FormGroup<ResetDatasetFormType>;
 
     public readonly FLATTEN_METADATA_TOOLTIP = CompactionTooltipsTexts.RESET_BLOCK_FLATTEN_METADATA;
     public readonly SEED_TOOLTIP = CompactionTooltipsTexts.RESET_TO_SEED;
@@ -50,7 +50,8 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                 [Validators.required, Validators.pattern(/^([a-zA-Z0-9][a-zA-Z0-9-]*)+(\.[a-zA-Z0-9][a-zA-Z0-9-]*)*$/)],
             ],
         });
-        this.resetDatasetForm = this.fb.group({
+
+        this.resetDatasetForm = this.fb.nonNullable.group({
             mode: [DatasetResetMode.RESET_TO_SEED],
             recursive: [false],
         });
@@ -66,11 +67,11 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
         return this.renameDatasetForm.controls.datasetName;
     }
 
-    public get recursiveControl(): AbstractControl {
+    public get recursiveControl(): FormControl<boolean> {
         return this.resetDatasetForm.controls.recursive;
     }
 
-    public get modeControl(): AbstractControl {
+    public get modeControl(): FormControl<DatasetResetMode> {
         return this.resetDatasetForm.controls.mode;
     }
 
@@ -123,7 +124,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                 noButtonText: "Cancel",
                 handler: (ok) => {
                     if (ok) {
-                        const mode = this.modeControl.value as DatasetResetMode;
+                        const mode = this.modeControl.value;
                         switch (mode) {
                             case DatasetResetMode.RESET_TO_SEED: {
                                 break;
@@ -135,7 +136,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                                         datasetFlowType: DatasetFlowType.HardCompaction,
                                         compactionArgs: {
                                             metadataOnly: {
-                                                recursive: this.recursiveControl.value as boolean,
+                                                recursive: this.recursiveControl.value,
                                             },
                                         },
                                     })

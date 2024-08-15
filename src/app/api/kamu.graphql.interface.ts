@@ -694,6 +694,7 @@ export enum DatasetFlowType {
     ExecuteTransform = "EXECUTE_TRANSFORM",
     HardCompaction = "HARD_COMPACTION",
     Ingest = "INGEST",
+    Reset = "RESET",
 }
 
 export type DatasetFlows = {
@@ -1041,6 +1042,7 @@ export type FlowConfiguration = {
     batching?: Maybe<FlowConfigurationBatching>;
     compaction?: Maybe<FlowConfigurationCompaction>;
     paused: Scalars["Boolean"];
+    reset?: Maybe<FlowConfigurationReset>;
     schedule?: Maybe<FlowConfigurationSchedule>;
 };
 
@@ -1057,6 +1059,21 @@ export type FlowConfigurationCompactionRule = {
     compactionRule: FlowConfigurationCompaction;
 };
 
+export type FlowConfigurationReset = {
+    __typename?: "FlowConfigurationReset";
+    mode: SnapshotPropagationMode;
+    oldHeadHash?: Maybe<Scalars["Multihash"]>;
+    recursive: Scalars["Boolean"];
+};
+
+export type FlowConfigurationResetCustom = {
+    newHeadHash: Scalars["Multihash"];
+};
+
+export type FlowConfigurationResetToSeedDummy = {
+    dummy: Scalars["String"];
+};
+
 export type FlowConfigurationSchedule = Cron5ComponentExpression | TimeDelta;
 
 export type FlowConfigurationScheduleRule = {
@@ -1067,6 +1084,7 @@ export type FlowConfigurationScheduleRule = {
 export type FlowConfigurationSnapshot =
     | FlowConfigurationBatching
     | FlowConfigurationCompactionRule
+    | FlowConfigurationReset
     | FlowConfigurationScheduleRule;
 
 export type FlowConnection = {
@@ -1091,6 +1109,7 @@ export type FlowDescription =
     | FlowDescriptionDatasetHardCompaction
     | FlowDescriptionDatasetPollingIngest
     | FlowDescriptionDatasetPushIngest
+    | FlowDescriptionDatasetReset
     | FlowDescriptionSystemGc;
 
 export type FlowDescriptionDatasetExecuteTransform = {
@@ -1123,6 +1142,12 @@ export type FlowDescriptionDatasetPushIngest = {
     sourceName?: Maybe<Scalars["String"]>;
 };
 
+export type FlowDescriptionDatasetReset = {
+    __typename?: "FlowDescriptionDatasetReset";
+    datasetId: Scalars["DatasetID"];
+    resetResult?: Maybe<FlowDescriptionResetResult>;
+};
+
 export type FlowDescriptionHardCompactionNothingToDo = {
     __typename?: "FlowDescriptionHardCompactionNothingToDo";
     dummy: Scalars["String"];
@@ -1134,6 +1159,11 @@ export type FlowDescriptionHardCompactionSuccess = {
     newHead: Scalars["Multihash"];
     originalBlocksCount: Scalars["Int"];
     resultingBlocksCount: Scalars["Int"];
+};
+
+export type FlowDescriptionResetResult = {
+    __typename?: "FlowDescriptionResetResult";
+    newHead: Scalars["Multihash"];
 };
 
 export type FlowDescriptionSystemGc = {
@@ -1252,9 +1282,10 @@ export type FlowPreconditionsNotMet = SetFlowBatchingConfigResult &
     };
 
 export type FlowRunConfiguration =
-    | { batching: BatchingConditionInput; compaction?: never; schedule?: never }
-    | { batching?: never; compaction: CompactionConditionInput; schedule?: never }
-    | { batching?: never; compaction?: never; schedule: ScheduleInput };
+    | { batching: BatchingConditionInput; compaction?: never; reset?: never; schedule?: never }
+    | { batching?: never; compaction: CompactionConditionInput; reset?: never; schedule?: never }
+    | { batching?: never; compaction?: never; reset: ResetConditionInput; schedule?: never }
+    | { batching?: never; compaction?: never; reset?: never; schedule: ScheduleInput };
 
 export type FlowStartCondition =
     | FlowStartConditionBatching
@@ -1598,6 +1629,10 @@ export type PrepStepPipe = {
     command: Array<Scalars["String"]>;
 };
 
+export type PropagationMode =
+    | { custom: FlowConfigurationResetCustom; toSeed?: never }
+    | { custom?: never; toSeed: FlowConfigurationResetToSeedDummy };
+
 export type Query = {
     __typename?: "Query";
     /**
@@ -1729,6 +1764,12 @@ export type RequestHeader = {
     __typename?: "RequestHeader";
     name: Scalars["String"];
     value: Scalars["String"];
+};
+
+export type ResetConditionInput = {
+    mode: PropagationMode;
+    oldHeadHash?: InputMaybe<Scalars["Multihash"]>;
+    recursive: Scalars["Boolean"];
 };
 
 export type RestProtocolDesc = {
@@ -1898,6 +1939,18 @@ export type SetWatermarkUpdated = SetWatermarkResult & {
     message: Scalars["String"];
     newHead: Scalars["Multihash"];
 };
+
+export type SnapshotConfigurationResetCustom = {
+    __typename?: "SnapshotConfigurationResetCustom";
+    newHeadHash: Scalars["Multihash"];
+};
+
+export type SnapshotConfigurationResetToSeedDummy = {
+    __typename?: "SnapshotConfigurationResetToSeedDummy";
+    dummy: Scalars["String"];
+};
+
+export type SnapshotPropagationMode = SnapshotConfigurationResetCustom | SnapshotConfigurationResetToSeedDummy;
 
 export type SourceCaching = SourceCachingForever;
 
@@ -3035,6 +3088,7 @@ export type DatasetResumeFlowsMutation = {
 export type DatasetTriggerFlowMutationVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     datasetFlowType: DatasetFlowType;
+    flowRunConfiguration?: InputMaybe<FlowRunConfiguration>;
 }>;
 
 export type DatasetTriggerFlowMutation = {
@@ -3114,6 +3168,7 @@ export type FlowSummaryDataFragment = {
                   numRecords: number;
               } | null;
           }
+        | { __typename?: "FlowDescriptionDatasetReset" }
         | { __typename?: "FlowDescriptionSystemGC"; dummy: boolean };
     initiator?: ({ __typename?: "Account" } & AccountFragment) | null;
     outcome?:
@@ -6467,12 +6522,16 @@ export class DatasetResumeFlowsGQL extends Apollo.Mutation<
     }
 }
 export const DatasetTriggerFlowDocument = gql`
-    mutation datasetTriggerFlow($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
+    mutation datasetTriggerFlow(
+        $datasetId: DatasetID!
+        $datasetFlowType: DatasetFlowType!
+        $flowRunConfiguration: FlowRunConfiguration
+    ) {
         datasets {
             byId(datasetId: $datasetId) {
                 flows {
                     runs {
-                        triggerFlow(datasetFlowType: $datasetFlowType) {
+                        triggerFlow(datasetFlowType: $datasetFlowType, flowRunConfiguration: $flowRunConfiguration) {
                             ... on TriggerFlowSuccess {
                                 flow {
                                     ...FlowSummaryData

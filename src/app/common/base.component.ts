@@ -1,4 +1,4 @@
-import { inject } from "@angular/core";
+import { DestroyRef, inject } from "@angular/core";
 import { ActivatedRoute, ParamMap, Params } from "@angular/router";
 import { DatasetInfo } from "../interface/navigation.interface";
 import ProjectLinks from "../project-links";
@@ -8,6 +8,7 @@ import { Observable, map } from "rxjs";
 
 export abstract class BaseComponent extends UnsubscribeOnDestroyAdapter {
     protected activatedRoute = inject(ActivatedRoute);
+    protected destroyRef = inject(DestroyRef);
 
     public get searchString(): string {
         return window.location.search;

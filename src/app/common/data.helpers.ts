@@ -202,6 +202,8 @@ export class DataHelpers {
                 return `Hard compaction`;
             case "FlowDescriptionSystemGC":
                 return `Garbage collector`;
+            case "FlowDescriptionDatasetReset":
+                return `Reset to seed`;
             default:
                 return "Unsupported flow description";
         }

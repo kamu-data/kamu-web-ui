@@ -163,6 +163,15 @@ export class DatasetFlowDetailsHelpers {
                                                 return "Unknown compaction result typename";
                                         }
 
+                                    case "FlowDescriptionDatasetReset":
+                                        switch (flowDetails.description.__typename) {
+                                            case "FlowDescriptionDatasetReset":
+                                                return "All dataset history has been cleared.";
+                                            /* istanbul ignore next */
+                                            default:
+                                                return "Unknown reset result typename";
+                                        }
+
                                     // TODO
                                     //  - GC
                                     /* istanbul ignore next */

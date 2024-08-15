@@ -3168,7 +3168,11 @@ export type FlowSummaryDataFragment = {
                   numRecords: number;
               } | null;
           }
-        | { __typename?: "FlowDescriptionDatasetReset" }
+        | {
+              __typename?: "FlowDescriptionDatasetReset";
+              datasetId: string;
+              resetResult?: { __typename?: "FlowDescriptionResetResult"; newHead: string } | null;
+          }
         | { __typename?: "FlowDescriptionSystemGC"; dummy: boolean };
     initiator?: ({ __typename?: "Account" } & AccountFragment) | null;
     outcome?:
@@ -4323,6 +4327,12 @@ export const FlowSummaryDataFragmentDoc = gql`
             }
             ... on FlowDescriptionSystemGC {
                 dummy
+            }
+            ... on FlowDescriptionDatasetReset {
+                datasetId
+                resetResult {
+                    newHead
+                }
             }
         }
         flowId

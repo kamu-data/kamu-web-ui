@@ -16,6 +16,7 @@ import { DatasetCompactionService } from "../../services/dataset-compaction.serv
 import { NavigationService } from "src/app/services/navigation.service";
 import AppValues from "src/app/common/app.values";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-dataset-settings-general-tab",
@@ -127,6 +128,33 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                         const mode = this.modeControl.value;
                         switch (mode) {
                             case DatasetResetMode.RESET_TO_SEED: {
+                                this.datasetCompactionService
+                                    .resetToSeed({
+                                        datasetId: this.datasetBasics.id,
+                                        datasetFlowType: DatasetFlowType.Reset,
+                                        flowRunConfiguration: {
+                                            reset: {
+                                                mode: {
+                                                    toSeed: {
+                                                        dummy: "",
+                                                    },
+                                                },
+                                                recursive: this.recursiveControl.value,
+                                            },
+                                        },
+                                    })
+                                    .pipe(takeUntilDestroyed(this.destroyRef))
+                                    .subscribe((result: boolean) => {
+                                        if (result) {
+                                            setTimeout(() => {
+                                                this.navigationService.navigateToDatasetView({
+                                                    accountName: this.datasetBasics.owner.accountName,
+                                                    datasetName: this.datasetBasics.name,
+                                                    tab: DatasetViewTypeEnum.Flows,
+                                                });
+                                            }, AppValues.SIMULATION_START_CONDITION_DELAY_MS);
+                                        }
+                                    });
                                 break;
                             }
                             case DatasetResetMode.RESET_METADATA_ONLY: {
@@ -140,6 +168,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                                             },
                                         },
                                     })
+                                    .pipe(takeUntilDestroyed(this.destroyRef))
                                     .subscribe((result: boolean) => {
                                         if (result) {
                                             setTimeout(() => {

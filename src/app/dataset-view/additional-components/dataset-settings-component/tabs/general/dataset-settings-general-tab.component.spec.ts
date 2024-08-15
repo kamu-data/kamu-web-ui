@@ -1,9 +1,10 @@
+import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { DatasetSettingsGeneralTabComponent } from "./dataset-settings-general-tab.component";
 import { DatasetSettingsService } from "../../services/dataset-settings.service";
 import { ModalService } from "../../../../../components/modal/modal.service";
 import { ApolloModule } from "apollo-angular";
-import { ReactiveFormsModule } from "@angular/forms";
+import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
@@ -22,6 +23,9 @@ import {
     getInputElementByDataTestId,
 } from "../../../../../common/base-test.helpers.spec";
 import { TEST_ACCOUNT_ID } from "src/app/api/mock/auth.mock";
+import { ToastrModule } from "ngx-toastr";
+import { MatRadioModule } from "@angular/material/radio";
+import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 
 describe("DatasetSettingsGeneralTabComponent", () => {
     let component: DatasetSettingsGeneralTabComponent;
@@ -31,7 +35,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DatasetSettingsGeneralTabComponent],
+            declarations: [DatasetSettingsGeneralTabComponent, TooltipIconComponent],
             imports: [
                 ReactiveFormsModule,
                 HttpClientTestingModule,
@@ -40,7 +44,12 @@ describe("DatasetSettingsGeneralTabComponent", () => {
                 ApolloModule,
                 ApolloTestingModule,
                 SharedTestModule,
+                ToastrModule.forRoot(),
+                MatRadioModule,
+                MatIconModule,
+                NgbTooltipModule,
             ],
+            providers: [FormBuilder],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DatasetSettingsGeneralTabComponent);

@@ -182,6 +182,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                                     });
                                 break;
                             }
+                            /* istanbul ignore next */
                             default:
                                 throw new Error("Unsupported reset mode");
                         }

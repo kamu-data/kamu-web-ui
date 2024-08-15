@@ -1,3 +1,5 @@
+import { NavigationService } from "./../../../../../services/navigation.service";
+import { DatasetCompactionService } from "./../../services/dataset-compaction.service";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { DatasetSettingsGeneralTabComponent } from "./dataset-settings-general-tab.component";
@@ -26,12 +28,17 @@ import { TEST_ACCOUNT_ID } from "src/app/api/mock/auth.mock";
 import { ToastrModule } from "ngx-toastr";
 import { MatRadioModule } from "@angular/material/radio";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
+import { DatasetFlowType } from "src/app/api/kamu.graphql.interface";
+import { DatasetResetMode } from "./dataset-settings-general-tab.types";
+import AppValues from "src/app/common/app.values";
 
 describe("DatasetSettingsGeneralTabComponent", () => {
     let component: DatasetSettingsGeneralTabComponent;
     let fixture: ComponentFixture<DatasetSettingsGeneralTabComponent>;
     let datasetSettingsService: DatasetSettingsService;
     let modalService: ModalService;
+    let datasetCompactionService: DatasetCompactionService;
+    let navigationService: NavigationService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -59,6 +66,8 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
         datasetSettingsService = TestBed.inject(DatasetSettingsService);
         modalService = TestBed.inject(ModalService);
+        datasetCompactionService = TestBed.inject(DatasetCompactionService);
+        navigationService = TestBed.inject(NavigationService);
         fixture.detectChanges();
     });
 
@@ -71,6 +80,8 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         RenameDatasetErrorCustom = "rename-dataset-error-custom",
 
         DeleteDatasetButton = "delete-dataset-button",
+
+        ResetDatasetButton = "reset-dataset-button",
     }
 
     it("should create", () => {
@@ -205,6 +216,62 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         tick();
 
         expect(deleteDatasetSpy).not.toHaveBeenCalled();
+
+        flush();
+    }));
+
+    it("should check reset modal window is shown and sends API call after confirm for Reset to Seed mode", fakeAsync(() => {
+        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options) => {
+            options.handler?.call(undefined, true);
+            return Promise.resolve("");
+        });
+        const resetToSeedSpy = spyOn(datasetCompactionService, "resetToSeed").and.returnValue(of(true));
+        const navigationServiceSpy = spyOn(navigationService, "navigateToDatasetView");
+        emitClickOnElementByDataTestId(fixture, Elements.ResetDatasetButton);
+        tick(AppValues.SIMULATION_START_CONDITION_DELAY_MS);
+
+        expect(navigationServiceSpy).toHaveBeenCalledTimes(1);
+        expect(modalServiceSpy).toHaveBeenCalledTimes(1);
+        expect(resetToSeedSpy).toHaveBeenCalledWith({
+            datasetId: component.datasetBasics.id,
+            datasetFlowType: DatasetFlowType.Reset,
+            flowRunConfiguration: {
+                reset: {
+                    mode: {
+                        toSeed: {
+                            dummy: "",
+                        },
+                    },
+                    recursive: component.recursiveControl.value,
+                },
+            },
+        });
+        flush();
+    }));
+
+    it("should check reset modal window is shown and sends API call after confirm for Flatten metadata mode", fakeAsync(() => {
+        component.resetDatasetForm.patchValue({ mode: DatasetResetMode.RESET_METADATA_ONLY });
+        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options) => {
+            options.handler?.call(undefined, true);
+            return Promise.resolve("");
+        });
+        const navigationServiceSpy = spyOn(navigationService, "navigateToDatasetView");
+        const resetToSeedSpy = spyOn(datasetCompactionService, "runHardCompaction").and.returnValue(of(true));
+
+        emitClickOnElementByDataTestId(fixture, Elements.ResetDatasetButton);
+        tick(AppValues.SIMULATION_START_CONDITION_DELAY_MS);
+
+        expect(navigationServiceSpy).toHaveBeenCalledTimes(1);
+        expect(modalServiceSpy).toHaveBeenCalledTimes(1);
+        expect(resetToSeedSpy).toHaveBeenCalledWith({
+            datasetId: component.datasetBasics.id,
+            datasetFlowType: DatasetFlowType.HardCompaction,
+            compactionArgs: {
+                metadataOnly: {
+                    recursive: component.recursiveControl.value,
+                },
+            },
+        });
 
         flush();
     }));

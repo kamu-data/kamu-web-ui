@@ -23,6 +23,7 @@ import {
     DatasetResumeFlowsMutation,
     DatasetTriggerFlowGQL,
     DatasetTriggerFlowMutation,
+    FlowRunConfiguration,
     GetDatasetFlowConfigsGQL,
     GetDatasetFlowConfigsQuery,
     GetDatasetListFlowsGQL,
@@ -56,6 +57,7 @@ export class DatasetFlowApi {
     public datasetTriggerFlow(params: {
         datasetId: string;
         datasetFlowType: DatasetFlowType;
+        flowRunConfiguration?: FlowRunConfiguration;
     }): Observable<DatasetTriggerFlowMutation> {
         return this.datasetTriggerFlowGQL.mutate({ ...params }).pipe(
             first(),

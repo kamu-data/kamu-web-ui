@@ -6,6 +6,8 @@ import {
     CompactionConditionInput,
     DatasetFlowCompactionMutation,
     DatasetFlowType,
+    DatasetTriggerFlowMutation,
+    FlowRunConfiguration,
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowsService } from "../../flows-component/services/dataset-flows.service";
 
@@ -41,6 +43,23 @@ export class DatasetCompactionService {
                     });
                 }
                 return of(false);
+            }),
+        );
+    }
+
+    public resetToSeed(params: {
+        datasetId: string;
+        datasetFlowType: DatasetFlowType;
+        flowRunConfiguration: FlowRunConfiguration;
+    }): Observable<boolean> {
+        return this.datasetFlowApi.datasetTriggerFlow(params).pipe(
+            map((data: DatasetTriggerFlowMutation) => {
+                if (data.datasets.byId?.flows.runs.triggerFlow.__typename === "TriggerFlowSuccess") {
+                    return true;
+                } else {
+                    this.toastrService.error(data.datasets.byId?.flows.runs.triggerFlow.message);
+                    return false;
+                }
             }),
         );
     }

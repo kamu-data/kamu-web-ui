@@ -1,9 +1,13 @@
-mutation datasetTriggerFlow($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
+mutation datasetTriggerFlow(
+  $datasetId: DatasetID!
+  $datasetFlowType: DatasetFlowType!
+  $flowRunConfiguration: FlowRunConfiguration
+) {
   datasets {
     byId(datasetId: $datasetId) {
       flows {
         runs {
-          triggerFlow(datasetFlowType: $datasetFlowType) {
+          triggerFlow(datasetFlowType: $datasetFlowType, flowRunConfiguration: $flowRunConfiguration) {
             ... on TriggerFlowSuccess {
               flow {
                 ...FlowSummaryData

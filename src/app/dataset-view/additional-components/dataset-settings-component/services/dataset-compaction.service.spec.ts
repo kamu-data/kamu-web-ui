@@ -11,6 +11,8 @@ import { DatasetFlowType } from "src/app/api/kamu.graphql.interface";
 import {
     mockDatasetFlowCompactionMutationError,
     mockDatasetFlowCompactionMutationSuccess,
+    mockDatasetTriggerFlowMutation,
+    mockDatasetTriggerFlowMutationError,
 } from "src/app/api/mock/dataset-flow.mock";
 
 describe("DatasetCompactionService", () => {
@@ -71,6 +73,58 @@ describe("DatasetCompactionService", () => {
                     full: {
                         maxSliceSize: MOCK_SLICE_SIZE,
                         maxSliceRecords: MOCK_SLICE_RECORDS,
+                        recursive: true,
+                    },
+                },
+            })
+            .subscribe((result: boolean) => {
+                expect(result).toBeFalse();
+                expect(toastrServiceErrorSpy).toHaveBeenCalledTimes(1);
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check reset to Seed with success", () => {
+        spyOn(datasetFlowApi, "datasetTriggerFlow").and.returnValue(of(mockDatasetTriggerFlowMutation));
+        mockDatasetTriggerFlowMutation;
+        const subscription$ = service
+            .resetToSeed({
+                datasetId: TEST_DATASET_ID,
+                datasetFlowType: DatasetFlowType.Reset,
+                flowRunConfiguration: {
+                    reset: {
+                        mode: {
+                            toSeed: {
+                                dummy: "",
+                            },
+                        },
+                        recursive: true,
+                    },
+                },
+            })
+            .subscribe((result: boolean) => {
+                expect(result).toBeTrue();
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check reset to Seed with error", () => {
+        spyOn(datasetFlowApi, "datasetTriggerFlow").and.returnValue(of(mockDatasetTriggerFlowMutationError));
+        mockDatasetTriggerFlowMutation;
+        const toastrServiceErrorSpy = spyOn(toastService, "error");
+        const subscription$ = service
+            .resetToSeed({
+                datasetId: TEST_DATASET_ID,
+                datasetFlowType: DatasetFlowType.Reset,
+                flowRunConfiguration: {
+                    reset: {
+                        mode: {
+                            toSeed: {
+                                dummy: "",
+                            },
+                        },
                         recursive: true,
                     },
                 },

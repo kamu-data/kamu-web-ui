@@ -45,6 +45,13 @@ fragment FlowSummaryData on Flow {
     ... on FlowDescriptionSystemGC {
       dummy
     }
+
+    ... on FlowDescriptionDatasetReset {
+      datasetId
+      resetResult {
+        newHead
+      }
+    }
   }
   flowId
   status

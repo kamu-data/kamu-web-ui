@@ -6,6 +6,7 @@ import { ModalService } from "../../../../../components/modal/modal.service";
 import {
     DatasetBasicsFragment,
     DatasetFlowType,
+    DatasetKind,
     DatasetPermissionsFragment,
 } from "../../../../../api/kamu.graphql.interface";
 import { DatasetSettingsService } from "../../services/dataset-settings.service";
@@ -78,6 +79,10 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
 
     public get isDeleteDatasetDisabled(): boolean {
         return !this.datasetPermissions.permissions.canDelete;
+    }
+
+    public get isRoot(): boolean {
+        return this.datasetBasics.kind === DatasetKind.Root;
     }
 
     public renameDataset(): void {

@@ -8,6 +8,7 @@
                 <span class="ps-2"> {{ pollingForm.controls.updatesState.value ? "enabled" : "disabled" }}</span>
             </mat-slide-toggle>
         </div>
+        <pre>{{ pollingForm.value | json }}</pre>
 
         <div formGroupName="pollingGroup" class="box p-4 mt-3">
             <h4>Root polling source</h4>
@@ -18,6 +19,10 @@
                 aria-label="Select an option"
                 color="primary"
             >
+                <div class="d-flex align-items-center mt-4">
+                    <input class="checkbox-uncacheable me-3" type="checkbox" formControlName="fetchUncacheable" />
+                    <span class="d-inline-block">Fetch uncachable</span>
+                </div>
                 <mat-radio-button disableRipple="true" [value]="pollingGroupEnum.TIME_DELTA">
                     <div class="d-flex align-items-center" data-test-id="button-time-delta">
                         <span class="form-control-label">Update every:</span>

@@ -43,6 +43,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                 Validators.required,
                 cronExpressionValidator(),
             ]),
+            fetchUncacheable: new FormControl(false),
         }),
     });
 
@@ -72,6 +73,10 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
 
     public get pollingType(): AbstractControl {
         return this.pollingGroup.controls.__typename;
+    }
+
+    public get pollingFetchUncacheable(): AbstractControl {
+        return this.pollingGroup.controls.fetchUncacheable;
     }
 
     public get batchingEveryTime(): AbstractControl {
@@ -256,7 +261,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                         unit: this.pollingUnitTime.value as TimeUnit,
                     },
                 },
-                fetchUncacheable: false,
+                fetchUncacheable: this.pollingFetchUncacheable.value as boolean,
             };
         }
         if (this.pollingGroup.controls.__typename.value === PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION) {
@@ -265,7 +270,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                     // sync with server validator
                     cron5ComponentExpression: this.cronExpression.value as string,
                 },
-                fetchUncacheable: false,
+                fetchUncacheable: this.pollingFetchUncacheable.value as boolean,
             };
         }
     }

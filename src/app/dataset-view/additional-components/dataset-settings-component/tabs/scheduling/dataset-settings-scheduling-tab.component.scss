@@ -46,6 +46,13 @@
     .cron-expression-hint {
         padding-left: 150px;
     }
+
+    .checkbox-uncacheable {
+        width: 16px;
+        height: 16px;
+        accent-color: rgba(63 81 181);
+        margin-left: 0.85rem;
+    }
 }
 
 @media (width <=1085px) {

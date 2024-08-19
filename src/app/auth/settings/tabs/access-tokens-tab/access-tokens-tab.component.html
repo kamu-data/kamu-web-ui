@@ -101,7 +101,7 @@
         Personal access tokens can be used to access Kamu API from tools, scripts, and other applications
     </p>
     <div class="d-flex justify-content-between align-items-center mt-60">
-        <div class="d-flex flex-row">
+        <div class="d-flex flex-row align-items-center">
             <button
                 (click)="addNewToken()"
                 class="new-token-button d-flex justify-content-between align-items-center"
@@ -110,7 +110,12 @@
                 <mat-icon class="text-muted fs-4 d-block pt-2px pe-1">add</mat-icon>
                 <span class="fs-12 me-2 d-block"> New token</span>
             </button>
-            <mat-slide-toggle color="primary" (change)="toggleTokens($event)" class="mat-elevation-z0 ms-4">
+            <mat-slide-toggle
+                [(ngModel)]="showRevokedToken"
+                color="primary"
+                (change)="toggleTokens()"
+                class="mat-elevation-z0 ms-4"
+            >
                 Show revoked tokens
             </mat-slide-toggle>
         </div>

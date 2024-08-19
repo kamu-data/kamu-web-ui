@@ -87,8 +87,9 @@ export class DatasetFlowTableHelpers {
                         switch (element.description.__typename) {
                             case "FlowDescriptionDatasetPollingIngest":
                             case "FlowDescriptionDatasetPushIngest":
-                                return element.description.ingestResult
-                                    ? `Ingested ${element.description.ingestResult.numRecords} new ${
+                                return element.description.ingestResult?.__typename ===
+                                    "FlowDescriptionUpdateResultSuccess"
+                                    ? `Ingested ${element.description.ingestResult.numBlocks} new ${
                                           element.description.ingestResult.numRecords == 1 ? "record" : "records"
                                       } in ${element.description.ingestResult.numBlocks} new ${
                                           element.description.ingestResult.numBlocks == 1 ? "block" : "blocks"
@@ -96,7 +97,8 @@ export class DatasetFlowTableHelpers {
                                     : "Dataset is up-to-date";
 
                             case "FlowDescriptionDatasetExecuteTransform":
-                                return element.description.transformResult
+                                return element.description.transformResult?.__typename ===
+                                    "FlowDescriptionUpdateResultSuccess"
                                     ? `Transformed ${element.description.transformResult.numRecords} new ${
                                           element.description.transformResult.numRecords == 1 ? "record" : "records"
                                       } in ${element.description.transformResult.numBlocks} new ${

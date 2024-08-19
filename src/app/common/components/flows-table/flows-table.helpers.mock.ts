@@ -24,7 +24,7 @@ export const mockDatasetExecuteTransformFlowSummaryData: FlowSummaryDataFragment
     description: {
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         transformResult: {
-            __typename: "FlowDescriptionUpdateResult",
+            __typename: "FlowDescriptionUpdateResultSuccess",
             numBlocks: 2,
             numRecords: 10,
         },
@@ -123,7 +123,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         description: {
             datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
             transformResult: {
-                __typename: "FlowDescriptionUpdateResult",
+                __typename: "FlowDescriptionUpdateResultSuccess",
                 numBlocks: 2,
                 numRecords: 10,
             },
@@ -308,7 +308,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         },
         startCondition: {
             __typename: "FlowStartConditionBatching",
-            activeBatchingRule: {
+            activeTransformRule: {
                 minRecordsToAwait: 500,
                 maxBatchingInterval: {
                     every: 5,

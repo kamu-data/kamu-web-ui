@@ -8,7 +8,7 @@ import {
     DatasetFlowType,
     DatasetKind,
     DatasetPermissionsFragment,
-    ScheduleInput,
+    IngestConditionInput,
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
@@ -27,7 +27,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
     public readonly pollingGroupEnum: typeof PollingGroupEnum = PollingGroupEnum;
     public readonly throttlingGroupEnum: typeof ThrottlingGroupEnum = ThrottlingGroupEnum;
     public readonly timeUnit: typeof TimeUnit = TimeUnit;
-    private scheduleOptions: ScheduleInput;
+    private scheduleOptions: IngestConditionInput;
     private everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = everyTimeMapperValidators;
 
     public pollingForm = new FormGroup({
@@ -168,9 +168,10 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                 this.datasetSchedulingService
                     .fetchDatasetFlowConfigs(this.datasetBasics.id, DatasetFlowType.Ingest)
                     .subscribe((data) => {
-                        const flowConfiguration = data.datasets.byId?.flows.configs.byType;
+                        const flowConfiguration = data.datasets.byId?.flows.configs.byType?.ingest;
+                        const paused = data.datasets.byId?.flows.configs.byType?.paused;
                         if (flowConfiguration?.schedule) {
-                            this.pollingForm.patchValue({ updatesState: !flowConfiguration.paused });
+                            this.pollingForm.patchValue({ updatesState: !paused });
                             this.pollingGroup.patchValue({
                                 ...flowConfiguration.schedule,
                             });
@@ -191,9 +192,10 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                     .fetchDatasetFlowConfigs(this.datasetBasics.id, DatasetFlowType.ExecuteTransform)
                     .subscribe((data) => {
                         const flowConfiguration = data.datasets.byId?.flows.configs.byType;
-                        if (flowConfiguration?.batching) {
-                            const batchingConfig = flowConfiguration.batching;
-                            this.pollingForm.patchValue({ updatesState: !flowConfiguration.paused });
+                        const paused = data.datasets.byId?.flows.configs.byType?.paused;
+                        if (flowConfiguration?.transform) {
+                            const batchingConfig = flowConfiguration.transform;
+                            this.pollingForm.patchValue({ updatesState: !paused });
                             this.batchingForm.patchValue({
                                 ...batchingConfig.maxBatchingInterval,
                                 minRecordsToAwait: batchingConfig.minRecordsToAwait,
@@ -213,7 +215,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                         datasetId: this.datasetBasics.id,
                         datasetFlowType: DatasetFlowType.Ingest,
                         paused: !(this.updateState.value as boolean),
-                        schedule: this.scheduleOptions,
+                        ingest: this.scheduleOptions,
                         datasetInfo: {
                             accountName: this.datasetBasics.owner.accountName,
                             datasetName: this.datasetBasics.name,
@@ -228,7 +230,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                         datasetId: this.datasetBasics.id,
                         datasetFlowType: DatasetFlowType.ExecuteTransform,
                         paused: !(this.updateState.value as boolean),
-                        batching: {
+                        transform: {
                             minRecordsToAwait: this.batchingMinRecordsToAwait.value as number,
                             maxBatchingInterval: {
                                 every: this.batchingEveryTime.value as number,
@@ -248,16 +250,22 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
     private setScheduleOptions(): void {
         if (this.pollingGroup.controls.__typename.value === PollingGroupEnum.TIME_DELTA) {
             this.scheduleOptions = {
-                timeDelta: {
-                    every: this.pollingEveryTime.value as number,
-                    unit: this.pollingUnitTime.value as TimeUnit,
+                schedule: {
+                    timeDelta: {
+                        every: this.pollingEveryTime.value as number,
+                        unit: this.pollingUnitTime.value as TimeUnit,
+                    },
                 },
+                fetchUncacheable: false,
             };
         }
         if (this.pollingGroup.controls.__typename.value === PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION) {
             this.scheduleOptions = {
-                // sync with server validator
-                cron5ComponentExpression: this.cronExpression.value as string,
+                schedule: {
+                    // sync with server validator
+                    cron5ComponentExpression: this.cronExpression.value as string,
+                },
+                fetchUncacheable: false,
             };
         }
     }

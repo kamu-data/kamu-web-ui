@@ -246,11 +246,6 @@ export type AuthMutRevokeAccessTokenArgs = {
     tokenId: Scalars["AccessTokenID"];
 };
 
-export type BatchingConditionInput = {
-    maxBatchingInterval: TimeDeltaInput;
-    minRecordsToAwait: Scalars["Int"];
-};
-
 export type BlockRef = {
     __typename?: "BlockRef";
     blockHash: Scalars["Multihash"];
@@ -622,9 +617,9 @@ export type DatasetFlowConfigsMut = {
     __typename?: "DatasetFlowConfigsMut";
     pauseFlows: Scalars["Boolean"];
     resumeFlows: Scalars["Boolean"];
-    setConfigBatching: SetFlowBatchingConfigResult;
     setConfigCompaction: SetFlowCompactionConfigResult;
-    setConfigSchedule: SetFlowConfigResult;
+    setConfigIngest: SetFlowConfigResult;
+    setConfigTransform: SetFlowTransformConfigResult;
 };
 
 export type DatasetFlowConfigsMutPauseFlowsArgs = {
@@ -635,21 +630,21 @@ export type DatasetFlowConfigsMutResumeFlowsArgs = {
     datasetFlowType?: InputMaybe<DatasetFlowType>;
 };
 
-export type DatasetFlowConfigsMutSetConfigBatchingArgs = {
-    batching: BatchingConditionInput;
-    datasetFlowType: DatasetFlowType;
-    paused: Scalars["Boolean"];
-};
-
 export type DatasetFlowConfigsMutSetConfigCompactionArgs = {
     compactionArgs: CompactionConditionInput;
     datasetFlowType: DatasetFlowType;
 };
 
-export type DatasetFlowConfigsMutSetConfigScheduleArgs = {
+export type DatasetFlowConfigsMutSetConfigIngestArgs = {
+    datasetFlowType: DatasetFlowType;
+    ingest: IngestConditionInput;
+    paused: Scalars["Boolean"];
+};
+
+export type DatasetFlowConfigsMutSetConfigTransformArgs = {
     datasetFlowType: DatasetFlowType;
     paused: Scalars["Boolean"];
-    schedule: ScheduleInput;
+    transform: TransformConditionInput;
 };
 
 export type DatasetFlowFilters = {
@@ -1039,17 +1034,11 @@ export type FlowAbortedResult = {
 
 export type FlowConfiguration = {
     __typename?: "FlowConfiguration";
-    batching?: Maybe<FlowConfigurationBatching>;
     compaction?: Maybe<FlowConfigurationCompaction>;
+    ingest?: Maybe<FlowConfigurationIngest>;
     paused: Scalars["Boolean"];
     reset?: Maybe<FlowConfigurationReset>;
-    schedule?: Maybe<FlowConfigurationSchedule>;
-};
-
-export type FlowConfigurationBatching = {
-    __typename?: "FlowConfigurationBatching";
-    maxBatchingInterval: TimeDelta;
-    minRecordsToAwait: Scalars["Int"];
+    transform?: Maybe<FlowConfigurationTransform>;
 };
 
 export type FlowConfigurationCompaction = CompactionFull | CompactionMetadataOnly;
@@ -1057,6 +1046,12 @@ export type FlowConfigurationCompaction = CompactionFull | CompactionMetadataOnl
 export type FlowConfigurationCompactionRule = {
     __typename?: "FlowConfigurationCompactionRule";
     compactionRule: FlowConfigurationCompaction;
+};
+
+export type FlowConfigurationIngest = {
+    __typename?: "FlowConfigurationIngest";
+    fetchUncacheable: Scalars["Boolean"];
+    schedule: FlowConfigurationSchedule;
 };
 
 export type FlowConfigurationReset = {
@@ -1076,16 +1071,17 @@ export type FlowConfigurationResetToSeedDummy = {
 
 export type FlowConfigurationSchedule = Cron5ComponentExpression | TimeDelta;
 
-export type FlowConfigurationScheduleRule = {
-    __typename?: "FlowConfigurationScheduleRule";
-    scheduleRule: FlowConfigurationSchedule;
-};
-
 export type FlowConfigurationSnapshot =
-    | FlowConfigurationBatching
     | FlowConfigurationCompactionRule
+    | FlowConfigurationIngest
     | FlowConfigurationReset
-    | FlowConfigurationScheduleRule;
+    | FlowConfigurationTransform;
+
+export type FlowConfigurationTransform = {
+    __typename?: "FlowConfigurationTransform";
+    maxBatchingInterval: TimeDelta;
+    minRecordsToAwait: Scalars["Int"];
+};
 
 export type FlowConnection = {
     __typename?: "FlowConnection";
@@ -1171,11 +1167,19 @@ export type FlowDescriptionSystemGc = {
     dummy: Scalars["Boolean"];
 };
 
-export type FlowDescriptionUpdateResult = {
-    __typename?: "FlowDescriptionUpdateResult";
+export type FlowDescriptionUpdateResult = FlowDescriptionUpdateResultSuccess | FlowDescriptionUpdateResultUpToDate;
+
+export type FlowDescriptionUpdateResultSuccess = {
+    __typename?: "FlowDescriptionUpdateResultSuccess";
     numBlocks: Scalars["Int"];
     numRecords: Scalars["Int"];
     updatedWatermark?: Maybe<Scalars["DateTime"]>;
+};
+
+export type FlowDescriptionUpdateResultUpToDate = {
+    __typename?: "FlowDescriptionUpdateResultUpToDate";
+    /** The value indicates whether the api cache was used */
+    uncacheable: Scalars["Boolean"];
 };
 
 export type FlowEdge = {
@@ -1236,21 +1240,15 @@ export type FlowFailedMessage = {
 
 export type FlowFailedReason = FlowDatasetCompactedFailedError | FlowFailedMessage;
 
-export type FlowIncompatibleDatasetKind = SetFlowBatchingConfigResult &
-    SetFlowCompactionConfigResult &
+export type FlowIncompatibleDatasetKind = SetFlowCompactionConfigResult &
     SetFlowConfigResult &
+    SetFlowTransformConfigResult &
     TriggerFlowResult & {
         __typename?: "FlowIncompatibleDatasetKind";
         actualDatasetKind: DatasetKind;
         expectedDatasetKind: DatasetKind;
         message: Scalars["String"];
     };
-
-export type FlowInvalidBatchingConfig = SetFlowBatchingConfigResult & {
-    __typename?: "FlowInvalidBatchingConfig";
-    message: Scalars["String"];
-    reason: Scalars["String"];
-};
 
 export type FlowInvalidCompactionConfig = SetFlowCompactionConfigResult & {
     __typename?: "FlowInvalidCompactionConfig";
@@ -1264,6 +1262,12 @@ export type FlowInvalidRunConfigurations = TriggerFlowResult & {
     message: Scalars["String"];
 };
 
+export type FlowInvalidTransformConfig = SetFlowTransformConfigResult & {
+    __typename?: "FlowInvalidTransformConfig";
+    message: Scalars["String"];
+    reason: Scalars["String"];
+};
+
 export type FlowNotFound = CancelScheduledTasksResult &
     GetFlowResult & {
         __typename?: "FlowNotFound";
@@ -1273,8 +1277,8 @@ export type FlowNotFound = CancelScheduledTasksResult &
 
 export type FlowOutcome = FlowAbortedResult | FlowFailedError | FlowSuccessResult;
 
-export type FlowPreconditionsNotMet = SetFlowBatchingConfigResult &
-    SetFlowConfigResult &
+export type FlowPreconditionsNotMet = SetFlowConfigResult &
+    SetFlowTransformConfigResult &
     TriggerFlowResult & {
         __typename?: "FlowPreconditionsNotMet";
         message: Scalars["String"];
@@ -1282,10 +1286,10 @@ export type FlowPreconditionsNotMet = SetFlowBatchingConfigResult &
     };
 
 export type FlowRunConfiguration =
-    | { batching: BatchingConditionInput; compaction?: never; reset?: never; schedule?: never }
-    | { batching?: never; compaction: CompactionConditionInput; reset?: never; schedule?: never }
-    | { batching?: never; compaction?: never; reset: ResetConditionInput; schedule?: never }
-    | { batching?: never; compaction?: never; reset?: never; schedule: ScheduleInput };
+    | { compaction: CompactionConditionInput; ingest?: never; reset?: never; transform?: never }
+    | { compaction?: never; ingest: IngestConditionInput; reset?: never; transform?: never }
+    | { compaction?: never; ingest?: never; reset: ResetConditionInput; transform?: never }
+    | { compaction?: never; ingest?: never; reset?: never; transform: TransformConditionInput };
 
 export type FlowStartCondition =
     | FlowStartConditionBatching
@@ -1296,7 +1300,7 @@ export type FlowStartCondition =
 export type FlowStartConditionBatching = {
     __typename?: "FlowStartConditionBatching";
     accumulatedRecordsCount: Scalars["Int"];
-    activeBatchingRule: FlowConfigurationBatching;
+    activeTransformRule: FlowConfigurationTransform;
     batchingDeadline: Scalars["DateTime"];
     watermarkModified: Scalars["Boolean"];
 };
@@ -1366,9 +1370,9 @@ export type FlowTriggerPush = {
     dummy: Scalars["Boolean"];
 };
 
-export type FlowTypeIsNotSupported = SetFlowBatchingConfigResult &
-    SetFlowCompactionConfigResult &
-    SetFlowConfigResult & {
+export type FlowTypeIsNotSupported = SetFlowCompactionConfigResult &
+    SetFlowConfigResult &
+    SetFlowTransformConfigResult & {
         __typename?: "FlowTypeIsNotSupported";
         message: Scalars["String"];
     };
@@ -1381,6 +1385,12 @@ export type GetFlowSuccess = GetFlowResult & {
     __typename?: "GetFlowSuccess";
     flow: Flow;
     message: Scalars["String"];
+};
+
+export type IngestConditionInput = {
+    /** Flag indicates to ignore cache during ingest step for API calls */
+    fetchUncacheable: Scalars["Boolean"];
+    schedule: ScheduleInput;
 };
 
 export type InitiatorFilterInput =
@@ -1862,10 +1872,6 @@ export type SetDataSchema = {
     schema: DataSchema;
 };
 
-export type SetFlowBatchingConfigResult = {
-    message: Scalars["String"];
-};
-
 export type SetFlowCompactionConfigResult = {
     message: Scalars["String"];
 };
@@ -1874,13 +1880,17 @@ export type SetFlowConfigResult = {
     message: Scalars["String"];
 };
 
-export type SetFlowConfigSuccess = SetFlowBatchingConfigResult &
-    SetFlowCompactionConfigResult &
-    SetFlowConfigResult & {
+export type SetFlowConfigSuccess = SetFlowCompactionConfigResult &
+    SetFlowConfigResult &
+    SetFlowTransformConfigResult & {
         __typename?: "SetFlowConfigSuccess";
         config: FlowConfiguration;
         message: Scalars["String"];
     };
+
+export type SetFlowTransformConfigResult = {
+    message: Scalars["String"];
+};
 
 export type SetInfo = {
     __typename?: "SetInfo";
@@ -2066,11 +2076,6 @@ export type TasksMut = {
      * ingest or a derivative transformation
      */
     createProbeTask: Task;
-    /**
-     * Schedules a task to update the specified dataset by performing polling
-     * ingest or a derivative transformation
-     */
-    createUpdateDatasetTask: Task;
 };
 
 export type TasksMutCancelTaskArgs = {
@@ -2081,10 +2086,6 @@ export type TasksMutCreateProbeTaskArgs = {
     busyTimeMs?: InputMaybe<Scalars["Int"]>;
     datasetId?: InputMaybe<Scalars["DatasetID"]>;
     endWithOutcome?: InputMaybe<TaskOutcome>;
-};
-
-export type TasksMutCreateUpdateDatasetTaskArgs = {
-    datasetId: Scalars["DatasetID"];
 };
 
 export type TemporalTable = {
@@ -2112,6 +2113,11 @@ export enum TimeUnit {
 }
 
 export type Transform = TransformSql;
+
+export type TransformConditionInput = {
+    maxBatchingInterval: TimeDeltaInput;
+    minRecordsToAwait: Scalars["Int"];
+};
 
 export type TransformInput = {
     __typename?: "TransformInput";
@@ -3129,11 +3135,15 @@ export type FlowSummaryDataFragment = {
         | {
               __typename?: "FlowDescriptionDatasetExecuteTransform";
               datasetId: string;
-              transformResult?: {
-                  __typename?: "FlowDescriptionUpdateResult";
-                  numBlocks: number;
-                  numRecords: number;
-              } | null;
+              transformResult?:
+                  | {
+                        __typename?: "FlowDescriptionUpdateResultSuccess";
+                        numBlocks: number;
+                        numRecords: number;
+                        updatedWatermark?: string | null;
+                    }
+                  | { __typename?: "FlowDescriptionUpdateResultUpToDate"; uncacheable: boolean }
+                  | null;
           }
         | {
               __typename?: "FlowDescriptionDatasetHardCompaction";
@@ -3151,22 +3161,30 @@ export type FlowSummaryDataFragment = {
         | {
               __typename?: "FlowDescriptionDatasetPollingIngest";
               datasetId: string;
-              ingestResult?: {
-                  __typename?: "FlowDescriptionUpdateResult";
-                  numBlocks: number;
-                  numRecords: number;
-              } | null;
+              ingestResult?:
+                  | {
+                        __typename?: "FlowDescriptionUpdateResultSuccess";
+                        numBlocks: number;
+                        numRecords: number;
+                        updatedWatermark?: string | null;
+                    }
+                  | { __typename?: "FlowDescriptionUpdateResultUpToDate"; uncacheable: boolean }
+                  | null;
           }
         | {
               __typename?: "FlowDescriptionDatasetPushIngest";
               datasetId: string;
               sourceName?: string | null;
               inputRecordsCount: number;
-              ingestResult?: {
-                  __typename?: "FlowDescriptionUpdateResult";
-                  numBlocks: number;
-                  numRecords: number;
-              } | null;
+              ingestResult?:
+                  | {
+                        __typename?: "FlowDescriptionUpdateResultSuccess";
+                        numBlocks: number;
+                        numRecords: number;
+                        updatedWatermark?: string | null;
+                    }
+                  | { __typename?: "FlowDescriptionUpdateResultUpToDate"; uncacheable: boolean }
+                  | null;
           }
         | {
               __typename?: "FlowDescriptionDatasetReset";
@@ -3192,8 +3210,8 @@ export type FlowSummaryDataFragment = {
               batchingDeadline: string;
               accumulatedRecordsCount: number;
               watermarkModified: boolean;
-              activeBatchingRule: {
-                  __typename?: "FlowConfigurationBatching";
+              activeTransformRule: {
+                  __typename?: "FlowConfigurationTransform";
                   minRecordsToAwait: number;
                   maxBatchingInterval: { __typename?: "TimeDelta" } & TimeDeltaDataFragment;
               };
@@ -3261,8 +3279,8 @@ type FlowHistoryData_FlowEventStartConditionUpdated_Fragment = {
               batchingDeadline: string;
               accumulatedRecordsCount: number;
               watermarkModified: boolean;
-              activeBatchingRule: {
-                  __typename?: "FlowConfigurationBatching";
+              activeTransformRule: {
+                  __typename?: "FlowConfigurationTransform";
                   minRecordsToAwait: number;
                   maxBatchingInterval: { __typename?: "TimeDelta" } & TimeDeltaDataFragment;
               };
@@ -3947,7 +3965,7 @@ export type DatasetFlowBatchingMutationVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     datasetFlowType: DatasetFlowType;
     paused: Scalars["Boolean"];
-    batching: BatchingConditionInput;
+    transform: TransformConditionInput;
 }>;
 
 export type DatasetFlowBatchingMutation = {
@@ -3960,14 +3978,14 @@ export type DatasetFlowBatchingMutation = {
                 __typename?: "DatasetFlowsMut";
                 configs: {
                     __typename?: "DatasetFlowConfigsMut";
-                    setConfigBatching:
+                    setConfigTransform:
                         | {
                               __typename: "FlowIncompatibleDatasetKind";
                               message: string;
                               expectedDatasetKind: DatasetKind;
                               actualDatasetKind: DatasetKind;
                           }
-                        | { __typename: "FlowInvalidBatchingConfig"; message: string; reason: string }
+                        | { __typename: "FlowInvalidTransformConfig"; message: string; reason: string }
                         | { __typename: "FlowPreconditionsNotMet"; message: string; preconditions: string }
                         | { __typename: "FlowTypeIsNotSupported"; message: string }
                         | {
@@ -3975,8 +3993,8 @@ export type DatasetFlowBatchingMutation = {
                               message: string;
                               config: {
                                   __typename?: "FlowConfiguration";
-                                  batching?: {
-                                      __typename?: "FlowConfigurationBatching";
+                                  transform?: {
+                                      __typename?: "FlowConfigurationTransform";
                                       minRecordsToAwait: number;
                                       maxBatchingInterval: { __typename?: "TimeDelta" } & TimeDeltaDataFragment;
                                   } | null;
@@ -4007,12 +4025,15 @@ export type GetDatasetFlowConfigsQuery = {
                           byType?: {
                               __typename?: "FlowConfiguration";
                               paused: boolean;
-                              schedule?:
-                                  | { __typename?: "Cron5ComponentExpression"; cron5ComponentExpression: string }
-                                  | ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment)
-                                  | null;
-                              batching?: {
-                                  __typename?: "FlowConfigurationBatching";
+                              ingest?: {
+                                  __typename?: "FlowConfigurationIngest";
+                                  fetchUncacheable: boolean;
+                                  schedule:
+                                      | { __typename?: "Cron5ComponentExpression"; cron5ComponentExpression: string }
+                                      | ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment);
+                              } | null;
+                              transform?: {
+                                  __typename?: "FlowConfigurationTransform";
                                   minRecordsToAwait: number;
                                   maxBatchingInterval: { __typename?: "TimeDelta" } & TimeDeltaDataFragment;
                               } | null;
@@ -4028,7 +4049,7 @@ export type DatasetFlowScheduleMutationVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     datasetFlowType: DatasetFlowType;
     paused: Scalars["Boolean"];
-    schedule: ScheduleInput;
+    ingest: IngestConditionInput;
 }>;
 
 export type DatasetFlowScheduleMutation = {
@@ -4041,7 +4062,7 @@ export type DatasetFlowScheduleMutation = {
                 __typename?: "DatasetFlowsMut";
                 configs: {
                     __typename?: "DatasetFlowConfigsMut";
-                    setConfigSchedule:
+                    setConfigIngest:
                         | {
                               __typename: "FlowIncompatibleDatasetKind";
                               message: string;
@@ -4055,10 +4076,16 @@ export type DatasetFlowScheduleMutation = {
                               message: string;
                               config: {
                                   __typename?: "FlowConfiguration";
-                                  schedule?:
-                                      | { __typename?: "Cron5ComponentExpression"; cron5ComponentExpression: string }
-                                      | ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment)
-                                      | null;
+                                  ingest?: {
+                                      __typename?: "FlowConfigurationIngest";
+                                      fetchUncacheable: boolean;
+                                      schedule:
+                                          | {
+                                                __typename?: "Cron5ComponentExpression";
+                                                cron5ComponentExpression: string;
+                                            }
+                                          | ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment);
+                                  } | null;
                               };
                           };
                 };
@@ -4291,8 +4318,14 @@ export const FlowSummaryDataFragmentDoc = gql`
             ... on FlowDescriptionDatasetPollingIngest {
                 datasetId
                 ingestResult {
-                    numBlocks
-                    numRecords
+                    ... on FlowDescriptionUpdateResultUpToDate {
+                        uncacheable
+                    }
+                    ... on FlowDescriptionUpdateResultSuccess {
+                        numBlocks
+                        numRecords
+                        updatedWatermark
+                    }
                 }
             }
             ... on FlowDescriptionDatasetPushIngest {
@@ -4300,15 +4333,27 @@ export const FlowSummaryDataFragmentDoc = gql`
                 sourceName
                 inputRecordsCount
                 ingestResult {
-                    numBlocks
-                    numRecords
+                    ... on FlowDescriptionUpdateResultUpToDate {
+                        uncacheable
+                    }
+                    ... on FlowDescriptionUpdateResultSuccess {
+                        numBlocks
+                        numRecords
+                        updatedWatermark
+                    }
                 }
             }
             ... on FlowDescriptionDatasetExecuteTransform {
                 datasetId
                 transformResult {
-                    numBlocks
-                    numRecords
+                    ... on FlowDescriptionUpdateResultUpToDate {
+                        uncacheable
+                    }
+                    ... on FlowDescriptionUpdateResultSuccess {
+                        numBlocks
+                        numRecords
+                        updatedWatermark
+                    }
                 }
             }
             ... on FlowDescriptionDatasetHardCompaction {
@@ -4356,7 +4401,7 @@ export const FlowSummaryDataFragmentDoc = gql`
                 shiftedFrom
             }
             ... on FlowStartConditionBatching {
-                activeBatchingRule {
+                activeTransformRule {
                     minRecordsToAwait
                     maxBatchingInterval {
                         ...TimeDeltaData
@@ -4444,7 +4489,7 @@ export const FlowHistoryDataFragmentDoc = gql`
                     shiftedFrom
                 }
                 ... on FlowStartConditionBatching {
-                    activeBatchingRule {
+                    activeTransformRule {
                         minRecordsToAwait
                         maxBatchingInterval {
                             ...TimeDeltaData
@@ -6652,18 +6697,18 @@ export const DatasetFlowBatchingDocument = gql`
         $datasetId: DatasetID!
         $datasetFlowType: DatasetFlowType!
         $paused: Boolean!
-        $batching: BatchingConditionInput!
+        $transform: TransformConditionInput!
     ) {
         datasets {
             byId(datasetId: $datasetId) {
                 flows {
                     configs {
-                        setConfigBatching(datasetFlowType: $datasetFlowType, paused: $paused, batching: $batching) {
+                        setConfigTransform(datasetFlowType: $datasetFlowType, paused: $paused, transform: $transform) {
                             __typename
                             ... on SetFlowConfigSuccess {
                                 message
                                 config {
-                                    batching {
+                                    transform {
                                         maxBatchingInterval {
                                             ...TimeDeltaData
                                         }
@@ -6676,7 +6721,7 @@ export const DatasetFlowBatchingDocument = gql`
                                 expectedDatasetKind
                                 actualDatasetKind
                             }
-                            ... on FlowInvalidBatchingConfig {
+                            ... on FlowInvalidTransformConfig {
                                 message
                                 reason
                             }
@@ -6719,15 +6764,18 @@ export const GetDatasetFlowConfigsDocument = gql`
                         __typename
                         byType(datasetFlowType: $datasetFlowType) {
                             paused
-                            schedule {
-                                ... on TimeDelta {
-                                    ...TimeDeltaData
+                            ingest {
+                                schedule {
+                                    ... on TimeDelta {
+                                        ...TimeDeltaData
+                                    }
+                                    ... on Cron5ComponentExpression {
+                                        cron5ComponentExpression
+                                    }
                                 }
-                                ... on Cron5ComponentExpression {
-                                    cron5ComponentExpression
-                                }
+                                fetchUncacheable
                             }
-                            batching {
+                            transform {
                                 maxBatchingInterval {
                                     ...TimeDeltaData
                                 }
@@ -6761,24 +6809,27 @@ export const DatasetFlowScheduleDocument = gql`
         $datasetId: DatasetID!
         $datasetFlowType: DatasetFlowType!
         $paused: Boolean!
-        $schedule: ScheduleInput!
+        $ingest: IngestConditionInput!
     ) {
         datasets {
             byId(datasetId: $datasetId) {
                 flows {
                     configs {
-                        setConfigSchedule(datasetFlowType: $datasetFlowType, paused: $paused, schedule: $schedule) {
+                        setConfigIngest(datasetFlowType: $datasetFlowType, paused: $paused, ingest: $ingest) {
                             __typename
                             ... on SetFlowConfigSuccess {
                                 message
                                 config {
-                                    schedule {
-                                        ... on TimeDelta {
-                                            ...TimeDeltaData
+                                    ingest {
+                                        schedule {
+                                            ... on TimeDelta {
+                                                ...TimeDeltaData
+                                            }
+                                            ... on Cron5ComponentExpression {
+                                                cron5ComponentExpression
+                                            }
                                         }
-                                        ... on Cron5ComponentExpression {
-                                            cron5ComponentExpression
-                                        }
+                                        fetchUncacheable
                                     }
                                 }
                             }

@@ -4,12 +4,12 @@ import { ToastrService } from "ngx-toastr";
 import { Observable, map } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
-    BatchingConditionInput,
     DatasetFlowBatchingMutation,
     DatasetFlowScheduleMutation,
     DatasetFlowType,
     GetDatasetFlowConfigsQuery,
-    ScheduleInput,
+    IngestConditionInput,
+    TransformConditionInput,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
@@ -36,12 +36,12 @@ export class DatasetSchedulingService {
         datasetId: string;
         datasetFlowType: DatasetFlowType;
         paused: boolean;
-        schedule: ScheduleInput;
+        ingest: IngestConditionInput;
         datasetInfo: DatasetInfo;
     }): Observable<void> {
         return this.datasetFlowApi.setDatasetFlowSchedule(params).pipe(
             map((data: DatasetFlowScheduleMutation) => {
-                const setConfigSchedule = data.datasets.byId?.flows.configs.setConfigSchedule;
+                const setConfigSchedule = data.datasets.byId?.flows.configs.setConfigIngest;
                 if (setConfigSchedule?.__typename === "SetFlowConfigSuccess") {
                     setTimeout(() => {
                         this.navigationService.navigateToDatasetView({
@@ -61,12 +61,12 @@ export class DatasetSchedulingService {
         datasetId: string;
         datasetFlowType: DatasetFlowType;
         paused: boolean;
-        batching: BatchingConditionInput;
+        transform: TransformConditionInput;
         datasetInfo: DatasetInfo;
     }): Observable<void> {
         return this.datasetFlowApi.setDatasetFlowBatching(params).pipe(
             map((data: DatasetFlowBatchingMutation) => {
-                const setConfigBatching = data.datasets.byId?.flows.configs.setConfigBatching;
+                const setConfigBatching = data.datasets.byId?.flows.configs.setConfigTransform;
                 setConfigBatching?.__typename === "SetFlowConfigSuccess"
                     ? setTimeout(() => {
                           this.navigationService.navigateToDatasetView({

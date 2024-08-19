@@ -9,15 +9,18 @@ query getDatasetFlowConfigs($datasetId: DatasetID!, $datasetFlowType: DatasetFlo
           __typename
           byType(datasetFlowType: $datasetFlowType) {
             paused
-            schedule {
-              ... on TimeDelta {
-                ...TimeDeltaData
+            ingest {
+              schedule {
+                ... on TimeDelta {
+                  ...TimeDeltaData
+                }
+                ... on Cron5ComponentExpression {
+                  cron5ComponentExpression
+                }
               }
-              ... on Cron5ComponentExpression {
-                cron5ComponentExpression
-              }
+              fetchUncacheable
             }
-            batching {
+            transform {
               maxBatchingInterval {
                 ...TimeDeltaData
               }

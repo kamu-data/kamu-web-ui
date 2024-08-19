@@ -49,7 +49,7 @@ describe("DatasetFlowTableHelpers", () => {
         expect(
             DatasetFlowTableHelpers.waitingBlockText({
                 __typename: "FlowStartConditionBatching",
-                activeBatchingRule: {
+                activeTransformRule: {
                     minRecordsToAwait: 500,
                     maxBatchingInterval: {
                         every: 5,

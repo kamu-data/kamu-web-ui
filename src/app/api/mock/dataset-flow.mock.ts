@@ -46,12 +46,15 @@ export const mockIngestGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQuery 
                     __typename: "DatasetFlowConfigs",
                     byType: {
                         paused: true,
-                        schedule: {
-                            every: 3,
-                            unit: TimeUnit.Hours,
-                            __typename: "TimeDelta",
+                        ingest: {
+                            schedule: {
+                                every: 3,
+                                unit: TimeUnit.Hours,
+                                __typename: "TimeDelta",
+                            },
+                            fetchUncacheable: false,
                         },
-                        batching: null,
+                        transform: null,
                         __typename: "FlowConfiguration",
                     },
                 },
@@ -80,15 +83,15 @@ export const mockBatchingGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQuer
                     __typename: "DatasetFlowConfigs",
                     byType: {
                         paused: true,
-                        schedule: null,
-                        batching: {
+                        ingest: null,
+                        transform: {
                             maxBatchingInterval: {
                                 every: 4,
                                 unit: TimeUnit.Minutes,
                                 __typename: "TimeDelta",
                             },
                             minRecordsToAwait: 10,
-                            __typename: "FlowConfigurationBatching",
+                            __typename: "FlowConfigurationTransform",
                         },
                         __typename: "FlowConfiguration",
                     },
@@ -105,14 +108,17 @@ export const mockSetDatasetFlowScheduleSuccess: DatasetFlowScheduleMutation = {
         byId: {
             flows: {
                 configs: {
-                    setConfigSchedule: {
+                    setConfigIngest: {
                         __typename: "SetFlowConfigSuccess",
                         message: "Success",
                         config: {
-                            schedule: {
-                                every: 10,
-                                unit: TimeUnit.Hours,
-                                __typename: "TimeDelta",
+                            ingest: {
+                                schedule: {
+                                    every: 10,
+                                    unit: TimeUnit.Hours,
+                                    __typename: "TimeDelta",
+                                },
+                                fetchUncacheable: false,
                             },
                             __typename: "FlowConfiguration",
                         },
@@ -132,7 +138,7 @@ export const mockSetDatasetFlowScheduleError: DatasetFlowScheduleMutation = {
         byId: {
             flows: {
                 configs: {
-                    setConfigSchedule: {
+                    setConfigIngest: {
                         __typename: "FlowIncompatibleDatasetKind",
                         message: "Error",
                         expectedDatasetKind: DatasetKind.Root,
@@ -153,18 +159,18 @@ export const mockSetDatasetFlowBatchingSuccess: DatasetFlowBatchingMutation = {
         byId: {
             flows: {
                 configs: {
-                    setConfigBatching: {
+                    setConfigTransform: {
                         __typename: "SetFlowConfigSuccess",
                         message: "Success",
                         config: {
-                            batching: {
+                            transform: {
                                 maxBatchingInterval: {
                                     every: 5,
                                     unit: TimeUnit.Minutes,
                                     __typename: "TimeDelta",
                                 },
                                 minRecordsToAwait: 123,
-                                __typename: "FlowConfigurationBatching",
+                                __typename: "FlowConfigurationTransform",
                             },
                             __typename: "FlowConfiguration",
                         },
@@ -184,7 +190,7 @@ export const mockSetDatasetFlowBatchingError: DatasetFlowBatchingMutation = {
         byId: {
             flows: {
                 configs: {
-                    setConfigBatching: {
+                    setConfigTransform: {
                         __typename: "FlowIncompatibleDatasetKind",
                         message: "Error",
                         expectedDatasetKind: DatasetKind.Derivative,

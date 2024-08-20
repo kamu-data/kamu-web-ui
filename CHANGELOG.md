@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ## Added
 - Added the ability to reset the dataset in 2 modes(`Reset to Seed` and `Flatten metadata`)
+## Fixed
+- Access tokens: when you turn on the switch, all tokens are displayed (active and revoked)
 
 
 ## [0.25.0] -2024-08-13

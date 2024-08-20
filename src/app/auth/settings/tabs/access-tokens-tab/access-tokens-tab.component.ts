@@ -19,7 +19,6 @@ import AppValues from "src/app/common/app.values";
 import { AccessTokenService } from "src/app/services/access-token.service";
 import { BaseComponent } from "src/app/common/base.component";
 import ProjectLinks from "src/app/project-links";
-import { MatSlideToggleChange } from "@angular/material/slide-toggle";
 
 @Component({
     selector: "app-access-tokens-tab",
@@ -39,6 +38,7 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
     public createTokenForm: FormGroup = this.fb.group({
         name: ["", [Validators.required, Validators.maxLength(100)]],
     });
+    public showRevokedToken = false;
     public readonly DISPLAY_COLUMNS: string[] = ["status", "name", "createdAt", "revokedAt", "actions"];
     public readonly TokenCreateStep: typeof TokenCreateStep = TokenCreateStep;
     public readonly PER_PAGE = 15;
@@ -81,14 +81,14 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
         this.composedToken = "";
     }
 
-    public toggleTokens(event: MatSlideToggleChange): void {
+    public toggleTokens(): void {
         this.dataSource.filterPredicate = (data: unknown, filter: string): boolean => {
             return String(Boolean((data as ViewAccessToken).revokedAt)) === filter;
         };
-        if (event.checked) {
-            this.dataSource.filter = String(event.checked);
-        } else {
+        if (this.showRevokedToken) {
             this.dataSource.filter = "";
+        } else {
+            this.dataSource.filter = String(this.showRevokedToken);
         }
     }
 
@@ -177,6 +177,7 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
                 })
                 .subscribe((result: AccessTokenConnection) => {
                     this.dataSource.data = result.nodes;
+                    this.toggleTokens();
                     this.dataSource.sort = this.sort;
                     this.pageBasedInfo = result.pageInfo;
                 }),

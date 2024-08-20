@@ -26,7 +26,13 @@ import { DynamicComponent } from "./dynamic.component";
                         class="modal__msg"
                         data-test-id="modalDescription"
                     >
-                        <img src="assets/images/information.png" alt="" width="14" height="14" />
+                        <img
+                            style="padding-bottom:2px"
+                            src="assets/images/information.png"
+                            alt=""
+                            width="14"
+                            height="14"
+                        />
                         {{ context.description }}
                     </p>
 

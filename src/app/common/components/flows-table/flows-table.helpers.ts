@@ -94,7 +94,13 @@ export class DatasetFlowTableHelpers {
                                       } in ${element.description.ingestResult.numBlocks} new ${
                                           element.description.ingestResult.numBlocks == 1 ? "block" : "blocks"
                                       }`
-                                    : "Dataset is up-to-date";
+                                    : element.description.ingestResult?.__typename ===
+                                            "FlowDescriptionUpdateResultUpToDate" &&
+                                        element.description.ingestResult.uncacheable &&
+                                        element.configSnapshot?.__typename === "FlowConfigurationIngest" &&
+                                        !element.configSnapshot.fetchUncacheable
+                                      ? `Source is uncacheable: to re-scan the data, use`
+                                      : "Dataset is up-to-date";
 
                             case "FlowDescriptionDatasetExecuteTransform":
                                 return element.description.transformResult?.__typename ===

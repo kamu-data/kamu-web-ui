@@ -20,6 +20,8 @@ import {
     Account,
     Dataset,
     DatasetListFlowsDataFragment,
+    DatasetFlowType,
+    IngestConditionInput,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { MatTableDataSource } from "@angular/material/table";
@@ -39,6 +41,10 @@ import { ModalService } from "src/app/components/modal/modal.service";
 import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
 import { MaybeNull } from "../../app.types";
 import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.interface";
+import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
+import { BaseComponent } from "../../base.component";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
     selector: "app-flows-table",
@@ -46,7 +52,7 @@ import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.
     styleUrls: ["./flows-table.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FlowsTableComponent implements OnInit, OnChanges {
+export class FlowsTableComponent extends BaseComponent implements OnInit, OnChanges {
     @Input() public nodes: FlowSummaryDataFragment[];
     @Input() public filterByStatus: MaybeNull<FlowStatus>;
     @Input() public onlySystemFlows: boolean;
@@ -76,10 +82,16 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     public dropdownStatustList: FilterStatusType[] = [];
     public selectedStatusItems: FilterStatusType[] = [];
 
+    private scheduleOptions: IngestConditionInput;
+
     constructor(
         private navigationService: NavigationService,
         private modalService: ModalService,
-    ) {}
+        private datasetFlowsService: DatasetFlowsService,
+        private toastrService: ToastrService,
+    ) {
+        super();
+    }
 
     ngOnChanges(changes: SimpleChanges): void {
         const nodes: SimpleChange = changes.nodes;
@@ -194,6 +206,57 @@ export class FlowsTableComponent implements OnInit, OnChanges {
 
     public get hasDatasetColumn(): boolean {
         return this.tableOptions.displayColumns.includes("dataset");
+    }
+
+    public onForceUpdate(node: FlowSummaryDataFragment): void {
+        if (
+            node.description.__typename === "FlowDescriptionDatasetPollingIngest" &&
+            node.configSnapshot?.__typename === "FlowConfigurationIngest"
+        ) {
+            this.setScheduleOptions(node);
+            this.datasetFlowsService
+                .datasetTriggerFlow({
+                    datasetId: node.description.datasetId,
+                    datasetFlowType: DatasetFlowType.Ingest,
+                    flowRunConfiguration: {
+                        ingest: this.scheduleOptions,
+                    },
+                })
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe((result: boolean) => {
+                    if (result) {
+                        this.toastrService.success("Success");
+                    }
+                });
+        }
+    }
+
+    private setScheduleOptions(node: FlowSummaryDataFragment): void {
+        if (
+            node.configSnapshot?.__typename === "FlowConfigurationIngest" &&
+            node.configSnapshot.schedule.__typename === "TimeDelta"
+        ) {
+            this.scheduleOptions = {
+                schedule: {
+                    timeDelta: {
+                        every: node.configSnapshot.schedule.every,
+                        unit: node.configSnapshot.schedule.unit,
+                    },
+                },
+                fetchUncacheable: true,
+            };
+        }
+        if (
+            node.configSnapshot?.__typename === "FlowConfigurationIngest" &&
+            node.configSnapshot.schedule.__typename === "Cron5ComponentExpression"
+        ) {
+            this.scheduleOptions = {
+                schedule: {
+                    cron5ComponentExpression: node.configSnapshot.schedule.cron5ComponentExpression,
+                },
+                fetchUncacheable: true,
+            };
+        }
     }
 
     private initializeFilters(): void {

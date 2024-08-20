@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "@apollo/client/core";
+import { gql } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -3220,6 +3220,18 @@ export type FlowSummaryDataFragment = {
         | { __typename: "FlowStartConditionSchedule"; wakeUpAt: string }
         | { __typename: "FlowStartConditionThrottling"; intervalSec: number; wakeUpAt: string; shiftedFrom: string }
         | null;
+    configSnapshot?:
+        | { __typename?: "FlowConfigurationCompactionRule" }
+        | {
+              __typename?: "FlowConfigurationIngest";
+              fetchUncacheable: boolean;
+              schedule:
+                  | { __typename?: "Cron5ComponentExpression"; cron5ComponentExpression: string }
+                  | ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment);
+          }
+        | { __typename?: "FlowConfigurationReset" }
+        | { __typename?: "FlowConfigurationTransform" }
+        | null;
 };
 
 export type DatasetListFlowsDataFragment = {
@@ -4416,6 +4428,19 @@ export const FlowSummaryDataFragmentDoc = gql`
             }
             ... on FlowStartConditionExecutor {
                 taskId
+            }
+        }
+        configSnapshot {
+            ... on FlowConfigurationIngest {
+                schedule {
+                    ... on TimeDelta {
+                        ...TimeDeltaData
+                    }
+                    ... on Cron5ComponentExpression {
+                        cron5ComponentExpression
+                    }
+                }
+                fetchUncacheable
             }
         }
     }

@@ -137,7 +137,13 @@ export class DatasetFlowDetailsHelpers {
                                                       ? "block"
                                                       : "blocks"
                                               }`
-                                            : "Dataset is up-to-date";
+                                            : flowDetails.description.ingestResult?.__typename ===
+                                                    "FlowDescriptionUpdateResultUpToDate" &&
+                                                flowDetails.description.ingestResult.uncacheable &&
+                                                flowDetails.configSnapshot?.__typename === "FlowConfigurationIngest" &&
+                                                !flowDetails.configSnapshot.fetchUncacheable
+                                              ? "Source is uncacheable, use force update to re-scan the data"
+                                              : "Dataset is up-to-date";
 
                                     case "FlowDescriptionDatasetExecuteTransform":
                                         return flowDetails.description.transformResult?.__typename ===

@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ## Added
 - Added the ability to reset the dataset in 2 modes(`Reset to Seed` and `Flatten metadata`)
+- Extended `Fetch uncacheable` checkbox for the update scheduler.
+- Added active link `force update` for the flow with uncacheable source(Flows table)
 
 
 ## [0.25.0] -2024-08-13

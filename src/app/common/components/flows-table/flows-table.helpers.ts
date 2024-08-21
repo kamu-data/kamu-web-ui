@@ -134,6 +134,7 @@ export class DatasetFlowTableHelpers {
                                 }
                             // TODO
                             //  - GC
+                            /* istanbul ignore next */
                             default:
                                 return "Unknown description typename";
                         }
@@ -192,7 +193,7 @@ export class DatasetFlowTableHelpers {
                     //  - GC
                 }
         }
-
+        /* istanbul ignore next */
         return "";
     }
 
@@ -208,6 +209,7 @@ export class DatasetFlowTableHelpers {
                     }
                     case "FlowStartConditionBatching":
                         return `deadline time: ${moment(node.startCondition.batchingDeadline).fromNow()}`;
+                    /* istanbul ignore next */
                     default:
                         return "";
                 }
@@ -244,7 +246,7 @@ export class DatasetFlowTableHelpers {
             }
             case "FlowStartConditionSchedule":
                 return "waiting for scheduled execution";
-
+            /* istanbul ignore next */
             default:
                 return "";
         }
@@ -268,6 +270,7 @@ export class DatasetFlowTableHelpers {
                         return `Deadline time: ${moment(node.startCondition.batchingDeadline).format(
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
+                    /* istanbul ignore next */
                     default:
                         return "";
                 }

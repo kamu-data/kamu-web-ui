@@ -82,8 +82,6 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     public dropdownStatustList: FilterStatusType[] = [];
     public selectedStatusItems: FilterStatusType[] = [];
 
-    private scheduleOptions: IngestConditionInput;
-
     constructor(
         private navigationService: NavigationService,
         private modalService: ModalService,
@@ -208,18 +206,27 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         return this.tableOptions.displayColumns.includes("dataset");
     }
 
+    public showForceUpdateLink(node: FlowSummaryDataFragment): boolean {
+        return (
+            node.description.__typename === "FlowDescriptionDatasetPollingIngest" &&
+            node.description.ingestResult?.__typename === "FlowDescriptionUpdateResultUpToDate" &&
+            node.description.ingestResult.uncacheable &&
+            node.configSnapshot?.__typename === "FlowConfigurationIngest" &&
+            !node.configSnapshot.fetchUncacheable
+        );
+    }
+
     public onForceUpdate(node: FlowSummaryDataFragment): void {
         if (
             node.description.__typename === "FlowDescriptionDatasetPollingIngest" &&
             node.configSnapshot?.__typename === "FlowConfigurationIngest"
         ) {
-            this.setScheduleOptions(node);
             this.datasetFlowsService
                 .datasetTriggerFlow({
                     datasetId: node.description.datasetId,
                     datasetFlowType: DatasetFlowType.Ingest,
                     flowRunConfiguration: {
-                        ingest: this.scheduleOptions,
+                        ingest: this.setScheduleOptions(node),
                     },
                 })
                 .pipe(takeUntilDestroyed(this.destroyRef))
@@ -231,31 +238,33 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         }
     }
 
-    private setScheduleOptions(node: FlowSummaryDataFragment): void {
-        if (
-            node.configSnapshot?.__typename === "FlowConfigurationIngest" &&
-            node.configSnapshot.schedule.__typename === "TimeDelta"
-        ) {
-            this.scheduleOptions = {
-                schedule: {
-                    timeDelta: {
-                        every: node.configSnapshot.schedule.every,
-                        unit: node.configSnapshot.schedule.unit,
-                    },
-                },
-                fetchUncacheable: true,
-            };
-        }
-        if (
-            node.configSnapshot?.__typename === "FlowConfigurationIngest" &&
-            node.configSnapshot.schedule.__typename === "Cron5ComponentExpression"
-        ) {
-            this.scheduleOptions = {
-                schedule: {
-                    cron5ComponentExpression: node.configSnapshot.schedule.cron5ComponentExpression,
-                },
-                fetchUncacheable: true,
-            };
+    private setScheduleOptions(node: FlowSummaryDataFragment): IngestConditionInput {
+        /* istanbul ignore else */
+        if (node.configSnapshot?.__typename === "FlowConfigurationIngest") {
+            switch (node.configSnapshot.schedule.__typename) {
+                case "TimeDelta":
+                    return {
+                        schedule: {
+                            timeDelta: {
+                                every: node.configSnapshot.schedule.every,
+                                unit: node.configSnapshot.schedule.unit,
+                            },
+                        },
+                        fetchUncacheable: true,
+                    };
+                case "Cron5ComponentExpression":
+                    return {
+                        schedule: {
+                            cron5ComponentExpression: node.configSnapshot.schedule.cron5ComponentExpression,
+                        },
+                        fetchUncacheable: true,
+                    };
+                /* istanbul ignore next */
+                default:
+                    throw new Error("Unknown configuration schedule type");
+            }
+        } else {
+            throw new Error("The type for the configuration is not FlowConfigurationIngest");
         }
     }
 

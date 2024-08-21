@@ -83,13 +83,7 @@
                         ></div>
                         &nbsp;
                         <a
-                            *ngIf="
-                                element.description.ingestResult?.__typename ===
-                                    'FlowDescriptionUpdateResultUpToDate' &&
-                                element.description.ingestResult.uncacheable &&
-                                element.configSnapshot?.__typename === 'FlowConfigurationIngest' &&
-                                !element.configSnapshot.fetchUncacheable
-                            "
+                            *ngIf="showForceUpdateLink(element)"
                             class="text-small text-primary d-inline-block"
                             (click)="onForceUpdate(element)"
                             >force update</a

@@ -142,7 +142,7 @@ export class DatasetFlowDetailsHelpers {
                                                 flowDetails.description.ingestResult.uncacheable &&
                                                 flowDetails.configSnapshot?.__typename === "FlowConfigurationIngest" &&
                                                 !flowDetails.configSnapshot.fetchUncacheable
-                                              ? "Source is uncacheable, use force update to re-scan the data"
+                                              ? "Source is uncacheable: to re-scan the data, use force update"
                                               : "Dataset is up-to-date";
 
                                     case "FlowDescriptionDatasetExecuteTransform":

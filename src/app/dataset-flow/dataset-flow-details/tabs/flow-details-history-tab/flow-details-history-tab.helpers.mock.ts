@@ -21,7 +21,7 @@ export const mockFlowSummaryDataFragmentIngestResult: FlowSummaryDataFragment = 
     description: {
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         ingestResult: {
-            __typename: "FlowDescriptionUpdateResult",
+            __typename: "FlowDescriptionUpdateResultSuccess",
             numBlocks: 10,
             numRecords: 100,
         },
@@ -132,7 +132,7 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         startCondition: {
             __typename: "FlowStartConditionBatching",
-            activeBatchingRule: {
+            activeTransformRule: {
                 minRecordsToAwait: 500,
                 maxBatchingInterval: {
                     every: 5,
@@ -260,7 +260,7 @@ export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         startCondition: {
             __typename: "FlowStartConditionBatching",
-            activeBatchingRule: {
+            activeTransformRule: {
                 minRecordsToAwait: 500,
                 maxBatchingInterval: {
                     every: 5,

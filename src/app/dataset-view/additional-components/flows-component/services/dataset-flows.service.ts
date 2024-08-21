@@ -14,6 +14,7 @@ import {
     DatasetResumeFlowsMutation,
     DatasetTriggerFlowMutation,
     FlowConnectionDataFragment,
+    FlowRunConfiguration,
     GetDatasetListFlowsQuery,
     GetFlowByIdQuery,
 } from "src/app/api/kamu.graphql.interface";
@@ -30,11 +31,16 @@ export class DatasetFlowsService {
         private toastrService: ToastrService,
     ) {}
 
-    public datasetTriggerFlow(params: { datasetId: string; datasetFlowType: DatasetFlowType }): Observable<boolean> {
+    public datasetTriggerFlow(params: {
+        datasetId: string;
+        datasetFlowType: DatasetFlowType;
+        flowRunConfiguration?: FlowRunConfiguration;
+    }): Observable<boolean> {
         return this.datasetFlowApi
             .datasetTriggerFlow({
                 datasetId: params.datasetId,
                 datasetFlowType: params.datasetFlowType,
+                flowRunConfiguration: params.flowRunConfiguration,
             })
             .pipe(
                 map((data: DatasetTriggerFlowMutation) => {

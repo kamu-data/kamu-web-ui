@@ -13,6 +13,7 @@ import {
     expectationsDesriptionColumnOptions,
     mockDatasetExecuteTransformFlowSummaryData,
     mockDatasets,
+    mockFlowSummaryDataFragmentShowForceLink,
     mockFlowSummaryDataFragmentTooltipAndDurationText,
     mockTableFlowSummaryDataFragments,
     tooltipTextResults,
@@ -49,7 +50,7 @@ describe("DatasetFlowTableHelpers", () => {
         expect(
             DatasetFlowTableHelpers.waitingBlockText({
                 __typename: "FlowStartConditionBatching",
-                activeBatchingRule: {
+                activeTransformRule: {
                     minRecordsToAwait: 500,
                     maxBatchingInterval: {
                         every: 5,
@@ -205,5 +206,15 @@ describe("DatasetFlowTableHelpers", () => {
                 mockDatasetMainDataId,
             ),
         ).toEqual("An error occurred, see logs for more details");
+    });
+
+    it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and cacheable source`, () => {
+        expect(
+            DatasetFlowTableHelpers.descriptionSubMessage(
+                mockFlowSummaryDataFragmentShowForceLink,
+                mockDatasets,
+                mockDatasets[1].id,
+            ),
+        ).toEqual(`Source is uncacheable: to re-scan the data, use`);
     });
 });

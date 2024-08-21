@@ -1,7 +1,6 @@
 import { MutationResult } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import {
-    BatchingConditionInput,
     CancelScheduledTasksGQL,
     CancelScheduledTasksMutation,
     CompactionConditionInput,
@@ -30,7 +29,8 @@ import {
     GetDatasetListFlowsQuery,
     GetFlowByIdGQL,
     GetFlowByIdQuery,
-    ScheduleInput,
+    IngestConditionInput,
+    TransformConditionInput,
 } from "./kamu.graphql.interface";
 import { Observable, first, map } from "rxjs";
 import { ApolloQueryResult } from "@apollo/client";
@@ -89,14 +89,11 @@ export class DatasetFlowApi {
         datasetId: string;
         datasetFlowType: DatasetFlowType;
         paused: boolean;
-        schedule: ScheduleInput;
+        ingest: IngestConditionInput;
     }): Observable<DatasetFlowScheduleMutation> {
         return this.datasetFlowScheduleGQL
             .mutate({
-                datasetId: params.datasetId,
-                datasetFlowType: params.datasetFlowType,
-                paused: params.paused,
-                schedule: params.schedule,
+                ...params,
             })
             .pipe(
                 first(),
@@ -115,14 +112,11 @@ export class DatasetFlowApi {
         datasetId: string;
         datasetFlowType: DatasetFlowType;
         paused: boolean;
-        batching: BatchingConditionInput;
+        transform: TransformConditionInput;
     }): Observable<DatasetFlowBatchingMutation> {
         return this.datasetFlowBatchingGQL
             .mutate({
-                datasetId: params.datasetId,
-                datasetFlowType: params.datasetFlowType,
-                paused: params.paused,
-                batching: params.batching,
+                ...params,
             })
             .pipe(
                 first(),

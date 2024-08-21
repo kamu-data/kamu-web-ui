@@ -102,8 +102,11 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
 
         expect(setDatasetFlowScheduleSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
-                schedule: {
-                    timeDelta: MOCK_INPUT_TIME_DELTA,
+                ingest: {
+                    fetchUncacheable: false,
+                    schedule: {
+                        timeDelta: MOCK_INPUT_TIME_DELTA,
+                    },
                 },
             }),
         );
@@ -121,8 +124,11 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
 
         expect(setDatasetFlowScheduleSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
-                schedule: {
-                    timeDelta: MOCK_INPUT_TIME_DELTA,
+                ingest: {
+                    fetchUncacheable: false,
+                    schedule: {
+                        timeDelta: MOCK_INPUT_TIME_DELTA,
+                    },
                 },
             }),
         );
@@ -140,8 +146,11 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
 
         expect(setDatasetFlowScheduleSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
-                schedule: {
-                    cron5ComponentExpression: `${MOCK_CRON_EXPRESSION}`,
+                ingest: {
+                    fetchUncacheable: false,
+                    schedule: {
+                        cron5ComponentExpression: `${MOCK_CRON_EXPRESSION}`,
+                    },
                 },
             }),
         );
@@ -161,7 +170,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
 
         expect(setDatasetFlowBatchingSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
-                batching: {
+                transform: {
                     minRecordsToAwait: MOCK_MIN_RECORDS_TO_AWAIT,
                     maxBatchingInterval: {
                         every: MOCK_PARAM_EVERY,

@@ -74,12 +74,21 @@
                         {{ flowTypeDescription(element) }}
                         <span>{{ descriptionDatasetFlowEndOfMessage(element) }}</span>
                     </a>
-                    <div
-                        class="text-small d-block pe-4 truncate-sub-message"
-                        [innerHTML]="
-                            descriptionDatasetFlowSubMessage(element, element.description.datasetId) | safeHtml
-                        "
-                    ></div>
+                    <div class="d-flex flex-row truncate-sub-message pe-4">
+                        <div
+                            class="text-small d-block"
+                            [innerHTML]="
+                                descriptionDatasetFlowSubMessage(element, element.description.datasetId) | safeHtml
+                            "
+                        ></div>
+                        &nbsp;
+                        <a
+                            *ngIf="showForceUpdateLink(element)"
+                            class="text-small text-primary d-inline-block"
+                            (click)="onForceUpdate(element)"
+                            >force update</a
+                        >
+                    </div>
                 </div>
             </div>
         </td>

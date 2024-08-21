@@ -20,7 +20,7 @@ import {
 } from "./../kamu.graphql.interface";
 import { GetDatasetFlowConfigsQuery, DatasetKind, TimeUnit, TimeDeltaInput } from "../kamu.graphql.interface";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
-import { mockDatasetBasicsRootFragment, mockDatasetMainDataId } from "src/app/search/mock.data";
+import { mockDatasetMainDataId } from "src/app/search/mock.data";
 import { FlowsTableData } from "src/app/common/components/flows-table/flows-table.types";
 
 export const mockTimeDeltaInput: TimeDeltaInput = {
@@ -46,12 +46,15 @@ export const mockIngestGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQuery 
                     __typename: "DatasetFlowConfigs",
                     byType: {
                         paused: true,
-                        schedule: {
-                            every: 3,
-                            unit: TimeUnit.Hours,
-                            __typename: "TimeDelta",
+                        ingest: {
+                            schedule: {
+                                every: 3,
+                                unit: TimeUnit.Hours,
+                                __typename: "TimeDelta",
+                            },
+                            fetchUncacheable: false,
                         },
-                        batching: null,
+                        transform: null,
                         __typename: "FlowConfiguration",
                     },
                 },
@@ -80,15 +83,15 @@ export const mockBatchingGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQuer
                     __typename: "DatasetFlowConfigs",
                     byType: {
                         paused: true,
-                        schedule: null,
-                        batching: {
+                        ingest: null,
+                        transform: {
                             maxBatchingInterval: {
                                 every: 4,
                                 unit: TimeUnit.Minutes,
                                 __typename: "TimeDelta",
                             },
                             minRecordsToAwait: 10,
-                            __typename: "FlowConfigurationBatching",
+                            __typename: "FlowConfigurationTransform",
                         },
                         __typename: "FlowConfiguration",
                     },
@@ -105,14 +108,17 @@ export const mockSetDatasetFlowScheduleSuccess: DatasetFlowScheduleMutation = {
         byId: {
             flows: {
                 configs: {
-                    setConfigSchedule: {
+                    setConfigIngest: {
                         __typename: "SetFlowConfigSuccess",
                         message: "Success",
                         config: {
-                            schedule: {
-                                every: 10,
-                                unit: TimeUnit.Hours,
-                                __typename: "TimeDelta",
+                            ingest: {
+                                schedule: {
+                                    every: 10,
+                                    unit: TimeUnit.Hours,
+                                    __typename: "TimeDelta",
+                                },
+                                fetchUncacheable: false,
                             },
                             __typename: "FlowConfiguration",
                         },
@@ -132,7 +138,7 @@ export const mockSetDatasetFlowScheduleError: DatasetFlowScheduleMutation = {
         byId: {
             flows: {
                 configs: {
-                    setConfigSchedule: {
+                    setConfigIngest: {
                         __typename: "FlowIncompatibleDatasetKind",
                         message: "Error",
                         expectedDatasetKind: DatasetKind.Root,
@@ -153,18 +159,18 @@ export const mockSetDatasetFlowBatchingSuccess: DatasetFlowBatchingMutation = {
         byId: {
             flows: {
                 configs: {
-                    setConfigBatching: {
+                    setConfigTransform: {
                         __typename: "SetFlowConfigSuccess",
                         message: "Success",
                         config: {
-                            batching: {
+                            transform: {
                                 maxBatchingInterval: {
                                     every: 5,
                                     unit: TimeUnit.Minutes,
                                     __typename: "TimeDelta",
                                 },
                                 minRecordsToAwait: 123,
-                                __typename: "FlowConfigurationBatching",
+                                __typename: "FlowConfigurationTransform",
                             },
                             __typename: "FlowConfiguration",
                         },
@@ -184,7 +190,7 @@ export const mockSetDatasetFlowBatchingError: DatasetFlowBatchingMutation = {
         byId: {
             flows: {
                 configs: {
-                    setConfigBatching: {
+                    setConfigTransform: {
                         __typename: "FlowIncompatibleDatasetKind",
                         message: "Error",
                         expectedDatasetKind: DatasetKind.Derivative,
@@ -363,16 +369,29 @@ export const mockDatasetResumeFlowsMutationError: DatasetResumeFlowsMutation = {
 export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
     datasets: {
         byId: {
-            ...mockDatasetBasicsRootFragment,
+            id: "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
+            kind: DatasetKind.Root,
+            name: "test-dataset",
+            owner: {
+                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+                accountName: "kamu",
+                __typename: "Account",
+            },
+            alias: "test-dataset",
+            __typename: "Dataset",
             metadata: {
                 currentPollingSource: {
-                    __typename: "SetPollingSource",
                     fetch: {
+                        url: "https://api.etherscan.io/api?module=account&action=txlist&address=0xeadb3840596cabf312f2bc88a4bb0b93a4e1ff5f&page=1&offset=1000&startblock=0&endblock=99999999&apikey=${{ env.ETHERSCAN_API_KEY }}",
+                        eventTime: null,
+                        headers: null,
+                        cache: null,
                         __typename: "FetchStepUrl",
-                        url: "http://test.com",
                     },
+                    __typename: "SetPollingSource",
                 },
                 currentTransform: null,
+                __typename: "DatasetMetadata",
             },
             flows: {
                 runs: {
@@ -381,41 +400,80 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                             {
                                 description: {
                                     datasetId:
-                                        "did:odf:fed0100d72fc7a0d7ced1ff2d47e3bfeb844390f18a7fa7e24ced6563aa7357dfa2e8",
-                                    ingestResult: null,
+                                        "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
+                                    ingestResult: {
+                                        numBlocks: 2,
+                                        numRecords: 203,
+                                        updatedWatermark: "2024-08-07T00:56:35+00:00",
+                                        __typename: "FlowDescriptionUpdateResultSuccess",
+                                    },
                                     __typename: "FlowDescriptionDatasetPollingIngest",
                                 },
-                                flowId: "90",
-                                status: FlowStatus.Running,
-                                initiator: null,
-                                outcome: null,
+                                flowId: "3",
+                                status: FlowStatus.Finished,
+                                initiator: {
+                                    id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+                                    accountName: "kamu",
+                                    displayName: "kamu",
+                                    accountType: AccountType.User,
+                                    avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                                    isAdmin: true,
+                                    __typename: "Account",
+                                },
+                                outcome: {
+                                    message: "SUCCESS",
+                                    __typename: "FlowSuccessResult",
+                                },
                                 timing: {
-                                    awaitingExecutorSince: "2024-02-13T10:11:25+00:00",
-                                    runningSince: null,
-                                    finishedAt: null,
+                                    awaitingExecutorSince: "2024-08-21T08:46:19.426925618+00:00",
+                                    runningSince: "2024-08-21T08:46:20.507478673+00:00",
+                                    finishedAt: "2024-08-21T08:46:22.636437316+00:00",
                                     __typename: "FlowTimingRecords",
+                                },
+                                startCondition: null,
+                                configSnapshot: {
+                                    schedule: {
+                                        every: 1,
+                                        unit: TimeUnit.Minutes,
+                                        __typename: "TimeDelta",
+                                    },
+                                    fetchUncacheable: false,
+                                    __typename: "FlowConfigurationIngest",
                                 },
                                 __typename: "Flow",
                             },
                             {
                                 description: {
                                     datasetId:
-                                        "did:odf:fed0100d72fc7a0d7ced1ff2d47e3bfeb844390f18a7fa7e24ced6563aa7357dfa2e8",
+                                        "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
                                     ingestResult: null,
                                     __typename: "FlowDescriptionDatasetPollingIngest",
                                 },
-                                flowId: "88",
+                                flowId: "2",
                                 status: FlowStatus.Finished,
                                 initiator: null,
                                 outcome: {
-                                    __typename: "FlowSuccessResult",
-                                    message: "Succes",
+                                    reason: {
+                                        message: "FAILED",
+                                        __typename: "FlowFailedMessage",
+                                    },
+                                    __typename: "FlowFailedError",
                                 },
                                 timing: {
-                                    awaitingExecutorSince: "2024-02-13T10:10:25+00:00",
-                                    runningSince: "2024-02-13T10:10:25.468811294+00:00",
-                                    finishedAt: "2024-02-13T10:10:25.488660882+00:00",
+                                    awaitingExecutorSince: "2024-08-21T08:45:17+00:00",
+                                    runningSince: "2024-08-21T08:45:18.722052534+00:00",
+                                    finishedAt: null,
                                     __typename: "FlowTimingRecords",
+                                },
+                                startCondition: null,
+                                configSnapshot: {
+                                    schedule: {
+                                        every: 1,
+                                        unit: TimeUnit.Minutes,
+                                        __typename: "TimeDelta",
+                                    },
+                                    fetchUncacheable: false,
+                                    __typename: "FlowConfigurationIngest",
                                 },
                                 __typename: "Flow",
                             },
@@ -433,19 +491,45 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                 node: {
                                     description: {
                                         datasetId:
-                                            "did:odf:fed0100d72fc7a0d7ced1ff2d47e3bfeb844390f18a7fa7e24ced6563aa7357dfa2e8",
-                                        ingestResult: null,
+                                            "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
+                                        ingestResult: {
+                                            numBlocks: 2,
+                                            numRecords: 203,
+                                            updatedWatermark: "2024-08-07T00:56:35+00:00",
+                                            __typename: "FlowDescriptionUpdateResultSuccess",
+                                        },
                                         __typename: "FlowDescriptionDatasetPollingIngest",
                                     },
-                                    flowId: "90",
-                                    status: FlowStatus.Running,
-                                    initiator: null,
-                                    outcome: null,
+                                    flowId: "3",
+                                    status: FlowStatus.Finished,
+                                    initiator: {
+                                        id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+                                        accountName: "kamu",
+                                        displayName: "kamu",
+                                        accountType: AccountType.User,
+                                        avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                                        isAdmin: true,
+                                        __typename: "Account",
+                                    },
+                                    outcome: {
+                                        message: "SUCCESS",
+                                        __typename: "FlowSuccessResult",
+                                    },
                                     timing: {
-                                        awaitingExecutorSince: "2024-02-13T10:11:25+00:00",
-                                        runningSince: null,
-                                        finishedAt: null,
+                                        awaitingExecutorSince: "2024-08-21T08:46:19.426925618+00:00",
+                                        runningSince: "2024-08-21T08:46:20.507478673+00:00",
+                                        finishedAt: "2024-08-21T08:46:22.636437316+00:00",
                                         __typename: "FlowTimingRecords",
+                                    },
+                                    startCondition: null,
+                                    configSnapshot: {
+                                        schedule: {
+                                            every: 1,
+                                            unit: TimeUnit.Minutes,
+                                            __typename: "TimeDelta",
+                                        },
+                                        fetchUncacheable: false,
+                                        __typename: "FlowConfigurationIngest",
                                     },
                                     __typename: "Flow",
                                 },
@@ -455,22 +539,35 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                 node: {
                                     description: {
                                         datasetId:
-                                            "did:odf:fed0100d72fc7a0d7ced1ff2d47e3bfeb844390f18a7fa7e24ced6563aa7357dfa2e8",
+                                            "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
                                         ingestResult: null,
                                         __typename: "FlowDescriptionDatasetPollingIngest",
                                     },
-                                    flowId: "88",
+                                    flowId: "2",
                                     status: FlowStatus.Finished,
                                     initiator: null,
                                     outcome: {
-                                        __typename: "FlowSuccessResult",
-                                        message: "Succes",
+                                        reason: {
+                                            message: "FAILED",
+                                            __typename: "FlowFailedMessage",
+                                        },
+                                        __typename: "FlowFailedError",
                                     },
                                     timing: {
-                                        awaitingExecutorSince: "2024-02-13T10:10:25+00:00",
-                                        runningSince: "2024-02-13T10:10:25.468811294+00:00",
-                                        finishedAt: "2024-02-13T10:10:25.488660882+00:00",
+                                        awaitingExecutorSince: "2024-08-21T08:45:17+00:00",
+                                        runningSince: "2024-08-21T08:45:18.722052534+00:00",
+                                        finishedAt: null,
                                         __typename: "FlowTimingRecords",
+                                    },
+                                    startCondition: null,
+                                    configSnapshot: {
+                                        schedule: {
+                                            every: 1,
+                                            unit: TimeUnit.Minutes,
+                                            __typename: "TimeDelta",
+                                        },
+                                        fetchUncacheable: false,
+                                        __typename: "FlowConfigurationIngest",
                                     },
                                     __typename: "Flow",
                                 },
@@ -482,42 +579,49 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                     tiles: {
                         nodes: [
                             {
-                                status: FlowStatus.Running,
-
-                                outcome: null,
+                                status: FlowStatus.Finished,
+                                initiator: {
+                                    accountName: "kamu",
+                                    __typename: "Account",
+                                },
+                                outcome: {
+                                    message: "SUCCESS",
+                                    __typename: "FlowSuccessResult",
+                                },
                                 timing: {
-                                    awaitingExecutorSince: "2024-02-13T10:11:25+00:00",
-                                    runningSince: null,
-                                    finishedAt: null,
+                                    awaitingExecutorSince: "2024-08-21T08:46:19.426925618+00:00",
+                                    runningSince: "2024-08-21T08:46:20.507478673+00:00",
+                                    finishedAt: "2024-08-21T08:46:22.636437316+00:00",
                                     __typename: "FlowTimingRecords",
                                 },
                                 __typename: "Flow",
                             },
                             {
                                 status: FlowStatus.Finished,
-
+                                initiator: null,
                                 outcome: {
-                                    __typename: "FlowSuccessResult",
-                                    message: "Succes",
+                                    reason: {
+                                        message: "FAILED",
+                                        __typename: "FlowFailedMessage",
+                                    },
+                                    __typename: "FlowFailedError",
                                 },
                                 timing: {
-                                    awaitingExecutorSince: "2024-02-13T10:10:25+00:00",
-                                    runningSince: "2024-02-13T10:10:25.468811294+00:00",
-                                    finishedAt: "2024-02-13T10:10:25.488660882+00:00",
+                                    awaitingExecutorSince: "2024-08-21T08:45:17+00:00",
+                                    runningSince: "2024-08-21T08:45:18.722052534+00:00",
+                                    finishedAt: null,
                                     __typename: "FlowTimingRecords",
                                 },
                                 __typename: "Flow",
                             },
                         ],
                         totalCount: 2,
-
                         __typename: "FlowConnection",
                     },
                     __typename: "DatasetFlowRuns",
                 },
                 __typename: "DatasetFlows",
             },
-            __typename: "Dataset",
         },
         __typename: "Datasets",
     },
@@ -536,6 +640,15 @@ export const mockDatasetTriggerFlowMutation: DatasetTriggerFlowMutation = {
                 runs: {
                     triggerFlow: {
                         flow: {
+                            configSnapshot: {
+                                schedule: {
+                                    every: 1,
+                                    unit: TimeUnit.Minutes,
+                                    __typename: "TimeDelta",
+                                },
+                                fetchUncacheable: true,
+                                __typename: "FlowConfigurationIngest",
+                            },
                             description: {
                                 datasetId:
                                     "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
@@ -605,6 +718,15 @@ export const mockCancelScheduledTasksMutationSuccess: CancelScheduledTasksMutati
                     cancelScheduledTasks: {
                         message: "Success",
                         flow: {
+                            configSnapshot: {
+                                schedule: {
+                                    every: 1,
+                                    unit: TimeUnit.Minutes,
+                                    __typename: "TimeDelta",
+                                },
+                                fetchUncacheable: true,
+                                __typename: "FlowConfigurationIngest",
+                            },
                             description: {
                                 datasetId:
                                     "did:odf:fed01162400e9e5fb02d78805f48580f25589e8c3c21738999e28845f7c9d6818bec7",
@@ -724,6 +846,15 @@ export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
                 runs: {
                     getFlow: {
                         flow: {
+                            configSnapshot: {
+                                schedule: {
+                                    every: 1,
+                                    unit: TimeUnit.Minutes,
+                                    __typename: "TimeDelta",
+                                },
+                                fetchUncacheable: true,
+                                __typename: "FlowConfigurationIngest",
+                            },
                             description: {
                                 datasetId:
                                     "did:odf:fed016c0070664336545c0f49dc6a7a860c6862ab3336b630c2d7e779394a26da2e1e",

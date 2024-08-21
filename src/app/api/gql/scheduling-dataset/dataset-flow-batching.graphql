@@ -2,18 +2,18 @@ mutation datasetFlowBatching(
   $datasetId: DatasetID!
   $datasetFlowType: DatasetFlowType!
   $paused: Boolean!
-  $batching: BatchingConditionInput!
+  $transform: TransformConditionInput!
 ) {
   datasets {
     byId(datasetId: $datasetId) {
       flows {
         configs {
-          setConfigBatching(datasetFlowType: $datasetFlowType, paused: $paused, batching: $batching) {
+          setConfigTransform(datasetFlowType: $datasetFlowType, paused: $paused, transform: $transform) {
             __typename
             ... on SetFlowConfigSuccess {
               message
               config {
-                batching {
+                transform {
                   maxBatchingInterval {
                     ...TimeDeltaData
                   }
@@ -28,7 +28,7 @@ mutation datasetFlowBatching(
               actualDatasetKind
             }
 
-            ... on FlowInvalidBatchingConfig {
+            ... on FlowInvalidTransformConfig {
               message
               reason
             }

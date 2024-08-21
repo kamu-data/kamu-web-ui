@@ -87,16 +87,24 @@ export class DatasetFlowTableHelpers {
                         switch (element.description.__typename) {
                             case "FlowDescriptionDatasetPollingIngest":
                             case "FlowDescriptionDatasetPushIngest":
-                                return element.description.ingestResult
+                                return element.description.ingestResult?.__typename ===
+                                    "FlowDescriptionUpdateResultSuccess"
                                     ? `Ingested ${element.description.ingestResult.numRecords} new ${
                                           element.description.ingestResult.numRecords == 1 ? "record" : "records"
                                       } in ${element.description.ingestResult.numBlocks} new ${
                                           element.description.ingestResult.numBlocks == 1 ? "block" : "blocks"
                                       }`
-                                    : "Dataset is up-to-date";
+                                    : element.description.ingestResult?.__typename ===
+                                            "FlowDescriptionUpdateResultUpToDate" &&
+                                        element.description.ingestResult.uncacheable &&
+                                        element.configSnapshot?.__typename === "FlowConfigurationIngest" &&
+                                        !element.configSnapshot.fetchUncacheable
+                                      ? `Source is uncacheable: to re-scan the data, use`
+                                      : "Dataset is up-to-date";
 
                             case "FlowDescriptionDatasetExecuteTransform":
-                                return element.description.transformResult
+                                return element.description.transformResult?.__typename ===
+                                    "FlowDescriptionUpdateResultSuccess"
                                     ? `Transformed ${element.description.transformResult.numRecords} new ${
                                           element.description.transformResult.numRecords == 1 ? "record" : "records"
                                       } in ${element.description.transformResult.numBlocks} new ${
@@ -126,6 +134,7 @@ export class DatasetFlowTableHelpers {
                                 }
                             // TODO
                             //  - GC
+                            /* istanbul ignore next */
                             default:
                                 return "Unknown description typename";
                         }
@@ -184,7 +193,7 @@ export class DatasetFlowTableHelpers {
                     //  - GC
                 }
         }
-
+        /* istanbul ignore next */
         return "";
     }
 
@@ -200,6 +209,7 @@ export class DatasetFlowTableHelpers {
                     }
                     case "FlowStartConditionBatching":
                         return `deadline time: ${moment(node.startCondition.batchingDeadline).fromNow()}`;
+                    /* istanbul ignore next */
                     default:
                         return "";
                 }
@@ -236,7 +246,7 @@ export class DatasetFlowTableHelpers {
             }
             case "FlowStartConditionSchedule":
                 return "waiting for scheduled execution";
-
+            /* istanbul ignore next */
             default:
                 return "";
         }
@@ -260,6 +270,7 @@ export class DatasetFlowTableHelpers {
                         return `Deadline time: ${moment(node.startCondition.batchingDeadline).format(
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
+                    /* istanbul ignore next */
                     default:
                         return "";
                 }

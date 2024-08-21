@@ -1,3 +1,4 @@
+import { Apollo } from "apollo-angular";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FlowsTableComponent } from "./flows-table.component";
 import { MatTableModule } from "@angular/material/table";
@@ -20,9 +21,12 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { ModalService } from "src/app/components/modal/modal.service";
 import { SharedModule } from "src/app/shared/shared/shared.module";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
-import { mockDatasets } from "./flows-table.helpers.mock";
+import { mockDatasets, mockFlowSummaryDataFragmentShowForceLink } from "./flows-table.helpers.mock";
 import { mockDatasetMainDataId } from "src/app/search/mock.data";
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
+import { ToastrModule, ToastrService } from "ngx-toastr";
+import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
+import { of } from "rxjs";
 
 describe("FlowsTableComponent", () => {
     let component: FlowsTableComponent;
@@ -30,10 +34,13 @@ describe("FlowsTableComponent", () => {
     let loader: HarnessLoader;
     let navigationService: NavigationService;
     let modalService: ModalService;
+    let datasetFlowsService: DatasetFlowsService;
+    let toastService: ToastrService;
     const MOCK_FLOW_ID = "1";
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
+            providers: [Apollo],
             declarations: [FlowsTableComponent],
             imports: [
                 MatTableModule,
@@ -49,6 +56,7 @@ describe("FlowsTableComponent", () => {
                 SharedModule,
                 NgbTypeaheadModule,
                 AngularMultiSelectModule,
+                ToastrModule.forRoot(),
             ],
         }).compileComponents();
 
@@ -61,6 +69,8 @@ describe("FlowsTableComponent", () => {
         fixture = TestBed.createComponent(FlowsTableComponent);
         navigationService = TestBed.inject(NavigationService);
         modalService = TestBed.inject(ModalService);
+        datasetFlowsService = TestBed.inject(DatasetFlowsService);
+        toastService = TestBed.inject(ToastrService);
         component = fixture.componentInstance;
         loader = TestbedHarnessEnvironment.loader(fixture);
         component.nodes = mockFlowSummaryDataFragments;
@@ -130,5 +140,19 @@ describe("FlowsTableComponent", () => {
         const searchByFiltersChangeSpy = spyOn(component.searchByFiltersChange, "emit");
         component.onResetFilters();
         expect(searchByFiltersChangeSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check show use-force link", () => {
+        expect(component.showForceUpdateLink(mockFlowSummaryDataFragmentShowForceLink)).toEqual(true);
+    });
+
+    it("should check trigger flow with force udate option", () => {
+        const datasetTriggerFlowSpy = spyOn(datasetFlowsService, "datasetTriggerFlow").and.returnValue(of(true));
+        const toastrServiceSuccessSpy = spyOn(toastService, "success");
+
+        component.onForceUpdate(mockFlowSummaryDataFragmentShowForceLink);
+
+        expect(datasetTriggerFlowSpy).toHaveBeenCalledTimes(1);
+        expect(toastrServiceSuccessSpy).toHaveBeenCalledWith("Success");
     });
 });

@@ -2,24 +2,27 @@ mutation DatasetFlowSchedule(
   $datasetId: DatasetID!
   $datasetFlowType: DatasetFlowType!
   $paused: Boolean!
-  $schedule: ScheduleInput!
+  $ingest: IngestConditionInput!
 ) {
   datasets {
     byId(datasetId: $datasetId) {
       flows {
         configs {
-          setConfigSchedule(datasetFlowType: $datasetFlowType, paused: $paused, schedule: $schedule) {
+          setConfigIngest(datasetFlowType: $datasetFlowType, paused: $paused, ingest: $ingest) {
             __typename
             ... on SetFlowConfigSuccess {
               message
               config {
-                schedule {
-                  ... on TimeDelta {
-                    ...TimeDeltaData
+                ingest {
+                  schedule {
+                    ... on TimeDelta {
+                      ...TimeDeltaData
+                    }
+                    ... on Cron5ComponentExpression {
+                      cron5ComponentExpression
+                    }
                   }
-                  ... on Cron5ComponentExpression {
-                    cron5ComponentExpression
-                  }
+                  fetchUncacheable
                 }
               }
             }

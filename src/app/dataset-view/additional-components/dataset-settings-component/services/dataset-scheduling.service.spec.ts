@@ -16,8 +16,9 @@ import {
 import {
     DatasetFlowType,
     FlowIncompatibleDatasetKind,
-    ScheduleInput,
+    IngestConditionInput,
     TimeUnit,
+    TransformConditionInput,
 } from "src/app/api/kamu.graphql.interface";
 import { mockDatasetInfo } from "src/app/search/mock.data";
 
@@ -29,13 +30,16 @@ describe("DatasetSchedulingService", () => {
     const MOCK_DATASET_ID = "did:odf:fed0100d72fc7a0d7ced1ff2d47e3bfeb844390f18a7fa7e24ced6563aa7357dfa2e8";
     const MOCK_DATASET_FLOW_TYPE = DatasetFlowType.Ingest;
     const MOCK_PAUSED = false;
-    const MOCK_SCHEDULE: ScheduleInput = {
-        timeDelta: {
-            every: 1,
-            unit: TimeUnit.Minutes,
+    const MOCK_SCHEDULE: IngestConditionInput = {
+        schedule: {
+            timeDelta: {
+                every: 1,
+                unit: TimeUnit.Minutes,
+            },
         },
+        fetchUncacheable: false,
     };
-    const MOCK_BATCHING_CONFIG = {
+    const MOCK_BATCHING_CONFIG: TransformConditionInput = {
         minRecordsToAwait: 100,
         maxBatchingInterval: {
             every: 1,
@@ -67,7 +71,7 @@ describe("DatasetSchedulingService", () => {
                 datasetId: MOCK_DATASET_ID,
                 datasetFlowType: MOCK_DATASET_FLOW_TYPE,
                 paused: MOCK_PAUSED,
-                schedule: MOCK_SCHEDULE,
+                ingest: MOCK_SCHEDULE,
                 datasetInfo: mockDatasetInfo,
             })
             .subscribe(() => {
@@ -81,8 +85,7 @@ describe("DatasetSchedulingService", () => {
 
     it("should check set dataset flow schedule with error", () => {
         const errorMessage = (
-            mockSetDatasetFlowScheduleError.datasets.byId?.flows.configs
-                .setConfigSchedule as FlowIncompatibleDatasetKind
+            mockSetDatasetFlowScheduleError.datasets.byId?.flows.configs.setConfigIngest as FlowIncompatibleDatasetKind
         ).message;
         spyOn(datasetFlowApi, "setDatasetFlowSchedule").and.returnValue(of(mockSetDatasetFlowScheduleError));
         const toastrServiceErrorSpy = spyOn(toastService, "error");
@@ -92,7 +95,7 @@ describe("DatasetSchedulingService", () => {
                 datasetId: MOCK_DATASET_ID,
                 datasetFlowType: MOCK_DATASET_FLOW_TYPE,
                 paused: MOCK_PAUSED,
-                schedule: MOCK_SCHEDULE,
+                ingest: MOCK_SCHEDULE,
                 datasetInfo: mockDatasetInfo,
             })
             .subscribe(() => {
@@ -111,7 +114,7 @@ describe("DatasetSchedulingService", () => {
                 datasetId: MOCK_DATASET_ID,
                 datasetFlowType: DatasetFlowType.ExecuteTransform,
                 paused: false,
-                batching: MOCK_BATCHING_CONFIG,
+                transform: MOCK_BATCHING_CONFIG,
                 datasetInfo: mockDatasetInfo,
             })
             .subscribe(() => {
@@ -124,7 +127,7 @@ describe("DatasetSchedulingService", () => {
     }));
 
     it("should check set dataset flow batching with error", () => {
-        const errorMessage = mockSetDatasetFlowBatchingError.datasets.byId?.flows.configs.setConfigBatching.message;
+        const errorMessage = mockSetDatasetFlowBatchingError.datasets.byId?.flows.configs.setConfigTransform.message;
         spyOn(datasetFlowApi, "setDatasetFlowBatching").and.returnValue(of(mockSetDatasetFlowBatchingError));
         const toastrServiceErrorSpy = spyOn(toastService, "error");
 
@@ -133,7 +136,7 @@ describe("DatasetSchedulingService", () => {
                 datasetId: MOCK_DATASET_ID,
                 datasetFlowType: DatasetFlowType.ExecuteTransform,
                 paused: false,
-                batching: MOCK_BATCHING_CONFIG,
+                transform: MOCK_BATCHING_CONFIG,
                 datasetInfo: mockDatasetInfo,
             })
             .subscribe(() => {

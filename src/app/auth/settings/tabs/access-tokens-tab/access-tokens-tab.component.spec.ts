@@ -21,7 +21,7 @@ import { PaginationComponent } from "src/app/components/pagination-component/pag
 import { NgbPaginationModule } from "@ng-bootstrap/ng-bootstrap";
 import { TokenCreateStep } from "../../account-settings.constants";
 import { ModalService } from "src/app/components/modal/modal.service";
-import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 describe("AccessTokensTabComponent", () => {
     let component: AccessTokensTabComponent;
@@ -160,12 +160,12 @@ describe("AccessTokensTabComponent", () => {
     });
 
     it("should check toggle status tokens", () => {
-        let matSlideToggleEvent = { checked: true } as MatSlideToggleChange;
-        component.toggleTokens(matSlideToggleEvent);
-        expect(component.dataSource.filter).toEqual("true");
-
-        matSlideToggleEvent = { checked: false } as MatSlideToggleChange;
-        component.toggleTokens(matSlideToggleEvent);
+        component.showRevokedToken = true;
+        component.toggleTokens();
         expect(component.dataSource.filter).toEqual("");
+
+        component.showRevokedToken = false;
+        component.toggleTokens();
+        expect(component.dataSource.filter).toEqual("false");
     });
 });

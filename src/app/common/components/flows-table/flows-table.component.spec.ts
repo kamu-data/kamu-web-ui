@@ -1,3 +1,4 @@
+import { Apollo } from "apollo-angular";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FlowsTableComponent } from "./flows-table.component";
 import { MatTableModule } from "@angular/material/table";
@@ -23,6 +24,7 @@ import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { mockDatasets } from "./flows-table.helpers.mock";
 import { mockDatasetMainDataId } from "src/app/search/mock.data";
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
+import { ToastrModule } from "ngx-toastr";
 
 describe("FlowsTableComponent", () => {
     let component: FlowsTableComponent;
@@ -34,6 +36,7 @@ describe("FlowsTableComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
+            providers: [Apollo],
             declarations: [FlowsTableComponent],
             imports: [
                 MatTableModule,
@@ -49,6 +52,7 @@ describe("FlowsTableComponent", () => {
                 SharedModule,
                 NgbTypeaheadModule,
                 AngularMultiSelectModule,
+                ToastrModule.forRoot(),
             ],
         }).compileComponents();
 

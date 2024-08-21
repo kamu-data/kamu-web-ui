@@ -89,7 +89,7 @@ export class DatasetFlowTableHelpers {
                             case "FlowDescriptionDatasetPushIngest":
                                 return element.description.ingestResult?.__typename ===
                                     "FlowDescriptionUpdateResultSuccess"
-                                    ? `Ingested ${element.description.ingestResult.numBlocks} new ${
+                                    ? `Ingested ${element.description.ingestResult.numRecords} new ${
                                           element.description.ingestResult.numRecords == 1 ? "record" : "records"
                                       } in ${element.description.ingestResult.numBlocks} new ${
                                           element.description.ingestResult.numBlocks == 1 ? "block" : "blocks"

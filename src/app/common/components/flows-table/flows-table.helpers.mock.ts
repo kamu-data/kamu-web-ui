@@ -150,6 +150,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             ingestResult: {
                 numBlocks: 4,
                 numRecords: 30,
+                __typename: "FlowDescriptionUpdateResultSuccess",
             },
             __typename: "FlowDescriptionDatasetPollingIngest",
         },

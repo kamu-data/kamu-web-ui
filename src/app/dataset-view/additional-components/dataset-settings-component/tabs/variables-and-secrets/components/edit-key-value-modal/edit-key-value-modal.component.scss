@@ -1,11 +1,7 @@
-:host {
-    ::ng-deep {
-        .mat-checkbox {
-            .mat-checkbox-ripple {
-                position: relative;
-            }
-        }
-    }
+.checkbox-uncacheable {
+    width: 16px;
+    height: 16px;
+    accent-color: rgba(63 81 181);
 }
 
 .eye-icon {

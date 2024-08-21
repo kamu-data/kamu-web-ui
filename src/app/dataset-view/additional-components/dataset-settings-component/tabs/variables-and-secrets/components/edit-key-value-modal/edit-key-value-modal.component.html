@@ -19,7 +19,8 @@
 <div class="body p-4">
     <form [formGroup]="keyValueForm" (ngSubmit)="onEditRow()">
         <div class="mt-4 d-flex align-items-center">
-            <mat-checkbox color="primary" class="example-margin" formControlName="isSecret">Secret value</mat-checkbox>
+            <input class="checkbox-uncacheable me-2" type="checkbox" formControlName="isSecret" />
+            <span class="d-inline-block">Secret value</span>
             <mat-icon
                 class="text-muted fs-5 ms-1 mt-2"
                 [matTooltip]="IS_SECRET_CONTROL_TOOLTIP"

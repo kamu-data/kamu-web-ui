@@ -23,6 +23,7 @@ import { AccountTabs } from "./account/account.constants";
 import { LoggedUserService } from "./auth/logged-user.service";
 import packageFile from "../../package.json";
 import { LocalStorageService } from "./services/local-storage.service";
+import { AccountSettingsTabs } from "./auth/settings/account-settings.constants";
 
 export const ALL_URLS_WITHOUT_HEADER: string[] = [ProjectLinks.URL_LOGIN, ProjectLinks.URL_GITHUB_CALLBACK];
 
@@ -197,7 +198,7 @@ export class AppComponent extends BaseComponent implements OnInit {
 
     public onSettings(): void {
         if (this.loggedUserService.maybeCurrentlyLoggedInUser?.accountName) {
-            this.navigationService.navigateToSettings();
+            this.navigationService.navigateToSettings(AccountSettingsTabs.ACCESS_TOKENS);
         } else {
             throwError(() => new AuthenticationError([new Error("Login is undefined")]));
         }

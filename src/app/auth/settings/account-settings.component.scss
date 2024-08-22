@@ -16,7 +16,7 @@
     padding: 0;
 
     &-item {
-        padding: 3px 0;
+        margin: 4px 0;
         position: relative;
         list-style: none;
         border-radius: 6px;
@@ -26,6 +26,14 @@
             &:hover {
                 cursor: pointer;
                 text-decoration: none;
+            }
+        }
+
+        .disabled {
+            color: rgb(33 37 41 / 75%);
+
+            &:hover {
+                cursor: not-allowed;
             }
         }
 

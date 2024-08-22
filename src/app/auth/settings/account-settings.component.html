@@ -40,12 +40,13 @@
                                 }"
                                 class="action-list-item"
                             >
+                                <!-- TODO: Add when menu item becomes active-->
+                                <!-- [routerLink]="getRouteLink(AccountSettingsTabs.PROFILE)" -->
                                 <a
                                     routerLinkActive="active"
-                                    [routerLink]="getRouteLink(AccountSettingsTabs.PROFILE)"
                                     aria-current="page"
                                     data-view-component="true"
-                                    class="action-list-content"
+                                    class="action-list-content disabled"
                                 >
                                     <span
                                         class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
@@ -61,11 +62,11 @@
                                 }"
                                 class="action-list-item"
                             >
+                                <!-- [routerLink]="getRouteLink(AccountSettingsTabs.ACCOUNT)" -->
                                 <a
                                     routerLinkActive="active"
-                                    [routerLink]="getRouteLink(AccountSettingsTabs.ACCOUNT)"
                                     data-view-component="true"
-                                    class="action-list-content"
+                                    class="action-list-content disabled"
                                 >
                                     <span
                                         class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
@@ -83,11 +84,11 @@
                                 }"
                                 class="action-list-item"
                             >
+                                <!-- [routerLink]="getRouteLink(AccountSettingsTabs.APPEARANCE)" -->
                                 <a
                                     routerLinkActive="active"
-                                    [routerLink]="getRouteLink(AccountSettingsTabs.APPEARANCE)"
                                     data-view-component="true"
-                                    class="action-list-content"
+                                    class="action-list-content disabled"
                                 >
                                     <span
                                         class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
@@ -105,11 +106,11 @@
                                 }"
                                 class="action-list-item"
                             >
+                                <!-- [routerLink]="getRouteLink(AccountSettingsTabs.ACCESSIBILITY)" -->
                                 <a
                                     routerLinkActive="active"
-                                    [routerLink]="getRouteLink(AccountSettingsTabs.ACCESSIBILITY)"
                                     data-view-component="true"
-                                    class="action-list-content"
+                                    class="action-list-content disabled"
                                 >
                                     <span
                                         class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
@@ -127,11 +128,11 @@
                                 }"
                                 class="action-list-item"
                             >
+                                <!-- [routerLink]="getRouteLink(AccountSettingsTabs.NOTIFICATIONS)" -->
                                 <a
                                     routerLinkActive="active"
-                                    [routerLink]="getRouteLink(AccountSettingsTabs.NOTIFICATIONS)"
                                     data-view-component="true"
-                                    class="action-list-content"
+                                    class="action-list-content disabled"
                                 >
                                     <span
                                         class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
@@ -170,11 +171,11 @@
                                             'action-list-item--nav__active': activeTab === AccountSettingsTabs.BILLING
                                         }"
                                     >
+                                        <!-- [routerLink]="getRouteLink(AccountSettingsTabs.BILLING)" -->
                                         <a
                                             routerLinkActive="active"
-                                            [routerLink]="getRouteLink(AccountSettingsTabs.BILLING)"
                                             data-view-component="true"
-                                            class="action-list-content"
+                                            class="action-list-content disabled"
                                         >
                                             <span
                                                 class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
@@ -192,11 +193,11 @@
                                             'action-list-item--nav__active': activeTab === AccountSettingsTabs.EMAILS
                                         }"
                                     >
+                                        <!-- [routerLink]="getRouteLink(AccountSettingsTabs.EMAILS)" -->
                                         <a
                                             routerLinkActive="active"
-                                            [routerLink]="getRouteLink(AccountSettingsTabs.EMAILS)"
                                             data-view-component="true"
-                                            class="action-list-content"
+                                            class="action-list-content disabled"
                                         >
                                             <span
                                                 class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
@@ -214,11 +215,11 @@
                                             'action-list-item--nav__active': activeTab === AccountSettingsTabs.SECURITY
                                         }"
                                     >
+                                        <!-- [routerLink]="getRouteLink(AccountSettingsTabs.SECURITY)" -->
                                         <a
                                             routerLinkActive="active"
-                                            [routerLink]="getRouteLink(AccountSettingsTabs.SECURITY)"
                                             data-view-component="true"
-                                            class="action-list-content"
+                                            class="action-list-content disabled"
                                         >
                                             <span
                                                 class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
@@ -237,11 +238,11 @@
                                                 activeTab === AccountSettingsTabs.ORGANIZATIONS
                                         }"
                                     >
+                                        <!-- [routerLink]="getRouteLink(AccountSettingsTabs.ORGANIZATIONS)" -->
                                         <a
                                             routerLinkActive="active"
-                                            [routerLink]="getRouteLink(AccountSettingsTabs.ORGANIZATIONS)"
                                             data-view-component="true"
-                                            class="action-list-content"
+                                            class="action-list-content disabled"
                                         >
                                             <span
                                                 class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"

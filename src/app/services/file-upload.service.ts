@@ -1,5 +1,5 @@
 import { AppConfigService } from "src/app/app-config.service";
-import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpUrlEncodingCodec } from "@angular/common/http";
 import { Injectable, Injector } from "@angular/core";
 import { Observable, Subject, catchError, finalize, first, of, switchMap, tap } from "rxjs";
 import { MaybeUndefined } from "../common/app.types";
@@ -108,9 +108,10 @@ export class FileUploadService {
     }
 
     public uploadFilePrepare(file: File): Observable<UploadPrepareResponse> {
+        const codec = new HttpUrlEncodingCodec();
         return this.http.post<UploadPrepareResponse>(
             `${this.appConfigService.apiServerHttpUrl}/platform/file/upload/prepare?fileName=` +
-                file.name +
+                `${codec.encodeValue(file.name)}` +
                 "&contentLength=" +
                 file.size +
                 "&contentType=" +

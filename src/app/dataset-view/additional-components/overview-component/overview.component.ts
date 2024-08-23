@@ -236,6 +236,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     public get showAddDataButton(): boolean {
         return (
+            Boolean(this.currentState?.data.length) &&
             this.isUserLogged &&
             !this.currentState?.overview.metadata.currentPollingSource &&
             this.datasetBasics.kind === DatasetKind.Root

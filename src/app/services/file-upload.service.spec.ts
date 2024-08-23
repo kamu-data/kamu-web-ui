@@ -3,7 +3,7 @@ import { FileUploadService } from "./file-upload.service";
 import { Apollo } from "apollo-angular";
 import { mockDatasetBasicsRootFragment, mockDatasetInfo } from "../search/mock.data";
 import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
-import { HttpHeaders } from "@angular/common/http";
+import { HttpHeaders, HttpUrlEncodingCodec } from "@angular/common/http";
 import { first, of } from "rxjs";
 import { ProtocolsService } from "./protocols.service";
 import { mockDatasetEndPoints } from "../components/data-access-panel/data-access-panel-mock.data";
@@ -16,6 +16,7 @@ describe("FileUploadService", () => {
     let appConfigService: AppConfigService;
     let httpTestingController: HttpTestingController;
     const mockUrl = "https://my-test";
+    const codec = new HttpUrlEncodingCodec();
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -93,5 +94,23 @@ describe("FileUploadService", () => {
         const testRequest = httpTestingController.expectOne(expectedUrl);
         expect(testRequest.request.method).toEqual("POST");
         testRequest.flush(mockResponse);
+    });
+
+    [
+        { case: "fileName whitespace", expected: "fileName%20whitespace" },
+        { case: "fileName\\", expected: "fileName%5C" },
+        { case: "fileName*", expected: "fileName*" },
+        { case: "fileName#", expected: "fileName%23" },
+        { case: "fileName&", expected: "fileName%26" },
+        { case: "fileName>", expected: "fileName%3E" },
+        { case: "fileName|", expected: "fileName%7C" },
+        { case: "fileName;", expected: "fileName;" },
+        { case: "fileName!", expected: "fileName!" },
+        { case: "fileName{", expected: "fileName%7B" },
+        { case: "fileName[", expected: "fileName%5B" },
+    ].forEach((item: { case: string; expected: string }) => {
+        it(`should encode file name with ${item.case}`, () => {
+            expect(codec.encodeValue(item.case)).toEqual(item.expected);
+        });
     });
 });

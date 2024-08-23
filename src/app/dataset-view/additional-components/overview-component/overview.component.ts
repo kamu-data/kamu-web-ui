@@ -234,6 +234,14 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         return !_.isNil(this.currentState?.overview.metadata.currentWatermark);
     }
 
+    public get showAddDataButton(): boolean {
+        return (
+            this.isUserLogged &&
+            !this.currentState?.overview.metadata.currentPollingSource &&
+            this.datasetBasics.kind === DatasetKind.Root
+        );
+    }
+
     public openInformationModal() {
         const modalRef: NgbModalRef = this.ngbModalService.open(EditDetailsModalComponent);
         const modalRefInstance = modalRef.componentInstance as EditDetailsModalComponent;

@@ -210,9 +210,8 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         return (
             node.description.__typename === "FlowDescriptionDatasetPollingIngest" &&
             node.description.ingestResult?.__typename === "FlowDescriptionUpdateResultUpToDate" &&
-            node.description.ingestResult.uncacheable &&
-            node.configSnapshot?.__typename === "FlowConfigurationIngest" &&
-            !node.configSnapshot.fetchUncacheable
+            ((node.configSnapshot?.__typename === "FlowConfigurationIngest" && !node.configSnapshot.fetchUncacheable) ||
+                !node.configSnapshot)
         );
     }
 

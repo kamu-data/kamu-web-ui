@@ -234,6 +234,8 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
                         this.toastrService.success("Success");
                     }
                 });
+        } else {
+            throw new Error("Configuration snapshot is undefined");
         }
     }
 

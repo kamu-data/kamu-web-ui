@@ -26,6 +26,14 @@ query getDatasetFlowConfigs($datasetId: DatasetID!, $datasetFlowType: DatasetFlo
               }
               minRecordsToAwait
             }
+
+            compaction {
+              ... on CompactionFull {
+                maxSliceSize
+                maxSliceRecords
+                recursive
+              }
+            }
           }
         }
       }

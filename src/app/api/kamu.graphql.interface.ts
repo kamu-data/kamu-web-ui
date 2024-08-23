@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "apollo-angular";
+import { gql } from "@apollo/client/core";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -4049,6 +4049,15 @@ export type GetDatasetFlowConfigsQuery = {
                                   minRecordsToAwait: number;
                                   maxBatchingInterval: { __typename?: "TimeDelta" } & TimeDeltaDataFragment;
                               } | null;
+                              compaction?:
+                                  | {
+                                        __typename?: "CompactionFull";
+                                        maxSliceSize: number;
+                                        maxSliceRecords: number;
+                                        recursive: boolean;
+                                    }
+                                  | { __typename?: "CompactionMetadataOnly" }
+                                  | null;
                           } | null;
                       };
                   };
@@ -6805,6 +6814,13 @@ export const GetDatasetFlowConfigsDocument = gql`
                                     ...TimeDeltaData
                                 }
                                 minRecordsToAwait
+                            }
+                            compaction {
+                                ... on CompactionFull {
+                                    maxSliceSize
+                                    maxSliceRecords
+                                    recursive
+                                }
                             }
                         }
                     }

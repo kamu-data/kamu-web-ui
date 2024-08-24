@@ -1,5 +1,5 @@
 import { AppConfigService } from "src/app/app-config.service";
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpUrlEncodingCodec } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { Injectable, Injector } from "@angular/core";
 import { Observable, Subject, catchError, finalize, first, of, switchMap, tap } from "rxjs";
 import { MaybeUndefined } from "../common/app.types";
@@ -108,17 +108,13 @@ export class FileUploadService {
     }
 
     public uploadFilePrepare(file: File): Observable<UploadPrepareResponse> {
-        const codec = new HttpUrlEncodingCodec();
-        return this.http.post<UploadPrepareResponse>(
-            `${this.appConfigService.apiServerHttpUrl}/platform/file/upload/prepare?fileName=` +
-                `${codec.encodeValue(file.name)}` +
-                "&contentLength=" +
-                file.size +
-                "&contentType=" +
-                file.type,
-            null,
-            { headers: { Authorization: `Bearer ${this.localStorageService.accessToken}` } },
-        );
+        const url = new URL(`${this.appConfigService.apiServerHttpUrl}/platform/file/upload/prepare`);
+        url.searchParams.append("fileName", file.name);
+        url.searchParams.append("contentLength", file.size.toString());
+        url.searchParams.append("contentType", file.type);
+        return this.http.post<UploadPrepareResponse>(url.href, null, {
+            headers: { Authorization: `Bearer ${this.localStorageService.accessToken}` },
+        });
     }
 
     public uploadPostFile(url: string, bodyObject: File | FormData, uploadHeaders: HttpHeaders): Observable<object> {

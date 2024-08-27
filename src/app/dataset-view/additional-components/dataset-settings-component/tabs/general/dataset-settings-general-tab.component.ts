@@ -1,3 +1,4 @@
+import { DatasetFlowsService } from "./../../../flows-component/services/dataset-flows.service";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { BaseComponent } from "../../../../../common/base.component";
@@ -42,6 +43,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
         private fb: FormBuilder,
         private modalService: ModalService,
         private datasetCompactionService: DatasetCompactionService,
+        private flowsService: DatasetFlowsService,
         private navigationService: NavigationService,
     ) {
         super();
@@ -163,13 +165,15 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                                 break;
                             }
                             case DatasetResetMode.RESET_METADATA_ONLY: {
-                                this.datasetCompactionService
-                                    .runHardCompaction({
+                                this.flowsService
+                                    .datasetTriggerFlow({
                                         datasetId: this.datasetBasics.id,
                                         datasetFlowType: DatasetFlowType.HardCompaction,
-                                        compactionArgs: {
-                                            metadataOnly: {
-                                                recursive: this.recursiveControl.value,
+                                        flowRunConfiguration: {
+                                            compaction: {
+                                                metadataOnly: {
+                                                    recursive: this.recursiveControl.value,
+                                                },
                                             },
                                         },
                                     })

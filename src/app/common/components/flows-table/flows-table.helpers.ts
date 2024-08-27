@@ -97,8 +97,9 @@ export class DatasetFlowTableHelpers {
                                     : element.description.ingestResult?.__typename ===
                                             "FlowDescriptionUpdateResultUpToDate" &&
                                         element.description.ingestResult.uncacheable &&
-                                        element.configSnapshot?.__typename === "FlowConfigurationIngest" &&
-                                        !element.configSnapshot.fetchUncacheable
+                                        ((element.configSnapshot?.__typename === "FlowConfigurationIngest" &&
+                                            !element.configSnapshot.fetchUncacheable) ||
+                                            !element.configSnapshot)
                                       ? `Source is uncacheable: to re-scan the data, use`
                                       : "Dataset is up-to-date";
 

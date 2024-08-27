@@ -9,6 +9,7 @@ import { isValidCronExpression } from "./cron-expression-validator.helper";
 import { ErrorPolicy, WatchQueryFetchPolicy } from "@apollo/client";
 import moment from "moment";
 import { convertSecondsToHumanReadableFormat } from "./app.helpers";
+import { SliceUnit } from "../dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
 
 export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";
@@ -311,3 +312,13 @@ export const noWhitespaceValidator = (control: FormControl): ValidationErrors | 
     const isSpace = ((control.value as string) || "").match(/\s/g);
     return isSpace ? { whitespace: true } : null;
 };
+
+export function sliceSizeMapperReverse(sizeInBytes: number): { size: number; unit: SliceUnit } {
+    if (sizeInBytes % Math.pow(2, 30) === 0) {
+        return { size: sizeInBytes / Math.pow(2, 30), unit: SliceUnit.GB };
+    } else if (sizeInBytes % Math.pow(2, 20) === 0) {
+        return { size: sizeInBytes / Math.pow(2, 20), unit: SliceUnit.MB };
+    } else {
+        return { size: sizeInBytes / Math.pow(2, 10), unit: SliceUnit.KB };
+    }
+}

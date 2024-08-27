@@ -234,6 +234,19 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         return !_.isNil(this.currentState?.overview.metadata.currentWatermark);
     }
 
+    public get showAddDataButton(): boolean {
+        if (Boolean(this.currentState?.data.length) && this.isUserLogged) {
+            return (
+                (!this.currentState?.overview.metadata.currentPollingSource &&
+                    this.datasetBasics.kind === DatasetKind.Root) ||
+                (!this.currentState?.overview.metadata.currentTransform &&
+                    this.datasetBasics.kind === DatasetKind.Derivative)
+            );
+        } else {
+            return false;
+        }
+    }
+
     public openInformationModal() {
         const modalRef: NgbModalRef = this.ngbModalService.open(EditDetailsModalComponent);
         const modalRefInstance = modalRef.componentInstance as EditDetailsModalComponent;

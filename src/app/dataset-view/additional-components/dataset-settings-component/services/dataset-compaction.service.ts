@@ -36,10 +36,15 @@ export class DatasetCompactionService {
                 }
             }),
             switchMap((success: boolean) => {
-                if (success) {
+                if (success && params.compactionArgs.full) {
                     return this.flowsService.datasetTriggerFlow({
                         datasetId: params.datasetId,
                         datasetFlowType: params.datasetFlowType,
+                        flowRunConfiguration: {
+                            compaction: {
+                                full: params.compactionArgs.full,
+                            },
+                        },
                     });
                 }
                 return of(false);

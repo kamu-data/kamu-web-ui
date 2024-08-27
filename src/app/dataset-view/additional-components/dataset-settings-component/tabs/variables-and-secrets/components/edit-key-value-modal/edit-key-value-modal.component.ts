@@ -6,7 +6,7 @@ import { MaybeNull } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
 import { noWhitespaceValidator } from "src/app/common/data.helpers";
 import { DatasetEvnironmentVariablesService } from "src/app/services/dataset-evnironment-variables.service";
-import { KeyValueFormType } from "./edit-key-value-modal.types";
+import { EnvAndSecretsFormType } from "./edit-key-value-modal.types";
 
 @Component({
     selector: "app-edit-key-value-modal",
@@ -20,8 +20,8 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
     public readonly KEY_MAX_LENGTH = 200;
     public readonly IS_SECRET_CONTROL_TOOLTIP =
         "While both secrets and variables are stored encrypted, making value a secret ensures that is used without ever being exposed by the system in task logs and other places. Use secrets for sensitive information like API keys and auth tokens.";
-    public keyValueForm: FormGroup<KeyValueFormType> = this.fb.group({
-        key: ["", [Validators.required, Validators.maxLength(this.KEY_MAX_LENGTH), noWhitespaceValidator]],
+    public keyValueForm: FormGroup<EnvAndSecretsFormType> = this.fb.nonNullable.group({
+        keyEnvVariable: ["", [Validators.required, Validators.maxLength(this.KEY_MAX_LENGTH), noWhitespaceValidator()]],
         value: ["", [Validators.required]],
         isSecret: [false],
     });
@@ -43,15 +43,15 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
         this.setInitialFormValue();
     }
 
-    public get keyControl(): AbstractControl {
-        return this.keyValueForm.controls.key;
+    public get keyControl(): AbstractControl<string> {
+        return this.keyValueForm.controls.keyEnvVariable;
     }
 
-    public get valueControl(): AbstractControl {
+    public get valueControl(): AbstractControl<string> {
         return this.keyValueForm.controls.value;
     }
 
-    public get isSecretControl(): AbstractControl {
+    public get isSecretControl(): AbstractControl<boolean> {
         return this.keyValueForm.controls.isSecret;
     }
 
@@ -62,10 +62,8 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
                     .saveEnvVariable({
                         accountId: this.datasetBasics.owner.id,
                         datasetId: this.datasetBasics.id,
-                        key: this.keyValueForm.controls.key.value as string,
-                        value: this.exposedValue
-                            ? this.exposedValue
-                            : (this.keyValueForm.controls.value.value as string),
+                        key: this.keyControl.value ?? "",
+                        value: this.exposedValue ? this.exposedValue : this.keyValueForm.controls.value.value ?? "",
                         isSecret: this.keyValueForm.controls.isSecret.value ? true : false,
                     })
                     .subscribe(() => {
@@ -79,7 +77,7 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
                         accountId: this.datasetBasics.owner.id,
                         datasetId: this.datasetBasics.id,
                         id: this.row.id,
-                        newValue: this.keyValueForm.controls.value.value as string,
+                        newValue: this.keyValueForm.controls.value.value ?? "",
                         isSecret: this.keyValueForm.controls.isSecret.value ? true : false,
                     })
                     .subscribe(() => {
@@ -96,7 +94,7 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
         } else {
             this.fetchExposedValue();
             this.keyValueForm.patchValue({
-                value: this.isShowExposedValue ? this.exposedValue : (this.valueControl.value as string),
+                value: this.isShowExposedValue ? this.exposedValue : this.valueControl.value,
             });
         }
     }
@@ -123,8 +121,8 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
     private setInitialFormValue(): void {
         if (this.row) {
             this.keyValueForm.patchValue({
-                key: this.row.key,
-                value: this.row.isSecret ? this.exposedValue : this.row.value,
+                keyEnvVariable: this.row.key,
+                value: this.row.isSecret ? this.exposedValue : this.row.value ?? "",
                 isSecret: this.row.isSecret,
             });
             this.row.isSecret ? this.isSecretControl.disable() : this.isSecretControl.enable();

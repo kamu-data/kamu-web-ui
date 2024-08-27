@@ -108,16 +108,13 @@ export class FileUploadService {
     }
 
     public uploadFilePrepare(file: File): Observable<UploadPrepareResponse> {
-        return this.http.post<UploadPrepareResponse>(
-            `${this.appConfigService.apiServerHttpUrl}/platform/file/upload/prepare?fileName=` +
-                file.name +
-                "&contentLength=" +
-                file.size +
-                "&contentType=" +
-                file.type,
-            null,
-            { headers: { Authorization: `Bearer ${this.localStorageService.accessToken}` } },
-        );
+        const url = new URL(`${this.appConfigService.apiServerHttpUrl}/platform/file/upload/prepare`);
+        url.searchParams.append("fileName", file.name);
+        url.searchParams.append("contentLength", file.size.toString());
+        url.searchParams.append("contentType", file.type);
+        return this.http.post<UploadPrepareResponse>(url.href, null, {
+            headers: { Authorization: `Bearer ${this.localStorageService.accessToken}` },
+        });
     }
 
     public uploadPostFile(url: string, bodyObject: File | FormData, uploadHeaders: HttpHeaders): Observable<object> {

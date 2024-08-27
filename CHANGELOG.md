@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Fixed
 - Disabled unused menu items for account settings
 - The file name for the file upload service may contain special characters.
+- Added form initialization for an existing configuration(Compaction tab)
 
 ## [0.25.1] -2024-08-22
 ## Added

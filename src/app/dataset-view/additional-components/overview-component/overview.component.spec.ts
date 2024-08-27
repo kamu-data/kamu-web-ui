@@ -1,7 +1,7 @@
 import { ReactiveFormsModule } from "@angular/forms";
 import { ApolloModule } from "apollo-angular";
 import { Apollo } from "apollo-angular";
-import { mockFullPowerDatasetPermissionsFragment } from "../../../search/mock.data";
+import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "../../../search/mock.data";
 import { mockMetadataDerivedUpdate, mockOverviewDataUpdate } from "../data-tabs.mock";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
@@ -272,6 +272,21 @@ describe("OverviewComponent", () => {
             const refreshButton = findElementByDataTestId(fixture, "refresh-now-button") as HTMLButtonElement;
             expect(refreshButton.disabled).toBeTrue();
         });
+
+        it("should check show Add data button without currentPollingSource", () => {
+            currentOverview().metadata.currentPollingSource = null;
+            spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+            fixture.detectChanges();
+
+            expect(component.showAddDataButton).toEqual(true);
+        });
+
+        it("should check don't show Add data button with currentPollingSource", () => {
+            spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+            fixture.detectChanges();
+
+            expect(component.showAddDataButton).toEqual(false);
+        });
     });
 
     describe("SetTransform", () => {
@@ -324,6 +339,24 @@ describe("OverviewComponent", () => {
                 accountName: mockOverviewDataUpdate.overview.owner.accountName,
                 datasetName: mockOverviewDataUpdate.overview.name,
             });
+        });
+
+        it("should check show Add data button without currentTransform", () => {
+            component.datasetBasics = mockDatasetBasicsDerivedFragment;
+            currentOverview().metadata.currentTransform = null;
+            spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+            fixture.detectChanges();
+
+            expect(component.showAddDataButton).toEqual(true);
+        });
+
+        it("should check don't show Add data button with currentTransform", () => {
+            component.datasetBasics = mockDatasetBasicsDerivedFragment;
+            currentOverview().metadata.currentTransform = { __typename: "SetTransform" };
+            spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+            fixture.detectChanges();
+
+            expect(component.showAddDataButton).toEqual(false);
         });
     });
 

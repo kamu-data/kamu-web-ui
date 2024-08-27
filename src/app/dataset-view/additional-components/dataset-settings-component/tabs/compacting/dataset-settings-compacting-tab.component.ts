@@ -11,13 +11,14 @@ import {
 import { promiseWithCatch } from "src/app/common/app.helpers";
 import { CompactionTooltipsTexts } from "src/app/common/tooltips/compacting.text";
 import { ModalService } from "src/app/components/modal/modal.service";
-import { SliceUnit, sliceSizeMapper, sliceSizeMapperReverse } from "./dataset-settings-compacting-tab.types";
+import { SliceUnit, sliceSizeMapper } from "./dataset-settings-compacting-tab.types";
 import { DatasetCompactionService } from "../../services/dataset-compaction.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import AppValues from "src/app/common/app.values";
 import { BaseComponent } from "src/app/common/base.component";
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { sliceSizeMapperReverse } from "src/app/common/data.helpers";
 
 @Component({
     selector: "app-dataset-settings-compacting-tab",
@@ -48,6 +49,7 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent impleme
     ) {
         super();
     }
+
     ngOnInit(): void {
         this.patchCompactionForm();
     }

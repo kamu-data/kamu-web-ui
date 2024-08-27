@@ -6,6 +6,7 @@ import { MaybeNull } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
 import { noWhitespaceValidator } from "src/app/common/data.helpers";
 import { DatasetEvnironmentVariablesService } from "src/app/services/dataset-evnironment-variables.service";
+import { KeyValueFormType } from "./edit-key-value-modal.types";
 
 @Component({
     selector: "app-edit-key-value-modal",
@@ -19,7 +20,7 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
     public readonly KEY_MAX_LENGTH = 200;
     public readonly IS_SECRET_CONTROL_TOOLTIP =
         "While both secrets and variables are stored encrypted, making value a secret ensures that is used without ever being exposed by the system in task logs and other places. Use secrets for sensitive information like API keys and auth tokens.";
-    public keyValueForm: FormGroup = this.fb.group({
+    public keyValueForm: FormGroup<KeyValueFormType> = this.fb.group({
         key: ["", [Validators.required, Validators.maxLength(this.KEY_MAX_LENGTH), noWhitespaceValidator]],
         value: ["", [Validators.required]],
         isSecret: [false],

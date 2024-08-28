@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The file name for the file upload service may contain special characters.
 - Added form initialization for an existing configuration(Compaction tab)
 - Added typed forms for all application
+### Changed
+- Added an `required` option for input parameters
 
 ## [0.25.1] -2024-08-22
 ## Added

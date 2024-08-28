@@ -9,3 +9,7 @@ export interface ResetDatasetFormType {
     mode: FormControl<DatasetResetMode>;
     recursive: FormControl<boolean>;
 }
+
+export interface RenameDatasetFormType {
+    datasetName: FormControl<string>;
+}

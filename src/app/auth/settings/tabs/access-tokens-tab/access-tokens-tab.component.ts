@@ -19,6 +19,7 @@ import AppValues from "src/app/common/app.values";
 import { AccessTokenService } from "src/app/services/access-token.service";
 import { BaseComponent } from "src/app/common/base.component";
 import ProjectLinks from "src/app/project-links";
+import { CreateTokenFormType } from "./access-tokens-tab.types";
 
 @Component({
     selector: "app-access-tokens-tab",
@@ -35,7 +36,7 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
     public composedToken = "";
     public currentCreateStep = TokenCreateStep.INITIAL;
     public pageBasedInfo: PageBasedInfo;
-    public createTokenForm: FormGroup = this.fb.group({
+    public createTokenForm: FormGroup<CreateTokenFormType> = this.fb.group({
         name: ["", [Validators.required, Validators.maxLength(100)]],
     });
     public showRevokedToken = false;

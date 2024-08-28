@@ -1,24 +1,24 @@
 import { BaseComponent } from "src/app/common/base.component";
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FileUrlFormType } from "./file-from-url-modal.types";
 
 @Component({
     selector: "app-file-from-url-modal",
     templateUrl: "./file-from-url-modal.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileFromUrlModalComponent extends BaseComponent implements OnInit {
-    public fileUrlForm: FormGroup = this.fb.group({
-        fileUrl: ["", [Validators.required]],
-    });
+export class FileFromUrlModalComponent extends BaseComponent {
+    public fileUrlForm: FormGroup<FileUrlFormType>;
 
     constructor(
         public activeModal: NgbActiveModal,
         private fb: FormBuilder,
     ) {
         super();
+        this.fileUrlForm = this.fb.group({
+            fileUrl: ["", [Validators.required]],
+        });
     }
-
-    ngOnInit(): void {}
 }

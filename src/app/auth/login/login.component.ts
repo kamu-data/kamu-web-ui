@@ -10,6 +10,7 @@ import { Observable, shareReplay } from "rxjs";
 import { ActivatedRoute, Params } from "@angular/router";
 import { BaseComponent } from "src/app/common/base.component";
 import { LocalStorageService } from "src/app/services/local-storage.service";
+import { LoginFormType } from "./login.component.model";
 
 @Component({
     selector: "app-login",
@@ -27,7 +28,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
     public readonly LoginMethod = LoginMethod;
 
     public selectedLoginMethod?: LoginMethod = undefined;
-    public passwordLoginForm: FormGroup;
+    public passwordLoginForm: FormGroup<LoginFormType>;
     public passwordLoginError$: Observable<string> =
         this.loginService.passwordLoginErrorOccurrences.pipe(shareReplay());
 

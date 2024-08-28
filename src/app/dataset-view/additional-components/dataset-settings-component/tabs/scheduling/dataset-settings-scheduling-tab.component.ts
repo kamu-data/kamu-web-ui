@@ -14,6 +14,7 @@ import {
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
 import { cronExpressionValidator, everyTimeMapperValidators } from "src/app/common/data.helpers";
 import { cronExpressionNextTime, logError } from "src/app/common/app.helpers";
+import { BatchingFormType, PollingFormType, PollingGroupType } from "./dataset-settings-scheduling-tab.component.types";
 
 @Component({
     selector: "app-dataset-settings-scheduling-tab",
@@ -30,29 +31,29 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
     private scheduleOptions: IngestConditionInput;
     private everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = everyTimeMapperValidators;
 
-    public pollingForm = new FormGroup({
-        updatesState: new FormControl(false),
-        pollingGroup: new FormGroup({
+    public pollingForm = new FormGroup<PollingFormType>({
+        updatesState: new FormControl<boolean>(false, { nonNullable: true }),
+        pollingGroup: new FormGroup<PollingGroupType>({
             __typename: new FormControl(PollingGroupEnum.TIME_DELTA, [Validators.required]),
-            every: new FormControl<number | undefined>({ value: undefined, disabled: true }, [
+            every: new FormControl<MaybeNull<number>>({ value: null, disabled: true }, [
                 Validators.required,
                 Validators.min(1),
             ]),
-            unit: new FormControl<TimeUnit | undefined>({ value: undefined, disabled: true }, [Validators.required]),
+            unit: new FormControl<MaybeNull<TimeUnit>>({ value: null, disabled: true }, [Validators.required]),
             cronExpression: new FormControl<MaybeNull<string>>({ value: "", disabled: true }, [
                 Validators.required,
                 cronExpressionValidator(),
             ]),
-            fetchUncacheable: new FormControl(false),
+            fetchUncacheable: new FormControl<boolean>(false, { nonNullable: true }),
         }),
     });
 
-    public batchingForm = new FormGroup({
-        every: new FormControl<number | undefined>({ value: undefined, disabled: true }, [
+    public batchingForm = new FormGroup<BatchingFormType>({
+        every: new FormControl<MaybeNull<number>>({ value: null, disabled: true }, [
             Validators.required,
             Validators.min(1),
         ]),
-        unit: new FormControl<TimeUnit | undefined>({ value: undefined, disabled: true }, [Validators.required]),
+        unit: new FormControl<MaybeNull<TimeUnit>>({ value: null, disabled: true }, [Validators.required]),
         minRecordsToAwait: new FormControl<MaybeNull<number>>({ value: null, disabled: true }, [
             Validators.required,
             Validators.min(1),

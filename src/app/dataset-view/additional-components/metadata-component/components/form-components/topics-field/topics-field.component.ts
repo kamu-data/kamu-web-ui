@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormBuilder, FormArray, FormGroup } from "@angular/forms";
 import { BaseField } from "../base-field";
 import { MqttQos } from "src/app/api/kamu.graphql.interface";
+import { KeyValueFormType } from "./topics-field.types";
 
 @Component({
     selector: "app-topics-field",
@@ -23,8 +24,8 @@ export class TopicsFieldComponent extends BaseField {
         return this.form.get(this.controlName) as FormArray;
     }
 
-    public get keyValueForm(): FormGroup {
-        return this.fb.group({
+    public get keyValueForm(): FormGroup<KeyValueFormType> {
+        return this.fb.group<KeyValueFormType>({
             path: this.fb.control("", RxwebValidators.required()),
             qos: this.fb.control(""),
         });

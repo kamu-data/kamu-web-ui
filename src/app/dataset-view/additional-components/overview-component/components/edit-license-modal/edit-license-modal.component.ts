@@ -15,6 +15,7 @@ import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-even
 import { DatasetCommitService } from "../../services/dataset-commit.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { finalize } from "rxjs";
+import { LicenseFormType } from "./edit-license-modal.types";
 
 @Component({
     selector: "app-edit-license-modal",
@@ -28,12 +29,7 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
         overview: DatasetOverviewFragment;
         size: DatasetDataSizeFragment;
     };
-    public licenseForm: FormGroup = this.fb.group({
-        name: ["", [Validators.required]],
-        shortName: ["", [Validators.required]],
-        websiteUrl: ["", [Validators.required, Validators.pattern(AppValues.URL_PATTERN)]],
-        spdxId: [""],
-    });
+    public licenseForm: FormGroup<LicenseFormType>;
 
     constructor(
         public activeModal: NgbActiveModal,
@@ -43,6 +39,12 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
         private loggedUserService: LoggedUserService,
     ) {
         super();
+        this.licenseForm = this.fb.group({
+            name: ["", [Validators.required]],
+            shortName: ["", [Validators.required]],
+            websiteUrl: ["", [Validators.required, Validators.pattern(AppValues.URL_PATTERN)]],
+            spdxId: [""],
+        });
     }
 
     ngOnInit(): void {

@@ -1,6 +1,7 @@
 import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { BaseField } from "../base-field";
+import { KeyValueForm } from "./key-value-field.types";
 
 @Component({
     selector: "app-key-value-field",
@@ -19,8 +20,8 @@ export class KeyValueFieldComponent extends BaseField {
         return this.form.get(this.controlName) as FormArray;
     }
 
-    public get keyValueForm(): FormGroup {
-        return this.fb.group({
+    public get keyValueForm(): FormGroup<KeyValueForm> {
+        return this.fb.group<KeyValueForm>({
             name: this.fb.control(""),
             value: this.fb.control(""),
         });

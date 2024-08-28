@@ -13,7 +13,7 @@ import {
 import { DatasetSettingsService } from "../../services/dataset-settings.service";
 import { Observable, shareReplay } from "rxjs";
 import { CompactionTooltipsTexts } from "src/app/common/tooltips/compacting.text";
-import { DatasetResetMode, ResetDatasetFormType } from "./dataset-settings-general-tab.types";
+import { DatasetResetMode, RenameDatasetFormType, ResetDatasetFormType } from "./dataset-settings-general-tab.types";
 import { DatasetCompactionService } from "../../services/dataset-compaction.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import AppValues from "src/app/common/app.values";
@@ -31,7 +31,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     @Input({ required: true }) public datasetPermissions: DatasetPermissionsFragment;
 
     public renameError$: Observable<string>;
-    public renameDatasetForm: FormGroup;
+    public renameDatasetForm: FormGroup<RenameDatasetFormType>;
     public resetDatasetForm: FormGroup<ResetDatasetFormType>;
 
     public readonly FLATTEN_METADATA_TOOLTIP = CompactionTooltipsTexts.RESET_BLOCK_FLATTEN_METADATA;
@@ -48,7 +48,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     ) {
         super();
         this.renameError$ = this.datasetSettingsService.renameDatasetErrorOccurrences.pipe(shareReplay());
-        this.renameDatasetForm = this.fb.group({
+        this.renameDatasetForm = this.fb.nonNullable.group({
             datasetName: [
                 this.getDatasetInfoFromUrl().datasetName,
                 [Validators.required, Validators.pattern(/^([a-zA-Z0-9][a-zA-Z0-9-]*)+(\.[a-zA-Z0-9][a-zA-Z0-9-]*)*$/)],

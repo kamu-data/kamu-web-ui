@@ -6,8 +6,8 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchSidenavComponent {
-    @Input() public searchValue: string;
-    @Input() public isMobileView: boolean;
+    @Input({ required: true }) public searchValue: string;
+    @Input({ required: true }) public isMobileView: boolean;
     @Output() public onInputSearch = new EventEmitter<string>();
 
     public onSearch(value: string): void {

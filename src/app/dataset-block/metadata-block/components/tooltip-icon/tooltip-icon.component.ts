@@ -7,6 +7,6 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TooltipIconComponent {
-    @Input() public tooltip: string;
+    @Input({ required: true }) public tooltip: string;
     public readonly OPEN_DELAY: number = AppValues.SHORT_DELAY_MS;
 }

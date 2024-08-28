@@ -18,8 +18,8 @@ import { finalize } from "rxjs";
     providers: [{ provide: OWL_DATE_TIME_FORMATS, useValue: MY_MOMENT_FORMATS }],
 })
 export class EditWatermarkModalComponent extends BaseComponent implements OnInit {
-    @Input() public currentWatermark: MaybeNullOrUndefined<string>;
-    @Input() public datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public currentWatermark: MaybeNullOrUndefined<string>;
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     public date: Date;
     public timeZone = this.currentTimeZone;
 

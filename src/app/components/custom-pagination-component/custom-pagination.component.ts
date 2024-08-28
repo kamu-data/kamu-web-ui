@@ -7,11 +7,11 @@ import { Component, Input, Output, EventEmitter, OnChanges, ChangeDetectionStrat
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomPaginationComponent implements OnChanges {
-    @Input() date = "";
-    @Input() hash = "";
-    @Input() pageIndex: number; // current offset
-    @Input() limit: number; // record per page
-    @Input() total: number; // total records
+    @Input({ required: true }) date = "";
+    @Input({ required: true }) hash = "";
+    @Input({ required: true }) pageIndex: number; // current offset
+    @Input({ required: true }) limit: number; // record per page
+    @Input({ required: true }) total: number; // total records
     @Input() range = 5;
     @Output() pageChange: EventEmitter<number>;
     totalPageNo: number[];

@@ -13,10 +13,10 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReadmeSectionComponent extends BaseComponent implements OnInit {
-    @Input() public datasetBasics: DatasetBasicsFragment;
-    @Input() public currentReadme?: MaybeNull<string>;
-    @Input() public editingInProgress = false;
-    @Input() public editable = true;
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public currentReadme?: MaybeNull<string>;
+    @Input({ required: true }) public editingInProgress = false;
+    @Input({ required: true }) public editable = true;
     @Output() public editViewShowEmitter = new EventEmitter<boolean>();
 
     public editMode: typeof EditMode = EditMode;

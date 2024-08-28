@@ -22,8 +22,8 @@ import { cronExpressionNextTime, logError } from "src/app/common/app.helpers";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetSettingsSchedulingTabComponent extends BaseComponent implements OnInit {
-    @Input() public datasetBasics: DatasetBasicsFragment;
-    @Input() public datasetPermissions: DatasetPermissionsFragment;
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public datasetPermissions: DatasetPermissionsFragment;
     public readonly pollingGroupEnum: typeof PollingGroupEnum = PollingGroupEnum;
     public readonly throttlingGroupEnum: typeof ThrottlingGroupEnum = ThrottlingGroupEnum;
     public readonly timeUnit: typeof TimeUnit = TimeUnit;

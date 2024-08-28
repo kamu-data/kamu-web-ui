@@ -27,8 +27,8 @@ export class RequestTimerComponent implements OnChanges, OnDestroy {
             this.stopTimer();
         }
     }
-    @Input() public class: string;
-    @Input() public sqlLoading: boolean = false;
+    @Input({ required: true }) public class: string;
+    @Input({ required: true }) public sqlLoading: boolean = false;
 
     private mm: number = 0;
     private ss: number = 0;

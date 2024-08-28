@@ -11,9 +11,9 @@ import { NavigationService } from "src/app/services/navigation.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetsTabComponent {
-    @Input() public datasets: DatasetSearchOverviewFragment[];
-    @Input() public accountName: string;
-    @Input() public pageInfo: PageBasedInfo;
+    @Input({ required: true }) public datasets: DatasetSearchOverviewFragment[];
+    @Input({ required: true }) public accountName: string;
+    @Input({ required: true }) public pageInfo: PageBasedInfo;
     public isClickableRow = true;
 
     constructor(private navigationService: NavigationService) {}

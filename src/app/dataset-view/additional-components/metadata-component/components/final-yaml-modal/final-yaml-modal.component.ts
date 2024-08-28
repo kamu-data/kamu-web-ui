@@ -11,9 +11,9 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinalYamlModalComponent extends BaseComponent {
-    @Input() public yamlTemplate: string;
-    @Input() public datasetInfo: DatasetInfo;
-    @Input() public enabledSaveBtn = true;
+    @Input({ required: true }) public yamlTemplate: string;
+    @Input({ required: true }) public datasetInfo: DatasetInfo;
+    @Input({ required: true }) public enabledSaveBtn = true;
 
     constructor(
         public activeModal: NgbActiveModal,

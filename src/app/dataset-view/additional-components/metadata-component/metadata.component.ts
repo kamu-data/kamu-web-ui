@@ -29,8 +29,8 @@ import { ModalService } from "src/app/components/modal/modal.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataComponent extends BaseComponent implements OnInit {
-    @Input() public datasetBasics: DatasetBasicsFragment;
-    @Input() public datasetPermissions: DatasetPermissionsFragment;
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public datasetPermissions: DatasetPermissionsFragment;
     @Output() pageChangeEmit = new EventEmitter<number>();
 
     public readonly ReadSectionMapping: Record<string, string> = {

@@ -9,7 +9,7 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EnginePropertyComponent extends BasePropertyComponent {
-    @Input() public data: string;
+    @Input({ required: true }) public data: string;
 
     public get engineLogo(): string | undefined {
         return DataHelpers.descriptionForEngine(this.data).url_logo;

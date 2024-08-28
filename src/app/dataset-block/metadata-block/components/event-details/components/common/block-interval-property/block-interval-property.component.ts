@@ -11,7 +11,7 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BlockIntervalPropertyComponent extends BasePropertyComponent implements OnInit {
-    @Input() public data: { prevBlockHash: string; newBlockHash: string; datasetId: string };
+    @Input({ required: true }) public data: { prevBlockHash: string; newBlockHash: string; datasetId: string };
     public datasetInfo: DatasetInfo = { accountName: "", datasetName: "" };
 
     constructor(private datasetService: DatasetService) {

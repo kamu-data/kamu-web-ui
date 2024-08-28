@@ -19,7 +19,7 @@ import { BaseComponent } from "src/app/common/base.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BaseDynamicEventComponent<TEvent extends object> extends BaseComponent implements AfterViewChecked {
-    @Input() public event: TEvent;
+    @Input({ required: true }) public event: TEvent;
     @ViewChildren("container", { read: ViewContainerRef })
     container: QueryList<ViewContainerRef>;
     public eventSections: EventSection[];

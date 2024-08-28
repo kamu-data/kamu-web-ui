@@ -10,7 +10,7 @@ import { DatasetFlowDetailsHelpers } from "../flow-details-history-tab/flow-deta
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlowDetailsSummaryTabComponent {
-    @Input() flowDetails: FlowSummaryDataFragment;
+    @Input({ required: true }) flowDetails: FlowSummaryDataFragment;
     public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;
     public readonly DATE_FORMAT = AppValues.DISPLAY_FLOW_DATE_FORMAT;
 

@@ -7,5 +7,5 @@ import { BaseField } from "../base-field";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckboxFieldComponent extends BaseField {
-    @Input() checked: boolean;
+    @Input({ required: true }) checked: boolean;
 }

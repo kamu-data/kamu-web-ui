@@ -9,7 +9,7 @@ import AppValues from "src/app/common/app.values";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DisplayTimeComponent extends BasePropertyComponent {
-    @Input() public data: string;
+    @Input({ required: true }) public data: string;
     @Input() public class?: string;
     @Input() public threshold?: moment.argThresholdOpts;
     @Input() public dataTestId: string;

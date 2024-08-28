@@ -34,7 +34,7 @@ import { SetLicenseEventComponent } from "./components/set-license-event/set-lic
 })
 export class EventDetailsComponent extends BaseComponent implements AfterViewInit {
     public block$: Observable<MetadataBlockFragment> = this.blockService.metadataBlockChanges;
-    @Input() public datasetInfo: DatasetInfo;
+    @Input({ required: true }) public datasetInfo: DatasetInfo;
 
     @ViewChild("dynamicContainer", { read: ViewContainerRef })
     public dynamicContainer: MaybeNull<ViewContainerRef>;

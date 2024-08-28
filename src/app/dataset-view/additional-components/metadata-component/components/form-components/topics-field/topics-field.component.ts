@@ -11,7 +11,7 @@ import { MqttQos } from "src/app/api/kamu.graphql.interface";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TopicsFieldComponent extends BaseField {
-    @Input() public buttonText: string;
+    @Input({ required: true }) public buttonText: string;
     @Input() public requiredField?: boolean;
     public readonly MqttQos: typeof MqttQos = MqttQos;
 

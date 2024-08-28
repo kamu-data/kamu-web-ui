@@ -12,9 +12,9 @@ import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BlockNavigationComponent {
-    @Input() public datasetHistory: MaybeNull<DatasetHistoryUpdate>;
-    @Input() public currentBlockHash: string;
-    @Input() public datasetInfo: DatasetInfo;
+    @Input({ required: true }) public datasetHistory: MaybeNull<DatasetHistoryUpdate>;
+    @Input({ required: true }) public currentBlockHash: string;
+    @Input({ required: true }) public datasetInfo: DatasetInfo;
     @Output() public onPageChangeEmit = new EventEmitter<number>();
     public searchHash = "";
     public currentPage = 1;

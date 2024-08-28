@@ -8,5 +8,5 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetAttachmentsEventComponent extends BaseComponent {
-    @Input() public event: SetAttachments;
+    @Input({ required: true }) public event: SetAttachments;
 }

@@ -13,7 +13,7 @@ import { Observable } from "rxjs";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataAccessPanelComponent implements OnInit {
-    @Input() datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) datasetBasics: DatasetBasicsFragment;
     public protocols$: Observable<MaybeUndefined<DatasetEndpoints>>;
 
     constructor(

@@ -13,7 +13,7 @@ import { NavigationService } from "src/app/services/navigation.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetNameByIdPropertyComponent extends BasePropertyComponent implements OnInit {
-    @Input() public data: string;
+    @Input({ required: true }) public data: string;
     public datasetInfo: DatasetInfo = { accountName: "", datasetName: "" };
 
     constructor(

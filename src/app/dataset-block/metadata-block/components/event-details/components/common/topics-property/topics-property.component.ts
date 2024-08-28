@@ -11,7 +11,7 @@ import { extractSchemaFieldsFromData } from "src/app/common/table.helper";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TopicsPropertyComponent extends BasePropertyComponent {
-    @Input() public data: MqttTopicSubscription[];
+    @Input({ required: true }) public data: MqttTopicSubscription[];
 
     public get tableSource(): DataRow[] {
         const result: DataRow[] = [];

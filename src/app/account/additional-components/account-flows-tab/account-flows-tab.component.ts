@@ -22,7 +22,7 @@ import { FlowsTableFiltersOptions } from "src/app/common/components/flows-table/
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent implements OnInit {
-    @Input() accountName: string;
+    @Input({ required: true }) accountName: string;
     public nodes: FlowSummaryDataFragment[] = [];
     public searchByDataset: DatasetListFlowsDataFragment[] = [];
     public readonly DISPLAY_COLUMNS = ["description", "information", "creator", "dataset", "options"];

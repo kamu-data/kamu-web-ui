@@ -10,7 +10,7 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SchemaPropertyComponent extends BasePropertyComponent {
-    @Input() public data: string[];
+    @Input({ required: true }) public data: string[];
 
     public get tableSource(): DataRow[] {
         return this.data.map((item: string) => ({

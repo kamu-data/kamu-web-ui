@@ -16,7 +16,7 @@ import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.inter
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddDataModalComponent extends BaseComponent {
-    @Input() public datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input() public overview?: OverviewUpdate;
 
     constructor(

@@ -8,8 +8,8 @@ import { PageBasedInfo } from "src/app/api/kamu.graphql.interface";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaginationComponent {
-    @Input() public currentPage: number;
-    @Input() public pageInfo: PageBasedInfo;
+    @Input({ required: true }) public currentPage: number;
+    @Input({ required: true }) public pageInfo: PageBasedInfo;
     @Output() public pageChangeEvent = new EventEmitter<number>();
 
     private previousPage: number;

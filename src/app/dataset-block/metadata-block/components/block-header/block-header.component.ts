@@ -13,8 +13,8 @@ import { BlockService } from "../../block.service";
 })
 export class BlockHeaderComponent extends BaseComponent implements OnInit {
     public block$: Observable<MetadataBlockFragment>;
-    @Input() public blockHash: string;
-    @Input() public datasetInfo: DatasetInfo;
+    @Input({ required: true }) public blockHash: string;
+    @Input({ required: true }) public datasetInfo: DatasetInfo;
 
     constructor(private blockService: BlockService) {
         super();

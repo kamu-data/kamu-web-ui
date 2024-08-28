@@ -33,11 +33,11 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     public readonly APP_LOGO = AppValues.APP_LOGO;
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
 
-    @Input() public isMobileView: boolean;
-    @Input() public isVisible: boolean;
-    @Input() public loggedAccount: AccountFragment;
-    @Input() public featureFlags: AppConfigFeatureFlags;
-    @Input() public loginMethods: LoginMethod[];
+    @Input({ required: true }) public isMobileView: boolean;
+    @Input({ required: true }) public isVisible: boolean;
+    @Input({ required: true }) public loggedAccount: AccountFragment;
+    @Input({ required: true }) public featureFlags: AppConfigFeatureFlags;
+    @Input({ required: true }) public loginMethods: LoginMethod[];
 
     @Output() public onSelectedDataset = new EventEmitter<DatasetAutocompleteItem>();
     @Output() public onClickedAddNew = new EventEmitter<null>();

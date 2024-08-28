@@ -24,7 +24,7 @@ import { FlowsTableFiltersOptions } from "src/app/common/components/flows-table/
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlowsComponent extends FlowsTableProcessingBaseComponent implements OnInit {
-    @Input() public datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     public searchFilter = "";
     public overview: DatasetOverviewFragment;
     public readonly DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"]; //1

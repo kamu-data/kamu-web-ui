@@ -31,8 +31,8 @@ import { NavigationService } from "src/app/services/navigation.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataComponent extends BaseComponent implements OnInit {
-    @Input() public datasetBasics: DatasetBasicsFragment;
-    @Input() public sqlLoading: boolean;
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public sqlLoading: boolean;
     @Input() public resultTime: number;
     @Output() public runSQLRequestEmit = new EventEmitter<DatasetRequestBySql>();
 

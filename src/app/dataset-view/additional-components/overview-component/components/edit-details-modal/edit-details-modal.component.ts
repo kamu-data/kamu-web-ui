@@ -20,13 +20,13 @@ import { finalize } from "rxjs";
     templateUrl: "./edit-details-modal.component.html",
 })
 export class EditDetailsModalComponent extends BaseComponent implements OnInit {
-    @Input() public currentState?: {
+    @Input({ required: true }) public currentState?: {
         schema: MaybeNull<DatasetSchema>;
         data: DataRow[];
         overview: DatasetOverviewFragment;
         size: DatasetDataSizeFragment;
     };
-    @Input() public datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     public keywordsSet = new Set([] as string[]);
     public description = "";
     public initialDescription = "";

@@ -7,7 +7,7 @@ import { DataHelpers } from "src/app/common/data.helpers";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrderPropertyComponent extends BasePropertyComponent {
-    @Input() public data: string;
+    @Input({ required: true }) public data: string;
 
     public get order(): string {
         return DataHelpers.descriptionOrder(this.data);

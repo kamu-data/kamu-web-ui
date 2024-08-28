@@ -19,7 +19,7 @@ import { isMobileView } from "src/app/common/app.helpers";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchAdditionalButtonsComponent implements OnInit {
-    @Input()
+    @Input({ required: true })
     public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[];
     @Output() public searchAdditionalButtonsMethod = new EventEmitter<string>();
     public shouldMinimizeSearchAdditionalButtons = false;

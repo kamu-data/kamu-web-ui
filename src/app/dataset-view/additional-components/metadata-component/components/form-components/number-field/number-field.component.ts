@@ -7,7 +7,7 @@ import { BaseField } from "../base-field";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NumberFieldComponent extends BaseField {
-    @Input() public value: string;
+    @Input({ required: true }) public value: string;
     @Input() public placeholder?: string;
     @Input() public requiredField?: boolean;
 }

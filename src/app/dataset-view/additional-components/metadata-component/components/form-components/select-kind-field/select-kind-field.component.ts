@@ -12,7 +12,7 @@ import AppValues from "src/app/common/app.values";
     providers: [NgbTooltipConfig],
 })
 export class SelectKindFieldComponent {
-    @Input() public form: FormGroup;
-    @Input() public data: RadioControlType[];
+    @Input({ required: true }) public form: FormGroup;
+    @Input({ required: true }) public data: RadioControlType[];
     public openDelay: number = AppValues.SHORT_DELAY_MS;
 }

@@ -8,5 +8,5 @@ import { TemporalTable } from "src/app/api/kamu.graphql.interface";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TemporalTablesPropertyComponent extends BasePropertyComponent {
-    @Input() public data: TemporalTable[];
+    @Input({ required: true }) public data: TemporalTable[];
 }

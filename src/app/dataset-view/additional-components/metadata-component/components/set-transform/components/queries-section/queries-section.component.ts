@@ -9,7 +9,7 @@ import { ViewportScroller } from "@angular/common";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QueriesSectionComponent {
-    @Input() public queries: Omit<SqlQueryStep, "__typename">[];
+    @Input({ required: true }) public queries: Omit<SqlQueryStep, "__typename">[];
 
     constructor(private scroll: ViewportScroller) {}
 

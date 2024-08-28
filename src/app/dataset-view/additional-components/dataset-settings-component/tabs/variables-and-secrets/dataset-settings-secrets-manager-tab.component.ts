@@ -32,7 +32,7 @@ export interface EnvVariableElement {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent implements OnInit {
-    @Input() public datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     public readonly DISPLAY_COLUMNS: string[] = ["key", "value", "actions"];
     public dataSource = new MatTableDataSource();
     public currentPage = 1;

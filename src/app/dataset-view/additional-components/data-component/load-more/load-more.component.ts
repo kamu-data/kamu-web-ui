@@ -11,7 +11,7 @@ export class LoadMoreComponent {
     public rowsNumber: number = AppValues.SQL_QUERY_LIMIT;
     public isHolderVisible = false;
 
-    @Input() public isAllDataLoaded = false;
+    @Input({ required: true }) public isAllDataLoaded = false;
 
     @Output() public loadMoreEmit = new EventEmitter<number>();
 

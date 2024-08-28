@@ -7,5 +7,5 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnsupportedPropertyComponent extends BasePropertyComponent {
-    @Input() public data: unknown;
+    @Input({ required: true }) public data: unknown;
 }

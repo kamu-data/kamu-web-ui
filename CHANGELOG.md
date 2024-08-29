@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added typed forms for all application
 ### Changed
 - Added an `required` option for input parameters
+- Replaced the constructor with `inject` function for all components and services
 
 ## [0.25.1] -2024-08-22
 ## Added

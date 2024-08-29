@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { NavigationEnd, Router } from "@angular/router";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
@@ -29,13 +29,9 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
 
     private mainDatasetQueryComplete$: Subject<DatasetInfo> = new ReplaySubject<DatasetInfo>(1 /* bufferSize */);
 
-    constructor(
-        private datasetPermissionsServices: DatasetPermissionsService,
-        private router: Router,
-        private cdr: ChangeDetectorRef,
-    ) {
-        super();
-    }
+    private datasetPermissionsServices = inject(DatasetPermissionsService);
+    private router = inject(Router);
+    private cdr = inject(ChangeDetectorRef);
 
     public ngOnInit(): void {
         const urlDatasetInfo = this.getDatasetInfoFromUrl();

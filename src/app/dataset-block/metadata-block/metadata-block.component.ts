@@ -2,7 +2,7 @@ import { DatasetHistoryUpdate } from "../../dataset-view/dataset.subscriptions.i
 import { Observable, Subscription, combineLatest } from "rxjs";
 import ProjectLinks from "src/app/project-links";
 import { DatasetViewTypeEnum } from "../../dataset-view/dataset-view.interface";
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { map } from "rxjs/operators";
 import { Params } from "@angular/router";
@@ -23,9 +23,7 @@ export class MetadataBlockComponent extends BaseDatasetDataComponent implements 
     public blockHash$: Observable<string>;
     public datasetHistoryUpdate$: Observable<MaybeNull<DatasetHistoryUpdate>>;
 
-    constructor(private blockService: BlockService) {
-        super();
-    }
+    private blockService = inject(BlockService);
 
     public ngOnInit(): void {
         this.datasetBasics$ = this.datasetService.datasetChanges;

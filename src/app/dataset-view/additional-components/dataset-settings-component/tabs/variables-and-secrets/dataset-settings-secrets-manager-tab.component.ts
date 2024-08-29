@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit, ViewChild } from "@angular/core";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { EditKeyValueModalComponent } from "./components/edit-key-value-modal/edit-key-value-modal.component";
@@ -41,14 +41,10 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
     public readonly PER_PAGE = 15;
     public searchByKey = "";
 
-    constructor(
-        private ngbModalService: NgbModal,
-        private modalService: ModalService,
-        private evnironmentVariablesService: DatasetEvnironmentVariablesService,
-        private navigationService: NavigationService,
-    ) {
-        super();
-    }
+    private ngbModalService = inject(NgbModal);
+    private modalService = inject(ModalService);
+    private evnironmentVariablesService = inject(DatasetEvnironmentVariablesService);
+    private navigationService = inject(NavigationService);
 
     public ngOnInit(): void {
         this.getPageFromUrl();

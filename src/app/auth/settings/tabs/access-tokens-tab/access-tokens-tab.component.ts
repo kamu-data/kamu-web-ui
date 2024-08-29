@@ -7,7 +7,7 @@ import {
     PageBasedInfo,
     ViewAccessToken,
 } from "src/app/api/kamu.graphql.interface";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit, ViewChild } from "@angular/core";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { AccountSettingsTabs, TokenCreateStep } from "../../account-settings.constants";
@@ -28,6 +28,13 @@ import { CreateTokenFormType } from "./access-tokens-tab.types";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccessTokensTabComponent extends BaseComponent implements OnInit {
+    private fb = inject(FormBuilder);
+    private modalService = inject(ModalService);
+    private clipboard = inject(Clipboard);
+    private accessTokenService = inject(AccessTokenService);
+    private navigationService = inject(NavigationService);
+    private cdr = inject(ChangeDetectorRef);
+
     @Input({ required: true }) public account: AccountFragment;
     @ViewChild(MatSort) sort: MatSort;
     public searchTokenName: string = "";
@@ -44,17 +51,6 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
     public readonly TokenCreateStep: typeof TokenCreateStep = TokenCreateStep;
     public readonly PER_PAGE = 15;
     public readonly DATE_FORMAT = AppValues.DISPLAY_FLOW_DATE_FORMAT;
-
-    constructor(
-        private fb: FormBuilder,
-        private modalService: ModalService,
-        private clipboard: Clipboard,
-        private accessTokenService: AccessTokenService,
-        private navigationService: NavigationService,
-        private cdr: ChangeDetectorRef,
-    ) {
-        super();
-    }
 
     ngOnInit(): void {
         this.getPageFromUrl();

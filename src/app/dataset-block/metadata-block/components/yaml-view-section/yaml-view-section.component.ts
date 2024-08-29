@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { BlockService } from "../../block.service";
 import { SupportedEvents } from "../event-details/supported.events";
@@ -10,10 +10,11 @@ import { eventsWithYamlView } from "./yaml-view-section.types";
     templateUrl: "./yaml-view-section.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class YamlViewSectionComponent {
+export class YamlViewSectionComponent implements OnInit {
+    private blockService = inject(BlockService);
     public yamlEventText$: Observable<string>;
 
-    constructor(private blockService: BlockService) {
+    ngOnInit(): void {
         this.yamlEventText$ = this.blockService.metadataBlockAsYamlChanges;
     }
 

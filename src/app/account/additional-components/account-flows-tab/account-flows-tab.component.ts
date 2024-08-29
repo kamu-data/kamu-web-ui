@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { combineLatest, map, of, switchMap, timer } from "rxjs";
 import { MaybeNull } from "src/app/common/app.types";
 import {
@@ -27,9 +27,7 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
     public searchByDataset: DatasetListFlowsDataFragment[] = [];
     public readonly DISPLAY_COLUMNS = ["description", "information", "creator", "dataset", "options"];
 
-    constructor(private accountService: AccountService) {
-        super();
-    }
+    private accountService = inject(AccountService);
 
     ngOnInit(): void {
         this.getPageFromUrl();

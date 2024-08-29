@@ -1,5 +1,5 @@
 import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { BaseField } from "../base-field";
 import { KeyValueForm } from "./key-value-field.types";
 
@@ -12,9 +12,7 @@ import { KeyValueForm } from "./key-value-field.types";
 export class KeyValueFieldComponent extends BaseField {
     @Input({ required: true }) public buttonText: string;
 
-    constructor(private fb: FormBuilder) {
-        super();
-    }
+    private fb = inject(FormBuilder);
 
     public get items(): FormArray {
         return this.form.get(this.controlName) as FormArray;

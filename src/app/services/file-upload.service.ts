@@ -1,6 +1,6 @@
 import { AppConfigService } from "src/app/app-config.service";
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
-import { Injectable, Injector } from "@angular/core";
+import { inject, Injectable, Injector } from "@angular/core";
 import { Observable, Subject, catchError, finalize, first, of, switchMap, tap } from "rxjs";
 import { MaybeUndefined } from "../common/app.types";
 import { LocalStorageService } from "./local-storage.service";
@@ -19,15 +19,13 @@ import { FileUploadError } from "../common/errors";
     providedIn: "root",
 })
 export class FileUploadService {
-    constructor(
-        private http: HttpClient,
-        private localStorageService: LocalStorageService,
-        private appConfigService: AppConfigService,
-        private navigationService: NavigationService,
-        private datasetService: DatasetService,
-        private injector: Injector,
-        private protocolsService: ProtocolsService,
-    ) {}
+    private http = inject(HttpClient);
+    private localStorageService = inject(LocalStorageService);
+    private appConfigService = inject(AppConfigService);
+    private navigationService = inject(NavigationService);
+    private datasetService = inject(DatasetService);
+    private injector = inject(Injector);
+    private protocolsService = inject(ProtocolsService);
 
     private uploadFileLoading$ = new Subject<boolean>();
 

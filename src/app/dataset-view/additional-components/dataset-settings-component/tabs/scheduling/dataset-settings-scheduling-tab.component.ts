@@ -1,5 +1,5 @@
 import { MaybeNull } from "../../../../../common/app.types";
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from "@angular/forms";
 import { BaseComponent } from "../../../../../common/base.component";
 import { PollingGroupEnum, ThrottlingGroupEnum } from "../../dataset-settings.model";
@@ -60,9 +60,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
         ]),
     });
 
-    constructor(private datasetSchedulingService: DatasetSchedulingService) {
-        super();
-    }
+    private datasetSchedulingService = inject(DatasetSchedulingService);
 
     public get pollingGroup(): FormGroup {
         return this.pollingForm.get("pollingGroup") as FormGroup;

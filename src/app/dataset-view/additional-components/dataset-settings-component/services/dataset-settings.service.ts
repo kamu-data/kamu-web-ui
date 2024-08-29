@@ -1,6 +1,6 @@
 import { Observable, Subject } from "rxjs";
 import { NavigationService } from "src/app/services/navigation.service";
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { DatasetApi } from "src/app/api/dataset.api";
 import { map } from "rxjs/operators";
 import { DeleteDatasetMutation, RenameDatasetMutation } from "src/app/api/kamu.graphql.interface";
@@ -25,12 +25,10 @@ export class DatasetSettingsService {
         return this.renameDatasetError$.asObservable();
     }
 
-    constructor(
-        private datasetApi: DatasetApi,
-        private navigationService: NavigationService,
-        private loggedUserService: LoggedUserService,
-        private datasetService: DatasetService,
-    ) {}
+    private datasetApi = inject(DatasetApi);
+    private navigationService = inject(NavigationService);
+    private loggedUserService = inject(LoggedUserService);
+    private datasetService = inject(DatasetService);
 
     public deleteDataset(accountId: string, datasetId: string): Observable<void> {
         if (this.loggedUserService.isAuthenticated) {

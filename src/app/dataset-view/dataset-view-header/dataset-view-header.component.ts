@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from "@angular/core";
 import { SearchAdditionalHeaderButtonInterface } from "../../components/search-additional-buttons/search-additional-buttons.interface";
 import { searchAdditionalButtonsEnum } from "../../search/search.interface";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -15,7 +15,7 @@ export class DatasetViewHeaderComponent {
     @Output() public showOwnerPageEmit = new EventEmitter<null>();
     @Output() public onClickSearchAdditionalButtonEmit = new EventEmitter<string>();
 
-    constructor(private navigationService: NavigationService) {}
+    private navigationService = inject(NavigationService);
 
     public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[] = [
         {

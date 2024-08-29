@@ -1,7 +1,7 @@
 import { AuthenticationError } from "./common/errors";
 import { throwError } from "rxjs";
 import { NavigationService } from "./services/navigation.service";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, inject, OnInit } from "@angular/core";
 import AppValues from "./common/app.values";
 import { filter, map } from "rxjs/operators";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
@@ -60,26 +60,21 @@ export class AppComponent extends BaseComponent implements OnInit {
         this.checkView();
     }
 
-    constructor(
-        private router: Router,
-        private loginService: LoginService,
-        private modalService: ModalService,
-        private navigationService: NavigationService,
-        private appConfigService: AppConfigService,
-        private cdr: ChangeDetectorRef,
-        private loggedUserService: LoggedUserService,
-        private localStorageService: LocalStorageService,
-    ) {
-        super();
-        // apollo client error messages
+    private router = inject(Router);
+    private loginService = inject(LoginService);
+    private modalService = inject(ModalService);
+    private navigationService = inject(NavigationService);
+    private appConfigService = inject(AppConfigService);
+    private cdr = inject(ChangeDetectorRef);
+    private loggedUserService = inject(LoggedUserService);
+    private localStorageService = inject(LocalStorageService);
+
+    public ngOnInit(): void {
         if (isDevMode()) {
             loadErrorMessages();
         }
         this.outputAppVersion();
         this.setMomentOptions();
-    }
-
-    public ngOnInit(): void {
         this.readConfiguration();
         this.checkView();
 

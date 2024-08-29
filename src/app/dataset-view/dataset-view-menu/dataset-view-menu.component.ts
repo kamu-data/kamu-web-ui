@@ -5,6 +5,7 @@ import {
     Component,
     ElementRef,
     HostListener,
+    inject,
     Input,
     OnInit,
     ViewChild,
@@ -35,10 +36,8 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
 
     private sideNavHelper: SideNavHelper;
 
-    constructor(
-        private datasetPermissionsServices: DatasetPermissionsService,
-        private widgetHeightService: WidgetHeightService,
-    ) {}
+    private datasetPermissionsServices = inject(DatasetPermissionsService);
+    private widgetHeightService = inject(WidgetHeightService);
 
     public ngAfterViewInit(): void {
         this.widgetHeightService.setWidgetOffsetTop(

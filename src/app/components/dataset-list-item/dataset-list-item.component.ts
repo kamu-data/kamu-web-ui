@@ -1,6 +1,6 @@
 import { ModalService } from "../modal/modal.service";
 import { DatasetSearchOverviewFragment } from "../../api/kamu.graphql.interface";
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, inject, Input, Output } from "@angular/core";
 import { promiseWithCatch } from "src/app/common/app.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
 
@@ -15,10 +15,8 @@ export class DatasetListItemComponent {
     @Input({ required: true }) public rowIndex: number;
     @Output() public selectDatasetEmit = new EventEmitter<DatasetSearchOverviewFragment>();
 
-    public constructor(
-        private modalService: ModalService,
-        private navigationService: NavigationService,
-    ) {}
+    private modalService = inject(ModalService);
+    private navigationService = inject(NavigationService);
 
     public selectTopic(topicName: string): void {
         promiseWithCatch(

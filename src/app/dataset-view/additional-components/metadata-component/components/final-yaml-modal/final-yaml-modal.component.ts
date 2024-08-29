@@ -1,5 +1,5 @@
 import { BaseComponent } from "src/app/common/base.component";
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
@@ -15,13 +15,9 @@ export class FinalYamlModalComponent extends BaseComponent {
     @Input({ required: true }) public datasetInfo: DatasetInfo;
     @Input({ required: true }) public enabledSaveBtn = true;
 
-    constructor(
-        public activeModal: NgbActiveModal,
-        private datasetCommitService: DatasetCommitService,
-        private loggedUserService: LoggedUserService,
-    ) {
-        super();
-    }
+    public activeModal = inject(NgbActiveModal);
+    private datasetCommitService = inject(DatasetCommitService);
+    private loggedUserService = inject(LoggedUserService);
 
     public saveEvent(): void {
         this.trackSubscription(

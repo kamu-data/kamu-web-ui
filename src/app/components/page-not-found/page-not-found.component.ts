@@ -1,5 +1,5 @@
 import { NavigationService } from "src/app/services/navigation.service";
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import AppValues from "src/app/common/app.values";
 
 @Component({
@@ -11,7 +11,7 @@ import AppValues from "src/app/common/app.values";
 export class PageNotFoundComponent {
     public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;
 
-    constructor(private navigationService: NavigationService) {}
+    private navigationService = inject(NavigationService);
 
     public navigateToHome(): void {
         this.navigationService.navigateToHome();

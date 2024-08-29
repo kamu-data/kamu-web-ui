@@ -1,7 +1,7 @@
 import ProjectLinks from "src/app/project-links";
 import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import { AccountSettingsTabs } from "./account-settings.constants";
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { filter } from "rxjs/operators";
 import { BaseComponent } from "src/app/common/base.component";
@@ -23,13 +23,9 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
     public activeTab: AccountSettingsTabs = AccountSettingsTabs.PROFILE;
     public user$: Observable<MaybeNull<AccountFragment>>;
 
-    constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        private loggedUserService: LoggedUserService,
-    ) {
-        super();
-    }
+    private router = inject(Router);
+    private route = inject(ActivatedRoute);
+    private loggedUserService = inject(LoggedUserService);
 
     public ngOnInit(): void {
         this.trackSubscription(

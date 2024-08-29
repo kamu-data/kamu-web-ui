@@ -6,6 +6,7 @@ import {
     Component,
     ElementRef,
     EventEmitter,
+    inject,
     Input,
     OnInit,
     Output,
@@ -63,15 +64,11 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     public searchQuery = "";
     public searching = false;
 
-    public constructor(
-        private appSearchAPI: SearchApi,
-        private route: ActivatedRoute,
-        private router: Router,
-        private cdr: ChangeDetectorRef,
-        private navigationService: NavigationService,
-    ) {
-        super();
-    }
+    private appSearchAPI = inject(SearchApi);
+    private route = inject(ActivatedRoute);
+    private router = inject(Router);
+    private cdr = inject(ChangeDetectorRef);
+    private navigationService = inject(NavigationService);
 
     public ngOnInit(): void {
         this.trackSubscriptions(

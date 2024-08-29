@@ -1,6 +1,6 @@
 import { DatasetInfo } from "../../interface/navigation.interface";
 import { NavigationService } from "../../services/navigation.service";
-import { Component, Input } from "@angular/core";
+import { Component, inject, Input } from "@angular/core";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { ToastrService } from "ngx-toastr";
 
@@ -15,11 +15,9 @@ export class DisplayHashComponent {
     @Input() public showCopyButton = false;
     @Input() public class = "mr-1 hashBlock";
 
-    constructor(
-        private navigationService: NavigationService,
-        private clipboard: Clipboard,
-        private toastr: ToastrService,
-    ) {}
+    private navigationService = inject(NavigationService);
+    private clipboard = inject(Clipboard);
+    private toastr = inject(ToastrService);
 
     public navigateToMetadataBlock(accountName: string, datasetName: string, blockHash: string): void {
         this.navigationService.navigateToMetadataBlock({

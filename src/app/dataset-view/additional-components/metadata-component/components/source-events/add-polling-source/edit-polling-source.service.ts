@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { parse } from "yaml";
 import {
     EditFormParseType,
@@ -23,9 +23,7 @@ export class EditPollingSourceService extends BaseYamlEventService {
     private readonly TIMESTAMP_FORMAT_CONTROL = "timestampFormat";
     private readonly READ_JSON_SUB_PATH_CONTROL = "subPath";
 
-    constructor(private fb: FormBuilder) {
-        super();
-    }
+    private fb = inject(FormBuilder);
 
     public parseEventFromYaml(event: string): AddPollingSourceEditFormType {
         const editFormParseValue = parse(event) as EditFormParseType;

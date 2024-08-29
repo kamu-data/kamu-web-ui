@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Observable, first, map } from "rxjs";
 import {
     CreateAccessTokenGQL,
@@ -17,11 +17,9 @@ import { noCacheFetchPolicy } from "../common/data.helpers";
     providedIn: "root",
 })
 export class AccessTokenApi {
-    constructor(
-        private listAccessTokensGQL: ListAccessTokensGQL,
-        private createAccessTokenGQL: CreateAccessTokenGQL,
-        private revokeAccessTokenGQL: RevokeAccessTokenGQL,
-    ) {}
+    private listAccessTokensGQL = inject(ListAccessTokensGQL);
+    private createAccessTokenGQL = inject(CreateAccessTokenGQL);
+    private revokeAccessTokenGQL = inject(RevokeAccessTokenGQL);
 
     public listAccessTokens(params: {
         accountId: string;

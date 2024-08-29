@@ -13,7 +13,7 @@ import {
     SetVocab,
 } from "../api/kamu.graphql.interface";
 import { DatasetInfo } from "../interface/navigation.interface";
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { DataRow, DatasetLineageNode, DatasetRequestBySql, DatasetSchema } from "../interface/dataset.interface";
 import {
@@ -41,13 +41,10 @@ import { parseCurrentSchema } from "../common/app.helpers";
 
 @Injectable({ providedIn: "root" })
 export class DatasetService {
-    constructor(
-        private datasetApi: DatasetApi,
-        private datasetSubsService: DatasetSubscriptionsService,
-    ) {}
+    private datasetApi = inject(DatasetApi);
+    private datasetSubsService = inject(DatasetSubscriptionsService);
 
     private currentSetVocab: SetVocab;
-
     private dataset$: Subject<DatasetBasicsFragment> = new Subject<DatasetBasicsFragment>();
 
     public get datasetChanges(): Observable<DatasetBasicsFragment> {

@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    inject,
     Input,
     OnChanges,
     OnDestroy,
@@ -14,7 +15,7 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RequestTimerComponent implements OnChanges, OnDestroy {
-    constructor(private cdr: ChangeDetectorRef) {}
+    private cdr = inject(ChangeDetectorRef);
 
     ngOnDestroy(): void {
         this.stopTimer();

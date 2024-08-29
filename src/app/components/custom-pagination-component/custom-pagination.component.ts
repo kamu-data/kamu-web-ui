@@ -13,15 +13,9 @@ export class CustomPaginationComponent implements OnChanges {
     @Input({ required: true }) limit: number; // record per page
     @Input({ required: true }) total: number; // total records
     @Input() range = 5;
-    @Output() pageChange: EventEmitter<number>;
-    totalPageNo: number[];
-    totalSizeOfPages: number;
-
-    constructor() {
-        this.totalSizeOfPages = 0;
-        this.totalPageNo = [];
-        this.pageChange = new EventEmitter<number>();
-    }
+    @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
+    public totalPageNo: number[] = [];
+    public totalSizeOfPages: number = 0;
 
     public ngOnChanges() {
         this.totalSizeOfPages = this.total / this.limit;

@@ -1,5 +1,5 @@
 import { MaybeNull } from "./../../../common/app.types";
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import {
     DatasetBasicsFragment,
     DatasetKind,
@@ -31,13 +31,9 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
     public sidePanelData: DatasetSettingsSidePanelItem[] = datasetSettingsSidePanelData;
     public overview: MaybeNull<DatasetOverviewFragment>;
 
-    constructor(
-        private appConfigService: AppConfigService,
-        private navigationService: NavigationService,
-        private datasetSubsService: DatasetSubscriptionsService,
-    ) {
-        super();
-    }
+    private appConfigService = inject(AppConfigService);
+    private navigationService = inject(NavigationService);
+    private datasetSubsService = inject(DatasetSubscriptionsService);
 
     public get isSchedulingAvailable(): boolean {
         return (

@@ -1,5 +1,5 @@
 import { FlowStatus } from "./../../api/kamu.graphql.interface";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { DatasetFlowByIdResponse, FlowDetailsTabs, ViewMenuData } from "./dataset-flow-details.types";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import {
@@ -39,14 +39,10 @@ export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implem
     public datasetFlowDetails$: Observable<MaybeUndefined<DatasetFlowByIdResponse>>;
     public readonly TIMEOUT_REFRESH_FLOW = 800;
 
-    constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        private datasetFlowsService: DatasetFlowsService,
-        private cdr: ChangeDetectorRef,
-    ) {
-        super();
-    }
+    private router = inject(Router);
+    private route = inject(ActivatedRoute);
+    private datasetFlowsService = inject(DatasetFlowsService);
+    private cdr = inject(ChangeDetectorRef);
 
     ngOnInit(): void {
         this.datasetBasics$ = this.datasetService.datasetChanges.pipe(shareReplay());

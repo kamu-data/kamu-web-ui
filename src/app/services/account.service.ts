@@ -11,7 +11,7 @@ import { AccountFlowFilters, AccountFragment, FlowConnectionDataFragment } from 
 import { AccountApi } from "../api/account.api";
 import { Observable, combineLatest, forkJoin } from "rxjs";
 import { DatasetApi } from "../api/dataset.api";
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { DatasetsByAccountNameQuery } from "../api/kamu.graphql.interface";
 import { DatasetsAccountResponse } from "../interface/dataset.interface";
 import { map } from "rxjs/operators";
@@ -23,11 +23,9 @@ import { FlowsTableData } from "../common/components/flows-table/flows-table.typ
     providedIn: "root",
 })
 export class AccountService {
-    constructor(
-        private datasetApi: DatasetApi,
-        private accountApi: AccountApi,
-        private toastrService: ToastrService,
-    ) {}
+    private datasetApi = inject(DatasetApi);
+    private accountApi = inject(AccountApi);
+    private toastrService = inject(ToastrService);
 
     public getDatasetsByAccountName(name: string, page: number): Observable<DatasetsAccountResponse> {
         return this.datasetApi.fetchDatasetsByAccountName(name, page).pipe(

@@ -1,6 +1,6 @@
 import { MaybeUndefined } from "src/app/common/app.types";
 import { NavigationService } from "../../services/navigation.service";
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { AccountExtendedFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { DataHelpers } from "src/app/common/data.helpers";
@@ -19,7 +19,7 @@ export class OverviewHistorySummaryHeaderComponent {
 
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
 
-    constructor(private navigationService: NavigationService) {}
+    private navigationService = inject(NavigationService);
 
     get systemTime(): string {
         return this.metadataBlockFragment ? this.metadataBlockFragment.systemTime : "";

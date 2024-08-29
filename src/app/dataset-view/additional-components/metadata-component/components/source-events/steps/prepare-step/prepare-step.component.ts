@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { ControlContainer, FormArray, FormBuilder, FormGroup, FormGroupDirective, Validators } from "@angular/forms";
 import { MaybeNull } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
@@ -24,13 +24,9 @@ export class PrepareStepComponent extends BaseComponent implements OnInit {
     public setPollingSourceEvent: MaybeNull<AddPollingSourceEditFormType> = null;
     public readonly prepareKind: typeof PrepareKind = PrepareKind;
 
-    constructor(
-        private rootFormGroupDirective: FormGroupDirective,
-        private fb: FormBuilder,
-        private editService: EditPollingSourceService,
-    ) {
-        super();
-    }
+    private rootFormGroupDirective = inject(FormGroupDirective);
+    private fb = inject(FormBuilder);
+    private editService = inject(EditPollingSourceService);
 
     ngOnInit(): void {
         this.parentForm = this.rootFormGroupDirective.form;

@@ -1,5 +1,5 @@
 import { MutationResult } from "apollo-angular";
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import {
     CancelScheduledTasksGQL,
     CancelScheduledTasksMutation,
@@ -39,20 +39,18 @@ import { noCacheFetchPolicy } from "../common/data.helpers";
 
 @Injectable({ providedIn: "root" })
 export class DatasetFlowApi {
-    constructor(
-        private getDatasetFlowConfigsGQL: GetDatasetFlowConfigsGQL,
-        private datasetFlowScheduleGQL: DatasetFlowScheduleGQL,
-        private datasetFlowBatchingGQL: DatasetFlowBatchingGQL,
-        private getDatasetListFlowsGQL: GetDatasetListFlowsGQL,
-        private datasetPauseFlowsGQL: DatasetPauseFlowsGQL,
-        private datasetResumeFlowsGQL: DatasetResumeFlowsGQL,
-        private datasetAllFlowsPausedGQL: DatasetAllFlowsPausedGQL,
-        private datasetTriggerFlowGQL: DatasetTriggerFlowGQL,
-        private datasetFlowByIdGQL: GetFlowByIdGQL,
-        private cancelScheduledTasksGQL: CancelScheduledTasksGQL,
-        private datasetFlowCompactionGQL: DatasetFlowCompactionGQL,
-        private datasetFlowsInitiatorsGQL: DatasetFlowsInitiatorsGQL,
-    ) {}
+    private getDatasetFlowConfigsGQL = inject(GetDatasetFlowConfigsGQL);
+    private datasetFlowScheduleGQL = inject(DatasetFlowScheduleGQL);
+    private datasetFlowBatchingGQL = inject(DatasetFlowBatchingGQL);
+    private getDatasetListFlowsGQL = inject(GetDatasetListFlowsGQL);
+    private datasetPauseFlowsGQL = inject(DatasetPauseFlowsGQL);
+    private datasetResumeFlowsGQL = inject(DatasetResumeFlowsGQL);
+    private datasetAllFlowsPausedGQL = inject(DatasetAllFlowsPausedGQL);
+    private datasetTriggerFlowGQL = inject(DatasetTriggerFlowGQL);
+    private datasetFlowByIdGQL = inject(GetFlowByIdGQL);
+    private cancelScheduledTasksGQL = inject(CancelScheduledTasksGQL);
+    private datasetFlowCompactionGQL = inject(DatasetFlowCompactionGQL);
+    private datasetFlowsInitiatorsGQL = inject(DatasetFlowsInitiatorsGQL);
 
     public datasetTriggerFlow(params: {
         datasetId: string;

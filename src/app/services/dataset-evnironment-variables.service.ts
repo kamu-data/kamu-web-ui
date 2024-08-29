@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { EnvironmentVariablesApi } from "../api/environment-variables.api";
 import { map, Observable } from "rxjs";
 import {
@@ -15,10 +15,8 @@ import { ToastrService } from "ngx-toastr";
     providedIn: "root",
 })
 export class DatasetEvnironmentVariablesService {
-    constructor(
-        private environmentVariablesApi: EnvironmentVariablesApi,
-        private toastrService: ToastrService,
-    ) {}
+    private environmentVariablesApi = inject(EnvironmentVariablesApi);
+    private toastrService = inject(ToastrService);
 
     public listEnvVariables(params: {
         accountName: string;

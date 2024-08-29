@@ -1,5 +1,5 @@
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { FormBuilder, FormArray, FormGroup } from "@angular/forms";
 import { BaseField } from "../base-field";
 import { MqttQos } from "src/app/api/kamu.graphql.interface";
@@ -16,9 +16,7 @@ export class TopicsFieldComponent extends BaseField {
     @Input() public requiredField?: boolean;
     public readonly MqttQos: typeof MqttQos = MqttQos;
 
-    constructor(private fb: FormBuilder) {
-        super();
-    }
+    private fb = inject(FormBuilder);
 
     public get items(): FormArray {
         return this.form.get(this.controlName) as FormArray;

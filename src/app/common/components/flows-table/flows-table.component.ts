@@ -4,6 +4,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     EventEmitter,
+    inject,
     Input,
     OnChanges,
     OnInit,
@@ -82,14 +83,10 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     public dropdownStatustList: FilterStatusType[] = [];
     public selectedStatusItems: FilterStatusType[] = [];
 
-    constructor(
-        private navigationService: NavigationService,
-        private modalService: ModalService,
-        private datasetFlowsService: DatasetFlowsService,
-        private toastrService: ToastrService,
-    ) {
-        super();
-    }
+    private navigationService = inject(NavigationService);
+    private modalService = inject(ModalService);
+    private datasetFlowsService = inject(DatasetFlowsService);
+    private toastrService = inject(ToastrService);
 
     ngOnChanges(changes: SimpleChanges): void {
         const nodes: SimpleChange = changes.nodes;

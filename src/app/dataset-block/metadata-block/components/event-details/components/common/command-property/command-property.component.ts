@@ -8,7 +8,7 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommandPropertyComponent extends BasePropertyComponent {
-    @Input() public data: string[];
+    @Input({ required: true }) public data: string[];
 
     public get commands(): string {
         return this.data.join(" ");

@@ -11,7 +11,7 @@ import { MaybeNull } from "src/app/common/app.types";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HistoryComponent extends BaseComponent {
-    @Input() public datasetName: string;
+    @Input({ required: true }) public datasetName: string;
     @Output() onPageChangeEmit = new EventEmitter<number>();
     public historyUpdate$: Observable<MaybeNull<DatasetHistoryUpdate>> = this.datasetSubsService.historyChanges;
 

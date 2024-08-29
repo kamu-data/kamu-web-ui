@@ -28,7 +28,7 @@ import { CreateTokenFormType } from "./access-tokens-tab.types";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccessTokensTabComponent extends BaseComponent implements OnInit {
-    @Input() public account: AccountFragment;
+    @Input({ required: true }) public account: AccountFragment;
     @ViewChild(MatSort) sort: MatSort;
     public searchTokenName: string = "";
     public dataSource = new MatTableDataSource();

@@ -10,7 +10,7 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetNamePropertyComponent extends BasePropertyComponent {
-    @Input() public data: { datasetName: string; ownerAccountName: string };
+    @Input({ required: true }) public data: { datasetName: string; ownerAccountName: string };
 
     public constructor(private navigationService: NavigationService) {
         super();

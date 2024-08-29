@@ -10,7 +10,7 @@ import { KeyValueForm } from "./key-value-field.types";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KeyValueFieldComponent extends BaseField {
-    @Input() public buttonText: string;
+    @Input({ required: true }) public buttonText: string;
 
     constructor(private fb: FormBuilder) {
         super();

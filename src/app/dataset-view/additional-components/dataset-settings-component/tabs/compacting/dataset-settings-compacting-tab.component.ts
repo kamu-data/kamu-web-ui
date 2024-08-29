@@ -27,7 +27,7 @@ import { sliceSizeMapperReverse } from "src/app/common/data.helpers";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetSettingsCompactingTabComponent extends BaseComponent implements OnInit {
-    @Input() public datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     public hardCompactionForm = this.fb.group({
         sliceUnit: [SliceUnit.MB, [Validators.required]],
         sliceSize: [300, [Validators.required, RxwebValidators.minNumber({ value: 1 })]],

@@ -27,8 +27,8 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetSettingsGeneralTabComponent extends BaseComponent implements OnInit {
-    @Input() public datasetBasics: DatasetBasicsFragment;
-    @Input() public datasetPermissions: DatasetPermissionsFragment;
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public datasetPermissions: DatasetPermissionsFragment;
 
     public renameError$: Observable<string>;
     public renameDatasetForm: FormGroup<RenameDatasetFormType>;

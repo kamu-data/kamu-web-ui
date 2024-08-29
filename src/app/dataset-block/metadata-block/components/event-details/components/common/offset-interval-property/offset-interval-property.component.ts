@@ -15,7 +15,7 @@ import { MaybeNull } from "src/app/common/app.types";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OffsetIntervalPropertyComponent extends BasePropertyComponent implements OnInit {
-    @Input() public data: {
+    @Input({ required: true }) public data: {
         block: MaybeNull<OffsetInterval>;
         datasetId: MaybeNull<string>;
     };

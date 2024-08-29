@@ -9,13 +9,13 @@ import { DatasetBasicsFragment, DatasetSearchOverviewFragment } from "src/app/ap
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetListComponent {
-    @Input() public dataSource: DatasetSearchOverviewFragment[];
-    @Input() public totalCount = 0;
-    @Input() public resultUnitText: string;
-    @Input() public hasResultQuantity?: boolean = false;
-    @Input() public isClickableRow?: boolean = false;
+    @Input({ required: true }) public dataSource: DatasetSearchOverviewFragment[];
+    @Input({ required: true }) public totalCount = 0;
+    @Input({ required: true }) public resultUnitText: string;
+    @Input({ required: true }) public hasResultQuantity?: boolean = false;
+    @Input({ required: true }) public isClickableRow?: boolean = false;
     @Output() public selectDatasetEmit = new EventEmitter<DatasetInfo>();
-    @Input() public sortOptions: {
+    @Input({ required: true }) public sortOptions: {
         value: string;
         label: string;
         active: boolean;

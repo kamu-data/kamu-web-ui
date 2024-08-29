@@ -23,8 +23,8 @@ import { DatasetViewTypeEnum } from "../../dataset-view.interface";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetSettingsComponent extends BaseComponent implements OnInit {
-    @Input() public datasetBasics: DatasetBasicsFragment;
-    @Input() public datasetPermissions: DatasetPermissionsFragment;
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public datasetPermissions: DatasetPermissionsFragment;
     public readonly settingsTabsEnum: typeof SettingsTabsEnum = SettingsTabsEnum;
     public readonly DatasetKind: typeof DatasetKind = DatasetKind;
     public activeTab: SettingsTabsEnum;

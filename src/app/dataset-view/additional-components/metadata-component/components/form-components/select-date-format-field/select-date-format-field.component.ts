@@ -10,7 +10,7 @@ import { RxwebValidators } from "@rxweb/reactive-form-validators";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectDateFormatFieldComponent extends BaseField implements OnInit {
-    @Input() public innerTooltips: Record<string, string>;
+    @Input({ required: true }) public innerTooltips: Record<string, string>;
     public currentSource: EventTimeSourceKind;
     public EventTimeSourceKind: typeof EventTimeSourceKind = EventTimeSourceKind;
     public readonly KIND_NAME_CONTROL = "kind";

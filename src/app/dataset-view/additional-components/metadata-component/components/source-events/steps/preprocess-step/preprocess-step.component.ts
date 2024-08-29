@@ -14,9 +14,9 @@ import { BaseComponent } from "src/app/common/base.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PreprocessStepComponent extends BaseComponent implements OnInit {
-    @Input() public showPreprocessStep: boolean;
-    @Input() public eventYamlByHash: MaybeNull<string> = null;
-    @Input() public preprocessValue: PreprocessStepValue;
+    @Input({ required: true }) public showPreprocessStep: boolean;
+    @Input({ required: true }) public eventYamlByHash: MaybeNull<string> = null;
+    @Input({ required: true }) public preprocessValue: PreprocessStepValue;
     @Output() public showPreprocessStepEmitter = new EventEmitter<boolean>();
     public setPollingSourceEvent: MaybeNull<AddPollingSourceEditFormType> = null;
 

@@ -15,8 +15,8 @@ import { EnvAndSecretsFormType } from "./edit-key-value-modal.types";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditKeyValueModalComponent extends BaseComponent implements OnInit {
-    @Input() public row: MaybeNull<ViewDatasetEnvVar>;
-    @Input() public datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public row: MaybeNull<ViewDatasetEnvVar>;
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     public readonly KEY_MAX_LENGTH = 200;
     public readonly IS_SECRET_CONTROL_TOOLTIP =
         "While both secrets and variables are stored encrypted, making value a secret ensures that is used without ever being exposed by the system in task logs and other places. Use secrets for sensitive information like API keys and auth tokens.";

@@ -7,6 +7,6 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SimplePropertyComponent extends BasePropertyComponent {
-    @Input() public data: string;
+    @Input({ required: true }) public data: string;
     @Input() public class?: string;
 }

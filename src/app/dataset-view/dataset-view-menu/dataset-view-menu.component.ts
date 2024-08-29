@@ -27,9 +27,9 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
     @ViewChild("menuTrigger") trigger: ElementRef;
     @ViewChild("datasetViewMenu") datasetViewMenuComponent: ElementRef<HTMLDivElement>;
 
-    @Input() datasetBasics: DatasetBasicsFragment;
-    @Input() datasetPermissions: DatasetPermissionsFragment;
-    @Input() datasetViewType: DatasetViewTypeEnum;
+    @Input({ required: true }) datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) datasetPermissions: DatasetPermissionsFragment;
+    @Input({ required: true }) datasetViewType: DatasetViewTypeEnum;
     @Input() isMinimizeSearchAdditionalButtons: boolean;
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 

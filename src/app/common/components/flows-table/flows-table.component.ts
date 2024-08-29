@@ -53,12 +53,12 @@ import { ToastrService } from "ngx-toastr";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlowsTableComponent extends BaseComponent implements OnInit, OnChanges {
-    @Input() public nodes: FlowSummaryDataFragment[];
-    @Input() public filterByStatus: MaybeNull<FlowStatus>;
-    @Input() public onlySystemFlows: boolean;
-    @Input() public searchByAccount: Account[] = [];
+    @Input({ required: true }) public nodes: FlowSummaryDataFragment[];
+    @Input({ required: true }) public filterByStatus: MaybeNull<FlowStatus>;
+    @Input({ required: true }) public onlySystemFlows: boolean;
+    @Input({ required: true }) public searchByAccount: Account[] = [];
     @Input() public searchByDataset: DatasetListFlowsDataFragment[] = [];
-    @Input() tableOptions: FlowsTableOptions;
+    @Input({ required: true }) tableOptions: FlowsTableOptions;
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
     @Output() public searchByFiltersChange = new EventEmitter<MaybeNull<FlowsTableFiltersOptions>>();
     @Output() public cancelFlowChange = new EventEmitter<CancelFlowArgs>();
@@ -69,8 +69,8 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
 
     public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>();
     @ViewChildren(MatMenuTrigger) triggersMatMenu: QueryList<MatMenuTrigger>;
-    @Input() public accountFlowInitiators: Account[];
-    @Input() public involvedDatasets: DatasetListFlowsDataFragment[];
+    @Input({ required: true }) public accountFlowInitiators: Account[];
+    @Input({ required: true }) public involvedDatasets: DatasetListFlowsDataFragment[];
 
     public readonly FILTER_DATASET_SETTINGS: DropdownSettings = DROPDOWN_DATASET_SETTINGS;
     public readonly FILTER_STATUS_SETTINGS: DropdownSettings = DROPDOWN_STATUS_SETTINGS;

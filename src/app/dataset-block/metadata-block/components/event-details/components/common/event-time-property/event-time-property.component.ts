@@ -8,7 +8,7 @@ import { EventTimeSource } from "src/app/api/kamu.graphql.interface";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventTimePropertyComponent extends BasePropertyComponent {
-    @Input() public data: EventTimeSource;
+    @Input({ required: true }) public data: EventTimeSource;
 
     public get isFromMetadata(): boolean {
         return this.data.__typename === "EventTimeSourceFromMetadata";

@@ -22,8 +22,8 @@ import { LicenseFormType } from "./edit-license-modal.types";
     templateUrl: "./edit-license-modal.component.html",
 })
 export class EditLicenseModalComponent extends BaseComponent implements OnInit {
-    @Input() public datasetBasics: DatasetBasicsFragment;
-    @Input() public currentState?: {
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public currentState?: {
         schema: MaybeNull<DatasetSchema>;
         data: DataRow[];
         overview: DatasetOverviewFragment;

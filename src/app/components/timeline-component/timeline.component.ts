@@ -11,9 +11,9 @@ import AppValues from "src/app/common/app.values";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimelineComponent {
-    @Input() public history: MetadataBlockFragment[];
-    @Input() public pageInfo: PageBasedInfo;
-    @Input() public datasetName: string;
+    @Input({ required: true }) public history: MetadataBlockFragment[];
+    @Input({ required: true }) public pageInfo: PageBasedInfo;
+    @Input({ required: true }) public datasetName: string;
     public DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
 
     constructor(private navigationService: NavigationService) {}

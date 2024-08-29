@@ -7,5 +7,5 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SizePropertyComponent extends BasePropertyComponent {
-    @Input() public data: number;
+    @Input({ required: true }) public data: number;
 }

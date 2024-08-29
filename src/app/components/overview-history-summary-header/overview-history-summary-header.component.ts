@@ -1,3 +1,4 @@
+import { MaybeUndefined } from "src/app/common/app.types";
 import { NavigationService } from "../../services/navigation.service";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { AccountExtendedFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
@@ -12,9 +13,9 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OverviewHistorySummaryHeaderComponent {
-    @Input() public metadataBlockFragment?: MetadataBlockFragment;
-    @Input() public numBlocksTotal: number;
-    @Input() public datasetName: string;
+    @Input({ required: true }) public metadataBlockFragment: MaybeUndefined<MetadataBlockFragment>;
+    @Input({ required: true }) public numBlocksTotal: number;
+    @Input({ required: true }) public datasetName: string;
 
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
 

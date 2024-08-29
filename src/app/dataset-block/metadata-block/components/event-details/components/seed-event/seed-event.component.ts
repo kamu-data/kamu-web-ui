@@ -10,7 +10,7 @@ import { BaseComponent } from "src/app/common/base.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SeedEventComponent extends BaseComponent {
-    @Input() public event: Seed;
+    @Input({ required: true }) public event: Seed;
 
     constructor(
         private clipboard: Clipboard,

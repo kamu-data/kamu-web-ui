@@ -24,12 +24,12 @@ import { SourcesSection } from "../../add-polling-source/process-form.service.ty
 })
 export class BaseStepComponent extends BaseComponent implements OnInit {
     public parentForm: FormGroup;
-    @Input() public sectionStepRadioData: RadioControlType[];
-    @Input() public sectionFormData: JsonFormData;
-    @Input() public defaultKind: string;
-    @Input() public description: string;
-    @Input() public sectionName: SourcesSection;
-    @Input() public eventYamlByHash: MaybeNull<string> = null;
+    @Input({ required: true }) public sectionStepRadioData: RadioControlType[];
+    @Input({ required: true }) public sectionFormData: JsonFormData;
+    @Input({ required: true }) public defaultKind: string;
+    @Input({ required: true }) public description: string;
+    @Input({ required: true }) public sectionName: SourcesSection;
+    @Input({ required: true }) public eventYamlByHash: MaybeNull<string> = null;
     private editFormValue: AddPollingSourceEditFormType;
     public controlType: typeof ControlType = ControlType;
     public readonly KIND_NAME_CONTROL = "kind";

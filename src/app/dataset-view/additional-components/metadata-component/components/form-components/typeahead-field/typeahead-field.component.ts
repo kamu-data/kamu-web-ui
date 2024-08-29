@@ -9,7 +9,7 @@ import { debounceTime, distinctUntilChanged, map, filter } from "rxjs/operators"
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TypeaheadFieldComponent extends BaseField {
-    @Input() public data: string[];
+    @Input({ required: true }) public data: string[];
     @Input() public requiredField = false;
     @Input() public placeholder?: string;
     @Input() public maxLength?: number;

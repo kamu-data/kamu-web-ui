@@ -8,7 +8,7 @@ import { EditorError } from "../../models/error.model";
 
 @Directive()
 export abstract class BaseEditorComponent implements OnChanges {
-    @Input() public template = "";
+    @Input({ required: true }) public template = "";
     @Input() public error: MaybeNull<string>;
     @Input() public height: MaybeUndefined<string>;
     @Input() public width: MaybeUndefined<string>;

@@ -10,7 +10,7 @@ import { ToastrService } from "ngx-toastr";
     styleUrls: ["./display-hash.component.scss"],
 })
 export class DisplayHashComponent {
-    @Input() public value: string;
+    @Input({ required: true }) public value: string;
     @Input() public navigationTargetDataset?: DatasetInfo;
     @Input() public showCopyButton = false;
     @Input() public class = "mr-1 hashBlock";

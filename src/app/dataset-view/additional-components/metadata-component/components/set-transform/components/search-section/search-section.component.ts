@@ -25,11 +25,11 @@ import { NavigationService } from "src/app/services/navigation.service";
 export class SearchSectionComponent extends BaseComponent {
     public searchDataset = "";
     private readonly delayTime: number = AppValues.SHORT_DELAY_MS;
-    @Input() public inputDatasets: Set<string>;
+    @Input({ required: true }) public inputDatasets: Set<string>;
 
     public treeControl = new NestedTreeControl<DatasetNode>((node) => node.children);
-    @Input() public dataSource: MatTreeNestedDataSource<DatasetNode>;
-    @Input() public TREE_DATA: DatasetNode[];
+    @Input({ required: true }) public dataSource: MatTreeNestedDataSource<DatasetNode>;
+    @Input({ required: true }) public TREE_DATA: DatasetNode[];
     constructor(
         private appSearchAPI: SearchApi,
         private datasetService: DatasetService,

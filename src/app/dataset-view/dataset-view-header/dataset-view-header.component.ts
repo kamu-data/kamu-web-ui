@@ -11,7 +11,7 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetViewHeaderComponent {
-    @Input() datasetInfo: DatasetInfo;
+    @Input({ required: true }) datasetInfo: DatasetInfo;
     @Output() public showOwnerPageEmit = new EventEmitter<null>();
     @Output() public onClickSearchAdditionalButtonEmit = new EventEmitter<string>();
 

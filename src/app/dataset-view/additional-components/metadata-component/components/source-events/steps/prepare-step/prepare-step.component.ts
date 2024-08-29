@@ -18,8 +18,8 @@ import { EditPollingSourceService } from "../../add-polling-source/edit-polling-
     viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
 })
 export class PrepareStepComponent extends BaseComponent implements OnInit {
-    @Input() public eventYamlByHash: MaybeNull<string> = null;
-    @Input() public sectionName: SetPollingSourceSection;
+    @Input({ required: true }) public eventYamlByHash: MaybeNull<string> = null;
+    @Input({ required: true }) public sectionName: SetPollingSourceSection;
     public parentForm: FormGroup;
     public setPollingSourceEvent: MaybeNull<AddPollingSourceEditFormType> = null;
     public readonly prepareKind: typeof PrepareKind = PrepareKind;

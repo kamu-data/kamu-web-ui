@@ -10,9 +10,9 @@ import { NavigationService } from "src/app/services/navigation.service";
     styleUrls: ["./dataset-list-item.component.scss"],
 })
 export class DatasetListItemComponent {
-    @Input() public row: DatasetSearchOverviewFragment;
+    @Input({ required: true }) public row: DatasetSearchOverviewFragment;
     @Input() public isClickableRow?: boolean = false;
-    @Input() public rowIndex: number;
+    @Input({ required: true }) public rowIndex: number;
     @Output() public selectDatasetEmit = new EventEmitter<DatasetSearchOverviewFragment>();
 
     public constructor(

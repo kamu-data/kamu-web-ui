@@ -20,7 +20,7 @@ import { EngineService } from "src/app/services/engine.service";
 })
 export class EngineSectionComponent extends BaseComponent implements OnInit {
     @Input() public knownEngines: MaybeNull<EngineDesc[]>;
-    @Input() public currentSetTransformEvent: MaybeNullOrUndefined<TransformSql>;
+    @Input({ required: true }) public currentSetTransformEvent: MaybeNullOrUndefined<TransformSql>;
     @Input() public selectedEngine: string;
     @Output() public onEmitSelectedEngine: EventEmitter<string> = new EventEmitter<string>();
     public selectedImage: string;

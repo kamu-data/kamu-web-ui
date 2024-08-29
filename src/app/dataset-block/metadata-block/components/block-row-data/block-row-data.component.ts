@@ -6,6 +6,6 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BlockRowDataComponent {
-    @Input() public label: string;
-    @Input() public tooltip: string;
+    @Input({ required: true }) public label: string;
+    @Input({ required: true }) public tooltip: string;
 }

@@ -12,7 +12,7 @@ import { MaybeNullOrUndefined } from "../../app.types";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TileBaseWidgetComponent {
-    @Input() public nodes: FlowItemWidgetDataFragment[];
+    @Input({ required: true }) public nodes: FlowItemWidgetDataFragment[];
     public readonly LAST_RUNS_COUNT = 150;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;

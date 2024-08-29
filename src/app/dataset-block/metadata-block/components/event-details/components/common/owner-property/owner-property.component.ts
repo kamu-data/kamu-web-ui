@@ -10,7 +10,7 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OwnerPropertyComponent extends BasePropertyComponent {
-    @Input() public data: AccountBasicsFragment;
+    @Input({ required: true }) public data: AccountBasicsFragment;
 
     constructor(private navigationService: NavigationService) {
         super();

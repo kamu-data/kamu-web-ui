@@ -1,5 +1,5 @@
 import { MaybeNull } from "src/app/common/app.types";
-import { AbstractControl, FormControl, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
+import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
 import { FlowSummaryDataFragment, MetadataBlockFragment, TimeUnit } from "../api/kamu.graphql.interface";
 import { EventPropertyLogo } from "../dataset-block/metadata-block/components/event-details/supported.events";
 import { JsonFormValidators } from "../dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
@@ -9,6 +9,7 @@ import { isValidCronExpression } from "./cron-expression-validator.helper";
 import { ErrorPolicy, WatchQueryFetchPolicy } from "@apollo/client";
 import moment from "moment";
 import { convertSecondsToHumanReadableFormat } from "./app.helpers";
+import { SliceUnit } from "../dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
 
 export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";
@@ -202,6 +203,8 @@ export class DataHelpers {
                 return `Hard compaction`;
             case "FlowDescriptionSystemGC":
                 return `Garbage collector`;
+            case "FlowDescriptionDatasetReset":
+                return `Reset to seed`;
             default:
                 return "Unsupported flow description";
         }
@@ -305,7 +308,19 @@ export const noCacheFetchPolicy: {
     errorPolicy: "all",
 };
 
-export const noWhitespaceValidator = (control: FormControl): ValidationErrors | null => {
-    const isSpace = ((control.value as string) || "").match(/\s/g);
-    return isSpace ? { whitespace: true } : null;
+export const noWhitespaceValidator = (): ValidatorFn => {
+    return (control: AbstractControl): ValidationErrors | null => {
+        const isSpace = ((control.value as string) || "").match(/\s/g);
+        return isSpace ? { whitespace: true } : null;
+    };
 };
+
+export function sliceSizeMapperReverse(sizeInBytes: number): { size: number; unit: SliceUnit } {
+    if (sizeInBytes % Math.pow(2, 30) === 0) {
+        return { size: sizeInBytes / Math.pow(2, 30), unit: SliceUnit.GB };
+    } else if (sizeInBytes % Math.pow(2, 20) === 0) {
+        return { size: sizeInBytes / Math.pow(2, 20), unit: SliceUnit.MB };
+    } else {
+        return { size: sizeInBytes / Math.pow(2, 10), unit: SliceUnit.KB };
+    }
+}

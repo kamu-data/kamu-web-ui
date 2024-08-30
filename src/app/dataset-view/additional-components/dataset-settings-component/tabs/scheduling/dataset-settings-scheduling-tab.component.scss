@@ -6,13 +6,18 @@
             }
         }
 
-        .mat-radio-button {
-            .mat-radio-ripple {
-                position: relative;
+        .mdc-switch {
+            .mdc-switch__ripple {
+                display: none;
             }
         }
 
-        .mat-radio-label {
+        .mat-mdc-radio-button {
+            --mat-radio-checked-ripple-color: transparent;
+            --mat-radio-ripple-color: transparent;
+        }
+
+        .mat-mdc-radio-label {
             white-space: normal;
         }
     }
@@ -23,6 +28,7 @@
 
     h4 {
         font-weight: 500;
+        letter-spacing: normal;
     }
 
     .form-control-width {
@@ -39,6 +45,13 @@
 
     .cron-expression-hint {
         padding-left: 150px;
+    }
+
+    .checkbox-uncacheable {
+        width: 16px;
+        height: 16px;
+        accent-color: rgba(63 81 181);
+        margin-left: 0.85rem;
     }
 }
 

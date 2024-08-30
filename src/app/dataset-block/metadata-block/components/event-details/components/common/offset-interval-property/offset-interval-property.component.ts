@@ -1,7 +1,7 @@
 import { DatasetByIdQuery } from "../../../../../../../api/kamu.graphql.interface";
 import { NavigationService } from "../../../../../../../services/navigation.service";
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { OffsetInterval } from "src/app/api/kamu.graphql.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
@@ -15,17 +15,14 @@ import { MaybeNull } from "src/app/common/app.types";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OffsetIntervalPropertyComponent extends BasePropertyComponent implements OnInit {
-    @Input() public data: {
+    @Input({ required: true }) public data: {
         block: MaybeNull<OffsetInterval>;
         datasetId: MaybeNull<string>;
     };
     private datasetInfo: DatasetInfo = { accountName: "", datasetName: "" };
-    constructor(
-        private navigationService: NavigationService,
-        private datasetService: DatasetService,
-    ) {
-        super();
-    }
+    private navigationService = inject(NavigationService);
+    private datasetService = inject(DatasetService);
+
     ngOnInit(): void {
         if (this.data.datasetId) {
             this.trackSubscription(

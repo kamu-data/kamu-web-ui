@@ -10,7 +10,7 @@ import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JsonKindFieldComponent extends BaseField implements OnInit {
-    @Input() public controlDescriptors: ReadFormatControlType[];
+    @Input({ required: true }) public controlDescriptors: ReadFormatControlType[];
     public ReadKind: typeof ReadKind = ReadKind;
     public readonly TOOLTIP_SUB_PATH = SourcesTooltipsTexts.SUB_PATH;
     public readonly READ_SUB_PATH_CONTROL = "subPath";

@@ -6,6 +6,7 @@ import {
     ComponentFactoryResolver,
     ComponentRef,
     ChangeDetectorRef,
+    inject,
 } from "@angular/core";
 
 import { DynamicComponent } from "./dynamic.component";
@@ -38,14 +39,10 @@ export class ModalComponent extends BaseComponent implements OnInit {
         spinner: ModalSpinnerComponent,
     };
 
-    constructor(
-        private componentFactoryResolver: ComponentFactoryResolver,
-        private modalService: ModalService,
-        private cdr: ChangeDetectorRef,
-        private location: Location,
-    ) {
-        super();
-    }
+    private componentFactoryResolver = inject(ComponentFactoryResolver);
+    private modalService = inject(ModalService);
+    private cdr = inject(ChangeDetectorRef);
+    private location = inject(Location);
 
     ngOnInit() {
         this.trackSubscription(

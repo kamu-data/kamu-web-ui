@@ -1,4 +1,11 @@
-import { DatasetKind, FlowStatus, FlowSummaryDataFragment, TimeUnit } from "src/app/api/kamu.graphql.interface";
+import {
+    AccountType,
+    DatasetKind,
+    DatasetListFlowsDataFragment,
+    FlowStatus,
+    FlowSummaryDataFragment,
+    TimeUnit,
+} from "src/app/api/kamu.graphql.interface";
 import { mockDatasetMainDataId } from "src/app/search/mock.data";
 
 export const expectationsDesriptionColumnOptions = [
@@ -18,7 +25,7 @@ export const mockDatasetExecuteTransformFlowSummaryData: FlowSummaryDataFragment
     description: {
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         transformResult: {
-            __typename: "FlowDescriptionUpdateResult",
+            __typename: "FlowDescriptionUpdateResultSuccess",
             numBlocks: 2,
             numRecords: 10,
         },
@@ -117,7 +124,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         description: {
             datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
             transformResult: {
-                __typename: "FlowDescriptionUpdateResult",
+                __typename: "FlowDescriptionUpdateResultSuccess",
                 numBlocks: 2,
                 numRecords: 10,
             },
@@ -144,6 +151,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             ingestResult: {
                 numBlocks: 4,
                 numRecords: 30,
+                __typename: "FlowDescriptionUpdateResultSuccess",
             },
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
@@ -302,7 +310,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         },
         startCondition: {
             __typename: "FlowStartConditionBatching",
-            activeBatchingRule: {
+            activeTransformRule: {
                 minRecordsToAwait: 500,
                 maxBatchingInterval: {
                     every: 5,
@@ -430,7 +438,7 @@ export const tooltipTextResults: string[] = [
     "Start running time: Mar 14th 2024, 11:24:29 AM",
 ];
 
-export const mockDatasets = [
+export const mockDatasets: DatasetListFlowsDataFragment[] = [
     {
         id: mockDatasetMainDataId,
         kind: DatasetKind.Root,
@@ -539,3 +547,46 @@ export const mockDatasets = [
         },
     },
 ];
+
+export const mockFlowSummaryDataFragmentShowForceLink: FlowSummaryDataFragment = {
+    description: {
+        datasetId: "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
+        ingestResult: {
+            uncacheable: true,
+            __typename: "FlowDescriptionUpdateResultUpToDate",
+        },
+        __typename: "FlowDescriptionDatasetPollingIngest",
+    },
+    flowId: "3",
+    status: FlowStatus.Finished,
+    initiator: {
+        id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+        accountName: "kamu",
+        displayName: "kamu",
+        accountType: AccountType.User,
+        avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+        isAdmin: true,
+        __typename: "Account",
+    },
+    outcome: {
+        message: "SUCCESS",
+        __typename: "FlowSuccessResult",
+    },
+    timing: {
+        awaitingExecutorSince: "2024-08-21T08:46:19.426925618+00:00",
+        runningSince: "2024-08-21T08:46:20.507478673+00:00",
+        finishedAt: "2024-08-21T08:46:22.636437316+00:00",
+        __typename: "FlowTimingRecords",
+    },
+    startCondition: null,
+    configSnapshot: {
+        schedule: {
+            every: 1,
+            unit: TimeUnit.Minutes,
+            __typename: "TimeDelta",
+        },
+        fetchUncacheable: false,
+        __typename: "FlowConfigurationIngest",
+    },
+    __typename: "Flow",
+};

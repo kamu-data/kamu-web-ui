@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Observable, Subject, of } from "rxjs";
 import { switchMap, map } from "rxjs/operators";
 import { DatasetApi } from "src/app/api/dataset.api";
@@ -34,12 +34,10 @@ export class DatasetCommitService {
 
     private datasetIdsByAccountDatasetName = new Map<string, string>();
 
-    constructor(
-        private datasetApi: DatasetApi,
-        private navigationService: NavigationService,
-        private datasetService: DatasetService,
-        private loggedUserService: LoggedUserService,
-    ) {}
+    private datasetApi = inject(DatasetApi);
+    private navigationService = inject(NavigationService);
+    private datasetService = inject(DatasetService);
+    private loggedUserService = inject(LoggedUserService);
 
     public commitEventToDataset(params: {
         accountId: string;

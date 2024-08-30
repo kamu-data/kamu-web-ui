@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, inject } from "@angular/core";
 import { SqlQueryStep } from "src/app/api/kamu.graphql.interface";
 import { ViewportScroller } from "@angular/common";
 
@@ -9,9 +9,9 @@ import { ViewportScroller } from "@angular/common";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QueriesSectionComponent {
-    @Input() public queries: Omit<SqlQueryStep, "__typename">[];
+    @Input({ required: true }) public queries: Omit<SqlQueryStep, "__typename">[];
 
-    constructor(private scroll: ViewportScroller) {}
+    private scroll = inject(ViewportScroller);
 
     public isLastQuery(index: number): boolean {
         return index === this.queries.length - 1;

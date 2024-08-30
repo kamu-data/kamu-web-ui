@@ -1,9 +1,12 @@
+import { NavigationService } from "./../../../../../services/navigation.service";
+import { DatasetCompactionService } from "./../../services/dataset-compaction.service";
+import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { DatasetSettingsGeneralTabComponent } from "./dataset-settings-general-tab.component";
 import { DatasetSettingsService } from "../../services/dataset-settings.service";
 import { ModalService } from "../../../../../components/modal/modal.service";
 import { ApolloModule } from "apollo-angular";
-import { ReactiveFormsModule } from "@angular/forms";
+import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
@@ -22,16 +25,26 @@ import {
     getInputElementByDataTestId,
 } from "../../../../../common/base-test.helpers.spec";
 import { TEST_ACCOUNT_ID } from "src/app/api/mock/auth.mock";
+import { ToastrModule } from "ngx-toastr";
+import { MatRadioModule } from "@angular/material/radio";
+import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
+import { DatasetFlowType } from "src/app/api/kamu.graphql.interface";
+import { DatasetResetMode } from "./dataset-settings-general-tab.types";
+import AppValues from "src/app/common/app.values";
+import { DatasetFlowsService } from "../../../flows-component/services/dataset-flows.service";
 
 describe("DatasetSettingsGeneralTabComponent", () => {
     let component: DatasetSettingsGeneralTabComponent;
     let fixture: ComponentFixture<DatasetSettingsGeneralTabComponent>;
     let datasetSettingsService: DatasetSettingsService;
     let modalService: ModalService;
+    let datasetCompactionService: DatasetCompactionService;
+    let navigationService: NavigationService;
+    let flowsService: DatasetFlowsService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DatasetSettingsGeneralTabComponent],
+            declarations: [DatasetSettingsGeneralTabComponent, TooltipIconComponent],
             imports: [
                 ReactiveFormsModule,
                 HttpClientTestingModule,
@@ -40,7 +53,12 @@ describe("DatasetSettingsGeneralTabComponent", () => {
                 ApolloModule,
                 ApolloTestingModule,
                 SharedTestModule,
+                ToastrModule.forRoot(),
+                MatRadioModule,
+                MatIconModule,
+                NgbTooltipModule,
             ],
+            providers: [FormBuilder],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DatasetSettingsGeneralTabComponent);
@@ -50,6 +68,10 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
         datasetSettingsService = TestBed.inject(DatasetSettingsService);
         modalService = TestBed.inject(ModalService);
+        datasetCompactionService = TestBed.inject(DatasetCompactionService);
+        flowsService = TestBed.inject(DatasetFlowsService);
+
+        navigationService = TestBed.inject(NavigationService);
         fixture.detectChanges();
     });
 
@@ -62,6 +84,8 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         RenameDatasetErrorCustom = "rename-dataset-error-custom",
 
         DeleteDatasetButton = "delete-dataset-button",
+
+        ResetDatasetButton = "reset-dataset-button",
     }
 
     it("should create", () => {
@@ -196,6 +220,64 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         tick();
 
         expect(deleteDatasetSpy).not.toHaveBeenCalled();
+
+        flush();
+    }));
+
+    it("should check reset modal window is shown and sends API call after confirm for Reset to Seed mode", fakeAsync(() => {
+        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options) => {
+            options.handler?.call(undefined, true);
+            return Promise.resolve("");
+        });
+        const resetToSeedSpy = spyOn(datasetCompactionService, "resetToSeed").and.returnValue(of(true));
+        const navigationServiceSpy = spyOn(navigationService, "navigateToDatasetView");
+        emitClickOnElementByDataTestId(fixture, Elements.ResetDatasetButton);
+        tick(AppValues.SIMULATION_START_CONDITION_DELAY_MS);
+
+        expect(navigationServiceSpy).toHaveBeenCalledTimes(1);
+        expect(modalServiceSpy).toHaveBeenCalledTimes(1);
+        expect(resetToSeedSpy).toHaveBeenCalledWith({
+            datasetId: component.datasetBasics.id,
+            datasetFlowType: DatasetFlowType.Reset,
+            flowRunConfiguration: {
+                reset: {
+                    mode: {
+                        toSeed: {
+                            dummy: "",
+                        },
+                    },
+                    recursive: component.recursiveControl.value,
+                },
+            },
+        });
+        flush();
+    }));
+
+    it("should check reset modal window is shown and sends API call after confirm for Flatten metadata mode", fakeAsync(() => {
+        component.resetDatasetForm.patchValue({ mode: DatasetResetMode.RESET_METADATA_ONLY });
+        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options) => {
+            options.handler?.call(undefined, true);
+            return Promise.resolve("");
+        });
+        const navigationServiceSpy = spyOn(navigationService, "navigateToDatasetView");
+        const datasetTriggerFlowSpy = spyOn(flowsService, "datasetTriggerFlow").and.returnValue(of(true));
+
+        emitClickOnElementByDataTestId(fixture, Elements.ResetDatasetButton);
+        tick(AppValues.SIMULATION_START_CONDITION_DELAY_MS);
+
+        expect(navigationServiceSpy).toHaveBeenCalledTimes(1);
+        expect(modalServiceSpy).toHaveBeenCalledTimes(1);
+        expect(datasetTriggerFlowSpy).toHaveBeenCalledWith({
+            datasetId: component.datasetBasics.id,
+            datasetFlowType: DatasetFlowType.HardCompaction,
+            flowRunConfiguration: {
+                compaction: {
+                    metadataOnly: {
+                        recursive: component.recursiveControl.value,
+                    },
+                },
+            },
+        });
 
         flush();
     }));

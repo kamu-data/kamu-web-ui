@@ -1,5 +1,5 @@
 import { FetchKind } from "./add-polling-source-form.types";
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { FormArray, FormGroup } from "@angular/forms";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import { FETCH_STEP_RADIO_CONTROLS } from "./form-control.source";
@@ -60,9 +60,7 @@ export class AddPollingSourceComponent extends BaseSourceEventComponent implemen
         return this.pollingSourceForm.get(SetPollingSourceSection.MERGE) as FormGroup;
     }
 
-    constructor(private editService: EditPollingSourceService) {
-        super();
-    }
+    private editService = inject(EditPollingSourceService);
 
     public ngOnInit(): void {
         super.ngOnInit();

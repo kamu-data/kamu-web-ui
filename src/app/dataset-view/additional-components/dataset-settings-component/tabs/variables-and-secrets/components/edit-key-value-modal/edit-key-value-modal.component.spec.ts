@@ -14,6 +14,7 @@ import { of } from "rxjs";
 import { mockListEnvVariablesQuery } from "src/app/api/mock/environment-variables-and-secrets.mock";
 import { ViewDatasetEnvVar } from "src/app/api/kamu.graphql.interface";
 import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 describe("EditKeyValueModalComponent", () => {
     let component: EditKeyValueModalComponent;
@@ -60,6 +61,7 @@ describe("EditKeyValueModalComponent", () => {
                 ReactiveFormsModule,
                 MatDividerModule,
                 MatIconModule,
+                MatTooltipModule,
             ],
         }).compileComponents();
 

@@ -11,7 +11,7 @@ import { DatasetSchema } from "src/app/interface/dataset.interface";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetDataSchemaEventComponent extends BaseComponent {
-    @Input() public event: SetDataSchema;
+    @Input({ required: true }) public event: SetDataSchema;
 
     public get datasetSchema(): MaybeNull<DatasetSchema> {
         return parseCurrentSchema(this.event.schema);

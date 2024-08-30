@@ -1,5 +1,5 @@
 import { Observable } from "rxjs";
-import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output, inject } from "@angular/core";
 import { Node } from "@swimlane/ngx-graph";
 import { BaseComponent } from "src/app/common/base.component";
 import { LineageGraphBuilderService } from "./services/lineage-graph-builder.service";
@@ -14,9 +14,7 @@ export class LineageComponent extends BaseComponent implements OnInit {
     @Output() onClickNodeEmit = new EventEmitter<Node>();
     public lineageGraphUpdate$: Observable<MaybeNull<LineageGraphUpdate>>;
 
-    constructor(private lineageGraphBuilderService: LineageGraphBuilderService) {
-        super();
-    }
+    private lineageGraphBuilderService = inject(LineageGraphBuilderService);
 
     public onClickNode(node: Node): void {
         this.onClickNodeEmit.emit(node);

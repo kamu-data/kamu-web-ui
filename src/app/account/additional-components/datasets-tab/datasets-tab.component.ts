@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Input } from "@angular/core";
+import { ChangeDetectionStrategy, inject, Input } from "@angular/core";
 import { Component } from "@angular/core";
 import { DatasetSearchOverviewFragment, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
 import { AccountTabs } from "../../account.constants";
@@ -11,12 +11,12 @@ import { NavigationService } from "src/app/services/navigation.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetsTabComponent {
-    @Input() public datasets: DatasetSearchOverviewFragment[];
-    @Input() public accountName: string;
-    @Input() public pageInfo: PageBasedInfo;
+    @Input({ required: true }) public datasets: DatasetSearchOverviewFragment[];
+    @Input({ required: true }) public accountName: string;
+    @Input({ required: true }) public pageInfo: PageBasedInfo;
     public isClickableRow = true;
 
-    constructor(private navigationService: NavigationService) {}
+    private navigationService = inject(NavigationService);
 
     public get currentPage(): number {
         return this.pageInfo.currentPage + 1;

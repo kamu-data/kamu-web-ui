@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
 import { Observable, map, of, switchMap } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
@@ -6,6 +6,8 @@ import {
     CompactionConditionInput,
     DatasetFlowCompactionMutation,
     DatasetFlowType,
+    DatasetTriggerFlowMutation,
+    FlowRunConfiguration,
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowsService } from "../../flows-component/services/dataset-flows.service";
 
@@ -13,11 +15,9 @@ import { DatasetFlowsService } from "../../flows-component/services/dataset-flow
     providedIn: "root",
 })
 export class DatasetCompactionService {
-    constructor(
-        private datasetFlowApi: DatasetFlowApi,
-        private toastrService: ToastrService,
-        private flowsService: DatasetFlowsService,
-    ) {}
+    private datasetFlowApi = inject(DatasetFlowApi);
+    private toastrService = inject(ToastrService);
+    private flowsService = inject(DatasetFlowsService);
 
     public runHardCompaction(params: {
         datasetId: string;
@@ -34,13 +34,35 @@ export class DatasetCompactionService {
                 }
             }),
             switchMap((success: boolean) => {
-                if (success) {
+                if (success && params.compactionArgs.full) {
                     return this.flowsService.datasetTriggerFlow({
                         datasetId: params.datasetId,
                         datasetFlowType: params.datasetFlowType,
+                        flowRunConfiguration: {
+                            compaction: {
+                                full: params.compactionArgs.full,
+                            },
+                        },
                     });
                 }
                 return of(false);
+            }),
+        );
+    }
+
+    public resetToSeed(params: {
+        datasetId: string;
+        datasetFlowType: DatasetFlowType;
+        flowRunConfiguration: FlowRunConfiguration;
+    }): Observable<boolean> {
+        return this.datasetFlowApi.datasetTriggerFlow(params).pipe(
+            map((data: DatasetTriggerFlowMutation) => {
+                if (data.datasets.byId?.flows.runs.triggerFlow.__typename === "TriggerFlowSuccess") {
+                    return true;
+                } else {
+                    this.toastrService.error(data.datasets.byId?.flows.runs.triggerFlow.message);
+                    return false;
+                }
             }),
         );
     }

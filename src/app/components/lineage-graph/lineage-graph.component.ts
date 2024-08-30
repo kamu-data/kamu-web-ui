@@ -5,6 +5,7 @@ import {
     ElementRef,
     EventEmitter,
     HostListener,
+    inject,
     Input,
     OnChanges,
     OnInit,
@@ -29,8 +30,8 @@ import { MaybeUndefined } from "src/app/common/app.types";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LineageGraphComponent implements OnInit, OnChanges {
-    @Input() public graph: LineageGraph;
-    @Input() public currentDataset: DatasetLineageBasicsFragment;
+    @Input({ required: true }) public graph: LineageGraph;
+    @Input({ required: true }) public currentDataset: DatasetLineageBasicsFragment;
     @Output() public onClickNodeEvent = new EventEmitter<Node>();
     public readonly LineageGraphNodeKind: typeof LineageGraphNodeKind = LineageGraphNodeKind;
     public readonly DatasetKind: typeof DatasetKind = DatasetKind;
@@ -46,10 +47,8 @@ export class LineageGraphComponent implements OnInit, OnChanges {
         this.changeLineageGraphView();
     }
 
-    constructor(
-        private sessionStorageService: SessionStorageService,
-        private widgetHeightService: WidgetHeightService,
-    ) {}
+    private sessionStorageService = inject(SessionStorageService);
+    private widgetHeightService = inject(WidgetHeightService);
 
     public ngOnInit(): void {
         this.view = [this.INITIAL_GRAPH_VIEW_WIDTH, this.lineageGraphHeight()];

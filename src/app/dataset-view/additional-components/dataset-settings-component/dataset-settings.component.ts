@@ -1,5 +1,5 @@
 import { MaybeNull } from "./../../../common/app.types";
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import {
     DatasetBasicsFragment,
     DatasetKind,
@@ -23,21 +23,17 @@ import { DatasetViewTypeEnum } from "../../dataset-view.interface";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetSettingsComponent extends BaseComponent implements OnInit {
-    @Input() public datasetBasics: DatasetBasicsFragment;
-    @Input() public datasetPermissions: DatasetPermissionsFragment;
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public datasetPermissions: DatasetPermissionsFragment;
     public readonly settingsTabsEnum: typeof SettingsTabsEnum = SettingsTabsEnum;
     public readonly DatasetKind: typeof DatasetKind = DatasetKind;
     public activeTab: SettingsTabsEnum;
     public sidePanelData: DatasetSettingsSidePanelItem[] = datasetSettingsSidePanelData;
     public overview: MaybeNull<DatasetOverviewFragment>;
 
-    constructor(
-        private appConfigService: AppConfigService,
-        private navigationService: NavigationService,
-        private datasetSubsService: DatasetSubscriptionsService,
-    ) {
-        super();
-    }
+    private appConfigService = inject(AppConfigService);
+    private navigationService = inject(NavigationService);
+    private datasetSubsService = inject(DatasetSubscriptionsService);
 
     public get isSchedulingAvailable(): boolean {
         return (
@@ -105,7 +101,10 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
             case SettingsTabsEnum.COMPACTION:
                 return this.datasetBasics.kind === DatasetKind.Root;
             case SettingsTabsEnum.VARIABLES_AND_SECRETS:
-                return this.appConfigService.featureFlags.enableDatasetEnvVarsManagment;
+                return (
+                    this.appConfigService.featureFlags.enableDatasetEnvVarsManagment &&
+                    this.datasetBasics.kind === DatasetKind.Root
+                );
             default:
                 return Boolean(item.visible);
         }

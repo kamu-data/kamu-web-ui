@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { combineLatest, map, of, switchMap, timer } from "rxjs";
 import { MaybeNull } from "src/app/common/app.types";
 import {
     AccountType,
-    Dataset,
+    DatasetListFlowsDataFragment,
     FlowStatus,
     FlowSummaryDataFragment,
     InitiatorFilterInput,
@@ -22,14 +22,12 @@ import { FlowsTableFiltersOptions } from "src/app/common/components/flows-table/
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent implements OnInit {
-    @Input() accountName: string;
+    @Input({ required: true }) accountName: string;
     public nodes: FlowSummaryDataFragment[] = [];
-    public searchByDataset: Dataset[] = [];
+    public searchByDataset: DatasetListFlowsDataFragment[] = [];
     public readonly DISPLAY_COLUMNS = ["description", "information", "creator", "dataset", "options"];
 
-    constructor(private accountService: AccountService) {
-        super();
-    }
+    private accountService = inject(AccountService);
 
     ngOnInit(): void {
         this.getPageFromUrl();
@@ -48,19 +46,14 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
                     this.accountService.getAccountListFlows({
                         accountName: this.accountName,
                         page: page - 1,
-                        perPage: this.TABLE_FLOW_RUNS_PER_PAGE,
+                        perPageTable: this.TABLE_FLOW_RUNS_PER_PAGE,
+                        perPageTiles: this.WIDGET_FLOW_RUNS_PER_PAGE,
                         filters: {
                             byFlowType: null,
                             byStatus: filterByStatus,
                             byInitiator: filterByInitiator,
                             byDatasetIds: datasetsIds ?? [],
                         },
-                    }),
-                    this.accountService.getAccountListFlows({
-                        accountName: this.accountName,
-                        page: 0,
-                        perPage: this.WIDGET_FLOW_RUNS_PER_PAGE,
-                        filters: { byFlowType: null, byStatus: null, byInitiator: null, byDatasetIds: [] },
                     }),
                     this.accountService.accountAllFlowsPaused(this.accountName),
                     // TODO: Implemented all accounts with flows from API
@@ -75,8 +68,8 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
                     ]),
                 ]),
             ),
-            map(([mainTableFlowsData, tileWidgetListFlowsData, allFlowsPaused, flowInitiators]) => {
-                return { mainTableFlowsData, tileWidgetListFlowsData, allFlowsPaused, flowInitiators };
+            map(([flowsData, allFlowsPaused, flowInitiators]) => {
+                return { flowsData, allFlowsPaused, flowInitiators };
             }),
         );
     }

@@ -1,5 +1,5 @@
 import { Observable, first, map } from "rxjs";
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import {
     AccountByNameGQL,
     AccountByNameQuery,
@@ -24,14 +24,12 @@ import { DatasetOperationError } from "../common/errors";
 
 @Injectable({ providedIn: "root" })
 export class AccountApi {
-    constructor(
-        private accountByNameGql: AccountByNameGQL,
-        private accountListFlowsGql: AccountListFlowsGQL,
-        private accountListDatasetsWithFlowsGql: AccountListDatasetsWithFlowsGQL,
-        private accountDatasetFlowsPausedGql: AccountDatasetFlowsPausedGQL,
-        private accountPauseFlowsGql: AccountPauseFlowsGQL,
-        private accountResumeFlowsGql: AccountResumeFlowsGQL,
-    ) {}
+    private accountByNameGql = inject(AccountByNameGQL);
+    private accountListFlowsGql = inject(AccountListFlowsGQL);
+    private accountListDatasetsWithFlowsGql = inject(AccountListDatasetsWithFlowsGQL);
+    private accountDatasetFlowsPausedGql = inject(AccountDatasetFlowsPausedGQL);
+    private accountPauseFlowsGql = inject(AccountPauseFlowsGQL);
+    private accountResumeFlowsGql = inject(AccountResumeFlowsGQL);
 
     public fetchAccountByName(accountName: string): Observable<MaybeNull<AccountFragment>> {
         return this.accountByNameGql
@@ -49,7 +47,8 @@ export class AccountApi {
     public fetchAccountListFlows(params: {
         accountName: string;
         page: number;
-        perPage: number;
+        perPageTable: number;
+        perPageTiles: number;
         filters: AccountFlowFilters;
     }): Observable<AccountListFlowsQuery> {
         return this.accountListFlowsGql
@@ -57,7 +56,8 @@ export class AccountApi {
                 {
                     name: params.accountName,
                     page: params.page,
-                    perPage: params.perPage,
+                    perPageTable: params.perPageTable,
+                    perPageTiles: params.perPageTiles,
                     filters: params.filters,
                 },
                 {

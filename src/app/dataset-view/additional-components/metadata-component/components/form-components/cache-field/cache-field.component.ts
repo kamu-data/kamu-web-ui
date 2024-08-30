@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { BaseField } from "../base-field";
 
@@ -8,9 +8,7 @@ import { BaseField } from "../base-field";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CacheFieldComponent extends BaseField {
-    constructor(private fb: FormBuilder) {
-        super();
-    }
+    private fb = inject(FormBuilder);
 
     public onCheckedCache(event: Event) {
         const input = event.target as HTMLInputElement;

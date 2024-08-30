@@ -1,19 +1,20 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
 import { Observable, map } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
     Account,
     CancelScheduledTasksMutation,
-    Dataset,
     DatasetAllFlowsPausedQuery,
     DatasetFlowFilters,
     DatasetFlowType,
     DatasetFlowsInitiatorsQuery,
+    DatasetListFlowsDataFragment,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsMutation,
     DatasetTriggerFlowMutation,
     FlowConnectionDataFragment,
+    FlowRunConfiguration,
     GetDatasetListFlowsQuery,
     GetFlowByIdQuery,
 } from "src/app/api/kamu.graphql.interface";
@@ -25,16 +26,19 @@ import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-detai
     providedIn: "root",
 })
 export class DatasetFlowsService {
-    constructor(
-        private datasetFlowApi: DatasetFlowApi,
-        private toastrService: ToastrService,
-    ) {}
+    private datasetFlowApi = inject(DatasetFlowApi);
+    private toastrService = inject(ToastrService);
 
-    public datasetTriggerFlow(params: { datasetId: string; datasetFlowType: DatasetFlowType }): Observable<boolean> {
+    public datasetTriggerFlow(params: {
+        datasetId: string;
+        datasetFlowType: DatasetFlowType;
+        flowRunConfiguration?: FlowRunConfiguration;
+    }): Observable<boolean> {
         return this.datasetFlowApi
             .datasetTriggerFlow({
                 datasetId: params.datasetId,
                 datasetFlowType: params.datasetFlowType,
+                flowRunConfiguration: params.flowRunConfiguration,
             })
             .pipe(
                 map((data: DatasetTriggerFlowMutation) => {
@@ -64,14 +68,16 @@ export class DatasetFlowsService {
     public datasetFlowsList(params: {
         datasetId: string;
         page: number;
-        perPage: number;
+        perPageTable: number;
+        perPageTiles: number;
         filters: DatasetFlowFilters;
     }): Observable<FlowsTableData> {
         return this.datasetFlowApi.getDatasetListFlows(params).pipe(
             map((data: GetDatasetListFlowsQuery) => {
                 return {
-                    connectionData: data.datasets.byId?.flows.runs.listFlows as FlowConnectionDataFragment,
-                    involvedDatasets: [data.datasets.byId as Dataset],
+                    connectionDataForTable: data.datasets.byId?.flows.runs.table as FlowConnectionDataFragment,
+                    connectionDataForWidget: data.datasets.byId?.flows.runs.tiles as FlowConnectionDataFragment,
+                    involvedDatasets: [data.datasets.byId] as DatasetListFlowsDataFragment[],
                 };
             }),
         );

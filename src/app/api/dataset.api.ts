@@ -37,7 +37,7 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { ApolloQueryResult } from "@apollo/client/core";
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { map, first } from "rxjs/operators";
 import { Observable } from "rxjs";
 import { MutationResult } from "apollo-angular";
@@ -49,25 +49,23 @@ import { updateCacheHelper } from "../apollo-cache.helper";
 
 @Injectable({ providedIn: "root" })
 export class DatasetApi {
-    constructor(
-        private datasetMainDataGQL: GetDatasetMainDataGQL,
-        private datasetBasicsWithPermissionGQL: GetDatasetBasicsWithPermissionsGQL,
-        private datasetDataSqlRunGQL: GetDatasetDataSqlRunGQL,
-        private datasetHistoryGQL: GetDatasetHistoryGQL,
-        private datasetsByAccountNameGQL: DatasetsByAccountNameGQL,
-        private metadataBlockGQL: GetMetadataBlockGQL,
-        private datasetByIdGQL: DatasetByIdGQL,
-        private datasetByAccountAndDatasetNameGQL: DatasetByAccountAndDatasetNameGQL,
-        private createEmptyDatasetGQL: CreateEmptyDatasetGQL,
-        private createDatasetFromSnapshotGQL: CreateDatasetFromSnapshotGQL,
-        private commitEventToDatasetGQL: CommitEventToDatasetGQL,
-        private datasetSchemaGQL: GetDatasetSchemaGQL,
-        private updateReadmeGQL: UpdateReadmeGQL,
-        private deleteDatasetGQL: DeleteDatasetGQL,
-        private renameDatasetGQL: RenameDatasetGQL,
-        private datasetLineageGQL: GetDatasetLineageGQL,
-        private updateWatermarkGQL: UpdateWatermarkGQL,
-    ) {}
+    private datasetMainDataGQL = inject(GetDatasetMainDataGQL);
+    private datasetBasicsWithPermissionGQL = inject(GetDatasetBasicsWithPermissionsGQL);
+    private datasetDataSqlRunGQL = inject(GetDatasetDataSqlRunGQL);
+    private datasetHistoryGQL = inject(GetDatasetHistoryGQL);
+    private datasetsByAccountNameGQL = inject(DatasetsByAccountNameGQL);
+    private metadataBlockGQL = inject(GetMetadataBlockGQL);
+    private datasetByIdGQL = inject(DatasetByIdGQL);
+    private datasetByAccountAndDatasetNameGQL = inject(DatasetByAccountAndDatasetNameGQL);
+    private createEmptyDatasetGQL = inject(CreateEmptyDatasetGQL);
+    private createDatasetFromSnapshotGQL = inject(CreateDatasetFromSnapshotGQL);
+    private commitEventToDatasetGQL = inject(CommitEventToDatasetGQL);
+    private datasetSchemaGQL = inject(GetDatasetSchemaGQL);
+    private updateReadmeGQL = inject(UpdateReadmeGQL);
+    private deleteDatasetGQL = inject(DeleteDatasetGQL);
+    private renameDatasetGQL = inject(RenameDatasetGQL);
+    private datasetLineageGQL = inject(GetDatasetLineageGQL);
+    private updateWatermarkGQL = inject(UpdateWatermarkGQL);
 
     public getDatasetMainData(params: {
         accountName: string;

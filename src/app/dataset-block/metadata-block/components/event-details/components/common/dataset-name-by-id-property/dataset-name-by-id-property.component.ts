@@ -1,5 +1,5 @@
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetByIdQuery } from "src/app/api/kamu.graphql.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
@@ -13,16 +13,12 @@ import { NavigationService } from "src/app/services/navigation.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetNameByIdPropertyComponent extends BasePropertyComponent implements OnInit {
-    @Input() public data: string;
+    @Input({ required: true }) public data: string;
     public datasetInfo: DatasetInfo = { accountName: "", datasetName: "" };
 
-    constructor(
-        private datasetService: DatasetService,
-        private navigationService: NavigationService,
-        private cdr: ChangeDetectorRef,
-    ) {
-        super();
-    }
+    private datasetService = inject(DatasetService);
+    private navigationService = inject(NavigationService);
+    private cdr = inject(ChangeDetectorRef);
 
     ngOnInit(): void {
         this.trackSubscription(

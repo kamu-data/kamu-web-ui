@@ -8,7 +8,7 @@ import { SearchAdditionalHeaderButtonInterface } from "./search-additional-butto
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchAdditionalButtonsNavComponent {
-    @Input()
+    @Input({ required: true })
     public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[];
     @Output() public searchAdditionalButtonsMethod = new EventEmitter<string>();
 

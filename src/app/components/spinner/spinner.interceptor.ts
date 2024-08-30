@@ -4,9 +4,10 @@ import { Observable } from "rxjs";
 import { finalize } from "rxjs/operators";
 import { environment } from "../../../environments/environment";
 import AppValues from "src/app/common/app.values";
+import { inject } from "@angular/core";
 
 export class SpinnerInterceptor implements HttpInterceptor {
-    constructor(private spinnerService: SpinnerService) {}
+    private spinnerService = inject(SpinnerService);
     timer: NodeJS.Timer;
     intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         const skipGlobalLoader = Boolean(req.headers.get(AppValues.HEADERS_SKIP_LOADING_KEY));

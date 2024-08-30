@@ -1,6 +1,6 @@
 import ProjectLinks from "src/app/project-links";
 import { BaseComponent } from "src/app/common/base.component";
-import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, ViewChild } from "@angular/core";
 import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import { AccountTabs } from "./account.constants";
 import { ActivatedRoute, Params } from "@angular/router";
@@ -24,9 +24,7 @@ import { LoggedUserService } from "../auth/logged-user.service";
 })
 export class AccountComponent extends BaseComponent implements OnInit {
     public readonly AccountTabs = AccountTabs;
-
     public isDropdownMenu = false;
-
     public user$: Observable<AccountFragment>;
     public datasetsAccount$: Observable<DatasetsAccountResponse>;
     public activeTab$: Observable<AccountTabs>;
@@ -34,14 +32,10 @@ export class AccountComponent extends BaseComponent implements OnInit {
     @ViewChild("containerMenu") containerMenu: ElementRef;
     @ViewChild("dropdownMenu") dropdownMenu: ElementRef;
 
-    constructor(
-        private route: ActivatedRoute,
-        private modalService: ModalService,
-        private accountService: AccountService,
-        private loggedUserService: LoggedUserService,
-    ) {
-        super();
-    }
+    private route = inject(ActivatedRoute);
+    private modalService = inject(ModalService);
+    private accountService = inject(AccountService);
+    private loggedUserService = inject(LoggedUserService);
 
     public ngOnInit(): void {
         const accountName$ = this.route.params.pipe(

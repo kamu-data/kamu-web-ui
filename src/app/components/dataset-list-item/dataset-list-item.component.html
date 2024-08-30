@@ -71,11 +71,11 @@
             {{ row.metadata.currentInfo.description }}
         </p>
         <div class="app-mat-chip">
-            <mat-chip-list aria-label="Tags selection">
+            <mat-chip-set aria-label="Tags selection">
                 <div *ngFor="let keyword of row.metadata.currentInfo.keywords">
                     <mat-chip (click)="selectTopic(row.kind)">{{ keyword }}</mat-chip>
                 </div>
-            </mat-chip-list>
+            </mat-chip-set>
         </div>
         <div class="dataset-list-container__additional-block mt-2">
             <p class="text-small color-text-secondary mr-3">

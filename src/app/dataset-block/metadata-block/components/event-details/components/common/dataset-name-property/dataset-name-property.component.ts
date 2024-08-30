@@ -1,5 +1,5 @@
 import { NavigationService } from "../../../../../../../services/navigation.service";
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { BasePropertyComponent } from "../base-property/base-property.component";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 
@@ -10,11 +10,9 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetNamePropertyComponent extends BasePropertyComponent {
-    @Input() public data: { datasetName: string; ownerAccountName: string };
+    @Input({ required: true }) public data: { datasetName: string; ownerAccountName: string };
 
-    public constructor(private navigationService: NavigationService) {
-        super();
-    }
+    private navigationService = inject(NavigationService);
 
     public navigateToDatasetView(): void {
         this.navigationService.navigateToDatasetView({

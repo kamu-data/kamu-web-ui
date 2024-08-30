@@ -18,7 +18,6 @@ import { LocalStorageService } from "../services/local-storage.service";
 })
 export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
     private loggedInUser: MaybeNull<AccountFragment> = null;
-
     private loggedInUser$: Subject<MaybeNull<AccountFragment>> = new ReplaySubject<MaybeNull<AccountFragment>>(1);
 
     constructor(
@@ -29,7 +28,6 @@ export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
         private apollo: Apollo,
     ) {
         super();
-
         this.trackSubscriptions(
             this.loginService.accessTokenChanges.subscribe((token: string) => this.saveAccessToken(token)),
             this.loginService.accountChanges.subscribe((user: AccountFragment) => this.changeUser(user)),

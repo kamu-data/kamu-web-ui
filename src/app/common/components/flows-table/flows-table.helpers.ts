@@ -1,6 +1,11 @@
 import _ from "lodash";
 import moment from "moment";
-import { Dataset, FlowStartCondition, FlowStatus, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
+import {
+    DatasetListFlowsDataFragment,
+    FlowStartCondition,
+    FlowStatus,
+    FlowSummaryDataFragment,
+} from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/common/app.types";
 import AppValues from "src/app/common/app.values";
 import { DataHelpers } from "src/app/common/data.helpers";
@@ -65,7 +70,7 @@ export class DatasetFlowTableHelpers {
 
     public static descriptionSubMessage(
         element: FlowSummaryDataFragment,
-        datasets: Dataset[],
+        datasets: DatasetListFlowsDataFragment[],
         datasetId: string,
     ): string {
         const datasetWithFlow = datasets.find((dataset) => dataset.id === datasetId);
@@ -82,16 +87,25 @@ export class DatasetFlowTableHelpers {
                         switch (element.description.__typename) {
                             case "FlowDescriptionDatasetPollingIngest":
                             case "FlowDescriptionDatasetPushIngest":
-                                return element.description.ingestResult
+                                return element.description.ingestResult?.__typename ===
+                                    "FlowDescriptionUpdateResultSuccess"
                                     ? `Ingested ${element.description.ingestResult.numRecords} new ${
                                           element.description.ingestResult.numRecords == 1 ? "record" : "records"
                                       } in ${element.description.ingestResult.numBlocks} new ${
                                           element.description.ingestResult.numBlocks == 1 ? "block" : "blocks"
                                       }`
-                                    : "Dataset is up-to-date";
+                                    : element.description.ingestResult?.__typename ===
+                                            "FlowDescriptionUpdateResultUpToDate" &&
+                                        element.description.ingestResult.uncacheable &&
+                                        ((element.configSnapshot?.__typename === "FlowConfigurationIngest" &&
+                                            !element.configSnapshot.fetchUncacheable) ||
+                                            !element.configSnapshot)
+                                      ? `Source is uncacheable: to re-scan the data, use`
+                                      : "Dataset is up-to-date";
 
                             case "FlowDescriptionDatasetExecuteTransform":
-                                return element.description.transformResult
+                                return element.description.transformResult?.__typename ===
+                                    "FlowDescriptionUpdateResultSuccess"
                                     ? `Transformed ${element.description.transformResult.numRecords} new ${
                                           element.description.transformResult.numRecords == 1 ? "record" : "records"
                                       } in ${element.description.transformResult.numBlocks} new ${
@@ -110,8 +124,18 @@ export class DatasetFlowTableHelpers {
                                     default:
                                         return "Unknown compaction result typename";
                                 }
+
+                            case "FlowDescriptionDatasetReset":
+                                switch (element.description.__typename) {
+                                    case "FlowDescriptionDatasetReset":
+                                        return "All dataset history has been cleared.";
+                                    /* istanbul ignore next */
+                                    default:
+                                        return "Unknown reset result typename";
+                                }
                             // TODO
                             //  - GC
+                            /* istanbul ignore next */
                             default:
                                 return "Unknown description typename";
                         }
@@ -170,7 +194,7 @@ export class DatasetFlowTableHelpers {
                     //  - GC
                 }
         }
-
+        /* istanbul ignore next */
         return "";
     }
 
@@ -186,6 +210,7 @@ export class DatasetFlowTableHelpers {
                     }
                     case "FlowStartConditionBatching":
                         return `deadline time: ${moment(node.startCondition.batchingDeadline).fromNow()}`;
+                    /* istanbul ignore next */
                     default:
                         return "";
                 }
@@ -222,7 +247,7 @@ export class DatasetFlowTableHelpers {
             }
             case "FlowStartConditionSchedule":
                 return "waiting for scheduled execution";
-
+            /* istanbul ignore next */
             default:
                 return "";
         }
@@ -246,6 +271,7 @@ export class DatasetFlowTableHelpers {
                         return `Deadline time: ${moment(node.startCondition.batchingDeadline).format(
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
+                    /* istanbul ignore next */
                     default:
                         return "";
                 }

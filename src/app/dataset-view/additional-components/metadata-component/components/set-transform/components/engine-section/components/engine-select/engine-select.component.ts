@@ -4,6 +4,7 @@ import {
     ElementRef,
     EventEmitter,
     HostListener,
+    inject,
     Input,
     OnInit,
     Output,
@@ -27,11 +28,11 @@ export class EngineSelectComponent implements OnInit {
     @ViewChild("selectedImage", { static: true })
     selectedImage: ElementRef<HTMLImageElement>;
     public showDropdown = false;
-    @Input() data: EngineDesc[];
-    @Input() engine: string;
+    @Input({ required: true }) data: EngineDesc[];
+    @Input({ required: true }) engine: string;
     @Output() selectedEngineEmitter = new EventEmitter<string>();
 
-    constructor(private render: Renderer2) {}
+    private render = inject(Renderer2);
 
     @HostListener("document:click", ["$event"])
     clickOut(event: Event) {

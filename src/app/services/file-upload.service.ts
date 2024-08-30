@@ -1,6 +1,6 @@
 import { AppConfigService } from "src/app/app-config.service";
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
-import { Injectable, Injector } from "@angular/core";
+import { inject, Injectable, Injector } from "@angular/core";
 import { Observable, Subject, catchError, finalize, first, of, switchMap, tap } from "rxjs";
 import { MaybeUndefined } from "../common/app.types";
 import { LocalStorageService } from "./local-storage.service";
@@ -19,15 +19,13 @@ import { FileUploadError } from "../common/errors";
     providedIn: "root",
 })
 export class FileUploadService {
-    constructor(
-        private http: HttpClient,
-        private localStorageService: LocalStorageService,
-        private appConfigService: AppConfigService,
-        private navigationService: NavigationService,
-        private datasetService: DatasetService,
-        private injector: Injector,
-        private protocolsService: ProtocolsService,
-    ) {}
+    private http = inject(HttpClient);
+    private localStorageService = inject(LocalStorageService);
+    private appConfigService = inject(AppConfigService);
+    private navigationService = inject(NavigationService);
+    private datasetService = inject(DatasetService);
+    private injector = inject(Injector);
+    private protocolsService = inject(ProtocolsService);
 
     private uploadFileLoading$ = new Subject<boolean>();
 
@@ -108,16 +106,13 @@ export class FileUploadService {
     }
 
     public uploadFilePrepare(file: File): Observable<UploadPrepareResponse> {
-        return this.http.post<UploadPrepareResponse>(
-            `${this.appConfigService.apiServerHttpUrl}/platform/file/upload/prepare?fileName=` +
-                file.name +
-                "&contentLength=" +
-                file.size +
-                "&contentType=" +
-                file.type,
-            null,
-            { headers: { Authorization: `Bearer ${this.localStorageService.accessToken}` } },
-        );
+        const url = new URL(`${this.appConfigService.apiServerHttpUrl}/platform/file/upload/prepare`);
+        url.searchParams.append("fileName", file.name);
+        url.searchParams.append("contentLength", file.size.toString());
+        url.searchParams.append("contentType", file.type);
+        return this.http.post<UploadPrepareResponse>(url.href, null, {
+            headers: { Authorization: `Bearer ${this.localStorageService.accessToken}` },
+        });
     }
 
     public uploadPostFile(url: string, bodyObject: File | FormData, uploadHeaders: HttpHeaders): Observable<object> {

@@ -7,13 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ## Fixed
+- Disabled unused menu items for account settings
+- The file name for the file upload service may contain special characters.
+- Added form initialization for an existing configuration(Compaction tab)
+- Added typed forms for all application
+### Changed
+- Added an `required` option for input parameters
+- Replaced the constructor with `inject` function for all components and services
+
+## [0.25.1] -2024-08-22
+## Added
+- Added the ability to reset the dataset in 2 modes(`Reset to Seed` and `Flatten metadata`)
+- Extended `Fetch uncacheable` checkbox for the update scheduler.
+- Added active link `force update` for the flow with uncacheable source(Flows table)
+## Fixed
+- Access tokens: when you turn on the switch, all tokens are displayed (active and revoked)
+
+
+## [0.25.0] -2024-08-13
+## Added
+- Migrated Angular v.14 to Angular v.16 
+
+## [0.24.0] -2024-08-12
+## Fixed
 - "Update now" button is present when user is not logged in 
+- Changed tab size in the monaco editor
+- Removed sliding animation from pop-up windows
+- Minor modifications for variables and secrets tab
+- Optimized and modified the query for getting data for the flow list
 ## Added
 - Improved UX of flows table:
   - Main description message is clickable
   - Duration block displayed correctly(added delay)
 - Added multiple filters selection for the flows table
 - Implemented links for the main menu of the dataset
+- Redirected to original URL after login flow
+- Added recursive flag for compaction for full mode
 
 ## [0.23.2] -2024-07-23
 ## Fixed

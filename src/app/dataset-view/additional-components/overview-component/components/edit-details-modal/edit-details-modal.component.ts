@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, inject, Input, OnInit } from "@angular/core";
 import { MatChipInputEvent } from "@angular/material/chips";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { isEqual } from "lodash";
@@ -20,25 +20,22 @@ import { finalize } from "rxjs";
     templateUrl: "./edit-details-modal.component.html",
 })
 export class EditDetailsModalComponent extends BaseComponent implements OnInit {
-    @Input() public currentState?: {
+    @Input({ required: true }) public currentState?: {
         schema: MaybeNull<DatasetSchema>;
         data: DataRow[];
         overview: DatasetOverviewFragment;
         size: DatasetDataSizeFragment;
     };
-    @Input() public datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     public keywordsSet = new Set([] as string[]);
     public description = "";
     public initialDescription = "";
     public initialKeywords: string[] = [];
-    constructor(
-        private datasetCommitService: DatasetCommitService,
-        private yamlEventService: TemplatesYamlEventsService,
-        public activeModal: NgbActiveModal,
-        private loggedUserService: LoggedUserService,
-    ) {
-        super();
-    }
+
+    private datasetCommitService = inject(DatasetCommitService);
+    private yamlEventService = inject(TemplatesYamlEventsService);
+    public activeModal = inject(NgbActiveModal);
+    private loggedUserService = inject(LoggedUserService);
 
     public get keywords(): string[] {
         return Array.from(this.keywordsSet);

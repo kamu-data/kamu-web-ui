@@ -5,6 +5,7 @@ import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
+    inject,
     Input,
     Type,
     ViewChild,
@@ -33,15 +34,12 @@ import { SetLicenseEventComponent } from "./components/set-license-event/set-lic
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventDetailsComponent extends BaseComponent implements AfterViewInit {
-    public block$: Observable<MetadataBlockFragment> = this.blockService.metadataBlockChanges;
-    @Input() public datasetInfo: DatasetInfo;
+    private blockService = inject(BlockService);
 
+    public block$: Observable<MetadataBlockFragment> = this.blockService.metadataBlockChanges;
+    @Input({ required: true }) public datasetInfo: DatasetInfo;
     @ViewChild("dynamicContainer", { read: ViewContainerRef })
     public dynamicContainer: MaybeNull<ViewContainerRef>;
-
-    constructor(private blockService: BlockService) {
-        super();
-    }
 
     ngAfterViewInit(): void {
         this.trackSubscription(

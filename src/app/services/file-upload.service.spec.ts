@@ -16,6 +16,7 @@ describe("FileUploadService", () => {
     let appConfigService: AppConfigService;
     let httpTestingController: HttpTestingController;
     const mockUrl = "https://my-test";
+    const urlUpload = new URL(mockUrl);
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -52,7 +53,7 @@ describe("FileUploadService", () => {
             expect(data).toEqual(mockUploadPrepareResponse);
         });
 
-        const expectedUrl = `${mockUrl}/platform/file/upload/prepare?fileName=data.csv&contentLength=12&contentType=text/csv`;
+        const expectedUrl = `${mockUrl}/platform/file/upload/prepare?fileName=data.csv&contentLength=12&contentType=text%2Fcsv`;
         const testRequest = httpTestingController.expectOne(expectedUrl);
         expect(testRequest.request.method).toEqual("POST");
         testRequest.flush(mockUploadPrepareResponse);
@@ -93,5 +94,25 @@ describe("FileUploadService", () => {
         const testRequest = httpTestingController.expectOne(expectedUrl);
         expect(testRequest.request.method).toEqual("POST");
         testRequest.flush(mockResponse);
+    });
+
+    [
+        { case: "fileName whitespace", expected: "fileName+whitespace" },
+        { case: "fileName\\", expected: "fileName%5C" },
+        { case: "fileName*", expected: "fileName*" },
+        { case: "fileName#", expected: "fileName%23" },
+        { case: "fileName&", expected: "fileName%26" },
+        { case: "fileName>", expected: "fileName%3E" },
+        { case: "fileName|", expected: "fileName%7C" },
+        { case: "fileName;", expected: "fileName%3B" },
+        { case: "fileName!", expected: "fileName%21" },
+        { case: "fileName{", expected: "fileName%7B" },
+        { case: "fileName[", expected: "fileName%5B" },
+    ].forEach((item: { case: string; expected: string }) => {
+        it(`should encode file name with ${item.case}`, () => {
+            urlUpload.searchParams.append("filename", item.case);
+            expect(urlUpload.href).toEqual(`${mockUrl}/?filename=${item.expected}`);
+            urlUpload.searchParams.delete("filename");
+        });
     });
 });

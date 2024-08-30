@@ -7,5 +7,5 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HashPropertyComponent extends BasePropertyComponent {
-    @Input() public data: string;
+    @Input({ required: true }) public data: string;
 }

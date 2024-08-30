@@ -1,4 +1,4 @@
-import { Directive, EventEmitter, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
+import { Directive, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 
 import * as monaco from "monaco-editor";
@@ -8,7 +8,7 @@ import { EditorError } from "../../models/error.model";
 
 @Directive()
 export abstract class BaseEditorComponent implements OnChanges {
-    @Input() public template = "";
+    @Input({ required: true }) public template = "";
     @Input() public error: MaybeNull<string>;
     @Input() public height: MaybeUndefined<string>;
     @Input() public width: MaybeUndefined<string>;
@@ -19,7 +19,7 @@ export abstract class BaseEditorComponent implements OnChanges {
     public editorModel: monaco.editor.ITextModel;
     public getErrorDetails: (error: string) => EditorError = getDefaultError;
 
-    constructor(private monacoService: MonacoService) {}
+    private monacoService = inject(MonacoService);
 
     public ngOnChanges(changes: SimpleChanges) {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

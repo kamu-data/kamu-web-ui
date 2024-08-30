@@ -1,5 +1,5 @@
 import { DatasetBasicsFragment, DatasetKind, TransformInput } from "../../../../../api/kamu.graphql.interface";
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { MatTreeNestedDataSource } from "@angular/material/tree";
 import { MaybeNull, MaybeNullOrUndefined } from "src/app/common/app.types";
@@ -27,9 +27,7 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
     public dataSource = new MatTreeNestedDataSource<DatasetNode>();
     public TREE_DATA: DatasetNode[] = [];
 
-    constructor(private editService: EditSetTransformService) {
-        super();
-    }
+    private editService = inject(EditSetTransformService);
 
     public ngOnInit(): void {
         this.checkDatasetEditability(DatasetKind.Derivative);

@@ -7,7 +7,7 @@ import {
     PageBasedInfo,
     ViewAccessToken,
 } from "src/app/api/kamu.graphql.interface";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit, ViewChild } from "@angular/core";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { AccountSettingsTabs, TokenCreateStep } from "../../account-settings.constants";
@@ -19,7 +19,7 @@ import AppValues from "src/app/common/app.values";
 import { AccessTokenService } from "src/app/services/access-token.service";
 import { BaseComponent } from "src/app/common/base.component";
 import ProjectLinks from "src/app/project-links";
-import { MatSlideToggleChange } from "@angular/material/slide-toggle";
+import { CreateTokenFormType } from "./access-tokens-tab.types";
 
 @Component({
     selector: "app-access-tokens-tab",
@@ -28,7 +28,14 @@ import { MatSlideToggleChange } from "@angular/material/slide-toggle";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccessTokensTabComponent extends BaseComponent implements OnInit {
-    @Input() public account: AccountFragment;
+    private fb = inject(FormBuilder);
+    private modalService = inject(ModalService);
+    private clipboard = inject(Clipboard);
+    private accessTokenService = inject(AccessTokenService);
+    private navigationService = inject(NavigationService);
+    private cdr = inject(ChangeDetectorRef);
+
+    @Input({ required: true }) public account: AccountFragment;
     @ViewChild(MatSort) sort: MatSort;
     public searchTokenName: string = "";
     public dataSource = new MatTableDataSource();
@@ -36,24 +43,14 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
     public composedToken = "";
     public currentCreateStep = TokenCreateStep.INITIAL;
     public pageBasedInfo: PageBasedInfo;
-    public createTokenForm: FormGroup = this.fb.group({
+    public createTokenForm: FormGroup<CreateTokenFormType> = this.fb.group({
         name: ["", [Validators.required, Validators.maxLength(100)]],
     });
+    public showRevokedToken = false;
     public readonly DISPLAY_COLUMNS: string[] = ["status", "name", "createdAt", "revokedAt", "actions"];
     public readonly TokenCreateStep: typeof TokenCreateStep = TokenCreateStep;
     public readonly PER_PAGE = 15;
     public readonly DATE_FORMAT = AppValues.DISPLAY_FLOW_DATE_FORMAT;
-
-    constructor(
-        private fb: FormBuilder,
-        private modalService: ModalService,
-        private clipboard: Clipboard,
-        private accessTokenService: AccessTokenService,
-        private navigationService: NavigationService,
-        private cdr: ChangeDetectorRef,
-    ) {
-        super();
-    }
 
     ngOnInit(): void {
         this.getPageFromUrl();
@@ -81,14 +78,14 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
         this.composedToken = "";
     }
 
-    public toggleTokens(event: MatSlideToggleChange): void {
+    public toggleTokens(): void {
         this.dataSource.filterPredicate = (data: unknown, filter: string): boolean => {
             return String(Boolean((data as ViewAccessToken).revokedAt)) === filter;
         };
-        if (event.checked) {
-            this.dataSource.filter = String(event.checked);
-        } else {
+        if (this.showRevokedToken) {
             this.dataSource.filter = "";
+        } else {
+            this.dataSource.filter = String(this.showRevokedToken);
         }
     }
 
@@ -177,6 +174,7 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
                 })
                 .subscribe((result: AccessTokenConnection) => {
                     this.dataSource.data = result.nodes;
+                    this.toggleTokens();
                     this.dataSource.sort = this.sort;
                     this.pageBasedInfo = result.pageInfo;
                 }),

@@ -7,8 +7,8 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToggleComponent {
-    @Input() public isToggled: boolean;
-    @Input() public className: string;
+    @Input({ required: true }) public isToggled: boolean;
+    @Input({ required: true }) public className: string;
     @Output() public toggled = new EventEmitter<boolean>();
 
     public onClick(): void {

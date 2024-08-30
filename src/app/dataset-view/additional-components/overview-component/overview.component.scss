@@ -1,3 +1,17 @@
+:host {
+    ::ng-deep {
+        .mat-mdc-standard-chip {
+            --mdc-chip-elevated-container-color: #f6f8fa;
+
+            .mdc-evolution-chip__text-label {
+                color: #0969da !important;
+                font-size: 12px;
+                font-weight: 500;
+            }
+        }
+    }
+}
+
 .custom-mat-chip {
     background: #d0d7de;
 }

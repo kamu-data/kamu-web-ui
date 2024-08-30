@@ -8,7 +8,7 @@ import { DataHelpers } from "src/app/common/data.helpers";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StepTypePropertyComponent extends BasePropertyComponent {
-    @Input() public data: string;
+    @Input({ required: true }) public data: string;
 
     public get type(): string {
         return DataHelpers.descriptionSetPollingSourceSteps(this.data);

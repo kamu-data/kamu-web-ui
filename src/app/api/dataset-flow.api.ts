@@ -1,7 +1,6 @@
 import { MutationResult } from "apollo-angular";
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import {
-    BatchingConditionInput,
     CancelScheduledTasksGQL,
     CancelScheduledTasksMutation,
     CompactionConditionInput,
@@ -23,13 +22,15 @@ import {
     DatasetResumeFlowsMutation,
     DatasetTriggerFlowGQL,
     DatasetTriggerFlowMutation,
+    FlowRunConfiguration,
     GetDatasetFlowConfigsGQL,
     GetDatasetFlowConfigsQuery,
     GetDatasetListFlowsGQL,
     GetDatasetListFlowsQuery,
     GetFlowByIdGQL,
     GetFlowByIdQuery,
-    ScheduleInput,
+    IngestConditionInput,
+    TransformConditionInput,
 } from "./kamu.graphql.interface";
 import { Observable, first, map } from "rxjs";
 import { ApolloQueryResult } from "@apollo/client";
@@ -38,24 +39,23 @@ import { noCacheFetchPolicy } from "../common/data.helpers";
 
 @Injectable({ providedIn: "root" })
 export class DatasetFlowApi {
-    constructor(
-        private getDatasetFlowConfigsGQL: GetDatasetFlowConfigsGQL,
-        private datasetFlowScheduleGQL: DatasetFlowScheduleGQL,
-        private datasetFlowBatchingGQL: DatasetFlowBatchingGQL,
-        private getDatasetListFlowsGQL: GetDatasetListFlowsGQL,
-        private datasetPauseFlowsGQL: DatasetPauseFlowsGQL,
-        private datasetResumeFlowsGQL: DatasetResumeFlowsGQL,
-        private datasetAllFlowsPausedGQL: DatasetAllFlowsPausedGQL,
-        private datasetTriggerFlowGQL: DatasetTriggerFlowGQL,
-        private datasetFlowByIdGQL: GetFlowByIdGQL,
-        private cancelScheduledTasksGQL: CancelScheduledTasksGQL,
-        private datasetFlowCompactionGQL: DatasetFlowCompactionGQL,
-        private datasetFlowsInitiatorsGQL: DatasetFlowsInitiatorsGQL,
-    ) {}
+    private getDatasetFlowConfigsGQL = inject(GetDatasetFlowConfigsGQL);
+    private datasetFlowScheduleGQL = inject(DatasetFlowScheduleGQL);
+    private datasetFlowBatchingGQL = inject(DatasetFlowBatchingGQL);
+    private getDatasetListFlowsGQL = inject(GetDatasetListFlowsGQL);
+    private datasetPauseFlowsGQL = inject(DatasetPauseFlowsGQL);
+    private datasetResumeFlowsGQL = inject(DatasetResumeFlowsGQL);
+    private datasetAllFlowsPausedGQL = inject(DatasetAllFlowsPausedGQL);
+    private datasetTriggerFlowGQL = inject(DatasetTriggerFlowGQL);
+    private datasetFlowByIdGQL = inject(GetFlowByIdGQL);
+    private cancelScheduledTasksGQL = inject(CancelScheduledTasksGQL);
+    private datasetFlowCompactionGQL = inject(DatasetFlowCompactionGQL);
+    private datasetFlowsInitiatorsGQL = inject(DatasetFlowsInitiatorsGQL);
 
     public datasetTriggerFlow(params: {
         datasetId: string;
         datasetFlowType: DatasetFlowType;
+        flowRunConfiguration?: FlowRunConfiguration;
     }): Observable<DatasetTriggerFlowMutation> {
         return this.datasetTriggerFlowGQL.mutate({ ...params }).pipe(
             first(),
@@ -87,14 +87,11 @@ export class DatasetFlowApi {
         datasetId: string;
         datasetFlowType: DatasetFlowType;
         paused: boolean;
-        schedule: ScheduleInput;
+        ingest: IngestConditionInput;
     }): Observable<DatasetFlowScheduleMutation> {
         return this.datasetFlowScheduleGQL
             .mutate({
-                datasetId: params.datasetId,
-                datasetFlowType: params.datasetFlowType,
-                paused: params.paused,
-                schedule: params.schedule,
+                ...params,
             })
             .pipe(
                 first(),
@@ -113,14 +110,11 @@ export class DatasetFlowApi {
         datasetId: string;
         datasetFlowType: DatasetFlowType;
         paused: boolean;
-        batching: BatchingConditionInput;
+        transform: TransformConditionInput;
     }): Observable<DatasetFlowBatchingMutation> {
         return this.datasetFlowBatchingGQL
             .mutate({
-                datasetId: params.datasetId,
-                datasetFlowType: params.datasetFlowType,
-                paused: params.paused,
-                batching: params.batching,
+                ...params,
             })
             .pipe(
                 first(),
@@ -138,12 +132,19 @@ export class DatasetFlowApi {
     public getDatasetListFlows(params: {
         datasetId: string;
         page: number;
-        perPage: number;
+        perPageTable: number;
+        perPageTiles: number;
         filters: DatasetFlowFilters;
     }): Observable<GetDatasetListFlowsQuery> {
         return this.getDatasetListFlowsGQL
             .watch(
-                { datasetId: params.datasetId, page: params.page, perPage: params.perPage, filters: params.filters },
+                {
+                    datasetId: params.datasetId,
+                    page: params.page,
+                    perPageTable: params.perPageTable,
+                    perPageTiles: params.perPageTiles,
+                    filters: params.filters,
+                },
                 {
                     ...noCacheFetchPolicy,
                     context: {

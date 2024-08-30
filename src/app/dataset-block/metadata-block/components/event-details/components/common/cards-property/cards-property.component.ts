@@ -8,5 +8,5 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardsPropertyComponent extends BasePropertyComponent {
-    @Input() public data: string[];
+    @Input({ required: true }) public data: string[];
 }

@@ -8,5 +8,5 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetLicenseEventComponent extends BaseComponent {
-    @Input() public event: SetLicense;
+    @Input({ required: true }) public event: SetLicense;
 }

@@ -10,10 +10,10 @@ import { TableSourceRowInterface } from "./dynamic-table.interface";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DynamicTableComponent implements OnInit, OnChanges, AfterContentInit {
-    @Input() public hasTableHeader: boolean;
-    @Input() public schemaFields: DataSchemaField[];
+    @Input({ required: true }) public hasTableHeader: boolean;
+    @Input({ required: true }) public schemaFields: DataSchemaField[];
     @Input() public dataRows?: DataRow[];
-    @Input() public idTable = "";
+    @Input({ required: true }) public idTable: string;
 
     public dataSource = new MatTableDataSource<TableSourceRowInterface>([]);
     public displayedColumns: string[] = [];

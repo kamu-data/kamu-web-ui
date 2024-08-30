@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Observable, first, map } from "rxjs";
 import { DatasetProtocolsGQL, DatasetProtocolsQuery } from "./kamu.graphql.interface";
 import { DatasetInfo } from "../interface/navigation.interface";
@@ -8,7 +8,7 @@ import { ApolloQueryResult } from "@apollo/client";
     providedIn: "root",
 })
 export class ProtocolsApi {
-    constructor(private protocolsGQL: DatasetProtocolsGQL) {}
+    private protocolsGQL = inject(DatasetProtocolsGQL);
 
     public getProtocols(datasetInfo: DatasetInfo): Observable<DatasetProtocolsQuery> {
         return this.protocolsGQL.watch({ ...datasetInfo }).valueChanges.pipe(

@@ -1,6 +1,6 @@
 import { DatasetInfo, FlowDetailsNavigationParams } from "../interface/navigation.interface";
 import { promiseWithCatch } from "src/app/common/app.helpers";
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { DatasetNavigationParams, MetadataBlockNavigationParams } from "../interface/navigation.interface";
 import ProjectLinks from "../project-links";
@@ -10,7 +10,7 @@ import { AccountSettingsTabs } from "../auth/settings/account-settings.constants
 
 @Injectable({ providedIn: "root" })
 export class NavigationService {
-    constructor(private router: Router) {}
+    private router = inject(Router);
 
     public navigateToWebsite(url: string): void {
         window.open(url, "_blank");
@@ -18,6 +18,10 @@ export class NavigationService {
 
     public navigateToHome(): void {
         promiseWithCatch(this.router.navigate([ProjectLinks.URL_HOME]));
+    }
+
+    public navigateToPath(url: string): void {
+        promiseWithCatch(this.router.navigateByUrl(url));
     }
 
     public navigateToAdminDashBoard(): void {

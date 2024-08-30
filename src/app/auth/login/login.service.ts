@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Observable, ReplaySubject, Subject, map } from "rxjs";
 import { AuthApi } from "src/app/api/auth.api";
 import { GithubLoginCredentials, PasswordLoginCredentials } from "src/app/api/auth.api.model";
@@ -16,13 +16,11 @@ import { LocalStorageService } from "src/app/services/local-storage.service";
     providedIn: "root",
 })
 export class LoginService {
-    public constructor(
-        private authApi: AuthApi,
-        private navigationService: NavigationService,
-        private appConfigService: AppConfigService,
-        private localStorageService: LocalStorageService,
-        private httpClient: HttpClient,
-    ) {}
+    private authApi = inject(AuthApi);
+    private navigationService = inject(NavigationService);
+    private appConfigService = inject(AppConfigService);
+    private localStorageService = inject(LocalStorageService);
+    private httpClient = inject(HttpClient);
 
     private accessToken$: Subject<string> = new ReplaySubject<string>(1);
     private account$: Subject<AccountFragment> = new ReplaySubject<AccountFragment>(1);
@@ -121,7 +119,13 @@ export class LoginService {
     private defaultLoginCallback(loginResponse: LoginResponse): void {
         this.accessToken$.next(loginResponse.accessToken);
         this.account$.next(loginResponse.account);
-        this.navigationService.navigateToHome();
+        const url = this.localStorageService.redirectAfterLoginUrl;
+        if (url) {
+            this.navigationService.navigateToPath(url);
+            this.localStorageService.setRedirectAfterLoginUrl(null);
+        } else {
+            this.navigationService.navigateToHome();
+        }
     }
 
     private redirectUrlLoginCallback(loginResponse: LoginResponse): void {

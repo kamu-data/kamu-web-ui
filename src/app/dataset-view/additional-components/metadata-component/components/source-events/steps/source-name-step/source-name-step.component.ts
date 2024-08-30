@@ -7,5 +7,5 @@ import { FormGroup } from "@angular/forms";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SourceNameStepComponent {
-    @Input() public form: FormGroup;
+    @Input({ required: true }) public form: FormGroup;
 }

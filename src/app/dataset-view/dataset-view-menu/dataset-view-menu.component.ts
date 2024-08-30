@@ -5,6 +5,7 @@ import {
     Component,
     ElementRef,
     HostListener,
+    inject,
     Input,
     OnInit,
     ViewChild,
@@ -27,18 +28,16 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
     @ViewChild("menuTrigger") trigger: ElementRef;
     @ViewChild("datasetViewMenu") datasetViewMenuComponent: ElementRef<HTMLDivElement>;
 
-    @Input() datasetBasics: DatasetBasicsFragment;
-    @Input() datasetPermissions: DatasetPermissionsFragment;
-    @Input() datasetViewType: DatasetViewTypeEnum;
+    @Input({ required: true }) datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) datasetPermissions: DatasetPermissionsFragment;
+    @Input({ required: true }) datasetViewType: DatasetViewTypeEnum;
     @Input() isMinimizeSearchAdditionalButtons: boolean;
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 
     private sideNavHelper: SideNavHelper;
 
-    constructor(
-        private datasetPermissionsServices: DatasetPermissionsService,
-        private widgetHeightService: WidgetHeightService,
-    ) {}
+    private datasetPermissionsServices = inject(DatasetPermissionsService);
+    private widgetHeightService = inject(WidgetHeightService);
 
     public ngAfterViewInit(): void {
         this.widgetHeightService.setWidgetOffsetTop(

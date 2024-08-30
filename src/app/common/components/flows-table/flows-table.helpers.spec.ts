@@ -1,4 +1,10 @@
-import { Dataset, FlowSummaryDataFragment, TimeUnit } from "src/app/api/kamu.graphql.interface";
+import {
+    FetchStepContainer,
+    FetchStepFilesGlob,
+    FetchStepUrl,
+    FlowSummaryDataFragment,
+    TimeUnit,
+} from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowTableHelpers } from "./flows-table.helpers";
 import { mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import {
@@ -7,6 +13,7 @@ import {
     expectationsDesriptionColumnOptions,
     mockDatasetExecuteTransformFlowSummaryData,
     mockDatasets,
+    mockFlowSummaryDataFragmentShowForceLink,
     mockFlowSummaryDataFragmentTooltipAndDurationText,
     mockTableFlowSummaryDataFragments,
     tooltipTextResults,
@@ -43,7 +50,7 @@ describe("DatasetFlowTableHelpers", () => {
         expect(
             DatasetFlowTableHelpers.waitingBlockText({
                 __typename: "FlowStartConditionBatching",
-                activeBatchingRule: {
+                activeTransformRule: {
                     minRecordsToAwait: 500,
                     maxBatchingInterval: {
                         every: 5,
@@ -107,37 +114,43 @@ describe("DatasetFlowTableHelpers", () => {
         expect(
             DatasetFlowTableHelpers.descriptionSubMessage(
                 mockTableFlowSummaryDataFragments[0],
-                mockDatasets as Dataset[],
+                mockDatasets,
                 mockDatasets[0].id,
             ),
-        ).toEqual(`Polling data from url: ${mockDatasets[0].metadata.currentPollingSource?.fetch.url}`);
+        ).toEqual(
+            `Polling data from url: ${(mockDatasets[0].metadata.currentPollingSource?.fetch as FetchStepUrl).url}`,
+        );
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and FetchStepContainer`, () => {
         expect(
             DatasetFlowTableHelpers.descriptionSubMessage(
                 mockTableFlowSummaryDataFragments[0],
-                mockDatasets as Dataset[],
+                mockDatasets,
                 mockDatasets[1].id,
             ),
-        ).toEqual(`Polling data from image: ${mockDatasets[1].metadata.currentPollingSource?.fetch.image}`);
+        ).toEqual(
+            `Polling data from image: ${(mockDatasets[1].metadata.currentPollingSource?.fetch as FetchStepContainer).image}`,
+        );
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and FetchStepFilesGlob`, () => {
         expect(
             DatasetFlowTableHelpers.descriptionSubMessage(
                 mockTableFlowSummaryDataFragments[0],
-                mockDatasets as Dataset[],
+                mockDatasets,
                 mockDatasets[2].id,
             ),
-        ).toEqual(`Polling data from file: ${mockDatasets[2].metadata.currentPollingSource?.fetch.path}`);
+        ).toEqual(
+            `Polling data from file: ${(mockDatasets[2].metadata.currentPollingSource?.fetch as FetchStepFilesGlob).path}`,
+        );
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetExecuteTransform typename `, () => {
         expect(
             DatasetFlowTableHelpers.descriptionSubMessage(
                 mockTableFlowSummaryDataFragments[4],
-                mockDatasets as Dataset[],
+                mockDatasets,
                 mockDatasets[3].id,
             ),
         ).toEqual(`Transforming 3 input datasets using "Apache Flink" engine`);
@@ -147,17 +160,19 @@ describe("DatasetFlowTableHelpers", () => {
         expect(
             DatasetFlowTableHelpers.descriptionSubMessage(
                 mockTableFlowSummaryDataFragments[3],
-                mockDatasets as Dataset[],
+                mockDatasets,
                 mockDatasets[2].id,
             ),
-        ).toEqual(`Polling data from file: ${mockDatasets[2].metadata.currentPollingSource?.fetch.path}`);
+        ).toEqual(
+            `Polling data from file: ${(mockDatasets[2].metadata.currentPollingSource?.fetch as FetchStepFilesGlob).path}`,
+        );
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetExecuteTransform typename and success outcome `, () => {
         expect(
             DatasetFlowTableHelpers.descriptionSubMessage(
                 mockDatasetExecuteTransformFlowSummaryData,
-                mockDatasets as Dataset[],
+                mockDatasets,
                 mockDatasets[3].id,
             ),
         ).toEqual(`Transformed 10 new records in 2 new blocks`);
@@ -167,7 +182,7 @@ describe("DatasetFlowTableHelpers", () => {
         expect(
             DatasetFlowTableHelpers.descriptionSubMessage(
                 mockTableFlowSummaryDataFragments[5],
-                mockDatasets as Dataset[],
+                mockDatasets,
                 mockDatasets[3].id,
             ),
         ).toEqual("Ingested 30 new records in 4 new blocks");
@@ -177,7 +192,7 @@ describe("DatasetFlowTableHelpers", () => {
         expect(
             DatasetFlowTableHelpers.descriptionSubMessage(
                 mockTableFlowSummaryDataFragments[6],
-                mockDatasets as Dataset[],
+                mockDatasets,
                 mockDatasets[3].id,
             ),
         ).toContain("Aborted at");
@@ -187,9 +202,19 @@ describe("DatasetFlowTableHelpers", () => {
         expect(
             DatasetFlowTableHelpers.descriptionSubMessage(
                 mockTableFlowSummaryDataFragments[7],
-                mockDatasets as Dataset[],
+                mockDatasets,
                 mockDatasetMainDataId,
             ),
         ).toEqual("An error occurred, see logs for more details");
+    });
+
+    it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and cacheable source`, () => {
+        expect(
+            DatasetFlowTableHelpers.descriptionSubMessage(
+                mockFlowSummaryDataFragmentShowForceLink,
+                mockDatasets,
+                mockDatasets[1].id,
+            ),
+        ).toEqual(`Source is uncacheable: to re-scan the data, use`);
     });
 });

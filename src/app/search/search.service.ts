@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { SearchApi } from "../api/search.api";
 import { DatasetAutocompleteItem, DatasetSearchResult } from "../interface/search.interface";
@@ -9,7 +9,7 @@ export class SearchService {
     private searchOverview$: Subject<DatasetSearchResult> = new Subject<DatasetSearchResult>();
     private searchAutocomplete$: Subject<DatasetAutocompleteItem[]> = new Subject<DatasetAutocompleteItem[]>();
 
-    constructor(private searchApi: SearchApi) {}
+    private searchApi = inject(SearchApi);
 
     private emitSearchOverviewChanged(searchData: DatasetSearchResult): void {
         this.searchOverview$.next(searchData);

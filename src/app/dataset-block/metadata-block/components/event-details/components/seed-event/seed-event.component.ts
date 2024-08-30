@@ -1,5 +1,5 @@
 import { ToastrService } from "ngx-toastr";
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { Seed } from "src/app/api/kamu.graphql.interface";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { BaseComponent } from "src/app/common/base.component";
@@ -10,14 +10,10 @@ import { BaseComponent } from "src/app/common/base.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SeedEventComponent extends BaseComponent {
-    @Input() public event: Seed;
+    @Input({ required: true }) public event: Seed;
 
-    constructor(
-        private clipboard: Clipboard,
-        private toastService: ToastrService,
-    ) {
-        super();
-    }
+    private clipboard = inject(Clipboard);
+    private toastService = inject(ToastrService);
 
     public copyToClipboard(text: string): void {
         this.clipboard.copy(text);

@@ -53,6 +53,5 @@ export const datasetSettingsSidePanelData: DatasetSettingsSidePanelItem[] = [
         showDivider: false,
         activeTab: SettingsTabsEnum.VARIABLES_AND_SECRETS,
         iconClassName: "mr-2 ms-3px",
-        visible: true,
     },
 ];

@@ -1,5 +1,5 @@
 import { MaybeNullOrUndefined } from "../../../../../common/app.types";
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { OWL_DATE_TIME_FORMATS } from "@danielmoncada/angular-datetime-picker";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import moment from "moment-timezone";
@@ -18,18 +18,15 @@ import { finalize } from "rxjs";
     providers: [{ provide: OWL_DATE_TIME_FORMATS, useValue: MY_MOMENT_FORMATS }],
 })
 export class EditWatermarkModalComponent extends BaseComponent implements OnInit {
-    @Input() public currentWatermark: MaybeNullOrUndefined<string>;
-    @Input() public datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public currentWatermark: MaybeNullOrUndefined<string>;
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     public date: Date;
     public timeZone = this.currentTimeZone;
 
-    constructor(
-        public activeModal: NgbActiveModal,
-        private datasetCommitService: DatasetCommitService,
-        private loggedUserService: LoggedUserService,
-    ) {
-        super();
-    }
+    public activeModal = inject(NgbActiveModal);
+    private datasetCommitService = inject(DatasetCommitService);
+    private loggedUserService = inject(LoggedUserService);
+
     ngOnInit(): void {
         this.date = new Date();
     }

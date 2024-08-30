@@ -1,5 +1,5 @@
 import { FormArray, FormBuilder, Validators } from "@angular/forms";
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { BaseField } from "../base-field";
 
 @Component({
@@ -9,12 +9,10 @@ import { BaseField } from "../base-field";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ArrayKeysFieldComponent extends BaseField {
-    @Input() public buttonText: string;
-    @Input() public placeholder: string;
+    @Input({ required: true }) public buttonText: string;
+    @Input({ required: true }) public placeholder: string;
 
-    constructor(private fb: FormBuilder) {
-        super();
-    }
+    private fb = inject(FormBuilder);
 
     public get items(): FormArray {
         return this.form.get(this.controlName) as FormArray;

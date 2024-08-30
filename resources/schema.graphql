@@ -202,11 +202,6 @@ type AuthMut {
   revokeAccessToken(tokenId: AccessTokenID!): RevokeResult!
 }
 
-input BatchingConditionInput {
-  minRecordsToAwait: Int!
-  maxBatchingInterval: TimeDeltaInput!
-}
-
 type BlockRef {
   name: String!
   blockHash: Multihash!
@@ -248,6 +243,7 @@ type CommitResultSuccess implements CommitResult & UpdateReadmeResult {
 input CompactionConditionFull {
   maxSliceSize: Int!
   maxSliceRecords: Int!
+  recursive: Boolean!
 }
 
 input CompactionConditionInput @oneOf {
@@ -262,6 +258,7 @@ input CompactionConditionMetadataOnly {
 type CompactionFull {
   maxSliceSize: Int!
   maxSliceRecords: Int!
+  recursive: Boolean!
 }
 
 type CompactionMetadataOnly {
@@ -351,7 +348,7 @@ enum DataBatchFormat {
   ND_JSON
   CSV
   """
-  Deprecated: Use ND_JSON instead
+  Deprecated: Use `ND_JSON` instead
   """
   JSON_LD
 }
@@ -556,12 +553,16 @@ type DatasetFlowConfigs {
 }
 
 type DatasetFlowConfigsMut {
-  setConfigSchedule(datasetFlowType: DatasetFlowType!, paused: Boolean!, schedule: ScheduleInput!): SetFlowConfigResult!
-  setConfigBatching(
+  setConfigIngest(
     datasetFlowType: DatasetFlowType!
     paused: Boolean!
-    batching: BatchingConditionInput!
-  ): SetFlowBatchingConfigResult!
+    ingest: IngestConditionInput!
+  ): SetFlowConfigResult!
+  setConfigTransform(
+    datasetFlowType: DatasetFlowType!
+    paused: Boolean!
+    transform: TransformConditionInput!
+  ): SetFlowTransformConfigResult!
   setConfigCompaction(
     datasetFlowType: DatasetFlowType!
     compactionArgs: CompactionConditionInput!
@@ -591,6 +592,7 @@ enum DatasetFlowType {
   INGEST
   EXECUTE_TRANSFORM
   HARD_COMPACTION
+  RESET
 }
 
 type DatasetFlows {
@@ -948,14 +950,10 @@ type FlowAbortedResult {
 
 type FlowConfiguration {
   paused: Boolean!
-  schedule: FlowConfigurationSchedule
-  batching: FlowConfigurationBatching
+  ingest: FlowConfigurationIngest
+  transform: FlowConfigurationTransform
   compaction: FlowConfigurationCompaction
-}
-
-type FlowConfigurationBatching {
-  minRecordsToAwait: Int!
-  maxBatchingInterval: TimeDelta!
+  reset: FlowConfigurationReset
 }
 
 union FlowConfigurationCompaction = CompactionFull | CompactionMetadataOnly
@@ -964,16 +962,37 @@ type FlowConfigurationCompactionRule {
   compactionRule: FlowConfigurationCompaction!
 }
 
-union FlowConfigurationSchedule = TimeDelta | Cron5ComponentExpression
-
-type FlowConfigurationScheduleRule {
-  scheduleRule: FlowConfigurationSchedule!
+type FlowConfigurationIngest {
+  schedule: FlowConfigurationSchedule!
+  fetchUncacheable: Boolean!
 }
 
+type FlowConfigurationReset {
+  mode: SnapshotPropagationMode!
+  oldHeadHash: Multihash
+  recursive: Boolean!
+}
+
+input FlowConfigurationResetCustom {
+  newHeadHash: Multihash!
+}
+
+input FlowConfigurationResetToSeedDummy {
+  dummy: String!
+}
+
+union FlowConfigurationSchedule = TimeDelta | Cron5ComponentExpression
+
 union FlowConfigurationSnapshot =
-  | FlowConfigurationBatching
-  | FlowConfigurationScheduleRule
+  | FlowConfigurationTransform
   | FlowConfigurationCompactionRule
+  | FlowConfigurationIngest
+  | FlowConfigurationReset
+
+type FlowConfigurationTransform {
+  minRecordsToAwait: Int!
+  maxBatchingInterval: TimeDelta!
+}
 
 type FlowConnection {
   """
@@ -1001,6 +1020,7 @@ union FlowDescription =
   | FlowDescriptionDatasetPushIngest
   | FlowDescriptionDatasetExecuteTransform
   | FlowDescriptionDatasetHardCompaction
+  | FlowDescriptionDatasetReset
   | FlowDescriptionSystemGC
 
 type FlowDescriptionDatasetExecuteTransform {
@@ -1029,6 +1049,11 @@ type FlowDescriptionDatasetPushIngest {
   ingestResult: FlowDescriptionUpdateResult
 }
 
+type FlowDescriptionDatasetReset {
+  datasetId: DatasetID!
+  resetResult: FlowDescriptionResetResult
+}
+
 type FlowDescriptionHardCompactionNothingToDo {
   dummy: String!
   message: String!
@@ -1040,14 +1065,27 @@ type FlowDescriptionHardCompactionSuccess {
   newHead: Multihash!
 }
 
+type FlowDescriptionResetResult {
+  newHead: Multihash!
+}
+
 type FlowDescriptionSystemGC {
   dummy: Boolean!
 }
 
-type FlowDescriptionUpdateResult {
+union FlowDescriptionUpdateResult = FlowDescriptionUpdateResultUpToDate | FlowDescriptionUpdateResultSuccess
+
+type FlowDescriptionUpdateResultSuccess {
   numBlocks: Int!
   numRecords: Int!
   updatedWatermark: DateTime
+}
+
+type FlowDescriptionUpdateResultUpToDate {
+  """
+  The value indicates whether the api cache was used
+  """
+  uncacheable: Boolean!
 }
 
 type FlowEdge {
@@ -1102,14 +1140,9 @@ union FlowFailedReason = FlowFailedMessage | FlowDatasetCompactedFailedError
 
 scalar FlowID
 
-type FlowIncompatibleDatasetKind implements SetFlowConfigResult & SetFlowBatchingConfigResult & SetFlowCompactionConfigResult & TriggerFlowResult {
+type FlowIncompatibleDatasetKind implements SetFlowConfigResult & SetFlowTransformConfigResult & SetFlowCompactionConfigResult & TriggerFlowResult {
   expectedDatasetKind: DatasetKind!
   actualDatasetKind: DatasetKind!
-  message: String!
-}
-
-type FlowInvalidBatchingConfig implements SetFlowBatchingConfigResult {
-  reason: String!
   message: String!
 }
 
@@ -1123,6 +1156,11 @@ type FlowInvalidRunConfigurations implements TriggerFlowResult {
   message: String!
 }
 
+type FlowInvalidTransformConfig implements SetFlowTransformConfigResult {
+  reason: String!
+  message: String!
+}
+
 type FlowNotFound implements GetFlowResult & CancelScheduledTasksResult {
   flowId: FlowID!
   message: String!
@@ -1130,15 +1168,16 @@ type FlowNotFound implements GetFlowResult & CancelScheduledTasksResult {
 
 union FlowOutcome = FlowSuccessResult | FlowFailedError | FlowAbortedResult
 
-type FlowPreconditionsNotMet implements SetFlowConfigResult & SetFlowBatchingConfigResult & TriggerFlowResult {
+type FlowPreconditionsNotMet implements SetFlowConfigResult & SetFlowTransformConfigResult & TriggerFlowResult {
   preconditions: String!
   message: String!
 }
 
 input FlowRunConfiguration @oneOf {
-  schedule: ScheduleInput
-  batching: BatchingConditionInput
+  transform: TransformConditionInput
   compaction: CompactionConditionInput
+  ingest: IngestConditionInput
+  reset: ResetConditionInput
 }
 
 union FlowStartCondition =
@@ -1148,7 +1187,7 @@ union FlowStartCondition =
   | FlowStartConditionExecutor
 
 type FlowStartConditionBatching {
-  activeBatchingRule: FlowConfigurationBatching!
+  activeTransformRule: FlowConfigurationTransform!
   batchingDeadline: DateTime!
   accumulatedRecordsCount: Int!
   watermarkModified: Boolean!
@@ -1214,7 +1253,7 @@ type FlowTriggerPush {
   dummy: Boolean!
 }
 
-type FlowTypeIsNotSupported implements SetFlowConfigResult & SetFlowBatchingConfigResult & SetFlowCompactionConfigResult {
+type FlowTypeIsNotSupported implements SetFlowConfigResult & SetFlowTransformConfigResult & SetFlowCompactionConfigResult {
   message: String!
 }
 
@@ -1225,6 +1264,14 @@ interface GetFlowResult {
 type GetFlowSuccess implements GetFlowResult {
   flow: Flow!
   message: String!
+}
+
+input IngestConditionInput {
+  """
+  Flag indicates to ignore cache during ingest step for API calls
+  """
+  fetchUncacheable: Boolean!
+  schedule: ScheduleInput!
 }
 
 input InitiatorFilterInput @oneOf {
@@ -1451,6 +1498,11 @@ type PrepStepPipe {
   command: [String!]!
 }
 
+input PropagationMode @oneOf {
+  custom: FlowConfigurationResetCustom
+  toSeed: FlowConfigurationResetToSeedDummy
+}
+
 type Query {
   """
   Returns the version of the GQL API
@@ -1582,6 +1634,12 @@ type RequestHeader {
   value: String!
 }
 
+input ResetConditionInput {
+  mode: PropagationMode!
+  oldHeadHash: Multihash
+  recursive: Boolean!
+}
+
 type RestProtocolDesc {
   tailUrl: String!
   queryUrl: String!
@@ -1664,10 +1722,6 @@ type SetDataSchema {
   schema: DataSchema!
 }
 
-interface SetFlowBatchingConfigResult {
-  message: String!
-}
-
 interface SetFlowCompactionConfigResult {
   message: String!
 }
@@ -1676,8 +1730,12 @@ interface SetFlowConfigResult {
   message: String!
 }
 
-type SetFlowConfigSuccess implements SetFlowConfigResult & SetFlowBatchingConfigResult & SetFlowCompactionConfigResult {
+type SetFlowConfigSuccess implements SetFlowConfigResult & SetFlowTransformConfigResult & SetFlowCompactionConfigResult {
   config: FlowConfiguration!
+  message: String!
+}
+
+interface SetFlowTransformConfigResult {
   message: String!
 }
 
@@ -1730,6 +1788,16 @@ type SetWatermarkUpdated implements SetWatermarkResult {
   newHead: Multihash!
   message: String!
 }
+
+type SnapshotConfigurationResetCustom {
+  newHeadHash: Multihash!
+}
+
+type SnapshotConfigurationResetToSeedDummy {
+  dummy: String!
+}
+
+union SnapshotPropagationMode = SnapshotConfigurationResetCustom | SnapshotConfigurationResetToSeedDummy
 
 union SourceCaching = SourceCachingForever
 
@@ -1842,7 +1910,7 @@ enum TaskStatus {
   """
   RUNNING
   """
-  Task has reached a certain final outcome (see [TaskOutcome])
+  Task has reached a certain final outcome (see [`TaskOutcome`])
   """
   FINISHED
 }
@@ -1864,11 +1932,6 @@ type TasksMut {
   Requests cancellation of the specified task
   """
   cancelTask(taskId: TaskID!): Task!
-  """
-  Schedules a task to update the specified dataset by performing polling
-  ingest or a derivative transformation
-  """
-  createUpdateDatasetTask(datasetId: DatasetID!): Task!
   """
   Schedules a task to update the specified dataset by performing polling
   ingest or a derivative transformation
@@ -1899,6 +1962,11 @@ enum TimeUnit {
 }
 
 union Transform = TransformSql
+
+input TransformConditionInput {
+  minRecordsToAwait: Int!
+  maxBatchingInterval: TimeDeltaInput!
+}
 
 type TransformInput {
   datasetRef: DatasetRef!

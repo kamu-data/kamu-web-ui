@@ -1,16 +1,13 @@
-import { Injectable } from "@angular/core";
-import { CanActivate } from "@angular/router";
+import { inject, Injectable } from "@angular/core";
 import { NavigationService } from "src/app/services/navigation.service";
 import { LoggedUserService } from "../logged-user.service";
 
 @Injectable({
     providedIn: "root",
 })
-export class AdminGuard implements CanActivate {
-    constructor(
-        private navigationService: NavigationService,
-        private loggedUserService: LoggedUserService,
-    ) {}
+export class AdminGuard {
+    private navigationService = inject(NavigationService);
+    private loggedUserService = inject(LoggedUserService);
 
     public canActivate(): boolean {
         if (!this.isAdmin()) {

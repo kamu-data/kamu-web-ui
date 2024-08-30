@@ -126,7 +126,8 @@ export class DatasetFlowDetailsHelpers {
                                 switch (flowDetails.description.__typename) {
                                     case "FlowDescriptionDatasetPollingIngest":
                                     case "FlowDescriptionDatasetPushIngest":
-                                        return flowDetails.description.ingestResult
+                                        return flowDetails.description.ingestResult?.__typename ===
+                                            "FlowDescriptionUpdateResultSuccess"
                                             ? `Ingested ${flowDetails.description.ingestResult.numRecords} new ${
                                                   flowDetails.description.ingestResult.numRecords == 1
                                                       ? "record"
@@ -136,10 +137,19 @@ export class DatasetFlowDetailsHelpers {
                                                       ? "block"
                                                       : "blocks"
                                               }`
-                                            : "Dataset is up-to-date";
+                                            : flowDetails.description.ingestResult?.__typename ===
+                                                    "FlowDescriptionUpdateResultUpToDate" &&
+                                                flowDetails.description.ingestResult.uncacheable &&
+                                                ((flowDetails.configSnapshot?.__typename ===
+                                                    "FlowConfigurationIngest" &&
+                                                    !flowDetails.configSnapshot.fetchUncacheable) ||
+                                                    !flowDetails.configSnapshot)
+                                              ? "Source is uncacheable: to re-scan the data, use force update"
+                                              : "Dataset is up-to-date";
 
                                     case "FlowDescriptionDatasetExecuteTransform":
-                                        return flowDetails.description.transformResult
+                                        return flowDetails.description.transformResult?.__typename ===
+                                            "FlowDescriptionUpdateResultSuccess"
                                             ? `Transformed ${flowDetails.description.transformResult.numRecords} new ${
                                                   flowDetails.description.transformResult.numRecords == 1
                                                       ? "record"
@@ -161,6 +171,15 @@ export class DatasetFlowDetailsHelpers {
                                             /* istanbul ignore next */
                                             default:
                                                 return "Unknown compaction result typename";
+                                        }
+
+                                    case "FlowDescriptionDatasetReset":
+                                        switch (flowDetails.description.__typename) {
+                                            case "FlowDescriptionDatasetReset":
+                                                return "All dataset history has been cleared.";
+                                            /* istanbul ignore next */
+                                            default:
+                                                return "Unknown reset result typename";
                                         }
 
                                     // TODO
@@ -257,7 +276,7 @@ export class DatasetFlowDetailsHelpers {
                 )}, shifted from ${moment(startCondition.shiftedFrom).format(AppValues.TIME_FORMAT)}`;
             case "FlowStartConditionBatching":
                 return `Accumulated ${startCondition.accumulatedRecordsCount}/${
-                    startCondition.activeBatchingRule.minRecordsToAwait
+                    startCondition.activeTransformRule.minRecordsToAwait
                 } records. Watermark ${
                     startCondition.watermarkModified ? "modified" : "unchanged"
                 }. Deadline at ${moment(startCondition.batchingDeadline).format(

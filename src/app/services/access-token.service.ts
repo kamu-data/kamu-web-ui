@@ -1,5 +1,5 @@
 import { MaybeNull } from "./../common/app.types";
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { AccessTokenApi } from "../api/access-token.api";
 import { Observable, map } from "rxjs";
 import {
@@ -15,10 +15,8 @@ import { ToastrService } from "ngx-toastr";
     providedIn: "root",
 })
 export class AccessTokenService {
-    constructor(
-        private accessTokenApi: AccessTokenApi,
-        private toastrService: ToastrService,
-    ) {}
+    private accessTokenApi = inject(AccessTokenApi);
+    private toastrService = inject(ToastrService);
 
     public listAccessTokens(params: {
         accountId: string;

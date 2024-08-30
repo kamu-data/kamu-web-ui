@@ -7,18 +7,16 @@
 @import "components/index";
 @include mat.core;
 
-/* Importing Bootstrap SCSS file. */
-
-// Use the desired palette
-$palette: mat.define-palette(mat.$indigo-palette);
-
-// Create the theme
-$theme: mat.define-light-theme($palette, $palette);
-
-// Or wrap inside another selector to scope the styles to only one specific component
-app-add-polling-source {
-    @include mat.stepper-theme($theme);
-}
+$custom-font-family: '"Roboto", "Helvetica Neue", sans-serif';
+$light-theme: mat.define-light-theme(
+    (
+        color: (
+            primary: mat.define-palette(mat.$indigo-palette),
+            accent: mat.define-palette(mat.$blue-grey-palette),
+        ),
+        density: -2,
+    )
+);
 
 body {
     font-size: 14px;
@@ -27,6 +25,7 @@ body {
 
 * {
     font-size: 14px;
+    letter-spacing: normal;
 }
 
 a {
@@ -41,6 +40,10 @@ a {
     &:hover {
         outline-width: 0;
     }
+}
+
+markdown {
+    line-height: normal;
 }
 
 .sr-only {
@@ -210,12 +213,12 @@ a {
     border: none;
 }
 
-.mat-menu-panel {
+.mat-mdc-menu-panel {
     &.app-header__user-menu {
         background-color: white;
         border: 1px solid $app-light-grayish-blue;
 
-        .mat-menu-item {
+        .mat-mdc-menu-item {
             background-color: white;
         }
     }
@@ -1020,8 +1023,8 @@ router-outlet {
     border-radius: 4px;
     text-align: center;
     opacity: 0;
-    transition: transform 1s linear;
-    animation: ani 1.5s forwards;
+    transition: transform linear;
+    animation: ani forwards;
 }
 
 .modal__dialog__header-block {
@@ -1039,11 +1042,6 @@ router-outlet {
 }
 
 @keyframes ani {
-    0% {
-        opacity: 0;
-        transform: translateY(-50%);
-    }
-
     100% {
         opacity: 1;
         transform: translateY(0%);

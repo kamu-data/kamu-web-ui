@@ -11,7 +11,7 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EnvVariablesPropertyComponent extends BasePropertyComponent {
-    @Input() public data: EnvVar[];
+    @Input({ required: true }) public data: EnvVar[];
 
     public get tableSource(): DataRow[] {
         const result: DataRow[] = [];

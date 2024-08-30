@@ -1,6 +1,6 @@
 import { BaseComponent } from "src/app/common/base.component";
 import AppValues from "src/app/common/app.values";
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, inject, Input, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import {
@@ -15,35 +15,32 @@ import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-even
 import { DatasetCommitService } from "../../services/dataset-commit.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { finalize } from "rxjs";
+import { LicenseFormType } from "./edit-license-modal.types";
 
 @Component({
     selector: "app-edit-license-modal",
     templateUrl: "./edit-license-modal.component.html",
 })
 export class EditLicenseModalComponent extends BaseComponent implements OnInit {
-    @Input() public datasetBasics: DatasetBasicsFragment;
-    @Input() public currentState?: {
+    public activeModal = inject(NgbActiveModal);
+    private fb = inject(FormBuilder);
+    private datasetCommitService = inject(DatasetCommitService);
+    private yamlEventService = inject(TemplatesYamlEventsService);
+    private loggedUserService = inject(LoggedUserService);
+
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public currentState?: {
         schema: MaybeNull<DatasetSchema>;
         data: DataRow[];
         overview: DatasetOverviewFragment;
         size: DatasetDataSizeFragment;
     };
-    public licenseForm: FormGroup = this.fb.group({
+    public licenseForm: FormGroup<LicenseFormType> = this.fb.group({
         name: ["", [Validators.required]],
         shortName: ["", [Validators.required]],
         websiteUrl: ["", [Validators.required, Validators.pattern(AppValues.URL_PATTERN)]],
         spdxId: [""],
     });
-
-    constructor(
-        public activeModal: NgbActiveModal,
-        private fb: FormBuilder,
-        private datasetCommitService: DatasetCommitService,
-        private yamlEventService: TemplatesYamlEventsService,
-        private loggedUserService: LoggedUserService,
-    ) {
-        super();
-    }
 
     ngOnInit(): void {
         if (this.currentState?.overview.metadata.currentLicense) {

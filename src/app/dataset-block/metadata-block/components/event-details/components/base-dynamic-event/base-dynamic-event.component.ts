@@ -8,6 +8,7 @@ import {
     ChangeDetectorRef,
     ComponentRef,
     AfterViewChecked,
+    inject,
 } from "@angular/core";
 import { EventRow, EventSection } from "../../dynamic-events/dynamic-events.model";
 import { BasePropertyComponent } from "../common/base-property/base-property.component";
@@ -19,14 +20,12 @@ import { BaseComponent } from "src/app/common/base.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BaseDynamicEventComponent<TEvent extends object> extends BaseComponent implements AfterViewChecked {
-    @Input() public event: TEvent;
+    @Input({ required: true }) public event: TEvent;
     @ViewChildren("container", { read: ViewContainerRef })
     container: QueryList<ViewContainerRef>;
     public eventSections: EventSection[];
 
-    public constructor(protected cdr: ChangeDetectorRef) {
-        super();
-    }
+    protected cdr = inject(ChangeDetectorRef);
 
     ngAfterViewChecked(): void {
         let componentRef: ComponentRef<BasePropertyComponent>;

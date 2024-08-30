@@ -4,6 +4,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     EventEmitter,
+    inject,
     Input,
     OnChanges,
     OnInit,
@@ -19,6 +20,9 @@ import {
     FlowStartCondition,
     Account,
     Dataset,
+    DatasetListFlowsDataFragment,
+    DatasetFlowType,
+    IngestConditionInput,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { MatTableDataSource } from "@angular/material/table";
@@ -38,6 +42,10 @@ import { ModalService } from "src/app/components/modal/modal.service";
 import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
 import { MaybeNull } from "../../app.types";
 import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.interface";
+import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
+import { BaseComponent } from "../../base.component";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
     selector: "app-flows-table",
@@ -45,13 +53,13 @@ import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.
     styleUrls: ["./flows-table.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FlowsTableComponent implements OnInit, OnChanges {
-    @Input() public nodes: FlowSummaryDataFragment[];
-    @Input() public filterByStatus: MaybeNull<FlowStatus>;
-    @Input() public onlySystemFlows: boolean;
-    @Input() public searchByAccount: Account[] = [];
-    @Input() public searchByDataset: Dataset[] = [];
-    @Input() tableOptions: FlowsTableOptions;
+export class FlowsTableComponent extends BaseComponent implements OnInit, OnChanges {
+    @Input({ required: true }) public nodes: FlowSummaryDataFragment[];
+    @Input({ required: true }) public filterByStatus: MaybeNull<FlowStatus>;
+    @Input({ required: true }) public onlySystemFlows: boolean;
+    @Input({ required: true }) public searchByAccount: Account[] = [];
+    @Input() public searchByDataset: DatasetListFlowsDataFragment[] = [];
+    @Input({ required: true }) tableOptions: FlowsTableOptions;
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
     @Output() public searchByFiltersChange = new EventEmitter<MaybeNull<FlowsTableFiltersOptions>>();
     @Output() public cancelFlowChange = new EventEmitter<CancelFlowArgs>();
@@ -62,23 +70,23 @@ export class FlowsTableComponent implements OnInit, OnChanges {
 
     public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>();
     @ViewChildren(MatMenuTrigger) triggersMatMenu: QueryList<MatMenuTrigger>;
-    @Input() public accountFlowInitiators: Account[];
-    @Input() public involvedDatasets: Dataset[];
+    @Input({ required: true }) public accountFlowInitiators: Account[];
+    @Input({ required: true }) public involvedDatasets: DatasetListFlowsDataFragment[];
 
     public readonly FILTER_DATASET_SETTINGS: DropdownSettings = DROPDOWN_DATASET_SETTINGS;
     public readonly FILTER_STATUS_SETTINGS: DropdownSettings = DROPDOWN_STATUS_SETTINGS;
     public filterAccountSettings: DropdownSettings = DROPDOWN_ACCOUNT_SETTINGS;
-    public dropdownDatasetList: Dataset[] = [];
-    public selectedDatasetItems: Dataset[] = [];
+    public dropdownDatasetList: DatasetListFlowsDataFragment[] = [];
+    public selectedDatasetItems: DatasetListFlowsDataFragment[] = [];
     public dropdownAccountList: Account[] = [];
     public selectedAccountItems: Account[] = [];
     public dropdownStatustList: FilterStatusType[] = [];
     public selectedStatusItems: FilterStatusType[] = [];
 
-    constructor(
-        private navigationService: NavigationService,
-        private modalService: ModalService,
-    ) {}
+    private navigationService = inject(NavigationService);
+    private modalService = inject(ModalService);
+    private datasetFlowsService = inject(DatasetFlowsService);
+    private toastrService = inject(ToastrService);
 
     ngOnChanges(changes: SimpleChanges): void {
         const nodes: SimpleChange = changes.nodes;
@@ -147,7 +155,7 @@ export class FlowsTableComponent implements OnInit, OnChanges {
     }
 
     public datasetById(datasetId: string): Dataset {
-        const dataset = this.involvedDatasets.find((dataset) => dataset.id === datasetId) as Dataset;
+        const dataset = (this.involvedDatasets as Dataset[]).find((dataset) => dataset.id === datasetId) as Dataset;
         return dataset;
     }
 
@@ -193,6 +201,69 @@ export class FlowsTableComponent implements OnInit, OnChanges {
 
     public get hasDatasetColumn(): boolean {
         return this.tableOptions.displayColumns.includes("dataset");
+    }
+
+    public showForceUpdateLink(node: FlowSummaryDataFragment): boolean {
+        return (
+            node.description.__typename === "FlowDescriptionDatasetPollingIngest" &&
+            node.description.ingestResult?.__typename === "FlowDescriptionUpdateResultUpToDate" &&
+            ((node.configSnapshot?.__typename === "FlowConfigurationIngest" && !node.configSnapshot.fetchUncacheable) ||
+                !node.configSnapshot)
+        );
+    }
+
+    public onForceUpdate(node: FlowSummaryDataFragment): void {
+        if (
+            node.description.__typename === "FlowDescriptionDatasetPollingIngest" &&
+            node.configSnapshot?.__typename === "FlowConfigurationIngest"
+        ) {
+            this.datasetFlowsService
+                .datasetTriggerFlow({
+                    datasetId: node.description.datasetId,
+                    datasetFlowType: DatasetFlowType.Ingest,
+                    flowRunConfiguration: {
+                        ingest: this.setScheduleOptions(node),
+                    },
+                })
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe((result: boolean) => {
+                    if (result) {
+                        this.toastrService.success("Success");
+                    }
+                });
+        } else {
+            throw new Error("Configuration snapshot is undefined");
+        }
+    }
+
+    private setScheduleOptions(node: FlowSummaryDataFragment): IngestConditionInput {
+        /* istanbul ignore else */
+        if (node.configSnapshot?.__typename === "FlowConfigurationIngest") {
+            switch (node.configSnapshot.schedule.__typename) {
+                case "TimeDelta":
+                    return {
+                        schedule: {
+                            timeDelta: {
+                                every: node.configSnapshot.schedule.every,
+                                unit: node.configSnapshot.schedule.unit,
+                            },
+                        },
+                        fetchUncacheable: true,
+                    };
+                case "Cron5ComponentExpression":
+                    return {
+                        schedule: {
+                            cron5ComponentExpression: node.configSnapshot.schedule.cron5ComponentExpression,
+                        },
+                        fetchUncacheable: true,
+                    };
+                /* istanbul ignore next */
+                default:
+                    throw new Error("Unknown configuration schedule type");
+            }
+        } else {
+            throw new Error("The type for the configuration is not FlowConfigurationIngest");
+        }
     }
 
     private initializeFilters(): void {

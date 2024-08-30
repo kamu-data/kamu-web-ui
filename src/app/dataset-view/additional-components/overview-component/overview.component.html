@@ -14,11 +14,11 @@
                     </div>
                     <div class="app-mat-chip" *ngIf="currentState.overview.metadata.currentInfo?.keywords">
                         <h2 class="box-title align-items-center pt-3">Keywords</h2>
-                        <mat-chip-list aria-label="Tags selection">
+                        <mat-chip-set aria-label="Tags selection">
                             <div *ngFor="let keyword of currentState.overview.metadata.currentInfo?.keywords">
                                 <mat-chip (click)="selectTopic(datasetBasics.kind)">{{ keyword }}</mat-chip>
                             </div>
-                        </mat-chip-list>
+                        </mat-chip-set>
                     </div>
                 </div>
                 <div *ngIf="canEditDatasetInfo" data-test-id="dataset-edit-info-block">
@@ -78,7 +78,7 @@
                 <button
                     class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center me-3"
                     data-test-id="add-more-data"
-                    *ngIf="currentState.data.length && isUserLogged"
+                    *ngIf="showAddDataButton"
                     (click)="addData()"
                 >
                     <mat-icon class="text-muted fs-4 d-block">add</mat-icon>

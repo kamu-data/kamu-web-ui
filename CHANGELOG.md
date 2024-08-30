@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added an `required` option for input parameters
 - Replaced the constructor with `inject` function for all components and services
 
-## [0.25.1] -2024-08-22
+## [0.25.1] - 2024-08-22
 ## Added
 - Added the ability to reset the dataset in 2 modes(`Reset to Seed` and `Flatten metadata`)
 - Extended `Fetch uncacheable` checkbox for the update scheduler.
@@ -24,11 +24,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Access tokens: when you turn on the switch, all tokens are displayed (active and revoked)
 
 
-## [0.25.0] -2024-08-13
+## [0.25.0] - 2024-08-13
 ## Added
 - Migrated Angular v.14 to Angular v.16 
 
-## [0.24.0] -2024-08-12
+## [0.24.0] - 2024-08-12
 ## Fixed
 - "Update now" button is present when user is not logged in 
 - Changed tab size in the monaco editor
@@ -44,16 +44,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Redirected to original URL after login flow
 - Added recursive flag for compaction for full mode
 
-## [0.23.2] -2024-07-23
+## [0.23.2] - 2024-07-23
 ## Fixed
 - Fixed bug with update after closing window(Overview tab)
 
-## [0.23.1] -2024-07-19
+## [0.23.1] - 2024-07-19
 ## Added
 - Displayed application version in console 
 
 
-## [0.23.0] -2024-07-18
+## [0.23.0] - 2024-07-18
 ## Added
 - Added access token feature
 - Added environment variables and secrets for the dataset
@@ -66,7 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved error description when loading data for a dataset from a file
 - Removed initial links when push source exist(Overview tab)
 
-## [0.22.0] -2024-06-27
+## [0.22.0] - 2024-06-27
 ### Fixed
 - Fixed GraphQL cache issue upon mutation methods
 - Show an empty result block instead of a block add data(Data tab)

@@ -1,5 +1,5 @@
 import { DatasetFlowsService } from "./../../../flows-component/services/dataset-flows.service";
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { BaseComponent } from "../../../../../common/base.component";
 import { promiseWithCatch } from "../../../../../common/app.helpers";
@@ -38,15 +38,15 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     public readonly SEED_TOOLTIP = CompactionTooltipsTexts.RESET_TO_SEED;
     public readonly RECURSIVE_TOOLTIP = CompactionTooltipsTexts.RESET_BLOCK_RECURSIVE;
     public readonly DatasetResetMode: typeof DatasetResetMode = DatasetResetMode;
-    constructor(
-        private datasetSettingsService: DatasetSettingsService,
-        private fb: FormBuilder,
-        private modalService: ModalService,
-        private datasetCompactionService: DatasetCompactionService,
-        private flowsService: DatasetFlowsService,
-        private navigationService: NavigationService,
-    ) {
-        super();
+
+    private datasetSettingsService = inject(DatasetSettingsService);
+    private fb = inject(FormBuilder);
+    private modalService = inject(ModalService);
+    private datasetCompactionService = inject(DatasetCompactionService);
+    private flowsService = inject(DatasetFlowsService);
+    private navigationService = inject(NavigationService);
+
+    public ngOnInit(): void {
         this.renameError$ = this.datasetSettingsService.renameDatasetErrorOccurrences.pipe(shareReplay());
         this.renameDatasetForm = this.fb.nonNullable.group({
             datasetName: [
@@ -59,9 +59,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
             mode: [DatasetResetMode.RESET_TO_SEED],
             recursive: [false],
         });
-    }
 
-    public ngOnInit(): void {
         if (!this.datasetPermissions.permissions.canRename) {
             this.renameDatasetForm.disable();
         }

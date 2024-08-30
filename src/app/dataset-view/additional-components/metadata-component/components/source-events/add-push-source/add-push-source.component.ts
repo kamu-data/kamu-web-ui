@@ -2,7 +2,7 @@ import { AddPushSource, MetadataBlockFragment } from "../../../../../../api/kamu
 import { SupportedEvents } from "../../../../../../dataset-block/metadata-block/components/event-details/supported.events";
 import ProjectLinks from "src/app/project-links";
 import { MaybeNull, MaybeNullOrUndefined } from "../../../../../../common/app.types";
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { AddPushSourceSection } from "src/app/shared/shared.types";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
@@ -22,9 +22,7 @@ export class AddPushSourceComponent extends BaseSourceEventComponent {
     public currentStep: AddPushSourceSection = AddPushSourceSection.READ;
     public steps: typeof AddPushSourceSection = AddPushSourceSection;
 
-    constructor(private editService: EditAddPushSourceService) {
-        super();
-    }
+    private editService = inject(EditAddPushSourceService);
 
     public ngOnInit(): void {
         super.ngOnInit();

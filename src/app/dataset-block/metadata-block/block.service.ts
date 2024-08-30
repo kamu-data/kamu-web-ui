@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Subject, Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { DatasetApi } from "src/app/api/dataset.api";
@@ -10,7 +10,7 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
     providedIn: "root",
 })
 export class BlockService {
-    constructor(private datasetApi: DatasetApi) {}
+    private datasetApi = inject(DatasetApi);
 
     public currentBlock: MetadataBlockFragment;
 

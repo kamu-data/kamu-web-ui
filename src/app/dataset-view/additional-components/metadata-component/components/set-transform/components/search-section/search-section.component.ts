@@ -1,5 +1,5 @@
 import { NestedTreeControl } from "@angular/cdk/tree";
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { MatTreeNestedDataSource } from "@angular/material/tree";
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { OperatorFunction, Observable } from "rxjs";
@@ -30,13 +30,10 @@ export class SearchSectionComponent extends BaseComponent {
     public treeControl = new NestedTreeControl<DatasetNode>((node) => node.children);
     @Input({ required: true }) public dataSource: MatTreeNestedDataSource<DatasetNode>;
     @Input({ required: true }) public TREE_DATA: DatasetNode[];
-    constructor(
-        private appSearchAPI: SearchApi,
-        private datasetService: DatasetService,
-        private navigationService: NavigationService,
-    ) {
-        super();
-    }
+
+    private appSearchAPI = inject(SearchApi);
+    private datasetService = inject(DatasetService);
+    private navigationService = inject(NavigationService);
 
     public search: OperatorFunction<string, readonly DatasetAutocompleteItem[]> = (text$: Observable<string>) => {
         return text$.pipe(

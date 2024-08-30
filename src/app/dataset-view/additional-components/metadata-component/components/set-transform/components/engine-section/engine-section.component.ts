@@ -3,6 +3,7 @@ import {
     ChangeDetectorRef,
     Component,
     EventEmitter,
+    inject,
     Input,
     OnInit,
     Output,
@@ -25,12 +26,8 @@ export class EngineSectionComponent extends BaseComponent implements OnInit {
     @Output() public onEmitSelectedEngine: EventEmitter<string> = new EventEmitter<string>();
     public selectedImage: string;
 
-    constructor(
-        private cdr: ChangeDetectorRef,
-        private engineService: EngineService,
-    ) {
-        super();
-    }
+    private cdr = inject(ChangeDetectorRef);
+    private engineService = inject(EngineService);
 
     public ngOnInit(): void {
         this.initEngineSection();

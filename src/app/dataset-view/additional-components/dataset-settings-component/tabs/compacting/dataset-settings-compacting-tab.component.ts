@@ -1,5 +1,5 @@
 import { NavigationService } from "./../../../../../services/navigation.service";
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { AbstractControl, FormBuilder, Validators } from "@angular/forms";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import {
@@ -27,6 +27,12 @@ import { sliceSizeMapperReverse } from "src/app/common/data.helpers";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetSettingsCompactingTabComponent extends BaseComponent implements OnInit {
+    public modalService = inject(ModalService);
+    private fb = inject(FormBuilder);
+    private datasetCompactionService = inject(DatasetCompactionService);
+    private navigationService = inject(NavigationService);
+    private datasetSchedulingService = inject(DatasetSchedulingService);
+
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     public hardCompactionForm = this.fb.group({
         sliceUnit: [SliceUnit.MB, [Validators.required]],
@@ -39,16 +45,6 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent impleme
     public readonly MAX_SLICE_RECORDS_TOOLTIP = CompactionTooltipsTexts.MAX_SLICE_RECORDS;
     public readonly RECURSIVE_TOOLTIP = CompactionTooltipsTexts.HARD_COMPACTION_RECURSIVE;
     public readonly MIN_VALUE_ERROR_TEXT = "The value must be positive";
-
-    constructor(
-        public modalService: ModalService,
-        private fb: FormBuilder,
-        private datasetCompactionService: DatasetCompactionService,
-        private navigationService: NavigationService,
-        private datasetSchedulingService: DatasetSchedulingService,
-    ) {
-        super();
-    }
 
     ngOnInit(): void {
         this.patchCompactionForm();

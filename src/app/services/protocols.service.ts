@@ -1,5 +1,5 @@
 import { MaybeUndefined } from "src/app/common/app.types";
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { ProtocolsApi } from "../api/protocols.api";
 import { Observable, map } from "rxjs";
 import { DatasetEndpoints, DatasetProtocolsQuery } from "../api/kamu.graphql.interface";
@@ -9,7 +9,7 @@ import { DatasetInfo } from "../interface/navigation.interface";
     providedIn: "root",
 })
 export class ProtocolsService {
-    constructor(private protocolsApi: ProtocolsApi) {}
+    private protocolsApi = inject(ProtocolsApi);
 
     public getProtocols(datasetInfo: DatasetInfo): Observable<MaybeUndefined<DatasetEndpoints>> {
         return this.protocolsApi.getProtocols(datasetInfo).pipe(

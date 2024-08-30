@@ -8,7 +8,7 @@ import {
 import { RadioControlType } from "../../add-polling-source/form-control.source";
 import { FormBuilder } from "@angular/forms";
 import { ControlContainer, FormGroupDirective } from "@angular/forms";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { JsonFormControl } from "../../add-polling-source/add-polling-source-form.types";
 import { getValidators } from "src/app/common/data.helpers";
@@ -38,14 +38,10 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
     private readonly EVENT_TIME_CONTROL = "eventTime";
     private readonly JSON_KIND_CONTROL = "jsonKind";
 
-    constructor(
-        private rootFormGroupDirective: FormGroupDirective,
-        private fb: FormBuilder,
-        private cdr: ChangeDetectorRef,
-        private editService: EditPollingSourceService,
-    ) {
-        super();
-    }
+    private rootFormGroupDirective = inject(FormGroupDirective);
+    private fb = inject(FormBuilder);
+    private cdr = inject(ChangeDetectorRef);
+    private editService = inject(EditPollingSourceService);
 
     public get sectionForm(): FormGroup {
         return this.parentForm.get(this.sectionName) as FormGroup;

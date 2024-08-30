@@ -23,27 +23,20 @@ export class LoginComponent extends BaseComponent implements OnInit {
         "LoginComponent requires at least 1 login method in configuration";
 
     private localStorageService = inject(LocalStorageService);
+    private route = inject(ActivatedRoute);
+    private fb = inject(FormBuilder);
+    private loginService = inject(LoginService);
 
     public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;
     public readonly LoginMethod = LoginMethod;
 
     public selectedLoginMethod?: LoginMethod = undefined;
-    public passwordLoginForm: FormGroup<LoginFormType>;
+    public passwordLoginForm: FormGroup<LoginFormType> = this.fb.group({
+        login: ["", [Validators.required]],
+        password: ["", [Validators.required]],
+    });
     public passwordLoginError$: Observable<string> =
         this.loginService.passwordLoginErrorOccurrences.pipe(shareReplay());
-
-    public constructor(
-        private route: ActivatedRoute,
-        private fb: FormBuilder,
-        private loginService: LoginService,
-    ) {
-        super();
-
-        this.passwordLoginForm = this.fb.group({
-            login: ["", [Validators.required]],
-            password: ["", [Validators.required]],
-        });
-    }
 
     public ngOnInit(): void {
         const loginMethods: LoginMethod[] = this.loginService.loginMethods;

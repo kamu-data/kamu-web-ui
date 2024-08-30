@@ -1,6 +1,6 @@
 import { BaseComponent } from "src/app/common/base.component";
 import AppValues from "src/app/common/app.values";
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, inject, Input, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import {
@@ -22,6 +22,12 @@ import { LicenseFormType } from "./edit-license-modal.types";
     templateUrl: "./edit-license-modal.component.html",
 })
 export class EditLicenseModalComponent extends BaseComponent implements OnInit {
+    public activeModal = inject(NgbActiveModal);
+    private fb = inject(FormBuilder);
+    private datasetCommitService = inject(DatasetCommitService);
+    private yamlEventService = inject(TemplatesYamlEventsService);
+    private loggedUserService = inject(LoggedUserService);
+
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public currentState?: {
         schema: MaybeNull<DatasetSchema>;
@@ -29,23 +35,12 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
         overview: DatasetOverviewFragment;
         size: DatasetDataSizeFragment;
     };
-    public licenseForm: FormGroup<LicenseFormType>;
-
-    constructor(
-        public activeModal: NgbActiveModal,
-        private fb: FormBuilder,
-        private datasetCommitService: DatasetCommitService,
-        private yamlEventService: TemplatesYamlEventsService,
-        private loggedUserService: LoggedUserService,
-    ) {
-        super();
-        this.licenseForm = this.fb.group({
-            name: ["", [Validators.required]],
-            shortName: ["", [Validators.required]],
-            websiteUrl: ["", [Validators.required, Validators.pattern(AppValues.URL_PATTERN)]],
-            spdxId: [""],
-        });
-    }
+    public licenseForm: FormGroup<LicenseFormType> = this.fb.group({
+        name: ["", [Validators.required]],
+        shortName: ["", [Validators.required]],
+        websiteUrl: ["", [Validators.required, Validators.pattern(AppValues.URL_PATTERN)]],
+        spdxId: [""],
+    });
 
     ngOnInit(): void {
         if (this.currentState?.overview.metadata.currentLicense) {

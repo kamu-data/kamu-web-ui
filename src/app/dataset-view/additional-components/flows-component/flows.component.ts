@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import {
     DatasetBasicsFragment,
     DatasetFlowType,
@@ -29,9 +29,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public overview: DatasetOverviewFragment;
     public readonly DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"]; //1
 
-    constructor(private datasetSubsService: DatasetSubscriptionsService) {
-        super();
-    }
+    private datasetSubsService = inject(DatasetSubscriptionsService);
 
     ngOnInit(): void {
         this.getPageFromUrl();

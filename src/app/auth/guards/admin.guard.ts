@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { NavigationService } from "src/app/services/navigation.service";
 import { LoggedUserService } from "../logged-user.service";
 
@@ -6,10 +6,8 @@ import { LoggedUserService } from "../logged-user.service";
     providedIn: "root",
 })
 export class AdminGuard {
-    constructor(
-        private navigationService: NavigationService,
-        private loggedUserService: LoggedUserService,
-    ) {}
+    private navigationService = inject(NavigationService);
+    private loggedUserService = inject(LoggedUserService);
 
     public canActivate(): boolean {
         if (!this.isAdmin()) {

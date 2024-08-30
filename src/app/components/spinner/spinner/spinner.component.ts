@@ -1,5 +1,5 @@
 import { SpinnerService } from "../spinner.service";
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 
 @Component({
     selector: "app-spinner",
@@ -8,6 +8,6 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SpinnerComponent {
-    constructor(private spinnerService: SpinnerService) {}
-    isLoading$ = this.spinnerService.isLoadingChanges;
+    private spinnerService = inject(SpinnerService);
+    public isLoading$ = this.spinnerService.isLoadingChanges;
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
@@ -27,12 +27,8 @@ export class ReadmeSectionComponent extends BaseComponent implements OnInit {
         return this.currentReadme !== this.readmeState;
     }
 
-    constructor(
-        private datasetCommitService: DatasetCommitService,
-        private loggedUserService: LoggedUserService,
-    ) {
-        super();
-    }
+    private datasetCommitService = inject(DatasetCommitService);
+    private loggedUserService = inject(LoggedUserService);
 
     public ngOnInit(): void {
         if (this.currentReadme) {

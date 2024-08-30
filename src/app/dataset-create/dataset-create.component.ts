@@ -1,7 +1,7 @@
 import { BaseComponent } from "src/app/common/base.component";
 import { DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "../common/app.types";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { DatasetCreateService } from "./dataset-create.service";
 import { Observable } from "rxjs";
@@ -14,12 +14,16 @@ import { LoggedUserService } from "../auth/logged-user.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetCreateComponent extends BaseComponent {
+    private cdr = inject(ChangeDetectorRef);
+    private fb = inject(FormBuilder);
+    private datasetCreateService = inject(DatasetCreateService);
+    private loggedUserService = inject(LoggedUserService);
+
     private readonly kindMapper: Record<string, DatasetKind> = {
         root: DatasetKind.Root,
         derivative: DatasetKind.Derivative,
     };
     private static readonly INITIAL_YAML_HINT = "# You can edit this file\n";
-
     public yamlTemplate = "";
     public showMonacoEditor = false;
     public errorMessage$: Observable<string>;
@@ -33,22 +37,13 @@ export class DatasetCreateComponent extends BaseComponent {
         kind: ["root", [Validators.required]],
     });
 
-    public constructor(
-        private cdr: ChangeDetectorRef,
-        private fb: FormBuilder,
-        private datasetCreateService: DatasetCreateService,
-        private loggedUserService: LoggedUserService,
-    ) {
-        super();
-        this.errorMessage$ = this.datasetCreateService.errorMessageChanges;
-    }
-
     public ngOnInit(): void {
         const currentUser = this.loggedUserService.maybeCurrentlyLoggedInUser;
         if (currentUser) {
             this.owners = [currentUser.accountName];
             this.createDatasetForm.controls.owner.setValue(currentUser.accountName);
         }
+        this.errorMessage$ = this.datasetCreateService.errorMessageChanges;
     }
 
     public get datasetName() {

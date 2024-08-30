@@ -1,7 +1,7 @@
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { SearchService } from "./search.service";
 import { DatasetSearchResult, SearchFilters } from "../interface/search.interface";
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { BaseComponent } from "../common/base.component";
 import { NavigationService } from "../services/navigation.service";
 import { DatasetInfo } from "../interface/navigation.interface";
@@ -17,6 +17,10 @@ import { Observable } from "rxjs";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchComponent extends BaseComponent implements OnInit {
+    private navigationService = inject(NavigationService);
+    private searchService = inject(SearchService);
+    private router = inject(Router);
+
     public searchValue = "";
     public currentPage = 1; // TODO: Should be zero-based and only offset for display
     public tableData$: Observable<DatasetSearchResult> = this.searchService.searchOverviewChanges;
@@ -125,14 +129,6 @@ export class SearchComponent extends BaseComponent implements OnInit {
             ],
         },
     ];
-
-    constructor(
-        private navigationService: NavigationService,
-        private searchService: SearchService,
-        private router: Router,
-    ) {
-        super();
-    }
 
     public ngOnInit(): void {
         this.initTableData();

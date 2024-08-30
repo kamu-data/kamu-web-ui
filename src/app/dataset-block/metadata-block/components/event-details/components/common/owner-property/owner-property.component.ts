@@ -1,6 +1,6 @@
 import { NavigationService } from "../../../../../../../services/navigation.service";
 import { AccountBasicsFragment } from "../../../../../../../api/kamu.graphql.interface";
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { BasePropertyComponent } from "../base-property/base-property.component";
 
 @Component({
@@ -12,9 +12,7 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
 export class OwnerPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: AccountBasicsFragment;
 
-    constructor(private navigationService: NavigationService) {
-        super();
-    }
+    private navigationService = inject(NavigationService);
 
     public showOwner(): void {
         this.navigationService.navigateToOwnerView(this.data.accountName);

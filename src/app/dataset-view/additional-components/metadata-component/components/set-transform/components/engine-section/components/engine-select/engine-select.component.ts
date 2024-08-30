@@ -4,6 +4,7 @@ import {
     ElementRef,
     EventEmitter,
     HostListener,
+    inject,
     Input,
     OnInit,
     Output,
@@ -31,7 +32,7 @@ export class EngineSelectComponent implements OnInit {
     @Input({ required: true }) engine: string;
     @Output() selectedEngineEmitter = new EventEmitter<string>();
 
-    constructor(private render: Renderer2) {}
+    private render = inject(Renderer2);
 
     @HostListener("document:click", ["$event"])
     clickOut(event: Event) {

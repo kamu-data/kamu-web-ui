@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { BaseField } from "../base-field";
 import { EventTimeSourceKind } from "../../source-events/add-polling-source/add-polling-source-form.types";
 import { FormBuilder, FormGroup } from "@angular/forms";
@@ -27,9 +27,7 @@ export class SelectDateFormatFieldComponent extends BaseField implements OnInit 
         "YYYY-M-D",
     ];
 
-    constructor(private fb: FormBuilder) {
-        super();
-    }
+    private fb = inject(FormBuilder);
 
     ngOnInit(): void {
         this.chooseEventTimeSource();

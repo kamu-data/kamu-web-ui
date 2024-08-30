@@ -1,5 +1,5 @@
 import { NavigationService } from "src/app/services/navigation.service";
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { MetadataBlockFragment, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
 import { DataHelpers } from "src/app/common/data.helpers";
 import AppValues from "src/app/common/app.values";
@@ -16,7 +16,7 @@ export class TimelineComponent {
     @Input({ required: true }) public datasetName: string;
     public DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
 
-    constructor(private navigationService: NavigationService) {}
+    private navigationService = inject(NavigationService);
 
     public navigateToOwnerView(ownerName: string): void {
         this.navigationService.navigateToOwnerView(ownerName);

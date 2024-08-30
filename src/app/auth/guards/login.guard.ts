@@ -1,5 +1,5 @@
 import { NavigationService } from "src/app/services/navigation.service";
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 import ProjectLinks from "src/app/project-links";
 import { LoggedUserService } from "../logged-user.service";
@@ -9,11 +9,9 @@ import { LoginService } from "../login/login.service";
     providedIn: "root",
 })
 export class LoginGuard {
-    constructor(
-        private navigationService: NavigationService,
-        private loginService: LoginService,
-        private loggedUserService: LoggedUserService,
-    ) {}
+    private navigationService = inject(NavigationService);
+    private loginService = inject(LoginService);
+    private loggedUserService = inject(LoggedUserService);
 
     public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
         // URLs start from /

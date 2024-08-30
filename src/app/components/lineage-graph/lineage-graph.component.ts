@@ -5,6 +5,7 @@ import {
     ElementRef,
     EventEmitter,
     HostListener,
+    inject,
     Input,
     OnChanges,
     OnInit,
@@ -46,10 +47,8 @@ export class LineageGraphComponent implements OnInit, OnChanges {
         this.changeLineageGraphView();
     }
 
-    constructor(
-        private sessionStorageService: SessionStorageService,
-        private widgetHeightService: WidgetHeightService,
-    ) {}
+    private sessionStorageService = inject(SessionStorageService);
+    private widgetHeightService = inject(WidgetHeightService);
 
     public ngOnInit(): void {
         this.view = [this.INITIAL_GRAPH_VIEW_WIDTH, this.lineageGraphHeight()];

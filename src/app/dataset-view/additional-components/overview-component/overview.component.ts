@@ -6,7 +6,7 @@ import {
     DatasetKind,
     DatasetPermissionsFragment,
 } from "../../../api/kamu.graphql.interface";
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
 import { BaseComponent } from "src/app/common/base.component";
 import { NavigationService } from "src/app/services/navigation.service";
 import {
@@ -57,18 +57,14 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         size: DatasetDataSizeFragment;
     };
 
-    constructor(
-        private datasetSubsService: DatasetSubscriptionsService,
-        private navigationService: NavigationService,
-        private ngbModalService: NgbModal,
-        private datasetFlowsService: DatasetFlowsService,
-        private fileUploadService: FileUploadService,
-        private configService: AppConfigService,
-        private modalService: ModalService,
-        private loggedUserService: LoggedUserService,
-    ) {
-        super();
-    }
+    private datasetSubsService = inject(DatasetSubscriptionsService);
+    private navigationService = inject(NavigationService);
+    private ngbModalService = inject(NgbModal);
+    private datasetFlowsService = inject(DatasetFlowsService);
+    private fileUploadService = inject(FileUploadService);
+    private configService = inject(AppConfigService);
+    private modalService = inject(ModalService);
+    private loggedUserService = inject(LoggedUserService);
 
     public ngOnInit(): void {
         this.uploadFileLoading$ = this.fileUploadService.isUploadFile;

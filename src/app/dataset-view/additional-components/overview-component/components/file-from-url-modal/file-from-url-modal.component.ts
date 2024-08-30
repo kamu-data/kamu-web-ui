@@ -1,5 +1,5 @@
 import { BaseComponent } from "src/app/common/base.component";
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { FileUrlFormType } from "./file-from-url-modal.types";
@@ -10,15 +10,10 @@ import { FileUrlFormType } from "./file-from-url-modal.types";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileFromUrlModalComponent extends BaseComponent {
-    public fileUrlForm: FormGroup<FileUrlFormType>;
+    public activeModal = inject(NgbActiveModal);
+    private fb = inject(FormBuilder);
 
-    constructor(
-        public activeModal: NgbActiveModal,
-        private fb: FormBuilder,
-    ) {
-        super();
-        this.fileUrlForm = this.fb.group({
-            fileUrl: ["", [Validators.required]],
-        });
-    }
+    public fileUrlForm: FormGroup<FileUrlFormType> = this.fb.group({
+        fileUrl: ["", [Validators.required]],
+    });
 }

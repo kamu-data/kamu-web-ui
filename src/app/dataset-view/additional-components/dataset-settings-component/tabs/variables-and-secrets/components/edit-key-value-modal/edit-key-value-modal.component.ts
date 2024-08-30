@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetBasicsFragment, ViewDatasetEnvVar } from "src/app/api/kamu.graphql.interface";
@@ -15,6 +15,10 @@ import { EnvAndSecretsFormType } from "./edit-key-value-modal.types";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditKeyValueModalComponent extends BaseComponent implements OnInit {
+    public activeModal = inject(NgbActiveModal);
+    private fb = inject(FormBuilder);
+    private evnironmentVariablesService = inject(DatasetEvnironmentVariablesService);
+
     @Input({ required: true }) public row: MaybeNull<ViewDatasetEnvVar>;
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     public readonly KEY_MAX_LENGTH = 200;
@@ -29,14 +33,6 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
     public exposedValue: string;
     public isShowExposedValue: boolean = false;
     public readonly STUB_VALUE = "stub-value";
-
-    constructor(
-        public activeModal: NgbActiveModal,
-        private fb: FormBuilder,
-        private evnironmentVariablesService: DatasetEvnironmentVariablesService,
-    ) {
-        super();
-    }
 
     ngOnInit(): void {
         this.fetchExposedValue();

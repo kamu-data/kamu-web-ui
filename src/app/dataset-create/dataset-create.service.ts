@@ -5,7 +5,7 @@ import {
 } from "../api/kamu.graphql.interface";
 import { Observable, Subject } from "rxjs";
 import { DatasetApi } from "src/app/api/dataset.api";
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { DatasetKind } from "../api/kamu.graphql.interface";
 import { map } from "rxjs/operators";
 import { NavigationService } from "../services/navigation.service";
@@ -28,11 +28,9 @@ export class DatasetCreateService {
         return this.errorMessage$.asObservable();
     }
 
-    public constructor(
-        private datasetApi: DatasetApi,
-        private loggedUserService: LoggedUserService,
-        private navigationService: NavigationService,
-    ) {}
+    private datasetApi = inject(DatasetApi);
+    private loggedUserService = inject(LoggedUserService);
+    private navigationService = inject(NavigationService);
 
     public createEmptyDataset(datasetKind: DatasetKind, datasetName: string): Observable<void> {
         const loggedUser: MaybeNull<AccountFragment> = this.loggedUserService.maybeCurrentlyLoggedInUser;

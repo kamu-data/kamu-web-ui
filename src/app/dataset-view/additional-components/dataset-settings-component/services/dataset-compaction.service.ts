@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
 import { Observable, map, of, switchMap } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
@@ -15,11 +15,9 @@ import { DatasetFlowsService } from "../../flows-component/services/dataset-flow
     providedIn: "root",
 })
 export class DatasetCompactionService {
-    constructor(
-        private datasetFlowApi: DatasetFlowApi,
-        private toastrService: ToastrService,
-        private flowsService: DatasetFlowsService,
-    ) {}
+    private datasetFlowApi = inject(DatasetFlowApi);
+    private toastrService = inject(ToastrService);
+    private flowsService = inject(DatasetFlowsService);
 
     public runHardCompaction(params: {
         datasetId: string;

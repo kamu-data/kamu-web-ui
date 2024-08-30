@@ -6,7 +6,7 @@ import {
     LicenseFragment,
     SetPollingSourceEventFragment,
 } from "../../../api/kamu.graphql.interface";
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, inject } from "@angular/core";
 import { DatasetSchema } from "../../../interface/dataset.interface";
 import AppValues from "../../../common/app.values";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
@@ -49,13 +49,9 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         pageInfo: PageBasedInfo;
     };
 
-    constructor(
-        private datasetSubsService: DatasetSubscriptionsService,
-        private navigationService: NavigationService,
-        private modalService: ModalService,
-    ) {
-        super();
-    }
+    private datasetSubsService = inject(DatasetSubscriptionsService);
+    private navigationService = inject(NavigationService);
+    private modalService = inject(ModalService);
 
     public ngOnInit() {
         this.trackSubscription(

@@ -8,6 +8,7 @@ import {
     ChangeDetectorRef,
     ComponentRef,
     AfterViewChecked,
+    inject,
 } from "@angular/core";
 import { EventRow, EventSection } from "../../dynamic-events/dynamic-events.model";
 import { BasePropertyComponent } from "../common/base-property/base-property.component";
@@ -24,9 +25,7 @@ export class BaseDynamicEventComponent<TEvent extends object> extends BaseCompon
     container: QueryList<ViewContainerRef>;
     public eventSections: EventSection[];
 
-    public constructor(protected cdr: ChangeDetectorRef) {
-        super();
-    }
+    protected cdr = inject(ChangeDetectorRef);
 
     ngAfterViewChecked(): void {
         let componentRef: ComponentRef<BasePropertyComponent>;

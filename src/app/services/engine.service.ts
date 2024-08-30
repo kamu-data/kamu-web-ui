@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { EngineApi } from "../api/engine.api";
 import { Observable } from "rxjs";
 import { EnginesQuery } from "../api/kamu.graphql.interface";
@@ -7,7 +7,7 @@ import { EnginesQuery } from "../api/kamu.graphql.interface";
     providedIn: "root",
 })
 export class EngineService {
-    constructor(private engineApi: EngineApi) {}
+    private engineApi = inject(EngineApi);
 
     public engines(): Observable<EnginesQuery> {
         return this.engineApi.getEngines();

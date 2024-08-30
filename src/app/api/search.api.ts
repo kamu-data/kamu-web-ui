@@ -1,5 +1,5 @@
 import { ApolloQueryResult } from "@apollo/client/core";
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 
 import { map, first } from "rxjs/operators";
 import { Observable, of } from "rxjs";
@@ -18,10 +18,8 @@ export const SEARCH_RESULTS_PER_PAGE = 10;
 
 @Injectable({ providedIn: "root" })
 export class SearchApi {
-    constructor(
-        private searchDatasetsAutocompleteGQL: SearchDatasetsAutocompleteGQL,
-        private searchDatasetsOverviewGQL: SearchDatasetsOverviewGQL,
-    ) {}
+    private searchDatasetsAutocompleteGQL = inject(SearchDatasetsAutocompleteGQL);
+    private searchDatasetsOverviewGQL = inject(SearchDatasetsOverviewGQL);
 
     // Search query that returns high-level dataset information for displaying the dataset badge
     public overviewDatasetSearch(

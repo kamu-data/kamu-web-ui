@@ -11,7 +11,7 @@ import {
     SaveEnvVariableGQL,
     SaveEnvVariableMutation,
 } from "./kamu.graphql.interface";
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { noCacheFetchPolicy } from "../common/data.helpers";
 import { ApolloQueryResult } from "@apollo/client";
 import { DatasetOperationError } from "../common/errors";
@@ -22,13 +22,11 @@ import { updateCacheHelper } from "../apollo-cache.helper";
     providedIn: "root",
 })
 export class EnvironmentVariablesApi {
-    constructor(
-        private listEnvVariablesGQL: ListEnvVariablesGQL,
-        private saveEnvVariableGQL: SaveEnvVariableGQL,
-        private modifyEnvVariableGQL: ModifyEnvVariableGQL,
-        private deleteEnvVariableGQL: DeleteEnvVariableGQL,
-        private exposedEnvVariableValueGQL: ExposedEnvVariableValueGQL,
-    ) {}
+    private listEnvVariablesGQL = inject(ListEnvVariablesGQL);
+    private saveEnvVariableGQL = inject(SaveEnvVariableGQL);
+    private modifyEnvVariableGQL = inject(ModifyEnvVariableGQL);
+    private deleteEnvVariableGQL = inject(DeleteEnvVariableGQL);
+    private exposedEnvVariableValueGQL = inject(ExposedEnvVariableValueGQL);
 
     public listEnvironmentVariables(params: {
         accountName: string;

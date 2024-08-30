@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { Observable, map } from "rxjs";
 import { DatasetLineageBasicsFragment, DatasetKind, FetchStep } from "src/app/api/kamu.graphql.interface";
 import { LineageUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
@@ -18,7 +18,7 @@ import { MaybeNull } from "src/app/common/app.types";
     providedIn: "root",
 })
 export class LineageGraphBuilderService {
-    constructor(private datasetSubsService: DatasetSubscriptionsService) {}
+    private datasetSubsService = inject(DatasetSubscriptionsService);
 
     public buildGraph(): Observable<MaybeNull<LineageGraphUpdate>> {
         return this.datasetSubsService.lineageChanges.pipe(

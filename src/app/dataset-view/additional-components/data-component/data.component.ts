@@ -3,6 +3,7 @@ import {
     ChangeDetectorRef,
     Component,
     EventEmitter,
+    inject,
     Input,
     OnInit,
     Output,
@@ -49,16 +50,12 @@ export class DataComponent extends BaseComponent implements OnInit {
     public dataUpdate$: Observable<DataUpdate>;
     public overviewUpdate$: Observable<OverviewUpdate>;
 
-    constructor(
-        private datasetSubsService: DatasetSubscriptionsService,
-        private location: Location,
-        private ngbModalService: NgbModal,
-        private datasetFlowsService: DatasetFlowsService,
-        private navigationService: NavigationService,
-        private cdr: ChangeDetectorRef,
-    ) {
-        super();
-    }
+    private datasetSubsService = inject(DatasetSubscriptionsService);
+    private location = inject(Location);
+    private ngbModalService = inject(NgbModal);
+    private datasetFlowsService = inject(DatasetFlowsService);
+    private navigationService = inject(NavigationService);
+    private cdr = inject(ChangeDetectorRef);
 
     public ngOnInit(): void {
         this.overviewUpdate$ = this.datasetSubsService.overviewChanges;

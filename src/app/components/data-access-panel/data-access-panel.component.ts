@@ -1,6 +1,6 @@
 import { MaybeUndefined } from "./../../common/app.types";
 import { ProtocolsService } from "./../../services/protocols.service";
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { DatasetBasicsFragment, DatasetEndpoints } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { Clipboard } from "@angular/cdk/clipboard";
@@ -16,10 +16,8 @@ export class DataAccessPanelComponent implements OnInit {
     @Input({ required: true }) datasetBasics: DatasetBasicsFragment;
     public protocols$: Observable<MaybeUndefined<DatasetEndpoints>>;
 
-    constructor(
-        private clipboard: Clipboard,
-        private protocolsService: ProtocolsService,
-    ) {}
+    private clipboard = inject(Clipboard);
+    private protocolsService = inject(ProtocolsService);
 
     ngOnInit(): void {
         this.initClipboardHints();

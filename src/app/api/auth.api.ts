@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { catchError, first, map } from "rxjs/operators";
 import { Observable, throwError } from "rxjs";
 import {
@@ -21,11 +21,9 @@ import { ApolloQueryResult } from "@apollo/client";
     providedIn: "root",
 })
 export class AuthApi {
-    constructor(
-        private getEnabledLoginMethodsGQL: GetEnabledLoginMethodsGQL,
-        private loginGQL: LoginGQL,
-        private fetchAccountDetailsGQL: FetchAccountDetailsGQL,
-    ) {}
+    private getEnabledLoginMethodsGQL = inject(GetEnabledLoginMethodsGQL);
+    private loginGQL = inject(LoginGQL);
+    private fetchAccountDetailsGQL = inject(FetchAccountDetailsGQL);
 
     public readEnabledLoginMethods(): Observable<LoginMethod[]> {
         return this.getEnabledLoginMethodsGQL.watch().valueChanges.pipe(

@@ -7,7 +7,6 @@
             [row]="row"
             [rowIndex]="rowIndex"
             [isClickableRow]="isClickableRow"
-            (selectDatasetEmit)="onSelectDataset($event)"
         ></app-dataset-list-item>
     </div>
     <ng-template [ngIf]="datasets.length > 0 && pageInfo">

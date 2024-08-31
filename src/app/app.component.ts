@@ -1,5 +1,3 @@
-import { AuthenticationError } from "./common/errors";
-import { throwError } from "rxjs";
 import { NavigationService } from "./services/navigation.service";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, inject, OnInit } from "@angular/core";
 import AppValues from "./common/app.values";
@@ -19,11 +17,9 @@ import { LoginService } from "./auth/login/login.service";
 import { loadErrorMessages } from "@apollo/client/dev";
 import { isDevMode } from "@angular/core";
 import moment from "moment";
-import { AccountTabs } from "./account/account.constants";
 import { LoggedUserService } from "./auth/logged-user.service";
 import packageFile from "../../package.json";
 import { LocalStorageService } from "./services/local-storage.service";
-import { AccountSettingsTabs } from "./auth/settings/account-settings.constants";
 
 export const ALL_URLS_WITHOUT_HEADER: string[] = [ProjectLinks.URL_LOGIN, ProjectLinks.URL_GITHUB_CALLBACK];
 
@@ -130,16 +126,8 @@ export class AppComponent extends BaseComponent implements OnInit {
         }
     }
 
-    public onAppLogo(): void {
-        this.navigationService.navigateToSearch();
-    }
-
     public onOpenUserInfo(): void {
         // Not implemented yet
-    }
-
-    public onAddNew(): void {
-        this.navigationService.navigateToDatasetCreate();
     }
 
     public onLogin(): void {
@@ -149,28 +137,6 @@ export class AppComponent extends BaseComponent implements OnInit {
 
     public onLogout(): void {
         this.loggedUserService.logout();
-    }
-
-    public onUserProfile(): void {
-        if (this.loggedUserService.maybeCurrentlyLoggedInUser?.accountName) {
-            this.navigationService.navigateToOwnerView(
-                this.loggedUserService.maybeCurrentlyLoggedInUser.accountName,
-                AccountTabs.OVERVIEW,
-            );
-        } else {
-            throwError(() => new AuthenticationError([new Error("Login is undefined")]));
-        }
-    }
-
-    public onUserDatasets(): void {
-        if (this.loggedUserService.maybeCurrentlyLoggedInUser?.accountName) {
-            this.navigationService.navigateToOwnerView(
-                this.loggedUserService.maybeCurrentlyLoggedInUser.accountName,
-                AccountTabs.DATASETS,
-            );
-        } else {
-            throwError(() => new AuthenticationError([new Error("Login is undefined")]));
-        }
     }
 
     public onBilling(): void {
@@ -189,14 +155,6 @@ export class AppComponent extends BaseComponent implements OnInit {
                 yesButtonText: "Ok",
             }),
         );
-    }
-
-    public onSettings(): void {
-        if (this.loggedUserService.maybeCurrentlyLoggedInUser?.accountName) {
-            this.navigationService.navigateToSettings(AccountSettingsTabs.ACCESS_TOKENS);
-        } else {
-            throwError(() => new AuthenticationError([new Error("Login is undefined")]));
-        }
     }
 
     public onHelp(): void {

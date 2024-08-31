@@ -28,6 +28,8 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public searchFilter = "";
     public overview: DatasetOverviewFragment;
     public readonly DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"]; //1
+    public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
+    public readonly SettingsTabsEnum: typeof SettingsTabsEnum = SettingsTabsEnum;
 
     private datasetSubsService = inject(DatasetSubscriptionsService);
 
@@ -104,15 +106,6 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             });
         }
         this.fetchTableData(page);
-    }
-
-    public updateSettings(): void {
-        this.navigationService.navigateToDatasetView({
-            accountName: this.datasetBasics.owner.accountName,
-            datasetName: this.datasetBasics.name,
-            tab: DatasetViewTypeEnum.Settings,
-            section: SettingsTabsEnum.SCHEDULING,
-        });
     }
 
     public updateNow(): void {

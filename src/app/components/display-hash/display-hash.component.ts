@@ -1,8 +1,8 @@
 import { DatasetInfo } from "../../interface/navigation.interface";
-import { NavigationService } from "../../services/navigation.service";
 import { Component, inject, Input } from "@angular/core";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { ToastrService } from "ngx-toastr";
+import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-display-hash",
@@ -14,18 +14,10 @@ export class DisplayHashComponent {
     @Input() public navigationTargetDataset?: DatasetInfo;
     @Input() public showCopyButton = false;
     @Input() public class = "mr-1 hashBlock";
+    public readonly URL_BLOCK = ProjectLinks.URL_BLOCK;
 
-    private navigationService = inject(NavigationService);
     private clipboard = inject(Clipboard);
     private toastr = inject(ToastrService);
-
-    public navigateToMetadataBlock(accountName: string, datasetName: string, blockHash: string): void {
-        this.navigationService.navigateToMetadataBlock({
-            accountName,
-            datasetName,
-            blockHash,
-        });
-    }
 
     public copyToClipboard(text: string): void {
         this.clipboard.copy(text);

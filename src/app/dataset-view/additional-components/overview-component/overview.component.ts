@@ -33,6 +33,7 @@ import { ModalService } from "src/app/components/modal/modal.service";
 import AppValues from "src/app/common/app.values";
 import { FileUploadService } from "src/app/services/file-upload.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-overview",
@@ -49,6 +50,9 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     public droppedFile: File;
     public uploadFileLoading$: Observable<boolean>;
     public readonly UPLOAD_FILE_IMAGE = AppValues.UPLOAD_FILE_IMAGE;
+    public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
+    public readonly URL_PARAM_SET_TRANSFORM = ProjectLinks.URL_PARAM_SET_TRANSFORM;
+    public readonly URL_PARAM_ADD_PUSH_SOURCE = ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE;
 
     public currentState?: {
         schema: MaybeNull<DatasetSchema>;
@@ -262,27 +266,6 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         const modalRefInstance = modalRef.componentInstance as EditWatermarkModalComponent;
         modalRefInstance.currentWatermark = this.currentState?.overview.metadata.currentWatermark;
         modalRefInstance.datasetBasics = this.datasetBasics;
-    }
-
-    public navigateToAddPollingSource(): void {
-        this.navigationService.navigateToAddPollingSource({
-            accountName: this.datasetBasics.owner.accountName,
-            datasetName: this.datasetBasics.name,
-        });
-    }
-
-    public navigateToAddPushSource(): void {
-        this.navigationService.navigateToAddPushSource({
-            accountName: this.datasetBasics.owner.accountName,
-            datasetName: this.datasetBasics.name,
-        });
-    }
-
-    public navigateToSetTransform(): void {
-        this.navigationService.navigateToSetTransform({
-            accountName: this.datasetBasics.owner.accountName,
-            datasetName: this.datasetBasics.name,
-        });
     }
 
     public onAddReadme(): void {

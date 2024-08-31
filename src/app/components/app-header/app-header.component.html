@@ -5,9 +5,9 @@
 >
     <div class="header-item mt-n1 mb-n1 d-none d-md-flex">
         <div [classList]="'app-brand'" id="app-header-logo">
-            <button (click)="onAppLogo()" data-test-id="appLogo">
+            <a [routerLink]="[HOME_LINK]" data-test-id="appLogo">
                 <img [src]="APP_LOGO" alt="Application logo" />
-            </button>
+            </a>
         </div>
     </div>
     <div class="header-item d-md-none">
@@ -89,14 +89,14 @@
             aria-label="Global"
         >
             <div class="d-flex flex-column flex-md-row flex-self-stretch flex-md-self-auto">
-                <a
+                <!-- <a
                     class="header-link py-2 py-md-3 mr-0 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
                     data-ga-click="Header, click, Nav menu - item:explore"
                     data-selected-links="/explore /trending /trending/developers /integrations /integrations/feature/code /integrations/feature/collaborate /integrations/feature/ship showcases showcases_search showcases_landing /explore"
                     href="#"
                 >
                     Explore
-                </a>
+                </a> -->
 
                 <ng-template [ngIf]="!isUserLoggedIn() && loginMethods.length > 0">
                     <a
@@ -113,7 +113,8 @@
                         data-ga-click="Header, click, Nav menu - item:dashboard:user"
                         data-test-id="userDatasetsHeader"
                         aria-label="Dashboard"
-                        (click)="onUserDatasets()"
+                        [routerLink]="['/', loggedAccount.accountName]"
+                        [queryParams]="{ tab: AccountTabs.DATASETS }"
                     >
                         Your Datasets
                     </a>
@@ -128,7 +129,7 @@
 
                     <a
                         class="header-link d-block d-md-none py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
-                        (click)="onAddNew()"
+                        [routerLink]="[URL_DATASET_CREATE]"
                         data-test-id="addNewDatasetHeader"
                     >
                         Add New Dataset
@@ -136,7 +137,7 @@
                     <a
                         class="header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
                         data-test-id="openUserProfileHeader"
-                        (click)="onUserProfile()"
+                        [routerLink]="['/', loggedAccount.accountName]"
                         >Your profile</a
                     >
                     <a
@@ -154,7 +155,7 @@
                     <a
                         class="header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
                         data-test-id="openSettingsHeader"
-                        (click)="onSettings()"
+                        [routerLink]="[URL_SETTINGS, AccountSettingsTabs.ACCESS_TOKENS]"
                         >Settings</a
                     >
                     <a
@@ -201,14 +202,14 @@
                     <app-notification-indicator></app-notification-indicator>
                 </div>
                 <ng-container *ngIf="isUserLoggedIn()">
-                    <button
+                    <a
                         class="app-header__right-column__addnew-block d-block d-sm-none d-md-flex m-2"
-                        (click)="onAddNew()"
+                        [routerLink]="[URL_DATASET_CREATE]"
                         data-test-id="addNewBlock"
                     >
                         <span><i class="bi bi-plus-circle"></i></span>
                         <span class="app-header__right-column__label">New</span>
-                    </button>
+                    </a>
                 </ng-container>
                 <div class="position-relative">
                     <button
@@ -249,12 +250,17 @@
                     </ng-template>
 
                     <ng-template [ngIf]="isUserLoggedIn()">
-                        <button mat-menu-item data-test-id="openUserProfile" (click)="onUserProfile()">
+                        <a mat-menu-item data-test-id="openUserProfile" [routerLink]="['/', loggedAccount.accountName]">
                             Your profile
-                        </button>
-                        <button mat-menu-item data-test-id="openUserDatasets" (click)="onUserDatasets()">
+                        </a>
+                        <a
+                            mat-menu-item
+                            data-test-id="openUserDatasets"
+                            [routerLink]="['/', loggedAccount.accountName]"
+                            [queryParams]="{ tab: AccountTabs.DATASETS }"
+                        >
                             Your datasets
-                        </button>
+                        </a>
 
                         <div role="none" class="dropdown-divider"></div>
 
@@ -262,15 +268,21 @@
                             Account & Billing
                         </button>
                         <button mat-menu-item data-test-id="openAnalytics" (click)="onAnalytics()">Analytics</button>
-                        <button mat-menu-item data-test-id="openSettings" (click)="onSettings()">Settings</button>
+                        <a
+                            mat-menu-item
+                            data-test-id="openSettings"
+                            [routerLink]="[URL_SETTINGS, AccountSettingsTabs.ACCESS_TOKENS]"
+                        >
+                            Settings
+                        </a>
 
                         <div role="none" class="dropdown-divider"></div>
 
                         <ng-container *ngIf="featureFlags.enableLogout">
-                            <button mat-menu-item data-test-id="openLogout" (click)="onLogout()">
+                            <a mat-menu-item data-test-id="openLogout" (click)="onLogout()">
                                 <svg-icon name="sign-out"></svg-icon>
                                 Log out
-                            </button>
+                            </a>
                         </ng-container>
                     </ng-template>
                 </mat-menu>
@@ -280,9 +292,9 @@
 
     <div class="d-block d-md-none">
         <div [classList]="'app-brand'">
-            <button (click)="onAppLogo()" data-test-id="appLogo">
+            <a [routerLink]="[HOME_LINK]" data-test-id="appLogo">
                 <img [src]="APP_LOGO" alt="Application logo" />
-            </button>
+            </a>
         </div>
     </div>
     <div class="d-flex d-md-none justify-content-center notification-indicator-container align-items-center m-0">

@@ -56,21 +56,51 @@
             >
                 <p>
                     You can
-                    <a class="text-decoration-none" (click)="navigateToAddPollingSource()"> Add data polling source</a>
+                    <a
+                        class="text-decoration-none"
+                        [routerLink]="[
+                            '/',
+                            datasetBasics.owner.accountName,
+                            datasetBasics.name,
+                            URL_PARAM_ADD_POLLING_SOURCE
+                        ]"
+                    >
+                        Add data polling source</a
+                    >
                 </p>
             </div>
             <!-- Changed to canAddPushSource -->
             <div class="my-4" *ngIf="canAddSetPollingSource" data-test-id="add-push-source-block">
                 <p>
                     You can
-                    <a class="text-decoration-none" (click)="navigateToAddPushSource()"> Add data push source</a>
+                    <a
+                        class="text-decoration-none"
+                        [routerLink]="[
+                            '/',
+                            datasetBasics.owner.accountName,
+                            datasetBasics.name,
+                            URL_PARAM_ADD_PUSH_SOURCE
+                        ]"
+                    >
+                        Add data push source</a
+                    >
                 </p>
             </div>
             <!-- end -->
             <div class="my-4" *ngIf="canAddSetTransform" data-test-id="add-set-transform-block">
                 <p>
                     You can
-                    <a class="text-decoration-none" (click)="navigateToSetTransform()"> Add transformation</a>
+                    <a
+                        class="text-decoration-none"
+                        [routerLink]="[
+                            '/',
+                            datasetBasics.owner.accountName,
+                            datasetBasics.name,
+                            URL_PARAM_SET_TRANSFORM
+                        ]"
+                    >
+                        Add transformation</a
+                    >
                 </p>
             </div>
 

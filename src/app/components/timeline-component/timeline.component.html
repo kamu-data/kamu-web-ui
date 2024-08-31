@@ -34,9 +34,13 @@
                                 >
                                 <a
                                     class="link--primary font-weight-bold"
-                                    (click)="
-                                        navigateToMetadataBlock(block.author.accountName, datasetName, block.blockHash)
-                                    "
+                                    [routerLink]="[
+                                        '/',
+                                        block.author.accountName,
+                                        datasetName,
+                                        URL_BLOCK,
+                                        block.blockHash
+                                    ]"
                                     data-test-id="navigate-to-block"
                                     >{{ descriptionForMetadataBlock(block) }}
                                 </a>
@@ -125,7 +129,7 @@
         </div>
     </div>
 </ng-template>
-<ng-template #popContent>
+<ng-template #popContent let-block="block">
     <div class="signer-block-info d-grid justify-content-between align-items-center">
         <a class="pe-1" aria-label="sergiimk" href="/sergiimk">
             <img
@@ -135,10 +139,9 @@
             />
         </a>
         <span class="signed-commit-signer-name flex-1">
-            <a class="signer" (click)="navigateToOwnerView('testName')" data-test-id="navigate-to-owner-link"
+            <a class="signer" [routerLink]="['/', block.author.accountName]" data-test-id="navigate-to-owner-link"
                 >owner.name</a
             >
-            row.owner.accountName
         </span>
     </div>
     <div class="signed-commit-footer p-1">

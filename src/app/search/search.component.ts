@@ -4,7 +4,6 @@ import { DatasetSearchResult, SearchFilters } from "../interface/search.interfac
 import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { BaseComponent } from "../common/base.component";
 import { NavigationService } from "../services/navigation.service";
-import { DatasetInfo } from "../interface/navigation.interface";
 import { requireValue } from "../common/app.helpers";
 import ProjectLinks from "../project-links";
 import { filter, map } from "rxjs/operators";
@@ -179,13 +178,6 @@ export class SearchComponent extends BaseComponent implements OnInit {
             return;
         }
         this.navigationService.navigateToSearch(this.searchValue, currentPage);
-    }
-
-    public onSelectDataset(data: DatasetInfo): void {
-        this.navigationService.navigateToDatasetView({
-            accountName: data.accountName,
-            datasetName: data.datasetName,
-        });
     }
 
     private onSearchDatasets(): void {

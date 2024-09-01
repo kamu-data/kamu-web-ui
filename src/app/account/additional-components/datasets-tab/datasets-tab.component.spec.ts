@@ -12,6 +12,7 @@ import { DisplayTimeModule } from "src/app/components/display-time/display-time.
 import { MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
 import { SharedTestModule } from "src/app/common/shared-test.module";
+import { RouterModule } from "@angular/router";
 
 describe("DatasetsTabComponent", () => {
     let component: DatasetsTabComponent;
@@ -28,6 +29,7 @@ describe("DatasetsTabComponent", () => {
                 NgbPopoverModule,
                 MatDividerModule,
                 SharedTestModule,
+                RouterModule,
             ],
             providers: [DatasetApi],
             declarations: [DatasetsTabComponent, DatasetListItemComponent],
@@ -43,15 +45,6 @@ describe("DatasetsTabComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
-    });
-
-    it("should check #selectDataset with datasets item", () => {
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
-        component.onSelectDataset(mockDatasetListItem);
-        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
-            accountName: mockDatasetListItem.owner.accountName,
-            datasetName: mockDatasetListItem.name,
-        });
     });
 
     it("should check page changed", () => {

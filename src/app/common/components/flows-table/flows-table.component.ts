@@ -46,6 +46,8 @@ import { DatasetFlowsService } from "src/app/dataset-view/additional-components/
 import { BaseComponent } from "../../base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ToastrService } from "ngx-toastr";
+import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-flows-table",
@@ -66,6 +68,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
+    public readonly FlowDetailsTabs: typeof FlowDetailsTabs = FlowDetailsTabs;
     private readonly FILTERED_ITEMS_COUNT = 10;
 
     public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>();
@@ -73,6 +76,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     @Input({ required: true }) public accountFlowInitiators: Account[];
     @Input({ required: true }) public involvedDatasets: DatasetListFlowsDataFragment[];
 
+    public readonly URL_FLOW_DETAILS = ProjectLinks.URL_FLOW_DETAILS;
     public readonly FILTER_DATASET_SETTINGS: DropdownSettings = DROPDOWN_DATASET_SETTINGS;
     public readonly FILTER_STATUS_SETTINGS: DropdownSettings = DROPDOWN_STATUS_SETTINGS;
     public filterAccountSettings: DropdownSettings = DROPDOWN_ACCOUNT_SETTINGS;
@@ -175,23 +179,8 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         );
     }
 
-    public navigateToFlowDetaisView(flow: FlowSummaryDataFragment, datasetId: string): void {
-        this.navigationService.navigateToFlowDetails({
-            accountName: this.datasetById(datasetId).owner.accountName,
-            datasetName: this.datasetById(datasetId).name,
-            flowId: flow.flowId,
-        });
-    }
-
     public dynamicImgSrc(status: FlowStatus): string {
         return DatasetFlowDetailsHelpers.dynamicImgSrc(status);
-    }
-
-    public onClickDataset(datasetId: string): void {
-        this.navigationService.navigateToDatasetView({
-            accountName: this.datasetById(datasetId).owner.accountName,
-            datasetName: this.datasetById(datasetId).name,
-        });
     }
 
     public onResetFilters(): void {

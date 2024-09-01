@@ -100,13 +100,22 @@
             </ng-container>
             <ng-container *ngIf="isSetPollingSourceEmpty">
                 No flow runs.To set the configuration you first need to
-                <a class="text-decoration-none" href="javascript:void(0);" (click)="navigateToAddPollingSource()"
+                <a
+                    class="text-decoration-none"
+                    [routerLink]="[
+                        '/',
+                        datasetBasics.owner.accountName,
+                        datasetBasics.name,
+                        URL_PARAM_ADD_POLLING_SOURCE
+                    ]"
                     >add data polling source
                 </a>
             </ng-container>
             <ng-container *ngIf="isSetTransformEmpty">
                 No flow runs.To set the configuration you first need to
-                <a class="text-decoration-none" href="javascript:void(0);" (click)="navigateToSetTransform()"
+                <a
+                    class="text-decoration-none"
+                    [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name, URL_PARAM_SET_TRANSFORM]"
                     >add transformation
                 </a>
             </ng-container>

@@ -60,7 +60,6 @@ describe("SearchComponent", () => {
                 AuthApi,
                 SearchApi,
                 ModalService,
-                // { provide: Router, useValue: routerMock },
                 { provide: ActivatedRoute, useValue: activeRouteMock },
             ],
         }).compileComponents();

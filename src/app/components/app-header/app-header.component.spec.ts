@@ -59,7 +59,6 @@ describe("AppHeaderComponent", () => {
             declarations: [AppHeaderComponent, NotificationIndicatorComponent],
             providers: [
                 Apollo,
-                // { provide: Router, useValue: routerMock },
                 {
                     provide: ActivatedRoute,
                     useValue: {

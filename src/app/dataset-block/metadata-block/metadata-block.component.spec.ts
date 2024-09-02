@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ActivatedRoute, Router, RouterModule } from "@angular/router";
+import { ActivatedRoute, RouterModule } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
 import { ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { of } from "rxjs";
 import { DatasetApi } from "src/app/api/dataset.api";
-import { routerMock } from "src/app/common/base-test.helpers.spec";
 import { MetadataBlockComponent } from "./metadata-block.component";
 import { BlockNavigationComponent } from "./components/block-navigation/block-navigation.component";
 import { MatIconModule } from "@angular/material/icon";
@@ -61,10 +60,6 @@ describe("MetadataBlockComponent", () => {
             ],
             providers: [
                 DatasetApi,
-                {
-                    provide: Router,
-                    useValue: routerMock,
-                },
                 {
                     provide: ActivatedRoute,
                     useValue: {

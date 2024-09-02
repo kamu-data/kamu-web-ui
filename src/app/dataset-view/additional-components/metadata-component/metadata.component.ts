@@ -22,10 +22,12 @@ import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "src/app/common/
 import { NavigationService } from "src/app/services/navigation.service";
 import _ from "lodash";
 import { ModalService } from "src/app/components/modal/modal.service";
+import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-metadata",
     templateUrl: "./metadata.component.html",
+    styleUrls: ["./metadata.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataComponent extends BaseComponent implements OnInit {
@@ -48,6 +50,8 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         metadataSummary: DatasetMetadataSummaryFragment;
         pageInfo: PageBasedInfo;
     };
+
+    public readonly URL_PARAM_SET_TRANSFORM = ProjectLinks.URL_PARAM_SET_TRANSFORM;
 
     private datasetSubsService = inject(DatasetSubscriptionsService);
     private navigationService = inject(NavigationService);

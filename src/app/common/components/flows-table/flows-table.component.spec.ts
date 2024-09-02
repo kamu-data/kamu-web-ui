@@ -17,7 +17,6 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { MatTableHarness } from "@angular/material/table/testing";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { SimpleChanges } from "@angular/core";
-import { NavigationService } from "src/app/services/navigation.service";
 import { ModalService } from "src/app/components/modal/modal.service";
 import { SharedModule } from "src/app/shared/shared/shared.module";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
@@ -27,12 +26,12 @@ import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 import { ToastrModule, ToastrService } from "ngx-toastr";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { of } from "rxjs";
+import { RouterModule } from "@angular/router";
 
 describe("FlowsTableComponent", () => {
     let component: FlowsTableComponent;
     let fixture: ComponentFixture<FlowsTableComponent>;
     let loader: HarnessLoader;
-    let navigationService: NavigationService;
     let modalService: ModalService;
     let datasetFlowsService: DatasetFlowsService;
     let toastService: ToastrService;
@@ -57,6 +56,7 @@ describe("FlowsTableComponent", () => {
                 NgbTypeaheadModule,
                 AngularMultiSelectModule,
                 ToastrModule.forRoot(),
+                RouterModule,
             ],
         }).compileComponents();
 
@@ -67,7 +67,6 @@ describe("FlowsTableComponent", () => {
         iconRegistryService.addSvg("timer", "");
 
         fixture = TestBed.createComponent(FlowsTableComponent);
-        navigationService = TestBed.inject(NavigationService);
         modalService = TestBed.inject(ModalService);
         datasetFlowsService = TestBed.inject(DatasetFlowsService);
         toastService = TestBed.inject(ToastrService);
@@ -118,22 +117,10 @@ describe("FlowsTableComponent", () => {
         expect(modalWindowSpy).toHaveBeenCalledWith(jasmine.objectContaining({ title: "Cancel flow" }));
     });
 
-    it("should check navigate to flow details view", () => {
-        const navigateToFlowDetailsSpy = spyOn(navigationService, "navigateToFlowDetails");
-        component.navigateToFlowDetaisView(mockFlowSummaryDataFragments[0], mockDatasetMainDataId);
-        expect(navigateToFlowDetailsSpy).toHaveBeenCalledTimes(1);
-    });
-
     it("should check search method", () => {
         const searchByFiltersChangeSpy = spyOn(component.searchByFiltersChange, "emit");
         component.onSearch();
         expect(searchByFiltersChangeSpy).toHaveBeenCalledTimes(1);
-    });
-
-    it("should check click on dataset name", () => {
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
-        component.onClickDataset(mockDatasetMainDataId);
-        expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check reset filters", () => {

@@ -24,13 +24,16 @@ mat-button-toggle {
     outline: none !important;
     background: inherit !important;
 
-    &:hover {
-        box-shadow: none !important;
-        border-bottom: 1px solid !important;
-        border-radius: 0 !important;
+    &.active-link {
+        border-bottom-color: #000 !important;
+        border-radius: 0;
+    }
 
-        &.mat-button-toggle-checked {
-            border-bottom: 2px #000 solid !important;
+    &:not(.active-link) {
+        &:hover {
+            box-shadow: none !important;
+            border-bottom: 1px solid !important;
+            border-radius: 0 !important;
         }
     }
 }
@@ -41,16 +44,6 @@ mat-button-toggle {
 
 .mat-button-toggle-focus-overlay {
     background: inherit !important;
-}
-
-.mat-button-toggle-checked {
-    border-bottom-color: #000 !important;
-    border-radius: 0;
-    background-color: transparent !important;
-
-    &:hover {
-        background-color: transparent !important;
-    }
 }
 
 .mat-button-toggle-input {

@@ -25,7 +25,15 @@
                         <mat-menu #menu="matMenu" xPosition="before" [hasBackdrop]="true">
                             <button mat-menu-item [disabled]="false" (click)="updateNow()">Update now</button>
                             <mat-divider></mat-divider>
-                            <button mat-menu-item (click)="updateSettings()">Update settings</button>
+                            <a
+                                mat-menu-item
+                                [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name]"
+                                [queryParams]="{
+                                    tab: DatasetViewTypeEnum.Settings,
+                                    section: SettingsTabsEnum.SCHEDULING
+                                }"
+                                >Update settings</a
+                            >
                             <mat-divider></mat-divider>
                             <button
                                 mat-menu-item
@@ -83,19 +91,31 @@
         <p class="ps-2 pt-2" data-test-id="empty-flow-runs-block">
             <ng-container *ngIf="!isSetTransformEmpty && !isSetPollingSourceEmpty">
                 No flow runs. You can
-                <a class="text-decoration-none" href="javascript:void(0);" (click)="updateSettings()"
+                <a
+                    class="text-decoration-none"
+                    [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name]"
+                    [queryParams]="{ tab: DatasetViewTypeEnum.Settings, section: SettingsTabsEnum.SCHEDULING }"
                     >update configuration settings</a
                 >
             </ng-container>
             <ng-container *ngIf="isSetPollingSourceEmpty">
                 No flow runs.To set the configuration you first need to
-                <a class="text-decoration-none" href="javascript:void(0);" (click)="navigateToAddPollingSource()"
+                <a
+                    class="text-decoration-none"
+                    [routerLink]="[
+                        '/',
+                        datasetBasics.owner.accountName,
+                        datasetBasics.name,
+                        URL_PARAM_ADD_POLLING_SOURCE
+                    ]"
                     >add data polling source
                 </a>
             </ng-container>
             <ng-container *ngIf="isSetTransformEmpty">
                 No flow runs.To set the configuration you first need to
-                <a class="text-decoration-none" href="javascript:void(0);" (click)="navigateToSetTransform()"
+                <a
+                    class="text-decoration-none"
+                    [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name, URL_PARAM_SET_TRANSFORM]"
                     >add transformation
                 </a>
             </ng-container>

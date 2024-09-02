@@ -3,7 +3,6 @@
         <app-dataset-view-header
             *ngIf="datasetInfo"
             [datasetInfo]="datasetInfo"
-            (showOwnerPageEmit)="showOwnerPage(getDatasetInfoFromUrl().accountName)"
             (onClickSearchAdditionalButtonEmit)="onClickSearchAdditionalButton($event)"
         ></app-dataset-view-header>
     </div>

@@ -1,5 +1,4 @@
 import { MatChipsModule } from "@angular/material/chips";
-import { DatasetInfo } from "../interface/navigation.interface";
 import { AuthApi } from "../api/auth.api";
 import { SearchApi } from "../api/search.api";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
@@ -11,14 +10,12 @@ import { ModalService } from "../components/modal/modal.service";
 import { RouterTestingModule } from "@angular/router/testing";
 import { mockSearchOverviewResponse } from "../api/mock/search.mock";
 import { of } from "rxjs";
-import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
+import { ActivatedRoute, RouterModule } from "@angular/router";
 import ProjectLinks from "../project-links";
 import {
     activeRouteMock,
     activeRouteMockQueryParamMap,
     findElementByDataTestId,
-    routerMock,
-    routerMockEventSubject,
 } from "../common/base-test.helpers.spec";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { DatasetListComponent } from "../components/dataset-list-component/dataset-list.component";
@@ -55,6 +52,7 @@ describe("SearchComponent", () => {
                 MatChipsModule,
                 NgbPaginationModule,
                 MatDividerModule,
+                RouterModule,
             ],
             providers: [
                 NavigationService,
@@ -62,7 +60,6 @@ describe("SearchComponent", () => {
                 AuthApi,
                 SearchApi,
                 ModalService,
-                { provide: Router, useValue: routerMock },
                 { provide: ActivatedRoute, useValue: activeRouteMock },
             ],
         }).compileComponents();
@@ -80,10 +77,6 @@ describe("SearchComponent", () => {
         } else if (activeRouteMockQueryParamMap.has(ProjectLinks.URL_QUERY_PARAM_PAGE)) {
             activeRouteMockQueryParamMap.delete(ProjectLinks.URL_QUERY_PARAM_PAGE);
         }
-    }
-
-    function pushNavigationEnd(): void {
-        routerMockEventSubject.next(new NavigationEnd(1, ProjectLinks.URL_SEARCH, ""));
     }
 
     beforeEach(() => {
@@ -108,54 +101,9 @@ describe("SearchComponent", () => {
         expect(component.currentPage).toEqual(DEFAULT_SEARCH_PAGE);
     });
 
-    it("should pick default search query/page when arguments are not specified", () => {
-        setSearchUrl();
-        pushNavigationEnd();
-        fixture.detectChanges();
-        expect(component.searchValue).toEqual("");
-        expect(component.currentPage).toEqual(1);
-
-        const testQuery = "test";
-        setSearchUrl(testQuery);
-        pushNavigationEnd();
-        fixture.detectChanges();
-        expect(component.searchValue).toEqual(testQuery);
-        expect(component.currentPage).toEqual(1);
-
-        setSearchUrl(undefined, 4);
-        pushNavigationEnd();
-        fixture.detectChanges();
-        expect(component.searchValue).toEqual("");
-        expect(component.currentPage).toEqual(4);
-    });
-
-    it("should pick search query/page from url updates", () => {
-        const testQuery = "test";
-        const testPage = 2;
-        setSearchUrl(testQuery, testPage);
-        pushNavigationEnd();
-
-        fixture.detectChanges();
-        expect(component.searchValue).toEqual(testQuery);
-        expect(component.currentPage).toEqual(testPage);
-    });
-
     it("should call updateAllComplete method upon request", () => {
         component.updateAllComplete();
         expect(component.allComplete).toEqual(false);
-    });
-
-    it("should call navigateToDatasetView in navigation service on dataset selection", () => {
-        const data: DatasetInfo = {
-            accountName: "test",
-            datasetName: "test datasetName",
-        };
-        const routerSpy = spyOn(navigationService, "navigateToDatasetView");
-        component.onSelectDataset(data);
-        expect(routerSpy).toHaveBeenCalledWith({
-            accountName: data.accountName,
-            datasetName: data.datasetName,
-        });
     });
 
     it("should check onPageChange method with page", () => {

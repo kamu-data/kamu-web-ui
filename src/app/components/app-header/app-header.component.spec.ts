@@ -9,7 +9,6 @@ import {
     dispatchInputEvent,
     getElementByDataTestId,
     findNativeElement,
-    routerMock,
     routerMockEventSubject,
     findElementByDataTestId,
     emitClickOnElementByDataTestId,
@@ -23,7 +22,7 @@ import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.int
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 import { first } from "rxjs/operators";
 import AppValues from "src/app/common/app.values";
-import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
+import { ActivatedRoute, NavigationEnd, RouterModule } from "@angular/router";
 import ProjectLinks from "src/app/project-links";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -55,11 +54,11 @@ describe("AppHeaderComponent", () => {
                 ApolloTestingModule,
                 AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
+                RouterModule,
             ],
             declarations: [AppHeaderComponent, NotificationIndicatorComponent],
             providers: [
                 Apollo,
-                { provide: Router, useValue: routerMock },
                 {
                     provide: ActivatedRoute,
                     useValue: {
@@ -139,13 +138,6 @@ describe("AppHeaderComponent", () => {
         });
     });
 
-    it("should emit on click app logo", () => {
-        const emitterSubscription$ = component.onClickedAppLogo.pipe(first()).subscribe();
-        const link = getElementByDataTestId(fixture, "appLogo");
-        link.click();
-        expect(emitterSubscription$.closed).toBeTrue();
-    });
-
     it("should emit on click Login link", () => {
         const emitterSubscription$ = component.onClickedLogin.pipe(first()).subscribe();
         const link = getElementByDataTestId(fixture, "loginHeader");
@@ -167,30 +159,6 @@ describe("AppHeaderComponent", () => {
         expect(link).toBeUndefined();
     });
 
-    it("should emit on click User Datasets link", () => {
-        loginUser();
-        const emitterSubscription$ = component.onClickedUserDatasets.pipe(first()).subscribe();
-        const link = getElementByDataTestId(fixture, "userDatasetsHeader");
-        link.click();
-        expect(emitterSubscription$.closed).toBeTrue();
-    });
-
-    it("should emit on click AddNew link", () => {
-        loginUser();
-        const emitterSubscription$ = component.onClickedAddNew.pipe(first()).subscribe();
-        const link = getElementByDataTestId(fixture, "addNewDatasetHeader");
-        link.click();
-        expect(emitterSubscription$.closed).toBeTrue();
-    });
-
-    it("should emit on click Your Profile link", () => {
-        loginUser();
-        const emitterSubscription$ = component.onClickedUserProfile.pipe(first()).subscribe();
-        const link = getElementByDataTestId(fixture, "openUserProfileHeader");
-        link.click();
-        expect(emitterSubscription$.closed).toBeTrue();
-    });
-
     it("should emit on click Billing link", () => {
         loginUser();
         const emitterSubscription$ = component.onClickedBilling.pipe(first()).subscribe();
@@ -203,14 +171,6 @@ describe("AppHeaderComponent", () => {
         loginUser();
         const emitterSubscription$ = component.onClickedAnalytics.pipe(first()).subscribe();
         const link = getElementByDataTestId(fixture, "openAnalyticsHeader");
-        link.click();
-        expect(emitterSubscription$.closed).toBeTrue();
-    });
-
-    it("should emit on click Settings link", () => {
-        loginUser();
-        const emitterSubscription$ = component.onClickedSettings.pipe(first()).subscribe();
-        const link = getElementByDataTestId(fixture, "openSettingsHeader");
         link.click();
         expect(emitterSubscription$.closed).toBeTrue();
     });
@@ -256,14 +216,6 @@ describe("AppHeaderComponent", () => {
     it("should emit on click Help link", () => {
         const emitterSubscription$ = component.onClickedHelp.pipe(first()).subscribe();
         const link = getElementByDataTestId(fixture, "openHelpHeader");
-        link.click();
-        expect(emitterSubscription$.closed).toBeTrue();
-    });
-
-    it("should emit add new second link", () => {
-        loginUser();
-        const emitterSubscription$ = component.onClickedAddNew.pipe(first()).subscribe();
-        const link = getElementByDataTestId(fixture, "addNewBlock");
         link.click();
         expect(emitterSubscription$.closed).toBeTrue();
     });
@@ -318,22 +270,6 @@ describe("AppHeaderComponent", () => {
             expect(link).toBeUndefined();
         });
 
-        it("should emit on click User Profile link menu", () => {
-            loginUser();
-            const emitterSubscription$ = component.onClickedUserProfile.pipe(first()).subscribe();
-            const link = getElementByDataTestId(fixture, "openUserProfile");
-            link.click();
-            expect(emitterSubscription$.closed).toBeTrue();
-        });
-
-        it("should emit on click User Datasets link menu", () => {
-            loginUser();
-            const emitterSubscription$ = component.onClickedUserDatasets.pipe(first()).subscribe();
-            const link = getElementByDataTestId(fixture, "openUserDatasets");
-            link.click();
-            expect(emitterSubscription$.closed).toBeTrue();
-        });
-
         it("should emit on click Billing link menu", () => {
             loginUser();
             const emitterSubscription$ = component.onClickedBilling.pipe(first()).subscribe();
@@ -346,14 +282,6 @@ describe("AppHeaderComponent", () => {
             loginUser();
             const emitterSubscription$ = component.onClickedAnalytics.pipe(first()).subscribe();
             const link = getElementByDataTestId(fixture, "openAnalytics");
-            link.click();
-            expect(emitterSubscription$.closed).toBeTrue();
-        });
-
-        it("should emit on click Settings link menu", () => {
-            loginUser();
-            const emitterSubscription$ = component.onClickedSettings.pipe(first()).subscribe();
-            const link = getElementByDataTestId(fixture, "openSettings");
             link.click();
             expect(emitterSubscription$.closed).toBeTrue();
         });

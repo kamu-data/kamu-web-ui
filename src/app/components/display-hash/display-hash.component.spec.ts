@@ -2,17 +2,17 @@ import { TEST_BLOCK_HASH } from "../../api/mock/dataset.mock";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { emitClickOnElementByDataTestId, getElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { mockDatasetInfo } from "src/app/search/mock.data";
-import { NavigationService } from "src/app/services/navigation.service";
 import { DisplayHashComponent } from "./display-hash.component";
 import { ToastrModule, ToastrService } from "ngx-toastr";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { AngularSvgIconModule } from "angular-svg-icon";
+import { RouterModule } from "@angular/router";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("DisplayHashComponent", () => {
     let component: DisplayHashComponent;
     let fixture: ComponentFixture<DisplayHashComponent>;
-    let navigationService: NavigationService;
     let toastService: ToastrService;
 
     beforeEach(async () => {
@@ -23,11 +23,12 @@ describe("DisplayHashComponent", () => {
                 BrowserAnimationsModule,
                 AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
+                RouterModule,
+                SharedTestModule,
             ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DisplayHashComponent);
-        navigationService = TestBed.inject(NavigationService);
         toastService = TestBed.inject(ToastrService);
         component = fixture.componentInstance;
         component.value = TEST_BLOCK_HASH;
@@ -37,17 +38,6 @@ describe("DisplayHashComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
-    });
-
-    it("should check navigate to metadata block page", () => {
-        const navigateToMetadataBlockSpy = spyOn(navigationService, "navigateToMetadataBlock");
-        emitClickOnElementByDataTestId(fixture, "navigableValue");
-
-        expect(navigateToMetadataBlockSpy).toHaveBeenCalledWith({
-            datasetName: mockDatasetInfo.datasetName,
-            accountName: mockDatasetInfo.accountName,
-            blockHash: TEST_BLOCK_HASH,
-        });
     });
 
     it("should check copyToClipboard button is exist", () => {

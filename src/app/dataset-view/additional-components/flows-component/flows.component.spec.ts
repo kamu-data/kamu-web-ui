@@ -4,10 +4,10 @@ import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, tick
 import { FlowsComponent } from "./flows.component";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, RouterModule } from "@angular/router";
 import { mockDatasetBasicsRootFragment, mockDatasetMainDataId } from "src/app/search/mock.data";
 import { ToastrModule } from "ngx-toastr";
-import { findElementByDataTestId, routerMock } from "src/app/common/base-test.helpers.spec";
+import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { DatasetFlowsService } from "./services/dataset-flows.service";
 import { of } from "rxjs";
 import { MatMenuModule } from "@angular/material/menu";
@@ -22,7 +22,6 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { NgbPaginationModule, NgbPopoverModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
-import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import _ from "lodash";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
@@ -43,7 +42,6 @@ describe("FlowsComponent", () => {
         await TestBed.configureTestingModule({
             providers: [
                 Apollo,
-                { provide: Router, useValue: routerMock },
                 {
                     provide: ActivatedRoute,
                     useValue: {
@@ -89,6 +87,7 @@ describe("FlowsComponent", () => {
                 NgbPopoverModule,
                 NgbTypeaheadModule,
                 NgbPaginationModule,
+                RouterModule,
             ],
         }).compileComponents();
 
@@ -108,14 +107,6 @@ describe("FlowsComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
-    });
-
-    it("should check update settings button", () => {
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
-        component.updateSettings();
-        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({ tab: DatasetViewTypeEnum.Settings, section: SettingsTabsEnum.SCHEDULING }),
-        );
     });
 
     it("should check refresh button", () => {
@@ -179,24 +170,6 @@ describe("FlowsComponent", () => {
         expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
         flush();
     }));
-
-    it("should check navigate to AddPollingSource", () => {
-        const navigateToAddPollingSourceSpy = spyOn(navigationService, "navigateToAddPollingSource");
-        component.navigateToAddPollingSource();
-        expect(navigateToAddPollingSourceSpy).toHaveBeenCalledOnceWith({
-            accountName: component.datasetBasics.owner.accountName,
-            datasetName: component.datasetBasics.name,
-        });
-    });
-
-    it("should check navigate to SetTransform", () => {
-        const navigateToSetTransformSpy = spyOn(navigationService, "navigateToSetTransform");
-        component.navigateToSetTransform();
-        expect(navigateToSetTransformSpy).toHaveBeenCalledOnceWith({
-            accountName: component.datasetBasics.owner.accountName,
-            datasetName: component.datasetBasics.name,
-        });
-    });
 
     it("should check navigate when page equal 1 ", () => {
         const page = 1;

@@ -22,13 +22,6 @@ export class DatasetsTabComponent {
         return this.pageInfo.currentPage + 1;
     }
 
-    public onSelectDataset(row: DatasetSearchOverviewFragment): void {
-        this.navigationService.navigateToDatasetView({
-            accountName: row.owner.accountName,
-            datasetName: row.name,
-        });
-    }
-
     public onPageChange(currentPage?: number): void {
         if (_.isNil(currentPage) || currentPage === 1) {
             this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.DATASETS);

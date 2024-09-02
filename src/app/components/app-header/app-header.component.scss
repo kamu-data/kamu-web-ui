@@ -1,6 +1,12 @@
 ::ng-deep {
     .mat-mdc-menu-content {
         .mat-mdc-menu-item {
+            &:not([disabled]) {
+                &:hover {
+                    text-decoration: none !important;
+                }
+            }
+
             .mat-mdc-menu-item-text {
                 font-size: 14px !important;
                 letter-spacing: normal !important;

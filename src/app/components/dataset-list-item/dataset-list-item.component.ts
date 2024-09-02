@@ -1,6 +1,6 @@
 import { ModalService } from "../modal/modal.service";
 import { DatasetSearchOverviewFragment } from "../../api/kamu.graphql.interface";
-import { Component, EventEmitter, inject, Input, Output } from "@angular/core";
+import { Component, inject, Input } from "@angular/core";
 import { promiseWithCatch } from "src/app/common/app.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
 
@@ -13,7 +13,6 @@ export class DatasetListItemComponent {
     @Input({ required: true }) public row: DatasetSearchOverviewFragment;
     @Input() public isClickableRow?: boolean = false;
     @Input({ required: true }) public rowIndex: number;
-    @Output() public selectDatasetEmit = new EventEmitter<DatasetSearchOverviewFragment>();
 
     private modalService = inject(ModalService);
     private navigationService = inject(NavigationService);
@@ -26,10 +25,6 @@ export class DatasetListItemComponent {
                 title: topicName,
             }),
         );
-    }
-
-    public onSelectDataset(row: DatasetSearchOverviewFragment): void {
-        this.selectDatasetEmit.emit(row);
     }
 
     public navigateToOwnerView(ownerName: string): void {

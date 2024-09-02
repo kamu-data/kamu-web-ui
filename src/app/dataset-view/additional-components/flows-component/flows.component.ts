@@ -16,6 +16,7 @@ import { environment } from "src/environments/environment";
 import { FlowsTableProcessingBaseComponent } from "src/app/common/components/flows-table/flows-table-processing-base.component";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { FlowsTableFiltersOptions } from "src/app/common/components/flows-table/flows-table.types";
+import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-flows",
@@ -28,6 +29,10 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public searchFilter = "";
     public overview: DatasetOverviewFragment;
     public readonly DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"]; //1
+    public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
+    public readonly SettingsTabsEnum: typeof SettingsTabsEnum = SettingsTabsEnum;
+    public readonly URL_PARAM_SET_TRANSFORM = ProjectLinks.URL_PARAM_SET_TRANSFORM;
+    public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
 
     private datasetSubsService = inject(DatasetSubscriptionsService);
 
@@ -104,15 +109,6 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             });
         }
         this.fetchTableData(page);
-    }
-
-    public updateSettings(): void {
-        this.navigationService.navigateToDatasetView({
-            accountName: this.datasetBasics.owner.accountName,
-            datasetName: this.datasetBasics.name,
-            tab: DatasetViewTypeEnum.Settings,
-            section: SettingsTabsEnum.SCHEDULING,
-        });
     }
 
     public updateNow(): void {

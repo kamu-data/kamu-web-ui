@@ -71,9 +71,9 @@
                     <mat-button-toggle
                         class="menu-link"
                         data-test-id="navigateToOverview"
+                        [class.active-link]="activeTab === AccountTabs.OVERVIEW"
                         value="overview"
                         [disabled]="true"
-                        [checked]="activeTab === AccountTabs.OVERVIEW"
                     >
                         <div class="d-flex align-items-center">
                             <mat-icon class="fs-4 d-block me-1">my_library_books</mat-icon>
@@ -82,8 +82,8 @@
                     </mat-button-toggle>
                     <mat-button-toggle
                         data-test-id="account-datasets-tab"
+                        [class.active-link]="activeTab === AccountTabs.DATASETS"
                         value="datasets"
-                        [checked]="activeTab === AccountTabs.DATASETS"
                     >
                         <a
                             [routerLink]="['/', user.accountName]"
@@ -102,8 +102,8 @@
                     </mat-button-toggle>
                     <mat-button-toggle
                         data-test-id="account-flows-tab"
+                        [class.active-link]="activeTab === AccountTabs.FLOWS"
                         value="flows"
-                        [checked]="activeTab === AccountTabs.FLOWS"
                     >
                         <a
                             [routerLink]="['/', user.accountName]"
@@ -119,8 +119,8 @@
                     </mat-button-toggle>
                     <mat-button-toggle
                         data-test-id="account-organizations-tab"
+                        [class.active-link]="activeTab === AccountTabs.ORGANIZATIONS"
                         value="organizations"
-                        [checked]="activeTab === AccountTabs.ORGANIZATIONS"
                         [disabled]="true"
                         class="menu-link"
                     >
@@ -131,8 +131,8 @@
 
                     <mat-button-toggle
                         data-test-id="account-inbox-tab"
+                        [class.active-link]="activeTab === AccountTabs.INBOX"
                         value="inbox"
-                        [checked]="activeTab === AccountTabs.INBOX"
                         [disabled]="true"
                         class="menu-link"
                     >
@@ -142,8 +142,8 @@
                     </mat-button-toggle>
                     <mat-button-toggle
                         data-test-id="account-stars-tab"
+                        [class.active-link]="activeTab === AccountTabs.STARS"
                         value="Stars"
-                        [checked]="activeTab === AccountTabs.STARS"
                         [disabled]="true"
                         class="menu-link"
                     >

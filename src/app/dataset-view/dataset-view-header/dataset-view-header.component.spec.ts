@@ -7,13 +7,12 @@ import { MatIconModule } from "@angular/material/icon";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatMenuModule } from "@angular/material/menu";
-import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
-import { NavigationService } from "src/app/services/navigation.service";
+import { RouterModule } from "@angular/router";
+import { SharedTestModule } from "src/app/common/shared-test.module";
 
 describe("DatasetViewHeaderComponent", () => {
     let component: DatasetViewHeaderComponent;
     let fixture: ComponentFixture<DatasetViewHeaderComponent>;
-    let navigationService: NavigationService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -22,12 +21,18 @@ describe("DatasetViewHeaderComponent", () => {
                 SearchAdditionalButtonsComponent,
                 SearchAdditionalButtonsNavComponent,
             ],
-            imports: [MatIconModule, MatMenuModule, AngularSvgIconModule.forRoot(), HttpClientTestingModule],
+            imports: [
+                MatIconModule,
+                MatMenuModule,
+                AngularSvgIconModule.forRoot(),
+                HttpClientTestingModule,
+                RouterModule,
+                SharedTestModule,
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DatasetViewHeaderComponent);
         component = fixture.componentInstance;
-        navigationService = TestBed.inject(NavigationService);
         component.datasetInfo = mockDatasetInfo;
         fixture.detectChanges();
     });
@@ -41,17 +46,5 @@ describe("DatasetViewHeaderComponent", () => {
         const onClickSearchAdditionalButtonEmitSpy = spyOn(component.onClickSearchAdditionalButtonEmit, "emit");
         component.onClickSearchAdditionalButton(methodName);
         expect(onClickSearchAdditionalButtonEmitSpy).toHaveBeenCalledWith(methodName);
-    });
-
-    it("should check showOwnerPageEmit is emit", () => {
-        const showOwnerPageEmitSpy = spyOn(component.showOwnerPageEmit, "emit");
-        emitClickOnElementByDataTestId(fixture, "show-owner-link");
-        expect(showOwnerPageEmitSpy).toHaveBeenCalledWith();
-    });
-
-    it("should check navigate to dataset", () => {
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
-        emitClickOnElementByDataTestId(fixture, "show-dataset-link");
-        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(mockDatasetInfo);
     });
 });

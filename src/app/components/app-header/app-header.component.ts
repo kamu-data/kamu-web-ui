@@ -1,3 +1,4 @@
+import { AccountTabs } from "./../../account/account.constants";
 import { MaybeNull } from "../../common/app.types";
 import { ActivatedRoute, NavigationEnd, Params, Router, RouterEvent } from "@angular/router";
 import {
@@ -23,6 +24,7 @@ import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 import { AppConfigFeatureFlags, LoginMethod } from "src/app/app-config.model";
+import { AccountSettingsTabs } from "src/app/auth/settings/account-settings.constants";
 
 @Component({
     selector: "app-header",
@@ -45,24 +47,25 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     @Output() public onClickedLogin = new EventEmitter<null>();
     @Output() public onClickedLogout = new EventEmitter<null>();
     @Output() public onClickedOpenUserInfo = new EventEmitter<null>();
-    @Output() public onClickedAppLogo = new EventEmitter<null>();
-    @Output() public onClickedSettings = new EventEmitter<null>();
     @Output() public onClickedHelp = new EventEmitter<null>();
     @Output() public onClickedAnalytics = new EventEmitter<null>();
     @Output() public onClickedBilling = new EventEmitter<null>();
-    @Output() public onClickedUserDatasets = new EventEmitter<null>();
-    @Output() public onClickedUserProfile = new EventEmitter<null>();
     @Output() public onClickedDashboard = new EventEmitter<null>();
 
     @ViewChild("appHeaderMenuButton")
     private appHeaderMenuButton: ElementRef<HTMLElement>;
 
     public readonly DEFAULT_USER_DISPLAY_NAME: string = AppValues.DEFAULT_USER_DISPLAY_NAME;
+    public readonly AccountTabs: typeof AccountTabs = AccountTabs;
+    public readonly AccountSettingsTabs: typeof AccountSettingsTabs = AccountSettingsTabs;
 
     public isSearchActive = false;
     public isCollapsedAppHeaderMenu = false;
     public searchQuery = "";
     public searching = false;
+    public readonly HOME_LINK = ProjectLinks.URL_SEARCH;
+    public readonly URL_DATASET_CREATE = ProjectLinks.URL_DATASET_CREATE;
+    public readonly URL_SETTINGS = ProjectLinks.URL_SETTINGS;
 
     private appSearchAPI = inject(SearchApi);
     private route = inject(ActivatedRoute);
@@ -201,16 +204,8 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
         this.isCollapsedAppHeaderMenu = !this.isCollapsedAppHeaderMenu;
     }
 
-    public onAppLogo(): void {
-        this.onClickedAppLogo.emit();
-    }
-
     public onHelp(): void {
         this.onClickedHelp.emit();
-    }
-
-    public onSettings(): void {
-        this.onClickedSettings.emit();
     }
 
     public onAnalytics(): void {
@@ -219,14 +214,6 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
 
     public onBilling(): void {
         this.onClickedBilling.emit();
-    }
-
-    public onUserDatasets(): void {
-        this.onClickedUserDatasets.emit();
-    }
-
-    public onUserProfile(): void {
-        this.onClickedUserProfile.emit();
     }
 
     public onDashboard(): void {

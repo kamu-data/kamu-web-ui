@@ -4,10 +4,7 @@
         [title]="value"
         [class]="class"
         data-test-id="navigableValue"
-        (click)="
-            navigationTargetDataset &&
-                navigateToMetadataBlock(navigationTargetDataset.accountName, navigationTargetDataset.datasetName, value)
-        "
+        [routerLink]="['/', navigationTargetDataset.accountName, navigationTargetDataset.datasetName, URL_BLOCK, value]"
         >{{ value | slice: -8 }}</a
     >
 

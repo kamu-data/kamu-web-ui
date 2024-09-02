@@ -135,6 +135,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                             case DatasetResetMode.RESET_TO_SEED: {
                                 this.datasetCompactionService
                                     .resetToSeed({
+                                        accountId: this.datasetBasics.owner.id,
                                         datasetId: this.datasetBasics.id,
                                         datasetFlowType: DatasetFlowType.Reset,
                                         flowRunConfiguration: {

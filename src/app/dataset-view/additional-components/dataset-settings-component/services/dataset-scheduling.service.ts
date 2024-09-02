@@ -31,6 +31,7 @@ export class DatasetSchedulingService {
     }
 
     public setDatasetFlowSchedule(params: {
+        accountId: string;
         datasetId: string;
         datasetFlowType: DatasetFlowType;
         paused: boolean;
@@ -56,6 +57,7 @@ export class DatasetSchedulingService {
     }
 
     public setDatasetFlowBatching(params: {
+        accountId: string;
         datasetId: string;
         datasetFlowType: DatasetFlowType;
         paused: boolean;

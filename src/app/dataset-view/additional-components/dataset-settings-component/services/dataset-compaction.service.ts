@@ -51,6 +51,7 @@ export class DatasetCompactionService {
     }
 
     public resetToSeed(params: {
+        accountId: string;
         datasetId: string;
         datasetFlowType: DatasetFlowType;
         flowRunConfiguration: FlowRunConfiguration;

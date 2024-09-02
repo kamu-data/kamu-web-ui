@@ -59,7 +59,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
             _.isNil(this.datasetBasics) ||
             this.datasetBasics.name !== urlDatasetInfo.datasetName ||
             this.datasetBasics.owner.accountName !== urlDatasetInfo.accountName ||
-            this.datasetViewType === DatasetViewTypeEnum.Flows
+            this.datasetViewType === DatasetViewTypeEnum.Overview
         ) {
             this.requestMainData(urlDatasetInfo);
         }

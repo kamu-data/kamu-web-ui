@@ -57,7 +57,7 @@
             </p>
             <form class="row" [formGroup]="resetDatasetForm">
                 <div class="d-flex flex-row">
-                    <div class="d-flex align-items-center pt-1 hint" *ngIf="isRoot">
+                    <div class="d-flex align-items-center pt-1 hint">
                         <mat-radio-group class="d-flex flex-column row-gap-1" formControlName="mode" color="primary">
                             <mat-radio-button [value]="DatasetResetMode.RESET_TO_SEED">
                                 <div class="d-flex align-items-center">

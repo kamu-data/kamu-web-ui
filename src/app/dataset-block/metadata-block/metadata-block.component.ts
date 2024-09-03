@@ -4,11 +4,12 @@ import ProjectLinks from "src/app/project-links";
 import { DatasetViewTypeEnum } from "../../dataset-view/dataset-view.interface";
 import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { map } from "rxjs/operators";
+import { map, switchMap } from "rxjs/operators";
 import { Params } from "@angular/router";
 import { BlockService } from "./block.service";
 import { MaybeNull } from "src/app/common/app.types";
 import { BaseDatasetDataComponent } from "src/app/common/base-dataset-data.component";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-metadata-block",
@@ -33,25 +34,32 @@ export class MetadataBlockComponent extends BaseDatasetDataComponent implements 
         this.blockHash$ = this.activatedRoute.params.pipe(
             map((params: Params) => params[ProjectLinks.URL_PARAM_BLOCK_HASH] as string),
         );
-        combineLatest([this.datasetInfo$, this.blockHash$]).subscribe(
-            ([datasetInfo, blockHash]: [DatasetInfo, string]) => {
-                this.trackSubscription(this.blockService.requestMetadataBlock(datasetInfo, blockHash).subscribe());
-            },
-        );
-        this.trackSubscriptions(this.loadHistory(), this.loadDatasetBasicDataWithPermissions());
+        combineLatest([this.datasetInfo$, this.blockHash$])
+            .pipe(
+                switchMap(([datasetInfo, blockHash]: [DatasetInfo, string]) =>
+                    this.blockService.requestMetadataBlock(datasetInfo, blockHash),
+                ),
+            )
+            .subscribe();
+        this.loadHistory();
+        this.loadDatasetBasicDataWithPermissions();
     }
 
     public onPageChange(currentPage: number): void {
-        this.trackSubscription(this.loadHistory(currentPage - 1));
+        this.loadHistory(currentPage - 1);
     }
 
     private loadDatasetBasicDataWithPermissions(): Subscription {
-        return this.datasetService.requestDatasetBasicDataWithPermissions(this.getDatasetInfoFromUrl()).subscribe();
+        return this.datasetService
+            .requestDatasetBasicDataWithPermissions(this.getDatasetInfoFromUrl())
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe();
     }
 
     private loadHistory(page = 0): Subscription {
         return this.datasetService
             .requestDatasetHistory(this.getDatasetInfoFromUrl(), MetadataBlockComponent.BLOCKS_PER_PAGE, page)
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe();
     }
 }

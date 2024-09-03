@@ -7,6 +7,7 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { MaybeNull } from "src/app/common/app.types";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-interval-property",
@@ -25,16 +26,15 @@ export class OffsetIntervalPropertyComponent extends BasePropertyComponent imple
 
     ngOnInit(): void {
         if (this.data.datasetId) {
-            this.trackSubscription(
-                this.datasetService
-                    .requestDatasetInfoById(this.data.datasetId)
-                    .subscribe((dataset: DatasetByIdQuery) => {
-                        if (dataset.datasets.byId) {
-                            this.datasetInfo.accountName = dataset.datasets.byId.owner.accountName;
-                            this.datasetInfo.datasetName = dataset.datasets.byId.name;
-                        }
-                    }),
-            );
+            this.datasetService
+                .requestDatasetInfoById(this.data.datasetId)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe((dataset: DatasetByIdQuery) => {
+                    if (dataset.datasets.byId) {
+                        this.datasetInfo.accountName = dataset.datasets.byId.owner.accountName;
+                        this.datasetInfo.datasetName = dataset.datasets.byId.name;
+                    }
+                });
         }
     }
 

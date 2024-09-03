@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Changed
 - Replaced dataset names, account names, history blocks, settings vertical tabs to links
+- Replaced all trackSubscriptions with takeUntilDestroyed operator
 
 ## [0.26.0] - 2024-08-30
 ### Fixed

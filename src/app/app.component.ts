@@ -20,6 +20,7 @@ import moment from "moment";
 import { LoggedUserService } from "./auth/logged-user.service";
 import packageFile from "../../package.json";
 import { LocalStorageService } from "./services/local-storage.service";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 export const ALL_URLS_WITHOUT_HEADER: string[] = [ProjectLinks.URL_LOGIN, ProjectLinks.URL_GITHUB_CALLBACK];
 
@@ -74,21 +75,22 @@ export class AppComponent extends BaseComponent implements OnInit {
         this.readConfiguration();
         this.checkView();
 
-        this.trackSubscriptions(
-            this.router.events
-                .pipe(
-                    filter((event) => event instanceof NavigationEnd),
-                    map((event) => event as RouterEvent),
-                )
-                .subscribe((event: RouterEvent) => {
-                    this.isHeaderVisible = this.shouldHeaderBeVisible(event.url);
-                }),
+        this.router.events
+            .pipe(
+                filter((event) => event instanceof NavigationEnd),
+                map((event) => event as RouterEvent),
+            )
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((event: RouterEvent) => {
+                this.isHeaderVisible = this.shouldHeaderBeVisible(event.url);
+            });
 
-            this.loggedUserService.loggedInUserChanges.subscribe((user: MaybeNull<AccountFragment>) => {
+        this.loggedUserService.loggedInUserChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((user: MaybeNull<AccountFragment>) => {
                 this.loggedAccount = user ? _.cloneDeep(user) : AppComponent.ANONYMOUS_ACCOUNT_INFO;
                 this.cdr.detectChanges();
-            }),
-        );
+            });
     }
 
     private setMomentOptions(): void {

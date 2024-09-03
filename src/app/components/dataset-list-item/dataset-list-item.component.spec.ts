@@ -11,6 +11,7 @@ import { DisplayTimeModule } from "../display-time/display-time.module";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { SharedTestModule } from "src/app/common/shared-test.module";
+import { RouterModule } from "@angular/router";
 
 describe("DatasetListItemComponent", () => {
     let component: DatasetListItemComponent;
@@ -30,6 +31,7 @@ describe("DatasetListItemComponent", () => {
                 AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
                 SharedTestModule,
+                RouterModule,
             ],
         }).compileComponents();
 
@@ -52,11 +54,5 @@ describe("DatasetListItemComponent", () => {
         emitClickOnElementByDataTestId(fixture, "dataset-owner-name");
 
         expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(component.row.owner.accountName);
-    });
-
-    it("should check click on dataset name", () => {
-        const selectDatasetEmitSpy = spyOn(component.selectDatasetEmit, "emit");
-        emitClickOnElementByDataTestId(fixture, "dataset-name-button-0");
-        expect(selectDatasetEmitSpy).toHaveBeenCalledWith(mockDatasetListItem);
     });
 });

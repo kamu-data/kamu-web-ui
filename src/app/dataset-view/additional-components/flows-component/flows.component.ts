@@ -16,6 +16,8 @@ import { environment } from "src/environments/environment";
 import { FlowsTableProcessingBaseComponent } from "src/app/common/components/flows-table/flows-table-processing-base.component";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { FlowsTableFiltersOptions } from "src/app/common/components/flows-table/flows-table.types";
+import ProjectLinks from "src/app/project-links";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-flows",
@@ -28,17 +30,21 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public searchFilter = "";
     public overview: DatasetOverviewFragment;
     public readonly DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"]; //1
+    public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
+    public readonly SettingsTabsEnum: typeof SettingsTabsEnum = SettingsTabsEnum;
+    public readonly URL_PARAM_SET_TRANSFORM = ProjectLinks.URL_PARAM_SET_TRANSFORM;
+    public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
 
     private datasetSubsService = inject(DatasetSubscriptionsService);
 
     ngOnInit(): void {
         this.getPageFromUrl();
         this.fetchTableData(this.currentPage);
-        this.trackSubscriptions(
-            this.datasetSubsService.overviewChanges.subscribe((overviewUpdate: OverviewUpdate) => {
+        this.datasetSubsService.overviewChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((overviewUpdate: OverviewUpdate) => {
                 this.overview = overviewUpdate.overview;
-            }),
-        );
+            });
     }
 
     public fetchTableData(
@@ -106,53 +112,41 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         this.fetchTableData(page);
     }
 
-    public updateSettings(): void {
-        this.navigationService.navigateToDatasetView({
-            accountName: this.datasetBasics.owner.accountName,
-            datasetName: this.datasetBasics.name,
-            tab: DatasetViewTypeEnum.Settings,
-            section: SettingsTabsEnum.SCHEDULING,
-        });
-    }
-
     public updateNow(): void {
-        this.trackSubscription(
-            this.flowsService
-                .datasetTriggerFlow({
-                    datasetId: this.datasetBasics.id,
-                    datasetFlowType:
-                        this.datasetBasics.kind === DatasetKind.Root
-                            ? DatasetFlowType.Ingest
-                            : DatasetFlowType.ExecuteTransform,
-                })
-                .subscribe((success: boolean) => {
-                    if (success) {
-                        setTimeout(() => {
-                            this.refreshFlow();
-                            this.cdr.detectChanges();
-                        }, this.TIMEOUT_REFRESH_FLOW);
-                    }
-                }),
-        );
+        this.flowsService
+            .datasetTriggerFlow({
+                datasetId: this.datasetBasics.id,
+                datasetFlowType:
+                    this.datasetBasics.kind === DatasetKind.Root
+                        ? DatasetFlowType.Ingest
+                        : DatasetFlowType.ExecuteTransform,
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((success: boolean) => {
+                if (success) {
+                    setTimeout(() => {
+                        this.refreshFlow();
+                        this.cdr.detectChanges();
+                    }, this.TIMEOUT_REFRESH_FLOW);
+                }
+            });
     }
 
     public toggleStateDatasetFlowConfigs(paused: boolean): void {
         if (!paused) {
-            this.trackSubscription(
-                this.flowsService
-                    .datasetPauseFlows({
-                        datasetId: this.datasetBasics.id,
-                    })
-                    .subscribe(),
-            );
+            this.flowsService
+                .datasetPauseFlows({
+                    datasetId: this.datasetBasics.id,
+                })
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe();
         } else {
-            this.trackSubscription(
-                this.flowsService
-                    .datasetResumeFlows({
-                        datasetId: this.datasetBasics.id,
-                    })
-                    .subscribe(),
-            );
+            this.flowsService
+                .datasetResumeFlows({
+                    datasetId: this.datasetBasics.id,
+                })
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe();
         }
         setTimeout(() => {
             this.refreshFlow();

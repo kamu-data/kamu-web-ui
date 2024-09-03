@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { SearchAdditionalHeaderButtonInterface } from "../../components/search-additional-buttons/search-additional-buttons.interface";
 import { searchAdditionalButtonsEnum } from "../../search/search.interface";
-import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 
 @Component({
@@ -12,10 +11,7 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
 })
 export class DatasetViewHeaderComponent {
     @Input({ required: true }) datasetInfo: DatasetInfo;
-    @Output() public showOwnerPageEmit = new EventEmitter<null>();
     @Output() public onClickSearchAdditionalButtonEmit = new EventEmitter<string>();
-
-    private navigationService = inject(NavigationService);
 
     public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[] = [
         {
@@ -65,18 +61,7 @@ export class DatasetViewHeaderComponent {
         },
     ];
 
-    public showOwnerPage(): void {
-        this.showOwnerPageEmit.emit();
-    }
-
     public onClickSearchAdditionalButton(method: string): void {
         this.onClickSearchAdditionalButtonEmit.emit(method);
-    }
-
-    public showDatasetView(): void {
-        this.navigationService.navigateToDatasetView({
-            accountName: this.datasetInfo.accountName,
-            datasetName: this.datasetInfo.datasetName,
-        });
     }
 }

@@ -6,17 +6,18 @@ import { MaybeNull } from "../common/app.types";
 import { isNull } from "lodash";
 import { AppConfigService } from "../app-config.service";
 import { AccountFragment } from "../api/kamu.graphql.interface";
-import { UnsubscribeOnDestroyAdapter } from "../common/unsubscribe.ondestroy.adapter";
+import { UnsubscribeDestroyRefAdapter } from "../common/unsubscribe.ondestroy.adapter";
 import { AppConfigLoginInstructions } from "../app-config.model";
 import { Apollo } from "apollo-angular";
 import { promiseWithCatch } from "../common/app.helpers";
 import { LoginService } from "./login/login.service";
 import { LocalStorageService } from "../services/local-storage.service";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Injectable({
     providedIn: "root",
 })
-export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
+export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
     private loggedInUser: MaybeNull<AccountFragment> = null;
     private loggedInUser$: Subject<MaybeNull<AccountFragment>> = new ReplaySubject<MaybeNull<AccountFragment>>(1);
 
@@ -28,10 +29,13 @@ export class LoggedUserService extends UnsubscribeOnDestroyAdapter {
         private apollo: Apollo,
     ) {
         super();
-        this.trackSubscriptions(
-            this.loginService.accessTokenChanges.subscribe((token: string) => this.saveAccessToken(token)),
-            this.loginService.accountChanges.subscribe((user: AccountFragment) => this.changeUser(user)),
-        );
+
+        this.loginService.accessTokenChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((token: string) => this.saveAccessToken(token)),
+            this.loginService.accountChanges
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe((user: AccountFragment) => this.changeUser(user));
     }
 
     public initializeCompletes(): Observable<void> {

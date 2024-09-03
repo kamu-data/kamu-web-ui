@@ -27,6 +27,7 @@ import { SetTransformEventComponent } from "./components/set-transform-event/set
 import { SeedEventComponent } from "./components/seed-event/seed-event.component";
 import { AddDataEventComponent } from "./components/add-data-event/add-data-event.component";
 import { SetLicenseEventComponent } from "./components/set-license-event/set-license-event.component";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-event-details",
@@ -42,8 +43,9 @@ export class EventDetailsComponent extends BaseComponent implements AfterViewIni
     public dynamicContainer: MaybeNull<ViewContainerRef>;
 
     ngAfterViewInit(): void {
-        this.trackSubscription(
-            this.blockService.metadataBlockChanges.subscribe((block: MetadataBlockFragment) => {
+        this.blockService.metadataBlockChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((block: MetadataBlockFragment) => {
                 if (this.dynamicContainer) {
                     this.dynamicContainer.clear();
                     const componentRef = this.dynamicContainer.createComponent<BaseComponent>(
@@ -53,8 +55,7 @@ export class EventDetailsComponent extends BaseComponent implements AfterViewIni
                     componentRef.setInput("event", block.event);
                     componentRef.changeDetectorRef.detectChanges();
                 }
-            }),
-        );
+            });
     }
 
     private componentEventTypeFactory: { [key in SupportedEvents]: MaybeUndefined<Type<BaseComponent>> } = {

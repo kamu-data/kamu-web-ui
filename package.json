@@ -37,7 +37,7 @@
     "@angular/platform-browser-dynamic": "^16.2.12",
     "@angular/router": "^16.2.12",
     "@angular/service-worker": "16.2.12",
-    "@apollo/client": "^3.9.6",
+    "@apollo/client": "3.10.8",
     "@danielmoncada/angular-datetime-picker": "^16.1.0",
     "@danielmoncada/angular-datetime-picker-moment-adapter": "^3.0.1",
     "@ng-bootstrap/ng-bootstrap": "15.0.0",
@@ -66,7 +66,6 @@
     "ngx-trim-directive": "^2.0.0",
     "npx": "^10.2.2",
     "rxjs": "^7.8.1",
-    "subsink": "^1.0.2",
     "tslib": "^2.0.0",
     "yaml": "^2.4.1",
     "zone.js": "~0.13.3"

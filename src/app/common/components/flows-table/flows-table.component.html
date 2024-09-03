@@ -68,7 +68,14 @@
                         class="dynamic-icon"
                     />
                     <a
-                        (click)="navigateToFlowDetaisView(element, element.description.datasetId)"
+                        [routerLink]="[
+                            '/',
+                            datasetById(element.description.datasetId).owner.accountName,
+                            datasetById(element.description.datasetId).name,
+                            URL_FLOW_DETAILS,
+                            element.flowId,
+                            FlowDetailsTabs.HISTORY
+                        ]"
                         class="fw-500 description-link text-dark"
                     >
                         {{ flowTypeDescription(element) }}
@@ -147,9 +154,15 @@
 
         <td mat-cell *matCellDef="let element">
             <div class="d-flex align-items-center ps-3">
-                <a (click)="onClickDataset(element.description.datasetId)" class="text-small">{{
-                    datasetById(element.description.datasetId).name
-                }}</a>
+                <a
+                    [routerLink]="[
+                        '/',
+                        datasetById(element.description.datasetId).owner.accountName,
+                        datasetById(element.description.datasetId).name
+                    ]"
+                    class="text-small"
+                    >{{ datasetById(element.description.datasetId).name }}</a
+                >
             </div>
         </td>
     </ng-container>
@@ -161,9 +174,19 @@
             <div class="pe-2">
                 <button mat-button [matMenuTriggerFor]="tableOptions"><svg-icon name="show-options"></svg-icon></button>
                 <mat-menu #tableOptions="matMenu" xPosition="before" [hasBackdrop]="true">
-                    <button mat-menu-item (click)="navigateToFlowDetaisView(element, element.description.datasetId)">
+                    <a
+                        mat-menu-item
+                        [routerLink]="[
+                            '/',
+                            datasetById(element.description.datasetId).owner.accountName,
+                            datasetById(element.description.datasetId).name,
+                            URL_FLOW_DETAILS,
+                            element.flowId,
+                            FlowDetailsTabs.HISTORY
+                        ]"
+                    >
                         Details
-                    </button>
+                    </a>
                     <mat-divider></mat-divider>
                     <button
                         (click)="cancelFlow(element.flowId, element.description.datasetId)"

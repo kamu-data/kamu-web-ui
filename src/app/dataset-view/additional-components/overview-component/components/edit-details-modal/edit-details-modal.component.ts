@@ -14,6 +14,7 @@ import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-even
 import { DatasetCommitService } from "../../services/dataset-commit.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { finalize } from "rxjs";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-details-modal",
@@ -66,17 +67,16 @@ export class EditDetailsModalComponent extends BaseComponent implements OnInit {
     }
 
     public commitSetInfoEvent(): void {
-        this.trackSubscription(
-            this.datasetCommitService
-                .commitEventToDataset({
-                    accountId: this.loggedUserService.currentlyLoggedInUser.id,
-                    accountName: this.datasetBasics.owner.accountName,
-                    datasetName: this.datasetBasics.name,
-                    event: this.yamlEventService.buildYamlSetInfoEvent(this.description, this.keywords),
-                })
-                .pipe(finalize(() => this.activeModal.close()))
-                .subscribe(),
-        );
+        this.datasetCommitService
+            .commitEventToDataset({
+                accountId: this.loggedUserService.currentlyLoggedInUser.id,
+                accountName: this.datasetBasics.owner.accountName,
+                datasetName: this.datasetBasics.name,
+                event: this.yamlEventService.buildYamlSetInfoEvent(this.description, this.keywords),
+            })
+            .pipe(finalize(() => this.activeModal.close()))
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe();
     }
 
     public addKeywordFromInput(event: MatChipInputEvent) {

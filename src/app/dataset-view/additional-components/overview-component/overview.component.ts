@@ -33,6 +33,8 @@ import { ModalService } from "src/app/components/modal/modal.service";
 import AppValues from "src/app/common/app.values";
 import { FileUploadService } from "src/app/services/file-upload.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import ProjectLinks from "src/app/project-links";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-overview",
@@ -49,6 +51,9 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     public droppedFile: File;
     public uploadFileLoading$: Observable<boolean>;
     public readonly UPLOAD_FILE_IMAGE = AppValues.UPLOAD_FILE_IMAGE;
+    public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
+    public readonly URL_PARAM_SET_TRANSFORM = ProjectLinks.URL_PARAM_SET_TRANSFORM;
+    public readonly URL_PARAM_ADD_PUSH_SOURCE = ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE;
 
     public currentState?: {
         schema: MaybeNull<DatasetSchema>;
@@ -68,16 +73,16 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     public ngOnInit(): void {
         this.uploadFileLoading$ = this.fileUploadService.isUploadFile;
-        this.trackSubscription(
-            this.datasetSubsService.overviewChanges.subscribe((overviewUpdate: OverviewUpdate) => {
+        this.datasetSubsService.overviewChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((overviewUpdate: OverviewUpdate) => {
                 this.currentState = {
                     schema: overviewUpdate.schema,
                     data: overviewUpdate.content,
                     size: overviewUpdate.size,
                     overview: overviewUpdate.overview,
                 };
-            }),
-        );
+            });
     }
 
     public showWebsite(url: string): void {
@@ -264,53 +269,31 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         modalRefInstance.datasetBasics = this.datasetBasics;
     }
 
-    public navigateToAddPollingSource(): void {
-        this.navigationService.navigateToAddPollingSource({
-            accountName: this.datasetBasics.owner.accountName,
-            datasetName: this.datasetBasics.name,
-        });
-    }
-
-    public navigateToAddPushSource(): void {
-        this.navigationService.navigateToAddPushSource({
-            accountName: this.datasetBasics.owner.accountName,
-            datasetName: this.datasetBasics.name,
-        });
-    }
-
-    public navigateToSetTransform(): void {
-        this.navigationService.navigateToSetTransform({
-            accountName: this.datasetBasics.owner.accountName,
-            datasetName: this.datasetBasics.name,
-        });
-    }
-
     public onAddReadme(): void {
         this.editingReadme = true;
     }
 
     public refreshNow(): void {
-        this.trackSubscription(
-            this.datasetFlowsService
-                .datasetTriggerFlow({
-                    datasetId: this.datasetBasics.id,
-                    datasetFlowType:
-                        this.datasetBasics.kind === DatasetKind.Root
-                            ? DatasetFlowType.Ingest
-                            : DatasetFlowType.ExecuteTransform,
-                })
-                .subscribe((success: boolean) => {
-                    if (success) {
-                        setTimeout(() => {
-                            this.navigationService.navigateToDatasetView({
-                                accountName: this.datasetBasics.owner.accountName,
-                                datasetName: this.datasetBasics.name,
-                                tab: DatasetViewTypeEnum.Flows,
-                            });
-                        }, AppValues.SIMULATION_START_CONDITION_DELAY_MS);
-                    }
-                }),
-        );
+        this.datasetFlowsService
+            .datasetTriggerFlow({
+                datasetId: this.datasetBasics.id,
+                datasetFlowType:
+                    this.datasetBasics.kind === DatasetKind.Root
+                        ? DatasetFlowType.Ingest
+                        : DatasetFlowType.ExecuteTransform,
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((success: boolean) => {
+                if (success) {
+                    setTimeout(() => {
+                        this.navigationService.navigateToDatasetView({
+                            accountName: this.datasetBasics.owner.accountName,
+                            datasetName: this.datasetBasics.name,
+                            tab: DatasetViewTypeEnum.Flows,
+                        });
+                    }, AppValues.SIMULATION_START_CONDITION_DELAY_MS);
+                }
+            });
     }
 
     public addData(): void {
@@ -323,7 +306,10 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         this.droppedFile = files[0];
         const fileSizeMb = this.droppedFile.size * Math.pow(10, -6);
         if (fileSizeMb <= this.configService.ingestUploadFileLimitMb) {
-            this.trackSubscription(this.fileUploadService.uploadFile(this.droppedFile, this.datasetBasics).subscribe());
+            this.fileUploadService
+                .uploadFile(this.droppedFile, this.datasetBasics)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe();
         } else {
             promiseWithCatch(
                 this.modalService.warning({

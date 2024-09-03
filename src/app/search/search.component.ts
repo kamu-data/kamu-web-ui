@@ -4,11 +4,11 @@ import { DatasetSearchResult, SearchFilters } from "../interface/search.interfac
 import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { BaseComponent } from "../common/base.component";
 import { NavigationService } from "../services/navigation.service";
-import { DatasetInfo } from "../interface/navigation.interface";
 import { requireValue } from "../common/app.helpers";
 import ProjectLinks from "../project-links";
 import { filter, map } from "rxjs/operators";
 import { Observable } from "rxjs";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-search",
@@ -135,14 +135,13 @@ export class SearchComponent extends BaseComponent implements OnInit {
 
         this.changePageAndSearch();
 
-        this.trackSubscriptions(
-            this.router.events
-                .pipe(
-                    filter((event) => event instanceof NavigationEnd),
-                    map((event) => event as RouterEvent),
-                )
-                .subscribe(() => this.changePageAndSearch()),
-        );
+        this.router.events
+            .pipe(
+                filter((event) => event instanceof NavigationEnd),
+                map((event) => event as RouterEvent),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(() => this.changePageAndSearch());
     }
 
     private changePageAndSearch(): void {
@@ -179,13 +178,6 @@ export class SearchComponent extends BaseComponent implements OnInit {
             return;
         }
         this.navigationService.navigateToSearch(this.searchValue, currentPage);
-    }
-
-    public onSelectDataset(data: DatasetInfo): void {
-        this.navigationService.navigateToDatasetView({
-            accountName: data.accountName,
-            datasetName: data.datasetName,
-        });
     }
 
     private onSearchDatasets(): void {

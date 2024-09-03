@@ -3,13 +3,13 @@
         <div class="dataset-list-container__title-row__dataset-name">
             <i *ngIf="row.kind === 'ROOT'" class="bi bi-journal-album"></i>
             <mat-icon *ngIf="row.kind === 'DERIVATIVE'">merge</mat-icon>
-            <button
+            <a
+                [routerLink]="['/', row.owner.accountName, row.name]"
                 attr.data-test-id="dataset-name-button-{{ rowIndex }}"
                 class="dataset-list-container__title mb-1 pl-0"
-                (click)="isClickableRow && onSelectDataset(row)"
             >
                 {{ row.owner.accountName }}/{{ row.name }}
-            </button>
+            </a>
         </div>
         <div>
             <ng-template #popTitle class="signed-commit__popup-header">
@@ -43,8 +43,8 @@
                     </span>
                 </div>
                 <div class="signed-commit-footer p-1">
-                    <span class="d-block"
-                        >GPG key ID: <span class="signed-commit-footer__id">7D279F791DB8E4F7</span></span
+                    <span class="d-block">
+                        GPG key ID: <span class="signed-commit-footer__id">7D279F791DB8E4F7</span></span
                     >
                     <a
                         href="https://docs.github.com/github/authenticating-to-github/displaying-verification-statuses-for-all-of-your-commits"

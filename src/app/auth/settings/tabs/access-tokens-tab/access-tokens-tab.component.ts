@@ -20,6 +20,7 @@ import { AccessTokenService } from "src/app/services/access-token.service";
 import { BaseComponent } from "src/app/common/base.component";
 import ProjectLinks from "src/app/project-links";
 import { CreateTokenFormType } from "./access-tokens-tab.types";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-access-tokens-tab",
@@ -101,11 +102,11 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
                 handler: (ok) => {
                     if (ok) {
                         this.deleteComposedToken();
-                        this.trackSubscription(
-                            this.accessTokenService
-                                .revokeAccessTokens(tokenId)
-                                .subscribe(() => this.updateTable(this.currentPage)),
-                        );
+
+                        this.accessTokenService
+                            .revokeAccessTokens(tokenId)
+                            .pipe(takeUntilDestroyed(this.destroyRef))
+                            .subscribe(() => this.updateTable(this.currentPage));
                     }
                 },
             }),
@@ -120,6 +121,7 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
     public onGenerateToken(): void {
         this.accessTokenService
             .createAccessTokens(this.account.id, this.createTokenForm.controls.name.value as string)
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((newToken: MaybeNull<CreatedAccessToken>) => {
                 if (newToken) {
                     this.deleteComposedToken();
@@ -165,20 +167,19 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
     }
 
     private updateTable(page: number): void {
-        this.trackSubscription(
-            this.accessTokenService
-                .listAccessTokens({
-                    accountId: this.account.id,
-                    page: page - 1,
-                    perPage: this.PER_PAGE,
-                })
-                .subscribe((result: AccessTokenConnection) => {
-                    this.dataSource.data = result.nodes;
-                    this.toggleTokens();
-                    this.dataSource.sort = this.sort;
-                    this.pageBasedInfo = result.pageInfo;
-                }),
-        );
+        this.accessTokenService
+            .listAccessTokens({
+                accountId: this.account.id,
+                page: page - 1,
+                perPage: this.PER_PAGE,
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((result: AccessTokenConnection) => {
+                this.dataSource.data = result.nodes;
+                this.toggleTokens();
+                this.dataSource.sort = this.sort;
+                this.pageBasedInfo = result.pageInfo;
+            });
     }
 
     public onPageChange(page: number): void {

@@ -19,6 +19,7 @@ import { Location } from "@angular/common";
 import { ModalMappingsComponent } from "../../interface/modal.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import { MaybeUndefined } from "src/app/common/app.types";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "modal",
@@ -45,12 +46,13 @@ export class ModalComponent extends BaseComponent implements OnInit {
     private location = inject(Location);
 
     ngOnInit() {
-        this.trackSubscription(
-            this.modalService.getCommand().subscribe((command: ModalCommandInterface) => {
+        this.modalService
+            .getCommand()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((command: ModalCommandInterface) => {
                 this._execute(command);
                 this.cdr.markForCheck();
-            }),
-        );
+            });
     }
 
     _execute(command: ModalCommandInterface) {

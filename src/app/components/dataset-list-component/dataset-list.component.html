@@ -15,10 +15,5 @@
     </div>
 </div>
 <div *ngFor="let row of dataSource; let rowIndex = index">
-    <app-dataset-list-item
-        [row]="row"
-        [rowIndex]="rowIndex"
-        [isClickableRow]="isClickableRow"
-        (selectDatasetEmit)="onSelectDataset($event)"
-    ></app-dataset-list-item>
+    <app-dataset-list-item [row]="row" [rowIndex]="rowIndex" [isClickableRow]="isClickableRow"></app-dataset-list-item>
 </div>

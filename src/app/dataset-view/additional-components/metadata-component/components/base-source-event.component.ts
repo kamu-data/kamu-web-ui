@@ -23,6 +23,7 @@ import {
     SourcesEvents,
     SupportedEvents,
 } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Injectable()
 export abstract class BaseSourceEventComponent extends BaseMainEventComponent implements OnInit {
@@ -69,24 +70,24 @@ export abstract class BaseSourceEventComponent extends BaseMainEventComponent im
                 ? this.changedEventYamlByHash
                 : this.selectSourceEvent(form, sourceEvent)),
             (instance.datasetInfo = this.getDatasetInfoFromUrl());
-        this.trackSubscription(
-            from(modalRef.result).subscribe((eventYaml: string) => {
+
+        from(modalRef.result)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((eventYaml: string) => {
                 this.changedEventYamlByHash = eventYaml;
-            }),
-        );
+            });
     }
 
     public saveSourceEvent(form: FormGroup, sourceEvent: SourcesEvents): void {
-        this.trackSubscription(
-            this.datasetCommitService
-                .commitEventToDataset({
-                    accountId: this.loggedUserService.currentlyLoggedInUser.id,
-                    accountName: this.getDatasetInfoFromUrl().accountName,
-                    datasetName: this.getDatasetInfoFromUrl().datasetName,
-                    event: this.selectSourceEvent(form, sourceEvent),
-                })
-                .subscribe(),
-        );
+        this.datasetCommitService
+            .commitEventToDataset({
+                accountId: this.loggedUserService.currentlyLoggedInUser.id,
+                accountName: this.getDatasetInfoFromUrl().accountName,
+                datasetName: this.getDatasetInfoFromUrl().datasetName,
+                event: this.selectSourceEvent(form, sourceEvent),
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe();
     }
 
     private selectSourceEvent(form: FormGroup, event: SourcesEvents): string {

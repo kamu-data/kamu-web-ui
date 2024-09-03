@@ -11,6 +11,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { DatasetListComponent } from "./dataset-list.component";
 import { MatSelectModule } from "@angular/material/select";
 import { AngularSvgIconModule } from "angular-svg-icon";
+import { RouterModule } from "@angular/router";
 
 @NgModule({
     imports: [
@@ -24,6 +25,7 @@ import { AngularSvgIconModule } from "angular-svg-icon";
         MatSelectModule,
         AngularSvgIconModule,
         DisplayTimeModule,
+        RouterModule,
     ],
     exports: [DatasetListComponent, DatasetListItemComponent],
     declarations: [DatasetListComponent, DatasetListItemComponent],

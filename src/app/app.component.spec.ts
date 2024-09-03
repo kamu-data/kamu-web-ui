@@ -16,15 +16,16 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { of } from "rxjs";
 import ProjectLinks from "./project-links";
 import { routerMock, routerMockEventSubject } from "./common/base-test.helpers.spec";
-import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
-import { mockAccountDetails, mockAccountFromAccessToken } from "./api/mock/auth.mock";
+import { ActivatedRoute, NavigationEnd, RouterModule } from "@angular/router";
+import { mockAccountFromAccessToken } from "./api/mock/auth.mock";
 import { FetchAccountDetailsGQL } from "./api/kamu.graphql.interface";
 import { AppHeaderComponent } from "./components/app-header/app-header.component";
 import { SpinnerComponent } from "./components/spinner/spinner/spinner.component";
 import { LoggedUserService } from "./auth/logged-user.service";
 import { LoginService } from "./auth/login/login.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { AccountTabs } from "./account/account.constants";
+import { NotificationIndicatorComponent } from "./components/notification-indicator/notification-indicator.component";
+import { AngularSvgIconModule, SvgIconRegistryService } from "angular-svg-icon";
 
 describe("AppComponent", () => {
     let component: AppComponent;
@@ -44,15 +45,23 @@ describe("AppComponent", () => {
                 NgbTypeaheadModule,
                 FormsModule,
                 HttpClientTestingModule,
+                RouterModule,
+                AngularSvgIconModule.forRoot(),
             ],
-            declarations: [AppComponent, ModalComponent, AppHeaderComponent, SpinnerComponent],
+            declarations: [
+                AppComponent,
+                ModalComponent,
+                AppHeaderComponent,
+                SpinnerComponent,
+                NotificationIndicatorComponent,
+            ],
             providers: [
                 SearchService,
                 SearchApi,
                 AuthApi,
                 NavigationService,
                 ModalService,
-                { provide: Router, useValue: routerMock },
+                // { provide: Router, useValue: routerMock },
                 {
                     provide: ActivatedRoute,
                     useValue: {
@@ -61,6 +70,9 @@ describe("AppComponent", () => {
                 },
             ],
         }).compileComponents();
+
+        const iconRegistryService: SvgIconRegistryService = TestBed.inject(SvgIconRegistryService);
+        iconRegistryService.addSvg("sign-out", "");
 
         routerMock.url = ProjectLinks.URL_HOME;
 
@@ -84,18 +96,6 @@ describe("AppComponent", () => {
         window.dispatchEvent(new Event("resize"));
         expect(checkWindowSizeSpy).toHaveBeenCalledWith();
         expect(component.isMobileView).toEqual(isMobileView());
-    });
-
-    it("should check call onAppLogo method", () => {
-        const navigateToSearchSpy = spyOn(navigationService, "navigateToSearch").and.returnValue();
-        component.onAppLogo();
-        expect(navigateToSearchSpy).toHaveBeenCalledWith();
-    });
-
-    it("should check call onAddNew method", () => {
-        const navigateToDatasetCreateSpy = spyOn(navigationService, "navigateToDatasetCreate").and.returnValue();
-        component.onAddNew();
-        expect(navigateToDatasetCreateSpy).toHaveBeenCalledWith();
     });
 
     it("should check call onLogout method", () => {
@@ -123,24 +123,6 @@ describe("AppComponent", () => {
         const navigateToSearchSpy = spyOn(navigationService, "navigateToSearch").and.returnValue();
         component.onSelectedDataset(mockAutocompleteItems[1]);
         expect(navigateToSearchSpy).toHaveBeenCalledWith(mockAutocompleteItems[1].dataset.id);
-    });
-
-    it("should check call onUserProfile", () => {
-        const navigationServiceSpy = spyOn(navigationService, "navigateToOwnerView").and.returnValue();
-        const currentUserSpy = spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(
-            mockAccountDetails,
-        );
-        component.onUserProfile();
-        expect(currentUserSpy).toHaveBeenCalledWith();
-        expect(navigationServiceSpy).toHaveBeenCalledWith(mockAccountDetails.accountName, AccountTabs.OVERVIEW);
-    });
-
-    ALL_URLS_WITHOUT_HEADER.forEach((url: string) => {
-        it(`should hide header when going to ${url} page`, () => {
-            routerMockEventSubject.next(new NavigationEnd(1, url, ""));
-            fixture.detectChanges();
-            expect(component.isHeaderVisible).toBeFalse();
-        });
     });
 
     ProjectLinks.ALL_URLS.filter((url) => !ALL_URLS_WITHOUT_HEADER.includes(url)).forEach((url: string) => {

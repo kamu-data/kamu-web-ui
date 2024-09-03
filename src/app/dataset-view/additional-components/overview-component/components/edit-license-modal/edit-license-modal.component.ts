@@ -16,6 +16,7 @@ import { DatasetCommitService } from "../../services/dataset-commit.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { finalize } from "rxjs";
 import { LicenseFormType } from "./edit-license-modal.types";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-edit-license-modal",
@@ -55,18 +56,19 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
     }
 
     public onEditLicense(): void {
-        this.trackSubscription(
-            this.datasetCommitService
-                .commitEventToDataset({
-                    accountId: this.loggedUserService.currentlyLoggedInUser.id,
-                    accountName: this.datasetBasics.owner.accountName,
-                    datasetName: this.datasetBasics.name,
-                    event: this.yamlEventService.buildYamlSetLicenseEvent(
-                        this.licenseForm.value as Omit<SetLicense, "__typename">,
-                    ),
-                })
-                .pipe(finalize(() => this.activeModal.close()))
-                .subscribe(),
-        );
+        this.datasetCommitService
+            .commitEventToDataset({
+                accountId: this.loggedUserService.currentlyLoggedInUser.id,
+                accountName: this.datasetBasics.owner.accountName,
+                datasetName: this.datasetBasics.name,
+                event: this.yamlEventService.buildYamlSetLicenseEvent(
+                    this.licenseForm.value as Omit<SetLicense, "__typename">,
+                ),
+            })
+            .pipe(
+                finalize(() => this.activeModal.close()),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe();
     }
 }

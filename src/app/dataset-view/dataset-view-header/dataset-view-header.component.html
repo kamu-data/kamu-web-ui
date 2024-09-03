@@ -3,15 +3,18 @@
         <h1 class="d-flex flex-wrap flex-items-center wb-break-word f3 text-normal align-items-center">
             <svg-icon name="repository"></svg-icon>
             <span class="author flex-self-stretch">
-                <a class="fw-bold" (click)="showOwnerPage()" data-test-id="show-owner-link">{{
+                <a class="fw-bold" [routerLink]="['/', datasetInfo.accountName]" data-test-id="show-owner-link">{{
                     datasetInfo.accountName
                 }}</a>
             </span>
             <span class="mx-1 flex-self-stretch color-fg-muted">/</span>
             <span class="mr-2 flex-self-stretch author">
-                <a class="fw-bold" (click)="showDatasetView()" data-test-id="show-dataset-link">{{
-                    datasetInfo.datasetName
-                }}</a>
+                <a
+                    class="fw-bold"
+                    [routerLink]="['/', datasetInfo.accountName, datasetInfo.datasetName]"
+                    data-test-id="show-dataset-link"
+                    >{{ datasetInfo.datasetName }}</a
+                >
             </span>
 
             <span></span><span class="label label--secondary v-align-middle mr-1">Public</span>

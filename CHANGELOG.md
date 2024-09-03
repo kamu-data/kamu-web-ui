@@ -8,11 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Fixed
 - Set consistent state with `force update` link
+### Changed
+- Replaced dataset names, account names, history blocks, settings vertical tabs to links
+- Replaced all trackSubscriptions with takeUntilDestroyed operator
 
 ## [0.26.0] - 2024-08-30
 ### Fixed
 - Disabled unused menu items for account settings
-- The file name for the file upload service may contain special characters.
+- The file name for the file upload service may contain special characters
 - Added form initialization for an existing configuration(Compaction tab)
 - Added typed forms for all application
 ### Changed

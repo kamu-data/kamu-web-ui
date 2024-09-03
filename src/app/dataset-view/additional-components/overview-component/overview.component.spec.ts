@@ -38,6 +38,7 @@ import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import AppValues from "src/app/common/app.values";
+import { RouterModule } from "@angular/router";
 
 describe("OverviewComponent", () => {
     let component: OverviewComponent;
@@ -78,6 +79,7 @@ describe("OverviewComponent", () => {
                 SharedTestModule,
                 ToastrModule.forRoot(),
                 MatIconModule,
+                RouterModule,
             ],
             providers: [Apollo],
         })
@@ -214,17 +216,6 @@ describe("OverviewComponent", () => {
         flush();
     }));
 
-    describe("AddPushSource", () => {
-        it("should navigate to create AddPushSource event page", () => {
-            const navigateToAddPushSourceSpy = spyOn(navigationService, "navigateToAddPushSource");
-            component.navigateToAddPushSource();
-            expect(navigateToAddPushSourceSpy).toHaveBeenCalledWith({
-                accountName: mockOverviewDataUpdate.overview.owner.accountName,
-                datasetName: mockOverviewDataUpdate.overview.name,
-            });
-        });
-    });
-
     describe("SetPollingSource", () => {
         it("should be possible to add polling source for root dataset and commit permissions", () => {
             // By default, we have a root dataset and commit permissions, and a ready polling source, swe reset it here
@@ -253,15 +244,6 @@ describe("OverviewComponent", () => {
             fixture.detectChanges();
 
             expect(component.canAddSetPollingSource).toBeFalse();
-        });
-
-        it("should navigate to create SetPollingSource event page", () => {
-            const navigateToAddPollingSourceSpy = spyOn(navigationService, "navigateToAddPollingSource");
-            component.navigateToAddPollingSource();
-            expect(navigateToAddPollingSourceSpy).toHaveBeenCalledWith({
-                accountName: mockOverviewDataUpdate.overview.owner.accountName,
-                datasetName: mockOverviewDataUpdate.overview.name,
-            });
         });
 
         it("should check refresh button is disabled when currentPollingSource=undefined=null ", () => {
@@ -330,15 +312,6 @@ describe("OverviewComponent", () => {
 
             const refreshButton = findElementByDataTestId(fixture, "refresh-now-button") as HTMLButtonElement;
             expect(refreshButton.disabled).toBeTrue();
-        });
-
-        it("should navigate to create SetTransform event page", () => {
-            const navigateToSetTransformSpy = spyOn(navigationService, "navigateToSetTransform");
-            component.navigateToSetTransform();
-            expect(navigateToSetTransformSpy).toHaveBeenCalledWith({
-                accountName: mockOverviewDataUpdate.overview.owner.accountName,
-                datasetName: mockOverviewDataUpdate.overview.name,
-            });
         });
 
         it("should check show Add data button without currentTransform", () => {

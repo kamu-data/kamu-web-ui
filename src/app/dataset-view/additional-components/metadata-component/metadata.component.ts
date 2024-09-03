@@ -22,10 +22,13 @@ import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "src/app/common/
 import { NavigationService } from "src/app/services/navigation.service";
 import _ from "lodash";
 import { ModalService } from "src/app/components/modal/modal.service";
+import ProjectLinks from "src/app/project-links";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-metadata",
     templateUrl: "./metadata.component.html",
+    styleUrls: ["./metadata.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataComponent extends BaseComponent implements OnInit {
@@ -49,20 +52,22 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         pageInfo: PageBasedInfo;
     };
 
+    public readonly URL_PARAM_SET_TRANSFORM = ProjectLinks.URL_PARAM_SET_TRANSFORM;
+
     private datasetSubsService = inject(DatasetSubscriptionsService);
     private navigationService = inject(NavigationService);
     private modalService = inject(ModalService);
 
     public ngOnInit() {
-        this.trackSubscription(
-            this.datasetSubsService.metadataSchemaChanges.subscribe((schemaUpdate: MetadataSchemaUpdate) => {
+        this.datasetSubsService.metadataSchemaChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((schemaUpdate: MetadataSchemaUpdate) => {
                 this.currentState = {
                     schema: schemaUpdate.schema,
                     metadataSummary: schemaUpdate.metadataSummary,
                     pageInfo: schemaUpdate.pageInfo,
                 };
-            }),
-        );
+            });
     }
 
     public onPageChange(currentPage: number): void {

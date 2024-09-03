@@ -1,10 +1,10 @@
 import { MaybeUndefined } from "src/app/common/app.types";
-import { NavigationService } from "../../services/navigation.service";
-import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { AccountExtendedFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { DataHelpers } from "src/app/common/data.helpers";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-overview-history-summary-header",
@@ -18,8 +18,8 @@ export class OverviewHistorySummaryHeaderComponent {
     @Input({ required: true }) public datasetName: string;
 
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
-
-    private navigationService = inject(NavigationService);
+    public readonly URL_BLOCK = ProjectLinks.URL_BLOCK;
+    public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 
     get systemTime(): string {
         return this.metadataBlockFragment ? this.metadataBlockFragment.systemTime : "";
@@ -37,21 +37,5 @@ export class OverviewHistorySummaryHeaderComponent {
 
     get descriptionForMetadataBlock(): string {
         return this.metadataBlockFragment ? DataHelpers.descriptionForMetadataBlock(this.metadataBlockFragment) : "";
-    }
-
-    public navigateToMetadataBlock(accountName: string, datasetName: string, blockHash: string): void {
-        this.navigationService.navigateToMetadataBlock({
-            accountName,
-            datasetName,
-            blockHash,
-        });
-    }
-
-    public navigateToHistory(accountName: string, datasetName: string): void {
-        this.navigationService.navigateToDatasetView({
-            accountName,
-            datasetName,
-            tab: DatasetViewTypeEnum.History,
-        });
     }
 }

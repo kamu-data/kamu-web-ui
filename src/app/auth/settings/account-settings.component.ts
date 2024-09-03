@@ -9,6 +9,7 @@ import AppValues from "src/app/common/app.values";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import { Observable } from "rxjs";
 import { LoggedUserService } from "../logged-user.service";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-settings",
@@ -28,11 +29,15 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
     private loggedUserService = inject(LoggedUserService);
 
     public ngOnInit(): void {
-        this.trackSubscription(
-            this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
+        this.router.events
+            .pipe(
+                filter((event) => event instanceof NavigationEnd),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(() => {
                 this.extractActiveTabFromRoute();
-            }),
-        );
+            });
+
         this.extractActiveTabFromRoute();
         this.user$ = this.loggedUserService.loggedInUserChanges;
     }

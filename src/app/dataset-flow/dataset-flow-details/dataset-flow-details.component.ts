@@ -23,6 +23,7 @@ import { DatasetFlowsService } from "src/app/dataset-view/additional-components/
 import { DataHelpers } from "src/app/common/data.helpers";
 import { BaseDatasetDataComponent } from "src/app/common/base-dataset-data.component";
 import { DatasetFlowTableHelpers } from "src/app/common/components/flows-table/flows-table.helpers";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-dataset-flow-details",
@@ -53,15 +54,17 @@ export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implem
             }),
             shareReplay(),
         );
-        this.trackSubscription(
-            this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
+
+        this.router.events
+            .pipe(filter((event) => event instanceof NavigationEnd))
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
                 this.extractActiveTabFromRoute();
-            }),
-        );
+            });
 
         this.extractActiveTabFromRoute();
         this.extractFlowIdFromRoute();
-        this.trackSubscriptions(this.loadDatasetBasicDataWithPermissions());
+        this.loadDatasetBasicDataWithPermissions();
         this.datasetFlowDetails$ = timer(0, 5000).pipe(
             switchMap(() => this.datasetViewMenuData$),
             switchMap((data: ViewMenuData) => {
@@ -114,7 +117,10 @@ export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implem
     }
 
     private loadDatasetBasicDataWithPermissions(): Subscription {
-        return this.datasetService.requestDatasetBasicDataWithPermissions(this.getDatasetInfoFromUrl()).subscribe();
+        return this.datasetService
+            .requestDatasetBasicDataWithPermissions(this.getDatasetInfoFromUrl())
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe();
     }
 
     public flowTypeDescription(flow: FlowSummaryDataFragment): string {

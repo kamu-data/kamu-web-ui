@@ -7,6 +7,7 @@ import { BaseComponent } from "src/app/common/base.component";
 import { noWhitespaceValidator } from "src/app/common/data.helpers";
 import { DatasetEvnironmentVariablesService } from "src/app/services/dataset-evnironment-variables.service";
 import { EnvAndSecretsFormType } from "./edit-key-value-modal.types";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-edit-key-value-modal",
@@ -53,33 +54,31 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
 
     public onEditRow(): void {
         if (!this.row) {
-            this.trackSubscription(
-                this.evnironmentVariablesService
-                    .saveEnvVariable({
-                        accountId: this.datasetBasics.owner.id,
-                        datasetId: this.datasetBasics.id,
-                        key: this.keyControl.value ?? "",
-                        value: this.exposedValue ? this.exposedValue : this.keyValueForm.controls.value.value ?? "",
-                        isSecret: this.keyValueForm.controls.isSecret.value ? true : false,
-                    })
-                    .subscribe(() => {
-                        this.activeModal.close("Success");
-                    }),
-            );
+            this.evnironmentVariablesService
+                .saveEnvVariable({
+                    accountId: this.datasetBasics.owner.id,
+                    datasetId: this.datasetBasics.id,
+                    key: this.keyControl.value ?? "",
+                    value: this.exposedValue ? this.exposedValue : this.keyValueForm.controls.value.value ?? "",
+                    isSecret: this.keyValueForm.controls.isSecret.value ? true : false,
+                })
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe(() => {
+                    this.activeModal.close("Success");
+                });
         } else {
-            this.trackSubscription(
-                this.evnironmentVariablesService
-                    .modifyEnvVariable({
-                        accountId: this.datasetBasics.owner.id,
-                        datasetId: this.datasetBasics.id,
-                        id: this.row.id,
-                        newValue: this.keyValueForm.controls.value.value ?? "",
-                        isSecret: this.keyValueForm.controls.isSecret.value ? true : false,
-                    })
-                    .subscribe(() => {
-                        this.activeModal.close("Success");
-                    }),
-            );
+            this.evnironmentVariablesService
+                .modifyEnvVariable({
+                    accountId: this.datasetBasics.owner.id,
+                    datasetId: this.datasetBasics.id,
+                    id: this.row.id,
+                    newValue: this.keyValueForm.controls.value.value ?? "",
+                    isSecret: this.keyValueForm.controls.isSecret.value ? true : false,
+                })
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe(() => {
+                    this.activeModal.close("Success");
+                });
         }
     }
 
@@ -97,20 +96,19 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
 
     private fetchExposedValue(): void {
         if (this.row?.isSecret) {
-            this.trackSubscription(
-                this.evnironmentVariablesService
-                    .exposedEnvVariableValue({
-                        accountName: this.datasetBasics.owner.accountName,
-                        datasetName: this.datasetBasics.name,
-                        datasetEnvVarId: this.row?.id,
-                    })
-                    .subscribe((data) => {
-                        this.exposedValue = data;
-                        this.keyValueForm.patchValue({
-                            value: this.exposedValue,
-                        });
-                    }),
-            );
+            this.evnironmentVariablesService
+                .exposedEnvVariableValue({
+                    accountName: this.datasetBasics.owner.accountName,
+                    datasetName: this.datasetBasics.name,
+                    datasetEnvVarId: this.row?.id,
+                })
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe((data) => {
+                    this.exposedValue = data;
+                    this.keyValueForm.patchValue({
+                        value: this.exposedValue,
+                    });
+                });
         }
     }
 

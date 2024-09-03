@@ -3,6 +3,7 @@ import { DatasetByIdQuery } from "../../../../../../../api/kamu.graphql.interfac
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-block-interval-property",
@@ -17,13 +18,14 @@ export class BlockIntervalPropertyComponent extends BasePropertyComponent implem
     private datasetService = inject(DatasetService);
 
     ngOnInit(): void {
-        this.trackSubscription(
-            this.datasetService.requestDatasetInfoById(this.data.datasetId).subscribe((dataset: DatasetByIdQuery) => {
+        this.datasetService
+            .requestDatasetInfoById(this.data.datasetId)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((dataset: DatasetByIdQuery) => {
                 if (dataset.datasets.byId) {
                     this.datasetInfo.accountName = dataset.datasets.byId.owner.accountName;
                     this.datasetInfo.datasetName = dataset.datasets.byId.name;
                 }
-            }),
-        );
+            });
     }
 }

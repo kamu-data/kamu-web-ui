@@ -18,6 +18,7 @@ import { from } from "rxjs";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { SettingsTabsEnum } from "../../dataset-settings.model";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 export interface EnvVariableElement {
     key: string;
@@ -66,16 +67,16 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
         if (envVar) {
             modalRefInstance.row = envVar;
         }
-        this.trackSubscription(
-            from(modalRef.result).subscribe(
+        from(modalRef.result)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(
                 (result: string) => {
                     if (result === "Success") {
                         this.updateTable(this.currentPage);
                     }
                 },
                 () => null,
-            ),
-        );
+            );
     }
 
     public applyFilter(search: string): void {
@@ -113,20 +114,19 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
     }
 
     private updateTable(page: number): void {
-        this.trackSubscription(
-            this.evnironmentVariablesService
-                .listEnvVariables({
-                    accountName: this.datasetBasics.owner.accountName,
-                    datasetName: this.datasetBasics.name,
-                    page: page - 1,
-                    perPage: this.PER_PAGE,
-                })
-                .subscribe((result: ViewDatasetEnvVarConnection) => {
-                    this.dataSource.data = result.nodes;
-                    this.dataSource.sort = this.sort;
-                    this.pageBasedInfo = result.pageInfo;
-                }),
-        );
+        this.evnironmentVariablesService
+            .listEnvVariables({
+                accountName: this.datasetBasics.owner.accountName,
+                datasetName: this.datasetBasics.name,
+                page: page - 1,
+                perPage: this.PER_PAGE,
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((result: ViewDatasetEnvVarConnection) => {
+                this.dataSource.data = result.nodes;
+                this.dataSource.sort = this.sort;
+                this.pageBasedInfo = result.pageInfo;
+            });
     }
 
     public onPageChange(page: number): void {

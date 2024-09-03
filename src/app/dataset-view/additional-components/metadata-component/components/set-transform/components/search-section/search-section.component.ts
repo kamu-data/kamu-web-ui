@@ -15,6 +15,7 @@ import { DatasetNode } from "../../set-transform.types";
 import { BaseComponent } from "src/app/common/base.component";
 import { parseCurrentSchema } from "src/app/common/app.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-search-section",
@@ -57,8 +58,11 @@ export class SearchSectionComponent extends BaseComponent {
         });
         if (value.__typename !== TypeNames.allDataType && !this.inputDatasets.has(inputDataset)) {
             this.inputDatasets.add(inputDataset);
-            this.trackSubscription(
-                this.datasetService.requestDatasetSchema(id).subscribe((data: GetDatasetSchemaQuery) => {
+
+            this.datasetService
+                .requestDatasetSchema(id)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe((data: GetDatasetSchemaQuery) => {
                     if (data.datasets.byId) {
                         const owner = (data.datasets.byId as DatasetBasicsFragment).owner.accountName;
                         const schema: MaybeNull<DatasetSchema> = parseCurrentSchema(
@@ -71,8 +75,7 @@ export class SearchSectionComponent extends BaseComponent {
                         });
                         this.dataSource.data = this.TREE_DATA;
                     }
-                }),
-            );
+                });
         }
     }
 

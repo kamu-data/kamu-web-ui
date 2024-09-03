@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { DatasetCreateService } from "./dataset-create.service";
 import { Observable } from "rxjs";
 import { LoggedUserService } from "../auth/logged-user.service";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-dataset-create",
@@ -86,12 +87,18 @@ export class DatasetCreateComponent extends BaseComponent {
     private createDatasetFromForm(): void {
         const kind = this.kindMapper[this.createDatasetForm.controls.kind.value as string];
         const datasetName = this.createDatasetForm.controls.datasetName.value as string;
-        this.trackSubscription(this.datasetCreateService.createEmptyDataset(kind, datasetName).subscribe());
+        this.datasetCreateService
+            .createEmptyDataset(kind, datasetName)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe();
     }
 
     private createDatasetFromSnapshot(): void {
         if (this.yamlTemplate) {
-            this.trackSubscription(this.datasetCreateService.createDatasetFromSnapshot(this.yamlTemplate).subscribe());
+            this.datasetCreateService
+                .createDatasetFromSnapshot(this.yamlTemplate)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe();
         }
     }
 

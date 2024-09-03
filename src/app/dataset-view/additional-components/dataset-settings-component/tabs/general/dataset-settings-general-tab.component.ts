@@ -89,16 +89,15 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
         const datasetId = this.datasetBasics.id;
         const accountName = this.datasetBasics.owner.accountName;
         const accountId = this.datasetBasics.owner.id;
-        this.trackSubscription(
-            this.datasetSettingsService
-                .renameDataset({
-                    accountId,
-                    accountName,
-                    datasetId,
-                    newName: this.datasetNameControl.value as string,
-                })
-                .subscribe(),
-        );
+        this.datasetSettingsService
+            .renameDataset({
+                accountId,
+                accountName,
+                datasetId,
+                newName: this.datasetNameControl.value as string,
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe();
     }
 
     public deleteDataset(): void {
@@ -112,9 +111,10 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                 noButtonText: "Cancel",
                 handler: (ok) => {
                     if (ok) {
-                        this.trackSubscription(
-                            this.datasetSettingsService.deleteDataset(accountId, datasetId).subscribe(),
-                        );
+                        this.datasetSettingsService
+                            .deleteDataset(accountId, datasetId)
+                            .pipe(takeUntilDestroyed(this.destroyRef))
+                            .subscribe();
                     }
                 },
             }),

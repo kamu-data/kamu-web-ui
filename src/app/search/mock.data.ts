@@ -881,6 +881,7 @@ export const mockCreateEmptyDatasetResponse: CreateEmptyDatasetMutation = {
         createEmpty: {
             __typename: "CreateDatasetResultSuccess",
             message: "Success",
+            dataset: mockDatasetBasicsDerivedFragment,
         },
     },
 };
@@ -890,6 +891,8 @@ export const mockCreateEmptyDatasetNameCollisionResponse: CreateEmptyDatasetMuta
         createEmpty: {
             __typename: "CreateDatasetResultNameCollision",
             message: "Dataset with name 'my-test' already exists",
+            accountName: "mockAccountName",
+            datasetName: "mockDatasetName",
         },
     },
 };

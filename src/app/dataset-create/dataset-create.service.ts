@@ -2,6 +2,7 @@ import {
     AccountFragment,
     CreateDatasetFromSnapshotMutation,
     CreateEmptyDatasetMutation,
+    DatasetVisibility,
 } from "../api/kamu.graphql.interface";
 import { Observable, Subject } from "rxjs";
 import { DatasetApi } from "src/app/api/dataset.api";
@@ -32,15 +33,19 @@ export class DatasetCreateService {
     private loggedUserService = inject(LoggedUserService);
     private navigationService = inject(NavigationService);
 
-    public createEmptyDataset(datasetKind: DatasetKind, datasetName: string): Observable<void> {
+    public createEmptyDataset(params: {
+        datasetKind: DatasetKind;
+        datasetAlias: string;
+        datasetVisibility: DatasetVisibility;
+    }): Observable<void> {
         const loggedUser: MaybeNull<AccountFragment> = this.loggedUserService.maybeCurrentlyLoggedInUser;
         if (loggedUser) {
-            return this.datasetApi.createEmptyDataset(datasetKind, datasetName).pipe(
+            return this.datasetApi.createEmptyDataset(params).pipe(
                 map((data: CreateEmptyDatasetMutation) => {
                     if (data.datasets.createEmpty.__typename === "CreateDatasetResultSuccess") {
                         this.navigationService.navigateToDatasetView({
                             accountName: loggedUser.accountName,
-                            datasetName,
+                            datasetName: params.datasetAlias,
                             tab: DatasetViewTypeEnum.Overview,
                         });
                     } else {
@@ -53,10 +58,13 @@ export class DatasetCreateService {
         }
     }
 
-    public createDatasetFromSnapshot(snapshot: string): Observable<void> {
+    public createDatasetFromSnapshot(params: {
+        snapshot: string;
+        datasetVisibility: DatasetVisibility;
+    }): Observable<void> {
         const loggedUser: MaybeNull<AccountFragment> = this.loggedUserService.maybeCurrentlyLoggedInUser;
         if (loggedUser) {
-            return this.datasetApi.createDatasetFromSnapshot(snapshot).pipe(
+            return this.datasetApi.createDatasetFromSnapshot(params).pipe(
                 map((data: CreateDatasetFromSnapshotMutation) => {
                     if (data.datasets.createFromSnapshot.__typename === "CreateDatasetResultSuccess") {
                         const datasetName = data.datasets.createFromSnapshot.dataset.name;

@@ -1,7 +1,22 @@
-mutation createEmptyDataset($datasetKind: DatasetKind!, $datasetAlias: DatasetAlias!) {
+mutation createEmptyDataset(
+  $datasetKind: DatasetKind!
+  $datasetAlias: DatasetAlias!
+  $datasetVisibility: DatasetVisibility
+) {
   datasets {
-    createEmpty(datasetKind: $datasetKind, datasetAlias: $datasetAlias) {
-      message
+    createEmpty(datasetKind: $datasetKind, datasetAlias: $datasetAlias, datasetVisibility: $datasetVisibility) {
+      ... on CreateDatasetResultSuccess {
+        dataset {
+          ...DatasetBasics
+        }
+        message
+      }
+
+      ... on CreateDatasetResultNameCollision {
+        message
+        accountName
+        datasetName
+      }
     }
   }
 }

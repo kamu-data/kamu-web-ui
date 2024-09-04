@@ -43,6 +43,7 @@ import {
     DatasetKind,
     DatasetsByAccountNameDocument,
     DatasetsByAccountNameQuery,
+    DatasetVisibility,
     DeleteDatasetDocument,
     DeleteDatasetMutation,
     GetDatasetBasicsWithPermissionsDocument,
@@ -385,7 +386,11 @@ describe("DatasetApi", () => {
         it(`should create empty ${datasetKind} dataset`, fakeAsync(() => {
             const mockDatasetAlias = "my-test";
             const subscription$ = service
-                .createEmptyDataset(datasetKind, mockDatasetAlias)
+                .createEmptyDataset({
+                    datasetKind,
+                    datasetAlias: mockDatasetAlias,
+                    datasetVisibility: DatasetVisibility.Public,
+                })
                 .pipe(first())
                 .subscribe((res: CreateEmptyDatasetMutation) => {
                     expect(res.datasets.createEmpty.__typename).toEqual("CreateDatasetResultSuccess");
@@ -408,7 +413,7 @@ describe("DatasetApi", () => {
     it("should create dataset from snapshot", fakeAsync(() => {
         const mockSnapshot = "snapshot";
         const subscription = service
-            .createDatasetFromSnapshot(mockSnapshot)
+            .createDatasetFromSnapshot({ snapshot: mockSnapshot, datasetVisibility: DatasetVisibility.Public })
             .pipe(first())
             .subscribe((res: CreateDatasetFromSnapshotMutation) => {
                 expect(res.datasets.createFromSnapshot.__typename).toEqual("CreateDatasetResultSuccess");
@@ -416,6 +421,7 @@ describe("DatasetApi", () => {
 
         const op = controller.expectOne(CreateDatasetFromSnapshotDocument);
         expect(op.operation.variables.snapshot).toEqual(mockSnapshot);
+        expect(op.operation.variables.datasetVisibility).toEqual(DatasetVisibility.Public);
         op.flush({
             data: mockCreateDatasetFromSnapshotResponse,
         });
@@ -525,14 +531,21 @@ describe("DatasetApi", () => {
             operationName: "createEmpty",
             expectedGqlQuery: CreateEmptyDatasetDocument,
             action: (): Observable<unknown> => {
-                return service.createEmptyDataset(DatasetKind.Root, MOCK_NEW_DATASET_NAME);
+                return service.createEmptyDataset({
+                    datasetKind: DatasetKind.Root,
+                    datasetAlias: MOCK_NEW_DATASET_NAME,
+                    datasetVisibility: DatasetVisibility.Public,
+                });
             },
         },
         {
             operationName: "createFromSnapshot",
             expectedGqlQuery: CreateDatasetFromSnapshotDocument,
             action: (): Observable<unknown> => {
-                return service.createDatasetFromSnapshot("someSnapshot");
+                return service.createDatasetFromSnapshot({
+                    snapshot: "someSnapshot",
+                    datasetVisibility: DatasetVisibility.Public,
+                });
             },
         },
         {

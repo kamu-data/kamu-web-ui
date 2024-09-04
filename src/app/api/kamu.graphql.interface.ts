@@ -791,6 +791,11 @@ export type DatasetPermissions = {
     canView: Scalars["Boolean"];
 };
 
+export enum DatasetVisibility {
+    Private = "PRIVATE",
+    Public = "PUBLIC",
+}
+
 export type Datasets = {
     __typename?: "Datasets";
     /** Returns datasets belonging to the specified account */
@@ -841,9 +846,11 @@ export type DatasetsMutByIdArgs = {
 export type DatasetsMutCreateEmptyArgs = {
     datasetAlias: Scalars["DatasetAlias"];
     datasetKind: DatasetKind;
+    datasetVisibility?: InputMaybe<DatasetVisibility>;
 };
 
 export type DatasetsMutCreateFromSnapshotArgs = {
+    datasetVisibility?: InputMaybe<DatasetVisibility>;
     snapshot: Scalars["String"];
     snapshotFormat: MetadataManifestFormat;
 };
@@ -2493,6 +2500,7 @@ export type CommitEventToDatasetMutation = {
 export type CreateEmptyDatasetMutationVariables = Exact<{
     datasetKind: DatasetKind;
     datasetAlias: Scalars["DatasetAlias"];
+    datasetVisibility?: InputMaybe<DatasetVisibility>;
 }>;
 
 export type CreateEmptyDatasetMutation = {
@@ -2500,13 +2508,23 @@ export type CreateEmptyDatasetMutation = {
     datasets: {
         __typename?: "DatasetsMut";
         createEmpty:
-            | { __typename?: "CreateDatasetResultNameCollision"; message: string }
-            | { __typename?: "CreateDatasetResultSuccess"; message: string };
+            | {
+                  __typename?: "CreateDatasetResultNameCollision";
+                  message: string;
+                  accountName?: string | null;
+                  datasetName: string;
+              }
+            | {
+                  __typename?: "CreateDatasetResultSuccess";
+                  message: string;
+                  dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+              };
     };
 };
 
 export type CreateDatasetFromSnapshotMutationVariables = Exact<{
     snapshot: Scalars["String"];
+    datasetVisibility?: InputMaybe<DatasetVisibility>;
 }>;
 
 export type CreateDatasetFromSnapshotMutation = {
@@ -2515,8 +2533,13 @@ export type CreateDatasetFromSnapshotMutation = {
         __typename?: "DatasetsMut";
         createFromSnapshot:
             | { __typename?: "CreateDatasetResultInvalidSnapshot"; message: string }
-            | { __typename?: "CreateDatasetResultMissingInputs"; message: string }
-            | { __typename?: "CreateDatasetResultNameCollision"; message: string }
+            | { __typename?: "CreateDatasetResultMissingInputs"; missingInputs: Array<string>; message: string }
+            | {
+                  __typename?: "CreateDatasetResultNameCollision";
+                  message: string;
+                  accountName?: string | null;
+                  datasetName: string;
+              }
             | {
                   __typename?: "CreateDatasetResultSuccess";
                   message: string;
@@ -5711,13 +5734,28 @@ export class CommitEventToDatasetGQL extends Apollo.Mutation<
     }
 }
 export const CreateEmptyDatasetDocument = gql`
-    mutation createEmptyDataset($datasetKind: DatasetKind!, $datasetAlias: DatasetAlias!) {
+    mutation createEmptyDataset(
+        $datasetKind: DatasetKind!
+        $datasetAlias: DatasetAlias!
+        $datasetVisibility: DatasetVisibility
+    ) {
         datasets {
-            createEmpty(datasetKind: $datasetKind, datasetAlias: $datasetAlias) {
-                message
+            createEmpty(datasetKind: $datasetKind, datasetAlias: $datasetAlias, datasetVisibility: $datasetVisibility) {
+                ... on CreateDatasetResultSuccess {
+                    dataset {
+                        ...DatasetBasics
+                    }
+                    message
+                }
+                ... on CreateDatasetResultNameCollision {
+                    message
+                    accountName
+                    datasetName
+                }
             }
         }
     }
+    ${DatasetBasicsFragmentDoc}
 `;
 
 @Injectable({
@@ -5734,14 +5772,32 @@ export class CreateEmptyDatasetGQL extends Apollo.Mutation<
     }
 }
 export const CreateDatasetFromSnapshotDocument = gql`
-    mutation createDatasetFromSnapshot($snapshot: String!) {
+    mutation createDatasetFromSnapshot($snapshot: String!, $datasetVisibility: DatasetVisibility) {
         datasets {
-            createFromSnapshot(snapshot: $snapshot, snapshotFormat: YAML) {
-                message
+            createFromSnapshot(snapshot: $snapshot, snapshotFormat: YAML, datasetVisibility: $datasetVisibility) {
                 ... on CreateDatasetResultSuccess {
                     dataset {
                         ...DatasetBasics
                     }
+                    message
+                }
+                ... on CreateDatasetResultNameCollision {
+                    message
+                    accountName
+                    datasetName
+                }
+                ... on CreateDatasetResultInvalidSnapshot {
+                    message
+                }
+                ... on CreateDatasetResultMissingInputs {
+                    missingInputs
+                    message
+                }
+                ... on MetadataManifestMalformed {
+                    message
+                }
+                ... on MetadataManifestUnsupportedVersion {
+                    message
                 }
             }
         }

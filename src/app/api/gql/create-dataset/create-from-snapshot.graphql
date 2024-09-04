@@ -1,11 +1,34 @@
-mutation createDatasetFromSnapshot($snapshot: String!) {
+mutation createDatasetFromSnapshot($snapshot: String!, $datasetVisibility: DatasetVisibility) {
   datasets {
-    createFromSnapshot(snapshot: $snapshot, snapshotFormat: YAML) {
-      message
+    createFromSnapshot(snapshot: $snapshot, snapshotFormat: YAML, datasetVisibility: $datasetVisibility) {
       ... on CreateDatasetResultSuccess {
         dataset {
           ...DatasetBasics
         }
+        message
+      }
+
+      ... on CreateDatasetResultNameCollision {
+        message
+        accountName
+        datasetName
+      }
+
+      ... on CreateDatasetResultInvalidSnapshot {
+        message
+      }
+
+      ... on CreateDatasetResultMissingInputs {
+        missingInputs
+        message
+      }
+
+      ... on MetadataManifestMalformed {
+        message
+      }
+
+      ... on MetadataManifestUnsupportedVersion {
+        message
       }
     }
   }

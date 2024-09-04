@@ -6,10 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Fixed
+- Set consistent state with `force update` link
+- Updated overview tab in real time when the flow is finished
 ### Changed
 - Replaced dataset names, account names, history blocks, settings vertical tabs to links
-### Fixed
-- Updated overview tab in real time when the flow is finished
+- Replaced all trackSubscriptions with takeUntilDestroyed operator
+
 
 ## [0.26.0] - 2024-08-30
 ### Fixed

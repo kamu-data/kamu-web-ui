@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { NavigationEnd, Router } from "@angular/router";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
@@ -14,13 +14,14 @@ import { ReplaySubject, Subject, of } from "rxjs";
 import { LineageGraphNodeData, LineageGraphNodeKind } from "./additional-components/lineage-component/lineage-model";
 import _ from "lodash";
 import { BaseDatasetDataComponent } from "../common/base-dataset-data.component";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-dataset",
     templateUrl: "./dataset.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DatasetComponent extends BaseDatasetDataComponent implements OnInit, OnDestroy {
+export class DatasetComponent extends BaseDatasetDataComponent implements OnInit {
     public datasetBasics: MaybeUndefined<DatasetBasicsFragment>;
     public datasetInfo: DatasetInfo;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
@@ -38,17 +39,20 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
         this.initDatasetViewByType(urlDatasetInfo, this.getCurrentPageFromUrl());
         this.requestMainData(urlDatasetInfo);
 
-        this.trackSubscriptions(
-            this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
+        this.router.events
+            .pipe(filter((event) => event instanceof NavigationEnd))
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
                 this.initDatasetViewByType(this.getDatasetInfoFromUrl(), this.getCurrentPageFromUrl());
                 this.requestMainDataIfChanged();
-            }),
-            this.datasetService.datasetChanges.subscribe((basics: DatasetBasicsFragment) => {
+            });
+        this.datasetService.datasetChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((basics: DatasetBasicsFragment) => {
                 this.datasetBasics = basics;
                 this.datasetInfo = { accountName: basics.owner.accountName, datasetName: basics.name };
                 this.cdr.markForCheck();
-            }),
-        );
+            });
 
         this.datasetPermissions$ = this.datasetSubsService.permissionsChanges;
     }
@@ -66,16 +70,15 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
     }
 
     public requestMainData(datasetInfo: DatasetInfo): void {
-        this.trackSubscription(
-            this.datasetService
-                .requestDatasetMainData(datasetInfo)
-                .pipe(
-                    tap(() => {
-                        this.mainDatasetQueryComplete$.next(datasetInfo);
-                    }),
-                )
-                .subscribe(),
-        );
+        this.datasetService
+            .requestDatasetMainData(datasetInfo)
+            .pipe(
+                tap(() => {
+                    this.mainDatasetQueryComplete$.next(datasetInfo);
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe();
     }
 
     public onPageChange(currentPage: number): void {
@@ -109,74 +112,68 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
     }
 
     private initFlowsTab(datasetInfo: DatasetInfo): void {
-        this.trackSubscription(
-            this.mainDatasetQueryComplete$
-                .pipe(
-                    filter(
-                        (info: DatasetInfo) =>
-                            info.accountName === datasetInfo.accountName &&
-                            info.datasetName === datasetInfo.datasetName,
-                    ),
-                    first(),
-                    switchMap(() => this.datasetPermissions$.pipe(first())),
-                )
-                .subscribe((datasetPermissions: DatasetPermissionsFragment) => {
-                    if (this.datasetPermissionsServices.shouldAllowFlowsTab(datasetPermissions)) {
-                        this.datasetViewType = DatasetViewTypeEnum.Flows;
-                    } else {
-                        this.datasetViewType = DatasetViewTypeEnum.Overview;
-                    }
-                    this.cdr.detectChanges();
-                }),
-        );
+        this.mainDatasetQueryComplete$
+            .pipe(
+                filter(
+                    (info: DatasetInfo) =>
+                        info.accountName === datasetInfo.accountName && info.datasetName === datasetInfo.datasetName,
+                ),
+                first(),
+                switchMap(() => this.datasetPermissions$.pipe(first())),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe((datasetPermissions: DatasetPermissionsFragment) => {
+                if (this.datasetPermissionsServices.shouldAllowFlowsTab(datasetPermissions)) {
+                    this.datasetViewType = DatasetViewTypeEnum.Flows;
+                } else {
+                    this.datasetViewType = DatasetViewTypeEnum.Overview;
+                }
+                this.cdr.detectChanges();
+            });
     }
 
     private initHistoryTab(datasetInfo: DatasetInfo, currentPage: number): void {
         this.datasetViewType = DatasetViewTypeEnum.History;
 
-        this.trackSubscription(
-            this.mainDatasetQueryComplete$
-                .pipe(
-                    filter(
-                        (info: DatasetInfo) =>
-                            info.accountName === datasetInfo.accountName &&
-                            info.datasetName === datasetInfo.datasetName,
-                    ),
-                    first(),
-                    switchMap((info: DatasetInfo) => {
-                        if (this.datasetViewType === DatasetViewTypeEnum.History) {
-                            return this.datasetService.requestDatasetHistory(info, 20, currentPage - 1);
-                        } else {
-                            return of();
-                        }
-                    }),
-                )
-                .subscribe(),
-        );
+        this.mainDatasetQueryComplete$
+            .pipe(
+                filter(
+                    (info: DatasetInfo) =>
+                        info.accountName === datasetInfo.accountName && info.datasetName === datasetInfo.datasetName,
+                ),
+                first(),
+                switchMap((info: DatasetInfo) => {
+                    if (this.datasetViewType === DatasetViewTypeEnum.History) {
+                        return this.datasetService.requestDatasetHistory(info, 20, currentPage - 1);
+                    } else {
+                        return of();
+                    }
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe();
     }
 
     private initLineageTab(datasetInfo: DatasetInfo): void {
         this.datasetViewType = DatasetViewTypeEnum.Lineage;
 
-        this.trackSubscription(
-            this.mainDatasetQueryComplete$
-                .pipe(
-                    filter(
-                        (info: DatasetInfo) =>
-                            info.accountName === datasetInfo.accountName &&
-                            info.datasetName === datasetInfo.datasetName,
-                    ),
-                    first(),
-                    switchMap((info) => {
-                        if (this.datasetViewType === DatasetViewTypeEnum.Lineage) {
-                            return this.datasetService.requestDatasetLineage(info);
-                        } else {
-                            return of();
-                        }
-                    }),
-                )
-                .subscribe(),
-        );
+        this.mainDatasetQueryComplete$
+            .pipe(
+                filter(
+                    (info: DatasetInfo) =>
+                        info.accountName === datasetInfo.accountName && info.datasetName === datasetInfo.datasetName,
+                ),
+                first(),
+                switchMap((info) => {
+                    if (this.datasetViewType === DatasetViewTypeEnum.Lineage) {
+                        return this.datasetService.requestDatasetLineage(info);
+                    } else {
+                        return of();
+                    }
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe();
     }
 
     public initDiscussionsTab(): void {
@@ -189,26 +186,24 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
     }
 
     public initSettingsTab(datasetInfo: DatasetInfo): void {
-        this.trackSubscription(
-            this.mainDatasetQueryComplete$
-                .pipe(
-                    filter(
-                        (info: DatasetInfo) =>
-                            info.accountName === datasetInfo.accountName &&
-                            info.datasetName === datasetInfo.datasetName,
-                    ),
-                    first(),
-                    switchMap(() => this.datasetPermissions$.pipe(first())),
-                )
-                .subscribe((datasetPermissions: DatasetPermissionsFragment) => {
-                    if (this.datasetPermissionsServices.shouldAllowSettingsTab(datasetPermissions)) {
-                        this.datasetViewType = DatasetViewTypeEnum.Settings;
-                    } else {
-                        this.datasetViewType = DatasetViewTypeEnum.Overview;
-                    }
-                    this.cdr.detectChanges();
-                }),
-        );
+        this.mainDatasetQueryComplete$
+            .pipe(
+                filter(
+                    (info: DatasetInfo) =>
+                        info.accountName === datasetInfo.accountName && info.datasetName === datasetInfo.datasetName,
+                ),
+                first(),
+                switchMap(() => this.datasetPermissions$.pipe(first())),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe((datasetPermissions: DatasetPermissionsFragment) => {
+                if (this.datasetPermissionsServices.shouldAllowSettingsTab(datasetPermissions)) {
+                    this.datasetViewType = DatasetViewTypeEnum.Settings;
+                } else {
+                    this.datasetViewType = DatasetViewTypeEnum.Overview;
+                }
+                this.cdr.detectChanges();
+            });
     }
 
     public selectTopic(topicName: string): void {
@@ -286,6 +281,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
                 finalize(() => {
                     this.sqlLoading = false;
                 }),
+                takeUntilDestroyed(this.destroyRef),
             )
             .subscribe();
         this.cdr.detectChanges();

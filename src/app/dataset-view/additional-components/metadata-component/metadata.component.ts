@@ -23,6 +23,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import _ from "lodash";
 import { ModalService } from "src/app/components/modal/modal.service";
 import ProjectLinks from "src/app/project-links";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-metadata",
@@ -58,15 +59,15 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     private modalService = inject(ModalService);
 
     public ngOnInit() {
-        this.trackSubscription(
-            this.datasetSubsService.metadataSchemaChanges.subscribe((schemaUpdate: MetadataSchemaUpdate) => {
+        this.datasetSubsService.metadataSchemaChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((schemaUpdate: MetadataSchemaUpdate) => {
                 this.currentState = {
                     schema: schemaUpdate.schema,
                     metadataSummary: schemaUpdate.metadataSummary,
                     pageInfo: schemaUpdate.pageInfo,
                 };
-            }),
-        );
+            });
     }
 
     public onPageChange(currentPage: number): void {

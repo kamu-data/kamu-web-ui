@@ -25,6 +25,7 @@ import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 import { AppConfigFeatureFlags, LoginMethod } from "src/app/app-config.model";
 import { AccountSettingsTabs } from "src/app/auth/settings/account-settings.constants";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-header",
@@ -74,24 +75,23 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     private navigationService = inject(NavigationService);
 
     public ngOnInit(): void {
-        this.trackSubscriptions(
-            this.router.events
-                .pipe(
-                    filter((event) => event instanceof NavigationEnd),
-                    map((event) => event as RouterEvent),
-                )
-                .subscribe((event: RouterEvent) => {
-                    if (!event.url.includes(`?${ProjectLinks.URL_QUERY_PARAM_QUERY}=`)) {
-                        this.searchQuery = "";
-                        this.cdr.detectChanges();
-                    }
-                }),
-            this.route.queryParams.subscribe((param: Params) => {
-                if (param.query) {
-                    this.searchQuery = param.query as string;
+        this.router.events
+            .pipe(
+                filter((event) => event instanceof NavigationEnd),
+                map((event) => event as RouterEvent),
+            )
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((event: RouterEvent) => {
+                if (!event.url.includes(`?${ProjectLinks.URL_QUERY_PARAM_QUERY}=`)) {
+                    this.searchQuery = "";
+                    this.cdr.detectChanges();
                 }
-            }),
-        );
+            });
+        this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((param: Params) => {
+            if (param.query) {
+                this.searchQuery = param.query as string;
+            }
+        });
     }
 
     public isDatasetType(type: TypeNames): boolean {

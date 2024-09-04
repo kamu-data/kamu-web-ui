@@ -14,11 +14,13 @@ import { ProtocolsService } from "./protocols.service";
 import { UploadPrepareResponse, UploadPerareData, UploadAvailableMethod } from "../common/ingest-via-file-upload.types";
 import { updateCacheHelper } from "../apollo-cache.helper";
 import { FileUploadError } from "../common/errors";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { UnsubscribeDestroyRefAdapter } from "../common/unsubscribe.ondestroy.adapter";
 
 @Injectable({
     providedIn: "root",
 })
-export class FileUploadService {
+export class FileUploadService extends UnsubscribeDestroyRefAdapter {
     private http = inject(HttpClient);
     private localStorageService = inject(LocalStorageService);
     private appConfigService = inject(AppConfigService);
@@ -86,6 +88,7 @@ export class FileUploadService {
                 accountName: datasetBasics.owner.accountName,
                 datasetName: datasetBasics.name,
             })
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(),
             this.navigationService.navigateToDatasetView({
                 accountName: datasetBasics.owner.accountName,

@@ -4,6 +4,7 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-final-yaml-modal",
@@ -20,16 +21,16 @@ export class FinalYamlModalComponent extends BaseComponent {
     private loggedUserService = inject(LoggedUserService);
 
     public saveEvent(): void {
-        this.trackSubscription(
-            this.datasetCommitService
-                .commitEventToDataset({
-                    accountId: this.loggedUserService.currentlyLoggedInUser.id,
-                    accountName: this.datasetInfo.accountName,
-                    datasetName: this.datasetInfo.datasetName,
-                    event: this.yamlTemplate,
-                })
-                .subscribe(),
-        );
+        this.datasetCommitService
+            .commitEventToDataset({
+                accountId: this.loggedUserService.currentlyLoggedInUser.id,
+                accountName: this.datasetInfo.accountName,
+                datasetName: this.datasetInfo.datasetName,
+                event: this.yamlTemplate,
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe();
+
         this.activeModal.close(this.yamlTemplate);
     }
 }

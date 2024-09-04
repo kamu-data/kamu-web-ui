@@ -8,6 +8,7 @@ import {
     OnInit,
     Output,
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { EngineDesc, EnginesQuery, TransformSql } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull, MaybeNullOrUndefined } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
@@ -48,8 +49,10 @@ export class EngineSectionComponent extends BaseComponent implements OnInit {
     }
 
     private initEngineSection(): void {
-        this.trackSubscription(
-            this.engineService.engines().subscribe((result: EnginesQuery) => {
+        this.engineService
+            .engines()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((result: EnginesQuery) => {
                 this.knownEngines = result.data.knownEngines;
                 if (!this.selectedEngine) {
                     this.selectedEngine = this.knownEngines[0].name;
@@ -60,8 +63,7 @@ export class EngineSectionComponent extends BaseComponent implements OnInit {
                 }
                 this.onEmitSelectedEngine.emit(this.selectedEngine);
                 this.cdr.detectChanges();
-            }),
-        );
+            });
     }
 
     private initCurrentEngine(): void {

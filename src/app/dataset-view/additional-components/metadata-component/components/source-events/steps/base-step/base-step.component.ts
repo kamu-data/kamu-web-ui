@@ -15,6 +15,7 @@ import { getValidators } from "src/app/common/data.helpers";
 import { EditPollingSourceService } from "../../add-polling-source/edit-polling-source.service";
 import { MaybeNull } from "src/app/common/app.types";
 import { SourcesSection } from "../../add-polling-source/process-form.service.types";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-base-step",
@@ -63,18 +64,20 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
     }
 
     private chooseFetchKind(): void {
-        const subscription = this.sectionForm.get(this.KIND_NAME_CONTROL)?.valueChanges.subscribe((kind: string) => {
-            Object.keys(this.sectionForm.value as object)
-                .filter((key: string) => ![this.KIND_NAME_CONTROL, this.SCHEMA_NAME_CONTROL].includes(key))
-                .forEach((item: string) => {
-                    if (item !== this.EVENT_TIME_CONTROL) this.sectionForm.removeControl(item);
-                });
-            if (this.sectionForm.contains(this.JSON_KIND_CONTROL)) {
-                this.sectionForm.removeControl(this.JSON_KIND_CONTROL);
-            }
-            this.initForm(kind);
-        });
-        if (subscription) this.trackSubscription(subscription);
+        this.sectionForm
+            .get(this.KIND_NAME_CONTROL)
+            ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((kind: string) => {
+                Object.keys(this.sectionForm.value as object)
+                    .filter((key: string) => ![this.KIND_NAME_CONTROL, this.SCHEMA_NAME_CONTROL].includes(key))
+                    .forEach((item: string) => {
+                        if (item !== this.EVENT_TIME_CONTROL) this.sectionForm.removeControl(item);
+                    });
+                if (this.sectionForm.contains(this.JSON_KIND_CONTROL)) {
+                    this.sectionForm.removeControl(this.JSON_KIND_CONTROL);
+                }
+                this.initForm(kind);
+            });
     }
 
     private isArrayControl(type: ControlType): boolean {

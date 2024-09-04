@@ -100,31 +100,30 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent impleme
                 noButtonText: "Cancel",
                 handler: (ok) => {
                     if (ok) {
-                        this.trackSubscription(
-                            this.datasetCompactionService
-                                .runHardCompaction({
-                                    datasetId: this.datasetBasics.id,
-                                    datasetFlowType: DatasetFlowType.HardCompaction,
-                                    compactionArgs: {
-                                        full: {
-                                            maxSliceSize: this.sliceSizeInBytes,
-                                            maxSliceRecords: this.recordsCount.value as number,
-                                            recursive: this.recursive.value as boolean,
-                                        },
+                        this.datasetCompactionService
+                            .runHardCompaction({
+                                datasetId: this.datasetBasics.id,
+                                datasetFlowType: DatasetFlowType.HardCompaction,
+                                compactionArgs: {
+                                    full: {
+                                        maxSliceSize: this.sliceSizeInBytes,
+                                        maxSliceRecords: this.recordsCount.value as number,
+                                        recursive: this.recursive.value as boolean,
                                     },
-                                })
-                                .subscribe((result: boolean) => {
-                                    if (result) {
-                                        setTimeout(() => {
-                                            this.navigationService.navigateToDatasetView({
-                                                accountName: this.datasetBasics.owner.accountName,
-                                                datasetName: this.datasetBasics.name,
-                                                tab: DatasetViewTypeEnum.Flows,
-                                            });
-                                        }, AppValues.SIMULATION_START_CONDITION_DELAY_MS);
-                                    }
-                                }),
-                        );
+                                },
+                            })
+                            .pipe(takeUntilDestroyed(this.destroyRef))
+                            .subscribe((result: boolean) => {
+                                if (result) {
+                                    setTimeout(() => {
+                                        this.navigationService.navigateToDatasetView({
+                                            accountName: this.datasetBasics.owner.accountName,
+                                            datasetName: this.datasetBasics.name,
+                                            tab: DatasetViewTypeEnum.Flows,
+                                        });
+                                    }, AppValues.SIMULATION_START_CONDITION_DELAY_MS);
+                                }
+                            });
                     }
                 },
             }),

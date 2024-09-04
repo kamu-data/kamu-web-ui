@@ -12,6 +12,7 @@ import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.co
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { from } from "rxjs";
 import { BaseMainEventComponent } from "../source-events/base-main-event.component";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-set-transform",
@@ -44,27 +45,26 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
     }
 
     private initQueriesSection(): void {
-        this.trackSubscription(
-            this.editService
-                .getEventAsYaml(this.getDatasetInfoFromUrl(), SupportedEvents.SetTransform)
-                .subscribe((result: MaybeNullOrUndefined<string>) => {
-                    if (result) {
-                        this.eventYamlByHash = result;
-                        this.currentSetTransformEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
+        this.editService
+            .getEventAsYaml(this.getDatasetInfoFromUrl(), SupportedEvents.SetTransform)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((result: MaybeNullOrUndefined<string>) => {
+                if (result) {
+                    this.eventYamlByHash = result;
+                    this.currentSetTransformEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
 
-                        if (this.currentSetTransformEvent.transform.query) {
-                            this.initDefaultQueriesSection(this.currentSetTransformEvent.transform.query);
-                        } else {
-                            this.queries = this.currentSetTransformEvent.transform.queries;
-                        }
-                        this.getInputDatasetsInfo();
+                    if (this.currentSetTransformEvent.transform.query) {
+                        this.initDefaultQueriesSection(this.currentSetTransformEvent.transform.query);
                     } else {
-                        this.initDefaultQueriesSection();
+                        this.queries = this.currentSetTransformEvent.transform.queries;
                     }
-                    this.history = this.editService.history;
-                    this.cdr.detectChanges();
-                }),
-        );
+                    this.getInputDatasetsInfo();
+                } else {
+                    this.initDefaultQueriesSection();
+                }
+                this.history = this.editService.history;
+                this.cdr.detectChanges();
+            });
     }
 
     private initDefaultQueriesSection(query = ""): void {
@@ -75,24 +75,24 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
         this.currentSetTransformEvent?.inputs.forEach((item: TransformInput) => {
             if (item.datasetRef) {
                 this.inputDatasets.add(JSON.stringify(item));
-                this.trackSubscription(
-                    this.datasetService
-                        .requestDatasetSchema(item.datasetRef)
-                        .subscribe((data: GetDatasetSchemaQuery) => {
-                            if (data.datasets.byId) {
-                                const owner = (data.datasets.byId as DatasetBasicsFragment).owner.accountName;
-                                const schema: MaybeNull<DatasetSchema> = parseCurrentSchema(
-                                    data.datasets.byId.metadata.currentSchema,
-                                );
-                                this.TREE_DATA.push({
-                                    name: item.alias,
-                                    children: schema?.fields,
-                                    owner,
-                                });
-                                this.dataSource.data = this.TREE_DATA;
-                            }
-                        }),
-                );
+
+                this.datasetService
+                    .requestDatasetSchema(item.datasetRef)
+                    .pipe(takeUntilDestroyed(this.destroyRef))
+                    .subscribe((data: GetDatasetSchemaQuery) => {
+                        if (data.datasets.byId) {
+                            const owner = (data.datasets.byId as DatasetBasicsFragment).owner.accountName;
+                            const schema: MaybeNull<DatasetSchema> = parseCurrentSchema(
+                                data.datasets.byId.metadata.currentSchema,
+                            );
+                            this.TREE_DATA.push({
+                                name: item.alias,
+                                children: schema?.fields,
+                                owner,
+                            });
+                            this.dataSource.data = this.TREE_DATA;
+                        }
+                    });
             } else {
                 throw new Error("TransformInput without an 'datasetRef' is unexpected");
             }
@@ -110,25 +110,25 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
                   );
         instance.datasetInfo = this.getDatasetInfoFromUrl();
         instance.enabledSaveBtn = this.isInputDatasetsExist;
-        this.trackSubscription(
-            from(modalRef.result).subscribe((eventYaml: string) => {
+
+        from(modalRef.result)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((eventYaml: string) => {
                 this.changedEventYamlByHash = eventYaml;
-            }),
-        );
+            });
     }
 
     public onSaveEvent(): void {
-        this.trackSubscription(
-            this.datasetCommitService
-                .commitEventToDataset({
-                    accountId: this.loggedUserService.currentlyLoggedInUser.id,
-                    accountName: this.getDatasetInfoFromUrl().accountName,
-                    datasetName: this.getDatasetInfoFromUrl().datasetName,
-                    event: this.yamlEventService.buildYamlSetTransformEvent(
-                        this.editService.transformEventAsObject(this.inputDatasets, this.selectedEngine, this.queries),
-                    ),
-                })
-                .subscribe(),
-        );
+        this.datasetCommitService
+            .commitEventToDataset({
+                accountId: this.loggedUserService.currentlyLoggedInUser.id,
+                accountName: this.getDatasetInfoFromUrl().accountName,
+                datasetName: this.getDatasetInfoFromUrl().datasetName,
+                event: this.yamlEventService.buildYamlSetTransformEvent(
+                    this.editService.transformEventAsObject(this.inputDatasets, this.selectedEngine, this.queries),
+                ),
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe();
     }
 }

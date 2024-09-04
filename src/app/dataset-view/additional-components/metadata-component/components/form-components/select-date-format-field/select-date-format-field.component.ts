@@ -3,6 +3,7 @@ import { BaseField } from "../base-field";
 import { EventTimeSourceKind } from "../../source-events/add-polling-source/add-polling-source-form.types";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-select-date-format-field",
@@ -39,9 +40,10 @@ export class SelectDateFormatFieldComponent extends BaseField implements OnInit 
 
     private chooseEventTimeSource(): void {
         this.currentSource = this.eventTimeGroup.get(this.KIND_NAME_CONTROL)?.value as EventTimeSourceKind;
-        const subscription = this.eventTimeGroup
+        this.eventTimeGroup
             .get(this.KIND_NAME_CONTROL)
-            ?.valueChanges.subscribe((kind: EventTimeSourceKind) => {
+            ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((kind: EventTimeSourceKind) => {
                 if (kind !== EventTimeSourceKind.FROM_PATH) {
                     this.eventTimeGroup.removeControl(this.PATTERN_NAME_CONTROL);
                     this.eventTimeGroup.removeControl(this.TIMESTAMP_FORMAT_NAME_CONTROL);
@@ -59,6 +61,5 @@ export class SelectDateFormatFieldComponent extends BaseField implements OnInit 
                     this.eventTimeGroup.addControl(this.TIMESTAMP_FORMAT_NAME_CONTROL, this.fb.control(""));
                 }
             });
-        if (subscription) this.trackSubscription(subscription);
     }
 }

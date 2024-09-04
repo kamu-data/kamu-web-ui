@@ -1,6 +1,6 @@
 <div [formGroup]="form">
     <div class="d-flex">
-        <app-tooltip-icon [tooltip]="tooltip"></app-tooltip-icon>
+        <app-tooltip-icon [tooltip]="tooltip" />
         <label class="form-label">{{ label }} <span *ngIf="requiredField" class="text-danger">*</span></label>
     </div>
     <input

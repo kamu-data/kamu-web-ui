@@ -10,7 +10,7 @@
             [datasetInfo]="datasetInfo"
             (showOwnerPageEmit)="showOwnerPage(datasetInfo.accountName)"
             (onClickSearchAdditionalButtonEmit)="onClickSearchAdditionalButton($event)"
-        ></app-dataset-view-header>
+        />
     </div>
 
     <div class="app-content">
@@ -19,7 +19,7 @@
                 [datasetViewType]="FLOWS_TYPE"
                 [datasetBasics]="values.datasetBasics"
                 [datasetPermissions]="values.datasetPermissions"
-            ></app-dataset-view-menu>
+            />
         </div>
     </div>
 
@@ -118,13 +118,13 @@
             <div class="content sidebar my-4">
                 <div class="my-3 pl-40">
                     <ng-container *ngIf="activeTab === FlowDetailsTabs.SUMMARY">
-                        <app-flow-details-summary-tab [flowDetails]="flowDetails.flow"> </app-flow-details-summary-tab>
+                        <app-flow-details-summary-tab [flowDetails]="flowDetails.flow" />
                     </ng-container>
                     <ng-container *ngIf="activeTab === FlowDetailsTabs.HISTORY">
                         <app-flow-details-history-tab
                             [flowDetails]="flowDetails.flow"
                             [flowHistory]="flowDetails.flowHistory"
-                        ></app-flow-details-history-tab>
+                        />
                     </ng-container>
                     <div *ngIf="activeTab === FlowDetailsTabs.LOGS">Logs tab coming soon</div>
                     <div *ngIf="activeTab === FlowDetailsTabs.USAGE">Usage tab coming soon</div>

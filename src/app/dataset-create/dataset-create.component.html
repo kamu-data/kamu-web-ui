@@ -1,7 +1,7 @@
 <div class="layout mt-4 px-4">
     <h1 class="title">Create a new dataset</h1>
     <p class="text-muted fs-6">A dataset is a durable collection of data</p>
-    <mat-divider></mat-divider>
+    <mat-divider />
     <form [formGroup]="createDatasetForm" (ngSubmit)="onCreateDataset()">
         <div class="my-4 d-flex align-items-start">
             <div class="w-25">
@@ -29,7 +29,7 @@
                 </div>
             </div>
         </div>
-        <mat-divider></mat-divider>
+        <mat-divider />
         <div class="my-4">
             <label class="d-flex" for="kind-root">
                 <input name="kind" type="radio" value="root" id="kind-root" formControlName="kind" />
@@ -50,21 +50,21 @@
                 </div>
             </label>
         </div>
-        <mat-divider></mat-divider>
+        <mat-divider />
         <div>
             <label for="visibility-public" class="my-3">
                 <input name="visibility" type="radio" value="public" checked="checked" disabled />
-                <svg-icon name="public" class="ms-1"></svg-icon>
+                <svg-icon name="public" class="ms-1" />
                 <span>Public</span>
             </label>
             <br />
             <label for="visibility-private" class="my-3 text-muted">
                 <input name="visibility" type="radio" value="private" disabled />
-                <svg-icon name="private" class="text-muted ms-1"></svg-icon>
+                <svg-icon name="private" class="text-muted ms-1" />
                 <span>Private</span>
             </label>
         </div>
-        <mat-divider></mat-divider>
+        <mat-divider />
     </form>
 
     <div class="my-4">
@@ -97,12 +97,12 @@
             </button>
         </div>
     </ng-container>
-    <mat-divider></mat-divider>
+    <mat-divider />
     <div class="my-4 d-flex align-items-center text-muted">
-        <svg-icon class="me-1" name="information"></svg-icon>
+        <svg-icon class="me-1" name="information" />
         <span class="fs-6 pt-1">You are creating a dataset in your personal account.</span>
     </div>
-    <mat-divider></mat-divider>
+    <mat-divider />
     <div class="mt-4 mb-4">
         <button (click)="onCreateDataset()" class="btn-create" [disabled]="!isFormValid" data-test-id="create-dataset">
             Create dataset

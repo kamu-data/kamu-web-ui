@@ -58,7 +58,7 @@
                         [hasResultQuantity]="tableData.hasResultQuantity"
                         [isClickableRow]="tableData.isClickableRow"
                         data-test-id="dataset-list"
-                    ></app-dataset-list>
+                    />
 
                     <ng-template [ngIf]="data.datasets.length > 0 && data.pageInfo">
                         <app-pagination
@@ -66,7 +66,7 @@
                             [pageInfo]="data.pageInfo"
                             (pageChangeEvent)="onPageChange($event)"
                             data-test-id="pagination"
-                        ></app-pagination>
+                        />
                     </ng-template>
                 </div>
             </div>

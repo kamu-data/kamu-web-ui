@@ -1,6 +1,6 @@
 <ng-container *ngIf="yamlEventText$ | async as yamlEventText">
     <div class="container-content my-4" *ngIf="currentBlock && isEventWithYamlView">
         <p class="text-center text-muted">YAML format:</p>
-        <app-yaml-event-viewer data-test-id="yaml-event-viewer" [data]="yamlEventText"> </app-yaml-event-viewer>
+        <app-yaml-event-viewer data-test-id="yaml-event-viewer" [data]="yamlEventText" />
     </div>
 </ng-container>

@@ -16,28 +16,25 @@
                                 [sectionName]="steps.FETCH"
                                 [eventYamlByHash]="eventYamlByHash"
                                 [description]="'Determines where data is sourced from'"
-                            ></app-base-step>
+                            />
                             <app-stepper-navigation
                                 [prevStep]="null"
                                 [nextStep]="steps.PREPARE"
                                 [validStep]="fetchForm.valid"
                                 (changeStepEmitter)="changeStep($event)"
-                            ></app-stepper-navigation>
+                            />
                         </div>
                     </mat-step>
                     <mat-step [stepControl]="prepareForm" errorMessage="Field is required">
                         <ng-template matStepLabel> Prepare </ng-template>
                         <div class="container-step">
-                            <app-prepare-step
-                                [eventYamlByHash]="eventYamlByHash"
-                                [sectionName]="steps.PREPARE"
-                            ></app-prepare-step>
+                            <app-prepare-step [eventYamlByHash]="eventYamlByHash" [sectionName]="steps.PREPARE" />
                             <app-stepper-navigation
                                 [prevStep]="steps.FETCH"
                                 [nextStep]="steps.READ"
                                 [validStep]="prepareForm.valid"
                                 (changeStepEmitter)="changeStep($event)"
-                            ></app-stepper-navigation>
+                            />
                         </div>
                     </mat-step>
                     <mat-step [stepControl]="readForm" errorMessage="Field is required">
@@ -53,13 +50,13 @@
                                 [sectionName]="steps.READ"
                                 [eventYamlByHash]="eventYamlByHash"
                                 [description]="'Defines how data is read into structured format'"
-                            ></app-base-step>
+                            />
                             <app-stepper-navigation
                                 [prevStep]="steps.PREPARE"
                                 [nextStep]="steps.PREPROCESS"
                                 [validStep]="readForm.valid"
                                 (changeStepEmitter)="changeStep($event)"
-                            ></app-stepper-navigation>
+                            />
                         </div>
                     </mat-step>
                     <mat-step [stepControl]="readForm">
@@ -70,13 +67,13 @@
                                 [preprocessValue]="preprocessStepValue"
                                 [showPreprocessStep]="showPreprocessStep"
                                 (showPreprocessStepEmitter)="onShowPreprocessStep($event)"
-                            ></app-preprocess-step>
+                            />
                             <app-stepper-navigation
                                 [prevStep]="steps.READ"
                                 [nextStep]="steps.MERGE"
                                 [validStep]="fetchForm.valid"
                                 (changeStepEmitter)="changeStep($event)"
-                            ></app-stepper-navigation>
+                            />
                         </div>
                     </mat-step>
                     <mat-step [stepControl]="mergeForm">
@@ -103,7 +100,7 @@
                                 (changeStepEmitter)="changeStep($event)"
                                 (saveEventEmitter)="onSaveEvent()"
                                 (editYamlEmitter)="onEditYaml()"
-                            ></app-stepper-navigation>
+                            />
                         </div>
                     </mat-step>
                 </mat-stepper>

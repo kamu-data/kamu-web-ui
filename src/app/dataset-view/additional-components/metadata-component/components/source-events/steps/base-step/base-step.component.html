@@ -3,7 +3,7 @@
         {{ sectionName | titlecase }}
     </h2>
     <p class="text-center mb-4">{{ description }}</p>
-    <app-select-kind-field [form]="sectionForm" [data]="sectionStepRadioData"></app-select-kind-field>
+    <app-select-kind-field [form]="sectionForm" [data]="sectionStepRadioData" />
     <div class="row">
         <ng-container *ngFor="let control of sectionFormData[sectionForm.get(KIND_NAME_CONTROL)?.value]?.controls">
             <div class="col-md-8 offset-md-2 mt-4">
@@ -16,7 +16,7 @@
                         [requiredField]="control.validators.required"
                         [placeholder]="control.placeholder"
                         [tooltip]="control.tooltip!"
-                    ></app-input-field>
+                    />
                 </ng-container>
                 <ng-container *ngIf="control.type === controlType.ARRAY_KEY_VALUE">
                     <app-key-value-field
@@ -25,7 +25,7 @@
                         [label]="control.label!"
                         [buttonText]="control.options?.buttonText!"
                         [tooltip]="control.tooltip!"
-                    ></app-key-value-field>
+                    />
                 </ng-container>
                 <ng-container *ngIf="control.type === controlType.ARRAY_KEY">
                     <app-array-keys-field
@@ -35,7 +35,7 @@
                         [buttonText]="control.options?.buttonText!"
                         [placeholder]="control.placeholder!"
                         [tooltip]="control.tooltip!"
-                    ></app-array-keys-field>
+                    />
                 </ng-container>
                 <ng-container *ngIf="control.type === controlType.CHECKBOX">
                     <app-checkbox-field
@@ -45,8 +45,7 @@
                         [checked]="control.value"
                         [dataTestId]="control.dataTestId"
                         [tooltip]="control.tooltip!"
-                    >
-                    </app-checkbox-field>
+                    />
                 </ng-container>
                 <ng-container *ngIf="control.type === controlType.SCHEMA">
                     <app-schema-field
@@ -54,8 +53,7 @@
                         [controlName]="control.name"
                         [label]="control.label"
                         [tooltip]="control.tooltip!"
-                    >
-                    </app-schema-field>
+                    />
                 </ng-container>
                 <ng-container *ngIf="control.type === controlType.EVENT_TIME">
                     <app-select-date-format-field
@@ -64,8 +62,7 @@
                         [label]="control.label"
                         [tooltip]="control.tooltip!"
                         [innerTooltips]="control.options?.innerTooltips!"
-                    >
-                    </app-select-date-format-field>
+                    />
                 </ng-container>
                 <ng-container *ngIf="control.type === controlType.CACHE">
                     <app-cache-field
@@ -73,8 +70,7 @@
                         [controlName]="control.name"
                         [label]="control.label"
                         [tooltip]="control.tooltip!"
-                    >
-                    </app-cache-field>
+                    />
                 </ng-container>
                 <ng-container *ngIf="control.type === controlType.ORDER">
                     <app-order-field
@@ -82,7 +78,7 @@
                         [controlName]="control.name"
                         [label]="control.label"
                         [tooltip]="control.tooltip!"
-                    ></app-order-field>
+                    />
                 </ng-container>
                 <ng-container *ngIf="control.type === controlType.TYPEAHEAD">
                     <app-typeahead-field
@@ -93,7 +89,7 @@
                         [data]="control.list!"
                         [tooltip]="control.tooltip!"
                         [maxLength]="control.validators.maxLength"
-                    ></app-typeahead-field>
+                    />
                 </ng-container>
                 <ng-container *ngIf="control.type === controlType.JSON_KIND">
                     <app-json-kind-field
@@ -102,7 +98,7 @@
                         [label]="control.label"
                         [tooltip]="control.tooltip!"
                         [controlDescriptors]="control.readFormatDescriptors!"
-                    ></app-json-kind-field>
+                    />
                 </ng-container>
                 <ng-container *ngIf="control.type === controlType.NUMBER">
                     <app-number-field
@@ -113,7 +109,7 @@
                         [requiredField]="control.validators.required"
                         [placeholder]="control.placeholder"
                         [tooltip]="control.tooltip!"
-                    ></app-number-field>
+                    />
                 </ng-container>
                 <ng-container *ngIf="control.type === controlType.TOPICS">
                     <app-topics-field
@@ -123,7 +119,7 @@
                         [buttonText]="control.options?.buttonText!"
                         [requiredField]="control.validators.required"
                         [tooltip]="control.tooltip!"
-                    ></app-topics-field>
+                    />
                 </ng-container>
             </div>
         </ng-container>

@@ -2,7 +2,7 @@
     <div *ngFor="let block of history; let i = index">
         <div class="timeline-block__item timeline-block__item--condensed pt-0 pb-2">
             <div class="timeline-block__item-badge">
-                <svg-icon name="git-commit"></svg-icon>
+                <svg-icon name="git-commit" />
             </div>
             <div class="timeline-block__body">
                 <ol class="mt-2 list-unstyled box box--condensed ml-n6 ml-sm-0 position-relative">
@@ -68,7 +68,7 @@
                                     >
 
                                     committed
-                                    <app-display-time class="no-wrap" [data]="block.systemTime"> </app-display-time>
+                                    <app-display-time class="no-wrap" [data]="block.systemTime" />
                                 </div>
                                 <div class="ml-1"></div>
                             </div>
@@ -98,7 +98,7 @@
                                     }"
                                     [showCopyButton]="true"
                                     [class]="'text-decoration-none text-dark mr-4 hashBlock'"
-                                ></app-display-hash>
+                                />
                             </div>
                             <div data-view-component="true" class="btns-group-item">
                                 <a
@@ -107,7 +107,7 @@
                                     data-view-component="true"
                                     class="tooltipped tooltipped-sw btn-outline btn btns-group-item"
                                 >
-                                    <svg-icon name="code"></svg-icon>
+                                    <svg-icon name="code" />
                                 </a>
                             </div>
                         </div>
@@ -121,7 +121,7 @@
 <ng-template #popTitle class="signed-commit__popup-header">
     <div class="signed-commit-header d-grid">
         <div class="pr-1">
-            <svg-icon name="verified-commit"></svg-icon>
+            <svg-icon name="verified-commit" />
         </div>
         <div class="flex-1">
             This commit was signed with the committer’s

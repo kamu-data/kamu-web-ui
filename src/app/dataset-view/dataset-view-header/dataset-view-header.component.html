@@ -1,7 +1,7 @@
 <div class="app-content--header">
     <div class="flex-auto min-width-0 width-fit mr-3">
         <h1 class="d-flex flex-wrap flex-items-center wb-break-word f3 text-normal align-items-center">
-            <svg-icon name="repository"></svg-icon>
+            <svg-icon name="repository" />
             <span class="author flex-self-stretch">
                 <a class="fw-bold" [routerLink]="['/', datasetInfo.accountName]" data-test-id="show-owner-link">{{
                     datasetInfo.accountName
@@ -33,6 +33,5 @@
     <app-search-additional-buttons
         [searchAdditionalButtonsData]="searchAdditionalButtonsData"
         (searchAdditionalButtonsMethod)="onClickSearchAdditionalButton($event)"
-    >
-    </app-search-additional-buttons>
+    />
 </div>

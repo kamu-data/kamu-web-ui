@@ -17,7 +17,7 @@
         </button>
         <mat-menu #menu="matMenu" xPosition="before" [hasBackdrop]="false">
             <div class="p-3 bg-white">Action 1</div>
-            <mat-divider></mat-divider>
+            <mat-divider />
             <button mat-menu-item>Action 2</button>
         </mat-menu>
     </div>
@@ -32,11 +32,10 @@
                 <span>{{ block.sequenceNumber }}</span>
             </app-block-row-data>
             <app-block-row-data tooltip="System time when this block was written." label="System Time:">
-                <app-display-time class="no-wrap" [data]="block.systemTime" [dataTestId]="'time-block-header'">
-                </app-display-time>
+                <app-display-time class="no-wrap" [data]="block.systemTime" [dataTestId]="'time-block-header'" />
             </app-block-row-data>
             <app-block-row-data tooltip="Hash sum of the current block." label="Block Hash:">
-                <app-display-hash [value]="block.blockHash" [showCopyButton]="true"></app-display-hash>
+                <app-display-hash [value]="block.blockHash" [showCopyButton]="true" />
             </app-block-row-data>
 
             <app-block-row-data tooltip="Hash sum of the preceding block." label="Previous Block Hash:">
@@ -44,7 +43,7 @@
                     [value]="block.prevBlockHash ?? 'None'"
                     [navigationTargetDataset]="datasetInfo"
                     [showCopyButton]="true"
-                ></app-display-hash>
+                />
             </app-block-row-data>
         </div>
     </div>

@@ -9,7 +9,7 @@
             placeholder="Search by hash"
             data-test-id="searchHash"
         />
-        <svg-icon name="search"></svg-icon>
+        <svg-icon name="search" />
         <mat-icon
             *ngIf="searchHash"
             (click)="refreshSearch()"
@@ -24,8 +24,7 @@
                 [settings]="DROPDOWN_SETTINGS"
                 [data]="dropdownList"
                 [(ngModel)]="eventTypeFiltersSelected"
-            >
-            </angular2-multiselect>
+            />
         </div>
         <div class="d-flex flex-column gap-4" *ngIf="datasetHistory">
             <ng-container
@@ -40,7 +39,7 @@
                             [value]="block.blockHash"
                             [navigationTargetDataset]="datasetInfo"
                             [showCopyButton]="false"
-                        ></app-display-hash>
+                        />
                         <div
                             [innerHTML]="highlightHash(block.blockHash, searchHash)"
                             class="ms-4 fs-10 text-muted"
@@ -61,7 +60,7 @@
                     [currentPage]="currentPage - 1"
                     [pageInfo]="datasetHistory.pageInfo"
                     (pageChangeEvent)="onPageChange($event)"
-                ></app-pagination>
+                />
             </ng-container>
         </div>
     </div>

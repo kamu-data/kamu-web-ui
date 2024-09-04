@@ -63,13 +63,13 @@
                             datasetName: this.datasetName
                         }"
                         [class]="'f6 link--secondary text-mono ml-2 d-none d-lg-inline'"
-                    ></app-display-hash>
+                    />
                     <a class="link--secondary ml-3">
                         <app-display-time
                             [data]="systemTime"
                             class="no-wrap"
                             [dataTestId]="'time-overview-history-summary'"
-                        ></app-display-time>
+                        />
                     </a>
                 </div>
             </div>
@@ -84,7 +84,7 @@
                             class="pl-3 pr-3 py-3 p-md-0 mt-n3 mb-n3 mr-n3 m-md-0 link--primary text-decoration-none flex-nowrap"
                         >
                             <span class="mr-1">
-                                <svg-icon name="history"></svg-icon>
+                                <svg-icon name="history" />
                             </span>
                             <span class="d-none d-sm-inline">
                                 <strong>{{ numBlocksTotal }}</strong>

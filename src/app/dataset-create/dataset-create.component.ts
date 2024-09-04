@@ -1,12 +1,13 @@
 import { BaseComponent } from "src/app/common/base.component";
-import { DatasetKind } from "src/app/api/kamu.graphql.interface";
+import { DatasetKind, DatasetVisibility } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "../common/app.types";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { DatasetCreateService } from "./dataset-create.service";
 import { Observable } from "rxjs";
 import { LoggedUserService } from "../auth/logged-user.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { CreateDatasetFormType } from "./dataset-create.types";
 
 @Component({
     selector: "app-dataset-create",
@@ -20,22 +21,21 @@ export class DatasetCreateComponent extends BaseComponent {
     private datasetCreateService = inject(DatasetCreateService);
     private loggedUserService = inject(LoggedUserService);
 
-    private readonly kindMapper: Record<string, DatasetKind> = {
-        root: DatasetKind.Root,
-        derivative: DatasetKind.Derivative,
-    };
+    public readonly DatasetVisibility: typeof DatasetVisibility = DatasetVisibility;
+    public readonly DatasetKind: typeof DatasetKind = DatasetKind;
     private static readonly INITIAL_YAML_HINT = "# You can edit this file\n";
     public yamlTemplate = "";
     public showMonacoEditor = false;
     public errorMessage$: Observable<string>;
     public owners: string[] = [];
-    public createDatasetForm: FormGroup = this.fb.group({
+    public createDatasetForm: FormGroup<CreateDatasetFormType> = this.fb.nonNullable.group({
         owner: ["", [Validators.required]],
         datasetName: [
             "",
             [Validators.required, Validators.pattern(/^([a-zA-Z0-9][a-zA-Z0-9-]*)+(\.[a-zA-Z0-9][a-zA-Z0-9-]*)*$/)],
         ],
-        kind: ["root", [Validators.required]],
+        kind: [DatasetKind.Root, [Validators.required]],
+        visibility: [DatasetVisibility.Public],
     });
 
     public ngOnInit(): void {
@@ -49,6 +49,10 @@ export class DatasetCreateComponent extends BaseComponent {
 
     public get datasetName() {
         return this.createDatasetForm.get("datasetName");
+    }
+
+    public get visibiltyControl(): FormControl<DatasetVisibility> {
+        return this.createDatasetForm.controls.visibility;
     }
 
     public get isFormValid(): boolean {
@@ -85,10 +89,11 @@ export class DatasetCreateComponent extends BaseComponent {
     }
 
     private createDatasetFromForm(): void {
-        const kind = this.kindMapper[this.createDatasetForm.controls.kind.value as string];
-        const datasetName = this.createDatasetForm.controls.datasetName.value as string;
+        const kind = this.createDatasetForm.controls.kind.value;
+        const datasetName = this.createDatasetForm.controls.datasetName.value;
+        const visibility = this.visibiltyControl.value;
         this.datasetCreateService
-            .createEmptyDataset(kind, datasetName)
+            .createEmptyDataset({ datasetKind: kind, datasetAlias: datasetName, datasetVisibility: visibility })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe();
     }
@@ -96,7 +101,10 @@ export class DatasetCreateComponent extends BaseComponent {
     private createDatasetFromSnapshot(): void {
         if (this.yamlTemplate) {
             this.datasetCreateService
-                .createDatasetFromSnapshot(this.yamlTemplate)
+                .createDatasetFromSnapshot({
+                    snapshot: this.yamlTemplate,
+                    datasetVisibility: this.visibiltyControl.value,
+                })
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe();
         }

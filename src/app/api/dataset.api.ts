@@ -1,4 +1,4 @@
-import { UpdateWatermarkGQL } from "./kamu.graphql.interface";
+import { DatasetVisibility, UpdateWatermarkGQL } from "./kamu.graphql.interface";
 import {
     CommitEventToDatasetGQL,
     CommitEventToDatasetMutation,
@@ -238,8 +238,11 @@ export class DatasetApi {
             );
     }
 
-    public createDatasetFromSnapshot(snapshot: string): Observable<CreateDatasetFromSnapshotMutation> {
-        return this.createDatasetFromSnapshotGQL.mutate({ snapshot }).pipe(
+    public createDatasetFromSnapshot(params: {
+        snapshot: string;
+        datasetVisibility: DatasetVisibility;
+    }): Observable<CreateDatasetFromSnapshotMutation> {
+        return this.createDatasetFromSnapshotGQL.mutate({ ...params }).pipe(
             first(),
             map((result: MutationResult<CreateDatasetFromSnapshotMutation>) => {
                 /* istanbul ignore else */
@@ -252,18 +255,26 @@ export class DatasetApi {
         );
     }
 
-    public createEmptyDataset(datasetKind: DatasetKind, datasetAlias: string): Observable<CreateEmptyDatasetMutation> {
-        return this.createEmptyDatasetGQL.mutate({ datasetKind, datasetAlias }).pipe(
-            first(),
-            map((result: MutationResult<CreateEmptyDatasetMutation>) => {
-                /* istanbul ignore else */
-                if (result.data) {
-                    return result.data;
-                } else {
-                    throw new DatasetOperationError(result.errors ?? []);
-                }
-            }),
-        );
+    public createEmptyDataset(params: {
+        datasetKind: DatasetKind;
+        datasetAlias: string;
+        datasetVisibility: DatasetVisibility;
+    }): Observable<CreateEmptyDatasetMutation> {
+        return this.createEmptyDatasetGQL
+            .mutate({
+                ...params,
+            })
+            .pipe(
+                first(),
+                map((result: MutationResult<CreateEmptyDatasetMutation>) => {
+                    /* istanbul ignore else */
+                    if (result.data) {
+                        return result.data;
+                    } else {
+                        throw new DatasetOperationError(result.errors ?? []);
+                    }
+                }),
+            );
     }
 
     public commitEvent(params: {

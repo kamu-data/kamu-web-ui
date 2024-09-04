@@ -22,7 +22,7 @@
                             fill-rule="evenodd"
                             [classList]="searchAdditionalData.iconSvgPathClass"
                             [attr.d]="searchAdditionalData.iconSvgPath"
-                        ></path>
+                        />
                     </svg>
                     <span class="d-inline mr-2">{{ searchAdditionalData.textButton }}</span>
                     <span
@@ -57,7 +57,7 @@
                                     aria-label="Close menu"
                                     data-action="click:notifications-list-subscription-form#closeMenu"
                                 >
-                                    <svg-icon name="close"></svg-icon>
+                                    <svg-icon name="close" />
                                 </button>
                             </header>
 
@@ -84,14 +84,8 @@
                                             data-targets="notifications-list-subscription-form.subscriptionButtons"
                                         >
                                             <span class="f5">
-                                                <svg-icon
-                                                    *ngIf="!option.isSelected"
-                                                    name="notifications-checked"
-                                                ></svg-icon>
-                                                <svg-icon
-                                                    *ngIf="option.isSelected"
-                                                    name="notifications-checked"
-                                                ></svg-icon>
+                                                <svg-icon *ngIf="!option.isSelected" name="notifications-checked" />
+                                                <svg-icon *ngIf="option.isSelected" name="notifications-checked" />
                                             </span>
                                             <div>
                                                 <div class="f5 text-bold">

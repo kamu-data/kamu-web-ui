@@ -5,12 +5,12 @@
                 [datasetName]="datasetName"
                 [history]="historyUpdate.history"
                 [pageInfo]="historyUpdate.pageInfo"
-            ></app-timeline>
+            />
             <app-pagination
                 [currentPage]="historyUpdate.pageInfo.currentPage + 1"
                 [pageInfo]="historyUpdate.pageInfo"
                 (pageChangeEvent)="onPageChange($event)"
-            ></app-pagination>
+            />
         </ng-template>
     </div>
 </div>

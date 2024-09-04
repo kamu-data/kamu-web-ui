@@ -15,7 +15,7 @@
             <ng-template #popTitle class="signed-commit__popup-header">
                 <div class="signed-commit-header d-grid">
                     <div class="pr-1">
-                        <svg-icon name="verified-commit"></svg-icon>
+                        <svg-icon name="verified-commit" />
                     </div>
                     <div class="flex-1">
                         This commit was signed with the committer’s
@@ -84,7 +84,7 @@
                     [data]="row.lastUpdatedAt"
                     class="text-small color-text-secondary no-wrap"
                     [dataTestId]="'time-dataset-list-item'"
-                ></app-display-time>
+                />
             </p>
             <ngb-rating [rate]="4.5" [max]="5" [readonly]="true">
                 <ng-template let-fill="fill">
@@ -101,4 +101,4 @@
         </div>
     </div>
 </div>
-<mat-divider></mat-divider>
+<mat-divider />

@@ -220,7 +220,7 @@
                     [title]="currentDataset.lastUpdatedAt"
                     [data]="currentDataset.lastUpdatedAt"
                     [dataTestId]="'side-panel-dataset-updated'"
-                ></app-display-time>
+                />
             </span>
         </div>
         <div class="info d-flex align-items-start">
@@ -233,7 +233,7 @@
                         [title]="currentDataset.metadata.currentWatermark"
                         [data]="currentDataset.metadata.currentWatermark"
                         [dataTestId]="'side-panel-dataset-watermark'"
-                    ></app-display-time>
+                    />
                 </ng-container>
                 <ng-template #noWatermark>
                     <span> No watermark</span>

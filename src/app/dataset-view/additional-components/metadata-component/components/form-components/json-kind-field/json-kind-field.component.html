@@ -1,6 +1,6 @@
 <div [formGroup]="form">
     <div class="d-flex">
-        <app-tooltip-icon [tooltip]="tooltip"></app-tooltip-icon>
+        <app-tooltip-icon [tooltip]="tooltip" />
         <label class="form-label">{{ label }} </label>
     </div>
     <div class="ms-4" *ngFor="let control of controlDescriptors">
@@ -23,6 +23,6 @@
             [label]="READ_SUB_PATH_TOOLTIP"
             [placeholder]="READ_SUB_PATH_PLACEHOLDER"
             [tooltip]="TOOLTIP_SUB_PATH"
-        ></app-input-field>
+        />
     </div>
 </div>

@@ -10,7 +10,7 @@
                 md-raised-button="primary"
             >
                 Sign in with GitHub
-                <svg-icon class="github-logo" name="github-logo"></svg-icon>
+                <svg-icon class="github-logo" name="github-logo" />
             </a>
             <a
                 data-test-id="select-method-password"
@@ -24,7 +24,7 @@
     </div>
 </ng-container>
 <div *ngIf="selectedLoginMethod == LoginMethod.GITHUB" class="d-flex justify-content-center align-items-center">
-    <app-spinner data-test-id="github-spinner"></app-spinner>
+    <app-spinner data-test-id="github-spinner" />
 </div>
 <div
     *ngIf="selectedLoginMethod == LoginMethod.PASSWORD"

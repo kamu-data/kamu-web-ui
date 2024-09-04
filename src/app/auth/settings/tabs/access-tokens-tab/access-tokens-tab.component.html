@@ -7,7 +7,7 @@
 
 <ng-container *ngIf="currentCreateStep === TokenCreateStep.GENERATE">
     <h2>New personal access token</h2>
-    <mat-divider></mat-divider>
+    <mat-divider />
 
     <p class="text-muted mt-3">
         Personal access tokens can be used to access Kamu API from tools, scripts, and other applications
@@ -69,10 +69,10 @@
                             role="button"
                         >
                             <div style="position: relative; display: inline-block">
-                                <svg-icon name="copy"></svg-icon>
+                                <svg-icon name="copy" />
                             </div>
                             <div style="position: relative; display: none">
-                                <svg-icon name="checked"></svg-icon>
+                                <svg-icon name="checked" />
                             </div>
                         </button>
                     </div>
@@ -96,7 +96,7 @@
 
 <ng-template #createTokenTemplate let-currentStep>
     <h2>Access tokens</h2>
-    <mat-divider></mat-divider>
+    <mat-divider />
     <p class="text-muted mt-3">
         Personal access tokens can be used to access Kamu API from tools, scripts, and other applications
     </p>
@@ -129,7 +129,7 @@
                 (keyup)="applyFilter(tokenSearch.value)"
                 [(ngModel)]="searchTokenName"
             />
-            <svg-icon name="search"></svg-icon>
+            <svg-icon name="search" />
             <mat-icon
                 *ngIf="searchTokenName"
                 (click)="refreshSearchByName()"

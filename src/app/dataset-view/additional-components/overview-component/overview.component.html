@@ -29,7 +29,7 @@
                         title="Edit dataset details"
                         (click)="openInformationModal()"
                     >
-                        <svg-icon name="pencil"></svg-icon>
+                        <svg-icon name="pencil" />
                     </button>
                 </div>
             </div>
@@ -131,7 +131,7 @@
                 [metadataBlockFragment]="metadataFragmentBlock"
                 [numBlocksTotal]="currentState.overview.metadata.chain.blocks.totalCount || 0"
                 [datasetName]="datasetBasics.name"
-            ></app-overview-history-summary-header>
+            />
 
             <div class="text-center upload-file-container my-4" *ngIf="uploadFileLoading$ | async; else noLoading">
                 <img [src]="UPLOAD_FILE_IMAGE" class="upload-file-loading" />
@@ -144,7 +144,7 @@
                     [schemaFields]="currentState.schema.fields"
                     [dataRows]="currentState ? currentState.data : []"
                     [idTable]="'overview-data-table'"
-                ></app-dynamic-table>
+                />
                 <ng-template #noData>
                     <div
                         *ngIf="!showDragAndDropBlock"
@@ -190,7 +190,7 @@
                 [editingInProgress]="editingReadme"
                 [editable]="canEditReadme"
                 (editViewShowEmitter)="editingReadme = $event"
-            ></app-readme-section>
+            />
         </div>
     </div>
     <div class="card">
@@ -222,7 +222,7 @@
                                 [value]="datasetBasics.id"
                                 [showCopyButton]="true"
                                 [class]="'text-decoration-none text-dark mr-4 hashBlock'"
-                            ></app-display-hash>
+                            />
                         </div>
                     </div>
                     <div class="dataset-info--block">
@@ -276,7 +276,7 @@
                                     title="Edit dataset license"
                                     (click)="openLicenseModal()"
                                 >
-                                    <svg-icon name="pencil"></svg-icon>
+                                    <svg-icon name="pencil" />
                                 </button>
                             </div>
                         </div>
@@ -317,7 +317,7 @@
                                 class="dataset-info--text"
                                 [title]="currentState.overview.createdAt"
                                 [data]="currentState.overview.createdAt"
-                            ></app-display-time>
+                            />
                         </div>
                     </div>
                     <div class="dataset-info--block" *ngIf="currentState">
@@ -330,7 +330,7 @@
                                 class="dataset-info--text"
                                 [title]="currentState.overview.lastUpdatedAt"
                                 [data]="currentState.overview.lastUpdatedAt"
-                            ></app-display-time>
+                            />
                         </div>
                     </div>
                     <div class="dataset-info--block">
@@ -346,7 +346,7 @@
                             <app-display-time
                                 [title]="currentState.overview.metadata.currentWatermark"
                                 [data]="currentState.overview.metadata.currentWatermark"
-                            ></app-display-time>
+                            />
                             <div *ngIf="canEditWatermark">
                                 <button
                                     class="btn-sm btn custom-edit ms-4"
@@ -355,7 +355,7 @@
                                     title="Edit watermark"
                                     (click)="openWatermarkModal()"
                                 >
-                                    <svg-icon name="pencil"></svg-icon>
+                                    <svg-icon name="pencil" />
                                 </button>
                             </div>
                         </div>

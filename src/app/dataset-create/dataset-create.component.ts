@@ -35,7 +35,7 @@ export class DatasetCreateComponent extends BaseComponent {
             [Validators.required, Validators.pattern(/^([a-zA-Z0-9][a-zA-Z0-9-]*)+(\.[a-zA-Z0-9][a-zA-Z0-9-]*)*$/)],
         ],
         kind: [DatasetKind.Root, [Validators.required]],
-        visibility: [DatasetVisibility.Public],
+        visibility: [DatasetVisibility.Private],
     });
 
     public ngOnInit(): void {

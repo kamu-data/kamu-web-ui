@@ -39,6 +39,15 @@ import { DynamicComponent } from "./dynamic.component";
                     <p *ngIf="context && context.message" class="modal__msg mt-4" data-test-id="modalMessage">
                         {{ context.message }}
                     </p>
+
+                    <ng-container *ngIf="context && context.listDescription">
+                        <mat-divider class="mb-4" />
+                        <ul>
+                            <li *ngFor="let item of context.listDescription" style="text-align:left" class="mb-1">
+                                <span class="fs-12 text-muted"> {{ item }}</span>
+                            </li>
+                        </ul>
+                    </ng-container>
                 </div>
                 <div
                     class="modal__dialog__footer-block"

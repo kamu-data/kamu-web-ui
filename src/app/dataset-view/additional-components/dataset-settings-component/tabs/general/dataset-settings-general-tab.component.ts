@@ -202,4 +202,30 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     public changeName(): void {
         this.datasetSettingsService.resetRenameError();
     }
+
+    public changeVisibilityDataset(): void {
+        promiseWithCatch(
+            this.modalService.error({
+                title: "Change visibility",
+                message: "Do you want to make dataset public?",
+                bigTextBlock: "Ok",
+                listDescription: [
+                    "The dataset will be visible to everyone",
+                    "Anyone can use your dataset",
+                    "Actions histoty and logs will be visible to everyone",
+                ],
+                // Change visibility to private
+                // listDescription: [
+                //     "The dataset will be visible only to you and your ownerships",
+                // ],
+                yesButtonText: "Ok",
+                noButtonText: "Cancel",
+                handler: (ok) => {
+                    if (ok) {
+                        //
+                    }
+                },
+            }),
+        );
+    }
 }

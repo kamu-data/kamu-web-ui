@@ -5,13 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+### Added
+- Added reset flatten option for derivative datasets
+
 ## [0.26.1] - 2024-09-06
 ### Fixed
 - Set consistent state with `force update` link
 ### Changed
 - Replaced dataset names, account names, history blocks, settings vertical tabs to links
 - Replaced all trackSubscriptions with takeUntilDestroyed operator
-- Replaced all components with selh closing tag
+- Replaced all components with self closing tag
 
 ## [0.26.0] - 2024-08-30
 ### Fixed

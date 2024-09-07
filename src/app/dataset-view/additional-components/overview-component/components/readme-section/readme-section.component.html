@@ -2,7 +2,7 @@
     <div class="file-header d-flex align-items-center">
         <div class="file-info pr-4 d-flex flex-order-1 flex-auto align-items-center">
             <span class="mr-2">
-                <svg-icon name="code-square"></svg-icon>
+                <svg-icon name="code-square" />
             </span>
             <h2 class="box-title align-items-center m-0">
                 <a href="#readme" data-view-component="true" class="link--primary">README.md</a>
@@ -15,7 +15,7 @@
             (click)="showEditTabs()"
             *ngIf="editable"
         >
-            <svg-icon name="pencil"></svg-icon>
+            <svg-icon name="pencil" />
         </button>
     </div>
     <div *ngIf="editingInProgress" class="edit-title d-flex align-items-center justify-content-between">
@@ -56,7 +56,7 @@
             <textarea class="variable-textarea" [(ngModel)]="readmeState"></textarea>
         </ng-template>
         <ng-template [ngIf]="!isEditView || !editingInProgress">
-            <markdown class="variable-binding" [data]="readmeState"></markdown>
+            <markdown class="variable-binding" [data]="readmeState" />
         </ng-template>
     </div>
 </div>

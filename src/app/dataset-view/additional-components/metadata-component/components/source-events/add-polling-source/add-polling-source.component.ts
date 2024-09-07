@@ -10,6 +10,7 @@ import { STEPPER_GLOBAL_OPTIONS } from "@angular/cdk/stepper";
 import { MaybeNullOrUndefined } from "src/app/common/app.types";
 import { SourcesSection } from "./process-form.service.types";
 import { BaseSourceEventComponent } from "../../base-source-event.component";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-add-polling-source",
@@ -68,17 +69,16 @@ export class AddPollingSourceComponent extends BaseSourceEventComponent implemen
     }
 
     public initEditForm(): void {
-        this.trackSubscriptions(
-            this.editService
-                .getEventAsYaml(this.getDatasetInfoFromUrl(), SupportedEvents.SetPollingSource)
-                .subscribe((result: MaybeNullOrUndefined<string>) => {
-                    if (result) {
-                        this.eventYamlByHash = result;
-                    }
-                    this.history = this.editService.history;
-                    this.cdr.detectChanges();
-                }),
-        );
+        this.editService
+            .getEventAsYaml(this.getDatasetInfoFromUrl(), SupportedEvents.SetPollingSource)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((result: MaybeNullOrUndefined<string>) => {
+                if (result) {
+                    this.eventYamlByHash = result;
+                }
+                this.history = this.editService.history;
+                this.cdr.detectChanges();
+            });
     }
 
     public changeStep(step: SourcesSection): void {

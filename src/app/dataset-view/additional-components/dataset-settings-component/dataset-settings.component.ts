@@ -15,6 +15,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-dataset-settings",
@@ -72,11 +73,12 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {
         this.activeTab = this.getSectionFromUrl() ?? SettingsTabsEnum.GENERAL;
-        this.trackSubscription(
-            this.datasetSubsService.overviewChanges.subscribe((overviewUpdate: OverviewUpdate) => {
+
+        this.datasetSubsService.overviewChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((overviewUpdate: OverviewUpdate) => {
                 this.overview = overviewUpdate.overview;
-            }),
-        );
+            });
     }
 
     public getSectionFromUrl(): MaybeNull<SettingsTabsEnum> {

@@ -8,6 +8,7 @@ import { NgbTypeahead } from "@ng-bootstrap/ng-bootstrap";
 import { debounceTime, distinctUntilChanged, map } from "rxjs/operators";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import AppValues from "src/app/common/app.values";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 export interface SchemaType {
     name: string;
@@ -50,24 +51,22 @@ export class SchemaFieldComponent extends BaseField implements AfterViewInit {
 
     ngAfterViewInit(): void {
         let focusItem$ = new Subject<SchemaType>();
-        this.trackSubscription(
-            this.focus$.subscribe((item) => {
-                const tableIndex = this.items.controls.findIndex(
-                    (element: AbstractControl) =>
-                        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                        element.value.name === item.name,
-                );
-                this.focusObservableList.some((focus, index) => {
-                    if (index === tableIndex) {
-                        focusItem$ = focus;
-                        return true;
-                    } else {
-                        return false;
-                    }
-                });
-                focusItem$.next(item);
-            }),
-        );
+        this.focus$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((item) => {
+            const tableIndex = this.items.controls.findIndex(
+                (element: AbstractControl) =>
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                    element.value.name === item.name,
+            );
+            this.focusObservableList.some((focus, index) => {
+                if (index === tableIndex) {
+                    focusItem$ = focus;
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+            focusItem$.next(item);
+        });
     }
 
     public search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) => {

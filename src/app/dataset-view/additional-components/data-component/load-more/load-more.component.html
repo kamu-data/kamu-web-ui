@@ -5,7 +5,7 @@
 <ng-container *ngIf="!isAllDataLoaded; else allDataIsLoaded">
     <button mat-button class="mr-4 btn-toggle" [class.opened]="isHolderVisible" (click)="toggleOptions()">
         Options
-        <mat-icon fontIcon="chevron_right"></mat-icon>
+        <mat-icon fontIcon="chevron_right" />
     </button>
 
     <div class="d-flex flex-wrap align-items-center row-gap-3 holder" [class.hidden]="!isHolderVisible">

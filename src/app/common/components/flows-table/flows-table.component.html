@@ -4,8 +4,7 @@
             [settings]="filterAccountSettings"
             [data]="dropdownAccountList"
             [(ngModel)]="selectedAccountItems"
-        >
-        </angular2-multiselect>
+        />
     </div>
 
     <div class="ms-4" *ngIf="hasDatasetColumn">
@@ -13,8 +12,7 @@
             [settings]="FILTER_DATASET_SETTINGS"
             [data]="dropdownDatasetList"
             [(ngModel)]="selectedDatasetItems"
-        >
-        </angular2-multiselect>
+        />
     </div>
 
     <div class="ms-4">
@@ -22,8 +20,7 @@
             [settings]="FILTER_STATUS_SETTINGS"
             [data]="dropdownStatustList"
             [(ngModel)]="selectedStatusItems"
-        >
-        </angular2-multiselect>
+        />
     </div>
 
     <div class="d-flex ms-4 align-items-center">
@@ -187,7 +184,7 @@
                     >
                         Details
                     </a>
-                    <mat-divider></mat-divider>
+                    <mat-divider />
                     <button
                         (click)="cancelFlow(element.flowId, element.description.datasetId)"
                         mat-menu-item

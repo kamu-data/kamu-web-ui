@@ -4,7 +4,7 @@
             [graph]="lineageGraphUpdate.graph"
             [currentDataset]="lineageGraphUpdate.originDataset"
             (onClickNodeEvent)="onClickNode($event)"
-        ></app-lineage-graph>
+        />
     </ng-container>
     <ng-container *ngIf="!lineageGraphUpdate.graph.nodes.length">
         <p>The current dataset is derivative. Not enough data to build the graph.</p>

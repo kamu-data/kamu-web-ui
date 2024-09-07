@@ -1,6 +1,6 @@
 <div [formGroup]="form">
     <div class="d-flex">
-        <app-tooltip-icon [tooltip]="tooltip"></app-tooltip-icon>
+        <app-tooltip-icon [tooltip]="tooltip" />
         <label class="form-label">{{ label }} </label><br />
     </div>
     <ng-container [formArrayName]="controlName" *ngFor="let item of items?.controls; let i = index">

@@ -20,11 +20,11 @@
                             #menuTrigger="matMenuTrigger"
                             [matMenuTriggerFor]="menu"
                         >
-                            <svg-icon name="show-options"></svg-icon>
+                            <svg-icon name="show-options" />
                         </button>
                         <mat-menu #menu="matMenu" xPosition="before" [hasBackdrop]="true">
                             <button mat-menu-item [disabled]="false" (click)="updateNow()">Update now</button>
-                            <mat-divider></mat-divider>
+                            <mat-divider />
                             <a
                                 mat-menu-item
                                 [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name]"
@@ -34,7 +34,7 @@
                                 }"
                                 >Update settings</a
                             >
-                            <mat-divider></mat-divider>
+                            <mat-divider />
                             <button
                                 mat-menu-item
                                 (click)="toggleStateDatasetFlowConfigs(flowConnectionData.allFlowsPaused!)"
@@ -58,9 +58,7 @@
             </div>
 
             <div class="search-result-container__content mt-2 mb-4">
-                <app-tile-base-widget
-                    [nodes]="flowConnectionData.flowsData.connectionDataForWidget.nodes"
-                ></app-tile-base-widget>
+                <app-tile-base-widget [nodes]="flowConnectionData.flowsData.connectionDataForWidget.nodes" />
             </div>
 
             <ng-container *ngIf="flowConnectionData">
@@ -76,13 +74,13 @@
                     }"
                     (searchByFiltersChange)="onSearchByFiltersChange($event)"
                     (cancelFlowChange)="onCancelFlow($event)"
-                ></app-flows-table>
+                />
                 <div class="mt-50px">
                     <app-pagination
                         [currentPage]="flowConnectionData.flowsData.connectionDataForTable.pageInfo.currentPage + 1"
                         [pageInfo]="flowConnectionData.flowsData.connectionDataForTable.pageInfo"
                         (pageChangeEvent)="onPageChange($event)"
-                    ></app-pagination>
+                    />
                 </div>
             </ng-container>
         </ng-container>

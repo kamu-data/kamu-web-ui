@@ -8,6 +8,7 @@ import { requireValue } from "../common/app.helpers";
 import ProjectLinks from "../project-links";
 import { filter, map } from "rxjs/operators";
 import { Observable } from "rxjs";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-search",
@@ -134,14 +135,13 @@ export class SearchComponent extends BaseComponent implements OnInit {
 
         this.changePageAndSearch();
 
-        this.trackSubscriptions(
-            this.router.events
-                .pipe(
-                    filter((event) => event instanceof NavigationEnd),
-                    map((event) => event as RouterEvent),
-                )
-                .subscribe(() => this.changePageAndSearch()),
-        );
+        this.router.events
+            .pipe(
+                filter((event) => event instanceof NavigationEnd),
+                map((event) => event as RouterEvent),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(() => this.changePageAndSearch());
     }
 
     private changePageAndSearch(): void {

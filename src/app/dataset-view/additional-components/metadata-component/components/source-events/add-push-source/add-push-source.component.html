@@ -6,13 +6,13 @@
                     <mat-step>
                         <ng-template matStepLabel>Source</ng-template>
                         <div class="container-step">
-                            <app-source-name-step [form]="addPushSourceForm"></app-source-name-step>
+                            <app-source-name-step [form]="addPushSourceForm" />
                             <app-stepper-navigation
                                 [prevStep]="null"
                                 [nextStep]="steps.READ"
                                 [validStep]="addPushSourceForm.valid"
                                 (changeStepEmitter)="changeStep($event)"
-                            ></app-stepper-navigation>
+                            />
                         </div>
                     </mat-step>
 
@@ -29,13 +29,13 @@
                                 [sectionName]="steps.READ"
                                 [eventYamlByHash]="eventYamlByHash"
                                 [description]="'Defines how data is read into structured format'"
-                            ></app-base-step>
+                            />
                             <app-stepper-navigation
                                 [prevStep]="steps.SOURCE_NAME"
                                 [nextStep]="steps.PREPROCESS"
                                 [validStep]="readPushForm.valid"
                                 (changeStepEmitter)="changeStep($event)"
-                            ></app-stepper-navigation>
+                            />
                         </div>
                     </mat-step>
                     <mat-step [stepControl]="readPushForm">
@@ -46,13 +46,13 @@
                                 [preprocessValue]="preprocessStepValue"
                                 [showPreprocessStep]="showPreprocessStep"
                                 (showPreprocessStepEmitter)="onShowPreprocessStep($event)"
-                            ></app-preprocess-step>
+                            />
                             <app-stepper-navigation
                                 [prevStep]="steps.READ"
                                 [nextStep]="steps.MERGE"
                                 [validStep]="readPushForm.valid"
                                 (changeStepEmitter)="changeStep($event)"
-                            ></app-stepper-navigation>
+                            />
                         </div>
                     </mat-step>
                     <mat-step [stepControl]="mergePushForm">
@@ -78,8 +78,7 @@
                                 [validStep]="addPushSourceForm.valid"
                                 (changeStepEmitter)="changeStep($event)"
                                 (saveEventEmitter)="onSaveEvent()"
-                                (editYamlEmitter)="onEditYaml()"
-                            ></app-stepper-navigation>
+                            />
                         </div>
                     </mat-step>
                 </mat-stepper>

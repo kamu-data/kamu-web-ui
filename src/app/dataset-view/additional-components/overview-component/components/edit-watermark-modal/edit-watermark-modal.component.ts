@@ -9,6 +9,7 @@ import { MY_MOMENT_FORMATS } from "src/app/common/data.helpers";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { finalize } from "rxjs";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-edit-watermark-modal",
@@ -53,19 +54,20 @@ export class EditWatermarkModalComponent extends BaseComponent implements OnInit
 
     public commitSetWatermarkEvent(): void {
         const date = moment.utc(this.date).tz(this.timeZone).format();
-        this.trackSubscription(
-            this.datasetCommitService
-                .updateWatermark({
-                    accountId: this.loggedUserService.currentlyLoggedInUser.id,
-                    datasetId: this.datasetBasics.id,
-                    watermark: date,
-                    datasetInfo: {
-                        accountName: this.datasetBasics.owner.accountName,
-                        datasetName: this.datasetBasics.name,
-                    },
-                })
-                .pipe(finalize(() => this.activeModal.close()))
-                .subscribe(),
-        );
+        this.datasetCommitService
+            .updateWatermark({
+                accountId: this.loggedUserService.currentlyLoggedInUser.id,
+                datasetId: this.datasetBasics.id,
+                watermark: date,
+                datasetInfo: {
+                    accountName: this.datasetBasics.owner.accountName,
+                    datasetName: this.datasetBasics.name,
+                },
+            })
+            .pipe(
+                finalize(() => this.activeModal.close()),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe();
     }
 }

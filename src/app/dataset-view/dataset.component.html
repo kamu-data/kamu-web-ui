@@ -4,7 +4,7 @@
             *ngIf="datasetInfo"
             [datasetInfo]="datasetInfo"
             (onClickSearchAdditionalButtonEmit)="onClickSearchAdditionalButton($event)"
-        ></app-dataset-view-header>
+        />
     </div>
 
     <div class="app-content" *ngIf="datasetPermissions$ | async as datasetPermissions">
@@ -13,50 +13,47 @@
                 [datasetBasics]="datasetBasics"
                 [datasetPermissions]="datasetPermissions"
                 [datasetViewType]="datasetViewType"
-            ></app-dataset-view-menu>
+            />
 
             <app-overview
                 *ngIf="datasetViewType === DatasetViewTypeEnum.Overview"
                 [datasetBasics]="datasetBasics"
                 [datasetPermissions]="datasetPermissions"
                 (selectTopicEmit)="selectTopic($event)"
-            ></app-overview>
+            />
 
             <app-metadata
                 *ngIf="datasetViewType === DatasetViewTypeEnum.Metadata"
                 [datasetBasics]="datasetBasics"
                 [datasetPermissions]="datasetPermissions"
                 (pageChangeEmit)="onPageChange($event)"
-            ></app-metadata>
+            />
 
             <app-data
                 *ngIf="datasetViewType === DatasetViewTypeEnum.Data"
                 [datasetBasics]="datasetBasics"
                 [sqlLoading]="sqlLoading"
                 (runSQLRequestEmit)="onRunSQLRequest($event)"
-            ></app-data>
+            />
 
             <app-history
                 *ngIf="datasetViewType === DatasetViewTypeEnum.History"
                 [datasetName]="datasetBasics.name"
                 (onPageChangeEmit)="onPageChange($event)"
-            ></app-history>
+            />
 
             <app-lineage
                 *ngIf="datasetViewType === DatasetViewTypeEnum.Lineage"
                 (onClickNodeEmit)="onClickLineageNode($event)"
-            ></app-lineage>
+            />
 
-            <app-flows
-                *ngIf="datasetViewType === DatasetViewTypeEnum.Flows"
-                [datasetBasics]="datasetBasics"
-            ></app-flows>
+            <app-flows *ngIf="datasetViewType === DatasetViewTypeEnum.Flows" [datasetBasics]="datasetBasics" />
 
             <app-dataset-settings
                 *ngIf="datasetViewType === DatasetViewTypeEnum.Settings"
                 [datasetBasics]="datasetBasics"
                 [datasetPermissions]="datasetPermissions"
-            ></app-dataset-settings>
+            />
         </div>
     </div>
 </div>

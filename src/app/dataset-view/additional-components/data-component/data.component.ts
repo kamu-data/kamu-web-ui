@@ -24,6 +24,7 @@ import { AddDataModalComponent } from "../overview-component/components/add-data
 import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { NavigationService } from "src/app/services/navigation.service";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-data",
@@ -131,25 +132,24 @@ export class DataComponent extends BaseComponent implements OnInit {
     }
 
     private updateNow(): void {
-        this.trackSubscription(
-            this.datasetFlowsService
-                .datasetTriggerFlow({
-                    datasetId: this.datasetBasics.id,
-                    datasetFlowType:
-                        this.datasetBasics.kind === DatasetKind.Root
-                            ? DatasetFlowType.Ingest
-                            : DatasetFlowType.ExecuteTransform,
-                })
-                .subscribe((success: boolean) => {
-                    if (success) {
-                        this.navigationService.navigateToDatasetView({
-                            accountName: this.datasetBasics.owner.accountName,
-                            datasetName: this.datasetBasics.name,
-                            tab: DatasetViewTypeEnum.Flows,
-                        });
-                    }
-                }),
-        );
+        this.datasetFlowsService
+            .datasetTriggerFlow({
+                datasetId: this.datasetBasics.id,
+                datasetFlowType:
+                    this.datasetBasics.kind === DatasetKind.Root
+                        ? DatasetFlowType.Ingest
+                        : DatasetFlowType.ExecuteTransform,
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((success: boolean) => {
+                if (success) {
+                    this.navigationService.navigateToDatasetView({
+                        accountName: this.datasetBasics.owner.accountName,
+                        datasetName: this.datasetBasics.name,
+                        tab: DatasetViewTypeEnum.Flows,
+                    });
+                }
+            });
     }
 
     private resetRowsLimits(): void {

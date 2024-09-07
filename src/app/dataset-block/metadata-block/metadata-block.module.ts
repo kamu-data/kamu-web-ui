@@ -47,6 +47,7 @@ import { AddPushSourceEventComponent } from "./components/event-details/componen
 import { SetDataSchemaEventComponent } from "./components/event-details/components/set-data-schema-event/set-data-schema-event.component";
 import { UnsupportedEventComponent } from "./components/event-details/components/unsupported-event/unsupported-event.component";
 import { TopicsPropertyComponent } from "./components/event-details/components/common/topics-property/topics-property.component";
+import { TimePropertyComponent } from "./components/event-details/components/common/time-property/time-property.component";
 
 @NgModule({
     declarations: [
@@ -86,6 +87,7 @@ import { TopicsPropertyComponent } from "./components/event-details/components/c
         SetDataSchemaEventComponent,
         UnsupportedEventComponent,
         TopicsPropertyComponent,
+        TimePropertyComponent,
     ],
     imports: [
         CommonModule,

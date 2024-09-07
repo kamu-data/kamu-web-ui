@@ -1,5 +1,5 @@
 <h2>General</h2>
-<mat-divider class="mt-1 w-75 mb-2"></mat-divider>
+<mat-divider class="mt-1 w-75 mb-2" />
 <form [formGroup]="renameDatasetForm">
     <dl class="form-group d-inline-block mt-3 mb-0">
         <dt class="input-label mb-2">
@@ -62,22 +62,19 @@
                             <mat-radio-button [value]="DatasetResetMode.RESET_TO_SEED">
                                 <div class="d-flex align-items-center">
                                     Reset to seed
-                                    <app-tooltip-icon class="ps-2 pt-1" [tooltip]="SEED_TOOLTIP"></app-tooltip-icon>
+                                    <app-tooltip-icon class="ps-2 pt-1" [tooltip]="SEED_TOOLTIP" />
                                 </div>
                             </mat-radio-button>
                             <mat-radio-button [value]="DatasetResetMode.RESET_METADATA_ONLY">
                                 <div class="d-flex align-items-center">
                                     Flatten metadata
-                                    <app-tooltip-icon
-                                        class="ps-2 pt-1"
-                                        [tooltip]="FLATTEN_METADATA_TOOLTIP"
-                                    ></app-tooltip-icon>
+                                    <app-tooltip-icon class="ps-2 pt-1" [tooltip]="FLATTEN_METADATA_TOOLTIP" />
                                 </div>
                             </mat-radio-button>
                         </mat-radio-group>
                     </div>
                     <div class="d-flex align-items-center pt-1 ms-2">
-                        <app-tooltip-icon class="mt-1" [tooltip]="RECURSIVE_TOOLTIP"></app-tooltip-icon>
+                        <app-tooltip-icon class="mt-1" [tooltip]="RECURSIVE_TOOLTIP" />
                         <span class="d-inline-block">Recursive:</span>
                         <input
                             class="form-check-input recursive-control d-inline-block ms-3"

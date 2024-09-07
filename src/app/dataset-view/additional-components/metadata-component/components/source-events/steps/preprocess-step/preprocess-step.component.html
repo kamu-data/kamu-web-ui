@@ -24,12 +24,12 @@
                     [currentSetTransformEvent]="setPollingSourceEvent?.preprocess"
                     [selectedEngine]="preprocessValue.engine"
                     (onEmitSelectedEngine)="onSelectEngine($event)"
-                ></app-engine-section>
+                />
             </div>
         </div>
         <div class="col-lg-8">
             <div class="mt-4 px-4">
-                <app-queries-section [queries]="preprocessValue.queries"></app-queries-section>
+                <app-queries-section [queries]="preprocessValue.queries" />
             </div>
         </div>
     </div>

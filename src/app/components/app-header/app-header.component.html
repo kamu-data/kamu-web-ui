@@ -42,7 +42,7 @@
                                 id="search-input"
                             >
                                 <div *ngIf="searching" class="container-spinner">
-                                    <mat-spinner [diameter]="20" color="warn" mode="indeterminate"></mat-spinner>
+                                    <mat-spinner [diameter]="20" color="warn" mode="indeterminate" />
                                 </div>
                                 <input
                                     type="text"
@@ -67,7 +67,7 @@
                                 <div>
                                     <i class="bi bi-journal-album mr-2"></i>
                                     <ng-container *ngIf="!r.dummy">{{ r.dataset.owner.accountName }}/</ng-container>
-                                    <ngb-highlight [result]="r.dataset.name" [term]="t"></ngb-highlight>
+                                    <ngb-highlight [result]="r.dataset.name" [term]="t" />
                                 </div>
                                 <div
                                     class="border rounded-1 flex-shrink-0 color-bg-tertiary px-1 f6 color-text-tertiary ml-1 jump-to-badge-jump"
@@ -199,7 +199,7 @@
                 <div
                     class="d-flex d-sm-none d-md-flex justify-content-center notification-indicator-container align-items-center m-2"
                 >
-                    <app-notification-indicator></app-notification-indicator>
+                    <app-notification-indicator />
                 </div>
                 <ng-container *ngIf="isUserLoggedIn()">
                     <a
@@ -280,7 +280,7 @@
 
                         <ng-container *ngIf="featureFlags.enableLogout">
                             <a mat-menu-item data-test-id="openLogout" (click)="onLogout()">
-                                <svg-icon name="sign-out"></svg-icon>
+                                <svg-icon name="sign-out" />
                                 Log out
                             </a>
                         </ng-container>
@@ -298,6 +298,6 @@
         </div>
     </div>
     <div class="d-flex d-md-none justify-content-center notification-indicator-container align-items-center m-0">
-        <app-notification-indicator></app-notification-indicator>
+        <app-notification-indicator />
     </div>
 </nav>

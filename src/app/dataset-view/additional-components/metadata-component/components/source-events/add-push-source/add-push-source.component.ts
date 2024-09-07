@@ -11,6 +11,7 @@ import { ParamMap } from "@angular/router";
 import { EditAddPushSourceService } from "./edit-add-push-source.service";
 import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { BaseSourceEventComponent } from "../../base-source-event.component";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-add-push-source",
@@ -40,31 +41,30 @@ export class AddPushSourceComponent extends BaseSourceEventComponent {
     });
 
     public initEditForm(): void {
-        this.trackSubscription(
-            this.editService
-                .getEventAsYaml(this.getDatasetInfoFromUrl(), SupportedEvents.AddPushSource, this.queryParamName)
-                .subscribe((result: MaybeNullOrUndefined<string>) => {
-                    this.history = this.editService.history;
-                    if (this.unsupportedSourceName()) {
-                        this.navigationServices.navigateToPageNotFound();
-                    }
-                    if (result) {
-                        this.eventYamlByHash = result;
-                        const currentPushSourceEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
-                        this.addPushSourceForm.patchValue({
-                            sourceName: this.queryParamName ? currentPushSourceEvent.sourceName : "",
-                        });
-                    }
-                    if (!this.queryParamName) {
-                        this.addPushSourceForm.controls.sourceName.addValidators(
-                            RxwebValidators.noneOf({
-                                matchValues: [...this.getAllSourceNames(this.history)],
-                            }),
-                        );
-                    }
-                    this.cdr.detectChanges();
-                }),
-        );
+        this.editService
+            .getEventAsYaml(this.getDatasetInfoFromUrl(), SupportedEvents.AddPushSource, this.queryParamName)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((result: MaybeNullOrUndefined<string>) => {
+                this.history = this.editService.history;
+                if (this.unsupportedSourceName()) {
+                    this.navigationServices.navigateToPageNotFound();
+                }
+                if (result) {
+                    this.eventYamlByHash = result;
+                    const currentPushSourceEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
+                    this.addPushSourceForm.patchValue({
+                        sourceName: this.queryParamName ? currentPushSourceEvent.sourceName : "",
+                    });
+                }
+                if (!this.queryParamName) {
+                    this.addPushSourceForm.controls.sourceName.addValidators(
+                        RxwebValidators.noneOf({
+                            matchValues: [...this.getAllSourceNames(this.history)],
+                        }),
+                    );
+                }
+                this.cdr.detectChanges();
+            });
     }
 
     private getAllSourceNames(historyUpdate: DatasetHistoryUpdate): string[] {

@@ -8,8 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - Added reset flatten option for derivative datasets
+
+## [0.26.1] - 2024-09-06
+### Fixed
+- Set consistent state with `force update` link
 ### Changed
 - Replaced dataset names, account names, history blocks, settings vertical tabs to links
+- Replaced all trackSubscriptions with takeUntilDestroyed operator
+- Replaced all components with self closing tag
 
 ## [0.26.0] - 2024-08-30
 ### Fixed

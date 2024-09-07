@@ -11,6 +11,7 @@ import { ActivatedRoute, Params } from "@angular/router";
 import { BaseComponent } from "src/app/common/base.component";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { LoginFormType } from "./login.component.model";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-login",
@@ -46,15 +47,13 @@ export class LoginComponent extends BaseComponent implements OnInit {
             throw new Error(LoginComponent.ERROR_ZERO_METHODS_IN_CONFIG);
         }
 
-        this.trackSubscription(
-            this.route.queryParams.subscribe((queryParams: Params) => {
-                const callbackUrl: MaybeUndefined<string> = queryParams[
-                    ProjectLinks.URL_QUERY_PARAM_CALLBACK_URL
-                ] as MaybeUndefined<string>;
+        this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((queryParams: Params) => {
+            const callbackUrl: MaybeUndefined<string> = queryParams[
+                ProjectLinks.URL_QUERY_PARAM_CALLBACK_URL
+            ] as MaybeUndefined<string>;
 
-                this.localStorageService.setLoginCallbackUrl(callbackUrl ?? null);
-            }),
-        );
+            this.localStorageService.setLoginCallbackUrl(callbackUrl ?? null);
+        });
     }
 
     public get loginControl(): MaybeNull<AbstractControl> {

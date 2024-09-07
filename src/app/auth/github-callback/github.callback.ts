@@ -4,6 +4,7 @@ import { ActivatedRoute, Params } from "@angular/router";
 import { BaseComponent } from "src/app/common/base.component";
 import { LoginService } from "../login/login.service";
 import { GithubLoginCredentials } from "src/app/api/auth.api.model";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-github-callback",
@@ -19,10 +20,9 @@ export class GithubCallbackComponent extends BaseComponent implements OnInit {
         if (!this.searchString.includes("?code=")) {
             this.navigationService.navigateToHome();
         }
-        this.trackSubscription(
-            this.route.queryParams.subscribe((param: Params) => {
-                this.loginService.githubLogin({ code: param.code as string } as GithubLoginCredentials);
-            }),
-        );
+
+        this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((param: Params) => {
+            this.loginService.githubLogin({ code: param.code as string } as GithubLoginCredentials);
+        });
     }
 }

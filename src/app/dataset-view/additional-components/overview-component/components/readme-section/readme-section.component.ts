@@ -5,6 +5,7 @@ import { BaseComponent } from "src/app/common/base.component";
 import { EditMode } from "./readme-section.types";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-readme-section",
@@ -59,18 +60,17 @@ export class ReadmeSectionComponent extends BaseComponent implements OnInit {
     }
 
     public saveChanges(): void {
-        this.trackSubscription(
-            this.datasetCommitService
-                .updateReadme({
-                    accountId: this.loggedUserService.currentlyLoggedInUser.id,
-                    accountName: this.datasetBasics.owner.accountName,
-                    datasetName: this.datasetBasics.name,
-                    content: this.readmeState,
-                })
-                .subscribe(() => {
-                    this.reset();
-                }),
-        );
+        this.datasetCommitService
+            .updateReadme({
+                accountId: this.loggedUserService.currentlyLoggedInUser.id,
+                accountName: this.datasetBasics.owner.accountName,
+                datasetName: this.datasetBasics.name,
+                content: this.readmeState,
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.reset();
+            });
     }
 
     private reset(): void {

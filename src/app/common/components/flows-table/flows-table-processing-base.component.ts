@@ -8,6 +8,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { requireValue } from "src/app/common/app.helpers";
 import ProjectLinks from "src/app/project-links";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Directive()
 export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
@@ -45,20 +46,19 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
     }
 
     public onCancelFlow(params: CancelFlowArgs): void {
-        this.trackSubscription(
-            this.flowsService
-                .cancelScheduledTasks({
-                    datasetId: params.datasetId,
-                    flowId: params.flowId,
-                })
-                .subscribe((success: boolean) => {
-                    if (success) {
-                        setTimeout(() => {
-                            this.refreshFlow();
-                        }, this.TIMEOUT_REFRESH_FLOW);
-                    }
-                }),
-        );
+        this.flowsService
+            .cancelScheduledTasks({
+                datasetId: params.datasetId,
+                flowId: params.flowId,
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((success: boolean) => {
+                if (success) {
+                    setTimeout(() => {
+                        this.refreshFlow();
+                    }, this.TIMEOUT_REFRESH_FLOW);
+                }
+            });
     }
 
     public refreshFlow(): void {

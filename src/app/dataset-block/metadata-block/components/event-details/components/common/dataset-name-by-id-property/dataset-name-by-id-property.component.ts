@@ -5,6 +5,7 @@ import { DatasetByIdQuery } from "src/app/api/kamu.graphql.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { NavigationService } from "src/app/services/navigation.service";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-dataset-id-and-name-property",
@@ -21,15 +22,16 @@ export class DatasetNameByIdPropertyComponent extends BasePropertyComponent impl
     private cdr = inject(ChangeDetectorRef);
 
     ngOnInit(): void {
-        this.trackSubscription(
-            this.datasetService.requestDatasetInfoById(this.data).subscribe((dataset: DatasetByIdQuery) => {
+        this.datasetService
+            .requestDatasetInfoById(this.data)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((dataset: DatasetByIdQuery) => {
                 if (dataset.datasets.byId) {
                     this.datasetInfo.accountName = dataset.datasets.byId.owner.accountName;
                     this.datasetInfo.datasetName = dataset.datasets.byId.name;
                     this.cdr.detectChanges();
                 }
-            }),
-        );
+            });
     }
 
     public navigateToDatasetView(): void {

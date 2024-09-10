@@ -140,6 +140,6 @@ describe("FlowsTableComponent", () => {
         component.onForceUpdate(mockFlowSummaryDataFragmentShowForceLink);
 
         expect(datasetTriggerFlowSpy).toHaveBeenCalledTimes(1);
-        expect(toastrServiceSuccessSpy).toHaveBeenCalledWith("Success");
+        expect(toastrServiceSuccessSpy).toHaveBeenCalledWith("Force update started");
     });
 });

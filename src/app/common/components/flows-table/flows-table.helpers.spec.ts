@@ -215,6 +215,6 @@ describe("DatasetFlowTableHelpers", () => {
                 mockDatasets,
                 mockDatasets[1].id,
             ),
-        ).toEqual(`Source is uncacheable: to re-scan the data, use`);
+        ).toEqual(`Source is uncacheable: to re-scan the data, use force update`);
     });
 });

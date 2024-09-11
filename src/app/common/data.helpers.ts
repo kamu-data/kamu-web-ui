@@ -200,6 +200,13 @@ export class DataHelpers {
             case "FlowDescriptionDatasetExecuteTransform":
                 return `Execute transformation`;
             case "FlowDescriptionDatasetHardCompaction":
+                if (
+                    flow.configSnapshot?.__typename === "FlowConfigurationCompactionRule" &&
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                    flow.configSnapshot.compactionRule.__typename === "CompactionMetadataOnly"
+                ) {
+                    return "Reset";
+                }
                 return `Hard compaction`;
             case "FlowDescriptionSystemGC":
                 return `Garbage collector`;

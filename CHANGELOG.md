@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Fixed
 - Hid the `force-update` link
+- Renamed `Hard compaction` to `Reset` descriprion(flows table) when user choose reset with flatten metadata
 
 ## [0.26.2] - 2024-09-09
 ### Added

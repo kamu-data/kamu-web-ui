@@ -303,7 +303,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         outcome: {
             __typename: "FlowFailedError",
             reason: {
-                __typename: "FlowFailedMessage",
+                __typename: "FlowFailureReasonGeneral",
                 message: "Failed",
             },
         },
@@ -455,7 +455,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                 outcome: {
                                     reason: {
                                         message: "FAILED",
-                                        __typename: "FlowFailedMessage",
+                                        __typename: "FlowFailureReasonGeneral",
                                     },
                                     __typename: "FlowFailedError",
                                 },
@@ -549,7 +549,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     outcome: {
                                         reason: {
                                             message: "FAILED",
-                                            __typename: "FlowFailedMessage",
+                                            __typename: "FlowFailureReasonGeneral",
                                         },
                                         __typename: "FlowFailedError",
                                     },
@@ -602,7 +602,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                 outcome: {
                                     reason: {
                                         message: "FAILED",
-                                        __typename: "FlowFailedMessage",
+                                        __typename: "FlowFailureReasonGeneral",
                                     },
                                     __typename: "FlowFailedError",
                                 },
@@ -1029,7 +1029,7 @@ export const mockFlowsOutcome: FlowOutcomeDataFragment[] = [
     {
         __typename: "FlowFailedError",
         reason: {
-            __typename: "FlowFailedMessage",
+            __typename: "FlowFailureReasonGeneral",
             message: "Error",
         },
     },

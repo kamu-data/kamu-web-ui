@@ -197,13 +197,10 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
             node.description.__typename === "FlowDescriptionDatasetPollingIngest" &&
             node.description.ingestResult?.__typename === "FlowDescriptionUpdateResultUpToDate" &&
             node.configSnapshot?.__typename === "FlowConfigurationIngest" &&
-            !node.configSnapshot.fetchUncacheable &&
-            // TODO: Remove this condition
-            Boolean(node.configSnapshot)
+            node.description.ingestResult.uncacheable &&
+            ((node.configSnapshot?.__typename === "FlowConfigurationIngest" && !node.configSnapshot.fetchUncacheable) ||
+                !node.configSnapshot)
         );
-        // TODO: Replace when will be new API
-        // ||
-        //     !node.configSnapshot)
     }
 
     public onForceUpdate(node: FlowSummaryDataFragment): void {
@@ -222,7 +219,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe((result: boolean) => {
                     if (result) {
-                        this.toastrService.success("Success");
+                        this.toastrService.success("Force update started");
                     }
                 });
         } else {

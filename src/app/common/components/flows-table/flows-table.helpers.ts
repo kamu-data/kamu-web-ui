@@ -97,14 +97,11 @@ export class DatasetFlowTableHelpers {
                                     : element.description.ingestResult?.__typename ===
                                             "FlowDescriptionUpdateResultUpToDate" &&
                                         element.description.ingestResult.uncacheable &&
-                                        element.configSnapshot?.__typename === "FlowConfigurationIngest" &&
-                                        !element.configSnapshot.fetchUncacheable &&
-                                        // TODO: Remove this condition
-                                        element.configSnapshot
+                                        ((element.configSnapshot?.__typename === "FlowConfigurationIngest" &&
+                                            !element.configSnapshot.fetchUncacheable) ||
+                                            !element.configSnapshot)
                                       ? // TODO: Replace when will be new API
-                                        // ||
-                                        //     !node.configSnapshot)
-                                        `Source is uncacheable: to re-scan the data, use`
+                                        `Source is uncacheable: to re-scan the data, use force update`
                                       : "Dataset is up-to-date";
 
                             case "FlowDescriptionDatasetExecuteTransform":
@@ -151,10 +148,10 @@ export class DatasetFlowTableHelpers {
 
                     case "FlowFailedError": {
                         switch (element.outcome.reason.__typename) {
-                            case "FlowFailedMessage":
+                            case "FlowFailureReasonGeneral":
                                 return `An error occurred, see logs for more details`;
-                            case "FlowDatasetCompactedFailedError": {
-                                return `Input dataset <a class="text-small text-danger">${element.outcome.reason.rootDataset.name}</a> was hard compacted`;
+                            case "FlowFailureReasonInputDatasetCompacted": {
+                                return `Input dataset <a class="text-small text-danger">${element.outcome.reason.inputDataset.name}</a> was hard compacted`;
                             }
                             /* istanbul ignore next */
                             default:

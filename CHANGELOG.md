@@ -7,12 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Fixed
+- Hid the `force-update` link
+
+## [0.26.2] - 2024-09-09
+### Added
+- Added reset flatten option for derivative datasets
+
+## [0.26.1] - 2024-09-06
+### Fixed
 - Set consistent state with `force update` link
 - Updated overview tab in real time when the flow is finished
 ### Changed
 - Replaced dataset names, account names, history blocks, settings vertical tabs to links
 - Replaced all trackSubscriptions with takeUntilDestroyed operator
-- Replaced all components with selh closing tag
+- Replaced all components with self closing tag
 
 ## [0.26.0] - 2024-08-30
 ### Fixed

@@ -114,10 +114,10 @@ export class DatasetFlowDetailsHelpers {
                         switch (flowDetails.outcome?.__typename) {
                             case "FlowFailedError":
                                 switch (flowDetails.outcome.reason.__typename) {
-                                    case "FlowFailedMessage":
+                                    case "FlowFailureReasonGeneral":
                                         return `An error occurred, see logs for more details`;
-                                    case "FlowDatasetCompactedFailedError":
-                                        return `Root dataset <span class="text-small text-danger">${flowDetails.outcome.reason.rootDataset.name}</span> was compacted`;
+                                    case "FlowFailureReasonInputDatasetCompacted":
+                                        return `Input dataset <span class="text-small text-danger">${flowDetails.outcome.reason.inputDataset.name}</span> was compacted`;
                                     /* istanbul ignore next */
                                     default:
                                         return "Unknown flow failed error";
@@ -140,14 +140,11 @@ export class DatasetFlowDetailsHelpers {
                                             : flowDetails.description.ingestResult?.__typename ===
                                                     "FlowDescriptionUpdateResultUpToDate" &&
                                                 flowDetails.description.ingestResult.uncacheable &&
-                                                flowDetails.configSnapshot?.__typename === "FlowConfigurationIngest" &&
-                                                !flowDetails.configSnapshot.fetchUncacheable &&
-                                                // TODO: Remove this condition
-                                                flowDetails.configSnapshot
-                                              ? // TODO: Replace when will be new API
-                                                // ||
-                                                //     !flowDetails.configSnapshot)
-                                                "Source is uncacheable: to re-scan the data, use force update"
+                                                ((flowDetails.configSnapshot?.__typename ===
+                                                    "FlowConfigurationIngest" &&
+                                                    !flowDetails.configSnapshot.fetchUncacheable) ||
+                                                    !flowDetails.configSnapshot)
+                                              ? "Source is uncacheable: to re-scan the data, use force update"
                                               : "Dataset is up-to-date";
 
                                     case "FlowDescriptionDatasetExecuteTransform":

@@ -275,4 +275,17 @@ describe("DatasetComponent", () => {
         expect(component.sqlLoading).toEqual(true);
         flush();
     }));
+
+    it("should check init current hash for last block", fakeAsync(() => {
+        const MOCK_HASH_LAST_BLOCK = "f16207c1039f6d9f5e107a2285ccfe04bc88cb65ddd2b217ceb62b717774b2f85f1f5";
+        const requestDatasetHashLastBlockSpy = spyOn(datasetService, "requestDatasetHashLastBlock").and.returnValue(
+            of(MOCK_HASH_LAST_BLOCK),
+        );
+        component.ngOnInit();
+        tick();
+
+        expect(component.currentHashLastBlock).toEqual(MOCK_HASH_LAST_BLOCK);
+        expect(requestDatasetHashLastBlockSpy).toHaveBeenCalledTimes(1);
+        flush();
+    }));
 });

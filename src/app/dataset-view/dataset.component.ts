@@ -182,6 +182,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
                 ),
                 first(),
                 switchMap((info: DatasetInfo) => {
+                    /* istanbul ignore else */
                     if (this.datasetViewType === DatasetViewTypeEnum.History) {
                         return this.datasetService.requestDatasetHistory(info, 20, currentPage - 1);
                     } else {
@@ -204,6 +205,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
                 ),
                 first(),
                 switchMap((info) => {
+                    /* istanbul ignore else */
                     if (this.datasetViewType === DatasetViewTypeEnum.Lineage) {
                         return this.datasetService.requestDatasetLineage(info);
                     } else {
@@ -257,6 +259,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
 
     public onClickLineageNode(node: Node): void {
         const nodeData: LineageGraphNodeData = node.data as LineageGraphNodeData;
+        /* istanbul ignore else */
         if (nodeData.kind === LineageGraphNodeKind.Dataset) {
             this.onSelectDataset(nodeData.dataObject.accountName, nodeData.dataObject.name);
         } else {

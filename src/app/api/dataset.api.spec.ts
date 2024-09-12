@@ -9,6 +9,7 @@ import {
     TEST_DATASET_ID,
     TEST_DATASET_NAME,
     TEST_WATERMARK,
+    TEST_ACCOUNT_NAME,
 } from "./mock/dataset.mock";
 import {
     MOCK_NEW_DATASET_NAME,
@@ -16,6 +17,7 @@ import {
     mockCreateDatasetFromSnapshotResponse,
     mockCreateEmptyDatasetResponse,
     mockDataset403OperationError,
+    mockDatasetHashLastBlockQuery,
     mockDatasetHistoryResponse,
     mockDatasetLineageResponse,
     mockDatasetMainDataResponse,
@@ -40,6 +42,8 @@ import {
     DatasetByAccountAndDatasetNameQuery,
     DatasetByIdDocument,
     DatasetByIdQuery,
+    DatasetHashLastBlockDocument,
+    DatasetHashLastBlockQuery,
     DatasetKind,
     DatasetsByAccountNameDocument,
     DatasetsByAccountNameQuery,
@@ -473,6 +477,23 @@ describe("DatasetApi", () => {
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
         op.flush({
             data: mockDeleteSuccessResponse,
+        });
+    });
+
+    it("should successfully fetch hash last block", () => {
+        service
+            .datasetHashLastBlock(TEST_ACCOUNT_NAME, TEST_DATASET_NAME)
+            .subscribe((res: DatasetHashLastBlockQuery) => {
+                expect(res.datasets.byOwnerAndName?.metadata.chain.blocks.nodes[0].blockHash).toEqual(
+                    mockDatasetHashLastBlockQuery.datasets.byOwnerAndName?.metadata.chain.blocks.nodes[0].blockHash,
+                );
+            });
+
+        const op = controller.expectOne(DatasetHashLastBlockDocument);
+        expect(op.operation.variables.accountName).toEqual(TEST_ACCOUNT_NAME);
+        expect(op.operation.variables.datasetName).toEqual(TEST_DATASET_NAME);
+        op.flush({
+            data: mockDatasetHashLastBlockQuery,
         });
     });
 

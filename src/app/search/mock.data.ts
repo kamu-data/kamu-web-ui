@@ -3,7 +3,7 @@ import {
     CommitEventToDatasetMutation,
     CreateDatasetFromSnapshotMutation,
     CreateEmptyDatasetMutation,
-    DatasetHashLastBlockQuery,
+    DatasetHeadBlockHashQuery,
     DatasetPermissionsFragment,
     DeleteDatasetMutation,
     GetDatasetLineageQuery,
@@ -1471,23 +1471,18 @@ export const mockPreprocessStepValue: PreprocessStepValue = {
     ],
 };
 
-export const mockDatasetHashLastBlockQuery: DatasetHashLastBlockQuery = {
+export const mockDatasetHeadBlockHashQuery: DatasetHeadBlockHashQuery = {
     datasets: {
         byOwnerAndName: {
             metadata: {
                 chain: {
-                    blocks: {
-                        nodes: [
-                            {
-                                blockHash: "f16207c1039f6d9f5e107a2285ccfe04bc88cb65ddd2b217ceb62b717774b2f85f1f5",
-                                __typename: "MetadataBlockExtended",
-                            },
-                        ],
-                        __typename: "MetadataBlockConnection",
-                    },
-                    __typename: "MetadataChain",
+                    refs: [
+                        {
+                            name: "head",
+                            blockHash: "f16207c1039f6d9f5e107a2285ccfe04bc88cb65ddd2b217ceb62b717774b2f85f1f5",
+                        },
+                    ],
                 },
-                __typename: "DatasetMetadata",
             },
             __typename: "Dataset",
         },

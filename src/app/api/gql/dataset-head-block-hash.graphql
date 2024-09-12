@@ -1,0 +1,14 @@
+query datasetHeadBlockHash($accountName: AccountName!, $datasetName: DatasetName!) {
+  datasets {
+    byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+      metadata {
+        chain {
+          refs {
+            name
+            blockHash
+          }
+        }
+      }
+    }
+  }
+}

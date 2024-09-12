@@ -17,7 +17,7 @@ import {
     mockCreateDatasetFromSnapshotResponse,
     mockCreateEmptyDatasetResponse,
     mockDataset403OperationError,
-    mockDatasetHashLastBlockQuery,
+    mockDatasetHeadBlockHashQuery,
     mockDatasetHistoryResponse,
     mockDatasetLineageResponse,
     mockDatasetMainDataResponse,
@@ -42,8 +42,8 @@ import {
     DatasetByAccountAndDatasetNameQuery,
     DatasetByIdDocument,
     DatasetByIdQuery,
-    DatasetHashLastBlockDocument,
-    DatasetHashLastBlockQuery,
+    DatasetHeadBlockHashDocument,
+    DatasetHeadBlockHashQuery,
     DatasetKind,
     DatasetsByAccountNameDocument,
     DatasetsByAccountNameQuery,
@@ -482,18 +482,21 @@ describe("DatasetApi", () => {
 
     it("should successfully fetch hash last block", () => {
         service
-            .datasetHashLastBlock(TEST_ACCOUNT_NAME, TEST_DATASET_NAME)
-            .subscribe((res: DatasetHashLastBlockQuery) => {
-                expect(res.datasets.byOwnerAndName?.metadata.chain.blocks.nodes[0].blockHash).toEqual(
-                    mockDatasetHashLastBlockQuery.datasets.byOwnerAndName?.metadata.chain.blocks.nodes[0].blockHash,
+            .datasetHeadBlockHash(TEST_ACCOUNT_NAME, TEST_DATASET_NAME)
+            .subscribe((res: DatasetHeadBlockHashQuery) => {
+                const refHeadBlock = res.datasets.byOwnerAndName?.metadata.chain.refs.find(
+                    (item) => item.name === "head",
+                );
+                expect(refHeadBlock?.blockHash).toEqual(
+                    mockDatasetHeadBlockHashQuery.datasets.byOwnerAndName?.metadata.chain.refs[0].blockHash,
                 );
             });
 
-        const op = controller.expectOne(DatasetHashLastBlockDocument);
+        const op = controller.expectOne(DatasetHeadBlockHashDocument);
         expect(op.operation.variables.accountName).toEqual(TEST_ACCOUNT_NAME);
         expect(op.operation.variables.datasetName).toEqual(TEST_DATASET_NAME);
         op.flush({
-            data: mockDatasetHashLastBlockQuery,
+            data: mockDatasetHeadBlockHashQuery,
         });
     });
 

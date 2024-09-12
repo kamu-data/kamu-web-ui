@@ -1,4 +1,4 @@
-import { mockDatasetHashLastBlockQuery } from "./../search/mock.data";
+import { mockDatasetHeadBlockHashQuery } from "./../search/mock.data";
 import {
     mockDatasetDataSqlRunResponse,
     mockDatasetHistoryResponse,
@@ -336,15 +336,14 @@ describe("AppDatasetService", () => {
     });
 
     it("should check get hash last block", () => {
-        const datasetHashLastBlockSpy = spyOn(datasetApi, "datasetHashLastBlock").and.returnValue(
-            of(mockDatasetHashLastBlockQuery),
+        const datasetHashLastBlockSpy = spyOn(datasetApi, "datasetHeadBlockHash").and.returnValue(
+            of(mockDatasetHeadBlockHashQuery),
         );
         const requestDatasetHashLastBlockSubscription$ = service
-            .requestDatasetHashLastBlock(TEST_ACCOUNT_NAME, TEST_DATASET_NAME)
+            .requestDatasetHeadBlockHash(TEST_ACCOUNT_NAME, TEST_DATASET_NAME)
             .subscribe((result: string) => {
                 expect(result).toEqual(
-                    mockDatasetHashLastBlockQuery.datasets.byOwnerAndName?.metadata.chain.blocks.nodes[0]
-                        .blockHash as string,
+                    mockDatasetHeadBlockHashQuery.datasets.byOwnerAndName?.metadata.chain.refs[0].blockHash as string,
                 );
             });
 

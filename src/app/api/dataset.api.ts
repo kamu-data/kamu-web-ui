@@ -1,4 +1,4 @@
-import { DatasetHashLastBlockQuery, UpdateWatermarkGQL } from "./kamu.graphql.interface";
+import { UpdateWatermarkGQL } from "./kamu.graphql.interface";
 import {
     CommitEventToDatasetGQL,
     CommitEventToDatasetMutation,
@@ -34,7 +34,8 @@ import {
     GetDatasetLineageQuery,
     GetDatasetLineageGQL,
     UpdateWatermarkMutation,
-    DatasetHashLastBlockGQL,
+    DatasetHeadBlockHashGQL,
+    DatasetHeadBlockHashQuery,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { ApolloQueryResult } from "@apollo/client/core";
@@ -67,7 +68,7 @@ export class DatasetApi {
     private renameDatasetGQL = inject(RenameDatasetGQL);
     private datasetLineageGQL = inject(GetDatasetLineageGQL);
     private updateWatermarkGQL = inject(UpdateWatermarkGQL);
-    private datasetHashLastBlockGQL = inject(DatasetHashLastBlockGQL);
+    private datasetHeadBlockHashGQL = inject(DatasetHeadBlockHashGQL);
 
     public getDatasetMainData(params: {
         accountName: string;
@@ -441,8 +442,8 @@ export class DatasetApi {
             );
     }
 
-    public datasetHashLastBlock(accountName: string, datasetName: string): Observable<DatasetHashLastBlockQuery> {
-        return this.datasetHashLastBlockGQL
+    public datasetHeadBlockHash(accountName: string, datasetName: string): Observable<DatasetHeadBlockHashQuery> {
+        return this.datasetHeadBlockHashGQL
             .watch(
                 { accountName, datasetName },
                 {
@@ -454,7 +455,7 @@ export class DatasetApi {
             )
             .valueChanges.pipe(
                 first(),
-                map((result: ApolloQueryResult<DatasetHashLastBlockQuery>) => {
+                map((result: ApolloQueryResult<DatasetHeadBlockHashQuery>) => {
                     return result.data;
                 }),
             );

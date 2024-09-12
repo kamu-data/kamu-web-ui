@@ -3,7 +3,7 @@ import {
     DataQueryResultErrorKind,
     DataQueryResultSuccessViewFragment,
     DatasetByIdQuery,
-    DatasetHashLastBlockQuery,
+    DatasetHeadBlockHashQuery,
     DatasetLineageBasicsFragment,
     DatasetLineageFragment,
     DatasetPageInfoFragment,
@@ -199,10 +199,12 @@ export class DatasetService {
         return this.datasetApi.getDatasetInfoById(datasetId);
     }
 
-    public requestDatasetHashLastBlock(accountName: string, datasetName: string): Observable<string> {
-        return this.datasetApi.datasetHashLastBlock(accountName, datasetName).pipe(
-            map((data: DatasetHashLastBlockQuery) => {
-                return data.datasets.byOwnerAndName?.metadata.chain.blocks.nodes[0].blockHash ?? "";
+    public requestDatasetHeadBlockHash(accountName: string, datasetName: string): Observable<string> {
+        return this.datasetApi.datasetHeadBlockHash(accountName, datasetName).pipe(
+            map((data: DatasetHeadBlockHashQuery) => {
+                const refs = data.datasets.byOwnerAndName?.metadata.chain.refs;
+                const head = refs?.find((item) => item.name === "head");
+                return head?.blockHash ?? "";
             }),
         );
     }

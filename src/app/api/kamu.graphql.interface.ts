@@ -2550,12 +2550,12 @@ export type GetDatasetDataSqlRunQuery = {
     };
 };
 
-export type DatasetHashLastBlockQueryVariables = Exact<{
+export type DatasetHeadBlockHashQueryVariables = Exact<{
     accountName: Scalars["AccountName"];
     datasetName: Scalars["DatasetName"];
 }>;
 
-export type DatasetHashLastBlockQuery = {
+export type DatasetHeadBlockHashQuery = {
     __typename?: "Query";
     datasets: {
         __typename?: "Datasets";
@@ -2565,10 +2565,7 @@ export type DatasetHashLastBlockQuery = {
                 __typename?: "DatasetMetadata";
                 chain: {
                     __typename?: "MetadataChain";
-                    blocks: {
-                        __typename?: "MetadataBlockConnection";
-                        nodes: Array<{ __typename?: "MetadataBlockExtended"; blockHash: string }>;
-                    };
+                    refs: Array<{ __typename?: "BlockRef"; name: string; blockHash: string }>;
                 };
             };
         } | null;
@@ -5894,16 +5891,15 @@ export class GetDatasetDataSqlRunGQL extends Apollo.Query<
         super(apollo);
     }
 }
-export const DatasetHashLastBlockDocument = gql`
-    query datasetHashLastBlock($accountName: AccountName!, $datasetName: DatasetName!) {
+export const DatasetHeadBlockHashDocument = gql`
+    query datasetHeadBlockHash($accountName: AccountName!, $datasetName: DatasetName!) {
         datasets {
             byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
                 metadata {
                     chain {
-                        blocks(perPage: 1, page: 0) {
-                            nodes {
-                                blockHash
-                            }
+                        refs {
+                            name
+                            blockHash
                         }
                     }
                 }
@@ -5915,11 +5911,11 @@ export const DatasetHashLastBlockDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class DatasetHashLastBlockGQL extends Apollo.Query<
-    DatasetHashLastBlockQuery,
-    DatasetHashLastBlockQueryVariables
+export class DatasetHeadBlockHashGQL extends Apollo.Query<
+    DatasetHeadBlockHashQuery,
+    DatasetHeadBlockHashQueryVariables
 > {
-    document = DatasetHashLastBlockDocument;
+    document = DatasetHeadBlockHashDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

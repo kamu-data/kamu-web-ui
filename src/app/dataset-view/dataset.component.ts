@@ -29,7 +29,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
     public readonly DatasetViewTypeEnum = DatasetViewTypeEnum;
     public sqlLoading: boolean = false;
-    public currentHashLastBlock: string = "";
+    public currentHeadBlockHash: string = "";
 
     private mainDatasetQueryComplete$: Subject<DatasetInfo> = new ReplaySubject<DatasetInfo>(1 /* bufferSize */);
 
@@ -59,15 +59,15 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
             });
 
         this.datasetPermissions$ = this.datasetSubsService.permissionsChanges;
-        this.fetchHashLastBlock(urlDatasetInfo);
+        this.fetchHashHead(urlDatasetInfo);
     }
 
-    private fetchHashLastBlock(datasetInfo: DatasetInfo): void {
+    private fetchHashHead(datasetInfo: DatasetInfo): void {
         this.datasetService
-            .requestDatasetHashLastBlock(datasetInfo.accountName, datasetInfo.datasetName)
+            .requestDatasetHeadBlockHash(datasetInfo.accountName, datasetInfo.datasetName)
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((hashLastBlock: string) => {
-                this.currentHashLastBlock = hashLastBlock;
+            .subscribe((blockHash: string) => {
+                this.currentHeadBlockHash = blockHash;
             });
     }
 
@@ -80,10 +80,10 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
             [DatasetViewTypeEnum.Overview, DatasetViewTypeEnum.Metadata].includes(this.datasetViewType)
         ) {
             this.datasetService
-                .requestDatasetHashLastBlock(urlDatasetInfo.accountName, urlDatasetInfo.datasetName)
+                .requestDatasetHeadBlockHash(urlDatasetInfo.accountName, urlDatasetInfo.datasetName)
                 .pipe(
-                    map((hash: string) => {
-                        if (hash !== this.currentHashLastBlock && this.datasetBasics) {
+                    map((hashBlock: string) => {
+                        if (hashBlock !== this.currentHeadBlockHash && this.datasetBasics) {
                             this.updateCache(this.datasetBasics);
                         }
                     }),

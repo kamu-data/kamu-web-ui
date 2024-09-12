@@ -2550,6 +2550,31 @@ export type GetDatasetDataSqlRunQuery = {
     };
 };
 
+export type DatasetHashLastBlockQueryVariables = Exact<{
+    accountName: Scalars["AccountName"];
+    datasetName: Scalars["DatasetName"];
+}>;
+
+export type DatasetHashLastBlockQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byOwnerAndName?: {
+            __typename?: "Dataset";
+            metadata: {
+                __typename?: "DatasetMetadata";
+                chain: {
+                    __typename?: "MetadataChain";
+                    blocks: {
+                        __typename?: "MetadataBlockConnection";
+                        nodes: Array<{ __typename?: "MetadataBlockExtended"; blockHash: string }>;
+                    };
+                };
+            };
+        } | null;
+    };
+};
+
 export type GetDatasetHistoryQueryVariables = Exact<{
     accountName: Scalars["AccountName"];
     datasetName: Scalars["DatasetName"];
@@ -5864,6 +5889,37 @@ export class GetDatasetDataSqlRunGQL extends Apollo.Query<
     GetDatasetDataSqlRunQueryVariables
 > {
     document = GetDatasetDataSqlRunDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetHashLastBlockDocument = gql`
+    query datasetHashLastBlock($accountName: AccountName!, $datasetName: DatasetName!) {
+        datasets {
+            byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+                metadata {
+                    chain {
+                        blocks(perPage: 1, page: 0) {
+                            nodes {
+                                blockHash
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetHashLastBlockGQL extends Apollo.Query<
+    DatasetHashLastBlockQuery,
+    DatasetHashLastBlockQueryVariables
+> {
+    document = DatasetHashLastBlockDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

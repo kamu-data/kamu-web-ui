@@ -3,6 +3,7 @@ import {
     DataQueryResultErrorKind,
     DataQueryResultSuccessViewFragment,
     DatasetByIdQuery,
+    DatasetHashLastBlockQuery,
     DatasetLineageBasicsFragment,
     DatasetLineageFragment,
     DatasetPageInfoFragment,
@@ -196,6 +197,14 @@ export class DatasetService {
 
     public requestDatasetInfoById(datasetId: string): Observable<DatasetByIdQuery> {
         return this.datasetApi.getDatasetInfoById(datasetId);
+    }
+
+    public requestDatasetHashLastBlock(accountName: string, datasetName: string): Observable<string> {
+        return this.datasetApi.datasetHashLastBlock(accountName, datasetName).pipe(
+            map((data: DatasetHashLastBlockQuery) => {
+                return data.datasets.byOwnerAndName?.metadata.chain.blocks.nodes[0].blockHash ?? "";
+            }),
+        );
     }
 
     public requestDatasetSchema(datasetId: string): Observable<GetDatasetSchemaQuery> {

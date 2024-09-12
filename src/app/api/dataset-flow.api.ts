@@ -36,7 +36,6 @@ import { Observable, first, map } from "rxjs";
 import { ApolloQueryResult } from "@apollo/client";
 import { DatasetOperationError } from "../common/errors";
 import { noCacheFetchPolicy } from "../common/data.helpers";
-import { updateCacheHelper } from "../apollo-cache.helper";
 
 @Injectable({ providedIn: "root" })
 export class DatasetFlowApi {
@@ -59,30 +58,17 @@ export class DatasetFlowApi {
         datasetFlowType: DatasetFlowType;
         flowRunConfiguration?: FlowRunConfiguration;
     }): Observable<DatasetTriggerFlowMutation> {
-        return this.datasetTriggerFlowGQL
-            .mutate(
-                { ...params },
-                {
-                    update: (cache) => {
-                        updateCacheHelper(cache, {
-                            accountId: params.accountId,
-                            datasetId: params.datasetId,
-                            fieldNames: ["data"],
-                        });
-                    },
-                },
-            )
-            .pipe(
-                first(),
-                map((result: MutationResult<DatasetTriggerFlowMutation>) => {
-                    /* istanbul ignore else */
-                    if (result.data) {
-                        return result.data;
-                    } else {
-                        throw new DatasetOperationError(result.errors ?? []);
-                    }
-                }),
-            );
+        return this.datasetTriggerFlowGQL.mutate({ ...params }).pipe(
+            first(),
+            map((result: MutationResult<DatasetTriggerFlowMutation>) => {
+                /* istanbul ignore else */
+                if (result.data) {
+                    return result.data;
+                } else {
+                    throw new DatasetOperationError(result.errors ?? []);
+                }
+            }),
+        );
     }
 
     public getDatasetFlowConfigs(params: {
@@ -106,22 +92,9 @@ export class DatasetFlowApi {
         ingest: IngestConditionInput;
     }): Observable<DatasetFlowScheduleMutation> {
         return this.datasetFlowScheduleGQL
-            .mutate(
-                {
-                    ...params,
-                },
-                {
-                    update: (cache) => {
-                        if (!params.paused) {
-                            updateCacheHelper(cache, {
-                                accountId: params.accountId,
-                                datasetId: params.datasetId,
-                                fieldNames: ["data"],
-                            });
-                        }
-                    },
-                },
-            )
+            .mutate({
+                ...params,
+            })
             .pipe(
                 first(),
                 map((result: MutationResult<DatasetFlowScheduleMutation>) => {
@@ -143,22 +116,9 @@ export class DatasetFlowApi {
         transform: TransformConditionInput;
     }): Observable<DatasetFlowBatchingMutation> {
         return this.datasetFlowBatchingGQL
-            .mutate(
-                {
-                    ...params,
-                },
-                {
-                    update: (cache) => {
-                        if (!params.paused) {
-                            updateCacheHelper(cache, {
-                                accountId: params.accountId,
-                                datasetId: params.datasetId,
-                                fieldNames: ["data"],
-                            });
-                        }
-                    },
-                },
-            )
+            .mutate({
+                ...params,
+            })
             .pipe(
                 first(),
                 map((result: MutationResult<DatasetFlowBatchingMutation>) => {

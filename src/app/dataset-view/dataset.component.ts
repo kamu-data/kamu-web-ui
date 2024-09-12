@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Injector, OnInit } from "@angular/core";
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { NavigationEnd, Router } from "@angular/router";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
-import { filter, finalize, first, switchMap, tap } from "rxjs/operators";
+import { filter, finalize, first, map, switchMap, tap } from "rxjs/operators";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "../api/kamu.graphql.interface";
 import ProjectLinks from "../project-links";
 import { DatasetInfo } from "../interface/navigation.interface";
@@ -15,6 +15,8 @@ import { LineageGraphNodeData, LineageGraphNodeKind } from "./additional-compone
 import _ from "lodash";
 import { BaseDatasetDataComponent } from "../common/base-dataset-data.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { APOLLO_OPTIONS } from "apollo-angular";
+import { updateCacheHelper } from "../apollo-cache.helper";
 
 @Component({
     selector: "app-dataset",
@@ -27,12 +29,14 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
     public readonly DatasetViewTypeEnum = DatasetViewTypeEnum;
     public sqlLoading: boolean = false;
+    public currentHashLastBlock: string = "";
 
     private mainDatasetQueryComplete$: Subject<DatasetInfo> = new ReplaySubject<DatasetInfo>(1 /* bufferSize */);
 
     private datasetPermissionsServices = inject(DatasetPermissionsService);
     private router = inject(Router);
     private cdr = inject(ChangeDetectorRef);
+    private injector = inject(Injector);
 
     public ngOnInit(): void {
         const urlDatasetInfo = this.getDatasetInfoFromUrl();
@@ -55,6 +59,16 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
             });
 
         this.datasetPermissions$ = this.datasetSubsService.permissionsChanges;
+        this.fetchHashLastBlock(urlDatasetInfo);
+    }
+
+    private fetchHashLastBlock(datasetInfo: DatasetInfo): void {
+        this.datasetService
+            .requestDatasetHashLastBlock(datasetInfo.accountName, datasetInfo.datasetName)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((hashLastBlock: string) => {
+                this.currentHashLastBlock = hashLastBlock;
+            });
     }
 
     private requestMainDataIfChanged(): void {
@@ -63,9 +77,34 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
             _.isNil(this.datasetBasics) ||
             this.datasetBasics.name !== urlDatasetInfo.datasetName ||
             this.datasetBasics.owner.accountName !== urlDatasetInfo.accountName ||
-            this.datasetViewType === DatasetViewTypeEnum.Overview
+            [DatasetViewTypeEnum.Overview, DatasetViewTypeEnum.Metadata].includes(this.datasetViewType)
         ) {
-            this.requestMainData(urlDatasetInfo);
+            this.datasetService
+                .requestDatasetHashLastBlock(urlDatasetInfo.accountName, urlDatasetInfo.datasetName)
+                .pipe(
+                    map((hash: string) => {
+                        if (hash !== this.currentHashLastBlock && this.datasetBasics) {
+                            this.updateCache(this.datasetBasics);
+                        }
+                    }),
+                    switchMap(() => this.datasetService.requestDatasetMainData(urlDatasetInfo)),
+                    tap(() => {
+                        this.mainDatasetQueryComplete$.next(urlDatasetInfo);
+                    }),
+                    takeUntilDestroyed(this.destroyRef),
+                )
+                .subscribe();
+        }
+    }
+
+    private updateCache(datasetBasics: DatasetBasicsFragment): void {
+        const cache = this.injector.get(APOLLO_OPTIONS).cache;
+        if (cache) {
+            updateCacheHelper(cache, {
+                accountId: datasetBasics.owner.id,
+                datasetId: datasetBasics.id,
+                fieldNames: ["metadata", "data"],
+            });
         }
     }
 

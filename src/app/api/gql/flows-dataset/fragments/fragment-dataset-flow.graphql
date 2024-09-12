@@ -128,5 +128,11 @@ fragment FlowSummaryData on Flow {
       }
       fetchUncacheable
     }
+
+    ... on FlowConfigurationCompactionRule {
+      compactionRule {
+        __typename
+      }
+    }
   }
 }

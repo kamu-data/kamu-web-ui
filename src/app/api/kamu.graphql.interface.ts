@@ -3177,7 +3177,10 @@ export type FlowSummaryDataFragment = {
         | { __typename: "FlowStartConditionThrottling"; intervalSec: number; wakeUpAt: string; shiftedFrom: string }
         | null;
     configSnapshot?:
-        | { __typename?: "FlowConfigurationCompactionRule" }
+        | {
+              __typename?: "FlowConfigurationCompactionRule";
+              compactionRule: { __typename: "CompactionFull" } | { __typename: "CompactionMetadataOnly" };
+          }
         | {
               __typename?: "FlowConfigurationIngest";
               fetchUncacheable: boolean;
@@ -4406,6 +4409,11 @@ export const FlowSummaryDataFragmentDoc = gql`
                     }
                 }
                 fetchUncacheable
+            }
+            ... on FlowConfigurationCompactionRule {
+                compactionRule {
+                    __typename
+                }
             }
         }
     }

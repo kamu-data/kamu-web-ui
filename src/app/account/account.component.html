@@ -2,7 +2,7 @@
     <div class="custom-container" *ngIf="activeTab$ | async as activeTab">
         <div class="container-sidebar">
             <div class="d-flex mb-3 justify-content-center align-items-center">
-                <a *ngIf="isLoggedUser; else notLoggedUserLink" routerLink="/v/settings/profile">
+                <a *ngIf="isLoggedUser; else notLoggedUserLink">
                     <img
                         alt="avatar"
                         width="260"
@@ -164,7 +164,7 @@
                 ></app-datasets-tab>
             </ng-container>
             <ng-container *ngIf="activeTab === AccountTabs.FLOWS">
-                <app-account-flows-tab [accountName]="user.accountName"></app-account-flows-tab>
+                <app-account-flows-tab [loggedUser]="user"></app-account-flows-tab>
             </ng-container>
             <ng-container *ngIf="activeTab === AccountTabs.ORGANIZATIONS">
                 <div>Organizations</div>

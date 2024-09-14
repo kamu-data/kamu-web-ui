@@ -15,7 +15,7 @@ jobs:
         target:
           - any
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v3
         with:
@@ -44,7 +44,7 @@ jobs:
       - run: npm run build
       - run: npm run build-prod
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ env.PACKAGE_NAME }}-${{ matrix.target }}
           path: dist/kamu-platform

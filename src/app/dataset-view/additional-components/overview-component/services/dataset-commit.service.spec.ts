@@ -23,7 +23,6 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { first } from "rxjs/operators";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DatasetNotFoundError, DatasetOperationError } from "src/app/common/errors";
@@ -32,7 +31,6 @@ import { TEST_ACCOUNT_ID } from "src/app/api/mock/auth.mock";
 
 describe("DatasetCommitService", () => {
     let commitService: DatasetCommitService;
-    let datasetService: DatasetService;
     let datasetApi: DatasetApi;
     let navigationService: NavigationService;
     let loggedUserService: LoggedUserService;
@@ -53,7 +51,6 @@ describe("DatasetCommitService", () => {
         datasetApi = TestBed.inject(DatasetApi);
         navigationService = TestBed.inject(NavigationService);
         commitService = TestBed.inject(DatasetCommitService);
-        datasetService = TestBed.inject(DatasetService);
         loggedUserService = TestBed.inject(LoggedUserService);
 
         getDatasetInfoSpy = spyOn(datasetApi, "getDatasetInfoByAccountAndDatasetName").and.returnValue(

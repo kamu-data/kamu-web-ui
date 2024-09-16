@@ -142,13 +142,17 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
 
     private setPollingEveryTimeValidator(): void {
         this.pollingUnitTime.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((data: TimeUnit) => {
-            this.pollingEveryTime.setValidators([this.everyTimeMapperValidators[data], Validators.required]);
+            if (data) {
+                this.pollingEveryTime.setValidators([this.everyTimeMapperValidators[data], Validators.required]);
+            }
         });
     }
 
     private setBatchingEveryTimeValidator(): void {
         this.batchingUnitTime.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((data: TimeUnit) => {
-            this.batchingEveryTime.setValidators([this.everyTimeMapperValidators[data], Validators.required]);
+            if (data) {
+                this.batchingEveryTime.setValidators([this.everyTimeMapperValidators[data], Validators.required]);
+            }
         });
     }
 
@@ -173,6 +177,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                         this.pollingForm.patchValue({ updatesState: !paused });
                         this.pollingGroup.patchValue({
                             ...flowConfiguration.schedule,
+                            fetchUncacheable: flowConfiguration.fetchUncacheable,
                         });
                         if (flowConfiguration.schedule.__typename === "Cron5ComponentExpression") {
                             this.pollingGroup.patchValue({

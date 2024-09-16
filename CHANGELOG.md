@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Detect dataset cache after the flows are completed
 ### Fixed
+- Replaced mock initiator for flows tab for account
+- Restored `Fetch uncacheable` checkbox when configuration exists
+
+## [0.26.3] - 2024-09-13
+### Fixed
 - Hid the `force-update` link
 - Renamed `Hard compaction` to `Reset` descriprion(flows table) when user choose reset with flatten metadata
 

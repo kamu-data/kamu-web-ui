@@ -21,6 +21,7 @@ import { FlowsTableFiltersOptions } from "src/app/common/components/flows-table/
 import { NgbPaginationModule } from "@ng-bootstrap/ng-bootstrap";
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 
 describe("AccountFlowsTabComponent", () => {
     let component: AccountFlowsTabComponent;
@@ -65,7 +66,7 @@ describe("AccountFlowsTabComponent", () => {
         navigationService = TestBed.inject(NavigationService);
         datasetFlowsService = TestBed.inject(DatasetFlowsService);
         component = fixture.componentInstance;
-        component.accountName = "mockAccountName";
+        component.loggedUser = mockAccountDetails;
     });
 
     it("should create", () => {
@@ -75,13 +76,13 @@ describe("AccountFlowsTabComponent", () => {
     it("should check navigate to owner view with page=1 ", () => {
         const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
         component.onPageChange(1);
-        expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(component.accountName, AccountTabs.FLOWS);
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(component.loggedUser.accountName, AccountTabs.FLOWS);
     });
 
     it("should check navigate to owner view with page>1 ", () => {
         const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
         component.onPageChange(2);
-        expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(component.accountName, AccountTabs.FLOWS, 2);
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(component.loggedUser.accountName, AccountTabs.FLOWS, 2);
     });
 
     it("should check cancel flow button", fakeAsync(() => {

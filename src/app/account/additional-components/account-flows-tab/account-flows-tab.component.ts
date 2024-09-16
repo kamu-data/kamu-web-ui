@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angu
 import { combineLatest, map, of, switchMap, timer } from "rxjs";
 import { MaybeNull } from "src/app/common/app.types";
 import {
-    AccountType,
+    AccountFragment,
     DatasetListFlowsDataFragment,
     FlowStatus,
     FlowSummaryDataFragment,
@@ -11,7 +11,6 @@ import {
 import { AccountService } from "src/app/services/account.service";
 import { AccountTabs } from "../../account.constants";
 import { environment } from "src/environments/environment";
-import { TEST_ACCOUNT_ID } from "src/app/search/mock.data";
 import { FlowsTableProcessingBaseComponent } from "src/app/common/components/flows-table/flows-table-processing-base.component";
 import { FlowsTableFiltersOptions } from "src/app/common/components/flows-table/flows-table.types";
 
@@ -22,7 +21,7 @@ import { FlowsTableFiltersOptions } from "src/app/common/components/flows-table/
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent implements OnInit {
-    @Input({ required: true }) accountName: string;
+    @Input({ required: true }) loggedUser: AccountFragment;
     public nodes: FlowSummaryDataFragment[] = [];
     public searchByDataset: DatasetListFlowsDataFragment[] = [];
     public readonly DISPLAY_COLUMNS = ["description", "information", "creator", "dataset", "options"];
@@ -44,7 +43,7 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
             switchMap(() =>
                 combineLatest([
                     this.accountService.getAccountListFlows({
-                        accountName: this.accountName,
+                        accountName: this.loggedUser.accountName,
                         page: page - 1,
                         perPageTable: this.TABLE_FLOW_RUNS_PER_PAGE,
                         perPageTiles: this.WIDGET_FLOW_RUNS_PER_PAGE,
@@ -55,17 +54,8 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
                             byDatasetIds: datasetsIds ?? [],
                         },
                     }),
-                    this.accountService.accountAllFlowsPaused(this.accountName),
-                    // TODO: Implemented all accounts with flows from API
-                    of([
-                        {
-                            accountName: "kamu",
-                            accountType: AccountType.User,
-                            id: TEST_ACCOUNT_ID,
-                            displayName: "kamu",
-                            isAdmin: true,
-                        },
-                    ]),
+                    this.accountService.accountAllFlowsPaused(this.loggedUser.accountName),
+                    of([this.loggedUser]),
                 ]),
             ),
             map(([flowsData, allFlowsPaused, flowInitiators]) => {
@@ -76,18 +66,18 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
 
     public onPageChange(page: number): void {
         if (page === 1) {
-            this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.FLOWS);
+            this.navigationService.navigateToOwnerView(this.loggedUser.accountName, AccountTabs.FLOWS);
         } else {
-            this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.FLOWS, page);
+            this.navigationService.navigateToOwnerView(this.loggedUser.accountName, AccountTabs.FLOWS, page);
         }
         this.fetchTableData(page);
     }
 
     public toggleStateAccountFlowConfigs(paused: boolean): void {
         if (!paused) {
-            this.accountService.accountPauseFlows(this.accountName).subscribe();
+            this.accountService.accountPauseFlows(this.loggedUser.accountName).subscribe();
         } else {
-            this.accountService.accountResumeFlows(this.accountName).subscribe();
+            this.accountService.accountResumeFlows(this.loggedUser.accountName).subscribe();
         }
         setTimeout(() => {
             this.refreshFlow();

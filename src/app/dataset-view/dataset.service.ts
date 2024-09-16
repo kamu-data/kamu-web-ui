@@ -1,5 +1,6 @@
 import { SqlExecutionError } from "../common/errors";
 import {
+    BlockRef,
     DataQueryResultErrorKind,
     DataQueryResultSuccessViewFragment,
     DatasetByIdQuery,
@@ -15,7 +16,7 @@ import {
 } from "../api/kamu.graphql.interface";
 import { DatasetInfo } from "../interface/navigation.interface";
 import { inject, Injectable } from "@angular/core";
-import { Observable, Subject } from "rxjs";
+import { combineLatest, Observable, of, Subject } from "rxjs";
 import { DataRow, DatasetLineageNode, DatasetRequestBySql, DatasetSchema } from "../interface/dataset.interface";
 import {
     DatasetBasicsFragment,
@@ -39,13 +40,16 @@ import { DatasetNotFoundError } from "../common/errors";
 import { map } from "rxjs/operators";
 import { MaybeNull } from "../common/app.types";
 import { parseCurrentSchema } from "../common/app.helpers";
+import { APOLLO_OPTIONS } from "apollo-angular";
+import { updateCacheHelper } from "../apollo-cache.helper";
 
 @Injectable({ providedIn: "root" })
 export class DatasetService {
     private datasetApi = inject(DatasetApi);
     private datasetSubsService = inject(DatasetSubscriptionsService);
-
+    private apolloCache = inject(APOLLO_OPTIONS);
     private currentSetVocab: SetVocab;
+    private currentHeadBlockHash: string;
     private dataset$: Subject<DatasetBasicsFragment> = new Subject<DatasetBasicsFragment>();
 
     public get datasetChanges(): Observable<DatasetBasicsFragment> {
@@ -77,6 +81,7 @@ export class DatasetService {
                         this.metadataTabDataUpdate(data, schema);
                         this.lineageDataReset();
                         this.historyDataReset();
+                        this.setHeadBlockHash(data.datasets.byOwnerAndName.metadata.chain.refs as BlockRef[]);
                     } else {
                         throw new SqlExecutionError(dataTail.errorMessage);
                     }
@@ -85,6 +90,34 @@ export class DatasetService {
                 }
             }),
         );
+    }
+
+    private setHeadBlockHash(refs: BlockRef[]): void {
+        const head = refs?.find((item) => item.name === "head");
+        this.currentHeadBlockHash = head?.blockHash ?? "";
+    }
+
+    public isHeadHashBlockChanged(datasetBasics: DatasetBasicsFragment): Observable<boolean> {
+        return combineLatest([
+            this.requestDatasetHeadBlockHash(datasetBasics.owner.accountName, datasetBasics.name),
+            of(this.currentHeadBlockHash),
+        ]).pipe(
+            map(([newHeadBlockHash, currentHeadBlockHash]) => {
+                if (currentHeadBlockHash !== newHeadBlockHash) {
+                    this.updateCache(datasetBasics);
+                    return true;
+                }
+                return false;
+            }),
+        );
+    }
+
+    private updateCache(datasetBasics: DatasetBasicsFragment): void {
+        updateCacheHelper(this.apolloCache.cache, {
+            accountId: datasetBasics.owner.id,
+            datasetId: datasetBasics.id,
+            fieldNames: ["metadata", "data"],
+        });
     }
 
     public requestDatasetBasicDataWithPermissions(info: DatasetInfo): Observable<void> {

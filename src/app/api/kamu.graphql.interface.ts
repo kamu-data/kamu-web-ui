@@ -3776,6 +3776,10 @@ export type DatasetMetadataSummaryFragment = {
     metadata: {
         __typename?: "DatasetMetadata";
         currentWatermark?: string | null;
+        chain: {
+            __typename?: "MetadataChain";
+            refs: Array<{ __typename?: "BlockRef"; name: string; blockHash: string }>;
+        };
         currentInfo: { __typename?: "SetInfo" } & DatasetCurrentInfoFragment;
         currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
         currentPollingSource?: ({ __typename?: "SetPollingSource" } & SetPollingSourceEventFragment) | null;
@@ -5131,6 +5135,12 @@ export const DatasetLastUpdateFragmentDoc = gql`
 export const DatasetMetadataSummaryFragmentDoc = gql`
     fragment DatasetMetadataSummary on Dataset {
         metadata {
+            chain {
+                refs {
+                    name
+                    blockHash
+                }
+            }
             currentInfo {
                 ...DatasetCurrentInfo
             }

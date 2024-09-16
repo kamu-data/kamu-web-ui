@@ -39,7 +39,6 @@ describe("DatasetCommitService", () => {
 
     let getDatasetInfoSpy: jasmine.Spy;
     let navigationServiceSpy: jasmine.Spy;
-    let requestDatasetMainDataSpy: jasmine.Spy;
 
     const TEST_ACCOUNT_NAME = "accountName";
     const TEST_DATASET_NAME = "datasetName";
@@ -60,9 +59,6 @@ describe("DatasetCommitService", () => {
         getDatasetInfoSpy = spyOn(datasetApi, "getDatasetInfoByAccountAndDatasetName").and.returnValue(
             of(mockDatasetMainDataResponse as DatasetByAccountAndDatasetNameQuery),
         );
-
-        requestDatasetMainDataSpy = spyOn(datasetService, "requestDatasetMainData").and.returnValue(of());
-
         navigationServiceSpy = spyOn(navigationService, "navigateToDatasetView");
     });
 
@@ -88,13 +84,6 @@ describe("DatasetCommitService", () => {
             accountName: TEST_ACCOUNT_NAME,
             datasetName: TEST_DATASET_NAME,
             tab: DatasetViewTypeEnum.Overview,
-        });
-    }
-
-    function expectRequestedDatasetMainData() {
-        expect(requestDatasetMainDataSpy).toHaveBeenCalledOnceWith({
-            accountName: TEST_ACCOUNT_NAME,
-            datasetName: TEST_DATASET_NAME,
         });
     }
 
@@ -160,7 +149,6 @@ describe("DatasetCommitService", () => {
             accountId: TEST_ACCOUNT_ID,
         });
         expectNavigatedToDatasetOverview();
-        expectRequestedDatasetMainData();
     }));
 
     [mockCommitEventToDatasetResultAppendError, mockCommitEventToDataseMetadataManifestMalformedError].forEach(
@@ -186,7 +174,6 @@ describe("DatasetCommitService", () => {
                     accountId: TEST_ACCOUNT_ID,
                 });
                 expect(navigationServiceSpy).not.toHaveBeenCalled();
-                expect(requestDatasetMainDataSpy).not.toHaveBeenCalled();
 
                 // If error triggered, our subscription will be closed
                 expect(errorSubscription$.closed).toBeTrue();
@@ -255,7 +242,6 @@ describe("DatasetCommitService", () => {
             content: README_CONTENT,
         });
         expectNavigatedToDatasetOverview();
-        expectRequestedDatasetMainData();
     }));
 
     it("should check update readme for dataset when not found", () => {

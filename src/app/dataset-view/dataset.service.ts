@@ -15,7 +15,7 @@ import {
     SetVocab,
 } from "../api/kamu.graphql.interface";
 import { DatasetInfo } from "../interface/navigation.interface";
-import { inject, Injectable } from "@angular/core";
+import { inject, Injectable, Injector } from "@angular/core";
 import { combineLatest, Observable, of, Subject } from "rxjs";
 import { DataRow, DatasetLineageNode, DatasetRequestBySql, DatasetSchema } from "../interface/dataset.interface";
 import {
@@ -47,7 +47,7 @@ import { updateCacheHelper } from "../apollo-cache.helper";
 export class DatasetService {
     private datasetApi = inject(DatasetApi);
     private datasetSubsService = inject(DatasetSubscriptionsService);
-    private apolloCache = inject(APOLLO_OPTIONS);
+    private injector = inject(Injector);
     private currentSetVocab: SetVocab;
     private currentHeadBlockHash: string;
     private dataset$: Subject<DatasetBasicsFragment> = new Subject<DatasetBasicsFragment>();
@@ -113,11 +113,14 @@ export class DatasetService {
     }
 
     private updateCache(datasetBasics: DatasetBasicsFragment): void {
-        updateCacheHelper(this.apolloCache.cache, {
-            accountId: datasetBasics.owner.id,
-            datasetId: datasetBasics.id,
-            fieldNames: ["metadata", "data"],
-        });
+        const cache = this.injector.get(APOLLO_OPTIONS).cache;
+        if (cache) {
+            updateCacheHelper(cache, {
+                accountId: datasetBasics.owner.id,
+                datasetId: datasetBasics.id,
+                fieldNames: ["metadata", "data"],
+            });
+        }
     }
 
     public requestDatasetBasicDataWithPermissions(info: DatasetInfo): Observable<void> {

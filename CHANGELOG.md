@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Fixed
 - Replaced mock initiator for flows tab for account
+- Restored `Fetch uncacheable` checkbox when configuration exists
 
 ## [0.26.3] - 2024-09-13
 ### Fixed

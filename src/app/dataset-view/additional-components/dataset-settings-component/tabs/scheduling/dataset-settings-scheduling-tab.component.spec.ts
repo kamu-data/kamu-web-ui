@@ -25,6 +25,8 @@ import {
 import { PollingGroupEnum } from "../../dataset-settings.model";
 import _ from "lodash";
 import { TimeDelta, TimeUnit } from "src/app/api/kamu.graphql.interface";
+import { of } from "rxjs";
+import { mockIngestGetDatasetFlowConfigsSuccess } from "src/app/api/mock/dataset-flow.mock";
 
 describe("DatasetSettingsSchedulingTabComponent", () => {
     let component: DatasetSettingsSchedulingTabComponent;
@@ -189,5 +191,31 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         fixture.detectChanges();
         const errorMessageElem = findElementByDataTestId(fixture, "cronExpression-error");
         expect(errorMessageElem?.textContent?.trim()).toEqual("Invalid expression");
+    });
+
+    it("should check init form  with schedule", () => {
+        component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
+        fixture.detectChanges();
+        emitClickOnElementByDataTestId(fixture, "button-cron-expression");
+        setFieldValue(fixture, "polling-group-cron-expression", MOCK_INVALID_CRON_EXPRESSION);
+        fixture.detectChanges();
+        const errorMessageElem = findElementByDataTestId(fixture, "cronExpression-error");
+        expect(errorMessageElem?.textContent?.trim()).toEqual("Invalid expression");
+    });
+
+    it("should check init form with schedule when configuration is exist", () => {
+        component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
+        const fetchDatasetFlowConfigsSpy = spyOn(datasetSchedulingService, "fetchDatasetFlowConfigs").and.returnValue(
+            of(mockIngestGetDatasetFlowConfigsSuccess),
+        );
+        component.ngOnInit();
+
+        expect(fetchDatasetFlowConfigsSpy).toHaveBeenCalledTimes(1);
+        expect(component.pollingGroup.value).toEqual({
+            __typename: "TimeDelta",
+            every: 3,
+            unit: TimeUnit.Hours,
+            fetchUncacheable: false,
+        });
     });
 });

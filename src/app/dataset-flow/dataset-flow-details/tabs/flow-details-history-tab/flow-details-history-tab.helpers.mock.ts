@@ -312,7 +312,7 @@ export const flowEventSubMessageResults: string[] = [
     "Task #1",
     "",
     "Wake up time at Feb 12th 2024, 8:22:30 PM, shifted from 8:22:29 PM",
-    "Activating at 2024-03-13, 7:54:30 AM",
+    "Activating at Mar 13th 2024, 4:54:30 PM",
     "Triggered by kamu",
     "Input dataset: kamu/alberta.case-details",
     "Accumulated 100/500 records. Watermark modified. Deadline at Aug 6th 2022, 12:17:30 AM", //1

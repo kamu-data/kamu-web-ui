@@ -1,4 +1,3 @@
-import { DatePipe } from "@angular/common";
 import moment from "moment";
 import {
     FlowEventInitiated,
@@ -113,11 +112,9 @@ export class DatasetFlowDetailsHelpers {
                 return "";
             case "FlowEventScheduledForActivation": {
                 const event = flowEvent as FlowEventScheduledForActivation;
-                const activationAsString = new DatePipe("en-US").transform(
-                    event.scheduledForActivationAt,
-                    AppValues.DISPLAY_FLOW_DATE_FORMAT,
-                );
-                return `Activating at ${activationAsString}`;
+                return `Activating at ${moment(event.scheduledForActivationAt).format(
+                    AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                )}`;
             }
             case "FlowEventTaskChanged": {
                 const event = flowEvent as FlowEventTaskChanged;

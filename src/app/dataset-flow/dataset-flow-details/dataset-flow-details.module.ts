@@ -9,9 +9,10 @@ import { DatasetModule } from "src/app/dataset-view/dataset.module";
 import { DatasetFlowDetailsComponent } from "./dataset-flow-details.component";
 import { FlowDetailsHistoryTabComponent } from "./tabs/flow-details-history-tab/flow-details-history-tab.component";
 import { FlowDetailsSummaryTabComponent } from "./tabs/flow-details-summary-tab/flow-details-summary-tab.component";
+import { FlowDetailsLogsTabComponent } from './tabs/flow-details-logs-tab/flow-details-logs-tab.component';
 
 @NgModule({
-    declarations: [DatasetFlowDetailsComponent, FlowDetailsHistoryTabComponent, FlowDetailsSummaryTabComponent],
+    declarations: [DatasetFlowDetailsComponent, FlowDetailsHistoryTabComponent, FlowDetailsSummaryTabComponent, FlowDetailsLogsTabComponent],
     imports: [
         CommonModule,
         MatIconModule,

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import {
     FlowHistoryDataFragment,
     FlowStatus,
@@ -8,6 +8,7 @@ import {
 import { DatasetFlowDetailsHelpers } from "./flow-details-history-tab.helpers";
 import { BaseComponent } from "src/app/common/base.component";
 import { DataHelpers } from "src/app/common/data.helpers";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 @Component({
     selector: "app-flow-details-history-tab",
@@ -19,6 +20,12 @@ export class FlowDetailsHistoryTabComponent extends BaseComponent {
     @Input({ required: true }) flowHistory: FlowHistoryDataFragment[];
     @Input({ required: true }) flowDetails: FlowSummaryDataFragment;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
+
+    private loggedUserService = inject(LoggedUserService);
+
+    public get isAdmin(): boolean {
+        return this.loggedUserService.isAdmin;
+    }
 
     public get history(): FlowHistoryDataFragment[] {
         return this.flowHistory.filter(

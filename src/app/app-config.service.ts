@@ -1,5 +1,10 @@
 import { Injectable } from "@angular/core";
-import { AppConfig, AppConfigFeatureFlags, AppConfigLoginInstructions } from "./app-config.model";
+import {
+    AppConfig,
+    AppConfigFeatureFlags,
+    AppConfigLoginInstructions,
+    GrafanaLogsConfiguration,
+} from "./app-config.model";
 import { environment } from "src/environments/environment";
 import { MaybeUndefined } from "./common/app.types";
 
@@ -55,6 +60,14 @@ export class AppConfigService {
         }
 
         return this.appConfig.featureFlags;
+    }
+
+    get grafanaLogs(): GrafanaLogsConfiguration | null {
+        if (!this.appConfig) {
+            this.appConfig = AppConfigService.loadAppConfig();
+        }
+
+        return this.appConfig.grafanaLogs ?? null;
     }
 
     get loginInstructions(): AppConfigLoginInstructions | null {

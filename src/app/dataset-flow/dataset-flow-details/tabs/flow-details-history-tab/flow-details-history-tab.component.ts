@@ -9,6 +9,7 @@ import { DatasetFlowDetailsHelpers } from "./flow-details-history-tab.helpers";
 import { BaseComponent } from "src/app/common/base.component";
 import { DataHelpers } from "src/app/common/data.helpers";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { AppConfigService } from "src/app/app-config.service";
 
 @Component({
     selector: "app-flow-details-history-tab",
@@ -22,6 +23,11 @@ export class FlowDetailsHistoryTabComponent extends BaseComponent {
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
 
     private loggedUserService = inject(LoggedUserService);
+    private appConfigService = inject(AppConfigService);
+
+    public get grafanaFlowHistoryUrl(): string {
+        return this.appConfigService.grafanaLogs?.flowHistoryUrl ?? "";
+    }
 
     public get isAdmin(): boolean {
         return this.loggedUserService.isAdmin;

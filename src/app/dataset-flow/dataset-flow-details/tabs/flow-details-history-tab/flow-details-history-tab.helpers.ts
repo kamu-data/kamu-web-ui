@@ -1,6 +1,7 @@
 import moment from "moment";
 import {
     FlowEventInitiated,
+    FlowEventScheduledForActivation,
     FlowEventStartConditionUpdated,
     FlowEventTaskChanged,
     FlowEventTriggerAdded,
@@ -39,6 +40,8 @@ export class DatasetFlowDetailsHelpers {
                 const startConditionEvent = flowEvent as FlowEventStartConditionUpdated;
                 return `Waiting for ${this.describeStartCondition(startConditionEvent)}`;
             }
+            case "FlowEventScheduledForActivation":
+                return "Flow scheduled for activation";
             /* istanbul ignore next */
             default:
                 throw new Error("Unknown event typename");
@@ -59,6 +62,8 @@ export class DatasetFlowDetailsHelpers {
                 return { icon: "add_circle", class: "text-muted" };
             case "FlowEventStartConditionUpdated":
                 return { icon: "downloading", class: "text-muted" };
+            case "FlowEventScheduledForActivation":
+                return { icon: "timer", class: "text-muted" };
             case "FlowEventTaskChanged": {
                 const event = flowEvent as FlowEventTaskChanged;
                 switch (event.taskStatus) {
@@ -105,6 +110,12 @@ export class DatasetFlowDetailsHelpers {
                 return this.describeTriggerDetails((flowEvent as FlowEventInitiated).trigger);
             case "FlowEventAborted":
                 return "";
+            case "FlowEventScheduledForActivation": {
+                const event = flowEvent as FlowEventScheduledForActivation;
+                return `Activating at ${moment(event.scheduledForActivationAt).format(
+                    AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                )}`;
+            }
             case "FlowEventTaskChanged": {
                 const event = flowEvent as FlowEventTaskChanged;
                 switch (event.taskStatus) {

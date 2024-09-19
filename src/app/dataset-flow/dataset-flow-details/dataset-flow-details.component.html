@@ -127,7 +127,7 @@
                         />
                     </ng-container>
                     <ng-container *ngIf="activeTab === FlowDetailsTabs.LOGS">
-                        <app-flow-details-logs-tab></app-flow-details-logs-tab>
+                        <app-flow-details-logs-tab [flowDetails]="flowDetails"></app-flow-details-logs-tab>
                     </ng-container>
 
                     <div *ngIf="activeTab === FlowDetailsTabs.USAGE">Usage tab coming soon</div>

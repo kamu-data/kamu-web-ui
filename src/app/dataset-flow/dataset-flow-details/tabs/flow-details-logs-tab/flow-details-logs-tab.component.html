@@ -2,7 +2,7 @@
 
 <ng-container *ngIf="isAdmin">
     <p class="position-relative my-4 box p-4">
-        You can <a href="#">see logs in Grafana</a>
+        You can <a [href]="grafanaTaskLogsUrl(this.grafanaMockURL)">see logs in Grafana</a>
         <mat-icon class="admin-view text-muted"> admin_panel_settings</mat-icon>
     </p>
 </ng-container>

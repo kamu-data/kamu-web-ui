@@ -41,7 +41,7 @@ import { map } from "rxjs/operators";
 import { MaybeNull } from "../common/app.types";
 import { parseCurrentSchema } from "../common/app.helpers";
 import { APOLLO_OPTIONS } from "apollo-angular";
-import { updateCacheHelper } from "../apollo-cache.helper";
+import { resetCacheHelper } from "../apollo-cache.helper";
 
 @Injectable({ providedIn: "root" })
 export class DatasetService {
@@ -104,7 +104,7 @@ export class DatasetService {
         ]).pipe(
             map(([newHeadBlockHash, currentHeadBlockHash]) => {
                 if (currentHeadBlockHash !== newHeadBlockHash) {
-                    this.updateCache(datasetBasics);
+                    this.resetCache(datasetBasics);
                     return true;
                 }
                 return false;
@@ -112,15 +112,9 @@ export class DatasetService {
         );
     }
 
-    private updateCache(datasetBasics: DatasetBasicsFragment): void {
+    private resetCache(datasetBasics: DatasetBasicsFragment): void {
         const cache = this.injector.get(APOLLO_OPTIONS).cache;
-        if (cache) {
-            updateCacheHelper(cache, {
-                accountId: datasetBasics.owner.id,
-                datasetId: datasetBasics.id,
-                fieldNames: ["metadata", "data"],
-            });
-        }
+        resetCacheHelper(cache, { accountId: datasetBasics.owner.id, datasetId: datasetBasics.id });
     }
 
     public requestDatasetBasicDataWithPermissions(info: DatasetInfo): Observable<void> {

@@ -47,7 +47,7 @@ import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { DatasetOperationError } from "../common/errors";
 import { StoreObject } from "@apollo/client/cache";
 import { noCacheFetchPolicy } from "../common/data.helpers";
-import { updateCacheHelper } from "../apollo-cache.helper";
+import { resetCacheHelper, updateCacheHelper } from "../apollo-cache.helper";
 
 @Injectable({ providedIn: "root" })
 export class DatasetApi {
@@ -275,23 +275,10 @@ export class DatasetApi {
         event: string;
     }): Observable<CommitEventToDatasetMutation> {
         return this.commitEventToDatasetGQL
-            .mutate(
-                {
-                    datasetId: params.datasetId,
-                    event: params.event,
-                },
-                {
-                    update: (cache) => {
-                        // New events affect metadata chain in unpredictable manner
-                        // Open question: future impact on "data" field, if new event brings schema evolution
-                        updateCacheHelper(cache, {
-                            accountId: params.accountId,
-                            datasetId: params.datasetId,
-                            fieldNames: ["metadata"],
-                        });
-                    },
-                },
-            )
+            .mutate({
+                datasetId: params.datasetId,
+                event: params.event,
+            })
             .pipe(
                 first(),
                 map((result: MutationResult<CommitEventToDatasetMutation>) => {
@@ -311,24 +298,10 @@ export class DatasetApi {
         content: string;
     }): Observable<UpdateReadmeMutation> {
         return this.updateReadmeGQL
-            .mutate(
-                {
-                    datasetId: params.datasetId,
-                    content: params.content,
-                },
-                {
-                    update: (cache) => {
-                        // Note: dropping readme on its own via `cache.modify` could have been an option,
-                        // but any change to readme affects the state of the metadata chain nodes,
-                        // so dropping metadata field completely is a valid and safe option
-                        updateCacheHelper(cache, {
-                            accountId: params.accountId,
-                            datasetId: params.datasetId,
-                            fieldNames: ["metadata"],
-                        });
-                    },
-                },
-            )
+            .mutate({
+                datasetId: params.datasetId,
+                content: params.content,
+            })
             .pipe(
                 first(),
                 map((result: MutationResult<UpdateReadmeMutation>) => {
@@ -351,13 +324,7 @@ export class DatasetApi {
                 {
                     update: (cache) => {
                         // Drop entire dataset object
-                        const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
-                            cache.identify(DatasetApi.generateAccountKeyFragment(params.accountId)),
-                            params.datasetId,
-                        );
-                        cache.evict({
-                            id: cache.identify(datasetKeyFragment),
-                        });
+                        resetCacheHelper(cache, params);
                     },
                 },
             )
@@ -414,21 +381,10 @@ export class DatasetApi {
         accountId: string;
     }): Observable<UpdateWatermarkMutation> {
         return this.updateWatermarkGQL
-            .mutate(
-                {
-                    datasetId: params.datasetId,
-                    watermark: params.watermark,
-                },
-                {
-                    update: (cache) => {
-                        updateCacheHelper(cache, {
-                            accountId: params.accountId,
-                            datasetId: params.datasetId,
-                            fieldNames: ["metadata"],
-                        });
-                    },
-                },
-            )
+            .mutate({
+                datasetId: params.datasetId,
+                watermark: params.watermark,
+            })
             .pipe(
                 first(),
                 map((result: MutationResult<UpdateWatermarkMutation>) => {

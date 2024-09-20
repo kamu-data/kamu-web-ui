@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - Detect dataset cache after the flows are completed
+
+## [0.26.4] - 2024-09-13
+### Added
+- Support `FlowEventScheduleForActivationEvent` in flow history
 ### Fixed
 - Replaced mock initiator for flows tab for account
 - Restored `Fetch uncacheable` checkbox when configuration exists

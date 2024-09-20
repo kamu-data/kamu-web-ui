@@ -1206,6 +1206,13 @@ export type FlowEventInitiated = FlowEvent & {
     trigger: FlowTrigger;
 };
 
+export type FlowEventScheduledForActivation = FlowEvent & {
+    __typename?: "FlowEventScheduledForActivation";
+    eventId: Scalars["EventID"];
+    eventTime: Scalars["DateTime"];
+    scheduledForActivationAt: Scalars["DateTime"];
+};
+
 export type FlowEventStartConditionUpdated = FlowEvent & {
     __typename?: "FlowEventStartConditionUpdated";
     eventId: Scalars["EventID"];
@@ -2939,6 +2946,9 @@ export type GetFlowByIdQuery = {
                                             __typename?: "FlowEventInitiated";
                                         } & FlowHistoryData_FlowEventInitiated_Fragment)
                                       | ({
+                                            __typename?: "FlowEventScheduledForActivation";
+                                        } & FlowHistoryData_FlowEventScheduledForActivation_Fragment)
+                                      | ({
                                             __typename?: "FlowEventStartConditionUpdated";
                                         } & FlowHistoryData_FlowEventStartConditionUpdated_Fragment)
                                       | ({
@@ -3240,6 +3250,13 @@ type FlowHistoryData_FlowEventInitiated_Fragment = {
         | { __typename: "FlowTriggerPush" };
 };
 
+type FlowHistoryData_FlowEventScheduledForActivation_Fragment = {
+    __typename: "FlowEventScheduledForActivation";
+    scheduledForActivationAt: string;
+    eventId: string;
+    eventTime: string;
+};
+
 type FlowHistoryData_FlowEventStartConditionUpdated_Fragment = {
     __typename: "FlowEventStartConditionUpdated";
     eventId: string;
@@ -3288,6 +3305,7 @@ type FlowHistoryData_FlowEventTriggerAdded_Fragment = {
 export type FlowHistoryDataFragment =
     | FlowHistoryData_FlowEventAborted_Fragment
     | FlowHistoryData_FlowEventInitiated_Fragment
+    | FlowHistoryData_FlowEventScheduledForActivation_Fragment
     | FlowHistoryData_FlowEventStartConditionUpdated_Fragment
     | FlowHistoryData_FlowEventTaskChanged_Fragment
     | FlowHistoryData_FlowEventTriggerAdded_Fragment;
@@ -4508,6 +4526,10 @@ export const FlowHistoryDataFragmentDoc = gql`
                     taskId
                 }
             }
+        }
+        ... on FlowEventScheduledForActivation {
+            __typename
+            scheduledForActivationAt
         }
         ... on FlowEventTaskChanged {
             __typename

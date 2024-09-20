@@ -45,7 +45,7 @@ describe("DatasetFlowDetailsHelpers", () => {
                 mockHistoryFragmentWithFinishedStatus,
                 mockFlowSummaryDataFragments[0],
             ),
-        ).toEqual(flowEventIconOptionsResults[5]);
+        ).toEqual(flowEventIconOptionsResults[6]);
     });
 
     it(`should check flow event icon and class with typename = FlowEventTaskChanged and flow outcome = Failed `, () => {
@@ -54,7 +54,7 @@ describe("DatasetFlowDetailsHelpers", () => {
                 mockHistoryFragmentWithFinishedStatus,
                 mockFlowSummaryDataFragments[4],
             ),
-        ).toEqual(flowEventIconOptionsResults[6]);
+        ).toEqual(flowEventIconOptionsResults[7]);
     });
 
     it(`should check flow event icon and class with typename = FlowEventTaskChanged and flow outcome = Aborted `, () => {
@@ -63,7 +63,7 @@ describe("DatasetFlowDetailsHelpers", () => {
                 mockHistoryFragmentWithFinishedStatus,
                 mockFlowSummaryDataFragments[3],
             ),
-        ).toEqual(flowEventIconOptionsResults[7]);
+        ).toEqual(flowEventIconOptionsResults[8]);
     });
 
     mockFlowHistoryDataFragmentForSubMessages.forEach((item, index) => {
@@ -80,7 +80,7 @@ describe("DatasetFlowDetailsHelpers", () => {
                 mockHistoryFragmentWithFinishedStatus,
                 mockFlowSummaryDataFragments[4],
             ),
-        ).toEqual(flowEventSubMessageResults[10]);
+        ).toEqual(flowEventSubMessageResults[11]);
     });
 
     it(`should check flow event submessage with typename = FlowEventTaskChanged and flow outcome = Success (ingestResult=null)`, () => {
@@ -89,7 +89,7 @@ describe("DatasetFlowDetailsHelpers", () => {
                 mockHistoryFragmentWithFinishedStatus,
                 mockFlowSummaryDataFragments[0],
             ),
-        ).toEqual(flowEventSubMessageResults[11]);
+        ).toEqual(flowEventSubMessageResults[12]);
     });
 
     it(`should check flow event submessage with typename = FlowEventTaskChanged and flow outcome = Success (ingestResult!==null)`, () => {
@@ -98,7 +98,7 @@ describe("DatasetFlowDetailsHelpers", () => {
                 mockHistoryFragmentWithFinishedStatus,
                 mockFlowSummaryDataFragmentIngestResult,
             ),
-        ).toEqual(flowEventSubMessageResults[12]);
+        ).toEqual(flowEventSubMessageResults[13]);
     });
 
     it(`should check flow event submessage with typename = FlowEventTaskChanged and flow outcome = Success (ExecuteTransform)`, () => {
@@ -107,7 +107,7 @@ describe("DatasetFlowDetailsHelpers", () => {
                 mockHistoryFragmentWithFinishedStatus,
                 mockDatasetExecuteTransformFlowSummaryData,
             ),
-        ).toEqual(flowEventSubMessageResults[13]);
+        ).toEqual(flowEventSubMessageResults[14]);
     });
 
     it(`should check don't show dynamic image`, () => {

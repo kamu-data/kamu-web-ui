@@ -1,5 +1,21 @@
 @import "var";
 
+:host {
+    ::ng-deep {
+        .mat-slide-toggle {
+            .mat-slide-toggle-ripple {
+                position: relative;
+            }
+        }
+
+        .mdc-switch {
+            .mdc-switch__ripple {
+                display: none;
+            }
+        }
+    }
+}
+
 .p-responsive {
     padding: 0 60px;
 

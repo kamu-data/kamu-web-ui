@@ -15,7 +15,7 @@ import { DatasetViewTypeEnum } from "../dataset-view.interface";
 import { SideNavHelper } from "../../common/sidenav.helper";
 import { isMobileView, promiseWithCatch } from "src/app/common/app.helpers";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
-import { DatasetPermissionsService } from "../dataset.permissions.service";
+import { ElementsViewService, EnumViewActions } from "src/app/services/elements-view.service";
 
 @Component({
     selector: "app-dataset-view-menu",
@@ -36,7 +36,7 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
 
     private sideNavHelper: SideNavHelper;
 
-    private datasetPermissionsServices = inject(DatasetPermissionsService);
+    private elementsViewService = inject(ElementsViewService);
     private widgetHeightService = inject(WidgetHeightService);
 
     public ngAfterViewInit(): void {
@@ -85,7 +85,14 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
     }
 
     public get shouldAllowSettingsTab(): boolean {
-        return this.datasetPermissionsServices.shouldAllowSettingsTab(this.datasetPermissions);
+        return this.elementsViewService.executeAction(
+            EnumViewActions.SHOW_SETTINGS_TAB_ACTION,
+            this.datasetPermissions,
+        );
+    }
+
+    public get shouldAllowFlowsTab(): boolean {
+        return this.elementsViewService.executeAction(EnumViewActions.SHOW_FLOWS_TAB_ACTION, this.datasetPermissions);
     }
 
     public get datasetLink(): string {

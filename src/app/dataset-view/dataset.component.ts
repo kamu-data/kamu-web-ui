@@ -9,12 +9,12 @@ import { DatasetInfo } from "../interface/navigation.interface";
 import { promiseWithCatch } from "../common/app.helpers";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { MaybeNull, MaybeUndefined } from "../common/app.types";
-import { DatasetPermissionsService } from "./dataset.permissions.service";
 import { ReplaySubject, Subject, of } from "rxjs";
 import { LineageGraphNodeData, LineageGraphNodeKind } from "./additional-components/lineage-component/lineage-model";
 import _ from "lodash";
 import { BaseDatasetDataComponent } from "../common/base-dataset-data.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { ElementsViewService, EnumViewActions } from "../services/elements-view.service";
 
 @Component({
     selector: "app-dataset",
@@ -30,9 +30,9 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
 
     private mainDatasetQueryComplete$: Subject<DatasetInfo> = new ReplaySubject<DatasetInfo>(1 /* bufferSize */);
 
-    private datasetPermissionsServices = inject(DatasetPermissionsService);
     private router = inject(Router);
     private cdr = inject(ChangeDetectorRef);
+    private elementsViewService = inject(ElementsViewService);
 
     public ngOnInit(): void {
         const urlDatasetInfo = this.getDatasetInfoFromUrl();
@@ -123,7 +123,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe((datasetPermissions: DatasetPermissionsFragment) => {
-                if (this.datasetPermissionsServices.shouldAllowFlowsTab(datasetPermissions)) {
+                if (this.elementsViewService.executeAction(EnumViewActions.SHOW_FLOWS_TAB_ACTION, datasetPermissions)) {
                     this.datasetViewType = DatasetViewTypeEnum.Flows;
                 } else {
                     this.datasetViewType = DatasetViewTypeEnum.Overview;
@@ -197,7 +197,9 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe((datasetPermissions: DatasetPermissionsFragment) => {
-                if (this.datasetPermissionsServices.shouldAllowSettingsTab(datasetPermissions)) {
+                if (
+                    this.elementsViewService.executeAction(EnumViewActions.SHOW_SETTINGS_TAB_ACTION, datasetPermissions)
+                ) {
                     this.datasetViewType = DatasetViewTypeEnum.Settings;
                 } else {
                     this.datasetViewType = DatasetViewTypeEnum.Overview;

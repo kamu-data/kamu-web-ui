@@ -10,6 +10,8 @@ import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import { Observable } from "rxjs";
 import { LoggedUserService } from "../logged-user.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { MatSlideToggleChange } from "@angular/material/slide-toggle";
+import { LocalStorageService } from "src/app/services/local-storage.service";
 
 @Component({
     selector: "app-settings",
@@ -23,12 +25,15 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
 
     public activeTab: AccountSettingsTabs = AccountSettingsTabs.PROFILE;
     public user$: Observable<MaybeNull<AccountFragment>>;
+    public adminPrivelegesOn: boolean = false;
 
     private router = inject(Router);
     private route = inject(ActivatedRoute);
     private loggedUserService = inject(LoggedUserService);
+    private localStorageService = inject(LocalStorageService);
 
     public ngOnInit(): void {
+        this.initAdminSlideToggle();
         this.router.events
             .pipe(
                 filter((event) => event instanceof NavigationEnd),
@@ -46,6 +51,14 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
         return `/${ProjectLinks.URL_SETTINGS}/${tab}`;
     }
 
+    public isAdmin(): boolean {
+        return this.loggedUserService.isAdmin;
+    }
+
+    public adminSlideToggleChange(event: MatSlideToggleChange): void {
+        this.localStorageService.setAdminPriveleges(event.checked);
+    }
+
     private extractActiveTabFromRoute(): void {
         const categoryParam: MaybeUndefined<string> = this.route.snapshot.params[
             ProjectLinks.URL_PARAM_CATEGORY
@@ -60,5 +73,12 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
         }
 
         this.activeTab = AccountSettingsTabs.PROFILE;
+    }
+
+    private initAdminSlideToggle(): void {
+        const flag = this.localStorageService.adminPriveleges;
+        if (flag) {
+            this.adminPrivelegesOn = flag;
+        }
     }
 }

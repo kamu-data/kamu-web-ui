@@ -92,6 +92,7 @@
             <div class="btn-group-parent" *ngIf="dataUpdate$ | async as dataUpdate">
                 <div class="d-flex">
                     <button
+                        data-test-id="shareSqlQueryButton"
                         (click)="shareQuery()"
                         class="share-query-button border border-1 rounded d-flex justify-content-center align-items-center me-4"
                     >

@@ -90,23 +90,31 @@
         <div class="sql-query-editor-header flex-column justify-content-between">
             <h2 class="box-title align-items-center pb-3 m-0">Query:</h2>
             <div class="btn-group-parent" *ngIf="dataUpdate$ | async as dataUpdate">
-                <button
-                    data-test-id="runSqlQueryButton"
-                    name="run sql button"
-                    (click)="runSQLRequest({ query: sqlRequestCode }, true)"
-                    [disabled]="!dataUpdate.schema?.fields?.length"
-                    class="sql-run-button border border-1 rounded-left-2 border-right-0 btn-group-item btn d-flex justify-content-center align-items-center"
-                >
-                    <span>Run</span><mat-icon>play_arrow</mat-icon>
-                </button>
-                <button
-                    class="starred rounded-right-2 border-1 border btn-sm btn btn-group-item d-flex justify-content-center align-items-center"
-                    [matMenuTriggerFor]="menu"
-                    aria-label="Example icon-button with a menu"
-                    data-test-id="searchAdditionalButtons"
-                >
-                    <mat-icon>arrow_drop_down</mat-icon>
-                </button>
+                <div class="d-flex">
+                    <button
+                        (click)="shareQuery()"
+                        class="share-query-button border border-1 rounded d-flex justify-content-center align-items-center me-4"
+                    >
+                        <span class="mr-1 button-text"> Share query</span><mat-icon>share</mat-icon>
+                    </button>
+                    <button
+                        data-test-id="runSqlQueryButton"
+                        name="run sql button"
+                        (click)="runSQLRequest({ query: sqlRequestCode }, true)"
+                        [disabled]="!dataUpdate.schema?.fields?.length"
+                        class="sql-run-button border border-1 rounded-left-2 border-right-0 btn-group-item btn d-flex justify-content-center align-items-center"
+                    >
+                        <span>Run</span><mat-icon>play_arrow</mat-icon>
+                    </button>
+                    <button
+                        class="starred rounded-right-2 border-1 border btn-sm btn btn-group-item d-flex justify-content-center align-items-center"
+                        [matMenuTriggerFor]="menu"
+                        aria-label="Example icon-button with a menu"
+                        data-test-id="searchAdditionalButtons"
+                    >
+                        <mat-icon>arrow_drop_down</mat-icon>
+                    </button>
+                </div>
                 <mat-menu #menu="matMenu">
                     <div class="select-menu-modal notifications-component-menu-modal">
                         <div class="select-menu-list">
@@ -136,7 +144,7 @@
             <ng-container *ngIf="!this.editorLoaded || sqlLoading">
                 <mat-progress-bar data-test-id="editor-progress-bar" class="position-absolute" mode="indeterminate" />
             </ng-container>
-            <div class="border border-1 rounded-2 px-2 py-4 position-relative">
+            <div class="border border-1 rounded-2 px-2 py-4 position-relative mt-2">
                 <app-sql-editor
                     [(template)]="sqlRequestCode"
                     [error]="sqlErrorMarker$ | async"

@@ -43,8 +43,8 @@
                 class="form-control d-inline"
                 id="login"
                 data-test-id="input-login"
-                required
-                (keyup)="resetPasswordLoginError()"
+                (keyup)="onChangeInputField($event)"
+                appAutofocus
                 [class.error-border-color]="passwordLoginError$ | async"
             />
             <div *ngIf="loginControl?.invalid && (loginControl?.touched || loginControl?.dirty)">
@@ -65,8 +65,7 @@
                 class="form-control d-inline"
                 id="password"
                 data-test-id="input-password"
-                required
-                (keyup)="resetPasswordLoginError()"
+                (keyup)="onChangeInputField($event)"
                 [class.error-border-color]="passwordLoginError$ | async"
             />
             <div *ngIf="passwordControl?.invalid && (passwordControl?.touched || passwordControl?.dirty)">

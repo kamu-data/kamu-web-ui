@@ -33,7 +33,8 @@ import { SqlEditorComponent } from "src/app/shared/editor/components/sql-editor/
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { HttpClientModule } from "@angular/common/http";
 import { Apollo } from "apollo-angular";
-import { ToastrModule } from "ngx-toastr";
+import { ToastrModule, ToastrService } from "ngx-toastr";
+import { Clipboard } from "@angular/cdk/clipboard";
 
 describe("DataComponent", () => {
     let component: DataComponent;
@@ -41,6 +42,8 @@ describe("DataComponent", () => {
     let datasetSubsService: DatasetSubscriptionsService;
     let location: Location;
     let ngbModalService: NgbModal;
+    let clipboard: Clipboard;
+    let toastrService: ToastrService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -65,6 +68,8 @@ describe("DataComponent", () => {
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         location = TestBed.inject(Location);
         ngbModalService = TestBed.inject(NgbModal);
+        clipboard = TestBed.inject(Clipboard);
+        toastrService = TestBed.inject(ToastrService);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
         spyOn(location, "getState").and.returnValue({ start: 0, end: 100 });
@@ -184,4 +189,16 @@ describe("DataComponent", () => {
         } as OverviewUpdate);
         expect(ngbModalServiceSpy).toHaveBeenCalledTimes(1);
     });
+
+    it("should check click on `Share query` button", fakeAsync(() => {
+        const toastServiceSpy = spyOn(toastrService, "success");
+        const clipboardCopySpy = spyOn(clipboard, "copy");
+        tick();
+        fixture.detectChanges();
+
+        emitClickOnElementByDataTestId(fixture, "shareSqlQueryButton");
+        expect(toastServiceSpy).toHaveBeenCalledWith("Copied url to clipboard");
+        expect(clipboardCopySpy).toHaveBeenCalledTimes(1);
+        flush();
+    }));
 });

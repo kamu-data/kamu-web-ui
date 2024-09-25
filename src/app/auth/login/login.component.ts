@@ -78,4 +78,10 @@ export class LoginComponent extends BaseComponent implements OnInit {
     public resetPasswordLoginError(): void {
         this.loginService.resetPasswordLoginError();
     }
+
+    public onChangeInputField(event: KeyboardEvent): void {
+        if (event.key !== "Enter") {
+            this.resetPasswordLoginError();
+        }
+    }
 }

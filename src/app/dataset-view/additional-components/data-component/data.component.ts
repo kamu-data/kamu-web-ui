@@ -25,6 +25,9 @@ import { DatasetFlowsService } from "../flows-component/services/dataset-flows.s
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { Clipboard } from "@angular/cdk/clipboard";
+import ProjectLinks from "src/app/project-links";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
     selector: "app-data",
@@ -57,6 +60,8 @@ export class DataComponent extends BaseComponent implements OnInit {
     private datasetFlowsService = inject(DatasetFlowsService);
     private navigationService = inject(NavigationService);
     private cdr = inject(ChangeDetectorRef);
+    private clipboard = inject(Clipboard);
+    private toastService = inject(ToastrService);
 
     public ngOnInit(): void {
         this.overviewUpdate$ = this.datasetSubsService.overviewChanges;
@@ -107,10 +112,15 @@ export class DataComponent extends BaseComponent implements OnInit {
     }
 
     private buildSqlRequestCode(): void {
-        this.sqlRequestCode += `'${this.datasetBasics.alias}'`;
-        const offset = this.location.getState() as MaybeNull<Partial<OffsetInterval>>;
-        if (offset && typeof offset.start !== "undefined" && typeof offset.end !== "undefined") {
-            this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;
+        const sqlQueryFromUrl = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_SQL_QUERY);
+        if (sqlQueryFromUrl) {
+            this.sqlRequestCode = sqlQueryFromUrl;
+        } else {
+            this.sqlRequestCode += `'${this.datasetBasics.alias}'`;
+            const offset = this.location.getState() as MaybeNull<Partial<OffsetInterval>>;
+            if (offset && typeof offset.start !== "undefined" && typeof offset.end !== "undefined") {
+                this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;
+            }
         }
     }
 
@@ -129,6 +139,13 @@ export class DataComponent extends BaseComponent implements OnInit {
             modalRefInstance.datasetBasics = this.datasetBasics;
             modalRefInstance.overview = overviewUpdate;
         }
+    }
+
+    public shareQuery(): void {
+        const url = new URL(`${window.location.href}`);
+        url.searchParams.set(ProjectLinks.URL_QUERY_PARAM_SQL_QUERY, this.sqlRequestCode);
+        this.clipboard.copy(url.href);
+        this.toastService.success("Copied url to clipboard");
     }
 
     private updateNow(): void {

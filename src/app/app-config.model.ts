@@ -5,6 +5,7 @@ export interface AppConfig {
     ingestUploadFileLimitMb: number;
     featureFlags: AppConfigFeatureFlags;
     loginInstructions?: AppConfigLoginInstructions;
+    grafanaLogs?: GrafanaLogsConfiguration;
 }
 
 export interface AppConfigLoginInstructions {
@@ -21,4 +22,9 @@ export interface AppConfigFeatureFlags {
     enableLogout: boolean;
     enableScheduling: boolean;
     enableDatasetEnvVarsManagment: boolean;
+}
+
+export interface GrafanaLogsConfiguration {
+    taskDetailsUrl?: string;
+    flowHistoryUrl?: string;
 }

@@ -7,6 +7,7 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { mockFlowHistoryDataFragment, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import { SharedModule } from "src/app/shared/shared/shared.module";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("FlowDetailsHistoryTabComponent", () => {
     let component: FlowDetailsHistoryTabComponent;
@@ -22,6 +23,7 @@ describe("FlowDetailsHistoryTabComponent", () => {
                 ApolloTestingModule,
                 SharedTestModule,
                 SharedModule,
+                HttpClientTestingModule,
             ],
             providers: [Apollo],
         }).compileComponents();

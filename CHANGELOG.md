@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
+- Added the ability to view task logs using Grafana only for the admin(Logs tab)
 - Detect dataset cache after the flows are completed
 - Added `Share query` button to the Data tab
 ### Fixed

@@ -29,7 +29,7 @@ import {
     GetFlowByIdDocument,
     GetFlowByIdQuery,
 } from "./kamu.graphql.interface";
-import { TEST_DATASET_ID } from "./mock/dataset.mock";
+import { TEST_ACCOUNT_ID, TEST_DATASET_ID } from "./mock/dataset.mock";
 import { DatasetFlowApi } from "./dataset-flow.api";
 import {
     mockIngestGetDatasetFlowConfigsSuccess,
@@ -128,6 +128,7 @@ describe("DatasetFlowApi", () => {
     it("should check setDatasetFlowSchedule", () => {
         service
             .setDatasetFlowSchedule({
+                accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
                 datasetFlowType: DatasetFlowType.Ingest,
                 paused: MOCK_PAUSED,
@@ -162,6 +163,7 @@ describe("DatasetFlowApi", () => {
     it("should check setDatasetFlowBatching", () => {
         service
             .setDatasetFlowBatching({
+                accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
                 datasetFlowType: DatasetFlowType.Ingest,
                 paused: MOCK_PAUSED,
@@ -190,6 +192,7 @@ describe("DatasetFlowApi", () => {
     it("should check datasetTriggerFlow", () => {
         service
             .datasetTriggerFlow({
+                accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
                 datasetFlowType: DatasetFlowType.Ingest,
             })

@@ -10,7 +10,7 @@ import { promiseWithCatch } from "../common/app.helpers";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { MaybeNull, MaybeUndefined } from "../common/app.types";
 import { DatasetPermissionsService } from "./dataset.permissions.service";
-import { ReplaySubject, Subject, of } from "rxjs";
+import { ReplaySubject, Subject, iif, of } from "rxjs";
 import { LineageGraphNodeData, LineageGraphNodeKind } from "./additional-components/lineage-component/lineage-model";
 import _ from "lodash";
 import { BaseDatasetDataComponent } from "../common/base-dataset-data.component";
@@ -27,6 +27,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
     public readonly DatasetViewTypeEnum = DatasetViewTypeEnum;
     public sqlLoading: boolean = false;
+    public currentHeadBlockHash: string = "";
 
     private mainDatasetQueryComplete$: Subject<DatasetInfo> = new ReplaySubject<DatasetInfo>(1 /* bufferSize */);
 
@@ -63,9 +64,24 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
             _.isNil(this.datasetBasics) ||
             this.datasetBasics.name !== urlDatasetInfo.datasetName ||
             this.datasetBasics.owner.accountName !== urlDatasetInfo.accountName ||
-            this.datasetViewType === DatasetViewTypeEnum.Flows
+            [DatasetViewTypeEnum.Overview, DatasetViewTypeEnum.Metadata, DatasetViewTypeEnum.Data].includes(
+                this.datasetViewType,
+            )
         ) {
-            this.requestMainData(urlDatasetInfo);
+            if (this.datasetBasics) {
+                this.datasetService
+                    .isHeadHashBlockChanged(this.datasetBasics)
+                    .pipe(
+                        switchMap((isNewHead: boolean) =>
+                            iif(() => isNewHead, this.datasetService.requestDatasetMainData(urlDatasetInfo), of()),
+                        ),
+                        tap(() => {
+                            this.mainDatasetQueryComplete$.next(urlDatasetInfo);
+                        }),
+                        takeUntilDestroyed(this.destroyRef),
+                    )
+                    .subscribe();
+            }
         }
     }
 
@@ -143,6 +159,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
                 ),
                 first(),
                 switchMap((info: DatasetInfo) => {
+                    /* istanbul ignore else */
                     if (this.datasetViewType === DatasetViewTypeEnum.History) {
                         return this.datasetService.requestDatasetHistory(info, 20, currentPage - 1);
                     } else {
@@ -165,6 +182,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
                 ),
                 first(),
                 switchMap((info) => {
+                    /* istanbul ignore else */
                     if (this.datasetViewType === DatasetViewTypeEnum.Lineage) {
                         return this.datasetService.requestDatasetLineage(info);
                     } else {
@@ -218,6 +236,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
 
     public onClickLineageNode(node: Node): void {
         const nodeData: LineageGraphNodeData = node.data as LineageGraphNodeData;
+        /* istanbul ignore else */
         if (nodeData.kind === LineageGraphNodeKind.Dataset) {
             this.onSelectDataset(nodeData.dataObject.accountName, nodeData.dataObject.name);
         } else {

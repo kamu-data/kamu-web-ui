@@ -54,3 +54,16 @@ export const updateCacheHelper = (
         });
     });
 };
+
+export const resetCacheHelper = (
+    cache: ApolloCache<unknown>,
+    params: { accountId: string; datasetId: string },
+): void => {
+    const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
+        cache.identify(DatasetApi.generateAccountKeyFragment(params.accountId)),
+        params.datasetId,
+    );
+    cache.evict({
+        id: cache.identify(datasetKeyFragment),
+    });
+};

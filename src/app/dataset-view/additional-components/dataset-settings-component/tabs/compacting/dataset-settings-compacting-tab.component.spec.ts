@@ -22,6 +22,7 @@ import { of } from "rxjs";
 import { NavigationService } from "src/app/services/navigation.service";
 import AppValues from "src/app/common/app.values";
 import { ActivatedRoute } from "@angular/router";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("DatasetSettingsCompactingTabComponent", () => {
     let component: DatasetSettingsCompactingTabComponent;
@@ -66,6 +67,7 @@ describe("DatasetSettingsCompactingTabComponent", () => {
                 MatIconModule,
                 NgbTooltipModule,
                 MatRadioModule,
+                HttpClientTestingModule,
             ],
         }).compileComponents();
 

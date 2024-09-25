@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - Added the ability to view task logs using Grafana only for the admin(Logs tab)
+- Added `Share query` button to the Data tab
+### Fixed
+- Added autofocus to the login field on the login page
 
 ## [0.26.4] - 2024-09-13
 ### Added

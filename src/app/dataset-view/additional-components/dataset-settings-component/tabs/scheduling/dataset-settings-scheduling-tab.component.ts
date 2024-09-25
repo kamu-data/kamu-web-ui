@@ -213,6 +213,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
             this.setScheduleOptions();
             this.datasetSchedulingService
                 .setDatasetFlowSchedule({
+                    accountId: this.datasetBasics.owner.id,
                     datasetId: this.datasetBasics.id,
                     datasetFlowType: DatasetFlowType.Ingest,
                     paused: !(this.updateState.value as boolean),
@@ -227,6 +228,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
         } else {
             this.datasetSchedulingService
                 .setDatasetFlowBatching({
+                    accountId: this.datasetBasics.owner.id,
                     datasetId: this.datasetBasics.id,
                     datasetFlowType: DatasetFlowType.ExecuteTransform,
                     paused: !(this.updateState.value as boolean),

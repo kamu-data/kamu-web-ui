@@ -20,6 +20,7 @@ import { mockDatasets } from "src/app/common/components/flows-table/flows-table.
 import { FlowsTableFiltersOptions } from "src/app/common/components/flows-table/flows-table.types";
 import { NgbPaginationModule } from "@ng-bootstrap/ng-bootstrap";
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 
 describe("AccountFlowsTabComponent", () => {
@@ -38,6 +39,7 @@ describe("AccountFlowsTabComponent", () => {
                 ToastrModule.forRoot(),
                 NgbPaginationModule,
                 AngularMultiSelectModule,
+                HttpClientTestingModule,
             ],
             declarations: [AccountFlowsTabComponent, TileBaseWidgetComponent, FlowsTableComponent, PaginationComponent],
             providers: [

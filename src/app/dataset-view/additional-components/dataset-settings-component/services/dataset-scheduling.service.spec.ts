@@ -20,7 +20,7 @@ import {
     TimeUnit,
     TransformConditionInput,
 } from "src/app/api/kamu.graphql.interface";
-import { mockDatasetInfo } from "src/app/search/mock.data";
+import { mockDatasetInfo, TEST_ACCOUNT_ID } from "src/app/search/mock.data";
 
 describe("DatasetSchedulingService", () => {
     let service: DatasetSchedulingService;
@@ -68,6 +68,7 @@ describe("DatasetSchedulingService", () => {
 
         const subscription$ = service
             .setDatasetFlowSchedule({
+                accountId: TEST_ACCOUNT_ID,
                 datasetId: MOCK_DATASET_ID,
                 datasetFlowType: MOCK_DATASET_FLOW_TYPE,
                 paused: MOCK_PAUSED,
@@ -92,6 +93,7 @@ describe("DatasetSchedulingService", () => {
 
         const subscription$ = service
             .setDatasetFlowSchedule({
+                accountId: TEST_ACCOUNT_ID,
                 datasetId: MOCK_DATASET_ID,
                 datasetFlowType: MOCK_DATASET_FLOW_TYPE,
                 paused: MOCK_PAUSED,
@@ -111,6 +113,7 @@ describe("DatasetSchedulingService", () => {
 
         const subscription$ = service
             .setDatasetFlowBatching({
+                accountId: TEST_ACCOUNT_ID,
                 datasetId: MOCK_DATASET_ID,
                 datasetFlowType: DatasetFlowType.ExecuteTransform,
                 paused: false,
@@ -133,6 +136,7 @@ describe("DatasetSchedulingService", () => {
 
         const subscription$ = service
             .setDatasetFlowBatching({
+                accountId: TEST_ACCOUNT_ID,
                 datasetId: MOCK_DATASET_ID,
                 datasetFlowType: DatasetFlowType.ExecuteTransform,
                 paused: false,

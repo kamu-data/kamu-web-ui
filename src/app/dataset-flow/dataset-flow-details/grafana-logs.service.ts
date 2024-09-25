@@ -14,12 +14,6 @@ export class GrafanaLogsService {
         return this.proccessUrl(initialUrl);
     }
 
-    // TODO:
-    // public buildFlowHistoryUrl(initialUrl: string, flowDetails: DatasetFlowByIdResponse): string {
-    //     this.addFlowHistoryFields(flowDetails);
-    //     return this.proccessUrl(initialUrl);
-    // }
-
     private proccessUrl(url: string): string {
         return url
             .replace(
@@ -44,15 +38,13 @@ export class GrafanaLogsService {
                 key: "fromTime",
                 value: moment(flowDetails.flow.timing.runningSince).subtract(30, "seconds").valueOf().toString(),
             });
+            const finishedTime = flowDetails.flow.timing.finishedAt;
             this.availableFields.push({
                 key: "toTime",
-                value: moment(flowDetails.flow.timing.finishedAt).add(30, "seconds").valueOf().toString(),
+                value: finishedTime
+                    ? moment(finishedTime).add(30, "seconds").valueOf().toString()
+                    : moment.now().toString(),
             });
         }
-    }
-
-    // TODO Implemented fields for history
-    private addFlowHistoryFields() {
-        this.availableFields = [];
     }
 }

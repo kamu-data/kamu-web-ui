@@ -77,7 +77,11 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
                     .pipe(
                         switchMap((isNewHead: boolean) =>
                             iif(
-                                () => isNewHead || this.datasetViewType === DatasetViewTypeEnum.Lineage,
+                                () =>
+                                    isNewHead ||
+                                    this.datasetViewType === DatasetViewTypeEnum.Lineage ||
+                                    this.datasetBasics?.name !== urlDatasetInfo.datasetName ||
+                                    this.datasetBasics.owner.accountName !== urlDatasetInfo.accountName,
                                 this.datasetService.requestDatasetMainData(urlDatasetInfo),
                                 of(),
                             ),

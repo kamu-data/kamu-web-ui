@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Ureleased
 ### Fixed
 - Lineage graph: redirect to another dataset
+- Application search: redirect to another dataset
 
 ## [0.27.0] - 2024-09-25
 ### Added

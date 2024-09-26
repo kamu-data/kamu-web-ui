@@ -64,16 +64,23 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
             _.isNil(this.datasetBasics) ||
             this.datasetBasics.name !== urlDatasetInfo.datasetName ||
             this.datasetBasics.owner.accountName !== urlDatasetInfo.accountName ||
-            [DatasetViewTypeEnum.Overview, DatasetViewTypeEnum.Metadata, DatasetViewTypeEnum.Data].includes(
-                this.datasetViewType,
-            )
+            [
+                DatasetViewTypeEnum.Overview,
+                DatasetViewTypeEnum.Metadata,
+                DatasetViewTypeEnum.Data,
+                DatasetViewTypeEnum.Lineage,
+            ].includes(this.datasetViewType)
         ) {
             if (this.datasetBasics) {
                 this.datasetService
                     .isHeadHashBlockChanged(this.datasetBasics)
                     .pipe(
                         switchMap((isNewHead: boolean) =>
-                            iif(() => isNewHead, this.datasetService.requestDatasetMainData(urlDatasetInfo), of()),
+                            iif(
+                                () => isNewHead || this.datasetViewType === DatasetViewTypeEnum.Lineage,
+                                this.datasetService.requestDatasetMainData(urlDatasetInfo),
+                                of(),
+                            ),
                         ),
                         tap(() => {
                             this.mainDatasetQueryComplete$.next(urlDatasetInfo);

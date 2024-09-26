@@ -64,6 +64,63 @@ export class DataComponent extends BaseComponent implements OnInit {
     private toastService = inject(ToastrService);
 
     public ngOnInit(): void {
+        // merge(
+        //     fromEvent(document, "mousedown"),
+        //     fromEvent(document, "touchstart").pipe(
+        //         map((event) => ({
+        //             target: event.target,
+        //             screenX: (event as TouchEvent).touches[0].screenX,
+        //             screenY: (event as TouchEvent).touches[0].screenY,
+        //         })),
+        //     ),
+        // )
+        //     .pipe(
+        //         filter((event) => {
+        //             const classs = (event.target as HTMLDivElement).className;
+        //             if (classs && typeof classs === "string") {
+        //                 return classs == "cell-border-bottom";
+        //             }
+        //             return false;
+        //         }),
+        //     )
+        //     .subscribe((event) => {
+        //         this.div = (event.target as HTMLDivElement).parentElement;
+
+        //         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+        //         this.rectOld = this.div.getBoundingClientRect();
+        //         this.origin = { x: (event as MouseEvent).screenX, y: (event as MouseEvent).screenY };
+        //         merge(fromEvent(document, "mouseup"), fromEvent(document, "touchend"))
+        //             .pipe(take(1))
+        //             .subscribe(() => {
+        //                 if (this.moveSubscription) {
+        //                     this.moveSubscription.unsubscribe();
+        //                     this.moveSubscription = undefined;
+        //                 }
+        //             });
+
+        //         if (!this.moveSubscription && this.div) {
+        //             this.moveSubscription = merge(
+        //                 fromEvent(document, "mousemove"),
+        //                 fromEvent(document, "touchmove").pipe(
+        //                     map((event) => ({
+        //                         target: event.target,
+        //                         screenX: (event as TouchEvent).touches[0].screenX,
+        //                         screenY: (event as TouchEvent).touches[0].screenY,
+        //                     })),
+        //                 ),
+        //             ).subscribe((moveEvent) => {
+        //                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        //                 const incrTop = (moveEvent as MouseEvent).screenY - this.origin.y;
+
+        //                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+        //                 const heigth = this.rectOld.height + incrTop;
+        //                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        //                 this.div.style.height = (heigth < 220 ? 220 : heigth) + "px";
+        //                 this.heightMonaco = (heigth < 220 ? 190 : heigth - 30) + "px";
+        //                 this.cdr.detectChanges();
+        //             });
+        //         }
+        //     });
         this.overviewUpdate$ = this.datasetSubsService.overviewChanges;
         this.sqlErrorMarker$ = this.datasetSubsService.sqlErrorOccurrences.pipe(
             map((data: DataSqlErrorUpdate) => data.error),

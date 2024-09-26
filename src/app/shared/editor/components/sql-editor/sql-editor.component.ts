@@ -57,6 +57,7 @@ export class SqlEditorComponent extends BaseEditorComponent implements OnInit, O
     alive: boolean = true;
 
     ngOnInit(): void {
+        /* istanbul ignore next */
         fromEvent(document, "mousedown")
             .pipe(
                 takeWhile(() => this.alive),

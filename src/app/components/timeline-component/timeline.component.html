@@ -1,122 +1,93 @@
-<div class="timeline-block">
-    <div *ngFor="let block of history; let i = index">
-        <div class="timeline-block__item timeline-block__item--condensed pt-0 pb-2">
-            <div class="timeline-block__item-badge">
-                <svg-icon name="git-commit" />
-            </div>
-            <div class="timeline-block__body">
-                <ol class="mt-2 list-unstyled box box--condensed ml-n6 ml-sm-0 position-relative">
-                    <li
-                        class="box__row box__row--focus-gray mt-0 d-flex"
-                        data-url="/kamu-data/kamu-web-ui/commits/75e711dfb8e35335b622f0c56ff59fc3fc7cea7d/commits_list_item"
-                    >
-                        <div class="flex-auto min-width-0 details">
-                            <div class="d-flex align-items-center mt-1" style="gap: 5px">
-                                <mat-icon *ngIf="block.event.__typename === 'Seed'">add_circle_outline</mat-icon>
-                                <mat-icon *ngIf="block.event.__typename === 'AddData'">input</mat-icon>
-                                <mat-icon *ngIf="block.event.__typename === 'ExecuteTransform'">call_merge</mat-icon>
-                                <mat-icon
-                                    *ngIf="
-                                        [
-                                            'SetAttachments',
-                                            'SetInfo',
-                                            'SetLicense',
-                                            'SetVocab',
-                                            'SetTransform',
-                                            'SetPollingSource',
-                                            'SetDataSchema',
-                                            'AddPushSource',
-                                            'DisablePushSource',
-                                            'DisablePollingSource'
-                                        ].includes(block.event.__typename)
-                                    "
-                                    >more_horiz</mat-icon
-                                >
-                                <a
-                                    class="link--primary font-weight-bold"
-                                    [routerLink]="[
-                                        '/',
-                                        block.author.accountName,
-                                        datasetName,
-                                        URL_BLOCK,
-                                        block.blockHash
-                                    ]"
-                                    data-test-id="navigate-to-block"
-                                    >{{ descriptionForMetadataBlock(block) }}
-                                </a>
-                            </div>
-
-                            <div class="d-flex align-items-center mt-1">
-                                <div class="avatar-stack flex-self-start">
-                                    <div>
-                                        <img
-                                            [src]="block.author.avatarUrl || DEFAULT_AVATAR_URL"
-                                            width="20"
-                                            height="20"
-                                            [alt]="'@' + block.author.accountName"
-                                            [attr.data-test-id]="'timeline-avatarUrl-' + i"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div class="f6 color-fg-muted min-width-0">
-                                    <a
-                                        class="commit-author user-mention"
-                                        [title]="'View all commits by ' + block.author.accountName"
-                                        [routerLink]="['/', block.author.accountName]"
-                                        >{{ block.author.accountName }}</a
-                                    >
-
-                                    committed
-                                    <app-display-time class="no-wrap" [data]="block.systemTime" />
-                                </div>
-                                <div class="ml-1"></div>
-                            </div>
-                        </div>
-
-                        <div class="d-none d-md-flex align-items-center flex-shrink-0">
-                            <div>
-                                <button
-                                    type="button"
-                                    class="signed-commit-badge verified signed-commit-badge-small m-2"
-                                    placement="left"
-                                    ngbPopover="Verified"
-                                    [popoverTitle]="popTitle"
-                                    [ngbPopover]="popContent"
-                                    data-test-id="button-verified"
-                                >
-                                    Verified
-                                </button>
-                            </div>
-
-                            <div data-view-component="true" class="btns-group-item m-4">
-                                <app-display-hash
-                                    [value]="block.blockHash"
-                                    [navigationTargetDataset]="{
-                                        accountName: block.author.accountName,
-                                        datasetName: this.datasetName
-                                    }"
-                                    [showCopyButton]="true"
-                                    [class]="'text-decoration-none text-dark mr-4 hashBlock'"
-                                />
-                            </div>
-                            <div data-view-component="true" class="btns-group-item">
-                                <a
-                                    href="/kamu-data/kamu-web-ui/tree/75e711dfb8e35335b622f0c56ff59fc3fc7cea7d"
-                                    aria-label="Browse the repository at this point in the history"
-                                    data-view-component="true"
-                                    class="tooltipped tooltipped-sw btn-outline btn btns-group-item"
-                                >
-                                    <svg-icon name="code" />
-                                </a>
-                            </div>
-                        </div>
-                    </li>
-                </ol>
-            </div>
+<ul class="timeline-block">
+    <li class="timeline-block__item pt-0 pb-2" *ngFor="let block of history; let i = index">
+        <div class="container-icon">
+            <mat-icon class="timeline-icon text-muted">{{ setTimelineItemIcon(block) }}</mat-icon>
         </div>
-    </div>
-</div>
+        <div class="timeline-block__body">
+            <ol class="mt-2 list-unstyled box box--condensed ml-n6 ml-sm-0 position-relative">
+                <li
+                    class="box__row box__row--focus-gray mt-0 d-flex"
+                    data-url="/kamu-data/kamu-web-ui/commits/75e711dfb8e35335b622f0c56ff59fc3fc7cea7d/commits_list_item"
+                >
+                    <div class="flex-auto min-width-0 details">
+                        <div class="d-flex align-items-center mt-3">
+                            <div class="avatar-stack flex-self-start">
+                                <div>
+                                    <img
+                                        [src]="block.author.avatarUrl || DEFAULT_AVATAR_URL"
+                                        width="20"
+                                        height="20"
+                                        [alt]="'@' + block.author.accountName"
+                                        [attr.data-test-id]="'timeline-avatarUrl-' + i"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="f6 color-fg-muted min-width-0">
+                                <a
+                                    class="commit-author user-mention"
+                                    [title]="'View all commits by ' + block.author.accountName"
+                                    [routerLink]="['/', block.author.accountName]"
+                                    >{{ block.author.accountName }}</a
+                                >
+
+                                committed
+                                <app-display-time class="no-wrap" [data]="block.systemTime" />
+                            </div>
+                            <div class="ml-1"></div>
+                        </div>
+                        <div class="d-flex align-items-center mt-2 pl-timelime">
+                            <a
+                                class=""
+                                [routerLink]="['/', block.author.accountName, datasetName, URL_BLOCK, block.blockHash]"
+                                data-test-id="navigate-to-block"
+                                >{{ descriptionForMetadataBlock(block) }}
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="d-none d-md-flex align-items-center flex-shrink-0">
+                        <div>
+                            <button
+                                type="button"
+                                class="signed-commit-badge verified signed-commit-badge-small m-2"
+                                placement="left"
+                                ngbPopover="Verified"
+                                [popoverTitle]="popTitle"
+                                [ngbPopover]="popContent"
+                                data-test-id="button-verified"
+                            >
+                                Verified
+                            </button>
+                        </div>
+
+                        <div data-view-component="true" class="btns-group-item m-4">
+                            <app-display-hash
+                                [value]="block.blockHash"
+                                [navigationTargetDataset]="{
+                                    accountName: block.author.accountName,
+                                    datasetName: this.datasetName
+                                }"
+                                [showCopyButton]="true"
+                                [class]="'text-dark mr-4 hashBlock'"
+                            />
+                        </div>
+                        <div data-view-component="true" class="btns-group-item">
+                            <a
+                                href="/kamu-data/kamu-web-ui/tree/75e711dfb8e35335b622f0c56ff59fc3fc7cea7d"
+                                aria-label="Browse the repository at this point in the history"
+                                data-view-component="true"
+                                class="tooltipped tooltipped-sw btn-outline btn btns-group-item"
+                            >
+                                <svg-icon name="code" />
+                            </a>
+                        </div>
+                    </div>
+                </li>
+            </ol>
+        </div>
+    </li>
+</ul>
 
 <ng-template #popTitle class="signed-commit__popup-header">
     <div class="signed-commit-header d-grid">

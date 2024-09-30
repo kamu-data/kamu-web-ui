@@ -2,66 +2,79 @@
 @import "node_modules/bootstrap/dist/css/bootstrap.min";
 
 .timeline-block {
-    &__item {
-        position: relative;
+    position: relative;
+
+    .timeline-block__item {
         display: flex;
         padding: 16px 0;
         margin-left: 16px;
+        list-style: none;
+        position: relative;
 
-        &::before {
+        &:last-child {
+            &::after {
+                display: none;
+            }
+        }
+
+        &::after {
             position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
             display: block;
             width: 2px;
+            top: 44px;
+            left: 14px;
+            height: 74px;
             content: "";
             background-color: $app-color-border-muted;
         }
 
-        &--condensed {
-            padding-top: 4px;
-            padding-bottom: 0;
-
-            .timeline-block__item-badge {
-                height: 16px;
-                margin-top: 8px;
-                margin-bottom: 8px;
-                color: $app-color-fg-muted;
-                background-color: $app-color-canvas-overlay;
-                border: 0;
-            }
-        }
-
-        &-badge {
-            position: relative;
-            z-index: 1;
-            display: flex;
-            width: 32px;
-            height: 32px;
-            margin-right: 8px;
-            margin-left: -15px;
-            color: $app-color-fg-muted;
-            align-items: center;
-            background-color: $app-color-timeline-badge-bg;
-            border: 2px solid $app-color-canvas-overlay;
-            border-radius: 50%;
-            justify-content: center;
-            flex-shrink: 0;
+        &::before {
+            position: absolute;
+            display: block;
+            height: 1px;
+            width: 13px;
+            top: 27px;
+            left: 33px;
+            content: "";
+            background-color: #b7b7b8;
         }
     }
+}
 
-    &__body {
-        min-width: 0;
-        max-width: 100%;
-        margin-top: 4px;
-        color: $app-color-fg-muted;
-        flex: auto;
+.timeline-block__body {
+    min-width: 0;
+    max-width: 100%;
+    margin-top: 4px;
+    color: $app-color-fg-muted;
+    flex: auto;
+
+    .pl-timelime {
+        margin-left: 26px;
     }
+}
 
-    mat-icon {
-        justify-content: center;
-        align-items: center;
-        display: flex;
+a {
+    color: #24292f;
+    font-weight: 500;
+
+    &:hover {
+        color: #0969da;
+    }
+}
+
+.container-icon {
+    display: flex;
+    position: relative;
+    background-color: #ebedee;
+    border: 2px solid #b7b7b8;
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    margin-top: 12px;
+    margin-right: 19px;
+
+    .timeline-icon {
+        margin-left: 2px;
+        margin-top: 2px;
     }
 }

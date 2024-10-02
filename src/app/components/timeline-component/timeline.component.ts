@@ -20,4 +20,8 @@ export class TimelineComponent {
     public descriptionForMetadataBlock(block: MetadataBlockFragment): string {
         return DataHelpers.descriptionForMetadataBlock(block);
     }
+
+    public setTimelineItemIcon(block: MetadataBlockFragment): string {
+        return DataHelpers.setTimelineItemIcon(block);
+    }
 }

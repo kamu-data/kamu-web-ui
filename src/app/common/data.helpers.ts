@@ -241,30 +241,21 @@ export class DataHelpers {
     public static setTimelineItemIcon(block: MetadataBlockFragment): string {
         switch (block.event.__typename) {
             case "AddData": {
-                return "add";
+                return "input";
             }
             case "ExecuteTransform":
                 return "call_merge";
             case "Seed":
-                return "flag_circle";
+                return "add_circle_outline";
             case "SetAttachments":
-                return "attach_file";
             case "SetInfo":
-                return "info";
             case "SetLicense":
-                return "receipt_long";
             case "SetVocab":
-                return "more_horiz";
             case "SetTransform":
-                return "code";
             case "SetPollingSource":
-                return "public";
             case "SetDataSchema":
-                return "upgrade";
             case "AddPushSource":
-                return "wifi_tethering";
             case "DisablePushSource":
-                return "more_horiz";
             case "DisablePollingSource":
                 return "more_horiz";
             /* istanbul ignore next */

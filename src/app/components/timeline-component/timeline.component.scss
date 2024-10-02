@@ -13,7 +13,14 @@
 
         &:last-child {
             &::after {
-                display: none;
+                position: absolute;
+                display: block;
+                width: 2px;
+                top: 36px;
+                left: 15px;
+                height: 65px;
+                content: "";
+                background-color: $app-color-border-muted;
             }
         }
 
@@ -21,9 +28,9 @@
             position: absolute;
             display: block;
             width: 2px;
-            top: 44px;
-            left: 14px;
-            height: 74px;
+            top: 36px;
+            left: 15px;
+            height: 93px;
             content: "";
             background-color: $app-color-border-muted;
         }
@@ -32,9 +39,9 @@
             position: absolute;
             display: block;
             height: 1px;
-            width: 13px;
+            width: 21px;
             top: 27px;
-            left: 33px;
+            left: 28px;
             content: "";
             background-color: #b7b7b8;
         }
@@ -47,10 +54,11 @@
     margin-top: 4px;
     color: $app-color-fg-muted;
     flex: auto;
+}
 
-    .pl-timelime {
-        margin-left: 26px;
-    }
+.account-icon {
+    margin-left: 2px;
+    margin-right: 8px;
 }
 
 a {
@@ -65,16 +73,13 @@ a {
 .container-icon {
     display: flex;
     position: relative;
-    background-color: #ebedee;
-    border: 2px solid #b7b7b8;
-    border-radius: 50%;
     height: 30px;
     width: 30px;
-    margin-top: 12px;
     margin-right: 19px;
+}
 
-    .timeline-icon {
-        margin-left: 2px;
-        margin-top: 2px;
-    }
+.commit-icon {
+    position: absolute;
+    top: 17px;
+    left: 8px;
 }

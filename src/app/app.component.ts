@@ -91,6 +91,13 @@ export class AppComponent extends BaseComponent implements OnInit {
                 this.loggedAccount = user ? _.cloneDeep(user) : AppComponent.ANONYMOUS_ACCOUNT_INFO;
                 this.cdr.detectChanges();
             });
+
+        this.initAdminSlideToggle();
+    }
+
+    private initAdminSlideToggle(): void {
+        const flag = this.localStorageService.adminPriveleges;
+        this.loggedUserService.emitAdminPrivelegesChanges(Boolean(flag));
     }
 
     private setMomentOptions(): void {

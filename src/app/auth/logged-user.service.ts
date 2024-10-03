@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { catchError, first } from "rxjs/operators";
-import { Observable, ReplaySubject, Subject, of } from "rxjs";
+import { BehaviorSubject, Observable, ReplaySubject, Subject, of } from "rxjs";
 import { NavigationService } from "../services/navigation.service";
 import { MaybeNull } from "../common/app.types";
 import { isNull } from "lodash";
@@ -20,6 +20,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
     private loggedInUser: MaybeNull<AccountFragment> = null;
     private loggedInUser$: Subject<MaybeNull<AccountFragment>> = new ReplaySubject<MaybeNull<AccountFragment>>(1);
+    private adminPriveleges$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
     constructor(
         private loginService: LoginService,
@@ -36,6 +37,14 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
             this.loginService.accountChanges
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe((user: AccountFragment) => this.changeUser(user));
+    }
+
+    public get adminPrivelegesChanges(): Observable<boolean> {
+        return this.adminPriveleges$.asObservable();
+    }
+
+    public emitAdminPrivelegesChanges(value: boolean): void {
+        return this.adminPriveleges$.next(value);
     }
 
     public initializeCompletes(): Observable<void> {

@@ -68,32 +68,48 @@
                     <span class="d-block">Discussions</span>
                 </div>
             </mat-button-toggle>
-            <mat-button-toggle
-                data-test-id="navigateToFlows"
-                value="flows"
-                [class.active-link]="isDatasetViewTypeFlows"
-                *ngIf="shouldAllowFlowsTab"
-            >
-                <a [routerLink]="[datasetLink]" [queryParams]="{ tab: DatasetViewTypeEnum.Flows }" class="menu-link">
-                    <div class="d-flex align-items-center">
-                        <mat-icon class="fs-4 d-block me-1">add_task</mat-icon>
-                        <span class="d-block">Flows</span>
-                    </div>
-                </a>
-            </mat-button-toggle>
-            <mat-button-toggle
-                data-test-id="navigateToSettings"
-                value="settings"
-                [class.active-link]="isDatasetViewTypeSettings"
-                *ngIf="shouldAllowSettingsTab"
-            >
-                <a [routerLink]="[datasetLink]" [queryParams]="{ tab: DatasetViewTypeEnum.Settings }" class="menu-link">
-                    <div class="d-flex align-items-center">
-                        <svg-icon name="account" class="me-1" />
-                        <span class="d-block">Settings</span>
-                    </div>
-                </a>
-            </mat-button-toggle>
+            <ng-container *ngIf="viewModeElement$ | async as viewMode">
+                <mat-button-toggle
+                    data-test-id="navigateToFlows"
+                    value="flows"
+                    [class.active-link]="isDatasetViewTypeFlows"
+                    *ngIf="viewMode === ViewModeElement.PERMISSIONS_MODE || viewMode === ViewModeElement.ADMIN_MODE"
+                >
+                    <a
+                        [routerLink]="[datasetLink]"
+                        [queryParams]="{ tab: DatasetViewTypeEnum.Flows }"
+                        class="menu-link"
+                    >
+                        <div class="d-flex align-items-center">
+                            <mat-icon class="fs-4 d-block me-1">add_task</mat-icon>
+                            <span class="d-block">Flows</span>
+                            <mat-icon *ngIf="viewMode === ViewModeElement.ADMIN_MODE" class="admin-icon d-block me-1">
+                                admin_panel_settings</mat-icon
+                            >
+                        </div>
+                    </a>
+                </mat-button-toggle>
+                <mat-button-toggle
+                    data-test-id="navigateToSettings"
+                    value="settings"
+                    [class.active-link]="isDatasetViewTypeSettings"
+                    *ngIf="viewMode === ViewModeElement.PERMISSIONS_MODE || viewMode === ViewModeElement.ADMIN_MODE"
+                >
+                    <a
+                        [routerLink]="[datasetLink]"
+                        [queryParams]="{ tab: DatasetViewTypeEnum.Settings }"
+                        class="menu-link"
+                    >
+                        <div class="d-flex align-items-center">
+                            <svg-icon name="account" class="me-1" />
+                            <span class="d-block">Settings</span>
+                            <mat-icon *ngIf="viewMode === ViewModeElement.ADMIN_MODE" class="admin-icon d-block me-1">
+                                admin_panel_settings</mat-icon
+                            >
+                        </div>
+                    </a>
+                </mat-button-toggle>
+            </ng-container>
         </mat-button-toggle-group>
     </div>
     <app-data-access-panel [datasetBasics]="datasetBasics" />

@@ -14,7 +14,8 @@ import { LineageGraphNodeData, LineageGraphNodeKind } from "./additional-compone
 import _ from "lodash";
 import { BaseDatasetDataComponent } from "../common/base-dataset-data.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { ElementsViewService, EnumViewActions } from "../services/elements-view.service";
+import { ElementsViewService } from "../services/elements-view.service";
+import { DatasetPermissionsService } from "./dataset.permissions.service";
 
 @Component({
     selector: "app-dataset",
@@ -30,6 +31,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
 
     private mainDatasetQueryComplete$: Subject<DatasetInfo> = new ReplaySubject<DatasetInfo>(1 /* bufferSize */);
 
+    private datasetPermissionsServices = inject(DatasetPermissionsService);
     private router = inject(Router);
     private cdr = inject(ChangeDetectorRef);
     private elementsViewService = inject(ElementsViewService);
@@ -123,7 +125,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe((datasetPermissions: DatasetPermissionsFragment) => {
-                if (this.elementsViewService.executeAction(EnumViewActions.SHOW_FLOWS_TAB_ACTION, datasetPermissions)) {
+                if (this.datasetPermissionsServices.shouldAllowFlowsTab(datasetPermissions)) {
                     this.datasetViewType = DatasetViewTypeEnum.Flows;
                 } else {
                     this.datasetViewType = DatasetViewTypeEnum.Overview;
@@ -197,9 +199,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe((datasetPermissions: DatasetPermissionsFragment) => {
-                if (
-                    this.elementsViewService.executeAction(EnumViewActions.SHOW_SETTINGS_TAB_ACTION, datasetPermissions)
-                ) {
+                if (this.datasetPermissionsServices.shouldAllowSettingsTab(datasetPermissions)) {
                     this.datasetViewType = DatasetViewTypeEnum.Settings;
                 } else {
                     this.datasetViewType = DatasetViewTypeEnum.Overview;

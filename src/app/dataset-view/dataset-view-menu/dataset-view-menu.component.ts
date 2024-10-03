@@ -15,7 +15,8 @@ import { DatasetViewTypeEnum } from "../dataset-view.interface";
 import { SideNavHelper } from "../../common/sidenav.helper";
 import { isMobileView, promiseWithCatch } from "src/app/common/app.helpers";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
-import { ElementsViewService, EnumViewActions } from "src/app/services/elements-view.service";
+import { ElementsViewService, ViewModeElement } from "src/app/services/elements-view.service";
+import { Observable } from "rxjs";
 
 @Component({
     selector: "app-dataset-view-menu",
@@ -38,6 +39,8 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
 
     private elementsViewService = inject(ElementsViewService);
     private widgetHeightService = inject(WidgetHeightService);
+    public viewModeElement$: Observable<ViewModeElement>;
+    public readonly ViewModeElement: typeof ViewModeElement = ViewModeElement;
 
     public ngAfterViewInit(): void {
         this.widgetHeightService.setWidgetOffsetTop(
@@ -50,6 +53,7 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
         if (this.sidenav) {
             this.sideNavHelper = new SideNavHelper(this.sidenav);
         }
+        this.viewModeElement$ = this.elementsViewService.viewModeElement();
     }
 
     public get isDatasetViewTypeOverview(): boolean {
@@ -82,17 +86,6 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
 
     public get isDatasetViewTypeSettings(): boolean {
         return this.datasetViewType === DatasetViewTypeEnum.Settings;
-    }
-
-    public get shouldAllowSettingsTab(): boolean {
-        return this.elementsViewService.executeAction(
-            EnumViewActions.SHOW_SETTINGS_TAB_ACTION,
-            this.datasetPermissions,
-        );
-    }
-
-    public get shouldAllowFlowsTab(): boolean {
-        return this.elementsViewService.executeAction(EnumViewActions.SHOW_FLOWS_TAB_ACTION, this.datasetPermissions);
     }
 
     public get datasetLink(): string {

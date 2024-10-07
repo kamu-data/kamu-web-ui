@@ -74,6 +74,7 @@ import { DatasetsTabComponent } from "./account/additional-components/datasets-t
 import { AccessTokensTabComponent } from "./auth/settings/tabs/access-tokens-tab/access-tokens-tab.component";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { AutofocusDirective } from "./common/directives/autofocus.directive";
+import { QueryExplainerComponent } from './components/query-explainer/query-explainer.component';
 
 const Services = [
     {
@@ -206,6 +207,7 @@ const MatModules = [
         AccessTokensTabComponent,
         AccountFlowsTabComponent,
         AutofocusDirective,
+        QueryExplainerComponent,
     ],
     imports: [
         AppRoutingModule,

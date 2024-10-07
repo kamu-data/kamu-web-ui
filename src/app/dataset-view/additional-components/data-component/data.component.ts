@@ -28,6 +28,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Clipboard } from "@angular/cdk/clipboard";
 import ProjectLinks from "src/app/project-links";
 import { ToastrService } from "ngx-toastr";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 @Component({
     selector: "app-data",
@@ -62,6 +63,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     private cdr = inject(ChangeDetectorRef);
     private clipboard = inject(Clipboard);
     private toastService = inject(ToastrService);
+    private loggedUserService = inject(LoggedUserService);
 
     public ngOnInit(): void {
         this.overviewUpdate$ = this.datasetSubsService.overviewChanges;
@@ -80,6 +82,10 @@ export class DataComponent extends BaseComponent implements OnInit {
         );
         this.buildSqlRequestCode();
         this.runSQLRequest({ query: this.sqlRequestCode }, true);
+    }
+
+    public get isAdmin(): boolean {
+        return this.loggedUserService.isAdmin;
     }
 
     public runSQLRequest(params: DatasetRequestBySql, initialSqlRun = false): void {

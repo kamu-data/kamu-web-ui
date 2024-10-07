@@ -1,0 +1,27 @@
+<div
+    class="alert alert-info message-success mx-4 mt-4 w-50 mx-auto d-flex align-items-center justify-content-center"
+    role="alert"
+>
+    <mat-icon class="me-1">check_circle</mat-icon>
+    Verification was successful
+</div>
+
+<div *ngIf="false" class="alert alert-info message-error mx-4 mt-4 w-50 mx-auto d-flex flex-column" role="alert">
+    <div class="d-flex align-items-center justify-content-center mb-2">
+        <mat-icon class="me-1">error</mat-icon>
+        Verification was failed
+    </div>
+
+    <div class="fs-12">
+        Query was reproduced but resulted in output hash different from expected. This means that the output was either
+        falsified, or the query reproducibility was not guaranteed by the system.
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="box p-4 my-2 ms-4">1</div>
+    </div>
+    <div class="col-md-6">
+        <div class="box p-4 my-2 me-4">2</div>
+    </div>
+</div>

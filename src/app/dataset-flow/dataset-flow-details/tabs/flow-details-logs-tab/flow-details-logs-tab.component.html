@@ -1,7 +1,7 @@
 <span *ngIf="!isAdmin">Logs tab coming soon</span>
 <ng-container *ngIf="isAdmin && grafanaTaskDetailsURL">
     <p class="position-relative my-4 box p-4" data-test-id="grafana-logs-section">
-        You can <a [href]="grafanaTaskLogsUrl(this.grafanaTaskDetailsURL)">see logs in Grafana</a>
+        You can <a [href]="grafanaTaskLogsUrl(this.grafanaTaskDetailsURL)" target="_blank">see logs in Grafana</a>
         <mat-icon class="admin-view text-muted"> admin_panel_settings</mat-icon>
     </p>
 </ng-container>

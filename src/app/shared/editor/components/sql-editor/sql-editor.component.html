@@ -1,7 +1,10 @@
-<ngx-monaco-editor
-    [ngStyle]="{ height: height, width: width }"
-    (onInit)="onInitEditor($event)"
-    [options]="EDITOR_OPTIONS"
-    [(ngModel)]="template"
-    (ngModelChange)="modelChange()"
-/>
+<div class="resizable pt-4">
+    <ngx-monaco-editor
+        [ngStyle]="{ height: height, width: width }"
+        (onInit)="onInitEditor($event)"
+        [options]="EDITOR_OPTIONS"
+        [(ngModel)]="template"
+        (ngModelChange)="modelChange()"
+    />
+    <div class="cell-border-bottom"></div>
+</div>

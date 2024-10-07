@@ -237,6 +237,32 @@ export class DataHelpers {
         const result = convertSecondsToHumanReadableFormat(durationSeconds);
         return result ? result : "less than 1 second";
     }
+
+    public static setTimelineItemIcon(block: MetadataBlockFragment): string {
+        switch (block.event.__typename) {
+            case "AddData": {
+                return "input";
+            }
+            case "ExecuteTransform":
+                return "call_merge";
+            case "Seed":
+                return "add_circle_outline";
+            case "SetAttachments":
+            case "SetInfo":
+            case "SetLicense":
+            case "SetVocab":
+            case "SetTransform":
+            case "SetPollingSource":
+            case "SetDataSchema":
+            case "AddPushSource":
+            case "DisablePushSource":
+            case "DisablePollingSource":
+                return "more_horiz";
+            /* istanbul ignore next */
+            default:
+                throw new Error("Unknown event type");
+        }
+    }
 }
 export const getValidators = (validators: JsonFormValidators): ValidatorFn[] => {
     const validatorsToAdd: ValidatorFn[] = [];

@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added the ability to resize the monaco editor vertically
 
+## [0.27.1] - 2024-10-04
+### Fixed
+- Lineage graph: redirect to another dataset
+- Application search: redirect to another dataset
+- Lineage tab displayed correctly
+- Prettified histopy timeline
+
 ## [0.27.0] - 2024-09-25
 ### Added
 - Added the ability to view task logs using Grafana only for the admin(Logs tab)

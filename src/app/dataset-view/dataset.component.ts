@@ -10,7 +10,7 @@ import { promiseWithCatch } from "../common/app.helpers";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { MaybeNull, MaybeUndefined } from "../common/app.types";
 import { DatasetPermissionsService } from "./dataset.permissions.service";
-import { ReplaySubject, Subject, iif, of } from "rxjs";
+import { ReplaySubject, Subject, of } from "rxjs";
 import { LineageGraphNodeData, LineageGraphNodeKind } from "./additional-components/lineage-component/lineage-model";
 import _ from "lodash";
 import { BaseDatasetDataComponent } from "../common/base-dataset-data.component";
@@ -64,17 +64,24 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
             _.isNil(this.datasetBasics) ||
             this.datasetBasics.name !== urlDatasetInfo.datasetName ||
             this.datasetBasics.owner.accountName !== urlDatasetInfo.accountName ||
-            [DatasetViewTypeEnum.Overview, DatasetViewTypeEnum.Metadata, DatasetViewTypeEnum.Data].includes(
-                this.datasetViewType,
-            )
+            [
+                DatasetViewTypeEnum.Overview,
+                DatasetViewTypeEnum.Metadata,
+                DatasetViewTypeEnum.Data,
+                DatasetViewTypeEnum.Lineage,
+            ].includes(this.datasetViewType)
         ) {
             if (this.datasetBasics) {
                 this.datasetService
                     .isHeadHashBlockChanged(this.datasetBasics)
                     .pipe(
-                        switchMap((isNewHead: boolean) =>
-                            iif(() => isNewHead, this.datasetService.requestDatasetMainData(urlDatasetInfo), of()),
-                        ),
+                        switchMap((isNewHead: boolean) => {
+                            return isNewHead ||
+                                this.datasetBasics?.name !== urlDatasetInfo.datasetName ||
+                                this.datasetBasics.owner.accountName !== urlDatasetInfo.accountName
+                                ? this.datasetService.requestDatasetMainData(urlDatasetInfo)
+                                : of();
+                        }),
                         tap(() => {
                             this.mainDatasetQueryComplete$.next(urlDatasetInfo);
                         }),

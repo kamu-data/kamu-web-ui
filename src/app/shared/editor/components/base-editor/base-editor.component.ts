@@ -10,7 +10,7 @@ import { EditorError } from "../../models/error.model";
 export abstract class BaseEditorComponent implements OnChanges {
     @Input({ required: true }) public template = "";
     @Input() public error: MaybeNull<string>;
-    @Input() public height: MaybeUndefined<string> = "220px";
+    @Input() public height: string = "220px";
     @Input() public width: MaybeUndefined<string>;
 
     @Output() public templateChange = new EventEmitter<string>();

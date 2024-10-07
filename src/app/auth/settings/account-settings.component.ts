@@ -25,17 +25,17 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
 
     public activeTab: AccountSettingsTabs = AccountSettingsTabs.PROFILE;
     public user$: Observable<MaybeNull<AccountFragment>>;
-    public adminPriveleges$: Observable<boolean>;
+    public adminPrivileges$: Observable<boolean>;
 
     private router = inject(Router);
     private route = inject(ActivatedRoute);
     private loggedUserService = inject(LoggedUserService);
     private localStorageService = inject(LocalStorageService);
 
-    public componentData$: Observable<{
-        user: MaybeNull<AccountFragment>;
-        adminPriveleges: boolean;
-    }>;
+    public userData$: Observable<{
+        user: AccountFragment;
+        adminPrivileges: boolean;
+    } | null>;
 
     public ngOnInit(): void {
         this.router.events
@@ -49,15 +49,17 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
 
         this.extractActiveTabFromRoute();
 
-        this.componentData$ = combineLatest([
+        this.userData$ = combineLatest([
             this.loggedUserService.loggedInUserChanges,
-            this.loggedUserService.adminPrivelegesChanges,
+            this.loggedUserService.adminPrivilegesChanges,
         ]).pipe(
-            map(([user, adminPriveleges]) => {
-                return {
-                    user,
-                    adminPriveleges,
-                };
+            map(([user, adminPrivileges]) => {
+                return user
+                    ? {
+                          user,
+                          adminPrivileges,
+                      }
+                    : null;
             }),
         );
     }
@@ -71,7 +73,7 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
     }
 
     public adminSlideToggleChange(event: MatSlideToggleChange): void {
-        this.loggedUserService.emitAdminPrivelegesChanges(event.checked);
+        this.loggedUserService.emitAdminPrivilegesChanges(event.checked);
         this.localStorageService.setAdminPriveleges(event.checked);
     }
 

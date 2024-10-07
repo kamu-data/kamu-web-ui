@@ -96,8 +96,8 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     private initAdminSlideToggle(): void {
-        const flag = this.localStorageService.adminPriveleges;
-        this.loggedUserService.emitAdminPrivelegesChanges(Boolean(flag));
+        const flag = this.localStorageService.adminPrivileges;
+        this.loggedUserService.emitAdminPrivilegesChanges(Boolean(flag));
     }
 
     private setMomentOptions(): void {

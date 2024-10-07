@@ -6,18 +6,6 @@
 >
     <div class="dataset-view-type-toggle-group">
         <mat-button-toggle-group name="datasetViewType" class="mat-button-toggle-group" aria-label="Dataset View Type">
-            <mat-button-toggle
-                data-test-id="navigateToOverview"
-                [class.active-link]="isDatasetViewTypeOverview"
-                value="overview"
-            >
-                <a [routerLink]="[datasetLink]" class="menu-link">
-                    <div class="d-flex align-items-center">
-                        <mat-icon class="fs-4 d-block me-1">visibility</mat-icon>
-                        <span class="d-block">Overview</span>
-                    </div>
-                </a>
-            </mat-button-toggle>
             <mat-button-toggle data-test-id="navigateToData" [class.active-link]="isDatasetViewTypeData" value="data">
                 <a [routerLink]="[datasetLink]" [queryParams]="{ tab: DatasetViewTypeEnum.Data }" class="menu-link">
                     <div class="d-flex align-items-center">
@@ -73,7 +61,10 @@
                     data-test-id="navigateToFlows"
                     value="flows"
                     [class.active-link]="isDatasetViewTypeFlows"
-                    *ngIf="viewMode === ViewModeElement.PERMISSIONS_MODE || viewMode === ViewModeElement.ADMIN_MODE"
+                    *ngIf="
+                        viewMode === ElementVisibilityMode.AVAILABLE_VIA_PERMISSIONS ||
+                        viewMode === ElementVisibilityMode.AVAILABLE_VIA_ADMIN_PRIVILEGES
+                    "
                 >
                     <a
                         [routerLink]="[datasetLink]"
@@ -83,7 +74,10 @@
                         <div class="d-flex align-items-center">
                             <mat-icon class="fs-4 d-block me-1">add_task</mat-icon>
                             <span class="d-block">Flows</span>
-                            <mat-icon *ngIf="viewMode === ViewModeElement.ADMIN_MODE" class="admin-icon d-block me-1">
+                            <mat-icon
+                                *ngIf="viewMode === ElementVisibilityMode.AVAILABLE_VIA_ADMIN_PRIVILEGES"
+                                class="admin-icon d-block me-1"
+                            >
                                 admin_panel_settings</mat-icon
                             >
                         </div>
@@ -93,7 +87,10 @@
                     data-test-id="navigateToSettings"
                     value="settings"
                     [class.active-link]="isDatasetViewTypeSettings"
-                    *ngIf="viewMode === ViewModeElement.PERMISSIONS_MODE || viewMode === ViewModeElement.ADMIN_MODE"
+                    *ngIf="
+                        viewMode === ElementVisibilityMode.AVAILABLE_VIA_PERMISSIONS ||
+                        viewMode === ElementVisibilityMode.AVAILABLE_VIA_ADMIN_PRIVILEGES
+                    "
                 >
                     <a
                         [routerLink]="[datasetLink]"
@@ -101,9 +98,13 @@
                         class="menu-link"
                     >
                         <div class="d-flex align-items-center">
-                            <svg-icon name="account" class="me-1" />
+                            <mat-icon class="fs-4 d-block me-1 material-icons-outlined">settings</mat-icon>
+                            <!-- <svg-icon name="account" class="me-1" /> -->
                             <span class="d-block">Settings</span>
-                            <mat-icon *ngIf="viewMode === ViewModeElement.ADMIN_MODE" class="admin-icon d-block me-1">
+                            <mat-icon
+                                *ngIf="viewMode === ElementVisibilityMode.AVAILABLE_VIA_ADMIN_PRIVILEGES"
+                                class="admin-icon d-block me-1"
+                            >
                                 admin_panel_settings</mat-icon
                             >
                         </div>

@@ -1,9 +1,9 @@
-<div class="pt-4 p-responsive clearfix" *ngIf="componentData$ | async as data">
+<div class="pt-4 p-responsive clearfix" *ngIf="userData$ | async as data">
     <div class="d-md-flex align-items-center justify-content-between mt-1 mb-4">
         <div class="d-flex align-items-center mb-2 mb-md-0">
             <img
-                [src]="data.user?.avatarUrl ?? DEFAULT_AVATAR_URL"
-                [alt]="'@' + data.user?.accountName"
+                [src]="data.user.avatarUrl ?? DEFAULT_AVATAR_URL"
+                [alt]="'@' + data.user.accountName"
                 size="48"
                 height="48"
                 width="48"
@@ -12,11 +12,11 @@
             />
             <div class="flex-auto mx-4 mt-3">
                 <a
-                    [routerLink]="['/', data.user?.accountName]"
+                    [routerLink]="['/', data.user.accountName]"
                     class="color-fg-default fw-bold-custom fs-5"
                     data-test-id="user-name-link"
                 >
-                    {{ data.user?.displayName }} <span class="text-muted">({{ data.user?.accountName }})</span>
+                    {{ data.user.displayName }} <span class="text-muted">({{ data.user.accountName }})</span>
                 </a>
                 <div class="d-flex align-items-center flex-wrap">
                     <p class="color-fg-muted">Your personal account</p>
@@ -25,7 +25,7 @@
         </div>
         <div class="box p-4" *ngIf="isAdmin">
             <mat-slide-toggle
-                [(ngModel)]="data.adminPriveleges"
+                [(ngModel)]="data.adminPrivileges"
                 (change)="adminSlideToggleChange($event)"
                 color="primary"
                 class="mat-elevation-z0"

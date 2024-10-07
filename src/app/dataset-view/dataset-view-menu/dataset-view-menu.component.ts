@@ -15,7 +15,7 @@ import { DatasetViewTypeEnum } from "../dataset-view.interface";
 import { SideNavHelper } from "../../common/sidenav.helper";
 import { isMobileView, promiseWithCatch } from "src/app/common/app.helpers";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
-import { ElementsViewService, ViewModeElement } from "src/app/services/elements-view.service";
+import { ElementsViewService, ElementVisibilityMode } from "src/app/services/elements-view.service";
 import { Observable } from "rxjs";
 
 @Component({
@@ -39,8 +39,8 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
 
     private elementsViewService = inject(ElementsViewService);
     private widgetHeightService = inject(WidgetHeightService);
-    public viewModeElement$: Observable<ViewModeElement>;
-    public readonly ViewModeElement: typeof ViewModeElement = ViewModeElement;
+    public viewModeElement$: Observable<ElementVisibilityMode>;
+    public readonly ElementVisibilityMode: typeof ElementVisibilityMode = ElementVisibilityMode;
 
     public ngAfterViewInit(): void {
         this.widgetHeightService.setWidgetOffsetTop(
@@ -48,6 +48,18 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
                 this.datasetViewMenuComponent.nativeElement.offsetTop,
         );
     }
+
+    public datasetMenuItemDescriptors = [
+        {
+            dataTestId: " navigateToOverview",
+            activeLink: true,
+            value: DatasetViewTypeEnum.Overview,
+            label: "",
+            icon: "",
+            tab: "",
+            pemissions: {},
+        },
+    ];
 
     public ngOnInit(): void {
         if (this.sidenav) {

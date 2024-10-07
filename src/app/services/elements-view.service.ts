@@ -10,34 +10,29 @@ export class ElementsViewService {
     private loggedUserService = inject(LoggedUserService);
     private datasetSubsService = inject(DatasetSubscriptionsService);
 
-    public viewModeElement(): Observable<ViewModeElement> {
+    public viewModeElement(): Observable<ElementVisibilityMode> {
         return combineLatest([
-            this.loggedUserService.adminPrivelegesChanges,
+            this.loggedUserService.adminPrivilegesChanges,
             this.datasetSubsService.permissionsChanges,
         ]).pipe(
-            map(([adminPriveleges, datasetPermissions]) => {
-                if (adminPriveleges) {
-                    return ViewModeElement.ADMIN_MODE;
+            map(([adminPrivileges, datasetPermissions]) => {
+                if (adminPrivileges) {
+                    return ElementVisibilityMode.AVAILABLE_VIA_ADMIN_PRIVILEGES;
                 }
 
                 const permissions = datasetPermissions.permissions;
-                if (
-                    permissions.canCommit ||
-                    permissions.canDelete ||
-                    permissions.canRename ||
-                    permissions.canSchedule
-                ) {
-                    return ViewModeElement.PERMISSIONS_MODE;
+                if (permissions.canView) {
+                    return ElementVisibilityMode.AVAILABLE_VIA_PERMISSIONS;
                 }
 
-                return ViewModeElement.NOT_AVAILABLE_MODE;
+                return ElementVisibilityMode.UNAVAILABLE;
             }),
         );
     }
 }
 
-export enum ViewModeElement {
-    NOT_AVAILABLE_MODE = "notAvailableMode",
-    PERMISSIONS_MODE = "permissionsMode",
-    ADMIN_MODE = "adminMode",
+export enum ElementVisibilityMode {
+    UNAVAILABLE,
+    AVAILABLE_VIA_PERMISSIONS,
+    AVAILABLE_VIA_ADMIN_PRIVILEGES,
 }

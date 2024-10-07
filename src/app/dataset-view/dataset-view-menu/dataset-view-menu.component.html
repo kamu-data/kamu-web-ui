@@ -3,113 +3,25 @@
     [style]="isMinimizeSearchAdditionalButtons ? 'grid-template-columns: 1fr;' : ''"
     id="container-dataset-tabs"
     #datasetViewMenu
+    *ngIf="viewModeElement$ | async as viewMode"
 >
     <div class="dataset-view-type-toggle-group">
         <mat-button-toggle-group name="datasetViewType" class="mat-button-toggle-group" aria-label="Dataset View Type">
-            <mat-button-toggle data-test-id="navigateToData" [class.active-link]="isDatasetViewTypeData" value="data">
-                <a [routerLink]="[datasetLink]" [queryParams]="{ tab: DatasetViewTypeEnum.Data }" class="menu-link">
-                    <div class="d-flex align-items-center">
-                        <mat-icon class="fs-4 d-block me-1">dataset</mat-icon>
-                        <span class="d-block">Data</span>
-                    </div>
-                </a>
-            </mat-button-toggle>
-            <mat-button-toggle
-                data-test-id="navigateToMetadata"
-                [class.active-link]="isDatasetViewTypeMetadata"
-                value="metadata"
-            >
-                <a [routerLink]="[datasetLink]" [queryParams]="{ tab: DatasetViewTypeEnum.Metadata }" class="menu-link">
-                    <div class="d-flex align-items-center">
-                        <mat-icon class="fs-4 d-block me-1">dataset_linked</mat-icon>
-                        <span class="d-block">Metadata</span>
-                    </div>
-                </a>
-            </mat-button-toggle>
-            <mat-button-toggle
-                data-test-id="navigateToHistory"
-                [class.active-link]="isDatasetViewTypeHistory"
-                value="history"
-            >
-                <a [routerLink]="[datasetLink]" [queryParams]="{ tab: DatasetViewTypeEnum.History }" class="menu-link">
-                    <div class="d-flex align-items-center">
-                        <mat-icon class="fs-4 d-block me-1">manage_history</mat-icon>
-                        <span class="d-block">History</span>
-                    </div>
-                </a>
-            </mat-button-toggle>
-            <mat-button-toggle
-                data-test-id="navigateToLineage"
-                [class.active-link]="isDatasetViewTypeLineage"
-                value="lineage"
-            >
-                <a [routerLink]="[datasetLink]" [queryParams]="{ tab: DatasetViewTypeEnum.Lineage }" class="menu-link">
-                    <div class="d-flex align-items-center">
-                        <mat-icon class="fs-4 d-block me-1">account_tree</mat-icon>
-                        <span class="d-block">Lineage</span>
-                    </div>
-                </a>
-            </mat-button-toggle>
-            <mat-button-toggle data-test-id="navigateToDiscussions" value="discussions" disabled>
-                <div class="d-flex align-items-center">
-                    <mat-icon class="fs-4 d-block me-1">message</mat-icon>
-                    <span class="d-block">Discussions</span>
-                </div>
-            </mat-button-toggle>
-            <ng-container *ngIf="viewModeElement$ | async as viewMode">
-                <mat-button-toggle
-                    data-test-id="navigateToFlows"
-                    value="flows"
-                    [class.active-link]="isDatasetViewTypeFlows"
-                    *ngIf="
-                        viewMode === ElementVisibilityMode.AVAILABLE_VIA_PERMISSIONS ||
-                        viewMode === ElementVisibilityMode.AVAILABLE_VIA_ADMIN_PRIVILEGES
-                    "
+            <ng-container *ngFor="let menuItem of datasetMenuItemDescriptors">
+                <app-dataset-view-menu-item
+                    [dataTestId]="menuItem.dataTestId"
+                    [activeLink]="datasetViewType === menuItem.value"
+                    [value]="menuItem.value"
+                    [label]="menuItem.label"
+                    [icon]="menuItem.icon"
+                    [tab]="menuItem.tab"
+                    [viewMode]="viewMode"
+                    [datasetBasics]="datasetBasics"
+                    [disabled]="menuItem.disabled"
+                    [showAdminIcon]="menuItem.showAdminIcon"
+                    [visible]="menuItem.shouldAllowTab(datasetPermissions)"
                 >
-                    <a
-                        [routerLink]="[datasetLink]"
-                        [queryParams]="{ tab: DatasetViewTypeEnum.Flows }"
-                        class="menu-link"
-                    >
-                        <div class="d-flex align-items-center">
-                            <mat-icon class="fs-4 d-block me-1">add_task</mat-icon>
-                            <span class="d-block">Flows</span>
-                            <mat-icon
-                                *ngIf="viewMode === ElementVisibilityMode.AVAILABLE_VIA_ADMIN_PRIVILEGES"
-                                class="admin-icon d-block me-1"
-                            >
-                                admin_panel_settings</mat-icon
-                            >
-                        </div>
-                    </a>
-                </mat-button-toggle>
-                <mat-button-toggle
-                    data-test-id="navigateToSettings"
-                    value="settings"
-                    [class.active-link]="isDatasetViewTypeSettings"
-                    *ngIf="
-                        viewMode === ElementVisibilityMode.AVAILABLE_VIA_PERMISSIONS ||
-                        viewMode === ElementVisibilityMode.AVAILABLE_VIA_ADMIN_PRIVILEGES
-                    "
-                >
-                    <a
-                        [routerLink]="[datasetLink]"
-                        [queryParams]="{ tab: DatasetViewTypeEnum.Settings }"
-                        class="menu-link"
-                    >
-                        <div class="d-flex align-items-center">
-                            <mat-icon class="fs-4 d-block me-1 material-icons-outlined">settings</mat-icon>
-                            <!-- <svg-icon name="account" class="me-1" /> -->
-                            <span class="d-block">Settings</span>
-                            <mat-icon
-                                *ngIf="viewMode === ElementVisibilityMode.AVAILABLE_VIA_ADMIN_PRIVILEGES"
-                                class="admin-icon d-block me-1"
-                            >
-                                admin_panel_settings</mat-icon
-                            >
-                        </div>
-                    </a>
-                </mat-button-toggle>
+                </app-dataset-view-menu-item>
             </ng-container>
         </mat-button-toggle-group>
     </div>

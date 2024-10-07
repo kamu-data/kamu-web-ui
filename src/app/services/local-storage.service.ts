@@ -22,7 +22,7 @@ export class LocalStorageService {
         } else return null;
     }
 
-    public setAdminPriveleges(flag: boolean) {
+    public setAdminPriveleges(flag: boolean | null) {
         localStorage.setItem(AppValues.LOCAL_STORAGE_ADMIN_PRIVILEGES, JSON.stringify(flag));
     }
 

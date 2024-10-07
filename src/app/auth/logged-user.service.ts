@@ -92,6 +92,7 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
         this.changeUser(null);
         this.resetAccessToken();
         this.clearGraphQLCache();
+        this.resetAdminPrivileges();
     }
 
     private attemptPreviousAuthenticationCompletes(): Observable<void> {
@@ -124,5 +125,10 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
 
     private saveAccessToken(token: string): void {
         this.localStorageService.setAccessToken(token);
+    }
+
+    private resetAdminPrivileges(): void {
+        this.localStorageService.setAdminPriveleges(null);
+        this.emitAdminPrivilegesChanges(false);
     }
 }

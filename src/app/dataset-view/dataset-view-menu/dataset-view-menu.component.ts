@@ -15,9 +15,9 @@ import { DatasetViewTypeEnum } from "../dataset-view.interface";
 import { SideNavHelper } from "../../common/sidenav.helper";
 import { isMobileView, promiseWithCatch } from "src/app/common/app.helpers";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
-import { ElementsViewService, ElementVisibilityMode } from "src/app/services/elements-view.service";
 import { Observable } from "rxjs";
-import { DatasetMenuItemOptions, DatasetViewMenuItems } from "./dataset-view-menu.model";
+import { DatasetViewMenuItems } from "./dataset-view-menu.model";
+import { ElementVisibilityMode, VisibilityModeService } from "./visibility-mode.service";
 
 @Component({
     selector: "app-dataset-view-menu",
@@ -34,11 +34,11 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
     @Input({ required: true }) datasetPermissions: DatasetPermissionsFragment;
     @Input({ required: true }) datasetViewType: DatasetViewTypeEnum;
     @Input() isMinimizeSearchAdditionalButtons: boolean;
-    public datasetMenuItemDescriptors: DatasetMenuItemOptions[] = DatasetViewMenuItems;
+    public datasetMenuItemDescriptors = DatasetViewMenuItems;
     private sideNavHelper: SideNavHelper;
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 
-    private elementsViewService = inject(ElementsViewService);
+    private visibilityModeService = inject(VisibilityModeService);
     private widgetHeightService = inject(WidgetHeightService);
     public viewModeElement$: Observable<ElementVisibilityMode>;
 
@@ -53,7 +53,11 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
         if (this.sidenav) {
             this.sideNavHelper = new SideNavHelper(this.sidenav);
         }
-        this.viewModeElement$ = this.elementsViewService.viewModeElement();
+        this.viewModeElement$ = this.visibilityModeService.viewModeElement();
+    }
+
+    public get datasetLink(): string {
+        return `/${this.datasetBasics.owner.accountName}/${this.datasetBasics.name}`;
     }
 
     @HostListener("window:resize")

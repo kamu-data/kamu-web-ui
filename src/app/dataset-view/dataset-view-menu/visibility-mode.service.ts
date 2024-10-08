@@ -1,12 +1,12 @@
 import { combineLatest, map, Observable } from "rxjs";
 import { inject, Injectable } from "@angular/core";
-import { LoggedUserService } from "../auth/logged-user.service";
-import { DatasetSubscriptionsService } from "../dataset-view/dataset.subscriptions.service";
+import { LoggedUserService } from "../../auth/logged-user.service";
+import { DatasetSubscriptionsService } from "../dataset.subscriptions.service";
 
 @Injectable({
     providedIn: "root",
 })
-export class ElementsViewService {
+export class VisibilityModeService {
     private loggedUserService = inject(LoggedUserService);
     private datasetSubsService = inject(DatasetSubscriptionsService);
 

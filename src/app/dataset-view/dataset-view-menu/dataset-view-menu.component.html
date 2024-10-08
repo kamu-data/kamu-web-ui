@@ -14,12 +14,11 @@
                     [value]="menuItem.value"
                     [label]="menuItem.label"
                     [icon]="menuItem.icon"
-                    [tab]="menuItem.tab"
                     [viewMode]="viewMode"
-                    [datasetBasics]="datasetBasics"
                     [disabled]="menuItem.disabled"
                     [showAdminIcon]="menuItem.showAdminIcon"
-                    [visible]="menuItem.shouldAllowTab(datasetPermissions)"
+                    [visible]="menuItem.shouldAllowTab(viewMode, datasetPermissions)"
+                    [datasetLink]="datasetLink"
                 >
                 </app-dataset-view-menu-item>
             </ng-container>

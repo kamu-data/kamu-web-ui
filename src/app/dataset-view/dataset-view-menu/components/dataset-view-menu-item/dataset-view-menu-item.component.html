@@ -5,7 +5,7 @@
     [value]="value"
     *ngIf="visible"
 >
-    <a [routerLink]="[datasetLink]" [queryParams]="{ tab }" class="menu-link">
+    <a [routerLink]="[datasetLink]" [queryParams]="{ tab: value == 'overview' ? null : value }" class="menu-link">
         <div class="d-flex align-items-center">
             <mat-icon class="fs-4 d-block me-1">{{ icon }}</mat-icon>
             <span class="d-block">{{ label }}</span>

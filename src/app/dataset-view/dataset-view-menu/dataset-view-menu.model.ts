@@ -1,99 +1,98 @@
 import { DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
-import { DatasetViewTypeEnum } from "../dataset-view.interface";
+import { ElementVisibilityMode } from "./visibility-mode.service";
 
 export interface DatasetMenuItemOptions {
     dataTestId: string;
-    value: DatasetViewTypeEnum;
+    value: string;
     label: string;
     icon: string;
-    tab: DatasetViewTypeEnum | null;
     disabled?: boolean;
     showAdminIcon?: boolean;
-    shouldAllowTab: (data: DatasetPermissionsFragment) => boolean;
+    shouldAllowTab: (viewMode: ElementVisibilityMode, permissions: DatasetPermissionsFragment | null) => boolean;
 }
 
-export const DatasetViewMenuItems = [
+export const DatasetViewMenuItems: DatasetMenuItemOptions[] = [
     {
         dataTestId: "navigateToOverview",
-        value: DatasetViewTypeEnum.Overview,
+        value: "overview",
         label: "Overview",
         icon: "visibility",
-        tab: null,
-        shouldAllowTab: (data: DatasetPermissionsFragment) => {
-            return data.permissions.canView;
+        shouldAllowTab: (viewMode: ElementVisibilityMode) => {
+            return viewMode !== ElementVisibilityMode.UNAVAILABLE;
         },
     },
     {
         dataTestId: "navigateToData",
-        value: DatasetViewTypeEnum.Data,
+        value: "data",
         label: "Data",
         icon: "dataset",
-        tab: DatasetViewTypeEnum.Data,
-        shouldAllowTab: (data: DatasetPermissionsFragment) => {
-            return data.permissions.canView;
+        shouldAllowTab: (viewMode: ElementVisibilityMode) => {
+            return viewMode !== ElementVisibilityMode.UNAVAILABLE;
         },
     },
     {
         dataTestId: "navigateToMetadata",
-        value: DatasetViewTypeEnum.Metadata,
+        value: "metadata",
         label: "Metadata",
         icon: "dataset_linked",
-        tab: DatasetViewTypeEnum.Metadata,
-        shouldAllowTab: (data: DatasetPermissionsFragment) => {
-            return data.permissions.canView;
+        shouldAllowTab: (viewMode: ElementVisibilityMode) => {
+            return viewMode !== ElementVisibilityMode.UNAVAILABLE;
         },
     },
     {
         dataTestId: "navigateToHistory",
-        value: DatasetViewTypeEnum.History,
+        value: "history",
         label: "History",
         icon: "manage_history",
-        tab: DatasetViewTypeEnum.History,
-        shouldAllowTab: (data: DatasetPermissionsFragment) => {
-            return data.permissions.canView;
+        shouldAllowTab: (viewMode: ElementVisibilityMode) => {
+            return viewMode !== ElementVisibilityMode.UNAVAILABLE;
         },
     },
     {
         dataTestId: "navigateToLineage",
-        value: DatasetViewTypeEnum.Lineage,
+        value: "lineage",
         label: "Lineage",
         icon: "account_tree",
-        tab: DatasetViewTypeEnum.Lineage,
-        shouldAllowTab: (data: DatasetPermissionsFragment) => {
-            return data.permissions.canView;
+        shouldAllowTab: (viewMode: ElementVisibilityMode) => {
+            return viewMode !== ElementVisibilityMode.UNAVAILABLE;
         },
     },
+
     {
         dataTestId: "navigateToDiscussion",
-        value: DatasetViewTypeEnum.Discussions,
+        value: "discussions",
         label: "Discussions",
         icon: "message",
-        tab: DatasetViewTypeEnum.Discussions,
         disabled: true,
-        shouldAllowTab: (data: DatasetPermissionsFragment) => {
-            return data.permissions.canView;
+        shouldAllowTab: (viewMode: ElementVisibilityMode) => {
+            return viewMode !== ElementVisibilityMode.UNAVAILABLE;
         },
     },
     {
         dataTestId: "navigateToFlows",
-        value: DatasetViewTypeEnum.Flows,
+        value: "flows",
         label: "Flows",
         icon: "add_task",
-        tab: DatasetViewTypeEnum.Flows,
         showAdminIcon: true,
-        shouldAllowTab: (data: DatasetPermissionsFragment) => {
-            return data.permissions.canSchedule;
+        shouldAllowTab: (viewMode: ElementVisibilityMode, permissions: DatasetPermissionsFragment | null) => {
+            return (
+                viewMode === ElementVisibilityMode.AVAILABLE_VIA_ADMIN_PRIVILEGES ||
+                Boolean(permissions?.permissions.canSchedule)
+            );
         },
     },
     {
         dataTestId: "navigateToSettings",
-        value: DatasetViewTypeEnum.Settings,
+        value: "settings",
         label: "Settings",
         icon: "settings",
-        tab: DatasetViewTypeEnum.Settings,
         showAdminIcon: true,
-        shouldAllowTab: (data: DatasetPermissionsFragment) => {
-            return data.permissions.canDelete || data.permissions.canRename;
+        shouldAllowTab: (viewMode: ElementVisibilityMode, permissions: DatasetPermissionsFragment | null) => {
+            return (
+                viewMode === ElementVisibilityMode.AVAILABLE_VIA_ADMIN_PRIVILEGES ||
+                Boolean(permissions?.permissions.canDelete) ||
+                Boolean(permissions?.permissions.canRename)
+            );
         },
     },
 ];

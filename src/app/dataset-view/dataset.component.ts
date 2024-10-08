@@ -14,7 +14,6 @@ import { LineageGraphNodeData, LineageGraphNodeKind } from "./additional-compone
 import _ from "lodash";
 import { BaseDatasetDataComponent } from "../common/base-dataset-data.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { ElementsViewService } from "../services/elements-view.service";
 import { DatasetPermissionsService } from "./dataset.permissions.service";
 
 @Component({
@@ -34,7 +33,6 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
     private datasetPermissionsServices = inject(DatasetPermissionsService);
     private router = inject(Router);
     private cdr = inject(ChangeDetectorRef);
-    private elementsViewService = inject(ElementsViewService);
 
     public ngOnInit(): void {
         const urlDatasetInfo = this.getDatasetInfoFromUrl();

@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MaybeUndefined } from "src/app/common/app.types";
-import { ElementVisibilityMode } from "../../visibility-mode.service";
 
 @Component({
     selector: "app-dataset-view-menu-item",
@@ -15,10 +14,8 @@ export class DatasetViewMenuItemComponent {
     @Input({ required: true }) public label: string;
     @Input({ required: true }) public icon: string;
     @Input({ required: true }) public datasetLink: string;
-    @Input({ required: true }) public viewMode: ElementVisibilityMode;
+    @Input({ required: true }) public adminPrivileges: boolean | null;
     @Input({ required: true }) public visible: boolean;
     @Input() public disabled: MaybeUndefined<boolean>;
     @Input() public showAdminIcon: MaybeUndefined<boolean>;
-
-    public readonly ElementVisibilityMode: typeof ElementVisibilityMode = ElementVisibilityMode;
 }

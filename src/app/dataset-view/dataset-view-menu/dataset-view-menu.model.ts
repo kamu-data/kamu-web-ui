@@ -1,5 +1,4 @@
 import { DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
-import { ElementVisibilityMode } from "./visibility-mode.service";
 
 export interface DatasetMenuItemOptions {
     dataTestId: string;
@@ -8,7 +7,7 @@ export interface DatasetMenuItemOptions {
     icon: string;
     disabled?: boolean;
     showAdminIcon?: boolean;
-    shouldAllowTab: (viewMode: ElementVisibilityMode, permissions: DatasetPermissionsFragment | null) => boolean;
+    shouldAllowTab: (datasetPermissions: DatasetPermissionsFragment, adminPrivileges?: boolean) => boolean;
 }
 
 export const DatasetViewMenuItems: DatasetMenuItemOptions[] = [
@@ -17,8 +16,8 @@ export const DatasetViewMenuItems: DatasetMenuItemOptions[] = [
         value: "overview",
         label: "Overview",
         icon: "visibility",
-        shouldAllowTab: (viewMode: ElementVisibilityMode) => {
-            return viewMode !== ElementVisibilityMode.UNAVAILABLE;
+        shouldAllowTab: (datasetPermissions: DatasetPermissionsFragment) => {
+            return datasetPermissions.permissions.canView;
         },
     },
     {
@@ -26,8 +25,8 @@ export const DatasetViewMenuItems: DatasetMenuItemOptions[] = [
         value: "data",
         label: "Data",
         icon: "dataset",
-        shouldAllowTab: (viewMode: ElementVisibilityMode) => {
-            return viewMode !== ElementVisibilityMode.UNAVAILABLE;
+        shouldAllowTab: (datasetPermissions: DatasetPermissionsFragment) => {
+            return datasetPermissions.permissions.canView;
         },
     },
     {
@@ -35,8 +34,8 @@ export const DatasetViewMenuItems: DatasetMenuItemOptions[] = [
         value: "metadata",
         label: "Metadata",
         icon: "dataset_linked",
-        shouldAllowTab: (viewMode: ElementVisibilityMode) => {
-            return viewMode !== ElementVisibilityMode.UNAVAILABLE;
+        shouldAllowTab: (datasetPermissions: DatasetPermissionsFragment) => {
+            return datasetPermissions.permissions.canView;
         },
     },
     {
@@ -44,8 +43,8 @@ export const DatasetViewMenuItems: DatasetMenuItemOptions[] = [
         value: "history",
         label: "History",
         icon: "manage_history",
-        shouldAllowTab: (viewMode: ElementVisibilityMode) => {
-            return viewMode !== ElementVisibilityMode.UNAVAILABLE;
+        shouldAllowTab: (datasetPermissions: DatasetPermissionsFragment) => {
+            return datasetPermissions.permissions.canView;
         },
     },
     {
@@ -53,8 +52,8 @@ export const DatasetViewMenuItems: DatasetMenuItemOptions[] = [
         value: "lineage",
         label: "Lineage",
         icon: "account_tree",
-        shouldAllowTab: (viewMode: ElementVisibilityMode) => {
-            return viewMode !== ElementVisibilityMode.UNAVAILABLE;
+        shouldAllowTab: (datasetPermissions: DatasetPermissionsFragment) => {
+            return datasetPermissions.permissions.canView;
         },
     },
 
@@ -64,8 +63,8 @@ export const DatasetViewMenuItems: DatasetMenuItemOptions[] = [
         label: "Discussions",
         icon: "message",
         disabled: true,
-        shouldAllowTab: (viewMode: ElementVisibilityMode) => {
-            return viewMode !== ElementVisibilityMode.UNAVAILABLE;
+        shouldAllowTab: (datasetPermissions: DatasetPermissionsFragment) => {
+            return datasetPermissions.permissions.canView;
         },
     },
     {
@@ -74,11 +73,8 @@ export const DatasetViewMenuItems: DatasetMenuItemOptions[] = [
         label: "Flows",
         icon: "add_task",
         showAdminIcon: true,
-        shouldAllowTab: (viewMode: ElementVisibilityMode, permissions: DatasetPermissionsFragment | null) => {
-            return (
-                viewMode === ElementVisibilityMode.AVAILABLE_VIA_ADMIN_PRIVILEGES ||
-                Boolean(permissions?.permissions.canSchedule)
-            );
+        shouldAllowTab: (datasetPermissions: DatasetPermissionsFragment, adminPrivileges?: boolean) => {
+            return Boolean(adminPrivileges) || datasetPermissions?.permissions.canSchedule;
         },
     },
     {
@@ -87,11 +83,11 @@ export const DatasetViewMenuItems: DatasetMenuItemOptions[] = [
         label: "Settings",
         icon: "settings",
         showAdminIcon: true,
-        shouldAllowTab: (viewMode: ElementVisibilityMode, permissions: DatasetPermissionsFragment | null) => {
+        shouldAllowTab: (datasetPermissions: DatasetPermissionsFragment, adminPrivileges?: boolean) => {
             return (
-                viewMode === ElementVisibilityMode.AVAILABLE_VIA_ADMIN_PRIVILEGES ||
-                Boolean(permissions?.permissions.canDelete) ||
-                Boolean(permissions?.permissions.canRename)
+                Boolean(adminPrivileges) ||
+                datasetPermissions.permissions.canDelete ||
+                datasetPermissions.permissions.canRename
             );
         },
     },

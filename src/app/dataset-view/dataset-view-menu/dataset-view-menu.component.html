@@ -3,7 +3,7 @@
     [style]="isMinimizeSearchAdditionalButtons ? 'grid-template-columns: 1fr;' : ''"
     id="container-dataset-tabs"
     #datasetViewMenu
-    *ngIf="viewModeElement$ | async as viewMode"
+    *ngIf="adminPrivileges$ | async as adminPrivileges"
 >
     <div class="dataset-view-type-toggle-group">
         <mat-button-toggle-group name="datasetViewType" class="mat-button-toggle-group" aria-label="Dataset View Type">
@@ -14,10 +14,10 @@
                     [value]="menuItem.value"
                     [label]="menuItem.label"
                     [icon]="menuItem.icon"
-                    [viewMode]="viewMode"
+                    [adminPrivileges]="adminPrivileges.value"
                     [disabled]="menuItem.disabled"
                     [showAdminIcon]="menuItem.showAdminIcon"
-                    [visible]="menuItem.shouldAllowTab(viewMode, datasetPermissions)"
+                    [visible]="menuItem.shouldAllowTab(datasetPermissions, adminPrivileges.value)"
                     [datasetLink]="datasetLink"
                 >
                 </app-dataset-view-menu-item>

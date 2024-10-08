@@ -57,7 +57,7 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
                 return user
                     ? {
                           user,
-                          adminPrivileges,
+                          adminPrivileges: adminPrivileges.value,
                       }
                     : null;
             }),

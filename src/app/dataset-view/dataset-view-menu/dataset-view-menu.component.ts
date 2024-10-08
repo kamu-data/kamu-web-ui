@@ -17,7 +17,7 @@ import { isMobileView, promiseWithCatch } from "src/app/common/app.helpers";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
 import { Observable } from "rxjs";
 import { DatasetViewMenuItems } from "./dataset-view-menu.model";
-import { ElementVisibilityMode, VisibilityModeService } from "./visibility-mode.service";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 @Component({
     selector: "app-dataset-view-menu",
@@ -35,12 +35,12 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
     @Input({ required: true }) datasetViewType: DatasetViewTypeEnum;
     @Input() isMinimizeSearchAdditionalButtons: boolean;
     public datasetMenuItemDescriptors = DatasetViewMenuItems;
+    public adminPrivileges$: Observable<{ value: boolean }>;
     private sideNavHelper: SideNavHelper;
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 
-    private visibilityModeService = inject(VisibilityModeService);
     private widgetHeightService = inject(WidgetHeightService);
-    public viewModeElement$: Observable<ElementVisibilityMode>;
+    private loggedUserService = inject(LoggedUserService);
 
     public ngAfterViewInit(): void {
         this.widgetHeightService.setWidgetOffsetTop(
@@ -53,7 +53,7 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
         if (this.sidenav) {
             this.sideNavHelper = new SideNavHelper(this.sidenav);
         }
-        this.viewModeElement$ = this.visibilityModeService.viewModeElement();
+        this.adminPrivileges$ = this.loggedUserService.adminPrivilegesChanges;
     }
 
     public get datasetLink(): string {

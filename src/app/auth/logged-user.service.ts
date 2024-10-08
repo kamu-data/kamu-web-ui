@@ -20,7 +20,9 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
     private loggedInUser: MaybeNull<AccountFragment> = null;
     private loggedInUser$: Subject<MaybeNull<AccountFragment>> = new ReplaySubject<MaybeNull<AccountFragment>>(1);
-    private adminPrivileges$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    private adminPrivileges$: BehaviorSubject<{ value: boolean }> = new BehaviorSubject<{ value: boolean }>({
+        value: false,
+    });
 
     constructor(
         private loginService: LoginService,
@@ -39,12 +41,12 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
                 .subscribe((user: AccountFragment) => this.changeUser(user));
     }
 
-    public get adminPrivilegesChanges(): Observable<boolean> {
+    public get adminPrivilegesChanges(): Observable<{ value: boolean }> {
         return this.adminPrivileges$.asObservable();
     }
 
     public emitAdminPrivilegesChanges(value: boolean): void {
-        return this.adminPrivileges$.next(value);
+        return this.adminPrivileges$.next({ value });
     }
 
     public initializeCompletes(): Observable<void> {

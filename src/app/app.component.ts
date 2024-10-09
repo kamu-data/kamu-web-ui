@@ -17,7 +17,6 @@ import { LoginService } from "./auth/login/login.service";
 import { loadErrorMessages } from "@apollo/client/dev";
 import { isDevMode } from "@angular/core";
 import moment from "moment";
-import { LoggedUserService } from "./auth/logged-user.service";
 import packageFile from "../../package.json";
 import { LocalStorageService } from "./services/local-storage.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -63,7 +62,6 @@ export class AppComponent extends BaseComponent implements OnInit {
     private navigationService = inject(NavigationService);
     private appConfigService = inject(AppConfigService);
     private cdr = inject(ChangeDetectorRef);
-    private loggedUserService = inject(LoggedUserService);
     private localStorageService = inject(LocalStorageService);
 
     public ngOnInit(): void {
@@ -182,7 +180,7 @@ export class AppComponent extends BaseComponent implements OnInit {
                 yesButtonText: "Ok",
             }),
         );
-        //TODO: Implement AdminDashBoardComponent
-        //  this.navigationService.navigateToAdminDashBoard();
+        // TODO: Implement AdminDashBoardComponent
+        // this.navigationService.navigateToAdminDashBoard();
     }
 }

@@ -92,6 +92,8 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
                 this.searchQuery = param.query as string;
             }
         });
+
+        this.adminPrivileges$ = this.loggedUserService.adminPrivilegesChanges;
     }
 
     public isDatasetType(type: TypeNames): boolean {

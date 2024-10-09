@@ -5,7 +5,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from "@
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { DatasetCreateService } from "./dataset-create.service";
 import { Observable } from "rxjs";
-import { LoggedUserService } from "../auth/logged-user.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
@@ -18,7 +17,6 @@ export class DatasetCreateComponent extends BaseComponent {
     private cdr = inject(ChangeDetectorRef);
     private fb = inject(FormBuilder);
     private datasetCreateService = inject(DatasetCreateService);
-    private loggedUserService = inject(LoggedUserService);
 
     private readonly kindMapper: Record<string, DatasetKind> = {
         root: DatasetKind.Root,

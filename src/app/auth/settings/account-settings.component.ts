@@ -8,7 +8,6 @@ import { BaseComponent } from "src/app/common/base.component";
 import AppValues from "src/app/common/app.values";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import { combineLatest, Observable } from "rxjs";
-import { LoggedUserService } from "../logged-user.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatSlideToggleChange } from "@angular/material/slide-toggle";
 import { LocalStorageService } from "src/app/services/local-storage.service";
@@ -25,11 +24,9 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
 
     public activeTab: AccountSettingsTabs = AccountSettingsTabs.PROFILE;
     public user$: Observable<MaybeNull<AccountFragment>>;
-    public adminPrivileges$: Observable<boolean>;
 
     private router = inject(Router);
     private route = inject(ActivatedRoute);
-    private loggedUserService = inject(LoggedUserService);
     private localStorageService = inject(LocalStorageService);
 
     public userData$: Observable<{

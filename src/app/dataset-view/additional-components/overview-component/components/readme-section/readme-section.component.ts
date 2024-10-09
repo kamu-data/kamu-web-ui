@@ -4,7 +4,6 @@ import { MaybeNull } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
 import { EditMode } from "./readme-section.types";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
@@ -29,7 +28,6 @@ export class ReadmeSectionComponent extends BaseComponent implements OnInit {
     }
 
     private datasetCommitService = inject(DatasetCommitService);
-    private loggedUserService = inject(LoggedUserService);
 
     public ngOnInit(): void {
         if (this.currentReadme) {

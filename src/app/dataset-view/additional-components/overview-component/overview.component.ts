@@ -32,7 +32,6 @@ import { promiseWithCatch } from "src/app/common/app.helpers";
 import { ModalService } from "src/app/components/modal/modal.service";
 import AppValues from "src/app/common/app.values";
 import { FileUploadService } from "src/app/services/file-upload.service";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
 import ProjectLinks from "src/app/project-links";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
@@ -69,7 +68,6 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     private fileUploadService = inject(FileUploadService);
     private configService = inject(AppConfigService);
     private modalService = inject(ModalService);
-    private loggedUserService = inject(LoggedUserService);
 
     public ngOnInit(): void {
         this.uploadFileLoading$ = this.fileUploadService.isUploadFile;

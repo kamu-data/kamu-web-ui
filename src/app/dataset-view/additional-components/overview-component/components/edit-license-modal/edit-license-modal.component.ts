@@ -13,7 +13,6 @@ import { MaybeNull } from "src/app/common/app.types";
 import { DatasetSchema, DataRow } from "src/app/interface/dataset.interface";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { finalize } from "rxjs";
 import { LicenseFormType } from "./edit-license-modal.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -27,7 +26,6 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
     private fb = inject(FormBuilder);
     private datasetCommitService = inject(DatasetCommitService);
     private yamlEventService = inject(TemplatesYamlEventsService);
-    private loggedUserService = inject(LoggedUserService);
 
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public currentState?: {

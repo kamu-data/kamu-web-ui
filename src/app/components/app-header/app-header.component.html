@@ -119,13 +119,18 @@
                         Your Datasets
                     </a>
 
-                    <a
-                        class="header-link py-2 py-md-3 mr-0 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
-                        (click)="onDashboard()"
-                        *ngIf="isAdmin"
-                    >
-                        Dashboard
-                    </a>
+                    <ng-container *ngIf="adminPrivileges$ | async as adminPrivileges">
+                        <a
+                            class="header-link py-2 py-md-3 mr-0 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
+                            (click)="onDashboard()"
+                            *ngIf="adminPrivileges.value"
+                        >
+                            Dashboard
+                        </a>
+                        <mat-icon *ngIf="adminPrivileges.value" class="admin-privileges-icon me-1">
+                            admin_panel_settings</mat-icon
+                        >
+                    </ng-container>
 
                     <a
                         class="header-link d-block d-md-none py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"

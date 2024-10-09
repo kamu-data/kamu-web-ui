@@ -15,7 +15,9 @@ import { DatasetViewTypeEnum } from "../dataset-view.interface";
 import { SideNavHelper } from "../../common/sidenav.helper";
 import { isMobileView, promiseWithCatch } from "src/app/common/app.helpers";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
-import { DatasetPermissionsService } from "../dataset.permissions.service";
+import { Observable } from "rxjs";
+import { DatasetViewMenuItems } from "./dataset-view-menu.model";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 @Component({
     selector: "app-dataset-view-menu",
@@ -32,12 +34,13 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
     @Input({ required: true }) datasetPermissions: DatasetPermissionsFragment;
     @Input({ required: true }) datasetViewType: DatasetViewTypeEnum;
     @Input() isMinimizeSearchAdditionalButtons: boolean;
+    public datasetMenuItemDescriptors = DatasetViewMenuItems;
+    public adminPrivileges$: Observable<{ value: boolean }>;
+    private sideNavHelper: SideNavHelper;
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 
-    private sideNavHelper: SideNavHelper;
-
-    private datasetPermissionsServices = inject(DatasetPermissionsService);
     private widgetHeightService = inject(WidgetHeightService);
+    private loggedUserService = inject(LoggedUserService);
 
     public ngAfterViewInit(): void {
         this.widgetHeightService.setWidgetOffsetTop(
@@ -50,46 +53,11 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
         if (this.sidenav) {
             this.sideNavHelper = new SideNavHelper(this.sidenav);
         }
-    }
-
-    public get isDatasetViewTypeOverview(): boolean {
-        return this.datasetViewType === DatasetViewTypeEnum.Overview;
-    }
-
-    public get isDatasetViewTypeData(): boolean {
-        return this.datasetViewType === DatasetViewTypeEnum.Data;
-    }
-
-    public get isDatasetViewTypeMetadata(): boolean {
-        return this.datasetViewType === DatasetViewTypeEnum.Metadata;
-    }
-
-    public get isDatasetViewTypeHistory(): boolean {
-        return this.datasetViewType === DatasetViewTypeEnum.History;
-    }
-
-    public get isDatasetViewTypeLineage(): boolean {
-        return this.datasetViewType === DatasetViewTypeEnum.Lineage;
-    }
-
-    public get isDatasetViewTypeDiscussions(): boolean {
-        return this.datasetViewType === DatasetViewTypeEnum.Discussions;
-    }
-
-    public get isDatasetViewTypeFlows(): boolean {
-        return this.datasetViewType === DatasetViewTypeEnum.Flows;
-    }
-
-    public get isDatasetViewTypeSettings(): boolean {
-        return this.datasetViewType === DatasetViewTypeEnum.Settings;
-    }
-
-    public get shouldAllowSettingsTab(): boolean {
-        return this.datasetPermissionsServices.shouldAllowSettingsTab(this.datasetPermissions);
+        this.adminPrivileges$ = this.loggedUserService.adminPrivilegesChanges;
     }
 
     public get datasetLink(): string {
-        return `/${this.datasetBasics.owner.accountName}/${this.datasetBasics.name}/`;
+        return `/${this.datasetBasics.owner.accountName}/${this.datasetBasics.name}`;
     }
 
     @HostListener("window:resize")

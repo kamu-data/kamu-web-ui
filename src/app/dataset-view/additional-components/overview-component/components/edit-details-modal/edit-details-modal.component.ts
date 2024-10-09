@@ -12,7 +12,6 @@ import { BaseComponent } from "src/app/common/base.component";
 import { DatasetSchema, DataRow } from "src/app/interface/dataset.interface";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { finalize } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
@@ -36,7 +35,6 @@ export class EditDetailsModalComponent extends BaseComponent implements OnInit {
     private datasetCommitService = inject(DatasetCommitService);
     private yamlEventService = inject(TemplatesYamlEventsService);
     public activeModal = inject(NgbActiveModal);
-    private loggedUserService = inject(LoggedUserService);
 
     public get keywords(): string[] {
         return Array.from(this.keywordsSet);

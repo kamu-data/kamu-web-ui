@@ -86,6 +86,7 @@ import { FlowsComponent } from "./additional-components/flows-component/flows.co
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatChipsModule } from "@angular/material/chips";
+import { DatasetViewMenuItemComponent } from "./dataset-view-menu/components/dataset-view-menu-item/dataset-view-menu-item.component";
 
 @NgModule({
     imports: [
@@ -165,6 +166,7 @@ import { MatChipsModule } from "@angular/material/chips";
         FlowsTableComponent,
         AngularMultiSelectModule,
         MatChipsModule,
+        DatasetViewMenuItemComponent,
     ],
     declarations: [
         DatasetViewHeaderComponent,
@@ -208,6 +210,7 @@ import { MatChipsModule } from "@angular/material/chips";
         RequestTimerComponent,
         AddDataModalComponent,
         FileFromUrlModalComponent,
+        DatasetViewMenuItemComponent,
     ],
 })
 export class DatasetModule {

@@ -120,16 +120,13 @@
                     </a>
 
                     <ng-container *ngIf="adminPrivileges$ | async as adminPrivileges">
-                        <a
-                            class="header-link py-2 py-md-3 mr-0 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
-                            (click)="onDashboard()"
-                            *ngIf="adminPrivileges.value"
-                        >
-                            Dashboard
-                        </a>
-                        <mat-icon *ngIf="adminPrivileges.value" class="admin-privileges-icon me-1">
-                            admin_panel_settings</mat-icon
-                        >
+                        <span class="py-2 py-md-3 border-sm-top">
+                            <app-admin-link [adminPrivileges]="adminPrivileges.value">
+                                <a class="header-link" (click)="onDashboard()" *ngIf="adminPrivileges.value">
+                                    Dashboard
+                                </a>
+                            </app-admin-link>
+                        </span>
                     </ng-container>
 
                     <a

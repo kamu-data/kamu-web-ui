@@ -154,6 +154,10 @@ export class DataComponent extends BaseComponent implements OnInit {
         this.toastService.success("Copied url to clipboard");
     }
 
+    public verifyQueryResult(): void {
+        this.navigationService.navigateToQueryExplainer(this.sqlRequestCode);
+    }
+
     private updateNow(): void {
         this.datasetFlowsService
             .datasetTriggerFlow({

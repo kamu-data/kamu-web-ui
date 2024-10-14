@@ -29,6 +29,7 @@ import { Clipboard } from "@angular/cdk/clipboard";
 import ProjectLinks from "src/app/project-links";
 import { ToastrService } from "ngx-toastr";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { AppConfigService } from "src/app/app-config.service";
 
 @Component({
     selector: "app-data",
@@ -64,6 +65,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     private clipboard = inject(Clipboard);
     private toastService = inject(ToastrService);
     private loggedUserService = inject(LoggedUserService);
+    private appConfigService = inject(AppConfigService);
 
     public ngOnInit(): void {
         this.overviewUpdate$ = this.datasetSubsService.overviewChanges;
@@ -152,6 +154,14 @@ export class DataComponent extends BaseComponent implements OnInit {
         url.searchParams.set(ProjectLinks.URL_QUERY_PARAM_SQL_QUERY, this.sqlRequestCode);
         this.clipboard.copy(url.href);
         this.toastService.success("Copied url to clipboard");
+    }
+
+    public copyCurlCommand(): void {
+        // Removed all \n symbols and replaced all single quotes on \" in the sql query
+        const sqlRequestReplacedCode = this.sqlRequestCode.replace(/\n/g, " ").replace(/'/g, '\\"');
+        const command = `echo '{ "query": "${sqlRequestReplacedCode}", "include": ["proof"] }' | curl "${this.appConfigService.apiServerHttpUrl}/query" -X POST --data-binary @- -H "Content-Type: application/json"`;
+        this.clipboard.copy(command);
+        this.toastService.success("Copied command to clipboard");
     }
 
     public verifyQueryResult(): void {

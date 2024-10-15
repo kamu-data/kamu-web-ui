@@ -610,7 +610,8 @@ router-outlet {
 #result-query-table,
 #overview-data-table,
 #set-data-schema-event,
-#set-polling-source-topics {
+#set-polling-source-topics,
+#query-explainer-table {
     * {
         padding: 0 8px;
         font-size: 12px;

@@ -1,226 +1,222 @@
-<div
-    class="alert alert-info message-success mx-4 mt-4 w-50 mx-auto d-flex align-items-center justify-content-center"
-    role="alert"
->
-    <mat-icon class="me-1">check_circle</mat-icon>
-    Verification was successful
-</div>
+<ng-container *ngIf="verifyResponse">
+    <div
+        class="alert alert-info message-success mx-4 mt-4 fs-18 w-50 mx-auto d-flex align-items-center justify-content-center"
+        role="alert"
+        *ngIf="verifyResponse?.ok"
+    >
+        <mat-icon class="me-1">check_circle</mat-icon>
+        Verification was successful
+    </div>
+    <div
+        *ngIf="verifyResponse?.error"
+        class="alert alert-info message-error error-color mx-4 mt-4 w-50 mx-auto d-flex flex-column"
+        role="alert"
+    >
+        <div class="d-flex align-items-center justify-content-center mb-2 fs-18">
+            <mat-icon class="me-1">error</mat-icon>
+            Verification was failed
+        </div>
 
-<div *ngIf="false" class="alert alert-info message-error mx-4 mt-4 w-50 mx-auto d-flex flex-column" role="alert">
-    <div class="d-flex align-items-center justify-content-center mb-2">
-        <mat-icon class="me-1">error</mat-icon>
-        Verification was failed
+        <div class="fs-13 text-center" *ngIf="verifyResponse.error?.message">
+            {{ verifyResponse.error?.message }}
+        </div>
     </div>
 
-    <div class="fs-12">
-        Query was reproduced but resulted in output hash different from expected. This means that the output was either
-        falsified, or the query reproducibility was not guaranteed by the system.
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-6">
-        <div class="box p-4 my-2 ms-4 h-100">
-            <div class="position-relative border border-1 p-2 rounded-3">
-                <span class="position-absolute text-muted group-box-label text-uppercase">Input data</span>
-                <div class="mt-4 mx-4">
-                    <div class="fw-semibold">Query:</div>
-                    <div class="mt-2">
-                        <pre><code [highlight]="'select * from input'" [languages]="['sql'] "  [attr.data-test-id]="'query-explainer-viewer'" class="rounded-3"></code></pre>
+    <ng-container *ngIf="sqlQueryExplainer">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="box p-4 my-2 ms-4 h-100">
+                    <div class="position-relative border border-1 p-2 rounded-3">
+                        <span class="position-absolute text-muted group-box-label text-uppercase">Input data</span>
+                        <div class="mt-4 mx-4">
+                            <div class="fw-semibold">Query:</div>
+                            <div class="mt-2">
+                                <pre><code [highlight]="sqlQueryExplainer.input.query" [languages]="['sql'] "  [attr.data-test-id]="'query-explainer-viewer'" class="rounded-3"></code></pre>
+                            </div>
+                        </div>
+                        <div class="my-4 mx-4 d-flex flex-row justify-content-between">
+                            <div class="fw-semibold">Query dialect:</div>
+                            <div>{{ sqlQueryExplainer.input.queryDialect }}</div>
+                        </div>
+                        <div class="my-4 mx-4 d-flex flex-row justify-content-between">
+                            <div class="fw-semibold">Data format:</div>
+                            <div>{{ sqlQueryExplainer.input.dataFormat }}</div>
+                        </div>
+                        <div class="my-4 mx-4 d-flex flex-row justify-content-between">
+                            <div class="fw-semibold">Schema format:</div>
+                            <div>{{ sqlQueryExplainer.input.schemaFormat }}</div>
+                        </div>
+                        <div class="my-4 mx-4 d-flex flex-row justify-content-between">
+                            <div class="fw-semibold">Limit:</div>
+                            <div>{{ sqlQueryExplainer.input.limit }}</div>
+                        </div>
+                        <div class="my-4 mx-4 d-flex flex-row justify-content-between">
+                            <div class="fw-semibold">Skip:</div>
+                            <div>{{ sqlQueryExplainer.input.skip }}</div>
+                        </div>
+                        <div class="my-4">
+                            <div class="fw-semibold mx-4">Datasets:</div>
+                            <ng-container *ngFor="let dataset of sqlQueryExplainer.input.datasets">
+                                <div class="mt-2">
+                                    <div class="dataset-box p-2 mx-2 my-4 rounded-3">
+                                        <div class="px-2 py-3">
+                                            <div class="fw-500">ID:</div>
+                                            <div class="mt-2 text-break">
+                                                <a [routerLink]="['/']">
+                                                    {{ dataset.id }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="px-2 py-3">
+                                            <div class="fw-500">Alias:</div>
+                                            <div class="mt-2">{{ dataset.alias }}</div>
+                                        </div>
+                                        <div class="px-2 py-3">
+                                            <div class="fw-500">Block hash:</div>
+                                            <div class="mt-2">
+                                                <app-display-hash [value]="dataset.blockHash" [showCopyButton]="true" />
+                                                <span class="ms-4">( as of Dec 13, 2023)???</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
                     </div>
                 </div>
-                <div class="my-4 mx-4 d-flex flex-row justify-content-between">
-                    <div class="fw-semibold">Query dialect:</div>
-                    <div>SqlDataFusion</div>
-                </div>
-                <div class="my-4 mx-4 d-flex flex-row justify-content-between">
-                    <div class="fw-semibold">Data format:</div>
-                    <div>JsonAoa</div>
-                </div>
-                <div class="my-4 mx-4 d-flex flex-row justify-content-between">
-                    <div class="fw-semibold">Schema format:</div>
-                    <div>ArrowJson</div>
-                </div>
-                <div class="my-4 mx-4 d-flex flex-row justify-content-between">
-                    <div class="fw-semibold">Limit:</div>
-                    <div>100</div>
-                </div>
-                <div class="my-4 mx-4 d-flex flex-row justify-content-between">
-                    <div class="fw-semibold">Skip:</div>
-                    <div>0</div>
-                </div>
-                <div class="my-4">
-                    <div class="fw-semibold mx-4">Datasets:</div>
-                    <div class="mt-2">
-                        <div class="dataset-box p-2 mx-2 my-4 rounded-3">
-                            <div class="px-2 py-3">
-                                <div class="fw-500">ID:</div>
-                                <div class="mt-2">
-                                    <a href="#">
-                                        did:odf:fed014aee1c33d51f36c21fab6f13444bdce6fe3d5762cbb889adead63498f57f4168
-                                    </a>
-                                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="box p-4 my-2 me-4 h-100">
+                    <div class="position-relative border border-1 p-2 rounded-3">
+                        <span class="position-absolute text-muted group-box-label text-uppercase">Commitment data</span>
+                        <div class="m-4">
+                            <div class="fw-semibold">Input hash:</div>
+                            <div class="mt-2 text-break">
+                                <span [class.error-color]="verifyResponse.error?.kind === 'InvalidRequest::InputHash'"
+                                    >{{ sqlQueryExplainer.commitment.inputHash }}
+                                </span>
+                                <button
+                                    (click)="copyToClipboard($event, sqlQueryExplainer.commitment.inputHash)"
+                                    data-test-id="copyToClipboard-query-explainer-input-hash"
+                                    aria-label="Copy to clipboard"
+                                    class="copy-button ms-4"
+                                    data-copy-feedback="Copied!"
+                                    tabindex="0"
+                                    role="button"
+                                >
+                                    <div style="position: relative; display: inline-block">
+                                        <svg-icon name="copy" />
+                                    </div>
+                                    <div style="position: relative; display: none">
+                                        <svg-icon name="checked" />
+                                    </div>
+                                </button>
                             </div>
-                            <div class="px-2 py-3">
-                                <div class="fw-500">Alias:</div>
-                                <div class="mt-2">kamu/com.cryptocompare.ohlcv.eth-usd</div>
+                        </div>
+                        <div class="m-4">
+                            <div class="fw-semibold">Output hash:</div>
+                            <div class="mt-2 text-break">
+                                <span
+                                    [class.error-color]="
+                                        verifyResponse.error?.kind === 'VerificationFailed::OutputMismatch'
+                                    "
+                                >
+                                    {{ sqlQueryExplainer.commitment.outputHash }}</span
+                                >
+                                <button
+                                    (click)="copyToClipboard($event, sqlQueryExplainer.commitment.outputHash)"
+                                    data-test-id="copyToClipboard-query-explainer-output-hash"
+                                    aria-label="Copy to clipboard"
+                                    class="copy-button ms-4"
+                                    data-copy-feedback="Copied!"
+                                    tabindex="0"
+                                    role="button"
+                                >
+                                    <div style="position: relative; display: inline-block">
+                                        <svg-icon name="copy" />
+                                    </div>
+                                    <div style="position: relative; display: none">
+                                        <svg-icon name="checked" />
+                                    </div>
+                                </button>
                             </div>
-                            <div class="px-2 py-3">
-                                <div class="fw-500">Block hash:</div>
-                                <div class="mt-2">
-                                    <app-display-hash
-                                        [value]="
-                                            'did:odf:fed014aee1c33d51f36c21fab6f13444bdce6fe3d5762cbb889adead63498f57f4168'
-                                        "
-                                        [showCopyButton]="true"
-                                    />
-                                    <span class="ms-4">( as of Dec 13, 2023)</span>
-                                </div>
+                        </div>
+                        <div class="m-4">
+                            <div class="fw-semibold">Sub queries hash:</div>
+                            <div class="mt-2 text-break">
+                                <span
+                                    [class.error-color]="
+                                        verifyResponse.error?.kind === 'InvalidRequest::SubQueriesHash'
+                                    "
+                                    >{{ sqlQueryExplainer.commitment.subQueriesHash }}
+                                </span>
+
+                                <button
+                                    (click)="copyToClipboard($event, sqlQueryExplainer.commitment.subQueriesHash)"
+                                    data-test-id="copyToClipboard-query-explainer-sub-queries-hash"
+                                    aria-label="Copy to clipboard"
+                                    class="copy-button ms-4"
+                                    data-copy-feedback="Copied!"
+                                    tabindex="0"
+                                    role="button"
+                                >
+                                    <div style="position: relative; display: inline-block">
+                                        <svg-icon name="copy" />
+                                    </div>
+                                    <div style="position: relative; display: none">
+                                        <svg-icon name="checked" />
+                                    </div>
+                                </button>
                             </div>
                         </div>
                     </div>
-                    <div class="mt-2">
-                        <div class="dataset-box p-2 mx-2 my-4 rounded-3">
-                            <div class="px-2 py-3">
-                                <div class="fw-500">ID:</div>
-                                <div class="mt-2">
-                                    <a href="#">
-                                        did:odf:fed014aee1c33d51f36c21fab6f13444bdce6fe3d5762cbb889adead63498f57f4168
-                                    </a>
-                                </div>
+
+                    <div class="position-relative border border-1 p-2 rounded-3 mt-4">
+                        <span class="position-absolute text-muted group-box-label text-uppercase">Proof data</span>
+                        <div class="m-4">
+                            <div class="fw-semibold">Type:</div>
+                            <div class="mt-2">
+                                <a
+                                    [href]="
+                                        'https://www.w3.org/community/reports/credentials/CG-FINAL-di-eddsa-2020-20220724/#dfn-ed25519signature2020'
+                                    "
+                                >
+                                    {{ sqlQueryExplainer.proof.type }}
+                                </a>
                             </div>
-                            <div class="px-2 py-3">
-                                <div class="fw-500">Alias:</div>
-                                <div class="mt-2">kamu/com.cryptocompare.ohlcv.eth-usd</div>
+                        </div>
+                        <div class="m-4">
+                            <div class="fw-semibold">ODF Node DID:</div>
+                            <div class="mt-2 text-break">
+                                {{ sqlQueryExplainer.proof.verificationMethod }}
                             </div>
-                            <div class="px-2 py-3">
-                                <div class="fw-500">Block hash:</div>
-                                <div class="mt-2">
-                                    <app-display-hash
-                                        [value]="
-                                            'did:odf:fed014aee1c33d51f36c21fab6f13444bdce6fe3d5762cbb889adead63498f57f4168'
-                                        "
-                                        [showCopyButton]="true"
-                                    />
-                                    <span class="ms-4">( as of Dec 13, 2023)</span>
-                                </div>
+                        </div>
+                        <div class="m-4">
+                            <div class="fw-semibold">Signature:</div>
+                            <div class="mt-2 text-break">
+                                <span
+                                    [class.error-color]="verifyResponse.error?.kind === 'InvalidRequest::BadSignature'"
+                                >
+                                    {{ sqlQueryExplainer.proof.proofValue }}
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-6">
-        <div class="box p-4 my-2 me-4 h-100">
-            <div class="position-relative border border-1 p-2 rounded-3">
-                <span class="position-absolute text-muted group-box-label text-uppercase">Commitment data</span>
-                <div class="m-4">
-                    <div class="fw-semibold">Input hash:</div>
-                    <div class="mt-2">
-                        did:odf:fed014aee1c33d51f36c21fab6f13444bdce6fe3d5762cbb889adead63498f57f4168
-                        <button
-                            (click)="
-                                copyToClipboard(
-                                    $event,
-                                    'did:odf:fed014aee1c33d51f36c21fab6f13444bdce6fe3d5762cbb889adead63498f57f4168'
-                                )
-                            "
-                            data-test-id="copyToClipboard-query-explainer-input-hash"
-                            aria-label="Copy to clipboard"
-                            class="copy-button ms-4"
-                            data-copy-feedback="Copied!"
-                            tabindex="0"
-                            role="button"
-                        >
-                            <div style="position: relative; display: inline-block">
-                                <svg-icon name="copy" />
-                            </div>
-                            <div style="position: relative; display: none">
-                                <svg-icon name="checked" />
-                            </div>
-                        </button>
-                    </div>
-                </div>
-                <div class="m-4">
-                    <div class="fw-semibold">Output hash:</div>
-                    <div class="mt-2">
-                        did:odf:fed014aee1c33d51f36c21fab6f13444bdce6fe3d5762cbb889adead63498f57f4168
-                        <button
-                            (click)="
-                                copyToClipboard(
-                                    $event,
-                                    'did:odf:fed014aee1c33d51f36c21fab6f13444bdce6fe3d5762cbb889adead63498f57f4168'
-                                )
-                            "
-                            data-test-id="copyToClipboard-query-explainer-output-hash"
-                            aria-label="Copy to clipboard"
-                            class="copy-button ms-4"
-                            data-copy-feedback="Copied!"
-                            tabindex="0"
-                            role="button"
-                        >
-                            <div style="position: relative; display: inline-block">
-                                <svg-icon name="copy" />
-                            </div>
-                            <div style="position: relative; display: none">
-                                <svg-icon name="checked" />
-                            </div>
-                        </button>
-                    </div>
-                </div>
-                <div class="m-4">
-                    <div class="fw-semibold">Sub gueries hash:</div>
-                    <div class="mt-2">
-                        did:odf:fed014aee1c33d51f36c21fab6f13444bdce6fe3d5762cbb889adead63498f57f4168
-                        <button
-                            (click)="
-                                copyToClipboard(
-                                    $event,
-                                    'did:odf:fed014aee1c33d51f36c21fab6f13444bdce6fe3d5762cbb889adead63498f57f4168'
-                                )
-                            "
-                            data-test-id="copyToClipboard-query-explainer-sub-queries-hash"
-                            aria-label="Copy to clipboard"
-                            class="copy-button ms-4"
-                            data-copy-feedback="Copied!"
-                            tabindex="0"
-                            role="button"
-                        >
-                            <div style="position: relative; display: inline-block">
-                                <svg-icon name="copy" />
-                            </div>
-                            <div style="position: relative; display: none">
-                                <svg-icon name="checked" />
-                            </div>
-                        </button>
-                    </div>
-                </div>
-            </div>
 
-            <div class="position-relative border border-1 p-2 rounded-3 mt-4">
-                <span class="position-absolute text-muted group-box-label text-uppercase">Proof data</span>
-                <div class="m-4">
-                    <div class="fw-semibold">Type:</div>
-                    <div class="mt-2">Ed25519Signature2020</div>
-                </div>
-                <div class="m-4">
-                    <div class="fw-semibold">ODF Node DID:</div>
-                    <div class="mt-2">
-                        did:odf:fed014aee1c33d51f36c21fab6f13444bdce6fe3d5762cbb889adead63498f57f4168
-                    </div>
-                </div>
-                <div class="m-4">
-                    <div class="fw-semibold">Signature:</div>
-                    <div class="mt-2">
-                        uJfY3_g03WbmqlQG8TLWUxKYU8ZoJaP14MzOzbnJedNiu7jpoKnCTNnDI3TYuaXv89vKlirlGs-5AN06mBseCg
-                    </div>
-                </div>
+        <div class="box p-4 margin-top mx-4 margin-bottom">
+            <div class="fw-semibold">Reproduced result:</div>
+            <div class="mt-4">
+                <app-dynamic-table
+                    [hasTableHeader]="true"
+                    [schemaFields]="schemaFields"
+                    [idTable]="'query-explainer-table'"
+                    [dataRows]="tableSource"
+                    [attr.data-test-id]="'query-explainer-table'"
+                />
             </div>
         </div>
-    </div>
-</div>
-
-<div class="box p-4 margin-top mx-4 margin-bottom">
-    <div class="fw-semibold">Reproduced result:</div>
-</div>
+    </ng-container>
+</ng-container>

@@ -36,7 +36,9 @@ export class NavigationService {
     public navigateToQueryExplainer(query: string): void {
         if (query) {
             promiseWithCatch(
-                this.router.navigate([ProjectLinks.URL_QUERY_EXPLAINER], { queryParams: { sqlQuery: query } }),
+                this.router.navigate([ProjectLinks.URL_QUERY_EXPLAINER], {
+                    queryParams: { [ProjectLinks.URL_QUERY_PARAM_SQL_QUERY]: query },
+                }),
             );
         }
     }

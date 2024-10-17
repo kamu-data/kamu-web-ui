@@ -1,8 +1,9 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { catchError, EMPTY, Observable } from "rxjs";
 import { AppConfigService } from "src/app/app-config.service";
 import { QueryExplainerResponse, VerifyQueryResponse } from "./query-explainer.types";
+import { ToastrService } from "ngx-toastr";
 
 @Injectable({
     providedIn: "root",
@@ -10,6 +11,7 @@ import { QueryExplainerResponse, VerifyQueryResponse } from "./query-explainer.t
 export class QueryExplainerService {
     private appConfigService = inject(AppConfigService);
     private httpClient = inject(HttpClient);
+    private toastrService = inject(ToastrService);
 
     public proccessQuery(query: string): Observable<QueryExplainerResponse> {
         const url = new URL(`${this.appConfigService.apiServerHttpUrl}/query`);
@@ -19,7 +21,14 @@ export class QueryExplainerService {
             schemaFormat: "ArrowJson",
             include: ["Proof"],
         };
-        return this.httpClient.post<QueryExplainerResponse>(url.href, body);
+        return this.httpClient.post<QueryExplainerResponse>(url.href, body).pipe(
+            catchError((e: HttpErrorResponse) => {
+                this.toastrService.error("", e.error as string, {
+                    disableTimeOut: "timeOut",
+                });
+                return EMPTY;
+            }),
+        );
     }
 
     public verifyQuery(data: QueryExplainerResponse): Observable<VerifyQueryResponse> {

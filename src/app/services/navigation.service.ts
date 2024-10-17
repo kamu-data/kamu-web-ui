@@ -33,6 +33,16 @@ export class NavigationService {
         promiseWithCatch(this.router.navigate([ProjectLinks.URL_SEARCH], { queryParams }));
     }
 
+    public navigateToQueryExplainer(query: string): void {
+        if (query) {
+            promiseWithCatch(
+                this.router.navigate([ProjectLinks.URL_QUERY_EXPLAINER], {
+                    queryParams: { [ProjectLinks.URL_QUERY_PARAM_SQL_QUERY]: query },
+                }),
+            );
+        }
+    }
+
     public navigateToDatasetCreate(): void {
         promiseWithCatch(this.router.navigate([ProjectLinks.URL_DATASET_CREATE]));
     }

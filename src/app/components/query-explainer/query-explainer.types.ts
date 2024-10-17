@@ -36,6 +36,6 @@ export interface VerifyQueryResponse {
         actual_hash?: string;
         expected_hash?: string;
         dataset_id?: string;
-        block_hash?:string
+        block_hash?: string;
     };
 }

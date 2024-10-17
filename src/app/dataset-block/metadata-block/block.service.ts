@@ -50,4 +50,12 @@ export class BlockService {
             }),
         );
     }
+
+    public requestSystemTimeBlockByHash(datasetId: string, blockHash: string): Observable<string> {
+        return this.datasetApi.getSystemTimeBlockByHash(datasetId, blockHash).pipe(
+            map((data) => {
+                return data.datasets.byId?.metadata.chain.blockByHash?.systemTime ?? "";
+            }),
+        );
+    }
 }

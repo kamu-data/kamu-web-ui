@@ -15,11 +15,9 @@ export class QueryExplainerService {
         const url = new URL(`${this.appConfigService.apiServerHttpUrl}/query`);
         const body = {
             query: query,
-            queryDialect: "SqlDataFusion",
-            limit: 20,
-            dataFormat: "JsonAoa",
+            dataFormat: "JsonAoA",
             schemaFormat: "ArrowJson",
-            include: ["proof"],
+            include: ["Proof"],
         };
         return this.httpClient.post<QueryExplainerResponse>(url.href, body);
     }

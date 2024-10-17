@@ -36,15 +36,15 @@
                         </div>
                         <div class="my-4 mx-4 d-flex flex-row justify-content-between">
                             <div class="fw-semibold">Query dialect:</div>
-                            <div>{{ sqlQueryExplainer.input.queryDialect }}</div>
+                            <div>{{ inputParamsHelper(sqlQueryExplainer.input.queryDialect) }}</div>
                         </div>
                         <div class="my-4 mx-4 d-flex flex-row justify-content-between">
                             <div class="fw-semibold">Data format:</div>
-                            <div>{{ sqlQueryExplainer.input.dataFormat }}</div>
+                            <div>{{ inputParamsHelper(sqlQueryExplainer.input.dataFormat) }}</div>
                         </div>
                         <div class="my-4 mx-4 d-flex flex-row justify-content-between">
                             <div class="fw-semibold">Schema format:</div>
-                            <div>{{ sqlQueryExplainer.input.schemaFormat }}</div>
+                            <div>{{ inputParamsHelper(sqlQueryExplainer.input.schemaFormat) }}</div>
                         </div>
                         <div class="my-4 mx-4 d-flex flex-row justify-content-between">
                             <div class="fw-semibold">Limit:</div>
@@ -56,13 +56,20 @@
                         </div>
                         <div class="my-4">
                             <div class="fw-semibold mx-4">Datasets:</div>
-                            <ng-container *ngFor="let dataset of sqlQueryExplainer.input.datasets">
+                            <ng-container *ngFor="let dataset of sqlQueryExplainer.input.datasets; let i = index">
                                 <div class="mt-2">
                                     <div class="dataset-box p-2 mx-2 my-4 rounded-3">
                                         <div class="px-2 py-3">
                                             <div class="fw-500">ID:</div>
                                             <div class="mt-2 text-break">
-                                                <a [routerLink]="['/']">
+                                                <a
+                                                    [class.error-color]="
+                                                        verifyResponse.error?.kind ===
+                                                            'VerificationFailed::DatasetNotFound' &&
+                                                        verifyResponse.error?.dataset_id === dataset.id
+                                                    "
+                                                    routerLink="/{{ routeToDataset(dataset.alias) }}"
+                                                >
                                                     {{ dataset.id }}
                                                 </a>
                                             </div>
@@ -74,8 +81,18 @@
                                         <div class="px-2 py-3">
                                             <div class="fw-500">Block hash:</div>
                                             <div class="mt-2">
-                                                <app-display-hash [value]="dataset.blockHash" [showCopyButton]="true" />
-                                                <span class="ms-4">( as of Dec 13, 2023)???</span>
+                                                <app-display-hash
+                                                    [class.error-color]="
+                                                        verifyResponse.error?.kind ===
+                                                            'VerificationFailed::DatasetBlockNotFound' &&
+                                                        verifyResponse.error?.block_hash === dataset.blockHash
+                                                    "
+                                                    [value]="dataset.blockHash"
+                                                    [showCopyButton]="true"
+                                                />
+                                                <span class="ms-4">
+                                                    ( as of {{ blockHashSystemTimes[i] | date: DATE_FORMAT }} )
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
@@ -99,7 +116,7 @@
                                     (click)="copyToClipboard($event, sqlQueryExplainer.commitment.inputHash)"
                                     data-test-id="copyToClipboard-query-explainer-input-hash"
                                     aria-label="Copy to clipboard"
-                                    class="copy-button ms-4"
+                                    class="copy-button ms-2"
                                     data-copy-feedback="Copied!"
                                     tabindex="0"
                                     role="button"
@@ -127,7 +144,7 @@
                                     (click)="copyToClipboard($event, sqlQueryExplainer.commitment.outputHash)"
                                     data-test-id="copyToClipboard-query-explainer-output-hash"
                                     aria-label="Copy to clipboard"
-                                    class="copy-button ms-4"
+                                    class="copy-button ms-2"
                                     data-copy-feedback="Copied!"
                                     tabindex="0"
                                     role="button"
@@ -155,7 +172,7 @@
                                     (click)="copyToClipboard($event, sqlQueryExplainer.commitment.subQueriesHash)"
                                     data-test-id="copyToClipboard-query-explainer-sub-queries-hash"
                                     aria-label="Copy to clipboard"
-                                    class="copy-button ms-4"
+                                    class="copy-button ms-2"
                                     data-copy-feedback="Copied!"
                                     tabindex="0"
                                     role="button"
@@ -220,3 +237,7 @@
         </div>
     </ng-container>
 </ng-container>
+
+<!-- <div *ngIf="!blockHashSystemTimes.length" class="mt-4 text-center box p-4 w-50 mx-auto">
+    Sorry, your request does not contain a signature.
+</div> -->

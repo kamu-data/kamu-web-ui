@@ -2692,6 +2692,30 @@ export type GetDatasetSchemaQuery = {
     };
 };
 
+export type DatasetSystemTimeBlockByHashQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    blockHash: Scalars["Multihash"];
+}>;
+
+export type DatasetSystemTimeBlockByHashQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?:
+            | ({
+                  __typename?: "Dataset";
+                  metadata: {
+                      __typename?: "DatasetMetadata";
+                      chain: {
+                          __typename?: "MetadataChain";
+                          blockByHash?: { __typename?: "MetadataBlockExtended"; systemTime: string } | null;
+                      };
+                  };
+              } & DatasetBasicsFragment)
+            | null;
+    };
+};
+
 export type DatasetsByAccountNameQueryVariables = Exact<{
     accountName: Scalars["AccountName"];
     perPage?: InputMaybe<Scalars["Int"]>;
@@ -6125,6 +6149,37 @@ export const GetDatasetSchemaDocument = gql`
 })
 export class GetDatasetSchemaGQL extends Apollo.Query<GetDatasetSchemaQuery, GetDatasetSchemaQueryVariables> {
     document = GetDatasetSchemaDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetSystemTimeBlockByHashDocument = gql`
+    query datasetSystemTimeBlockByHash($datasetId: DatasetID!, $blockHash: Multihash!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                ...DatasetBasics
+                metadata {
+                    chain {
+                        blockByHash(hash: $blockHash) {
+                            systemTime
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetSystemTimeBlockByHashGQL extends Apollo.Query<
+    DatasetSystemTimeBlockByHashQuery,
+    DatasetSystemTimeBlockByHashQueryVariables
+> {
+    document = DatasetSystemTimeBlockByHashDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

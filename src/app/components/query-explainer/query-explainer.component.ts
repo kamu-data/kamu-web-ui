@@ -6,12 +6,22 @@ import { BaseComponent } from "src/app/common/base.component";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import ProjectLinks from "src/app/project-links";
 import { catchError, forkJoin, Observable, of, switchMap, tap } from "rxjs";
-import { QueryExplainerResponse, VerifyQueryResponse } from "./query-explainer.types";
+import {
+    QueryExplainerOutputType,
+    QueryExplainerResponse,
+    QueryExplainerSchemaType,
+    VerifyQueryDatasetBlockNotFoundError,
+    VerifyQueryDatasetNotFoundError,
+    VerifyQueryError,
+    VerifyQueryKindError,
+    VerifyQueryResponse,
+} from "./query-explainer.types";
 import { HttpErrorResponse } from "@angular/common/http";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
 import { extractSchemaFieldsFromData } from "src/app/common/table.helper";
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
+import { changeCopyIcon } from "src/app/common/app.helpers";
 
 @Component({
     selector: "app-query-explainer",
@@ -27,24 +37,25 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
 
     private sqlQuery: MaybeNull<string>;
     public readonly DATE_FORMAT = AppValues.DISPLAY_FLOW_DATE_FORMAT;
+    public readonly VerifyQueryKindError: typeof VerifyQueryKindError = VerifyQueryKindError;
 
-    public sqlQueryExplainer: QueryExplainerResponse;
+    public sqlQueryExplainerResponse: QueryExplainerResponse;
     public sqlQueryVerify$: Observable<VerifyQueryResponse>;
     public verifyResponse: VerifyQueryResponse;
-    public blockHashSystemTimes: string[] = [];
+    public blockHashSystemTimes: Date[] = [];
 
     ngOnInit(): void {
         this.sqlQuery = this.extractSqlQueryFromRoute();
 
         if (this.sqlQuery) {
-            const blockHashObservables$: Observable<string>[] = [];
+            const blockHashObservables$: Observable<Date>[] = [];
             this.queryExplainerService
                 .proccessQuery(this.sqlQuery)
                 .pipe(
                     tap((response) => {
-                        this.sqlQueryExplainer = response;
+                        this.sqlQueryExplainerResponse = response;
                         response.input.datasets
-                            .map((dataset) => ({ datasetId: dataset.id, blockHash: dataset.blockHash }))
+                            ?.map((dataset) => ({ datasetId: dataset.id, blockHash: dataset.blockHash }))
                             .forEach(({ datasetId, blockHash }) => {
                                 blockHashObservables$.push(
                                     this.blockService.requestSystemTimeBlockByHash(datasetId, blockHash),
@@ -72,22 +83,10 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
 
     public copyToClipboard(event: MouseEvent, text: string): void {
         this.clipboard.copy(text);
-        if (event.currentTarget !== null) {
-            const currentElement: HTMLButtonElement = event.currentTarget as HTMLButtonElement;
-            const currentElementChildren: HTMLCollectionOf<HTMLElement> =
-                currentElement.children as HTMLCollectionOf<HTMLElement>;
-            setTimeout(() => {
-                currentElementChildren[0].style.display = "inline-block";
-                currentElementChildren[1].style.display = "none";
-                currentElement.classList.remove("clipboard-btn--success");
-            }, AppValues.LONG_DELAY_MS);
-            currentElementChildren[0].style.display = "none";
-            currentElementChildren[1].style.display = "inline-block";
-            currentElement.classList.add("clipboard-btn--success");
-        }
+        changeCopyIcon(event);
     }
 
-    private extractSqlQueryFromRoute(): MaybeNull<string> {
+    private extractSqlQueryFromRoute(): string {
         const sqlQueryFromRoute: MaybeUndefined<string> = this.activatedRoute.snapshot.queryParams[
             ProjectLinks.URL_QUERY_PARAM_SQL_QUERY
         ] as MaybeUndefined<string>;
@@ -98,31 +97,61 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
         return alias.includes("/") ? alias : `kamu/${alias}`;
     }
 
-    public get schemaFields(): DataSchemaField[] {
-        return extractSchemaFieldsFromData(this.tableSource[0]);
+    public schemaFields(output: QueryExplainerOutputType): DataSchemaField[] {
+        return extractSchemaFieldsFromData(this.tableSource(output)[0]);
     }
 
     public inputParamsHelper(option: string): string {
         switch (option) {
             case "SqlDataFusion":
-                return "Sql Data Fusion";
+                return "SQL DataFusion";
             case "JsonAoA":
-                return "Json AoA";
+                return "JSON AoA";
             case "ArrowJson":
-                return "Arrow Json";
+                return "Arrow JSON";
             default:
                 return "Unknown options";
         }
     }
 
-    private columnNames(): string[] {
-        return this.sqlQueryExplainer?.output?.schema.fields.map((item) => item.name) as string[];
+    public isDatasetBlockNotFoundError(error: MaybeUndefined<VerifyQueryError>, blockHash: string): boolean {
+        return (
+            error?.kind === VerifyQueryKindError.DatasetBlockNotFound &&
+            (error as VerifyQueryDatasetBlockNotFoundError).block_hash === blockHash
+        );
     }
 
-    public get tableSource(): DataRow[] {
-        const result = this.sqlQueryExplainer?.output?.data.map((item) => {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-            return Object.assign({}, ...item.map((key, index) => ({ [this.columnNames()[index]]: key })));
+    public isDatasetNotFoundError(error: MaybeUndefined<VerifyQueryError>, datasetId: string): boolean {
+        return (
+            error?.kind === VerifyQueryKindError.DatasetNotFound &&
+            (error as VerifyQueryDatasetNotFoundError).dataset_id === datasetId
+        );
+    }
+
+    public isInputHashError(error: MaybeUndefined<VerifyQueryError>): boolean {
+        return error?.kind === VerifyQueryKindError.InputHash;
+    }
+
+    public isSubQueriesHashError(error: MaybeUndefined<VerifyQueryError>): boolean {
+        return error?.kind === VerifyQueryKindError.SubQueriesHash;
+    }
+
+    public isBadSignatureError(error: MaybeUndefined<VerifyQueryError>): boolean {
+        return error?.kind === VerifyQueryKindError.BadSignature;
+    }
+
+    public isOutputMismatchError(error: MaybeUndefined<VerifyQueryError>): boolean {
+        return error?.kind === VerifyQueryKindError.OutputMismatch;
+    }
+
+    private columnNames(schema: QueryExplainerSchemaType): string[] {
+        return schema.fields.map((item) => item.name);
+    }
+
+    public tableSource(output: QueryExplainerOutputType): DataRow[] {
+        const result = output.data.map((dataItem) => {
+            const arr = dataItem.map((value, index) => ({ [this.columnNames(output.schema)[index]]: value }));
+            return arr.reduce((resultObj, obj) => Object.assign(resultObj, obj), {});
         }) as DataRow[];
         return result;
     }

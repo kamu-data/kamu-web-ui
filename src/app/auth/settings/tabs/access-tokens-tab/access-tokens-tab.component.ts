@@ -13,7 +13,7 @@ import { MatTableDataSource } from "@angular/material/table";
 import { AccountSettingsTabs, TokenCreateStep } from "../../account-settings.constants";
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ModalService } from "src/app/components/modal/modal.service";
-import { promiseWithCatch, requireValue } from "src/app/common/app.helpers";
+import { changeCopyIcon, promiseWithCatch, requireValue } from "src/app/common/app.helpers";
 import { Clipboard } from "@angular/cdk/clipboard";
 import AppValues from "src/app/common/app.values";
 import { AccessTokenService } from "src/app/services/access-token.service";
@@ -151,19 +151,7 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
     /* istanbul ignore next */
     public copyToClipboard(event: MouseEvent, text: string): void {
         this.clipboard.copy(text);
-        if (event.currentTarget !== null) {
-            const currentElement: HTMLButtonElement = event.currentTarget as HTMLButtonElement;
-            const currentElementChildren: HTMLCollectionOf<HTMLElement> =
-                currentElement.children as HTMLCollectionOf<HTMLElement>;
-            setTimeout(() => {
-                currentElementChildren[0].style.display = "inline-block";
-                currentElementChildren[1].style.display = "none";
-                currentElement.classList.remove("clipboard-btn--success");
-            }, AppValues.LONG_DELAY_MS);
-            currentElementChildren[0].style.display = "none";
-            currentElementChildren[1].style.display = "inline-block";
-            currentElement.classList.add("clipboard-btn--success");
-        }
+        changeCopyIcon(event);
     }
 
     private updateTable(page: number): void {

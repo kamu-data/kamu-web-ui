@@ -86,3 +86,18 @@ export function convertSecondsToHumanReadableFormat(seconds: number): string {
 export function capitalizeString(value: string): string {
     return value[0].toUpperCase() + value.slice(1).toLowerCase();
 }
+
+export function changeCopyIcon(event: MouseEvent): void {
+    if (event.currentTarget !== null) {
+        const htmlButtonElement: HTMLButtonElement = event.currentTarget as HTMLButtonElement;
+        const iconsPair: HTMLCollectionOf<HTMLElement> = htmlButtonElement.children as HTMLCollectionOf<HTMLElement>;
+        setTimeout(() => {
+            iconsPair[0].style.display = "inline-block";
+            iconsPair[1].style.display = "none";
+            htmlButtonElement.classList.remove("clipboard-btn--success");
+        }, AppValues.LONG_DELAY_MS);
+        iconsPair[0].style.display = "none";
+        iconsPair[1].style.display = "inline-block";
+        htmlButtonElement.classList.add("clipboard-btn--success");
+    }
+}

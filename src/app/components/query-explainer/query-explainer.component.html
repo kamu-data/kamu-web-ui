@@ -2,7 +2,7 @@
     <div
         class="alert alert-info message-success mx-4 mt-4 fs-18 w-50 mx-auto d-flex align-items-center justify-content-center"
         role="alert"
-        *ngIf="verifyResponse?.ok"
+        *ngIf="verifyResponse.ok"
     >
         <mat-icon class="me-1">check_circle</mat-icon>
         Verification was successful
@@ -22,7 +22,7 @@
         </div>
     </div>
 
-    <ng-container *ngIf="sqlQueryExplainer">
+    <ng-container *ngIf="sqlQueryExplainerResponse">
         <div class="row">
             <div class="col-md-6">
                 <div class="box p-4 my-2 ms-4 h-100">
@@ -31,32 +31,37 @@
                         <div class="mt-4 mx-4">
                             <div class="fw-semibold">Query:</div>
                             <div class="mt-2">
-                                <pre><code [highlight]="sqlQueryExplainer.input.query" [languages]="['sql'] "  [attr.data-test-id]="'query-explainer-viewer'" class="rounded-3"></code></pre>
+                                <pre><code [highlight]="sqlQueryExplainerResponse.input.query" [languages]="['sql'] "  [attr.data-test-id]="'query-explainer-viewer'" class="rounded-3"></code></pre>
                             </div>
                         </div>
-                        <div class="my-4 mx-4 d-flex flex-row justify-content-between">
+                        <div
+                            class="my-4 mx-4 d-flex flex-row justify-content-between"
+                            *ngIf="sqlQueryExplainerResponse.input.queryDialect"
+                        >
                             <div class="fw-semibold">Query dialect:</div>
-                            <div>{{ inputParamsHelper(sqlQueryExplainer.input.queryDialect) }}</div>
+                            <div>{{ inputParamsHelper(sqlQueryExplainerResponse.input.queryDialect) }}</div>
                         </div>
                         <div class="my-4 mx-4 d-flex flex-row justify-content-between">
                             <div class="fw-semibold">Data format:</div>
-                            <div>{{ inputParamsHelper(sqlQueryExplainer.input.dataFormat) }}</div>
+                            <div>{{ inputParamsHelper(sqlQueryExplainerResponse.input.dataFormat) }}</div>
                         </div>
                         <div class="my-4 mx-4 d-flex flex-row justify-content-between">
                             <div class="fw-semibold">Schema format:</div>
-                            <div>{{ inputParamsHelper(sqlQueryExplainer.input.schemaFormat) }}</div>
+                            <div>{{ inputParamsHelper(sqlQueryExplainerResponse.input.schemaFormat!) }}</div>
                         </div>
                         <div class="my-4 mx-4 d-flex flex-row justify-content-between">
                             <div class="fw-semibold">Limit:</div>
-                            <div>{{ sqlQueryExplainer.input.limit }}</div>
+                            <div>{{ sqlQueryExplainerResponse.input.limit }}</div>
                         </div>
                         <div class="my-4 mx-4 d-flex flex-row justify-content-between">
                             <div class="fw-semibold">Skip:</div>
-                            <div>{{ sqlQueryExplainer.input.skip }}</div>
+                            <div>{{ sqlQueryExplainerResponse.input.skip }}</div>
                         </div>
                         <div class="my-4">
                             <div class="fw-semibold mx-4">Datasets:</div>
-                            <ng-container *ngFor="let dataset of sqlQueryExplainer.input.datasets; let i = index">
+                            <ng-container
+                                *ngFor="let dataset of sqlQueryExplainerResponse.input.datasets; let i = index"
+                            >
                                 <div class="mt-2">
                                     <div class="dataset-box p-2 mx-2 my-4 rounded-3">
                                         <div class="px-2 py-3">
@@ -64,9 +69,7 @@
                                             <div class="mt-2 text-break">
                                                 <a
                                                     [class.error-color]="
-                                                        verifyResponse.error?.kind ===
-                                                            'VerificationFailed::DatasetNotFound' &&
-                                                        verifyResponse.error?.dataset_id === dataset.id
+                                                        isDatasetNotFoundError(verifyResponse.error, dataset.id)
                                                     "
                                                     routerLink="/{{ routeToDataset(dataset.alias) }}"
                                                 >
@@ -83,9 +86,10 @@
                                             <div class="mt-2">
                                                 <app-display-hash
                                                     [class.error-color]="
-                                                        verifyResponse.error?.kind ===
-                                                            'VerificationFailed::DatasetBlockNotFound' &&
-                                                        verifyResponse.error?.block_hash === dataset.blockHash
+                                                        isDatasetBlockNotFoundError(
+                                                            verifyResponse.error,
+                                                            dataset.blockHash
+                                                        )
                                                     "
                                                     [value]="dataset.blockHash"
                                                     [showCopyButton]="true"
@@ -109,11 +113,11 @@
                         <div class="m-4">
                             <div class="fw-semibold">Input hash:</div>
                             <div class="mt-2 text-break">
-                                <span [class.error-color]="verifyResponse.error?.kind === 'InvalidRequest::InputHash'"
-                                    >{{ sqlQueryExplainer.commitment.inputHash }}
+                                <span [class.error-color]="isInputHashError(verifyResponse.error)"
+                                    >{{ sqlQueryExplainerResponse.commitment.inputHash }}
                                 </span>
                                 <button
-                                    (click)="copyToClipboard($event, sqlQueryExplainer.commitment.inputHash)"
+                                    (click)="copyToClipboard($event, sqlQueryExplainerResponse.commitment.inputHash)"
                                     data-test-id="copyToClipboard-query-explainer-input-hash"
                                     aria-label="Copy to clipboard"
                                     class="copy-button ms-2"
@@ -133,15 +137,11 @@
                         <div class="m-4">
                             <div class="fw-semibold">Output hash:</div>
                             <div class="mt-2 text-break">
-                                <span
-                                    [class.error-color]="
-                                        verifyResponse.error?.kind === 'VerificationFailed::OutputMismatch'
-                                    "
-                                >
-                                    {{ sqlQueryExplainer.commitment.outputHash }}</span
+                                <span [class.error-color]="isOutputMismatchError(verifyResponse.error)">
+                                    {{ sqlQueryExplainerResponse.commitment.outputHash }}</span
                                 >
                                 <button
-                                    (click)="copyToClipboard($event, sqlQueryExplainer.commitment.outputHash)"
+                                    (click)="copyToClipboard($event, sqlQueryExplainerResponse.commitment.outputHash)"
                                     data-test-id="copyToClipboard-query-explainer-output-hash"
                                     aria-label="Copy to clipboard"
                                     class="copy-button ms-2"
@@ -161,15 +161,14 @@
                         <div class="m-4">
                             <div class="fw-semibold">Sub queries hash:</div>
                             <div class="mt-2 text-break">
-                                <span
-                                    [class.error-color]="
-                                        verifyResponse.error?.kind === 'InvalidRequest::SubQueriesHash'
-                                    "
-                                    >{{ sqlQueryExplainer.commitment.subQueriesHash }}
+                                <span [class.error-color]="isSubQueriesHashError(verifyResponse.error)"
+                                    >{{ sqlQueryExplainerResponse.commitment.subQueriesHash }}
                                 </span>
 
                                 <button
-                                    (click)="copyToClipboard($event, sqlQueryExplainer.commitment.subQueriesHash)"
+                                    (click)="
+                                        copyToClipboard($event, sqlQueryExplainerResponse.commitment.subQueriesHash)
+                                    "
                                     data-test-id="copyToClipboard-query-explainer-sub-queries-hash"
                                     aria-label="Copy to clipboard"
                                     class="copy-button ms-2"
@@ -198,23 +197,21 @@
                                         'https://www.w3.org/community/reports/credentials/CG-FINAL-di-eddsa-2020-20220724/#dfn-ed25519signature2020'
                                     "
                                 >
-                                    {{ sqlQueryExplainer.proof.type }}
+                                    {{ sqlQueryExplainerResponse.proof.type }}
                                 </a>
                             </div>
                         </div>
                         <div class="m-4">
                             <div class="fw-semibold">ODF Node DID:</div>
                             <div class="mt-2 text-break">
-                                {{ sqlQueryExplainer.proof.verificationMethod }}
+                                {{ sqlQueryExplainerResponse.proof.verificationMethod }}
                             </div>
                         </div>
                         <div class="m-4">
                             <div class="fw-semibold">Signature:</div>
                             <div class="mt-2 text-break">
-                                <span
-                                    [class.error-color]="verifyResponse.error?.kind === 'InvalidRequest::BadSignature'"
-                                >
-                                    {{ sqlQueryExplainer.proof.proofValue }}
+                                <span [class.error-color]="isBadSignatureError(verifyResponse.error)">
+                                    {{ sqlQueryExplainerResponse.proof.proofValue }}
                                 </span>
                             </div>
                         </div>
@@ -225,19 +222,15 @@
 
         <div class="box p-4 margin-top mx-4 margin-bottom">
             <div class="fw-semibold">Reproduced result:</div>
-            <div class="mt-4">
+            <div class="mt-4" *ngIf="sqlQueryExplainerResponse.output">
                 <app-dynamic-table
                     [hasTableHeader]="true"
-                    [schemaFields]="schemaFields"
+                    [schemaFields]="schemaFields(sqlQueryExplainerResponse.output)"
                     [idTable]="'query-explainer-table'"
-                    [dataRows]="tableSource"
+                    [dataRows]="tableSource(sqlQueryExplainerResponse.output)"
                     [attr.data-test-id]="'query-explainer-table'"
                 />
             </div>
         </div>
     </ng-container>
 </ng-container>
-
-<!-- <div *ngIf="!blockHashSystemTimes.length" class="mt-4 text-center box p-4 w-50 mx-auto">
-    Sorry, your request does not contain a signature.
-</div> -->

@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { catchError, EMPTY, Observable } from "rxjs";
 import { AppConfigService } from "src/app/app-config.service";
-import { QueryExplainerResponse, VerifyQueryResponse } from "./query-explainer.types";
+import { QueryExplainerInputType, QueryExplainerResponse, VerifyQueryResponse } from "./query-explainer.types";
 import { ToastrService } from "ngx-toastr";
 
 @Injectable({
@@ -15,9 +15,9 @@ export class QueryExplainerService {
 
     public proccessQuery(query: string): Observable<QueryExplainerResponse> {
         const url = new URL(`${this.appConfigService.apiServerHttpUrl}/query`);
-        const body = {
+        const body: QueryExplainerInputType = {
             query: query,
-            dataFormat: "JsonAoA",
+            dataFormat: "JsonAoa",
             schemaFormat: "ArrowJson",
             include: ["Proof"],
         };

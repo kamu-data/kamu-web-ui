@@ -1,0 +1,46 @@
+.message-success {
+    background: #c9efcb;
+    color: #0db24f;
+    border-color: #0db24f;
+}
+
+.message-error {
+    background: #efd4dc;
+    border-color: #ef6363;
+}
+
+.error-color {
+    color: #ef6363;
+}
+
+.fs-18 {
+    font-size: 18px !important;
+}
+
+.fs-13 {
+    font-size: 13px !important;
+}
+
+.dataset-box {
+    border: 1px dashed #d0d7de;
+}
+
+.copy-button {
+    border: 0;
+    outline: 0;
+    background: transparent;
+    height: 30px;
+
+    &:hover {
+        background: rgb(245 240 240);
+        border-radius: 5px;
+    }
+}
+
+.margin-top {
+    margin-top: 2rem;
+}
+
+.margin-bottom {
+    margin-bottom: 200px;
+}

@@ -1,4 +1,8 @@
-import { UpdateWatermarkGQL } from "./kamu.graphql.interface";
+import {
+    DatasetSystemTimeBlockByHashGQL,
+    DatasetSystemTimeBlockByHashQuery,
+    UpdateWatermarkGQL,
+} from "./kamu.graphql.interface";
 import {
     CommitEventToDatasetGQL,
     CommitEventToDatasetMutation,
@@ -69,6 +73,7 @@ export class DatasetApi {
     private datasetLineageGQL = inject(GetDatasetLineageGQL);
     private updateWatermarkGQL = inject(UpdateWatermarkGQL);
     private datasetHeadBlockHashGQL = inject(DatasetHeadBlockHashGQL);
+    private datasetSystemTimeBlockByHashGQL = inject(DatasetSystemTimeBlockByHashGQL);
 
     public getDatasetMainData(params: {
         accountName: string;
@@ -219,6 +224,23 @@ export class DatasetApi {
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<DatasetByIdQuery>) => {
+                    return result.data;
+                }),
+            );
+    }
+
+    public getSystemTimeBlockByHash(
+        datasetId: string,
+        blockHash: string,
+    ): Observable<DatasetSystemTimeBlockByHashQuery> {
+        return this.datasetSystemTimeBlockByHashGQL
+            .watch({
+                datasetId,
+                blockHash,
+            })
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<DatasetSystemTimeBlockByHashQuery>) => {
                     return result.data;
                 }),
             );

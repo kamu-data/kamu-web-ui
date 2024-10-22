@@ -1,15 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import AppValues from "src/app/common/app.values";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { QueryExplainerService } from "./query-explainer.service";
 import { BaseComponent } from "src/app/common/base.component";
-import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
+import { MaybeUndefined } from "src/app/common/app.types";
 import ProjectLinks from "src/app/project-links";
-import { catchError, forkJoin, Observable, of, switchMap, tap } from "rxjs";
+import { catchError, map, Observable, of, switchMap, tap } from "rxjs";
 import {
-    QueryExplainerOutputType,
+    QueryExplainerDatasetsType,
     QueryExplainerResponse,
-    QueryExplainerSchemaType,
     VerifyQueryDatasetBlockNotFoundError,
     VerifyQueryDatasetNotFoundError,
     VerifyQueryError,
@@ -17,9 +16,6 @@ import {
     VerifyQueryResponse,
 } from "./query-explainer.types";
 import { HttpErrorResponse } from "@angular/common/http";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
-import { extractSchemaFieldsFromData } from "src/app/common/table.helper";
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import { changeCopyIcon } from "src/app/common/app.helpers";
 
@@ -32,53 +28,59 @@ import { changeCopyIcon } from "src/app/common/app.helpers";
 export class QueryExplainerComponent extends BaseComponent implements OnInit {
     private clipboard = inject(Clipboard);
     private queryExplainerService = inject(QueryExplainerService);
-    private cdr = inject(ChangeDetectorRef);
     private blockService = inject(BlockService);
-
-    private sqlQuery: MaybeNull<string>;
     public readonly DATE_FORMAT = AppValues.DISPLAY_FLOW_DATE_FORMAT;
     public readonly VerifyQueryKindError: typeof VerifyQueryKindError = VerifyQueryKindError;
 
     public sqlQueryExplainerResponse: QueryExplainerResponse;
-    public sqlQueryVerify$: Observable<VerifyQueryResponse>;
-    public verifyResponse: VerifyQueryResponse;
-    public blockHashSystemTimes: Date[] = [];
+    public blockHashObservables$: Observable<Date>[] = [];
+    public componentData$: Observable<{
+        sqlQueryExplainerResponse: QueryExplainerResponse;
+        sqlQueryVerify: VerifyQueryResponse;
+    }>;
 
     ngOnInit(): void {
-        this.sqlQuery = this.extractSqlQueryFromRoute();
-
-        if (this.sqlQuery) {
-            const blockHashObservables$: Observable<Date>[] = [];
-            this.queryExplainerService
-                .proccessQuery(this.sqlQuery)
-                .pipe(
-                    tap((response) => {
-                        this.sqlQueryExplainerResponse = response;
-                        response.input.datasets
-                            ?.map((dataset) => ({ datasetId: dataset.id, blockHash: dataset.blockHash }))
-                            .forEach(({ datasetId, blockHash }) => {
-                                blockHashObservables$.push(
-                                    this.blockService.requestSystemTimeBlockByHash(datasetId, blockHash),
-                                );
-                            });
-                    }),
-                    switchMap((response: QueryExplainerResponse) => {
-                        return this.queryExplainerService.verifyQuery(response);
-                    }),
-                    catchError((e: HttpErrorResponse) => {
-                        return of(e.error as VerifyQueryResponse);
-                    }),
-                    tap((data) => {
-                        this.verifyResponse = data;
-                    }),
-                    switchMap(() => forkJoin(blockHashObservables$)),
-                    tap((blockHashSystemTimes) => {
-                        this.blockHashSystemTimes = blockHashSystemTimes;
-                    }),
-                    takeUntilDestroyed(this.destroyRef),
-                )
-                .subscribe(() => this.cdr.detectChanges());
+        const commitmentUploadToken = this.extractCommitmentUploadId();
+        if (commitmentUploadToken) {
+            this.componentData$ = this.commitmentDataWithoutOutput(commitmentUploadToken).pipe(
+                switchMap((response: QueryExplainerResponse) => {
+                    return this.queryExplainerService.verifyQuery(response);
+                }),
+                catchError((e: HttpErrorResponse) => {
+                    return of(e.error as VerifyQueryResponse);
+                }),
+                map((verifyResponse: VerifyQueryResponse) => {
+                    return {
+                        sqlQueryVerify: verifyResponse,
+                        sqlQueryExplainerResponse: this.sqlQueryExplainerResponse,
+                    };
+                }),
+            );
         }
+    }
+
+    private commitmentDataWithoutOutput(commitmentUploadToken: string): Observable<QueryExplainerResponse> {
+        return this.queryExplainerService.fetchQueryByUploadToken(commitmentUploadToken).pipe(
+            tap((response: QueryExplainerResponse) => {
+                this.sqlQueryExplainerResponse = response;
+                this.fillBlockHashObservables(response.input.datasets ?? []);
+            }),
+            map((data: QueryExplainerResponse) => {
+                const cloneData = Object.assign({}, data);
+                if ("output" in cloneData) {
+                    delete cloneData.output;
+                }
+                return cloneData;
+            }),
+        );
+    }
+
+    private fillBlockHashObservables(datasets: QueryExplainerDatasetsType[]): void {
+        datasets
+            ?.map((dataset) => ({ datasetId: dataset.id, blockHash: dataset.blockHash }))
+            .forEach(({ datasetId, blockHash }) => {
+                this.blockHashObservables$.push(this.blockService.requestSystemTimeBlockByHash(datasetId, blockHash));
+            });
     }
 
     public copyToClipboard(event: MouseEvent, text: string): void {
@@ -86,19 +88,15 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
         changeCopyIcon(event);
     }
 
-    private extractSqlQueryFromRoute(): string {
-        const sqlQueryFromRoute: MaybeUndefined<string> = this.activatedRoute.snapshot.queryParams[
-            ProjectLinks.URL_QUERY_PARAM_SQL_QUERY
+    private extractCommitmentUploadId(): string {
+        const commitmentUploadId: MaybeUndefined<string> = this.activatedRoute.snapshot.queryParams[
+            ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN
         ] as MaybeUndefined<string>;
-        return sqlQueryFromRoute ?? "";
+        return commitmentUploadId ?? "";
     }
 
     public routeToDataset(alias: string): string {
         return alias.includes("/") ? alias : `kamu/${alias}`;
-    }
-
-    public schemaFields(output: QueryExplainerOutputType): DataSchemaField[] {
-        return extractSchemaFieldsFromData(this.tableSource(output)[0]);
     }
 
     public inputParamsHelper(option: string): string {
@@ -142,17 +140,5 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
 
     public isOutputMismatchError(error: MaybeUndefined<VerifyQueryError>): boolean {
         return error?.kind === VerifyQueryKindError.OutputMismatch;
-    }
-
-    private columnNames(schema: QueryExplainerSchemaType): string[] {
-        return schema.fields.map((item) => item.name);
-    }
-
-    public tableSource(output: QueryExplainerOutputType): DataRow[] {
-        const result = output.data.map((dataItem) => {
-            const arr = dataItem.map((value, index) => ({ [this.columnNames(output.schema)[index]]: value }));
-            return arr.reduce((resultObj, obj) => Object.assign(resultObj, obj), {});
-        }) as DataRow[];
-        return result;
     }
 }

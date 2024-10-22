@@ -1,28 +1,7 @@
-<ng-container *ngIf="verifyResponse">
-    <div
-        class="alert alert-info message-success mx-4 mt-4 fs-18 w-50 mx-auto d-flex align-items-center justify-content-center"
-        role="alert"
-        *ngIf="verifyResponse.ok"
-    >
-        <mat-icon class="me-1">check_circle</mat-icon>
-        Verification was successful
-    </div>
-    <div
-        *ngIf="verifyResponse?.error"
-        class="alert alert-info message-error error-color mx-4 mt-4 w-50 mx-auto d-flex flex-column"
-        role="alert"
-    >
-        <div class="d-flex align-items-center justify-content-center mb-2 fs-18">
-            <mat-icon class="me-1">error</mat-icon>
-            Verification was failed
-        </div>
+<ng-container *ngIf="componentData$ | async as componentData">
+    <app-verify-result-section [verifyResponse]="componentData.sqlQueryVerify" />
 
-        <div class="fs-13 text-center" *ngIf="verifyResponse.error?.message">
-            {{ verifyResponse.error?.message }}
-        </div>
-    </div>
-
-    <ng-container *ngIf="sqlQueryExplainerResponse">
+    <ng-container *ngIf="componentData.sqlQueryExplainerResponse">
         <div class="row">
             <div class="col-md-6">
                 <div class="box p-4 my-2 ms-4 h-100">
@@ -31,36 +10,43 @@
                         <div class="mt-4 mx-4">
                             <div class="fw-semibold">Query:</div>
                             <div class="mt-2">
-                                <pre><code [highlight]="sqlQueryExplainerResponse.input.query" [languages]="['sql'] "  [attr.data-test-id]="'query-explainer-viewer'" class="rounded-3"></code></pre>
+                                <pre><code [highlight]="componentData.sqlQueryExplainerResponse.input.query" [languages]="['sql'] "  [attr.data-test-id]="'query-explainer-viewer'" class="rounded-3"></code></pre>
                             </div>
                         </div>
                         <div
                             class="my-4 mx-4 d-flex flex-row justify-content-between"
-                            *ngIf="sqlQueryExplainerResponse.input.queryDialect"
+                            *ngIf="componentData.sqlQueryExplainerResponse.input.queryDialect"
                         >
                             <div class="fw-semibold">Query dialect:</div>
-                            <div>{{ inputParamsHelper(sqlQueryExplainerResponse.input.queryDialect) }}</div>
+                            <div>
+                                {{ inputParamsHelper(componentData.sqlQueryExplainerResponse.input.queryDialect) }}
+                            </div>
                         </div>
                         <div class="my-4 mx-4 d-flex flex-row justify-content-between">
                             <div class="fw-semibold">Data format:</div>
-                            <div>{{ inputParamsHelper(sqlQueryExplainerResponse.input.dataFormat) }}</div>
+                            <div>{{ inputParamsHelper(componentData.sqlQueryExplainerResponse.input.dataFormat) }}</div>
                         </div>
                         <div class="my-4 mx-4 d-flex flex-row justify-content-between">
                             <div class="fw-semibold">Schema format:</div>
-                            <div>{{ inputParamsHelper(sqlQueryExplainerResponse.input.schemaFormat!) }}</div>
+                            <div>
+                                {{ inputParamsHelper(componentData.sqlQueryExplainerResponse.input.schemaFormat!) }}
+                            </div>
                         </div>
                         <div class="my-4 mx-4 d-flex flex-row justify-content-between">
                             <div class="fw-semibold">Limit:</div>
-                            <div>{{ sqlQueryExplainerResponse.input.limit }}</div>
+                            <div>{{ componentData.sqlQueryExplainerResponse.input.limit }}</div>
                         </div>
                         <div class="my-4 mx-4 d-flex flex-row justify-content-between">
                             <div class="fw-semibold">Skip:</div>
-                            <div>{{ sqlQueryExplainerResponse.input.skip }}</div>
+                            <div>{{ componentData.sqlQueryExplainerResponse.input.skip }}</div>
                         </div>
                         <div class="my-4">
                             <div class="fw-semibold mx-4">Datasets:</div>
                             <ng-container
-                                *ngFor="let dataset of sqlQueryExplainerResponse.input.datasets; let i = index"
+                                *ngFor="
+                                    let dataset of componentData.sqlQueryExplainerResponse.input.datasets;
+                                    let i = index
+                                "
                             >
                                 <div class="mt-2">
                                     <div class="dataset-box p-2 mx-2 my-4 rounded-3">
@@ -69,9 +55,13 @@
                                             <div class="mt-2 text-break">
                                                 <a
                                                     [class.error-color]="
-                                                        isDatasetNotFoundError(verifyResponse.error, dataset.id)
+                                                        isDatasetNotFoundError(
+                                                            componentData.sqlQueryVerify.error,
+                                                            dataset.id
+                                                        )
                                                     "
                                                     routerLink="/{{ routeToDataset(dataset.alias) }}"
+                                                    target="_blank"
                                                 >
                                                     {{ dataset.id }}
                                                 </a>
@@ -87,7 +77,7 @@
                                                 <app-display-hash
                                                     [class.error-color]="
                                                         isDatasetBlockNotFoundError(
-                                                            verifyResponse.error,
+                                                            componentData.sqlQueryVerify.error,
                                                             dataset.blockHash
                                                         )
                                                     "
@@ -95,7 +85,8 @@
                                                     [showCopyButton]="true"
                                                 />
                                                 <span class="ms-4">
-                                                    ( as of {{ blockHashSystemTimes[i] | date: DATE_FORMAT }} )
+                                                    ( as of
+                                                    {{ blockHashObservables$[i] | async | date: DATE_FORMAT }} )
                                                 </span>
                                             </div>
                                         </div>
@@ -113,11 +104,16 @@
                         <div class="m-4">
                             <div class="fw-semibold">Input hash:</div>
                             <div class="mt-2 text-break">
-                                <span [class.error-color]="isInputHashError(verifyResponse.error)"
-                                    >{{ sqlQueryExplainerResponse.commitment.inputHash }}
+                                <span [class.error-color]="isInputHashError(componentData.sqlQueryVerify.error)"
+                                    >{{ componentData.sqlQueryExplainerResponse.commitment.inputHash }}
                                 </span>
                                 <button
-                                    (click)="copyToClipboard($event, sqlQueryExplainerResponse.commitment.inputHash)"
+                                    (click)="
+                                        copyToClipboard(
+                                            $event,
+                                            componentData.sqlQueryExplainerResponse.commitment.inputHash
+                                        )
+                                    "
                                     data-test-id="copyToClipboard-query-explainer-input-hash"
                                     aria-label="Copy to clipboard"
                                     class="copy-button ms-2"
@@ -137,11 +133,16 @@
                         <div class="m-4">
                             <div class="fw-semibold">Output hash:</div>
                             <div class="mt-2 text-break">
-                                <span [class.error-color]="isOutputMismatchError(verifyResponse.error)">
-                                    {{ sqlQueryExplainerResponse.commitment.outputHash }}</span
+                                <span [class.error-color]="isOutputMismatchError(componentData.sqlQueryVerify.error)">
+                                    {{ componentData.sqlQueryExplainerResponse.commitment.outputHash }}</span
                                 >
                                 <button
-                                    (click)="copyToClipboard($event, sqlQueryExplainerResponse.commitment.outputHash)"
+                                    (click)="
+                                        copyToClipboard(
+                                            $event,
+                                            componentData.sqlQueryExplainerResponse.commitment.outputHash
+                                        )
+                                    "
                                     data-test-id="copyToClipboard-query-explainer-output-hash"
                                     aria-label="Copy to clipboard"
                                     class="copy-button ms-2"
@@ -161,13 +162,16 @@
                         <div class="m-4">
                             <div class="fw-semibold">Sub queries hash:</div>
                             <div class="mt-2 text-break">
-                                <span [class.error-color]="isSubQueriesHashError(verifyResponse.error)"
-                                    >{{ sqlQueryExplainerResponse.commitment.subQueriesHash }}
+                                <span [class.error-color]="isSubQueriesHashError(componentData.sqlQueryVerify.error)"
+                                    >{{ componentData.sqlQueryExplainerResponse.commitment.subQueriesHash }}
                                 </span>
 
                                 <button
                                     (click)="
-                                        copyToClipboard($event, sqlQueryExplainerResponse.commitment.subQueriesHash)
+                                        copyToClipboard(
+                                            $event,
+                                            componentData.sqlQueryExplainerResponse.commitment.subQueriesHash
+                                        )
                                     "
                                     data-test-id="copyToClipboard-query-explainer-sub-queries-hash"
                                     aria-label="Copy to clipboard"
@@ -193,25 +197,26 @@
                             <div class="fw-semibold">Type:</div>
                             <div class="mt-2">
                                 <a
+                                    target="_blank"
                                     [href]="
                                         'https://www.w3.org/community/reports/credentials/CG-FINAL-di-eddsa-2020-20220724/#dfn-ed25519signature2020'
                                     "
                                 >
-                                    {{ sqlQueryExplainerResponse.proof.type }}
+                                    {{ componentData.sqlQueryExplainerResponse.proof.type }}
                                 </a>
                             </div>
                         </div>
                         <div class="m-4">
                             <div class="fw-semibold">ODF Node DID:</div>
                             <div class="mt-2 text-break">
-                                {{ sqlQueryExplainerResponse.proof.verificationMethod }}
+                                {{ componentData.sqlQueryExplainerResponse.proof.verificationMethod }}
                             </div>
                         </div>
                         <div class="m-4">
                             <div class="fw-semibold">Signature:</div>
                             <div class="mt-2 text-break">
-                                <span [class.error-color]="isBadSignatureError(verifyResponse.error)">
-                                    {{ sqlQueryExplainerResponse.proof.proofValue }}
+                                <span [class.error-color]="isBadSignatureError(componentData.sqlQueryVerify.error)">
+                                    {{ componentData.sqlQueryExplainerResponse.proof.proofValue }}
                                 </span>
                             </div>
                         </div>
@@ -220,17 +225,8 @@
             </div>
         </div>
 
-        <div class="box p-4 margin-top mx-4 margin-bottom">
-            <div class="fw-semibold">Reproduced result:</div>
-            <div class="mt-4" *ngIf="sqlQueryExplainerResponse.output">
-                <app-dynamic-table
-                    [hasTableHeader]="true"
-                    [schemaFields]="schemaFields(sqlQueryExplainerResponse.output)"
-                    [idTable]="'query-explainer-table'"
-                    [dataRows]="tableSource(sqlQueryExplainerResponse.output)"
-                    [attr.data-test-id]="'query-explainer-table'"
-                />
-            </div>
+        <div class="margin-top margin-bottom" *ngIf="componentData.sqlQueryExplainerResponse.output">
+            <app-reproduced-result-section [output]="componentData.sqlQueryExplainerResponse.output" />
         </div>
     </ng-container>
 </ng-container>

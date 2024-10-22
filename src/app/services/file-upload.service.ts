@@ -9,7 +9,11 @@ import { DatasetBasicsFragment, DatasetEndpoints } from "../api/kamu.graphql.int
 import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
 import { NavigationService } from "./navigation.service";
 import { ProtocolsService } from "./protocols.service";
-import { UploadPrepareResponse, UploadPerareData, UploadAvailableMethod } from "../common/ingest-via-file-upload.types";
+import {
+    UploadPrepareResponse,
+    UploadPrepareData,
+    UploadAvailableMethod,
+} from "../common/ingest-via-file-upload.types";
 import { FileUploadError } from "../common/errors";
 import { UnsubscribeDestroyRefAdapter } from "../common/unsubscribe.ondestroy.adapter";
 
@@ -38,7 +42,7 @@ export class FileUploadService extends UnsubscribeDestroyRefAdapter {
             switchMap((uploadPrepareResponse: UploadPrepareResponse) =>
                 this.prepareUploadData(uploadPrepareResponse, file),
             ),
-            switchMap(({ uploadPrepareResponse, bodyObject, uploadHeaders }: UploadPerareData) =>
+            switchMap(({ uploadPrepareResponse, bodyObject, uploadHeaders }: UploadPrepareData) =>
                 this.uploadFileByMethod(
                     uploadPrepareResponse.method,
                     uploadPrepareResponse.uploadUrl,
@@ -115,7 +119,7 @@ export class FileUploadService extends UnsubscribeDestroyRefAdapter {
         );
     }
 
-    private prepareUploadData(uploadPrepareResponse: UploadPrepareResponse, file: File): Observable<UploadPerareData> {
+    public prepareUploadData(uploadPrepareResponse: UploadPrepareResponse, file: File): Observable<UploadPrepareData> {
         let uploadHeaders = new HttpHeaders();
         uploadPrepareResponse.headers.forEach((header: [string, string]) => {
             uploadHeaders = uploadHeaders.append(header[0], header[1]);
@@ -138,7 +142,7 @@ export class FileUploadService extends UnsubscribeDestroyRefAdapter {
         });
     }
 
-    private uploadFileByMethod(
+    public uploadFileByMethod(
         method: UploadAvailableMethod,
         uploadUrl: string,
         bodyObject: File | FormData,

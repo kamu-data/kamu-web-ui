@@ -1,4 +1,6 @@
+import { HttpHeaders } from "@angular/common/http";
 import { DataBatchFormat, DataSchemaFormat, QueryDialect } from "src/app/api/kamu.graphql.interface";
+import { UploadPrepareResponse } from "src/app/common/ingest-via-file-upload.types";
 
 export interface QueryExplainerResponse {
     input: QueryExplainerInputType;
@@ -35,9 +37,15 @@ export interface QueryExplainerInputType {
     dataFormat: keyof typeof DataBatchFormat;
     queryDialect?: keyof typeof QueryDialect;
     schemaFormat?: keyof typeof DataSchemaFormat;
-    datasets?: [{ alias: string; blockHash: string; id: string }];
+    datasets?: QueryExplainerDatasetsType[];
     skip?: number;
     limit?: number;
+}
+
+export interface QueryExplainerDatasetsType {
+    alias: string;
+    blockHash: string;
+    id: string;
 }
 
 export interface VerifyQueryResponse {
@@ -73,4 +81,10 @@ export interface VerifyQueryDatasetNotFoundError extends VerifyQueryError {
 export interface VerifyQueryDatasetBlockNotFoundError extends VerifyQueryError {
     dataset_id: string;
     block_hash: string;
+}
+
+export interface UploadPrepareCommitmentData {
+    uploadPrepareResponse: UploadPrepareResponse;
+    bodyObject: FormData;
+    uploadHeaders: HttpHeaders;
 }

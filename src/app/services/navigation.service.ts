@@ -33,11 +33,11 @@ export class NavigationService {
         promiseWithCatch(this.router.navigate([ProjectLinks.URL_SEARCH], { queryParams }));
     }
 
-    public navigateToQueryExplainer(query: string): void {
-        if (query) {
+    public navigateToQueryExplainer(commitmentUploadId: string): void {
+        if (commitmentUploadId) {
             promiseWithCatch(
                 this.router.navigate([ProjectLinks.URL_QUERY_EXPLAINER], {
-                    queryParams: { [ProjectLinks.URL_QUERY_PARAM_SQL_QUERY]: query },
+                    queryParams: { [ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN]: commitmentUploadId },
                 }),
             );
         }

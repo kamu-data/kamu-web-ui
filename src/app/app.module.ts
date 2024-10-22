@@ -74,7 +74,6 @@ import { AccessTokensTabComponent } from "./auth/settings/tabs/access-tokens-tab
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { AutofocusDirective } from "./common/directives/autofocus.directive";
 import { DynamicTableModule } from "./components/dynamic-table/dynamic-table.module";
-import { QueryExplainerModule } from "./components/query-explainer/query-explainer.module";
 
 const Services = [
     {
@@ -248,7 +247,6 @@ const MatModules = [
         }), // ToastrModule added
         DatasetFlowDetailsModule,
         DynamicTableModule,
-        QueryExplainerModule,
     ],
     providers: [...Services],
     bootstrap: [AppComponent],

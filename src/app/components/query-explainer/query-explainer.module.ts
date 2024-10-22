@@ -7,8 +7,9 @@ import { DisplayHashModule } from "../display-hash/display-hash.module";
 import { RouterModule } from "@angular/router";
 import { HighlightModule } from "ngx-highlightjs";
 import { DynamicTableModule } from "../dynamic-table/dynamic-table.module";
-import { VerifyResultSectionComponent } from './components/verify-result-section/verify-result-section.component';
-import { ReproducedResultSectionComponent } from './components/reproduced-result-section/reproduced-result-section.component';
+import { VerifyResultSectionComponent } from "./components/verify-result-section/verify-result-section.component";
+import { ReproducedResultSectionComponent } from "./components/reproduced-result-section/reproduced-result-section.component";
+import { QueryExplainerRoutingModule } from "./query-explainer-routing.module";
 
 @NgModule({
     declarations: [QueryExplainerComponent, VerifyResultSectionComponent, ReproducedResultSectionComponent],
@@ -20,6 +21,7 @@ import { ReproducedResultSectionComponent } from './components/reproduced-result
         RouterModule,
         HighlightModule,
         DynamicTableModule,
+        QueryExplainerRoutingModule,
     ],
 })
 export class QueryExplainerModule {}

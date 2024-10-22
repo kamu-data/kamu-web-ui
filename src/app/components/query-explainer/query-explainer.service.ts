@@ -39,7 +39,7 @@ export class QueryExplainerService {
         return this.http.post<VerifyQueryResponse>(url.href, data);
     }
 
-    public fetchQueryByUploadToken(token: string): Observable<QueryExplainerResponse> {
+    public fetchCommitmentDataByUploadToken(token: string): Observable<QueryExplainerResponse> {
         const url = new URL(`${this.appConfigService.apiServerHttpUrl}/platform/file/upload/${token}`);
         return this.http.get<QueryExplainerResponse>(url.href, {
             headers: { Authorization: `Bearer ${this.localStorageService.accessToken}` },

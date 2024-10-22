@@ -60,7 +60,7 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
     }
 
     private commitmentDataWithoutOutput(commitmentUploadToken: string): Observable<QueryExplainerResponse> {
-        return this.queryExplainerService.fetchQueryByUploadToken(commitmentUploadToken).pipe(
+        return this.queryExplainerService.fetchCommitmentDataByUploadToken(commitmentUploadToken).pipe(
             tap((response: QueryExplainerResponse) => {
                 this.sqlQueryExplainerResponse = response;
                 this.fillBlockHashObservables(response.input.datasets ?? []);

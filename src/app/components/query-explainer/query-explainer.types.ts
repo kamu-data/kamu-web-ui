@@ -16,7 +16,7 @@ export interface QueryExplainerOutputType {
 }
 
 export interface QueryExplainerSchemaType {
-    fields: [{ name: string }];
+    fields: { name: string }[];
 }
 
 export interface QueryExplainerProofType {

@@ -1,3 +1,4 @@
+import { MaybeNull } from "src/app/common/app.types";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { VerifyQueryResponse } from "../../query-explainer.types";
 
@@ -8,5 +9,5 @@ import { VerifyQueryResponse } from "../../query-explainer.types";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VerifyResultSectionComponent {
-    @Input({ required: true }) public verifyResponse: VerifyQueryResponse;
+    @Input({ required: true }) public verifyResponse: MaybeNull<VerifyQueryResponse>;
 }

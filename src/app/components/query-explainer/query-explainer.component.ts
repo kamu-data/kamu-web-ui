@@ -3,7 +3,7 @@ import AppValues from "src/app/common/app.values";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { QueryExplainerService } from "./query-explainer.service";
 import { BaseComponent } from "src/app/common/base.component";
-import { MaybeUndefined } from "src/app/common/app.types";
+import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import ProjectLinks from "src/app/project-links";
 import { catchError, map, Observable, of, switchMap, tap } from "rxjs";
 import {
@@ -36,11 +36,11 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
     public blockHashObservables$: Observable<Date>[] = [];
     public componentData$: Observable<{
         sqlQueryExplainerResponse: QueryExplainerResponse;
-        sqlQueryVerify: VerifyQueryResponse;
+        sqlQueryVerify: MaybeNull<VerifyQueryResponse>;
     }>;
 
     ngOnInit(): void {
-        const commitmentUploadToken = this.extractCommitmentUploadId();
+        const commitmentUploadToken = this.extractCommitmentUploadToken();
         if (commitmentUploadToken) {
             this.componentData$ = this.commitmentDataWithoutOutput(commitmentUploadToken).pipe(
                 switchMap((response: QueryExplainerResponse) => {
@@ -88,11 +88,11 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
         changeCopyIcon(event);
     }
 
-    private extractCommitmentUploadId(): string {
-        const commitmentUploadId: MaybeUndefined<string> = this.activatedRoute.snapshot.queryParams[
-            ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN
-        ] as MaybeUndefined<string>;
-        return commitmentUploadId ?? "";
+    public extractCommitmentUploadToken(): string {
+        const commitmentUploadToken: MaybeNull<string> = this.activatedRoute.snapshot.queryParamMap.get(
+            ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN,
+        );
+        return commitmentUploadToken ?? "";
     }
 
     public routeToDataset(alias: string): string {

@@ -1,7 +1,7 @@
 <ng-container *ngIf="componentData$ | async as componentData">
     <app-verify-result-section [verifyResponse]="componentData.sqlQueryVerify" />
 
-    <ng-container *ngIf="componentData.sqlQueryExplainerResponse">
+    <ng-container *ngIf="componentData">
         <div class="row">
             <div class="col-md-6">
                 <div class="box p-4 my-2 ms-4 h-100">
@@ -56,7 +56,7 @@
                                                 <a
                                                     [class.error-color]="
                                                         isDatasetNotFoundError(
-                                                            componentData.sqlQueryVerify.error,
+                                                            componentData.sqlQueryVerify?.error,
                                                             dataset.id
                                                         )
                                                     "
@@ -77,7 +77,7 @@
                                                 <app-display-hash
                                                     [class.error-color]="
                                                         isDatasetBlockNotFoundError(
-                                                            componentData.sqlQueryVerify.error,
+                                                            componentData.sqlQueryVerify?.error,
                                                             dataset.blockHash
                                                         )
                                                     "
@@ -104,7 +104,7 @@
                         <div class="m-4">
                             <div class="fw-semibold">Input hash:</div>
                             <div class="mt-2 text-break">
-                                <span [class.error-color]="isInputHashError(componentData.sqlQueryVerify.error)"
+                                <span [class.error-color]="isInputHashError(componentData.sqlQueryVerify?.error)"
                                     >{{ componentData.sqlQueryExplainerResponse.commitment.inputHash }}
                                 </span>
                                 <button
@@ -133,7 +133,7 @@
                         <div class="m-4">
                             <div class="fw-semibold">Output hash:</div>
                             <div class="mt-2 text-break">
-                                <span [class.error-color]="isOutputMismatchError(componentData.sqlQueryVerify.error)">
+                                <span [class.error-color]="isOutputMismatchError(componentData.sqlQueryVerify?.error)">
                                     {{ componentData.sqlQueryExplainerResponse.commitment.outputHash }}</span
                                 >
                                 <button
@@ -147,7 +147,7 @@
                                     aria-label="Copy to clipboard"
                                     class="copy-button ms-2"
                                     data-copy-feedback="Copied!"
-                                    tabindex="0"
+                                    tabindex="1"
                                     role="button"
                                 >
                                     <div style="position: relative; display: inline-block">
@@ -162,7 +162,7 @@
                         <div class="m-4">
                             <div class="fw-semibold">Sub queries hash:</div>
                             <div class="mt-2 text-break">
-                                <span [class.error-color]="isSubQueriesHashError(componentData.sqlQueryVerify.error)"
+                                <span [class.error-color]="isSubQueriesHashError(componentData.sqlQueryVerify?.error)"
                                     >{{ componentData.sqlQueryExplainerResponse.commitment.subQueriesHash }}
                                 </span>
 
@@ -177,7 +177,7 @@
                                     aria-label="Copy to clipboard"
                                     class="copy-button ms-2"
                                     data-copy-feedback="Copied!"
-                                    tabindex="0"
+                                    tabindex="2"
                                     role="button"
                                 >
                                     <div style="position: relative; display: inline-block">
@@ -215,7 +215,7 @@
                         <div class="m-4">
                             <div class="fw-semibold">Signature:</div>
                             <div class="mt-2 text-break">
-                                <span [class.error-color]="isBadSignatureError(componentData.sqlQueryVerify.error)">
+                                <span [class.error-color]="isBadSignatureError(componentData.sqlQueryVerify?.error)">
                                     {{ componentData.sqlQueryExplainerResponse.proof.proofValue }}
                                 </span>
                             </div>

@@ -1,22 +1,24 @@
-<div
-    class="alert alert-info message-success mx-4 mt-4 fs-18 w-50 mx-auto d-flex align-items-center justify-content-center"
-    role="alert"
-    *ngIf="verifyResponse.ok"
->
-    <mat-icon class="me-1">check_circle</mat-icon>
-    Verification successful
-</div>
-<div
-    *ngIf="verifyResponse.error"
-    class="alert alert-info message-error error-color mx-4 mt-4 w-50 mx-auto d-flex flex-column"
-    role="alert"
->
-    <div class="d-flex align-items-center justify-content-center mb-2 fs-18">
-        <mat-icon class="me-1">error</mat-icon>
-        Verification failed
+<ng-container *ngIf="verifyResponse">
+    <div
+        class="alert alert-info message-success mx-4 mt-4 fs-18 w-50 mx-auto d-flex align-items-center justify-content-center"
+        role="alert"
+        *ngIf="verifyResponse.ok"
+    >
+        <mat-icon class="me-1">check_circle</mat-icon>
+        Verification successful
     </div>
+    <div
+        *ngIf="verifyResponse.error"
+        class="alert alert-info message-error error-color mx-4 mt-4 w-50 mx-auto d-flex flex-column"
+        role="alert"
+    >
+        <div class="d-flex align-items-center justify-content-center mb-2 fs-18">
+            <mat-icon class="me-1">error</mat-icon>
+            Verification failed
+        </div>
 
-    <div class="fs-13 text-center" *ngIf="verifyResponse.error?.message">
-        {{ verifyResponse.error.message }}
+        <div class="fs-13 text-center" *ngIf="verifyResponse.error.message">
+            {{ verifyResponse.error.message }}
+        </div>
     </div>
-</div>
+</ng-container>

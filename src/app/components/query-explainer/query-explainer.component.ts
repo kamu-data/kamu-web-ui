@@ -19,6 +19,9 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import { changeCopyIcon } from "src/app/common/app.helpers";
 import { ToastrService } from "ngx-toastr";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
+import { DatasetByIdQuery } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-query-explainer",
@@ -31,10 +34,12 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
     private queryExplainerService = inject(QueryExplainerService);
     private blockService = inject(BlockService);
     private toastrService = inject(ToastrService);
+    private datasetService = inject(DatasetService);
     public readonly DATE_FORMAT = AppValues.DISPLAY_FLOW_DATE_FORMAT;
     public readonly VerifyQueryKindError: typeof VerifyQueryKindError = VerifyQueryKindError;
 
     public blockHashObservables$: Observable<Date>[] = [];
+    public datasetInfoObservables$: Observable<DatasetInfo>[] = [];
     public componentData$: Observable<{
         sqlQueryExplainerResponse: QueryExplainerResponse;
         sqlQueryVerify: MaybeNull<VerifyQueryResponse>;
@@ -76,15 +81,26 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
     private commitmentDataWithoutOutput(commitmentUploadToken: string): Observable<QueryExplainerResponse> {
         return this.queryExplainerService.fetchCommitmentDataByUploadToken(commitmentUploadToken).pipe(
             tap((response: QueryExplainerResponse) => {
-                this.fillBlockHashObservables(response.input.datasets ?? []);
+                this.fillDatasetsObservables(response.input.datasets ?? []);
             }),
         );
     }
 
-    private fillBlockHashObservables(datasets: QueryExplainerDatasetsType[]): void {
+    private fillDatasetsObservables(datasets: QueryExplainerDatasetsType[]): void {
         datasets
             ?.map((dataset) => ({ datasetId: dataset.id, blockHash: dataset.blockHash }))
             .forEach(({ datasetId, blockHash }) => {
+                this.datasetInfoObservables$.push(
+                    this.datasetService.requestDatasetInfoById(datasetId).pipe(
+                        map((dataset: DatasetByIdQuery) => {
+                            return {
+                                accountName:
+                                    dataset.datasets.byId?.owner.accountName ?? AppValues.DEFAULT_ADMIN_ACCOUNT_NAME,
+                                datasetName: dataset.datasets.byId?.name ?? "",
+                            };
+                        }),
+                    ),
+                );
                 this.blockHashObservables$.push(this.blockService.requestSystemTimeBlockByHash(datasetId, blockHash));
             });
     }
@@ -99,10 +115,6 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
             ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN,
         );
         return commitmentUploadToken ?? "";
-    }
-
-    public routeToDataset(alias: string): string {
-        return alias.includes("/") ? alias : `kamu/${alias}`;
     }
 
     public inputParamsHelper(option: string): string {

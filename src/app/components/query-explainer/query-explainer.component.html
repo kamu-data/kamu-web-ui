@@ -52,7 +52,10 @@
                                     <div class="dataset-box p-2 mx-2 my-4 rounded-3">
                                         <div class="px-2 py-3">
                                             <div class="fw-500">ID:</div>
-                                            <div class="mt-2 text-break">
+                                            <div
+                                                class="mt-2 text-break"
+                                                *ngIf="datasetInfoObservables$[i] | async as datasetInfo"
+                                            >
                                                 <a
                                                     [class.error-color]="
                                                         isDatasetNotFoundError(
@@ -60,7 +63,9 @@
                                                             dataset.id
                                                         )
                                                     "
-                                                    routerLink="/{{ routeToDataset(dataset.alias) }}"
+                                                    routerLink="/{{ datasetInfo.accountName }}/{{
+                                                        datasetInfo.datasetName
+                                                    }}"
                                                     target="_blank"
                                                 >
                                                     {{ dataset.id }}

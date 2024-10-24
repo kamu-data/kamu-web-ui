@@ -92,21 +92,39 @@ export class FileUploadService extends UnsubscribeDestroyRefAdapter {
         url.searchParams.append("fileName", file.name);
         url.searchParams.append("contentLength", file.size.toString());
         url.searchParams.append("contentType", file.type);
-        return this.http.post<UploadPrepareResponse>(url.href, null, {
-            headers: { Authorization: `Bearer ${this.localStorageService.accessToken}` },
-        });
+        return this.http
+            .post<UploadPrepareResponse>(url.href, null, {
+                headers: { Authorization: `Bearer ${this.localStorageService.accessToken}` },
+            })
+            .pipe(
+                catchError((e: HttpErrorResponse) => {
+                    throw new FileUploadError([new Error(`File could not be prepare for upload, ${e.error}`)]);
+                }),
+            );
     }
 
     public uploadPostFile(url: string, bodyObject: File | FormData, uploadHeaders: HttpHeaders): Observable<object> {
-        return this.http.post(url, bodyObject, {
-            headers: uploadHeaders,
-        });
+        return this.http
+            .post(url, bodyObject, {
+                headers: uploadHeaders,
+            })
+            .pipe(
+                catchError((e: HttpErrorResponse) => {
+                    throw new FileUploadError([new Error(`File could not be loaded with POST, ${e.error}`)]);
+                }),
+            );
     }
 
     public uploadPutFile(url: string, bodyObject: File | FormData, uploadHeaders: HttpHeaders): Observable<object> {
-        return this.http.put(url, bodyObject, {
-            headers: uploadHeaders,
-        });
+        return this.http
+            .put(url, bodyObject, {
+                headers: uploadHeaders,
+            })
+            .pipe(
+                catchError((e: HttpErrorResponse) => {
+                    throw new FileUploadError([new Error(`File could not be loaded with PUT, ${e.error}`)]);
+                }),
+            );
     }
 
     public ingestDataToDataset(datasetInfo: DatasetInfo, uploadToken: string): Observable<object> {

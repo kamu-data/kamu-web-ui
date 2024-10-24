@@ -15,7 +15,7 @@ export class QueryExplainerService {
     private toastrService = inject(ToastrService);
     private localStorageService = inject(LocalStorageService);
 
-    public proccessQuery(query: string): Observable<QueryExplainerResponse> {
+    public processQuery(query: string): Observable<QueryExplainerResponse> {
         const url = new URL(`${this.appConfigService.apiServerHttpUrl}/query`);
         const body: QueryExplainerInputType = {
             query: query,

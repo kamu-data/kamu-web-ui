@@ -5,7 +5,7 @@ import { QueryExplainerService } from "./query-explainer.service";
 import { BaseComponent } from "src/app/common/base.component";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import ProjectLinks from "src/app/project-links";
-import { catchError, map, Observable, of, switchMap, tap } from "rxjs";
+import { catchError, combineLatest, EMPTY, map, Observable, of, switchMap, tap } from "rxjs";
 import {
     QueryExplainerDatasetsType,
     QueryExplainerResponse,
@@ -18,6 +18,7 @@ import {
 import { HttpErrorResponse } from "@angular/common/http";
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import { changeCopyIcon } from "src/app/common/app.helpers";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
     selector: "app-query-explainer",
@@ -29,10 +30,10 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
     private clipboard = inject(Clipboard);
     private queryExplainerService = inject(QueryExplainerService);
     private blockService = inject(BlockService);
+    private toastrService = inject(ToastrService);
     public readonly DATE_FORMAT = AppValues.DISPLAY_FLOW_DATE_FORMAT;
     public readonly VerifyQueryKindError: typeof VerifyQueryKindError = VerifyQueryKindError;
 
-    public sqlQueryExplainerResponse: QueryExplainerResponse;
     public blockHashObservables$: Observable<Date>[] = [];
     public componentData$: Observable<{
         sqlQueryExplainerResponse: QueryExplainerResponse;
@@ -44,16 +45,29 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
         if (commitmentUploadToken) {
             this.componentData$ = this.commitmentDataWithoutOutput(commitmentUploadToken).pipe(
                 switchMap((response: QueryExplainerResponse) => {
-                    return this.queryExplainerService.verifyQuery(response);
-                }),
-                catchError((e: HttpErrorResponse) => {
-                    return of(e.error as VerifyQueryResponse);
-                }),
-                map((verifyResponse: VerifyQueryResponse) => {
-                    return {
-                        sqlQueryVerify: verifyResponse,
-                        sqlQueryExplainerResponse: this.sqlQueryExplainerResponse,
-                    };
+                    const cloneData = Object.assign({}, response);
+                    if ("output" in cloneData) {
+                        delete cloneData.output;
+                    }
+                    return combineLatest([
+                        of(response),
+                        this.queryExplainerService.verifyQuery(cloneData).pipe(
+                            catchError((e: HttpErrorResponse) => {
+                                if (e.status === 400) return of(e.error as VerifyQueryResponse);
+                                else {
+                                    this.toastrService.error("", e.error as string, {
+                                        disableTimeOut: "timeOut",
+                                    });
+                                    return EMPTY;
+                                }
+                            }),
+                        ),
+                    ]).pipe(
+                        map(([sqlQueryExplainerResponse, sqlQueryVerify]) => ({
+                            sqlQueryExplainerResponse,
+                            sqlQueryVerify,
+                        })),
+                    );
                 }),
             );
         }
@@ -62,15 +76,7 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
     private commitmentDataWithoutOutput(commitmentUploadToken: string): Observable<QueryExplainerResponse> {
         return this.queryExplainerService.fetchCommitmentDataByUploadToken(commitmentUploadToken).pipe(
             tap((response: QueryExplainerResponse) => {
-                this.sqlQueryExplainerResponse = response;
                 this.fillBlockHashObservables(response.input.datasets ?? []);
-            }),
-            map((data: QueryExplainerResponse) => {
-                const cloneData = Object.assign({}, data);
-                if ("output" in cloneData) {
-                    delete cloneData.output;
-                }
-                return cloneData;
             }),
         );
     }

@@ -173,7 +173,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     public verifyQueryResult(): void {
         let uploadToken: string;
         this.queryExplainerService
-            .proccessQuery(this.sqlRequestCode)
+            .processQuery(this.sqlRequestCode)
             .pipe(
                 switchMap((response: QueryExplainerResponse) => {
                     const file = new File(

@@ -19,6 +19,7 @@ import { AdminGuard } from "./auth/guards/admin.guard";
 import { AdminDashboardComponent } from "./admin-view/admin-dashboard/admin-dashboard.component";
 import { DatasetFlowDetailsComponent } from "./dataset-flow/dataset-flow-details/dataset-flow-details.component";
 import { AccountComponent } from "./account/account.component";
+import { QueryExplainerComponent } from "./components/query-explainer/query-explainer.component";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -49,6 +50,7 @@ export const routes: Routes = [
     {
         canActivate: [AdminGuard],
         path: ProjectLinks.URL_QUERY_EXPLAINER,
+        component: QueryExplainerComponent,
         loadChildren: () =>
             import("./components/query-explainer/query-explainer.module").then((m) => m.QueryExplainerModule),
     },

@@ -1,6 +1,11 @@
-import { MaybeNull } from "src/app/common/app.types";
+import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { VerifyQueryResponse } from "../../query-explainer.types";
+import {
+    VerifyQueryError,
+    VerifyQueryKindError,
+    VerifyQueryOutputMismatchError,
+    VerifyQueryResponse,
+} from "../../query-explainer.types";
 
 @Component({
     selector: "app-verify-result-section",
@@ -10,4 +15,12 @@ import { VerifyQueryResponse } from "../../query-explainer.types";
 })
 export class VerifyResultSectionComponent {
     @Input({ required: true }) public verifyResponse: MaybeNull<VerifyQueryResponse>;
+
+    public isOutputMismatchError(error: MaybeUndefined<VerifyQueryError>): boolean {
+        return error?.kind === VerifyQueryKindError.OutputMismatch;
+    }
+
+    public outputMismatchError(error: MaybeUndefined<VerifyQueryError>): VerifyQueryOutputMismatchError {
+        return error as VerifyQueryOutputMismatchError;
+    }
 }

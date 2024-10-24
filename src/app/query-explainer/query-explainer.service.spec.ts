@@ -55,7 +55,6 @@ describe("QueryExplainerService", () => {
         });
         const req = httpTestingController.expectOne(`${appConfigService.apiServerHttpUrl}/query`);
         req.flush(errorMessage, { status: 404, statusText: "Not Found" });
-
         expect(toastrServiceSpy).toHaveBeenCalledTimes(1);
     });
 
@@ -68,7 +67,23 @@ describe("QueryExplainerService", () => {
         req.flush(mockVerifyQueryResponseSuccess);
     });
 
-    it("should upload commitment data bu upload token", () => {
+    it("should return unsupported error when verify query", () => {
+        const errorMessage = "Error";
+        const toastrServiceSpy = spyOn(toastrService, "error");
+
+        service.verifyQuery(mockQueryExplainerResponse).subscribe({
+            next: () => fail("should have failed with the 404 error"),
+            error: (error: HttpErrorResponse) => {
+                expect(error.status).withContext("status").toEqual(404);
+                expect(error.message).withContext("message").toEqual(errorMessage);
+            },
+        });
+        const req = httpTestingController.expectOne(`${appConfigService.apiServerHttpUrl}/verify`);
+        req.flush(errorMessage, { status: 404, statusText: "Not found" });
+        expect(toastrServiceSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should upload commitment data by upload token", () => {
         const mockUploadToken = "sadsaJJWwccdfdf";
         service
             .fetchCommitmentDataByUploadToken(mockUploadToken)
@@ -79,5 +94,24 @@ describe("QueryExplainerService", () => {
 
         expect(req.request.method).toEqual("GET");
         req.flush(mockQueryExplainerResponse);
+    });
+
+    it("should return error when fetch commitment data by upload token", () => {
+        const errorMessage = "Error";
+        const toastrServiceSpy = spyOn(toastrService, "error");
+        const uploadToken = "dfdflLKDsddfdddlfdsdsjkpbfopofoFDdfdf";
+
+        service.fetchCommitmentDataByUploadToken(uploadToken).subscribe({
+            next: () => fail("should have failed with the 404 error"),
+            error: (error: HttpErrorResponse) => {
+                expect(error.status).withContext("status").toEqual(404);
+                expect(error.message).withContext("message").toEqual(errorMessage);
+            },
+        });
+        const req = httpTestingController.expectOne(
+            `${appConfigService.apiServerHttpUrl}/platform/file/upload/${uploadToken}`,
+        );
+        req.flush(errorMessage, { status: 404, statusText: "Not found" });
+        expect(toastrServiceSpy).toHaveBeenCalledTimes(1);
     });
 });

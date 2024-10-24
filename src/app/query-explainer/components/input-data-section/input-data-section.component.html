@@ -12,27 +12,29 @@
             *ngIf="inputData.sqlQueryExplainerResponse.input.queryDialect"
         >
             <div class="fw-semibold">Query dialect:</div>
-            <div>
+            <div data-test-id="input-query-dialect">
                 {{ inputParamsHelper(inputData.sqlQueryExplainerResponse.input.queryDialect) }}
             </div>
         </div>
         <div class="my-4 mx-4 d-flex flex-row justify-content-between">
             <div class="fw-semibold">Data format:</div>
-            <div>{{ inputParamsHelper(inputData.sqlQueryExplainerResponse.input.dataFormat) }}</div>
+            <div data-test-id="input-data-format">
+                {{ inputParamsHelper(inputData.sqlQueryExplainerResponse.input.dataFormat) }}
+            </div>
         </div>
         <div class="my-4 mx-4 d-flex flex-row justify-content-between">
             <div class="fw-semibold">Schema format:</div>
-            <div>
+            <div data-test-id="input-schema-format">
                 {{ inputParamsHelper(inputData.sqlQueryExplainerResponse.input.schemaFormat!) }}
             </div>
         </div>
         <div class="my-4 mx-4 d-flex flex-row justify-content-between">
             <div class="fw-semibold">Limit:</div>
-            <div>{{ inputData.sqlQueryExplainerResponse.input.limit }}</div>
+            <div data-test-id="input-limit">{{ inputData.sqlQueryExplainerResponse.input.limit }}</div>
         </div>
         <div class="my-4 mx-4 d-flex flex-row justify-content-between">
             <div class="fw-semibold">Skip:</div>
-            <div>{{ inputData.sqlQueryExplainerResponse.input.skip }}</div>
+            <div data-test-id="input-skip">{{ inputData.sqlQueryExplainerResponse.input.skip }}</div>
         </div>
         <div class="my-4">
             <div class="fw-semibold mx-4">Datasets:</div>
@@ -48,6 +50,7 @@
                                     "
                                     routerLink="/{{ datasetInfo.accountName }}/{{ datasetInfo.datasetName }}"
                                     target="_blank"
+                                    attr.data-test-id="input-dataset-id-{{ i }}"
                                 >
                                     {{ dataset.id }}
                                 </a>
@@ -55,7 +58,7 @@
                         </div>
                         <div class="px-2 py-3">
                             <div class="fw-500">Alias:</div>
-                            <div class="mt-2">{{ dataset.alias }}</div>
+                            <div class="mt-2" attr.data-test-id="input-dataset-alias-{{ i }}">{{ dataset.alias }}</div>
                         </div>
                         <div class="px-2 py-3">
                             <div class="fw-500">Block hash:</div>
@@ -66,8 +69,9 @@
                                     "
                                     [value]="dataset.blockHash"
                                     [showCopyButton]="true"
+                                    data-test-id="input-dataset-hash"
                                 />
-                                <span class="ms-4">
+                                <span class="ms-4" attr.data-test-id="input-dataset-date-{{ i }}">
                                     ( as of
                                     {{ blockHashObservables$[i] | async | date: DATE_FORMAT }} )
                                 </span>

@@ -4,7 +4,9 @@
         <div class="m-4">
             <div class="fw-semibold">Input hash:</div>
             <div class="mt-2 text-break">
-                <span [class.error-color]="isInputHashError(commitmentData.sqlQueryVerify?.error)"
+                <span
+                    data-test-id="input-hash"
+                    [class.error-color]="isInputHashError(commitmentData.sqlQueryVerify?.error)"
                     >{{ commitmentData.sqlQueryExplainerResponse.commitment.inputHash }}
                 </span>
                 <button
@@ -28,7 +30,10 @@
         <div class="m-4">
             <div class="fw-semibold">Output hash:</div>
             <div class="mt-2 text-break">
-                <span [class.error-color]="isOutputMismatchError(commitmentData.sqlQueryVerify?.error)">
+                <span
+                    data-test-id="output-hash"
+                    [class.error-color]="isOutputMismatchError(commitmentData.sqlQueryVerify?.error)"
+                >
                     {{ commitmentData.sqlQueryExplainerResponse.commitment.outputHash }}</span
                 >
                 <button
@@ -52,7 +57,9 @@
         <div class="m-4">
             <div class="fw-semibold">Sub queries hash:</div>
             <div class="mt-2 text-break">
-                <span [class.error-color]="isSubQueriesHashError(commitmentData.sqlQueryVerify?.error)"
+                <span
+                    data-test-id="sub-queries-hash"
+                    [class.error-color]="isSubQueriesHashError(commitmentData.sqlQueryVerify?.error)"
                     >{{ commitmentData.sqlQueryExplainerResponse.commitment.subQueriesHash }}
                 </span>
 

@@ -5,7 +5,7 @@
         *ngIf="verifyResponse.ok"
     >
         <mat-icon class="me-1">check_circle</mat-icon>
-        Verification successful
+        <span data-test-id="verification-success">Verification successful</span>
     </div>
     <div
         *ngIf="verifyResponse.error"
@@ -14,15 +14,19 @@
     >
         <div class="d-flex align-items-center justify-content-center mb-2 fs-18">
             <mat-icon class="me-1">error</mat-icon>
-            Verification failed
+            <span data-test-id="verification-failed"> Verification failed </span>
         </div>
 
         <div class="fs-13 text-center" *ngIf="verifyResponse.error.message">
             {{ verifyResponse.error.message }}
         </div>
         <div *ngIf="isOutputMismatchError(verifyResponse.error)">
-            <div class="mt-4 ms-4">Actual hash: {{ outputMismatchError(verifyResponse.error).actual_hash }}</div>
-            <div class="my-2 ms-4">Expected hash: {{ outputMismatchError(verifyResponse.error).expected_hash }}</div>
+            <div data-test-id="error-actual-hash" class="mt-4 ms-4">
+                Actual hash: {{ outputMismatchError(verifyResponse.error).actual_hash }}
+            </div>
+            <div data-test-id="error-expected-hash" class="my-2 ms-4">
+                Expected hash: {{ outputMismatchError(verifyResponse.error).expected_hash }}
+            </div>
         </div>
     </div>
 </ng-container>

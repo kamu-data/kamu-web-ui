@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { catchError, EMPTY, Observable, shareReplay } from "rxjs";
+import { catchError, EMPTY, Observable, of } from "rxjs";
 import { AppConfigService } from "src/app/app-config.service";
 import { QueryExplainerInputType, QueryExplainerResponse, VerifyQueryResponse } from "./query-explainer.types";
 import { ToastrService } from "ngx-toastr";
@@ -30,19 +30,37 @@ export class QueryExplainerService {
                 });
                 return EMPTY;
             }),
-            shareReplay(),
         );
     }
 
     public verifyQuery(data: QueryExplainerResponse): Observable<VerifyQueryResponse> {
         const url = new URL(`${this.appConfigService.apiServerHttpUrl}/verify`);
-        return this.http.post<VerifyQueryResponse>(url.href, data);
+        return this.http.post<VerifyQueryResponse>(url.href, data).pipe(
+            catchError((e: HttpErrorResponse) => {
+                if (e.status === 400) return of(e.error as VerifyQueryResponse);
+                else {
+                    this.toastrService.error("", e.error as string, {
+                        disableTimeOut: "timeOut",
+                    });
+                    return EMPTY;
+                }
+            }),
+        );
     }
 
     public fetchCommitmentDataByUploadToken(token: string): Observable<QueryExplainerResponse> {
         const url = new URL(`${this.appConfigService.apiServerHttpUrl}/platform/file/upload/${token}`);
-        return this.http.get<QueryExplainerResponse>(url.href, {
-            headers: { Authorization: `Bearer ${this.localStorageService.accessToken}` },
-        });
+        return this.http
+            .get<QueryExplainerResponse>(url.href, {
+                headers: { Authorization: `Bearer ${this.localStorageService.accessToken}` },
+            })
+            .pipe(
+                catchError((e: HttpErrorResponse) => {
+                    this.toastrService.error("", e.error as string, {
+                        disableTimeOut: "timeOut",
+                    });
+                    return EMPTY;
+                }),
+            );
     }
 }

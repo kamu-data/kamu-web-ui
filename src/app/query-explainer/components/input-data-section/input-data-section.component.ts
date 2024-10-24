@@ -28,9 +28,11 @@ export class InputDataSectionComponent {
             case "SqlDataFusion":
                 return "SQL DataFusion";
             case "JsonAoA":
+            case "JsonAoa":
                 return "JSON AoA";
             case "ArrowJson":
                 return "Arrow JSON";
+            /* istanbul ignore next */
             default:
                 return "Unknown options";
         }

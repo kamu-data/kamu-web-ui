@@ -4,17 +4,14 @@ import { QueryExplainerService } from "./query-explainer.service";
 import { BaseComponent } from "src/app/common/base.component";
 import { MaybeNull } from "src/app/common/app.types";
 import ProjectLinks from "src/app/project-links";
-import { catchError, combineLatest, EMPTY, map, Observable, of, switchMap, tap } from "rxjs";
+import { combineLatest, map, Observable, of, switchMap, tap } from "rxjs";
 import {
     QueryExplainerComponentData,
     QueryExplainerDatasetsType,
     QueryExplainerResponse,
     VerifyQueryKindError,
-    VerifyQueryResponse,
 } from "./query-explainer.types";
-import { HttpErrorResponse } from "@angular/common/http";
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
-import { ToastrService } from "ngx-toastr";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DatasetByIdQuery } from "src/app/api/kamu.graphql.interface";
@@ -28,7 +25,6 @@ import { DatasetByIdQuery } from "src/app/api/kamu.graphql.interface";
 export class QueryExplainerComponent extends BaseComponent implements OnInit {
     private queryExplainerService = inject(QueryExplainerService);
     private blockService = inject(BlockService);
-    private toastrService = inject(ToastrService);
     private datasetService = inject(DatasetService);
     public readonly VerifyQueryKindError: typeof VerifyQueryKindError = VerifyQueryKindError;
 
@@ -36,6 +32,7 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
     public datasetInfoObservables$: Observable<DatasetInfo>[] = [];
     public componentData$: Observable<QueryExplainerComponentData>;
 
+    /* istanbul ignore next */
     ngOnInit(): void {
         const commitmentUploadToken = this.extractCommitmentUploadToken();
         if (commitmentUploadToken) {
@@ -45,20 +42,7 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
                     if ("output" in cloneData) {
                         delete cloneData.output;
                     }
-                    return combineLatest([
-                        of(response),
-                        this.queryExplainerService.verifyQuery(cloneData).pipe(
-                            catchError((e: HttpErrorResponse) => {
-                                if (e.status === 400) return of(e.error as VerifyQueryResponse);
-                                else {
-                                    this.toastrService.error("", e.error as string, {
-                                        disableTimeOut: "timeOut",
-                                    });
-                                    return EMPTY;
-                                }
-                            }),
-                        ),
-                    ]).pipe(
+                    return combineLatest([of(response), this.queryExplainerService.verifyQuery(cloneData)]).pipe(
                         map(([sqlQueryExplainerResponse, sqlQueryVerify]) => ({
                             sqlQueryExplainerResponse,
                             sqlQueryVerify,

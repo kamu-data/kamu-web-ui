@@ -1,3 +1,5 @@
+import { CommitmentDataSectionComponent } from "./components/commitment-data-section/commitment-data-section.component";
+import { InputDataSectionComponent } from "./components/input-data-section/input-data-section.component";
 import { VerifyResultSectionComponent } from "./components/verify-result-section/verify-result-section.component";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { QueryExplainerComponent } from "./query-explainer.component";
@@ -9,20 +11,29 @@ import { Apollo } from "apollo-angular";
 import { QueryExplainerService } from "./query-explainer.service";
 import { mockQueryExplainerResponse, mockVerifyQueryResponseSuccess } from "./query-explainer.mocks";
 import ProjectLinks from "src/app/project-links";
-import { DisplayHashModule } from "../display-hash/display-hash.module";
 import { HIGHLIGHT_OPTIONS, HighlightModule } from "ngx-highlightjs";
-import { DynamicTableModule } from "../dynamic-table/dynamic-table.module";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { ReproducedResultSectionComponent } from "./components/reproduced-result-section/reproduced-result-section.component";
+import { DisplayHashModule } from "../components/display-hash/display-hash.module";
+import { DynamicTableModule } from "../components/dynamic-table/dynamic-table.module";
+import { DatasetService } from "../dataset-view/dataset.service";
+import { mockDatasetByIdQuery } from "../api/mock/dataset.mock";
 
 describe("QueryExplainerComponent", () => {
     let component: QueryExplainerComponent;
     let fixture: ComponentFixture<QueryExplainerComponent>;
     let queryExplainerService: QueryExplainerService;
+    let datasetService: DatasetService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [QueryExplainerComponent, VerifyResultSectionComponent, ReproducedResultSectionComponent],
+            declarations: [
+                QueryExplainerComponent,
+                VerifyResultSectionComponent,
+                ReproducedResultSectionComponent,
+                InputDataSectionComponent,
+                CommitmentDataSectionComponent,
+            ],
             imports: [
                 HttpClientTestingModule,
                 DynamicTableModule,
@@ -61,21 +72,19 @@ describe("QueryExplainerComponent", () => {
                 },
             ],
         });
-        fixture = TestBed.createComponent(QueryExplainerComponent);
+        datasetService = TestBed.inject(DatasetService);
         queryExplainerService = TestBed.inject(QueryExplainerService);
-        component = fixture.componentInstance;
         spyOn(queryExplainerService, "verifyQuery").and.returnValue(of(mockVerifyQueryResponseSuccess));
         spyOn(queryExplainerService, "fetchCommitmentDataByUploadToken").and.returnValue(
             of(mockQueryExplainerResponse),
         );
+        spyOn(datasetService, "requestDatasetInfoById").and.returnValue(of(mockDatasetByIdQuery));
+        fixture = TestBed.createComponent(QueryExplainerComponent);
+        component = fixture.componentInstance;
         fixture.detectChanges();
     });
 
     it("should create", () => {
         expect(component).toBeTruthy();
-    });
-
-    it("should check verify is successful", () => {
-        expect(true).toEqual(true);
     });
 });

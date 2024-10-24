@@ -13,6 +13,7 @@ export class CommitmentDataSectionComponent {
     private clipboard = inject(Clipboard);
     @Input({ required: true }) commitmentData: QueryExplainerComponentData;
 
+    /* istanbul ignore next */
     public copyToClipboard(event: MouseEvent, text: string): void {
         this.clipboard.copy(text);
         changeCopyIcon(event);

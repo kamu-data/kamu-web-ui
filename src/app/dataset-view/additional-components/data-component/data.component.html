@@ -169,18 +169,18 @@
             </div>
         </div>
 
-        <div class="position-relative">
+        <div class="position-relative mt-4">
             <ng-container *ngIf="!this.editorLoaded || sqlLoading">
                 <mat-progress-bar data-test-id="editor-progress-bar" class="position-absolute" mode="indeterminate" />
             </ng-container>
-            <div class="border border-1 rounded-2 px-2 py-4 position-relative mt-2">
-                <app-sql-editor
-                    [(template)]="sqlRequestCode"
-                    [error]="sqlErrorMarker$ | async"
-                    (onRunSql)="runSql()"
-                    (onEditorLoaded)="hideProgressBar()"
-                />
-            </div>
+
+            <app-sql-editor
+                [(template)]="sqlRequestCode"
+                [error]="sqlErrorMarker$ | async"
+                (onRunSql)="runSql()"
+                (onEditorLoaded)="hideProgressBar()"
+            />
+
             <div class="mt-3 text-end">
                 <app-request-timer
                     class="badge"

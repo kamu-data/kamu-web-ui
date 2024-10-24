@@ -33,6 +33,19 @@ export class NavigationService {
         promiseWithCatch(this.router.navigate([ProjectLinks.URL_SEARCH], { queryParams }));
     }
 
+    public navigateToQueryExplainer(commitmentUploadToken: string): void {
+        if (commitmentUploadToken) {
+            const link = this.router.serializeUrl(
+                this.router.createUrlTree([`/${ProjectLinks.URL_QUERY_EXPLAINER}`], {
+                    queryParams: {
+                        [ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN]: commitmentUploadToken,
+                    },
+                }),
+            );
+            window.open(link, "_blank");
+        }
+    }
+
     public navigateToDatasetCreate(): void {
         promiseWithCatch(this.router.navigate([ProjectLinks.URL_DATASET_CREATE]));
     }

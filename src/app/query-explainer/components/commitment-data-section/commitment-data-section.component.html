@@ -1,0 +1,118 @@
+<div class="box p-4 my-2 me-4 h-100">
+    <div class="position-relative border border-1 p-2 rounded-3">
+        <span class="position-absolute text-muted group-box-label text-uppercase">Commitment data</span>
+        <div class="m-4">
+            <div class="fw-semibold">Input hash:</div>
+            <div class="mt-2 text-break">
+                <span
+                    data-test-id="input-hash"
+                    [class.error-color]="isInputHashError(commitmentData.sqlQueryVerify?.error)"
+                    >{{ commitmentData.sqlQueryExplainerResponse.commitment.inputHash }}
+                </span>
+                <button
+                    (click)="copyToClipboard($event, commitmentData.sqlQueryExplainerResponse.commitment.inputHash)"
+                    data-test-id="copyToClipboard-query-explainer-input-hash"
+                    aria-label="Copy to clipboard"
+                    class="copy-button ms-2"
+                    data-copy-feedback="Copied!"
+                    tabindex="0"
+                    role="button"
+                >
+                    <div style="position: relative; display: inline-block">
+                        <svg-icon name="copy" />
+                    </div>
+                    <div style="position: relative; display: none">
+                        <svg-icon name="checked" />
+                    </div>
+                </button>
+            </div>
+        </div>
+        <div class="m-4">
+            <div class="fw-semibold">Output hash:</div>
+            <div class="mt-2 text-break">
+                <span
+                    data-test-id="output-hash"
+                    [class.error-color]="isOutputMismatchError(commitmentData.sqlQueryVerify?.error)"
+                >
+                    {{ commitmentData.sqlQueryExplainerResponse.commitment.outputHash }}</span
+                >
+                <button
+                    (click)="copyToClipboard($event, commitmentData.sqlQueryExplainerResponse.commitment.outputHash)"
+                    data-test-id="copyToClipboard-query-explainer-output-hash"
+                    aria-label="Copy to clipboard"
+                    class="copy-button ms-2"
+                    data-copy-feedback="Copied!"
+                    tabindex="1"
+                    role="button"
+                >
+                    <div style="position: relative; display: inline-block">
+                        <svg-icon name="copy" />
+                    </div>
+                    <div style="position: relative; display: none">
+                        <svg-icon name="checked" />
+                    </div>
+                </button>
+            </div>
+        </div>
+        <div class="m-4">
+            <div class="fw-semibold">Sub queries hash:</div>
+            <div class="mt-2 text-break">
+                <span
+                    data-test-id="sub-queries-hash"
+                    [class.error-color]="isSubQueriesHashError(commitmentData.sqlQueryVerify?.error)"
+                    >{{ commitmentData.sqlQueryExplainerResponse.commitment.subQueriesHash }}
+                </span>
+
+                <button
+                    (click)="
+                        copyToClipboard($event, commitmentData.sqlQueryExplainerResponse.commitment.subQueriesHash)
+                    "
+                    data-test-id="copyToClipboard-query-explainer-sub-queries-hash"
+                    aria-label="Copy to clipboard"
+                    class="copy-button ms-2"
+                    data-copy-feedback="Copied!"
+                    tabindex="2"
+                    role="button"
+                >
+                    <div style="position: relative; display: inline-block">
+                        <svg-icon name="copy" />
+                    </div>
+                    <div style="position: relative; display: none">
+                        <svg-icon name="checked" />
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="position-relative border border-1 p-2 rounded-3 mt-4">
+        <span class="position-absolute text-muted group-box-label text-uppercase">Proof data</span>
+        <div class="m-4">
+            <div class="fw-semibold">Type:</div>
+            <div class="mt-2">
+                <a
+                    target="_blank"
+                    [href]="
+                        'https://www.w3.org/community/reports/credentials/CG-FINAL-di-eddsa-2020-20220724/#dfn-ed25519signature2020'
+                    "
+                >
+                    {{ commitmentData.sqlQueryExplainerResponse.proof.type }}
+                </a>
+            </div>
+        </div>
+        <div class="m-4">
+            <div class="fw-semibold">ODF Node DID:</div>
+            <div class="mt-2 text-break">
+                {{ commitmentData.sqlQueryExplainerResponse.proof.verificationMethod }}
+            </div>
+        </div>
+        <div class="m-4">
+            <div class="fw-semibold">Signature:</div>
+            <div class="mt-2 text-break">
+                <span [class.error-color]="isBadSignatureError(commitmentData.sqlQueryVerify?.error)">
+                    {{ commitmentData.sqlQueryExplainerResponse.proof.proofValue }}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

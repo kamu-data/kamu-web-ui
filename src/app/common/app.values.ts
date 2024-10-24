@@ -31,6 +31,7 @@ export default class AppValues {
     public static readonly HEADERS_SKIP_LOADING_KEY = "Skip-loading";
     public static readonly HEADERS_AUTHORIZATION_KEY = "Authorization";
     public static readonly UPLOAD_FILE_IMAGE = "assets/images/upload-file-gear.gif";
+    public static readonly DEFAULT_ADMIN_ACCOUNT_NAME = "kamu";
 
     public static readonly MARKDOWN_CONTAIN = `## Markdown __rulez__!
 ---

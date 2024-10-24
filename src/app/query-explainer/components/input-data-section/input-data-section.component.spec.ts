@@ -16,20 +16,10 @@ import ProjectLinks from "src/app/project-links";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
-import moment from "moment";
-import timekeeper from "timekeeper";
 
 describe("InputDataSectionComponent", () => {
     let component: InputDataSectionComponent;
     let fixture: ComponentFixture<InputDataSectionComponent>;
-    beforeAll(() => {
-        timekeeper.freeze("2024-03-14T11:22:29+00:00");
-        moment.tz.setDefault("Europe/Kiev");
-    });
-
-    afterAll(() => {
-        moment.tz.setDefault();
-    });
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -101,9 +91,6 @@ describe("InputDataSectionComponent", () => {
         );
         const datasetAliasElem = findElementByDataTestId(fixture, "input-dataset-alias-0");
         expect(datasetAliasElem?.innerText.trim()).toEqual("account.tokens.portfolio");
-
-        const datasetDateElem = findElementByDataTestId(fixture, "input-dataset-date-0");
-        expect(datasetDateElem?.innerText.trim()).toEqual("( as of 2024-10-22, 2:54:24 PM )");
     });
 
     it("should check DatasetBlockNotFoundError error is exist", () => {

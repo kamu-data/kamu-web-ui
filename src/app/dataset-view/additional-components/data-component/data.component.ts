@@ -30,10 +30,10 @@ import ProjectLinks from "src/app/project-links";
 import { ToastrService } from "ngx-toastr";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { AppConfigService } from "src/app/app-config.service";
-import { QueryExplainerService } from "src/app/components/query-explainer/query-explainer.service";
-import { QueryExplainerResponse } from "src/app/components/query-explainer/query-explainer.types";
 import { UploadPrepareData, UploadPrepareResponse } from "src/app/common/ingest-via-file-upload.types";
 import { FileUploadService } from "src/app/services/file-upload.service";
+import { QueryExplainerService } from "src/app/query-explainer/query-explainer.service";
+import { QueryExplainerResponse } from "src/app/query-explainer/query-explainer.types";
 
 @Component({
     selector: "app-data",

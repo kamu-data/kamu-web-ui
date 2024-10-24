@@ -33,13 +33,16 @@ export class NavigationService {
         promiseWithCatch(this.router.navigate([ProjectLinks.URL_SEARCH], { queryParams }));
     }
 
-    public navigateToQueryExplainer(commitmentUploadId: string): void {
-        if (commitmentUploadId) {
-            promiseWithCatch(
-                this.router.navigate([ProjectLinks.URL_QUERY_EXPLAINER], {
-                    queryParams: { [ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN]: commitmentUploadId },
+    public navigateToQueryExplainer(commitmentUploadToken: string): void {
+        if (commitmentUploadToken) {
+            const link = this.router.serializeUrl(
+                this.router.createUrlTree([`/${ProjectLinks.URL_QUERY_EXPLAINER}`], {
+                    queryParams: {
+                        [ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN]: commitmentUploadToken,
+                    },
                 }),
             );
+            window.open(link, "_blank");
         }
     }
 

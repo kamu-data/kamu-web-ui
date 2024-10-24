@@ -16,10 +16,20 @@ import ProjectLinks from "src/app/project-links";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import moment from "moment";
+import timekeeper from "timekeeper";
 
 describe("InputDataSectionComponent", () => {
     let component: InputDataSectionComponent;
     let fixture: ComponentFixture<InputDataSectionComponent>;
+    beforeAll(() => {
+        timekeeper.freeze("2024-03-14T11:22:29+00:00");
+        moment.tz.setDefault("Europe/Kiev");
+    });
+
+    afterAll(() => {
+        moment.tz.setDefault();
+    });
 
     beforeEach(() => {
         TestBed.configureTestingModule({

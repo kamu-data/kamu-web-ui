@@ -9,9 +9,11 @@ import { HighlightModule } from "ngx-highlightjs";
 import { DynamicTableModule } from "../dynamic-table/dynamic-table.module";
 import { VerifyResultSectionComponent } from "./components/verify-result-section/verify-result-section.component";
 import { ReproducedResultSectionComponent } from "./components/reproduced-result-section/reproduced-result-section.component";
+import { InputDataSectionComponent } from './components/input-data-section/input-data-section.component';
+import { CommitmentDataSectionComponent } from './components/commitment-data-section/commitment-data-section.component';
 
 @NgModule({
-    declarations: [QueryExplainerComponent, VerifyResultSectionComponent, ReproducedResultSectionComponent],
+    declarations: [QueryExplainerComponent, VerifyResultSectionComponent, ReproducedResultSectionComponent, InputDataSectionComponent, CommitmentDataSectionComponent],
     imports: [
         CommonModule,
         MatIconModule,

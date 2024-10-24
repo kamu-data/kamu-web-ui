@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - Added the ability to resize the monaco editor vertically
+- Added query explainer page for admin
 
 ## [0.27.1] - 2024-10-04
 ### Fixed

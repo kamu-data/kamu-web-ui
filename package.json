@@ -1,6 +1,6 @@
 {
   "name": "kamu-platform",
-  "version": "0.27.1",
+  "version": "0.28.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --watch",

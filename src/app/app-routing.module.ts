@@ -48,7 +48,6 @@ export const routes: Routes = [
         component: AdminDashboardComponent,
     },
     {
-        canActivate: [AdminGuard],
         path: ProjectLinks.URL_QUERY_EXPLAINER,
         component: QueryExplainerComponent,
         loadChildren: () => import("./query-explainer/query-explainer.module").then((m) => m.QueryExplainerModule),

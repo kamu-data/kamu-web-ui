@@ -67,13 +67,13 @@ import { apolloCache } from "./apollo-cache.helper";
 import { AdminDashboardComponent } from "./admin-view/admin-dashboard/admin-dashboard.component";
 import { DatasetFlowDetailsModule } from "./dataset-flow/dataset-flow-details/dataset-flow-details.module";
 import { MatSortModule } from "@angular/material/sort";
-
 import { AccountFlowsTabComponent } from "./account/additional-components/account-flows-tab/account-flows-tab.component";
 import { AccountComponent } from "./account/account.component";
 import { DatasetsTabComponent } from "./account/additional-components/datasets-tab/datasets-tab.component";
 import { AccessTokensTabComponent } from "./auth/settings/tabs/access-tokens-tab/access-tokens-tab.component";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { AutofocusDirective } from "./common/directives/autofocus.directive";
+import { DynamicTableModule } from "./components/dynamic-table/dynamic-table.module";
 
 const Services = [
     {
@@ -246,6 +246,7 @@ const MatModules = [
             preventDuplicates: true,
         }), // ToastrModule added
         DatasetFlowDetailsModule,
+        DynamicTableModule,
     ],
     providers: [...Services],
     bootstrap: [AppComponent],

@@ -9,7 +9,11 @@ import { DatasetBasicsFragment, DatasetEndpoints } from "../api/kamu.graphql.int
 import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
 import { NavigationService } from "./navigation.service";
 import { ProtocolsService } from "./protocols.service";
-import { UploadPrepareResponse, UploadPerareData, UploadAvailableMethod } from "../common/ingest-via-file-upload.types";
+import {
+    UploadPrepareResponse,
+    UploadPrepareData,
+    UploadAvailableMethod,
+} from "../common/ingest-via-file-upload.types";
 import { FileUploadError } from "../common/errors";
 import { UnsubscribeDestroyRefAdapter } from "../common/unsubscribe.ondestroy.adapter";
 
@@ -38,7 +42,7 @@ export class FileUploadService extends UnsubscribeDestroyRefAdapter {
             switchMap((uploadPrepareResponse: UploadPrepareResponse) =>
                 this.prepareUploadData(uploadPrepareResponse, file),
             ),
-            switchMap(({ uploadPrepareResponse, bodyObject, uploadHeaders }: UploadPerareData) =>
+            switchMap(({ uploadPrepareResponse, bodyObject, uploadHeaders }: UploadPrepareData) =>
                 this.uploadFileByMethod(
                     uploadPrepareResponse.method,
                     uploadPrepareResponse.uploadUrl,
@@ -88,21 +92,39 @@ export class FileUploadService extends UnsubscribeDestroyRefAdapter {
         url.searchParams.append("fileName", file.name);
         url.searchParams.append("contentLength", file.size.toString());
         url.searchParams.append("contentType", file.type);
-        return this.http.post<UploadPrepareResponse>(url.href, null, {
-            headers: { Authorization: `Bearer ${this.localStorageService.accessToken}` },
-        });
+        return this.http
+            .post<UploadPrepareResponse>(url.href, null, {
+                headers: { Authorization: `Bearer ${this.localStorageService.accessToken}` },
+            })
+            .pipe(
+                catchError((e: HttpErrorResponse) => {
+                    throw new FileUploadError([new Error(`File could not be prepare for upload, ${e.error}`)]);
+                }),
+            );
     }
 
     public uploadPostFile(url: string, bodyObject: File | FormData, uploadHeaders: HttpHeaders): Observable<object> {
-        return this.http.post(url, bodyObject, {
-            headers: uploadHeaders,
-        });
+        return this.http
+            .post(url, bodyObject, {
+                headers: uploadHeaders,
+            })
+            .pipe(
+                catchError((e: HttpErrorResponse) => {
+                    throw new FileUploadError([new Error(`File could not be loaded with POST, ${e.error}`)]);
+                }),
+            );
     }
 
     public uploadPutFile(url: string, bodyObject: File | FormData, uploadHeaders: HttpHeaders): Observable<object> {
-        return this.http.put(url, bodyObject, {
-            headers: uploadHeaders,
-        });
+        return this.http
+            .put(url, bodyObject, {
+                headers: uploadHeaders,
+            })
+            .pipe(
+                catchError((e: HttpErrorResponse) => {
+                    throw new FileUploadError([new Error(`File could not be loaded with PUT, ${e.error}`)]);
+                }),
+            );
     }
 
     public ingestDataToDataset(datasetInfo: DatasetInfo, uploadToken: string): Observable<object> {
@@ -115,7 +137,7 @@ export class FileUploadService extends UnsubscribeDestroyRefAdapter {
         );
     }
 
-    private prepareUploadData(uploadPrepareResponse: UploadPrepareResponse, file: File): Observable<UploadPerareData> {
+    public prepareUploadData(uploadPrepareResponse: UploadPrepareResponse, file: File): Observable<UploadPrepareData> {
         let uploadHeaders = new HttpHeaders();
         uploadPrepareResponse.headers.forEach((header: [string, string]) => {
             uploadHeaders = uploadHeaders.append(header[0], header[1]);
@@ -138,7 +160,7 @@ export class FileUploadService extends UnsubscribeDestroyRefAdapter {
         });
     }
 
-    private uploadFileByMethod(
+    public uploadFileByMethod(
         method: UploadAvailableMethod,
         uploadUrl: string,
         bodyObject: File | FormData,

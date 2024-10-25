@@ -120,22 +120,50 @@
                     <div class="select-menu-modal notifications-component-menu-modal">
                         <div class="select-menu-list">
                             <button
-                                type="submit"
-                                name="do"
-                                value="subscribed"
-                                class="select-menu-item flex-items-start"
-                                role="menuitemradio"
-                                aria-checked="true"
-                                data-targets="notifications-list-subscription-form.subscriptionButtons"
+                                type="button"
+                                [disabled]="true"
+                                class="select-menu-item no-pointer flex-items-start"
                             >
                                 <div>
                                     <div class="f5 text-bold">New Dataset from Query</div>
-                                    <div class="text-small color-fg-muted text-normal pb-1">
-                                        Creates new derivative dataset using current query as the transformation.
+                                    <div class="text-small color-fg-muted text-normal pb-1 lh-130">
+                                        Creates new derivative dataset using current query as the transformation
                                     </div>
                                 </div>
                             </button>
                         </div>
+                        <ng-container *ngIf="isAdmin">
+                            <div class="select-menu-list">
+                                <mat-divider></mat-divider>
+                                <button
+                                    type="button"
+                                    (click)="verifyQueryResult()"
+                                    class="select-menu-item flex-items-start"
+                                >
+                                    <div>
+                                        <div class="f5 text-bold">Verify query result</div>
+                                        <div class="text-small color-fg-muted text-normal pb-1 lh-130">
+                                            You can verify the query result and make sure that you can trust it
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="select-menu-list">
+                                <mat-divider></mat-divider>
+                                <button
+                                    type="button"
+                                    (click)="copyCurlCommand()"
+                                    class="select-menu-item flex-items-start"
+                                >
+                                    <div>
+                                        <div class="f5 text-bold">Copy as curl command</div>
+                                        <div class="text-small color-fg-muted text-normal pb-1 lh-130">
+                                            You can verify the query result with curl command
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
+                        </ng-container>
                     </div>
                 </mat-menu>
             </div>

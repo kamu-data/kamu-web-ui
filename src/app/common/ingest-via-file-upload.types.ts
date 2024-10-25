@@ -9,7 +9,7 @@ export interface UploadPrepareResponse {
     fields: [string, string][];
 }
 
-export interface UploadPerareData {
+export interface UploadPrepareData {
     uploadPrepareResponse: UploadPrepareResponse;
     bodyObject: FormData | File;
     uploadHeaders: HttpHeaders;

@@ -13,6 +13,7 @@ export default class ProjectLinks {
     public static readonly URL_SETTINGS: string = "v/settings";
     public static readonly URL_ADMIN_DASHBOARD: string = "v/admin-dashboard";
     public static readonly URL_FLOW_DETAILS: string = "flow-details";
+    public static readonly URL_QUERY_EXPLAINER: string = "query-explainer";
 
     public static readonly ALL_URLS: string[] = [
         ProjectLinks.URL_HOME,
@@ -43,5 +44,6 @@ export default class ProjectLinks {
     public static readonly URL_QUERY_PARAM_CALLBACK_URL: string = "callbackUrl";
     public static readonly URL_QUERY_PARAM_PUSH_SOURCE_NAME: string = "name";
     public static readonly URL_QUERY_PARAM_SECTION: string = "section";
+    public static readonly URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN: string = "commitmentUploadToken";
     public static readonly URL_QUERY_PARAM_SQL_QUERY: string = "sqlQuery";
 }

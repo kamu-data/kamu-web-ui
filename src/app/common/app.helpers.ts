@@ -57,7 +57,11 @@ export function momentConvertDateToLocalWithFormat(dateParams: {
 }
 
 export function parseCurrentSchema(data: MaybeNullOrUndefined<DataSchema>): MaybeNull<DatasetSchema> {
-    return data ? (JSON.parse(data.content) as DatasetSchema) : null;
+    return data ? (JSON.parse(removeAllLineBreaks(data.content)) as DatasetSchema) : null;
+}
+
+export function removeAllLineBreaks(value: string): string {
+    return value.replace(/(\r\n|\n|\r)/gm, "");
 }
 
 export function cronExpressionNextTime(cronExpression: string): string {

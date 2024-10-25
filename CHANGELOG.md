@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.28.1] - 2024-10-25
 ### Added
-- Added support node.js v18.20.0
+- Switched to Node.JS v18.20.4
 ### Fixed
 - Bug with line breaks for the schema content
 

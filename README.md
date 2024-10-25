@@ -38,7 +38,7 @@ See [deployment manual](https://docs.kamu.dev/node/deploy/) on how to deploy the
 ### Technologies
 
 - TypeScript, version: 5.1.6;
-- [Node.js](https://nodejs.org/en/download/releases/), version: 16.20.2;
+- [Node.js](https://nodejs.org/en/download/releases/), version: 18.20.0;
 - [Angular CLI](https://github.com/angular/angular-cli), version 16.2.14.
 
 ### Libraries
@@ -60,7 +60,7 @@ See [deployment manual](https://docs.kamu.dev/node/deploy/) on how to deploy the
 
 0. Do it once:
 
-   - download and install [Node.js](https://nodejs.org/en/download/releases/), version: 16.20.2
+   - download and install [Node.js](https://nodejs.org/en/download/releases/), version: 18.20.0
 
    or
 
@@ -68,7 +68,7 @@ See [deployment manual](https://docs.kamu.dev/node/deploy/) on how to deploy the
 
      Using `nvm` (Node.js Version Manager) makes it easier to install and manage multiple versions of Node.js on a single local environment.
 
-     To install a specific version of node: `nvm install 16.20.2`
+     To install a specific version of node: `nvm install 18.20.0`
 
 1. Install packages that project depends on: `npm install` and `npm run install_pretty_quick`
 2. Run application locally: `ng serve` or `npm run start`

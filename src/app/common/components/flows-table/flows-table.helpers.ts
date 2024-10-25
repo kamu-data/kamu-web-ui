@@ -9,6 +9,7 @@ import {
 import { MaybeNull } from "src/app/common/app.types";
 import AppValues from "src/app/common/app.values";
 import { DataHelpers } from "src/app/common/data.helpers";
+import { excludeAgoWord } from "../../app.helpers";
 
 export class DatasetFlowTableHelpers {
     public static descriptionColumnTableOptions(element: FlowSummaryDataFragment): { icon: string; class: string } {
@@ -204,7 +205,7 @@ export class DatasetFlowTableHelpers {
             case FlowStatus.Waiting:
                 switch (node.startCondition?.__typename) {
                     case "FlowStartConditionExecutor":
-                        return `awaiting since ${moment(node.timing.awaitingExecutorSince ?? "").fromNow()}`;
+                        return `waiting for ${excludeAgoWord(moment(node.timing.awaitingExecutorSince ?? "").fromNow())}`;
                     case "FlowStartConditionThrottling":
                     case "FlowStartConditionSchedule": {
                         return `wake up time: ${moment(node.startCondition.wakeUpAt).fromNow()}`;
@@ -216,7 +217,7 @@ export class DatasetFlowTableHelpers {
                         return "";
                 }
             case FlowStatus.Running:
-                return "running since " + moment(node.timing.runningSince).fromNow();
+                return "running for " + excludeAgoWord(moment(node.timing.runningSince).fromNow());
             case FlowStatus.Finished:
                 switch (node.outcome?.__typename) {
                     case "FlowSuccessResult":
@@ -259,8 +260,10 @@ export class DatasetFlowTableHelpers {
             case FlowStatus.Waiting:
                 switch (node.startCondition?.__typename) {
                     case "FlowStartConditionExecutor":
-                        return `awaiting since: ${moment(node.timing.awaitingExecutorSince ?? "").format(
-                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                        return `waiting for: ${excludeAgoWord(
+                            moment(node.timing.awaitingExecutorSince ?? "").format(
+                                AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                            ),
                         )}`;
                     case "FlowStartConditionThrottling":
                     case "FlowStartConditionSchedule": {

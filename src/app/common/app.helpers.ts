@@ -64,6 +64,10 @@ export function removeAllLineBreaks(value: string): string {
     return value.replace(/(\r\n|\n|\r)/gm, "");
 }
 
+export function excludeAgoWord(value: string): string {
+    return value.replace("ago", "");
+}
+
 export function cronExpressionNextTime(cronExpression: string): string {
     const date = cronParser.parseExpression(cronExpression).next().toDate();
     return moment(date).format(AppValues.CRON_EXPRESSION_DATE_FORMAT as string);

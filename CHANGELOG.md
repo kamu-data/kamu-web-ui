@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.28.2] - 2024-10-25
 ### Fixed
 - The `/query-explainer` view allows anonymous access
+- Query explainer: added support for all kinds of data format
 
 ## [0.28.1] - 2024-10-25
 ### Added

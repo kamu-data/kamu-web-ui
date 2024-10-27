@@ -3,6 +3,7 @@ import { inject, Injectable } from "@angular/core";
 import { catchError, EMPTY, Observable, of } from "rxjs";
 import { AppConfigService } from "src/app/app-config.service";
 import {
+    QueryExplainerDataFormat,
     QueryExplainerIncludeType,
     QueryExplainerInputType,
     QueryExplainerResponse,
@@ -20,11 +21,16 @@ export class QueryExplainerService {
     private toastrService = inject(ToastrService);
     private localStorageService = inject(LocalStorageService);
 
-    public processQuery(query: string, include: QueryExplainerIncludeType[]): Observable<QueryExplainerResponse> {
+    public processQuery(
+        query: string,
+        include: QueryExplainerIncludeType[],
+        dataFormat?: keyof typeof QueryExplainerDataFormat,
+    ): Observable<QueryExplainerResponse> {
         const url = new URL(`${this.appConfigService.apiServerHttpUrl}/query`);
         const body: QueryExplainerInputType = {
             query,
             include,
+            dataFormat,
         };
         return this.http.post<QueryExplainerResponse>(url.href, body).pipe(
             catchError((e: HttpErrorResponse) => {

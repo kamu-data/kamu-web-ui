@@ -14,20 +14,7 @@ export class ReproducedResultSectionComponent {
 
     public tableSource(output: QueryExplainerOutputType): DataRow[] {
         const columnNames: string[] = output.schema.fields.map((item) => item.name);
-        switch (this.dataFormat) {
-            case "JsonAoS": {
-                return this.parseDataFromJsonAoSFormat(output.data, columnNames);
-            }
-            case "JsonAoA": {
-                return this.parseDataFromJsonAoAFormat(output.data, columnNames);
-            }
-            case "JsonSoA": {
-                return this.parseDataFromJsonSoAFormat(output.data, columnNames);
-            }
-            /* istanbul ignore next */
-            default:
-                throw new Error("Unable to parse date");
-        }
+        return this.parseDataFromJsonAoSFormat(output.data, columnNames);
     }
 
     public schemaFields(output: QueryExplainerOutputType): DataSchemaField[] {
@@ -41,28 +28,5 @@ export class ReproducedResultSectionComponent {
             }));
             return arr.reduce((resultObj, obj) => Object.assign(resultObj, obj), {});
         });
-    }
-
-    private parseDataFromJsonAoAFormat(data: object[], columnNames: string[]): DataRow[] {
-        return data.map((dataItem) => {
-            const arr = columnNames.map((value: string, index: number) => ({
-                [value]: (dataItem as string[])[index as keyof typeof dataItem][index],
-            }));
-            return arr.reduce((resultObj, obj) => Object.assign(resultObj, obj), {});
-        }) as DataRow[];
-    }
-
-    private parseDataFromJsonSoAFormat(data: object[], columnNames: string[]): DataRow[] {
-        const values = Object.values(data) as [string[]];
-        const result = values[0].map((_, index: number) => {
-            const arr = columnNames.map((value: string) => {
-                const findDataIndex = Object.keys(data).findIndex((x) => x === value);
-                return {
-                    [value]: values[findDataIndex][index],
-                };
-            });
-            return arr.reduce((resultObj, obj) => Object.assign(resultObj, obj), {});
-        }) as DataRow[];
-        return result;
     }
 }

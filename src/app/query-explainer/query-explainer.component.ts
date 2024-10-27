@@ -4,7 +4,7 @@ import { QueryExplainerService } from "./query-explainer.service";
 import { BaseComponent } from "src/app/common/base.component";
 import { MaybeNull } from "src/app/common/app.types";
 import ProjectLinks from "src/app/project-links";
-import { combineLatest, map, Observable, switchMap, tap } from "rxjs";
+import { combineLatest, map, Observable, of, switchMap, tap } from "rxjs";
 import {
     QueryExplainerComponentData,
     QueryExplainerDatasetsType,
@@ -39,16 +39,17 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
             this.componentData$ = this.commitmentDataWithoutOutput(commitmentUploadToken).pipe(
                 switchMap((response: QueryExplainerResponse) => {
                     return combineLatest([
-                        this.queryExplainerService.processQuery(response.input.query, [
-                            ...response.input.include,
-                            "Schema",
-                        ]),
+                        of(response),
+                        this.queryExplainerService.processQuery(response.input.query, ["Schema"], "JsonAoS"),
                         this.queryExplainerService.verifyQuery(response),
                     ]).pipe(
-                        map(([sqlQueryExplainerResponse, sqlQueryVerify]) => ({
-                            sqlQueryExplainerResponse,
-                            sqlQueryVerify,
-                        })),
+                        map(([commitmentData, outputData, sqlQueryVerify]) => {
+                            const result = Object.assign({}, outputData, commitmentData);
+                            return {
+                                sqlQueryExplainerResponse: result,
+                                sqlQueryVerify,
+                            };
+                        }),
                     );
                 }),
             );

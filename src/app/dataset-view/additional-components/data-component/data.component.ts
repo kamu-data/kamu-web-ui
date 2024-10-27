@@ -173,12 +173,16 @@ export class DataComponent extends BaseComponent implements OnInit {
     public verifyQueryResult(): void {
         let uploadToken: string;
         this.queryExplainerService
-            .processQuery(this.sqlRequestCode)
+            .processQuery(this.sqlRequestCode, ["Proof"])
             .pipe(
                 switchMap((response: QueryExplainerResponse) => {
+                    const cloneData = Object.assign({}, response);
+                    if ("output" in cloneData) {
+                        delete cloneData.output;
+                    }
                     const file = new File(
                         [
-                            new Blob([JSON.stringify(response, null, 2)], {
+                            new Blob([JSON.stringify(cloneData, null, 2)], {
                                 type: "application/json",
                             }),
                         ],

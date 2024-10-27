@@ -39,7 +39,7 @@ import { DatasetApi } from "../api/dataset.api";
 import { DatasetNotFoundError } from "../common/errors";
 import { map } from "rxjs/operators";
 import { MaybeNull } from "../common/app.types";
-import { parseCurrentSchema } from "../common/app.helpers";
+import { parseCurrentSchema, removeAllLineBreaks } from "../common/app.helpers";
 import { APOLLO_OPTIONS } from "apollo-angular";
 import { resetCacheHelper } from "../apollo-cache.helper";
 
@@ -430,6 +430,6 @@ export class DatasetService {
     }
 
     private static parseSchema(schemaContent: string): DatasetSchema {
-        return JSON.parse(schemaContent) as DatasetSchema;
+        return JSON.parse(removeAllLineBreaks(schemaContent)) as DatasetSchema;
     }
 }

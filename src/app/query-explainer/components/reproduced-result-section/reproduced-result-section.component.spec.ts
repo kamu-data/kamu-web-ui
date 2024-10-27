@@ -16,6 +16,7 @@ describe("ReproducedResultSectionComponent", () => {
         fixture = TestBed.createComponent(ReproducedResultSectionComponent);
         component = fixture.componentInstance;
         component.output = mockQueryExplainerOutput;
+        component.dataFormat = "JsonAoS";
         fixture.detectChanges();
     });
 

@@ -10,7 +10,8 @@ import {
 
 export const mockQueryExplainerOutput: QueryExplainerOutputType = {
     data: [["0", "0", "2024-10-22T11:54:24.234Z", "2024-10-22T11:54:24.100Z", "100", "200"]],
-    dataFormat: "JsonAoa",
+    dataFormat: "JsonAoA",
+    schemaFormat: "ArrowJson",
     schema: {
         fields: [
             {
@@ -76,7 +77,7 @@ export const mockQueryExplainerResponse: QueryExplainerResponse = {
     input: {
         query: 'select block_number from "account.tokens.portfolio" order by offset desc limit 1',
         queryDialect: "SqlDataFusion",
-        dataFormat: "JsonAoa",
+        dataFormat: "JsonAoA",
         include: ["Input", "Proof", "Schema"],
         schemaFormat: "ArrowJson",
         datasets: [
@@ -91,7 +92,7 @@ export const mockQueryExplainerResponse: QueryExplainerResponse = {
     },
     output: {
         data: [["20865224"]],
-        dataFormat: "JsonAoa",
+        dataFormat: "JsonAoA",
         schema: {
             fields: [
                 {
@@ -99,6 +100,7 @@ export const mockQueryExplainerResponse: QueryExplainerResponse = {
                 },
             ],
         },
+        schemaFormat: "ArrowJson",
     },
     commitment: {
         inputHash: "f1620dadb9057b8e95e5956a34db4edaa6a68c86ba9cab409336b120a69f21f46e881",

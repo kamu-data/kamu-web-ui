@@ -114,16 +114,19 @@
                     <mat-icon class="text-muted fs-4 d-block">add</mat-icon>
                     <span class="fs-12 me-2 d-block"> Add data</span>
                 </button>
-                <button
-                    class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
-                    data-test-id="refresh-now-button"
-                    [disabled]="!canRefresh"
-                    *ngIf="isUserLogged"
-                    (click)="refreshNow()"
-                >
-                    <mat-icon class="text-muted fs-4 d-block">cached</mat-icon>
-                    <span class="fs-12 me-2 d-block"> Update now</span>
-                </button>
+
+                <ng-container *ngIf="adminPrivileges$ | async as adminPrivileges">
+                    <app-admin-available-button
+                        [label]="UPDATE_BUTTON_DESCRIPTOR.label"
+                        [icon]="UPDATE_BUTTON_DESCRIPTOR.icon"
+                        [datasetId]="UPDATE_BUTTON_DESCRIPTOR.datasetId"
+                        [disabled]="!canRefresh"
+                        [showAdwinIcon]="!isOwnerDataset"
+                        [adminPrivileges]="adminPrivileges.value"
+                        (onClick)="refreshNow()"
+                        [class]="UPDATE_BUTTON_DESCRIPTOR.class"
+                    ></app-admin-available-button>
+                </ng-container>
             </div>
 
             <app-overview-history-summary-header

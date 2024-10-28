@@ -28,7 +28,6 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Clipboard } from "@angular/cdk/clipboard";
 import ProjectLinks from "src/app/project-links";
 import { ToastrService } from "ngx-toastr";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { AppConfigService } from "src/app/app-config.service";
 import { UploadPrepareData, UploadPrepareResponse } from "src/app/common/ingest-via-file-upload.types";
 import { FileUploadService } from "src/app/services/file-upload.service";
@@ -68,7 +67,6 @@ export class DataComponent extends BaseComponent implements OnInit {
     private cdr = inject(ChangeDetectorRef);
     private clipboard = inject(Clipboard);
     private toastService = inject(ToastrService);
-    private loggedUserService = inject(LoggedUserService);
     private appConfigService = inject(AppConfigService);
     private queryExplainerService = inject(QueryExplainerService);
     private fileUploadService = inject(FileUploadService);

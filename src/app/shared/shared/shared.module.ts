@@ -20,6 +20,7 @@ import { SafeHtmlPipe } from "src/app/common/pipes/safe-html.pipe";
 import { DragAndDropDirective } from "src/app/common/directives/drag-and-drop.directive";
 import { YamlEventViewerComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/yaml-event-viewer/yaml-event-viewer.component";
 import { RouterModule } from "@angular/router";
+import { AdminAvailableButtonComponent } from "src/app/common/components/admin-available-button/admin-available-button.component";
 
 @NgModule({
     declarations: [
@@ -36,6 +37,7 @@ import { RouterModule } from "@angular/router";
         SafeHtmlPipe,
         DragAndDropDirective,
         YamlEventViewerComponent,
+        AdminAvailableButtonComponent,
     ],
     imports: [
         CommonModule,
@@ -64,6 +66,7 @@ import { RouterModule } from "@angular/router";
         SafeHtmlPipe,
         DragAndDropDirective,
         YamlEventViewerComponent,
+        AdminAvailableButtonComponent,
     ],
 })
 export class SharedModule {}

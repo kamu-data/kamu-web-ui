@@ -1,0 +1,5 @@
+<button [class]="class" [attr.data-test-id]="datasetId" [disabled]="disabled" *ngIf="visible" (click)="click()">
+    <mat-icon class="text-muted fs-4 d-block">{{ icon }}</mat-icon>
+    <span class="fs-12 me-2 d-block">{{ label }}</span>
+    <mat-icon *ngIf="showAdwinIcon && adminPrivileges" class="admin-icon d-block me-1"> admin_panel_settings</mat-icon>
+</button>

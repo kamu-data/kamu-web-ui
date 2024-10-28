@@ -76,11 +76,11 @@ describe("InputDataSectionComponent", () => {
     it("should check display data", () => {
         fixture.detectChanges();
         const queryDialectElem = findElementByDataTestId(fixture, "input-query-dialect");
-        expect(queryDialectElem?.innerText.trim()).toEqual("SQL DataFusion");
+        expect(queryDialectElem?.innerText.trim()).toEqual("SqlDataFusion");
         const dataFormatElem = findElementByDataTestId(fixture, "input-data-format");
-        expect(dataFormatElem?.innerText.trim()).toEqual("JSON AoA");
+        expect(dataFormatElem?.innerText.trim()).toEqual("JsonAoA");
         const schemaElem = findElementByDataTestId(fixture, "input-schema-format");
-        expect(schemaElem?.innerText.trim()).toEqual("Arrow JSON");
+        expect(schemaElem?.innerText.trim()).toEqual("ArrowJson");
         const limitElem = findElementByDataTestId(fixture, "input-limit");
         expect(limitElem?.innerText.trim()).toEqual("100");
         const skipElem = findElementByDataTestId(fixture, "input-skip");

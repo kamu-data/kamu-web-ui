@@ -13,13 +13,13 @@
         >
             <div class="fw-semibold">Query dialect:</div>
             <div data-test-id="input-query-dialect">
-                {{ inputQueryDialectHelper(inputData.sqlQueryExplainerResponse.input.queryDialect) }}
+                {{ inputData.sqlQueryExplainerResponse.input.queryDialect }}
             </div>
         </div>
         <div class="my-4 mx-4 d-flex flex-row justify-content-between">
             <div class="fw-semibold">Data format:</div>
             <div data-test-id="input-data-format">
-                {{ inputDataFormatHelper(inputData.sqlQueryExplainerResponse.input.dataFormat!) }}
+                {{ inputData.sqlQueryExplainerResponse.input.dataFormat! }}
             </div>
         </div>
         <div class="my-4 mx-4 d-flex flex-row justify-content-between">
@@ -27,7 +27,7 @@
             <div data-test-id="input-schema-format">
                 {{
                     inputData.sqlQueryExplainerResponse.input.schemaFormat
-                        ? inputSchemaFormatHelper(inputData.sqlQueryExplainerResponse.input.schemaFormat)
+                        ? inputData.sqlQueryExplainerResponse.input.schemaFormat
                         : "N/A"
                 }}
             </div>

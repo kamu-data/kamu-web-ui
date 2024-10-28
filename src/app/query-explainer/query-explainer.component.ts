@@ -40,7 +40,7 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
                 switchMap((response: QueryExplainerResponse) => {
                     return combineLatest([
                         of(response),
-                        this.queryExplainerService.processQuery(response.input.query, ["Schema"], "JsonAoS"),
+                        this.queryExplainerService.processQuery(response.input.query, ["Schema"]),
                         this.queryExplainerService.verifyQuery(response),
                     ]).pipe(
                         map(([commitmentData, outputData, sqlQueryVerify]) => {

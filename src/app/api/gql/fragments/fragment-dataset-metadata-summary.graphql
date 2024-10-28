@@ -1,5 +1,12 @@
 fragment DatasetMetadataSummary on Dataset {
   metadata {
+    chain {
+      refs {
+        name
+        blockHash
+      }
+    }
+
     currentInfo {
       ...DatasetCurrentInfo
     }

@@ -2557,6 +2557,28 @@ export type GetDatasetDataSqlRunQuery = {
     };
 };
 
+export type DatasetHeadBlockHashQueryVariables = Exact<{
+    accountName: Scalars["AccountName"];
+    datasetName: Scalars["DatasetName"];
+}>;
+
+export type DatasetHeadBlockHashQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byOwnerAndName?: {
+            __typename?: "Dataset";
+            metadata: {
+                __typename?: "DatasetMetadata";
+                chain: {
+                    __typename?: "MetadataChain";
+                    refs: Array<{ __typename?: "BlockRef"; name: string; blockHash: string }>;
+                };
+            };
+        } | null;
+    };
+};
+
 export type GetDatasetHistoryQueryVariables = Exact<{
     accountName: Scalars["AccountName"];
     datasetName: Scalars["DatasetName"];
@@ -2664,6 +2686,30 @@ export type GetDatasetSchemaQuery = {
                   metadata: {
                       __typename?: "DatasetMetadata";
                       currentSchema?: { __typename?: "DataSchema"; format: DataSchemaFormat; content: string } | null;
+                  };
+              } & DatasetBasicsFragment)
+            | null;
+    };
+};
+
+export type DatasetSystemTimeBlockByHashQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    blockHash: Scalars["Multihash"];
+}>;
+
+export type DatasetSystemTimeBlockByHashQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?:
+            | ({
+                  __typename?: "Dataset";
+                  metadata: {
+                      __typename?: "DatasetMetadata";
+                      chain: {
+                          __typename?: "MetadataChain";
+                          blockByHash?: { __typename?: "MetadataBlockExtended"; systemTime: string } | null;
+                      };
                   };
               } & DatasetBasicsFragment)
             | null;
@@ -3772,6 +3818,10 @@ export type DatasetMetadataSummaryFragment = {
     metadata: {
         __typename?: "DatasetMetadata";
         currentWatermark?: string | null;
+        chain: {
+            __typename?: "MetadataChain";
+            refs: Array<{ __typename?: "BlockRef"; name: string; blockHash: string }>;
+        };
         currentInfo: { __typename?: "SetInfo" } & DatasetCurrentInfoFragment;
         currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
         currentPollingSource?: ({ __typename?: "SetPollingSource" } & SetPollingSourceEventFragment) | null;
@@ -5131,6 +5181,12 @@ export const DatasetLastUpdateFragmentDoc = gql`
 export const DatasetMetadataSummaryFragmentDoc = gql`
     fragment DatasetMetadataSummary on Dataset {
         metadata {
+            chain {
+                refs {
+                    name
+                    blockHash
+                }
+            }
             currentInfo {
                 ...DatasetCurrentInfo
             }
@@ -5899,6 +5955,36 @@ export class GetDatasetDataSqlRunGQL extends Apollo.Query<
         super(apollo);
     }
 }
+export const DatasetHeadBlockHashDocument = gql`
+    query datasetHeadBlockHash($accountName: AccountName!, $datasetName: DatasetName!) {
+        datasets {
+            byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+                metadata {
+                    chain {
+                        refs {
+                            name
+                            blockHash
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetHeadBlockHashGQL extends Apollo.Query<
+    DatasetHeadBlockHashQuery,
+    DatasetHeadBlockHashQueryVariables
+> {
+    document = DatasetHeadBlockHashDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
 export const GetDatasetHistoryDocument = gql`
     query getDatasetHistory($accountName: AccountName!, $datasetName: DatasetName!, $perPage: Int, $page: Int) {
         datasets {
@@ -6063,6 +6149,37 @@ export const GetDatasetSchemaDocument = gql`
 })
 export class GetDatasetSchemaGQL extends Apollo.Query<GetDatasetSchemaQuery, GetDatasetSchemaQueryVariables> {
     document = GetDatasetSchemaDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetSystemTimeBlockByHashDocument = gql`
+    query datasetSystemTimeBlockByHash($datasetId: DatasetID!, $blockHash: Multihash!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                ...DatasetBasics
+                metadata {
+                    chain {
+                        blockByHash(hash: $blockHash) {
+                            systemTime
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetSystemTimeBlockByHashGQL extends Apollo.Query<
+    DatasetSystemTimeBlockByHashQuery,
+    DatasetSystemTimeBlockByHashQueryVariables
+> {
+    document = DatasetSystemTimeBlockByHashDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

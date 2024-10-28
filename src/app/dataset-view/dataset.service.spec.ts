@@ -1,3 +1,4 @@
+import { mockDatasetHeadBlockHashQuery } from "./../search/mock.data";
 import {
     mockDatasetDataSqlRunResponse,
     mockDatasetHistoryResponse,
@@ -36,7 +37,7 @@ import {
 } from "./dataset.subscriptions.interface";
 import { first } from "rxjs/operators";
 import _ from "lodash";
-import { mockDatasetBasicsWithPermissionQuery } from "../api/mock/dataset.mock";
+import { mockDatasetBasicsWithPermissionQuery, TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "../api/mock/dataset.mock";
 import { MaybeNull } from "../common/app.types";
 
 describe("AppDatasetService", () => {
@@ -332,5 +333,21 @@ describe("AppDatasetService", () => {
         });
 
         expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check get hash last block", () => {
+        const datasetHashLastBlockSpy = spyOn(datasetApi, "datasetHeadBlockHash").and.returnValue(
+            of(mockDatasetHeadBlockHashQuery),
+        );
+        const requestDatasetHashLastBlockSubscription$ = service
+            .requestDatasetHeadBlockHash(TEST_ACCOUNT_NAME, TEST_DATASET_NAME)
+            .subscribe((result: string) => {
+                expect(result).toEqual(
+                    mockDatasetHeadBlockHashQuery.datasets.byOwnerAndName?.metadata.chain.refs[0].blockHash as string,
+                );
+            });
+
+        expect(requestDatasetHashLastBlockSubscription$.closed).toBeTrue();
+        expect(datasetHashLastBlockSpy).toHaveBeenCalledTimes(1);
     });
 });

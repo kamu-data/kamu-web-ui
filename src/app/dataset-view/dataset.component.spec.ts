@@ -6,7 +6,7 @@ import {
 } from "../search/mock.data";
 import { DatasetService } from "./dataset.service";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
-import { ActivatedRoute, RouterModule } from "@angular/router";
+import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { DatasetApi } from "../api/dataset.api";
@@ -48,6 +48,8 @@ import { EditorModule } from "../shared/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { FlowsComponent } from "./additional-components/flows-component/flows.component";
+import { RouterTestingModule } from "@angular/router/testing";
+import { promiseWithCatch } from "../common/app.helpers";
 
 describe("DatasetComponent", () => {
     let component: DatasetComponent;
@@ -56,6 +58,8 @@ describe("DatasetComponent", () => {
     let datasetSubsServices: DatasetSubscriptionsService;
     let navigationService: NavigationService;
     let route: ActivatedRoute;
+    let router: Router;
+    const MOCK_DATASET_ROUTE = "kamu/mockNameDerived";
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -96,6 +100,7 @@ describe("DatasetComponent", () => {
                 EditorModule,
                 MatProgressBarModule,
                 CdkAccordionModule,
+                RouterTestingModule.withRoutes([{ path: MOCK_DATASET_ROUTE, component: DatasetComponent }]),
             ],
             providers: [
                 DatasetApi,
@@ -140,18 +145,23 @@ describe("DatasetComponent", () => {
         iconRegistryService.addSvg("account", "");
         iconRegistryService.addSvg("clock", "");
         iconRegistryService.addSvg("security", "");
+        iconRegistryService.addSvg("repository", "");
+        iconRegistryService.addSvg("close", "");
+        iconRegistryService.addSvg("notifications-checked", "");
 
         datasetSubsServices = TestBed.inject(DatasetSubscriptionsService);
         datasetSubsServices.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
 
         datasetService = TestBed.inject(DatasetService);
+        router = TestBed.inject(Router);
         spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsDerivedFragment));
-        spyOn(datasetService, "requestDatasetMainData").and.returnValue(of(void {}));
 
         fixture = TestBed.createComponent(DatasetComponent);
+        router.initialNavigation();
         route = TestBed.inject(ActivatedRoute);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
+        component.datasetBasics = mockDatasetBasicsDerivedFragment;
     });
 
     it("should create", () => {
@@ -275,4 +285,42 @@ describe("DatasetComponent", () => {
         expect(component.sqlLoading).toEqual(true);
         flush();
     }));
+
+    [DatasetViewTypeEnum.Lineage, DatasetViewTypeEnum.Settings, DatasetViewTypeEnum.Flows].forEach(
+        (tab: DatasetViewTypeEnum) => {
+            it(`should check navigate to ${tab} tab`, fakeAsync(() => {
+                const requestDatasetMainDataSpy = spyOn(datasetService, "requestDatasetMainData").and.returnValue(
+                    of(void {}),
+                );
+                const isHeadHashBlockChangedSpy = spyOn(datasetService, "isHeadHashBlockChanged").and.returnValue(
+                    of(false),
+                );
+                fixture.detectChanges();
+                promiseWithCatch(router.navigate([MOCK_DATASET_ROUTE], { queryParams: { tab } }));
+                tick();
+
+                expect(requestDatasetMainDataSpy).toHaveBeenCalledTimes(1);
+                expect(isHeadHashBlockChangedSpy).toHaveBeenCalledTimes(1);
+            }));
+        },
+    );
+
+    [DatasetViewTypeEnum.Overview, DatasetViewTypeEnum.Data, DatasetViewTypeEnum.Metadata].forEach(
+        (tab: DatasetViewTypeEnum) => {
+            it(`should check navigate to ${tab} tab`, fakeAsync(() => {
+                const requestDatasetMainDataSpy = spyOn(datasetService, "requestDatasetMainData").and.returnValue(
+                    of(void {}),
+                );
+                const isHeadHashBlockChangedSpy = spyOn(datasetService, "isHeadHashBlockChanged").and.returnValue(
+                    of(true),
+                );
+                fixture.detectChanges();
+                promiseWithCatch(router.navigate([MOCK_DATASET_ROUTE], { queryParams: { tab } }));
+                tick();
+
+                expect(requestDatasetMainDataSpy).toHaveBeenCalledTimes(2);
+                expect(isHeadHashBlockChangedSpy).toHaveBeenCalledTimes(1);
+            }));
+        },
+    );
 });

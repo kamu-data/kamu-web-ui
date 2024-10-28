@@ -9,7 +9,7 @@ import {
     Output,
 } from "@angular/core";
 import { Location } from "@angular/common";
-import { Observable, map, tap } from "rxjs";
+import { Observable, map, switchMap, tap } from "rxjs";
 import AppValues from "src/app/common/app.values";
 import DataTabValues from "./mock.data";
 import { DatasetFlowType, DatasetKind, OffsetInterval } from "../../../api/kamu.graphql.interface";
@@ -25,6 +25,15 @@ import { DatasetFlowsService } from "../flows-component/services/dataset-flows.s
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { Clipboard } from "@angular/cdk/clipboard";
+import ProjectLinks from "src/app/project-links";
+import { ToastrService } from "ngx-toastr";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { AppConfigService } from "src/app/app-config.service";
+import { UploadPrepareData, UploadPrepareResponse } from "src/app/common/ingest-via-file-upload.types";
+import { FileUploadService } from "src/app/services/file-upload.service";
+import { QueryExplainerService } from "src/app/query-explainer/query-explainer.service";
+import { QueryExplainerResponse } from "src/app/query-explainer/query-explainer.types";
 
 @Component({
     selector: "app-data",
@@ -57,6 +66,12 @@ export class DataComponent extends BaseComponent implements OnInit {
     private datasetFlowsService = inject(DatasetFlowsService);
     private navigationService = inject(NavigationService);
     private cdr = inject(ChangeDetectorRef);
+    private clipboard = inject(Clipboard);
+    private toastService = inject(ToastrService);
+    private loggedUserService = inject(LoggedUserService);
+    private appConfigService = inject(AppConfigService);
+    private queryExplainerService = inject(QueryExplainerService);
+    private fileUploadService = inject(FileUploadService);
 
     public ngOnInit(): void {
         this.overviewUpdate$ = this.datasetSubsService.overviewChanges;
@@ -75,6 +90,10 @@ export class DataComponent extends BaseComponent implements OnInit {
         );
         this.buildSqlRequestCode();
         this.runSQLRequest({ query: this.sqlRequestCode }, true);
+    }
+
+    public get isAdmin(): boolean {
+        return this.loggedUserService.isAdmin;
     }
 
     public runSQLRequest(params: DatasetRequestBySql, initialSqlRun = false): void {
@@ -107,10 +126,15 @@ export class DataComponent extends BaseComponent implements OnInit {
     }
 
     private buildSqlRequestCode(): void {
-        this.sqlRequestCode += `'${this.datasetBasics.alias}'`;
-        const offset = this.location.getState() as MaybeNull<Partial<OffsetInterval>>;
-        if (offset && typeof offset.start !== "undefined" && typeof offset.end !== "undefined") {
-            this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;
+        const sqlQueryFromUrl = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_SQL_QUERY);
+        if (sqlQueryFromUrl) {
+            this.sqlRequestCode = sqlQueryFromUrl;
+        } else {
+            this.sqlRequestCode += `'${this.datasetBasics.alias}'`;
+            const offset = this.location.getState() as MaybeNull<Partial<OffsetInterval>>;
+            if (offset && typeof offset.start !== "undefined" && typeof offset.end !== "undefined") {
+                this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;
+            }
         }
     }
 
@@ -129,6 +153,58 @@ export class DataComponent extends BaseComponent implements OnInit {
             modalRefInstance.datasetBasics = this.datasetBasics;
             modalRefInstance.overview = overviewUpdate;
         }
+    }
+
+    public shareQuery(): void {
+        const url = new URL(`${window.location.href}`);
+        url.searchParams.set(ProjectLinks.URL_QUERY_PARAM_SQL_QUERY, this.sqlRequestCode);
+        this.clipboard.copy(url.href);
+        this.toastService.success("Copied url to clipboard");
+    }
+
+    public copyCurlCommand(): void {
+        // Removed all \n symbols and replaced all single quotes on \" in the sql query
+        const sqlRequestReplacedCode = this.sqlRequestCode.replace(/\n/g, " ").replace(/'/g, '\\"');
+        const command = `echo '{ "query": "${sqlRequestReplacedCode}", "include": ["proof"] }' | curl "${this.appConfigService.apiServerHttpUrl}/query" -X POST --data-binary @- -H "Content-Type: application/json"`;
+        this.clipboard.copy(command);
+        this.toastService.success("Copied command to clipboard");
+    }
+
+    public verifyQueryResult(): void {
+        let uploadToken: string;
+        this.queryExplainerService
+            .processQuery(this.sqlRequestCode)
+            .pipe(
+                switchMap((response: QueryExplainerResponse) => {
+                    const file = new File(
+                        [
+                            new Blob([JSON.stringify(response, null, 2)], {
+                                type: "application/json",
+                            }),
+                        ],
+                        "query-explainer.json",
+                    );
+                    return this.fileUploadService.uploadFilePrepare(file).pipe(
+                        tap((data) => (uploadToken = data.uploadToken)),
+                        switchMap((uploadPrepareResponse: UploadPrepareResponse) =>
+                            this.fileUploadService.prepareUploadData(uploadPrepareResponse, file),
+                        ),
+                        switchMap(({ uploadPrepareResponse, bodyObject, uploadHeaders }: UploadPrepareData) =>
+                            this.fileUploadService.uploadFileByMethod(
+                                uploadPrepareResponse.method,
+                                uploadPrepareResponse.uploadUrl,
+                                bodyObject,
+                                uploadHeaders,
+                            ),
+                        ),
+                    );
+                }),
+
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(() => {
+                this.navigationService.navigateToQueryExplainer(uploadToken);
+            });
     }
 
     private updateNow(): void {

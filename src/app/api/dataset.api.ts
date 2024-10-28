@@ -1,4 +1,8 @@
-import { UpdateWatermarkGQL } from "./kamu.graphql.interface";
+import {
+    DatasetSystemTimeBlockByHashGQL,
+    DatasetSystemTimeBlockByHashQuery,
+    UpdateWatermarkGQL,
+} from "./kamu.graphql.interface";
 import {
     CommitEventToDatasetGQL,
     CommitEventToDatasetMutation,
@@ -34,6 +38,8 @@ import {
     GetDatasetLineageQuery,
     GetDatasetLineageGQL,
     UpdateWatermarkMutation,
+    DatasetHeadBlockHashGQL,
+    DatasetHeadBlockHashQuery,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { ApolloQueryResult } from "@apollo/client/core";
@@ -45,7 +51,7 @@ import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { DatasetOperationError } from "../common/errors";
 import { StoreObject } from "@apollo/client/cache";
 import { noCacheFetchPolicy } from "../common/data.helpers";
-import { updateCacheHelper } from "../apollo-cache.helper";
+import { resetCacheHelper, updateCacheHelper } from "../apollo-cache.helper";
 
 @Injectable({ providedIn: "root" })
 export class DatasetApi {
@@ -66,6 +72,8 @@ export class DatasetApi {
     private renameDatasetGQL = inject(RenameDatasetGQL);
     private datasetLineageGQL = inject(GetDatasetLineageGQL);
     private updateWatermarkGQL = inject(UpdateWatermarkGQL);
+    private datasetHeadBlockHashGQL = inject(DatasetHeadBlockHashGQL);
+    private datasetSystemTimeBlockByHashGQL = inject(DatasetSystemTimeBlockByHashGQL);
 
     public getDatasetMainData(params: {
         accountName: string;
@@ -221,6 +229,23 @@ export class DatasetApi {
             );
     }
 
+    public getSystemTimeBlockByHash(
+        datasetId: string,
+        blockHash: string,
+    ): Observable<DatasetSystemTimeBlockByHashQuery> {
+        return this.datasetSystemTimeBlockByHashGQL
+            .watch({
+                datasetId,
+                blockHash,
+            })
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<DatasetSystemTimeBlockByHashQuery>) => {
+                    return result.data;
+                }),
+            );
+    }
+
     public getDatasetInfoByAccountAndDatasetName(
         accountName: string,
         datasetName: string,
@@ -272,23 +297,10 @@ export class DatasetApi {
         event: string;
     }): Observable<CommitEventToDatasetMutation> {
         return this.commitEventToDatasetGQL
-            .mutate(
-                {
-                    datasetId: params.datasetId,
-                    event: params.event,
-                },
-                {
-                    update: (cache) => {
-                        // New events affect metadata chain in unpredictable manner
-                        // Open question: future impact on "data" field, if new event brings schema evolution
-                        updateCacheHelper(cache, {
-                            accountId: params.accountId,
-                            datasetId: params.datasetId,
-                            fieldNames: ["metadata"],
-                        });
-                    },
-                },
-            )
+            .mutate({
+                datasetId: params.datasetId,
+                event: params.event,
+            })
             .pipe(
                 first(),
                 map((result: MutationResult<CommitEventToDatasetMutation>) => {
@@ -308,24 +320,10 @@ export class DatasetApi {
         content: string;
     }): Observable<UpdateReadmeMutation> {
         return this.updateReadmeGQL
-            .mutate(
-                {
-                    datasetId: params.datasetId,
-                    content: params.content,
-                },
-                {
-                    update: (cache) => {
-                        // Note: dropping readme on its own via `cache.modify` could have been an option,
-                        // but any change to readme affects the state of the metadata chain nodes,
-                        // so dropping metadata field completely is a valid and safe option
-                        updateCacheHelper(cache, {
-                            accountId: params.accountId,
-                            datasetId: params.datasetId,
-                            fieldNames: ["metadata"],
-                        });
-                    },
-                },
-            )
+            .mutate({
+                datasetId: params.datasetId,
+                content: params.content,
+            })
             .pipe(
                 first(),
                 map((result: MutationResult<UpdateReadmeMutation>) => {
@@ -348,13 +346,7 @@ export class DatasetApi {
                 {
                     update: (cache) => {
                         // Drop entire dataset object
-                        const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
-                            cache.identify(DatasetApi.generateAccountKeyFragment(params.accountId)),
-                            params.datasetId,
-                        );
-                        cache.evict({
-                            id: cache.identify(datasetKeyFragment),
-                        });
+                        resetCacheHelper(cache, params);
                     },
                 },
             )
@@ -411,21 +403,10 @@ export class DatasetApi {
         accountId: string;
     }): Observable<UpdateWatermarkMutation> {
         return this.updateWatermarkGQL
-            .mutate(
-                {
-                    datasetId: params.datasetId,
-                    watermark: params.watermark,
-                },
-                {
-                    update: (cache) => {
-                        updateCacheHelper(cache, {
-                            accountId: params.accountId,
-                            datasetId: params.datasetId,
-                            fieldNames: ["metadata"],
-                        });
-                    },
-                },
-            )
+            .mutate({
+                datasetId: params.datasetId,
+                watermark: params.watermark,
+            })
             .pipe(
                 first(),
                 map((result: MutationResult<UpdateWatermarkMutation>) => {
@@ -435,6 +416,25 @@ export class DatasetApi {
                     } else {
                         throw new DatasetOperationError(result.errors ?? []);
                     }
+                }),
+            );
+    }
+
+    public datasetHeadBlockHash(accountName: string, datasetName: string): Observable<DatasetHeadBlockHashQuery> {
+        return this.datasetHeadBlockHashGQL
+            .watch(
+                { accountName, datasetName },
+                {
+                    ...noCacheFetchPolicy,
+                    context: {
+                        skipLoading: true,
+                    },
+                },
+            )
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<DatasetHeadBlockHashQuery>) => {
+                    return result.data;
                 }),
             );
     }

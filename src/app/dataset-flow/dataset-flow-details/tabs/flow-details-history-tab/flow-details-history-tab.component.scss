@@ -59,3 +59,23 @@ ul {
         }
     }
 }
+
+p {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: blue;
+
+    &:hover {
+        color: blue;
+    }
+}
+
+.admin-view {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: block;
+}

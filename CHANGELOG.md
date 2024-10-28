@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.28.2] - 2024-10-25
+### Fixed
+- The `/query-explainer` view allows anonymous access
+
+## [0.28.1] - 2024-10-25
+### Added
+- Switched to Node.JS v18.20.4
+### Fixed
+- Bug with line breaks for the schema content
+
+## [0.28.0] - 2024-10-25
+### Added
+- Added the ability to resize the monaco editor vertically
+- Added query explainer page for admin
+
+## [0.27.1] - 2024-10-04
+### Fixed
+- Lineage graph: redirect to another dataset
+- Application search: redirect to another dataset
+- Lineage tab displayed correctly
+- Prettified histopy timeline
+
+## [0.27.0] - 2024-09-25
+### Added
+- Added the ability to view task logs using Grafana only for the admin(Logs tab)
+- Detect dataset cache after the flows are completed
+- Added `Share query` button to the Data tab
+### Fixed
+- Added autofocus to the login field on the login page
+
 ## [0.26.4] - 2024-09-13
 ### Added
 - Support `FlowEventScheduleForActivationEvent` in flow history

@@ -1,8 +1,10 @@
 import { SqlExecutionError } from "../common/errors";
 import {
+    BlockRef,
     DataQueryResultErrorKind,
     DataQueryResultSuccessViewFragment,
     DatasetByIdQuery,
+    DatasetHeadBlockHashQuery,
     DatasetLineageBasicsFragment,
     DatasetLineageFragment,
     DatasetPageInfoFragment,
@@ -13,8 +15,8 @@ import {
     SetVocab,
 } from "../api/kamu.graphql.interface";
 import { DatasetInfo } from "../interface/navigation.interface";
-import { inject, Injectable } from "@angular/core";
-import { Observable, Subject } from "rxjs";
+import { inject, Injectable, Injector } from "@angular/core";
+import { combineLatest, Observable, of, Subject } from "rxjs";
 import { DataRow, DatasetLineageNode, DatasetRequestBySql, DatasetSchema } from "../interface/dataset.interface";
 import {
     DatasetBasicsFragment,
@@ -38,13 +40,16 @@ import { DatasetNotFoundError } from "../common/errors";
 import { map } from "rxjs/operators";
 import { MaybeNull } from "../common/app.types";
 import { parseCurrentSchema } from "../common/app.helpers";
+import { APOLLO_OPTIONS } from "apollo-angular";
+import { resetCacheHelper } from "../apollo-cache.helper";
 
 @Injectable({ providedIn: "root" })
 export class DatasetService {
     private datasetApi = inject(DatasetApi);
     private datasetSubsService = inject(DatasetSubscriptionsService);
-
+    private injector = inject(Injector);
     private currentSetVocab: SetVocab;
+    private currentHeadBlockHash: string;
     private dataset$: Subject<DatasetBasicsFragment> = new Subject<DatasetBasicsFragment>();
 
     public get datasetChanges(): Observable<DatasetBasicsFragment> {
@@ -76,6 +81,7 @@ export class DatasetService {
                         this.metadataTabDataUpdate(data, schema);
                         this.lineageDataReset();
                         this.historyDataReset();
+                        this.setHeadBlockHash(data.datasets.byOwnerAndName.metadata.chain.refs as BlockRef[]);
                     } else {
                         throw new SqlExecutionError(dataTail.errorMessage);
                     }
@@ -84,6 +90,31 @@ export class DatasetService {
                 }
             }),
         );
+    }
+
+    private setHeadBlockHash(refs: BlockRef[]): void {
+        const head = refs?.find((item) => item.name === "head");
+        this.currentHeadBlockHash = head?.blockHash ?? "";
+    }
+
+    public isHeadHashBlockChanged(datasetBasics: DatasetBasicsFragment): Observable<boolean> {
+        return combineLatest([
+            this.requestDatasetHeadBlockHash(datasetBasics.owner.accountName, datasetBasics.name),
+            of(this.currentHeadBlockHash),
+        ]).pipe(
+            map(([newHeadBlockHash, currentHeadBlockHash]) => {
+                if (currentHeadBlockHash !== newHeadBlockHash) {
+                    this.resetCache(datasetBasics);
+                    return true;
+                }
+                return false;
+            }),
+        );
+    }
+
+    private resetCache(datasetBasics: DatasetBasicsFragment): void {
+        const cache = this.injector.get(APOLLO_OPTIONS).cache;
+        resetCacheHelper(cache, { accountId: datasetBasics.owner.id, datasetId: datasetBasics.id });
     }
 
     public requestDatasetBasicDataWithPermissions(info: DatasetInfo): Observable<void> {
@@ -196,6 +227,16 @@ export class DatasetService {
 
     public requestDatasetInfoById(datasetId: string): Observable<DatasetByIdQuery> {
         return this.datasetApi.getDatasetInfoById(datasetId);
+    }
+
+    public requestDatasetHeadBlockHash(accountName: string, datasetName: string): Observable<string> {
+        return this.datasetApi.datasetHeadBlockHash(accountName, datasetName).pipe(
+            map((data: DatasetHeadBlockHashQuery) => {
+                const refs = data.datasets.byOwnerAndName?.metadata.chain.refs;
+                const head = refs?.find((item) => item.name === "head");
+                return head?.blockHash ?? "";
+            }),
+        );
     }
 
     public requestDatasetSchema(datasetId: string): Observable<GetDatasetSchemaQuery> {

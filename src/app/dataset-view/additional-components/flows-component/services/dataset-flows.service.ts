@@ -18,6 +18,7 @@ import {
     GetDatasetListFlowsQuery,
     GetFlowByIdQuery,
 } from "src/app/api/kamu.graphql.interface";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { MaybeUndefined } from "src/app/common/app.types";
 import { FlowsTableData } from "src/app/common/components/flows-table/flows-table.types";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
@@ -28,6 +29,7 @@ import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-detai
 export class DatasetFlowsService {
     private datasetFlowApi = inject(DatasetFlowApi);
     private toastrService = inject(ToastrService);
+    private loggedUserService = inject(LoggedUserService);
 
     public datasetTriggerFlow(params: {
         datasetId: string;
@@ -36,6 +38,7 @@ export class DatasetFlowsService {
     }): Observable<boolean> {
         return this.datasetFlowApi
             .datasetTriggerFlow({
+                accountId: this.loggedUserService.currentlyLoggedInUser.id,
                 datasetId: params.datasetId,
                 datasetFlowType: params.datasetFlowType,
                 flowRunConfiguration: params.flowRunConfiguration,

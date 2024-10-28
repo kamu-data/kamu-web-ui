@@ -53,6 +53,7 @@ export class DatasetFlowApi {
     private datasetFlowsInitiatorsGQL = inject(DatasetFlowsInitiatorsGQL);
 
     public datasetTriggerFlow(params: {
+        accountId: string;
         datasetId: string;
         datasetFlowType: DatasetFlowType;
         flowRunConfiguration?: FlowRunConfiguration;
@@ -84,6 +85,7 @@ export class DatasetFlowApi {
     }
 
     public setDatasetFlowSchedule(params: {
+        accountId: string;
         datasetId: string;
         datasetFlowType: DatasetFlowType;
         paused: boolean;
@@ -107,6 +109,7 @@ export class DatasetFlowApi {
     }
 
     public setDatasetFlowBatching(params: {
+        accountId: string;
         datasetId: string;
         datasetFlowType: DatasetFlowType;
         paused: boolean;

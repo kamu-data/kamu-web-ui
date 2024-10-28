@@ -1,0 +1,85 @@
+<div class="box p-4 my-2 ms-4 h-100">
+    <div class="position-relative border border-1 p-2 rounded-3">
+        <span class="position-absolute text-muted group-box-label text-uppercase">Input data</span>
+        <div class="mt-4 mx-4">
+            <div class="fw-semibold">Query:</div>
+            <div class="mt-2">
+                <pre><code [highlight]="inputData.sqlQueryExplainerResponse.input.query" [languages]="['sql'] "   [attr.data-test-id]="'query-explainer-viewer'" class="rounded-3"></code></pre>
+            </div>
+        </div>
+        <div
+            class="my-4 mx-4 d-flex flex-row justify-content-between"
+            *ngIf="inputData.sqlQueryExplainerResponse.input.queryDialect"
+        >
+            <div class="fw-semibold">Query dialect:</div>
+            <div data-test-id="input-query-dialect">
+                {{ inputParamsHelper(inputData.sqlQueryExplainerResponse.input.queryDialect) }}
+            </div>
+        </div>
+        <div class="my-4 mx-4 d-flex flex-row justify-content-between">
+            <div class="fw-semibold">Data format:</div>
+            <div data-test-id="input-data-format">
+                {{ inputParamsHelper(inputData.sqlQueryExplainerResponse.input.dataFormat) }}
+            </div>
+        </div>
+        <div class="my-4 mx-4 d-flex flex-row justify-content-between">
+            <div class="fw-semibold">Schema format:</div>
+            <div data-test-id="input-schema-format">
+                {{ inputParamsHelper(inputData.sqlQueryExplainerResponse.input.schemaFormat!) }}
+            </div>
+        </div>
+        <div class="my-4 mx-4 d-flex flex-row justify-content-between">
+            <div class="fw-semibold">Limit:</div>
+            <div data-test-id="input-limit">{{ inputData.sqlQueryExplainerResponse.input.limit }}</div>
+        </div>
+        <div class="my-4 mx-4 d-flex flex-row justify-content-between">
+            <div class="fw-semibold">Skip:</div>
+            <div data-test-id="input-skip">{{ inputData.sqlQueryExplainerResponse.input.skip }}</div>
+        </div>
+        <div class="my-4">
+            <div class="fw-semibold mx-4">Datasets:</div>
+            <ng-container *ngFor="let dataset of inputData.sqlQueryExplainerResponse.input.datasets; let i = index">
+                <div class="mt-2">
+                    <div class="dataset-box p-2 mx-2 my-4 rounded-3">
+                        <div class="px-2 py-3">
+                            <div class="fw-500">ID:</div>
+                            <div class="mt-2 text-break" *ngIf="datasetInfoObservables$[i] | async as datasetInfo">
+                                <a
+                                    [class.error-color]="
+                                        isDatasetNotFoundError(inputData.sqlQueryVerify?.error, dataset.id)
+                                    "
+                                    routerLink="/{{ datasetInfo.accountName }}/{{ datasetInfo.datasetName }}"
+                                    target="_blank"
+                                    attr.data-test-id="input-dataset-id-{{ i }}"
+                                >
+                                    {{ dataset.id }}
+                                </a>
+                            </div>
+                        </div>
+                        <div class="px-2 py-3">
+                            <div class="fw-500">Alias:</div>
+                            <div class="mt-2" attr.data-test-id="input-dataset-alias-{{ i }}">{{ dataset.alias }}</div>
+                        </div>
+                        <div class="px-2 py-3">
+                            <div class="fw-500">Block hash:</div>
+                            <div class="mt-2">
+                                <app-display-hash
+                                    [class.error-color]="
+                                        isDatasetBlockNotFoundError(inputData.sqlQueryVerify?.error, dataset.blockHash)
+                                    "
+                                    [value]="dataset.blockHash"
+                                    [showCopyButton]="true"
+                                    data-test-id="input-dataset-hash"
+                                />
+                                <span class="ms-4" attr.data-test-id="input-dataset-date-{{ i }}">
+                                    ( as of
+                                    {{ blockHashObservables$[i] | async | date: DATE_FORMAT }} )
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

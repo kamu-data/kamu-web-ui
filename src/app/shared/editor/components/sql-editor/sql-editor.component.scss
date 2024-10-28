@@ -1,0 +1,23 @@
+@import "var";
+
+.resizable {
+    position: relative;
+    border-radius: 3px;
+    border: 1px solid $app-color-border-default;
+}
+
+.cell-border-bottom {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    cursor: s-resize;
+    height: 9px;
+    width: 100%;
+    border-top: 1px solid #f1f1f1;
+    overflow: hidden;
+    background-color: #eff0f1;
+    background-image: url("https://cdn.sstatic.net/Sites/stackoverflow/img/sprites.svg"), none;
+    background-position: calc(100% / 2) -364px;
+    background-size: initial;
+    background-repeat: no-repeat;
+}

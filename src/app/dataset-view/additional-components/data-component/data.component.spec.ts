@@ -33,7 +33,13 @@ import { SqlEditorComponent } from "src/app/shared/editor/components/sql-editor/
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { HttpClientModule } from "@angular/common/http";
 import { Apollo } from "apollo-angular";
-import { ToastrModule } from "ngx-toastr";
+import { ToastrModule, ToastrService } from "ngx-toastr";
+import { Clipboard } from "@angular/cdk/clipboard";
+import { QueryExplainerService } from "src/app/query-explainer/query-explainer.service";
+import { of } from "rxjs";
+import { mockQueryExplainerResponse } from "src/app/query-explainer/query-explainer.mocks";
+import { FileUploadService } from "src/app/services/file-upload.service";
+import { mockUploadPrepareResponse } from "src/app/api/mock/upload-file.mock";
 
 describe("DataComponent", () => {
     let component: DataComponent;
@@ -41,6 +47,10 @@ describe("DataComponent", () => {
     let datasetSubsService: DatasetSubscriptionsService;
     let location: Location;
     let ngbModalService: NgbModal;
+    let clipboard: Clipboard;
+    let toastrService: ToastrService;
+    let queryExplainerService: QueryExplainerService;
+    let fileUploadService: FileUploadService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -65,10 +75,14 @@ describe("DataComponent", () => {
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         location = TestBed.inject(Location);
         ngbModalService = TestBed.inject(NgbModal);
+        clipboard = TestBed.inject(Clipboard);
+        toastrService = TestBed.inject(ToastrService);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
         spyOn(location, "getState").and.returnValue({ start: 0, end: 100 });
         datasetSubsService.emitSqlQueryDataChanged(mockDataUpdate);
+        queryExplainerService = TestBed.inject(QueryExplainerService);
+        fileUploadService = TestBed.inject(FileUploadService);
     });
 
     it("should create", () => {
@@ -183,5 +197,37 @@ describe("DataComponent", () => {
             size: mockOverviewDataUpdate.size,
         } as OverviewUpdate);
         expect(ngbModalServiceSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check click on `Share query` button", fakeAsync(() => {
+        const toastServiceSpy = spyOn(toastrService, "success");
+        const clipboardCopySpy = spyOn(clipboard, "copy");
+        tick();
+        fixture.detectChanges();
+
+        emitClickOnElementByDataTestId(fixture, "shareSqlQueryButton");
+        expect(toastServiceSpy).toHaveBeenCalledWith("Copied url to clipboard");
+        expect(clipboardCopySpy).toHaveBeenCalledTimes(1);
+        flush();
+    }));
+
+    it("should check click on `Copy as curl command` button", () => {
+        const toastServiceSpy = spyOn(toastrService, "success");
+        const clipboardCopySpy = spyOn(clipboard, "copy");
+        component.copyCurlCommand();
+        expect(toastServiceSpy).toHaveBeenCalledWith("Copied command to clipboard");
+        expect(clipboardCopySpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check click on `Verify query result` button", () => {
+        const processQuerySpy = spyOn(queryExplainerService, "processQuery").and.returnValue(
+            of(mockQueryExplainerResponse),
+        );
+        const uploadFilePrepareSpy = spyOn(fileUploadService, "uploadFilePrepare").and.returnValue(
+            of(mockUploadPrepareResponse),
+        );
+        component.verifyQueryResult();
+        expect(processQuerySpy).toHaveBeenCalledTimes(1);
+        expect(uploadFilePrepareSpy).toHaveBeenCalledTimes(1);
     });
 });

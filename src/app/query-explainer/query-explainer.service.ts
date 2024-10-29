@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { catchError, EMPTY, map, Observable, of } from "rxjs";
+import { catchError, EMPTY, map, Observable, of, tap } from "rxjs";
 import { AppConfigService } from "src/app/app-config.service";
 import {
     QueryExplainerDataJsonAosResponse,
@@ -10,7 +10,6 @@ import {
     VerifyQueryResponse,
 } from "./query-explainer.types";
 import { ToastrService } from "ngx-toastr";
-import { LocalStorageService } from "src/app/services/local-storage.service";
 
 @Injectable({
     providedIn: "root",
@@ -19,7 +18,6 @@ export class QueryExplainerService {
     private appConfigService = inject(AppConfigService);
     private http = inject(HttpClient);
     private toastrService = inject(ToastrService);
-    private localStorageService = inject(LocalStorageService);
     private baseUrl: string;
 
     constructor() {
@@ -38,7 +36,12 @@ export class QueryExplainerService {
                 if ("output" in cloneData) {
                     delete cloneData.output;
                 }
-                return cloneData;
+                return cloneData as QueryExplainerProofResponse;
+            }),
+            tap((res: QueryExplainerProofResponse) => {
+                if (res.subQueries?.length) {
+                    throw new Error("Unknown subQueries array");
+                }
             }),
             catchError((e: HttpErrorResponse) => {
                 this.toastrService.error("", e.error as string, {

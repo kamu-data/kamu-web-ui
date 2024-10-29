@@ -34,7 +34,7 @@ describe("QueryExplainerService", () => {
     it("should return commitment data", () => {
         const mockQuery = `select block_number,to from "kamu/net.rocketpool.reth.tokens-minted" order by offset limit 1`;
         const mockResponse: QueryExplainerResponse = mockQueryExplainerResponse;
-        service.processQuery(mockQuery, ["Schema"]).subscribe((data) => expect(data).toEqual(mockResponse));
+        service.processQueryWithSchema(mockQuery).subscribe((data) => expect(data).toEqual(mockResponse));
         const req = httpTestingController.expectOne(`${appConfigService.apiServerHttpUrl}/query`);
 
         expect(req.request.method).toEqual("POST");
@@ -47,7 +47,7 @@ describe("QueryExplainerService", () => {
         const errorMessage = "Error";
         const toastrServiceSpy = spyOn(toastrService, "error");
 
-        service.processQuery(mockQuery, ["Schema"]).subscribe({
+        service.processQueryWithSchema(mockQuery).subscribe({
             next: () => fail("should have failed with the 404 error"),
             error: (error: HttpErrorResponse) => {
                 expect(error.status).withContext("status").toEqual(404);

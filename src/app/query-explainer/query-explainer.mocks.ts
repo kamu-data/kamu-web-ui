@@ -1,6 +1,6 @@
 import {
     QueryExplainerOutputType,
-    QueryExplainerResponse,
+    QueryExplainerProofResponse,
     VerifyQueryDatasetBlockNotFoundError,
     VerifyQueryDatasetNotFoundError,
     VerifyQueryKindError,
@@ -74,7 +74,7 @@ export const mockVerifyQueryOutputMismatchError: VerifyQueryResponse = {
     } as VerifyQueryOutputMismatchError,
 };
 
-export const mockQueryExplainerResponse: QueryExplainerResponse = {
+export const mockQueryExplainerResponse: QueryExplainerProofResponse = {
     input: {
         query: 'select block_number from "account.tokens.portfolio" order by offset desc limit 1',
         queryDialect: "SqlDataFusion",
@@ -91,18 +91,7 @@ export const mockQueryExplainerResponse: QueryExplainerResponse = {
         skip: 0,
         limit: 100,
     },
-    output: {
-        data: [["20865224"]],
-        dataFormat: "JsonAoA",
-        schema: {
-            fields: [
-                {
-                    name: "block_number",
-                },
-            ],
-        },
-        schemaFormat: "ArrowJson",
-    },
+
     commitment: {
         inputHash: "f1620dadb9057b8e95e5956a34db4edaa6a68c86ba9cab409336b120a69f21f46e881",
         outputHash: "f1620b7f5fd290ed9d56967f36dd75dc0af02f7b2e5076aab96128277b31b161b1fea",

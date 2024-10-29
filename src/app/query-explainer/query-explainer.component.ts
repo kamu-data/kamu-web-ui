@@ -1,3 +1,4 @@
+import { ToastrService } from "ngx-toastr";
 import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import AppValues from "src/app/common/app.values";
 import { QueryExplainerService } from "./query-explainer.service";
@@ -26,6 +27,9 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
     private queryExplainerService = inject(QueryExplainerService);
     private blockService = inject(BlockService);
     private datasetService = inject(DatasetService);
+    private toastrService = inject(ToastrService);
+    public commitmentUploadToken: MaybeNull<string>;
+    public commitment: string;
     public readonly VerifyQueryKindError: typeof VerifyQueryKindError = VerifyQueryKindError;
 
     public blockHashObservables$: Observable<Date>[] = [];
@@ -34,9 +38,9 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
 
     /* istanbul ignore next */
     ngOnInit(): void {
-        const commitmentUploadToken = this.extractCommitmentUploadToken();
-        if (commitmentUploadToken) {
-            this.componentData$ = this.commitmentDataWithoutOutput(commitmentUploadToken).pipe(
+        this.commitmentUploadToken = this.extractCommitmentUploadToken();
+        if (this.commitmentUploadToken) {
+            this.componentData$ = this.commitmentDataWithoutOutput(this.commitmentUploadToken).pipe(
                 switchMap((response: QueryExplainerResponse) => {
                     return combineLatest([
                         of(response),
@@ -88,5 +92,29 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
             ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN,
         );
         return commitmentUploadToken ?? "";
+    }
+
+    /* istanbul ignore next */
+    public async verifyCommitment(): Promise<void> {
+        try {
+            const parsedCommitment = (await JSON.parse(this.commitment)) as QueryExplainerResponse;
+            this.commitmentUploadToken = "simulated-token";
+            this.componentData$ = combineLatest([
+                of(parsedCommitment),
+                this.queryExplainerService.processQuery(parsedCommitment.input.query, ["Schema"]),
+                this.queryExplainerService.verifyQuery(parsedCommitment),
+            ]).pipe(
+                tap(([t]) => this.fillDatasetsObservables(t.input.datasets ?? [])),
+                map(([commitmentData, outputData, sqlQueryVerify]) => {
+                    const result = Object.assign({}, outputData, commitmentData);
+                    return {
+                        sqlQueryExplainerResponse: result,
+                        sqlQueryVerify,
+                    };
+                }),
+            );
+        } catch (e) {
+            this.toastrService.error("Impossible to parse the commitment");
+        }
     }
 }

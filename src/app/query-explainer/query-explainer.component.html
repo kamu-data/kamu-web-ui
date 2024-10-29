@@ -1,25 +1,54 @@
-<ng-container *ngIf="componentData$ | async as componentData">
-    <app-verify-result-section [verifyResponse]="componentData.sqlQueryVerify" />
+<ng-container *ngIf="commitmentUploadToken; else commitmentInputTemplate">
+    <ng-container *ngIf="componentData$ | async as componentData">
+        <app-verify-result-section [verifyResponse]="componentData.sqlQueryVerify" />
 
-    <ng-container *ngIf="componentData">
-        <div class="row">
-            <div class="col-md-6">
-                <app-input-data-section
-                    [blockHashObservables$]="blockHashObservables$"
-                    [datasetInfoObservables$]="datasetInfoObservables$"
-                    [inputData]="componentData"
+        <ng-container *ngIf="componentData">
+            <div class="row">
+                <div class="col-md-6">
+                    <app-input-data-section
+                        [blockHashObservables$]="blockHashObservables$"
+                        [datasetInfoObservables$]="datasetInfoObservables$"
+                        [inputData]="componentData"
+                    />
+                </div>
+                <div class="col-md-6">
+                    <app-commitment-data-section [commitmentData]="componentData" />
+                </div>
+            </div>
+
+            <div class="margin-top margin-bottom" *ngIf="componentData.sqlQueryExplainerResponse.output">
+                <app-reproduced-result-section
+                    [output]="componentData.sqlQueryExplainerResponse.output"
+                    [dataFormat]="componentData.sqlQueryExplainerResponse.input.dataFormat!"
                 />
             </div>
-            <div class="col-md-6">
-                <app-commitment-data-section [commitmentData]="componentData" />
-            </div>
-        </div>
-
-        <div class="margin-top margin-bottom" *ngIf="componentData.sqlQueryExplainerResponse.output">
-            <app-reproduced-result-section
-                [output]="componentData.sqlQueryExplainerResponse.output"
-                [dataFormat]="componentData.sqlQueryExplainerResponse.input.dataFormat!"
-            />
-        </div>
+        </ng-container>
     </ng-container>
 </ng-container>
+
+<ng-template #commitmentInputTemplate>
+    <div class="m-4 p-4 d-flex align-items-center flex-column justify-content-center">
+        <div class="w-50">
+            <div class="textarea-header p-2">Commitment</div>
+            <div>
+                <textarea
+                    appAutofocus
+                    rows="20"
+                    data-test-id="input-textarea"
+                    class="w-100 input-textarea p-4"
+                    [(ngModel)]="commitment"
+                ></textarea>
+                <div class="text-end mt-3">
+                    <button
+                        [disabled]="!commitment"
+                        (click)="verifyCommitment()"
+                        class="rounded-2 verify-commitment-button px-2 py-2 btn btn-sm"
+                        type="button"
+                    >
+                        Verify commitment
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

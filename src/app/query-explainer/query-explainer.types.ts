@@ -14,6 +14,8 @@ export interface QueryExplainerResponse {
     commitment: QueryExplainerCommitmentType;
     proof: QueryExplainerProofType;
     output?: QueryExplainerOutputType;
+    // TODO: need implementation
+    subQueries?: unknown[];
 }
 
 export interface QueryExplainerOutputType {

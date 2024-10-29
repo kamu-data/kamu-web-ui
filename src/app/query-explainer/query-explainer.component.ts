@@ -7,15 +7,20 @@ import { MaybeNull } from "src/app/common/app.types";
 import ProjectLinks from "src/app/project-links";
 import { combineLatest, map, Observable, of, switchMap, tap } from "rxjs";
 import {
-    QueryExplainerComponentData,
     QueryExplainerDatasetsType,
     QueryExplainerResponse,
     VerifyQueryKindError,
+    VerifyQueryResponse,
 } from "./query-explainer.types";
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DatasetByIdQuery } from "src/app/api/kamu.graphql.interface";
+
+export interface QueryExplainerComponentData {
+    sqlQueryExplainerResponse: QueryExplainerResponse;
+    sqlQueryVerify: MaybeNull<VerifyQueryResponse>;
+}
 
 @Component({
     selector: "app-query-explainer",
@@ -40,17 +45,19 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
     ngOnInit(): void {
         this.commitmentUploadToken = this.extractCommitmentUploadToken();
         if (this.commitmentUploadToken) {
-            this.componentData$ = this.commitmentDataWithoutOutput(this.commitmentUploadToken).pipe(
-                switchMap((response: QueryExplainerResponse) => {
+            this.componentData$ = this.uploadCommitment(this.commitmentUploadToken).pipe(
+                switchMap((uploadedCommitment: QueryExplainerResponse) => {
                     return combineLatest([
-                        of(response),
-                        this.queryExplainerService.processQuery(response.input.query, ["Schema"]),
-                        this.queryExplainerService.verifyQuery(response),
+                        of(uploadedCommitment),
+                        this.queryExplainerService.processQueryWithSchema(uploadedCommitment.input.query),
+                        this.queryExplainerService.verifyQuery(uploadedCommitment),
                     ]).pipe(
-                        map(([commitmentData, outputData, sqlQueryVerify]) => {
-                            const result = Object.assign({}, outputData, commitmentData);
+                        map(([commitment, dataJsonAoS, sqlQueryVerify]) => {
                             return {
-                                sqlQueryExplainerResponse: result,
+                                sqlQueryExplainerResponse: {
+                                    ...commitment,
+                                    ...dataJsonAoS,
+                                },
                                 sqlQueryVerify,
                             };
                         }),
@@ -60,7 +67,7 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
         }
     }
 
-    private commitmentDataWithoutOutput(commitmentUploadToken: string): Observable<QueryExplainerResponse> {
+    private uploadCommitment(commitmentUploadToken: string): Observable<QueryExplainerResponse> {
         return this.queryExplainerService.fetchCommitmentDataByUploadToken(commitmentUploadToken).pipe(
             tap((response: QueryExplainerResponse) => {
                 this.fillDatasetsObservables(response.input.datasets ?? []);
@@ -101,14 +108,16 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
             this.commitmentUploadToken = "simulated-token";
             this.componentData$ = combineLatest([
                 of(parsedCommitment),
-                this.queryExplainerService.processQuery(parsedCommitment.input.query, ["Schema"]),
+                this.queryExplainerService.processQueryWithSchema(parsedCommitment.input.query),
                 this.queryExplainerService.verifyQuery(parsedCommitment),
             ]).pipe(
-                tap(([t]) => this.fillDatasetsObservables(t.input.datasets ?? [])),
-                map(([commitmentData, outputData, sqlQueryVerify]) => {
-                    const result = Object.assign({}, outputData, commitmentData);
+                tap(([commitment]) => this.fillDatasetsObservables(commitment.input.datasets ?? [])),
+                map(([commitment, dataJsonAoS, sqlQueryVerify]) => {
                     return {
-                        sqlQueryExplainerResponse: result,
+                        sqlQueryExplainerResponse: {
+                            ...commitment,
+                            ...dataJsonAoS,
+                        },
                         sqlQueryVerify,
                     };
                 }),

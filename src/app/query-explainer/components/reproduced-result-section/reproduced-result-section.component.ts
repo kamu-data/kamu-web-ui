@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { QueryExplainerDataFormat, QueryExplainerOutputType } from "../../query-explainer.types";
+import { QueryExplainerOutputType } from "../../query-explainer.types";
 import { extractSchemaFieldsFromData } from "src/app/common/table.helper";
 import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
 
@@ -9,8 +9,7 @@ import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReproducedResultSectionComponent {
-    @Input({ required: true }) public output: QueryExplainerOutputType;
-    @Input({ required: true }) public dataFormat: keyof typeof QueryExplainerDataFormat;
+    @Input({ required: true }) public dataJsonAoS: QueryExplainerOutputType;
 
     public tableSource(output: QueryExplainerOutputType): DataRow[] {
         const columnNames: string[] = output.schema.fields.map((item) => item.name);

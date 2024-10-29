@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { Observable } from "rxjs";
 import {
-    QueryExplainerComponentData,
     VerifyQueryDatasetBlockNotFoundError,
     VerifyQueryDatasetNotFoundError,
     VerifyQueryError,
@@ -10,6 +9,7 @@ import {
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { MaybeUndefined } from "src/app/common/app.types";
 import AppValues from "src/app/common/app.values";
+import { QueryExplainerComponentData } from "../../query-explainer.component";
 
 @Component({
     selector: "app-input-data-section",

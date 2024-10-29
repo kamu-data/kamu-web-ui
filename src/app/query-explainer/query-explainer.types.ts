@@ -1,6 +1,5 @@
 import { HttpHeaders } from "@angular/common/http";
 import { DataSchemaFormat, QueryDialect } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/common/app.types";
 import { UploadPrepareResponse } from "src/app/common/ingest-via-file-upload.types";
 
 export enum QueryExplainerDataFormat {
@@ -16,6 +15,18 @@ export interface QueryExplainerResponse {
     output?: QueryExplainerOutputType;
     // TODO: need implementation
     subQueries?: unknown[];
+}
+
+export interface QueryExplainerProofResponse {
+    input: QueryExplainerInputType;
+    commitment: QueryExplainerCommitmentType;
+    proof: QueryExplainerProofType;
+    // TODO: need implementation
+    subQueries?: unknown[];
+}
+
+export interface QueryExplainerDataJsonAosResponse {
+    output?: QueryExplainerOutputType;
 }
 
 export interface QueryExplainerOutputType {
@@ -99,9 +110,4 @@ export interface UploadPrepareCommitmentData {
     uploadPrepareResponse: UploadPrepareResponse;
     bodyObject: FormData;
     uploadHeaders: HttpHeaders;
-}
-
-export interface QueryExplainerComponentData {
-    sqlQueryExplainerResponse: QueryExplainerResponse;
-    sqlQueryVerify: MaybeNull<VerifyQueryResponse>;
 }

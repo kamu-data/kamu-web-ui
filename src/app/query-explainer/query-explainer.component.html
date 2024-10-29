@@ -17,10 +17,7 @@
             </div>
 
             <div class="margin-top margin-bottom" *ngIf="componentData.sqlQueryExplainerResponse.output">
-                <app-reproduced-result-section
-                    [output]="componentData.sqlQueryExplainerResponse.output"
-                    [dataFormat]="componentData.sqlQueryExplainerResponse.input.dataFormat!"
-                />
+                <app-reproduced-result-section [dataJsonAoS]="componentData.sqlQueryExplainerResponse.output" />
             </div>
         </ng-container>
     </ng-container>

@@ -45,34 +45,14 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
     ngOnInit(): void {
         this.commitmentUploadToken = this.extractCommitmentUploadToken();
         if (this.commitmentUploadToken) {
-            this.componentData$ = this.uploadCommitment(this.commitmentUploadToken).pipe(
-                switchMap((uploadedCommitment: QueryExplainerResponse) => {
-                    return combineLatest([
-                        of(uploadedCommitment),
-                        this.queryExplainerService.processQueryWithSchema(uploadedCommitment.input.query),
-                        this.queryExplainerService.verifyQuery(uploadedCommitment),
-                    ]).pipe(
-                        map(([commitment, dataJsonAoS, sqlQueryVerify]) => {
-                            return {
-                                sqlQueryExplainerResponse: {
-                                    ...commitment,
-                                    ...dataJsonAoS,
-                                },
-                                sqlQueryVerify,
-                            };
-                        }),
-                    );
-                }),
-            );
+            this.componentData$ = this.queryExplainerService
+                .fetchCommitmentDataByUploadToken(this.commitmentUploadToken)
+                .pipe(
+                    switchMap((uploadedCommitment: QueryExplainerResponse) => {
+                        return this.combineQueryExplainerResponse(uploadedCommitment);
+                    }),
+                );
         }
-    }
-
-    private uploadCommitment(commitmentUploadToken: string): Observable<QueryExplainerResponse> {
-        return this.queryExplainerService.fetchCommitmentDataByUploadToken(commitmentUploadToken).pipe(
-            tap((response: QueryExplainerResponse) => {
-                this.fillDatasetsObservables(response.input.datasets ?? []);
-            }),
-        );
     }
 
     private fillDatasetsObservables(datasets: QueryExplainerDatasetsType[]): void {
@@ -106,24 +86,30 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
         try {
             const parsedCommitment = (await JSON.parse(this.commitment)) as QueryExplainerResponse;
             this.commitmentUploadToken = "simulated-token";
-            this.componentData$ = combineLatest([
-                of(parsedCommitment),
-                this.queryExplainerService.processQueryWithSchema(parsedCommitment.input.query),
-                this.queryExplainerService.verifyQuery(parsedCommitment),
-            ]).pipe(
-                tap(([commitment]) => this.fillDatasetsObservables(commitment.input.datasets ?? [])),
-                map(([commitment, dataJsonAoS, sqlQueryVerify]) => {
-                    return {
-                        sqlQueryExplainerResponse: {
-                            ...commitment,
-                            ...dataJsonAoS,
-                        },
-                        sqlQueryVerify,
-                    };
-                }),
-            );
+            this.componentData$ = this.combineQueryExplainerResponse(parsedCommitment);
         } catch (e) {
             this.toastrService.error("Impossible to parse the commitment");
         }
+    }
+
+    private combineQueryExplainerResponse(
+        parsedCommitment: QueryExplainerResponse,
+    ): Observable<QueryExplainerComponentData> {
+        return combineLatest([
+            of(parsedCommitment),
+            this.queryExplainerService.processQueryWithSchema(parsedCommitment.input.query),
+            this.queryExplainerService.verifyQuery(parsedCommitment),
+        ]).pipe(
+            tap(([commitment]) => this.fillDatasetsObservables(commitment.input.datasets ?? [])),
+            map(([commitment, dataJsonAoS, sqlQueryVerify]) => {
+                return {
+                    sqlQueryExplainerResponse: {
+                        ...commitment,
+                        ...dataJsonAoS,
+                    },
+                    sqlQueryVerify,
+                };
+            }),
+        );
     }
 }

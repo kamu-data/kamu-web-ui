@@ -12,7 +12,7 @@ export default class ProjectLinks {
     public static readonly URL_RETURN_TO_CLI: string = "v/return-to-cli";
     public static readonly URL_SETTINGS: string = "v/settings";
     public static readonly URL_ADMIN_DASHBOARD: string = "v/admin-dashboard";
-    public static readonly URL_FLOW_DETAILS: string = "flow-details";
+    public static readonly URL_FLOW_DETAILS: string = "v/flow-details";
     public static readonly URL_QUERY_EXPLAINER: string = "v/query-explainer";
 
     public static readonly ALL_URLS: string[] = [

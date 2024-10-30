@@ -40,7 +40,7 @@ export class QueryExplainerService {
             }),
             tap((res: QueryExplainerProofResponse) => {
                 if (res.subQueries?.length) {
-                    throw new Error("Unknown subQueries array");
+                    throw new Error("Unsupported subQueries array");
                 }
             }),
             catchError((e: HttpErrorResponse) => {

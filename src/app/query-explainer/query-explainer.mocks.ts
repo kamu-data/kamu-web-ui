@@ -8,6 +8,40 @@ import {
     VerifyQueryResponse,
 } from "./query-explainer.types";
 
+export const mockTextareaCommitment: string = `
+{
+    "input": {
+        "query": "select\n  *\nfrom 'account.tokens.portfolio' limit 1",
+        "queryDialect": "SqlDataFusion",
+        "dataFormat": "JsonAoS",
+        "include": [
+            "Input",
+            "Proof"
+        ],
+        "datasets": [
+            {
+                "id": "did:odf:fed01df8964328b3b36fdfc5b140c5aea8795d445403a577428b2eafa5111f47dc212",
+                "alias": "account.tokens.portfolio",
+                "blockHash": "f16207781e20aca696acfafc462429613e7d5c3d0f333d6bd0003240b53a083a52d27"
+            }
+        ],
+        "skip": 0,
+        "limit": 100
+    },
+    "subQueries": [],
+    "commitment": {
+        "inputHash": "f1620cd150e7b1de0ae94d1e4a36a495d9719d5e74151efe5bd8c6a50e61eeb7e045c",
+        "outputHash": "f1620d0c403f71d659d040e6624806abf9159b83be4c3019e0daf3b362143397cdc33",
+        "subQueriesHash": "f1620ca4510738395af1429224dd785675309c344b2b549632e20275c69b15ed1d210"
+    },
+    "proof": {
+        "type": "Ed25519Signature2020",
+        "verificationMethod": "did:key:z6MksqxvcNrqUYMC2LrAFcEtjjqEMLsUi1Ek8x6VFA8vA4xF",
+        "proofValue": "uM3hJArKzYILkfYFOv1kqjqrxRn9_joCHFdQuTAflCJ7SeYwjcOGR5p8VHpVx4uKMTG_2SwcieFCcGellRNgpDQ"
+    }
+}
+`;
+
 export const mockQueryExplainerOutput: QueryExplainerOutputType = {
     data: [["0", "0", "2024-10-22T11:54:24.234Z", "2024-10-22T11:54:24.100Z", "100", "200"]],
 

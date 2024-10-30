@@ -2,17 +2,19 @@ import { Injectable } from "@angular/core";
 
 @Injectable()
 export default class ProjectLinks {
-    public static readonly URL_HOME: string = "/";
-    public static readonly URL_LOGIN: string = "v/login";
     public static readonly URL_GITHUB_CALLBACK: string = "github_callback";
     public static readonly URL_BLOCK: string = "block";
+    public static readonly URL_FLOW_DETAILS: string = "flow-details";
+
+    // initial routes
+    public static readonly URL_HOME: string = "/";
+    public static readonly URL_LOGIN: string = "v/login";
     public static readonly URL_SEARCH: string = "v/search";
     public static readonly URL_DATASET_CREATE: string = "v/new-dataset";
     public static readonly URL_PAGE_NOT_FOUND: string = "v/page-not-found";
     public static readonly URL_RETURN_TO_CLI: string = "v/return-to-cli";
     public static readonly URL_SETTINGS: string = "v/settings";
     public static readonly URL_ADMIN_DASHBOARD: string = "v/admin-dashboard";
-    public static readonly URL_FLOW_DETAILS: string = "flow-details";
     public static readonly URL_QUERY_EXPLAINER: string = "v/query-explainer";
 
     public static readonly ALL_URLS: string[] = [

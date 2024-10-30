@@ -72,8 +72,8 @@ import { AccountComponent } from "./account/account.component";
 import { DatasetsTabComponent } from "./account/additional-components/datasets-tab/datasets-tab.component";
 import { AccessTokensTabComponent } from "./auth/settings/tabs/access-tokens-tab/access-tokens-tab.component";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
-import { AutofocusDirective } from "./common/directives/autofocus.directive";
 import { DynamicTableModule } from "./components/dynamic-table/dynamic-table.module";
+import { AutofocusModule } from "./common/directives/autofocus.module";
 
 const Services = [
     {
@@ -205,7 +205,6 @@ const MatModules = [
         AdminDashboardComponent,
         AccessTokensTabComponent,
         AccountFlowsTabComponent,
-        AutofocusDirective,
     ],
     imports: [
         AppRoutingModule,
@@ -247,6 +246,7 @@ const MatModules = [
         }), // ToastrModule added
         DatasetFlowDetailsModule,
         DynamicTableModule,
+        AutofocusModule,
     ],
     providers: [...Services],
     bootstrap: [AppComponent],

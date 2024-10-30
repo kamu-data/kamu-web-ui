@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Fixed
+- Query explainer successfully validates commitment and shows data
 - Simplify the language in flow scheduling
 
 ## [0.28.2] - 2024-10-25

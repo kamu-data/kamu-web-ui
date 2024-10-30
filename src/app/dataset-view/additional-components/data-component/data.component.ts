@@ -33,7 +33,7 @@ import { AppConfigService } from "src/app/app-config.service";
 import { UploadPrepareData, UploadPrepareResponse } from "src/app/common/ingest-via-file-upload.types";
 import { FileUploadService } from "src/app/services/file-upload.service";
 import { QueryExplainerService } from "src/app/query-explainer/query-explainer.service";
-import { QueryExplainerResponse } from "src/app/query-explainer/query-explainer.types";
+import { QueryExplainerProofResponse } from "src/app/query-explainer/query-explainer.types";
 
 @Component({
     selector: "app-data",
@@ -173,9 +173,9 @@ export class DataComponent extends BaseComponent implements OnInit {
     public verifyQueryResult(): void {
         let uploadToken: string;
         this.queryExplainerService
-            .processQuery(this.sqlRequestCode)
+            .processQueryWithProof(this.sqlRequestCode)
             .pipe(
-                switchMap((response: QueryExplainerResponse) => {
+                switchMap((response: QueryExplainerProofResponse) => {
                     const file = new File(
                         [
                             new Blob([JSON.stringify(response, null, 2)], {

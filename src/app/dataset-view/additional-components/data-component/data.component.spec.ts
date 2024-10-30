@@ -220,7 +220,7 @@ describe("DataComponent", () => {
     });
 
     it("should check click on `Verify query result` button", () => {
-        const processQuerySpy = spyOn(queryExplainerService, "processQuery").and.returnValue(
+        const processQuerySpy = spyOn(queryExplainerService, "processQueryWithProof").and.returnValue(
             of(mockQueryExplainerResponse),
         );
         const uploadFilePrepareSpy = spyOn(fileUploadService, "uploadFilePrepare").and.returnValue(

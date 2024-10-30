@@ -1,7 +1,28 @@
+@import "var";
+
 .margin-top {
     margin-top: 2rem;
 }
 
 .margin-bottom {
     margin-bottom: 4rem;
+}
+
+.input-textarea {
+    border: 1px solid $app-color-border-default;
+
+    &:focus {
+        outline: none;
+    }
+}
+
+.verify-commitment-button {
+    border: 1px solid #38323270;
+    background-color: #f0f0f0;
+}
+
+.textarea-header {
+    background-color: #e1e5e9;
+    text-align: center;
+    border: 1px solid $app-color-border-default;
 }

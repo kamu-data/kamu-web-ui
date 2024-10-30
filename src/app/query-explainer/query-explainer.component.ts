@@ -1,3 +1,4 @@
+import { ToastrService } from "ngx-toastr";
 import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import AppValues from "src/app/common/app.values";
 import { QueryExplainerService } from "./query-explainer.service";
@@ -6,15 +7,20 @@ import { MaybeNull } from "src/app/common/app.types";
 import ProjectLinks from "src/app/project-links";
 import { combineLatest, map, Observable, of, switchMap, tap } from "rxjs";
 import {
-    QueryExplainerComponentData,
     QueryExplainerDatasetsType,
     QueryExplainerResponse,
     VerifyQueryKindError,
+    VerifyQueryResponse,
 } from "./query-explainer.types";
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DatasetByIdQuery } from "src/app/api/kamu.graphql.interface";
+
+export interface QueryExplainerComponentData {
+    sqlQueryExplainerResponse: QueryExplainerResponse;
+    sqlQueryVerify: MaybeNull<VerifyQueryResponse>;
+}
 
 @Component({
     selector: "app-query-explainer",
@@ -26,6 +32,9 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
     private queryExplainerService = inject(QueryExplainerService);
     private blockService = inject(BlockService);
     private datasetService = inject(DatasetService);
+    private toastrService = inject(ToastrService);
+    public commitmentUploadToken: MaybeNull<string>;
+    public commitment: string;
     public readonly VerifyQueryKindError: typeof VerifyQueryKindError = VerifyQueryKindError;
 
     public blockHashObservables$: Observable<Date>[] = [];
@@ -34,31 +43,16 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
 
     /* istanbul ignore next */
     ngOnInit(): void {
-        const commitmentUploadToken = this.extractCommitmentUploadToken();
-        if (commitmentUploadToken) {
-            this.componentData$ = this.commitmentDataWithoutOutput(commitmentUploadToken).pipe(
-                switchMap((response: QueryExplainerResponse) => {
-                    const cloneData = Object.assign({}, response);
-                    if ("output" in cloneData) {
-                        delete cloneData.output;
-                    }
-                    return combineLatest([of(response), this.queryExplainerService.verifyQuery(cloneData)]).pipe(
-                        map(([sqlQueryExplainerResponse, sqlQueryVerify]) => ({
-                            sqlQueryExplainerResponse,
-                            sqlQueryVerify,
-                        })),
-                    );
-                }),
-            );
+        this.commitmentUploadToken = this.extractCommitmentUploadToken();
+        if (this.commitmentUploadToken) {
+            this.componentData$ = this.queryExplainerService
+                .fetchCommitmentDataByUploadToken(this.commitmentUploadToken)
+                .pipe(
+                    switchMap((uploadedCommitment: QueryExplainerResponse) => {
+                        return this.combineQueryExplainerResponse(uploadedCommitment);
+                    }),
+                );
         }
-    }
-
-    private commitmentDataWithoutOutput(commitmentUploadToken: string): Observable<QueryExplainerResponse> {
-        return this.queryExplainerService.fetchCommitmentDataByUploadToken(commitmentUploadToken).pipe(
-            tap((response: QueryExplainerResponse) => {
-                this.fillDatasetsObservables(response.input.datasets ?? []);
-            }),
-        );
     }
 
     private fillDatasetsObservables(datasets: QueryExplainerDatasetsType[]): void {
@@ -85,5 +79,37 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
             ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN,
         );
         return commitmentUploadToken ?? "";
+    }
+
+    /* istanbul ignore next */
+    public async verifyCommitment(): Promise<void> {
+        try {
+            const parsedCommitment = (await JSON.parse(this.commitment)) as QueryExplainerResponse;
+            this.commitmentUploadToken = "simulated-token";
+            this.componentData$ = this.combineQueryExplainerResponse(parsedCommitment);
+        } catch (e) {
+            this.toastrService.error("Impossible to parse the commitment");
+        }
+    }
+
+    private combineQueryExplainerResponse(
+        parsedCommitment: QueryExplainerResponse,
+    ): Observable<QueryExplainerComponentData> {
+        return combineLatest([
+            of(parsedCommitment),
+            this.queryExplainerService.processQueryWithSchema(parsedCommitment.input.query),
+            this.queryExplainerService.verifyQuery(parsedCommitment),
+        ]).pipe(
+            tap(([commitment]) => this.fillDatasetsObservables(commitment.input.datasets ?? [])),
+            map(([commitment, dataJsonAoS, sqlQueryVerify]) => {
+                return {
+                    sqlQueryExplainerResponse: {
+                        ...commitment,
+                        ...dataJsonAoS,
+                    },
+                    sqlQueryVerify,
+                };
+            }),
+        );
     }
 }

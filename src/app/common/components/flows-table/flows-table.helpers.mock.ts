@@ -417,18 +417,18 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
 ];
 
 export const durationBlockTextResults: string[] = [
-    "awaiting since 58 minutes ago",
+    "waiting for 58 minutes ",
     "wake up time: in an hour",
     "wake up time: in 2 hours",
     "deadline time: in an hour",
-    "running since 48 minutes ago",
+    "running for 48 minutes ",
     "finished in an hour",
     "aborted 2 hours ago",
     "failed 2 hours ago",
 ];
 
 export const tooltipTextResults: string[] = [
-    "awaiting since: Mar 14th 2024, 12:24:29 PM",
+    "waiting for: Mar 14th 2024, 12:24:29 PM",
     "Wake up time: Mar 14th 2024, 2:24:29 PM",
     "Wake up time: Mar 14th 2024, 3:24:29 PM",
     "Deadline time: Mar 14th 2024, 2:24:29 PM",

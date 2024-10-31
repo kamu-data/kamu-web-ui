@@ -5,7 +5,7 @@ import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
-import { SecurityContext } from "@angular/core";
+import { SecurityContext, SimpleChanges } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { FormsModule } from "@angular/forms";
@@ -100,4 +100,18 @@ describe("ReadmeSectionComponent", () => {
         expect(updateReadmeSpy).toHaveBeenCalledTimes(1);
         flush();
     }));
+
+    it("should check readme updated in the onChanges hook", () => {
+        const modifiedReadmeContent = mockReadmeContent + "modified";
+        const readmeSimpleChanges: SimpleChanges = {
+            currentReadme: {
+                previousValue: mockReadmeContent,
+                currentValue: modifiedReadmeContent,
+                firstChange: false,
+                isFirstChange: () => false,
+            },
+        };
+        component.ngOnChanges(readmeSimpleChanges);
+        expect(component.readmeState).toEqual(modifiedReadmeContent);
+    });
 });

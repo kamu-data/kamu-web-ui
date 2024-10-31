@@ -43,6 +43,7 @@ export class ReadmeSectionComponent extends BaseComponent implements OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.currentReadme && changes.currentReadme.currentValue !== changes.currentReadme.previousValue) {
             this.readmeState = changes.currentReadme.currentValue as string;
+            this.editingInProgress = false;
         }
     }
 

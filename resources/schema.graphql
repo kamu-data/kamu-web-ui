@@ -5,8 +5,6 @@
 # make codegen-graphql-schema
 # ```
 
-directive @oneOf on INPUT_OBJECT
-
 type AccessTokenConnection {
 	"""
 	A shorthand for `edges { node { ... } }`
@@ -343,7 +341,12 @@ type DataBatch {
 }
 
 enum DataBatchFormat {
+	"""
+	Deprecated: Use `JSON_AOS` instead and expect it to become default in
+	future versions
+	"""
 	JSON
+	JSON_AOS
 	JSON_SOA
 	JSON_AOA
 	ND_JSON
@@ -1623,6 +1626,9 @@ type SaveDatasetEnvVarResultSuccess implements SaveDatasetEnvVarResult {
 
 input ScheduleInput @oneOf {
 	timeDelta: TimeDeltaInput
+	"""
+	Supported CRON syntax: min hour dayOfMonth month dayOfWeek
+	"""
 	cron5ComponentExpression: String
 }
 
@@ -1964,6 +1970,10 @@ type WebSocketProtocolDesc {
 	url: String!
 }
 
+directive @include(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+directive @oneOf on INPUT_OBJECT
+directive @skip(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+directive @specifiedBy(url: String!) on SCALAR
 schema {
 	query: Query
 	mutation: Mutation

@@ -399,8 +399,13 @@ export type DataBatch = {
 
 export enum DataBatchFormat {
     Csv = "CSV",
+    /**
+     * Deprecated: Use `JSON_AOS` instead and expect it to become default in
+     * future versions
+     */
     Json = "JSON",
     JsonAoa = "JSON_AOA",
+    JsonAos = "JSON_AOS",
     /** Deprecated: Use `ND_JSON` instead */
     JsonLd = "JSON_LD",
     JsonSoa = "JSON_SOA",
@@ -1822,6 +1827,7 @@ export type SaveDatasetEnvVarResultSuccess = SaveDatasetEnvVarResult & {
 };
 
 export type ScheduleInput =
+    /** Supported CRON syntax: min hour dayOfMonth month dayOfWeek */
     | { cron5ComponentExpression: Scalars["String"]; timeDelta?: never }
     | { cron5ComponentExpression?: never; timeDelta: TimeDeltaInput };
 

@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    OnChanges,
+    Output,
+    SimpleChanges,
+} from "@angular/core";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
@@ -13,7 +22,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
     styleUrls: ["./readme-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReadmeSectionComponent extends BaseComponent implements OnInit {
+export class ReadmeSectionComponent extends BaseComponent implements OnChanges {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public currentReadme?: MaybeNull<string>;
     @Input({ required: true }) public editingInProgress = false;
@@ -31,9 +40,10 @@ export class ReadmeSectionComponent extends BaseComponent implements OnInit {
     private datasetCommitService = inject(DatasetCommitService);
     private loggedUserService = inject(LoggedUserService);
 
-    public ngOnInit(): void {
-        if (this.currentReadme) {
-            this.readmeState = this.currentReadme;
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes.currentReadme && changes.currentReadme.currentValue !== changes.currentReadme.previousValue) {
+            this.readmeState = changes.currentReadme.currentValue as string;
+            this.editingInProgress = false;
         }
     }
 

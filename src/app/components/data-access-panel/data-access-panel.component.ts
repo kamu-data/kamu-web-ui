@@ -2,9 +2,9 @@ import { MaybeUndefined } from "./../../common/app.types";
 import { ProtocolsService } from "./../../services/protocols.service";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { DatasetBasicsFragment, DatasetEndpoints } from "src/app/api/kamu.graphql.interface";
-import { Clipboard } from "@angular/cdk/clipboard";
 import { Observable } from "rxjs";
-import { changeCopyIcon } from "src/app/common/app.helpers";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { DataAccessModalComponent } from "./data-access-modal/data-access-modal.component";
 
 @Component({
     selector: "app-data-access-panel",
@@ -16,16 +16,11 @@ export class DataAccessPanelComponent implements OnInit {
     @Input({ required: true }) datasetBasics: DatasetBasicsFragment;
     public protocols$: Observable<MaybeUndefined<DatasetEndpoints>>;
 
-    private clipboard = inject(Clipboard);
     private protocolsService = inject(ProtocolsService);
+    private ngbModalService = inject(NgbModal);
 
     ngOnInit(): void {
         this.initClipboardHints();
-    }
-
-    public copyToClipboard(event: MouseEvent, text: string): void {
-        this.clipboard.copy(text);
-        changeCopyIcon(event);
     }
 
     private initClipboardHints(): void {
@@ -33,5 +28,14 @@ export class DataAccessPanelComponent implements OnInit {
             accountName: this.datasetBasics.owner.accountName,
             datasetName: this.datasetBasics.name,
         });
+    }
+
+    public openDataAccessModal(): void {
+        const modalRef: NgbModalRef = this.ngbModalService.open(DataAccessModalComponent, {
+            size: "lg",
+            centered: true,
+        });
+        const modalRefInstance = modalRef.componentInstance as DataAccessModalComponent;
+        modalRefInstance.protocols$ = this.protocols$;
     }
 }

@@ -1,34 +1,11 @@
 @import "var";
 
-::ng-deep {
-    .mat-mdc-checkbox {
-        --mdc-checkbox-state-layer-size: 25px;
-
-        .mdc-checkbox__background {
-            width: 16px;
-            height: 16px;
-        }
-    }
-
-    .mdc-tab__ripple {
-        display: none;
-    }
-}
-
-.download-button {
-    height: 28px;
-}
-
 a {
     color: $app-navy-blue;
 }
 
 .select-menu-item {
     cursor: default;
-}
-
-.help-icon {
-    padding: 5px 0 0 5px;
 }
 
 .custom-container {
@@ -112,45 +89,5 @@ a {
         font-weight: 500;
         color: $app-color-fg-muted;
         flex-direction: column;
-    }
-}
-
-.copy-button {
-    border: 0;
-    outline: 0;
-    background: transparent;
-    height: 30px;
-
-    &:hover {
-        background: rgb(245 240 240);
-        border-radius: 5px;
-    }
-}
-
-.form-control {
-    &:focus {
-        box-shadow: none;
-        border-color: #dee2e6;
-    }
-}
-
-fieldset {
-    &.fieldset-border {
-        border: 1px solid #dee2e6;
-        padding: 0 1.4em 1em;
-        margin: 0 0 0.5em;
-        border-radius: 6px;
-    }
-
-    legend {
-        &.fieldset-border {
-            font-size: 12px;
-            font-weight: bold;
-            width: auto;
-            padding: 0 10px;
-            position: relative;
-            top: -10px;
-            background: white;
-        }
     }
 }

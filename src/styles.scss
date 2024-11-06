@@ -1528,3 +1528,22 @@ input {
         text-decoration: none;
     }
 }
+
+.form-control-data-access {
+    &:focus {
+        box-shadow: none;
+        border-color: #dee2e6;
+    }
+}
+
+.copy-button-data-access {
+    border: 0;
+    outline: 0;
+    background: transparent;
+    height: 30px;
+
+    &:hover {
+        background: rgb(245 240 240);
+        border-radius: 5px;
+    }
+}

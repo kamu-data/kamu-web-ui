@@ -1,0 +1,81 @@
+<div class="flex-column px-4 pb-4">
+    <div class="input-group mb-1">
+        <span class="fs-12 text-muted"> Share this dataset on the Web:</span>
+    </div>
+
+    <div class="select-menu-item align-items-start p-0 border-0 mb-2">
+        <div class="input-group mb-2">
+            <input
+                type="text"
+                class="form-control fs-12 rounded form-control-data-access"
+                data-autoselect=""
+                [value]="webLink.url"
+                #clipboardReference
+                readonly
+            />
+            <div class="input-group-button ms-1">
+                <button
+                    (click)="copyToClipboard($event, clipboardReference.value)"
+                    data-test-id="copyToClipboard-clipboardReference"
+                    aria-label="Copy to clipboard"
+                    class="copy-button-data-access ms-1"
+                    data-copy-feedback="Copied!"
+                    tabindex="0"
+                    role="button"
+                >
+                    <div style="position: relative; display: inline-block">
+                        <svg-icon name="copy" />
+                    </div>
+                    <div style="position: relative; display: none">
+                        <svg-icon name="checked" />
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="input-group mt-1">
+        <mat-checkbox color="primary" disabled="true">
+            <span class="fs-12">Stable</span>
+        </mat-checkbox>
+        <mat-icon
+            class="text-muted fs-5 help-icon"
+            matTooltip="Include the unique identifier of the dataset. This guarantees that link will point to the same dataset even if its name and owner changes over time."
+            [matTooltipPosition]="'right'"
+            >help_outline</mat-icon
+        >
+    </div>
+    <div class="input-group mt-1">
+        <mat-checkbox color="primary" disabled="true">
+            <span class="fs-12">Frozen</span>
+        </mat-checkbox>
+        <mat-icon
+            class="text-muted fs-5 help-icon"
+            matTooltip="Link to the state of a dataset at this specific point in time, for reproducibility. No matter how much time passes, everyone using this link will the the exact same data."
+            [matTooltipPosition]="'right'"
+            >help_outline</mat-icon
+        >
+    </div>
+    <div class="input-group mt-1 mb-3">
+        <mat-checkbox color="primary" disabled="true">
+            <span class="fs-12">DOI</span>
+        </mat-checkbox>
+        <mat-icon
+            class="text-muted fs-5 help-icon"
+            matTooltip="Produce a DOI.org identifier used for scientific publications."
+            [matTooltipPosition]="'right'"
+            >help_outline</mat-icon
+        >
+    </div>
+    <div class="w-100">
+        <mat-divider class="my-2" />
+        <div class="d-flex align-items-center">
+            <mat-icon class="text-muted fs-5 pt-1">info</mat-icon>
+            <span class="fs-12">
+                <a href="https://docs.kamu.dev/odf/spec/#dataset-identity" target="_blank" class="fs-12"
+                    >Dataset identity and references</a
+                >
+            </span>
+        </div>
+    </div>
+</div>

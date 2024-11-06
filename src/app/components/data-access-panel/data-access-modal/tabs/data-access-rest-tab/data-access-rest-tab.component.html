@@ -1,0 +1,112 @@
+<div class="flex-column px-4 pb-4 w-100">
+    <div class="input-group mb-1">
+        <span class="fs-12 text-muted"> Access last few events:</span>
+    </div>
+    <div class="select-menu-item align-items-start p-0 border-0 mb-4">
+        <div class="input-group">
+            <input
+                type="text"
+                class="form-control fs-12 rounded form-control-data-access"
+                data-autoselect=""
+                [value]="rest.tailUrl"
+                #clipboardRestUrlTail
+                readonly
+            />
+            <div class="input-group-button ms-1">
+                <button
+                    (click)="copyToClipboard($event, clipboardRestUrlTail.value)"
+                    data-test-id="copyToClipboard-clipboardRestUrlTail"
+                    aria-label="Copy to clipboard"
+                    class="copy-button-data-access ms-1"
+                    data-copy-feedback="Copied!"
+                    tabindex="0"
+                    role="button"
+                >
+                    <div style="position: relative; display: inline-block">
+                        <svg-icon name="copy" />
+                    </div>
+                    <div style="position: relative; display: none">
+                        <svg-icon name="checked" />
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="input-group mb-1">
+        <span class="fs-12 text-muted"> Execute an arbitrary SQL query:</span>
+    </div>
+    <div class="select-menu-item align-items-start p-0 border-0 mb-4">
+        <div class="input-group">
+            <input
+                type="text"
+                class="form-control fs-12 rounded form-control-data-access"
+                data-autoselect=""
+                [value]="rest.queryUrl"
+                #clipboardRestUrlQuery
+                readonly
+            />
+            <div class="input-group-button ms-1">
+                <button
+                    (click)="copyToClipboard($event, clipboardRestUrlQuery.value)"
+                    data-test-id="copyToClipboard-clipboardRestUrlQuery"
+                    aria-label="Copy to clipboard"
+                    class="copy-button-data-access ms-1"
+                    data-copy-feedback="Copied!"
+                    tabindex="0"
+                    role="button"
+                >
+                    <div style="position: relative; display: inline-block">
+                        <svg-icon name="copy" />
+                    </div>
+                    <div style="position: relative; display: none">
+                        <svg-icon name="checked" />
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="input-group mb-1">
+        <span class="fs-12 text-muted"> Push data (dataset must have a push source defined):</span>
+    </div>
+    <div class="select-menu-item align-items-start p-0 border-0 mb-4">
+        <div class="input-group">
+            <input
+                type="text"
+                class="form-control fs-12 rounded form-control-data-access"
+                data-autoselect=""
+                [value]="rest.pushUrl"
+                #clipboardRestUrlPush
+                readonly
+            />
+            <div class="input-group-button ms-1">
+                <button
+                    (click)="copyToClipboard($event, clipboardRestUrlPush.value)"
+                    data-test-id="copyToClipboard-clipboardRestUrlPush"
+                    aria-label="Copy to clipboard"
+                    class="copy-button-data-access ms-1"
+                    data-copy-feedback="Copied!"
+                    tabindex="0"
+                    role="button"
+                >
+                    <div style="position: relative; display: inline-block">
+                        <svg-icon name="copy" />
+                    </div>
+                    <div style="position: relative; display: none">
+                        <svg-icon name="checked" />
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="w-100">
+        <mat-divider class="my-2" />
+        <div class="d-flex align-items-center">
+            <mat-icon class="text-muted fs-5 pt-1">info</mat-icon>
+            <span class="fs-12">
+                <a href="https://docs.kamu.dev/node/protocols/rest-api/" target="_blank" class="fs-12"
+                    >REST API documentation</a
+                >
+            </span>
+        </div>
+    </div>
+</div>

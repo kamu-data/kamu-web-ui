@@ -1,0 +1,79 @@
+<div class="flex-column w-100 px-4 pb-4">
+    <div class="input-group mb-1">
+        <span class="fs-12 text-muted"> Pull dataset to local machine:</span>
+    </div>
+    <div class="align-items-start p-0 border-0 mb-4">
+        <div class="input-group">
+            <input
+                type="text"
+                class="form-control fs-12 rounded form-control-data-access"
+                data-autoselect=""
+                [value]="cli.pullCommand"
+                #clipboardKamuCliPull
+                readonly
+            />
+            <div class="input-group-button ms-1">
+                <button
+                    (click)="copyToClipboard($event, clipboardKamuCliPull.value)"
+                    data-test-id="copyToClipboard-clipboardKamuCliPull"
+                    aria-label="Copy to clipboard"
+                    class="copy-button-data-access ms-1"
+                    data-copy-feedback="Copied!"
+                    tabindex="0"
+                    role="button"
+                >
+                    <div style="position: relative; display: inline-block">
+                        <svg-icon name="copy" />
+                    </div>
+                    <div style="position: relative; display: none">
+                        <svg-icon name="checked" />
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="input-group mb-1">
+        <span class="fs-12 text-muted"> Push local updates to repository:</span>
+    </div>
+    <div class="align-items-start p-0 border-0 mb-4">
+        <div class="input-group">
+            <input
+                type="text"
+                class="form-control fs-12 rounded form-control-data-access"
+                data-autoselect=""
+                [value]="cli.pushCommand"
+                #clipboardKamuCliPush
+                readonly
+            />
+            <div class="input-group-button ms-1">
+                <button
+                    (click)="copyToClipboard($event, clipboardKamuCliPush.value)"
+                    data-test-id="copyToClipboard-clipboardKamuCliPush"
+                    aria-label="Copy to clipboard"
+                    class="copy-button-data-access ms-1"
+                    data-copy-feedback="Copied!"
+                    tabindex="0"
+                    role="button"
+                >
+                    <div style="position: relative; display: inline-block">
+                        <svg-icon name="copy" />
+                    </div>
+                    <div style="position: relative; display: none">
+                        <svg-icon name="checked" />
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="w-100">
+        <mat-divider class="my-2" />
+        <div class="d-flex align-items-center">
+            <mat-icon class="text-muted fs-5 pt-1">info</mat-icon>
+            <span class="fs-12">
+                <a href="https://docs.kamu.dev/cli/collab/repositories/" target="_blank" class="fs-12"
+                    >Working with repositories in Kamu CLI</a
+                >
+            </span>
+        </div>
+    </div>
+</div>

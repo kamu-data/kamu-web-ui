@@ -11,7 +11,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { ClipboardModule } from "@angular/cdk/clipboard";
-import { DataAccessModalComponent } from './data-access-modal/data-access-modal.component';
+import { DataAccessModalComponent } from "./data-access-modal/data-access-modal.component";
 
 @NgModule({
     declarations: [DataAccessPanelComponent, DataAccessModalComponent],

@@ -1,7 +1,15 @@
 <div *ngIf="protocols$ | async as protocols">
     <header class="select-menu-header">
         <div class="select-menu-title text-bold d-flex align-item-center d-flex align-items-center">Protocols</div>
-        <a class="fs-12">Manage API tokens</a>
+        <a
+            [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name]"
+            [queryParams]="{ tab: datasetViewType.Settings, section: datasetSettingsTabsEnum.VARIABLES_AND_SECRETS }"
+            class="fs-12"
+            (keydown.esc)="activeModal.close()"
+            (click)="activeModal.close()"
+            *ngIf="showApiTokensLink"
+            >Manage API tokens</a
+        >
     </header>
     <div class="custom-container my-4">
         <div class="layout-sidebar">

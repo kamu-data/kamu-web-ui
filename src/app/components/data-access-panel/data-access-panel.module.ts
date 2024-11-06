@@ -20,6 +20,7 @@ import { DataAccessStreamTabComponent } from "./data-access-modal/tabs/data-acce
 import { DataAccessCodeTabComponent } from "./data-access-modal/tabs/data-access-code-tab/data-access-code-tab.component";
 import { DataAccessOdataTabComponent } from "./data-access-modal/tabs/data-access-odata-tab/data-access-odata-tab.component";
 import { DataAccessExportTabComponent } from "./data-access-modal/tabs/data-access-export-tab/data-access-export-tab.component";
+import { RouterModule } from "@angular/router";
 
 @NgModule({
     declarations: [
@@ -47,6 +48,7 @@ import { DataAccessExportTabComponent } from "./data-access-modal/tabs/data-acce
         MatTooltipModule,
         ClipboardModule,
         ReactiveFormsModule,
+        RouterModule,
     ],
     exports: [DataAccessPanelComponent],
 })

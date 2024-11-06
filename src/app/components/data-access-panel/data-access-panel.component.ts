@@ -37,5 +37,6 @@ export class DataAccessPanelComponent implements OnInit {
         });
         const modalRefInstance = modalRef.componentInstance as DataAccessModalComponent;
         modalRefInstance.protocols$ = this.protocols$;
+        modalRefInstance.datasetBasics = this.datasetBasics;
     }
 }

@@ -1,21 +1,20 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { DataAccessCodeTabComponent } from "./data-access-code-tab.component";
 
-import { DataAccessCodeTabComponent } from './data-access-code-tab.component';
+describe("DataAccessCodeTabComponent", () => {
+    let component: DataAccessCodeTabComponent;
+    let fixture: ComponentFixture<DataAccessCodeTabComponent>;
 
-describe('DataAccessCodeTabComponent', () => {
-  let component: DataAccessCodeTabComponent;
-  let fixture: ComponentFixture<DataAccessCodeTabComponent>;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [DataAccessCodeTabComponent]
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            declarations: [DataAccessCodeTabComponent],
+        });
+        fixture = TestBed.createComponent(DataAccessCodeTabComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
     });
-    fixture = TestBed.createComponent(DataAccessCodeTabComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
 });

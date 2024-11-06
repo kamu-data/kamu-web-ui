@@ -1,0 +1,74 @@
+<div *ngIf="protocols$ | async as protocols">
+    <header class="select-menu-header">
+        <div class="select-menu-title text-bold d-flex align-item-center d-flex align-items-center">Protocols</div>
+        <a
+            [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name]"
+            [queryParams]="{ tab: datasetViewType.Settings, section: datasetSettingsTabsEnum.VARIABLES_AND_SECRETS }"
+            class="fs-12"
+            (keydown.esc)="activeModal.close()"
+            (click)="activeModal.close()"
+            *ngIf="showApiTokensLink"
+            >Manage API tokens</a
+        >
+    </header>
+    <div class="custom-container my-4">
+        <div class="layout-sidebar">
+            <div class="pr-md-4 pr-0">
+                <div>
+                    <nav>
+                        <ul role="list" class="action-list d-flex flex-column gap-1">
+                            <ng-container *ngFor="let navItem of accessDataOptions">
+                                <li
+                                    [class.action-list-item--nav-active]="activeTab === navItem.activeTab"
+                                    class="action-list-item"
+                                >
+                                    <a
+                                        class="action-list-content d-flex align-items-center"
+                                        (click)="navigateToSection(navItem.activeTab)"
+                                        attr.data-test-id="action-list-{{ navItem.activeTab }}-tab"
+                                    >
+                                        <span
+                                            class="text-muted pt-2 mr-1 d-inline-block"
+                                            [class]="navItem.iconClassName"
+                                        >
+                                            <mat-icon class="fs-4">{{ navItem.iconName }}</mat-icon>
+                                        </span>
+                                        <span class="action-list-item-label d-inline-block"> {{ navItem.name }} </span>
+                                    </a>
+                                </li>
+                            </ng-container>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <ng-container *ngIf="activeTab === dataAccessTabsEnum.LINK">
+            <app-data-access-link-tab [webLink]="protocols.webLink" />
+        </ng-container>
+        <ng-container *ngIf="activeTab === dataAccessTabsEnum.KAMU_CLI">
+            <app-data-access-kamu-cli-tab [cli]="protocols.cli" />
+        </ng-container>
+        <ng-container *ngIf="activeTab === dataAccessTabsEnum.REST">
+            <app-data-access-rest-tab [rest]="protocols.rest" />
+        </ng-container>
+        <ng-container *ngIf="activeTab === dataAccessTabsEnum.SQL">
+            <app-data-access-sql-tab
+                [flightSql]="protocols.flightsql"
+                [jdbc]="protocols.jdbc"
+                [postgreSql]="protocols.postgresql"
+            />
+        </ng-container>
+        <ng-container *ngIf="activeTab === dataAccessTabsEnum.STREAM">
+            <app-data-access-stream-tab [kafka]="protocols.kafka" [websocket]="protocols.websocket" />
+        </ng-container>
+        <ng-container *ngIf="activeTab === dataAccessTabsEnum.CODE">
+            <app-data-access-code-tab />
+        </ng-container>
+        <ng-container *ngIf="activeTab === dataAccessTabsEnum.ODATA">
+            <app-data-access-odata-tab [odata]="protocols.odata" />
+        </ng-container>
+        <ng-container *ngIf="activeTab === dataAccessTabsEnum.EXPORT">
+            <app-data-access-export-tab />
+        </ng-container>
+    </div>
+</div>

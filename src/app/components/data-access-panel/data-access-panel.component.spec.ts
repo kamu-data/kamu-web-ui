@@ -1,7 +1,5 @@
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DataAccessPanelComponent } from "./data-access-panel.component";
-import AppValues from "src/app/common/app.values";
-import { emitClickOnElementByDataTestId, getElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
@@ -55,21 +53,4 @@ describe("DataAccessPanelComponent", () => {
     it("should create", () => {
         expect(component).toBeTruthy();
     });
-
-    it("should copy to clipboard", fakeAsync(() => {
-        emitClickOnElementByDataTestId(fixture, "searchAdditionalButtons");
-
-        const menu = getElementByDataTestId(fixture, "menu");
-        expect(menu).toBeDefined();
-
-        const copyToClipboardButton = getElementByDataTestId(fixture, "copyToClipboard-clipboardReference");
-        emitClickOnElementByDataTestId(fixture, "copyToClipboard-clipboardReference");
-        expect(copyToClipboardButton.classList.contains("clipboard-btn--success")).toEqual(true);
-
-        tick(AppValues.LONG_DELAY_MS);
-
-        expect(copyToClipboardButton.classList.contains("clipboard-btn--success")).toEqual(false);
-
-        flush();
-    }));
 });

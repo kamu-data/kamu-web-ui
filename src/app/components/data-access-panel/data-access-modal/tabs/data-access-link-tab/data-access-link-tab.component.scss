@@ -1,0 +1,18 @@
+::ng-deep {
+    .mat-mdc-checkbox {
+        --mdc-checkbox-state-layer-size: 25px;
+
+        .mdc-checkbox__background {
+            width: 16px;
+            height: 16px;
+        }
+    }
+
+    .mdc-tab__ripple {
+        display: none;
+    }
+}
+
+.help-icon {
+    padding: 5px 0 0 5px;
+}

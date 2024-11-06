@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Fixed
 - Readme section refresh when navigating between datasets
+### Changed
+- `Get Data` panel redesign
 
 ## [0.28.3] - 2024-10-30
 ### Fixed

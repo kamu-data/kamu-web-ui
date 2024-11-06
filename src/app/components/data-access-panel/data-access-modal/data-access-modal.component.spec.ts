@@ -20,6 +20,7 @@ import { DataAccessStreamTabComponent } from "./tabs/data-access-stream-tab/data
 import { DataAccessCodeTabComponent } from "./tabs/data-access-code-tab/data-access-code-tab.component";
 import { DataAccessOdataTabComponent } from "./tabs/data-access-odata-tab/data-access-odata-tab.component";
 import { DataAccessExportTabComponent } from "./tabs/data-access-export-tab/data-access-export-tab.component";
+import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
 describe("DataAccessModalComponent", () => {
     let component: DataAccessModalComponent;
@@ -27,7 +28,7 @@ describe("DataAccessModalComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo],
+            providers: [Apollo, NgbActiveModal],
             declarations: [
                 DataAccessModalComponent,
                 DataAccessLinkTabComponent,

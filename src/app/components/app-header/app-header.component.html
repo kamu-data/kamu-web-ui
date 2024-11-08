@@ -121,6 +121,13 @@
 
                     <a
                         class="header-link py-2 py-md-3 mr-0 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
+                        [routerLink]="[URL_QUERY]"
+                    >
+                        Query
+                    </a>
+
+                    <a
+                        class="header-link py-2 py-md-3 mr-0 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
                         (click)="onDashboard()"
                         *ngIf="isAdmin"
                     >

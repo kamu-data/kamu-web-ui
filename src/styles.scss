@@ -611,7 +611,8 @@ router-outlet {
 #overview-data-table,
 #set-data-schema-event,
 #set-polling-source-topics,
-#query-explainer-table {
+#query-explainer-table,
+#global-query-table {
     * {
         padding: 0 8px;
         font-size: 12px;

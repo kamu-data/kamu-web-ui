@@ -165,6 +165,8 @@ import { MatChipsModule } from "@angular/material/chips";
         FlowsTableComponent,
         AngularMultiSelectModule,
         MatChipsModule,
+        RequestTimerComponent,
+        LoadMoreComponent,
     ],
     declarations: [
         DatasetViewHeaderComponent,

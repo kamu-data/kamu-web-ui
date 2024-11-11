@@ -1,10 +1,10 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { Observable, catchError, EMPTY } from "rxjs";
+import { Observable, catchError, EMPTY, Subject, ReplaySubject } from "rxjs";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { QueryExplainerInputOutputResponse, QueryExplainerInputType } from "../query-explainer/query-explainer.types";
-import { ToastrService } from "ngx-toastr";
 import { AppConfigService } from "../app-config.service";
+import { DataSqlErrorUpdate } from "../dataset-view/dataset.subscriptions.interface";
 
 @Injectable({
     providedIn: "root",
@@ -12,9 +12,21 @@ import { AppConfigService } from "../app-config.service";
 export class GlobalQueryService {
     private appConfigService = inject(AppConfigService);
     private http = inject(HttpClient);
-    private toastrService = inject(ToastrService);
     private baseUrl: string;
     private readonly DEFAULT_ROWS_LIMIT = 50;
+
+    private sqlError$: Subject<DataSqlErrorUpdate> = new ReplaySubject<DataSqlErrorUpdate>(1 /*bufferSize*/);
+    public emitSqlErrorOccurred(dataSqlErrorUpdate: DataSqlErrorUpdate) {
+        this.sqlError$.next(dataSqlErrorUpdate);
+    }
+
+    public resetSqlError(): void {
+        this.emitSqlErrorOccurred({ error: "" });
+    }
+
+    public get sqlErrorOccurrences(): Observable<DataSqlErrorUpdate> {
+        return this.sqlError$.asObservable();
+    }
 
     constructor() {
         this.baseUrl = `${this.appConfigService.apiServerHttpUrl}`;
@@ -30,9 +42,7 @@ export class GlobalQueryService {
         };
         return this.http.post<QueryExplainerInputOutputResponse>(url.href, body).pipe(
             catchError((e: HttpErrorResponse) => {
-                this.toastrService.error("", e.error as string, {
-                    disableTimeOut: "timeOut",
-                });
+                this.emitSqlErrorOccurred({ error: e.error as string });
                 return EMPTY;
             }),
         );

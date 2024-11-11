@@ -1,164 +1,233 @@
-<div class="query-container p-4">
-    <div class="box p-4">1</div>
-    <div class="search-result-container__content">
-        <div class="sql-query-editor-header flex-column justify-content-between">
-            <h2 class="box-title align-items-center pb-3 m-0">Query:</h2>
-            <div class="btn-group-parent">
-                <div class="d-flex">
-                    <button
-                        data-test-id="shareSqlQueryButton"
-                        (click)="shareQuery()"
-                        class="share-query-button border border-1 rounded d-flex justify-content-center align-items-center me-4"
-                    >
-                        <span class="mr-1 button-text"> Share query</span><mat-icon>share</mat-icon>
-                    </button>
-                    <button
-                        data-test-id="runSqlQueryButton"
-                        name="run sql button"
-                        (click)="runSQLRequest({ query: sqlRequestCode }, true)"
-                        class="sql-run-button border border-1 rounded-left-2 border-right-0 btn-group-item btn d-flex justify-content-center align-items-center"
-                    >
-                        <span>Run</span><mat-icon>play_arrow</mat-icon>
-                    </button>
-                    <button
-                        class="starred rounded-right-2 border-1 border btn-sm btn btn-group-item d-flex justify-content-center align-items-center"
-                        [matMenuTriggerFor]="menu"
-                        aria-label="Example icon-button with a menu"
-                        data-test-id="searchAdditionalButtons"
-                    >
-                        <mat-icon>arrow_drop_down</mat-icon>
-                    </button>
+<div class="container-main">
+    <div class="query-container py-4">
+        <div class="box p-4 schemes-container">
+            <div class="d-flex flex-column">
+                <label for="global-query-search-dataset" class="form-label d-block"> Search</label>
+                <div class="d-flex flex-row position-relative w-100">
+                    <input
+                        type="text"
+                        class="form-control"
+                        data-test-id="global-query-search-dataset"
+                        #searchDatasets
+                        placeholder="Enter dataset name..."
+                        [(ngModel)]="searchDataset"
+                        [ngbTypeahead]="search"
+                        [resultTemplate]="rt"
+                        [inputFormatter]="formatter"
+                        (selectItem)="onSelectItem($event)"
+                    />
+                    <button class="inner-btn" (click)="clearSearch()" data-test-id="clear-input">x</button>
                 </div>
-                <mat-menu #menu="matMenu">
-                    <div class="select-menu-modal notifications-component-menu-modal">
-                        <div class="select-menu-list">
-                            <button
-                                type="button"
-                                [disabled]="true"
-                                class="select-menu-item no-pointer flex-items-start"
+            </div>
+            <ng-template #rt let-r="result" let-t="term">
+                <div class="d-flex flex-row justify-content-between" [style.width.px]="searchDatasets.clientWidth - 28">
+                    <div class="search-result-item">
+                        <i class="bi bi-journal-album mr-2"></i>
+                        <ng-container *ngIf="!r.dummy">{{ r.dataset.owner.accountName }}/</ng-container>
+                        <ngb-highlight [result]="r.dataset.name" [term]="t" />
+                    </div>
+                    <div
+                        class="border rounded-1 flex-shrink-0 color-bg-tertiary px-1 f6 button-add color-text-tertiary ml-1"
+                    >
+                        Add
+                        <span class="d-inline-block ml-1 v-align-middle"><i class="bi bi-arrow-return-left"></i></span>
+                    </div>
+                </div>
+            </ng-template>
+
+            <div class="search-datasets mt-4">
+                <label for="global-query-search-dataset" class="form-label d-block"> Dataset schemes</label>
+                <mat-divider class="px-2 mt-1"></mat-divider>
+
+                <cdk-accordion
+                    [multi]="true"
+                    class="example-accordion mt-4"
+                    *ngIf="searchResult.length; else emptyTemplate"
+                >
+                    <cdk-accordion-item
+                        *ngFor="let item of searchResult; let index = index"
+                        #accordionItem="cdkAccordionItem"
+                        class="example-accordion-item"
+                        role="button"
+                        tabindex="0"
+                        [attr.id]="'accordion-header-' + index"
+                        [attr.aria-expanded]="accordionItem.expanded"
+                        [attr.aria-controls]="'accordion-body-' + index"
+                    >
+                        <div class="datatab-expanding-row">
+                            <div class="datatab-expanding-row-header" (click)="accordionItem.toggle()">
+                                <div class="datatab-expanding-row-header-content">
+                                    {{ item.datasetAlias }}
+                                </div>
+                                <ng-template [ngIf]="!accordionItem.expanded">
+                                    <mat-icon>keyboard_arrow_down</mat-icon>
+                                </ng-template>
+                                <ng-template [ngIf]="accordionItem.expanded">
+                                    <mat-icon>keyboard_arrow_up</mat-icon>
+                                </ng-template>
+                                <button
+                                    class="no-button d-flex"
+                                    (click)="deleteDataset(item.datasetAlias)"
+                                    title="Delete dataset"
+                                >
+                                    <mat-icon class="fs-4 hover">delete</mat-icon>
+                                </button>
+                            </div>
+                            <div
+                                class="example-accordion-item-body"
+                                role="region"
+                                [style.display]="accordionItem.expanded ? '' : 'none'"
+                                [attr.id]="'accordion-body-' + index"
+                                [attr.aria-labelledby]="'accordion-header-' + index"
                             >
                                 <div>
-                                    <div class="f5 text-bold">New Dataset from Query</div>
-                                    <div class="text-small color-fg-muted text-normal pb-1 lh-130">
-                                        Creates new derivative dataset using current query as the transformation
-                                    </div>
+                                    <app-dynamic-table
+                                        [hasTableHeader]="true"
+                                        [schemaFields]="item.schema.fields"
+                                        [idTable]="'schema-block-table'"
+                                    />
                                 </div>
-                            </button>
+                            </div>
                         </div>
-                        <ng-container *ngIf="isAdmin">
-                            <div class="select-menu-list">
-                                <mat-divider></mat-divider>
-                                <button
-                                    type="button"
-                                    (click)="verifyQueryResult()"
-                                    class="select-menu-item flex-items-start"
-                                >
-                                    <div>
-                                        <div class="f5 text-bold">Verify query result</div>
-                                        <div class="text-small color-fg-muted text-normal pb-1 lh-130">
-                                            You can verify the query result and make sure that you can trust it
-                                        </div>
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="select-menu-list">
-                                <mat-divider></mat-divider>
-                                <button
-                                    type="button"
-                                    (click)="copyCurlCommand()"
-                                    class="select-menu-item flex-items-start"
-                                >
-                                    <div>
-                                        <div class="f5 text-bold">Copy as curl command</div>
-                                        <div class="text-small color-fg-muted text-normal pb-1 lh-130">
-                                            You can verify the query result with curl command
-                                        </div>
-                                    </div>
-                                </button>
-                            </div>
-                        </ng-container>
+                    </cdk-accordion-item>
+                </cdk-accordion>
+                <ng-template #emptyTemplate>
+                    <p class="text-center mt-4">No datasets selected</p>
+                </ng-template>
+            </div>
+        </div>
+        <div class="search-result-container__content">
+            <div class="sql-query-editor-header flex-column justify-content-between">
+                <h2 class="box-title align-items-center pb-3 m-0">Query:</h2>
+                <div class="btn-group-parent">
+                    <div class="d-flex">
+                        <button
+                            data-test-id="shareSqlQueryButton"
+                            (click)="shareQuery()"
+                            class="share-query-button border border-1 rounded d-flex justify-content-center align-items-center me-4"
+                        >
+                            <span class="mr-1 button-text"> Share query</span><mat-icon>share</mat-icon>
+                        </button>
+                        <button
+                            data-test-id="runSqlQueryButton"
+                            name="run sql button"
+                            (click)="runSQLRequest({ query: sqlRequestCode }, true)"
+                            class="sql-run-button border border-1 rounded-left-2 border-right-0 btn-group-item btn d-flex justify-content-center align-items-center"
+                        >
+                            <span>Run</span><mat-icon>play_arrow</mat-icon>
+                        </button>
+                        <button
+                            class="starred rounded-right-2 border-1 border btn-sm btn btn-group-item d-flex justify-content-center align-items-center"
+                            [matMenuTriggerFor]="menu"
+                            aria-label="Example icon-button with a menu"
+                            data-test-id="searchAdditionalButtons"
+                        >
+                            <mat-icon>arrow_drop_down</mat-icon>
+                        </button>
                     </div>
-                </mat-menu>
+                    <mat-menu #menu="matMenu">
+                        <div class="select-menu-modal notifications-component-menu-modal">
+                            <div class="select-menu-list">
+                                <button
+                                    type="button"
+                                    [disabled]="true"
+                                    class="select-menu-item no-pointer flex-items-start"
+                                >
+                                    <div>
+                                        <div class="f5 text-bold">New Dataset from Query</div>
+                                        <div class="text-small color-fg-muted text-normal pb-1 lh-130">
+                                            Creates new derivative dataset using current query as the transformation
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
+                            <ng-container *ngIf="isAdmin">
+                                <div class="select-menu-list">
+                                    <mat-divider></mat-divider>
+                                    <button
+                                        type="button"
+                                        (click)="verifyQueryResult()"
+                                        class="select-menu-item flex-items-start"
+                                    >
+                                        <div>
+                                            <div class="f5 text-bold">Verify query result</div>
+                                            <div class="text-small color-fg-muted text-normal pb-1 lh-130">
+                                                You can verify the query result and make sure that you can trust it
+                                            </div>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div class="select-menu-list">
+                                    <mat-divider></mat-divider>
+                                    <button
+                                        type="button"
+                                        (click)="copyCurlCommand()"
+                                        class="select-menu-item flex-items-start"
+                                    >
+                                        <div>
+                                            <div class="f5 text-bold">Copy as curl command</div>
+                                            <div class="text-small color-fg-muted text-normal pb-1 lh-130">
+                                                You can verify the query result with curl command
+                                            </div>
+                                        </div>
+                                    </button>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </mat-menu>
+                </div>
             </div>
-        </div>
 
-        <div class="position-relative mt-4">
-            <ng-container *ngIf="!this.editorLoaded || sqlLoading">
-                <mat-progress-bar data-test-id="editor-progress-bar" class="position-absolute" mode="indeterminate" />
-            </ng-container>
+            <div class="position-relative mt-4">
+                <ng-container *ngIf="!this.editorLoaded || sqlLoading">
+                    <mat-progress-bar
+                        data-test-id="editor-progress-bar"
+                        class="position-absolute"
+                        mode="indeterminate"
+                    />
+                </ng-container>
 
-            <app-sql-editor
-                [(template)]="sqlRequestCode"
-                [error]="sqlErrorMarker$ | async"
-                (onRunSql)="runSql()"
-                (onEditorLoaded)="hideProgressBar()"
-            />
-
-            <div class="mt-3 text-end">
-                <app-request-timer
-                    class="badge"
-                    [class.text-bg-danger]="!sqlLoading && (sqlErrorMarker$ | async)"
-                    [class.text-bg-warning]="sqlLoading"
-                    [class.text-bg-success]="!sqlLoading"
-                    [sqlLoading]="sqlLoading"
+                <app-sql-editor
+                    [(template)]="sqlRequestCode"
+                    [error]="sqlErrorMarker$ | async"
+                    (onRunSql)="runSql()"
+                    (onEditorLoaded)="hideProgressBar()"
                 />
-            </div>
-        </div>
 
-        <ng-container *ngIf="output && output.data.length">
-            <div class="d-flex justify-content-between align-items-center">
-                <h2 class="box-title align-items-center pb-3 m-0">Result:</h2>
+                <div class="mt-3 text-end">
+                    <app-request-timer
+                        class="badge"
+                        [class.text-bg-danger]="!sqlLoading && (sqlErrorMarker$ | async)"
+                        [class.text-bg-warning]="sqlLoading"
+                        [class.text-bg-success]="!sqlLoading"
+                        [sqlLoading]="sqlLoading"
+                    />
+                </div>
             </div>
-            <ng-container *ngIf="output.data.length; else noRecords">
-                <app-dynamic-table
-                    [hasTableHeader]="true"
-                    [schemaFields]="schemaFields(output)"
-                    [dataRows]="tableSource(output)"
-                    [idTable]="'global-query-table'"
-                />
-                <app-load-more [isAllDataLoaded]="isAllDataLoaded" (loadMoreEmit)="loadMore($event)" class="mt-4" />
-            </ng-container>
-            <ng-template #noRecords>
-                <h3>0 records</h3>
-            </ng-template>
-        </ng-container>
-        <!-- <ng-container *ngIf="sqlErrorMarker$ | async as sqlErrorMarker">
+            <ng-container *ngIf="sqlErrorMarker$ | async as sqlErrorMarker">
                 <div class="d-flex justify-content-between align-items-center">
                     <h2 class="box-title align-items-center pb-3 m-0">Error:</h2>
                 </div>
-                <p class="sql-error-message" data-test-id="sql-error-message">{{ sqlErrorMarker }}</p>
+                <p class="sql-error-message" data-test-id="global-sql-error-message">{{ sqlErrorMarker }}</p>
             </ng-container>
-            <ng-container *ngIf="dataUpdate$ | async as dataUpdate">
-                <ng-container *ngIf="!(sqlErrorMarker$ | async) && dataUpdate.schema?.fields?.length">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h2 class="box-title align-items-center pb-3 m-0">Result:</h2>
-                    </div>
-                    <ng-container *ngIf="currentData.length; else noRecords">
-                        <app-dynamic-table
-                            [hasTableHeader]="true"
-                            [schemaFields]="dataUpdate.schema ? dataUpdate.schema.fields : []"
-                            [dataRows]="currentData"
-                            [idTable]="'result-query-table'"
-                        />
-                        <app-load-more
-                            [isAllDataLoaded]="isAllDataLoaded"
-                            (loadMoreEmit)="loadMore($event)"
-                            class="mt-4"
-                        />
-                    </ng-container>
-                    <ng-template #noRecords>
-                        <h3>0 records</h3>
-                    </ng-template>
+
+            <ng-container *ngIf="output && output.data.length && !(sqlErrorMarker$ | async)">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2 class="box-title align-items-center pb-3 m-0">Result:</h2>
+                </div>
+                <ng-container *ngIf="output.data.length; else noRecords">
+                    <app-dynamic-table
+                        [hasTableHeader]="true"
+                        [schemaFields]="schemaFields(output)"
+                        [dataRows]="tableSource(output)"
+                        [idTable]="'global-query-table'"
+                    />
+                    <app-load-more [isAllDataLoaded]="isAllDataLoaded" (loadMoreEmit)="loadMore($event)" class="mt-4" />
                 </ng-container>
+                <ng-template #noRecords>
+                    <h3>0 records</h3>
+                </ng-template>
             </ng-container>
-            <p
-                *ngIf="!(dataUpdate$ | async)?.schema?.fields?.length && !sqlLoading && !(sqlErrorMarker$ | async)"
-                class="search-result-container__content mt-4"
-            >
-                The current dataset does not contain any data. Need to
-                <a class="add-link" *ngIf="overviewUpdate$ | async as overviewUpdate" (click)="addData(overviewUpdate)">
-                    add data</a
-                >
-            </p> -->
+        </div>
     </div>
 </div>

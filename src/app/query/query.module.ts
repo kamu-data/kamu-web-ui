@@ -7,6 +7,9 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatMenuModule } from "@angular/material/menu";
 import { DynamicTableModule } from "../components/dynamic-table/dynamic-table.module";
+import { FormsModule } from "@angular/forms";
+import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
+import { CdkAccordionModule } from "@angular/cdk/accordion";
 
 @NgModule({
     declarations: [GlobalQueryComponent],
@@ -18,6 +21,9 @@ import { DynamicTableModule } from "../components/dynamic-table/dynamic-table.mo
         MatDividerModule,
         MatMenuModule,
         DatasetModule,
+        FormsModule,
+        NgbTypeaheadModule,
+        CdkAccordionModule,
     ],
 })
 export class QueryModule {}

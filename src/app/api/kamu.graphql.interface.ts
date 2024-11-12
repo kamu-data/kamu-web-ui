@@ -446,6 +446,7 @@ export enum DataQueryResultErrorKind {
 export type DataQueryResultSuccess = {
     __typename?: "DataQueryResultSuccess";
     data: DataBatch;
+    datasets?: Maybe<Array<DatasetState>>;
     limit: Scalars["Int"];
     schema?: Maybe<DataSchema>;
 };
@@ -794,6 +795,19 @@ export type DatasetPermissions = {
     canRename: Scalars["Boolean"];
     canSchedule: Scalars["Boolean"];
     canView: Scalars["Boolean"];
+};
+
+export type DatasetState = {
+    __typename?: "DatasetState";
+    /** Alias to be used in the query */
+    alias: Scalars["String"];
+    /**
+     * Last block hash of the input datasets that was or should be considered
+     * during the query planning
+     */
+    blockHash?: Maybe<Scalars["Multihash"]>;
+    /** Globally unique identity of the dataset */
+    id: Scalars["DatasetID"];
 };
 
 export enum DatasetVisibility {
@@ -3663,6 +3677,7 @@ export type DataQueryResultSuccessViewFragment = {
     __typename?: "DataQueryResultSuccess";
     schema?: { __typename?: "DataSchema"; format: DataSchemaFormat; content: string } | null;
     data: { __typename?: "DataBatch"; format: DataBatchFormat; content: string };
+    datasets?: Array<{ __typename?: "DatasetState"; id: string; alias: string; blockHash?: string | null }> | null;
 };
 
 export type DatasetBasicsFragment = {
@@ -4647,6 +4662,11 @@ export const DataQueryResultSuccessViewFragmentDoc = gql`
         data {
             format
             content
+        }
+        datasets {
+            id
+            alias
+            blockHash
         }
     }
 `;
@@ -5929,7 +5949,7 @@ export const GetDatasetDataSqlRunDocument = gql`
                 query: $query
                 queryDialect: SQL_DATA_FUSION
                 schemaFormat: PARQUET_JSON
-                dataFormat: JSON
+                dataFormat: JSON_AOS
                 limit: $limit
                 skip: $skip
             ) {

@@ -73,7 +73,7 @@
                                     mat-icon-button
                                     data-test-id="runSqlQueryRequestCode"
                                     name="run sql button"
-                                    (click)="runSQLRequest({ query: item.query }, true)"
+                                    (click)="runSQLRequest({ query: item.query })"
                                     class="sql-run-button rounded-2 btn-group-item btn d-flex justify-content-center align-items-center"
                                 >
                                     <span>Run</span><mat-icon>play_arrow</mat-icon>
@@ -87,143 +87,10 @@
     </div>
 
     <div class="search-result-container__content">
-        <div class="sql-query-editor-header flex-column justify-content-between">
-            <h2 class="box-title align-items-center pb-3 m-0">Query:</h2>
-            <div class="btn-group-parent" *ngIf="dataUpdate$ | async as dataUpdate">
-                <div class="d-flex">
-                    <button
-                        data-test-id="shareSqlQueryButton"
-                        (click)="shareQuery()"
-                        class="share-query-button border border-1 rounded d-flex justify-content-center align-items-center me-4"
-                    >
-                        <span class="mr-1 button-text"> Share query</span><mat-icon>share</mat-icon>
-                    </button>
-                    <button
-                        data-test-id="runSqlQueryButton"
-                        name="run sql button"
-                        (click)="runSQLRequest({ query: sqlRequestCode }, true)"
-                        [disabled]="!dataUpdate.schema?.fields?.length"
-                        class="sql-run-button border border-1 rounded-left-2 border-right-0 btn-group-item btn d-flex justify-content-center align-items-center"
-                    >
-                        <span>Run</span><mat-icon>play_arrow</mat-icon>
-                    </button>
-                    <button
-                        class="starred rounded-right-2 border-1 border btn-sm btn btn-group-item d-flex justify-content-center align-items-center"
-                        [matMenuTriggerFor]="menu"
-                        aria-label="Example icon-button with a menu"
-                        data-test-id="searchAdditionalButtons"
-                    >
-                        <mat-icon>arrow_drop_down</mat-icon>
-                    </button>
-                </div>
-                <mat-menu #menu="matMenu">
-                    <div class="select-menu-modal notifications-component-menu-modal">
-                        <div class="select-menu-list">
-                            <button
-                                type="button"
-                                [disabled]="true"
-                                class="select-menu-item no-pointer flex-items-start"
-                            >
-                                <div>
-                                    <div class="f5 text-bold">New Dataset from Query</div>
-                                    <div class="text-small color-fg-muted text-normal pb-1 lh-130">
-                                        Creates new derivative dataset using current query as the transformation
-                                    </div>
-                                </div>
-                            </button>
-                        </div>
-                        <ng-container *ngIf="isAdmin">
-                            <div class="select-menu-list">
-                                <mat-divider></mat-divider>
-                                <button
-                                    type="button"
-                                    (click)="verifyQueryResult()"
-                                    class="select-menu-item flex-items-start"
-                                >
-                                    <div>
-                                        <div class="f5 text-bold">Verify query result</div>
-                                        <div class="text-small color-fg-muted text-normal pb-1 lh-130">
-                                            You can verify the query result and make sure that you can trust it
-                                        </div>
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="select-menu-list">
-                                <mat-divider></mat-divider>
-                                <button
-                                    type="button"
-                                    (click)="copyCurlCommand()"
-                                    class="select-menu-item flex-items-start"
-                                >
-                                    <div>
-                                        <div class="f5 text-bold">Copy as curl command</div>
-                                        <div class="text-small color-fg-muted text-normal pb-1 lh-130">
-                                            You can verify the query result with curl command
-                                        </div>
-                                    </div>
-                                </button>
-                            </div>
-                        </ng-container>
-                    </div>
-                </mat-menu>
-            </div>
-        </div>
-
-        <div class="position-relative mt-4">
-            <ng-container *ngIf="!this.editorLoaded || sqlLoading">
-                <mat-progress-bar data-test-id="editor-progress-bar" class="position-absolute" mode="indeterminate" />
-            </ng-container>
-
-            <app-sql-editor
-                [(template)]="sqlRequestCode"
-                [error]="sqlErrorMarker$ | async"
-                (onRunSql)="runSql()"
-                (onEditorLoaded)="hideProgressBar()"
-            />
-
-            <div class="mt-3 text-end">
-                <app-request-timer
-                    class="badge"
-                    [class.text-bg-danger]="!sqlLoading && (sqlErrorMarker$ | async)"
-                    [class.text-bg-warning]="sqlLoading"
-                    [class.text-bg-success]="!sqlLoading"
-                    [sqlLoading]="sqlLoading"
-                />
-            </div>
-        </div>
-        <ng-container *ngIf="sqlErrorMarker$ | async as sqlErrorMarker">
-            <div class="d-flex justify-content-between align-items-center">
-                <h2 class="box-title align-items-center pb-3 m-0">Error:</h2>
-            </div>
-            <p class="sql-error-message" data-test-id="sql-error-message">{{ sqlErrorMarker }}</p>
-        </ng-container>
-        <ng-container *ngIf="dataUpdate$ | async as dataUpdate">
-            <ng-container *ngIf="!(sqlErrorMarker$ | async) && dataUpdate.schema?.fields?.length">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h2 class="box-title align-items-center pb-3 m-0">Result:</h2>
-                </div>
-                <ng-container *ngIf="currentData.length; else noRecords">
-                    <app-dynamic-table
-                        [hasTableHeader]="true"
-                        [schemaFields]="dataUpdate.schema ? dataUpdate.schema.fields : []"
-                        [dataRows]="currentData"
-                        [idTable]="'result-query-table'"
-                    />
-                    <app-load-more [isAllDataLoaded]="isAllDataLoaded" (loadMoreEmit)="loadMore($event)" class="mt-4" />
-                </ng-container>
-                <ng-template #noRecords>
-                    <h3>0 records</h3>
-                </ng-template>
-            </ng-container>
-        </ng-container>
-        <p
-            *ngIf="!(dataUpdate$ | async)?.schema?.fields?.length && !sqlLoading && !(sqlErrorMarker$ | async)"
-            class="search-result-container__content mt-4"
-        >
-            The current dataset does not contain any data. Need to
-            <a class="add-link" *ngIf="overviewUpdate$ | async as overviewUpdate" (click)="addData(overviewUpdate)">
-                add data</a
-            >
-        </p>
+        <app-query-and-result-sections
+            [sqlLoading]="sqlLoading"
+            [sqlRequestCode]="sqlRequestCode"
+            (runSQLRequestEmit)="runSQLRequest($event)"
+        />
     </div>
 </div>

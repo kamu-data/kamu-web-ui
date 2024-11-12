@@ -86,6 +86,7 @@ import { FlowsComponent } from "./additional-components/flows-component/flows.co
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatChipsModule } from "@angular/material/chips";
+import { QueryAndResultSectionsComponent } from './additional-components/data-component/query-and-result-sections/query-and-result-sections.component';
 
 @NgModule({
     imports: [
@@ -210,6 +211,7 @@ import { MatChipsModule } from "@angular/material/chips";
         RequestTimerComponent,
         AddDataModalComponent,
         FileFromUrlModalComponent,
+        QueryAndResultSectionsComponent,
     ],
 })
 export class DatasetModule {

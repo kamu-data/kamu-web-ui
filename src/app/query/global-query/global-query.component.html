@@ -2,7 +2,7 @@
     <div class="query-container py-4">
         <div class="box p-4 schemes-container">
             <div class="d-flex flex-column">
-                <label for="global-query-search-dataset" class="form-label d-block"> Search</label>
+                <label for="global-query-search-dataset" class="form-label d-block fw-500"> Search</label>
                 <div class="d-flex flex-row position-relative w-100">
                     <input
                         type="text"
@@ -16,7 +16,9 @@
                         [inputFormatter]="formatter"
                         (selectItem)="onSelectItem($event)"
                     />
-                    <button class="inner-btn" (click)="clearSearch()" data-test-id="clear-input">x</button>
+                    <button class="inner-btn" *ngIf="searchDataset" (click)="clearSearch()" data-test-id="clear-input">
+                        x
+                    </button>
                 </div>
             </div>
             <ng-template #rt let-r="result" let-t="term">
@@ -36,8 +38,8 @@
             </ng-template>
 
             <div class="search-datasets mt-4">
-                <label for="global-query-search-dataset" class="form-label d-block"> Dataset schemes</label>
-                <mat-divider class="px-2 mt-1"></mat-divider>
+                <label for="global-query-search-dataset" class="form-label d-block fw-500"> Dataset schemes</label>
+                <mat-divider class="px-2 mt-2 mb-4"></mat-divider>
 
                 <cdk-accordion
                     [multi]="true"
@@ -80,13 +82,16 @@
                                 [attr.id]="'accordion-body-' + index"
                                 [attr.aria-labelledby]="'accordion-header-' + index"
                             >
-                                <div>
+                                <div *ngIf="item.schema; else emptySchemaTemplate">
                                     <app-dynamic-table
                                         [hasTableHeader]="true"
                                         [schemaFields]="item.schema.fields"
                                         [idTable]="'schema-block-table'"
                                     />
                                 </div>
+                                <ng-template #emptySchemaTemplate>
+                                    <p class="mt-3 text-center">No schema</p>
+                                </ng-template>
                             </div>
                         </div>
                     </cdk-accordion-item>

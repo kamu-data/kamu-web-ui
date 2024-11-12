@@ -112,10 +112,9 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
                         const schema: MaybeNull<DatasetSchema> = parseCurrentSchema(
                             data.datasets.byId.metadata.currentSchema,
                         );
-                        if (schema) {
-                            this.searchResult = [...this.searchResult, { datasetAlias, schema }];
-                            this.cdr.detectChanges();
-                        }
+
+                        this.searchResult = [...this.searchResult, { datasetAlias, schema }];
+                        this.cdr.detectChanges();
                     }
                 });
         }

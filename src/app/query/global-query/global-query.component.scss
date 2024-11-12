@@ -82,6 +82,10 @@
 .example-accordion-item {
     display: block;
     border: solid 1px #ccc;
+
+    &:last-child {
+        border-bottom: 1px solid #ccc;
+    }
 }
 
 .example-accordion-item-body {

@@ -91,6 +91,13 @@
             [sqlLoading]="sqlLoading"
             [sqlRequestCode]="sqlRequestCode"
             (runSQLRequestEmit)="runSQLRequest($event)"
-        />
+        >
+            <p class="search-result-container__content mt-4">
+                The current dataset does not contain any data. Need to
+                <a class="add-link" *ngIf="overviewUpdate$ | async as overviewUpdate" (click)="addData(overviewUpdate)">
+                    add data</a
+                >
+            </p>
+        </app-query-and-result-sections>
     </div>
 </div>

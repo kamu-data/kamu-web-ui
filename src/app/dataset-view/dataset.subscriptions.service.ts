@@ -14,7 +14,7 @@ import { MaybeNull } from "../common/app.types";
 @Injectable({ providedIn: "root" })
 export class DatasetSubscriptionsService {
     private overview$: Subject<OverviewUpdate> = new ReplaySubject<OverviewUpdate>(1 /*bufferSize*/);
-    private sqlQueryData$: Subject<DataUpdate> = new ReplaySubject<DataUpdate>(1 /*bufferSize*/);
+    private sqlQueryData$: Subject<MaybeNull<DataUpdate>> = new ReplaySubject<MaybeNull<DataUpdate>>(1 /*bufferSize*/);
     private sqlError$: Subject<DataSqlErrorUpdate> = new ReplaySubject<DataSqlErrorUpdate>(1 /*bufferSize*/);
     private history$: Subject<MaybeNull<DatasetHistoryUpdate>> = new ReplaySubject<MaybeNull<DatasetHistoryUpdate>>(
         1 /*bufferSize*/,
@@ -35,11 +35,11 @@ export class DatasetSubscriptionsService {
 
     // SQL queries
 
-    public emitSqlQueryDataChanged(dataUpdate: DataUpdate): void {
+    public emitSqlQueryDataChanged(dataUpdate: MaybeNull<DataUpdate>): void {
         this.sqlQueryData$.next(dataUpdate);
     }
 
-    public get sqlQueryDataChanges(): Observable<DataUpdate> {
+    public get sqlQueryDataChanges(): Observable<MaybeNull<DataUpdate>> {
         return this.sqlQueryData$.asObservable();
     }
 

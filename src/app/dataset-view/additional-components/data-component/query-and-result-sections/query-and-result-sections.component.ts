@@ -12,7 +12,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ToastrService } from "ngx-toastr";
 import { map, Observable, switchMap, tap } from "rxjs";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { MaybeUndefined } from "src/app/common/app.types";
+import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import AppValues from "src/app/common/app.values";
 import { BaseComponent } from "src/app/common/base.component";
 import { UploadPrepareResponse, UploadPrepareData } from "src/app/common/ingest-via-file-upload.types";
@@ -36,7 +36,7 @@ import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscr
 export class QueryAndResultSectionsComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public sqlLoading: boolean;
     sqlErrorMarker$: Observable<string>;
-    public dataUpdate$: Observable<DataUpdate>;
+    public dataUpdate$: Observable<MaybeNull<DataUpdate>>;
     @Input({ required: true }) public sqlRequestCode: string;
     public currentData: DataRow[] = [];
     public isAllDataLoaded = false;
@@ -53,27 +53,29 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
     private datasetSubsService = inject(DatasetSubscriptionsService);
 
     public ngOnInit(): void {
+        this.datasetSubsService.emitSqlQueryDataChanged(null);
         this.sqlErrorMarker$ = this.datasetSubsService.sqlErrorOccurrences.pipe(
             map((data: DataSqlErrorUpdate) => data.error),
         );
         this.dataUpdate$ = this.datasetSubsService.sqlQueryDataChanges.pipe(
-            tap((dataUpdate: DataUpdate) => {
-                if (dataUpdate.currentVocab?.offsetColumn) {
-                    this.offsetColumnName = dataUpdate.currentVocab.offsetColumn;
+            tap((dataUpdate: MaybeNull<DataUpdate>) => {
+                if (dataUpdate) {
+                    if (dataUpdate.currentVocab?.offsetColumn) {
+                        this.offsetColumnName = dataUpdate.currentVocab.offsetColumn;
+                    }
+                    this.isAllDataLoaded = dataUpdate.content.length < this.rowsLimit;
+                    this.currentData = this.skipRows
+                        ? [...this.currentData, ...dataUpdate.content]
+                        : dataUpdate.content;
+                    this.datasetSubsService.resetSqlError();
                 }
-                this.isAllDataLoaded = dataUpdate.content.length < this.rowsLimit;
-                this.currentData = this.skipRows ? [...this.currentData, ...dataUpdate.content] : dataUpdate.content;
-                this.datasetSubsService.resetSqlError();
             }),
         );
-
-        //this.runSQLRequest({ query: this.sqlRequestCode }, true);
     }
     private skipRows: MaybeUndefined<number>;
     private rowsLimit: number = AppValues.SQL_QUERY_LIMIT;
     public editorLoaded = false;
     private offsetColumnName = AppValues.DEFAULT_OFFSET_COLUMN_NAME;
-    //  public currentData: DataRow[] = [];
 
     public get isAdmin(): boolean {
         return this.loggedUserService.isAdmin;

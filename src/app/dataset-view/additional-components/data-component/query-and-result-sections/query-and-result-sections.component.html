@@ -1,6 +1,6 @@
 <div class="sql-query-editor-header flex-column justify-content-between">
     <h2 class="box-title align-items-center pb-3 m-0">Query:</h2>
-    <div class="btn-group-parent" *ngIf="dataUpdate$ | async as dataUpdate">
+    <div class="btn-group-parent">
         <div class="d-flex">
             <button
                 data-test-id="shareSqlQueryButton"
@@ -11,6 +11,7 @@
             </button>
             <button
                 data-test-id="runSqlQueryButton"
+                [disabled]="!sqlRequestCode"
                 name="run sql button"
                 (click)="runSQLRequest({ query: sqlRequestCode }, true)"
                 class="sql-run-button border border-1 rounded-left-2 border-right-0 btn-group-item btn d-flex justify-content-center align-items-center"
@@ -115,9 +116,6 @@
     </ng-container>
 </ng-container>
 
-<p
-    *ngIf="!(dataUpdate$ | async)?.schema?.fields?.length && !sqlLoading && !(sqlErrorMarker$ | async)"
-    class="search-result-container__content mt-4"
->
-    The current dataset does not contain any data.
-</p>
+<ng-content
+    *ngIf="(dataUpdate$ | async)?.schema?.fields?.length == 0 && !sqlLoading && !(sqlErrorMarker$ | async)"
+></ng-content>

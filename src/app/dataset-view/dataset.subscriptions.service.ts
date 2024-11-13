@@ -24,6 +24,7 @@ export class DatasetSubscriptionsService {
     private permissions$: Subject<DatasetPermissionsFragment> = new ReplaySubject<DatasetPermissionsFragment>(
         1 /*bufferSize*/,
     );
+    private involvedSqlDatasetsId$: Subject<string[]> = new ReplaySubject<string[]>(1 /*bufferSize*/);
 
     public emitOverviewChanged(data: OverviewUpdate): void {
         this.overview$.next(data);
@@ -53,6 +54,14 @@ export class DatasetSubscriptionsService {
 
     public get sqlErrorOccurrences(): Observable<DataSqlErrorUpdate> {
         return this.sqlError$.asObservable();
+    }
+
+    public emitInvolvedSqlDatasetsId(ids: string[]): void {
+        this.involvedSqlDatasetsId$.next(ids);
+    }
+
+    public get involvedSqlDatasetsIdChanges(): Observable<string[]> {
+        return this.involvedSqlDatasetsId$.asObservable();
     }
 
     // history

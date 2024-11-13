@@ -1,6 +1,15 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { debounceTime, distinctUntilChanged, finalize, Observable, OperatorFunction, switchMap } from "rxjs";
+import {
+    combineLatest,
+    debounceTime,
+    distinctUntilChanged,
+    finalize,
+    map,
+    Observable,
+    OperatorFunction,
+    switchMap,
+} from "rxjs";
 import { BaseComponent } from "src/app/common/base.component";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetRequestBySql, DatasetSchema } from "src/app/interface/dataset.interface";
@@ -13,6 +22,7 @@ import { parseCurrentSchema } from "src/app/common/app.helpers";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 import { SearchApi } from "src/app/api/search.api";
 import { GlobalQuerySearchItem } from "./global-query.model";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 
 @Component({
     selector: "app-global-query",
@@ -33,8 +43,32 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
     private datasetService = inject(DatasetService);
     private cdr = inject(ChangeDetectorRef);
     private appSearchAPI = inject(SearchApi);
+    private datasetSubsService = inject(DatasetSubscriptionsService);
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        this.datasetSubsService.emitInvolvedSqlDatasetsId([]);
+        this.datasetSubsService.involvedSqlDatasetsIdChanges
+            .pipe(
+                switchMap((ids: string[]) => {
+                    const array = ids.map((id) => this.datasetService.requestDatasetSchema(id));
+                    return combineLatest(array).pipe(
+                        map((datasets: GetDatasetSchemaQuery[]) => {
+                            const result = datasets.map((item) => {
+                                const datasetAlias = item.datasets.byId?.alias;
+                                const schema = parseCurrentSchema(item.datasets.byId?.metadata.currentSchema);
+                                return { datasetAlias, schema } as GlobalQuerySearchItem;
+                            });
+                            return result;
+                        }),
+                    );
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe((data: GlobalQuerySearchItem[]) => {
+                this.searchResult = data;
+                this.cdr.detectChanges();
+            });
+    }
 
     public deleteDataset(datasetAlias: string): void {
         this.searchResult = this.searchResult.filter(
@@ -69,22 +103,25 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
         });
         if (value.__typename !== TypeNames.allDataType && !this.inputDatasets.has(inputDataset)) {
             this.inputDatasets.add(inputDataset);
-
-            this.datasetService
-                .requestDatasetSchema(id)
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe((data: GetDatasetSchemaQuery) => {
-                    if (data.datasets.byId) {
-                        const datasetAlias = (data.datasets.byId as DatasetBasicsFragment).alias;
-                        const schema: MaybeNull<DatasetSchema> = parseCurrentSchema(
-                            data.datasets.byId.metadata.currentSchema,
-                        );
-
-                        this.searchResult = [...this.searchResult, { datasetAlias, schema }];
-                        this.cdr.detectChanges();
-                    }
-                });
+            this.requestDatasetSchemaById(id);
         }
+    }
+
+    private requestDatasetSchemaById(id: string): void {
+        this.datasetService
+            .requestDatasetSchema(id)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((data: GetDatasetSchemaQuery) => {
+                if (data.datasets.byId) {
+                    const datasetAlias = (data.datasets.byId as DatasetBasicsFragment).alias;
+                    const schema: MaybeNull<DatasetSchema> = parseCurrentSchema(
+                        data.datasets.byId.metadata.currentSchema,
+                    );
+
+                    this.searchResult = [...this.searchResult, { datasetAlias, schema }];
+                    this.cdr.detectChanges();
+                }
+            });
     }
 
     public clearSearch(): void {

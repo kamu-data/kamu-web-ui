@@ -202,6 +202,7 @@ export class DatasetService {
             map((result: GetDatasetDataSqlRunQuery) => {
                 const queryResult = result.data.query;
                 if (queryResult.__typename === "DataQueryResultSuccess") {
+                    const involvedDatasetsId = queryResult.datasets?.map((item) => item.id) ?? [];
                     const content: DataRow[] = DatasetService.parseDataRows(queryResult);
                     const schema: MaybeNull<DatasetSchema> = queryResult.schema
                         ? DatasetService.parseSchema(queryResult.schema.content)
@@ -213,6 +214,7 @@ export class DatasetService {
                         currentVocab: this.currentSetVocab,
                     };
                     this.datasetSubsService.emitSqlQueryDataChanged(dataUpdate);
+                    this.datasetSubsService.emitInvolvedSqlDatasetsId(involvedDatasetsId);
                     this.datasetSubsService.resetSqlError();
                 } else if (queryResult.errorKind === DataQueryResultErrorKind.InvalidSql) {
                     this.datasetSubsService.emitSqlErrorOccurred({

@@ -2,7 +2,7 @@
     <div class="query-container py-4">
         <div class="box p-4 schemes-container">
             <div class="d-flex flex-column">
-                <label for="global-query-search-dataset" class="form-label d-block fw-500"> Search</label>
+                <h2 class="mb-1">Search:</h2>
                 <div class="d-flex flex-row position-relative w-100">
                     <input
                         type="text"
@@ -38,7 +38,7 @@
             </ng-template>
 
             <div class="search-datasets mt-4">
-                <label for="global-query-search-dataset" class="form-label d-block fw-500"> Dataset schemes</label>
+                <h2>Dataset schemes:</h2>
                 <mat-divider class="px-2 mt-2 mb-4"></mat-divider>
 
                 <cdk-accordion
@@ -99,6 +99,12 @@
                 <ng-template #emptyTemplate>
                     <p class="text-center mt-4">No datasets selected</p>
                 </ng-template>
+            </div>
+
+            <div class="mt-100">
+                <h2>Saved queries:</h2>
+                <mat-divider class="px-2 mt-2 mb-4"></mat-divider>
+                <app-saved-queries-section></app-saved-queries-section>
             </div>
         </div>
         <div class="search-result-container__content">

@@ -1,0 +1,70 @@
+<cdk-accordion class="example-accordion">
+    <cdk-accordion-item
+        [disabled]="true"
+        *ngFor="let item of savedQueries; let index = index"
+        #accordionItem="cdkAccordionItem"
+        class="example-accordion-item"
+        role="button"
+        tabindex="0"
+        [attr.id]="'accordion-header-' + index"
+        [attr.aria-expanded]="accordionItem.expanded"
+        [attr.aria-controls]="'accordion-body-' + index"
+    >
+        <div class="datatab-activity-item">
+            <div class="datatab-expanding-row">
+                <div class="datatab-expanding-row-header" (click)="accordionItem.toggle()">
+                    <div class="datatab-expanding-row-header-content">
+                        <div class="datatab-activity-row-summary">
+                            <div class="datatab-activity-timestamp">{{ item.time }}</div>
+                            <div class="datatab-activity-icon">
+                                <div
+                                    class="ace-icon ace-icon-size-small cfc-color-active ace-icon-configuration ng-star-inserted"
+                                >
+                                    <mat-icon class="datatab-activity-icon-size">query_stats</mat-icon>
+                                </div>
+                            </div>
+                            <div class="datatab-activity-info-container">
+                                <div
+                                    class="datatab-activity-title"
+                                    style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
+                                    title=""
+                                >
+                                    <span> {{ item.title }} </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ng-template [ngIf]="!accordionItem.expanded">
+                        <mat-icon>keyboard_arrow_down</mat-icon>
+                    </ng-template>
+                    <ng-template [ngIf]="accordionItem.expanded">
+                        <mat-icon>keyboard_arrow_up</mat-icon>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="example-accordion-item-body pt-3 pb-3"
+            role="region"
+            [style.display]="accordionItem.expanded ? '' : 'none'"
+            [attr.id]="'accordion-body-' + index"
+            [attr.aria-labelledby]="'accordion-header-' + index"
+        >
+            {{ item.title }} <br />
+            <code style="display: block; white-space: pre-wrap">{{ item.query }}</code>
+            <div class="d-inline">
+                <div class="btn-group-parent float-none">
+                    <button
+                        mat-icon-button
+                        data-test-id="runSqlQueryRequestCode"
+                        name="run sql button"
+                        class="sql-run-button rounded-2 btn-group-item btn d-flex justify-content-center align-items-center"
+                    >
+                        <span>Run</span><mat-icon>play_arrow</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </cdk-accordion-item>
+</cdk-accordion>

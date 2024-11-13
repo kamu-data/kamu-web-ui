@@ -87,6 +87,7 @@ import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatChipsModule } from "@angular/material/chips";
 import { QueryAndResultSectionsComponent } from "./additional-components/data-component/query-and-result-sections/query-and-result-sections.component";
+import { SavedQueriesSectionComponent } from "./additional-components/data-component/saved-queries-section/saved-queries-section.component";
 
 @NgModule({
     imports: [
@@ -169,6 +170,7 @@ import { QueryAndResultSectionsComponent } from "./additional-components/data-co
         RequestTimerComponent,
         LoadMoreComponent,
         QueryAndResultSectionsComponent,
+        SavedQueriesSectionComponent,
     ],
     declarations: [
         DatasetViewHeaderComponent,
@@ -213,6 +215,7 @@ import { QueryAndResultSectionsComponent } from "./additional-components/data-co
         AddDataModalComponent,
         FileFromUrlModalComponent,
         QueryAndResultSectionsComponent,
+        SavedQueriesSectionComponent,
     ],
 })
 export class DatasetModule {

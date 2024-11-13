@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit
 import { Location } from "@angular/common";
 import { Observable } from "rxjs";
 import AppValues from "src/app/common/app.values";
-import DataTabValues from "./mock.data";
 import { DatasetFlowType, DatasetKind, OffsetInterval } from "../../../api/kamu.graphql.interface";
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetRequestBySql } from "../../../interface/dataset.interface";
@@ -21,7 +20,6 @@ import { NavigationService } from "src/app/services/navigation.service";
 @Component({
     selector: "app-data",
     templateUrl: "./data.component.html",
-    styleUrls: ["./data.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataComponent extends BaseComponent implements OnInit {
@@ -30,7 +28,6 @@ export class DataComponent extends BaseComponent implements OnInit {
     @Input() public resultTime: number;
     @Output() public runSQLRequestEmit = new EventEmitter<DatasetRequestBySql>();
 
-    public savedQueries = DataTabValues.savedQueries;
     public sqlRequestCode = `select\n  *\nfrom `;
 
     private offsetColumnName = AppValues.DEFAULT_OFFSET_COLUMN_NAME;

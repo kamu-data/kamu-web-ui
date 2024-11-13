@@ -23,6 +23,7 @@ import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.int
 import { SearchApi } from "src/app/api/search.api";
 import { GlobalQuerySearchItem } from "./global-query.model";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-global-query",
@@ -46,21 +47,13 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
     private datasetSubsService = inject(DatasetSubscriptionsService);
 
     ngOnInit(): void {
+        this.initSqlQueryFromUrl();
         this.datasetSubsService.emitInvolvedSqlDatasetsId([]);
         this.datasetSubsService.involvedSqlDatasetsIdChanges
             .pipe(
                 switchMap((ids: string[]) => {
-                    const array = ids.map((id) => this.datasetService.requestDatasetSchema(id));
-                    return combineLatest(array).pipe(
-                        map((datasets: GetDatasetSchemaQuery[]) => {
-                            const result = datasets.map((item) => {
-                                const datasetAlias = item.datasets.byId?.alias;
-                                const schema = parseCurrentSchema(item.datasets.byId?.metadata.currentSchema);
-                                return { datasetAlias, schema } as GlobalQuerySearchItem;
-                            });
-                            return result;
-                        }),
-                    );
+                    const schemaResponses = ids.map((id: string) => this.datasetService.requestDatasetSchema(id));
+                    return this.processSchemaResponses(schemaResponses);
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
@@ -68,6 +61,28 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
                 this.searchResult = data;
                 this.cdr.detectChanges();
             });
+    }
+
+    private initSqlQueryFromUrl(): void {
+        const sqlQueryFromUrl = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_SQL_QUERY);
+        if (sqlQueryFromUrl) {
+            this.sqlRequestCode = sqlQueryFromUrl;
+        }
+    }
+
+    private processSchemaResponses(
+        schemaResponses: Observable<GetDatasetSchemaQuery>[],
+    ): Observable<GlobalQuerySearchItem[]> {
+        return combineLatest(schemaResponses).pipe(
+            map((datasets: GetDatasetSchemaQuery[]) => {
+                const result = datasets.map((item: GetDatasetSchemaQuery) => {
+                    const datasetAlias = item.datasets.byId?.alias;
+                    const schema = parseCurrentSchema(item.datasets.byId?.metadata.currentSchema);
+                    return { datasetAlias, schema } as GlobalQuerySearchItem;
+                });
+                return result;
+            }),
+        );
     }
 
     public deleteDataset(datasetAlias: string): void {
@@ -131,7 +146,6 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
     public runSQLRequest(params: DatasetRequestBySql): void {
         this.sqlLoading = true;
         this.datasetService
-            // TODO: Propagate limit from UI and display when it was reached
             .requestDatasetDataSqlRun(params)
             .pipe(
                 finalize(() => {

@@ -4,6 +4,10 @@
     margin-left: auto;
 }
 
+h2 {
+    margin: 0;
+}
+
 .query-container {
     display: grid;
     align-items: start;
@@ -13,49 +17,6 @@
 
 .schemes-container {
     min-height: 393px;
-}
-
-.sql-query-editor-header {
-    h2 {
-        width: max-content;
-        display: inline-block;
-    }
-
-    .btn-group-parent {
-        float: right;
-
-        .btn-group-item span {
-            font-size: 17px;
-            font-weight: 600;
-        }
-    }
-}
-
-.sql-run-button {
-    color: #1a7f37;
-    width: min-content;
-    padding: 5px 10px;
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-}
-
-.share-query-button {
-    color: #1a7f37;
-    padding: 5px 10px;
-    font-weight: 700;
-    background: #f6f8fa;
-
-    .button-text {
-        font-size: 16px;
-    }
-}
-
-.lh-130 {
-    line-height: 130%;
-}
-
-.no-pointer {
-    cursor: not-allowed;
 }
 
 .search-result-item {
@@ -115,4 +76,8 @@
             max-width: calc(100% - 24px);
         }
     }
+}
+
+.mt-100 {
+    margin-top: 100px;
 }

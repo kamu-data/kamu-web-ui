@@ -50,6 +50,8 @@ import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { FlowsComponent } from "./additional-components/flows-component/flows.component";
 import { RouterTestingModule } from "@angular/router/testing";
 import { promiseWithCatch } from "../common/app.helpers";
+import { QueryAndResultSectionsComponent } from "./additional-components/data-component/query-and-result-sections/query-and-result-sections.component";
+import { SavedQueriesSectionComponent } from "./additional-components/data-component/saved-queries-section/saved-queries-section.component";
 
 describe("DatasetComponent", () => {
     let component: DatasetComponent;
@@ -80,6 +82,8 @@ describe("DatasetComponent", () => {
                 SqlEditorComponent,
                 RequestTimerComponent,
                 FlowsComponent,
+                QueryAndResultSectionsComponent,
+                SavedQueriesSectionComponent,
             ],
             imports: [
                 AngularSvgIconModule.forRoot(),

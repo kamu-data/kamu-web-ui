@@ -1,5 +1,6 @@
 <div class="resizable pt-4">
     <ngx-monaco-editor
+        #monacoEditor
         [ngStyle]="{ height: height, width: width }"
         (onInit)="onInitEditor($event)"
         [options]="EDITOR_OPTIONS"
@@ -7,4 +8,5 @@
         (ngModelChange)="modelChange()"
     />
     <div class="cell-border-bottom"></div>
+    <div *ngIf="!template" class="placeholder-class" (click)="clickPlaceholder()">{{ placeholder }}</div>
 </div>

@@ -4,6 +4,7 @@
     position: relative;
     border-radius: 3px;
     border: 1px solid $app-color-border-default;
+    z-index: 9999;
 }
 
 .cell-border-bottom {
@@ -20,4 +21,13 @@
     background-position: calc(100% / 2) -364px;
     background-size: initial;
     background-repeat: no-repeat;
+}
+
+.placeholder-class {
+    position: absolute;
+    top: 20px;
+    left: 65px;
+    background: none;
+    z-index: 1;
+    opacity: 0.5;
 }

@@ -38,7 +38,7 @@
             </ng-template>
 
             <div class="search-datasets mt-4">
-                <h2>Dataset schemes:</h2>
+                <h2>Dataset schemas:</h2>
                 <mat-divider class="px-2 mt-2 mb-4"></mat-divider>
 
                 <cdk-accordion
@@ -52,6 +52,7 @@
                         class="example-accordion-item"
                         role="button"
                         tabindex="0"
+                        [expanded]="true"
                         [attr.id]="'accordion-header-' + index"
                         [attr.aria-expanded]="accordionItem.expanded"
                         [attr.aria-controls]="'accordion-body-' + index"

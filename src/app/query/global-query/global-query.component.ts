@@ -37,7 +37,7 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
     public searchResult: GlobalQuerySearchItem[] = [];
 
     //Search
-    public inputDatasets = new Set<string>();
+    public loadedDatasets = new Set<string>();
     public searchDataset = "";
     private readonly delayTime: number = AppValues.SHORT_DELAY_MS;
 
@@ -89,9 +89,9 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
         this.searchResult = this.searchResult.filter(
             (item: GlobalQuerySearchItem) => item.datasetAlias !== datasetAlias,
         );
-        this.inputDatasets.forEach((item) => {
+        this.loadedDatasets.forEach((item) => {
             if (item.includes(datasetAlias)) {
-                this.inputDatasets.delete(item);
+                this.loadedDatasets.delete(item);
             }
         });
     }
@@ -116,8 +116,8 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
             datasetRef: id,
             alias: name,
         });
-        if (value.__typename !== TypeNames.allDataType && !this.inputDatasets.has(inputDataset)) {
-            this.inputDatasets.add(inputDataset);
+        if (value.__typename !== TypeNames.allDataType && !this.loadedDatasets.has(inputDataset)) {
+            this.loadedDatasets.add(inputDataset);
             this.requestDatasetSchemaById(id);
         }
     }

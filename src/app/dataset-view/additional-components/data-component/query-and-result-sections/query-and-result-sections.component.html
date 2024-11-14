@@ -3,6 +3,7 @@
     <div class="btn-group-parent">
         <div class="d-flex">
             <button
+                [disabled]="!sqlRequestCode"
                 data-test-id="shareSqlQueryButton"
                 (click)="shareQuery()"
                 class="share-query-button border border-1 rounded d-flex justify-content-center align-items-center me-4"
@@ -19,6 +20,7 @@
                 <span>Run</span><mat-icon>play_arrow</mat-icon>
             </button>
             <button
+                [disabled]="!sqlRequestCode"
                 class="starred rounded-right-2 border-1 border btn-sm btn btn-group-item d-flex justify-content-center align-items-center"
                 [matMenuTriggerFor]="menu"
                 aria-label="Example icon-button with a menu"

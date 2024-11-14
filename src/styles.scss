@@ -241,6 +241,12 @@ markdown {
 
 .header-link {
     text-decoration: none;
+    color: #f1f1f1;
+
+    &:hover {
+        text-decoration: none;
+        color: #d4d4c9;
+    }
 }
 
 #app-header {
@@ -252,10 +258,6 @@ markdown {
     align-items: center;
     justify-content: space-between;
     background-color: $app-dark;
-
-    * {
-        color: $app-primary;
-    }
 
     .navbar-nav {
         margin: auto;
@@ -942,6 +944,12 @@ router-outlet {
         display: flex;
         justify-content: flex-end;
         align-items: flex-end;
+    }
+
+    .header-link {
+        mat-icon {
+            display: none;
+        }
     }
 }
 

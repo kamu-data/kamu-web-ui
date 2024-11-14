@@ -107,6 +107,14 @@
                     >
                 </ng-template>
 
+                <a
+                    class="header-link d-flex align-items-center py-2 py-md-3 mr-4 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
+                    [routerLink]="[URL_QUERY]"
+                >
+                    <mat-icon class="fs-4">query_stats</mat-icon>
+                    <span> Query</span>
+                </a>
+
                 <ng-template [ngIf]="isUserLoggedIn()">
                     <a
                         class="header-link d-flex align-items-center py-2 py-md-3 mr-4 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
@@ -118,14 +126,6 @@
                     >
                         <mat-icon class="fs-4">book</mat-icon>
                         <span>Your Datasets </span>
-                    </a>
-
-                    <a
-                        class="header-link d-flex align-items-center py-2 py-md-3 mr-4 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
-                        [routerLink]="[URL_QUERY]"
-                    >
-                        <mat-icon class="fs-4">query_stats</mat-icon>
-                        <span> Query</span>
                     </a>
 
                     <a

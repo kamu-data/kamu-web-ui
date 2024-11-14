@@ -10,9 +10,10 @@ import { DynamicTableModule } from "../components/dynamic-table/dynamic-table.mo
 import { FormsModule } from "@angular/forms";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
+import { SearchAndSchemasSectionComponent } from "./global-query/search-and-schemas-section/search-and-schemas-section.component";
 
 @NgModule({
-    declarations: [GlobalQueryComponent],
+    declarations: [GlobalQueryComponent, SearchAndSchemasSectionComponent],
     imports: [
         CommonModule,
         MatProgressBarModule,

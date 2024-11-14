@@ -4,10 +4,6 @@
     margin-left: auto;
 }
 
-h2 {
-    margin: 0;
-}
-
 .query-container {
     display: grid;
     align-items: start;
@@ -15,69 +11,69 @@ h2 {
     column-gap: 1.5rem;
 }
 
-.schemes-container {
-    min-height: 393px;
-}
+// .schemes-container {
+//     min-height: 393px;
+// }
 
-.search-result-item {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 80%;
-}
+// .search-result-item {
+//     overflow: hidden;
+//     text-overflow: ellipsis;
+//     white-space: nowrap;
+//     width: 80%;
+// }
 
-.inner-btn {
-    position: absolute;
-    width: 10px;
-    font-weight: 550;
-    border: none;
-    background-color: transparent;
-    line-height: 32px;
-    left: calc(100% - 30px);
+// .inner-btn {
+//     position: absolute;
+//     width: 10px;
+//     font-weight: 550;
+//     border: none;
+//     background-color: transparent;
+//     line-height: 32px;
+//     left: calc(100% - 30px);
 
-    &:hover {
-        color: blue;
-    }
-}
+//     &:hover {
+//         color: blue;
+//     }
+// }
 
-.example-accordion-item {
-    display: block;
-    border: solid 1px #ccc;
+// .example-accordion-item {
+//     display: block;
+//     border: solid 1px #ccc;
 
-    &:last-child {
-        border-bottom: 1px solid #ccc;
-    }
-}
+//     &:last-child {
+//         border-bottom: 1px solid #ccc;
+//     }
+// }
 
-.example-accordion-item-body {
-    border-top: 1px solid #ccc;
-}
+// .example-accordion-item-body {
+//     border-top: 1px solid #ccc;
+// }
 
-.datatab-expanding-row {
-    transition: margin 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: margin;
+// .datatab-expanding-row {
+//     transition: margin 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+//     will-change: margin;
 
-    &-header {
-        color: #000;
-        font-size: 13px;
-        font-weight: 400;
-        line-height: 20px;
-        cursor: pointer;
-        display: flex;
-        padding: 4px 10px;
-        background: #f6f8fa;
+//     &-header {
+//         color: #000;
+//         font-size: 13px;
+//         font-weight: 400;
+//         line-height: 20px;
+//         cursor: pointer;
+//         display: flex;
+//         padding: 4px 10px;
+//         background: #f6f8fa;
 
-        &:hover {
-            cursor: pointer;
-        }
+//         &:hover {
+//             cursor: pointer;
+//         }
 
-        &-content {
-            flex-grow: 1;
-            max-width: calc(100% - 24px);
-        }
-    }
-}
+//         &-content {
+//             flex-grow: 1;
+//             max-width: calc(100% - 24px);
+//         }
+//     }
+// }
 
-.mt-100 {
-    margin-top: 100px;
-}
+// .mt-100 {
+//     margin-top: 100px;
+// }

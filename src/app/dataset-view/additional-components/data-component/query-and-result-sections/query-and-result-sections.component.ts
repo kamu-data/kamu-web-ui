@@ -1,3 +1,4 @@
+import { SqlQueryService } from "src/app/services/sql-query.service";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -25,7 +26,6 @@ import { FileUploadService } from "src/app/services/file-upload.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { AppConfigService } from "src/app/app-config.service";
-import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 
 @Component({
     selector: "app-query-and-result-sections",
@@ -50,14 +50,19 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
     private toastService = inject(ToastrService);
     private appConfigService = inject(AppConfigService);
     private cdr = inject(ChangeDetectorRef);
-    private datasetSubsService = inject(DatasetSubscriptionsService);
+    private sqlQueryService = inject(SqlQueryService);
+
+    private skipRows: MaybeUndefined<number>;
+    private rowsLimit: number = AppValues.SQL_QUERY_LIMIT;
+    public editorLoaded = false;
+    private offsetColumnName = AppValues.DEFAULT_OFFSET_COLUMN_NAME;
 
     public ngOnInit(): void {
-        this.datasetSubsService.emitSqlQueryDataChanged(null);
-        this.sqlErrorMarker$ = this.datasetSubsService.sqlErrorOccurrences.pipe(
+        this.sqlQueryService.emitSqlQueryDataChanged(null);
+        this.sqlErrorMarker$ = this.sqlQueryService.sqlErrorOccurrences.pipe(
             map((data: DataSqlErrorUpdate) => data.error),
         );
-        this.dataUpdate$ = this.datasetSubsService.sqlQueryDataChanges.pipe(
+        this.dataUpdate$ = this.sqlQueryService.sqlQueryDataChanges.pipe(
             tap((dataUpdate: MaybeNull<DataUpdate>) => {
                 if (dataUpdate) {
                     if (dataUpdate.currentVocab?.offsetColumn) {
@@ -67,15 +72,11 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
                     this.currentData = this.skipRows
                         ? [...this.currentData, ...dataUpdate.content]
                         : dataUpdate.content;
-                    this.datasetSubsService.resetSqlError();
+                    this.sqlQueryService.resetSqlError();
                 }
             }),
         );
     }
-    private skipRows: MaybeUndefined<number>;
-    private rowsLimit: number = AppValues.SQL_QUERY_LIMIT;
-    public editorLoaded = false;
-    private offsetColumnName = AppValues.DEFAULT_OFFSET_COLUMN_NAME;
 
     public get isAdmin(): boolean {
         return this.loggedUserService.isAdmin;

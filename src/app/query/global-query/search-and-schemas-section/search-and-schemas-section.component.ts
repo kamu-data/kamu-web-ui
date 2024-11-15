@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { GlobalQuerySearchItem } from "../global-query.model";
-import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { BaseComponent } from "src/app/common/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { combineLatest, debounceTime, distinctUntilChanged, map, Observable, OperatorFunction, switchMap } from "rxjs";
@@ -13,6 +12,7 @@ import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.int
 import { SearchApi } from "src/app/api/search.api";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import AppValues from "src/app/common/app.values";
+import { SqlQueryService } from "src/app/services/sql-query.service";
 
 @Component({
     selector: "app-search-and-schemas-section",
@@ -26,14 +26,14 @@ export class SearchAndSchemasSectionComponent extends BaseComponent implements O
     public searchDataset = "";
     private readonly delayTime: number = AppValues.SHORT_DELAY_MS;
 
-    private datasetSubsService = inject(DatasetSubscriptionsService);
     private cdr = inject(ChangeDetectorRef);
     private datasetService = inject(DatasetService);
     private appSearchAPI = inject(SearchApi);
+    private sqlQueryService = inject(SqlQueryService);
 
     public ngOnInit(): void {
-        this.datasetSubsService.emitInvolvedSqlDatasetsId([]);
-        this.datasetSubsService.involvedSqlDatasetsIdChanges
+        this.sqlQueryService.emitInvolvedSqlDatasetsId([]);
+        this.sqlQueryService.involvedSqlDatasetsIdChanges
             .pipe(
                 switchMap((ids: string[]) => {
                     const schemaResponses = ids.map((id: string) => this.datasetService.requestDatasetSchema(id));

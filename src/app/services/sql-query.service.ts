@@ -1,31 +1,31 @@
-import { DatasetSubscriptionsService } from "./../dataset-view/dataset.subscriptions.service";
 import { inject, Injectable } from "@angular/core";
 import { Observable, ReplaySubject, Subject, map } from "rxjs";
 import { GetDatasetDataSqlRunQuery, DataQueryResultErrorKind } from "../api/kamu.graphql.interface";
 import { MaybeNull } from "../common/app.types";
 import { SqlExecutionError } from "../common/errors";
-import { DataSqlErrorUpdate, DataUpdate } from "../dataset-view/dataset.subscriptions.interface";
+import { DataSqlErrorUpdate } from "../dataset-view/dataset.subscriptions.interface";
 import { DatasetRequestBySql, DataRow, DatasetSchema } from "../interface/dataset.interface";
 import { DatasetApi } from "../api/dataset.api";
 import { parseDataRows, parseSchema } from "../common/data.helpers";
+import { SqlQueryResponseState } from "../query/global-query/global-query.model";
 
 @Injectable({
     providedIn: "root",
 })
 export class SqlQueryService {
     private datasetApi = inject(DatasetApi);
-    private datasetSubsService = inject(DatasetSubscriptionsService);
 
-    private sqlQueryData$: Subject<MaybeNull<DataUpdate>> = new ReplaySubject<MaybeNull<DataUpdate>>(1 /*bufferSize*/);
+    private sqlQueryResponse$: Subject<MaybeNull<SqlQueryResponseState>> = new ReplaySubject<
+        MaybeNull<SqlQueryResponseState>
+    >(1 /*bufferSize*/);
     private sqlError$: Subject<DataSqlErrorUpdate> = new ReplaySubject<DataSqlErrorUpdate>(1 /*bufferSize*/);
-    private involvedSqlDatasetsId$: Subject<string[]> = new ReplaySubject<string[]>(1 /*bufferSize*/);
 
-    public emitSqlQueryDataChanged(dataUpdate: MaybeNull<DataUpdate>): void {
-        this.sqlQueryData$.next(dataUpdate);
+    public emitSqlQueryResponseChanged(dataUpdate: MaybeNull<SqlQueryResponseState>): void {
+        this.sqlQueryResponse$.next(dataUpdate);
     }
 
-    public get sqlQueryDataChanges(): Observable<MaybeNull<DataUpdate>> {
-        return this.sqlQueryData$.asObservable();
+    public get sqlQueryResponseChanges(): Observable<MaybeNull<SqlQueryResponseState>> {
+        return this.sqlQueryResponse$.asObservable();
     }
 
     public emitSqlErrorOccurred(dataSqlErrorUpdate: DataSqlErrorUpdate) {
@@ -40,14 +40,6 @@ export class SqlQueryService {
         return this.sqlError$.asObservable();
     }
 
-    public emitInvolvedSqlDatasetsId(ids: string[]): void {
-        this.involvedSqlDatasetsId$.next(ids);
-    }
-
-    public get involvedSqlDatasetsIdChanges(): Observable<string[]> {
-        return this.involvedSqlDatasetsId$.asObservable();
-    }
-
     public requestDataSqlRun(params: DatasetRequestBySql): Observable<void> {
         return this.datasetApi.getDatasetDataSqlRun(params).pipe(
             map((result: GetDatasetDataSqlRunQuery) => {
@@ -59,12 +51,12 @@ export class SqlQueryService {
                         ? parseSchema(queryResult.schema.content)
                         : null;
 
-                    const dataUpdate: DataUpdate = {
+                    const sqlQueryResponse: SqlQueryResponseState = {
                         content,
                         schema,
+                        involvedDatasetsId,
                     };
-                    this.emitSqlQueryDataChanged(dataUpdate);
-                    this.emitInvolvedSqlDatasetsId(involvedDatasetsId);
+                    this.emitSqlQueryResponseChanged(sqlQueryResponse);
                     this.resetSqlError();
                 } else if (queryResult.errorKind === DataQueryResultErrorKind.InvalidSql) {
                     this.emitSqlErrorOccurred({

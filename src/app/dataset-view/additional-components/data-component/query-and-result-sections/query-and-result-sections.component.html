@@ -77,7 +77,7 @@
 
     <app-sql-editor
         [(template)]="sqlRequestCode"
-        [error]="sqlErrorMarker$ | async"
+        [error]="sqlError"
         (onRunSql)="runSql()"
         (onEditorLoaded)="hideProgressBar()"
     />
@@ -85,28 +85,28 @@
     <div class="mt-3 text-end">
         <app-request-timer
             class="badge"
-            [class.text-bg-danger]="!sqlLoading && (sqlErrorMarker$ | async)"
+            [class.text-bg-danger]="!sqlLoading && sqlError"
             [class.text-bg-warning]="sqlLoading"
             [class.text-bg-success]="!sqlLoading"
             [sqlLoading]="sqlLoading"
         />
     </div>
 </div>
-<ng-container *ngIf="sqlErrorMarker$ | async as sqlErrorMarker">
+<ng-container *ngIf="sqlError">
     <div class="d-flex justify-content-between align-items-center">
         <h2 class="box-title align-items-center pb-3 m-0">Error:</h2>
     </div>
-    <p class="sql-error-message" data-test-id="sql-error-message">{{ sqlErrorMarker }}</p>
+    <p class="sql-error-message" data-test-id="sql-error-message">{{ sqlError }}</p>
 </ng-container>
-<ng-container *ngIf="dataUpdate$ | async as dataUpdate">
-    <ng-container *ngIf="!(sqlErrorMarker$ | async) && dataUpdate.schema?.fields?.length">
+<ng-container>
+    <ng-container *ngIf="!sqlError && sqlQueryResponse?.schema?.fields?.length">
         <div class="d-flex justify-content-between align-items-center">
             <h2 class="box-title align-items-center pb-3 m-0">Result:</h2>
         </div>
         <ng-container *ngIf="currentData.length; else noRecords">
             <app-dynamic-table
                 [hasTableHeader]="true"
-                [schemaFields]="dataUpdate.schema ? dataUpdate.schema.fields : []"
+                [schemaFields]="sqlQueryResponse?.schema?.fields!"
                 [dataRows]="currentData"
                 [idTable]="'result-query-table'"
             />
@@ -118,6 +118,4 @@
     </ng-container>
 </ng-container>
 
-<ng-content
-    *ngIf="(dataUpdate$ | async)?.schema?.fields?.length == 0 && !sqlLoading && !(sqlErrorMarker$ | async)"
-></ng-content>
+<ng-content *ngIf="sqlQueryResponse?.schema?.fields?.length == 0 && !sqlLoading && !sqlError"></ng-content>

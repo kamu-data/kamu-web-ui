@@ -1,4 +1,3 @@
-import { SqlQueryService } from "src/app/services/sql-query.service";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -6,18 +5,18 @@ import {
     EventEmitter,
     inject,
     Input,
-    OnInit,
+    OnChanges,
     Output,
+    SimpleChanges,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ToastrService } from "ngx-toastr";
-import { map, Observable, switchMap, tap } from "rxjs";
+import { switchMap, tap } from "rxjs";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import AppValues from "src/app/common/app.values";
 import { BaseComponent } from "src/app/common/base.component";
 import { UploadPrepareResponse, UploadPrepareData } from "src/app/common/ingest-via-file-upload.types";
-import { DataSqlErrorUpdate, DataUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DataRow, DatasetRequestBySql } from "src/app/interface/dataset.interface";
 import ProjectLinks from "src/app/project-links";
 import { QueryExplainerService } from "src/app/query-explainer/query-explainer.service";
@@ -26,6 +25,7 @@ import { FileUploadService } from "src/app/services/file-upload.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { AppConfigService } from "src/app/app-config.service";
+import { SqlQueryResponseState } from "src/app/query/global-query/global-query.model";
 
 @Component({
     selector: "app-query-and-result-sections",
@@ -33,13 +33,11 @@ import { AppConfigService } from "src/app/app-config.service";
     styleUrls: ["./query-and-result-sections.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class QueryAndResultSectionsComponent extends BaseComponent implements OnInit {
+export class QueryAndResultSectionsComponent extends BaseComponent implements OnChanges {
     @Input({ required: true }) public sqlLoading: boolean;
-    sqlErrorMarker$: Observable<string>;
-    public dataUpdate$: Observable<MaybeNull<DataUpdate>>;
+    @Input({ required: true }) sqlError: MaybeNull<string>;
     @Input({ required: true }) public sqlRequestCode: string;
-    public currentData: DataRow[] = [];
-    public isAllDataLoaded = false;
+    @Input({ required: true }) public sqlQueryResponse: MaybeNull<SqlQueryResponseState>;
     @Output() public runSQLRequestEmit = new EventEmitter<DatasetRequestBySql>();
 
     private loggedUserService = inject(LoggedUserService);
@@ -50,32 +48,25 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
     private toastService = inject(ToastrService);
     private appConfigService = inject(AppConfigService);
     private cdr = inject(ChangeDetectorRef);
-    private sqlQueryService = inject(SqlQueryService);
 
-    private skipRows: MaybeUndefined<number>;
-    private rowsLimit: number = AppValues.SQL_QUERY_LIMIT;
+    public skipRows: MaybeUndefined<number>;
+    public rowsLimit: number = AppValues.SQL_QUERY_LIMIT;
     public editorLoaded = false;
-    private offsetColumnName = AppValues.DEFAULT_OFFSET_COLUMN_NAME;
+    public currentData: DataRow[] = [];
+    public isAllDataLoaded: boolean;
 
-    public ngOnInit(): void {
-        this.sqlQueryService.emitSqlQueryDataChanged(null);
-        this.sqlErrorMarker$ = this.sqlQueryService.sqlErrorOccurrences.pipe(
-            map((data: DataSqlErrorUpdate) => data.error),
-        );
-        this.dataUpdate$ = this.sqlQueryService.sqlQueryDataChanges.pipe(
-            tap((dataUpdate: MaybeNull<DataUpdate>) => {
-                if (dataUpdate) {
-                    if (dataUpdate.currentVocab?.offsetColumn) {
-                        this.offsetColumnName = dataUpdate.currentVocab.offsetColumn;
-                    }
-                    this.isAllDataLoaded = dataUpdate.content.length < this.rowsLimit;
-                    this.currentData = this.skipRows
-                        ? [...this.currentData, ...dataUpdate.content]
-                        : dataUpdate.content;
-                    this.sqlQueryService.resetSqlError();
-                }
-            }),
-        );
+    ngOnChanges(changes: SimpleChanges): void {
+        if (
+            changes.sqlQueryResponse &&
+            changes.sqlQueryResponse.currentValue &&
+            changes.sqlQueryResponse.currentValue !== changes.sqlQueryResponse.previousValue
+        ) {
+            const currentResponse = changes.sqlQueryResponse.currentValue as SqlQueryResponseState;
+            this.isAllDataLoaded = currentResponse.content.length < this.rowsLimit;
+            this.currentData = this.skipRows
+                ? [...this.currentData, ...currentResponse.content]
+                : currentResponse.content;
+        }
     }
 
     public get isAdmin(): boolean {

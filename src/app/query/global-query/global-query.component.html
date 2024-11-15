@@ -5,6 +5,8 @@
         <div class="search-result-container__content">
             <app-query-and-result-sections
                 [sqlLoading]="sqlLoading"
+                [sqlError]="sqlErrorMarker$ | async"
+                [sqlQueryResponse]="sqlQueryResponse$ | async"
                 [sqlRequestCode]="sqlRequestCode"
                 (runSQLRequestEmit)="runSQLRequest($event)"
             >

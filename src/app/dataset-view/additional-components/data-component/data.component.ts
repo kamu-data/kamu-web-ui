@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
 import { Location } from "@angular/common";
-import { Observable } from "rxjs";
+import { map, Observable } from "rxjs";
 import AppValues from "src/app/common/app.values";
 import { DatasetFlowType, DatasetKind, OffsetInterval } from "../../../api/kamu.graphql.interface";
-import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { DataSqlErrorUpdate, OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetRequestBySql } from "../../../interface/dataset.interface";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { BaseComponent } from "src/app/common/base.component";
@@ -16,6 +16,8 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
 import { NavigationService } from "src/app/services/navigation.service";
+import { SqlQueryResponseState } from "src/app/query/global-query/global-query.model";
+import { SqlQueryService } from "src/app/services/sql-query.service";
 
 @Component({
     selector: "app-data",
@@ -32,16 +34,22 @@ export class DataComponent extends BaseComponent implements OnInit {
 
     private offsetColumnName = AppValues.DEFAULT_OFFSET_COLUMN_NAME;
     public overviewUpdate$: Observable<OverviewUpdate>;
+    public sqlErrorMarker$: Observable<string>;
+    public sqlQueryResponse$: Observable<MaybeNull<SqlQueryResponseState>>;
 
     private datasetSubsService = inject(DatasetSubscriptionsService);
     private location = inject(Location);
     private ngbModalService = inject(NgbModal);
     private datasetFlowsService = inject(DatasetFlowsService);
     private navigationService = inject(NavigationService);
+    private sqlQueryService = inject(SqlQueryService);
 
     public ngOnInit(): void {
         this.overviewUpdate$ = this.datasetSubsService.overviewChanges;
-
+        this.sqlErrorMarker$ = this.sqlQueryService.sqlErrorOccurrences.pipe(
+            map((data: DataSqlErrorUpdate) => data.error),
+        );
+        this.sqlQueryResponse$ = this.sqlQueryService.sqlQueryResponseChanges;
         this.buildSqlRequestCode();
         this.runSQLRequest({ query: this.sqlRequestCode });
     }

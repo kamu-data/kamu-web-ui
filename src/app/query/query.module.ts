@@ -16,6 +16,7 @@ import { LoadMoreComponent } from "../dataset-view/additional-components/data-co
 import { RequestTimerComponent } from "../dataset-view/additional-components/data-component/request-timer/request-timer.component";
 import { MatIconModule } from "@angular/material/icon";
 import { SavedQueriesSectionComponent } from "../dataset-view/additional-components/data-component/saved-queries-section/saved-queries-section.component";
+import { MatButtonModule } from "@angular/material/button";
 
 @NgModule({
     declarations: [
@@ -37,6 +38,7 @@ import { SavedQueriesSectionComponent } from "../dataset-view/additional-compone
         FormsModule,
         NgbTypeaheadModule,
         CdkAccordionModule,
+        MatButtonModule,
         MatButtonToggleModule,
     ],
     exports: [QueryAndResultSectionsComponent, SavedQueriesSectionComponent],

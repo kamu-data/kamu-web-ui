@@ -1,8 +1,17 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
-import { GlobalQuerySearchItem } from "../global-query.model";
+import { GlobalQuerySearchItem, SqlQueryResponseState } from "../global-query.model";
 import { BaseComponent } from "src/app/common/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { combineLatest, debounceTime, distinctUntilChanged, map, Observable, OperatorFunction, switchMap } from "rxjs";
+import {
+    combineLatest,
+    debounceTime,
+    distinctUntilChanged,
+    map,
+    Observable,
+    of,
+    OperatorFunction,
+    switchMap,
+} from "rxjs";
 import { DatasetBasicsFragment, GetDatasetSchemaQuery } from "src/app/api/kamu.graphql.interface";
 import { parseCurrentSchema } from "src/app/common/app.helpers";
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
@@ -32,18 +41,24 @@ export class SearchAndSchemasSectionComponent extends BaseComponent implements O
     private sqlQueryService = inject(SqlQueryService);
 
     public ngOnInit(): void {
-        this.sqlQueryService.emitInvolvedSqlDatasetsId([]);
-        this.sqlQueryService.involvedSqlDatasetsIdChanges
+        this.sqlQueryService.sqlQueryResponseChanges
             .pipe(
-                switchMap((ids: string[]) => {
-                    const schemaResponses = ids.map((id: string) => this.datasetService.requestDatasetSchema(id));
-                    return this.processSchemaResponses(schemaResponses);
+                switchMap((sqlQueryResponse: MaybeNull<SqlQueryResponseState>) => {
+                    if (sqlQueryResponse) {
+                        const schemaResponses = sqlQueryResponse.involvedDatasetsId.map((id: string) =>
+                            this.datasetService.requestDatasetSchema(id),
+                        );
+                        return this.processSchemaResponses(schemaResponses);
+                    }
+                    return of(null);
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe((data: GlobalQuerySearchItem[]) => {
-                this.searchResult = data;
-                this.cdr.detectChanges();
+            .subscribe((data: MaybeNull<GlobalQuerySearchItem[]>) => {
+                if (data) {
+                    this.searchResult = data;
+                    this.cdr.detectChanges();
+                }
             });
     }
 

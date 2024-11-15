@@ -12,8 +12,6 @@ import { MaybeNull } from "../common/app.types";
 @Injectable({ providedIn: "root" })
 export class DatasetSubscriptionsService {
     private overview$: Subject<OverviewUpdate> = new ReplaySubject<OverviewUpdate>(1 /*bufferSize*/);
-    // private sqlQueryData$: Subject<MaybeNull<DataUpdate>> = new ReplaySubject<MaybeNull<DataUpdate>>(1 /*bufferSize*/);
-    // private sqlError$: Subject<DataSqlErrorUpdate> = new ReplaySubject<DataSqlErrorUpdate>(1 /*bufferSize*/);
     private history$: Subject<MaybeNull<DatasetHistoryUpdate>> = new ReplaySubject<MaybeNull<DatasetHistoryUpdate>>(
         1 /*bufferSize*/,
     );
@@ -22,7 +20,6 @@ export class DatasetSubscriptionsService {
     private permissions$: Subject<DatasetPermissionsFragment> = new ReplaySubject<DatasetPermissionsFragment>(
         1 /*bufferSize*/,
     );
-    // private involvedSqlDatasetsId$: Subject<string[]> = new ReplaySubject<string[]>(1 /*bufferSize*/);
 
     public emitOverviewChanged(data: OverviewUpdate): void {
         this.overview$.next(data);
@@ -31,36 +28,6 @@ export class DatasetSubscriptionsService {
     public get overviewChanges(): Observable<OverviewUpdate> {
         return this.overview$.asObservable();
     }
-
-    // SQL queries
-
-    // public emitSqlQueryDataChanged(dataUpdate: MaybeNull<DataUpdate>): void {
-    //     this.sqlQueryData$.next(dataUpdate);
-    // }
-
-    // public get sqlQueryDataChanges(): Observable<MaybeNull<DataUpdate>> {
-    //     return this.sqlQueryData$.asObservable();
-    // }
-
-    // public emitSqlErrorOccurred(dataSqlErrorUpdate: DataSqlErrorUpdate) {
-    //     this.sqlError$.next(dataSqlErrorUpdate);
-    // }
-
-    // public resetSqlError(): void {
-    //     this.emitSqlErrorOccurred({ error: "" });
-    // }
-
-    // public get sqlErrorOccurrences(): Observable<DataSqlErrorUpdate> {
-    //     return this.sqlError$.asObservable();
-    // }
-
-    // public emitInvolvedSqlDatasetsId(ids: string[]): void {
-    //     this.involvedSqlDatasetsId$.next(ids);
-    // }
-
-    // public get involvedSqlDatasetsIdChanges(): Observable<string[]> {
-    //     return this.involvedSqlDatasetsId$.asObservable();
-    // }
 
     // history
 

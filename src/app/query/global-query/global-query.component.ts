@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit }
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { finalize } from "rxjs";
 import { BaseComponent } from "src/app/common/base.component";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
 import ProjectLinks from "src/app/project-links";
+import { SqlQueryService } from "src/app/services/sql-query.service";
 
 @Component({
     selector: "app-global-query",
@@ -16,7 +16,7 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
     public sqlRequestCode = "";
     public sqlLoading = false;
 
-    private datasetService = inject(DatasetService);
+    private sqlQueryService = inject(SqlQueryService);
     private cdr = inject(ChangeDetectorRef);
 
     ngOnInit(): void {
@@ -32,8 +32,8 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
 
     public runSQLRequest(params: DatasetRequestBySql): void {
         this.sqlLoading = true;
-        this.datasetService
-            .requestDatasetDataSqlRun(params)
+        this.sqlQueryService
+            .requestDataSqlRun(params)
             .pipe(
                 finalize(() => {
                     this.sqlLoading = false;

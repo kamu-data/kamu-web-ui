@@ -1,4 +1,4 @@
-import { DatasetModule } from "./../dataset-view/dataset.module";
+import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { EditorModule } from "./../shared/editor/editor.module";
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
@@ -11,9 +11,21 @@ import { FormsModule } from "@angular/forms";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { SearchAndSchemasSectionComponent } from "./global-query/search-and-schemas-section/search-and-schemas-section.component";
+import { QueryAndResultSectionsComponent } from "../dataset-view/additional-components/data-component/query-and-result-sections/query-and-result-sections.component";
+import { LoadMoreComponent } from "../dataset-view/additional-components/data-component/load-more/load-more.component";
+import { RequestTimerComponent } from "../dataset-view/additional-components/data-component/request-timer/request-timer.component";
+import { MatIconModule } from "@angular/material/icon";
+import { SavedQueriesSectionComponent } from "../dataset-view/additional-components/data-component/saved-queries-section/saved-queries-section.component";
 
 @NgModule({
-    declarations: [GlobalQueryComponent, SearchAndSchemasSectionComponent],
+    declarations: [
+        GlobalQueryComponent,
+        RequestTimerComponent,
+        LoadMoreComponent,
+        SearchAndSchemasSectionComponent,
+        QueryAndResultSectionsComponent,
+        SavedQueriesSectionComponent,
+    ],
     imports: [
         CommonModule,
         MatProgressBarModule,
@@ -21,10 +33,12 @@ import { SearchAndSchemasSectionComponent } from "./global-query/search-and-sche
         EditorModule,
         MatDividerModule,
         MatMenuModule,
-        DatasetModule,
+        MatIconModule,
         FormsModule,
         NgbTypeaheadModule,
         CdkAccordionModule,
+        MatButtonToggleModule,
     ],
+    exports: [QueryAndResultSectionsComponent, SavedQueriesSectionComponent],
 })
 export class QueryModule {}

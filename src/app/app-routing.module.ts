@@ -56,7 +56,6 @@ export const routes: Routes = [
     {
         path: ProjectLinks.URL_QUERY,
         component: GlobalQueryComponent,
-        loadChildren: () => import("./query/query.module").then((m) => m.QueryModule),
     },
     {
         path:

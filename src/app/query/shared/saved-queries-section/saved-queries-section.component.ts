@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import DataTabValues from "../mock.data";
+import DataTabValues from "../../../dataset-view/additional-components/data-component/mock.data";
 
 @Component({
     selector: "app-saved-queries-section",

@@ -43,15 +43,15 @@ import { DatasetSettingsSchedulingTabComponent } from "./additional-components/d
 import { ToastrModule } from "ngx-toastr";
 import { DataAccessPanelModule } from "../components/data-access-panel/data-access-panel.module";
 import { SqlEditorComponent } from "../shared/editor/components/sql-editor/sql-editor.component";
-import { RequestTimerComponent } from "./additional-components/data-component/request-timer/request-timer.component";
+import { RequestTimerComponent } from "../query/shared/request-timer/request-timer.component";
 import { EditorModule } from "../shared/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { FlowsComponent } from "./additional-components/flows-component/flows.component";
 import { RouterTestingModule } from "@angular/router/testing";
 import { promiseWithCatch } from "../common/app.helpers";
-import { QueryAndResultSectionsComponent } from "./additional-components/data-component/query-and-result-sections/query-and-result-sections.component";
-import { SavedQueriesSectionComponent } from "./additional-components/data-component/saved-queries-section/saved-queries-section.component";
+import { QueryAndResultSectionsComponent } from "../query/shared/query-and-result-sections/query-and-result-sections.component";
+import { SavedQueriesSectionComponent } from "../query/shared/saved-queries-section/saved-queries-section.component";
 import { SqlQueryService } from "../services/sql-query.service";
 
 describe("DatasetComponent", () => {

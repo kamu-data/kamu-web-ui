@@ -6,7 +6,7 @@ import { SharedTestModule } from "src/app/common/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { NgbTypeaheadModule, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { FormsModule } from "@angular/forms";
-import { SavedQueriesSectionComponent } from "src/app/dataset-view/additional-components/data-component/saved-queries-section/saved-queries-section.component";
+import { SavedQueriesSectionComponent } from "src/app/query/shared/saved-queries-section/saved-queries-section.component";
 import { MatDividerModule } from "@angular/material/divider";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 import { mockDatasetBasicsDerivedFragment, mockSqlQueryResponseState } from "src/app/search/mock.data";

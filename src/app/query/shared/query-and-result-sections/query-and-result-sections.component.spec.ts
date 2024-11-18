@@ -16,7 +16,7 @@ import {
     findElementByDataTestId,
     getElementByDataTestId,
 } from "src/app/common/base-test.helpers.spec";
-import { mockSqlErrorUpdate } from "../../data-tabs.mock";
+import { mockSqlErrorUpdate } from "../../../dataset-view/additional-components/data-tabs.mock";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { QueryExplainerService } from "src/app/query-explainer/query-explainer.service";
 import { of } from "rxjs";

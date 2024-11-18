@@ -1,9 +1,9 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { RequestTimerComponent } from "src/app/dataset-view/additional-components/data-component/request-timer/request-timer.component";
-import { LoadMoreComponent } from "src/app/dataset-view/additional-components/data-component/load-more/load-more.component";
-import { QueryAndResultSectionsComponent } from "src/app/dataset-view/additional-components/data-component/query-and-result-sections/query-and-result-sections.component";
-import { SavedQueriesSectionComponent } from "src/app/dataset-view/additional-components/data-component/saved-queries-section/saved-queries-section.component";
+import { RequestTimerComponent } from "src/app/query/shared/request-timer/request-timer.component";
+import { LoadMoreComponent } from "src/app/query/shared/load-more/load-more.component";
+import { QueryAndResultSectionsComponent } from "src/app/query/shared/query-and-result-sections/query-and-result-sections.component";
+import { SavedQueriesSectionComponent } from "src/app/query/shared/saved-queries-section/saved-queries-section.component";
 import { SearchAndSchemasSectionComponent } from "../../global-query/search-and-schemas-section/search-and-schemas-section.component";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { FormsModule } from "@angular/forms";

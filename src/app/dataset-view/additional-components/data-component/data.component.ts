@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
 import { Location } from "@angular/common";
-import { Observable } from "rxjs";
+import { map, Observable } from "rxjs";
 import AppValues from "src/app/common/app.values";
 import { DatasetFlowType, DatasetKind, OffsetInterval } from "../../../api/kamu.graphql.interface";
-import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { DataSqlErrorUpdate, OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetRequestBySql } from "../../../interface/dataset.interface";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { BaseComponent } from "src/app/common/base.component";
@@ -46,10 +46,10 @@ export class DataComponent extends BaseComponent implements OnInit {
 
     public ngOnInit(): void {
         this.overviewUpdate$ = this.datasetSubsService.overviewChanges;
-        // this.sqlErrorMarker$ = this.sqlQueryService.sqlErrorOccurrences.pipe(
-        //     map((data: DataSqlErrorUpdate) => data.error),
-        // );
-        // this.sqlQueryResponse$ = this.sqlQueryService.sqlQueryResponseChanges;
+        this.sqlErrorMarker$ = this.sqlQueryService.sqlErrorOccurrences.pipe(
+            map((data: DataSqlErrorUpdate) => data.error),
+        );
+        this.sqlQueryResponse$ = this.sqlQueryService.sqlQueryResponseChanges;
         this.buildSqlRequestCode();
         this.runSQLRequest({ query: this.sqlRequestCode });
     }

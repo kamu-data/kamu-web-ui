@@ -1,14 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { finalize, map, Observable } from "rxjs";
-import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
+import { MaybeNull } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
 import { DataSqlErrorUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
-import { DataRow, DataSchemaField, DatasetRequestBySql } from "src/app/interface/dataset.interface";
+import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
 import ProjectLinks from "src/app/project-links";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 import { SqlQueryResponseState } from "./global-query.model";
-import AppValues from "src/app/common/app.values";
 
 @Component({
     selector: "app-global-query",
@@ -20,11 +19,6 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
     public sqlRequestCode = "";
     public sqlLoading = false;
     public sqlErrorMarker$: Observable<string>;
-    public currentData: DataRow[] = [];
-    public isAllDataLoaded = false;
-    public skipRows: MaybeUndefined<number>;
-    public rowsLimit: number = AppValues.SQL_QUERY_LIMIT;
-    public schemaFields: DataSchemaField[] = [];
     public sqlQueryResponse$: Observable<MaybeNull<SqlQueryResponseState>>;
 
     private sqlQueryService = inject(SqlQueryService);

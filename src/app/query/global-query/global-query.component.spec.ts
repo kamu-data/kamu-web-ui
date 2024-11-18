@@ -18,10 +18,14 @@ import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatDividerModule } from "@angular/material/divider";
 import { FormsModule } from "@angular/forms";
 import { SearchAndSchemasSectionComponent } from "./search-and-schemas-section/search-and-schemas-section.component";
+import { SqlQueryService } from "src/app/services/sql-query.service";
+import { of } from "rxjs";
 
 describe("GlobalQueryComponent", () => {
     let component: GlobalQueryComponent;
     let fixture: ComponentFixture<GlobalQueryComponent>;
+    let sqlQueryService: SqlQueryService;
+    const SQL_QUERY = "select * from 'datasetName'";
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -65,7 +69,7 @@ describe("GlobalQueryComponent", () => {
                                 get: (key: string) => {
                                     switch (key) {
                                         case ProjectLinks.URL_QUERY_PARAM_SQL_QUERY:
-                                            return "";
+                                            return SQL_QUERY;
                                     }
                                 },
                             },
@@ -76,10 +80,22 @@ describe("GlobalQueryComponent", () => {
         });
         fixture = TestBed.createComponent(GlobalQueryComponent);
         component = fixture.componentInstance;
+        sqlQueryService = TestBed.inject(SqlQueryService);
         fixture.detectChanges();
     });
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should check init sql request code ", () => {
+        component.ngOnInit();
+        expect(component.sqlRequestCode).toEqual(SQL_QUERY);
+    });
+
+    it("should check run sql request code ", () => {
+        const requestDataSqlRunSpy = spyOn(sqlQueryService, "requestDataSqlRun").and.returnValue(of());
+        component.runSQLRequest({ query: SQL_QUERY });
+        expect(requestDataSqlRunSpy).toHaveBeenCalledWith(jasmine.objectContaining({ query: SQL_QUERY }));
     });
 });

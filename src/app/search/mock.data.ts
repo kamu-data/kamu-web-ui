@@ -47,6 +47,7 @@ import { GraphQLError } from "graphql";
 import { TEST_AVATAR_URL } from "../api/mock/auth.mock";
 import { AddPushSourceEditFormType } from "../dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
 import { OdfDefaultValues } from "../common/app-odf-default.values";
+import { SqlQueryResponseState } from "../query/global-query/global-query.model";
 
 export const mockPageBasedInfo: PageBasedInfo = {
     currentPage: 1,
@@ -1495,4 +1496,95 @@ export const mockDatasetHeadBlockHashQuery: DatasetHeadBlockHashQuery = {
         },
         __typename: "Datasets",
     },
+};
+
+export const mockSqlQueryResponseState: SqlQueryResponseState = {
+    content: [
+        {
+            offset: 244,
+            op: 0,
+            system_time: "2024-10-26T01:13:21.961Z",
+            block_time: "2024-10-25T19:07:11Z",
+            block_number: 21044617,
+            transaction_hash: "0x5e234037964087cd4326ab685301e01ad3c5ffe41d12fa5addc08332e0a6e16d",
+            account_symbol: "eth",
+            token_symbol: "WOETH",
+            token_amount: -524.67456,
+            eth_amount: 0,
+            token_balance: 0,
+            token_book_value_eth: 0.00016904811,
+        },
+    ],
+    schema: {
+        name: "arrow_schema",
+        type: "struct",
+        fields: [
+            {
+                name: "offset",
+                repetition: "REQUIRED",
+                type: "INT64",
+            },
+            {
+                name: "op",
+                repetition: "REQUIRED",
+                type: "INT32",
+            },
+            {
+                name: "system_time",
+                repetition: "REQUIRED",
+                type: "INT64",
+                logicalType: "TIMESTAMP(MILLIS,true)",
+            },
+            {
+                name: "block_time",
+                repetition: "OPTIONAL",
+                type: "INT64",
+                logicalType: "TIMESTAMP(MILLIS,true)",
+            },
+            {
+                name: "block_number",
+                repetition: "OPTIONAL",
+                type: "INT64",
+            },
+            {
+                name: "transaction_hash",
+                repetition: "OPTIONAL",
+                type: "BYTE_ARRAY",
+                logicalType: "STRING",
+            },
+            {
+                name: "account_symbol",
+                repetition: "OPTIONAL",
+                type: "BYTE_ARRAY",
+                logicalType: "STRING",
+            },
+            {
+                name: "token_symbol",
+                repetition: "OPTIONAL",
+                type: "BYTE_ARRAY",
+                logicalType: "STRING",
+            },
+            {
+                name: "token_amount",
+                repetition: "OPTIONAL",
+                type: "FLOAT",
+            },
+            {
+                name: "eth_amount",
+                repetition: "OPTIONAL",
+                type: "FLOAT",
+            },
+            {
+                name: "token_balance",
+                repetition: "OPTIONAL",
+                type: "FLOAT",
+            },
+            {
+                name: "token_book_value_eth",
+                repetition: "OPTIONAL",
+                type: "FLOAT",
+            },
+        ],
+    },
+    involvedDatasetsId: ["did:odf:fed01df8964328b3b36fdfc5b140c5aea8795d445403a577428b2eafa5111f47dc212"],
 };

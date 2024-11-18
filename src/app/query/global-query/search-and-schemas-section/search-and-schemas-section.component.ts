@@ -30,7 +30,7 @@ import { SqlQueryService } from "src/app/services/sql-query.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchAndSchemasSectionComponent extends BaseComponent implements OnInit {
-    private searchResult: GlobalQuerySearchItem[] = [];
+    public searchResult: GlobalQuerySearchItem[] = [];
     public inputDatasets = new Set<string>();
     public searchDataset = "";
     private readonly delayTime: number = AppValues.SHORT_DELAY_MS;

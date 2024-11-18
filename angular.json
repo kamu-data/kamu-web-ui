@@ -151,7 +151,8 @@
               "node_modules/prismjs/plugins/line-highlight/prism-line-highlight.js",
               "node_modules/prismjs/plugins/command-line/prism-command-line.js",
               "node_modules/emoji-toolkit/lib/js/joypixels.min.js",
-              "node_modules/katex/dist/katex.min.js"
+              "node_modules/katex/dist/katex.min.js",
+              "node_modules/clipboard/dist/clipboard.min.js"
             ]
           }
         }

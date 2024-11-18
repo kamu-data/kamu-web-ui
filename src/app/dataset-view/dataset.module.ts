@@ -84,7 +84,7 @@ import { FlowsComponent } from "./additional-components/flows-component/flows.co
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatChipsModule } from "@angular/material/chips";
-import { QueryModule } from "../query/query.module";
+import { QuerySharedModule } from "../query/shared/query-shared/query-shared.module";
 
 @NgModule({
     imports: [
@@ -140,7 +140,7 @@ import { QueryModule } from "../query/query.module";
         DataAccessPanelModule,
         MatSortModule,
         AngularMultiSelectModule,
-        QueryModule,
+        QuerySharedModule,
     ],
     exports: [
         DatasetViewHeaderComponent,

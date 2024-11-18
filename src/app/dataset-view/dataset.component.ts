@@ -128,6 +128,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
 
     private initDataTab(): void {
         this.datasetViewType = DatasetViewTypeEnum.Data;
+        this.cdr.detectChanges();
     }
 
     private initMetadataTab(): void {

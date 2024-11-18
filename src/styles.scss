@@ -1547,3 +1547,38 @@ input {
         border-radius: 5px;
     }
 }
+
+.markdown-clipboard-button,
+.markdown-run-button {
+    background-color: rgb(255 255 255 / 7%);
+    opacity: 1 !important;
+    border: none;
+    border-radius: 4px;
+    color: #ffff;
+    cursor: pointer;
+    font-size: 11px;
+    padding: 4px 0;
+    width: 50px;
+    transition: all 250ms ease-out;
+
+    &:hover {
+        background-color: rgb(255 255 255 / 14%);
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+}
+
+.markdown-clipboard-button.copied {
+    background-color: rgb(0 255 0 / 10%);
+    color: rgb(0 255 51 / 100%);
+}
+
+pre.language-sql {
+    + {
+        div {
+            opacity: 1 !important;
+        }
+    }
+}

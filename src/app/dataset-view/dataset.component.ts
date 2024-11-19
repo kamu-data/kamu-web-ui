@@ -15,6 +15,7 @@ import { LineageGraphNodeData, LineageGraphNodeKind } from "./additional-compone
 import _ from "lodash";
 import { BaseDatasetDataComponent } from "../common/base-dataset-data.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { SqlQueryService } from "../services/sql-query.service";
 
 @Component({
     selector: "app-dataset",
@@ -34,6 +35,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
     private datasetPermissionsServices = inject(DatasetPermissionsService);
     private router = inject(Router);
     private cdr = inject(ChangeDetectorRef);
+    private sqlQueryService = inject(SqlQueryService);
 
     public ngOnInit(): void {
         const urlDatasetInfo = this.getDatasetInfoFromUrl();
@@ -300,9 +302,9 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
 
     public onRunSQLRequest(params: DatasetRequestBySql): void {
         this.sqlLoading = true;
-        this.datasetService
+        this.sqlQueryService
             // TODO: Propagate limit from UI and display when it was reached
-            .requestDatasetDataSqlRun(params)
+            .requestDataSqlRun(params)
             .pipe(
                 finalize(() => {
                     this.sqlLoading = false;

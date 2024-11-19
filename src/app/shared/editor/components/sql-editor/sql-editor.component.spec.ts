@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { SqlEditorComponent } from "./sql-editor.component";
 import { MonacoService } from "../../services/monaco.service";
 import { EditorModule } from "../../editor.module";

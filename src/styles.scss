@@ -241,6 +241,12 @@ markdown {
 
 .header-link {
     text-decoration: none;
+    color: #f1f1f1;
+
+    &:hover {
+        text-decoration: none;
+        color: #d4d4c9;
+    }
 }
 
 #app-header {
@@ -252,10 +258,6 @@ markdown {
     align-items: center;
     justify-content: space-between;
     background-color: $app-dark;
-
-    * {
-        color: $app-primary;
-    }
 
     .navbar-nav {
         margin: auto;
@@ -611,7 +613,8 @@ router-outlet {
 #overview-data-table,
 #set-data-schema-event,
 #set-polling-source-topics,
-#query-explainer-table {
+#query-explainer-table,
+#global-query-table {
     * {
         padding: 0 8px;
         font-size: 12px;
@@ -941,6 +944,12 @@ router-outlet {
         display: flex;
         justify-content: flex-end;
         align-items: flex-end;
+    }
+
+    .header-link {
+        mat-icon {
+            display: none;
+        }
     }
 }
 
@@ -1442,6 +1451,7 @@ pre {
 
 .no-button {
     border: none;
+    outline: none;
     background: transparent;
 
     &:hover {

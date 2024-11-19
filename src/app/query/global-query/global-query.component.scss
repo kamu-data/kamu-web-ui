@@ -1,0 +1,12 @@
+.container-main {
+    max-width: 1441px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.query-container {
+    display: grid;
+    align-items: start;
+    grid-template-columns: minmax(16rem, 37%) 1fr;
+    column-gap: 1.5rem;
+}

@@ -1,0 +1,17 @@
+<div class="container-main">
+    <div class="query-container py-4">
+        <app-search-and-schemas-section></app-search-and-schemas-section>
+
+        <div class="search-result-container__content">
+            <app-query-and-result-sections
+                [sqlLoading]="sqlLoading"
+                [sqlError]="sqlErrorMarker$ | async"
+                [sqlQueryResponse]="sqlQueryResponse$ | async"
+                [sqlRequestCode]="sqlRequestCode"
+                (runSQLRequestEmit)="runSQLRequest($event)"
+            >
+                <p class="search-result-container__content mt-4">The query didn't return any records</p>
+            </app-query-and-result-sections>
+        </div>
+    </div>
+</div>

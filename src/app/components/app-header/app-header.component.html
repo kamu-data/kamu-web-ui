@@ -107,24 +107,34 @@
                     >
                 </ng-template>
 
+                <a
+                    class="header-link d-flex align-items-center py-2 py-md-3 mr-4 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
+                    [routerLink]="[URL_QUERY]"
+                >
+                    <mat-icon class="fs-4">query_stats</mat-icon>
+                    <span> Query</span>
+                </a>
+
                 <ng-template [ngIf]="isUserLoggedIn()">
                     <a
-                        class="header-link py-2 py-md-3 mr-0 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
+                        class="header-link d-flex align-items-center py-2 py-md-3 mr-4 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
                         data-ga-click="Header, click, Nav menu - item:dashboard:user"
                         data-test-id="userDatasetsHeader"
                         aria-label="Dashboard"
                         [routerLink]="['/', loggedAccount.accountName]"
                         [queryParams]="{ tab: AccountTabs.DATASETS }"
                     >
-                        Your Datasets
+                        <mat-icon class="fs-4">book</mat-icon>
+                        <span>Your Datasets </span>
                     </a>
 
                     <a
-                        class="header-link py-2 py-md-3 mr-0 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
+                        class="header-link d-flex align-items-center py-2 py-md-3 mr-4 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
                         (click)="onDashboard()"
                         *ngIf="isAdmin"
                     >
-                        Dashboard
+                        <mat-icon class="fs-4">dashboard</mat-icon>
+                        <span> Dashboard</span>
                     </a>
 
                     <a
@@ -203,7 +213,7 @@
                 </div>
                 <ng-container *ngIf="isUserLoggedIn()">
                     <a
-                        class="app-header__right-column__addnew-block d-block d-sm-none d-md-flex m-2"
+                        class="app-header__right-column__addnew-block header-link d-block d-sm-none d-md-flex m-2"
                         [routerLink]="[URL_DATASET_CREATE]"
                         data-test-id="addNewBlock"
                     >

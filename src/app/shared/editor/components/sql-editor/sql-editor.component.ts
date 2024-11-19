@@ -4,9 +4,11 @@ import {
     Component,
     EventEmitter,
     inject,
+    Input,
     OnDestroy,
     OnInit,
     Output,
+    ViewChild,
 } from "@angular/core";
 import * as monaco from "monaco-editor";
 
@@ -14,6 +16,8 @@ import { getMonacoNamespace } from "../../services/monaco.service";
 import { BaseEditorComponent } from "../base-editor/base-editor.component";
 import { getSqlError } from "../../helpers/editor-error-formatter";
 import { fromEvent, filter, take, Subscription, takeWhile } from "rxjs";
+import { EditorComponent } from "ngx-monaco-editor-v2";
+import AppValues from "src/app/common/app.values";
 
 const SQL_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
     theme: "vs",
@@ -42,6 +46,8 @@ export class SqlEditorComponent extends BaseEditorComponent implements OnInit, O
     public readonly EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = SQL_EDITOR_OPTIONS;
     public getErrorDetails = getSqlError;
     @Output() public onRunSql = new EventEmitter<null>();
+    @Input() public placeholder = AppValues.DEFAULT_MONACO_EDITOR_PLACEHOLDER;
+    @ViewChild("monacoEditor") private monaco: EditorComponent;
 
     private cdr = inject(ChangeDetectorRef);
     private readonly INITIAL_EDITOR_HEIGHT = 200;
@@ -124,6 +130,11 @@ export class SqlEditorComponent extends BaseEditorComponent implements OnInit, O
                 run: runQueryFn,
             });
         }
+    }
+
+    public clickPlaceholder(): void {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+        this.monaco["_editor"].focus();
     }
 
     ngOnDestroy() {

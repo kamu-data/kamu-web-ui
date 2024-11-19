@@ -43,13 +43,16 @@ import { DatasetSettingsSchedulingTabComponent } from "./additional-components/d
 import { ToastrModule } from "ngx-toastr";
 import { DataAccessPanelModule } from "../components/data-access-panel/data-access-panel.module";
 import { SqlEditorComponent } from "../shared/editor/components/sql-editor/sql-editor.component";
-import { RequestTimerComponent } from "./additional-components/data-component/request-timer/request-timer.component";
+import { RequestTimerComponent } from "../query/shared/request-timer/request-timer.component";
 import { EditorModule } from "../shared/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { FlowsComponent } from "./additional-components/flows-component/flows.component";
 import { RouterTestingModule } from "@angular/router/testing";
 import { promiseWithCatch } from "../common/app.helpers";
+import { QueryAndResultSectionsComponent } from "../query/shared/query-and-result-sections/query-and-result-sections.component";
+import { SavedQueriesSectionComponent } from "../query/shared/saved-queries-section/saved-queries-section.component";
+import { SqlQueryService } from "../services/sql-query.service";
 
 describe("DatasetComponent", () => {
     let component: DatasetComponent;
@@ -57,6 +60,7 @@ describe("DatasetComponent", () => {
     let datasetService: DatasetService;
     let datasetSubsServices: DatasetSubscriptionsService;
     let navigationService: NavigationService;
+    let sqlQueryService: SqlQueryService;
     let route: ActivatedRoute;
     let router: Router;
     const MOCK_DATASET_ROUTE = "kamu/mockNameDerived";
@@ -80,6 +84,8 @@ describe("DatasetComponent", () => {
                 SqlEditorComponent,
                 RequestTimerComponent,
                 FlowsComponent,
+                QueryAndResultSectionsComponent,
+                SavedQueriesSectionComponent,
             ],
             imports: [
                 AngularSvgIconModule.forRoot(),
@@ -151,7 +157,7 @@ describe("DatasetComponent", () => {
 
         datasetSubsServices = TestBed.inject(DatasetSubscriptionsService);
         datasetSubsServices.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
-
+        sqlQueryService = TestBed.inject(SqlQueryService);
         datasetService = TestBed.inject(DatasetService);
         router = TestBed.inject(Router);
         spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsDerivedFragment));
@@ -159,6 +165,7 @@ describe("DatasetComponent", () => {
         fixture = TestBed.createComponent(DatasetComponent);
         router.initialNavigation();
         route = TestBed.inject(ActivatedRoute);
+
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
@@ -200,7 +207,7 @@ describe("DatasetComponent", () => {
             limit: AppValues.SQL_QUERY_LIMIT,
         };
 
-        const requestDatasetDataSqlRunSpy = spyOn(datasetService, "requestDatasetDataSqlRun").and.returnValue(of());
+        const requestDatasetDataSqlRunSpy = spyOn(sqlQueryService, "requestDataSqlRun").and.returnValue(of());
         component.onRunSQLRequest(params);
         expect(requestDatasetDataSqlRunSpy).toHaveBeenCalledWith(params);
     });
@@ -278,7 +285,7 @@ describe("DatasetComponent", () => {
             limit: AppValues.SQL_QUERY_LIMIT,
         };
 
-        spyOn(datasetService, "requestDatasetDataSqlRun").and.returnValue(of().pipe(delay(1000)));
+        spyOn(sqlQueryService, "requestDataSqlRun").and.returnValue(of().pipe(delay(1000)));
         component.onRunSQLRequest(params);
         tick(500);
 

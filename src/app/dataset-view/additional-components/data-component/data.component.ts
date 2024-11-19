@@ -1,44 +1,27 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    inject,
-    Input,
-    OnInit,
-    Output,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
 import { Location } from "@angular/common";
-import { Observable, map, switchMap, tap } from "rxjs";
+import { map, Observable } from "rxjs";
 import AppValues from "src/app/common/app.values";
-import DataTabValues from "./mock.data";
 import { DatasetFlowType, DatasetKind, OffsetInterval } from "../../../api/kamu.graphql.interface";
-import { DataSqlErrorUpdate, DataUpdate, OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
-import { DataRow, DatasetRequestBySql } from "../../../interface/dataset.interface";
+import { DataSqlErrorUpdate, OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { DatasetRequestBySql } from "../../../interface/dataset.interface";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { BaseComponent } from "src/app/common/base.component";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
+import { MaybeNull } from "src/app/common/app.types";
+import ProjectLinks from "src/app/project-links";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { AddDataModalComponent } from "../overview-component/components/add-data-modal/add-data-modal.component";
-import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
-import { DatasetViewTypeEnum } from "../../dataset-view.interface";
-import { NavigationService } from "src/app/services/navigation.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { Clipboard } from "@angular/cdk/clipboard";
-import ProjectLinks from "src/app/project-links";
-import { ToastrService } from "ngx-toastr";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { AppConfigService } from "src/app/app-config.service";
-import { UploadPrepareData, UploadPrepareResponse } from "src/app/common/ingest-via-file-upload.types";
-import { FileUploadService } from "src/app/services/file-upload.service";
-import { QueryExplainerService } from "src/app/query-explainer/query-explainer.service";
-import { QueryExplainerProofResponse } from "src/app/query-explainer/query-explainer.types";
+import { DatasetViewTypeEnum } from "../../dataset-view.interface";
+import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
+import { NavigationService } from "src/app/services/navigation.service";
+import { SqlQueryResponseState } from "src/app/query/global-query/global-query.model";
+import { SqlQueryService } from "src/app/services/sql-query.service";
 
 @Component({
     selector: "app-data",
     templateUrl: "./data.component.html",
-    styleUrls: ["./data.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataComponent extends BaseComponent implements OnInit {
@@ -47,82 +30,32 @@ export class DataComponent extends BaseComponent implements OnInit {
     @Input() public resultTime: number;
     @Output() public runSQLRequestEmit = new EventEmitter<DatasetRequestBySql>();
 
-    public savedQueries = DataTabValues.savedQueries;
     public sqlRequestCode = `select\n  *\nfrom `;
-    public currentData: DataRow[] = [];
-    public isAllDataLoaded = false;
-    public editorLoaded = false;
 
-    private skipRows: MaybeUndefined<number>;
-    private rowsLimit: number = AppValues.SQL_QUERY_LIMIT;
     private offsetColumnName = AppValues.DEFAULT_OFFSET_COLUMN_NAME;
-    public sqlErrorMarker$: Observable<string>;
-    public dataUpdate$: Observable<DataUpdate>;
     public overviewUpdate$: Observable<OverviewUpdate>;
+    public sqlErrorMarker$: Observable<string>;
+    public sqlQueryResponse$: Observable<MaybeNull<SqlQueryResponseState>>;
 
     private datasetSubsService = inject(DatasetSubscriptionsService);
     private location = inject(Location);
     private ngbModalService = inject(NgbModal);
     private datasetFlowsService = inject(DatasetFlowsService);
     private navigationService = inject(NavigationService);
-    private cdr = inject(ChangeDetectorRef);
-    private clipboard = inject(Clipboard);
-    private toastService = inject(ToastrService);
-    private loggedUserService = inject(LoggedUserService);
-    private appConfigService = inject(AppConfigService);
-    private queryExplainerService = inject(QueryExplainerService);
-    private fileUploadService = inject(FileUploadService);
+    private sqlQueryService = inject(SqlQueryService);
 
     public ngOnInit(): void {
         this.overviewUpdate$ = this.datasetSubsService.overviewChanges;
-        this.sqlErrorMarker$ = this.datasetSubsService.sqlErrorOccurrences.pipe(
+        this.sqlErrorMarker$ = this.sqlQueryService.sqlErrorOccurrences.pipe(
             map((data: DataSqlErrorUpdate) => data.error),
         );
-        this.dataUpdate$ = this.datasetSubsService.sqlQueryDataChanges.pipe(
-            tap((dataUpdate: DataUpdate) => {
-                if (dataUpdate.currentVocab?.offsetColumn) {
-                    this.offsetColumnName = dataUpdate.currentVocab.offsetColumn;
-                }
-                this.isAllDataLoaded = dataUpdate.content.length < this.rowsLimit;
-                this.currentData = this.skipRows ? [...this.currentData, ...dataUpdate.content] : dataUpdate.content;
-                this.datasetSubsService.resetSqlError();
-            }),
-        );
+        this.sqlQueryResponse$ = this.sqlQueryService.sqlQueryResponseChanges;
         this.buildSqlRequestCode();
-        this.runSQLRequest({ query: this.sqlRequestCode }, true);
+        this.runSQLRequest({ query: this.sqlRequestCode });
     }
 
-    public get isAdmin(): boolean {
-        return this.loggedUserService.isAdmin;
-    }
-
-    public runSQLRequest(params: DatasetRequestBySql, initialSqlRun = false): void {
-        if (initialSqlRun) {
-            this.resetRowsLimits();
-        }
+    public runSQLRequest(params: DatasetRequestBySql): void {
         this.runSQLRequestEmit.emit(params);
-    }
-
-    public loadMore(limit: number): void {
-        this.skipRows = this.currentData.length;
-        this.rowsLimit = limit;
-
-        const params = {
-            query: this.sqlRequestCode,
-            skip: this.skipRows,
-            limit,
-        };
-
-        this.runSQLRequest(params);
-    }
-
-    public runSql(): void {
-        this.runSQLRequest({ query: this.sqlRequestCode }, true);
-    }
-
-    public hideProgressBar(): void {
-        this.editorLoaded = true;
-        this.cdr.detectChanges();
     }
 
     private buildSqlRequestCode(): void {
@@ -155,58 +88,6 @@ export class DataComponent extends BaseComponent implements OnInit {
         }
     }
 
-    public shareQuery(): void {
-        const url = new URL(`${window.location.href}`);
-        url.searchParams.set(ProjectLinks.URL_QUERY_PARAM_SQL_QUERY, this.sqlRequestCode);
-        this.clipboard.copy(url.href);
-        this.toastService.success("Copied url to clipboard");
-    }
-
-    public copyCurlCommand(): void {
-        // Removed all \n symbols and replaced all single quotes on \" in the sql query
-        const sqlRequestReplacedCode = this.sqlRequestCode.replace(/\n/g, " ").replace(/'/g, '\\"');
-        const command = `echo '{ "query": "${sqlRequestReplacedCode}", "include": ["proof"] }' | curl "${this.appConfigService.apiServerHttpUrl}/query" -X POST --data-binary @- -H "Content-Type: application/json"`;
-        this.clipboard.copy(command);
-        this.toastService.success("Copied command to clipboard");
-    }
-
-    public verifyQueryResult(): void {
-        let uploadToken: string;
-        this.queryExplainerService
-            .processQueryWithProof(this.sqlRequestCode)
-            .pipe(
-                switchMap((response: QueryExplainerProofResponse) => {
-                    const file = new File(
-                        [
-                            new Blob([JSON.stringify(response, null, 2)], {
-                                type: "application/json",
-                            }),
-                        ],
-                        "query-explainer.json",
-                    );
-                    return this.fileUploadService.uploadFilePrepare(file).pipe(
-                        tap((data) => (uploadToken = data.uploadToken)),
-                        switchMap((uploadPrepareResponse: UploadPrepareResponse) =>
-                            this.fileUploadService.prepareUploadData(uploadPrepareResponse, file),
-                        ),
-                        switchMap(({ uploadPrepareResponse, bodyObject, uploadHeaders }: UploadPrepareData) =>
-                            this.fileUploadService.uploadFileByMethod(
-                                uploadPrepareResponse.method,
-                                uploadPrepareResponse.uploadUrl,
-                                bodyObject,
-                                uploadHeaders,
-                            ),
-                        ),
-                    );
-                }),
-
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(() => {
-                this.navigationService.navigateToQueryExplainer(uploadToken);
-            });
-    }
-
     private updateNow(): void {
         this.datasetFlowsService
             .datasetTriggerFlow({
@@ -226,10 +107,5 @@ export class DataComponent extends BaseComponent implements OnInit {
                     });
                 }
             });
-    }
-
-    private resetRowsLimits(): void {
-        this.skipRows = undefined;
-        this.rowsLimit = AppValues.SQL_QUERY_LIMIT;
     }
 }

@@ -1,9 +1,7 @@
 import { Observable, ReplaySubject, Subject } from "rxjs";
 import { Injectable } from "@angular/core";
 import {
-    DataSqlErrorUpdate,
     DatasetHistoryUpdate,
-    DataUpdate,
     LineageUpdate,
     MetadataSchemaUpdate,
     OverviewUpdate,
@@ -14,8 +12,6 @@ import { MaybeNull } from "../common/app.types";
 @Injectable({ providedIn: "root" })
 export class DatasetSubscriptionsService {
     private overview$: Subject<OverviewUpdate> = new ReplaySubject<OverviewUpdate>(1 /*bufferSize*/);
-    private sqlQueryData$: Subject<DataUpdate> = new ReplaySubject<DataUpdate>(1 /*bufferSize*/);
-    private sqlError$: Subject<DataSqlErrorUpdate> = new ReplaySubject<DataSqlErrorUpdate>(1 /*bufferSize*/);
     private history$: Subject<MaybeNull<DatasetHistoryUpdate>> = new ReplaySubject<MaybeNull<DatasetHistoryUpdate>>(
         1 /*bufferSize*/,
     );
@@ -31,28 +27,6 @@ export class DatasetSubscriptionsService {
 
     public get overviewChanges(): Observable<OverviewUpdate> {
         return this.overview$.asObservable();
-    }
-
-    // SQL queries
-
-    public emitSqlQueryDataChanged(dataUpdate: DataUpdate): void {
-        this.sqlQueryData$.next(dataUpdate);
-    }
-
-    public get sqlQueryDataChanges(): Observable<DataUpdate> {
-        return this.sqlQueryData$.asObservable();
-    }
-
-    public emitSqlErrorOccurred(dataSqlErrorUpdate: DataSqlErrorUpdate) {
-        this.sqlError$.next(dataSqlErrorUpdate);
-    }
-
-    public resetSqlError(): void {
-        this.emitSqlErrorOccurred({ error: "" });
-    }
-
-    public get sqlErrorOccurrences(): Observable<DataSqlErrorUpdate> {
-        return this.sqlError$.asObservable();
     }
 
     // history

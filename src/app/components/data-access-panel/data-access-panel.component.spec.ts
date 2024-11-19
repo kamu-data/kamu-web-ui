@@ -16,11 +16,13 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { ProtocolsService } from "src/app/services/protocols.service";
 import { of } from "rxjs";
 import { mockDatasetEndPoints } from "./data-access-panel-mock.data";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 describe("DataAccessPanelComponent", () => {
     let component: DataAccessPanelComponent;
     let fixture: ComponentFixture<DataAccessPanelComponent>;
     let protocolsService: ProtocolsService;
+    let ngbModalService: NgbModal;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -44,6 +46,7 @@ describe("DataAccessPanelComponent", () => {
 
         fixture = TestBed.createComponent(DataAccessPanelComponent);
         protocolsService = TestBed.inject(ProtocolsService);
+        ngbModalService = TestBed.inject(NgbModal);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
         spyOn(protocolsService, "getProtocols").and.returnValue(of(mockDatasetEndPoints));
@@ -52,5 +55,11 @@ describe("DataAccessPanelComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should check open modal window", () => {
+        const ngbModalOpenSpy = spyOn(ngbModalService, "open").and.callThrough();
+        component.openDataAccessModal();
+        expect(ngbModalOpenSpy).toHaveBeenCalledTimes(1);
     });
 });

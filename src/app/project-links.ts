@@ -16,6 +16,7 @@ export default class ProjectLinks {
     public static readonly URL_SETTINGS: string = "v/settings";
     public static readonly URL_ADMIN_DASHBOARD: string = "v/admin-dashboard";
     public static readonly URL_QUERY_EXPLAINER: string = "v/query-explainer";
+    public static readonly URL_QUERY: string = "v/query";
 
     public static readonly ALL_URLS: string[] = [
         ProjectLinks.URL_HOME,

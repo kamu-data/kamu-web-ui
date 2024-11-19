@@ -25,6 +25,11 @@ export interface QueryExplainerProofResponse {
     subQueries?: unknown[];
 }
 
+export interface QueryExplainerInputOutputResponse {
+    input: QueryExplainerInputType;
+    output?: QueryExplainerOutputType;
+}
+
 export interface QueryExplainerDataJsonAosResponse {
     output?: QueryExplainerOutputType;
 }

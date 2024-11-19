@@ -5,6 +5,7 @@ import { KafkaProtocolDesc, WebSocketProtocolDesc } from "src/app/api/kamu.graph
 @Component({
     selector: "app-data-access-stream-tab",
     templateUrl: "./data-access-stream-tab.component.html",
+    styleUrls: ["./data-access-stream-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataAccessStreamTabComponent extends DataAccessBaseTabComponent {

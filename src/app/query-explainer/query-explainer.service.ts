@@ -44,7 +44,7 @@ export class QueryExplainerService {
                 }
             }),
             catchError((e: HttpErrorResponse) => {
-                this.toastrService.error("", e.error as string, {
+                this.toastrService.error("", (e.error as { message: string }).message, {
                     disableTimeOut: "timeOut",
                 });
                 return EMPTY;

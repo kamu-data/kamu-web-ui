@@ -1,3 +1,4 @@
+import { NavigationService } from "src/app/services/navigation.service";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { ReadmeSectionComponent } from "./readme-section.component";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
@@ -9,19 +10,21 @@ import { SecurityContext, SimpleChanges } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { FormsModule } from "@angular/forms";
-import { AngularSvgIconModule } from "angular-svg-icon";
+import { AngularSvgIconModule, SvgIconRegistryService } from "angular-svg-icon";
 import { MarkdownModule } from "ngx-markdown";
-import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, findNativeElement } from "src/app/common/base-test.helpers.spec";
 import { EditMode } from "./readme-section.types";
 import { of } from "rxjs";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 
 describe("ReadmeSectionComponent", () => {
     let component: ReadmeSectionComponent;
     let fixture: ComponentFixture<ReadmeSectionComponent>;
     let datasetCommitService: DatasetCommitService;
     let loggedUserService: LoggedUserService;
+    let navigationService: NavigationService;
 
     const mockReadmeContent = "Mock README.md content";
 
@@ -43,15 +46,18 @@ describe("ReadmeSectionComponent", () => {
             ],
         }).compileComponents();
 
+        const iconRegistryService: SvgIconRegistryService = TestBed.inject(SvgIconRegistryService);
+        iconRegistryService.addSvg("code-square", "");
+        iconRegistryService.addSvg("pencil", "");
+
         fixture = TestBed.createComponent(ReadmeSectionComponent);
         component = fixture.componentInstance;
         datasetCommitService = TestBed.inject(DatasetCommitService);
         loggedUserService = TestBed.inject(LoggedUserService);
+        navigationService = TestBed.inject(NavigationService);
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
         component.currentReadme = mockReadmeContent;
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-
-        fixture.detectChanges();
     });
 
     it("should create", () => {
@@ -59,6 +65,7 @@ describe("ReadmeSectionComponent", () => {
     });
 
     it("should check show select tab", () => {
+        fixture.detectChanges();
         expect(component.editingInProgress).toEqual(false);
         emitClickOnElementByDataTestId(fixture, "show-edit-tabs");
         fixture.detectChanges();
@@ -66,6 +73,7 @@ describe("ReadmeSectionComponent", () => {
     });
 
     it("should check switch edit/preview mode", () => {
+        fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "show-edit-tabs");
         fixture.detectChanges();
         expect(component.viewMode).toEqual(EditMode.Edit);
@@ -76,6 +84,7 @@ describe("ReadmeSectionComponent", () => {
     });
 
     it("should check push button 'cancel changes' when currentReadme exist", () => {
+        fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "show-edit-tabs");
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "cancel-changes");
@@ -83,6 +92,7 @@ describe("ReadmeSectionComponent", () => {
     });
 
     it("should check push button 'cancel changes' when currentReadme is not exist", () => {
+        fixture.detectChanges();
         component.currentReadme = null;
         emitClickOnElementByDataTestId(fixture, "show-edit-tabs");
         fixture.detectChanges();
@@ -91,6 +101,7 @@ describe("ReadmeSectionComponent", () => {
     });
 
     it("should check save changes", fakeAsync(() => {
+        fixture.detectChanges();
         component.readmeState = mockReadmeContent + "modified";
         const updateReadmeSpy = spyOn(datasetCommitService, "updateReadme").and.returnValue(of());
         emitClickOnElementByDataTestId(fixture, "show-edit-tabs");
@@ -113,5 +124,31 @@ describe("ReadmeSectionComponent", () => {
         };
         component.ngOnChanges(readmeSimpleChanges);
         expect(component.readmeState).toEqual(modifiedReadmeContent);
+    });
+
+    it("should check Run and Copy buttons exist", () => {
+        component.readmeState = "```sql" + "\nselect * from 'account.tokens.portfolio.market-value'" + "\n```";
+        component.viewMode = EditMode.Preview;
+        fixture.detectChanges();
+        const copyButtonElement = findNativeElement(fixture, `.markdown-clipboard-button`);
+        expect(copyButtonElement).toBeDefined();
+
+        const runButtonElement = findNativeElement(fixture, `.markdown-run-button`);
+        expect(runButtonElement).toBeDefined();
+    });
+
+    it("should check Run button navigate to Data tab", () => {
+        component.readmeState = "```sql" + "\nselect * from 'account.tokens.portfolio.market-value'" + "\n```";
+        component.viewMode = EditMode.Preview;
+
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        fixture.detectChanges();
+
+        const runButtonElement = findNativeElement(fixture, `.markdown-run-button`);
+        runButtonElement.click();
+
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
+            jasmine.objectContaining({ tab: DatasetViewTypeEnum.Data }),
+        );
     });
 });

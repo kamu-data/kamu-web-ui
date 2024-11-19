@@ -90,7 +90,7 @@ export class NavigationService {
                 queryParams:
                     params.page === 1
                         ? { tab: params.tab }
-                        : { tab: params.tab, section: params.section, page: params.page },
+                        : { tab: params.tab, section: params.section, page: params.page, sqlQuery: params.sqlQuery },
                 state: params.state,
             }),
         );

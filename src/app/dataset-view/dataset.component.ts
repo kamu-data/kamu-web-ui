@@ -48,6 +48,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
             .subscribe(() => {
                 this.initDatasetViewByType(this.getDatasetInfoFromUrl(), this.getCurrentPageFromUrl());
                 this.requestMainDataIfChanged();
+                this.cdr.detectChanges();
             });
         this.datasetService.datasetChanges
             .pipe(takeUntilDestroyed(this.destroyRef))

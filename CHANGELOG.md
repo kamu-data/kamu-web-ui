@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - Added a new page `Query` that allows you to make sql queries without being tied to a dataset
+- Impovements for readme section
+  - Add syntax highlight support for SQL in markdown
+  - Add copy to clipboard button for SQL blocks
+  - Add run button that opens "Data" tab in new window and executes the selected query
 
 
 ## [0.29.0] - 2024-11-12

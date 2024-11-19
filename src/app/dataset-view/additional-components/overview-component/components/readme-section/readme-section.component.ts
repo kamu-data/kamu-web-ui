@@ -1,4 +1,6 @@
+import { NavigationService } from "./../../../../../services/navigation.service";
 import {
+    AfterViewChecked,
     ChangeDetectionStrategy,
     Component,
     EventEmitter,
@@ -15,6 +17,7 @@ import { EditMode } from "./readme-section.types";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 
 @Component({
     selector: "app-readme-section",
@@ -22,7 +25,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
     styleUrls: ["./readme-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReadmeSectionComponent extends BaseComponent implements OnChanges {
+export class ReadmeSectionComponent extends BaseComponent implements OnChanges, AfterViewChecked {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public currentReadme?: MaybeNull<string>;
     @Input({ required: true }) public editingInProgress = false;
@@ -37,6 +40,7 @@ export class ReadmeSectionComponent extends BaseComponent implements OnChanges {
         return this.currentReadme !== this.readmeState;
     }
 
+    private navigationService = inject(NavigationService);
     private datasetCommitService = inject(DatasetCommitService);
     private loggedUserService = inject(LoggedUserService);
 
@@ -45,6 +49,10 @@ export class ReadmeSectionComponent extends BaseComponent implements OnChanges {
             this.readmeState = changes.currentReadme.currentValue as string;
             this.editingInProgress = false;
         }
+    }
+
+    ngAfterViewChecked(): void {
+        this.addDynamicRunButton();
     }
 
     public get isEditView(): boolean {
@@ -87,5 +95,38 @@ export class ReadmeSectionComponent extends BaseComponent implements OnChanges {
         this.viewMode = EditMode.Edit;
         this.editingInProgress = false;
         this.editViewShowEmitter.emit(this.editingInProgress);
+    }
+
+    private addDynamicRunButton(): void {
+        if (this.readmeState) {
+            // Find all sql queries between ```sql and ```
+            const sqlQueries = this.readmeState.match(/(?<=```sql\s+).*?(?=\s+```)/gs);
+            const containerRunButtonElement: HTMLCollectionOf<Element> =
+                document.getElementsByClassName("container-run-button");
+
+            if (sqlQueries?.length && !containerRunButtonElement.length) {
+                const preElements: NodeListOf<Element> = document.querySelectorAll("pre.language-sql");
+                preElements.forEach((preElement: Element, index: number) => {
+                    const divElement: HTMLDivElement = document.createElement("div");
+                    divElement.classList.add("container-run-button");
+                    divElement.style.position = "absolute";
+                    divElement.style.top = "7px";
+                    divElement.style.right = "65px";
+                    const buttonElement: HTMLButtonElement = document.createElement("button");
+                    buttonElement.innerHTML = "Run";
+                    buttonElement.classList.add("markdown-run-button");
+                    buttonElement.addEventListener("click", () => {
+                        this.navigationService.navigateToDatasetView({
+                            accountName: this.datasetBasics.owner.accountName,
+                            datasetName: this.datasetBasics.name,
+                            tab: DatasetViewTypeEnum.Data,
+                            sqlQuery: sqlQueries[index],
+                        });
+                    });
+                    divElement.appendChild(buttonElement);
+                    preElement.after(divElement);
+                });
+            }
+        }
     }
 }

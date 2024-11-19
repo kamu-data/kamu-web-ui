@@ -46,6 +46,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
             .subscribe(() => {
                 this.initDatasetViewByType(this.getDatasetInfoFromUrl(), this.getCurrentPageFromUrl());
                 this.requestMainDataIfChanged();
+                this.cdr.detectChanges();
             });
         this.datasetService.datasetChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -128,7 +129,6 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
 
     private initDataTab(): void {
         this.datasetViewType = DatasetViewTypeEnum.Data;
-        this.cdr.detectChanges();
     }
 
     private initMetadataTab(): void {

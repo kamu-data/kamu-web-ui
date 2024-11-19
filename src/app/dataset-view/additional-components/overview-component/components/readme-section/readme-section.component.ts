@@ -101,15 +101,20 @@ export class ReadmeSectionComponent extends BaseComponent implements OnChanges, 
         if (this.readmeState) {
             // Find all sql queries between ```sql and ```
             const sqlQueries = this.readmeState.match(/(?<=```sql\s+).*?(?=\s+```)/gs);
-            if (sqlQueries?.length) {
-                const preElements = document.querySelectorAll("pre.language-sql");
+            const containerRunButtonElement: HTMLCollectionOf<Element> =
+                document.getElementsByClassName("container-run-button");
+
+            if (sqlQueries?.length && !containerRunButtonElement.length) {
+                const preElements: NodeListOf<Element> = document.querySelectorAll("pre.language-sql");
                 preElements.forEach((preElement: Element, index: number) => {
-                    const buttonElement = document.createElement("button");
-                    buttonElement.innerText = "Run";
+                    const divElement: HTMLDivElement = document.createElement("div");
+                    divElement.classList.add("container-run-button");
+                    divElement.style.position = "absolute";
+                    divElement.style.top = "7px";
+                    divElement.style.right = "65px";
+                    const buttonElement: HTMLButtonElement = document.createElement("button");
+                    buttonElement.innerHTML = "Run";
                     buttonElement.classList.add("markdown-run-button");
-                    buttonElement.style.position = "absolute";
-                    buttonElement.style.top = "7px";
-                    buttonElement.style.right = "65px";
                     buttonElement.addEventListener("click", () => {
                         this.navigationService.navigateToDatasetView({
                             accountName: this.datasetBasics.owner.accountName,
@@ -118,7 +123,8 @@ export class ReadmeSectionComponent extends BaseComponent implements OnChanges, 
                             sqlQuery: sqlQueries[index],
                         });
                     });
-                    preElement.appendChild(buttonElement);
+                    divElement.appendChild(buttonElement);
+                    preElement.after(divElement);
                 });
             }
         }

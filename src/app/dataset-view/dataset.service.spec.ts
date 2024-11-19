@@ -74,8 +74,6 @@ describe("AppDatasetService", () => {
 
         const metadataSchemaSubscription$ = datasetSubsService.metadataSchemaChanges.pipe(first()).subscribe();
 
-        //   datasetSubsService.sqlQueryDataChanges.subscribe(() => fail("Unexpected data update"));
-
         service.requestDatasetMainData(mockDatasetInfo).subscribe();
 
         expect(datasetChangesSubscription$.closed).toBeTrue();
@@ -109,7 +107,6 @@ describe("AppDatasetService", () => {
 
         service.datasetChanges.subscribe(() => fail("Unexpected onDatasetChanges update"));
         datasetSubsService.overviewChanges.subscribe(() => fail("Unexpected overview update"));
-        //   datasetSubsService.sqlQueryDataChanges.subscribe(() => fail("Unexpected data update"));
         datasetSubsService.metadataSchemaChanges.subscribe(() => fail("Unexpected metadata update"));
 
         const subscription$ = service
@@ -140,7 +137,6 @@ describe("AppDatasetService", () => {
 
         service.datasetChanges.subscribe(() => fail("Unexpected onDatasetChanges update"));
         datasetSubsService.overviewChanges.subscribe(() => fail("Unexpected overview update"));
-        //   datasetSubsService.sqlQueryDataChanges.subscribe(() => fail("Unexpected data update"));
         datasetSubsService.metadataSchemaChanges.subscribe(() => fail("Unexpected metadata update"));
 
         const subscription$ = service

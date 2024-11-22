@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+### Added
+- Added Terms of Service link
+
 ## [0.30.0] - 2024-11-22
 ### Added
 - Added a new page `Query` that allows you to make sql queries without being tied to a dataset
@@ -12,7 +16,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Add syntax highlight support for SQL in markdown
   - Add copy to clipboard button for SQL blocks
   - Add run button that opens "Data" tab in new window and executes the selected query
-- Added Terms of Service link
 
 ## [0.29.0] - 2024-11-12
 ### Fixed

@@ -39,6 +39,12 @@ describe("LoginComponent", () => {
     let localStorageService: LocalStorageService;
     let authApi: AuthApi;
     let httpController: HttpTestingController;
+    const MOCK_FEATURE_FLAGS = {
+        enableLogout: true,
+        enableScheduling: true,
+        enableDatasetEnvVarsManagment: true,
+        enableTermsOfService: true,
+    };
 
     enum Elements {
         METHOD_SELECTION_BLOCK = "method-selection-block",
@@ -98,11 +104,7 @@ describe("LoginComponent", () => {
     describe("Main test suite", () => {
         beforeEach(() => {
             appConfigService = TestBed.inject(AppConfigService);
-            spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue({
-                enableLogout: true,
-                enableScheduling: true,
-                enableDatasetEnvVarsManagment: true,
-            });
+            spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue(MOCK_FEATURE_FLAGS);
             spyOnProperty(loginService, "loginMethods", "get").and.returnValue([
                 LoginMethod.GITHUB,
                 LoginMethod.PASSWORD,
@@ -266,11 +268,7 @@ describe("LoginComponent", () => {
 
             beforeEach(() => {
                 appConfigService = TestBed.inject(AppConfigService);
-                spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue({
-                    enableLogout: true,
-                    enableScheduling: true,
-                    enableDatasetEnvVarsManagment: true,
-                });
+                spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue(MOCK_FEATURE_FLAGS);
                 spyOnProperty(loginService, "loginMethods", "get").and.returnValue([loginMethod]);
 
                 spyGotoGithub = spyOn(loginService, "gotoGithub").and.stub();
@@ -297,11 +295,7 @@ describe("LoginComponent", () => {
     describe("Zero-method-config", () => {
         beforeEach(() => {
             appConfigService = TestBed.inject(AppConfigService);
-            spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue({
-                enableLogout: true,
-                enableScheduling: true,
-                enableDatasetEnvVarsManagment: true,
-            });
+            spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue(MOCK_FEATURE_FLAGS);
             spyOnProperty(loginService, "loginMethods", "get").and.returnValue([]);
         });
 

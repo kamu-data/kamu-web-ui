@@ -5,10 +5,24 @@ a {
     color: $app-dark;
 }
 
+.tos-link {
+    text-decoration: underline;
+    color: #0d6efd;
+}
+
+p {
+    margin: 0;
+}
+
+.mt-30 {
+    margin-top: 30px;
+}
+
 .login-container__buttons {
     height: 100vh;
-    overflow: hidden;
-    margin-top: 200px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 
     .inner-container {
         border: 1px solid $app-color-border-default;
@@ -17,7 +31,7 @@ a {
         display: flex;
         justify-content: center;
         flex-direction: column;
-        gap: 40px;
+        gap: 30px;
         border-radius: 6px;
     }
 
@@ -26,7 +40,7 @@ a {
         display: flex;
         justify-content: center;
         border: 1px solid $app-color-border-default;
-        width: 200px;
+        width: 280px;
         padding: 5px 15px;
         border-radius: 6px;
         background-color: #ebeef1;

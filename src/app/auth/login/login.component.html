@@ -20,6 +20,9 @@
             >
                 Login with Password
             </a>
+            <ng-container *ngIf="enableTermsOfService">
+                <ng-container *ngTemplateOutlet="termsOfServiceFragment"></ng-container>
+            </ng-container>
         </div>
     </div>
 </ng-container>
@@ -88,5 +91,17 @@
         <div *ngIf="passwordLoginError$ | async as passwordLoginError" class="mt-4">
             <div class="error-block" data-test-id="password-method-error">{{ passwordLoginError }}</div>
         </div>
+        <div class="mt-30" *ngIf="enableTermsOfService">
+            <ng-container *ngTemplateOutlet="termsOfServiceFragment"></ng-container>
+        </div>
     </form>
 </div>
+
+<ng-template #termsOfServiceFragment>
+    <p class="text-center fs-12">
+        By logging in you accept the
+        <a class="fs-12 tos-link" href="https://docs.kamu.dev/terms-of-service" target="_blank"
+            >Kamu Terms of Service</a
+        >
+    </p>
+</ng-template>

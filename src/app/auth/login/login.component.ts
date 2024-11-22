@@ -12,6 +12,7 @@ import { BaseComponent } from "src/app/common/base.component";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { LoginFormType } from "./login.component.model";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { AppConfigService } from "src/app/app-config.service";
 
 @Component({
     selector: "app-login",
@@ -27,6 +28,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
     private route = inject(ActivatedRoute);
     private fb = inject(FormBuilder);
     private loginService = inject(LoginService);
+    private appConfigService = inject(AppConfigService);
 
     public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;
     public readonly LoginMethod = LoginMethod;
@@ -62,6 +64,10 @@ export class LoginComponent extends BaseComponent implements OnInit {
 
     public get passwordControl(): MaybeNull<AbstractControl> {
         return this.passwordLoginForm.get("password");
+    }
+
+    public get enableTermsOfService(): boolean {
+        return this.appConfigService.featureFlags.enableTermsOfService;
     }
 
     public onSelectedLoginMethod(loginMethod: LoginMethod): void {

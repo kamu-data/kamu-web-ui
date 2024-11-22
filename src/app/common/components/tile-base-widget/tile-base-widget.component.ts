@@ -51,8 +51,8 @@ export class TileBaseWidgetComponent {
         }
     }
 
-    public datasetAliasByDescription(description: FlowItemWidgetDataFragment): MaybeNull<string> {
-        const datasetId = this.extractDatasetId(description);
+    public datasetAliasByDescription(node: FlowItemWidgetDataFragment): MaybeNull<string> {
+        const datasetId = this.extractDatasetId(node);
         if (datasetId) {
             const dataset = (this.involvedDatasets as Dataset[]).find((dataset) => dataset.id === datasetId) as Dataset;
             return dataset.alias;

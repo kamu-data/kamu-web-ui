@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Add syntax highlight support for SQL in markdown
   - Add copy to clipboard button for SQL blocks
   - Add run button that opens "Data" tab in new window and executes the selected query
+- Added Terms of Service link
 
 
 ## [0.29.0] - 2024-11-12

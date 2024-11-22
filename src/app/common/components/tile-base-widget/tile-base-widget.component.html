@@ -35,6 +35,14 @@
                     <span class="fs-12"> - </span>
                 </ng-template>
                 <br />
+
+                <ng-container *ngIf="involvedDatasets.length">
+                    <span class="fs-12 fw-bold">Alias:</span>
+                    <span class="fs-12">
+                        {{ datasetAliasByDescription(node) }}
+                    </span>
+                    <br />
+                </ng-container>
             </div>
         </ng-template>
     </div>

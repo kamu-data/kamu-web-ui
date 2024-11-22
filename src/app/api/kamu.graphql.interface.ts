@@ -3378,17 +3378,6 @@ export type FlowItemWidgetDataFragment = {
     };
 };
 
-export type FlowItemWidgetDatasetIdFragment = {
-    __typename?: "Flow";
-    description:
-        | { __typename?: "FlowDescriptionDatasetExecuteTransform"; datasetId: string }
-        | { __typename?: "FlowDescriptionDatasetHardCompaction"; datasetId: string }
-        | { __typename?: "FlowDescriptionDatasetPollingIngest"; datasetId: string }
-        | { __typename?: "FlowDescriptionDatasetPushIngest"; datasetId: string }
-        | { __typename?: "FlowDescriptionDatasetReset"; datasetId: string }
-        | { __typename?: "FlowDescriptionSystemGC" };
-};
-
 type FlowOutcomeData_FlowAbortedResult_Fragment = { __typename?: "FlowAbortedResult"; message: string };
 
 type FlowOutcomeData_FlowFailedError_Fragment = {
@@ -4626,27 +4615,6 @@ export const FlowHistoryDataFragmentDoc = gql`
     ${AccountFragmentDoc}
     ${DatasetBasicsFragmentDoc}
     ${TimeDeltaDataFragmentDoc}
-`;
-export const FlowItemWidgetDatasetIdFragmentDoc = gql`
-    fragment FlowItemWidgetDatasetId on Flow {
-        description {
-            ... on FlowDescriptionDatasetPollingIngest {
-                datasetId
-            }
-            ... on FlowDescriptionDatasetPushIngest {
-                datasetId
-            }
-            ... on FlowDescriptionDatasetExecuteTransform {
-                datasetId
-            }
-            ... on FlowDescriptionDatasetHardCompaction {
-                datasetId
-            }
-            ... on FlowDescriptionDatasetReset {
-                datasetId
-            }
-        }
-    }
 `;
 export const FlowItemWidgetDataFragmentDoc = gql`
     fragment FlowItemWidgetData on Flow {

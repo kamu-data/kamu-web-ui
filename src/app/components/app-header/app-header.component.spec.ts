@@ -87,6 +87,7 @@ describe("AppHeaderComponent", () => {
             enableLogout: true,
             enableScheduling: true,
             enableDatasetEnvVarsManagment: true,
+            enableTermsOfService: true,
         };
         component.loginMethods = [LoginMethod.GITHUB, LoginMethod.PASSWORD];
         component.isVisible = true;

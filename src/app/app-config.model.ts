@@ -22,6 +22,7 @@ export interface AppConfigFeatureFlags {
     enableLogout: boolean;
     enableScheduling: boolean;
     enableDatasetEnvVarsManagment: boolean;
+    enableTermsOfService: boolean;
 }
 
 export interface GrafanaLogsConfiguration {

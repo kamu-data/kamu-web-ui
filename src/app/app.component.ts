@@ -41,6 +41,7 @@ export class AppComponent extends BaseComponent implements OnInit {
         enableLogout: true,
         enableScheduling: true,
         enableDatasetEnvVarsManagment: true,
+        enableTermsOfService: true,
     };
 
     public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;

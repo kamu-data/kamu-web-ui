@@ -78,6 +78,7 @@
     <app-sql-editor
         [(template)]="sqlRequestCode"
         [error]="sqlError"
+        [placeholder]="monacoPlaceholder"
         (onRunSql)="runSql()"
         (onEditorLoaded)="hideProgressBar()"
     />

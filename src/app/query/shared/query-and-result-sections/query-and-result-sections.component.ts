@@ -38,6 +38,7 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
     @Input({ required: true }) sqlError: MaybeNull<string>;
     @Input({ required: true }) public sqlRequestCode: string;
     @Input({ required: true }) public sqlQueryResponse: MaybeNull<SqlQueryResponseState>;
+    @Input({ required: true }) public monacoPlaceholder: string = "";
     @Output() public runSQLRequestEmit = new EventEmitter<DatasetRequestBySql>();
 
     private loggedUserService = inject(LoggedUserService);

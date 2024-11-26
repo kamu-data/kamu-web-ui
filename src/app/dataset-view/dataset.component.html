@@ -14,46 +14,47 @@
                 [datasetPermissions]="datasetPermissions"
                 [datasetViewType]="datasetViewType"
             />
+            <div class="container-main">
+                <app-overview
+                    *ngIf="datasetViewType === DatasetViewTypeEnum.Overview"
+                    [datasetBasics]="datasetBasics"
+                    [datasetPermissions]="datasetPermissions"
+                    (selectTopicEmit)="selectTopic($event)"
+                />
 
-            <app-overview
-                *ngIf="datasetViewType === DatasetViewTypeEnum.Overview"
-                [datasetBasics]="datasetBasics"
-                [datasetPermissions]="datasetPermissions"
-                (selectTopicEmit)="selectTopic($event)"
-            />
+                <app-metadata
+                    *ngIf="datasetViewType === DatasetViewTypeEnum.Metadata"
+                    [datasetBasics]="datasetBasics"
+                    [datasetPermissions]="datasetPermissions"
+                    (pageChangeEmit)="onPageChange($event)"
+                />
 
-            <app-metadata
-                *ngIf="datasetViewType === DatasetViewTypeEnum.Metadata"
-                [datasetBasics]="datasetBasics"
-                [datasetPermissions]="datasetPermissions"
-                (pageChangeEmit)="onPageChange($event)"
-            />
+                <app-data
+                    *ngIf="datasetViewType === DatasetViewTypeEnum.Data"
+                    [datasetBasics]="datasetBasics"
+                    [sqlLoading]="sqlLoading"
+                    (runSQLRequestEmit)="onRunSQLRequest($event)"
+                />
 
-            <app-data
-                *ngIf="datasetViewType === DatasetViewTypeEnum.Data"
-                [datasetBasics]="datasetBasics"
-                [sqlLoading]="sqlLoading"
-                (runSQLRequestEmit)="onRunSQLRequest($event)"
-            />
+                <app-history
+                    *ngIf="datasetViewType === DatasetViewTypeEnum.History"
+                    [datasetName]="datasetBasics.name"
+                    (onPageChangeEmit)="onPageChange($event)"
+                />
 
-            <app-history
-                *ngIf="datasetViewType === DatasetViewTypeEnum.History"
-                [datasetName]="datasetBasics.name"
-                (onPageChangeEmit)="onPageChange($event)"
-            />
+                <app-lineage
+                    *ngIf="datasetViewType === DatasetViewTypeEnum.Lineage"
+                    (onClickNodeEmit)="onClickLineageNode($event)"
+                />
 
-            <app-lineage
-                *ngIf="datasetViewType === DatasetViewTypeEnum.Lineage"
-                (onClickNodeEmit)="onClickLineageNode($event)"
-            />
+                <app-flows *ngIf="datasetViewType === DatasetViewTypeEnum.Flows" [datasetBasics]="datasetBasics" />
 
-            <app-flows *ngIf="datasetViewType === DatasetViewTypeEnum.Flows" [datasetBasics]="datasetBasics" />
-
-            <app-dataset-settings
-                *ngIf="datasetViewType === DatasetViewTypeEnum.Settings"
-                [datasetBasics]="datasetBasics"
-                [datasetPermissions]="datasetPermissions"
-            />
+                <app-dataset-settings
+                    *ngIf="datasetViewType === DatasetViewTypeEnum.Settings"
+                    [datasetBasics]="datasetBasics"
+                    [datasetPermissions]="datasetPermissions"
+                />
+            </div>
         </div>
     </div>
 </div>

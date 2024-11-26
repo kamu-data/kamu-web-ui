@@ -1,4 +1,3 @@
-import { NavigationService } from "src/app/services/navigation.service";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { ReadmeSectionComponent } from "./readme-section.component";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
@@ -17,14 +16,12 @@ import { EditMode } from "./readme-section.types";
 import { of } from "rxjs";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 
 describe("ReadmeSectionComponent", () => {
     let component: ReadmeSectionComponent;
     let fixture: ComponentFixture<ReadmeSectionComponent>;
     let datasetCommitService: DatasetCommitService;
     let loggedUserService: LoggedUserService;
-    let navigationService: NavigationService;
 
     const mockReadmeContent = "Mock README.md content";
 
@@ -54,7 +51,6 @@ describe("ReadmeSectionComponent", () => {
         component = fixture.componentInstance;
         datasetCommitService = TestBed.inject(DatasetCommitService);
         loggedUserService = TestBed.inject(LoggedUserService);
-        navigationService = TestBed.inject(NavigationService);
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
         component.currentReadme = mockReadmeContent;
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
@@ -141,14 +137,13 @@ describe("ReadmeSectionComponent", () => {
         component.readmeState = "```sql" + "\nselect * from 'account.tokens.portfolio.market-value'" + "\n```";
         component.viewMode = EditMode.Preview;
 
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         fixture.detectChanges();
 
-        const runButtonElement = findNativeElement(fixture, `.markdown-run-button`);
-        runButtonElement.click();
-
-        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({ tab: DatasetViewTypeEnum.Data }),
-        );
+        const runButtonElement = findNativeElement(fixture, `.markdown-run-button`) as HTMLLinkElement;
+        expect(
+            runButtonElement.href.includes(
+                "kamu/mockNameDerived?tab=data&sqlQuery=select%20*%20from%20%27account.tokens.portfolio.market-value%27",
+            ),
+        ).toBeTrue();
     });
 });

@@ -110,20 +110,30 @@ export class ReadmeSectionComponent extends BaseComponent implements OnChanges, 
                     const divElement: HTMLDivElement = document.createElement("div");
                     divElement.classList.add("container-run-button");
                     divElement.style.position = "absolute";
-                    divElement.style.top = "7px";
+                    divElement.style.top = "10px";
                     divElement.style.right = "65px";
-                    const buttonElement: HTMLButtonElement = document.createElement("button");
-                    buttonElement.innerHTML = "Run";
-                    buttonElement.classList.add("markdown-run-button");
-                    buttonElement.addEventListener("click", () => {
-                        this.navigationService.navigateToDatasetView({
-                            accountName: this.datasetBasics.owner.accountName,
-                            datasetName: this.datasetBasics.name,
-                            tab: DatasetViewTypeEnum.Data,
-                            sqlQuery: sqlQueries[index],
-                        });
+                    const linkElement = document.createElement("a");
+                    linkElement.classList.add("markdown-run-button");
+                    linkElement.style.padding = "3.6px 16px";
+                    linkElement.style.color = "#ffff";
+                    linkElement.style.fontSize = "13px";
+                    linkElement.style.textDecoration = "none";
+                    linkElement.style.backgroundColor = "rgba(255,255, 255, 0.07)";
+                    linkElement.style.borderRadius = "4px";
+                    linkElement.style.transition = "all 250ms ease-out";
+                    linkElement.setAttribute("target", "_blank");
+                    linkElement.setAttribute(
+                        "href",
+                        `/${this.datasetBasics.owner.accountName}/${this.datasetBasics.name}?tab=${DatasetViewTypeEnum.Data}&sqlQuery=${sqlQueries[index]}`,
+                    );
+                    linkElement.addEventListener("mouseover", () => {
+                        linkElement.style.backgroundColor = "rgba(255,255, 255, 0.14)";
                     });
-                    divElement.appendChild(buttonElement);
+                    linkElement.addEventListener("mouseleave", () => {
+                        linkElement.style.backgroundColor = "rgba(255,255, 255, 0.07)";
+                    });
+                    linkElement.innerHTML = "Run";
+                    divElement.appendChild(linkElement);
                     preElement.after(divElement);
                 });
             }

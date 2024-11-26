@@ -3357,6 +3357,13 @@ export type FlowHistoryDataFragment =
 export type FlowItemWidgetDataFragment = {
     __typename?: "Flow";
     status: FlowStatus;
+    description:
+        | { __typename?: "FlowDescriptionDatasetExecuteTransform"; datasetId: string }
+        | { __typename?: "FlowDescriptionDatasetHardCompaction"; datasetId: string }
+        | { __typename?: "FlowDescriptionDatasetPollingIngest"; datasetId: string }
+        | { __typename?: "FlowDescriptionDatasetPushIngest"; datasetId: string }
+        | { __typename?: "FlowDescriptionDatasetReset"; datasetId: string }
+        | { __typename?: "FlowDescriptionSystemGC" };
     initiator?: { __typename?: "Account"; accountName: string } | null;
     outcome?:
         | ({ __typename?: "FlowAbortedResult" } & FlowOutcomeData_FlowAbortedResult_Fragment)
@@ -4612,6 +4619,23 @@ export const FlowHistoryDataFragmentDoc = gql`
 export const FlowItemWidgetDataFragmentDoc = gql`
     fragment FlowItemWidgetData on Flow {
         status
+        description {
+            ... on FlowDescriptionDatasetPollingIngest {
+                datasetId
+            }
+            ... on FlowDescriptionDatasetPushIngest {
+                datasetId
+            }
+            ... on FlowDescriptionDatasetExecuteTransform {
+                datasetId
+            }
+            ... on FlowDescriptionDatasetHardCompaction {
+                datasetId
+            }
+            ... on FlowDescriptionDatasetReset {
+                datasetId
+            }
+        }
         initiator {
             accountName
         }

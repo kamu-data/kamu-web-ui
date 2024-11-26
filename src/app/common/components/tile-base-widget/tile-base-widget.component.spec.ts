@@ -3,6 +3,7 @@ import { TileBaseWidgetComponent } from "./tile-base-widget.component";
 import { mockFlowsOutcome, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import { NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
 import { FlowOutcomeDataFragment } from "src/app/api/kamu.graphql.interface";
+import { mockDatasets } from "../flows-table/flows-table.helpers.mock";
 
 describe("TileBaseWidgetComponent", () => {
     let component: TileBaseWidgetComponent;
@@ -17,6 +18,7 @@ describe("TileBaseWidgetComponent", () => {
         fixture = TestBed.createComponent(TileBaseWidgetComponent);
         component = fixture.componentInstance;
         component.nodes = mockFlowSummaryDataFragments;
+        component.involvedDatasets = mockDatasets;
         fixture.detectChanges();
     });
 
@@ -51,5 +53,9 @@ describe("TileBaseWidgetComponent", () => {
         it(`should check outcome message equal ${testCase.expectedResult}`, () => {
             expect(component.tileOutcomeMessage(testCase.case)).toEqual(testCase.expectedResult);
         });
+    });
+
+    it(`should check extract dataset alias`, () => {
+        expect(component.datasetAliasByDescription(mockFlowSummaryDataFragments[0])).toEqual(mockDatasets[0].alias);
     });
 });

@@ -36,6 +36,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     public overviewUpdate$: Observable<OverviewUpdate>;
     public sqlErrorMarker$: Observable<string>;
     public sqlQueryResponse$: Observable<MaybeNull<SqlQueryResponseState>>;
+    public readonly MONACO_PLACEHOLDER = "Please type your guery here...";
 
     private datasetSubsService = inject(DatasetSubscriptionsService);
     private location = inject(Location);

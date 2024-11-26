@@ -20,6 +20,7 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
     public sqlLoading = false;
     public sqlErrorMarker$: Observable<string>;
     public sqlQueryResponse$: Observable<MaybeNull<SqlQueryResponseState>>;
+    public readonly MONACO_PLACEHOLDER = "Please type your guery here or find the dataset in the search...";
 
     private sqlQueryService = inject(SqlQueryService);
     private cdr = inject(ChangeDetectorRef);
@@ -39,6 +40,10 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
         if (sqlQueryFromUrl) {
             this.sqlRequestCode = sqlQueryFromUrl;
         }
+    }
+
+    public setDefaultQuery(sqlRequestCode: string): void {
+        this.sqlRequestCode = sqlRequestCode;
     }
 
     public runSQLRequest(params: DatasetRequestBySql): void {

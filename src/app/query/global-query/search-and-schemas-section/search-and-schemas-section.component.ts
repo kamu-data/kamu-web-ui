@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    inject,
+    OnInit,
+    Output,
+} from "@angular/core";
 import { GlobalQuerySearchItem, SqlQueryResponseState } from "../global-query.model";
 import { BaseComponent } from "src/app/common/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -30,10 +38,12 @@ import { SqlQueryService } from "src/app/services/sql-query.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchAndSchemasSectionComponent extends BaseComponent implements OnInit {
+    @Output() public sqlQueryEmit = new EventEmitter<string>();
     public searchResult: GlobalQuerySearchItem[] = [];
     public inputDatasets = new Set<string>();
     public searchDataset = "";
     private readonly delayTime: number = AppValues.SHORT_DELAY_MS;
+    private readonly SQL_DEFAULT_TEMPLATE = "select * from";
 
     private cdr = inject(ChangeDetectorRef);
     private datasetService = inject(DatasetService);
@@ -104,6 +114,9 @@ export class SearchAndSchemasSectionComponent extends BaseComponent implements O
         const value = event.item as DatasetAutocompleteItem;
         const id = value.dataset.id;
         const name = value.dataset.name;
+        if (!this.inputDatasets.size) {
+            this.sqlQueryEmit.emit(`${this.SQL_DEFAULT_TEMPLATE} '${value.dataset.alias}'`);
+        }
         const inputDataset = JSON.stringify({
             datasetRef: id,
             alias: name,

@@ -4,9 +4,7 @@ import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
 import { DataComponent } from "./data.component";
-
-import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
-import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
+import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { mockMetadataDerivedUpdate, mockOverviewDataUpdate, mockOverviewDataUpdateNullable } from "../data-tabs.mock";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Location } from "@angular/common";
@@ -26,11 +24,11 @@ import { Apollo } from "apollo-angular";
 import { ToastrModule } from "ngx-toastr";
 import { SavedQueriesSectionComponent } from "../../../query/shared/saved-queries-section/saved-queries-section.component";
 import { QueryAndResultSectionsComponent } from "../../../query/shared/query-and-result-sections/query-and-result-sections.component";
+import { SearchAndSchemasSectionComponent } from "src/app/query/global-query/search-and-schemas-section/search-and-schemas-section.component";
 
 describe("DataComponent", () => {
     let component: DataComponent;
     let fixture: ComponentFixture<DataComponent>;
-    let datasetSubsService: DatasetSubscriptionsService;
     let location: Location;
     let ngbModalService: NgbModal;
 
@@ -58,10 +56,10 @@ describe("DataComponent", () => {
                 LoadMoreComponent,
                 RequestTimerComponent,
                 SqlEditorComponent,
+                SearchAndSchemasSectionComponent,
             ],
         }).compileComponents();
         fixture = TestBed.createComponent(DataComponent);
-        datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         location = TestBed.inject(Location);
         ngbModalService = TestBed.inject(NgbModal);
         component = fixture.componentInstance;
@@ -84,24 +82,6 @@ describe("DataComponent", () => {
         emitClickOnElementByDataTestId(fixture, "runSqlQueryButton");
 
         expect(runSQLRequestEmitSpy).toHaveBeenCalledTimes(1);
-        flush();
-    }));
-
-    it("should check schema column names", fakeAsync(() => {
-        datasetSubsService.emitOverviewChanged({
-            schema: mockMetadataDerivedUpdate.schema,
-            content: mockOverviewDataUpdate.content,
-            overview: _.cloneDeep(mockOverviewDataUpdate.overview),
-            size: mockOverviewDataUpdate.size,
-        } as OverviewUpdate);
-        tick();
-        fixture.detectChanges();
-        const columnSchemaNames = mockMetadataDerivedUpdate.schema?.fields.map((item) => item.name);
-        columnSchemaNames?.forEach((columnName) => {
-            expect(findElementByDataTestId(fixture, `column-name-${columnName}`)?.textContent?.trim()).toEqual(
-                columnName,
-            );
-        });
         flush();
     }));
 

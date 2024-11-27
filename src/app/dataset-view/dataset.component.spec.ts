@@ -53,6 +53,7 @@ import { promiseWithCatch } from "../common/app.helpers";
 import { QueryAndResultSectionsComponent } from "../query/shared/query-and-result-sections/query-and-result-sections.component";
 import { SavedQueriesSectionComponent } from "../query/shared/saved-queries-section/saved-queries-section.component";
 import { SqlQueryService } from "../services/sql-query.service";
+import { SearchAndSchemasSectionComponent } from "../query/global-query/search-and-schemas-section/search-and-schemas-section.component";
 
 describe("DatasetComponent", () => {
     let component: DatasetComponent;
@@ -86,6 +87,7 @@ describe("DatasetComponent", () => {
                 FlowsComponent,
                 QueryAndResultSectionsComponent,
                 SavedQueriesSectionComponent,
+                SearchAndSchemasSectionComponent,
             ],
             imports: [
                 AngularSvgIconModule.forRoot(),

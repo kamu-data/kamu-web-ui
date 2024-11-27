@@ -1,5 +1,5 @@
 <div class="box p-4 schemes-container">
-    <div class="d-flex flex-column">
+    <div class="d-flex flex-column" *ngIf="!disableSearch">
         <h2 class="mb-1">Search:</h2>
         <div class="d-flex flex-row position-relative w-100">
             <input
@@ -18,23 +18,25 @@
                 x
             </button>
         </div>
+        <ng-template #rt let-r="result" let-t="term">
+            <div class="d-flex flex-row justify-content-between" [style.width.px]="searchDatasets.clientWidth - 28">
+                <div class="search-result-item">
+                    <i class="bi bi-journal-album mr-2"></i>
+                    <ng-container *ngIf="!r.dummy">{{ r.dataset.owner.accountName }}/</ng-container>
+                    <ngb-highlight [result]="r.dataset.name" [term]="t" />
+                </div>
+                <div
+                    class="border rounded-1 flex-shrink-0 color-bg-tertiary px-1 f6 button-add color-text-tertiary ml-1"
+                >
+                    Add
+                    <span class="d-inline-block ml-1 v-align-middle"><i class="bi bi-arrow-return-left"></i></span>
+                </div>
+            </div>
+        </ng-template>
     </div>
-    <ng-template #rt let-r="result" let-t="term">
-        <div class="d-flex flex-row justify-content-between" [style.width.px]="searchDatasets.clientWidth - 28">
-            <div class="search-result-item">
-                <i class="bi bi-journal-album mr-2"></i>
-                <ng-container *ngIf="!r.dummy">{{ r.dataset.owner.accountName }}/</ng-container>
-                <ngb-highlight [result]="r.dataset.name" [term]="t" />
-            </div>
-            <div class="border rounded-1 flex-shrink-0 color-bg-tertiary px-1 f6 button-add color-text-tertiary ml-1">
-                Add
-                <span class="d-inline-block ml-1 v-align-middle"><i class="bi bi-arrow-return-left"></i></span>
-            </div>
-        </div>
-    </ng-template>
 
     <div class="search-datasets mt-4">
-        <h2>Dataset schemas:</h2>
+        <h2>Schemas:</h2>
         <mat-divider class="px-2 mt-2 mb-4"></mat-divider>
 
         <cdk-accordion
@@ -65,6 +67,7 @@
                             <mat-icon>keyboard_arrow_up</mat-icon>
                         </ng-template>
                         <button
+                            *ngIf="!disableSearch"
                             class="no-button d-flex"
                             (click)="removeDataset(item.datasetAlias)"
                             title="Remove dataset"
@@ -94,7 +97,7 @@
             </cdk-accordion-item>
         </cdk-accordion>
         <ng-template #emptyTemplate>
-            <p class="text-center mt-4">No datasets selected</p>
+            <p *ngIf="!disableSearch" class="text-center mt-4">No datasets selected</p>
         </ng-template>
     </div>
 

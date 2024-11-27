@@ -4,6 +4,7 @@ import {
     Component,
     EventEmitter,
     inject,
+    Input,
     OnInit,
     Output,
 } from "@angular/core";
@@ -39,6 +40,7 @@ import { SqlQueryService } from "src/app/services/sql-query.service";
 })
 export class SearchAndSchemasSectionComponent extends BaseComponent implements OnInit {
     @Output() public sqlQueryEmit = new EventEmitter<string>();
+    @Input() public disableSearch: boolean;
     public searchResult: GlobalQuerySearchItem[] = [];
     public inputDatasets = new Set<string>();
     public searchDataset = "";

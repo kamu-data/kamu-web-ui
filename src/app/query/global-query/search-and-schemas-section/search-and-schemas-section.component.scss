@@ -29,7 +29,6 @@ h2 {
 
 .example-accordion-item {
     display: block;
-    border: solid 1px #ccc;
 
     &:last-child {
         border-bottom: 1px solid #ccc;
@@ -47,12 +46,15 @@ h2 {
     &-header {
         color: #000;
         font-size: 13px;
-        font-weight: 400;
+        font-weight: 500;
         line-height: 20px;
         cursor: pointer;
         display: flex;
         padding: 4px 10px;
         background: #f6f8fa;
+        border-top: solid 1px #ccc;
+        border-left: solid 1px #ccc;
+        border-right: solid 1px #ccc;
 
         &:hover {
             cursor: pointer;

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Query page: added default query after searching for first dataset
 - Set the container width for large screens
+- Added contextual schemas in Data tab
 ### Changed
 - Readme section: modified 'Run' button into a link
 - Hint extension for tile widget account

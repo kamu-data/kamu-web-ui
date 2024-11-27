@@ -5,10 +5,14 @@ import { BaseComponent } from "../../../../../common/base.component";
 import { promiseWithCatch } from "../../../../../common/app.helpers";
 import { ModalService } from "../../../../../components/modal/modal.service";
 import {
+    CompareChainsResultError,
+    CompareChainsResultStatus,
+    CompareChainsStatus,
     DatasetBasicsFragment,
     DatasetFlowType,
     DatasetKind,
     DatasetPermissionsFragment,
+    DatasetPushSyncStatusesQuery,
 } from "../../../../../api/kamu.graphql.interface";
 import { DatasetSettingsService } from "../../services/dataset-settings.service";
 import { Observable, shareReplay } from "rxjs";
@@ -19,6 +23,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import AppValues from "src/app/common/app.values";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { DatasetApi } from "../../../../../api/dataset.api";
 
 @Component({
     selector: "app-dataset-settings-general-tab",
@@ -45,6 +50,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     private datasetCompactionService = inject(DatasetCompactionService);
     private flowsService = inject(DatasetFlowsService);
     private navigationService = inject(NavigationService);
+    private datasetApi = inject(DatasetApi);
 
     public ngOnInit(): void {
         this.renameError$ = this.datasetSettingsService.renameDatasetErrorOccurrences.pipe(shareReplay());
@@ -103,22 +109,58 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     public deleteDataset(): void {
         const datasetId = this.datasetBasics.id;
         const accountId = this.datasetBasics.owner.id;
-        promiseWithCatch(
-            this.modalService.error({
-                title: "Delete",
-                message: "Do you want to delete a dataset?",
-                yesButtonText: "Ok",
-                noButtonText: "Cancel",
-                handler: (ok) => {
-                    if (ok) {
-                        this.datasetSettingsService
-                            .deleteDataset(accountId, datasetId)
-                            .pipe(takeUntilDestroyed(this.destroyRef))
-                            .subscribe();
+
+        this.datasetApi.datasetPushSyncStatuses(datasetId).subscribe((data: DatasetPushSyncStatusesQuery) => {
+            const statuses = data.datasets.byId?.metadata.pushSyncStatuses.statuses ?? [];
+            const lines: string[] = [];
+            const error_lines: string[] = [];
+            statuses.forEach((status) => {
+                if (status.result.__typename === "CompareChainsResultStatus") {
+                    const result: CompareChainsResultStatus = status.result;
+                    if (result.message === CompareChainsStatus.Ahead) {
+                        lines.push(`behind "${status.remote}"`);
+                    } else if (result.message === CompareChainsStatus.Behind) {
+                        lines.push(`ahead of "${status.remote}"`);
+                    } else if (result.message === CompareChainsStatus.Diverged) {
+                        lines.push(`diverged from "${status.remote}"`);
                     }
-                },
-            }),
-        );
+                } else if (status.result.__typename === "CompareChainsResultError") {
+                    const result: CompareChainsResultError = status.result;
+                    error_lines.push(`could not check state of '${status.remote}'. Error: ${result.reason.message}`);
+                }
+            });
+
+            let message = "";
+            if (lines.length > 0 || error_lines.length > 0) {
+                message = `Dataset is out of sync with remote(s):<br><br>`;
+                lines.forEach((line) => {
+                    message += `${line}<br>`;
+                });
+                error_lines.forEach((line) => {
+                    message += `${line}<br>`;
+                });
+                message += "<br><br>";
+            }
+            message += "Do you want to delete a dataset?";
+
+            promiseWithCatch(
+                this.modalService.error({
+                    title: "Delete",
+                    bigTextBlock: true,
+                    htmlMessage: message,
+                    yesButtonText: "Ok",
+                    noButtonText: "Cancel",
+                    handler: (ok) => {
+                        if (ok) {
+                            this.datasetSettingsService
+                                .deleteDataset(accountId, datasetId)
+                                .pipe(takeUntilDestroyed(this.destroyRef))
+                                .subscribe();
+                        }
+                    },
+                }),
+            );
+        });
     }
 
     public resetDataset(): void {

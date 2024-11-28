@@ -1,22 +1,5 @@
-<div class="dataset-view-data-result-container">
-    <div class="search-result-container__content">
-        <ng-container *ngIf="overviewUpdate$ | async as overviewUpdate">
-            <ng-container *ngIf="overviewUpdate.schema">
-                <h2 class="box-title align-items-center pb-3 m-0">Schema:</h2>
-                <app-dynamic-table
-                    [hasTableHeader]="true"
-                    [schemaFields]="overviewUpdate.schema.fields"
-                    [idTable]="'schema-block-table'"
-                />
-            </ng-container>
-        </ng-container>
-
-        <div>
-            <h2 class="box-title align-items-center pb-3 pt-3 m-0">Saved Queries</h2>
-            <app-saved-queries-section></app-saved-queries-section>
-        </div>
-    </div>
-
+<div class="query-container">
+    <app-search-and-schemas-section [disableSearch]="true"></app-search-and-schemas-section>
     <div class="search-result-container__content">
         <app-query-and-result-sections
             [sqlLoading]="sqlLoading"

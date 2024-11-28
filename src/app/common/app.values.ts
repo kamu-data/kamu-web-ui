@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { AppUIConfig, AppUIConfigFeatureFlags } from "../app-config.model";
 
 @Injectable()
 export default class AppValues {
@@ -50,4 +51,16 @@ const language = 'typescript';
 
 ### Blockquote
 > Blockquote to the max`;
+
+    public static readonly DEFAULT_UI_FEATURE_FLAGS: AppUIConfigFeatureFlags = {
+        enableLogout: true,
+        enableScheduling: true,
+        enableDatasetEnvVarsManagement: true,
+        enableTermsOfService: true,
+    };
+
+    public static readonly DEFAULT_UI_CONFIGURATION: AppUIConfig = {
+        ingestUploadFileLimitMb: 50,
+        featureFlags: AppValues.DEFAULT_UI_FEATURE_FLAGS,
+    };
 }

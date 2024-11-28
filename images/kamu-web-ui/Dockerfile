@@ -17,6 +17,5 @@ RUN cd /usr/share/nginx/html && \
     rm -r kamu-web-ui-any.tar.gz kamu-web-ui-any
 
 COPY runtime-config.json /usr/share/nginx/html/assets/runtime-config.json
-COPY runtime-config-single-tenant.json /usr/share/nginx/html/assets/runtime-config-single-tenant.json
 
 USER nginx

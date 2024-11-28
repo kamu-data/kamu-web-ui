@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Readme section: modified 'Run' button into a link
 - Hint extension for tile widget account
+- Separated runtime and UI configurations
 ### Fixed
 - Typo in feature flags (enableDatasetEnvVarsManagement)
                                                   ^

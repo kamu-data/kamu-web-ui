@@ -39,12 +39,6 @@ import { DynamicComponent } from "./dynamic.component";
                     <p *ngIf="context && context.message" class="modal__msg mt-4" data-test-id="modalMessage">
                         {{ context.message }}
                     </p>
-                    <p
-                        *ngIf="context && context.htmlMessage"
-                        class="modal__msg mt-4"
-                        data-test-id="modalHtmlMessage"
-                        [innerHTML]="context.htmlMessage"
-                    ></p>
                 </div>
                 <div
                     class="modal__dialog__footer-block"

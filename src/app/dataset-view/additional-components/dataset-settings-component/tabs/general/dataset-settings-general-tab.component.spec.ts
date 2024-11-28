@@ -32,6 +32,7 @@ import { DatasetFlowType } from "src/app/api/kamu.graphql.interface";
 import { DatasetResetMode } from "./dataset-settings-general-tab.types";
 import AppValues from "src/app/common/app.values";
 import { DatasetFlowsService } from "../../../flows-component/services/dataset-flows.service";
+import { DatasetService } from "../../../../dataset.service";
 
 describe("DatasetSettingsGeneralTabComponent", () => {
     let component: DatasetSettingsGeneralTabComponent;
@@ -41,6 +42,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     let datasetCompactionService: DatasetCompactionService;
     let navigationService: NavigationService;
     let flowsService: DatasetFlowsService;
+    let datasetService: DatasetService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -70,6 +72,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         modalService = TestBed.inject(ModalService);
         datasetCompactionService = TestBed.inject(DatasetCompactionService);
         flowsService = TestBed.inject(DatasetFlowsService);
+        datasetService = TestBed.inject(DatasetService);
 
         navigationService = TestBed.inject(NavigationService);
         fixture.detectChanges();
@@ -189,6 +192,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     }));
 
     it("should check delete modal window is shown and sends API call after confirm", fakeAsync(() => {
+        const hasOutOfSyncPushRemotesSpy = spyOn(datasetService, "hasOutOfSyncPushRemotes").and.returnValue(of(false));
         const modalServiceSpy = spyOn(modalService, "error").and.callFake((options) => {
             options.handler?.call(undefined, true);
             return Promise.resolve("");
@@ -197,6 +201,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
         emitClickOnElementByDataTestId(fixture, Elements.DeleteDatasetButton);
         expect(modalServiceSpy).toHaveBeenCalledTimes(1);
+        expect(hasOutOfSyncPushRemotesSpy).toHaveBeenCalledTimes(1);
         fixture.detectChanges();
 
         tick();
@@ -207,6 +212,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     }));
 
     it("should check delete modal window is shown and does not send API call after reject", fakeAsync(() => {
+        const hasOutOfSyncPushRemotesSpy = spyOn(datasetService, "hasOutOfSyncPushRemotes").and.returnValue(of(false));
         const modalServiceSpy = spyOn(modalService, "error").and.callFake((options) => {
             options.handler?.call(undefined, false);
             return Promise.resolve("");
@@ -215,6 +221,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
         emitClickOnElementByDataTestId(fixture, Elements.DeleteDatasetButton);
         expect(modalServiceSpy).toHaveBeenCalledTimes(1);
+        expect(hasOutOfSyncPushRemotesSpy).toHaveBeenCalledTimes(1);
         fixture.detectChanges();
 
         tick();

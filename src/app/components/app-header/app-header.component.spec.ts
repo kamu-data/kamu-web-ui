@@ -86,7 +86,7 @@ describe("AppHeaderComponent", () => {
         component.featureFlags = {
             enableLogout: true,
             enableScheduling: true,
-            enableDatasetEnvVarsManagment: true,
+            enableDatasetEnvVarsManagement: true,
             enableTermsOfService: true,
         };
         component.loginMethods = [LoginMethod.GITHUB, LoginMethod.PASSWORD];

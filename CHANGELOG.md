@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Readme section: modified 'Run' button into a link
 - Hint extension for tile widget account
+### Fixed
+- Typo in feature flags (enableDatasetEnvVarsManagement)
+                                                  ^
 
 ## [0.31.0] - 2024-11-22
 ### Added
@@ -143,7 +146,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added access token feature
 - Added environment variables and secrets for the dataset
-- Added new flag(enableDatasetEnvVarsManagment) in the runtime configuration
+- Added new flag(enableDatasetEnvVarsManagement) in the runtime configuration
 ### Fixed
 - Fixed bug with cache(Data tab) on the deployment version
 - Extended full source info for EthereumLogs(Metadata tab)

@@ -42,7 +42,7 @@ export class DataAccessModalComponent {
 
     public get showApiTokensLink(): boolean {
         return (
-            this.appConfigService.featureFlags.enableDatasetEnvVarsManagment &&
+            this.appConfigService.featureFlags.enableDatasetEnvVarsManagement &&
             this.loggedUserService.isAuthenticated &&
             this.datasetBasics.kind === DatasetKind.Root
         );

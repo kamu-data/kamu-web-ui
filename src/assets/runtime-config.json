@@ -6,7 +6,7 @@
   "featureFlags": {
     "enableLogout": true,
     "enableScheduling": true,
-    "enableDatasetEnvVarsManagment": true,
+    "enableDatasetEnvVarsManagement": true,
     "enableTermsOfService": true
   },
   "grafanaLogs": {

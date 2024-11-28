@@ -40,7 +40,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     public static readonly DEFAULT_FEATURE_FLAGS: AppConfigFeatureFlags = {
         enableLogout: true,
         enableScheduling: true,
-        enableDatasetEnvVarsManagment: true,
+        enableDatasetEnvVarsManagement: true,
         enableTermsOfService: true,
     };
 

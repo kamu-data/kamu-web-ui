@@ -42,7 +42,7 @@ describe("LoginComponent", () => {
     const MOCK_FEATURE_FLAGS = {
         enableLogout: true,
         enableScheduling: true,
-        enableDatasetEnvVarsManagment: true,
+        enableDatasetEnvVarsManagement: true,
         enableTermsOfService: true,
     };
 

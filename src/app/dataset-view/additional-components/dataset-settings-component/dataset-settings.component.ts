@@ -66,7 +66,7 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
 
     public get showSecretsManagerTab(): boolean {
         return (
-            this.appConfigService.featureFlags.enableDatasetEnvVarsManagment &&
+            this.appConfigService.featureFlags.enableDatasetEnvVarsManagement &&
             this.activeTab === SettingsTabsEnum.VARIABLES_AND_SECRETS
         );
     }
@@ -104,7 +104,7 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
                 return this.datasetBasics.kind === DatasetKind.Root;
             case SettingsTabsEnum.VARIABLES_AND_SECRETS:
                 return (
-                    this.appConfigService.featureFlags.enableDatasetEnvVarsManagment &&
+                    this.appConfigService.featureFlags.enableDatasetEnvVarsManagement &&
                     this.datasetBasics.kind === DatasetKind.Root
                 );
             default:

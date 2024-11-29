@@ -118,7 +118,7 @@
                     class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
                     data-test-id="refresh-now-button"
                     [disabled]="!canRefresh"
-                    *ngIf="isUserLogged"
+                    *ngIf="visibleUpdateButton"
                     (click)="refreshNow()"
                 >
                     <mat-icon class="text-muted fs-4 d-block">cached</mat-icon>

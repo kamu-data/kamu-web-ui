@@ -72,7 +72,7 @@
                 data-test-id="navigateToFlows"
                 value="flows"
                 [class.active-link]="isDatasetViewTypeFlows"
-                *ngIf="shouldAllowSettingsTab"
+                *ngIf="shouldAllowFlowsTab"
             >
                 <a [routerLink]="[datasetLink]" [queryParams]="{ tab: DatasetViewTypeEnum.Flows }" class="menu-link">
                     <div class="d-flex align-items-center">

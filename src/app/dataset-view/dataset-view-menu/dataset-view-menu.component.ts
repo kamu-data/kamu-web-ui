@@ -16,6 +16,7 @@ import { SideNavHelper } from "../../common/sidenav.helper";
 import { isMobileView, promiseWithCatch } from "src/app/common/app.helpers";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
 import { DatasetPermissionsService } from "../dataset.permissions.service";
+import { AppConfigService } from "src/app/app-config.service";
 
 @Component({
     selector: "app-dataset-view-menu",
@@ -38,6 +39,7 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
 
     private datasetPermissionsServices = inject(DatasetPermissionsService);
     private widgetHeightService = inject(WidgetHeightService);
+    private configService = inject(AppConfigService);
 
     public ngAfterViewInit(): void {
         this.widgetHeightService.setWidgetOffsetTop(
@@ -50,6 +52,10 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
         if (this.sidenav) {
             this.sideNavHelper = new SideNavHelper(this.sidenav);
         }
+    }
+
+    public get enableScheduling(): boolean {
+        return this.configService.featureFlags.enableScheduling;
     }
 
     public get isDatasetViewTypeOverview(): boolean {
@@ -86,6 +92,10 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
 
     public get shouldAllowSettingsTab(): boolean {
         return this.datasetPermissionsServices.shouldAllowSettingsTab(this.datasetPermissions);
+    }
+
+    public get shouldAllowFlowsTab(): boolean {
+        return this.datasetPermissionsServices.shouldAllowFlowsTab(this.datasetPermissions) && this.enableScheduling;
     }
 
     public get datasetLink(): string {

@@ -1,0 +1,17 @@
+query datasetPushSyncStatuses($datasetId: DatasetID!) {
+    datasets {
+        byId(datasetId: $datasetId) {
+            metadata {
+                pushSyncStatuses {
+                    statuses {
+                        remote,
+                        result {
+                            ... on CompareChainsResultStatus { message }
+                            ... on CompareChainsResultError { reason { message } }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,6 +1,8 @@
 import { SqlExecutionError } from "../common/errors";
 import {
     BlockRef,
+    CompareChainsResultStatus,
+    CompareChainsStatus,
     DataQueryResultSuccessViewFragment,
     DatasetByIdQuery,
     DatasetHeadBlockHashQuery,
@@ -8,6 +10,7 @@ import {
     DatasetLineageFragment,
     DatasetPageInfoFragment,
     DatasetPermissionsFragment,
+    DatasetPushSyncStatusesQuery,
     GetDatasetBasicsWithPermissionsQuery,
     GetDatasetLineageQuery,
     GetDatasetSchemaQuery,
@@ -204,6 +207,25 @@ export class DatasetService {
 
     public requestDatasetSchema(datasetId: string): Observable<GetDatasetSchemaQuery> {
         return this.datasetApi.getDatasetSchema(datasetId);
+    }
+
+    public hasOutOfSyncPushRemotes(datasetId: string): Observable<boolean> {
+        return this.datasetApi.datasetPushSyncStatuses(datasetId).pipe(
+            map((data: DatasetPushSyncStatusesQuery) => {
+                const statuses = data.datasets.byId?.metadata.pushSyncStatuses.statuses ?? [];
+                return statuses.some((status) => {
+                    if (status.result.__typename === "CompareChainsResultStatus") {
+                        const result: CompareChainsResultStatus = status.result;
+                        if (result.message !== CompareChainsStatus.Equal) {
+                            return true;
+                        }
+                    } else if (status.result.__typename === "CompareChainsResultError") {
+                        return true;
+                    }
+                    return false;
+                });
+            }),
+        );
     }
 
     private datasetUpdate(data: DatasetBasicsFragment): void {

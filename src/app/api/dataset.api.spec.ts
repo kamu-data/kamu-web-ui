@@ -10,6 +10,7 @@ import {
     TEST_DATASET_NAME,
     TEST_WATERMARK,
     TEST_ACCOUNT_NAME,
+    mockDatasetPushSyncStatusesQuery,
 } from "./mock/dataset.mock";
 import {
     MOCK_NEW_DATASET_NAME,
@@ -45,6 +46,8 @@ import {
     DatasetHeadBlockHashDocument,
     DatasetHeadBlockHashQuery,
     DatasetKind,
+    DatasetPushSyncStatusesDocument,
+    DatasetPushSyncStatusesQuery,
     DatasetsByAccountNameDocument,
     DatasetsByAccountNameQuery,
     DeleteDatasetDocument,
@@ -537,6 +540,27 @@ describe("DatasetApi", () => {
             data: mockUpdateWatermarkSuccessResponse,
         });
     });
+
+    it("should extract push remotes sync statuses by id", fakeAsync(() => {
+        const subscription$ = service
+            .datasetPushSyncStatuses(TEST_DATASET_ID)
+            .subscribe((res: DatasetPushSyncStatusesQuery) => {
+                expect(res.datasets.byId?.metadata.pushSyncStatuses.__typename).toEqual("DatasetPushStatuses");
+            });
+
+        const op = controller.expectOne(DatasetPushSyncStatusesDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+
+        op.flush({
+            data: mockDatasetPushSyncStatusesQuery,
+        });
+
+        tick();
+
+        expect(subscription$.closed).toEqual(true);
+
+        flush();
+    }));
 
     interface RuntimeFailureTestCase {
         operationName: string;

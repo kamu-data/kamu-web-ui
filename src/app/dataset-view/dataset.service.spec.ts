@@ -28,7 +28,15 @@ import { DatasetNotFoundError, SqlExecutionError } from "../common/errors";
 import { DatasetHistoryUpdate, LineageUpdate, OverviewUpdate } from "./dataset.subscriptions.interface";
 import { first } from "rxjs/operators";
 import _ from "lodash";
-import { mockDatasetBasicsWithPermissionQuery, TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "../api/mock/dataset.mock";
+import {
+    mockDatasetBasicsWithPermissionQuery,
+    mockDatasetPushSyncStatusesAllInSyncQuery,
+    mockDatasetPushSyncStatusesNoRemotesQuery,
+    mockDatasetPushSyncStatusesQuery,
+    TEST_ACCOUNT_NAME,
+    TEST_DATASET_ID,
+    TEST_DATASET_NAME,
+} from "../api/mock/dataset.mock";
 import { MaybeNull } from "../common/app.types";
 
 describe("AppDatasetService", () => {
@@ -262,5 +270,44 @@ describe("AppDatasetService", () => {
 
         expect(requestDatasetHashLastBlockSubscription$.closed).toBeTrue();
         expect(datasetHashLastBlockSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should return true is there are out of sync push remotes", () => {
+        spyOn(datasetApi, "datasetPushSyncStatuses").and.returnValue(of(mockDatasetPushSyncStatusesQuery));
+
+        const subscription$ = service
+            .hasOutOfSyncPushRemotes(TEST_DATASET_ID)
+            .pipe(first())
+            .subscribe((hasOutOfSyncRemotes: boolean) => {
+                expect(hasOutOfSyncRemotes).toBe(true);
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should return false is there are no out of sync push remotes", () => {
+        spyOn(datasetApi, "datasetPushSyncStatuses").and.returnValue(of(mockDatasetPushSyncStatusesAllInSyncQuery));
+
+        const subscription$ = service
+            .hasOutOfSyncPushRemotes(TEST_DATASET_ID)
+            .pipe(first())
+            .subscribe((hasOutOfSyncRemotes: boolean) => {
+                expect(hasOutOfSyncRemotes).toBe(false);
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should return false is there are no push remotes", () => {
+        spyOn(datasetApi, "datasetPushSyncStatuses").and.returnValue(of(mockDatasetPushSyncStatusesNoRemotesQuery));
+
+        const subscription$ = service
+            .hasOutOfSyncPushRemotes(TEST_DATASET_ID)
+            .pipe(first())
+            .subscribe((hasOutOfSyncRemotes: boolean) => {
+                expect(hasOutOfSyncRemotes).toBe(false);
+            });
+
+        expect(subscription$.closed).toBeTrue();
     });
 });

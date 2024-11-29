@@ -106,30 +106,33 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
         const datasetId = this.datasetBasics.id;
         const accountId = this.datasetBasics.owner.id;
 
-        this.datasetService.hasOutOfSyncPushRemotes(datasetId).subscribe((hasOutOfSyncRemotes: boolean) => {
-            let message = "";
-            if (hasOutOfSyncRemotes) {
-                message += "Dataset is out of sync with its remote(s). ";
-            }
-            message += "Do you want to delete a dataset?";
+        this.datasetService
+            .hasOutOfSyncPushRemotes(datasetId)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((hasOutOfSyncRemotes: boolean) => {
+                let message = "";
+                if (hasOutOfSyncRemotes) {
+                    message += "Dataset is out of sync with its remote(s). ";
+                }
+                message += "Do you want to delete a dataset?";
 
-            promiseWithCatch(
-                this.modalService.error({
-                    title: "Delete",
-                    message: message,
-                    yesButtonText: "Ok",
-                    noButtonText: "Cancel",
-                    handler: (ok) => {
-                        if (ok) {
-                            this.datasetSettingsService
-                                .deleteDataset(accountId, datasetId)
-                                .pipe(takeUntilDestroyed(this.destroyRef))
-                                .subscribe();
-                        }
-                    },
-                }),
-            );
-        });
+                promiseWithCatch(
+                    this.modalService.error({
+                        title: "Delete",
+                        message: message,
+                        yesButtonText: "Ok",
+                        noButtonText: "Cancel",
+                        handler: (ok) => {
+                            if (ok) {
+                                this.datasetSettingsService
+                                    .deleteDataset(accountId, datasetId)
+                                    .pipe(takeUntilDestroyed(this.destroyRef))
+                                    .subscribe();
+                            }
+                        },
+                    }),
+                );
+            });
     }
 
     public resetDataset(): void {

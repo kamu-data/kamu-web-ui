@@ -105,6 +105,10 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         }
     }
 
+    public get enableScheduling(): boolean {
+        return this.configService.featureFlags.enableScheduling;
+    }
+
     public get canAddDatasetInfo(): boolean {
         if (!this.hasDatasetInfo) {
             return this.datasetPermissions.permissions.canCommit && !_.isNil(this.currentState);
@@ -217,6 +221,10 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     public get isUserLogged(): boolean {
         return this.loggedUserService.isAuthenticated;
+    }
+
+    public get visibleUpdateButton(): boolean {
+        return this.isUserLogged && this.enableScheduling;
     }
 
     public get hasSetPollingSource(): boolean {

@@ -1,9 +1,12 @@
+import { FeatureShowMode } from "./interface/feature-flags.interface";
+
 export interface AppRuntimeConfig {
     apiServerGqlUrl: string;
     apiServerHttpUrl: string;
     githubClientId?: string;
     loginInstructions?: AppLoginInstructions;
     grafanaLogs?: GrafanaLogsConfiguration;
+    features?: FeaturesRuntimeConfig;
 }
 
 export interface AppLoginInstructions {
@@ -19,6 +22,10 @@ export enum LoginMethod {
 export interface GrafanaLogsConfiguration {
     taskDetailsUrl?: string;
     flowHistoryUrl?: string;
+}
+
+export interface FeaturesRuntimeConfig {
+    showMode: FeatureShowMode;
 }
 
 export interface AppUIConfig {

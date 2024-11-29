@@ -1,229 +1,229 @@
 [
   {
     "id": "analytics",
-    "development-state": "reserved"
+    "developmentState": "reserved"
   },
   {
     "id": "billing",
-    "development-state": "reserved"
+    "developmentState": "reserved"
   },
   {
     "id": "dashboard",
-    "development-state": "reserved"
+    "developmentState": "reserved"
   },
   {
     "id": "dataset",
-    "development-state": "stable",
+    "developmentState": "stable",
     "subfeatures": [
       {
-        "id": "badge-privacy",
-        "development-state": "mockup"
+        "id": "badgePrivacy",
+        "developmentState": "mockup"
       },
       {
-        "id": "badge-verified",
-        "development-state": "mockup"
+        "id": "badgeVerified",
+        "developmentState": "mockup"
       },
       {
         "id": "derive",
-        "development-state": "mockup"
+        "developmentState": "mockup"
       },
       {
-        "id": "get-data",
-        "development-state": "stable",
+        "id": "getData",
+        "developmentState": "stable",
         "subfeatures": [
           {
             "id": "cli",
-            "development-state": "stable"
+            "developmentState": "stable"
           },
           {
             "id": "code",
-            "development-state": "reserved"
+            "developmentState": "reserved"
           },
           {
             "id": "export",
-            "development-state": "reserved"
+            "developmentState": "reserved"
           },
           {
             "id": "link",
-            "development-state": "stable"
+            "developmentState": "stable"
           },
           {
             "id": "odata",
-            "development-state": "stable"
+            "developmentState": "stable"
           },
           {
             "id": "rest",
-            "development-state": "stable"
+            "developmentState": "stable"
           },
           {
             "id": "sql",
-            "development-state": "stable"
+            "developmentState": "stable"
           },
           {
             "id": "stream",
-            "development-state": "mockup"
+            "developmentState": "mockup"
           }
         ]
       },
       {
         "id": "panel",
-        "development-state": "stable",
+        "developmentState": "stable",
         "subfeatures": [
           {
             "id": "data",
-            "development-state": "stable",
+            "developmentState": "stable",
             "subfeatures": [
               {
-                "id": "dataset-schemas",
-                "development-state": "stable"
+                "id": "datasetSchemas",
+                "developmentState": "stable"
               },
               {
-                "id": "edit-run",
-                "development-state": "stable",
+                "id": "editRun",
+                "developmentState": "stable",
                 "subfeatures": [
                   {
                     "id": "curl",
-                    "development-state": "stable"
+                    "developmentState": "stable"
                   },
                   {
-                    "id": "new-dataset",
-                    "development-state": "mockup"
+                    "id": "newDataset",
+                    "developmentState": "mockup"
                   },
                   {
                     "id": "share",
-                    "development-state": "stable"
+                    "developmentState": "stable"
                   },
                   {
                     "id": "verify",
-                    "development-state": "stable"
+                    "developmentState": "stable"
                   }
                 ]
               },
               {
-                "id": "saved-queries",
-                "development-state": "mockup"
+                "id": "savedQueries",
+                "developmentState": "mockup"
               }
             ]
           },
           {
             "id": "discussions",
-            "development-state": "reserved"
+            "developmentState": "reserved"
           },
           {
             "id": "flows",
-            "development-state": "stable"
+            "developmentState": "stable"
           },
           {
             "id": "history",
-            "development-state": "stable"
+            "developmentState": "stable"
           },
           {
             "id": "lineage",
-            "development-state": "stable"
+            "developmentState": "stable"
           },
           {
             "id": "metadata",
-            "development-state": "stable",
+            "developmentState": "stable",
             "subfeatures": [
               {
-                "id": "edit-polling-source",
-                "development-state": "stable"
+                "id": "editPollingSource",
+                "developmentState": "stable"
               },
               {
-                "id": "edit-push-source",
-                "development-state": "stable"
+                "id": "editPushSource",
+                "developmentState": "stable"
               },
               {
-                "id": "edit-transform",
-                "development-state": "stable"
+                "id": "editTransform",
+                "developmentState": "stable"
               }
             ]
           },
           {
             "id": "overview",
-            "development-state": "stable",
+            "developmentState": "stable",
             "subfeatures": [
               {
-                "id": "add-data",
-                "development-state": "stable",
+                "id": "addData",
+                "developmentState": "stable",
                 "subfeatures": [
                   {
                     "id": "sync",
-                    "development-state": "mockup"
+                    "developmentState": "mockup"
                   },
                   {
                     "id": "upload",
-                    "development-state": "stable"
+                    "developmentState": "stable"
                   }
                 ]
               },
               {
-                "id": "add-polling-source",
-                "development-state": "stable"
+                "id": "addPollingSource",
+                "developmentState": "stable"
               },
               {
-                "id": "add-push-source",
-                "development-state": "stable"
+                "id": "addPushSource",
+                "developmentState": "stable"
               },
               {
-                "id": "add-transform",
-                "development-state": "stable"
+                "id": "addTransform",
+                "developmentState": "stable"
               },
               {
                 "id": "description",
-                "development-state": "stable"
+                "developmentState": "stable"
               },
               {
                 "id": "license",
-                "development-state": "stable"
+                "developmentState": "stable"
               },
               {
                 "id": "readme",
-                "development-state": "stable"
+                "developmentState": "stable"
               },
               {
                 "id": "update",
-                "development-state": "stable"
+                "developmentState": "stable"
               },
               {
                 "id": "watermark",
-                "development-state": "stable"
+                "developmentState": "stable"
               }
             ]
           },
           {
             "id": "settings",
-            "development-state": "stable",
+            "developmentState": "stable",
             "subfeatures": [
               {
                 "id": "compaction",
-                "development-state": "stable"
+                "developmentState": "stable"
               },
               {
                 "id": "general",
-                "development-state": "stable",
+                "developmentState": "stable",
                 "subfeatures": [
                   {
                     "id": "delete",
-                    "development-state": "stable"
+                    "developmentState": "stable"
                   },
                   {
                     "id": "rename",
-                    "development-state": "stable"
+                    "developmentState": "stable"
                   },
                   {
                     "id": "reset",
-                    "development-state": "stable"
+                    "developmentState": "stable"
                   }
                 ]
               },
               {
                 "id": "scheduling",
-                "development-state": "stable"
+                "developmentState": "stable"
               },
               {
-                "id": "vars-secrets",
-                "development-state": "stable"
+                "id": "varsSecrets",
+                "developmentState": "stable"
               }
             ]
           }
@@ -231,155 +231,155 @@
       },
       {
         "id": "stars",
-        "development-state": "mockup"
+        "developmentState": "mockup"
       },
       {
         "id": "watch",
-        "development-state": "mockup"
+        "developmentState": "mockup"
       }
     ]
   },
   {
     "id": "help",
-    "development-state": "reserved"
+    "developmentState": "reserved"
   },
   {
-    "id": "new-dataset",
-    "development-state": "stable",
+    "id": "newDataset",
+    "developmentState": "stable",
     "subfeatures": [
       {
         "id": "privacy",
-        "development-state": "mockup"
+        "developmentState": "mockup"
       }
     ]
   },
   {
     "id": "notifications",
-    "development-state": "reserved"
+    "developmentState": "reserved"
   },
   {
     "id": "profile",
-    "development-state": "stable",
+    "developmentState": "stable",
     "subfeatures": [
       {
         "id": "datasets",
-        "development-state": "stable"
+        "developmentState": "stable"
       },
       {
         "id": "edit",
-        "development-state": "reserved"
+        "developmentState": "reserved"
       },
       {
         "id": "flows",
-        "development-state": "stable"
+        "developmentState": "stable"
       },
       {
         "id": "inbox",
-        "development-state": "reserved"
+        "developmentState": "reserved"
       },
       {
         "id": "organizations",
-        "development-state": "reserved"
+        "developmentState": "reserved"
       },
       {
         "id": "overview",
-        "development-state": "reserved"
+        "developmentState": "reserved"
       },
       {
         "id": "stars",
-        "development-state": "reserved"
+        "developmentState": "reserved"
       }
     ]
   },
   {
     "id": "query",
-    "development-state": "stable",
+    "developmentState": "stable",
     "subfeatures": [
       {
-        "id": "dataset-schemas",
-        "development-state": "stable"
+        "id": "datasetSchemas",
+        "developmentState": "stable"
       },
       {
-        "id": "edit-run",
-        "development-state": "stable",
+        "id": "editRun",
+        "developmentState": "stable",
         "subfeatures": [
           {
-            "id": "new-dataset",
-            "development-state": "mockup"
+            "id": "newDataset",
+            "developmentState": "mockup"
           },
           {
             "id": "share",
-            "development-state": "stable"
+            "developmentState": "stable"
           }
         ]
       },
       {
-        "id": "saved-queries",
-        "development-state": "mockup"
+        "id": "savedQueries",
+        "developmentState": "mockup"
       },
       {
-        "id": "search-datasets",
-        "development-state": "stable"
+        "id": "searchDatasets",
+        "developmentState": "stable"
       }
     ]
   },
   {
     "id": "search",
-    "development-state": "stable",
+    "developmentState": "stable",
     "subfeatures": [
       {
         "id": "filters",
-        "development-state": "mockup"
+        "developmentState": "mockup"
       },
       {
         "id": "sorting",
-        "development-state": "mockup"
+        "developmentState": "mockup"
       }
     ]
   },
   {
     "id": "settings",
-    "development-state": "stable",
+    "developmentState": "stable",
     "subfeatures": [
       {
         "id": "accessibility",
-        "development-state": "reserved"
+        "developmentState": "reserved"
       },
       {
         "id": "account",
-        "development-state": "reserved"
+        "developmentState": "reserved"
       },
       {
         "id": "appearance",
-        "development-state": "reserved"
+        "developmentState": "reserved"
       },
       {
         "id": "billing",
-        "development-state": "reserved"
+        "developmentState": "reserved"
       },
       {
         "id": "emails",
-        "development-state": "reserved"
+        "developmentState": "reserved"
       },
       {
         "id": "notifications",
-        "development-state": "reserved"
+        "developmentState": "reserved"
       },
       {
         "id": "organizations",
-        "development-state": "reserved"
+        "developmentState": "reserved"
       },
       {
         "id": "password",
-        "development-state": "reserved"
+        "developmentState": "reserved"
       },
       {
         "id": "profile",
-        "development-state": "reserved"
+        "developmentState": "reserved"
       },
       {
         "id": "tokens",
-        "development-state": "stable"
+        "developmentState": "stable"
       }
     ]
   }

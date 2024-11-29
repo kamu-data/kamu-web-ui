@@ -70,3 +70,10 @@ h2 {
 .mt-100 {
     margin-top: 100px;
 }
+
+.disabled {
+    pointer-events: none; /* Prevent interaction */
+    opacity: 0.5; /* Reduce visibility */
+    filter: grayscale(100%); /* Grayscale effect */
+    cursor: not-allowed; /* Show "not allowed" cursor */
+}

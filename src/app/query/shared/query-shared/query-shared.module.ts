@@ -16,6 +16,7 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { DynamicTableModule } from "src/app/components/dynamic-table/dynamic-table.module";
 import { EditorModule } from "src/app/shared/editor/editor.module";
+import { SharedModule } from "src/app/shared/shared/shared.module";
 
 @NgModule({
     declarations: [
@@ -27,6 +28,7 @@ import { EditorModule } from "src/app/shared/editor/editor.module";
     ],
     imports: [
         CommonModule,
+        SharedModule,
         MatProgressBarModule,
         DynamicTableModule,
         EditorModule,

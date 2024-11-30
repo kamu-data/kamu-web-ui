@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { catchError, first } from "rxjs/operators";
-import { Observable, ReplaySubject, Subject, of } from "rxjs";
+import { EMPTY, Observable, ReplaySubject, Subject } from "rxjs";
 import { NavigationService } from "../services/navigation.service";
 import { MaybeNull } from "../common/app.types";
 import { isNull } from "lodash";
@@ -92,11 +92,11 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
                 first(),
                 catchError(() => {
                     this.terminateSession();
-                    return of();
+                    return EMPTY;
                 }),
             );
         } else {
-            return of(void {});
+            return EMPTY;
         }
     }
 

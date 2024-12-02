@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Warning when deleting datasets which are out of sync with their push remotes
 ### Fixed
 - Visibility for Update button and Flows tab from configuration
+- Error in console during initialization
 
 ## [0.32.0] - 2024-11-28
 ### Added

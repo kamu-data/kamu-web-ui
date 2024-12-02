@@ -58,7 +58,7 @@ import { ClipboardModule } from "@angular/cdk/clipboard";
 import { HighlightModule, HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 import { ToastrModule } from "ngx-toastr";
 import { LoggedUserService } from "./auth/logged-user.service";
-import { firstValueFrom } from "rxjs";
+import { catchError, EMPTY, firstValueFrom } from "rxjs";
 import { LoginService } from "./auth/login/login.service";
 import { logError } from "./common/app.helpers";
 import { DatasetPermissionsService } from "./dataset-view/dataset.permissions.service";
@@ -151,8 +151,13 @@ const Services = [
     {
         provide: APP_INITIALIZER,
         useFactory: (loggedUserService: LoggedUserService) => {
-            return (): Promise<void> => {
-                return firstValueFrom(loggedUserService.initializeCompletes()).catch((e) => logError(e));
+            return () => {
+                return loggedUserService.initializeCompletes().pipe(
+                    catchError((e) => {
+                        logError(e);
+                        return EMPTY;
+                    }),
+                );
             };
         },
         deps: [LoggedUserService],

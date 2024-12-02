@@ -124,7 +124,7 @@ export class ReadmeSectionComponent extends BaseComponent implements OnChanges, 
                     linkElement.setAttribute("target", "_blank");
                     linkElement.setAttribute(
                         "href",
-                        `/${this.datasetBasics.owner.accountName}/${this.datasetBasics.name}?tab=${DatasetViewTypeEnum.Data}&sqlQuery=${sqlQueries[index]}`,
+                        `/${this.datasetBasics.owner.accountName}/${this.datasetBasics.name}?tab=${DatasetViewTypeEnum.Data}&sqlQuery=${encodeURI(sqlQueries[index])}`,
                     );
                     linkElement.addEventListener("mouseover", () => {
                         linkElement.style.backgroundColor = "rgba(255,255, 255, 0.14)";

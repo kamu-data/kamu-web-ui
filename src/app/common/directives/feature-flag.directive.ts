@@ -9,11 +9,11 @@ import { FeatureFlagsService } from "src/app/services/feature-flags.service";
 
 @Directive({ selector: "[appFeatureFlag]" })
 export class FeatureFlagDirective {
-    el = inject(ElementRef);
-    renderer = inject(Renderer2);
-    featureFlagsService = inject(FeatureFlagsService);
+    private el = inject(ElementRef);
+    private renderer = inject(Renderer2);
+    private featureFlagsService = inject(FeatureFlagsService);
 
-    @Input("appFeatureFlag") featureName: string;
+    @Input("appFeatureFlag") public featureName: string;
 
     public ngOnInit(): void {
         if (!this.el.nativeElement) {

@@ -1,6 +1,6 @@
 <ul class="nav search-additional-buttons__nav">
     <ng-template ngFor let-searchAdditionalData [ngForOf]="searchAdditionalButtonsData">
-        <li class="nav-item mr-2 pt-2">
+        <li class="nav-item mr-2 pt-2" [appFeatureFlag]="searchAdditionalData.id">
             <div class="btn-group-parent nav">
                 <button
                     (click)="onClickButton(searchAdditionalData.textButton)"

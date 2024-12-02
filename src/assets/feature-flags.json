@@ -1,5 +1,9 @@
 [
   {
+    "id": "help",
+    "developmentState": "stable"
+  },
+  {
     "id": "analytics",
     "developmentState": "reserved"
   },
@@ -24,6 +28,14 @@
         "developmentState": "mockup"
       },
       {
+        "id": "starred",
+        "developmentState": "mockup"
+      },
+      {
+        "id": "unwatch",
+        "developmentState": "mockup"
+      },
+      {
         "id": "derive",
         "developmentState": "mockup"
       },
@@ -32,7 +44,7 @@
         "developmentState": "stable",
         "subfeatures": [
           {
-            "id": "cli",
+            "id": "kamuCli",
             "developmentState": "stable"
           },
           {
@@ -73,10 +85,6 @@
             "id": "data",
             "developmentState": "stable",
             "subfeatures": [
-              {
-                "id": "datasetSchemas",
-                "developmentState": "stable"
-              },
               {
                 "id": "editRun",
                 "developmentState": "stable",
@@ -127,11 +135,23 @@
             "subfeatures": [
               {
                 "id": "editPollingSource",
+                "developmentState": "mockup"
+              },
+              {
+                "id": "deletePollingSource",
+                "developmentState": "stable"
+              },
+              {
+                "id": "newPushSource",
                 "developmentState": "stable"
               },
               {
                 "id": "editPushSource",
                 "developmentState": "stable"
+              },
+              {
+                "id": "deletePushSource",
+                "developmentState": "mockup"
               },
               {
                 "id": "editTransform",
@@ -191,6 +211,9 @@
               }
             ]
           },
+
+          // continue
+
           {
             "id": "settings",
             "developmentState": "stable",
@@ -228,14 +251,6 @@
             ]
           }
         ]
-      },
-      {
-        "id": "stars",
-        "developmentState": "mockup"
-      },
-      {
-        "id": "watch",
-        "developmentState": "mockup"
       }
     ]
   },

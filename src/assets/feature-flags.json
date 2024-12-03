@@ -123,7 +123,13 @@
           },
           {
             "id": "history",
-            "developmentState": "stable"
+            "developmentState": "stable",
+            "subfeatures": [
+              {
+                "id": "verified",
+                "developmentState": "mockup"
+              }
+            ]
           },
           {
             "id": "lineage",
@@ -133,6 +139,10 @@
             "id": "metadata",
             "developmentState": "stable",
             "subfeatures": [
+              {
+                "id": "pagination",
+                "developmentState": "mockup"
+              },
               {
                 "id": "editPollingSource",
                 "developmentState": "mockup"
@@ -346,6 +356,14 @@
       },
       {
         "id": "sorting",
+        "developmentState": "mockup"
+      },
+      {
+        "id": "verified",
+        "developmentState": "mockup"
+      },
+      {
+        "id": "rating",
         "developmentState": "mockup"
       }
     ]

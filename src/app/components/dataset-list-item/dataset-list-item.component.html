@@ -54,6 +54,7 @@
                 </div>
             </ng-template>
             <button
+                appFeatureFlag="search.verified"
                 data-test-id="button-popover-verified"
                 type="button"
                 class="signed-commit-badge verified signed-commit-badge-small"
@@ -77,7 +78,7 @@
                 </div>
             </mat-chip-set>
         </div>
-        <div class="dataset-list-container__additional-block mt-2">
+        <div class="dataset-list-container__additional-block mt-1">
             <p class="text-small color-text-secondary mr-3">
                 Updated
                 <app-display-time
@@ -86,11 +87,13 @@
                     [dataTestId]="'time-dataset-list-item'"
                 />
             </p>
-            <ngb-rating [rate]="4.5" [max]="5" [readonly]="true">
-                <ng-template let-fill="fill">
-                    <span class="rating-star" [class.filled]="fill === 100">&#9733;</span>
-                </ng-template>
-            </ngb-rating>
+            <p appFeatureFlag="search.rating">
+                <ngb-rating [rate]="4.5" [max]="5" [readonly]="true">
+                    <ng-template let-fill="fill">
+                        <span class="rating-star" [class.filled]="fill === 100">&#9733;</span>
+                    </ng-template>
+                </ngb-rating>
+            </p>
             <p class="text-small color-text-secondary mr-3">
                 {{ row.metadata.currentDownstreamDependencies.length }}
                 Downstream

@@ -1606,3 +1606,10 @@ pre.language-sql {
     grid-template-columns: minmax(16rem, 37%) 1fr;
     column-gap: 1.5rem;
 }
+
+.disabled {
+    pointer-events: none; /* Prevent interaction */
+    opacity: 0.5; /* Reduce visibility */
+    filter: grayscale(100%); /* Grayscale effect */
+    cursor: not-allowed; /* Show "not allowed" cursor */
+}

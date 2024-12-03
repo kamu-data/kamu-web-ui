@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Visibility for Update button and Flows tab from configuration
 - Error in console during initialization
+- Readme section: redirection after clicking the `Run` button
 
 ## [0.32.0] - 2024-11-28
 ### Added

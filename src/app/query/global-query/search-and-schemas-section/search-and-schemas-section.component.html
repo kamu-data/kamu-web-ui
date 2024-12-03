@@ -1,5 +1,5 @@
 <div class="box p-4 schemes-container">
-    <div class="d-flex flex-column" *ngIf="!disableSearch">
+    <div appFeatureFlag="query.searchDatasets" class="search-container flex-column" *ngIf="!disableSearch">
         <h2 class="mb-1">Search:</h2>
         <div class="d-flex flex-row position-relative w-100">
             <input
@@ -97,7 +97,9 @@
             </cdk-accordion-item>
         </cdk-accordion>
         <ng-template #emptyTemplate>
-            <p *ngIf="!disableSearch" class="text-center mt-4">No datasets selected</p>
+            <p appFeatureFlag="query.searchDatasets" *ngIf="!disableSearch" class="text-center mt-4">
+                No datasets selected
+            </p>
         </ng-template>
     </div>
 

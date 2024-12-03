@@ -1,5 +1,9 @@
 .schemes-container {
     min-height: 393px;
+
+    .search-container {
+        display: flex;
+    }
 }
 
 h2 {

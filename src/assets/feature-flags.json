@@ -212,8 +212,6 @@
             ]
           },
 
-          // continue
-
           {
             "id": "settings",
             "developmentState": "stable",

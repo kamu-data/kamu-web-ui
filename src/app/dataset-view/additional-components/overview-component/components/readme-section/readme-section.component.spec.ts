@@ -146,4 +146,18 @@ describe("ReadmeSectionComponent", () => {
             ),
         ).toBeTrue();
     });
+
+    it("should check Run button navigate to Data tab with line breaks", () => {
+        component.readmeState = "```sql" + "\nselect\n*\nfrom 'account.tokens.portfolio.market-value'" + "\n```";
+        component.viewMode = EditMode.Preview;
+
+        fixture.detectChanges();
+
+        const runButtonElement = findNativeElement(fixture, `.markdown-run-button`) as HTMLLinkElement;
+        expect(
+            runButtonElement.href.includes(
+                "kamu/mockNameDerived?tab=data&sqlQuery=select%0A*%0Afrom%20%27account.tokens.portfolio.market-value%27",
+            ),
+        ).toBeTrue();
+    });
 });

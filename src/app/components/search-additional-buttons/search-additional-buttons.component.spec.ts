@@ -4,6 +4,7 @@ import { SearchAdditionalButtonsNavComponent } from "./search-additional-buttons
 import { SearchAdditionalButtonsComponent } from "./search-additional-buttons.component";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
+import { SharedModule } from "src/app/shared/shared/shared.module";
 
 describe("SearchAdditionalButtonsComponent", () => {
     let component: SearchAdditionalButtonsComponent;
@@ -12,7 +13,7 @@ describe("SearchAdditionalButtonsComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [SearchAdditionalButtonsComponent, SearchAdditionalButtonsNavComponent],
-            imports: [MatIconModule, MatMenuModule],
+            imports: [MatIconModule, MatMenuModule, SharedModule],
         })
             .overrideComponent(SearchAdditionalButtonsComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },

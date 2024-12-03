@@ -24,6 +24,7 @@ import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { mockMetadataRootUpdate, mockOverviewDataUpdate } from "../data-tabs.mock";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
+import { SharedModule } from "src/app/shared/shared/shared.module";
 
 describe("DatasetSettingsComponent", () => {
     let component: DatasetSettingsComponent;
@@ -75,6 +76,7 @@ describe("DatasetSettingsComponent", () => {
                 MatRadioModule,
                 MatIconModule,
                 NgbTooltipModule,
+                SharedModule,
             ],
         })
             .overrideComponent(DatasetSettingsComponent, {

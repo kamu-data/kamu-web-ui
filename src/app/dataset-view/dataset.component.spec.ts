@@ -54,6 +54,7 @@ import { QueryAndResultSectionsComponent } from "../query/shared/query-and-resul
 import { SavedQueriesSectionComponent } from "../query/shared/saved-queries-section/saved-queries-section.component";
 import { SqlQueryService } from "../services/sql-query.service";
 import { SearchAndSchemasSectionComponent } from "../query/global-query/search-and-schemas-section/search-and-schemas-section.component";
+import { SharedModule } from "../shared/shared/shared.module";
 
 describe("DatasetComponent", () => {
     let component: DatasetComponent;
@@ -108,6 +109,7 @@ describe("DatasetComponent", () => {
                 EditorModule,
                 MatProgressBarModule,
                 CdkAccordionModule,
+                SharedModule,
                 RouterTestingModule.withRoutes([{ path: MOCK_DATASET_ROUTE, component: DatasetComponent }]),
             ],
             providers: [

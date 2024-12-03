@@ -23,6 +23,7 @@ import { of } from "rxjs";
 import { mockUploadPrepareResponse } from "src/app/api/mock/upload-file.mock";
 import { mockQueryExplainerResponse } from "src/app/query-explainer/query-explainer.mocks";
 import { FileUploadService } from "src/app/services/file-upload.service";
+import { MatDividerModule } from "@angular/material/divider";
 
 describe("QueryAndResultSectionsComponent", () => {
     let component: QueryAndResultSectionsComponent;
@@ -44,6 +45,7 @@ describe("QueryAndResultSectionsComponent", () => {
                 EditorModule,
                 MatIconModule,
                 SharedTestModule,
+                MatDividerModule,
             ],
             providers: [Apollo],
         });

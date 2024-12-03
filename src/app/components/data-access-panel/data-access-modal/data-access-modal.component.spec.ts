@@ -21,6 +21,7 @@ import { DataAccessCodeTabComponent } from "./tabs/data-access-code-tab/data-acc
 import { DataAccessOdataTabComponent } from "./tabs/data-access-odata-tab/data-access-odata-tab.component";
 import { DataAccessExportTabComponent } from "./tabs/data-access-export-tab/data-access-export-tab.component";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { SharedModule } from "src/app/shared/shared/shared.module";
 
 describe("DataAccessModalComponent", () => {
     let component: DataAccessModalComponent;
@@ -51,6 +52,7 @@ describe("DataAccessModalComponent", () => {
                 BrowserAnimationsModule,
                 ApolloModule,
                 ApolloTestingModule,
+                SharedModule,
             ],
         });
         fixture = TestBed.createComponent(DataAccessModalComponent);

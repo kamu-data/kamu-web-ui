@@ -37,7 +37,8 @@
                     {{ isLoggedUser(user) ? "Edit profile" : "Follow" }}
                 </button>
             </div>
-            <div class="border-top mt-5 me-4">
+            <mat-divider class="w-90"></mat-divider>
+            <div appFeatureFlag="profile.companies" class="mt-2 me-4">
                 <h3 class="text-start pt-3 px-3 organization">Organizations</h3>
                 <div class="d-flex flex-row gap-2 text-start px-3">
                     <img

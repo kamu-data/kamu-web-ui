@@ -14,7 +14,7 @@
         <div class="d-flex justify-content-end" *ngIf="canEditSetPollingSource">
             <button
                 appFeatureFlag="dataset.panel.metadata.editPollingSource"
-                class="border-1 bg-light border rounded-2 me-3 btn btn-sm justify-content-between align-items-center"
+                class="border-1 bg-light border edit-polling-source-btn rounded-2 me-3 btn btn-sm justify-content-between align-items-center"
                 data-test-id="'edit-source-link'"
                 (click)="navigateToEditPollingSource()"
             >
@@ -23,7 +23,7 @@
             </button>
             <button
                 appFeatureFlag="dataset.panel.metadata.deletePollingSource"
-                class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
+                class="border-1 bg-light border delete-polling-source-btn rounded-2 px-2 btn btn-sm justify-content-between align-items-center"
                 data-test-id="'edit-source-link'"
                 (click)="onDeletePollingSource()"
             >
@@ -72,7 +72,7 @@
                         <div class="d-flex justify-content-end" *ngIf="canEditAddPushSource">
                             <button
                                 appFeatureFlag="dataset.panel.metadata.editPushSource"
-                                class="border-1 bg-light border rounded-2 me-3 btn btn-sm justify-content-between align-items-center"
+                                class="edit-push-source-btn border-1 bg-light border rounded-2 me-3 btn btn-sm justify-content-between align-items-center"
                                 data-test-id="'edit-source-link'"
                                 (click)="navigateToEditAddPushSource(source.sourceName!)"
                             >
@@ -81,7 +81,7 @@
                             </button>
                             <button
                                 appFeatureFlag="dataset.panel.metadata.deletePushSource"
-                                class="border-1 bg-light border rounded-2 px-2 btn btn-sm justify-content-between align-items-center"
+                                class="delete-push-source-btn border-1 bg-light border rounded-2 px-2 btn btn-sm justify-content-between align-items-center"
                                 data-test-id="'edit-source-link'"
                                 (click)="onDeletePushSource()"
                             >

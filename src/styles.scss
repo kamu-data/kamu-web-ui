@@ -1609,7 +1609,7 @@ pre.language-sql {
 
 .disabled {
     pointer-events: none; /* Prevent interaction */
-    opacity: 0.5; /* Reduce visibility */
+    opacity: 0.65; /* Reduce visibility */
     filter: grayscale(100%); /* Grayscale effect */
     cursor: not-allowed; /* Show "not allowed" cursor */
 }

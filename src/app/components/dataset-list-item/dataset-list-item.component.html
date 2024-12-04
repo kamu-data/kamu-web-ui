@@ -79,11 +79,11 @@
             </mat-chip-set>
         </div>
         <div class="dataset-list-container__additional-block mt-1">
-            <p class="text-small color-text-secondary mr-3">
+            <p class="text-small mr-3">
                 Updated
                 <app-display-time
                     [data]="row.lastUpdatedAt"
-                    class="text-small color-text-secondary no-wrap"
+                    class="text-small no-wrap"
                     [dataTestId]="'time-dataset-list-item'"
                 />
             </p>
@@ -94,11 +94,11 @@
                     </ng-template>
                 </ngb-rating>
             </p>
-            <p class="text-small color-text-secondary mr-3">
+            <p class="text-small mr-3">
                 {{ row.metadata.currentDownstreamDependencies.length }}
                 Downstream
             </p>
-            <p class="text-small color-text-secondary mr-3" *ngIf="row.metadata.currentLicense">
+            <p class="text-small mr-3" *ngIf="row.metadata.currentLicense">
                 {{ row.metadata.currentLicense.shortName }}
             </p>
         </div>

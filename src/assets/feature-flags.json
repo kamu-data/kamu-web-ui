@@ -41,7 +41,13 @@
           },
           {
             "id": "link",
-            "developmentState": "stable"
+            "developmentState": "stable",
+            "subfeatures": [
+              {
+                "id": "checkboxes",
+                "developmentState": "mockup"
+              }
+            ]
           },
           {
             "id": "odata",
@@ -129,7 +135,7 @@
             "subfeatures": [
               {
                 "id": "deletePollingSource",
-                "developmentState": "stable"
+                "developmentState": "mockup"
               },
               {
                 "id": "deletePushSource",
@@ -137,7 +143,7 @@
               },
               {
                 "id": "editPollingSource",
-                "developmentState": "mockup"
+                "developmentState": "stable"
               },
               {
                 "id": "editPushSource",
@@ -251,6 +257,32 @@
     ]
   },
   {
+    "id": "flowDetails",
+    "developmentState": "stable",
+    "subfeatures": [
+      {
+        "id": "admin",
+        "developmentState": "mockup"
+      },
+      {
+        "id": "history",
+        "developmentState": "stable"
+      },
+      {
+        "id": "logs",
+        "developmentState": "stable"
+      },
+      {
+        "id": "summary",
+        "developmentState": "stable"
+      },
+      {
+        "id": "usage",
+        "developmentState": "mockup"
+      }
+    ]
+  },
+  {
     "id": "help",
     "developmentState": "reserved"
   },
@@ -272,6 +304,10 @@
     "id": "profile",
     "developmentState": "stable",
     "subfeatures": [
+      {
+        "id": "companies",
+        "developmentState": "mockup"
+      },
       {
         "id": "datasets",
         "developmentState": "stable"

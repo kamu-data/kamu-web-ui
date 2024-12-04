@@ -22,7 +22,7 @@
                 <span>Run</span><mat-icon>play_arrow</mat-icon>
             </button>
             <button
-                [disabled]="!sqlRequestCode"
+                [disabled]="!sqlRequestCode || !isUserAuthenticated"
                 class="starred rounded-right-2 border-1 border btn-sm btn btn-group-item d-flex justify-content-center align-items-center"
                 [matMenuTriggerFor]="menu"
                 aria-label="Example icon-button with a menu"

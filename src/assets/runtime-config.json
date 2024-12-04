@@ -7,6 +7,6 @@
     "flowHistoryUrl": ""
   },
   "features": {
-    "showMode": "production"
+    "showMode": "develop"
   }
 }

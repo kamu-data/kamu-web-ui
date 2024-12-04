@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Handling feature elements
+- Handling feature elements in 3 modes
+  - `production` mode: only implemented features available
+  - `demo` mode: unimplemented features are disabled
+  - `develop` mode: unimplemented features are available
 
 ## [0.33.0] - 2024-12-03
 ### Added

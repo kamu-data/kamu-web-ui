@@ -1,9 +1,5 @@
 [
   {
-    "id": "help",
-    "developmentState": "stable"
-  },
-  {
     "id": "analytics",
     "developmentState": "reserved"
   },
@@ -28,25 +24,9 @@
         "developmentState": "mockup"
       },
       {
-        "id": "starred",
-        "developmentState": "mockup"
-      },
-      {
-        "id": "unwatch",
-        "developmentState": "mockup"
-      },
-      {
-        "id": "derive",
-        "developmentState": "mockup"
-      },
-      {
         "id": "getData",
         "developmentState": "stable",
         "subfeatures": [
-          {
-            "id": "kamuCli",
-            "developmentState": "stable"
-          },
           {
             "id": "code",
             "developmentState": "reserved"
@@ -54,6 +34,10 @@
           {
             "id": "export",
             "developmentState": "reserved"
+          },
+          {
+            "id": "kamuCli",
+            "developmentState": "stable"
           },
           {
             "id": "link",
@@ -126,6 +110,10 @@
             "developmentState": "stable",
             "subfeatures": [
               {
+                "id": "blockActions",
+                "developmentState": "mockup"
+              },
+              {
                 "id": "verified",
                 "developmentState": "mockup"
               }
@@ -140,23 +128,7 @@
             "developmentState": "stable",
             "subfeatures": [
               {
-                "id": "pagination",
-                "developmentState": "mockup"
-              },
-              {
-                "id": "editPollingSource",
-                "developmentState": "mockup"
-              },
-              {
                 "id": "deletePollingSource",
-                "developmentState": "stable"
-              },
-              {
-                "id": "newPushSource",
-                "developmentState": "stable"
-              },
-              {
-                "id": "editPushSource",
                 "developmentState": "stable"
               },
               {
@@ -164,8 +136,24 @@
                 "developmentState": "mockup"
               },
               {
+                "id": "editPollingSource",
+                "developmentState": "mockup"
+              },
+              {
+                "id": "editPushSource",
+                "developmentState": "stable"
+              },
+              {
                 "id": "editTransform",
                 "developmentState": "stable"
+              },
+              {
+                "id": "newPushSource",
+                "developmentState": "stable"
+              },
+              {
+                "id": "pagination",
+                "developmentState": "mockup"
               }
             ]
           },
@@ -351,7 +339,15 @@
     "developmentState": "stable",
     "subfeatures": [
       {
+        "id": "derive",
+        "developmentState": "mockup"
+      },
+      {
         "id": "filters",
+        "developmentState": "mockup"
+      },
+      {
+        "id": "rating",
         "developmentState": "mockup"
       },
       {
@@ -359,11 +355,15 @@
         "developmentState": "mockup"
       },
       {
-        "id": "verified",
+        "id": "starred",
         "developmentState": "mockup"
       },
       {
-        "id": "rating",
+        "id": "unwatch",
+        "developmentState": "mockup"
+      },
+      {
+        "id": "verified",
         "developmentState": "mockup"
       }
     ]

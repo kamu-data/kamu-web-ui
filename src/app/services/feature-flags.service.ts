@@ -8,7 +8,7 @@ import { AppConfigService } from "../app-config.service";
     providedIn: "root",
 })
 export class FeatureFlagsService {
-    private features: Feature[];
+    public features: Feature[];
 
     public constructor(private appConfigService: AppConfigService) {
         const request = new XMLHttpRequest();

@@ -129,7 +129,8 @@
                     </a>
 
                     <a
-                        class="header-link d-flex align-items-center py-2 py-md-3 mr-4 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
+                        appFeatureFlag="dashboard"
+                        class="header-link align-items-center py-2 py-md-3 mr-4 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
                         (click)="onDashboard()"
                         *ngIf="isAdmin"
                     >
@@ -151,13 +152,15 @@
                         >Your profile</a
                     >
                     <a
-                        class="header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
+                        appFeatureFlag="billing"
+                        class="header-link d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
                         data-test-id="openBillingPlanHeader"
                         (click)="onBilling()"
                         >Account & Billing</a
                     >
                     <a
-                        class="header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
+                        appFeatureFlag="analytics"
+                        class="header-link d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
                         data-test-id="openAnalyticsHeader"
                         (click)="onAnalytics()"
                         >Analytics</a
@@ -199,7 +202,8 @@
                     </ng-container>
                 </ng-template>
                 <a
-                    class="header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
+                    appFeatureFlag="help"
+                    class="header-link d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
                     data-test-id="openHelpHeader"
                     (click)="onHelp()"
                     >Help</a
@@ -207,7 +211,8 @@
             </div>
             <div id="app-header-additional-block" class="app-header__right-column">
                 <div
-                    class="d-flex d-sm-none d-md-flex justify-content-center notification-indicator-container align-items-center m-2"
+                    appFeatureFlag="notifications"
+                    class="d-sm-none justify-content-center notification-indicator-container align-items-center m-2"
                 >
                     <app-notification-indicator />
                 </div>
@@ -251,7 +256,7 @@
                         }}</strong>
                     </p>
 
-                    <button mat-menu-item data-test-id="openHelp" (click)="onHelp()">Help</button>
+                    <button appFeatureFlag="help" mat-menu-item data-test-id="openHelp" (click)="onHelp()">Help</button>
 
                     <div role="none" class="dropdown-divider"></div>
 
@@ -274,10 +279,22 @@
 
                         <div role="none" class="dropdown-divider"></div>
 
-                        <button mat-menu-item data-test-id="openBillingPlan" (click)="onBilling()">
+                        <button
+                            appFeatureFlag="billing"
+                            mat-menu-item
+                            data-test-id="openBillingPlan"
+                            (click)="onBilling()"
+                        >
                             Account & Billing
                         </button>
-                        <button mat-menu-item data-test-id="openAnalytics" (click)="onAnalytics()">Analytics</button>
+                        <button
+                            appFeatureFlag="analytics"
+                            mat-menu-item
+                            data-test-id="openAnalytics"
+                            (click)="onAnalytics()"
+                        >
+                            Analytics
+                        </button>
                         <a
                             mat-menu-item
                             data-test-id="openSettings"

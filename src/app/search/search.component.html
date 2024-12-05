@@ -1,8 +1,8 @@
 <div class="app-main-container container-main" role="main">
     <div class="app-content mt-4">
         <div id="search">
-            <div class="search-result-container">
-                <div class="card">
+            <div class="d-flex flex-row gap-4">
+                <div appFeatureFlag="search.filters" class="card w-25 h-100">
                     <nav class="navbar navbar-expand">
                         <div>
                             <h3 class="search-result-container__navbar__title">Filters</h3>
@@ -11,7 +11,7 @@
                                     {{ filter.name }}
                                 </span>
                                 <span class="example-list-section">
-                                    <ul>
+                                    <ul class="list-unstyled">
                                         <li *ngFor="let subtask of filter.subtasks">
                                             <ng-template [ngIf]="!subtask.isTitle">
                                                 <mat-checkbox
@@ -29,7 +29,7 @@
                                                 </span>
                                             </ng-template>
                                             <ng-template [ngIf]="subtask.subtasks && subtask.subtasks.length > 0">
-                                                <ul>
+                                                <ul class="list-unstyled">
                                                     <li *ngFor="let sub_subtask of subtask.subtasks">
                                                         <mat-checkbox
                                                             [(ngModel)]="sub_subtask.completed"
@@ -49,7 +49,7 @@
                         </div>
                     </nav>
                 </div>
-                <div class="search-result-container__content" *ngIf="tableData$ | async as data">
+                <div class="search-result-container__content w-100" *ngIf="tableData$ | async as data">
                     <app-dataset-list
                         [dataSource]="data.datasets"
                         [sortOptions]="tableData.sortOptions"

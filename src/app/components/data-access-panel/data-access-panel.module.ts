@@ -21,6 +21,7 @@ import { DataAccessCodeTabComponent } from "./data-access-modal/tabs/data-access
 import { DataAccessOdataTabComponent } from "./data-access-modal/tabs/data-access-odata-tab/data-access-odata-tab.component";
 import { DataAccessExportTabComponent } from "./data-access-modal/tabs/data-access-export-tab/data-access-export-tab.component";
 import { RouterModule } from "@angular/router";
+import { SharedModule } from "src/app/shared/shared/shared.module";
 
 @NgModule({
     declarations: [
@@ -49,6 +50,7 @@ import { RouterModule } from "@angular/router";
         ClipboardModule,
         ReactiveFormsModule,
         RouterModule,
+        SharedModule,
     ],
     exports: [DataAccessPanelComponent],
 })

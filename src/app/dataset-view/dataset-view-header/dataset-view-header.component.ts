@@ -15,6 +15,7 @@ export class DatasetViewHeaderComponent {
 
     public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[] = [
         {
+            id: "search.starred",
             textButton: searchAdditionalButtonsEnum.Starred,
             counter: 2,
             iconSvgPath:
@@ -23,6 +24,7 @@ export class DatasetViewHeaderComponent {
             iconSvgPathClass: "starred-button-icon",
         },
         {
+            id: "search.unwatch",
             textButton: searchAdditionalButtonsEnum.UnWatch,
             counter: 1,
             iconSvgPath:
@@ -52,6 +54,7 @@ export class DatasetViewHeaderComponent {
             },
         },
         {
+            id: "search.derive",
             textButton: searchAdditionalButtonsEnum.DeriveFrom,
             counter: 4,
             iconSvgPath:

@@ -9,6 +9,7 @@ import { NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
 import { TimelineComponent } from "./timeline.component";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { RouterModule } from "@angular/router";
+import { SharedModule } from "src/app/shared/shared/shared.module";
 
 @NgModule({
     imports: [
@@ -21,6 +22,7 @@ import { RouterModule } from "@angular/router";
         RouterModule,
         DisplayTimeModule,
         DisplayHashModule,
+        SharedModule,
     ],
     exports: [TimelineComponent],
     declarations: [TimelineComponent],

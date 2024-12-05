@@ -3,24 +3,26 @@
     <div class="btn-group-parent">
         <div class="d-flex">
             <button
+                appFeatureFlag="dataset.panel.data.editRun.share"
                 [disabled]="!sqlRequestCode"
                 data-test-id="shareSqlQueryButton"
                 (click)="shareQuery()"
-                class="share-query-button border border-1 rounded d-flex justify-content-center align-items-center me-4"
+                class="share-query-button border border-1 rounded justify-content-center align-items-center me-4"
             >
                 <span class="mr-1 button-text"> Share query</span><mat-icon>share</mat-icon>
             </button>
             <button
+                appFeatureFlag="dataset.panel.data.editRun"
                 data-test-id="runSqlQueryButton"
                 [disabled]="!sqlRequestCode"
                 name="run sql button"
                 (click)="runSQLRequest({ query: sqlRequestCode }, true)"
-                class="sql-run-button border border-1 rounded-left-2 border-right-0 btn-group-item btn d-flex justify-content-center align-items-center"
+                class="sql-run-button border border-1 rounded-left-2 border-right-0 btn-group-item btn justify-content-center align-items-center"
             >
                 <span>Run</span><mat-icon>play_arrow</mat-icon>
             </button>
             <button
-                [disabled]="!sqlRequestCode"
+                [disabled]="!sqlRequestCode || !isUserAuthenticated"
                 class="starred rounded-right-2 border-1 border btn-sm btn btn-group-item d-flex justify-content-center align-items-center"
                 [matMenuTriggerFor]="menu"
                 aria-label="Example icon-button with a menu"
@@ -31,7 +33,7 @@
         </div>
         <mat-menu #menu="matMenu">
             <div class="select-menu-modal notifications-component-menu-modal">
-                <div class="select-menu-list">
+                <div appFeatureFlag="dataset.panel.data.editRun.newDataset" class="select-menu-list">
                     <button type="button" [disabled]="true" class="select-menu-item no-pointer flex-items-start">
                         <div>
                             <div class="f5 text-bold">New Dataset from Query</div>
@@ -40,10 +42,10 @@
                             </div>
                         </div>
                     </button>
+                    <mat-divider></mat-divider>
                 </div>
                 <ng-container *ngIf="isAdmin">
-                    <div class="select-menu-list">
-                        <mat-divider></mat-divider>
+                    <div appFeatureFlag="dataset.panel.data.editRun.verify" class="select-menu-list">
                         <button type="button" (click)="verifyQueryResult()" class="select-menu-item flex-items-start">
                             <div>
                                 <div class="f5 text-bold">Verify query result</div>
@@ -52,9 +54,9 @@
                                 </div>
                             </div>
                         </button>
-                    </div>
-                    <div class="select-menu-list">
                         <mat-divider></mat-divider>
+                    </div>
+                    <div appFeatureFlag="dataset.panel.data.editRun.curl" class="select-menu-list">
                         <button type="button" (click)="copyCurlCommand()" class="select-menu-item flex-items-start">
                             <div>
                                 <div class="f5 text-bold">Copy as curl command</div>

@@ -20,6 +20,7 @@ import { SafeHtmlPipe } from "src/app/common/pipes/safe-html.pipe";
 import { DragAndDropDirective } from "src/app/common/directives/drag-and-drop.directive";
 import { YamlEventViewerComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/yaml-event-viewer/yaml-event-viewer.component";
 import { RouterModule } from "@angular/router";
+import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.directive";
 
 @NgModule({
     declarations: [
@@ -35,6 +36,7 @@ import { RouterModule } from "@angular/router";
         CardsPropertyComponent,
         SafeHtmlPipe,
         DragAndDropDirective,
+        FeatureFlagDirective,
         YamlEventViewerComponent,
     ],
     imports: [
@@ -63,6 +65,7 @@ import { RouterModule } from "@angular/router";
         DisplaySizeModule,
         SafeHtmlPipe,
         DragAndDropDirective,
+        FeatureFlagDirective,
         YamlEventViewerComponent,
     ],
 })

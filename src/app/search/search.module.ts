@@ -10,6 +10,7 @@ import { DatasetListModule } from "../components/dataset-list-component/dataset-
 import { PaginationModule } from "../components/pagination-component/pagination.module";
 import { ModalModule } from "../components/modal/modal.module";
 import { MatCheckboxModule } from "@angular/material/checkbox";
+import { SharedModule } from "../shared/shared/shared.module";
 
 @NgModule({
     imports: [
@@ -23,6 +24,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
         ModalModule,
         MatCheckboxModule,
         DisplayTimeModule,
+        SharedModule,
     ],
     exports: [SearchComponent],
     declarations: [SearchComponent],

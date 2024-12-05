@@ -159,4 +159,8 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
         this.editorLoaded = true;
         this.cdr.detectChanges();
     }
+
+    public get isUserAuthenticated(): boolean {
+        return this.loggedUserService.isAuthenticated;
+    }
 }

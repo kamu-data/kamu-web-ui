@@ -21,6 +21,7 @@
                                 <li
                                     [class.action-list-item--nav-active]="activeTab === navItem.activeTab"
                                     class="action-list-item"
+                                    [appFeatureFlag]="'dataset.getData.' + navItem.activeTab"
                                 >
                                     <a
                                         class="action-list-content d-flex align-items-center"

@@ -34,39 +34,42 @@
         </div>
     </div>
 
-    <div class="input-group mt-1">
-        <mat-checkbox color="primary" disabled="true">
-            <span class="fs-12">Stable</span>
-        </mat-checkbox>
-        <mat-icon
-            class="text-muted fs-5 help-icon"
-            matTooltip="Include the unique identifier of the dataset. This guarantees that link will point to the same dataset even if its name and owner changes over time."
-            [matTooltipPosition]="'right'"
-            >help_outline</mat-icon
-        >
+    <div appFeatureFlag="dataset.getData.link.checkboxes">
+        <div class="input-group mt-1">
+            <mat-checkbox color="primary" disabled="true">
+                <span class="fs-12">Stable</span>
+            </mat-checkbox>
+            <mat-icon
+                class="text-muted fs-5 help-icon"
+                matTooltip="Include the unique identifier of the dataset. This guarantees that link will point to the same dataset even if its name and owner changes over time."
+                [matTooltipPosition]="'right'"
+                >help_outline</mat-icon
+            >
+        </div>
+        <div class="input-group mt-1">
+            <mat-checkbox color="primary" disabled="true">
+                <span class="fs-12">Frozen</span>
+            </mat-checkbox>
+            <mat-icon
+                class="text-muted fs-5 help-icon"
+                matTooltip="Link to the state of a dataset at this specific point in time, for reproducibility. No matter how much time passes, everyone using this link will the the exact same data."
+                [matTooltipPosition]="'right'"
+                >help_outline</mat-icon
+            >
+        </div>
+        <div class="input-group mt-1 mb-3">
+            <mat-checkbox color="primary" disabled="true">
+                <span class="fs-12">DOI</span>
+            </mat-checkbox>
+            <mat-icon
+                class="text-muted fs-5 help-icon"
+                matTooltip="Produce a DOI.org identifier used for scientific publications."
+                [matTooltipPosition]="'right'"
+                >help_outline</mat-icon
+            >
+        </div>
     </div>
-    <div class="input-group mt-1">
-        <mat-checkbox color="primary" disabled="true">
-            <span class="fs-12">Frozen</span>
-        </mat-checkbox>
-        <mat-icon
-            class="text-muted fs-5 help-icon"
-            matTooltip="Link to the state of a dataset at this specific point in time, for reproducibility. No matter how much time passes, everyone using this link will the the exact same data."
-            [matTooltipPosition]="'right'"
-            >help_outline</mat-icon
-        >
-    </div>
-    <div class="input-group mt-1 mb-3">
-        <mat-checkbox color="primary" disabled="true">
-            <span class="fs-12">DOI</span>
-        </mat-checkbox>
-        <mat-icon
-            class="text-muted fs-5 help-icon"
-            matTooltip="Produce a DOI.org identifier used for scientific publications."
-            [matTooltipPosition]="'right'"
-            >help_outline</mat-icon
-        >
-    </div>
+
     <div class="w-100">
         <mat-divider class="my-2" />
         <div class="d-flex align-items-center">

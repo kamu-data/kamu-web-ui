@@ -5,6 +5,7 @@ import {
     AppLoginInstructions,
     GrafanaLogsConfiguration,
     AppUIConfig,
+    FeaturesRuntimeConfig,
 } from "./app-config.model";
 import { environment } from "src/environments/environment";
 import { MaybeUndefined } from "./common/app.types";
@@ -14,54 +15,35 @@ import AppValues from "./common/app.values";
     providedIn: "root",
 })
 export class AppConfigService {
-    private appRuntimeConfig?: AppRuntimeConfig;
-    private appUiConfig?: AppUIConfig;
+    private appRuntimeConfig: AppRuntimeConfig;
+    private appUiConfig: AppUIConfig;
+
+    public constructor() {
+        this.appRuntimeConfig = AppConfigService.loadAppRuntimeConfig();
+        this.appUiConfig = AppConfigService.loadAppUIConfig(this.appRuntimeConfig);
+    }
 
     get apiServerUrl(): string {
-        if (!this.appRuntimeConfig) {
-            this.appRuntimeConfig = AppConfigService.loadAppRuntimeConfig();
-        }
-
         return new URL(this.apiServerGqlUrl).origin;
     }
 
     get apiServerGqlUrl(): string {
-        if (!this.appRuntimeConfig) {
-            this.appRuntimeConfig = AppConfigService.loadAppRuntimeConfig();
-        }
-
         return this.appRuntimeConfig.apiServerGqlUrl;
     }
 
     get apiServerHttpUrl(): string {
-        if (!this.appRuntimeConfig) {
-            this.appRuntimeConfig = AppConfigService.loadAppRuntimeConfig();
-        }
-
         return this.appRuntimeConfig.apiServerHttpUrl;
     }
 
     get githubClientId(): MaybeUndefined<string> {
-        if (!this.appRuntimeConfig) {
-            this.appRuntimeConfig = AppConfigService.loadAppRuntimeConfig();
-        }
-
         return this.appRuntimeConfig.githubClientId;
     }
 
     get grafanaLogs(): GrafanaLogsConfiguration | null {
-        if (!this.appRuntimeConfig) {
-            this.appRuntimeConfig = AppConfigService.loadAppRuntimeConfig();
-        }
-
         return this.appRuntimeConfig.grafanaLogs ?? null;
     }
 
     get loginInstructions(): AppLoginInstructions | null {
-        if (!this.appRuntimeConfig) {
-            this.appRuntimeConfig = AppConfigService.loadAppRuntimeConfig();
-        }
-
         if (this.appRuntimeConfig.loginInstructions) {
             return this.appRuntimeConfig.loginInstructions;
         } else {
@@ -69,25 +51,19 @@ export class AppConfigService {
         }
     }
 
-    get ingestUploadFileLimitMb(): number {
-        if (!this.appRuntimeConfig) {
-            this.appRuntimeConfig = AppConfigService.loadAppRuntimeConfig();
+    get featuresRuntimeConfig(): FeaturesRuntimeConfig | null {
+        if (this.appRuntimeConfig.features) {
+            return this.appRuntimeConfig.features;
+        } else {
+            return null;
         }
-        if (!this.appUiConfig) {
-            this.appUiConfig = AppConfigService.loadAppUIConfig(this.appRuntimeConfig);
-        }
+    }
 
+    get ingestUploadFileLimitMb(): number {
         return this.appUiConfig.ingestUploadFileLimitMb;
     }
 
     get featureFlags(): AppUIConfigFeatureFlags {
-        if (!this.appRuntimeConfig) {
-            this.appRuntimeConfig = AppConfigService.loadAppRuntimeConfig();
-        }
-        if (!this.appUiConfig) {
-            this.appUiConfig = AppConfigService.loadAppUIConfig(this.appRuntimeConfig);
-        }
-
         return this.appUiConfig.featureFlags;
     }
 

@@ -248,6 +248,7 @@ markdown {
 .header-link {
     text-decoration: none;
     color: #f1f1f1;
+    display: flex;
 
     &:hover {
         text-decoration: none;
@@ -415,6 +416,7 @@ markdown {
 
 .notification-indicator-container {
     width: 1.5em;
+    display: flex;
 }
 
 .app-main-container {
@@ -1603,4 +1605,11 @@ pre.language-sql {
     align-items: start;
     grid-template-columns: minmax(16rem, 37%) 1fr;
     column-gap: 1.5rem;
+}
+
+.disabled {
+    pointer-events: none; /* Prevent interaction */
+    opacity: 0.65; /* Reduce visibility */
+    filter: grayscale(100%); /* Grayscale effect */
+    cursor: not-allowed; /* Show "not allowed" cursor */
 }

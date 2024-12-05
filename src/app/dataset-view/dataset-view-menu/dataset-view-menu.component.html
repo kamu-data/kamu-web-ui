@@ -7,6 +7,7 @@
     <div class="dataset-view-type-toggle-group">
         <mat-button-toggle-group name="datasetViewType" class="mat-button-toggle-group" aria-label="Dataset View Type">
             <mat-button-toggle
+                appFeatureFlag="dataset.panel.overview"
                 data-test-id="navigateToOverview"
                 [class.active-link]="isDatasetViewTypeOverview"
                 value="overview"
@@ -18,7 +19,12 @@
                     </div>
                 </a>
             </mat-button-toggle>
-            <mat-button-toggle data-test-id="navigateToData" [class.active-link]="isDatasetViewTypeData" value="data">
+            <mat-button-toggle
+                appFeatureFlag="dataset.panel.data"
+                data-test-id="navigateToData"
+                [class.active-link]="isDatasetViewTypeData"
+                value="data"
+            >
                 <a [routerLink]="[datasetLink]" [queryParams]="{ tab: DatasetViewTypeEnum.Data }" class="menu-link">
                     <div class="d-flex align-items-center">
                         <mat-icon class="fs-4 d-block me-1">dataset</mat-icon>
@@ -27,6 +33,7 @@
                 </a>
             </mat-button-toggle>
             <mat-button-toggle
+                appFeatureFlag="dataset.panel.metadata"
                 data-test-id="navigateToMetadata"
                 [class.active-link]="isDatasetViewTypeMetadata"
                 value="metadata"
@@ -39,6 +46,7 @@
                 </a>
             </mat-button-toggle>
             <mat-button-toggle
+                appFeatureFlag="dataset.panel.history"
                 data-test-id="navigateToHistory"
                 [class.active-link]="isDatasetViewTypeHistory"
                 value="history"
@@ -51,6 +59,7 @@
                 </a>
             </mat-button-toggle>
             <mat-button-toggle
+                appFeatureFlag="dataset.panel.lineage"
                 data-test-id="navigateToLineage"
                 [class.active-link]="isDatasetViewTypeLineage"
                 value="lineage"
@@ -62,13 +71,19 @@
                     </div>
                 </a>
             </mat-button-toggle>
-            <mat-button-toggle data-test-id="navigateToDiscussions" value="discussions" disabled>
+            <mat-button-toggle
+                appFeatureFlag="dataset.panel.discussions"
+                data-test-id="navigateToDiscussions"
+                value="discussions"
+                disabled
+            >
                 <div class="d-flex align-items-center">
                     <mat-icon class="fs-4 d-block me-1">message</mat-icon>
                     <span class="d-block">Discussions</span>
                 </div>
             </mat-button-toggle>
             <mat-button-toggle
+                appFeatureFlag="dataset.panel.flows"
                 data-test-id="navigateToFlows"
                 value="flows"
                 [class.active-link]="isDatasetViewTypeFlows"
@@ -82,6 +97,7 @@
                 </a>
             </mat-button-toggle>
             <mat-button-toggle
+                appFeatureFlag="dataset.panel.settings"
                 data-test-id="navigateToSettings"
                 value="settings"
                 [class.active-link]="isDatasetViewTypeSettings"

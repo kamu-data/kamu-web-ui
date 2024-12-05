@@ -1,5 +1,22 @@
 fragment FlowItemWidgetData on Flow {
   status
+  description {
+    ... on FlowDescriptionDatasetPollingIngest {
+      datasetId
+    }
+    ... on FlowDescriptionDatasetPushIngest {
+      datasetId
+    }
+    ... on FlowDescriptionDatasetExecuteTransform {
+      datasetId
+    }
+    ... on FlowDescriptionDatasetHardCompaction {
+      datasetId
+    }
+    ... on FlowDescriptionDatasetReset {
+      datasetId
+    }
+  }
   initiator {
     accountName
   }

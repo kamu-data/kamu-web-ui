@@ -48,7 +48,7 @@
                     </div>
 
                     <div class="d-none d-md-flex align-items-center flex-shrink-0">
-                        <div>
+                        <div appFeatureFlag="dataset.panel.history.verified">
                             <button
                                 type="button"
                                 class="signed-commit-badge verified signed-commit-badge-small m-2"
@@ -72,16 +72,6 @@
                                 [showCopyButton]="true"
                                 [class]="'text-dark mr-4 hashBlock'"
                             />
-                        </div>
-                        <div data-view-component="true" class="btns-group-item">
-                            <a
-                                href="/kamu-data/kamu-web-ui/tree/75e711dfb8e35335b622f0c56ff59fc3fc7cea7d"
-                                aria-label="Browse the repository at this point in the history"
-                                data-view-component="true"
-                                class="tooltipped tooltipped-sw btn-outline btn btns-group-item"
-                            >
-                                <svg-icon name="code" />
-                            </a>
                         </div>
                     </div>
                 </li>

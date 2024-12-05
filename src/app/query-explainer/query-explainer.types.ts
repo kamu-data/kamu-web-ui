@@ -1,19 +1,44 @@
 import { HttpHeaders } from "@angular/common/http";
-import { DataBatchFormat, DataSchemaFormat, QueryDialect } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/common/app.types";
+import { DataSchemaFormat, QueryDialect } from "src/app/api/kamu.graphql.interface";
 import { UploadPrepareResponse } from "src/app/common/ingest-via-file-upload.types";
+
+export enum QueryExplainerDataFormat {
+    JsonAoS = "JsonAoS",
+    JsonSoA = "JsonSoA",
+    JsonAoA = "JsonAoA",
+}
 
 export interface QueryExplainerResponse {
     input: QueryExplainerInputType;
     commitment: QueryExplainerCommitmentType;
     proof: QueryExplainerProofType;
     output?: QueryExplainerOutputType;
+    // TODO: need implementation
+    subQueries?: unknown[];
+}
+
+export interface QueryExplainerProofResponse {
+    input: QueryExplainerInputType;
+    commitment: QueryExplainerCommitmentType;
+    proof: QueryExplainerProofType;
+    // TODO: need implementation
+    subQueries?: unknown[];
+}
+
+export interface QueryExplainerInputOutputResponse {
+    input: QueryExplainerInputType;
+    output?: QueryExplainerOutputType;
+}
+
+export interface QueryExplainerDataJsonAosResponse {
+    output?: QueryExplainerOutputType;
 }
 
 export interface QueryExplainerOutputType {
-    data: [string[]];
-    dataFormat: keyof typeof DataBatchFormat;
+    data: object[] | [string[]];
+    dataFormat: keyof typeof QueryExplainerDataFormat;
     schema: QueryExplainerSchemaType;
+    schemaFormat: keyof typeof DataSchemaFormat;
 }
 
 export interface QueryExplainerSchemaType {
@@ -34,14 +59,16 @@ export interface QueryExplainerCommitmentType {
 
 export interface QueryExplainerInputType {
     query: string;
-    include: string[];
-    dataFormat: keyof typeof DataBatchFormat;
+    include: QueryExplainerIncludeType[];
+    dataFormat?: keyof typeof QueryExplainerDataFormat;
     queryDialect?: keyof typeof QueryDialect;
     schemaFormat?: keyof typeof DataSchemaFormat;
     datasets?: QueryExplainerDatasetsType[];
     skip?: number;
     limit?: number;
 }
+
+export type QueryExplainerIncludeType = "Proof" | "Input" | "Schema";
 
 export interface QueryExplainerDatasetsType {
     alias: string;
@@ -88,9 +115,4 @@ export interface UploadPrepareCommitmentData {
     uploadPrepareResponse: UploadPrepareResponse;
     bodyObject: FormData;
     uploadHeaders: HttpHeaders;
-}
-
-export interface QueryExplainerComponentData {
-    sqlQueryExplainerResponse: QueryExplainerResponse;
-    sqlQueryVerify: MaybeNull<VerifyQueryResponse>;
 }

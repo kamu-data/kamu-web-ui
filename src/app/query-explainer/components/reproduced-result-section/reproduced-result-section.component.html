@@ -3,9 +3,9 @@
     <div class="mt-4">
         <app-dynamic-table
             [hasTableHeader]="true"
-            [schemaFields]="schemaFields(output)"
+            [schemaFields]="schemaFields(dataJsonAoS)"
             [idTable]="'query-explainer-table'"
-            [dataRows]="tableSource(output)"
+            [dataRows]="tableSource(dataJsonAoS)"
             [attr.data-test-id]="'query-explainer-table'"
         />
     </div>

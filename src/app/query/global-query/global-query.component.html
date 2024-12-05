@@ -1,0 +1,18 @@
+<div class="container-main">
+    <div class="query-container py-4">
+        <app-search-and-schemas-section (sqlQueryEmit)="setDefaultQuery($event)"></app-search-and-schemas-section>
+
+        <div class="search-result-container__content">
+            <app-query-and-result-sections
+                [sqlLoading]="sqlLoading"
+                [sqlError]="sqlErrorMarker$ | async"
+                [sqlQueryResponse]="sqlQueryResponse$ | async"
+                [sqlRequestCode]="sqlRequestCode"
+                [monacoPlaceholder]="MONACO_PLACEHOLDER"
+                (runSQLRequestEmit)="runSQLRequest($event)"
+            >
+                <p class="search-result-container__content mt-4">The query didn't return any records</p>
+            </app-query-and-result-sections>
+        </div>
+    </div>
+</div>

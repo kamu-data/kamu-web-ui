@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { QueryExplainerOutputType, QueryExplainerSchemaType } from "../../query-explainer.types";
+import { QueryExplainerOutputType } from "../../query-explainer.types";
 import { extractSchemaFieldsFromData } from "src/app/common/table.helper";
 import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
 
@@ -9,21 +9,23 @@ import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReproducedResultSectionComponent {
-    @Input({ required: true }) public output: QueryExplainerOutputType;
+    @Input({ required: true }) public dataJsonAoS: QueryExplainerOutputType;
 
     public tableSource(output: QueryExplainerOutputType): DataRow[] {
-        const result = output.data.map((dataItem) => {
-            const arr = dataItem.map((value, index) => ({ [this.columnNames(output.schema)[index]]: value }));
-            return arr.reduce((resultObj, obj) => Object.assign(resultObj, obj), {});
-        }) as DataRow[];
-        return result;
-    }
-
-    private columnNames(schema: QueryExplainerSchemaType): string[] {
-        return schema.fields.map((item) => item.name);
+        const columnNames: string[] = output.schema.fields.map((item) => item.name);
+        return this.parseDataFromJsonAoSFormat(output.data, columnNames);
     }
 
     public schemaFields(output: QueryExplainerOutputType): DataSchemaField[] {
         return extractSchemaFieldsFromData(this.tableSource(output)[0]);
+    }
+
+    private parseDataFromJsonAoSFormat(data: object[], columnNames: string[]): DataRow[] {
+        return data.map((dataItem: object) => {
+            const arr = columnNames.map((value: string) => ({
+                [value]: dataItem[value as keyof typeof dataItem],
+            }));
+            return arr.reduce((resultObj, obj) => Object.assign(resultObj, obj), {});
+        });
     }
 }

@@ -1,3 +1,4 @@
+import { GlobalQueryComponent } from "./query/global-query/global-query.component";
 import { AddPollingSourceComponent } from "./dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source.component";
 import { MetadataBlockComponent } from "./dataset-block/metadata-block/metadata-block.component";
 import { AuthenticatedGuard } from "./auth/guards/authenticated.guard";
@@ -51,6 +52,11 @@ export const routes: Routes = [
         path: ProjectLinks.URL_QUERY_EXPLAINER,
         component: QueryExplainerComponent,
         loadChildren: () => import("./query-explainer/query-explainer.module").then((m) => m.QueryExplainerModule),
+    },
+    {
+        path: ProjectLinks.URL_QUERY,
+        component: GlobalQueryComponent,
+        loadChildren: () => import("./query/query.module").then((m) => m.QueryModule),
     },
     {
         path:

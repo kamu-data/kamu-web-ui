@@ -40,6 +40,8 @@ import {
     UpdateWatermarkMutation,
     DatasetHeadBlockHashGQL,
     DatasetHeadBlockHashQuery,
+    DatasetPushSyncStatusesGQL,
+    DatasetPushSyncStatusesQuery,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { ApolloQueryResult } from "@apollo/client/core";
@@ -74,6 +76,7 @@ export class DatasetApi {
     private updateWatermarkGQL = inject(UpdateWatermarkGQL);
     private datasetHeadBlockHashGQL = inject(DatasetHeadBlockHashGQL);
     private datasetSystemTimeBlockByHashGQL = inject(DatasetSystemTimeBlockByHashGQL);
+    private datasetPushSyncStatusesGQL = inject(DatasetPushSyncStatusesGQL);
 
     public getDatasetMainData(params: {
         accountName: string;
@@ -434,6 +437,26 @@ export class DatasetApi {
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<DatasetHeadBlockHashQuery>) => {
+                    return result.data;
+                }),
+            );
+    }
+
+    public datasetPushSyncStatuses(datasetId: string): Observable<DatasetPushSyncStatusesQuery> {
+        return this.datasetPushSyncStatusesGQL
+            .watch(
+                { datasetId },
+
+                {
+                    ...noCacheFetchPolicy,
+                    context: {
+                        skipLoading: true,
+                    },
+                },
+            )
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<DatasetPushSyncStatusesQuery>) => {
                     return result.data;
                 }),
             );

@@ -18,6 +18,7 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { DatasetViewTypeEnum } from "../dataset-view.interface";
 import { RouterModule } from "@angular/router";
 import { SharedTestModule } from "src/app/common/shared-test.module";
+import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 
 describe("DatasetViewMenuComponent", () => {
     let component: DatasetViewMenuComponent;
@@ -57,5 +58,11 @@ describe("DatasetViewMenuComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should check element has appFeatureFlag directive", () => {
+        const navigateToDiscussionsElem = findElementByDataTestId(fixture, "navigateToDiscussions");
+        expect(navigateToDiscussionsElem?.hasAttribute("appfeatureflag")).toBeTrue();
+        expect(navigateToDiscussionsElem?.getAttribute("appfeatureflag")).toEqual("dataset.panel.discussions");
     });
 });

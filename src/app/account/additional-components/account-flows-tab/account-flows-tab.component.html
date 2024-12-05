@@ -34,6 +34,7 @@
             <div class="search-result-container__content my-4">
                 <app-tile-base-widget
                     [nodes]="flowConnectionData.flowsData.connectionDataForWidget.nodes"
+                    [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
                 ></app-tile-base-widget>
             </div>
             <app-flows-table

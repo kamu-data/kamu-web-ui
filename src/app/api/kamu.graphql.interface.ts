@@ -23,6 +23,7 @@ export type Scalars = {
     DatasetID: string;
     DatasetName: string;
     DatasetRef: string;
+    DatasetRefRemote: string;
     /**
      * Implement the DateTime<Utc> scalar
      *
@@ -318,6 +319,30 @@ export type CompactionMetadataOnly = {
     recursive: Scalars["Boolean"];
 };
 
+export type CompareChainsResult = CompareChainsResultError | CompareChainsResultStatus;
+
+export type CompareChainsResultError = {
+    __typename?: "CompareChainsResultError";
+    reason: CompareChainsResultReason;
+};
+
+export type CompareChainsResultReason = {
+    __typename?: "CompareChainsResultReason";
+    message: Scalars["String"];
+};
+
+export type CompareChainsResultStatus = {
+    __typename?: "CompareChainsResultStatus";
+    message: CompareChainsStatus;
+};
+
+export enum CompareChainsStatus {
+    Ahead = "AHEAD",
+    Behind = "BEHIND",
+    Diverged = "DIVERGED",
+    Equal = "EQUAL",
+}
+
 export enum CompressionFormat {
     Gzip = "GZIP",
     Zip = "ZIP",
@@ -399,8 +424,13 @@ export type DataBatch = {
 
 export enum DataBatchFormat {
     Csv = "CSV",
+    /**
+     * Deprecated: Use `JSON_AOS` instead and expect it to become default in
+     * future versions
+     */
     Json = "JSON",
     JsonAoa = "JSON_AOA",
+    JsonAos = "JSON_AOS",
     /** Deprecated: Use `ND_JSON` instead */
     JsonLd = "JSON_LD",
     JsonSoa = "JSON_SOA",
@@ -441,6 +471,7 @@ export enum DataQueryResultErrorKind {
 export type DataQueryResultSuccess = {
     __typename?: "DataQueryResultSuccess";
     data: DataBatch;
+    datasets?: Maybe<Array<DatasetState>>;
     limit: Scalars["Int"];
     schema?: Maybe<DataSchema>;
 };
@@ -740,6 +771,8 @@ export type DatasetMetadata = {
     currentVocab?: Maybe<SetVocab>;
     /** Last recorded watermark */
     currentWatermark?: Maybe<Scalars["DateTime"]>;
+    /** Sync statuses of push remotes */
+    pushSyncStatuses: DatasetPushStatuses;
 };
 
 export type DatasetMetadataCurrentSchemaArgs = {
@@ -789,6 +822,30 @@ export type DatasetPermissions = {
     canRename: Scalars["Boolean"];
     canSchedule: Scalars["Boolean"];
     canView: Scalars["Boolean"];
+};
+
+export type DatasetPushStatus = {
+    __typename?: "DatasetPushStatus";
+    remote: Scalars["DatasetRefRemote"];
+    result: CompareChainsResult;
+};
+
+export type DatasetPushStatuses = {
+    __typename?: "DatasetPushStatuses";
+    statuses: Array<DatasetPushStatus>;
+};
+
+export type DatasetState = {
+    __typename?: "DatasetState";
+    /** Alias to be used in the query */
+    alias: Scalars["String"];
+    /**
+     * Last block hash of the input datasets that was or should be considered
+     * during the query planning
+     */
+    blockHash?: Maybe<Scalars["Multihash"]>;
+    /** Globally unique identity of the dataset */
+    id: Scalars["DatasetID"];
 };
 
 export enum DatasetVisibility {
@@ -1822,6 +1879,7 @@ export type SaveDatasetEnvVarResultSuccess = SaveDatasetEnvVarResult & {
 };
 
 export type ScheduleInput =
+    /** Supported CRON syntax: min hour dayOfMonth month dayOfWeek */
     | { cron5ComponentExpression: Scalars["String"]; timeDelta?: never }
     | { cron5ComponentExpression?: never; timeDelta: TimeDeltaInput };
 
@@ -2672,6 +2730,36 @@ export type DatasetProtocolsQuery = {
     };
 };
 
+export type DatasetPushSyncStatusesQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+}>;
+
+export type DatasetPushSyncStatusesQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            metadata: {
+                __typename?: "DatasetMetadata";
+                pushSyncStatuses: {
+                    __typename?: "DatasetPushStatuses";
+                    statuses: Array<{
+                        __typename?: "DatasetPushStatus";
+                        remote: string;
+                        result:
+                            | {
+                                  __typename?: "CompareChainsResultError";
+                                  reason: { __typename?: "CompareChainsResultReason"; message: string };
+                              }
+                            | { __typename?: "CompareChainsResultStatus"; message: CompareChainsStatus };
+                    }>;
+                };
+            };
+        } | null;
+    };
+};
+
 export type GetDatasetSchemaQueryVariables = Exact<{
     datasetId: Scalars["DatasetID"];
 }>;
@@ -3337,6 +3425,13 @@ export type FlowHistoryDataFragment =
 export type FlowItemWidgetDataFragment = {
     __typename?: "Flow";
     status: FlowStatus;
+    description:
+        | { __typename?: "FlowDescriptionDatasetExecuteTransform"; datasetId: string }
+        | { __typename?: "FlowDescriptionDatasetHardCompaction"; datasetId: string }
+        | { __typename?: "FlowDescriptionDatasetPollingIngest"; datasetId: string }
+        | { __typename?: "FlowDescriptionDatasetPushIngest"; datasetId: string }
+        | { __typename?: "FlowDescriptionDatasetReset"; datasetId: string }
+        | { __typename?: "FlowDescriptionSystemGC" };
     initiator?: { __typename?: "Account"; accountName: string } | null;
     outcome?:
         | ({ __typename?: "FlowAbortedResult" } & FlowOutcomeData_FlowAbortedResult_Fragment)
@@ -3657,6 +3752,7 @@ export type DataQueryResultSuccessViewFragment = {
     __typename?: "DataQueryResultSuccess";
     schema?: { __typename?: "DataSchema"; format: DataSchemaFormat; content: string } | null;
     data: { __typename?: "DataBatch"; format: DataBatchFormat; content: string };
+    datasets?: Array<{ __typename?: "DatasetState"; id: string; alias: string; blockHash?: string | null }> | null;
 };
 
 export type DatasetBasicsFragment = {
@@ -4591,6 +4687,23 @@ export const FlowHistoryDataFragmentDoc = gql`
 export const FlowItemWidgetDataFragmentDoc = gql`
     fragment FlowItemWidgetData on Flow {
         status
+        description {
+            ... on FlowDescriptionDatasetPollingIngest {
+                datasetId
+            }
+            ... on FlowDescriptionDatasetPushIngest {
+                datasetId
+            }
+            ... on FlowDescriptionDatasetExecuteTransform {
+                datasetId
+            }
+            ... on FlowDescriptionDatasetHardCompaction {
+                datasetId
+            }
+            ... on FlowDescriptionDatasetReset {
+                datasetId
+            }
+        }
         initiator {
             accountName
         }
@@ -4641,6 +4754,11 @@ export const DataQueryResultSuccessViewFragmentDoc = gql`
         data {
             format
             content
+        }
+        datasets {
+            id
+            alias
+            blockHash
         }
     }
 `;
@@ -5923,7 +6041,7 @@ export const GetDatasetDataSqlRunDocument = gql`
                 query: $query
                 queryDialect: SQL_DATA_FUSION
                 schemaFormat: PARQUET_JSON
-                dataFormat: JSON
+                dataFormat: JSON_AOS
                 limit: $limit
                 skip: $skip
             ) {
@@ -6122,6 +6240,45 @@ export const DatasetProtocolsDocument = gql`
 })
 export class DatasetProtocolsGQL extends Apollo.Query<DatasetProtocolsQuery, DatasetProtocolsQueryVariables> {
     document = DatasetProtocolsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetPushSyncStatusesDocument = gql`
+    query datasetPushSyncStatuses($datasetId: DatasetID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                metadata {
+                    pushSyncStatuses {
+                        statuses {
+                            remote
+                            result {
+                                ... on CompareChainsResultStatus {
+                                    message
+                                }
+                                ... on CompareChainsResultError {
+                                    reason {
+                                        message
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetPushSyncStatusesGQL extends Apollo.Query<
+    DatasetPushSyncStatusesQuery,
+    DatasetPushSyncStatusesQueryVariables
+> {
+    document = DatasetPushSyncStatusesDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

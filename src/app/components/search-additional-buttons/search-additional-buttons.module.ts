@@ -7,9 +7,18 @@ import { CommonModule } from "@angular/common";
 import { NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
 import { SearchAdditionalButtonsNavComponent } from "./search-additional-buttons-nav.component";
 import { AngularSvgIconModule } from "angular-svg-icon";
+import { SharedModule } from "src/app/shared/shared/shared.module";
 
 @NgModule({
-    imports: [MatMenuModule, MatIconModule, MatButtonModule, CommonModule, NgbPopoverModule, AngularSvgIconModule],
+    imports: [
+        MatMenuModule,
+        MatIconModule,
+        MatButtonModule,
+        CommonModule,
+        NgbPopoverModule,
+        AngularSvgIconModule,
+        SharedModule,
+    ],
     exports: [SearchAdditionalButtonsComponent, SearchAdditionalButtonsNavComponent],
     declarations: [SearchAdditionalButtonsComponent, SearchAdditionalButtonsNavComponent],
 })

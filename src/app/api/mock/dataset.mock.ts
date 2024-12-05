@@ -1,8 +1,10 @@
 import {
+    CompareChainsStatus,
     DataBatchFormat,
     DatasetByAccountAndDatasetNameQuery,
     DatasetByIdQuery,
     DatasetKind,
+    DatasetPushSyncStatusesQuery,
     DatasetsByAccountNameQuery,
     DatasetSearchOverviewFragment,
     GetDatasetBasicsWithPermissionsQuery,
@@ -147,6 +149,107 @@ export const mockDatasetByIdQuery: DatasetByIdQuery = {
                 accountName: TEST_LOGIN,
             },
             alias: TEST_LOGIN + "/" + TEST_DATASET_NAME,
+        },
+    },
+};
+
+export const mockDatasetPushSyncStatusesQuery: DatasetPushSyncStatusesQuery = {
+    datasets: {
+        __typename: "Datasets",
+        byId: {
+            metadata: {
+                pushSyncStatuses: {
+                    statuses: [
+                        {
+                            remote: "file:///path/to/remote/1",
+                            result: {
+                                message: CompareChainsStatus.Behind,
+                                __typename: "CompareChainsResultStatus",
+                            },
+                            __typename: "DatasetPushStatus",
+                        },
+                        {
+                            remote: "file:///path/to/remote/2",
+                            result: {
+                                message: CompareChainsStatus.Equal,
+                                __typename: "CompareChainsResultStatus",
+                            },
+                            __typename: "DatasetPushStatus",
+                        },
+                        {
+                            remote: "file:///path/to/remote/3",
+                            result: {
+                                reason: {
+                                    message: "Remote dataset not found",
+                                    __typename: "CompareChainsResultReason",
+                                },
+                                __typename: "CompareChainsResultError",
+                            },
+                            __typename: "DatasetPushStatus",
+                        },
+                        {
+                            remote: "file:///path/to/remote/4",
+                            result: {
+                                message: CompareChainsStatus.Ahead,
+                                __typename: "CompareChainsResultStatus",
+                            },
+                            __typename: "DatasetPushStatus",
+                        },
+                        {
+                            remote: "file:///path/to/remote/5",
+                            result: {
+                                message: CompareChainsStatus.Diverged,
+                                __typename: "CompareChainsResultStatus",
+                            },
+                            __typename: "DatasetPushStatus",
+                        },
+                    ],
+                    __typename: "DatasetPushStatuses",
+                },
+                __typename: "DatasetMetadata",
+            },
+            __typename: "Dataset",
+        },
+    },
+};
+
+export const mockDatasetPushSyncStatusesAllInSyncQuery: DatasetPushSyncStatusesQuery = {
+    datasets: {
+        __typename: "Datasets",
+        byId: {
+            metadata: {
+                pushSyncStatuses: {
+                    statuses: [
+                        {
+                            remote: "file:///path/to/remote",
+                            result: {
+                                message: CompareChainsStatus.Equal,
+                                __typename: "CompareChainsResultStatus",
+                            },
+                            __typename: "DatasetPushStatus",
+                        },
+                    ],
+                    __typename: "DatasetPushStatuses",
+                },
+                __typename: "DatasetMetadata",
+            },
+            __typename: "Dataset",
+        },
+    },
+};
+
+export const mockDatasetPushSyncStatusesNoRemotesQuery: DatasetPushSyncStatusesQuery = {
+    datasets: {
+        __typename: "Datasets",
+        byId: {
+            metadata: {
+                pushSyncStatuses: {
+                    statuses: [],
+                    __typename: "DatasetPushStatuses",
+                },
+                __typename: "DatasetMetadata",
+            },
+            __typename: "Dataset",
         },
     },
 };

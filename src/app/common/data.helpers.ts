@@ -1,6 +1,11 @@
 import { MaybeNull } from "src/app/common/app.types";
 import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
-import { FlowSummaryDataFragment, MetadataBlockFragment, TimeUnit } from "../api/kamu.graphql.interface";
+import {
+    DataQueryResultSuccessViewFragment,
+    FlowSummaryDataFragment,
+    MetadataBlockFragment,
+    TimeUnit,
+} from "../api/kamu.graphql.interface";
 import { EventPropertyLogo } from "../dataset-block/metadata-block/components/event-details/supported.events";
 import { JsonFormValidators } from "../dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { MaybeUndefined } from "./app.types";
@@ -8,8 +13,9 @@ import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { isValidCronExpression } from "./cron-expression-validator.helper";
 import { ErrorPolicy, WatchQueryFetchPolicy } from "@apollo/client";
 import moment from "moment";
-import { convertSecondsToHumanReadableFormat } from "./app.helpers";
+import { convertSecondsToHumanReadableFormat, removeAllLineBreaks } from "./app.helpers";
 import { SliceUnit } from "../dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
+import { DataRow, DatasetSchema } from "../interface/dataset.interface";
 
 export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";
@@ -356,4 +362,13 @@ export function sliceSizeMapperReverse(sizeInBytes: number): { size: number; uni
     } else {
         return { size: sizeInBytes / Math.pow(2, 10), unit: SliceUnit.KB };
     }
+}
+
+export function parseSchema(schemaContent: string): DatasetSchema {
+    return JSON.parse(removeAllLineBreaks(schemaContent)) as DatasetSchema;
+}
+
+export function parseDataRows(successResult: DataQueryResultSuccessViewFragment): DataRow[] {
+    const content: string = successResult.data.content;
+    return JSON.parse(content) as DataRow[];
 }

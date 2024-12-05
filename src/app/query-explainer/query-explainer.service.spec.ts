@@ -31,13 +31,42 @@ describe("QueryExplainerService", () => {
         expect(service).toBeTruthy();
     });
 
-    it("should return commitment data", () => {
+    it("should proces query with proof", () => {
         const mockQuery = `select block_number,to from "kamu/net.rocketpool.reth.tokens-minted" order by offset limit 1`;
-        const mockResponse: QueryExplainerResponse = mockQueryExplainerResponse;
-        service.processQuery(mockQuery).subscribe((data) => expect(data).toEqual(mockResponse));
+        service.processQueryWithProof(mockQuery).subscribe((data) => expect(data).toEqual(mockQueryExplainerResponse));
         const req = httpTestingController.expectOne(`${appConfigService.apiServerHttpUrl}/query`);
 
         expect(req.request.method).toEqual("POST");
+        req.flush(mockQueryExplainerResponse);
+    });
+
+    it("should proces query with proof with error", () => {
+        const errorMessage = "Error";
+        const toastrServiceSpy = spyOn(toastrService, "error");
+
+        const mockQuery = `select block_number,to from "kamu/net.rocketpool.reth.tokens-minted" order by offset limit 1`;
+        service.processQueryWithProof(mockQuery).subscribe({
+            next: () => fail("should have failed with the 404 error"),
+            error: (error: HttpErrorResponse) => {
+                expect(error.status).withContext("status").toEqual(404);
+                expect(error.message).withContext("message").toEqual(errorMessage);
+            },
+        });
+        const req = httpTestingController.expectOne(`${appConfigService.apiServerHttpUrl}/query`);
+
+        expect(req.request.method).toEqual("POST");
+        req.flush(errorMessage, { status: 404, statusText: "Not Found" });
+        expect(toastrServiceSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should return commitment data", () => {
+        const mockQuery = `select block_number,to from "kamu/net.rocketpool.reth.tokens-minted" order by offset limit 1`;
+        const mockResponse: QueryExplainerResponse = mockQueryExplainerResponse;
+        service.processQueryWithSchema(mockQuery).subscribe((data) => expect(data).toEqual(mockResponse));
+        const req = httpTestingController.expectOne(`${appConfigService.apiServerHttpUrl}/query`);
+
+        expect(req.request.method).toEqual("POST");
+        expect(req.request.body).toEqual(jasmine.objectContaining({ include: ["Schema"], query: mockQuery }));
         req.flush(mockResponse);
     });
 
@@ -46,7 +75,7 @@ describe("QueryExplainerService", () => {
         const errorMessage = "Error";
         const toastrServiceSpy = spyOn(toastrService, "error");
 
-        service.processQuery(mockQuery).subscribe({
+        service.processQueryWithSchema(mockQuery).subscribe({
             next: () => fail("should have failed with the 404 error"),
             error: (error: HttpErrorResponse) => {
                 expect(error.status).withContext("status").toEqual(404);

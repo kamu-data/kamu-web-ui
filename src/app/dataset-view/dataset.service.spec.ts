@@ -1,12 +1,9 @@
 import { mockDatasetHeadBlockHashQuery } from "./../search/mock.data";
 import {
-    mockDatasetDataSqlRunResponse,
     mockDatasetHistoryResponse,
     mockDatasetMainDataResponse,
     mockDatasetResponseNotFound,
     mockDatasetInfo,
-    mockDatasetDataSqlRunInvalidSqlResponse,
-    mockDatasetDataSqlRunInternalErrorResponse,
     mockFullPowerDatasetPermissionsFragment,
     mockDatasetLineageResponse,
 } from "../search/mock.data";
@@ -19,7 +16,6 @@ import { DatasetSubscriptionsService } from "./dataset.subscriptions.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import {
-    DataQueryResultError,
     DataQueryResultErrorKind,
     DatasetBasicsFragment,
     DatasetDataSizeFragment,
@@ -27,17 +23,20 @@ import {
     DatasetPermissionsFragment,
     MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
-import { of, throwError } from "rxjs";
+import { of } from "rxjs";
 import { DatasetNotFoundError, SqlExecutionError } from "../common/errors";
-import {
-    DatasetHistoryUpdate,
-    DataSqlErrorUpdate,
-    LineageUpdate,
-    OverviewUpdate,
-} from "./dataset.subscriptions.interface";
+import { DatasetHistoryUpdate, LineageUpdate, OverviewUpdate } from "./dataset.subscriptions.interface";
 import { first } from "rxjs/operators";
 import _ from "lodash";
-import { mockDatasetBasicsWithPermissionQuery, TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "../api/mock/dataset.mock";
+import {
+    mockDatasetBasicsWithPermissionQuery,
+    mockDatasetPushSyncStatusesAllInSyncQuery,
+    mockDatasetPushSyncStatusesNoRemotesQuery,
+    mockDatasetPushSyncStatusesQuery,
+    TEST_ACCOUNT_NAME,
+    TEST_DATASET_ID,
+    TEST_DATASET_NAME,
+} from "../api/mock/dataset.mock";
 import { MaybeNull } from "../common/app.types";
 
 describe("AppDatasetService", () => {
@@ -83,8 +82,6 @@ describe("AppDatasetService", () => {
 
         const metadataSchemaSubscription$ = datasetSubsService.metadataSchemaChanges.pipe(first()).subscribe();
 
-        datasetSubsService.sqlQueryDataChanges.subscribe(() => fail("Unexpected data update"));
-
         service.requestDatasetMainData(mockDatasetInfo).subscribe();
 
         expect(datasetChangesSubscription$.closed).toBeTrue();
@@ -118,7 +115,6 @@ describe("AppDatasetService", () => {
 
         service.datasetChanges.subscribe(() => fail("Unexpected onDatasetChanges update"));
         datasetSubsService.overviewChanges.subscribe(() => fail("Unexpected overview update"));
-        datasetSubsService.sqlQueryDataChanges.subscribe(() => fail("Unexpected data update"));
         datasetSubsService.metadataSchemaChanges.subscribe(() => fail("Unexpected metadata update"));
 
         const subscription$ = service
@@ -149,7 +145,6 @@ describe("AppDatasetService", () => {
 
         service.datasetChanges.subscribe(() => fail("Unexpected onDatasetChanges update"));
         datasetSubsService.overviewChanges.subscribe(() => fail("Unexpected overview update"));
-        datasetSubsService.sqlQueryDataChanges.subscribe(() => fail("Unexpected data update"));
         datasetSubsService.metadataSchemaChanges.subscribe(() => fail("Unexpected metadata update"));
 
         const subscription$ = service
@@ -236,80 +231,6 @@ describe("AppDatasetService", () => {
         expect(subscription$.closed).toBeTrue();
     });
 
-    it("should check get SQL query data from api", () => {
-        const query = "select\n  *\nfrom testTable";
-        const limit = 20;
-        spyOn(datasetApi, "getDatasetDataSqlRun").and.returnValue(of(mockDatasetDataSqlRunResponse));
-
-        const subscriptionDataChanges$ = datasetSubsService.sqlQueryDataChanges.pipe(first()).subscribe();
-
-        const emitSqlErrorOccurredSpy = spyOn(datasetSubsService, "emitSqlErrorOccurred");
-
-        service.requestDatasetDataSqlRun({ query, limit }).subscribe();
-
-        expect(subscriptionDataChanges$.closed).toBeTrue();
-        expect(emitSqlErrorOccurredSpy).toHaveBeenCalledWith({ error: "" });
-    });
-
-    it("should check get SQL query data from api with invalid SQL", () => {
-        const query = "invalid sql query";
-        const limit = 20;
-        spyOn(datasetApi, "getDatasetDataSqlRun").and.returnValue(of(mockDatasetDataSqlRunInvalidSqlResponse));
-
-        const subscriptionDataChanges$ = datasetSubsService.sqlQueryDataChanges.pipe(first()).subscribe();
-
-        const subscriptionErrorChanges$ = datasetSubsService.sqlErrorOccurrences
-            .pipe(first())
-            .subscribe((update: DataSqlErrorUpdate) => {
-                const errorResult = mockDatasetDataSqlRunInvalidSqlResponse.data.query as DataQueryResultError;
-                expect(update.error).toEqual(errorResult.errorMessage);
-            });
-
-        service.requestDatasetDataSqlRun({ query, limit }).subscribe();
-
-        expect(subscriptionDataChanges$.closed).toBeFalse();
-        expect(subscriptionErrorChanges$.closed).toBeTrue();
-    });
-
-    it("should check get SQL query data from api when SQL execution fails softly", () => {
-        const query = "select\n  *\nfrom testTable";
-        const limit = 20;
-        spyOn(datasetApi, "getDatasetDataSqlRun").and.returnValue(of(mockDatasetDataSqlRunInternalErrorResponse));
-
-        datasetSubsService.sqlQueryDataChanges.subscribe(() => fail("Unexpected data update"));
-        datasetSubsService.sqlErrorOccurrences.subscribe(() => fail("Unexpected SQL error update"));
-
-        const subscription$ = service
-            .requestDatasetDataSqlRun({ query, limit })
-            .pipe(first())
-            .subscribe({
-                next: () => fail("Unexpected success"),
-                error: (e: Error) => {
-                    const errorResult = mockDatasetDataSqlRunInternalErrorResponse.data.query as DataQueryResultError;
-                    expect(e).toEqual(new SqlExecutionError(errorResult.errorMessage));
-                },
-            });
-        expect(subscription$.closed).toBeTrue();
-    });
-
-    it("should check get SQL query data from api when SQL execution fails hardly", () => {
-        const query = "select\n  *\nfrom testTable";
-        const limit = 20;
-        spyOn(datasetApi, "getDatasetDataSqlRun").and.returnValue(throwError(() => new SqlExecutionError()));
-
-        datasetSubsService.sqlQueryDataChanges.subscribe(() => fail("Unexpected data update"));
-        datasetSubsService.sqlErrorOccurrences.subscribe(() => fail("Unexpected SQL error update"));
-
-        const subscription$ = service
-            .requestDatasetDataSqlRun({ query, limit })
-            .pipe(first())
-            .subscribe({
-                next: () => fail("Unexpected success"),
-                error: (e: Error) => expect(e).toEqual(new SqlExecutionError()),
-            });
-        expect(subscription$.closed).toBeTrue();
-    });
-
     it("should check get dataset basics with permissions", () => {
         spyOn(datasetApi, "getDatasetBasicsWithPermissions").and.returnValue(of(mockDatasetBasicsWithPermissionQuery));
 
@@ -349,5 +270,44 @@ describe("AppDatasetService", () => {
 
         expect(requestDatasetHashLastBlockSubscription$.closed).toBeTrue();
         expect(datasetHashLastBlockSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should return true is there are out of sync push remotes", () => {
+        spyOn(datasetApi, "datasetPushSyncStatuses").and.returnValue(of(mockDatasetPushSyncStatusesQuery));
+
+        const subscription$ = service
+            .hasOutOfSyncPushRemotes(TEST_DATASET_ID)
+            .pipe(first())
+            .subscribe((hasOutOfSyncRemotes: boolean) => {
+                expect(hasOutOfSyncRemotes).toBe(true);
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should return false is there are no out of sync push remotes", () => {
+        spyOn(datasetApi, "datasetPushSyncStatuses").and.returnValue(of(mockDatasetPushSyncStatusesAllInSyncQuery));
+
+        const subscription$ = service
+            .hasOutOfSyncPushRemotes(TEST_DATASET_ID)
+            .pipe(first())
+            .subscribe((hasOutOfSyncRemotes: boolean) => {
+                expect(hasOutOfSyncRemotes).toBe(false);
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should return false is there are no push remotes", () => {
+        spyOn(datasetApi, "datasetPushSyncStatuses").and.returnValue(of(mockDatasetPushSyncStatusesNoRemotesQuery));
+
+        const subscription$ = service
+            .hasOutOfSyncPushRemotes(TEST_DATASET_ID)
+            .pipe(first())
+            .subscribe((hasOutOfSyncRemotes: boolean) => {
+                expect(hasOutOfSyncRemotes).toBe(false);
+            });
+
+        expect(subscription$.closed).toBeTrue();
     });
 });

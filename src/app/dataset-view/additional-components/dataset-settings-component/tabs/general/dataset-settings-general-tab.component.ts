@@ -19,6 +19,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import AppValues from "src/app/common/app.values";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { DatasetService } from "../../../../dataset.service";
 
 @Component({
     selector: "app-dataset-settings-general-tab",
@@ -45,6 +46,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     private datasetCompactionService = inject(DatasetCompactionService);
     private flowsService = inject(DatasetFlowsService);
     private navigationService = inject(NavigationService);
+    private datasetService = inject(DatasetService);
 
     public ngOnInit(): void {
         this.renameError$ = this.datasetSettingsService.renameDatasetErrorOccurrences.pipe(shareReplay());
@@ -103,22 +105,34 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     public deleteDataset(): void {
         const datasetId = this.datasetBasics.id;
         const accountId = this.datasetBasics.owner.id;
-        promiseWithCatch(
-            this.modalService.error({
-                title: "Delete",
-                message: "Do you want to delete a dataset?",
-                yesButtonText: "Ok",
-                noButtonText: "Cancel",
-                handler: (ok) => {
-                    if (ok) {
-                        this.datasetSettingsService
-                            .deleteDataset(accountId, datasetId)
-                            .pipe(takeUntilDestroyed(this.destroyRef))
-                            .subscribe();
-                    }
-                },
-            }),
-        );
+
+        this.datasetService
+            .hasOutOfSyncPushRemotes(datasetId)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((hasOutOfSyncRemotes: boolean) => {
+                let message = "";
+                if (hasOutOfSyncRemotes) {
+                    message += "Dataset is out of sync with its remote(s). ";
+                }
+                message += "Do you want to delete a dataset?";
+
+                promiseWithCatch(
+                    this.modalService.error({
+                        title: "Delete",
+                        message: message,
+                        yesButtonText: "Ok",
+                        noButtonText: "Cancel",
+                        handler: (ok) => {
+                            if (ok) {
+                                this.datasetSettingsService
+                                    .deleteDataset(accountId, datasetId)
+                                    .pipe(takeUntilDestroyed(this.destroyRef))
+                                    .subscribe();
+                            }
+                        },
+                    }),
+                );
+            });
     }
 
     public resetDataset(): void {

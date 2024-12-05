@@ -18,6 +18,8 @@ import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/k
 import { Observable } from "rxjs";
 import { DatasetViewMenuItems } from "./dataset-view-menu.model";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { DatasetPermissionsService } from "../dataset.permissions.service";
+import { AppConfigService } from "src/app/app-config.service";
 
 @Component({
     selector: "app-dataset-view-menu",
@@ -41,6 +43,8 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
 
     private widgetHeightService = inject(WidgetHeightService);
     private loggedUserService = inject(LoggedUserService);
+    private configService = inject(AppConfigService);
+    private datasetPermissionsServices = inject(DatasetPermissionsService);
 
     public ngAfterViewInit(): void {
         this.widgetHeightService.setWidgetOffsetTop(
@@ -54,6 +58,50 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
             this.sideNavHelper = new SideNavHelper(this.sidenav);
         }
         this.adminPrivileges$ = this.loggedUserService.adminPrivilegesChanges;
+    }
+
+    public get enableScheduling(): boolean {
+        return this.configService.featureFlags.enableScheduling;
+    }
+
+    public get isDatasetViewTypeOverview(): boolean {
+        return this.datasetViewType === DatasetViewTypeEnum.Overview;
+    }
+
+    public get isDatasetViewTypeData(): boolean {
+        return this.datasetViewType === DatasetViewTypeEnum.Data;
+    }
+
+    public get isDatasetViewTypeMetadata(): boolean {
+        return this.datasetViewType === DatasetViewTypeEnum.Metadata;
+    }
+
+    public get isDatasetViewTypeHistory(): boolean {
+        return this.datasetViewType === DatasetViewTypeEnum.History;
+    }
+
+    public get isDatasetViewTypeLineage(): boolean {
+        return this.datasetViewType === DatasetViewTypeEnum.Lineage;
+    }
+
+    public get isDatasetViewTypeDiscussions(): boolean {
+        return this.datasetViewType === DatasetViewTypeEnum.Discussions;
+    }
+
+    public get isDatasetViewTypeFlows(): boolean {
+        return this.datasetViewType === DatasetViewTypeEnum.Flows;
+    }
+
+    public get isDatasetViewTypeSettings(): boolean {
+        return this.datasetViewType === DatasetViewTypeEnum.Settings;
+    }
+
+    public get shouldAllowSettingsTab(): boolean {
+        return this.datasetPermissionsServices.shouldAllowSettingsTab(this.datasetPermissions);
+    }
+
+    public get shouldAllowFlowsTab(): boolean {
+        return this.datasetPermissionsServices.shouldAllowFlowsTab(this.datasetPermissions) && this.enableScheduling;
     }
 
     public get datasetLink(): string {

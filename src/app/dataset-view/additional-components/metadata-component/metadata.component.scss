@@ -1,3 +1,11 @@
 a {
     color: #0969da;
 }
+
+.new-push-source-btn,
+.edit-push-source-btn,
+.delete-push-source-btn,
+.edit-polling-source-btn,
+.delete-polling-source-btn {
+    display: flex;
+}

@@ -579,6 +579,10 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                     tiles: {
                         nodes: [
                             {
+                                description: {
+                                    __typename: "FlowDescriptionDatasetPollingIngest",
+                                    datasetId: mockDatasetMainDataId,
+                                },
                                 status: FlowStatus.Finished,
                                 initiator: {
                                     accountName: "kamu",
@@ -597,6 +601,10 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                 __typename: "Flow",
                             },
                             {
+                                description: {
+                                    __typename: "FlowDescriptionDatasetPollingIngest",
+                                    datasetId: mockDatasetMainDataId,
+                                },
                                 status: FlowStatus.Finished,
                                 initiator: null,
                                 outcome: {

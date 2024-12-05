@@ -51,6 +51,7 @@
             <div class="sidebar my-4">
                 <ul class="action-list">
                     <li
+                        appFeatureFlag="flowDetails.summary"
                         class="action-list-item"
                         [ngClass]="{
                             'action-list-item__nav-active': activeTab === FlowDetailsTabs.SUMMARY
@@ -65,6 +66,7 @@
                         >
                     </li>
                     <li
+                        appFeatureFlag="flowDetails.history"
                         class="action-list-item"
                         [ngClass]="{
                             'action-list-item__nav-active': activeTab === FlowDetailsTabs.HISTORY
@@ -77,6 +79,7 @@
                         >
                     </li>
                     <li
+                        appFeatureFlag="flowDetails.logs"
                         class="action-list-item"
                         [ngClass]="{
                             'action-list-item__nav-active': activeTab === FlowDetailsTabs.LOGS
@@ -90,6 +93,7 @@
                         >
                     </li>
                     <li
+                        appFeatureFlag="flowDetails.usage"
                         class="action-list-item"
                         [ngClass]="{
                             'action-list-item__nav-active': activeTab === FlowDetailsTabs.USAGE
@@ -102,6 +106,7 @@
                         >
                     </li>
                     <li
+                        appFeatureFlag="flowDetails.admin"
                         class="action-list-item"
                         [ngClass]="{
                             'action-list-item__nav-active': activeTab === FlowDetailsTabs.ADMIN

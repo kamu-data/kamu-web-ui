@@ -88,7 +88,7 @@
             class="d-flex flex-column align-items-center flex-md-row flex-self-stretch flex-md-self-auto width-full justify-content-between"
             aria-label="Global"
         >
-            <div class="d-flex flex-column flex-md-row flex-self-stretch flex-md-self-auto">
+            <div class="d-flex align-items-center flex-row">
                 <!-- <a
                     class="header-link py-2 py-md-3 mr-0 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
                     data-ga-click="Header, click, Nav menu - item:explore"
@@ -107,26 +107,38 @@
                     >
                 </ng-template>
 
+                <a
+                    class="header-link d-flex align-items-center py-2 py-md-3 mr-4 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
+                    [routerLink]="[URL_QUERY]"
+                >
+                    <mat-icon class="fs-4">query_stats</mat-icon>
+                    <span> Query</span>
+                </a>
+
                 <ng-template [ngIf]="isUserLoggedIn()">
                     <a
-                        class="header-link py-2 py-md-3 mr-0 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
+                        class="header-link d-flex align-items-center py-2 py-md-3 mr-4 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
                         data-ga-click="Header, click, Nav menu - item:dashboard:user"
                         data-test-id="userDatasetsHeader"
                         aria-label="Dashboard"
                         [routerLink]="['/', loggedAccount.accountName]"
                         [queryParams]="{ tab: AccountTabs.DATASETS }"
                     >
-                        Your Datasets
+                        <mat-icon class="fs-4">book</mat-icon>
+                        <span>Your Datasets </span>
                     </a>
 
                     <ng-container *ngIf="adminPrivileges$ | async as adminPrivileges">
-                        <span class="py-2 py-md-3 border-sm-top">
-                            <app-admin-link [adminPrivileges]="adminPrivileges.value">
-                                <a class="header-link" (click)="onDashboard()" *ngIf="adminPrivileges.value">
-                                    Dashboard
-                                </a>
-                            </app-admin-link>
-                        </span>
+                        <app-admin-link appFeatureFlag="dashboard" [adminPrivileges]="adminPrivileges.value">
+                            <a
+                                class="header-link d-flex align-items-center"
+                                (click)="onDashboard()"
+                                *ngIf="adminPrivileges.value"
+                            >
+                                <mat-icon class="fs-4">dashboard</mat-icon>
+                                <span> Dashboard</span>
+                            </a>
+                        </app-admin-link>
                     </ng-container>
 
                     <a
@@ -143,13 +155,15 @@
                         >Your profile</a
                     >
                     <a
-                        class="header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
+                        appFeatureFlag="billing"
+                        class="header-link d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
                         data-test-id="openBillingPlanHeader"
                         (click)="onBilling()"
                         >Account & Billing</a
                     >
                     <a
-                        class="header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
+                        appFeatureFlag="analytics"
+                        class="header-link d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
                         data-test-id="openAnalyticsHeader"
                         (click)="onAnalytics()"
                         >Analytics</a
@@ -191,7 +205,8 @@
                     </ng-container>
                 </ng-template>
                 <a
-                    class="header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
+                    appFeatureFlag="help"
+                    class="header-link d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
                     data-test-id="openHelpHeader"
                     (click)="onHelp()"
                     >Help</a
@@ -199,13 +214,14 @@
             </div>
             <div id="app-header-additional-block" class="app-header__right-column">
                 <div
-                    class="d-flex d-sm-none d-md-flex justify-content-center notification-indicator-container align-items-center m-2"
+                    appFeatureFlag="notifications"
+                    class="d-sm-none justify-content-center notification-indicator-container align-items-center m-2"
                 >
                     <app-notification-indicator />
                 </div>
                 <ng-container *ngIf="isUserLoggedIn()">
                     <a
-                        class="app-header__right-column__addnew-block d-block d-sm-none d-md-flex m-2"
+                        class="app-header__right-column__addnew-block header-link d-block d-sm-none d-md-flex m-2"
                         [routerLink]="[URL_DATASET_CREATE]"
                         data-test-id="addNewBlock"
                     >
@@ -243,7 +259,7 @@
                         }}</strong>
                     </p>
 
-                    <button mat-menu-item data-test-id="openHelp" (click)="onHelp()">Help</button>
+                    <button appFeatureFlag="help" mat-menu-item data-test-id="openHelp" (click)="onHelp()">Help</button>
 
                     <div role="none" class="dropdown-divider"></div>
 
@@ -266,10 +282,22 @@
 
                         <div role="none" class="dropdown-divider"></div>
 
-                        <button mat-menu-item data-test-id="openBillingPlan" (click)="onBilling()">
+                        <button
+                            appFeatureFlag="billing"
+                            mat-menu-item
+                            data-test-id="openBillingPlan"
+                            (click)="onBilling()"
+                        >
                             Account & Billing
                         </button>
-                        <button mat-menu-item data-test-id="openAnalytics" (click)="onAnalytics()">Analytics</button>
+                        <button
+                            appFeatureFlag="analytics"
+                            mat-menu-item
+                            data-test-id="openAnalytics"
+                            (click)="onAnalytics()"
+                        >
+                            Analytics
+                        </button>
                         <a
                             mat-menu-item
                             data-test-id="openSettings"

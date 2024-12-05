@@ -9,6 +9,7 @@
         <mat-button-toggle-group name="datasetViewType" class="mat-button-toggle-group" aria-label="Dataset View Type">
             <ng-container *ngFor="let menuItem of datasetMenuItemDescriptors">
                 <app-dataset-view-menu-item
+                    [appFeatureFlag]="'dataset.panel.' + menuItem.value"
                     [dataTestId]="menuItem.dataTestId"
                     [activeLink]="datasetViewType === menuItem.value"
                     [value]="menuItem.value"

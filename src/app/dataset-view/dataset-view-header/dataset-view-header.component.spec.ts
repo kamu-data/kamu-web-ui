@@ -9,6 +9,7 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatMenuModule } from "@angular/material/menu";
 import { RouterModule } from "@angular/router";
 import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedModule } from "src/app/shared/shared/shared.module";
 
 describe("DatasetViewHeaderComponent", () => {
     let component: DatasetViewHeaderComponent;
@@ -28,6 +29,7 @@ describe("DatasetViewHeaderComponent", () => {
                 HttpClientTestingModule,
                 RouterModule,
                 SharedTestModule,
+                SharedModule,
             ],
         }).compileComponents();
 

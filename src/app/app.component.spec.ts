@@ -26,6 +26,7 @@ import { LoginService } from "./auth/login/login.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { NotificationIndicatorComponent } from "./components/notification-indicator/notification-indicator.component";
 import { AngularSvgIconModule, SvgIconRegistryService } from "angular-svg-icon";
+import { MatIconModule } from "@angular/material/icon";
 
 describe("AppComponent", () => {
     let component: AppComponent;
@@ -46,6 +47,7 @@ describe("AppComponent", () => {
                 FormsModule,
                 HttpClientTestingModule,
                 RouterModule,
+                MatIconModule,
                 AngularSvgIconModule.forRoot(),
             ],
             declarations: [

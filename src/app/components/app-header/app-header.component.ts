@@ -23,7 +23,7 @@ import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
-import { AppConfigFeatureFlags, LoginMethod } from "src/app/app-config.model";
+import { AppUIConfigFeatureFlags, LoginMethod } from "src/app/app-config.model";
 import { AccountSettingsTabs } from "src/app/auth/settings/account-settings.constants";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
@@ -40,7 +40,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public isMobileView: boolean;
     @Input({ required: true }) public isVisible: boolean;
     @Input({ required: true }) public loggedAccount: AccountFragment;
-    @Input({ required: true }) public featureFlags: AppConfigFeatureFlags;
+    @Input({ required: true }) public featureFlags: AppUIConfigFeatureFlags;
     @Input({ required: true }) public loginMethods: LoginMethod[];
 
     @Output() public onSelectedDataset = new EventEmitter<DatasetAutocompleteItem>();
@@ -67,6 +67,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     public readonly HOME_LINK = ProjectLinks.URL_SEARCH;
     public readonly URL_DATASET_CREATE = ProjectLinks.URL_DATASET_CREATE;
     public readonly URL_SETTINGS = ProjectLinks.URL_SETTINGS;
+    public readonly URL_QUERY = ProjectLinks.URL_QUERY;
 
     private appSearchAPI = inject(SearchApi);
     private route = inject(ActivatedRoute);

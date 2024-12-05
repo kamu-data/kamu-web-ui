@@ -1,4 +1,4 @@
-<div class="p-4 p-responsive clearfix" *ngIf="user$ | async as user">
+<div class="container-main mt-4 p-responsive clearfix" *ngIf="user$ | async as user">
     <div class="custom-container" *ngIf="activeTab$ | async as activeTab">
         <div class="container-sidebar">
             <div class="d-flex mb-3 justify-content-center align-items-center">
@@ -28,6 +28,7 @@
             </span>
             <div class="my-3 text-center me-4">
                 <button
+                    appFeatureFlag="profile.edit"
                     name="button"
                     type="button"
                     class="btn btn-outline-secondary w-100 btn-custom"
@@ -36,18 +37,10 @@
                     {{ isLoggedUser(user) ? "Edit profile" : "Follow" }}
                 </button>
             </div>
-            <div class="border-top mt-5 me-4">
+            <mat-divider class="w-90"></mat-divider>
+            <div appFeatureFlag="profile.companies" class="mt-2 me-4">
                 <h3 class="text-start pt-3 px-3 organization">Organizations</h3>
                 <div class="d-flex flex-row gap-2 text-start px-3">
-                    <img
-                        src="https://avatars.githubusercontent.com/u/50896974?s=64&amp;v=4"
-                        alt="@kamu-data"
-                        size="32"
-                        height="32"
-                        width="32"
-                        data-view-component="true"
-                        class="avatar"
-                    />
                     <img
                         src="https://avatars.githubusercontent.com/u/50896974?s=64&amp;v=4"
                         alt="@kamu-data"
@@ -69,6 +62,7 @@
                     [value]="activeTab"
                 >
                     <mat-button-toggle
+                        appFeatureFlag="profile.overview"
                         class="menu-link"
                         data-test-id="navigateToOverview"
                         [class.active-link]="activeTab === AccountTabs.OVERVIEW"
@@ -81,6 +75,7 @@
                         </div>
                     </mat-button-toggle>
                     <mat-button-toggle
+                        appFeatureFlag="profile.datasets"
                         data-test-id="account-datasets-tab"
                         [class.active-link]="activeTab === AccountTabs.DATASETS"
                         value="datasets"
@@ -101,6 +96,7 @@
                         </a>
                     </mat-button-toggle>
                     <mat-button-toggle
+                        appFeatureFlag="profile.flows"
                         data-test-id="account-flows-tab"
                         [class.active-link]="activeTab === AccountTabs.FLOWS"
                         value="flows"
@@ -118,6 +114,7 @@
                         </a>
                     </mat-button-toggle>
                     <mat-button-toggle
+                        appFeatureFlag="profile.organizations"
                         data-test-id="account-organizations-tab"
                         [class.active-link]="activeTab === AccountTabs.ORGANIZATIONS"
                         value="organizations"
@@ -130,6 +127,7 @@
                     </mat-button-toggle>
 
                     <mat-button-toggle
+                        appFeatureFlag="profile.inbox"
                         data-test-id="account-inbox-tab"
                         [class.active-link]="activeTab === AccountTabs.INBOX"
                         value="inbox"
@@ -141,6 +139,7 @@
                         <span title="1" data-view-component="true" class="counter">2</span>
                     </mat-button-toggle>
                     <mat-button-toggle
+                        appFeatureFlag="profile.stars"
                         data-test-id="account-stars-tab"
                         [class.active-link]="activeTab === AccountTabs.STARS"
                         value="Stars"

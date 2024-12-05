@@ -12,6 +12,7 @@ import { DatasetListComponent } from "./dataset-list.component";
 import { MatSelectModule } from "@angular/material/select";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { RouterModule } from "@angular/router";
+import { SharedModule } from "src/app/shared/shared/shared.module";
 
 @NgModule({
     imports: [
@@ -26,6 +27,7 @@ import { RouterModule } from "@angular/router";
         AngularSvgIconModule,
         DisplayTimeModule,
         RouterModule,
+        SharedModule,
     ],
     exports: [DatasetListComponent, DatasetListItemComponent],
     declarations: [DatasetListComponent, DatasetListItemComponent],

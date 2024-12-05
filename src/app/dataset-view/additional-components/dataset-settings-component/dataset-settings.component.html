@@ -1,4 +1,4 @@
-<div class="custom-container px-4 p-responsive">
+<div class="custom-container p-responsive container-main">
     <div class="layout-sidebar">
         <div class="pr-md-4 pr-0">
             <div>
@@ -6,6 +6,7 @@
                     <ul role="list" class="action-list d-flex flex-column gap-1">
                         <ng-container *ngFor="let navItem of sidePanelData">
                             <li
+                                [appFeatureFlag]="'dataset.panel.settings.' + navItem.id"
                                 [class.action-list-item--nav-active]="activeTab === navItem.activeTab"
                                 class="action-list-item"
                                 *ngIf="visibilitySettingsMenuItem(navItem)"
@@ -31,6 +32,7 @@
     <div class="content-container">
         <ng-container *ngIf="activeTab === settingsTabsEnum.GENERAL">
             <app-dataset-settings-general-tab
+                appFeatureFlag="dataset.panel.settings.general"
                 [datasetBasics]="datasetBasics"
                 [datasetPermissions]="datasetPermissions"
                 data-test-id="settings-general-tab"
@@ -38,16 +40,23 @@
         </ng-container>
         <ng-container *ngIf="showSchedulingTab">
             <app-dataset-settings-scheduling-tab
+                appFeatureFlag="dataset.panel.settings.scheduling"
                 [datasetBasics]="datasetBasics"
                 [datasetPermissions]="datasetPermissions"
                 data-test-id="settings-scheduling-tab"
             />
         </ng-container>
         <ng-container *ngIf="showSecretsManagerTab">
-            <app-dataset-settings-secrets-manager-tab [datasetBasics]="datasetBasics" />
+            <app-dataset-settings-secrets-manager-tab
+                appFeatureFlag="dataset.panel.settings.varsSecrets"
+                [datasetBasics]="datasetBasics"
+            />
         </ng-container>
         <ng-container *ngIf="showCompactionTab">
-            <app-dataset-settings-compacting-tab [datasetBasics]="datasetBasics" />
+            <app-dataset-settings-compacting-tab
+                appFeatureFlag="dataset.panel.settings.compaction"
+                [datasetBasics]="datasetBasics"
+            />
         </ng-container>
     </div>
 </div>

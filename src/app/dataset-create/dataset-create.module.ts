@@ -11,6 +11,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { EditorModule } from "../shared/editor/editor.module";
+import { SharedModule } from "../shared/shared/shared.module";
 
 @NgModule({
     imports: [
@@ -26,6 +27,7 @@ import { EditorModule } from "../shared/editor/editor.module";
         AngularSvgIconModule,
         ReactiveFormsModule,
         EditorModule,
+        SharedModule,
     ],
     exports: [DatasetCreateComponent],
     declarations: [DatasetCreateComponent],

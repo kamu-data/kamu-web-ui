@@ -167,7 +167,7 @@ describe("NavigationService", () => {
         const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
         service.navigateToDatasetView(mockParams);
         expect(routerSpy).toHaveBeenCalledWith([mockParams.accountName, mockParams.datasetName], {
-            queryParams: { tab: mockParams.tab, page: mockParams.page, section: undefined },
+            queryParams: { tab: mockParams.tab, page: mockParams.page, section: undefined, sqlQuery: undefined },
             state: undefined,
         });
     });

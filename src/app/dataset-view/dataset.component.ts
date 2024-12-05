@@ -15,6 +15,8 @@ import _ from "lodash";
 import { BaseDatasetDataComponent } from "../common/base-dataset-data.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DatasetPermissionsService } from "./dataset.permissions.service";
+import { SqlQueryService } from "../services/sql-query.service";
+import { AppConfigService } from "../app-config.service";
 
 @Component({
     selector: "app-dataset",
@@ -34,6 +36,8 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
     private datasetPermissionsServices = inject(DatasetPermissionsService);
     private router = inject(Router);
     private cdr = inject(ChangeDetectorRef);
+    private sqlQueryService = inject(SqlQueryService);
+    private configService = inject(AppConfigService);
 
     public ngOnInit(): void {
         const urlDatasetInfo = this.getDatasetInfoFromUrl();
@@ -46,6 +50,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
             .subscribe(() => {
                 this.initDatasetViewByType(this.getDatasetInfoFromUrl(), this.getCurrentPageFromUrl());
                 this.requestMainDataIfChanged();
+                this.cdr.detectChanges();
             });
         this.datasetService.datasetChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -56,6 +61,10 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
             });
 
         this.datasetPermissions$ = this.datasetSubsService.permissionsChanges;
+    }
+
+    public get enableScheduling(): boolean {
+        return this.configService.featureFlags.enableScheduling;
     }
 
     private requestMainDataIfChanged(): void {
@@ -146,7 +155,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe((datasetPermissions: DatasetPermissionsFragment) => {
-                if (this.datasetPermissionsServices.shouldAllowFlowsTab(datasetPermissions)) {
+                if (this.datasetPermissionsServices.shouldAllowFlowsTab(datasetPermissions) && this.enableScheduling) {
                     this.datasetViewType = DatasetViewTypeEnum.Flows;
                 } else {
                     this.datasetViewType = DatasetViewTypeEnum.Overview;
@@ -300,9 +309,9 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
 
     public onRunSQLRequest(params: DatasetRequestBySql): void {
         this.sqlLoading = true;
-        this.datasetService
+        this.sqlQueryService
             // TODO: Propagate limit from UI and display when it was reached
-            .requestDatasetDataSqlRun(params)
+            .requestDataSqlRun(params)
             .pipe(
                 finalize(() => {
                     this.sqlLoading = false;

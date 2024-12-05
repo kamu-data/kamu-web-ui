@@ -5,8 +5,6 @@
 # make codegen-graphql-schema
 # ```
 
-directive @oneOf on INPUT_OBJECT
-
 type AccessTokenConnection {
 	"""
 	A shorthand for `edges { node { ... } }`
@@ -266,6 +264,27 @@ type CompactionMetadataOnly {
 	recursive: Boolean!
 }
 
+union CompareChainsResult = CompareChainsResultStatus | CompareChainsResultError
+
+type CompareChainsResultError {
+	reason: CompareChainsResultReason!
+}
+
+type CompareChainsResultReason {
+	message: String!
+}
+
+type CompareChainsResultStatus {
+	message: CompareChainsStatus!
+}
+
+enum CompareChainsStatus {
+	EQUAL
+	BEHIND
+	AHEAD
+	DIVERGED
+}
+
 enum CompressionFormat {
 	GZIP
 	ZIP
@@ -343,7 +362,12 @@ type DataBatch {
 }
 
 enum DataBatchFormat {
+	"""
+	Deprecated: Use `JSON_AOS` instead and expect it to become default in
+	future versions
+	"""
 	JSON
+	JSON_AOS
 	JSON_SOA
 	JSON_AOA
 	ND_JSON
@@ -381,6 +405,7 @@ enum DataQueryResultErrorKind {
 type DataQueryResultSuccess {
 	schema: DataSchema
 	data: DataBatch!
+	datasets: [DatasetState!]
 	limit: Int!
 }
 
@@ -631,6 +656,10 @@ type DatasetMetadata {
 	"""
 	currentPushSources: [AddPushSource!]!
 	"""
+	Sync statuses of push remotes
+	"""
+	pushSyncStatuses: DatasetPushStatuses!
+	"""
 	Current transformation used by the derivative dataset
 	"""
 	currentTransform: SetTransform
@@ -701,7 +730,34 @@ type DatasetPermissions {
 	canSchedule: Boolean!
 }
 
+type DatasetPushStatus {
+	remote: DatasetRefRemote!
+	result: CompareChainsResult!
+}
+
+type DatasetPushStatuses {
+	statuses: [DatasetPushStatus!]!
+}
+
 scalar DatasetRef
+
+scalar DatasetRefRemote
+
+type DatasetState {
+	"""
+	Globally unique identity of the dataset
+	"""
+	id: DatasetID!
+	"""
+	Alias to be used in the query
+	"""
+	alias: String!
+	"""
+	Last block hash of the input datasets that was or should be considered
+	during the query planning
+	"""
+	blockHash: Multihash
+}
 
 enum DatasetVisibility {
 	PRIVATE
@@ -1623,6 +1679,9 @@ type SaveDatasetEnvVarResultSuccess implements SaveDatasetEnvVarResult {
 
 input ScheduleInput @oneOf {
 	timeDelta: TimeDeltaInput
+	"""
+	Supported CRON syntax: min hour dayOfMonth month dayOfWeek
+	"""
 	cron5ComponentExpression: String
 }
 
@@ -1964,6 +2023,10 @@ type WebSocketProtocolDesc {
 	url: String!
 }
 
+directive @include(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+directive @oneOf on INPUT_OBJECT
+directive @skip(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+directive @specifiedBy(url: String!) on SCALAR
 schema {
 	query: Query
 	mutation: Mutation

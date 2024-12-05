@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { AppUIConfig, AppUIConfigFeatureFlags } from "../app-config.model";
 
 @Injectable()
 export default class AppValues {
@@ -34,6 +35,7 @@ export default class AppValues {
     public static readonly HEADERS_AUTHORIZATION_KEY = "Authorization";
     public static readonly UPLOAD_FILE_IMAGE = "assets/images/upload-file-gear.gif";
     public static readonly DEFAULT_ADMIN_ACCOUNT_NAME = "kamu";
+    public static readonly DEFAULT_MONACO_EDITOR_PLACEHOLDER = "Please type your query here...";
 
     public static readonly MARKDOWN_CONTAIN = `## Markdown __rulez__!
 ---
@@ -51,4 +53,16 @@ const language = 'typescript';
 
 ### Blockquote
 > Blockquote to the max`;
+
+    public static readonly DEFAULT_UI_FEATURE_FLAGS: AppUIConfigFeatureFlags = {
+        enableLogout: true,
+        enableScheduling: true,
+        enableDatasetEnvVarsManagement: true,
+        enableTermsOfService: true,
+    };
+
+    public static readonly DEFAULT_UI_CONFIGURATION: AppUIConfig = {
+        ingestUploadFileLimitMb: 50,
+        featureFlags: AppValues.DEFAULT_UI_FEATURE_FLAGS,
+    };
 }

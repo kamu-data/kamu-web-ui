@@ -1,3 +1,4 @@
+import { mockDatasetMainDataId } from "src/app/search/mock.data";
 import {
     AccountByNameQuery,
     AccountDatasetFlowsPausedQuery,
@@ -118,6 +119,10 @@ export const mockAccountListFlowsQuery: AccountListFlowsQuery = {
                     tiles: {
                         nodes: [
                             {
+                                description: {
+                                    __typename: "FlowDescriptionDatasetPollingIngest",
+                                    datasetId: mockDatasetMainDataId,
+                                },
                                 status: FlowStatus.Finished,
 
                                 outcome: {

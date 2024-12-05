@@ -5,6 +5,57 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Added
+- Handling feature elements in 3 modes
+  - `production` mode: only implemented features available
+  - `demo` mode: unimplemented features are disabled
+  - `develop` mode: unimplemented features are available
+
+## [0.33.0] - 2024-12-03
+### Added
+- Warning when deleting datasets which are out of sync with their push remotes
+### Fixed
+- Visibility for Update button and Flows tab from configuration
+- Error in console during initialization
+- Readme section: redirection after clicking the `Run` button
+
+## [0.32.0] - 2024-11-28
+### Added
+- Query page: added default query after searching for first dataset
+- Set the container width for large screens
+- Added contextual schemas in Data tab
+### Changed
+- Readme section: modified 'Run' button into a link
+- Hint extension for tile widget account
+- Separated runtime and UI configurations
+### Fixed
+- Typo in feature flags (enableDatasetEnvVarsManagement)
+                                                  ^
+
+## [0.31.0] - 2024-11-22
+### Added
+- Added Terms of Service link
+
+## [0.30.0] - 2024-11-22
+### Added
+- Added a new page `Query` that allows you to make sql queries without being tied to a dataset
+- Impovements for readme section
+  - Add syntax highlight support for SQL in markdown
+  - Add copy to clipboard button for SQL blocks
+  - Add run button that opens "Data" tab in new window and executes the selected query
+
+## [0.29.0] - 2024-11-12
+### Fixed
+- Readme section refresh when navigating between datasets
+### Changed
+- `Get Data` panel redesign
+
+## [0.28.3] - 2024-10-30
+### Fixed
+- Query explainer successfully validates commitment and shows data
+- Simplify the language in flow scheduling
+
 ## [0.28.2] - 2024-10-25
 ### Fixed
 - The `/query-explainer` view allows anonymous access
@@ -111,7 +162,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added access token feature
 - Added environment variables and secrets for the dataset
-- Added new flag(enableDatasetEnvVarsManagment) in the runtime configuration
+- Added new flag(enableDatasetEnvVarsManagement) in the runtime configuration
 ### Fixed
 - Fixed bug with cache(Data tab) on the deployment version
 - Extended full source info for EthereumLogs(Metadata tab)

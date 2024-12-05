@@ -51,7 +51,7 @@
             </label>
         </div>
         <mat-divider />
-        <div>
+        <div appFeatureFlag="newDataset.privacy">
             <label for="visibility-public" class="my-3">
                 <input name="visibility" type="radio" value="public" checked="checked" disabled />
                 <svg-icon name="public" class="ms-1" />
@@ -63,8 +63,8 @@
                 <svg-icon name="private" class="text-muted ms-1" />
                 <span>Private</span>
             </label>
+            <mat-divider />
         </div>
-        <mat-divider />
     </form>
 
     <div class="my-4">

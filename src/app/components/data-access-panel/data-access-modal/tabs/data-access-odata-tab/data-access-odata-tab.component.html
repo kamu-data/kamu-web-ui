@@ -1,0 +1,80 @@
+<div class="flex-column w-100 px-4 pb-4">
+    <div class="input-group mb-1">
+        <span class="fs-12 text-muted"> Service endpoint:</span>
+    </div>
+    <div class="select-menu-item align-items-start p-0 border-0 mb-2">
+        <div class="input-group mb-4">
+            <input
+                type="text"
+                class="form-control fs-12 rounded form-control-data-access"
+                data-autoselect=""
+                [value]="odata.serviceUrl"
+                #clipboardODataURLService
+                readonly
+            />
+            <div class="input-group-button ms-1">
+                <button
+                    (click)="copyToClipboard($event, clipboardODataURLService.value)"
+                    data-test-id="copyToClipboard-clipboardODataURLService"
+                    aria-label="Copy to clipboard"
+                    class="copy-button-data-access ms-1"
+                    data-copy-feedback="Copied!"
+                    tabindex="0"
+                    role="button"
+                >
+                    <div style="position: relative; display: inline-block">
+                        <svg-icon name="copy" />
+                    </div>
+                    <div style="position: relative; display: none">
+                        <svg-icon name="checked" />
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="input-group mb-1">
+        <span class="fs-12 text-muted"> Current dataset as a collection:</span>
+    </div>
+    <div class="select-menu-item align-items-start p-0 border-0 mb-4">
+        <div class="input-group">
+            <input
+                type="text"
+                class="form-control fs-12 rounded form-control-data-access"
+                data-autoselect=""
+                [value]="odata.collectionUrl"
+                #clipboardODataURLCollection
+                readonly
+            />
+            <div class="input-group-button ms-1">
+                <button
+                    (click)="copyToClipboard($event, clipboardODataURLCollection.value)"
+                    data-test-id="copyToClipboard-clipboardODataURLCollection"
+                    aria-label="Copy to clipboard"
+                    class="copy-button-data-access ms-1"
+                    data-copy-feedback="Copied!"
+                    tabindex="0"
+                    role="button"
+                >
+                    <div style="position: relative; display: inline-block">
+                        <svg-icon name="copy" />
+                    </div>
+                    <div style="position: relative; display: none">
+                        <svg-icon name="checked" />
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="w-100">
+        <mat-divider class="my-2" />
+        <div class="d-flex align-items-center">
+            <mat-icon class="text-muted fs-5 pt-1">info</mat-icon>
+            <span class="fs-12">
+                <a href="https://docs.kamu.dev/node/protocols/odata/" target="_blank" class="fs-12"
+                    >OData adapter details</a
+                >
+            </span>
+        </div>
+    </div>
+</div>

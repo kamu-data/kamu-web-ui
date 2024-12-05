@@ -43,7 +43,7 @@
                     <nav>
                         <ul role="list" class="action-list">
                             <li
-                                data-item-id="settings_user_profile"
+                                appFeatureFlag="settings.profile"
                                 data-view-component="true"
                                 [ngClass]="{
                                     'action-list-item--nav__active': activeTab === AccountSettingsTabs.PROFILE
@@ -67,6 +67,7 @@
                                 </a>
                             </li>
                             <li
+                                appFeatureFlag="settings.account"
                                 [ngClass]="{
                                     'action-list-item--nav__active': activeTab === AccountSettingsTabs.ACCOUNT
                                 }"
@@ -87,7 +88,7 @@
                                 </a>
                             </li>
                             <li
-                                data-item-id=""
+                                appFeatureFlag="settings.appearance"
                                 data-view-component="true"
                                 [ngClass]="{
                                     'action-list-item--nav__active': activeTab === AccountSettingsTabs.APPEARANCE
@@ -109,6 +110,7 @@
                                 </a>
                             </li>
                             <li
+                                appFeatureFlag="settings.accessibility"
                                 data-item-id=""
                                 data-view-component="true"
                                 [ngClass]="{
@@ -131,7 +133,7 @@
                                 </a>
                             </li>
                             <li
-                                data-item-id=""
+                                appFeatureFlag="settings.notifications"
                                 data-view-component="true"
                                 [ngClass]="{
                                     'action-list-item--nav__active': activeTab === AccountSettingsTabs.NOTIFICATIONS
@@ -174,7 +176,7 @@
                                     class="action-list action-list--subGroup"
                                 >
                                     <li
-                                        data-item-id=""
+                                        appFeatureFlag="settings.billing"
                                         data-view-component="true"
                                         class="action-list-item"
                                         [ngClass]="{
@@ -196,7 +198,7 @@
                                         </a>
                                     </li>
                                     <li
-                                        data-item-id=""
+                                        appFeatureFlag="settings.emails"
                                         data-view-component="true"
                                         class="action-list-item"
                                         [ngClass]="{
@@ -218,7 +220,7 @@
                                         </a>
                                     </li>
                                     <li
-                                        data-item-id=""
+                                        appFeatureFlag="settings.password"
                                         data-view-component="true"
                                         class="action-list-item"
                                         [ngClass]="{
@@ -240,7 +242,7 @@
                                         </a>
                                     </li>
                                     <li
-                                        data-item-id=""
+                                        appFeatureFlag="settings.organizations"
                                         data-view-component="true"
                                         class="action-list-item"
                                         [ngClass]="{
@@ -263,7 +265,7 @@
                                         </a>
                                     </li>
                                     <li
-                                        data-item-id=""
+                                        appFeatureFlag="settings.tokens"
                                         data-view-component="true"
                                         class="action-list-item"
                                         [ngClass]="{

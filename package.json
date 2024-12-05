@@ -1,6 +1,6 @@
 {
   "name": "kamu-platform",
-  "version": "0.28.2",
+  "version": "0.33.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --watch",
@@ -52,6 +52,7 @@
     "autoprefixer": "^10.4.5",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
+    "clipboard": "^2.0.11",
     "cron-parser": "^4.9.0",
     "d3-scale": "^4.0.2",
     "graphql": "^16.8.1",

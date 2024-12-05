@@ -17,9 +17,13 @@
                 >
             </span>
 
-            <span></span><span class="label label--secondary v-align-middle mr-1">Public</span>
+            <span></span
+            ><span appFeatureFlag="dataset.badgePrivacy" class="label label--secondary v-align-middle mr-1"
+                >Public</span
+            >
 
             <button
+                appFeatureFlag="dataset.badgeVerified"
                 type="button"
                 class="signed-commit-badge verified signed-commit-badge-small"
                 placement="left"

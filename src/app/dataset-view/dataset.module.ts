@@ -57,7 +57,6 @@ import { MatStepperModule } from "@angular/material/stepper";
 import { EngineSelectComponent } from "./additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
 import { ReadmeSectionComponent } from "./additional-components/overview-component/components/readme-section/readme-section.component";
 import { DatasetSettingsComponent } from "./additional-components/dataset-settings-component/dataset-settings.component";
-import { LoadMoreComponent } from "./additional-components/data-component/load-more/load-more.component";
 import { MatInputModule } from "@angular/material/input";
 import { ReturnToCliComponent } from "../components/return-to-cli/return-to-cli.component";
 import { EditorModule } from "../shared/editor/editor.module";
@@ -77,7 +76,6 @@ import { DatasetSettingsSecretsManagerTabComponent } from "./additional-componen
 import { MatSortModule } from "@angular/material/sort";
 import { EditKeyValueModalComponent } from "./additional-components/dataset-settings-component/tabs/variables-and-secrets/components/edit-key-value-modal/edit-key-value-modal.component";
 import { DatasetSettingsCompactingTabComponent } from "./additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.component";
-import { RequestTimerComponent } from "./additional-components/data-component/request-timer/request-timer.component";
 import { AddDataModalComponent } from "./additional-components/overview-component/components/add-data-modal/add-data-modal.component";
 import { FileFromUrlModalComponent } from "./additional-components/overview-component/components/file-from-url-modal/file-from-url-modal.component";
 import { FlowsTableComponent } from "../common/components/flows-table/flows-table.component";
@@ -87,6 +85,7 @@ import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatChipsModule } from "@angular/material/chips";
 import { DatasetViewMenuItemComponent } from "./dataset-view-menu/components/dataset-view-menu-item/dataset-view-menu-item.component";
+import { QuerySharedModule } from "../query/shared/query-shared/query-shared.module";
 
 @NgModule({
     imports: [
@@ -142,6 +141,7 @@ import { DatasetViewMenuItemComponent } from "./dataset-view-menu/components/dat
         DataAccessPanelModule,
         MatSortModule,
         AngularMultiSelectModule,
+        QuerySharedModule,
     ],
     exports: [
         DatasetViewHeaderComponent,
@@ -196,7 +196,6 @@ import { DatasetViewMenuItemComponent } from "./dataset-view-menu/components/dat
         EngineSelectComponent,
         ReadmeSectionComponent,
         DatasetSettingsComponent,
-        LoadMoreComponent,
         FlowsComponent,
         TileBaseWidgetComponent,
         FlowsTableComponent,
@@ -207,7 +206,6 @@ import { DatasetViewMenuItemComponent } from "./dataset-view-menu/components/dat
         DatasetSettingsSecretsManagerTabComponent,
         EditKeyValueModalComponent,
         DatasetSettingsCompactingTabComponent,
-        RequestTimerComponent,
         AddDataModalComponent,
         FileFromUrlModalComponent,
         DatasetViewMenuItemComponent,

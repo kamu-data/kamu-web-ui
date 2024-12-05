@@ -11,6 +11,8 @@ import { InputDataSectionComponent } from "./components/input-data-section/input
 import { CommitmentDataSectionComponent } from "./components/commitment-data-section/commitment-data-section.component";
 import { DisplayHashModule } from "../components/display-hash/display-hash.module";
 import { DynamicTableModule } from "../components/dynamic-table/dynamic-table.module";
+import { FormsModule } from "@angular/forms";
+import { AutofocusModule } from "../common/directives/autofocus.module";
 
 @NgModule({
     declarations: [
@@ -28,6 +30,8 @@ import { DynamicTableModule } from "../components/dynamic-table/dynamic-table.mo
         RouterModule,
         HighlightModule,
         DynamicTableModule,
+        FormsModule,
+        AutofocusModule,
     ],
 })
 export class QueryExplainerModule {}

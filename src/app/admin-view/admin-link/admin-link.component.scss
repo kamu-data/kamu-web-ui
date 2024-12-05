@@ -1,0 +1,25 @@
+:host {
+    position: relative;
+}
+
+.admin-privileges-icon {
+    font-size: 16px;
+    position: absolute;
+    top: -4px;
+    right: -27px;
+    display: block;
+}
+
+.light-theme {
+    color: #f1f1f1 !important;
+}
+
+.dark-theme {
+    color: #378bb0 !important;
+}
+
+@media (width <=768px) {
+    .admin-privileges-icon {
+        display: none;
+    }
+}

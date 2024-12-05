@@ -15,6 +15,17 @@ export class LocalStorageService {
         return localStorage.getItem(AppValues.LOCAL_STORAGE_LOGIN_REDIRECT_URL);
     }
 
+    public get adminPrivileges(): boolean | null {
+        const flag = localStorage.getItem(AppValues.LOCAL_STORAGE_ADMIN_PRIVILEGES);
+        if (flag) {
+            return Boolean(JSON.parse(flag));
+        } else return null;
+    }
+
+    public setAdminPriveleges(flag: boolean | null) {
+        localStorage.setItem(AppValues.LOCAL_STORAGE_ADMIN_PRIVILEGES, JSON.stringify(flag));
+    }
+
     public setRedirectAfterLoginUrl(url: string | null) {
         if (url) {
             localStorage.setItem(AppValues.LOCAL_STORAGE_LOGIN_REDIRECT_URL, url);

@@ -84,6 +84,7 @@ import { FlowsComponent } from "./additional-components/flows-component/flows.co
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatChipsModule } from "@angular/material/chips";
+import { DatasetViewMenuItemComponent } from "./dataset-view-menu/components/dataset-view-menu-item/dataset-view-menu-item.component";
 import { QuerySharedModule } from "../query/shared/query-shared/query-shared.module";
 
 @NgModule({
@@ -165,6 +166,7 @@ import { QuerySharedModule } from "../query/shared/query-shared/query-shared.mod
         FlowsTableComponent,
         AngularMultiSelectModule,
         MatChipsModule,
+        DatasetViewMenuItemComponent,
     ],
     declarations: [
         DatasetViewHeaderComponent,
@@ -206,6 +208,7 @@ import { QuerySharedModule } from "../query/shared/query-shared/query-shared.mod
         DatasetSettingsCompactingTabComponent,
         AddDataModalComponent,
         FileFromUrlModalComponent,
+        DatasetViewMenuItemComponent,
     ],
 })
 export class DatasetModule {

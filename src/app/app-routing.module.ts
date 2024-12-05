@@ -16,7 +16,7 @@ import { SetTransformComponent } from "./dataset-view/additional-components/meta
 import { LoginGuard } from "./auth/guards/login.guard";
 import { ReturnToCliComponent } from "./components/return-to-cli/return-to-cli.component";
 import { AddPushSourceComponent } from "./dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source.component";
-import { AdminGuard } from "./auth/guards/admin.guard";
+import { adminGuard } from "./auth/guards/admin.guard";
 import { AdminDashboardComponent } from "./admin-view/admin-dashboard/admin-dashboard.component";
 import { DatasetFlowDetailsComponent } from "./dataset-flow/dataset-flow-details/dataset-flow-details.component";
 import { AccountComponent } from "./account/account.component";
@@ -44,7 +44,7 @@ export const routes: Routes = [
         component: DatasetCreateComponent,
     },
     {
-        canActivate: [AdminGuard],
+        canActivate: [adminGuard],
         path: ProjectLinks.URL_ADMIN_DASHBOARD,
         component: AdminDashboardComponent,
     },

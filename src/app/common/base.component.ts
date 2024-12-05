@@ -5,9 +5,12 @@ import ProjectLinks from "../project-links";
 import { requireValue } from "./app.helpers";
 import { UnsubscribeDestroyRefAdapter } from "./unsubscribe.ondestroy.adapter";
 import { Observable, map } from "rxjs";
+import { LoggedUserService } from "../auth/logged-user.service";
 
 export abstract class BaseComponent extends UnsubscribeDestroyRefAdapter {
+    public adminPrivileges$: Observable<{ value: boolean }>;
     protected activatedRoute = inject(ActivatedRoute);
+    protected loggedUserService = inject(LoggedUserService);
 
     public get searchString(): string {
         return window.location.search;

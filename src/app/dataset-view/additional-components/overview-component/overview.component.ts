@@ -32,9 +32,9 @@ import { promiseWithCatch } from "src/app/common/app.helpers";
 import { ModalService } from "src/app/components/modal/modal.service";
 import AppValues from "src/app/common/app.values";
 import { FileUploadService } from "src/app/services/file-upload.service";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
 import ProjectLinks from "src/app/project-links";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { updateButtonDescriptor } from "./overview.component.model";
 
 @Component({
     selector: "app-overview",
@@ -50,10 +50,12 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     public editingReadme = false;
     public droppedFile: File;
     public uploadFileLoading$: Observable<boolean>;
+    public adminPrivileges$: Observable<{ value: boolean }>;
     public readonly UPLOAD_FILE_IMAGE = AppValues.UPLOAD_FILE_IMAGE;
     public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
     public readonly URL_PARAM_SET_TRANSFORM = ProjectLinks.URL_PARAM_SET_TRANSFORM;
     public readonly URL_PARAM_ADD_PUSH_SOURCE = ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE;
+    public readonly UPDATE_BUTTON_DESCRIPTOR = updateButtonDescriptor;
 
     public currentState?: {
         schema: MaybeNull<DatasetSchema>;
@@ -69,7 +71,6 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     private fileUploadService = inject(FileUploadService);
     private configService = inject(AppConfigService);
     private modalService = inject(ModalService);
-    private loggedUserService = inject(LoggedUserService);
 
     public ngOnInit(): void {
         this.uploadFileLoading$ = this.fileUploadService.isUploadFile;
@@ -83,6 +84,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
                     overview: overviewUpdate.overview,
                 };
             });
+        this.adminPrivileges$ = this.loggedUserService.adminPrivilegesChanges;
     }
 
     public showWebsite(url: string): void {
@@ -91,6 +93,10 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     public selectTopic(topicName: string): void {
         this.selectTopicEmit.emit(topicName);
+    }
+
+    public get isOwnerDataset(): boolean {
+        return this.datasetBasics.owner.accountName === this.loggedUserService.currentlyLoggedInUser.accountName;
     }
 
     public get metadataFragmentBlock(): MaybeUndefined<MetadataBlockFragment> {

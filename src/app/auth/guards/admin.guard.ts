@@ -1,23 +1,21 @@
-import { inject, Injectable } from "@angular/core";
+import { inject } from "@angular/core";
 import { NavigationService } from "src/app/services/navigation.service";
 import { LoggedUserService } from "../logged-user.service";
+import { CanActivateFn } from "@angular/router";
+import { combineLatest, map, of } from "rxjs";
 
-@Injectable({
-    providedIn: "root",
-})
-export class AdminGuard {
-    private navigationService = inject(NavigationService);
-    private loggedUserService = inject(LoggedUserService);
+export const adminGuard: CanActivateFn = () => {
+    const navigationService = inject(NavigationService);
+    const loggedUserService = inject(LoggedUserService);
 
-    public canActivate(): boolean {
-        if (!this.isAdmin()) {
-            this.navigationService.navigateToHome();
-            return false;
-        }
-        return true;
-    }
-
-    private isAdmin(): boolean {
-        return this.loggedUserService.isAdmin;
-    }
-}
+    return combineLatest([of(loggedUserService.isAdmin), loggedUserService.adminPrivilegesChanges]).pipe(
+        map(([isAdmin, adminPrivileges]) => {
+            if (isAdmin && adminPrivileges.value) {
+                return true;
+            } else {
+                navigationService.navigateToHome();
+                return false;
+            }
+        }),
+    );
+};

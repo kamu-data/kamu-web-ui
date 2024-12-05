@@ -1,0 +1,17 @@
+<mat-button-toggle
+    [attr.data-test-id]="dataTestId"
+    [class.active-link]="activeLink"
+    [disabled]="disabled"
+    [value]="value"
+    *ngIf="visible"
+>
+    <a [routerLink]="[datasetLink]" [queryParams]="{ tab: value == 'overview' ? null : value }" class="menu-link">
+        <div class="d-flex align-items-center">
+            <mat-icon class="fs-4 d-block me-1">{{ icon }}</mat-icon>
+            <span class="d-block">{{ label }}</span>
+            <mat-icon *ngIf="adminPrivileges && showAdminIcon" class="admin-icon d-block me-1">
+                admin_panel_settings</mat-icon
+            >
+        </div>
+    </a>
+</mat-button-toggle>

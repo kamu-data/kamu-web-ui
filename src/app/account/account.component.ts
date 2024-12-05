@@ -14,7 +14,6 @@ import { MaybeNull } from "src/app/common/app.types";
 import { AccountNotFoundError } from "src/app/common/errors";
 import { AccountPageQueryParams } from "./account.component.model";
 import { ModalService } from "../components/modal/modal.service";
-import { LoggedUserService } from "../auth/logged-user.service";
 
 @Component({
     selector: "app-account",
@@ -35,7 +34,6 @@ export class AccountComponent extends BaseComponent implements OnInit {
     private route = inject(ActivatedRoute);
     private modalService = inject(ModalService);
     private accountService = inject(AccountService);
-    private loggedUserService = inject(LoggedUserService);
 
     public ngOnInit(): void {
         const accountName$ = this.route.params.pipe(

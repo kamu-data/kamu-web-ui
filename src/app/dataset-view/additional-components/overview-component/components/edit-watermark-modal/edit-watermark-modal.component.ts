@@ -7,7 +7,6 @@ import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/base.component";
 import { MY_MOMENT_FORMATS } from "src/app/common/data.helpers";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { finalize } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
@@ -26,7 +25,6 @@ export class EditWatermarkModalComponent extends BaseComponent implements OnInit
 
     public activeModal = inject(NgbActiveModal);
     private datasetCommitService = inject(DatasetCommitService);
-    private loggedUserService = inject(LoggedUserService);
 
     ngOnInit(): void {
         this.date = new Date();

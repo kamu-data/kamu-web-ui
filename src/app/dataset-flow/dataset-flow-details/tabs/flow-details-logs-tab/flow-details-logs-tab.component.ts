@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { BaseComponent } from "src/app/common/base.component";
 import { GrafanaLogsService } from "../../grafana-logs.service";
 import { DatasetFlowByIdResponse } from "../../dataset-flow-details.types";
@@ -13,7 +12,6 @@ import { AppConfigService } from "src/app/app-config.service";
 })
 export class FlowDetailsLogsTabComponent extends BaseComponent {
     @Input({ required: true }) flowDetails: DatasetFlowByIdResponse;
-    private loggedUserService = inject(LoggedUserService);
     private grafanaLogsService = inject(GrafanaLogsService);
     private appConfigService = inject(AppConfigService);
 

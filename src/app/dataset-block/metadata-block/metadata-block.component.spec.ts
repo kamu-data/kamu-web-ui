@@ -12,7 +12,6 @@ import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
 import { FormsModule } from "@angular/forms";
 import { EventDetailsComponent } from "./components/event-details/event-details.component";
 import { BlockHeaderComponent } from "./components/block-header/block-header.component";
-import { DatasetViewMenuComponent } from "src/app/dataset-view/dataset-view-menu/dataset-view-menu.component";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatMenuModule } from "@angular/material/menu";
 import { DatasetViewHeaderComponent } from "src/app/dataset-view/dataset-view-header/dataset-view-header.component";
@@ -25,6 +24,7 @@ import { YamlViewSectionComponent } from "./components/yaml-view-section/yaml-vi
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { DataAccessPanelModule } from "src/app/components/data-access-panel/data-access-panel.module";
 import { SharedModule } from "src/app/shared/shared/shared.module";
+import { DatasetViewMenuModule } from "src/app/dataset-view/dataset-view-menu/dataset-view-menu/dataset-view-menu.module";
 
 describe("MetadataBlockComponent", () => {
     let component: MetadataBlockComponent;
@@ -37,7 +37,6 @@ describe("MetadataBlockComponent", () => {
                 BlockNavigationComponent,
                 EventDetailsComponent,
                 BlockHeaderComponent,
-                DatasetViewMenuComponent,
                 DatasetViewHeaderComponent,
                 SearchAdditionalButtonsComponent,
                 SearchAdditionalButtonsNavComponent,
@@ -59,6 +58,7 @@ describe("MetadataBlockComponent", () => {
                 DataAccessPanelModule,
                 RouterModule,
                 SharedModule,
+                DatasetViewMenuModule,
             ],
             providers: [
                 DatasetApi,

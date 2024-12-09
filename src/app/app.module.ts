@@ -27,7 +27,6 @@ import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatButtonModule } from "@angular/material/button";
 import { SearchModule } from "./search/search.module";
-import { DatasetModule } from "./dataset-view/dataset.module";
 import { DatasetService } from "./dataset-view/dataset.service";
 import { DatasetCreateModule } from "./dataset-create/dataset-create.module";
 import { AppHeaderComponent } from "./components/app-header/app-header.component";
@@ -48,7 +47,6 @@ import { DatasetSubscriptionsService } from "./dataset-view/dataset.subscription
 import { SpinnerModule } from "./components/spinner/spinner.module";
 import { DatasetApi } from "./api/dataset.api";
 import { ErrorHandlerService } from "./services/error-handler.service";
-import { AccountSettingsComponent } from "./auth/settings/account-settings.component";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { DatasetListModule } from "./components/dataset-list-component/dataset-list.module";
 import { PaginationModule } from "./components/pagination-component/pagination.module";
@@ -67,10 +65,6 @@ import { apolloCache } from "./apollo-cache.helper";
 import { AdminDashboardComponent } from "./admin-view/admin-dashboard/admin-dashboard.component";
 import { DatasetFlowDetailsModule } from "./dataset-flow/dataset-flow-details/dataset-flow-details.module";
 import { MatSortModule } from "@angular/material/sort";
-import { AccountFlowsTabComponent } from "./account/additional-components/account-flows-tab/account-flows-tab.component";
-import { AccountComponent } from "./account/account.component";
-import { DatasetsTabComponent } from "./account/additional-components/datasets-tab/datasets-tab.component";
-import { AccessTokensTabComponent } from "./auth/settings/tabs/access-tokens-tab/access-tokens-tab.component";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { DynamicTableModule } from "./components/dynamic-table/dynamic-table.module";
 import { AutofocusModule } from "./common/directives/autofocus.module";
@@ -203,17 +197,11 @@ const MatModules = [
         AppHeaderComponent,
         LoginComponent,
         GithubCallbackComponent,
-        AccountComponent,
         NotificationIndicatorComponent,
-        AccountSettingsComponent,
-        DatasetsTabComponent,
         AdminDashboardComponent,
-        AccessTokensTabComponent,
-        AccountFlowsTabComponent,
     ],
     imports: [
-        AppRoutingModule,
-        DatasetModule,
+        //  DatasetModule,
         DatasetCreateModule,
         MetadataBlockModule,
         ModalModule.forRoot(),
@@ -252,6 +240,7 @@ const MatModules = [
         DatasetFlowDetailsModule,
         DynamicTableModule,
         AutofocusModule,
+        AppRoutingModule,
     ],
     providers: [...Services],
     bootstrap: [AppComponent],

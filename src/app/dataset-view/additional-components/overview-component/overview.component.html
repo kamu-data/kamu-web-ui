@@ -1,33 +1,33 @@
-<div class="dataset-result-container container-main">
-    <div class="search-result-container__content" *ngIf="currentState">
+<div class="dataset-result-container container-main" *ngIf="datasetOverviewTabData$ | async as data">
+    <div class="search-result-container__content">
         <div>
             <div
-                *ngIf="hasDatasetInfo; else noDetails"
+                *ngIf="hasDatasetInfo(data.overviewUpdate); else noDetails"
                 class="d-flex flex-row flex-justify-between mb-3"
                 data-test-id="dataset-info-block"
             >
                 <div class="d-flex flex-column me-auto">
-                    <div *ngIf="currentState.overview.metadata.currentInfo?.description">
+                    <div *ngIf="data.overviewUpdate.overview.metadata.currentInfo?.description">
                         <h2 class="box-title align-items-center pb-3">Description</h2>
 
-                        <p>{{ currentState.overview.metadata.currentInfo.description }}</p>
+                        <p>{{ data.overviewUpdate.overview.metadata.currentInfo.description }}</p>
                     </div>
-                    <div class="app-mat-chip" *ngIf="currentState.overview.metadata.currentInfo?.keywords">
+                    <div class="app-mat-chip" *ngIf="data.overviewUpdate.overview.metadata.currentInfo?.keywords">
                         <h2 class="box-title align-items-center pt-3">Keywords</h2>
                         <mat-chip-set aria-label="Tags selection">
-                            <div *ngFor="let keyword of currentState.overview.metadata.currentInfo?.keywords">
-                                <mat-chip (click)="selectTopic(datasetBasics.kind)">{{ keyword }}</mat-chip>
+                            <div *ngFor="let keyword of data.overviewUpdate.overview.metadata.currentInfo?.keywords">
+                                <mat-chip (click)="selectTopic(data.datasetBasics.kind)">{{ keyword }}</mat-chip>
                             </div>
                         </mat-chip-set>
                     </div>
                 </div>
-                <div *ngIf="canEditDatasetInfo" data-test-id="dataset-edit-info-block">
+                <div *ngIf="canEditDatasetInfo(data)" data-test-id="dataset-edit-info-block">
                     <button
                         class="btn-sm btn custom-edit"
                         aria-label="Edit dataset details"
                         data-test-id="edit-dataset-details"
                         title="Edit dataset details"
-                        (click)="openInformationModal()"
+                        (click)="openInformationModal(data)"
                     >
                         <svg-icon name="pencil" />
                     </button>
@@ -35,12 +35,12 @@
             </div>
 
             <ng-template #noDetails>
-                <div class="my-4" *ngIf="canAddDatasetInfo" data-test-id="dataset-add-info-block">
+                <div class="my-4" *ngIf="canAddDatasetInfo(data)" data-test-id="dataset-add-info-block">
                     <p appFeatureFlag="dataset.panel.overview.description">
                         You can
                         <a
                             class="text-decoration-none"
-                            (click)="openInformationModal()"
+                            (click)="openInformationModal(data)"
                             data-test-id="'open-information-modal'"
                         >
                             Add information</a
@@ -51,7 +51,7 @@
             </ng-template>
             <div
                 class="my-4"
-                *ngIf="canAddSetPollingSource && canAddPushSource"
+                *ngIf="canAddSetPollingSource(data) && canAddPushSource(data)"
                 data-test-id="add-set-polling-source-block"
             >
                 <p appFeatureFlag="dataset.panel.overview.addPollingSource">
@@ -60,8 +60,8 @@
                         class="text-decoration-none"
                         [routerLink]="[
                             '/',
-                            datasetBasics.owner.accountName,
-                            datasetBasics.name,
+                            data.datasetBasics.owner.accountName,
+                            data.datasetBasics.name,
                             URL_PARAM_ADD_POLLING_SOURCE
                         ]"
                     >
@@ -70,15 +70,15 @@
                 </p>
             </div>
             <!-- Changed to canAddPushSource -->
-            <div class="my-4" *ngIf="canAddSetPollingSource" data-test-id="add-push-source-block">
+            <div class="my-4" *ngIf="canAddSetPollingSource(data)" data-test-id="add-push-source-block">
                 <p appFeatureFlag="dataset.panel.overview.addPushSource">
                     You can
                     <a
                         class="text-decoration-none"
                         [routerLink]="[
                             '/',
-                            datasetBasics.owner.accountName,
-                            datasetBasics.name,
+                            data.datasetBasics.owner.accountName,
+                            data.datasetBasics.name,
                             URL_PARAM_ADD_PUSH_SOURCE
                         ]"
                     >
@@ -87,15 +87,15 @@
                 </p>
             </div>
             <!-- end -->
-            <div class="my-4" *ngIf="canAddSetTransform" data-test-id="add-set-transform-block">
+            <div class="my-4" *ngIf="canAddSetTransform(data)" data-test-id="add-set-transform-block">
                 <p appFeatureFlag="dataset.panel.overview.addTransform">
                     You can
                     <a
                         class="text-decoration-none"
                         [routerLink]="[
                             '/',
-                            datasetBasics.owner.accountName,
-                            datasetBasics.name,
+                            data.datasetBasics.owner.accountName,
+                            data.datasetBasics.name,
                             URL_PARAM_SET_TRANSFORM
                         ]"
                     >
@@ -109,8 +109,8 @@
                     appFeatureFlag="dataset.panel.overview.addData"
                     class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center me-3"
                     data-test-id="add-more-data"
-                    *ngIf="showAddDataButton"
-                    (click)="addData()"
+                    *ngIf="showAddDataButton(data)"
+                    (click)="addData(data)"
                 >
                     <mat-icon class="text-muted fs-4 d-block">add</mat-icon>
                     <span class="fs-12 me-2 d-block"> Add data</span>
@@ -119,9 +119,9 @@
                     appFeatureFlag="dataset.panel.overview.update"
                     class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
                     data-test-id="refresh-now-button"
-                    [disabled]="!canRefresh"
+                    [disabled]="!canRefresh(data)"
                     *ngIf="visibleUpdateButton"
-                    (click)="refreshNow()"
+                    (click)="refreshNow(data)"
                 >
                     <mat-icon class="text-muted fs-4 d-block">cached</mat-icon>
                     <span class="fs-12 me-2 d-block"> Update now</span>
@@ -130,9 +130,9 @@
 
             <app-overview-history-summary-header
                 data-test-id="overview-history-summary-header-block"
-                [metadataBlockFragment]="metadataFragmentBlock"
-                [numBlocksTotal]="currentState.overview.metadata.chain.blocks.totalCount || 0"
-                [datasetName]="datasetBasics.name"
+                [metadataBlockFragment]="metadataFragmentBlock(data.overviewUpdate)"
+                [numBlocksTotal]="data.overviewUpdate.overview.metadata.chain.blocks.totalCount || 0"
+                [datasetName]="data.datasetBasics.name"
             />
 
             <div class="text-center upload-file-container my-4" *ngIf="uploadFileLoading$ | async; else noLoading">
@@ -140,11 +140,11 @@
             </div>
             <ng-template #noLoading>
                 <app-dynamic-table
-                    *ngIf="currentState && currentState.schema; else noData"
+                    *ngIf="data.overviewUpdate && data.overviewUpdate.schema; else noData"
                     data-test-id="data-tail-block"
                     [hasTableHeader]="true"
-                    [schemaFields]="currentState.schema.fields"
-                    [dataRows]="currentState ? currentState.data : []"
+                    [schemaFields]="data.overviewUpdate.schema.fields"
+                    [dataRows]="data.overviewUpdate ? data.overviewUpdate.content : []"
                     [idTable]="'overview-data-table'"
                 />
                 <ng-template #noData>
@@ -159,9 +159,9 @@
                         appFeatureFlag="dataset.panel.overview.addData"
                         class="upload-file-container my-4"
                         appDragAndDrop
-                        (click)="addData()"
-                        (fileDropped)="onFileDropped($event)"
-                        *ngIf="showDragAndDropBlock && isUserLogged"
+                        (click)="addData(data)"
+                        (fileDropped)="onFileDropped($event, data.datasetBasics)"
+                        *ngIf="showDragAndDropBlock(data) && isUserLogged"
                     >
                         <div class="upload-file-icon">
                             <mat-icon class="text-muted">cloud_upload</mat-icon>
@@ -180,7 +180,7 @@
                     </div>
                 </ng-template>
             </ng-template>
-            <div class="my-4" *ngIf="canAddReadme" data-test-id="add-readme-block">
+            <div class="my-4" *ngIf="canAddReadme(data)" data-test-id="add-readme-block">
                 <p appFeatureFlag="dataset.panel.overview.readme">
                     You can
                     <a class="text-decoration-none" (click)="onAddReadme()" data-test-id="add-readme"> Add README.md</a>
@@ -188,10 +188,10 @@
             </div>
             <app-readme-section
                 data-test-id="readme-editor-block"
-                [datasetBasics]="datasetBasics"
-                [currentReadme]="currentState.overview.metadata.currentReadme"
+                [datasetBasics]="data.datasetBasics"
+                [currentReadme]="data.overviewUpdate.overview.metadata.currentReadme"
                 [editingInProgress]="editingReadme"
-                [editable]="canEditReadme"
+                [editable]="canEditReadme(data)"
                 (editViewShowEmitter)="editingReadme = $event"
             />
         </div>
@@ -208,13 +208,13 @@
                     data-test-id="add-license-btn"
                     type="button"
                     class="signed-commit-badge verified signed-commit-badge-small"
-                    (click)="openLicenseModal()"
+                    (click)="openLicenseModal(data)"
                 >
                     Add license
                 </button>
             </div>
             <div class="card--row dataset-info">
-                <ng-template [ngIf]="datasetBasics && currentState">
+                <ng-template [ngIf]="data.datasetBasics && data.overviewUpdate">
                     <div class="dataset-info--block">
                         <div class="dataset-info--sub-block d-flex align-items-center">
                             <mat-icon class="fs-4 mr-2">key_vertical</mat-icon>
@@ -223,7 +223,7 @@
 
                         <div class="dataset-info--sub-block">
                             <app-display-hash
-                                [value]="datasetBasics.id"
+                                [value]="data.datasetBasics.id"
                                 [showCopyButton]="true"
                                 [class]="'text-decoration-none text-dark mr-4 hashBlock'"
                             />
@@ -236,7 +236,7 @@
                         </div>
 
                         <div class="dataset-info--sub-block">
-                            <p class="dataset-info--text">{{ datasetBasics.kind | titlecase }}</p>
+                            <p class="dataset-info--text">{{ data.datasetBasics.kind | titlecase }}</p>
                         </div>
                     </div>
                     <div class="dataset-info--block">
@@ -250,7 +250,7 @@
                     </div>
                     <div
                         class="dataset-info--block"
-                        *ngIf="currentState.overview.metadata.currentLicense"
+                        *ngIf="data.overviewUpdate.overview.metadata.currentLicense"
                         data-test-id="license-block"
                     >
                         <div class="dataset-info--sub-block d-flex align-items-center">
@@ -261,24 +261,26 @@
                             <div>
                                 <a
                                     class="link--primary text-break"
-                                    (click)="showWebsite(currentState.overview.metadata.currentLicense.websiteUrl)"
+                                    (click)="
+                                        showWebsite(data.overviewUpdate.overview.metadata.currentLicense.websiteUrl)
+                                    "
                                 >
                                     <span
                                         class="dataset-info--text"
                                         placement="bottom"
-                                        [ngbTooltip]="currentState.overview.metadata.currentLicense.name"
+                                        [ngbTooltip]="data.overviewUpdate.overview.metadata.currentLicense.name"
                                     >
-                                        {{ currentState.overview.metadata.currentLicense.shortName }}
+                                        {{ data.overviewUpdate.overview.metadata.currentLicense.shortName }}
                                     </span>
                                 </a>
                             </div>
-                            <div *ngIf="canEditLicense">
+                            <div *ngIf="canEditLicense(data)">
                                 <button
                                     class="btn-sm btn custom-edit ms-3"
                                     aria-label="Edit dataset details"
                                     data-test-id="edit-dataset-license"
                                     title="Edit dataset license"
-                                    (click)="openLicenseModal()"
+                                    (click)="openLicenseModal(data)"
                                 >
                                     <svg-icon name="pencil" />
                                 </button>
@@ -293,8 +295,8 @@
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
                                 {{
-                                    currentState.size.estimatedSize
-                                        ? (currentState.size.estimatedSize | displaySize)
+                                    data.overviewUpdate.size.estimatedSize
+                                        ? (data.overviewUpdate.size.estimatedSize | displaySize)
                                         : "-"
                                 }}
                             </p>
@@ -307,11 +309,11 @@
                         </div>
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
-                                {{ currentState.size.numRecordsTotal || 0 | number: "1.0-0" }}
+                                {{ data.overviewUpdate.size.numRecordsTotal || 0 | number: "1.0-0" }}
                             </p>
                         </div>
                     </div>
-                    <div class="dataset-info--block" *ngIf="currentState">
+                    <div class="dataset-info--block" *ngIf="data.overviewUpdate">
                         <div class="dataset-info--sub-block d-flex align-items-center">
                             <mat-icon class="fs-4 mr-3">more_time</mat-icon>
                             <h2 class="dataset-info--subtitle">Created At:</h2>
@@ -319,12 +321,12 @@
                         <div class="dataset-info--sub-block p-0">
                             <app-display-time
                                 class="dataset-info--text"
-                                [title]="currentState.overview.createdAt"
-                                [data]="currentState.overview.createdAt"
+                                [title]="data.overviewUpdate.overview.createdAt"
+                                [data]="data.overviewUpdate.overview.createdAt"
                             />
                         </div>
                     </div>
-                    <div class="dataset-info--block" *ngIf="currentState">
+                    <div class="dataset-info--block" *ngIf="data.overviewUpdate">
                         <div class="dataset-info--sub-block d-flex align-items-center">
                             <mat-icon class="fs-4 mr-2">update</mat-icon>
                             <h2 class="dataset-info--subtitle">Last Updated At:</h2>
@@ -332,8 +334,8 @@
                         <div class="dataset-info--sub-block">
                             <app-display-time
                                 class="dataset-info--text"
-                                [title]="currentState.overview.lastUpdatedAt"
-                                [data]="currentState.overview.lastUpdatedAt"
+                                [title]="data.overviewUpdate.overview.lastUpdatedAt"
+                                [data]="data.overviewUpdate.overview.lastUpdatedAt"
                             />
                         </div>
                     </div>
@@ -344,20 +346,23 @@
                         </div>
                         <div
                             class="dataset-info--sub-block d-flex align-items-center ps-1"
-                            *ngIf="currentState && currentState.overview.metadata.currentWatermark; else noWatermark"
+                            *ngIf="
+                                data.overviewUpdate && data.overviewUpdate.overview.metadata.currentWatermark;
+                                else noWatermark
+                            "
                             data-test-id="watermark-block"
                         >
                             <app-display-time
-                                [title]="currentState.overview.metadata.currentWatermark"
-                                [data]="currentState.overview.metadata.currentWatermark"
+                                [title]="data.overviewUpdate.overview.metadata.currentWatermark"
+                                [data]="data.overviewUpdate.overview.metadata.currentWatermark"
                             />
-                            <div *ngIf="canEditWatermark">
+                            <div *ngIf="canEditWatermark(data)">
                                 <button
                                     class="btn-sm btn custom-edit ms-4"
                                     aria-label="Edit watermark details"
                                     data-test-id="edit-dataset-watermark"
                                     title="Edit watermark"
-                                    (click)="openWatermarkModal()"
+                                    (click)="openWatermarkModal(data)"
                                 >
                                     <svg-icon name="pencil" />
                                 </button>
@@ -366,7 +371,7 @@
                         <ng-template #noWatermark>
                             <div
                                 class="dataset-info--sub-block d-flex align-items-center ms-4"
-                                *ngIf="canAddWatermark"
+                                *ngIf="canAddWatermark(data)"
                                 data-test-id="no-watermark-block"
                             >
                                 <div class="me-4">-</div>
@@ -377,7 +382,7 @@
                                         data-test-id="edit-dataset-watermark"
                                         title="Add watermark"
                                         type="button"
-                                        (click)="openWatermarkModal()"
+                                        (click)="openWatermarkModal(data)"
                                     >
                                         Add watermark
                                     </button>

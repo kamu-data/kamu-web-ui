@@ -1,6 +1,14 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    inject,
+    OnInit,
+    Output,
+} from "@angular/core";
 import { Location } from "@angular/common";
-import { map, Observable } from "rxjs";
+import { finalize, map, Observable } from "rxjs";
 import AppValues from "src/app/common/app.values";
 import { DatasetFlowType, DatasetKind, OffsetInterval } from "../../../api/kamu.graphql.interface";
 import { DataSqlErrorUpdate, OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
@@ -18,6 +26,7 @@ import { DatasetFlowsService } from "../flows-component/services/dataset-flows.s
 import { NavigationService } from "src/app/services/navigation.service";
 import { SqlQueryResponseState } from "src/app/query/global-query/global-query.model";
 import { SqlQueryService } from "src/app/services/sql-query.service";
+import { DatasetService } from "../../dataset.service";
 
 @Component({
     selector: "app-data",
@@ -25,9 +34,10 @@ import { SqlQueryService } from "src/app/services/sql-query.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataComponent extends BaseComponent implements OnInit {
-    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    @Input({ required: true }) public sqlLoading: boolean;
-    @Input() public resultTime: number;
+    public datasetBasics: DatasetBasicsFragment;
+    public sqlLoading: boolean = false;
+    // @Input({ required: true }) public sqlLoading: boolean;
+    // @Input() public resultTime: number;
     @Output() public runSQLRequestEmit = new EventEmitter<DatasetRequestBySql>();
 
     public sqlRequestCode = `select\n  *\nfrom `;
@@ -44,8 +54,13 @@ export class DataComponent extends BaseComponent implements OnInit {
     private datasetFlowsService = inject(DatasetFlowsService);
     private navigationService = inject(NavigationService);
     private sqlQueryService = inject(SqlQueryService);
+    protected datasetService = inject(DatasetService);
+    protected cdr = inject(ChangeDetectorRef);
 
     public ngOnInit(): void {
+        this.datasetService.datasetChanges.subscribe((datasetBasics) => {
+            this.datasetBasics = datasetBasics;
+        });
         this.overviewUpdate$ = this.datasetSubsService.overviewChanges;
         this.sqlErrorMarker$ = this.sqlQueryService.sqlErrorOccurrences.pipe(
             map((data: DataSqlErrorUpdate) => data.error),
@@ -56,7 +71,22 @@ export class DataComponent extends BaseComponent implements OnInit {
     }
 
     public runSQLRequest(params: DatasetRequestBySql): void {
-        this.runSQLRequestEmit.emit(params);
+        this.onRunSQLRequest(params);
+    }
+
+    public onRunSQLRequest(params: DatasetRequestBySql): void {
+        this.sqlLoading = true;
+        this.sqlQueryService
+            // TODO: Propagate limit from UI and display when it was reached
+            .requestDataSqlRun(params)
+            .pipe(
+                finalize(() => {
+                    this.sqlLoading = false;
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe();
+        this.cdr.detectChanges();
     }
 
     private buildSqlRequestCode(): void {

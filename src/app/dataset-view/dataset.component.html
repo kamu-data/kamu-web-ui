@@ -14,8 +14,9 @@
                 [datasetPermissions]="datasetPermissions"
                 [datasetViewType]="datasetViewType"
             />
+            <router-outlet></router-outlet>
 
-            <app-overview
+            <!-- <app-overview
                 *ngIf="datasetViewType === DatasetViewTypeEnum.Overview"
                 [datasetBasics]="datasetBasics"
                 [datasetPermissions]="datasetPermissions"
@@ -53,7 +54,7 @@
                 *ngIf="datasetViewType === DatasetViewTypeEnum.Settings"
                 [datasetBasics]="datasetBasics"
                 [datasetPermissions]="datasetPermissions"
-            />
+            /> -->
         </div>
     </div>
 </div>

@@ -6,7 +6,6 @@ import { DisplayTimeModule } from "../components/display-time/display-time.modul
 import { ModuleWithProviders, NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { DatasetComponent } from "./dataset.component";
-import { SearchAdditionalButtonsModule } from "../components/search-additional-buttons/search-additional-buttons.module";
 import { NgbModule, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { DynamicTableModule } from "../components/dynamic-table/dynamic-table.module";
@@ -20,15 +19,12 @@ import { MatButtonModule } from "@angular/material/button";
 import { MarkdownModule } from "ngx-markdown";
 import { MetadataComponent } from "./additional-components/metadata-component/metadata.component";
 import { ClipboardModule } from "@angular/cdk/clipboard";
-import { DataComponent } from "./additional-components/data-component/data.component";
 import { OverviewComponent } from "./additional-components/overview-component/overview.component";
 import { LineageComponent as LineageComponent } from "./additional-components/lineage-component/lineage.component";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { HistoryComponent } from "./additional-components/history-component/history.component";
 import { TimelineModule } from "../components/timeline-component/timeline.module";
 import { CustomPaginationModule } from "../components/custom-pagination-component/custom-pagination.module";
-import { DatasetViewHeaderComponent } from "./dataset-view-header/dataset-view-header.component";
-import { DatasetViewMenuComponent } from "./dataset-view-menu/dataset-view-menu.component";
 import { SideNavModule } from "../sidenav/side-nav.module";
 import { RouterModule } from "@angular/router";
 import { OverviewHistorySummaryHeaderComponent } from "../components/overview-history-summary-header/overview-history-summary-header.component";
@@ -78,13 +74,15 @@ import { EditKeyValueModalComponent } from "./additional-components/dataset-sett
 import { DatasetSettingsCompactingTabComponent } from "./additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.component";
 import { AddDataModalComponent } from "./additional-components/overview-component/components/add-data-modal/add-data-modal.component";
 import { FileFromUrlModalComponent } from "./additional-components/overview-component/components/file-from-url-modal/file-from-url-modal.component";
-import { FlowsTableComponent } from "../common/components/flows-table/flows-table.component";
-import { TileBaseWidgetComponent } from "../common/components/tile-base-widget/tile-base-widget.component";
 import { FlowsComponent } from "./additional-components/flows-component/flows.component";
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatChipsModule } from "@angular/material/chips";
 import { QuerySharedModule } from "../query/shared/query-shared/query-shared.module";
+import { DatasetFlowModule } from "../dataset-flow/dataset-flow/dataset-flow.module";
+import { DatasetViewMenuModule } from "./dataset-view-menu/dataset-view-menu/dataset-view-menu.module";
+import { DatasetViewHeaderModule } from "./dataset-view-header/dataset-view-header/dataset-view-header.module";
+import { DatasetTabsRoutingModule } from "./additional-components/dataset-tabs-routing.module";
 
 @NgModule({
     imports: [
@@ -97,7 +95,6 @@ import { QuerySharedModule } from "../query/shared/query-shared/query-shared.mod
         MatButtonToggleModule,
         DynamicTableModule,
         SearchSidenavModule,
-        SearchAdditionalButtonsModule,
         TimelineModule,
         NgxGraphModule,
         LineageGraphModule,
@@ -141,14 +138,15 @@ import { QuerySharedModule } from "../query/shared/query-shared/query-shared.mod
         MatSortModule,
         AngularMultiSelectModule,
         QuerySharedModule,
+        DatasetFlowModule,
+        DatasetViewMenuModule,
+        DatasetViewHeaderModule,
+        DatasetTabsRoutingModule,
     ],
     exports: [
-        DatasetViewHeaderComponent,
         OverviewHistorySummaryHeaderComponent,
         DatasetComponent,
-        DatasetViewMenuComponent,
         MetadataComponent,
-        DataComponent,
         BaseStepComponent,
         PrepareStepComponent,
         PreprocessStepComponent,
@@ -161,18 +159,13 @@ import { QuerySharedModule } from "../query/shared/query-shared/query-shared.mod
         MatTooltipModule,
         DataAccessPanelModule,
         SharedModule,
-        TileBaseWidgetComponent,
-        FlowsTableComponent,
         AngularMultiSelectModule,
         MatChipsModule,
     ],
     declarations: [
-        DatasetViewHeaderComponent,
         OverviewHistorySummaryHeaderComponent,
         DatasetComponent,
-        DatasetViewMenuComponent,
         MetadataComponent,
-        DataComponent,
         OverviewComponent,
         LineageComponent,
         HistoryComponent,
@@ -195,8 +188,6 @@ import { QuerySharedModule } from "../query/shared/query-shared/query-shared.mod
         ReadmeSectionComponent,
         DatasetSettingsComponent,
         FlowsComponent,
-        TileBaseWidgetComponent,
-        FlowsTableComponent,
         AddPushSourceComponent,
         SourceNameStepComponent,
         DatasetSettingsGeneralTabComponent,

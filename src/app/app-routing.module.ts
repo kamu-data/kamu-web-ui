@@ -86,6 +86,8 @@ export const routes: Routes = [
             {
                 path: `:${ProjectLinks.URL_PARAM_CATEGORY}`,
                 component: AccountSettingsComponent,
+                loadChildren: () =>
+                    import("./auth/settings/account-settings.module").then((m) => m.AccountSettingsModule),
             },
         ],
     },
@@ -93,12 +95,15 @@ export const routes: Routes = [
         path: `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}`,
         children: [
             {
-                path: "",
-                component: AccountComponent,
-            },
-            {
                 path: `:${ProjectLinks.URL_PARAM_DATASET_NAME}`,
                 component: DatasetComponent,
+
+                loadChildren: () => import("./dataset-view/dataset.module").then((m) => m.DatasetModule),
+            },
+            {
+                path: "",
+                component: AccountComponent,
+                loadChildren: () => import("./account/account.module").then((m) => m.AccountModule),
             },
         ],
     },

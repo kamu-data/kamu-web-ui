@@ -8,7 +8,6 @@ import { EventDetailsComponent } from "./components/event-details/event-details.
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MetadataBlockComponent } from "./metadata-block.component";
-import { DatasetModule } from "src/app/dataset-view/dataset.module";
 import { BlockHeaderComponent } from "./components/block-header/block-header.component";
 import { BlockNavigationComponent } from "./components/block-navigation/block-navigation.component";
 import { MatMenuModule } from "@angular/material/menu";
@@ -48,6 +47,9 @@ import { SetDataSchemaEventComponent } from "./components/event-details/componen
 import { UnsupportedEventComponent } from "./components/event-details/components/unsupported-event/unsupported-event.component";
 import { TopicsPropertyComponent } from "./components/event-details/components/common/topics-property/topics-property.component";
 import { TimePropertyComponent } from "./components/event-details/components/common/time-property/time-property.component";
+import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
+import { DatasetViewMenuModule } from "src/app/dataset-view/dataset-view-menu/dataset-view-menu/dataset-view-menu.module";
+import { DatasetViewHeaderModule } from "src/app/dataset-view/dataset-view-header/dataset-view-header/dataset-view-header.module";
 
 @NgModule({
     declarations: [
@@ -91,7 +93,6 @@ import { TimePropertyComponent } from "./components/event-details/components/com
     ],
     imports: [
         CommonModule,
-        DatasetModule,
         MatMenuModule,
         MatDividerModule,
         FormsModule,
@@ -102,6 +103,9 @@ import { TimePropertyComponent } from "./components/event-details/components/com
         DisplayTimeModule,
         DisplayHashModule,
         SharedModule,
+        AngularMultiSelectModule,
+        DatasetViewMenuModule,
+        DatasetViewHeaderModule,
     ],
     exports: [MetadataBlockComponent],
 })

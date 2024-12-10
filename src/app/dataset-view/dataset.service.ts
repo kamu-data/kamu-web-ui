@@ -17,7 +17,7 @@ import {
 } from "../api/kamu.graphql.interface";
 import { DatasetInfo } from "../interface/navigation.interface";
 import { inject, Injectable, Injector } from "@angular/core";
-import { combineLatest, Observable, of, Subject } from "rxjs";
+import { combineLatest, Observable, of, ReplaySubject, Subject } from "rxjs";
 import { DataRow, DatasetLineageNode, DatasetSchema } from "../interface/dataset.interface";
 import {
     DatasetBasicsFragment,
@@ -45,7 +45,7 @@ export class DatasetService {
     private datasetSubsService = inject(DatasetSubscriptionsService);
     private injector = inject(Injector);
     private currentHeadBlockHash: string;
-    private dataset$: Subject<DatasetBasicsFragment> = new Subject<DatasetBasicsFragment>();
+    private dataset$: Subject<DatasetBasicsFragment> = new ReplaySubject<DatasetBasicsFragment>(1);
 
     public get datasetChanges(): Observable<DatasetBasicsFragment> {
         return this.dataset$.asObservable();

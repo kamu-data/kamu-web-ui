@@ -10,7 +10,6 @@
                 (pageChange)="onPageChange($event)"
             />
         </div>
-
         <div class="d-flex justify-content-end" *ngIf="canEditSetPollingSource">
             <button
                 appFeatureFlag="dataset.panel.metadata.editPollingSource"
@@ -307,10 +306,10 @@
                 </ng-container>
             </div>
         </ng-container>
-        <ng-container *ngIf="hasAnySource() && datasetBasics.kind === 'ROOT'">
+        <ng-container *ngIf="hasAnySource() && datasetBasics && datasetBasics.kind === 'ROOT'">
             <h3 class="box-title text-center mt-4">There is no metadata.</h3>
         </ng-container>
-        <ng-container *ngIf="!currentTransform && datasetBasics.kind === 'DERIVATIVE'">
+        <ng-container *ngIf="!currentTransform && datasetBasics && datasetBasics.kind === 'DERIVATIVE'">
             <h3 class="box-title text-center">
                 There is no metadata. Need to add
                 <a

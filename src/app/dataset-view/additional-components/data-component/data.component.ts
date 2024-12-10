@@ -1,12 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    inject,
-    OnInit,
-    Output,
-} from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { Location } from "@angular/common";
 import { finalize, map, Observable } from "rxjs";
 import AppValues from "src/app/common/app.values";
@@ -36,10 +28,6 @@ import { DatasetService } from "../../dataset.service";
 export class DataComponent extends BaseComponent implements OnInit {
     public datasetBasics: DatasetBasicsFragment;
     public sqlLoading: boolean = false;
-    // @Input({ required: true }) public sqlLoading: boolean;
-    // @Input() public resultTime: number;
-    @Output() public runSQLRequestEmit = new EventEmitter<DatasetRequestBySql>();
-
     public sqlRequestCode = `select\n  *\nfrom `;
 
     private offsetColumnName = AppValues.DEFAULT_OFFSET_COLUMN_NAME;
@@ -58,7 +46,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     protected cdr = inject(ChangeDetectorRef);
 
     public ngOnInit(): void {
-        this.datasetService.datasetChanges.subscribe((datasetBasics) => {
+        this.datasetService.datasetChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((datasetBasics) => {
             this.datasetBasics = datasetBasics;
         });
         this.overviewUpdate$ = this.datasetSubsService.overviewChanges;

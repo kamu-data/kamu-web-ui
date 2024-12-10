@@ -38,7 +38,7 @@
                 [class.active-link]="isDatasetViewTypeMetadata"
                 value="metadata"
             >
-                <a [routerLink]="[datasetLink]" [queryParams]="{ tab: DatasetViewTypeEnum.Metadata }" class="menu-link">
+                <a [routerLink]="[datasetLink, DatasetViewTypeEnum.Metadata]" class="menu-link">
                     <div class="d-flex align-items-center">
                         <mat-icon class="fs-4 d-block me-1">dataset_linked</mat-icon>
                         <span class="d-block">Metadata</span>

@@ -1,10 +1,10 @@
 import { mockDatasetBasicsDerivedFragment, mockDatasetBasicsRootFragment } from "../../../search/mock.data";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
 import { DataComponent } from "./data.component";
-import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+
 import { mockMetadataDerivedUpdate, mockOverviewDataUpdate, mockOverviewDataUpdateNullable } from "../data-tabs.mock";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Location } from "@angular/common";
@@ -73,17 +73,17 @@ describe("DataComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check run sql button", fakeAsync(() => {
-        const runSQLRequestEmitSpy = spyOn(component.runSQLRequestEmit, "emit");
-        tick();
-        fixture.detectChanges();
-        runSQLRequestEmitSpy.calls.reset();
+    // it("should check run sql button", fakeAsync(() => {
+    //     const runSQLRequestEmitSpy = spyOn(component.runSQLRequestEmit, "emit");
+    //     tick();
+    //     fixture.detectChanges();
+    //     runSQLRequestEmitSpy.calls.reset();
 
-        emitClickOnElementByDataTestId(fixture, "runSqlQueryButton");
+    //     emitClickOnElementByDataTestId(fixture, "runSqlQueryButton");
 
-        expect(runSQLRequestEmitSpy).toHaveBeenCalledTimes(1);
-        flush();
-    }));
+    //     expect(runSQLRequestEmitSpy).toHaveBeenCalledTimes(1);
+    //     flush();
+    // }));
 
     it("should check add data", () => {
         const ngbModalServiceSpy = spyOn(ngbModalService, "open").and.callThrough();

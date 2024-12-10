@@ -3,6 +3,7 @@ import { RouterModule, Routes } from "@angular/router";
 import { OverviewComponent } from "./overview-component/overview.component";
 import { DataComponent } from "./data-component/data.component";
 import { DatasetViewTypeEnum } from "../dataset-view.interface";
+import { MetadataComponent } from "./metadata-component/metadata.component";
 
 const routes: Routes = [
     {
@@ -14,6 +15,11 @@ const routes: Routes = [
         path: "data",
         component: DataComponent,
         data: { tab: DatasetViewTypeEnum.Data },
+    },
+    {
+        path: "metadata",
+        component: MetadataComponent,
+        data: { tab: DatasetViewTypeEnum.Metadata },
     },
 ];
 

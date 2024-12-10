@@ -14,6 +14,7 @@ const routes: Routes = [
     {
         path: "data",
         component: DataComponent,
+        loadChildren: () => import("./data-component/data-tab.module").then((m) => m.DataTabModule),
         data: { tab: DatasetViewTypeEnum.Data },
     },
     {

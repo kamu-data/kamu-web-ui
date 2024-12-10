@@ -95,15 +95,15 @@ export const routes: Routes = [
         path: `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}`,
         children: [
             {
-                path: "",
-                component: AccountComponent,
-                loadChildren: () => import("./account/account.module").then((m) => m.AccountModule),
-            },
-            {
                 path: `:${ProjectLinks.URL_PARAM_DATASET_NAME}`,
                 component: DatasetComponent,
 
                 loadChildren: () => import("./dataset-view/dataset.module").then((m) => m.DatasetModule),
+            },
+            {
+                path: "",
+                component: AccountComponent,
+                loadChildren: () => import("./account/account.module").then((m) => m.AccountModule),
             },
         ],
     },

@@ -1,11 +1,13 @@
 <div class="content">
-    <div
+    <a
         *ngFor="let node of nodes | slice: 0 : LAST_RUNS_COUNT; let i = index"
         class="tile-item"
         [ngbPopover]="popContent"
         triggers="mouseenter:mouseleave"
         [openDelay]="300"
         [ngClass]="tileWidgetClass(node)"
+        target="_blank"
+        [href]="setTileItemLink(node)"
     >
         <ng-template #popContent>
             <div class="fs-12 text-muted">
@@ -45,7 +47,7 @@
                 </ng-container>
             </div>
         </ng-template>
-    </div>
+    </a>
 </div>
 <div class="mt-1">
     <span class="fs-12 text-muted"> Showing last {{ LAST_RUNS_COUNT }} runs</span>

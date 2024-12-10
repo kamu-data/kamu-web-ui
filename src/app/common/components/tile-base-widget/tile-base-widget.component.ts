@@ -12,6 +12,8 @@ import { TileBaseWidgetHelpers } from "./tile-base-widget.helpers";
 import { DataHelpers } from "src/app/common/data.helpers";
 import AppValues from "src/app/common/app.values";
 import { MaybeNullOrUndefined } from "../../app.types";
+import ProjectLinks from "src/app/project-links";
+import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 
 @Component({
     selector: "app-tile-base-widget",
@@ -26,6 +28,8 @@ export class TileBaseWidgetComponent {
     public readonly LAST_RUNS_COUNT = 150;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;
+    public readonly URL_FLOW_DETAILS = ProjectLinks.URL_FLOW_DETAILS;
+    public readonly DEFAULT_ADMIN_ACCOUNT_NAME = AppValues.DEFAULT_ADMIN_ACCOUNT_NAME;
 
     public durationTask(d1: MaybeNullOrUndefined<string>, d2: MaybeNullOrUndefined<string>): string {
         if (!d2 || !d1) return "-";
@@ -51,13 +55,26 @@ export class TileBaseWidgetComponent {
         }
     }
 
-    public datasetAliasByDescription(node: FlowItemWidgetDataFragment): MaybeNull<string> {
+    public datasetAliasByDescription(node: FlowItemWidgetDataFragment): string {
         const datasetId = this.extractDatasetId(node);
         if (datasetId) {
             const dataset = (this.involvedDatasets as Dataset[]).find((dataset) => dataset.id === datasetId) as Dataset;
             return dataset.alias;
         }
-        return null;
+        return "";
+    }
+
+    public prefixAccountName(node: FlowItemWidgetDataFragment): string {
+        if (this.datasetAliasByDescription(node).includes("/")) {
+            return this.datasetAliasByDescription(node);
+        }
+        return this.DEFAULT_ADMIN_ACCOUNT_NAME + this.datasetAliasByDescription(node);
+    }
+
+    public setTileItemLink(node: FlowItemWidgetDataFragment): string {
+        return encodeURI(
+            `${this.prefixAccountName(node)}/${this.URL_FLOW_DETAILS}/${node.flowId}/${FlowDetailsTabs.HISTORY}`,
+        );
     }
 
     private extractDatasetId(node: FlowItemWidgetDataFragment): MaybeNull<string> {

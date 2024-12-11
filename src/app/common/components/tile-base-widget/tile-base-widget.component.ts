@@ -68,7 +68,7 @@ export class TileBaseWidgetComponent {
         if (this.datasetAliasByDescription(node).includes("/")) {
             return this.datasetAliasByDescription(node);
         }
-        return this.DEFAULT_ADMIN_ACCOUNT_NAME + this.datasetAliasByDescription(node);
+        return `${this.DEFAULT_ADMIN_ACCOUNT_NAME}/${this.datasetAliasByDescription(node)}`;
     }
 
     public setTileItemLink(node: FlowItemWidgetDataFragment): string {

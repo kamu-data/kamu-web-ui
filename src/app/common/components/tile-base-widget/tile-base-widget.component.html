@@ -7,6 +7,7 @@
         [openDelay]="300"
         [ngClass]="tileWidgetClass(node)"
         target="_blank"
+        [attr.data-test-id]="'tile-element' + '-' + i"
         [href]="setTileItemLink(node)"
     >
         <ng-template #popContent>

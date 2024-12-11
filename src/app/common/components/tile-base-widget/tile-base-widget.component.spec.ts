@@ -4,6 +4,7 @@ import { mockFlowsOutcome, mockFlowSummaryDataFragments } from "src/app/api/mock
 import { NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
 import { FlowOutcomeDataFragment } from "src/app/api/kamu.graphql.interface";
 import { mockDatasets } from "../flows-table/flows-table.helpers.mock";
+import { findElementByDataTestId } from "../../base-test.helpers.spec";
 
 describe("TileBaseWidgetComponent", () => {
     let component: TileBaseWidgetComponent;
@@ -57,5 +58,10 @@ describe("TileBaseWidgetComponent", () => {
 
     it(`should check extract dataset alias`, () => {
         expect(component.datasetAliasByDescription(mockFlowSummaryDataFragments[0])).toEqual(mockDatasets[0].alias);
+    });
+
+    it(`should check href for tile element`, () => {
+        const tileElement = findElementByDataTestId(fixture, "tile-element-0") as HTMLLinkElement;
+        expect(tileElement.href.includes("kamu/account.tokens.transfers/flow-details/414/history")).toBeTrue();
     });
 });

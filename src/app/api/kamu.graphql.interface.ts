@@ -3424,6 +3424,7 @@ export type FlowHistoryDataFragment =
 
 export type FlowItemWidgetDataFragment = {
     __typename?: "Flow";
+    flowId: string;
     status: FlowStatus;
     description:
         | { __typename?: "FlowDescriptionDatasetExecuteTransform"; datasetId: string }
@@ -4686,6 +4687,7 @@ export const FlowHistoryDataFragmentDoc = gql`
 `;
 export const FlowItemWidgetDataFragmentDoc = gql`
     fragment FlowItemWidgetData on Flow {
+        flowId
         status
         description {
             ... on FlowDescriptionDatasetPollingIngest {

@@ -58,7 +58,10 @@
             </div>
 
             <div class="search-result-container__content mt-2 mb-4">
-                <app-tile-base-widget [nodes]="flowConnectionData.flowsData.connectionDataForWidget.nodes" />
+                <app-tile-base-widget
+                    [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
+                    [nodes]="flowConnectionData.flowsData.connectionDataForWidget.nodes"
+                />
             </div>
 
             <ng-container *ngIf="flowConnectionData">

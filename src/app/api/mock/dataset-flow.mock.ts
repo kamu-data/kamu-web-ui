@@ -579,6 +579,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                     tiles: {
                         nodes: [
                             {
+                                flowId: "0",
                                 description: {
                                     __typename: "FlowDescriptionDatasetPollingIngest",
                                     datasetId: mockDatasetMainDataId,
@@ -601,6 +602,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                 __typename: "Flow",
                             },
                             {
+                                flowId: "1",
                                 description: {
                                     __typename: "FlowDescriptionDatasetPollingIngest",
                                     datasetId: mockDatasetMainDataId,

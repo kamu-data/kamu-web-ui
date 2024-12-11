@@ -1,4 +1,5 @@
 fragment FlowItemWidgetData on Flow {
+  flowId
   status
   description {
     ... on FlowDescriptionDatasetPollingIngest {

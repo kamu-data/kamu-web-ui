@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `production` mode: only implemented features available
   - `demo` mode: unimplemented features are disabled
   - `develop` mode: unimplemented features are available
+- Made a tile element clickable
 
 ## [0.33.0] - 2024-12-03
 ### Added

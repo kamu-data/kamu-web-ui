@@ -119,6 +119,7 @@ export const mockAccountListFlowsQuery: AccountListFlowsQuery = {
                     tiles: {
                         nodes: [
                             {
+                                flowId: "0",
                                 description: {
                                     __typename: "FlowDescriptionDatasetPollingIngest",
                                     datasetId: mockDatasetMainDataId,

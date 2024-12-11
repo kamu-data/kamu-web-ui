@@ -51,7 +51,7 @@
                 [class.active-link]="isDatasetViewTypeHistory"
                 value="history"
             >
-                <a [routerLink]="[datasetLink]" [queryParams]="{ tab: DatasetViewTypeEnum.History }" class="menu-link">
+                <a [routerLink]="[datasetLink, DatasetViewTypeEnum.History]" class="menu-link">
                     <div class="d-flex align-items-center">
                         <mat-icon class="fs-4 d-block me-1">manage_history</mat-icon>
                         <span class="d-block">History</span>

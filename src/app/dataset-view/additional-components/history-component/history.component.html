@@ -6,14 +6,14 @@
     <div id="history-block">
         <ng-template [ngIf]="historyUpdate.history.length > 0">
             <app-timeline
-                [datasetName]="datasetName"
+                [datasetName]="historyUpdate.datasetInfo.datasetName"
                 [history]="historyUpdate.history"
                 [pageInfo]="historyUpdate.pageInfo"
             />
             <app-pagination
                 [currentPage]="historyUpdate.pageInfo.currentPage + 1"
                 [pageInfo]="historyUpdate.pageInfo"
-                (pageChangeEvent)="onPageChange($event)"
+                (pageChangeEvent)="onPageChange($event, historyUpdate.datasetInfo)"
             />
         </ng-template>
     </div>

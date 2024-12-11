@@ -4,6 +4,7 @@ import { OverviewComponent } from "./overview-component/overview.component";
 import { DataComponent } from "./data-component/data.component";
 import { DatasetViewTypeEnum } from "../dataset-view.interface";
 import { MetadataComponent } from "./metadata-component/metadata.component";
+import { HistoryComponent } from "./history-component/history.component";
 
 const routes: Routes = [
     {
@@ -21,6 +22,11 @@ const routes: Routes = [
         path: "metadata",
         component: MetadataComponent,
         data: { tab: DatasetViewTypeEnum.Metadata },
+    },
+    {
+        path: "history",
+        component: HistoryComponent,
+        data: { tab: DatasetViewTypeEnum.History },
     },
 ];
 

@@ -141,6 +141,10 @@ export class DatasetService {
                     const historyUpdate: DatasetHistoryUpdate = {
                         history: data.datasets.byOwnerAndName.metadata.chain.blocks.nodes as MetadataBlockFragment[],
                         pageInfo,
+                        datasetInfo: {
+                            accountName: data.datasets.byOwnerAndName.owner.accountName,
+                            datasetName: data.datasets.byOwnerAndName.name,
+                        },
                     };
                     this.datasetSubsService.emitHistoryChanged(historyUpdate);
                 } else {
@@ -168,6 +172,10 @@ export class DatasetService {
                     const historyUpdate: DatasetHistoryUpdate = {
                         history: data.datasets.byOwnerAndName.metadata.chain.blocks.nodes as MetadataBlockFragment[],
                         pageInfo,
+                        datasetInfo: {
+                            accountName: data.datasets.byOwnerAndName.owner.accountName,
+                            datasetName: data.datasets.byOwnerAndName.name,
+                        },
                     };
                     return historyUpdate;
                 } else {

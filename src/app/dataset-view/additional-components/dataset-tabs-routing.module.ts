@@ -5,6 +5,7 @@ import { DataComponent } from "./data-component/data.component";
 import { DatasetViewTypeEnum } from "../dataset-view.interface";
 import { MetadataComponent } from "./metadata-component/metadata.component";
 import { HistoryComponent } from "./history-component/history.component";
+import { LineageComponent } from "./lineage-component/lineage.component";
 
 const routes: Routes = [
     {
@@ -27,6 +28,11 @@ const routes: Routes = [
         path: "history",
         component: HistoryComponent,
         data: { tab: DatasetViewTypeEnum.History },
+    },
+    {
+        path: "lineage",
+        component: LineageComponent,
+        data: { tab: DatasetViewTypeEnum.Lineage },
     },
 ];
 

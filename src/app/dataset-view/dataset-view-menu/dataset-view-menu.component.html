@@ -64,7 +64,7 @@
                 [class.active-link]="isDatasetViewTypeLineage"
                 value="lineage"
             >
-                <a [routerLink]="[datasetLink]" [queryParams]="{ tab: DatasetViewTypeEnum.Lineage }" class="menu-link">
+                <a [routerLink]="[datasetLink, DatasetViewTypeEnum.Lineage]" class="menu-link">
                     <div class="d-flex align-items-center">
                         <mat-icon class="fs-4 d-block me-1">account_tree</mat-icon>
                         <span class="d-block">Lineage</span>

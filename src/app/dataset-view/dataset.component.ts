@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { NavigationEnd, Router } from "@angular/router";
-import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { filter, first, switchMap, tap } from "rxjs/operators";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "../api/kamu.graphql.interface";
 import ProjectLinks from "../project-links";
@@ -10,7 +9,6 @@ import { promiseWithCatch } from "../common/app.helpers";
 import { MaybeNull, MaybeUndefined } from "../common/app.types";
 import { DatasetPermissionsService } from "./dataset.permissions.service";
 import { ReplaySubject, Subject, of } from "rxjs";
-import { LineageGraphNodeData, LineageGraphNodeKind } from "./additional-components/lineage-component/lineage-model";
 import _ from "lodash";
 import { BaseDatasetDataComponent } from "../common/base-dataset-data.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -246,15 +244,15 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
         );
     }
 
-    public onClickLineageNode(node: Node): void {
-        const nodeData: LineageGraphNodeData = node.data as LineageGraphNodeData;
-        /* istanbul ignore else */
-        if (nodeData.kind === LineageGraphNodeKind.Dataset) {
-            this.onSelectDataset(nodeData.dataObject.accountName, nodeData.dataObject.name);
-        } else {
-            throw new Error("Clicked lineage node of unexpected type");
-        }
-    }
+    // public onClickLineageNode(node: Node): void {
+    //     const nodeData: LineageGraphNodeData = node.data as LineageGraphNodeData;
+    //     /* istanbul ignore else */
+    //     if (nodeData.kind === LineageGraphNodeKind.Dataset) {
+    //         this.onSelectDataset(nodeData.dataObject.accountName, nodeData.dataObject.name);
+    //     } else {
+    //         throw new Error("Clicked lineage node of unexpected type");
+    //     }
+    // }
 
     private initDatasetViewByType(datasetInfo: DatasetInfo, currentPage: number): void {
         const mapperTabs: { [key in DatasetViewTypeEnum]: () => void } = {

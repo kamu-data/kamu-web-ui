@@ -42,7 +42,7 @@ import {
     LineageGraphDatasetNodeObject,
     LineageGraphNodeKind,
     LineageNodeAccess,
-} from "../dataset-view/additional-components/lineage-component/lineage-model";
+} from "../dataset-view/additional-components/lineage-tab/lineage-graph.model";
 import { GraphQLError } from "graphql";
 import { TEST_AVATAR_URL } from "../api/mock/auth.mock";
 import { AddPushSourceEditFormType } from "../dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";

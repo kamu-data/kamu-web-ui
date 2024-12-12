@@ -6,7 +6,7 @@ import {
     LicenseFragment,
     SetPollingSourceEventFragment,
 } from "../../../api/kamu.graphql.interface";
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output, inject } from "@angular/core";
 import { DatasetSchema } from "../../../interface/dataset.interface";
 import AppValues from "../../../common/app.values";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
@@ -24,6 +24,7 @@ import _ from "lodash";
 import { ModalService } from "src/app/components/modal/modal.service";
 import ProjectLinks from "src/app/project-links";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { DatasetService } from "../../dataset.service";
 
 @Component({
     selector: "app-metadata",
@@ -32,8 +33,8 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataComponent extends BaseComponent implements OnInit {
-    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    @Input({ required: true }) public datasetPermissions: DatasetPermissionsFragment;
+    public datasetBasics: DatasetBasicsFragment;
+    public datasetPermissions: DatasetPermissionsFragment;
     @Output() pageChangeEmit = new EventEmitter<number>();
 
     public readonly ReadSectionMapping: Record<string, string> = {
@@ -57,6 +58,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     private datasetSubsService = inject(DatasetSubscriptionsService);
     private navigationService = inject(NavigationService);
     private modalService = inject(ModalService);
+    private datasetService = inject(DatasetService);
 
     public ngOnInit() {
         this.datasetSubsService.metadataSchemaChanges
@@ -67,6 +69,15 @@ export class MetadataComponent extends BaseComponent implements OnInit {
                     metadataSummary: schemaUpdate.metadataSummary,
                     pageInfo: schemaUpdate.pageInfo,
                 };
+            });
+
+        this.datasetService.datasetChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((datasetChanges) => {
+            this.datasetBasics = datasetChanges;
+        });
+        this.datasetSubsService.permissionsChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((permissionsChanges) => {
+                this.datasetPermissions = permissionsChanges;
             });
     }
 

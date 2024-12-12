@@ -7,6 +7,7 @@ import {
 } from "../api/kamu.graphql.interface";
 import { DataRow, DatasetSchema } from "../interface/dataset.interface";
 import { MaybeNull } from "../common/app.types";
+import { DatasetInfo } from "../interface/navigation.interface";
 
 export interface OverviewUpdate {
     schema: MaybeNull<DatasetSchema>;
@@ -34,6 +35,7 @@ export interface MetadataSchemaUpdate {
 export interface DatasetHistoryUpdate {
     history: MetadataBlockFragment[];
     pageInfo: DatasetPageInfoFragment;
+    datasetInfo: DatasetInfo;
 }
 
 export interface LineageUpdate {

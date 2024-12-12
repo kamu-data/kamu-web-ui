@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import DataTabValues from "../../../dataset-view/additional-components/data-component/mock.data";
+import SavedQueriesValues from "./mock.data";
 
 @Component({
     selector: "app-saved-queries-section",
@@ -8,5 +8,5 @@ import DataTabValues from "../../../dataset-view/additional-components/data-comp
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SavedQueriesSectionComponent {
-    public savedQueries = DataTabValues.savedQueries;
+    public savedQueries = SavedQueriesValues.savedQueries;
 }

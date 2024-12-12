@@ -86,11 +86,9 @@ export class NavigationService {
 
     public navigateToDatasetView(params: DatasetNavigationParams): void {
         promiseWithCatch(
-            this.router.navigate([params.accountName, params.datasetName], {
+            this.router.navigate([params.accountName, params.datasetName, params.tab], {
                 queryParams:
-                    params.page === 1
-                        ? { tab: params.tab }
-                        : { tab: params.tab, section: params.section, page: params.page, sqlQuery: params.sqlQuery },
+                    params.page === 1 ? {} : { section: params.section, page: params.page, sqlQuery: params.sqlQuery },
                 state: params.state,
             }),
         );

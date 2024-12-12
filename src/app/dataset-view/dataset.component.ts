@@ -1,21 +1,17 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { NavigationEnd, Router } from "@angular/router";
-import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
-import { filter, finalize, first, switchMap, tap } from "rxjs/operators";
+import { filter, first, switchMap, tap } from "rxjs/operators";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "../api/kamu.graphql.interface";
 import ProjectLinks from "../project-links";
 import { DatasetInfo } from "../interface/navigation.interface";
 import { promiseWithCatch } from "../common/app.helpers";
-import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { MaybeNull, MaybeUndefined } from "../common/app.types";
 import { DatasetPermissionsService } from "./dataset.permissions.service";
 import { ReplaySubject, Subject, of } from "rxjs";
-import { LineageGraphNodeData, LineageGraphNodeKind } from "./additional-components/lineage-component/lineage-model";
 import _ from "lodash";
 import { BaseDatasetDataComponent } from "../common/base-dataset-data.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { SqlQueryService } from "../services/sql-query.service";
 import { AppConfigService } from "../app-config.service";
 
 @Component({
@@ -28,7 +24,6 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
     public datasetInfo: DatasetInfo;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
     public readonly DatasetViewTypeEnum = DatasetViewTypeEnum;
-    public sqlLoading: boolean = false;
     public currentHeadBlockHash: string = "";
 
     private mainDatasetQueryComplete$: Subject<DatasetInfo> = new ReplaySubject<DatasetInfo>(1 /* bufferSize */);
@@ -36,7 +31,6 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
     private datasetPermissionsServices = inject(DatasetPermissionsService);
     private router = inject(Router);
     private cdr = inject(ChangeDetectorRef);
-    private sqlQueryService = inject(SqlQueryService);
     private configService = inject(AppConfigService);
 
     public ngOnInit(): void {
@@ -250,15 +244,15 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
         );
     }
 
-    public onClickLineageNode(node: Node): void {
-        const nodeData: LineageGraphNodeData = node.data as LineageGraphNodeData;
-        /* istanbul ignore else */
-        if (nodeData.kind === LineageGraphNodeKind.Dataset) {
-            this.onSelectDataset(nodeData.dataObject.accountName, nodeData.dataObject.name);
-        } else {
-            throw new Error("Clicked lineage node of unexpected type");
-        }
-    }
+    // public onClickLineageNode(node: Node): void {
+    //     const nodeData: LineageGraphNodeData = node.data as LineageGraphNodeData;
+    //     /* istanbul ignore else */
+    //     if (nodeData.kind === LineageGraphNodeKind.Dataset) {
+    //         this.onSelectDataset(nodeData.dataObject.accountName, nodeData.dataObject.name);
+    //     } else {
+    //         throw new Error("Clicked lineage node of unexpected type");
+    //     }
+    // }
 
     private initDatasetViewByType(datasetInfo: DatasetInfo, currentPage: number): void {
         const mapperTabs: { [key in DatasetViewTypeEnum]: () => void } = {
@@ -284,9 +278,8 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
     }
 
     private getDatasetViewTypeFromUrl(): DatasetViewTypeEnum {
-        const tabValue: MaybeNull<string> = this.activatedRoute.snapshot.queryParamMap.get(
-            ProjectLinks.URL_QUERY_PARAM_TAB,
-        );
+        const tabValue: MaybeNull<string> = this.activatedRoute.snapshot.firstChild?.data.tab as string;
+
         if (tabValue) {
             const tab = tabValue as DatasetViewTypeEnum;
             if (Object.values(DatasetViewTypeEnum).includes(tab)) {
@@ -305,20 +298,5 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
                 tab: DatasetViewTypeEnum.Lineage,
             });
         }
-    }
-
-    public onRunSQLRequest(params: DatasetRequestBySql): void {
-        this.sqlLoading = true;
-        this.sqlQueryService
-            // TODO: Propagate limit from UI and display when it was reached
-            .requestDataSqlRun(params)
-            .pipe(
-                finalize(() => {
-                    this.sqlLoading = false;
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe();
-        this.cdr.detectChanges();
     }
 }

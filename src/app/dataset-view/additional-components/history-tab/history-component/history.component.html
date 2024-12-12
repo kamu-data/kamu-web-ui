@@ -1,0 +1,20 @@
+<div
+    class="search-result-container__content container-main"
+    id="dataset-view-history"
+    *ngIf="historyUpdate$ | async as historyUpdate"
+>
+    <div id="history-block">
+        <ng-template [ngIf]="historyUpdate.history.length > 0">
+            <app-timeline
+                [datasetName]="historyUpdate.datasetInfo.datasetName"
+                [history]="historyUpdate.history"
+                [pageInfo]="historyUpdate.pageInfo"
+            />
+            <app-pagination
+                [currentPage]="historyUpdate.pageInfo.currentPage + 1"
+                [pageInfo]="historyUpdate.pageInfo"
+                (pageChangeEvent)="onPageChange($event, historyUpdate.datasetInfo)"
+            />
+        </ng-template>
+    </div>
+</div>

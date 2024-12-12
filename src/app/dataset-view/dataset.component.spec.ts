@@ -36,7 +36,7 @@ import { DatasetSettingsComponent } from "./additional-components/dataset-settin
 import { MatDividerModule } from "@angular/material/divider";
 import { DataComponent } from "./additional-components/data-tab/data-component/data.component";
 import { MetadataComponent } from "./additional-components/metadata-component/metadata.component";
-import { HistoryComponent } from "./additional-components/history-component/history.component";
+import { HistoryComponent } from "./additional-components/history-tab/history-component/history.component";
 import { LineageComponent } from "./additional-components/lineage-tab/lineage-component/lineage.component";
 import { DatasetSettingsGeneralTabComponent } from "./additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.component";
 import { DatasetSettingsSchedulingTabComponent } from "./additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.component";

@@ -3,7 +3,6 @@ import { RouterModule, Routes } from "@angular/router";
 import { OverviewComponent } from "./overview-component/overview.component";
 import { DatasetViewTypeEnum } from "../dataset-view.interface";
 import { MetadataComponent } from "./metadata-component/metadata.component";
-import { HistoryComponent } from "./history-component/history.component";
 import { FlowsComponent } from "./flows-component/flows.component";
 
 const routes: Routes = [
@@ -24,7 +23,7 @@ const routes: Routes = [
     },
     {
         path: "history",
-        component: HistoryComponent,
+        loadChildren: () => import("./history-tab/history-tab.module").then((m) => m.HistoryTabModule),
         data: { tab: DatasetViewTypeEnum.History },
     },
     {

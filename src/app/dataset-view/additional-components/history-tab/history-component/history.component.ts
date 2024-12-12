@@ -1,12 +1,12 @@
 import { Observable } from "rxjs";
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output } from "@angular/core";
 import { BaseComponent } from "src/app/common/base.component";
-import { DatasetHistoryUpdate } from "../../dataset.subscriptions.interface";
-import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { MaybeNull } from "src/app/common/app.types";
 import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 
 @Component({
     selector: "app-history",

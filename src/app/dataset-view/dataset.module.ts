@@ -20,8 +20,6 @@ import { MetadataComponent } from "./additional-components/metadata-component/me
 import { ClipboardModule } from "@angular/cdk/clipboard";
 import { OverviewComponent } from "./additional-components/overview-component/overview.component";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
-import { HistoryComponent } from "./additional-components/history-component/history.component";
-import { TimelineModule } from "../components/timeline-component/timeline.module";
 import { CustomPaginationModule } from "../components/custom-pagination-component/custom-pagination.module";
 import { SideNavModule } from "../sidenav/side-nav.module";
 import { RouterModule } from "@angular/router";
@@ -93,7 +91,6 @@ import { DatasetTabsRoutingModule } from "./additional-components/dataset-tabs-r
         MatButtonToggleModule,
         DynamicTableModule,
         SearchSidenavModule,
-        TimelineModule,
         NgxGraphModule,
         PaginationModule,
         MatMenuModule,
@@ -149,7 +146,6 @@ import { DatasetTabsRoutingModule } from "./additional-components/dataset-tabs-r
         PreprocessStepComponent,
         StepperNavigationComponent,
         OverviewComponent,
-        HistoryComponent,
         DisplayHashModule,
         MatTreeModule,
         MatTooltipModule,
@@ -163,7 +159,6 @@ import { DatasetTabsRoutingModule } from "./additional-components/dataset-tabs-r
         DatasetComponent,
         MetadataComponent,
         OverviewComponent,
-        HistoryComponent,
         EditDetailsModalComponent,
         EditLicenseModalComponent,
         FinalYamlModalComponent,

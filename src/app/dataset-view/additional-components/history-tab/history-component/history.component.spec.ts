@@ -1,7 +1,5 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { first } from "rxjs/operators";
-import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
-import { mockHistoryUpdate } from "../data-tabs.mock";
 import { HistoryComponent } from "./history.component";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { PaginationComponent } from "src/app/components/pagination-component/pagination.component";
@@ -14,6 +12,8 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ToastrModule } from "ngx-toastr";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterTestingModule } from "@angular/router/testing";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import { mockHistoryUpdate } from "../../data-tabs.mock";
 
 describe("HistoryComponent", () => {
     let component: HistoryComponent;

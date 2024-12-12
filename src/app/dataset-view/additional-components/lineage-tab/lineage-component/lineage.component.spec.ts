@@ -1,4 +1,4 @@
-import { mockNode } from "../../../search/mock.data";
+
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { LineageComponent } from "./lineage.component";
 
@@ -9,6 +9,7 @@ import { ApolloModule } from "apollo-angular";
 import { AccountService } from "src/app/services/account.service";
 import { of } from "rxjs";
 import { ToastrModule } from "ngx-toastr";
+import { mockNode } from "src/app/search/mock.data";
 
 describe("LineageComponent", () => {
     let component: LineageComponent;

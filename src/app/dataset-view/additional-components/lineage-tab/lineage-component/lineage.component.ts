@@ -2,11 +2,12 @@ import { Observable } from "rxjs";
 import { ChangeDetectionStrategy, Component, OnInit, inject } from "@angular/core";
 import { Node } from "@swimlane/ngx-graph";
 import { BaseComponent } from "src/app/common/base.component";
-import { LineageGraphBuilderService } from "./services/lineage-graph-builder.service";
-import { LineageGraphNodeData, LineageGraphNodeKind, LineageGraphUpdate } from "./lineage-model";
+import { LineageGraphBuilderService } from "../services/lineage-graph-builder.service";
+import { LineageGraphNodeData, LineageGraphNodeKind, LineageGraphUpdate } from "../lineage-graph.model";
 import { MaybeNull } from "src/app/common/app.types";
 import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetViewTypeEnum } from "../../dataset-view.interface";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+
 @Component({
     selector: "app-lineage",
     templateUrl: "./lineage.component.html",

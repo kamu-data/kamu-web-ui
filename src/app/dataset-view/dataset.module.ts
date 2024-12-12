@@ -12,7 +12,6 @@ import { DynamicTableModule } from "../components/dynamic-table/dynamic-table.mo
 import { SearchSidenavModule } from "../components/search-sidenav/search-sidenav.module";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { NgxGraphModule } from "@swimlane/ngx-graph";
-import { LineageGraphModule } from "../components/lineage-graph/lineage-graph.module";
 import { PaginationModule } from "../components/pagination-component/pagination.module";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatButtonModule } from "@angular/material/button";
@@ -20,7 +19,6 @@ import { MarkdownModule } from "ngx-markdown";
 import { MetadataComponent } from "./additional-components/metadata-component/metadata.component";
 import { ClipboardModule } from "@angular/cdk/clipboard";
 import { OverviewComponent } from "./additional-components/overview-component/overview.component";
-import { LineageComponent as LineageComponent } from "./additional-components/lineage-component/lineage.component";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { HistoryComponent } from "./additional-components/history-component/history.component";
 import { TimelineModule } from "../components/timeline-component/timeline.module";
@@ -97,7 +95,6 @@ import { DatasetTabsRoutingModule } from "./additional-components/dataset-tabs-r
         SearchSidenavModule,
         TimelineModule,
         NgxGraphModule,
-        LineageGraphModule,
         PaginationModule,
         MatMenuModule,
         MatButtonModule,
@@ -152,7 +149,6 @@ import { DatasetTabsRoutingModule } from "./additional-components/dataset-tabs-r
         PreprocessStepComponent,
         StepperNavigationComponent,
         OverviewComponent,
-        LineageComponent,
         HistoryComponent,
         DisplayHashModule,
         MatTreeModule,
@@ -167,7 +163,6 @@ import { DatasetTabsRoutingModule } from "./additional-components/dataset-tabs-r
         DatasetComponent,
         MetadataComponent,
         OverviewComponent,
-        LineageComponent,
         HistoryComponent,
         EditDetailsModalComponent,
         EditLicenseModalComponent,

@@ -1,4 +1,3 @@
-import { WidgetHeightService } from "../../services/widget-height.service";
 import {
     ChangeDetectionStrategy,
     Component,
@@ -18,10 +17,11 @@ import AppValues from "src/app/common/app.values";
 import {
     LineageGraph,
     LineageGraphNodeKind,
-} from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
+} from "src/app/dataset-view/additional-components/lineage-tab/lineage-graph.model";
 import { LineageGraphConfig, LINEAGE_CONFIG } from "./ligeage-graph.settings";
 import { SessionStorageService } from "src/app/services/session-storage.service";
 import { MaybeUndefined } from "src/app/common/app.types";
+import { WidgetHeightService } from "src/app/services/widget-height.service";
 
 @Component({
     selector: "app-lineage-graph",

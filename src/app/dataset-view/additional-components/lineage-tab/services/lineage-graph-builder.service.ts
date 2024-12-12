@@ -9,7 +9,7 @@ import {
     LineageNodeAccess,
     LineageGraph,
     LineageGraphUpdate,
-} from "../lineage-model";
+} from "../lineage-graph.model";
 import { Node, Edge } from "@swimlane/ngx-graph";
 import _ from "lodash";
 import { MaybeNull } from "src/app/common/app.types";

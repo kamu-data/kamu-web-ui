@@ -38,7 +38,7 @@ fragment FlowHistoryData on FlowEvent {
       }
 
       ... on FlowStartConditionBatching {
-        activeTransformRule {
+        activeBatchingRule {
           minRecordsToAwait
           maxBatchingInterval {
             ...TimeDeltaData

@@ -92,41 +92,41 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent impleme
     }
 
     public onRunCompaction(): void {
-        promiseWithCatch(
-            this.modalService.error({
-                title: "Run compaction",
-                message: "Do you want to run hard compaction?",
-                yesButtonText: "Ok",
-                noButtonText: "Cancel",
-                handler: (ok) => {
-                    if (ok) {
-                        this.datasetCompactionService
-                            .runHardCompaction({
-                                datasetId: this.datasetBasics.id,
-                                datasetFlowType: DatasetFlowType.HardCompaction,
-                                compactionArgs: {
-                                    full: {
-                                        maxSliceSize: this.sliceSizeInBytes,
-                                        maxSliceRecords: this.recordsCount.value as number,
-                                        recursive: this.recursive.value as boolean,
-                                    },
-                                },
-                            })
-                            .pipe(takeUntilDestroyed(this.destroyRef))
-                            .subscribe((result: boolean) => {
-                                if (result) {
-                                    setTimeout(() => {
-                                        this.navigationService.navigateToDatasetView({
-                                            accountName: this.datasetBasics.owner.accountName,
-                                            datasetName: this.datasetBasics.name,
-                                            tab: DatasetViewTypeEnum.Flows,
-                                        });
-                                    }, AppValues.SIMULATION_START_CONDITION_DELAY_MS);
-                                }
-                            });
-                    }
-                },
-            }),
-        );
+        // promiseWithCatch(
+        //     this.modalService.error({
+        //         title: "Run compaction",
+        //         message: "Do you want to run hard compaction?",
+        //         yesButtonText: "Ok",
+        //         noButtonText: "Cancel",
+        //         handler: (ok) => {
+        //             if (ok) {
+        //                 this.datasetCompactionService
+        //                     .runHardCompaction({
+        //                         datasetId: this.datasetBasics.id,
+        //                         datasetFlowType: DatasetFlowType.HardCompaction,
+        //                         compactionArgs: {
+        //                             full: {
+        //                                 maxSliceSize: this.sliceSizeInBytes,
+        //                                 maxSliceRecords: this.recordsCount.value as number,
+        //                                 recursive: this.recursive.value as boolean,
+        //                             },
+        //                         },
+        //                     })
+        //                     .pipe(takeUntilDestroyed(this.destroyRef))
+        //                     .subscribe((result: boolean) => {
+        //                         if (result) {
+        //                             setTimeout(() => {
+        //                                 this.navigationService.navigateToDatasetView({
+        //                                     accountName: this.datasetBasics.owner.accountName,
+        //                                     datasetName: this.datasetBasics.name,
+        //                                     tab: DatasetViewTypeEnum.Flows,
+        //                                 });
+        //                             }, AppValues.SIMULATION_START_CONDITION_DELAY_MS);
+        //                         }
+        //                     });
+        //             }
+        //         },
+        //     }),
+        // );
     }
 }

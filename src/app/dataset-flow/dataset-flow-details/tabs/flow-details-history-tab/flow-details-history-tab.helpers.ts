@@ -11,7 +11,7 @@ import {
     FlowStartCondition,
     FlowStatus,
     FlowSummaryDataFragment,
-    FlowTrigger,
+    FlowTriggerType,
     TaskStatus,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
@@ -230,7 +230,7 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    private static describeTrigger(trigger: FlowTrigger): string {
+    private static describeTrigger(trigger: FlowTriggerType): string {
         switch (trigger.__typename) {
             case "FlowTriggerAutoPolling":
                 return "automatically";
@@ -246,7 +246,7 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    private static describeTriggerDetails(trigger: FlowTrigger): string {
+    private static describeTriggerDetails(trigger: FlowTriggerType): string {
         switch (trigger.__typename) {
             case "FlowTriggerAutoPolling":
                 return "";
@@ -287,7 +287,7 @@ export class DatasetFlowDetailsHelpers {
                 )}, shifted from ${moment(startCondition.shiftedFrom).format(AppValues.TIME_FORMAT)}`;
             case "FlowStartConditionBatching":
                 return `Accumulated ${startCondition.accumulatedRecordsCount}/${
-                    startCondition.activeTransformRule.minRecordsToAwait
+                    startCondition.activeBatchingRule.minRecordsToAwait
                 } records. Watermark ${
                     startCondition.watermarkModified ? "modified" : "unchanged"
                 }. Deadline at ${moment(startCondition.batchingDeadline).format(

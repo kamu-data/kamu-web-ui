@@ -163,110 +163,100 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
     }
 
     private checkStatusSection(): void {
-        if (this.datasetBasics.kind === DatasetKind.Root) {
-            this.batchingForm.disable();
-            this.pollingGroup.enable();
-            this.cronExpression.disable();
-            this.datasetSchedulingService
-                .fetchDatasetFlowConfigs(this.datasetBasics.id, DatasetFlowType.Ingest)
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe((data) => {
-                    const flowConfiguration = data.datasets.byId?.flows.configs.byType?.ingest;
-                    const paused = data.datasets.byId?.flows.configs.byType?.paused;
-                    if (flowConfiguration?.schedule) {
-                        this.pollingForm.patchValue({ updatesState: !paused });
-                        this.pollingGroup.patchValue({
-                            ...flowConfiguration.schedule,
-                            fetchUncacheable: flowConfiguration.fetchUncacheable,
-                        });
-                        if (flowConfiguration.schedule.__typename === "Cron5ComponentExpression") {
-                            this.pollingGroup.patchValue({
-                                // splice for sync with cron parser
-                                cronExpression: flowConfiguration.schedule.cron5ComponentExpression,
-                            });
-                        }
-                    }
-                });
-        } else {
-            this.pollingGroup.disable();
-            this.batchingForm.enable();
-            this.datasetSchedulingService
-                .fetchDatasetFlowConfigs(this.datasetBasics.id, DatasetFlowType.ExecuteTransform)
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe((data) => {
-                    const flowConfiguration = data.datasets.byId?.flows.configs.byType;
-                    const paused = data.datasets.byId?.flows.configs.byType?.paused;
-                    if (flowConfiguration?.transform) {
-                        const batchingConfig = flowConfiguration.transform;
-                        this.pollingForm.patchValue({ updatesState: !paused });
-                        this.batchingForm.patchValue({
-                            ...batchingConfig.maxBatchingInterval,
-                            minRecordsToAwait: batchingConfig.minRecordsToAwait,
-                        });
-                    }
-                });
-        }
+        // if (this.datasetBasics.kind === DatasetKind.Root) {
+        //     this.batchingForm.disable();
+        //     this.pollingGroup.enable();
+        //     this.cronExpression.disable();
+        //     this.datasetSchedulingService
+        //         .fetchDatasetFlowConfigs(this.datasetBasics.id, DatasetFlowType.Ingest)
+        //         .pipe(takeUntilDestroyed(this.destroyRef))
+        //         .subscribe((data) => {
+        //             const flowConfiguration = data.datasets.byId?.flows.configs.byType?.ingest;
+        //             const paused = data.datasets.byId?.flows.configs.byType?.paused;
+        //             if (flowConfiguration?.schedule) {
+        //                 this.pollingForm.patchValue({ updatesState: !paused });
+        //                 this.pollingGroup.patchValue({
+        //                     ...flowConfiguration.schedule,
+        //                     fetchUncacheable: flowConfiguration.fetchUncacheable,
+        //                 });
+        //                 if (flowConfiguration.schedule.__typename === "Cron5ComponentExpression") {
+        //                     this.pollingGroup.patchValue({
+        //                         // splice for sync with cron parser
+        //                         cronExpression: flowConfiguration.schedule.cron5ComponentExpression,
+        //                     });
+        //                 }
+        //             }
+        //         });
+        // } else {
+        //     this.pollingGroup.disable();
+        //     this.batchingForm.enable();
+        //     this.datasetSchedulingService
+        //         .fetchDatasetFlowConfigs(this.datasetBasics.id, DatasetFlowType.ExecuteTransform)
+        //         .pipe(takeUntilDestroyed(this.destroyRef))
+        //         .subscribe((data) => {
+        //             const flowConfiguration = data.datasets.byId?.flows.configs.byType;
+        //             const paused = data.datasets.byId?.flows.configs.byType?.paused;
+        //             if (flowConfiguration?.transform) {
+        //                 const batchingConfig = flowConfiguration.transform;
+        //                 this.pollingForm.patchValue({ updatesState: !paused });
+        //                 this.batchingForm.patchValue({
+        //                     ...batchingConfig.maxBatchingInterval,
+        //                     minRecordsToAwait: batchingConfig.minRecordsToAwait,
+        //                 });
+        //             }
+        //         });
+        // }
     }
 
     public onSubmit(): void {
-        if (this.datasetBasics.kind === DatasetKind.Root) {
-            this.setScheduleOptions();
-            this.datasetSchedulingService
-                .setDatasetFlowSchedule({
-                    accountId: this.datasetBasics.owner.id,
-                    datasetId: this.datasetBasics.id,
-                    datasetFlowType: DatasetFlowType.Ingest,
-                    paused: !(this.updateState.value as boolean),
-                    ingest: this.scheduleOptions,
-                    datasetInfo: {
-                        accountName: this.datasetBasics.owner.accountName,
-                        datasetName: this.datasetBasics.name,
-                    },
-                })
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe();
-        } else {
-            this.datasetSchedulingService
-                .setDatasetFlowBatching({
-                    accountId: this.datasetBasics.owner.id,
-                    datasetId: this.datasetBasics.id,
-                    datasetFlowType: DatasetFlowType.ExecuteTransform,
-                    paused: !(this.updateState.value as boolean),
-                    transform: {
-                        minRecordsToAwait: this.batchingMinRecordsToAwait.value as number,
-                        maxBatchingInterval: {
-                            every: this.batchingEveryTime.value as number,
-                            unit: this.batchingUnitTime.value as TimeUnit,
-                        },
-                    },
-                    datasetInfo: {
-                        accountName: this.datasetBasics.owner.accountName,
-                        datasetName: this.datasetBasics.name,
-                    },
-                })
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe();
-        }
+        // if (this.datasetBasics.kind === DatasetKind.Root) {
+        //     this.setScheduleOptions();
+        //     this.datasetSchedulingService
+        //         .setDatasetFlowSchedule({
+        //             accountId: this.datasetBasics.owner.id,
+        //             datasetId: this.datasetBasics.id,
+        //             datasetFlowType: DatasetFlowType.Ingest,
+        //             paused: !(this.updateState.value as boolean),
+        //             ingest: this.scheduleOptions,
+        //             datasetInfo: {
+        //                 accountName: this.datasetBasics.owner.accountName,
+        //                 datasetName: this.datasetBasics.name,
+        //             },
+        //         })
+        //         .pipe(takeUntilDestroyed(this.destroyRef))
+        //         .subscribe();
+        // } else {
+        //     this.datasetSchedulingService
+        //         .setDatasetFlowBatching({
+        //             accountId: this.datasetBasics.owner.id,
+        //             datasetId: this.datasetBasics.id,
+        //             datasetFlowType: DatasetFlowType.ExecuteTransform,
+        //             paused: !(this.updateState.value as boolean),
+        //             transform: {
+        //                 minRecordsToAwait: this.batchingMinRecordsToAwait.value as number,
+        //                 maxBatchingInterval: {
+        //                     every: this.batchingEveryTime.value as number,
+        //                     unit: this.batchingUnitTime.value as TimeUnit,
+        //                 },
+        //             },
+        //             datasetInfo: {
+        //                 accountName: this.datasetBasics.owner.accountName,
+        //                 datasetName: this.datasetBasics.name,
+        //             },
+        //         })
+        //         .pipe(takeUntilDestroyed(this.destroyRef))
+        //         .subscribe();
+        // }
     }
 
     private setScheduleOptions(): void {
         if (this.pollingGroup.controls.__typename.value === PollingGroupEnum.TIME_DELTA) {
             this.scheduleOptions = {
-                schedule: {
-                    timeDelta: {
-                        every: this.pollingEveryTime.value as number,
-                        unit: this.pollingUnitTime.value as TimeUnit,
-                    },
-                },
                 fetchUncacheable: this.pollingFetchUncacheable.value as boolean,
             };
         }
         if (this.pollingGroup.controls.__typename.value === PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION) {
             this.scheduleOptions = {
-                schedule: {
-                    // sync with server validator
-                    cron5ComponentExpression: this.cronExpression.value as string,
-                },
                 fetchUncacheable: this.pollingFetchUncacheable.value as boolean,
             };
         }

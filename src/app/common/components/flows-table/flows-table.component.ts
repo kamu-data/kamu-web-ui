@@ -22,7 +22,6 @@ import {
     Dataset,
     DatasetListFlowsDataFragment,
     DatasetFlowType,
-    IngestConditionInput,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { MatTableDataSource } from "@angular/material/table";
@@ -213,7 +212,9 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
                     datasetId: node.description.datasetId,
                     datasetFlowType: DatasetFlowType.Ingest,
                     flowRunConfiguration: {
-                        ingest: this.setScheduleOptions(node),
+                        ingest: {
+                            fetchUncacheable: true,
+                        },
                     },
                 })
                 .pipe(takeUntilDestroyed(this.destroyRef))
@@ -227,35 +228,29 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         }
     }
 
-    private setScheduleOptions(node: FlowSummaryDataFragment): IngestConditionInput {
-        /* istanbul ignore else */
-        if (node.configSnapshot?.__typename === "FlowConfigurationIngest") {
-            switch (node.configSnapshot.schedule.__typename) {
-                case "TimeDelta":
-                    return {
-                        schedule: {
-                            timeDelta: {
-                                every: node.configSnapshot.schedule.every,
-                                unit: node.configSnapshot.schedule.unit,
-                            },
-                        },
-                        fetchUncacheable: true,
-                    };
-                case "Cron5ComponentExpression":
-                    return {
-                        schedule: {
-                            cron5ComponentExpression: node.configSnapshot.schedule.cron5ComponentExpression,
-                        },
-                        fetchUncacheable: true,
-                    };
-                /* istanbul ignore next */
-                default:
-                    throw new Error("Unknown configuration schedule type");
-            }
-        } else {
-            throw new Error("The type for the configuration is not FlowConfigurationIngest");
-        }
-    }
+    // private setScheduleOptions(node: FlowSummaryDataFragment): IngestConditionInput {
+    //     /* istanbul ignore else */
+    //     if (node.configSnapshot?.__typename === "FlowConfigurationIngest") {
+    //         switch (node.configSnapshot.schedule.__typename) {
+    //             case "TimeDelta":
+    //                 return {
+    //                     fetchUncacheable: true,
+    //                 };
+    //             case "Cron5ComponentExpression":
+    //                 return {
+    //                     schedule: {
+    //                         cron5ComponentExpression: node.configSnapshot.schedule.cron5ComponentExpression,
+    //                     },
+    //                     fetchUncacheable: true,
+    //                 };
+    //             /* istanbul ignore next */
+    //             default:
+    //                 throw new Error("Unknown configuration schedule type");
+    //         }
+    //     } else {
+    //         throw new Error("The type for the configuration is not FlowConfigurationIngest");
+    //     }
+    // }
 
     private initializeFilters(): void {
         this.dropdownDatasetList = this.involvedDatasets.slice(0, this.FILTERED_ITEMS_COUNT);

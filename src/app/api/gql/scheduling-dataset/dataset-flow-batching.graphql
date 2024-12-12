@@ -1,49 +1,49 @@
-mutation datasetFlowBatching(
-  $datasetId: DatasetID!
-  $datasetFlowType: DatasetFlowType!
-  $paused: Boolean!
-  $transform: TransformConditionInput!
-) {
-  datasets {
-    byId(datasetId: $datasetId) {
-      flows {
-        configs {
-          setConfigTransform(datasetFlowType: $datasetFlowType, paused: $paused, transform: $transform) {
-            __typename
-            ... on SetFlowConfigSuccess {
-              message
-              config {
-                transform {
-                  maxBatchingInterval {
-                    ...TimeDeltaData
-                  }
-                  minRecordsToAwait
-                }
-              }
-            }
+# mutation datasetFlowBatching(
+#   $datasetId: DatasetID!
+#   $datasetFlowType: DatasetFlowType!
+#   $paused: Boolean!
+#   $transform: TransformConditionInput!
+# ) {
+#   datasets {
+#     byId(datasetId: $datasetId) {
+#       flows {
+#         configs {
+#           setConfigTransform(datasetFlowType: $datasetFlowType, paused: $paused, transform: $transform) {
+#             __typename
+#             ... on SetFlowConfigSuccess {
+#               message
+#               config {
+#                 transform {
+#                   maxBatchingInterval {
+#                     ...TimeDeltaData
+#                   }
+#                   minRecordsToAwait
+#                 }
+#               }
+#             }
 
-            ... on FlowIncompatibleDatasetKind {
-              message
-              expectedDatasetKind
-              actualDatasetKind
-            }
+#             ... on FlowIncompatibleDatasetKind {
+#               message
+#               expectedDatasetKind
+#               actualDatasetKind
+#             }
 
-            ... on FlowInvalidTransformConfig {
-              message
-              reason
-            }
+#             ... on FlowInvalidTransformConfig {
+#               message
+#               reason
+#             }
 
-            ... on FlowPreconditionsNotMet {
-              message
-              preconditions
-            }
+#             ... on FlowPreconditionsNotMet {
+#               message
+#               preconditions
+#             }
 
-            ... on FlowTypeIsNotSupported {
-              message
-            }
-          }
-        }
-      }
-    }
-  }
-}
+#             ... on FlowTypeIsNotSupported {
+#               message
+#             }
+#           }
+#         }
+#       }
+#     }
+#   }
+# }

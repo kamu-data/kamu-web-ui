@@ -12,6 +12,7 @@ import { SharedModule } from "src/app/shared/shared/shared.module";
 import { MatTableModule } from "@angular/material/table";
 import { FormsModule } from "@angular/forms";
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
+import { MatButtonModule } from "@angular/material/button";
 
 @NgModule({
     declarations: [TileBaseWidgetComponent, FlowsTableComponent],
@@ -27,6 +28,7 @@ import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
         MatTableModule,
         FormsModule,
         AngularMultiSelectModule,
+        MatButtonModule,
     ],
     exports: [TileBaseWidgetComponent, FlowsTableComponent],
 })

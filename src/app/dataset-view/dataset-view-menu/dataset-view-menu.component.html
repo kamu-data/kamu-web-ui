@@ -89,7 +89,7 @@
                 [class.active-link]="isDatasetViewTypeFlows"
                 *ngIf="shouldAllowFlowsTab"
             >
-                <a [routerLink]="[datasetLink]" [queryParams]="{ tab: DatasetViewTypeEnum.Flows }" class="menu-link">
+                <a [routerLink]="[datasetLink, DatasetViewTypeEnum.Flows]" class="menu-link">
                     <div class="d-flex align-items-center">
                         <mat-icon class="fs-4 d-block me-1">add_task</mat-icon>
                         <span class="d-block">Flows</span>

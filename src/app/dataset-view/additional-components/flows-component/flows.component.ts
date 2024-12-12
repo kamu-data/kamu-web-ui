@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import {
     DatasetBasicsFragment,
     DatasetFlowType,
@@ -18,6 +18,7 @@ import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { FlowsTableFiltersOptions } from "src/app/common/components/flows-table/flows-table.types";
 import ProjectLinks from "src/app/project-links";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { DatasetService } from "../../dataset.service";
 
 @Component({
     selector: "app-flows",
@@ -26,7 +27,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlowsComponent extends FlowsTableProcessingBaseComponent implements OnInit {
-    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
+    public datasetBasics: DatasetBasicsFragment;
     public searchFilter = "";
     public overview: DatasetOverviewFragment;
     public readonly DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"]; //1
@@ -36,10 +37,15 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
 
     private datasetSubsService = inject(DatasetSubscriptionsService);
+    private datasetService = inject(DatasetService);
 
     ngOnInit(): void {
+        this.datasetService.datasetChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((datasetChanges) => {
+            this.datasetBasics = datasetChanges;
+        });
         this.getPageFromUrl();
         this.fetchTableData(this.currentPage);
+
         this.datasetSubsService.overviewChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((overviewUpdate: OverviewUpdate) => {

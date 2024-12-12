@@ -1,29 +1,29 @@
-import { mockDatasetBasicsDerivedFragment, mockDatasetBasicsRootFragment } from "../../../search/mock.data";
+import { mockDatasetBasicsDerivedFragment, mockDatasetBasicsRootFragment } from "../../../../search/mock.data";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
 import { DataComponent } from "./data.component";
 
-import { mockMetadataDerivedUpdate, mockOverviewDataUpdate, mockOverviewDataUpdateNullable } from "../data-tabs.mock";
+import { mockMetadataDerivedUpdate, mockOverviewDataUpdate, mockOverviewDataUpdateNullable } from "../../data-tabs.mock";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Location } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
-import { LoadMoreComponent } from "../../../query/shared/load-more/load-more.component";
-import { DynamicTableModule } from "../../../components/dynamic-table/dynamic-table.module";
+import { LoadMoreComponent } from "../../../../query/shared/load-more/load-more.component";
+import { DynamicTableModule } from "../../../../components/dynamic-table/dynamic-table.module";
 import { EditorModule } from "src/app/shared/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { OverviewUpdate } from "../../dataset.subscriptions.interface";
+import { OverviewUpdate } from "../../../dataset.subscriptions.interface";
 import _ from "lodash";
-import { RequestTimerComponent } from "../../../query/shared/request-timer/request-timer.component";
+import { RequestTimerComponent } from "../../../../query/shared/request-timer/request-timer.component";
 import { SqlEditorComponent } from "src/app/shared/editor/components/sql-editor/sql-editor.component";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { HttpClientModule } from "@angular/common/http";
 import { Apollo } from "apollo-angular";
 import { ToastrModule } from "ngx-toastr";
-import { SavedQueriesSectionComponent } from "../../../query/shared/saved-queries-section/saved-queries-section.component";
-import { QueryAndResultSectionsComponent } from "../../../query/shared/query-and-result-sections/query-and-result-sections.component";
+import { SavedQueriesSectionComponent } from "../../../../query/shared/saved-queries-section/saved-queries-section.component";
+import { QueryAndResultSectionsComponent } from "../../../../query/shared/query-and-result-sections/query-and-result-sections.component";
 import { SearchAndSchemasSectionComponent } from "src/app/query/global-query/search-and-schemas-section/search-and-schemas-section.component";
 
 describe("DataComponent", () => {

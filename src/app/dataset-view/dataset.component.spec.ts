@@ -34,7 +34,7 @@ import { DatasetSubscriptionsService } from "./dataset.subscriptions.service";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { DatasetSettingsComponent } from "./additional-components/dataset-settings-component/dataset-settings.component";
 import { MatDividerModule } from "@angular/material/divider";
-import { DataComponent } from "./additional-components/data-component/data.component";
+import { DataComponent } from "./additional-components/data-tab/data-component/data.component";
 import { MetadataComponent } from "./additional-components/metadata-component/metadata.component";
 import { HistoryComponent } from "./additional-components/history-component/history.component";
 import { LineageComponent } from "./additional-components/lineage-component/lineage.component";

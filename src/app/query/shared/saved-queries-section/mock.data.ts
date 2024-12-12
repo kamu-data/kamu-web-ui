@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 
 @Injectable()
-export default class DataTabValues {
+export default class SavedQueriesValues {
     public static savedQueries = [
         {
             time: "10:02 AM",

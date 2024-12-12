@@ -11,7 +11,6 @@ import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/common/app.types";
 import ProjectLinks from "src/app/project-links";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { AddDataModalComponent } from "../../overview-component/components/add-data-modal/add-data-modal.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DatasetViewTypeEnum } from "../../../dataset-view.interface";
 import { DatasetFlowsService } from "../../flows-component/services/dataset-flows.service";
@@ -19,6 +18,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { SqlQueryResponseState } from "src/app/query/global-query/global-query.model";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 import { DatasetService } from "../../../dataset.service";
+import { AddDataModalComponent } from "../../overview-tab/components/add-data-modal/add-data-modal.component";
 
 @Component({
     selector: "app-data",

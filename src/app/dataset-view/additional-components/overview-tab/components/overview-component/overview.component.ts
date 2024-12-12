@@ -1,22 +1,9 @@
-import { EditLicenseModalComponent } from "./components/edit-license-modal/edit-license-modal.component";
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
-import {
-    DatasetCurrentInfoFragment,
-    DatasetFlowType,
-    DatasetKind,
-    DatasetPermissionsFragment,
-} from "../../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, OnInit, Output } from "@angular/core";
 
-import { DatasetBasicsFragment, MetadataBlockFragment } from "../../../api/kamu.graphql.interface";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { EditDetailsModalComponent } from "./components/edit-details-modal/edit-details-modal.component";
-import { EditWatermarkModalComponent } from "./components/edit-watermark-modal/edit-watermark-modal.component";
 import _ from "lodash";
-import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
-import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
-import { AddDataModalComponent } from "./components/add-data-modal/add-data-modal.component";
 
 import { combineLatest, map, Observable } from "rxjs";
 import { AppConfigService } from "src/app/app-config.service";
@@ -27,6 +14,13 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
 import ProjectLinks from "src/app/project-links";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { BaseDatasetDataComponent } from "src/app/common/base-dataset-data.component";
+import { DatasetCurrentInfoFragment, DatasetKind, DatasetPermissionsFragment, DatasetFlowType, DatasetBasicsFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
+import { DatasetFlowsService } from "../../../flows-component/services/dataset-flows.service";
+import { AddDataModalComponent } from "../add-data-modal/add-data-modal.component";
+import { EditDetailsModalComponent } from "../edit-details-modal/edit-details-modal.component";
+import { EditLicenseModalComponent } from "../edit-license-modal/edit-license-modal.component";
+import { EditWatermarkModalComponent } from "../edit-watermark-modal/edit-watermark-modal.component";
+import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 
 @Component({
     selector: "app-overview",

@@ -9,7 +9,6 @@ import { mockGetDatasetSchemaQuery, mockParseSetTransformYamlType, mockSetTransf
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { MatTreeModule, MatTreeNestedDataSource } from "@angular/material/tree";
 import { DatasetNode } from "./set-transform.types";
-import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
 import { QueriesSectionComponent } from "./components/queries-section/queries-section.component";
 import { EngineSectionComponent } from "./components/engine-section/engine-section.component";
 import { SearchSectionComponent } from "./components/search-section/search-section.component";
@@ -29,6 +28,7 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { EditorModule } from "../../../../../shared/editor/editor.module";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { DatasetCommitService } from "../../../overview-tab/services/dataset-commit.service";
 
 describe("SetTransformComponent", () => {
     let component: SetTransformComponent;

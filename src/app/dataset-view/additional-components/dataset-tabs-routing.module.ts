@@ -1,14 +1,16 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { OverviewComponent } from "./overview-component/overview.component";
 import { DatasetViewTypeEnum } from "../dataset-view.interface";
 import { MetadataComponent } from "./metadata-component/metadata.component";
 import { FlowsComponent } from "./flows-component/flows.component";
 
 const routes: Routes = [
+    { 
+        path: '', redirectTo: 'overview', pathMatch: 'full' 
+    },
     {
-        path: "",
-        component: OverviewComponent,
+        path: "overview",
+        loadChildren: () => import("./overview-tab/overview-tab.module").then((m) => m.OverviewTabModule),
         data: { tab: DatasetViewTypeEnum.Overview },
     },
     {

@@ -4,7 +4,6 @@ import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule } f
 import { ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { DatasetCommitService } from "../../../../overview-component/services/dataset-commit.service";
 import { from, of } from "rxjs";
 import { AddPushSourceSection } from "src/app/shared/shared.types";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
@@ -26,6 +25,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { MergeKind, ReadKind } from "../add-polling-source/add-polling-source-form.types";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-tab/services/dataset-commit.service";
 
 const providersSection = (name: string) => {
     return [

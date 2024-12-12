@@ -18,24 +18,19 @@ import { MatButtonModule } from "@angular/material/button";
 import { MarkdownModule } from "ngx-markdown";
 import { MetadataComponent } from "./additional-components/metadata-component/metadata.component";
 import { ClipboardModule } from "@angular/cdk/clipboard";
-import { OverviewComponent } from "./additional-components/overview-component/overview.component";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { CustomPaginationModule } from "../components/custom-pagination-component/custom-pagination.module";
 import { SideNavModule } from "../sidenav/side-nav.module";
 import { RouterModule } from "@angular/router";
-import { OverviewHistorySummaryHeaderComponent } from "../components/overview-history-summary-header/overview-history-summary-header.component";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { DisplaySizeModule } from "../common/pipes/display-size.module";
 import { SharedModule } from "../shared/shared/shared.module";
-import { EditDetailsModalComponent } from "./additional-components/overview-component/components/edit-details-modal/edit-details-modal.component";
-import { EditLicenseModalComponent } from "./additional-components/overview-component/components/edit-license-modal/edit-license-modal.component";
 import { FinalYamlModalComponent } from "./additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
 import { BaseStepComponent } from "./additional-components/metadata-component/components/source-events/steps/base-step/base-step.component";
 import { StepperNavigationComponent } from "./additional-components/metadata-component/components/stepper-navigation/stepper-navigation.component";
 import { PrepareStepComponent } from "./additional-components/metadata-component/components/source-events/steps/prepare-step/prepare-step.component";
 import { PreprocessStepComponent } from "./additional-components/metadata-component/components/source-events/steps/preprocess-step/preprocess-step.component";
 import { PollingSourceFormComponentsModule } from "./additional-components/metadata-component/components/form-components/polling-source-form-components.module";
-import { EditWatermarkModalComponent } from "./additional-components/overview-component/components/edit-watermark-modal/edit-watermark-modal.component";
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { SetTransformComponent } from "./additional-components/metadata-component/components/set-transform/set-transform.component";
@@ -47,7 +42,6 @@ import { PageNotFoundComponent } from "../components/page-not-found/page-not-fou
 import { AddPollingSourceComponent } from "./additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source.component";
 import { MatStepperModule } from "@angular/material/stepper";
 import { EngineSelectComponent } from "./additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
-import { ReadmeSectionComponent } from "./additional-components/overview-component/components/readme-section/readme-section.component";
 import { DatasetSettingsComponent } from "./additional-components/dataset-settings-component/dataset-settings.component";
 import { MatInputModule } from "@angular/material/input";
 import { ReturnToCliComponent } from "../components/return-to-cli/return-to-cli.component";
@@ -68,8 +62,6 @@ import { DatasetSettingsSecretsManagerTabComponent } from "./additional-componen
 import { MatSortModule } from "@angular/material/sort";
 import { EditKeyValueModalComponent } from "./additional-components/dataset-settings-component/tabs/variables-and-secrets/components/edit-key-value-modal/edit-key-value-modal.component";
 import { DatasetSettingsCompactingTabComponent } from "./additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.component";
-import { AddDataModalComponent } from "./additional-components/overview-component/components/add-data-modal/add-data-modal.component";
-import { FileFromUrlModalComponent } from "./additional-components/overview-component/components/file-from-url-modal/file-from-url-modal.component";
 import { FlowsComponent } from "./additional-components/flows-component/flows.component";
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 import { MatTabsModule } from "@angular/material/tabs";
@@ -138,14 +130,12 @@ import { DatasetTabsRoutingModule } from "./additional-components/dataset-tabs-r
         DatasetTabsRoutingModule,
     ],
     exports: [
-        OverviewHistorySummaryHeaderComponent,
         DatasetComponent,
         MetadataComponent,
         BaseStepComponent,
         PrepareStepComponent,
         PreprocessStepComponent,
         StepperNavigationComponent,
-        OverviewComponent,
         DisplayHashModule,
         MatTreeModule,
         MatTooltipModule,
@@ -155,18 +145,13 @@ import { DatasetTabsRoutingModule } from "./additional-components/dataset-tabs-r
         MatChipsModule,
     ],
     declarations: [
-        OverviewHistorySummaryHeaderComponent,
         DatasetComponent,
         MetadataComponent,
-        OverviewComponent,
-        EditDetailsModalComponent,
-        EditLicenseModalComponent,
         FinalYamlModalComponent,
         BaseStepComponent,
         PrepareStepComponent,
         PreprocessStepComponent,
         StepperNavigationComponent,
-        EditWatermarkModalComponent,
         SetTransformComponent,
         SearchSectionComponent,
         EngineSectionComponent,
@@ -175,7 +160,6 @@ import { DatasetTabsRoutingModule } from "./additional-components/dataset-tabs-r
         ReturnToCliComponent,
         AddPollingSourceComponent,
         EngineSelectComponent,
-        ReadmeSectionComponent,
         DatasetSettingsComponent,
         FlowsComponent,
         AddPushSourceComponent,
@@ -184,10 +168,7 @@ import { DatasetTabsRoutingModule } from "./additional-components/dataset-tabs-r
         DatasetSettingsSchedulingTabComponent,
         DatasetSettingsSecretsManagerTabComponent,
         EditKeyValueModalComponent,
-        DatasetSettingsCompactingTabComponent,
-        AddDataModalComponent,
-        FileFromUrlModalComponent,
-    ],
+        DatasetSettingsCompactingTabComponent    ],
 })
 export class DatasetModule {
     public static forRoot(): ModuleWithProviders<DatasetModule> {

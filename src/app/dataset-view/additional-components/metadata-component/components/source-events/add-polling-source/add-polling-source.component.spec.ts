@@ -20,7 +20,6 @@ import {
 import { DatasetPageInfoFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { EditPollingSourceService } from "./edit-polling-source.service";
 import { SharedTestModule } from "src/app/common/shared-test.module";
-import { DatasetCommitService } from "../../../../overview-component/services/dataset-commit.service";
 import { PrepareStepComponent } from "../steps/prepare-step/prepare-step.component";
 import { MatStepperModule } from "@angular/material/stepper";
 import { PreprocessStepComponent } from "../steps/preprocess-step/preprocess-step.component";
@@ -35,6 +34,7 @@ import { EventTimeSourceKind, FetchKind, MergeKind, ReadKind } from "./add-polli
 import { OdfDefaultValues } from "src/app/common/app-odf-default.values";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-tab/services/dataset-commit.service";
 
 describe("AddPollingSourceComponent", () => {
     let component: AddPollingSourceComponent;

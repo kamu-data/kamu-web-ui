@@ -195,7 +195,6 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         return (
             node.description.__typename === "FlowDescriptionDatasetPollingIngest" &&
             node.description.ingestResult?.__typename === "FlowDescriptionUpdateResultUpToDate" &&
-            node.configSnapshot?.__typename === "FlowConfigurationIngest" &&
             node.description.ingestResult.uncacheable &&
             ((node.configSnapshot?.__typename === "FlowConfigurationIngest" && !node.configSnapshot.fetchUncacheable) ||
                 !node.configSnapshot)
@@ -203,10 +202,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     }
 
     public onForceUpdate(node: FlowSummaryDataFragment): void {
-        if (
-            node.description.__typename === "FlowDescriptionDatasetPollingIngest" &&
-            node.configSnapshot?.__typename === "FlowConfigurationIngest"
-        ) {
+        if (node.description.__typename === "FlowDescriptionDatasetPollingIngest") {
             this.datasetFlowsService
                 .datasetTriggerFlow({
                     datasetId: node.description.datasetId,

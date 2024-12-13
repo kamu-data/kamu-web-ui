@@ -36,11 +36,11 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
         updatesState: new FormControl<boolean>(false, { nonNullable: true }),
         pollingGroup: new FormGroup<PollingGroupType>({
             __typename: new FormControl(PollingGroupEnum.TIME_DELTA, [Validators.required]),
-            every: new FormControl<MaybeNull<number>>({ value: null, disabled: true }, [
+            every: new FormControl<MaybeNull<number>>({ value: null, disabled: false }, [
                 Validators.required,
                 Validators.min(1),
             ]),
-            unit: new FormControl<MaybeNull<TimeUnit>>({ value: null, disabled: true }, [Validators.required]),
+            unit: new FormControl<MaybeNull<TimeUnit>>({ value: null, disabled: false }, [Validators.required]),
             cronExpression: new FormControl<MaybeNull<string>>({ value: "", disabled: true }, [
                 Validators.required,
                 cronExpressionValidator(),
@@ -50,12 +50,12 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
     });
 
     public batchingForm = new FormGroup<BatchingFormType>({
-        every: new FormControl<MaybeNull<number>>({ value: null, disabled: true }, [
+        every: new FormControl<MaybeNull<number>>({ value: null, disabled: false }, [
             Validators.required,
             Validators.min(1),
         ]),
-        unit: new FormControl<MaybeNull<TimeUnit>>({ value: null, disabled: true }, [Validators.required]),
-        minRecordsToAwait: new FormControl<MaybeNull<number>>({ value: null, disabled: true }, [
+        unit: new FormControl<MaybeNull<TimeUnit>>({ value: null, disabled: false }, [Validators.required]),
+        minRecordsToAwait: new FormControl<MaybeNull<number>>({ value: null, disabled: false }, [
             Validators.required,
             Validators.min(1),
         ]),
@@ -105,6 +105,10 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
 
     public get nextTime(): string {
         return cronExpressionNextTime(this.cronExpression.value as string);
+    }
+
+    public get isRootDataset(): boolean {
+        return this.datasetBasics.kind === DatasetKind.Root;
     }
 
     public ngOnInit() {

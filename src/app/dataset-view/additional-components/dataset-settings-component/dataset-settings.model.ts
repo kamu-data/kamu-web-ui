@@ -36,7 +36,7 @@ export const datasetSettingsSidePanelData: DatasetSettingsSidePanelItem[] = [
         id: "general",
     },
     {
-        name: "Scheduling",
+        name: "Scheduled updates",
         iconName: "clock",
         showDivider: false,
         activeTab: SettingsTabsEnum.SCHEDULING,

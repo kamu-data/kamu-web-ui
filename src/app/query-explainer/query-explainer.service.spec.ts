@@ -126,7 +126,7 @@ describe("QueryExplainerService", () => {
     });
 
     it("should return error when fetch commitment data by upload token", () => {
-        const errorMessage = "Error";
+        const errorMessage = "Uploaded file not found on the server";
         const toastrServiceSpy = spyOn(toastrService, "error");
         const uploadToken = "dfdflLKDsddfdddlfdsdsjkpbfopofoFDdfdf";
 
@@ -140,7 +140,11 @@ describe("QueryExplainerService", () => {
         const req = httpTestingController.expectOne(
             `${appConfigService.apiServerHttpUrl}/platform/file/upload/${uploadToken}`,
         );
-        req.flush(errorMessage, { status: 404, statusText: "Not found" });
+
+        req.flush({ message: errorMessage }, { status: 404, statusText: "Not found" });
         expect(toastrServiceSpy).toHaveBeenCalledTimes(1);
+        expect(toastrServiceSpy).toHaveBeenCalledWith("", errorMessage, {
+            disableTimeOut: "timeOut",
+        });
     });
 });

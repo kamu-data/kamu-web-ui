@@ -1,22 +1,24 @@
 <div class="custom-container">
     <h2>Scheduled updates</h2>
     <mat-divider class="mt-1 mb-2" />
-    <form [formGroup]="pollingForm">
-        <div class="box p-4 mt-3">
-            <h4>Enable/Disable update schedule</h4>
-            <mat-slide-toggle color="primary" class="mat-elevation-z0" formControlName="updatesState">
-                <span class="ps-2"> {{ pollingForm.controls.updatesState.value ? "enabled" : "disabled" }}</span>
-            </mat-slide-toggle>
-        </div>
-
-        <div formGroupName="pollingGroup" class="box mt-3 p-4" *ngIf="isRootDataset">
-            <div class="d-flex flex-row gap-4">
-                <div class="position-relative border border-1 rounded-3 w-50">
-                    <div>
+    <div class="box mt-3 p-4" *ngIf="isRootDataset">
+        <div class="d-flex flex-row gap-4">
+            <div class="position-relative border border-1 rounded-3 w-50">
+                <form [formGroup]="pollingForm">
+                    <div formGroupName="pollingGroup">
                         <span class="position-absolute text-muted group-box-label text-uppercase">Triggers</span>
                         <div class="p-4">
+                            <div class="my-4 ms-1 px-2 pb-3">
+                                <mat-slide-toggle
+                                    color="primary"
+                                    class="mat-elevation-z0"
+                                    formControlName="updatesState"
+                                >
+                                    <span class="ps-2"> Enable/Disable update schedule</span>
+                                </mat-slide-toggle>
+                            </div>
                             <mat-radio-group
-                                class="d-flex flex-column row-gap-4"
+                                class="d-flex flex-column row-gap-4 mt-4"
                                 formControlName="__typename"
                                 aria-label="Select an option"
                                 color="primary"
@@ -111,8 +113,10 @@
                             Save Trigger
                         </button>
                     </div>
-                </div>
-                <div class="position-relative border border-1 rounded-3 w-50 align-self-start px-4 pb-4">
+                </form>
+            </div>
+            <div class="position-relative border border-1 rounded-3 w-50 align-self-start px-4 pb-4">
+                <form [formGroup]="ingestConfigurationForm">
                     <span class="position-absolute text-muted group-box-label text-uppercase">Configuration</span>
 
                     <div class="d-flex align-items-center mt-4">
@@ -124,16 +128,17 @@
                         <button
                             type="button"
                             class="btn btn-success"
-                            (click)="onSubmit()"
+                            (click)="saveIngestConfiguration()"
                             data-test-id="save-config-options"
                         >
                             Save configuration
                         </button>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
-    </form>
+    </div>
+
     <form [formGroup]="batchingForm" *ngIf="!isRootDataset">
         <div class="box p-4 mt-3">
             <div class="d-flex flex-column gap-4">

@@ -14,7 +14,12 @@ import {
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
 import { cronExpressionValidator, everyTimeMapperValidators } from "src/app/common/data.helpers";
 import { cronExpressionNextTime, logError } from "src/app/common/app.helpers";
-import { BatchingFormType, PollingFormType, PollingGroupType } from "./dataset-settings-scheduling-tab.component.types";
+import {
+    BatchingFormType,
+    IngestConfigurationFormType,
+    PollingFormType,
+    PollingGroupType,
+} from "./dataset-settings-scheduling-tab.component.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
@@ -32,9 +37,13 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
     private scheduleOptions: IngestConditionInput;
     private everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = everyTimeMapperValidators;
 
+    public ingestConfigurationForm = new FormGroup<IngestConfigurationFormType>({
+        fetchUncacheable: new FormControl<boolean>(false, { nonNullable: true }),
+    });
+
     public pollingForm = new FormGroup<PollingFormType>({
-        updatesState: new FormControl<boolean>(false, { nonNullable: true }),
         pollingGroup: new FormGroup<PollingGroupType>({
+            updatesState: new FormControl<boolean>(false, { nonNullable: true }),
             __typename: new FormControl(PollingGroupEnum.TIME_DELTA, [Validators.required]),
             every: new FormControl<MaybeNull<number>>({ value: null, disabled: false }, [
                 Validators.required,
@@ -45,7 +54,6 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                 Validators.required,
                 cronExpressionValidator(),
             ]),
-            fetchUncacheable: new FormControl<boolean>(false, { nonNullable: true }),
         }),
     });
 
@@ -67,16 +75,8 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
         return this.pollingForm.get("pollingGroup") as FormGroup;
     }
 
-    public get updateState(): AbstractControl {
-        return this.pollingForm.controls.updatesState;
-    }
-
     public get pollingType(): AbstractControl {
         return this.pollingGroup.controls.__typename;
-    }
-
-    public get pollingFetchUncacheable(): AbstractControl {
-        return this.pollingGroup.controls.fetchUncacheable;
     }
 
     public get batchingEveryTime(): AbstractControl {
@@ -111,6 +111,10 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
         return this.datasetBasics.kind === DatasetKind.Root;
     }
 
+    public get fetchUncacheable(): FormControl<boolean> {
+        return this.ingestConfigurationForm.controls.fetchUncacheable;
+    }
+
     public ngOnInit() {
         if (!this.datasetPermissions.permissions.canSchedule) {
             this.pollingForm.disable();
@@ -120,6 +124,21 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
             this.setPollingEveryTimeValidator();
             this.setBatchingEveryTimeValidator();
         }
+    }
+
+    public saveIngestConfiguration(): void {
+        this.datasetSchedulingService
+            .setDatasetFlowConfigs({
+                datasetId: this.datasetBasics.id,
+                datasetFlowType: DatasetFlowType.Ingest,
+                configInput: {
+                    ingest: {
+                        fetchUncacheable: this.fetchUncacheable.value,
+                    },
+                },
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe();
     }
 
     private pollingTypeChanges(): void {
@@ -167,31 +186,34 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
     }
 
     private checkStatusSection(): void {
-        // if (this.datasetBasics.kind === DatasetKind.Root) {
-        //     this.batchingForm.disable();
-        //     this.pollingGroup.enable();
-        //     this.cronExpression.disable();
-        //     this.datasetSchedulingService
-        //         .fetchDatasetFlowConfigs(this.datasetBasics.id, DatasetFlowType.Ingest)
-        //         .pipe(takeUntilDestroyed(this.destroyRef))
-        //         .subscribe((data) => {
-        //             const flowConfiguration = data.datasets.byId?.flows.configs.byType?.ingest;
-        //             const paused = data.datasets.byId?.flows.configs.byType?.paused;
-        //             if (flowConfiguration?.schedule) {
-        //                 this.pollingForm.patchValue({ updatesState: !paused });
-        //                 this.pollingGroup.patchValue({
-        //                     ...flowConfiguration.schedule,
-        //                     fetchUncacheable: flowConfiguration.fetchUncacheable,
-        //                 });
-        //                 if (flowConfiguration.schedule.__typename === "Cron5ComponentExpression") {
-        //                     this.pollingGroup.patchValue({
-        //                         // splice for sync with cron parser
-        //                         cronExpression: flowConfiguration.schedule.cron5ComponentExpression,
-        //                     });
-        //                 }
-        //             }
-        //         });
-        // } else {
+        if (this.datasetBasics.kind === DatasetKind.Root) {
+            this.batchingForm.disable();
+            this.pollingGroup.enable();
+            this.cronExpression.disable();
+            this.datasetSchedulingService
+                .fetchDatasetFlowConfigs(this.datasetBasics.id, DatasetFlowType.Ingest)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe((data) => {
+                    const flowConfiguration = data.datasets.byId?.flows.configs.byType?.ingest;
+                    this.ingestConfigurationForm.patchValue({ fetchUncacheable: flowConfiguration?.fetchUncacheable });
+                    console.log("==>", flowConfiguration);
+                    // const paused = data.datasets.byId?.flows.configs.byType?.paused;
+                    // if (flowConfiguration?.schedule) {
+                    //     this.pollingForm.patchValue({ updatesState: !paused });
+                    //     this.pollingGroup.patchValue({
+                    //         ...flowConfiguration.schedule,
+                    //         fetchUncacheable: flowConfiguration.fetchUncacheable,
+                    //     });
+                    //     if (flowConfiguration.schedule.__typename === "Cron5ComponentExpression") {
+                    //         this.pollingGroup.patchValue({
+                    //             // splice for sync with cron parser
+                    //             cronExpression: flowConfiguration.schedule.cron5ComponentExpression,
+                    //         });
+                    //     }
+                    // }
+                });
+        }
+        //  else {
         //     this.pollingGroup.disable();
         //     this.batchingForm.enable();
         //     this.datasetSchedulingService
@@ -256,12 +278,12 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
     private setScheduleOptions(): void {
         if (this.pollingGroup.controls.__typename.value === PollingGroupEnum.TIME_DELTA) {
             this.scheduleOptions = {
-                fetchUncacheable: this.pollingFetchUncacheable.value as boolean,
+                fetchUncacheable: this.fetchUncacheable.value,
             };
         }
         if (this.pollingGroup.controls.__typename.value === PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION) {
             this.scheduleOptions = {
-                fetchUncacheable: this.pollingFetchUncacheable.value as boolean,
+                fetchUncacheable: this.fetchUncacheable.value,
             };
         }
     }

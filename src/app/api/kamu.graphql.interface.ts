@@ -4094,6 +4094,39 @@ export type GetDatasetFlowConfigsQuery = {
     };
 };
 
+export type SetDatasetFlowConfigMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    datasetFlowType: DatasetFlowType;
+    configInput: FlowConfigurationInput;
+}>;
+
+export type SetDatasetFlowConfigMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            flows: {
+                __typename?: "DatasetFlowsMut";
+                configs: {
+                    __typename?: "DatasetFlowConfigsMut";
+                    setConfig:
+                        | {
+                              __typename?: "FlowIncompatibleDatasetKind";
+                              message: string;
+                              actualDatasetKind: DatasetKind;
+                              expectedDatasetKind: DatasetKind;
+                          }
+                        | { __typename?: "FlowInvalidConfigInputError"; message: string; reason: string }
+                        | { __typename?: "FlowPreconditionsNotMet"; message: string; preconditions: string }
+                        | { __typename?: "FlowTypeIsNotSupported"; message: string }
+                        | { __typename?: "SetFlowConfigSuccess"; message: string };
+                };
+            };
+        } | null;
+    };
+};
+
 export type TimeDeltaDataFragment = { __typename?: "TimeDelta"; every: number; unit: TimeUnit };
 
 export type SearchDatasetsAutocompleteQueryVariables = Exact<{
@@ -6822,6 +6855,57 @@ export class GetDatasetFlowConfigsGQL extends Apollo.Query<
     GetDatasetFlowConfigsQueryVariables
 > {
     document = GetDatasetFlowConfigsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const SetDatasetFlowConfigDocument = gql`
+    mutation setDatasetFlowConfig(
+        $datasetId: DatasetID!
+        $datasetFlowType: DatasetFlowType!
+        $configInput: FlowConfigurationInput!
+    ) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    configs {
+                        setConfig(datasetFlowType: $datasetFlowType, configInput: $configInput) {
+                            ... on SetFlowConfigSuccess {
+                                message
+                            }
+                            ... on FlowTypeIsNotSupported {
+                                message
+                            }
+                            ... on FlowPreconditionsNotMet {
+                                message
+                                preconditions
+                            }
+                            ... on FlowInvalidConfigInputError {
+                                message
+                                reason
+                            }
+                            ... on FlowIncompatibleDatasetKind {
+                                message
+                                actualDatasetKind
+                                expectedDatasetKind
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class SetDatasetFlowConfigGQL extends Apollo.Mutation<
+    SetDatasetFlowConfigMutation,
+    SetDatasetFlowConfigMutationVariables
+> {
+    document = SetDatasetFlowConfigDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

@@ -3,7 +3,12 @@ import { inject, Injectable } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
 import { Observable, map } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
-import { DatasetFlowType, GetDatasetFlowConfigsQuery } from "src/app/api/kamu.graphql.interface";
+import {
+    DatasetFlowType,
+    FlowConfigurationInput,
+    GetDatasetFlowConfigsQuery,
+    SetDatasetFlowConfigMutation,
+} from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
@@ -21,6 +26,23 @@ export class DatasetSchedulingService {
         datasetFlowType: DatasetFlowType,
     ): Observable<GetDatasetFlowConfigsQuery> {
         return this.datasetFlowApi.getDatasetFlowConfigs({ datasetId, datasetFlowType });
+    }
+
+    public setDatasetFlowConfigs(params: {
+        datasetId: string;
+        datasetFlowType: DatasetFlowType;
+        configInput: FlowConfigurationInput;
+    }): Observable<void> {
+        return this.datasetFlowApi.setDatasetFlowConfigs(params).pipe(
+            map((data: SetDatasetFlowConfigMutation) => {
+                const setConfig = data.datasets.byId?.flows.configs.setConfig;
+                if (setConfig?.__typename === "SetFlowConfigSuccess") {
+                    this.toastrService.success("Configuration saved");
+                } else {
+                    this.toastrService.error(setConfig?.message);
+                }
+            }),
+        );
     }
 
     // public setDatasetFlowSchedule(params: {

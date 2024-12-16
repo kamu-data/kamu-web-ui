@@ -15,6 +15,7 @@ import {
     DatasetResumeFlowsMutation,
     DatasetTriggerFlowGQL,
     DatasetTriggerFlowMutation,
+    FlowConfigurationInput,
     FlowRunConfiguration,
     GetDatasetFlowConfigsGQL,
     GetDatasetFlowConfigsQuery,
@@ -22,6 +23,8 @@ import {
     GetDatasetListFlowsQuery,
     GetFlowByIdGQL,
     GetFlowByIdQuery,
+    SetDatasetFlowConfigGQL,
+    SetDatasetFlowConfigMutation,
 } from "./kamu.graphql.interface";
 import { Observable, first, map } from "rxjs";
 import { ApolloQueryResult } from "@apollo/client";
@@ -42,6 +45,7 @@ export class DatasetFlowApi {
     private cancelScheduledTasksGQL = inject(CancelScheduledTasksGQL);
     // private datasetFlowCompactionGQL = inject(DatasetFlowCompactionGQL);
     private datasetFlowsInitiatorsGQL = inject(DatasetFlowsInitiatorsGQL);
+    private setDatasetFlowConfigGQL = inject(SetDatasetFlowConfigGQL);
 
     public datasetTriggerFlow(params: {
         accountId: string;
@@ -71,6 +75,30 @@ export class DatasetFlowApi {
             .valueChanges.pipe(
                 map((result: ApolloQueryResult<GetDatasetFlowConfigsQuery>) => {
                     return result.data;
+                }),
+            );
+    }
+
+    public setDatasetFlowConfigs(params: {
+        datasetId: string;
+        datasetFlowType: DatasetFlowType;
+        configInput: FlowConfigurationInput;
+    }): Observable<SetDatasetFlowConfigMutation> {
+        return this.setDatasetFlowConfigGQL
+            .mutate({
+                datasetId: params.datasetId,
+                datasetFlowType: params.datasetFlowType,
+                configInput: params.configInput,
+            })
+            .pipe(
+                first(),
+                map((result: MutationResult<SetDatasetFlowConfigMutation>) => {
+                    /* istanbul ignore else */
+                    if (result.data) {
+                        return result.data;
+                    } else {
+                        throw new DatasetOperationError(result.errors ?? []);
+                    }
                 }),
             );
     }

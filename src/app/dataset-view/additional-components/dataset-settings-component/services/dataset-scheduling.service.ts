@@ -6,8 +6,11 @@ import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
     DatasetFlowType,
     FlowConfigurationInput,
+    FlowTriggerInput,
     GetDatasetFlowConfigsQuery,
+    GetDatasetFlowTriggersQuery,
     SetDatasetFlowConfigMutation,
+    SetDatasetFlowTriggersMutation,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
@@ -40,6 +43,38 @@ export class DatasetSchedulingService {
                     this.toastrService.success("Configuration saved");
                 } else {
                     this.toastrService.error(setConfig?.message);
+                }
+            }),
+        );
+    }
+
+    public fetchDatasetFlowTriggers(
+        datasetId: string,
+        datasetFlowType: DatasetFlowType,
+    ): Observable<GetDatasetFlowTriggersQuery> {
+        return this.datasetFlowApi.getDatasetFlowTriggers({ datasetId, datasetFlowType });
+    }
+
+    public setDatasetTriggers(params: {
+        datasetId: string;
+        datasetFlowType: DatasetFlowType;
+        paused: boolean;
+        triggerInput: FlowTriggerInput;
+        datasetInfo: DatasetInfo;
+    }): Observable<void> {
+        return this.datasetFlowApi.setDatasetFlowTriggers(params).pipe(
+            map((data: SetDatasetFlowTriggersMutation) => {
+                const triggers = data.datasets.byId?.flows.triggers.setTrigger;
+                if (triggers?.__typename === "SetFlowTriggerSuccess") {
+                    setTimeout(() => {
+                        this.navigationService.navigateToDatasetView({
+                            accountName: params.datasetInfo.accountName,
+                            datasetName: params.datasetInfo.datasetName,
+                            tab: DatasetViewTypeEnum.Flows,
+                        });
+                    }, AppValues.SIMULATION_START_CONDITION_DELAY_MS);
+                } else {
+                    this.toastrService.error(triggers?.message);
                 }
             }),
         );

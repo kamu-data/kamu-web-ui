@@ -1111,6 +1111,13 @@ export type FlowAbortedResult = {
     message: Scalars["String"];
 };
 
+export type FlowConfigSnapshotModified = FlowEvent & {
+    __typename?: "FlowConfigSnapshotModified";
+    configSnapshot: FlowConfigurationSnapshot;
+    eventId: Scalars["EventID"];
+    eventTime: Scalars["DateTime"];
+};
+
 export type FlowConfiguration = {
     __typename?: "FlowConfiguration";
     compaction?: Maybe<FlowConfigurationCompaction>;
@@ -3034,6 +3041,9 @@ export type GetFlowByIdQuery = {
                                   __typename?: "Flow";
                                   history: Array<
                                       | ({
+                                            __typename?: "FlowConfigSnapshotModified";
+                                        } & FlowHistoryData_FlowConfigSnapshotModified_Fragment)
+                                      | ({
                                             __typename?: "FlowEventAborted";
                                         } & FlowHistoryData_FlowEventAborted_Fragment)
                                       | ({
@@ -3319,6 +3329,16 @@ export type FlowConnectionDataFragment = {
     edges: Array<{ __typename?: "FlowEdge"; node: { __typename?: "Flow" } & FlowSummaryDataFragment }>;
 };
 
+type FlowHistoryData_FlowConfigSnapshotModified_Fragment = {
+    __typename: "FlowConfigSnapshotModified";
+    eventId: string;
+    eventTime: string;
+    configSnapshot:
+        | { __typename: "FlowConfigurationCompactionRule" }
+        | { __typename: "FlowConfigurationIngest" }
+        | { __typename: "FlowConfigurationReset" };
+};
+
 type FlowHistoryData_FlowEventAborted_Fragment = { __typename: "FlowEventAborted"; eventId: string; eventTime: string };
 
 type FlowHistoryData_FlowEventInitiated_Fragment = {
@@ -3390,6 +3410,7 @@ type FlowHistoryData_FlowEventTriggerAdded_Fragment = {
 };
 
 export type FlowHistoryDataFragment =
+    | FlowHistoryData_FlowConfigSnapshotModified_Fragment
     | FlowHistoryData_FlowEventAborted_Fragment
     | FlowHistoryData_FlowEventInitiated_Fragment
     | FlowHistoryData_FlowEventScheduledForActivation_Fragment
@@ -4127,6 +4148,74 @@ export type SetDatasetFlowConfigMutation = {
     };
 };
 
+export type SetDatasetFlowTriggersMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    datasetFlowType: DatasetFlowType;
+    paused: Scalars["Boolean"];
+    triggerInput: FlowTriggerInput;
+}>;
+
+export type SetDatasetFlowTriggersMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            flows: {
+                __typename?: "DatasetFlowsMut";
+                triggers: {
+                    __typename?: "DatasetFlowTriggersMut";
+                    setTrigger:
+                        | {
+                              __typename?: "FlowIncompatibleDatasetKind";
+                              message: string;
+                              expectedDatasetKind: DatasetKind;
+                              actualDatasetKind: DatasetKind;
+                          }
+                        | { __typename?: "FlowInvalidTriggerInputError"; message: string; reason: string }
+                        | { __typename?: "FlowPreconditionsNotMet"; message: string }
+                        | { __typename?: "FlowTypeIsNotSupported"; message: string }
+                        | { __typename?: "SetFlowTriggerSuccess"; message: string };
+                };
+            };
+        } | null;
+    };
+};
+
+export type GetDatasetFlowTriggersQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    datasetFlowType: DatasetFlowType;
+}>;
+
+export type GetDatasetFlowTriggersQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            flows: {
+                __typename?: "DatasetFlows";
+                triggers: {
+                    __typename?: "DatasetFlowTriggers";
+                    byType?: {
+                        __typename?: "FlowTrigger";
+                        paused: boolean;
+                        schedule?:
+                            | { __typename?: "Cron5ComponentExpression"; cron5ComponentExpression: string }
+                            | ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment)
+                            | null;
+                        batching?: {
+                            __typename?: "FlowTriggerBatchingRule";
+                            minRecordsToAwait: number;
+                            maxBatchingInterval: { __typename?: "TimeDelta" } & TimeDeltaDataFragment;
+                        } | null;
+                    } | null;
+                };
+            };
+        } | null;
+    };
+};
+
 export type TimeDeltaDataFragment = { __typename?: "TimeDelta"; every: number; unit: TimeUnit };
 
 export type SearchDatasetsAutocompleteQueryVariables = Exact<{
@@ -4580,6 +4669,11 @@ export const FlowHistoryDataFragmentDoc = gql`
                     flowId
                     flowType
                 }
+            }
+        }
+        ... on FlowConfigSnapshotModified {
+            configSnapshot {
+                __typename
             }
         }
     }
@@ -6906,6 +7000,101 @@ export class SetDatasetFlowConfigGQL extends Apollo.Mutation<
     SetDatasetFlowConfigMutationVariables
 > {
     document = SetDatasetFlowConfigDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const SetDatasetFlowTriggersDocument = gql`
+    mutation setDatasetFlowTriggers(
+        $datasetId: DatasetID!
+        $datasetFlowType: DatasetFlowType!
+        $paused: Boolean!
+        $triggerInput: FlowTriggerInput!
+    ) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    triggers {
+                        setTrigger(datasetFlowType: $datasetFlowType, paused: $paused, triggerInput: $triggerInput) {
+                            ... on SetFlowTriggerSuccess {
+                                message
+                            }
+                            ... on FlowIncompatibleDatasetKind {
+                                message
+                                expectedDatasetKind
+                                actualDatasetKind
+                            }
+                            ... on FlowPreconditionsNotMet {
+                                message
+                            }
+                            ... on FlowTypeIsNotSupported {
+                                message
+                            }
+                            ... on FlowInvalidTriggerInputError {
+                                message
+                                reason
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class SetDatasetFlowTriggersGQL extends Apollo.Mutation<
+    SetDatasetFlowTriggersMutation,
+    SetDatasetFlowTriggersMutationVariables
+> {
+    document = SetDatasetFlowTriggersDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const GetDatasetFlowTriggersDocument = gql`
+    query getDatasetFlowTriggers($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    triggers {
+                        byType(datasetFlowType: $datasetFlowType) {
+                            paused
+                            schedule {
+                                ... on TimeDelta {
+                                    ...TimeDeltaData
+                                }
+                                ... on Cron5ComponentExpression {
+                                    cron5ComponentExpression
+                                }
+                            }
+                            batching {
+                                maxBatchingInterval {
+                                    ...TimeDeltaData
+                                }
+                                minRecordsToAwait
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${TimeDeltaDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class GetDatasetFlowTriggersGQL extends Apollo.Query<
+    GetDatasetFlowTriggersQuery,
+    GetDatasetFlowTriggersQueryVariables
+> {
+    document = GetDatasetFlowTriggersDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

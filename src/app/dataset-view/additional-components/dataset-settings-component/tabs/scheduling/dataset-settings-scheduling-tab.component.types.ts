@@ -16,6 +16,7 @@ export interface PollingGroupType {
 }
 
 export interface BatchingFormType {
+    updatesState: FormControl<boolean>;
     every: FormControl<MaybeNull<number>>;
     unit: FormControl<MaybeNull<TimeUnit>>;
     minRecordsToAwait: FormControl<MaybeNull<number>>;

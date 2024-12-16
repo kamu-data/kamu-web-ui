@@ -5,6 +5,7 @@ fragment FlowHistoryData on FlowEvent {
   ... on FlowEventAborted {
     __typename
   }
+
   ... on FlowEventInitiated {
     trigger {
       __typename
@@ -88,6 +89,12 @@ fragment FlowHistoryData on FlowEvent {
         flowId
         flowType
       }
+    }
+  }
+
+  ... on FlowConfigSnapshotModified {
+    configSnapshot {
+      __typename
     }
   }
 }

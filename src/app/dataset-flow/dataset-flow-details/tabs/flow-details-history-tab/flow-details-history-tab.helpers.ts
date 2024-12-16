@@ -1,5 +1,6 @@
 import moment from "moment";
 import {
+    FlowConfigSnapshotModified,
     FlowEventInitiated,
     FlowEventScheduledForActivation,
     FlowEventStartConditionUpdated,
@@ -42,6 +43,8 @@ export class DatasetFlowDetailsHelpers {
             }
             case "FlowEventScheduledForActivation":
                 return "Flow scheduled for activation";
+            case "FlowConfigSnapshotModified":
+                return "Flow configuration was modified";
             /* istanbul ignore next */
             default:
                 throw new Error("Unknown event typename");
@@ -64,6 +67,8 @@ export class DatasetFlowDetailsHelpers {
                 return { icon: "downloading", class: "text-muted" };
             case "FlowEventScheduledForActivation":
                 return { icon: "timer", class: "text-muted" };
+            case "FlowConfigSnapshotModified":
+                return { icon: "downloading", class: "text-muted" };
             case "FlowEventTaskChanged": {
                 const event = flowEvent as FlowEventTaskChanged;
                 switch (event.taskStatus) {
@@ -108,6 +113,20 @@ export class DatasetFlowDetailsHelpers {
             case "FlowEventInitiated":
             case "FlowEventTriggerAdded":
                 return this.describeTriggerDetails((flowEvent as FlowEventInitiated).trigger);
+            case "FlowConfigSnapshotModified": {
+                const event = flowEvent as FlowConfigSnapshotModified;
+                switch (event.configSnapshot.__typename) {
+                    case "FlowConfigurationCompactionRule":
+                        return "Modified by compaction rule";
+                    case "FlowConfigurationIngest":
+                        return "Modified by ingest rule";
+                    case "FlowConfigurationReset":
+                        return "Modified by reset rule";
+                    /* istanbul ignore next */
+                    default:
+                        throw new Error("Unknown configSnapshot typename");
+                }
+            }
             case "FlowEventAborted":
                 return "";
             case "FlowEventScheduledForActivation": {

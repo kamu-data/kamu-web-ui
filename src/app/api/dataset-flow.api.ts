@@ -17,14 +17,19 @@ import {
     DatasetTriggerFlowMutation,
     FlowConfigurationInput,
     FlowRunConfiguration,
+    FlowTriggerInput,
     GetDatasetFlowConfigsGQL,
     GetDatasetFlowConfigsQuery,
+    GetDatasetFlowTriggersGQL,
+    GetDatasetFlowTriggersQuery,
     GetDatasetListFlowsGQL,
     GetDatasetListFlowsQuery,
     GetFlowByIdGQL,
     GetFlowByIdQuery,
     SetDatasetFlowConfigGQL,
     SetDatasetFlowConfigMutation,
+    SetDatasetFlowTriggersGQL,
+    SetDatasetFlowTriggersMutation,
 } from "./kamu.graphql.interface";
 import { Observable, first, map } from "rxjs";
 import { ApolloQueryResult } from "@apollo/client";
@@ -46,6 +51,8 @@ export class DatasetFlowApi {
     // private datasetFlowCompactionGQL = inject(DatasetFlowCompactionGQL);
     private datasetFlowsInitiatorsGQL = inject(DatasetFlowsInitiatorsGQL);
     private setDatasetFlowConfigGQL = inject(SetDatasetFlowConfigGQL);
+    private setDatasetFlowTriggersGQL = inject(SetDatasetFlowTriggersGQL);
+    private getDatasetFlowTriggersGQL = inject(GetDatasetFlowTriggersGQL);
 
     public datasetTriggerFlow(params: {
         accountId: string;
@@ -99,6 +106,43 @@ export class DatasetFlowApi {
                     } else {
                         throw new DatasetOperationError(result.errors ?? []);
                     }
+                }),
+            );
+    }
+
+    public setDatasetFlowTriggers(params: {
+        datasetId: string;
+        datasetFlowType: DatasetFlowType;
+        paused: boolean;
+        triggerInput: FlowTriggerInput;
+    }): Observable<SetDatasetFlowTriggersMutation> {
+        return this.setDatasetFlowTriggersGQL.mutate(params).pipe(
+            first(),
+            map((result: MutationResult<SetDatasetFlowTriggersMutation>) => {
+                /* istanbul ignore else */
+                if (result.data) {
+                    return result.data;
+                } else {
+                    throw new DatasetOperationError(result.errors ?? []);
+                }
+            }),
+        );
+    }
+
+    public getDatasetFlowTriggers(params: {
+        datasetId: string;
+        datasetFlowType: DatasetFlowType;
+    }): Observable<GetDatasetFlowTriggersQuery> {
+        return this.getDatasetFlowTriggersGQL
+            .watch(params, {
+                ...noCacheFetchPolicy,
+                context: {
+                    skipLoading: true,
+                },
+            })
+            .valueChanges.pipe(
+                map((result: ApolloQueryResult<GetDatasetFlowTriggersQuery>) => {
+                    return result.data;
                 }),
             );
     }

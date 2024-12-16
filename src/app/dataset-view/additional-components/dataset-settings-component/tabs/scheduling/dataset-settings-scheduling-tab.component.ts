@@ -8,6 +8,9 @@ import {
     DatasetFlowType,
     DatasetKind,
     DatasetPermissionsFragment,
+    FlowTriggerInput,
+    GetDatasetFlowConfigsQuery,
+    GetDatasetFlowTriggersQuery,
     IngestConditionInput,
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
@@ -17,7 +20,6 @@ import { cronExpressionNextTime, logError } from "src/app/common/app.helpers";
 import {
     BatchingFormType,
     IngestConfigurationFormType,
-    PollingFormType,
     PollingGroupType,
 } from "./dataset-settings-scheduling-tab.component.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -34,30 +36,28 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
     public readonly pollingGroupEnum: typeof PollingGroupEnum = PollingGroupEnum;
     public readonly throttlingGroupEnum: typeof ThrottlingGroupEnum = ThrottlingGroupEnum;
     public readonly timeUnit: typeof TimeUnit = TimeUnit;
-    private scheduleOptions: IngestConditionInput;
     private everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = everyTimeMapperValidators;
 
     public ingestConfigurationForm = new FormGroup<IngestConfigurationFormType>({
         fetchUncacheable: new FormControl<boolean>(false, { nonNullable: true }),
     });
 
-    public pollingForm = new FormGroup<PollingFormType>({
-        pollingGroup: new FormGroup<PollingGroupType>({
-            updatesState: new FormControl<boolean>(false, { nonNullable: true }),
-            __typename: new FormControl(PollingGroupEnum.TIME_DELTA, [Validators.required]),
-            every: new FormControl<MaybeNull<number>>({ value: null, disabled: false }, [
-                Validators.required,
-                Validators.min(1),
-            ]),
-            unit: new FormControl<MaybeNull<TimeUnit>>({ value: null, disabled: false }, [Validators.required]),
-            cronExpression: new FormControl<MaybeNull<string>>({ value: "", disabled: true }, [
-                Validators.required,
-                cronExpressionValidator(),
-            ]),
-        }),
+    public pollingForm = new FormGroup<PollingGroupType>({
+        updatesState: new FormControl<boolean>(false, { nonNullable: true }),
+        __typename: new FormControl(PollingGroupEnum.TIME_DELTA, [Validators.required]),
+        every: new FormControl<MaybeNull<number>>({ value: null, disabled: false }, [
+            Validators.required,
+            Validators.min(1),
+        ]),
+        unit: new FormControl<MaybeNull<TimeUnit>>({ value: null, disabled: false }, [Validators.required]),
+        cronExpression: new FormControl<MaybeNull<string>>({ value: "", disabled: true }, [
+            Validators.required,
+            cronExpressionValidator(),
+        ]),
     });
 
     public batchingForm = new FormGroup<BatchingFormType>({
+        updatesState: new FormControl<boolean>(false, { nonNullable: true }),
         every: new FormControl<MaybeNull<number>>({ value: null, disabled: false }, [
             Validators.required,
             Validators.min(1),
@@ -71,12 +71,8 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
 
     private datasetSchedulingService = inject(DatasetSchedulingService);
 
-    public get pollingGroup(): FormGroup {
-        return this.pollingForm.get("pollingGroup") as FormGroup;
-    }
-
     public get pollingType(): AbstractControl {
-        return this.pollingGroup.controls.__typename;
+        return this.pollingForm.controls.__typename;
     }
 
     public get batchingEveryTime(): AbstractControl {
@@ -91,16 +87,20 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
         return this.batchingForm.controls.minRecordsToAwait;
     }
 
+    public get batchingUpdateState(): AbstractControl {
+        return this.batchingForm.controls.updatesState;
+    }
+
     public get pollingEveryTime(): AbstractControl {
-        return this.pollingGroup.controls.every;
+        return this.pollingForm.controls.every;
     }
 
     public get pollingUnitTime(): AbstractControl {
-        return this.pollingGroup.controls.unit;
+        return this.pollingForm.controls.unit;
     }
 
     public get cronExpression(): AbstractControl {
-        return this.pollingGroup.controls.cronExpression;
+        return this.pollingForm.controls.cronExpression;
     }
 
     public get nextTime(): string {
@@ -113,6 +113,10 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
 
     public get fetchUncacheable(): FormControl<boolean> {
         return this.ingestConfigurationForm.controls.fetchUncacheable;
+    }
+
+    public get pollingUpdateState(): AbstractControl {
+        return this.pollingForm.controls.updatesState;
     }
 
     public ngOnInit() {
@@ -187,104 +191,117 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
 
     private checkStatusSection(): void {
         if (this.datasetBasics.kind === DatasetKind.Root) {
-            this.batchingForm.disable();
-            this.pollingGroup.enable();
-            this.cronExpression.disable();
+            //   this.cronExpression.disable();
+            //Init configs
             this.datasetSchedulingService
                 .fetchDatasetFlowConfigs(this.datasetBasics.id, DatasetFlowType.Ingest)
                 .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe((data) => {
+                .subscribe((data: GetDatasetFlowConfigsQuery) => {
                     const flowConfiguration = data.datasets.byId?.flows.configs.byType?.ingest;
                     this.ingestConfigurationForm.patchValue({ fetchUncacheable: flowConfiguration?.fetchUncacheable });
-                    console.log("==>", flowConfiguration);
-                    // const paused = data.datasets.byId?.flows.configs.byType?.paused;
-                    // if (flowConfiguration?.schedule) {
-                    //     this.pollingForm.patchValue({ updatesState: !paused });
-                    //     this.pollingGroup.patchValue({
-                    //         ...flowConfiguration.schedule,
-                    //         fetchUncacheable: flowConfiguration.fetchUncacheable,
-                    //     });
-                    //     if (flowConfiguration.schedule.__typename === "Cron5ComponentExpression") {
-                    //         this.pollingGroup.patchValue({
-                    //             // splice for sync with cron parser
-                    //             cronExpression: flowConfiguration.schedule.cron5ComponentExpression,
-                    //         });
-                    //     }
-                    // }
+                });
+            //Init triggers
+            this.datasetSchedulingService
+                .fetchDatasetFlowTriggers(this.datasetBasics.id, DatasetFlowType.Ingest)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe((data: GetDatasetFlowTriggersQuery) => {
+                    const flowTriggers = data.datasets.byId?.flows.triggers.byType;
+                    const schedule = flowTriggers?.schedule;
+                    if (schedule && schedule.__typename === PollingGroupEnum.TIME_DELTA) {
+                        this.pollingForm.patchValue({
+                            updatesState: !flowTriggers.paused,
+                            __typename: schedule?.__typename as PollingGroupEnum,
+                            every: schedule.every,
+                            unit: schedule.unit,
+                        });
+                    }
+                    if (schedule && schedule.__typename === PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION) {
+                        this.pollingForm.patchValue({
+                            updatesState: !flowTriggers.paused,
+                            __typename: schedule.__typename as PollingGroupEnum,
+                            cronExpression: schedule.cron5ComponentExpression,
+                        });
+                    }
+                });
+        } else {
+            this.datasetSchedulingService
+                .fetchDatasetFlowTriggers(this.datasetBasics.id, DatasetFlowType.ExecuteTransform)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe((data: GetDatasetFlowTriggersQuery) => {
+                    const flowTriggers = data.datasets.byId?.flows.triggers.byType;
+                    const batching = flowTriggers?.batching;
+                    if (batching) {
+                        this.batchingForm.patchValue({
+                            ...batching.maxBatchingInterval,
+                            minRecordsToAwait: batching.minRecordsToAwait,
+                            updatesState: !flowTriggers.paused,
+                        });
+                    }
                 });
         }
-        //  else {
-        //     this.pollingGroup.disable();
-        //     this.batchingForm.enable();
-        //     this.datasetSchedulingService
-        //         .fetchDatasetFlowConfigs(this.datasetBasics.id, DatasetFlowType.ExecuteTransform)
-        //         .pipe(takeUntilDestroyed(this.destroyRef))
-        //         .subscribe((data) => {
-        //             const flowConfiguration = data.datasets.byId?.flows.configs.byType;
-        //             const paused = data.datasets.byId?.flows.configs.byType?.paused;
-        //             if (flowConfiguration?.transform) {
-        //                 const batchingConfig = flowConfiguration.transform;
-        //                 this.pollingForm.patchValue({ updatesState: !paused });
-        //                 this.batchingForm.patchValue({
-        //                     ...batchingConfig.maxBatchingInterval,
-        //                     minRecordsToAwait: batchingConfig.minRecordsToAwait,
-        //                 });
-        //             }
-        //         });
-        // }
     }
 
-    public onSubmit(): void {
-        // if (this.datasetBasics.kind === DatasetKind.Root) {
-        //     this.setScheduleOptions();
-        //     this.datasetSchedulingService
-        //         .setDatasetFlowSchedule({
-        //             accountId: this.datasetBasics.owner.id,
-        //             datasetId: this.datasetBasics.id,
-        //             datasetFlowType: DatasetFlowType.Ingest,
-        //             paused: !(this.updateState.value as boolean),
-        //             ingest: this.scheduleOptions,
-        //             datasetInfo: {
-        //                 accountName: this.datasetBasics.owner.accountName,
-        //                 datasetName: this.datasetBasics.name,
-        //             },
-        //         })
-        //         .pipe(takeUntilDestroyed(this.destroyRef))
-        //         .subscribe();
-        // } else {
-        //     this.datasetSchedulingService
-        //         .setDatasetFlowBatching({
-        //             accountId: this.datasetBasics.owner.id,
-        //             datasetId: this.datasetBasics.id,
-        //             datasetFlowType: DatasetFlowType.ExecuteTransform,
-        //             paused: !(this.updateState.value as boolean),
-        //             transform: {
-        //                 minRecordsToAwait: this.batchingMinRecordsToAwait.value as number,
-        //                 maxBatchingInterval: {
-        //                     every: this.batchingEveryTime.value as number,
-        //                     unit: this.batchingUnitTime.value as TimeUnit,
-        //                 },
-        //             },
-        //             datasetInfo: {
-        //                 accountName: this.datasetBasics.owner.accountName,
-        //                 datasetName: this.datasetBasics.name,
-        //             },
-        //         })
-        //         .pipe(takeUntilDestroyed(this.destroyRef))
-        //         .subscribe();
-        // }
+    public saveBatchingTriggers(): void {
+        this.datasetSchedulingService
+            .setDatasetTriggers({
+                datasetId: this.datasetBasics.id,
+                datasetFlowType: DatasetFlowType.ExecuteTransform,
+                paused: !(this.batchingUpdateState.value as boolean),
+                triggerInput: this.setBatchingTriggerInput(),
+                datasetInfo: {
+                    accountName: this.datasetBasics.owner.accountName,
+                    datasetName: this.datasetBasics.name,
+                },
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe();
     }
 
-    private setScheduleOptions(): void {
-        if (this.pollingGroup.controls.__typename.value === PollingGroupEnum.TIME_DELTA) {
-            this.scheduleOptions = {
-                fetchUncacheable: this.fetchUncacheable.value,
+    public savePollingTriggers(): void {
+        this.datasetSchedulingService
+            .setDatasetTriggers({
+                datasetId: this.datasetBasics.id,
+                datasetFlowType: DatasetFlowType.Ingest,
+                paused: !(this.pollingUpdateState.value as boolean),
+                triggerInput: this.setPollingTriggerInput(),
+                datasetInfo: {
+                    accountName: this.datasetBasics.owner.accountName,
+                    datasetName: this.datasetBasics.name,
+                },
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe();
+    }
+
+    private setPollingTriggerInput(): FlowTriggerInput {
+        if (this.pollingForm.controls.__typename.value === PollingGroupEnum.TIME_DELTA) {
+            return {
+                schedule: {
+                    timeDelta: {
+                        every: this.pollingEveryTime.value as number,
+                        unit: this.pollingUnitTime.value as TimeUnit,
+                    },
+                },
+            };
+        } else {
+            return {
+                schedule: {
+                    // sync with server validator
+                    cron5ComponentExpression: this.cronExpression.value as string,
+                },
             };
         }
-        if (this.pollingGroup.controls.__typename.value === PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION) {
-            this.scheduleOptions = {
-                fetchUncacheable: this.fetchUncacheable.value,
-            };
-        }
+    }
+
+    private setBatchingTriggerInput(): FlowTriggerInput {
+        return {
+            batching: {
+                minRecordsToAwait: this.batchingMinRecordsToAwait.value as number,
+                maxBatchingInterval: {
+                    every: this.batchingEveryTime.value as number,
+                    unit: this.batchingUnitTime.value as TimeUnit,
+                },
+            },
+        };
     }
 }

@@ -35,14 +35,15 @@ export class DatasetSchedulingService {
         datasetId: string;
         datasetFlowType: DatasetFlowType;
         configInput: FlowConfigurationInput;
-    }): Observable<void> {
+    }): Observable<boolean> {
         return this.datasetFlowApi.setDatasetFlowConfigs(params).pipe(
             map((data: SetDatasetFlowConfigMutation) => {
                 const setConfig = data.datasets.byId?.flows.configs.setConfig;
                 if (setConfig?.__typename === "SetFlowConfigSuccess") {
-                    this.toastrService.success("Configuration saved");
+                    return true;
                 } else {
                     this.toastrService.error(setConfig?.message);
+                    return false;
                 }
             }),
         );
@@ -79,54 +80,4 @@ export class DatasetSchedulingService {
             }),
         );
     }
-
-    // public setDatasetFlowSchedule(params: {
-    //     accountId: string;
-    //     datasetId: string;
-    //     datasetFlowType: DatasetFlowType;
-    //     paused: boolean;
-    //     ingest: IngestConditionInput;
-    //     datasetInfo: DatasetInfo;
-    // }): Observable<void> {
-    //     return this.datasetFlowApi.setDatasetFlowSchedule(params).pipe(
-    //         map((data: DatasetFlowScheduleMutation) => {
-    //             const setConfigSchedule = data.datasets.byId?.flows.configs.setConfigIngest;
-    //             if (setConfigSchedule?.__typename === "SetFlowConfigSuccess") {
-    //                 setTimeout(() => {
-    //                     this.navigationService.navigateToDatasetView({
-    //                         accountName: params.datasetInfo.accountName,
-    //                         datasetName: params.datasetInfo.datasetName,
-    //                         tab: DatasetViewTypeEnum.Flows,
-    //                     });
-    //                 }, AppValues.SIMULATION_START_CONDITION_DELAY_MS);
-    //             } else if (setConfigSchedule?.__typename === "FlowIncompatibleDatasetKind") {
-    //                 this.toastrService.error(setConfigSchedule.message);
-    //             }
-    //         }),
-    //     );
-    // }
-
-    // public setDatasetFlowBatching(params: {
-    //     accountId: string;
-    //     datasetId: string;
-    //     datasetFlowType: DatasetFlowType;
-    //     paused: boolean;
-    //     transform: TransformConditionInput;
-    //     datasetInfo: DatasetInfo;
-    // }): Observable<void> {
-    //     return this.datasetFlowApi.setDatasetFlowBatching(params).pipe(
-    //         map((data: DatasetFlowBatchingMutation) => {
-    //             const setConfigBatching = data.datasets.byId?.flows.configs.setConfigTransform;
-    //             setConfigBatching?.__typename === "SetFlowConfigSuccess"
-    //                 ? setTimeout(() => {
-    //                       this.navigationService.navigateToDatasetView({
-    //                           accountName: params.datasetInfo.accountName,
-    //                           datasetName: params.datasetInfo.datasetName,
-    //                           tab: DatasetViewTypeEnum.Flows,
-    //                       });
-    //                   }, AppValues.SIMULATION_START_CONDITION_DELAY_MS)
-    //                 : this.toastrService.error(setConfigBatching?.message);
-    //         }),
-    //     );
-    // }
 }

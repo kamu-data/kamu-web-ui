@@ -1,8 +1,13 @@
 import { inject, Injectable } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
-import { Observable, map, of, switchMap } from "rxjs";
+import { Observable, map } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
-import { DatasetFlowType, DatasetTriggerFlowMutation, FlowRunConfiguration } from "src/app/api/kamu.graphql.interface";
+import {
+    CompactionConditionInput,
+    DatasetFlowType,
+    DatasetTriggerFlowMutation,
+    FlowRunConfiguration,
+} from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowsService } from "../../flows-component/services/dataset-flows.service";
 
 @Injectable({
@@ -13,36 +18,19 @@ export class DatasetCompactionService {
     private toastrService = inject(ToastrService);
     private flowsService = inject(DatasetFlowsService);
 
-    // public runHardCompaction(params: {
-    //     datasetId: string;
-    //     datasetFlowType: DatasetFlowType;
-    //     compactionArgs: CompactionConditionInput;
-    // }): Observable<boolean> {
-    //     return this.datasetFlowApi.setDatasetFlowCompaction(params).pipe(
-    //         map((data: DatasetFlowCompactionMutation) => {
-    //             if (data.datasets.byId?.flows.configs.setConfigCompaction.__typename === "SetFlowConfigSuccess") {
-    //                 return true;
-    //             } else {
-    //                 this.toastrService.error(data.datasets.byId?.flows.configs.setConfigCompaction.message);
-    //                 return false;
-    //             }
-    //         }),
-    //         switchMap((success: boolean) => {
-    //             if (success && params.compactionArgs.full) {
-    //                 return this.flowsService.datasetTriggerFlow({
-    //                     datasetId: params.datasetId,
-    //                     datasetFlowType: params.datasetFlowType,
-    //                     flowRunConfiguration: {
-    //                         compaction: {
-    //                             full: params.compactionArgs.full,
-    //                         },
-    //                     },
-    //                 });
-    //             }
-    //             return of(false);
-    //         }),
-    //     );
-    // }
+    public runHardCompaction(params: {
+        datasetId: string;
+        datasetFlowType: DatasetFlowType;
+        compactionArgs: CompactionConditionInput;
+    }): Observable<boolean> {
+        return this.flowsService.datasetTriggerFlow({
+            datasetId: params.datasetId,
+            datasetFlowType: params.datasetFlowType,
+            flowRunConfiguration: {
+                compaction: params.compactionArgs,
+            },
+        });
+    }
 
     public resetToSeed(params: {
         accountId: string;

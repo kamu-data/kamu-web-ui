@@ -11,7 +11,6 @@ import {
     FlowTriggerInput,
     GetDatasetFlowConfigsQuery,
     GetDatasetFlowTriggersQuery,
-    IngestConditionInput,
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
@@ -23,6 +22,7 @@ import {
     PollingGroupType,
 } from "./dataset-settings-scheduling-tab.component.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
     selector: "app-dataset-settings-scheduling-tab",
@@ -70,6 +70,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
     });
 
     private datasetSchedulingService = inject(DatasetSchedulingService);
+    private toastrService = inject(ToastrService);
 
     public get pollingType(): AbstractControl {
         return this.pollingForm.controls.__typename;
@@ -142,7 +143,11 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                 },
             })
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe();
+            .subscribe((success: boolean) => {
+                if (success) {
+                    this.toastrService.success("Configuration saved");
+                }
+            });
     }
 
     private pollingTypeChanges(): void {

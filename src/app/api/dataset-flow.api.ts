@@ -39,8 +39,6 @@ import { noCacheFetchPolicy } from "../common/data.helpers";
 @Injectable({ providedIn: "root" })
 export class DatasetFlowApi {
     private getDatasetFlowConfigsGQL = inject(GetDatasetFlowConfigsGQL);
-    // private datasetFlowScheduleGQL = inject(DatasetFlowScheduleGQL);
-    // private datasetFlowBatchingGQL = inject(DatasetFlowBatchingGQL);
     private getDatasetListFlowsGQL = inject(GetDatasetListFlowsGQL);
     private datasetPauseFlowsGQL = inject(DatasetPauseFlowsGQL);
     private datasetResumeFlowsGQL = inject(DatasetResumeFlowsGQL);
@@ -48,7 +46,6 @@ export class DatasetFlowApi {
     private datasetTriggerFlowGQL = inject(DatasetTriggerFlowGQL);
     private datasetFlowByIdGQL = inject(GetFlowByIdGQL);
     private cancelScheduledTasksGQL = inject(CancelScheduledTasksGQL);
-    // private datasetFlowCompactionGQL = inject(DatasetFlowCompactionGQL);
     private datasetFlowsInitiatorsGQL = inject(DatasetFlowsInitiatorsGQL);
     private setDatasetFlowConfigGQL = inject(SetDatasetFlowConfigGQL);
     private setDatasetFlowTriggersGQL = inject(SetDatasetFlowTriggersGQL);
@@ -146,54 +143,6 @@ export class DatasetFlowApi {
                 }),
             );
     }
-
-    // public setDatasetFlowSchedule(params: {
-    //     accountId: string;
-    //     datasetId: string;
-    //     datasetFlowType: DatasetFlowType;
-    //     paused: boolean;
-    //     ingest: IngestConditionInput;
-    // }): Observable<DatasetFlowScheduleMutation> {
-    //     return this.datasetFlowScheduleGQL
-    //         .mutate({
-    //             ...params,
-    //         })
-    //         .pipe(
-    //             first(),
-    //             map((result: MutationResult<DatasetFlowScheduleMutation>) => {
-    //                 /* istanbul ignore else */
-    //                 if (result.data) {
-    //                     return result.data;
-    //                 } else {
-    //                     throw new DatasetOperationError(result.errors ?? []);
-    //                 }
-    //             }),
-    //         );
-    // }
-
-    // public setDatasetFlowBatching(params: {
-    //     accountId: string;
-    //     datasetId: string;
-    //     datasetFlowType: DatasetFlowType;
-    //     paused: boolean;
-    //     transform: TransformConditionInput;
-    // }): Observable<DatasetFlowBatchingMutation> {
-    //     return this.datasetFlowBatchingGQL
-    //         .mutate({
-    //             ...params,
-    //         })
-    //         .pipe(
-    //             first(),
-    //             map((result: MutationResult<DatasetFlowBatchingMutation>) => {
-    //                 /* istanbul ignore else */
-    //                 if (result.data) {
-    //                     return result.data;
-    //                 } else {
-    //                     throw new DatasetOperationError(result.errors ?? []);
-    //                 }
-    //             }),
-    //         );
-    // }
 
     public getDatasetListFlows(params: {
         datasetId: string;
@@ -308,30 +257,6 @@ export class DatasetFlowApi {
                 }),
             );
     }
-
-    // public setDatasetFlowCompaction(params: {
-    //     datasetId: string;
-    //     datasetFlowType: DatasetFlowType;
-    //     compactionArgs: CompactionConditionInput;
-    // }): Observable<DatasetFlowCompactionMutation> {
-    //     return this.datasetFlowCompactionGQL
-    //         .mutate({
-    //             datasetId: params.datasetId,
-    //             datasetFlowType: params.datasetFlowType,
-    //             compactionArgs: params.compactionArgs,
-    //         })
-    //         .pipe(
-    //             first(),
-    //             map((result: MutationResult<DatasetFlowCompactionMutation>) => {
-    //                 /* istanbul ignore else */
-    //                 if (result.data) {
-    //                     return result.data;
-    //                 } else {
-    //                     throw new DatasetOperationError(result.errors ?? []);
-    //                 }
-    //             }),
-    //         );
-    // }
 
     public getDatasetFlowsInitiators(datasetId: string): Observable<DatasetFlowsInitiatorsQuery> {
         return this.datasetFlowsInitiatorsGQL.watch({ datasetId }, noCacheFetchPolicy).valueChanges.pipe(

@@ -191,7 +191,6 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
 
     private checkStatusSection(): void {
         if (this.datasetBasics.kind === DatasetKind.Root) {
-            //   this.cronExpression.disable();
             //Init configs
             this.datasetSchedulingService
                 .fetchDatasetFlowConfigs(this.datasetBasics.id, DatasetFlowType.Ingest)

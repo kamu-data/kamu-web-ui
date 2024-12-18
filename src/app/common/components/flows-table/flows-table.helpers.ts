@@ -101,8 +101,7 @@ export class DatasetFlowTableHelpers {
                                         ((element.configSnapshot?.__typename === "FlowConfigurationIngest" &&
                                             !element.configSnapshot.fetchUncacheable) ||
                                             !element.configSnapshot)
-                                      ? // TODO: Replace when will be new API
-                                        `Source is uncacheable: to re-scan the data, use force update`
+                                      ? `Source is uncacheable: to re-scan the data, use`
                                       : "Dataset is up-to-date";
 
                             case "FlowDescriptionDatasetExecuteTransform":

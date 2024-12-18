@@ -50,7 +50,7 @@ describe("DatasetFlowTableHelpers", () => {
         expect(
             DatasetFlowTableHelpers.waitingBlockText({
                 __typename: "FlowStartConditionBatching",
-                activeTransformRule: {
+                activeBatchingRule: {
                     minRecordsToAwait: 500,
                     maxBatchingInterval: {
                         every: 5,
@@ -215,6 +215,6 @@ describe("DatasetFlowTableHelpers", () => {
                 mockDatasets,
                 mockDatasets[1].id,
             ),
-        ).toEqual(`Source is uncacheable: to re-scan the data, use force update`);
+        ).toEqual(`Source is uncacheable: to re-scan the data, use`);
     });
 });

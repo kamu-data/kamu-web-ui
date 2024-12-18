@@ -4,12 +4,13 @@ import { ToastrService } from "ngx-toastr";
 import { Observable, map } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
-    DatasetFlowBatchingMutation,
-    DatasetFlowScheduleMutation,
     DatasetFlowType,
+    FlowConfigurationInput,
+    FlowTriggerInput,
     GetDatasetFlowConfigsQuery,
-    IngestConditionInput,
-    TransformConditionInput,
+    GetDatasetFlowTriggersQuery,
+    SetDatasetFlowConfigMutation,
+    SetDatasetFlowTriggersMutation,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
@@ -30,18 +31,42 @@ export class DatasetSchedulingService {
         return this.datasetFlowApi.getDatasetFlowConfigs({ datasetId, datasetFlowType });
     }
 
-    public setDatasetFlowSchedule(params: {
-        accountId: string;
+    public setDatasetFlowConfigs(params: {
+        datasetId: string;
+        datasetFlowType: DatasetFlowType;
+        configInput: FlowConfigurationInput;
+    }): Observable<boolean> {
+        return this.datasetFlowApi.setDatasetFlowConfigs(params).pipe(
+            map((data: SetDatasetFlowConfigMutation) => {
+                const setConfig = data.datasets.byId?.flows.configs.setConfig;
+                if (setConfig?.__typename === "SetFlowConfigSuccess") {
+                    return true;
+                } else {
+                    this.toastrService.error(setConfig?.message);
+                    return false;
+                }
+            }),
+        );
+    }
+
+    public fetchDatasetFlowTriggers(
+        datasetId: string,
+        datasetFlowType: DatasetFlowType,
+    ): Observable<GetDatasetFlowTriggersQuery> {
+        return this.datasetFlowApi.getDatasetFlowTriggers({ datasetId, datasetFlowType });
+    }
+
+    public setDatasetTriggers(params: {
         datasetId: string;
         datasetFlowType: DatasetFlowType;
         paused: boolean;
-        ingest: IngestConditionInput;
+        triggerInput: FlowTriggerInput;
         datasetInfo: DatasetInfo;
     }): Observable<void> {
-        return this.datasetFlowApi.setDatasetFlowSchedule(params).pipe(
-            map((data: DatasetFlowScheduleMutation) => {
-                const setConfigSchedule = data.datasets.byId?.flows.configs.setConfigIngest;
-                if (setConfigSchedule?.__typename === "SetFlowConfigSuccess") {
+        return this.datasetFlowApi.setDatasetFlowTriggers(params).pipe(
+            map((data: SetDatasetFlowTriggersMutation) => {
+                const triggers = data.datasets.byId?.flows.triggers.setTrigger;
+                if (triggers?.__typename === "SetFlowTriggerSuccess") {
                     setTimeout(() => {
                         this.navigationService.navigateToDatasetView({
                             accountName: params.datasetInfo.accountName,
@@ -49,33 +74,9 @@ export class DatasetSchedulingService {
                             tab: DatasetViewTypeEnum.Flows,
                         });
                     }, AppValues.SIMULATION_START_CONDITION_DELAY_MS);
-                } else if (setConfigSchedule?.__typename === "FlowIncompatibleDatasetKind") {
-                    this.toastrService.error(setConfigSchedule.message);
+                } else {
+                    this.toastrService.error(triggers?.message);
                 }
-            }),
-        );
-    }
-
-    public setDatasetFlowBatching(params: {
-        accountId: string;
-        datasetId: string;
-        datasetFlowType: DatasetFlowType;
-        paused: boolean;
-        transform: TransformConditionInput;
-        datasetInfo: DatasetInfo;
-    }): Observable<void> {
-        return this.datasetFlowApi.setDatasetFlowBatching(params).pipe(
-            map((data: DatasetFlowBatchingMutation) => {
-                const setConfigBatching = data.datasets.byId?.flows.configs.setConfigTransform;
-                setConfigBatching?.__typename === "SetFlowConfigSuccess"
-                    ? setTimeout(() => {
-                          this.navigationService.navigateToDatasetView({
-                              accountName: params.datasetInfo.accountName,
-                              datasetName: params.datasetInfo.datasetName,
-                              tab: DatasetViewTypeEnum.Flows,
-                          });
-                      }, AppValues.SIMULATION_START_CONDITION_DELAY_MS)
-                    : this.toastrService.error(setConfigBatching?.message);
             }),
         );
     }

@@ -289,6 +289,11 @@ export class OverviewComponent extends BaseComponent implements OnInit {
                     this.datasetBasics.kind === DatasetKind.Root
                         ? DatasetFlowType.Ingest
                         : DatasetFlowType.ExecuteTransform,
+                flowRunConfiguration: {
+                    ingest: {
+                        fetchUncacheable: true,
+                    },
+                },
             })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((success: boolean) => {

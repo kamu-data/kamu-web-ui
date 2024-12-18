@@ -85,7 +85,9 @@ import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatChipsModule } from "@angular/material/chips";
 import { QuerySharedModule } from "../query/shared/query-shared/query-shared.module";
-
+import { IngestConfigurationModule } from "./additional-components/dataset-settings-component/tabs/scheduling/ingest-configuration-form/ingest-configuration.module";
+import { IngestTriggerModule } from "./additional-components/dataset-settings-component/tabs/scheduling/ingest-trigger-form/ingest-trigger.module";
+import { BatchingTriggerModule } from "./additional-components/dataset-settings-component/tabs/scheduling/batching-trigger-form/batching-trigger.module";
 @NgModule({
     imports: [
         CommonModule,
@@ -141,6 +143,9 @@ import { QuerySharedModule } from "../query/shared/query-shared/query-shared.mod
         MatSortModule,
         AngularMultiSelectModule,
         QuerySharedModule,
+        IngestConfigurationModule,
+        IngestTriggerModule,
+        BatchingTriggerModule,
     ],
     exports: [
         DatasetViewHeaderComponent,

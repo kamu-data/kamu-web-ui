@@ -1,0 +1,39 @@
+mutation setDatasetFlowConfig(
+  $datasetId: DatasetID!
+  $datasetFlowType: DatasetFlowType!
+  $configInput: FlowConfigurationInput!
+) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      flows {
+        configs {
+          setConfig(datasetFlowType: $datasetFlowType, configInput: $configInput) {
+            ... on SetFlowConfigSuccess {
+              message
+            }
+
+            ... on FlowTypeIsNotSupported {
+              message
+            }
+
+            ... on FlowPreconditionsNotMet {
+              message
+              preconditions
+            }
+
+            ... on FlowInvalidConfigInputError {
+              message
+              reason
+            }
+
+            ... on FlowIncompatibleDatasetKind {
+              message
+              actualDatasetKind
+              expectedDatasetKind
+            }
+          }
+        }
+      }
+    }
+  }
+}

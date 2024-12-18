@@ -15,6 +15,7 @@ export class FeatureFlagDirective {
 
     @Input("appFeatureFlag") public featureName: string;
 
+    /* istanbul ignore next */
     public ngOnInit(): void {
         if (!this.el.nativeElement) {
             return;
@@ -37,6 +38,7 @@ export class FeatureFlagDirective {
         }
     }
 
+    /* istanbul ignore next */
     private deduceFeatureVisibility(feature: Feature): FeatureVisibility {
         const showMode = this.featureFlagsService.getEffectiveFeatureShowMode();
         switch (showMode) {

@@ -1,4 +1,3 @@
-import { NavigationService } from "src/app/services/navigation.service";
 import { DataHelpers } from "src/app/common/data.helpers";
 import {
     ChangeDetectionStrategy,
@@ -86,7 +85,6 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     public dropdownStatustList: FilterStatusType[] = [];
     public selectedStatusItems: FilterStatusType[] = [];
 
-    private navigationService = inject(NavigationService);
     private modalService = inject(ModalService);
     private datasetFlowsService = inject(DatasetFlowsService);
     private toastrService = inject(ToastrService);

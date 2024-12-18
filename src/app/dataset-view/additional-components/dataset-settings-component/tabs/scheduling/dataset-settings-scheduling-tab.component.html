@@ -121,7 +121,12 @@
                     <span class="position-absolute text-muted group-box-label text-uppercase">Configuration</span>
 
                     <div class="d-flex align-items-center mt-4">
-                        <input class="checkbox-uncacheable me-3" type="checkbox" formControlName="fetchUncacheable" />
+                        <input
+                            class="checkbox-uncacheable me-3"
+                            type="checkbox"
+                            data-test-id="fetchUncacheable"
+                            formControlName="fetchUncacheable"
+                        />
                         <span class="d-inline-block">Fetch uncacheable</span>
                     </div>
                     <div class="border-top mt-4"></div>
@@ -130,7 +135,7 @@
                             type="button"
                             class="btn btn-success"
                             (click)="saveIngestConfiguration()"
-                            data-test-id="save-polling-triggers"
+                            data-test-id="save-polling-configuration"
                         >
                             Save configuration
                         </button>

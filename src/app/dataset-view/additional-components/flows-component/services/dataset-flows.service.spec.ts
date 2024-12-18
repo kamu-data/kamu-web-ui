@@ -177,17 +177,7 @@ describe("DatasetFlowsService", () => {
         spyOn(datasetFlowApi, "allFlowsPaused").and.returnValue(of(mockDatasetAllFlowsPausedQuery));
 
         const subscription$ = service.allFlowsPaused(MOCK_DATASET_ID).subscribe((result) => {
-            expect(result).toEqual(mockDatasetAllFlowsPausedQuery.datasets.byId?.flows.configs.allPaused);
-        });
-
-        expect(subscription$.closed).toBeTrue();
-    });
-
-    it("should check get flow by id", () => {
-        spyOn(datasetFlowApi, "allFlowsPaused").and.returnValue(of(mockDatasetAllFlowsPausedQuery));
-
-        const subscription$ = service.allFlowsPaused(MOCK_DATASET_ID).subscribe((result) => {
-            expect(result).toEqual(mockDatasetAllFlowsPausedQuery.datasets.byId?.flows.configs.allPaused);
+            expect(result).toEqual(mockDatasetAllFlowsPausedQuery.datasets.byId?.flows.triggers.allPaused);
         });
 
         expect(subscription$.closed).toBeTrue();

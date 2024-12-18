@@ -165,6 +165,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                     this.disableAndClearControl(this.pollingUnitTime);
                     break;
                 }
+                /* istanbul ignore next */
                 default: {
                     logError("Unknown PollingGroupEnum key");
                 }

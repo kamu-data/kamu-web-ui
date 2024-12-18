@@ -139,7 +139,27 @@ export const mockGetDatasetFlowTriggersQuery: GetDatasetFlowTriggersQuery = {
                         paused: true,
                         schedule: {
                             __typename: "Cron5ComponentExpression",
-                            cron5ComponentExpression: "",
+                            cron5ComponentExpression: "* * * * ?",
+                        },
+                    },
+                },
+            },
+        },
+    },
+};
+
+export const mockGetDatasetFlowTriggersTimeDeltaQuery: GetDatasetFlowTriggersQuery = {
+    datasets: {
+        __typename: "Datasets",
+        byId: {
+            flows: {
+                triggers: {
+                    byType: {
+                        paused: true,
+                        schedule: {
+                            __typename: "TimeDelta",
+                            every: 10,
+                            unit: TimeUnit.Minutes,
                         },
                     },
                 },

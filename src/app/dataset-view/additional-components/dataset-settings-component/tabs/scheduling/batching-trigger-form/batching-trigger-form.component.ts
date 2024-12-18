@@ -48,14 +48,6 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
         return this.batchingForm.controls.unit;
     }
 
-    public get batchingMinRecordsToAwait(): AbstractControl {
-        return this.batchingForm.controls.minRecordsToAwait;
-    }
-
-    public get batchingUpdateState(): AbstractControl {
-        return this.batchingForm.controls.updatesState;
-    }
-
     public saveBatchingTriggers(): void {
         this.saveTriggerEmit.emit(this.batchingForm);
     }

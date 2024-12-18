@@ -12,17 +12,10 @@ import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetBasicsRootFragment,
     mockFullPowerDatasetPermissionsFragment,
-    mockNotScheduleDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
-import { ReactiveFormsModule } from "@angular/forms";
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
-import {
-    checkButtonDisabled,
-    emitClickOnElementByDataTestId,
-    findElementByDataTestId,
-    setFieldValue,
-} from "src/app/common/base-test.helpers.spec";
-import { PollingGroupEnum } from "../../dataset-settings.model";
+import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import _ from "lodash";
 import { TimeDelta, TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { of } from "rxjs";
@@ -31,6 +24,17 @@ import {
     mockGetDatasetFlowTriggersQuery,
     mockIngestGetDatasetFlowConfigsSuccess,
 } from "src/app/api/mock/dataset-flow.mock";
+import { BatchingTriggerModule } from "./batching-trigger-form/batching-trigger.module";
+import { IngestConfigurationModule } from "./ingest-configuration-form/ingest-configuration.module";
+import { IngestTriggerModule } from "./ingest-trigger-form/ingest-trigger.module";
+import {
+    BatchingFormType,
+    IngestConfigurationFormType,
+    PollingGroupType,
+} from "./dataset-settings-scheduling-tab.component.types";
+import { MaybeNull } from "src/app/common/app.types";
+import { PollingGroupEnum } from "../../dataset-settings.model";
+import { cronExpressionValidator } from "src/app/common/data.helpers";
 
 describe("DatasetSettingsSchedulingTabComponent", () => {
     let component: DatasetSettingsSchedulingTabComponent;
@@ -42,7 +46,6 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
     const MOCK_PARAM_UNIT = TimeUnit.Minutes;
     const MOCK_MIN_RECORDS_TO_AWAIT = 40;
     const MOCK_CRON_EXPRESSION = "* * * * ?";
-    const MOCK_INVALID_CRON_EXPRESSION = "* *";
     const MOCK_INPUT_TIME_DELTA: TimeDelta = {
         every: MOCK_PARAM_EVERY,
         unit: MOCK_PARAM_UNIT,
@@ -61,6 +64,9 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
                 MatSlideToggleModule,
                 MatRadioModule,
                 ReactiveFormsModule,
+                IngestConfigurationModule,
+                IngestTriggerModule,
+                BatchingTriggerModule,
             ],
         }).compileComponents();
 
@@ -103,100 +109,43 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         expect(fetchUncacheableCheckBox.value).toEqual(TimeUnit.Hours);
     });
 
-    it("should check have permission to canSchedule", () => {
-        component.datasetPermissions = _.cloneDeep(mockNotScheduleDatasetPermissionsFragment);
-        fixture.detectChanges();
-        expect(component.pollingForm.disabled).toEqual(true);
-    });
-
-    it("should check the initial state of the 'Save' button", () => {
+    it("should check save ingest configuration", () => {
+        const mockConfigurationForm = new FormGroup<IngestConfigurationFormType>({
+            fetchUncacheable: new FormControl<boolean>(false, { nonNullable: true }),
+        });
         component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
         fixture.detectChanges();
-        checkButtonDisabled(fixture, "save-config-options", true);
-    });
-
-    it("should check switch polling options", () => {
-        component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
-        fixture.detectChanges();
-        emitClickOnElementByDataTestId(fixture, "button-cron-expression");
-        expect(component.pollingType.value).toEqual(PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION);
-        emitClickOnElementByDataTestId(fixture, "button-time-delta");
-        expect(component.pollingType.value).toEqual(PollingGroupEnum.TIME_DELTA);
-    });
-
-    it("should check 'Save trigger' button works for ROOT dataset", () => {
-        const setDatasetFlowScheduleSpy = spyOn(datasetSchedulingService, "setDatasetTriggers").and.callThrough();
-        component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
-        fixture.detectChanges();
-        setFieldValue(fixture, "polling-group-every", MOCK_PARAM_EVERY.toString());
-        setFieldValue(fixture, "polling-group-unit", MOCK_PARAM_UNIT);
-        fixture.detectChanges();
-
-        emitClickOnElementByDataTestId(fixture, "save-config-options");
-        expect(setDatasetFlowScheduleSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
-                triggerInput: {
-                    schedule: {
-                        timeDelta: MOCK_INPUT_TIME_DELTA,
-                    },
-                },
-            }),
+        const setDatasetFlowScheduleSpy = spyOn(datasetSchedulingService, "setDatasetFlowConfigs").and.returnValue(
+            of(true),
         );
-    });
+        const toastrServiceSpy = spyOn(toastrService, "success");
 
-    it("should check 'Save trigger' button works for ROOT dataset with time delta", () => {
-        const setDatasetFlowScheduleSpy = spyOn(datasetSchedulingService, "setDatasetTriggers").and.callThrough();
-        component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
-        fixture.detectChanges();
-        setFieldValue(fixture, "polling-group-every", MOCK_PARAM_EVERY.toString());
-        setFieldValue(fixture, "polling-group-unit", MOCK_PARAM_UNIT);
-        fixture.detectChanges();
+        component.saveIngestConfiguration(mockConfigurationForm);
 
-        emitClickOnElementByDataTestId(fixture, "save-config-options");
-
-        expect(setDatasetFlowScheduleSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
-                triggerInput: {
-                    schedule: {
-                        timeDelta: MOCK_INPUT_TIME_DELTA,
-                    },
-                },
-            }),
-        );
-    });
-
-    it("should check 'Save trigger' button works for ROOT dataset with cron expression", () => {
-        const setDatasetFlowScheduleSpy = spyOn(datasetSchedulingService, "setDatasetTriggers").and.callThrough();
-        component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
-        fixture.detectChanges();
-        emitClickOnElementByDataTestId(fixture, "button-cron-expression");
-        setFieldValue(fixture, "polling-group-cron-expression", MOCK_CRON_EXPRESSION);
-        fixture.detectChanges();
-
-        emitClickOnElementByDataTestId(fixture, "save-config-options");
-
-        expect(setDatasetFlowScheduleSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
-                triggerInput: {
-                    schedule: {
-                        cron5ComponentExpression: `${MOCK_CRON_EXPRESSION}`,
-                    },
-                },
-            }),
-        );
+        expect(setDatasetFlowScheduleSpy).toHaveBeenCalledTimes(1);
+        expect(toastrServiceSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check 'Save triger' button works for DERIVATIVE dataset", () => {
         const setDatasetFlowBatchingSpy = spyOn(datasetSchedulingService, "setDatasetTriggers").and.callThrough();
         component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
-        fixture.detectChanges();
-        setFieldValue(fixture, "batching-interval-every", MOCK_PARAM_EVERY.toString());
-        setFieldValue(fixture, "batching-interval-unit", MOCK_PARAM_UNIT);
-        setFieldValue(fixture, "batching-min-records", MOCK_MIN_RECORDS_TO_AWAIT.toString());
-        fixture.detectChanges();
+        const mockBatchingTriggerForm = new FormGroup<BatchingFormType>({
+            updatesState: new FormControl<boolean>(false, { nonNullable: true }),
+            every: new FormControl<MaybeNull<number>>({ value: MOCK_PARAM_EVERY, disabled: false }, [
+                Validators.required,
+                Validators.min(1),
+            ]),
+            unit: new FormControl<MaybeNull<TimeUnit>>({ value: MOCK_PARAM_UNIT, disabled: false }, [
+                Validators.required,
+            ]),
+            minRecordsToAwait: new FormControl<MaybeNull<number>>(
+                { value: MOCK_MIN_RECORDS_TO_AWAIT, disabled: false },
+                [Validators.required, Validators.min(1)],
+            ),
+        });
 
-        emitClickOnElementByDataTestId(fixture, "save-batching-triggers");
+        component.saveBatchingTriggers(mockBatchingTriggerForm);
 
         expect(setDatasetFlowBatchingSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
@@ -213,39 +162,67 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         );
     });
 
-    it("should check cron expression error", () => {
+    it("should check 'Save trigger' button works for ROOT dataset with time delta", () => {
+        const setDatasetFlowScheduleSpy = spyOn(datasetSchedulingService, "setDatasetTriggers").and.callThrough();
         component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
-        fixture.detectChanges();
-        emitClickOnElementByDataTestId(fixture, "button-cron-expression");
-        setFieldValue(fixture, "polling-group-cron-expression", MOCK_INVALID_CRON_EXPRESSION);
-        fixture.detectChanges();
-        const errorMessageElem = findElementByDataTestId(fixture, "cronExpression-error");
-        expect(errorMessageElem?.textContent?.trim()).toEqual("Invalid expression");
-    });
 
-    it("should check init form  with schedule", () => {
-        component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
-        fixture.detectChanges();
-        emitClickOnElementByDataTestId(fixture, "button-cron-expression");
-        setFieldValue(fixture, "polling-group-cron-expression", MOCK_INVALID_CRON_EXPRESSION);
-        fixture.detectChanges();
-        const errorMessageElem = findElementByDataTestId(fixture, "cronExpression-error");
-        expect(errorMessageElem?.textContent?.trim()).toEqual("Invalid expression");
-    });
+        const mockPollingTriggerForm = new FormGroup<PollingGroupType>({
+            updatesState: new FormControl<boolean>(false, { nonNullable: true }),
+            __typename: new FormControl(PollingGroupEnum.TIME_DELTA, [Validators.required]),
+            every: new FormControl<MaybeNull<number>>({ value: MOCK_PARAM_EVERY, disabled: false }, [
+                Validators.required,
+                Validators.min(1),
+            ]),
+            unit: new FormControl<MaybeNull<TimeUnit>>({ value: MOCK_PARAM_UNIT, disabled: false }, [
+                Validators.required,
+            ]),
+            cronExpression: new FormControl<MaybeNull<string>>({ value: "", disabled: true }, [
+                Validators.required,
+                cronExpressionValidator(),
+            ]),
+        });
 
-    it("should check save ingest configuration", () => {
-        component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
-        const toastrServiceSpy = spyOn(toastrService, "success");
-        const setDatasetFlowScheduleSpy = spyOn(datasetSchedulingService, "setDatasetFlowConfigs").and.returnValue(
-            of(true),
+        component.savePollingTriggers(mockPollingTriggerForm);
+
+        expect(setDatasetFlowScheduleSpy).toHaveBeenCalledWith(
+            jasmine.objectContaining({
+                triggerInput: {
+                    schedule: {
+                        timeDelta: MOCK_INPUT_TIME_DELTA,
+                    },
+                },
+            }),
         );
-        fixture.detectChanges();
-        emitClickOnElementByDataTestId(fixture, "fetchUncacheable");
-        fixture.detectChanges();
+    });
 
-        emitClickOnElementByDataTestId(fixture, "save-polling-configuration");
+    it("should check 'Save trigger' button works for ROOT dataset with cron expression", () => {
+        const setDatasetFlowScheduleSpy = spyOn(datasetSchedulingService, "setDatasetTriggers").and.callThrough();
+        component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
 
-        expect(setDatasetFlowScheduleSpy).toHaveBeenCalledTimes(1);
-        expect(toastrServiceSpy).toHaveBeenCalledTimes(1);
+        const mockPollingTriggerForm = new FormGroup<PollingGroupType>({
+            updatesState: new FormControl<boolean>(false, { nonNullable: true }),
+            __typename: new FormControl(PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION, [Validators.required]),
+            every: new FormControl<MaybeNull<number>>({ value: null, disabled: false }, [
+                Validators.required,
+                Validators.min(1),
+            ]),
+            unit: new FormControl<MaybeNull<TimeUnit>>({ value: null, disabled: false }, [Validators.required]),
+            cronExpression: new FormControl<MaybeNull<string>>({ value: MOCK_CRON_EXPRESSION, disabled: true }, [
+                Validators.required,
+                cronExpressionValidator(),
+            ]),
+        });
+
+        component.savePollingTriggers(mockPollingTriggerForm);
+
+        expect(setDatasetFlowScheduleSpy).toHaveBeenCalledWith(
+            jasmine.objectContaining({
+                triggerInput: {
+                    schedule: {
+                        cron5ComponentExpression: `${MOCK_CRON_EXPRESSION}`,
+                    },
+                },
+            }),
+        );
     });
 });

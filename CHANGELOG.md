@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `demo` mode: unimplemented features are disabled
   - `develop` mode: unimplemented features are available
 - Made a tile element clickable
+- Made `force update` link for a flow table
+### Changed
+- Flow configuration separation
 
 ## [0.33.0] - 2024-12-03
 ### Added

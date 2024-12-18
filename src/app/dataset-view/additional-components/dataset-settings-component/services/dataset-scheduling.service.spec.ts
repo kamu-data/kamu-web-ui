@@ -171,25 +171,4 @@ describe("DatasetSchedulingService", () => {
 
         expect(subscription$.closed).toBeTrue();
     }));
-
-    // it("should check set dataset flow batching with error", () => {
-    //     const errorMessage = mockSetDatasetFlowBatchingError.datasets.byId?.flows.configs.setConfigTransform.message;
-    //     spyOn(datasetFlowApi, "setDatasetFlowBatching").and.returnValue(of(mockSetDatasetFlowBatchingError));
-    //     const toastrServiceErrorSpy = spyOn(toastService, "error");
-
-    //     const subscription$ = service
-    //         .setDatasetFlowBatching({
-    //             accountId: TEST_ACCOUNT_ID,
-    //             datasetId: MOCK_DATASET_ID,
-    //             datasetFlowType: DatasetFlowType.ExecuteTransform,
-    //             paused: false,
-    //             transform: MOCK_BATCHING_CONFIG,
-    //             datasetInfo: mockDatasetInfo,
-    //         })
-    //         .subscribe(() => {
-    //             expect(toastrServiceErrorSpy).toHaveBeenCalledWith(errorMessage);
-    //         });
-
-    //     expect(subscription$.closed).toBeTrue();
-    // });
 });

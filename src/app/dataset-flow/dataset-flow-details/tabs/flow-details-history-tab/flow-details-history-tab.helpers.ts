@@ -68,7 +68,7 @@ export class DatasetFlowDetailsHelpers {
             case "FlowEventScheduledForActivation":
                 return { icon: "timer", class: "text-muted" };
             case "FlowConfigSnapshotModified":
-                return { icon: "downloading", class: "text-muted" };
+                return { icon: "outbound", class: "text-muted" };
             case "FlowEventTaskChanged": {
                 const event = flowEvent as FlowEventTaskChanged;
                 switch (event.taskStatus) {

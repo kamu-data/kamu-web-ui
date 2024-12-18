@@ -60,7 +60,7 @@ export class QueryExplainerService {
         };
         return this.http.post<QueryExplainerDataJsonAosResponse>(url.href, body).pipe(
             catchError((e: HttpErrorResponse) => {
-                this.toastrService.error("", e.error as string, {
+                this.toastrService.error("", (e.error as { message: string }).message, {
                     disableTimeOut: "timeOut",
                 });
                 return EMPTY;
@@ -74,7 +74,7 @@ export class QueryExplainerService {
             catchError((e: HttpErrorResponse) => {
                 if (e.status === 400) return of(e.error as VerifyQueryResponse);
                 else {
-                    this.toastrService.error("", e.error as string, {
+                    this.toastrService.error("", (e.error as { message: string }).message, {
                         disableTimeOut: "timeOut",
                     });
                     return EMPTY;
@@ -87,7 +87,7 @@ export class QueryExplainerService {
         const url = new URL(`${this.baseUrl}/platform/file/upload/${token}`);
         return this.http.get<QueryExplainerResponse>(url.href).pipe(
             catchError((e: HttpErrorResponse) => {
-                this.toastrService.error("", e.error as string, {
+                this.toastrService.error("", (e.error as { message: string }).message, {
                     disableTimeOut: "timeOut",
                 });
                 return EMPTY;

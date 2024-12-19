@@ -1,0 +1,39 @@
+mutation setDatasetFlowTriggers(
+  $datasetId: DatasetID!
+  $datasetFlowType: DatasetFlowType!
+  $paused: Boolean!
+  $triggerInput: FlowTriggerInput!
+) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      flows {
+        triggers {
+          setTrigger(datasetFlowType: $datasetFlowType, paused: $paused, triggerInput: $triggerInput) {
+            ... on SetFlowTriggerSuccess {
+              message
+            }
+
+            ... on FlowIncompatibleDatasetKind {
+              message
+              expectedDatasetKind
+              actualDatasetKind
+            }
+
+            ... on FlowPreconditionsNotMet {
+              message
+            }
+
+            ... on FlowTypeIsNotSupported {
+              message
+            }
+
+            ... on FlowInvalidTriggerInputError {
+              message
+              reason
+            }
+          }
+        }
+      }
+    }
+  }
+}

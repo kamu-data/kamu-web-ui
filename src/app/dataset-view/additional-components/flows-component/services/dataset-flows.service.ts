@@ -89,7 +89,7 @@ export class DatasetFlowsService {
     public datasetPauseFlows(params: { datasetId: string; datasetFlowType?: DatasetFlowType }): Observable<void> {
         return this.datasetFlowApi.datasetPauseFlows(params).pipe(
             map((data: DatasetPauseFlowsMutation) => {
-                const result = data.datasets.byId?.flows.configs.pauseFlows;
+                const result = data.datasets.byId?.flows.triggers.pauseFlows;
                 result
                     ? this.toastrService.success("Flows paused")
                     : this.toastrService.error("Error, flows not paused");
@@ -100,7 +100,7 @@ export class DatasetFlowsService {
     public datasetResumeFlows(params: { datasetId: string; datasetFlowType?: DatasetFlowType }): Observable<void> {
         return this.datasetFlowApi.datasetResumeFlows(params).pipe(
             map((data: DatasetResumeFlowsMutation) => {
-                const result = data.datasets.byId?.flows.configs.resumeFlows;
+                const result = data.datasets.byId?.flows.triggers.resumeFlows;
                 result
                     ? this.toastrService.success("Flows resumed")
                     : this.toastrService.error("Error, flows not resumed");
@@ -111,7 +111,7 @@ export class DatasetFlowsService {
     public allFlowsPaused(datasetId: string): Observable<MaybeUndefined<boolean>> {
         return this.datasetFlowApi.allFlowsPaused(datasetId).pipe(
             map((data: DatasetAllFlowsPausedQuery) => {
-                return data.datasets.byId?.flows.configs.allPaused;
+                return data.datasets.byId?.flows.triggers.allPaused;
             }),
         );
     }

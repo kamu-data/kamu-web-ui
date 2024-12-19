@@ -96,7 +96,7 @@ export class AccountService {
     public accountAllFlowsPaused(accountName: string): Observable<MaybeUndefined<boolean>> {
         return this.accountApi.accountFlowsPaused(accountName).pipe(
             map((data: AccountDatasetFlowsPausedQuery) => {
-                return data.accounts.byName?.flows?.configs.allPaused;
+                return data.accounts.byName?.flows?.triggers.allPaused;
             }),
         );
     }
@@ -104,7 +104,7 @@ export class AccountService {
     public accountPauseFlows(accountName: string): Observable<void> {
         return this.accountApi.accountPauseFlows(accountName).pipe(
             map((data: AccountPauseFlowsMutation) => {
-                const result = data.accounts.byName?.flows.configs.pauseAccountDatasetFlows;
+                const result = data.accounts.byName?.flows.triggers.pauseAccountDatasetFlows;
                 result
                     ? this.toastrService.success("Flows paused")
                     : this.toastrService.error("Error, flows not paused");
@@ -115,7 +115,7 @@ export class AccountService {
     public accountResumeFlows(accountName: string): Observable<void> {
         return this.accountApi.accountResumeFlows(accountName).pipe(
             map((data: AccountResumeFlowsMutation) => {
-                const result = data.accounts.byName?.flows.configs.resumeAccountDatasetFlows;
+                const result = data.accounts.byName?.flows.triggers.resumeAccountDatasetFlows;
                 result
                     ? this.toastrService.success("Flows resumed")
                     : this.toastrService.error("Error, flows not resumed");

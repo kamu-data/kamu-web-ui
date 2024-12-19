@@ -145,8 +145,8 @@ describe("AccountApi", () => {
 
     it("should check account flows paused", () => {
         service.accountFlowsPaused(ACCOUNT_NAME).subscribe((state: AccountDatasetFlowsPausedQuery) => {
-            expect(state.accounts.byName?.flows?.configs.allPaused).toEqual(
-                mockAccountDatasetFlowsPausedQuery.accounts.byName?.flows?.configs.allPaused,
+            expect(state.accounts.byName?.flows?.triggers.allPaused).toEqual(
+                mockAccountDatasetFlowsPausedQuery.accounts.byName?.flows?.triggers.allPaused,
             );
         });
 
@@ -160,8 +160,8 @@ describe("AccountApi", () => {
 
     it("should check account pause flows", () => {
         service.accountPauseFlows(ACCOUNT_NAME).subscribe((state: AccountPauseFlowsMutation) => {
-            expect(state.accounts.byName?.flows.configs.pauseAccountDatasetFlows).toEqual(
-                mockAccountPauseFlowsMutationSuccess.accounts.byName?.flows.configs.pauseAccountDatasetFlows,
+            expect(state.accounts.byName?.flows.triggers.pauseAccountDatasetFlows).toEqual(
+                mockAccountPauseFlowsMutationSuccess.accounts.byName?.flows.triggers.pauseAccountDatasetFlows,
             );
         });
 
@@ -175,8 +175,8 @@ describe("AccountApi", () => {
 
     it("should check account resume flows", () => {
         service.accountResumeFlows(ACCOUNT_NAME).subscribe((state: AccountResumeFlowsMutation) => {
-            expect(state.accounts.byName?.flows.configs.resumeAccountDatasetFlows).toEqual(
-                mockAccountResumeFlowsMutationSuccess.accounts.byName?.flows.configs.resumeAccountDatasetFlows,
+            expect(state.accounts.byName?.flows.triggers.resumeAccountDatasetFlows).toEqual(
+                mockAccountResumeFlowsMutationSuccess.accounts.byName?.flows.triggers.resumeAccountDatasetFlows,
             );
         });
 

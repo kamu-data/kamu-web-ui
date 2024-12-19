@@ -2,7 +2,7 @@ query accountDatasetFlowsPaused($accountName: AccountName!) {
   accounts {
     byName(name: $accountName) {
       flows {
-        configs {
+        triggers {
           allPaused
         }
       }

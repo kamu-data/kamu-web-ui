@@ -310,7 +310,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         },
         startCondition: {
             __typename: "FlowStartConditionBatching",
-            activeTransformRule: {
+            activeBatchingRule: {
                 minRecordsToAwait: 500,
                 maxBatchingInterval: {
                     every: 5,
@@ -580,11 +580,6 @@ export const mockFlowSummaryDataFragmentShowForceLink: FlowSummaryDataFragment =
     },
     startCondition: null,
     configSnapshot: {
-        schedule: {
-            every: 1,
-            unit: TimeUnit.Minutes,
-            __typename: "TimeDelta",
-        },
         fetchUncacheable: false,
         __typename: "FlowConfigurationIngest",
     },

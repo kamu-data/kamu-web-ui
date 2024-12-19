@@ -2,7 +2,7 @@ mutation datasetResumeFlows($datasetId: DatasetID!, $datasetFlowType: DatasetFlo
   datasets {
     byId(datasetId: $datasetId) {
       flows {
-        configs {
+        triggers {
           resumeFlows(datasetFlowType: $datasetFlowType)
         }
       }

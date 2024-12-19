@@ -1,14 +1,15 @@
-<div class="app-main-container" role="main" data-test-id="dataset-view" id="dataset-view">
+<div class="app-main-container" role="main" data-test-id="dataset-view" id="dataset-view" *ngIf="datasetBasics">
     <div class="app-content mt-4">
         <app-dataset-view-header
             *ngIf="datasetInfo"
+            [datasetVisibility]="datasetBasics.visibility"
             [datasetInfo]="datasetInfo"
             (onClickSearchAdditionalButtonEmit)="onClickSearchAdditionalButton($event)"
         />
     </div>
 
     <div class="app-content" *ngIf="datasetPermissions$ | async as datasetPermissions">
-        <div id="dataset-viewer" *ngIf="datasetBasics">
+        <div id="dataset-viewer">
             <app-dataset-view-menu
                 [datasetBasics]="datasetBasics"
                 [datasetPermissions]="datasetPermissions"

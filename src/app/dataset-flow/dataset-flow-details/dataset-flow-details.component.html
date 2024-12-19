@@ -7,6 +7,7 @@
 >
     <div class="app-content mt-4">
         <app-dataset-view-header
+            [datasetVisibility]="values.datasetBasics.visibility"
             [datasetInfo]="datasetInfo"
             (showOwnerPageEmit)="showOwnerPage(datasetInfo.accountName)"
             (onClickSearchAdditionalButtonEmit)="onClickSearchAdditionalButton($event)"

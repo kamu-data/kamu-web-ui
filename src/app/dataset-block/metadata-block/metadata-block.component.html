@@ -6,11 +6,14 @@
     *ngIf="datasetInfo$ | async as datasetInfo"
 >
     <div class="app-content mt-4">
-        <app-dataset-view-header
-            [datasetInfo]="datasetInfo"
-            (showOwnerPageEmit)="showOwnerPage(datasetInfo.accountName)"
-            (onClickSearchAdditionalButtonEmit)="onClickSearchAdditionalButton($event)"
-        />
+        <ng-container *ngIf="datasetBasics$ | async as datasetBasics">
+            <app-dataset-view-header
+                [datasetVisibility]="datasetBasics.visibility"
+                [datasetInfo]="datasetInfo"
+                (showOwnerPageEmit)="showOwnerPage(datasetInfo.accountName)"
+                (onClickSearchAdditionalButtonEmit)="onClickSearchAdditionalButton($event)"
+            />
+        </ng-container>
     </div>
 
     <div class="app-content" *ngIf="datasetPermissions$ | async as datasetPermissions">

@@ -224,7 +224,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get visibleUpdateButton(): boolean {
-        return this.isUserLogged && this.enableScheduling;
+        return this.isUserLogged && this.enableScheduling && this.canSchedule;
     }
 
     public get hasSetPollingSource(): boolean {

@@ -76,6 +76,10 @@ export class SearchApi {
                                 accountName: "",
                             },
                             alias: "",
+                            visibility: {
+                                __typename: "PublicDatasetVisibility",
+                                anonymousAvailable: true,
+                            },
                         },
                         dummy: true,
                     });

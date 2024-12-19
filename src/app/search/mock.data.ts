@@ -7,6 +7,8 @@ import {
     DeleteDatasetMutation,
     GetDatasetLineageQuery,
     PageBasedInfo,
+    PrivateDatasetVisibility,
+    PublicDatasetVisibility,
     RenameDatasetMutation,
     UpdateReadmeMutation,
     UpdateWatermarkMutation,
@@ -70,6 +72,14 @@ export const mockOwnerFieldsWithAvatar: AccountBasicsFragment & { avatarUrl?: st
     avatarUrl: TEST_AVATAR_URL,
 };
 
+export const mockPublicDatasetVisibility: PublicDatasetVisibility = {
+    anonymousAvailable: true,
+};
+
+export const mockPrivateDatasetVisibility: PrivateDatasetVisibility = {
+    dummy: "",
+};
+
 export const mockAutocompleteItems: DatasetAutocompleteItem[] = [
     {
         dataset: {
@@ -78,6 +88,7 @@ export const mockAutocompleteItems: DatasetAutocompleteItem[] = [
             name: "mockName1",
             owner: mockOwnerFields,
             alias: mockOwnerFields.accountName + "/mockName1",
+            visibility: mockPublicDatasetVisibility,
         },
         dummy: false,
         __typename: TypeNames.datasetType,
@@ -90,6 +101,7 @@ export const mockAutocompleteItems: DatasetAutocompleteItem[] = [
             name: "mockName2",
             owner: mockOwnerFields,
             alias: mockOwnerFields.accountName + "/mockName2",
+            visibility: mockPublicDatasetVisibility,
         },
         dummy: false,
         __typename: TypeNames.allDataType,
@@ -133,6 +145,7 @@ export const mockDatasetSearchResult: DatasetSearchResult = {
             alias: mockOwnerFields.accountName + "/alberta.case-details",
             createdAt: "2022-08-05T21:17:30.613911358+00:00",
             lastUpdatedAt: "2022-08-05T21:19:28.817281255+00:00",
+            visibility: mockPublicDatasetVisibility,
             metadata: {
                 currentInfo: mockMetadataCurrentInfo,
                 currentLicense: mockMetadataCurrentLicense,
@@ -177,6 +190,7 @@ export const mockDatasetBasicsRootFragment: DatasetBasicsFragment = {
     name: "mockNameRoot",
     owner: { __typename: "Account", ...mockOwnerFields },
     alias: mockOwnerFields.accountName + "/mockNameRoot",
+    visibility: mockPublicDatasetVisibility,
 };
 
 export const mockDatasetBasicsDerivedFragment: DatasetBasicsFragment = {
@@ -185,6 +199,7 @@ export const mockDatasetBasicsDerivedFragment: DatasetBasicsFragment = {
     name: "mockNameDerived",
     owner: { __typename: "Account", ...mockOwnerFieldsWithAvatar },
     alias: mockOwnerFields.accountName + "/mockNameDerived",
+    visibility: mockPublicDatasetVisibility,
 };
 
 export const mockFullPowerDatasetPermissionsFragment: DatasetPermissionsFragment = {
@@ -241,6 +256,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                 accountName: "kamu",
             },
             alias: "kamu/alberta.case-details",
+            visibility: mockPublicDatasetVisibility,
             metadata: {
                 __typename: "DatasetMetadata",
                 currentPollingSource: {
@@ -434,6 +450,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                 avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
             },
             alias: "kamu/account.transactions",
+            visibility: mockPublicDatasetVisibility,
             metadata: {
                 __typename: "DatasetMetadata",
                 currentUpstreamDependencies: [],
@@ -475,6 +492,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                 kind: DatasetKind.Derivative,
                                                 name: "account.tokens.portfolio.market-value",
                                                 alias: "account.tokens.portfolio.market-value",
+                                                visibility: mockPublicDatasetVisibility,
                                             },
                                             {
                                                 __typename: "Dataset",
@@ -508,6 +526,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                             kind: DatasetKind.Derivative,
                                                             name: "account.whatif.reth-vs-snp500.market-value",
                                                             alias: "account.whatif.reth-vs-snp500.market-value",
+                                                            visibility: mockPublicDatasetVisibility,
                                                         },
                                                     ],
                                                     currentPollingSource: null,
@@ -532,6 +551,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                 kind: DatasetKind.Derivative,
                                                 name: "account.whatif.reth-vs-snp500.portfolio",
                                                 alias: "account.whatif.reth-vs-snp500.portfolio",
+                                                visibility: mockPublicDatasetVisibility,
                                             },
                                         ],
                                         currentPollingSource: null,
@@ -555,6 +575,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                     kind: DatasetKind.Derivative,
                                     name: "account.tokens.portfolio.usd",
                                     alias: "account.tokens.portfolio.usd",
+                                    visibility: mockPublicDatasetVisibility,
                                 },
                             ],
                             currentPollingSource: null,
@@ -578,6 +599,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                         kind: DatasetKind.Derivative,
                         name: "account.tokens.portfolio",
                         alias: "account.tokens.portfolio",
+                        visibility: mockPublicDatasetVisibility,
                     },
                 ],
                 currentPollingSource: {
@@ -828,6 +850,7 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                 ...mockOwnerFields,
             },
             alias: mockOwnerFields.accountName + "/alberta.case-details",
+            visibility: mockPublicDatasetVisibility,
         },
     },
 };

@@ -3728,6 +3728,9 @@ export type DatasetBasicsFragment = {
     name: string;
     alias: string;
     owner: { __typename?: "Account" } & AccountBasicsFragment;
+    visibility:
+        | { __typename: "PrivateDatasetVisibility" }
+        | { __typename?: "PublicDatasetVisibility"; anonymousAvailable: boolean };
 };
 
 export type DatasetCurrentInfoFragment = {
@@ -4231,6 +4234,14 @@ export const DatasetBasicsFragmentDoc = gql`
             ...AccountBasics
         }
         alias
+        visibility {
+            ... on PrivateDatasetVisibility {
+                __typename
+            }
+            ... on PublicDatasetVisibility {
+                anonymousAvailable
+            }
+        }
     }
     ${AccountBasicsFragmentDoc}
 `;

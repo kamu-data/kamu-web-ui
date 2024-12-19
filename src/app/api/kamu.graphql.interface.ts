@@ -23,6 +23,7 @@ export type Scalars = {
     DatasetID: string;
     DatasetName: string;
     DatasetRef: string;
+    DatasetRefRemote: string;
     /**
      * Implement the DateTime<Utc> scalar
      *
@@ -318,6 +319,30 @@ export type CompactionMetadataOnly = {
     recursive: Scalars["Boolean"];
 };
 
+export type CompareChainsResult = CompareChainsResultError | CompareChainsResultStatus;
+
+export type CompareChainsResultError = {
+    __typename?: "CompareChainsResultError";
+    reason: CompareChainsResultReason;
+};
+
+export type CompareChainsResultReason = {
+    __typename?: "CompareChainsResultReason";
+    message: Scalars["String"];
+};
+
+export type CompareChainsResultStatus = {
+    __typename?: "CompareChainsResultStatus";
+    message: CompareChainsStatus;
+};
+
+export enum CompareChainsStatus {
+    Ahead = "AHEAD",
+    Behind = "BEHIND",
+    Diverged = "DIVERGED",
+    Equal = "EQUAL",
+}
+
 export enum CompressionFormat {
     Gzip = "GZIP",
     Zip = "ZIP",
@@ -399,8 +424,13 @@ export type DataBatch = {
 
 export enum DataBatchFormat {
     Csv = "CSV",
+    /**
+     * Deprecated: Use `JSON_AOS` instead and expect it to become default in
+     * future versions
+     */
     Json = "JSON",
     JsonAoa = "JSON_AOA",
+    JsonAos = "JSON_AOS",
     /** Deprecated: Use `ND_JSON` instead */
     JsonLd = "JSON_LD",
     JsonSoa = "JSON_SOA",
@@ -441,6 +471,7 @@ export enum DataQueryResultErrorKind {
 export type DataQueryResultSuccess = {
     __typename?: "DataQueryResultSuccess";
     data: DataBatch;
+    datasets?: Maybe<Array<DatasetState>>;
     limit: Scalars["Int"];
     schema?: Maybe<DataSchema>;
 };
@@ -497,6 +528,8 @@ export type Dataset = {
     owner: Account;
     /** Permissions of the current user */
     permissions: DatasetPermissions;
+    /** Returns the visibility of dataset */
+    visibility: DatasetVisibilityOutput;
 };
 
 export type DatasetConnection = {
@@ -740,6 +773,8 @@ export type DatasetMetadata = {
     currentVocab?: Maybe<SetVocab>;
     /** Last recorded watermark */
     currentWatermark?: Maybe<Scalars["DateTime"]>;
+    /** Sync statuses of push remotes */
+    pushSyncStatuses: DatasetPushStatuses;
 };
 
 export type DatasetMetadataCurrentSchemaArgs = {
@@ -770,12 +805,18 @@ export type DatasetMut = {
     metadata: DatasetMetadataMut;
     /** Rename the dataset */
     rename: RenameResult;
+    /** Set visibility for the dataset */
+    setVisibility: SetDatasetPropertyResultSuccess;
     /** Manually advances the watermark of a root dataset */
     setWatermark: SetWatermarkResult;
 };
 
 export type DatasetMutRenameArgs = {
     newName: Scalars["DatasetName"];
+};
+
+export type DatasetMutSetVisibilityArgs = {
+    visibility: DatasetVisibilityInput;
 };
 
 export type DatasetMutSetWatermarkArgs = {
@@ -791,10 +832,40 @@ export type DatasetPermissions = {
     canView: Scalars["Boolean"];
 };
 
+export type DatasetPushStatus = {
+    __typename?: "DatasetPushStatus";
+    remote: Scalars["DatasetRefRemote"];
+    result: CompareChainsResult;
+};
+
+export type DatasetPushStatuses = {
+    __typename?: "DatasetPushStatuses";
+    statuses: Array<DatasetPushStatus>;
+};
+
+export type DatasetState = {
+    __typename?: "DatasetState";
+    /** Alias to be used in the query */
+    alias: Scalars["String"];
+    /**
+     * Last block hash of the input datasets that was or should be considered
+     * during the query planning
+     */
+    blockHash?: Maybe<Scalars["Multihash"]>;
+    /** Globally unique identity of the dataset */
+    id: Scalars["DatasetID"];
+};
+
 export enum DatasetVisibility {
     Private = "PRIVATE",
     Public = "PUBLIC",
 }
+
+export type DatasetVisibilityInput =
+    | { private: PrivateDatasetVisibilityInput; public?: never }
+    | { private?: never; public: PublicDatasetVisibilityInput };
+
+export type DatasetVisibilityOutput = PrivateDatasetVisibility | PublicDatasetVisibility;
 
 export type Datasets = {
     __typename?: "Datasets";
@@ -1101,12 +1172,6 @@ export type FlowConnection = {
     totalCount: Scalars["Int"];
 };
 
-export type FlowDatasetCompactedFailedError = {
-    __typename?: "FlowDatasetCompactedFailedError";
-    message: Scalars["String"];
-    rootDataset: Dataset;
-};
-
 export type FlowDescription =
     | FlowDescriptionDatasetExecuteTransform
     | FlowDescriptionDatasetHardCompaction
@@ -1212,6 +1277,13 @@ export type FlowEventInitiated = FlowEvent & {
     trigger: FlowTrigger;
 };
 
+export type FlowEventScheduledForActivation = FlowEvent & {
+    __typename?: "FlowEventScheduledForActivation";
+    eventId: Scalars["EventID"];
+    eventTime: Scalars["DateTime"];
+    scheduledForActivationAt: Scalars["DateTime"];
+};
+
 export type FlowEventStartConditionUpdated = FlowEvent & {
     __typename?: "FlowEventStartConditionUpdated";
     eventId: Scalars["EventID"];
@@ -1237,15 +1309,21 @@ export type FlowEventTriggerAdded = FlowEvent & {
 
 export type FlowFailedError = {
     __typename?: "FlowFailedError";
-    reason: FlowFailedReason;
+    reason: FlowFailureReason;
 };
 
-export type FlowFailedMessage = {
-    __typename?: "FlowFailedMessage";
+export type FlowFailureReason = FlowFailureReasonGeneral | FlowFailureReasonInputDatasetCompacted;
+
+export type FlowFailureReasonGeneral = {
+    __typename?: "FlowFailureReasonGeneral";
     message: Scalars["String"];
 };
 
-export type FlowFailedReason = FlowDatasetCompactedFailedError | FlowFailedMessage;
+export type FlowFailureReasonInputDatasetCompacted = {
+    __typename?: "FlowFailureReasonInputDatasetCompacted";
+    inputDataset: Dataset;
+    message: Scalars["String"];
+};
 
 export type FlowIncompatibleDatasetKind = SetFlowCompactionConfigResult &
     SetFlowConfigResult &
@@ -1586,13 +1664,6 @@ export type Mutation = {
      * schema.
      */
     datasets: DatasetsMut;
-    /**
-     * Tasks-related functionality group.
-     *
-     * Tasks are units of work scheduled and executed by the system to query
-     * and process data.
-     */
-    tasks: TasksMut;
 };
 
 export type NoChanges = CommitResult &
@@ -1646,9 +1717,27 @@ export type PrepStepPipe = {
     command: Array<Scalars["String"]>;
 };
 
+export type PrivateDatasetVisibility = {
+    __typename?: "PrivateDatasetVisibility";
+    dummy?: Maybe<Scalars["String"]>;
+};
+
+export type PrivateDatasetVisibilityInput = {
+    dummy?: InputMaybe<Scalars["String"]>;
+};
+
 export type PropagationMode =
     | { custom: FlowConfigurationResetCustom; toSeed?: never }
     | { custom?: never; toSeed: FlowConfigurationResetToSeedDummy };
+
+export type PublicDatasetVisibility = {
+    __typename?: "PublicDatasetVisibility";
+    anonymousAvailable: Scalars["Boolean"];
+};
+
+export type PublicDatasetVisibilityInput = {
+    anonymousAvailable: Scalars["Boolean"];
+};
 
 export type Query = {
     __typename?: "Query";
@@ -1676,14 +1765,6 @@ export type Query = {
     datasets: Datasets;
     /** Search-related functionality group */
     search: Search;
-    /**
-     * Task-related functionality group.
-     *
-     * Tasks are units of scheduling that can perform many functions like
-     * ingesting new data, running dataset transformations, answering ad-hoc
-     * queries etc.
-     */
-    tasks: Tasks;
 };
 
 export enum QueryDialect {
@@ -1830,6 +1911,7 @@ export type SaveDatasetEnvVarResultSuccess = SaveDatasetEnvVarResult & {
 };
 
 export type ScheduleInput =
+    /** Supported CRON syntax: min hour dayOfMonth month dayOfWeek */
     | { cron5ComponentExpression: Scalars["String"]; timeDelta?: never }
     | { cron5ComponentExpression?: never; timeDelta: TimeDeltaInput };
 
@@ -1877,6 +1959,12 @@ export type SetAttachments = {
 export type SetDataSchema = {
     __typename?: "SetDataSchema";
     schema: DataSchema;
+};
+
+export type SetDatasetPropertyResultSuccess = {
+    __typename?: "SetDatasetPropertyResultSuccess";
+    dummy?: Maybe<Scalars["String"]>;
+    message: Scalars["String"];
 };
 
 export type SetFlowCompactionConfigResult = {
@@ -2017,22 +2105,6 @@ export type Task = {
     taskId: Scalars["TaskID"];
 };
 
-export type TaskConnection = {
-    __typename?: "TaskConnection";
-    edges: Array<TaskEdge>;
-    /** A shorthand for `edges { node { ... } }` */
-    nodes: Array<Task>;
-    /** Page information */
-    pageInfo: PageBasedInfo;
-    /** Approximate number of total nodes */
-    totalCount: Scalars["Int"];
-};
-
-export type TaskEdge = {
-    __typename?: "TaskEdge";
-    node: Task;
-};
-
 /** Describes a certain final outcome of the task */
 export enum TaskOutcome {
     /** Task was cancelled by a user */
@@ -2052,48 +2124,6 @@ export enum TaskStatus {
     /** Task is being executed */
     Running = "RUNNING",
 }
-
-export type Tasks = {
-    __typename?: "Tasks";
-    /** Returns current state of a given task */
-    getTask?: Maybe<Task>;
-    /**
-     * Returns states of tasks associated with a given dataset ordered by
-     * creation time from newest to oldest
-     */
-    listTasksByDataset: TaskConnection;
-};
-
-export type TasksGetTaskArgs = {
-    taskId: Scalars["TaskID"];
-};
-
-export type TasksListTasksByDatasetArgs = {
-    datasetId: Scalars["DatasetID"];
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
-};
-
-export type TasksMut = {
-    __typename?: "TasksMut";
-    /** Requests cancellation of the specified task */
-    cancelTask: Task;
-    /**
-     * Schedules a task to update the specified dataset by performing polling
-     * ingest or a derivative transformation
-     */
-    createProbeTask: Task;
-};
-
-export type TasksMutCancelTaskArgs = {
-    taskId: Scalars["TaskID"];
-};
-
-export type TasksMutCreateProbeTaskArgs = {
-    busyTimeMs?: InputMaybe<Scalars["Int"]>;
-    datasetId?: InputMaybe<Scalars["DatasetID"]>;
-    endWithOutcome?: InputMaybe<TaskOutcome>;
-};
 
 export type TemporalTable = {
     __typename?: "TemporalTable";
@@ -3006,6 +3036,9 @@ export type GetFlowByIdQuery = {
                                             __typename?: "FlowEventInitiated";
                                         } & FlowHistoryData_FlowEventInitiated_Fragment)
                                       | ({
+                                            __typename?: "FlowEventScheduledForActivation";
+                                        } & FlowHistoryData_FlowEventScheduledForActivation_Fragment)
+                                      | ({
                                             __typename?: "FlowEventStartConditionUpdated";
                                         } & FlowHistoryData_FlowEventStartConditionUpdated_Fragment)
                                       | ({
@@ -3304,6 +3337,12 @@ type FlowHistoryData_FlowEventInitiated_Fragment = {
         | { __typename: "FlowTriggerPush" };
 };
 
+type FlowHistoryData_FlowEventScheduledForActivation_Fragment = {
+    __typename: "FlowEventScheduledForActivation";
+    eventId: string;
+    eventTime: string;
+};
+
 type FlowHistoryData_FlowEventStartConditionUpdated_Fragment = {
     __typename: "FlowEventStartConditionUpdated";
     eventId: string;
@@ -3352,6 +3391,7 @@ type FlowHistoryData_FlowEventTriggerAdded_Fragment = {
 export type FlowHistoryDataFragment =
     | FlowHistoryData_FlowEventAborted_Fragment
     | FlowHistoryData_FlowEventInitiated_Fragment
+    | FlowHistoryData_FlowEventScheduledForActivation_Fragment
     | FlowHistoryData_FlowEventStartConditionUpdated_Fragment
     | FlowHistoryData_FlowEventTaskChanged_Fragment
     | FlowHistoryData_FlowEventTriggerAdded_Fragment;
@@ -3378,12 +3418,12 @@ type FlowOutcomeData_FlowAbortedResult_Fragment = { __typename?: "FlowAbortedRes
 type FlowOutcomeData_FlowFailedError_Fragment = {
     __typename?: "FlowFailedError";
     reason:
+        | { __typename?: "FlowFailureReasonGeneral"; message: string }
         | {
-              __typename?: "FlowDatasetCompactedFailedError";
+              __typename?: "FlowFailureReasonInputDatasetCompacted";
               message: string;
-              rootDataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
-          }
-        | { __typename?: "FlowFailedMessage"; message: string };
+              inputDataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+          };
 };
 
 type FlowOutcomeData_FlowSuccessResult_Fragment = { __typename?: "FlowSuccessResult"; message: string };
@@ -4333,12 +4373,12 @@ export const FlowOutcomeDataFragmentDoc = gql`
         }
         ... on FlowFailedError {
             reason {
-                ... on FlowFailedMessage {
+                ... on FlowFailureReasonGeneral {
                     message
                 }
-                ... on FlowDatasetCompactedFailedError {
+                ... on FlowFailureReasonInputDatasetCompacted {
                     message
-                    rootDataset {
+                    inputDataset {
                         ...DatasetBasics
                     }
                 }

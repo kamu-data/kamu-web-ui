@@ -114,10 +114,10 @@ export class DatasetFlowDetailsHelpers {
                         switch (flowDetails.outcome?.__typename) {
                             case "FlowFailedError":
                                 switch (flowDetails.outcome.reason.__typename) {
-                                    case "FlowFailedMessage":
+                                    case "FlowFailureReasonGeneral":
                                         return `An error occurred, see logs for more details`;
-                                    case "FlowDatasetCompactedFailedError":
-                                        return `Root dataset <span class="text-small text-danger">${flowDetails.outcome.reason.rootDataset.name}</span> was compacted`;
+                                    case "FlowFailureReasonInputDatasetCompacted":
+                                        return `Root dataset <span class="text-small text-danger">${flowDetails.outcome.reason.inputDataset.name}</span> was compacted`;
                                     /* istanbul ignore next */
                                     default:
                                         return "Unknown flow failed error";

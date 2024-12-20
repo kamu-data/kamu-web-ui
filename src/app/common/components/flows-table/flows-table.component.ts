@@ -200,26 +200,38 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     }
 
     public onForceUpdate(node: FlowSummaryDataFragment): void {
-        if (node.description.__typename === "FlowDescriptionDatasetPollingIngest") {
-            this.datasetFlowsService
-                .datasetTriggerFlow({
-                    datasetId: node.description.datasetId,
-                    datasetFlowType: DatasetFlowType.Ingest,
-                    flowRunConfiguration: {
-                        ingest: {
-                            fetchUncacheable: true,
-                        },
-                    },
-                })
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe((result: boolean) => {
-                    if (result) {
-                        this.toastrService.success("Force update started");
+        promiseWithCatch(
+            this.modalService.error({
+                title: "Run force update",
+                message: "Do you want to run a force update?",
+                yesButtonText: "Ok",
+                noButtonText: "Cancel",
+                handler: (ok) => {
+                    if (ok) {
+                        if (node.description.__typename === "FlowDescriptionDatasetPollingIngest") {
+                            this.datasetFlowsService
+                                .datasetTriggerFlow({
+                                    datasetId: node.description.datasetId,
+                                    datasetFlowType: DatasetFlowType.Ingest,
+                                    flowRunConfiguration: {
+                                        ingest: {
+                                            fetchUncacheable: true,
+                                        },
+                                    },
+                                })
+                                .pipe(takeUntilDestroyed(this.destroyRef))
+                                .subscribe((result: boolean) => {
+                                    if (result) {
+                                        this.toastrService.success("Force update started");
+                                    }
+                                });
+                        } else {
+                            throw new Error("Configuration snapshot is undefined");
+                        }
                     }
-                });
-        } else {
-            throw new Error("Configuration snapshot is undefined");
-        }
+                },
+            }),
+        );
     }
 
     private initializeFilters(): void {

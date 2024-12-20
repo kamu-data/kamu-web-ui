@@ -86,6 +86,7 @@ import { FlowsComponent } from "./additional-components/flows-component/flows.co
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatChipsModule } from "@angular/material/chips";
+import { DatasetVisibilityModule } from "../components/dataset-visibility/dataset-visibility.module";
 
 @NgModule({
     imports: [
@@ -141,6 +142,7 @@ import { MatChipsModule } from "@angular/material/chips";
         DataAccessPanelModule,
         MatSortModule,
         AngularMultiSelectModule,
+        DatasetVisibilityModule,
     ],
     exports: [
         DatasetViewHeaderComponent,

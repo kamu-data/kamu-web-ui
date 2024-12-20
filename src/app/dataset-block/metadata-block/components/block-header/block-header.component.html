@@ -40,7 +40,8 @@
 
             <app-block-row-data tooltip="Hash sum of the preceding block." label="Previous Block Hash:">
                 <app-display-hash
-                    [value]="block.prevBlockHash ?? 'None'"
+                    *ngIf="block.prevBlockHash; else noPrevBlockHash"
+                    [value]="block.prevBlockHash"
                     [navigationTargetDataset]="datasetInfo"
                     [showCopyButton]="true"
                 />
@@ -48,3 +49,6 @@
         </div>
     </div>
 </div>
+<ng-template #noPrevBlockHash>
+    <span>-</span>
+</ng-template>

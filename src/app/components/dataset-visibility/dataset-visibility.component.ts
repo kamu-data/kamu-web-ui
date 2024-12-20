@@ -4,6 +4,7 @@ import { DatasetVisibilityOutput } from "src/app/api/kamu.graphql.interface";
 @Component({
     selector: "app-dataset-visibility",
     templateUrl: "./dataset-visibility.component.html",
+    styleUrls: ["./dataset-visibility.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetVisibilityComponent {

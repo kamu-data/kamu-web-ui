@@ -53,6 +53,7 @@
                     >.
                 </div>
             </ng-template>
+            <app-dataset-visibility class="me-2" [datasetVisibility]="row.visibility"></app-dataset-visibility>
             <button
                 data-test-id="button-popover-verified"
                 type="button"
@@ -67,7 +68,7 @@
         </div>
     </div>
     <div>
-        <p class="dataset-list-container__description mb-2">
+        <p class="dataset-list-container__description my-2">
             {{ row.metadata.currentInfo.description }}
         </p>
         <div class="app-mat-chip">

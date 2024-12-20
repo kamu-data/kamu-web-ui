@@ -235,6 +235,10 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         return !_.isNil(this.currentState?.overview.metadata.currentWatermark);
     }
 
+    public get isPrivate(): boolean {
+        return this.datasetBasics.visibility.__typename === "PrivateDatasetVisibility";
+    }
+
     public get showAddDataButton(): boolean {
         if (Boolean(this.currentState?.data.length) && this.isUserLogged) {
             return (

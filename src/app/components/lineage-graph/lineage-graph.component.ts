@@ -81,6 +81,10 @@ export class LineageGraphComponent implements OnInit, OnChanges {
         this.sessionStorageService.setSidePanelVisible(this.showSidePanel);
     }
 
+    public get isPrivateVisibility(): boolean {
+        return this.currentDataset.visibility.__typename === "PrivateDatasetVisibility";
+    }
+
     private checkVisibilitySidePanel(): void {
         this.showSidePanel = this.sessionStorageService.isSidePanelVisible;
     }

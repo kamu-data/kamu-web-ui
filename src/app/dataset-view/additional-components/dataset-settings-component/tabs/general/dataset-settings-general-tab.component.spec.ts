@@ -6,7 +6,7 @@ import { DatasetSettingsGeneralTabComponent } from "./dataset-settings-general-t
 import { DatasetSettingsService } from "../../services/dataset-settings.service";
 import { ModalService } from "../../../../../components/modal/modal.service";
 import { ApolloModule } from "apollo-angular";
-import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
+import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
@@ -33,6 +33,7 @@ import { DatasetResetMode } from "./dataset-settings-general-tab.types";
 import AppValues from "src/app/common/app.values";
 import { DatasetFlowsService } from "../../../flows-component/services/dataset-flows.service";
 import { DatasetService } from "../../../../dataset.service";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 
 describe("DatasetSettingsGeneralTabComponent", () => {
     let component: DatasetSettingsGeneralTabComponent;
@@ -59,6 +60,8 @@ describe("DatasetSettingsGeneralTabComponent", () => {
                 MatRadioModule,
                 MatIconModule,
                 NgbTooltipModule,
+                MatCheckboxModule,
+                FormsModule,
             ],
             providers: [FormBuilder],
         }).compileComponents();

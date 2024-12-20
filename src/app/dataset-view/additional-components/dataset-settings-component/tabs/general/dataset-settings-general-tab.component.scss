@@ -7,6 +7,10 @@
             --mat-radio-ripple-color: transparent;
         }
 
+        .mdc-checkbox__ripple {
+            display: none;
+        }
+
         .mat-mdc-radio-label {
             white-space: normal;
         }

@@ -2,7 +2,7 @@ mutation accountPauseFlows($accountName: AccountName!) {
   accounts {
     byName(accountName: $accountName) {
       flows {
-        configs {
+        triggers {
           pauseAccountDatasetFlows
         }
       }

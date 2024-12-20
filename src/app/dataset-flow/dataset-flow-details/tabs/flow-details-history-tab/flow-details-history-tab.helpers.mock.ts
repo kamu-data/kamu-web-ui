@@ -132,7 +132,7 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         startCondition: {
             __typename: "FlowStartConditionBatching",
-            activeTransformRule: {
+            activeBatchingRule: {
                 minRecordsToAwait: 500,
                 maxBatchingInterval: {
                     every: 5,
@@ -274,7 +274,7 @@ export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         startCondition: {
             __typename: "FlowStartConditionBatching",
-            activeTransformRule: {
+            activeBatchingRule: {
                 minRecordsToAwait: 500,
                 maxBatchingInterval: {
                     every: 5,

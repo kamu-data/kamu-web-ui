@@ -1,4 +1,3 @@
-import { NavigationService } from "src/app/services/navigation.service";
 import { DataHelpers } from "src/app/common/data.helpers";
 import {
     ChangeDetectionStrategy,
@@ -22,7 +21,6 @@ import {
     Dataset,
     DatasetListFlowsDataFragment,
     DatasetFlowType,
-    IngestConditionInput,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { MatTableDataSource } from "@angular/material/table";
@@ -87,7 +85,6 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     public dropdownStatustList: FilterStatusType[] = [];
     public selectedStatusItems: FilterStatusType[] = [];
 
-    private navigationService = inject(NavigationService);
     private modalService = inject(ModalService);
     private datasetFlowsService = inject(DatasetFlowsService);
     private toastrService = inject(ToastrService);
@@ -196,7 +193,6 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         return (
             node.description.__typename === "FlowDescriptionDatasetPollingIngest" &&
             node.description.ingestResult?.__typename === "FlowDescriptionUpdateResultUpToDate" &&
-            node.configSnapshot?.__typename === "FlowConfigurationIngest" &&
             node.description.ingestResult.uncacheable &&
             ((node.configSnapshot?.__typename === "FlowConfigurationIngest" && !node.configSnapshot.fetchUncacheable) ||
                 !node.configSnapshot)
@@ -204,57 +200,38 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     }
 
     public onForceUpdate(node: FlowSummaryDataFragment): void {
-        if (
-            node.description.__typename === "FlowDescriptionDatasetPollingIngest" &&
-            node.configSnapshot?.__typename === "FlowConfigurationIngest"
-        ) {
-            this.datasetFlowsService
-                .datasetTriggerFlow({
-                    datasetId: node.description.datasetId,
-                    datasetFlowType: DatasetFlowType.Ingest,
-                    flowRunConfiguration: {
-                        ingest: this.setScheduleOptions(node),
-                    },
-                })
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe((result: boolean) => {
-                    if (result) {
-                        this.toastrService.success("Force update started");
+        promiseWithCatch(
+            this.modalService.error({
+                title: "Run force update",
+                message: "Do you want to run a force update?",
+                yesButtonText: "Ok",
+                noButtonText: "Cancel",
+                handler: (ok) => {
+                    if (ok) {
+                        if (node.description.__typename === "FlowDescriptionDatasetPollingIngest") {
+                            this.datasetFlowsService
+                                .datasetTriggerFlow({
+                                    datasetId: node.description.datasetId,
+                                    datasetFlowType: DatasetFlowType.Ingest,
+                                    flowRunConfiguration: {
+                                        ingest: {
+                                            fetchUncacheable: true,
+                                        },
+                                    },
+                                })
+                                .pipe(takeUntilDestroyed(this.destroyRef))
+                                .subscribe((result: boolean) => {
+                                    if (result) {
+                                        this.toastrService.success("Force update started");
+                                    }
+                                });
+                        } else {
+                            throw new Error("Configuration snapshot is undefined");
+                        }
                     }
-                });
-        } else {
-            throw new Error("Configuration snapshot is undefined");
-        }
-    }
-
-    private setScheduleOptions(node: FlowSummaryDataFragment): IngestConditionInput {
-        /* istanbul ignore else */
-        if (node.configSnapshot?.__typename === "FlowConfigurationIngest") {
-            switch (node.configSnapshot.schedule.__typename) {
-                case "TimeDelta":
-                    return {
-                        schedule: {
-                            timeDelta: {
-                                every: node.configSnapshot.schedule.every,
-                                unit: node.configSnapshot.schedule.unit,
-                            },
-                        },
-                        fetchUncacheable: true,
-                    };
-                case "Cron5ComponentExpression":
-                    return {
-                        schedule: {
-                            cron5ComponentExpression: node.configSnapshot.schedule.cron5ComponentExpression,
-                        },
-                        fetchUncacheable: true,
-                    };
-                /* istanbul ignore next */
-                default:
-                    throw new Error("Unknown configuration schedule type");
-            }
-        } else {
-            throw new Error("The type for the configuration is not FlowConfigurationIngest");
-        }
+                },
+            }),
+        );
     }
 
     private initializeFilters(): void {

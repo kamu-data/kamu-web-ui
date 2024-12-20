@@ -101,8 +101,7 @@ export class DatasetFlowTableHelpers {
                                         ((element.configSnapshot?.__typename === "FlowConfigurationIngest" &&
                                             !element.configSnapshot.fetchUncacheable) ||
                                             !element.configSnapshot)
-                                      ? // TODO: Replace when will be new API
-                                        `Source is uncacheable: to re-scan the data, use force update`
+                                      ? `Source is uncacheable: to re-scan the data, use`
                                       : "Dataset is up-to-date";
 
                             case "FlowDescriptionDatasetExecuteTransform":
@@ -118,6 +117,13 @@ export class DatasetFlowTableHelpers {
                             case "FlowDescriptionDatasetHardCompaction":
                                 switch (element.description.compactionResult?.__typename) {
                                     case "FlowDescriptionHardCompactionSuccess":
+                                        if (
+                                            element.configSnapshot?.__typename === "FlowConfigurationCompactionRule" &&
+                                            element.configSnapshot.compactionRule.__typename ===
+                                                "CompactionMetadataOnly"
+                                        ) {
+                                            return "All data except metadata has been deleted";
+                                        }
                                         return `Compacted ${element.description.compactionResult.originalBlocksCount} original blocks to ${element.description.compactionResult.resultingBlocksCount} resulting blocks`;
 
                                     case "FlowDescriptionHardCompactionNothingToDo":
@@ -130,7 +136,7 @@ export class DatasetFlowTableHelpers {
                             case "FlowDescriptionDatasetReset":
                                 switch (element.description.__typename) {
                                     case "FlowDescriptionDatasetReset":
-                                        return "All dataset history has been cleared.";
+                                        return "All dataset history has been cleared";
                                     /* istanbul ignore next */
                                     default:
                                         return "Unknown reset result typename";

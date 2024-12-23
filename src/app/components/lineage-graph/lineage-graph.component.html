@@ -79,7 +79,10 @@
                     {{ node.data.dataObject.accountName }}
                 </svg:text>
             </svg:g>
-            <svg:g [attr.transform]="'translate(' + node.dimension.width + ', 0)'" *ngIf="false">
+            <svg:g
+                [attr.transform]="'translate(' + node.dimension.width / 2 + ', 0)'"
+                *ngIf="node.data.dataObject.access === LineageNodeAccess.PRIVATE"
+            >
                 <image
                     [attr.x]="5"
                     [attr.y]="-12"

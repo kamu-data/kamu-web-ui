@@ -12,7 +12,7 @@ import {
 import { DataSchemaFormat } from "../kamu.graphql.interface";
 import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
 import { TEST_LOGIN } from "./auth.mock";
-import { mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+import { mockFullPowerDatasetPermissionsFragment, mockPublicDatasetVisibility } from "src/app/search/mock.data";
 import {
     LineageGraphDatasetNodeObject,
     LineageGraphNodeData,
@@ -89,6 +89,7 @@ export const mockDatasetListItem: DatasetSearchOverviewFragment = {
                 },
                 kind: DatasetKind.Derivative,
                 alias: "kamu/alberta.case-details.hm",
+                visibility: mockPublicDatasetVisibility,
             },
         ],
     },
@@ -101,6 +102,7 @@ export const mockDatasetListItem: DatasetSearchOverviewFragment = {
         accountName: "kamu",
     },
     alias: "kamu/alberta.case-details",
+    visibility: mockPublicDatasetVisibility,
 };
 
 export const mockDatasetsAccountResponse: DatasetsAccountResponse = {
@@ -129,6 +131,7 @@ export const mockDatasetByAccountAndDatasetNameQuery: DatasetByAccountAndDataset
                 accountName: TEST_LOGIN,
             },
             alias: TEST_LOGIN + "/" + TEST_DATASET_NAME,
+            visibility: mockPublicDatasetVisibility,
         },
     },
 };
@@ -147,6 +150,7 @@ export const mockDatasetByIdQuery: DatasetByIdQuery = {
                 accountName: TEST_LOGIN,
             },
             alias: TEST_LOGIN + "/" + TEST_DATASET_NAME,
+            visibility: mockPublicDatasetVisibility,
         },
     },
 };
@@ -168,6 +172,7 @@ export const mockDatasetBasicsWithPermissionQuery: GetDatasetBasicsWithPermissio
             permissions: {
                 ...mockFullPowerDatasetPermissionsFragment.permissions,
             },
+            visibility: mockPublicDatasetVisibility,
         },
     },
 };
@@ -217,6 +222,7 @@ export const mockDatasetsByAccountNameQuery: DatasetsByAccountNameQuery = {
                                     id: TEST_ACCOUNT_ID,
                                     accountName: "kamu",
                                 },
+                                visibility: mockPublicDatasetVisibility,
                             },
                         ],
                     },
@@ -229,6 +235,7 @@ export const mockDatasetsByAccountNameQuery: DatasetsByAccountNameQuery = {
                         accountName: "kamu",
                     },
                     alias: "kamu/alberta.case-details",
+                    visibility: mockPublicDatasetVisibility,
                 },
             ],
             totalCount: 1,
@@ -309,6 +316,7 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
                 id: TEST_ACCOUNT_ID,
                 accountName: "alias",
             },
+            visibility: mockPublicDatasetVisibility,
         },
     },
 };

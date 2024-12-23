@@ -83,7 +83,10 @@ export class LineageGraphBuilderService {
                         name: dataset.name,
                         kind: dataset.kind,
                         isCurrent: dataset.id === currentDataset.id,
-                        access: LineageNodeAccess.PRIVATE,
+                        access:
+                            dataset.visibility.__typename === "PrivateDatasetVisibility"
+                                ? LineageNodeAccess.PRIVATE
+                                : LineageNodeAccess.PUBLIC,
                         accountName: dataset.owner.accountName,
                         avatarUrl: dataset.owner.avatarUrl,
                     },

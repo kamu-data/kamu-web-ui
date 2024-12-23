@@ -85,6 +85,10 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
         return this.datasetBasics.kind === DatasetKind.Root;
     }
 
+    public get isPrivate(): boolean {
+        return this.datasetBasics.visibility.__typename === "PrivateDatasetVisibility";
+    }
+
     public renameDataset(): void {
         const datasetId = this.datasetBasics.id;
         const accountName = this.datasetBasics.owner.accountName;
@@ -209,15 +213,14 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                 title: "Change visibility",
                 message: "Do you want to make dataset public?",
                 bigTextBlock: "Ok",
-                listDescription: [
-                    "The dataset will be visible to everyone",
-                    "Anyone can use your dataset",
-                    "Actions histoty and logs will be visible to everyone",
-                ],
-                // Change visibility to private
-                // listDescription: [
-                //     "The dataset will be visible only to you and your ownerships",
-                // ],
+                listDescription: this.isPrivate
+                    ? [
+                          "The dataset will be visible to everyone",
+                          "Anyone can use your dataset",
+                          "Actions history and logs will be visible to everyone",
+                      ]
+                    : ["The dataset will be visible only to you and your ownerships"],
+
                 yesButtonText: "Ok",
                 noButtonText: "Cancel",
                 handler: (ok) => {

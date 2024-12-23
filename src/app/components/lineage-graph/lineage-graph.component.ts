@@ -18,6 +18,7 @@ import AppValues from "src/app/common/app.values";
 import {
     LineageGraph,
     LineageGraphNodeKind,
+    LineageNodeAccess,
 } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
 import { LineageGraphConfig, LINEAGE_CONFIG } from "./ligeage-graph.settings";
 import { SessionStorageService } from "src/app/services/session-storage.service";
@@ -34,6 +35,7 @@ export class LineageGraphComponent implements OnInit, OnChanges {
     @Input({ required: true }) public currentDataset: DatasetLineageBasicsFragment;
     @Output() public onClickNodeEvent = new EventEmitter<Node>();
     public readonly LineageGraphNodeKind: typeof LineageGraphNodeKind = LineageGraphNodeKind;
+    public readonly LineageNodeAccess: typeof LineageNodeAccess = LineageNodeAccess;
     public readonly DatasetKind: typeof DatasetKind = DatasetKind;
     public readonly LINEAGE_CONFIG: LineageGraphConfig = LINEAGE_CONFIG;
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;

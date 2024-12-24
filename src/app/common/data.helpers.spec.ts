@@ -1,5 +1,5 @@
 import { DataSchemaFormat, DatasetKind, MetadataBlockFragment } from "../api/kamu.graphql.interface";
-import { mockOwnerFields } from "../search/mock.data";
+import { mockOwnerFields, mockPublicDatasetVisibility } from "../search/mock.data";
 import { DataHelpers } from "./data.helpers";
 
 export const metadataBlockSetVocab: MetadataBlockFragment = {
@@ -176,6 +176,7 @@ it("should check description for SetTransform block", () => {
                             accountName: "kamu",
                         },
                         alias: "kamu/quebec.case-details",
+                        visibility: mockPublicDatasetVisibility,
                     },
                 },
             ],

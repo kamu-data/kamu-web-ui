@@ -1,3 +1,4 @@
+import { mockPublicDatasetVisibility } from "src/app/search/mock.data";
 import {
     DatasetKind,
     DeleteEnvVariableMutation,
@@ -27,6 +28,7 @@ export const mockListEnvVariablesQuery: ListEnvVariablesQuery = {
                 accountName: "kamu",
             },
             alias: "kamu/account.tokens.portfolio",
+            visibility: mockPublicDatasetVisibility,
             envVars: {
                 listEnvVariables: {
                     totalCount: 5,

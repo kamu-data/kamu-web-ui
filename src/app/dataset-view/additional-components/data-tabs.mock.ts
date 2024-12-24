@@ -11,8 +11,9 @@ import {
     LineageUpdate,
     MetadataSchemaUpdate,
 } from "../dataset.subscriptions.interface";
-import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
+import { mockDatasetBasicsDerivedFragment, mockPublicDatasetVisibility } from "src/app/search/mock.data";
 import { Node } from "@swimlane/ngx-graph";
+import { LineageNodeAccess } from "./lineage-component/lineage-model";
 
 export const mockDataUpdate: DataUpdate = {
     schema: {
@@ -151,6 +152,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
         },
         alias: "kamu/alberta.case-details",
+        visibility: mockPublicDatasetVisibility,
         metadata: {
             __typename: "DatasetMetadata",
             currentPollingSource: {
@@ -191,6 +193,8 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
             },
             alias: "kamu/alberta.case-details",
+            visibility: mockPublicDatasetVisibility,
+
             metadata: {
                 __typename: "DatasetMetadata",
                 currentPollingSource: {
@@ -248,6 +252,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             kind: DatasetKind.Derivative,
             name: "alberta.case-details.hm",
             alias: "alberta.case-details.hm",
+            visibility: mockPublicDatasetVisibility,
         },
         {
             __typename: "Dataset",
@@ -280,6 +285,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             kind: DatasetKind.Derivative,
             name: "canada.case-details",
             alias: "canada.case-details",
+            visibility: mockPublicDatasetVisibility,
         },
         {
             __typename: "Dataset",
@@ -312,6 +318,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             kind: DatasetKind.Derivative,
             name: "canada.daily-cases",
             alias: "canada.daily-cases",
+            visibility: mockPublicDatasetVisibility,
         },
     ],
     edges: [
@@ -328,6 +335,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                     avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
                 },
                 alias: "kamu/alberta.case-details",
+                visibility: mockPublicDatasetVisibility,
                 metadata: {
                     __typename: "DatasetMetadata",
                     currentPollingSource: {
@@ -385,6 +393,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 kind: DatasetKind.Derivative,
                 name: "alberta.case-details.hm",
                 alias: "alberta.case-details.hm",
+                visibility: mockPublicDatasetVisibility,
             },
         ],
         [
@@ -419,6 +428,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 kind: DatasetKind.Derivative,
                 name: "alberta.case-details.hm",
                 alias: "alberta.case-details.hm",
+                visibility: mockPublicDatasetVisibility,
             },
             {
                 __typename: "Dataset",
@@ -451,6 +461,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 kind: DatasetKind.Derivative,
                 name: "canada.case-details",
                 alias: "canada.case-details",
+                visibility: mockPublicDatasetVisibility,
             },
         ],
         [
@@ -485,6 +496,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 kind: DatasetKind.Derivative,
                 name: "canada.case-details",
                 alias: "canada.case-details",
+                visibility: mockPublicDatasetVisibility,
             },
             {
                 __typename: "Dataset",
@@ -517,6 +529,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 kind: DatasetKind.Derivative,
                 name: "canada.daily-cases",
                 alias: "canada.daily-cases",
+                visibility: mockPublicDatasetVisibility,
             },
         ],
     ],
@@ -535,6 +548,7 @@ export const mockLineageGraphUpdateWithMqttSource: LineageUpdate = {
             avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
         },
         alias: "temp",
+        visibility: mockPublicDatasetVisibility,
         metadata: {
             __typename: "DatasetMetadata",
             currentPollingSource: {
@@ -569,6 +583,7 @@ export const mockLineageGraphUpdateWithMqttSource: LineageUpdate = {
                 avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
             },
             alias: "temp",
+            visibility: mockPublicDatasetVisibility,
             metadata: {
                 __typename: "DatasetMetadata",
                 currentPollingSource: {
@@ -613,7 +628,7 @@ export const mockBuildGraphNodesResult: Node[] = [
                 name: "alberta.case-details",
                 kind: "ROOT",
                 isCurrent: true,
-                access: "private",
+                access: LineageNodeAccess.PUBLIC,
                 accountName: "kamu",
                 avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
             },
@@ -629,7 +644,7 @@ export const mockBuildGraphNodesResult: Node[] = [
                 name: "alberta.case-details.hm",
                 kind: "DERIVATIVE",
                 isCurrent: false,
-                access: "private",
+                access: LineageNodeAccess.PUBLIC,
                 accountName: "kamu",
                 avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
             },
@@ -645,7 +660,7 @@ export const mockBuildGraphNodesResult: Node[] = [
                 name: "canada.case-details",
                 kind: "DERIVATIVE",
                 isCurrent: false,
-                access: "private",
+                access: LineageNodeAccess.PUBLIC,
                 accountName: "kamu",
                 avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
             },
@@ -661,7 +676,7 @@ export const mockBuildGraphNodesResult: Node[] = [
                 name: "canada.daily-cases",
                 kind: "DERIVATIVE",
                 isCurrent: false,
-                access: "private",
+                access: LineageNodeAccess.PUBLIC,
                 accountName: "kamu",
                 avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
             },
@@ -1392,6 +1407,7 @@ export const mockMetadataDerivedUpdate: MetadataSchemaUpdate = {
                                 accountName: "kamu",
                             },
                             alias: "kamu/alberta.case-details",
+                            visibility: mockPublicDatasetVisibility,
                         },
                     },
                 ],

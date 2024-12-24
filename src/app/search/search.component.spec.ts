@@ -26,6 +26,7 @@ import { DisplayTimeModule } from "../components/display-time/display-time.modul
 import { MatIconModule } from "@angular/material/icon";
 import { PaginationComponent } from "../components/pagination-component/pagination.component";
 import { MatDividerModule } from "@angular/material/divider";
+import { DatasetVisibilityModule } from "../components/dataset-visibility/dataset-visibility.module";
 
 describe("SearchComponent", () => {
     let component: SearchComponent;
@@ -53,6 +54,7 @@ describe("SearchComponent", () => {
                 NgbPaginationModule,
                 MatDividerModule,
                 RouterModule,
+                DatasetVisibilityModule,
             ],
             providers: [
                 NavigationService,

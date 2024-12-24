@@ -1,3 +1,4 @@
+import { mockPublicDatasetVisibility } from "src/app/search/mock.data";
 import { DatasetAutocompleteItem, TypeNames } from "../../interface/search.interface";
 import { DatasetKind, SearchDatasetsAutocompleteQuery, SearchDatasetsOverviewQuery } from "../kamu.graphql.interface";
 
@@ -48,6 +49,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                                     id: TEST_ACCOUNT_ID,
                                     accountName: "kamu",
                                 },
+                                visibility: mockPublicDatasetVisibility,
                             },
                         ],
                     },
@@ -60,6 +62,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                         accountName: "kamu",
                     },
                     alias: "kamu/alberta.case-details",
+                    visibility: mockPublicDatasetVisibility,
                 },
                 {
                     __typename: "Dataset",
@@ -95,6 +98,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                                 id: "did:odf:z4k88e8epAntnrFDUiDYxSGkCRcTc6wNzcwbpubzLCPQLVLUMcF",
                                 kind: DatasetKind.Derivative,
                                 alias: "kamu/canada.case-details.hm",
+                                visibility: mockPublicDatasetVisibility,
                                 name: "canada.case-details.hm",
                                 owner: {
                                     __typename: "Account",
@@ -113,6 +117,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                         accountName: "kamu",
                     },
                     alias: "kamu/alberta.case-details.hm",
+                    visibility: mockPublicDatasetVisibility,
                 },
                 {
                     __typename: "Dataset",
@@ -149,6 +154,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                                 kind: DatasetKind.Derivative,
                                 alias: "kamu/british-columbia.case-details.hm",
                                 name: "british-columbia.case-details.hm",
+                                visibility: mockPublicDatasetVisibility,
                                 owner: {
                                     __typename: "Account",
                                     id: TEST_ACCOUNT_ID,
@@ -166,6 +172,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                         accountName: "kamu",
                     },
                     alias: "kamu/british-columbia.case-details",
+                    visibility: mockPublicDatasetVisibility,
                 },
                 {
                     __typename: "Dataset",
@@ -201,6 +208,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                                 id: "did:odf:z4k88e8epAntnrFDUiDYxSGkCRcTc6wNzcwbpubzLCPQLVLUMcF",
                                 kind: DatasetKind.Derivative,
                                 alias: "kamu/canada.case-details.hm",
+                                visibility: mockPublicDatasetVisibility,
                                 name: "canada.case-details.hm",
                                 owner: {
                                     __typename: "Account",
@@ -219,6 +227,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                         accountName: "kamu",
                     },
                     alias: "kamu/british-columbia.case-details.hm",
+                    visibility: mockPublicDatasetVisibility,
                 },
                 {
                     __typename: "Dataset",
@@ -254,6 +263,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                                 id: "did:odf:z4k88e8thqpQ7kupbJCiFbeXr5WZVCor7hmybhfmyUTLnWifwz6",
                                 kind: DatasetKind.Derivative,
                                 alias: "kamu/canada.case-details.hm",
+                                visibility: mockPublicDatasetVisibility,
                                 name: "canada.case-details.hm",
                                 owner: {
                                     __typename: "Account",
@@ -272,6 +282,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                         accountName: "kamu",
                     },
                     alias: "kamu/canada.case-details",
+                    visibility: mockPublicDatasetVisibility,
                 },
                 {
                     __typename: "Dataset",
@@ -303,6 +314,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                         accountName: "kamu",
                     },
                     alias: "kamu/canada.daily-cases",
+                    visibility: mockPublicDatasetVisibility,
                 },
                 {
                     __typename: "Dataset",
@@ -327,6 +339,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                         accountName: "kamu",
                     },
                     alias: "kamu/co.alphavantage.tickers.daily.spy",
+                    visibility: mockPublicDatasetVisibility,
                 },
                 {
                     __typename: "Dataset",
@@ -357,6 +370,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                         accountName: "kamu",
                     },
                     alias: "kamu/com.cryptocompare.ohlcv.eth-usd",
+                    visibility: mockPublicDatasetVisibility,
                 },
                 {
                     __typename: "Dataset",
@@ -381,6 +395,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                         accountName: "kamu",
                     },
                     alias: "kamu/net.rocketpool.reth.mint-burn",
+                    visibility: mockPublicDatasetVisibility,
                 },
                 {
                     __typename: "Dataset",
@@ -415,6 +430,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                                 id: "did:odf:z4k88e8gCvWKoSD2eaVa7ocoLDzuUcGu8VW89Pks775fM5MgDom",
                                 kind: DatasetKind.Derivative,
                                 alias: "kamu/ontario.case-details.hm",
+                                visibility: mockPublicDatasetVisibility,
                                 name: "ontario.case-details.hm",
                                 owner: {
                                     __typename: "Account",
@@ -433,6 +449,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                         accountName: "kamu",
                     },
                     alias: "kamu/ontario.case-details",
+                    visibility: mockPublicDatasetVisibility,
                 },
             ],
             totalCount: 13,
@@ -464,6 +481,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                         accountName: "kamu",
                     },
                     alias: "kamu/alberta.case-details",
+                    visibility: mockPublicDatasetVisibility,
                 },
                 {
                     __typename: "Dataset",
@@ -476,6 +494,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                         accountName: "kamu",
                     },
                     alias: "kamu/alberta.case-details.hm",
+                    visibility: mockPublicDatasetVisibility,
                 },
                 {
                     __typename: "Dataset",
@@ -488,6 +507,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                         accountName: "kamu",
                     },
                     alias: "kamu/british-columbia.case-details",
+                    visibility: mockPublicDatasetVisibility,
                 },
                 {
                     __typename: "Dataset",
@@ -500,6 +520,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                         accountName: "kamu",
                     },
                     alias: "kamu/british-columbia.case-details.hm",
+                    visibility: mockPublicDatasetVisibility,
                 },
                 {
                     __typename: "Dataset",
@@ -512,6 +533,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                         accountName: "kamu",
                     },
                     alias: "kamu/canada.case-details",
+                    visibility: mockPublicDatasetVisibility,
                 },
                 {
                     __typename: "Dataset",
@@ -524,6 +546,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                         accountName: "kamu",
                     },
                     alias: "kamu/canada.daily-cases",
+                    visibility: mockPublicDatasetVisibility,
                 },
                 {
                     __typename: "Dataset",
@@ -536,6 +559,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                         accountName: "kamu",
                     },
                     alias: "kamu/co.alphavantage.tickers.daily.spy",
+                    visibility: mockPublicDatasetVisibility,
                 },
                 {
                     __typename: "Dataset",
@@ -548,6 +572,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                         accountName: "kamu",
                     },
                     alias: "kamu/com.cryptocompare.ohlcv.eth-usd",
+                    visibility: mockPublicDatasetVisibility,
                 },
                 {
                     __typename: "Dataset",
@@ -560,6 +585,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                         accountName: "kamu",
                     },
                     alias: "kamu/ontario.case-details",
+                    visibility: mockPublicDatasetVisibility,
                 },
                 {
                     __typename: "Dataset",
@@ -572,6 +598,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                         accountName: "kamu",
                     },
                     alias: "kamu/ontario.case-details.hm",
+                    visibility: mockPublicDatasetVisibility,
                 },
             ],
         },
@@ -590,6 +617,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
                 accountName: "anonymous",
             },
             alias: "anonymous/a",
+            visibility: mockPublicDatasetVisibility,
         },
         dummy: false,
     },
@@ -605,6 +633,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
                 accountName: "kamu",
             },
             alias: "kamu/alberta.case-details",
+            visibility: mockPublicDatasetVisibility,
         },
         dummy: false,
         __typename: TypeNames.datasetType,
@@ -621,6 +650,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
                 accountName: "kamu",
             },
             alias: "kamu/alberta.case-details.hm",
+            visibility: mockPublicDatasetVisibility,
         },
         dummy: false,
         __typename: TypeNames.datasetType,
@@ -637,6 +667,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
                 accountName: "kamu",
             },
             alias: "kamu/british-columbia.case-details",
+            visibility: mockPublicDatasetVisibility,
         },
         dummy: false,
         __typename: TypeNames.datasetType,
@@ -653,6 +684,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
                 accountName: "kamu",
             },
             alias: "kamu/british-columbia.case-details.hm",
+            visibility: mockPublicDatasetVisibility,
         },
         dummy: false,
         __typename: TypeNames.datasetType,
@@ -669,6 +701,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
                 accountName: "kamu",
             },
             alias: "kamu/canada.case-details",
+            visibility: mockPublicDatasetVisibility,
         },
         dummy: false,
         __typename: TypeNames.datasetType,
@@ -685,6 +718,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
                 accountName: "kamu",
             },
             alias: "kamu/canada.daily-cases",
+            visibility: mockPublicDatasetVisibility,
         },
         dummy: false,
         __typename: TypeNames.datasetType,
@@ -701,6 +735,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
                 accountName: "kamu",
             },
             alias: "kamu/co.alphavantage.tickers.daily.spy",
+            visibility: mockPublicDatasetVisibility,
         },
         dummy: false,
         __typename: TypeNames.datasetType,
@@ -717,6 +752,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
                 accountName: "kamu",
             },
             alias: "kamu/com.cryptocompare.ohlcv.eth-usd",
+            visibility: mockPublicDatasetVisibility,
         },
         dummy: false,
         __typename: TypeNames.datasetType,
@@ -733,6 +769,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
                 accountName: "kamu",
             },
             alias: "kamu/ontario.case-details",
+            visibility: mockPublicDatasetVisibility,
         },
         dummy: false,
         __typename: TypeNames.datasetType,
@@ -749,6 +786,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
                 accountName: "kamu",
             },
             alias: "kamu/ontario.case-details.hm",
+            visibility: mockPublicDatasetVisibility,
         },
         dummy: false,
         __typename: TypeNames.datasetType,

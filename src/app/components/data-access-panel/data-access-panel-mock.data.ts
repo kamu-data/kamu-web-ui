@@ -1,4 +1,5 @@
 import { DatasetEndpoints, DatasetKind, DatasetProtocolsQuery } from "src/app/api/kamu.graphql.interface";
+import { mockPublicDatasetVisibility } from "src/app/search/mock.data";
 
 export const mockDatasetEndPoints: DatasetEndpoints = {
     __typename: "DatasetEndpoints",
@@ -101,6 +102,7 @@ export const mockDatasetProtocolsQuery: DatasetProtocolsQuery = {
                 accountName: "kamu",
             },
             alias: "kamu/account.tokens.portfolio",
+            visibility: mockPublicDatasetVisibility,
         },
     },
 };

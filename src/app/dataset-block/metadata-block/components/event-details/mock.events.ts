@@ -1,3 +1,4 @@
+import { mockPublicDatasetVisibility } from "src/app/search/mock.data";
 import {
     AddPushSource,
     CompressionFormat,
@@ -152,6 +153,7 @@ export const mockSetTransform: DatasetTransformFragment = {
                     accountName: "kamu",
                 },
                 alias: "kamu/alberta.case-details",
+                visibility: mockPublicDatasetVisibility,
             },
         },
     ],

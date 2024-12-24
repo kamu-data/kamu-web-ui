@@ -6,7 +6,7 @@ import {
     FlowSummaryDataFragment,
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
-import { mockDatasetMainDataId } from "src/app/search/mock.data";
+import { mockDatasetMainDataId, mockPublicDatasetVisibility } from "src/app/search/mock.data";
 
 export const expectationsDesriptionColumnOptions = [
     {
@@ -449,6 +449,7 @@ export const mockDatasets: DatasetListFlowsDataFragment[] = [
             __typename: "Account",
         },
         alias: "account.tokens.transfers",
+        visibility: mockPublicDatasetVisibility,
         __typename: "Dataset",
         metadata: {
             currentPollingSource: {
@@ -475,6 +476,7 @@ export const mockDatasets: DatasetListFlowsDataFragment[] = [
             __typename: "Account",
         },
         alias: "account.tokens.transfers",
+        visibility: mockPublicDatasetVisibility,
         __typename: "Dataset",
         metadata: {
             currentPollingSource: {
@@ -498,6 +500,7 @@ export const mockDatasets: DatasetListFlowsDataFragment[] = [
             __typename: "Account",
         },
         alias: "account.tokens.transfers",
+        visibility: mockPublicDatasetVisibility,
         __typename: "Dataset",
         metadata: {
             currentPollingSource: {
@@ -522,6 +525,7 @@ export const mockDatasets: DatasetListFlowsDataFragment[] = [
             __typename: "Account",
         },
         alias: "account.tokens.transfers",
+        visibility: mockPublicDatasetVisibility,
         __typename: "Dataset",
         metadata: {
             currentPollingSource: null,

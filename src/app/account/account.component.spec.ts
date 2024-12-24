@@ -26,6 +26,7 @@ import { AccountFlowsTabComponent } from "./additional-components/account-flows-
 import { LoggedUserService } from "../auth/logged-user.service";
 import { mockAccountDetails, TEST_AVATAR_URL, TEST_LOGIN } from "../api/mock/auth.mock";
 import { findElementByDataTestId } from "../common/base-test.helpers.spec";
+import { DatasetVisibilityModule } from "../components/dataset-visibility/dataset-visibility.module";
 
 describe("AccountComponent", () => {
     let component: AccountComponent;
@@ -66,6 +67,7 @@ describe("AccountComponent", () => {
                 HttpClientTestingModule,
                 ToastrModule.forRoot(),
                 RouterModule,
+                DatasetVisibilityModule,
             ],
             providers: [
                 DatasetApi,

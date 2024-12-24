@@ -8,6 +8,7 @@ import {
 import { SetTransformYamlType } from "./set-transform.types";
 import { PreprocessStepValue } from "../source-events/add-polling-source/add-polling-source-form.types";
 import { Engine } from "./components/engine-section/engine-section.types";
+import { mockPublicDatasetVisibility } from "src/app/search/mock.data";
 
 export const mockEngines: EnginesQuery = {
     data: {
@@ -65,6 +66,7 @@ export const mockGetDatasetSchemaQuery: GetDatasetSchemaQuery = {
                 accountName: "kamu",
             },
             alias: "kamu/account.tokens.portfolio.usd",
+            visibility: mockPublicDatasetVisibility,
         },
     },
 };

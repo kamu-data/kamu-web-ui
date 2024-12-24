@@ -48,6 +48,7 @@ import { EditorModule } from "../shared/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { FlowsComponent } from "./additional-components/flows-component/flows.component";
+import { DatasetVisibilityModule } from "../components/dataset-visibility/dataset-visibility.module";
 
 describe("DatasetComponent", () => {
     let component: DatasetComponent;
@@ -96,6 +97,7 @@ describe("DatasetComponent", () => {
                 EditorModule,
                 MatProgressBarModule,
                 CdkAccordionModule,
+                DatasetVisibilityModule,
             ],
             providers: [
                 DatasetApi,

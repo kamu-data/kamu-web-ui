@@ -5,6 +5,7 @@ export class SetTransformTooltipsTexts {
         "Temporary Flink-specific extension for creating temporal tables from streams.";
     public static readonly DATASET_ID = "Unique dataset identifier.";
     public static readonly DATASET_KIND = "Type of the dataset.";
+    public static readonly DATASET_VISIBILITY = "Visibility of the dataset.";
     public static readonly DATASET_NAME = "Name of the dataset.";
     public static readonly DATASET_OWNER = "Owner of the dataset.";
     public static readonly DATASET_ALIAS = "Query alias of the dataset.";

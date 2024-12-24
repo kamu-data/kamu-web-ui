@@ -13,6 +13,7 @@ import { MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { RouterModule } from "@angular/router";
+import { DatasetVisibilityModule } from "src/app/components/dataset-visibility/dataset-visibility.module";
 
 describe("DatasetsTabComponent", () => {
     let component: DatasetsTabComponent;
@@ -30,6 +31,7 @@ describe("DatasetsTabComponent", () => {
                 MatDividerModule,
                 SharedTestModule,
                 RouterModule,
+                DatasetVisibilityModule,
             ],
             providers: [DatasetApi],
             declarations: [DatasetsTabComponent, DatasetListItemComponent],

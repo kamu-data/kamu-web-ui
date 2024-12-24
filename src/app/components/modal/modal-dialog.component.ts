@@ -36,6 +36,15 @@ import { DynamicComponent } from "./dynamic.component";
                         {{ context.description }}
                     </p>
 
+                    <p
+                        *ngIf="context && context.warningText"
+                        style="text-align:center; font-size:12px; color:red;"
+                        class="modal__msg"
+                        data-test-id="modalWarning"
+                    >
+                        {{ context.warningText }}
+                    </p>
+
                     <p *ngIf="context && context.message" class="modal__msg mt-4" data-test-id="modalMessage">
                         {{ context.message }}
                     </p>

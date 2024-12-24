@@ -80,7 +80,7 @@
                 </svg:text>
             </svg:g>
             <svg:g
-                [attr.transform]="'translate(' + node.dimension.width / 2 + ', 0)'"
+                [attr.transform]="'translate(' + node.dimension.width + ', 0)'"
                 *ngIf="node.data.dataObject.access === LineageNodeAccess.PRIVATE"
             >
                 <image

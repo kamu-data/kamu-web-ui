@@ -1,4 +1,9 @@
-import { DatasetVisibility, UpdateWatermarkGQL } from "./kamu.graphql.interface";
+import {
+    DatasetVisibility,
+    DatasetVisibilityInput,
+    SetVisibilityDatasetMutation,
+    UpdateWatermarkGQL,
+} from "./kamu.graphql.interface";
 import {
     CommitEventToDatasetGQL,
     CommitEventToDatasetMutation,
@@ -34,6 +39,7 @@ import {
     GetDatasetLineageQuery,
     GetDatasetLineageGQL,
     UpdateWatermarkMutation,
+    SetVisibilityDatasetGQL,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { ApolloQueryResult } from "@apollo/client/core";
@@ -66,6 +72,7 @@ export class DatasetApi {
     private renameDatasetGQL = inject(RenameDatasetGQL);
     private datasetLineageGQL = inject(GetDatasetLineageGQL);
     private updateWatermarkGQL = inject(UpdateWatermarkGQL);
+    private setVisibilityDatasetGQL = inject(SetVisibilityDatasetGQL);
 
     public getDatasetMainData(params: {
         accountName: string;
@@ -440,6 +447,40 @@ export class DatasetApi {
             .pipe(
                 first(),
                 map((result: MutationResult<UpdateWatermarkMutation>) => {
+                    /* istanbul ignore else */
+                    if (result.data) {
+                        return result.data;
+                    } else {
+                        throw new DatasetOperationError(result.errors ?? []);
+                    }
+                }),
+            );
+    }
+
+    public setVisibilityDataset(params: {
+        accountId: string;
+        datasetId: string;
+        visibility: DatasetVisibilityInput;
+    }): Observable<SetVisibilityDatasetMutation> {
+        return this.setVisibilityDatasetGQL
+            .mutate(
+                {
+                    datasetId: params.datasetId,
+                    visibility: params.visibility,
+                },
+                {
+                    update: (cache) => {
+                        updateCacheHelper(cache, {
+                            accountId: params.accountId,
+                            datasetId: params.datasetId,
+                            fieldNames: ["visibility"],
+                        });
+                    },
+                },
+            )
+            .pipe(
+                first(),
+                map((result: MutationResult<SetVisibilityDatasetMutation>) => {
                     /* istanbul ignore else */
                     if (result.data) {
                         return result.data;

@@ -806,7 +806,7 @@ export type DatasetMut = {
     /** Rename the dataset */
     rename: RenameResult;
     /** Set visibility for the dataset */
-    setVisibility: SetDatasetPropertyResultSuccess;
+    setVisibility: SetDatasetPropertyResult;
     /** Manually advances the watermark of a root dataset */
     setWatermark: SetWatermarkResult;
 };
@@ -1961,7 +1961,11 @@ export type SetDataSchema = {
     schema: DataSchema;
 };
 
-export type SetDatasetPropertyResultSuccess = {
+export type SetDatasetPropertyResult = {
+    message: Scalars["String"];
+};
+
+export type SetDatasetPropertyResultSuccess = SetDatasetPropertyResult & {
     __typename?: "SetDatasetPropertyResultSuccess";
     dummy?: Maybe<Scalars["String"]>;
     message: Scalars["String"];
@@ -2451,6 +2455,22 @@ export type FetchAccountDetailsMutationVariables = Exact<{
 export type FetchAccountDetailsMutation = {
     __typename?: "Mutation";
     auth: { __typename?: "AuthMut"; accountDetails: { __typename?: "Account" } & AccountFragment };
+};
+
+export type SetVisibilityDatasetMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    visibility: DatasetVisibilityInput;
+}>;
+
+export type SetVisibilityDatasetMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            setVisibility: { __typename?: "SetDatasetPropertyResultSuccess"; message: string };
+        } | null;
+    };
 };
 
 export type DatasetFlowCompactionMutationVariables = Exact<{
@@ -5675,6 +5695,33 @@ export class FetchAccountDetailsGQL extends Apollo.Mutation<
     FetchAccountDetailsMutationVariables
 > {
     document = FetchAccountDetailsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const SetVisibilityDatasetDocument = gql`
+    mutation setVisibilityDataset($datasetId: DatasetID!, $visibility: DatasetVisibilityInput!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                setVisibility(visibility: $visibility) {
+                    ... on SetDatasetPropertyResultSuccess {
+                        message
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class SetVisibilityDatasetGQL extends Apollo.Mutation<
+    SetVisibilityDatasetMutation,
+    SetVisibilityDatasetMutationVariables
+> {
+    document = SetVisibilityDatasetDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

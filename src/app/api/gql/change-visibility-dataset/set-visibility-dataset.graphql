@@ -1,0 +1,11 @@
+mutation setVisibilityDataset($datasetId: DatasetID!, $visibility: DatasetVisibilityInput!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      setVisibility(visibility: $visibility) {
+        ... on SetDatasetPropertyResultSuccess {
+          message
+        }
+      }
+    }
+  }
+}

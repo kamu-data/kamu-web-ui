@@ -63,6 +63,13 @@ describe("QueryAndResultSectionsComponent", () => {
         expect(component).toBeTruthy();
     });
 
+    it("should check 'Run' button is disabled", () => {
+        component.sqlLoading = true;
+        fixture.detectChanges();
+        const runButtonElem = findElementByDataTestId(fixture, "runSqlQueryButton") as HTMLButtonElement;
+        expect(runButtonElem.disabled).toEqual(true);
+    });
+
     it("should check that the progress bar for the editor disappears", fakeAsync(() => {
         component.editorLoaded = false;
         fixture.detectChanges();

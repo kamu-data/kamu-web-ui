@@ -14,7 +14,7 @@
             <button
                 appFeatureFlag="dataset.panel.data.editRun"
                 data-test-id="runSqlQueryButton"
-                [disabled]="!sqlRequestCode"
+                [disabled]="!sqlRequestCode || sqlLoading"
                 name="run sql button"
                 (click)="runSQLRequest({ query: sqlRequestCode }, true)"
                 class="sql-run-button border border-1 rounded-left-2 border-right-0 btn-group-item btn justify-content-center align-items-center"

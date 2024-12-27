@@ -160,7 +160,7 @@
                     [attr.font-weight]="'600'"
                     [attr.cursor]="'pointer'"
                 >
-                    ID: {{ node.label | slice: -8 }}
+                    {{ node.label | displayDatasetId }}
                 </svg:text>
                 <svg:g [attr.transform]="'translate(' + (node.dimension.width - 15) + ', 0)'">
                     <image

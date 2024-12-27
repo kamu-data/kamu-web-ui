@@ -30,7 +30,7 @@
                                 [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name]"
                                 [queryParams]="{
                                     tab: DatasetViewTypeEnum.Settings,
-                                    section: SettingsTabsEnum.SCHEDULING
+                                    section: SettingsTabsEnum.SCHEDULING,
                                 }"
                                 >Update settings</a
                             >
@@ -73,7 +73,7 @@
                     [accountFlowInitiators]="flowConnectionData.flowInitiators"
                     [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
                     [tableOptions]="{
-                        displayColumns: DISPLAY_COLUMNS
+                        displayColumns: DISPLAY_COLUMNS,
                     }"
                     (searchByFiltersChange)="onSearchByFiltersChange($event)"
                     (cancelFlowChange)="onCancelFlow($event)"
@@ -107,7 +107,7 @@
                         '/',
                         datasetBasics.owner.accountName,
                         datasetBasics.name,
-                        URL_PARAM_ADD_POLLING_SOURCE
+                        URL_PARAM_ADD_POLLING_SOURCE,
                     ]"
                     >add data polling source
                 </a>

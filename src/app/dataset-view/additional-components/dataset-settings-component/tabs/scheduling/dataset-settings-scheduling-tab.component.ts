@@ -62,7 +62,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
             .setDatasetTriggers({
                 datasetId: this.datasetBasics.id,
                 datasetFlowType: DatasetFlowType.ExecuteTransform,
-                paused: !(batchingTriggerForm.controls.updatesState.value as boolean),
+                paused: !batchingTriggerForm.controls.updatesState.value,
                 triggerInput: this.setBatchingTriggerInput(batchingTriggerForm),
                 datasetInfo: {
                     accountName: this.datasetBasics.owner.accountName,
@@ -78,7 +78,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
             .setDatasetTriggers({
                 datasetId: this.datasetBasics.id,
                 datasetFlowType: DatasetFlowType.Ingest,
-                paused: !(pollingForm.controls.updatesState.value as boolean),
+                paused: !pollingForm.controls.updatesState.value,
                 triggerInput: this.setPollingTriggerInput(pollingForm),
                 datasetInfo: {
                     accountName: this.datasetBasics.owner.accountName,

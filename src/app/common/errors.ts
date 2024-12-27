@@ -5,6 +5,7 @@ import { logError } from "./app.helpers";
 import { LoggedUserService } from "../auth/logged-user.service";
 import { Injector } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
+import { GraphQLFormattedError } from "graphql";
 
 export abstract class KamuError extends Error {
     abstract accept(visitor: KamuErrorVisitor): void;
@@ -48,9 +49,9 @@ export class AccountNotFoundError extends KamuError {
 }
 
 export abstract class KamuMultiError extends KamuError {
-    public readonly errors: readonly Error[];
+    public readonly errors: ReadonlyArray<GraphQLFormattedError>;
 
-    constructor(errors: readonly Error[]) {
+    constructor(errors: ReadonlyArray<GraphQLFormattedError>) {
         super();
         this.errors = errors;
     }

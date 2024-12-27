@@ -14,7 +14,7 @@ import { DynamicComponent } from "./dynamic.component";
                             'modal__header-ok': context && context.status === 'ok',
                             'modal__header-warning': context && context.status === 'warning',
                             'modal__header-error': context && context.status === 'error',
-                            'modal__header-black': context && context.status === 'dialog_question'
+                            'modal__header-black': context && context.status === 'dialog_question',
                         }"
                     >
                         {{ context && context.title }}
@@ -45,7 +45,7 @@ import { DynamicComponent } from "./dynamic.component";
                     [style]="{
                         width: computeWidth(),
                         display: 'flex',
-                        alignItems: 'center'
+                        alignItems: 'center',
                     }"
                 >
                     <button

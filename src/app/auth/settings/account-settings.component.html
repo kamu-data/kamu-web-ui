@@ -36,7 +36,7 @@
                                 appFeatureFlag="settings.profile"
                                 data-view-component="true"
                                 [ngClass]="{
-                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.PROFILE
+                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.PROFILE,
                                 }"
                                 class="action-list-item"
                             >
@@ -59,7 +59,7 @@
                             <li
                                 appFeatureFlag="settings.account"
                                 [ngClass]="{
-                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.ACCOUNT
+                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.ACCOUNT,
                                 }"
                                 class="action-list-item"
                             >
@@ -81,7 +81,7 @@
                                 appFeatureFlag="settings.appearance"
                                 data-view-component="true"
                                 [ngClass]="{
-                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.APPEARANCE
+                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.APPEARANCE,
                                 }"
                                 class="action-list-item"
                             >
@@ -104,7 +104,7 @@
                                 data-item-id=""
                                 data-view-component="true"
                                 [ngClass]="{
-                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.ACCESSIBILITY
+                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.ACCESSIBILITY,
                                 }"
                                 class="action-list-item"
                             >
@@ -126,7 +126,7 @@
                                 appFeatureFlag="settings.notifications"
                                 data-view-component="true"
                                 [ngClass]="{
-                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.NOTIFICATIONS
+                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.NOTIFICATIONS,
                                 }"
                                 class="action-list-item"
                             >
@@ -170,7 +170,7 @@
                                         data-view-component="true"
                                         class="action-list-item"
                                         [ngClass]="{
-                                            'action-list-item--nav__active': activeTab === AccountSettingsTabs.BILLING
+                                            'action-list-item--nav__active': activeTab === AccountSettingsTabs.BILLING,
                                         }"
                                     >
                                         <!-- [routerLink]="getRouteLink(AccountSettingsTabs.BILLING)" -->
@@ -192,7 +192,7 @@
                                         data-view-component="true"
                                         class="action-list-item"
                                         [ngClass]="{
-                                            'action-list-item--nav__active': activeTab === AccountSettingsTabs.EMAILS
+                                            'action-list-item--nav__active': activeTab === AccountSettingsTabs.EMAILS,
                                         }"
                                     >
                                         <!-- [routerLink]="getRouteLink(AccountSettingsTabs.EMAILS)" -->
@@ -214,7 +214,7 @@
                                         data-view-component="true"
                                         class="action-list-item"
                                         [ngClass]="{
-                                            'action-list-item--nav__active': activeTab === AccountSettingsTabs.SECURITY
+                                            'action-list-item--nav__active': activeTab === AccountSettingsTabs.SECURITY,
                                         }"
                                     >
                                         <!-- [routerLink]="getRouteLink(AccountSettingsTabs.SECURITY)" -->
@@ -237,7 +237,7 @@
                                         class="action-list-item"
                                         [ngClass]="{
                                             'action-list-item--nav__active':
-                                                activeTab === AccountSettingsTabs.ORGANIZATIONS
+                                                activeTab === AccountSettingsTabs.ORGANIZATIONS,
                                         }"
                                     >
                                         <!-- [routerLink]="getRouteLink(AccountSettingsTabs.ORGANIZATIONS)" -->
@@ -260,7 +260,7 @@
                                         class="action-list-item"
                                         [ngClass]="{
                                             'action-list-item--nav__active':
-                                                activeTab === AccountSettingsTabs.ACCESS_TOKENS
+                                                activeTab === AccountSettingsTabs.ACCESS_TOKENS,
                                         }"
                                     >
                                         <a

@@ -59,7 +59,7 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
                     accountId: this.datasetBasics.owner.id,
                     datasetId: this.datasetBasics.id,
                     key: this.keyControl.value ?? "",
-                    value: this.exposedValue ? this.exposedValue : this.keyValueForm.controls.value.value ?? "",
+                    value: this.exposedValue ? this.exposedValue : (this.keyValueForm.controls.value.value ?? ""),
                     isSecret: this.keyValueForm.controls.isSecret.value ? true : false,
                 })
                 .pipe(takeUntilDestroyed(this.destroyRef))
@@ -116,7 +116,7 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
         if (this.row) {
             this.keyValueForm.patchValue({
                 keyEnvVariable: this.row.key,
-                value: this.row.isSecret ? this.exposedValue : this.row.value ?? "",
+                value: this.row.isSecret ? this.exposedValue : (this.row.value ?? ""),
                 isSecret: this.row.isSecret,
             });
             this.row.isSecret ? this.isSecretControl.disable() : this.isSecretControl.enable();

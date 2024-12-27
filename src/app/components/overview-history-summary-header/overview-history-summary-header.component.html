@@ -36,7 +36,7 @@
                                 metadataBlockFragment.author.accountName,
                                 datasetName,
                                 URL_BLOCK,
-                                metadataBlockFragment.blockHash
+                                metadataBlockFragment.blockHash,
                             ]"
                             >{{ descriptionForMetadataBlock }}</a
                         >
@@ -60,7 +60,7 @@
                         [value]="metadataBlockFragment.blockHash"
                         [navigationTargetDataset]="{
                             accountName: metadataBlockFragment.author.accountName,
-                            datasetName: this.datasetName
+                            datasetName: this.datasetName,
                         }"
                         [class]="'f6 link--secondary text-mono ml-2 d-none d-lg-inline'"
                     />

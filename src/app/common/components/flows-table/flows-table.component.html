@@ -71,7 +71,7 @@
                             datasetById(element.description.datasetId).name,
                             URL_FLOW_DETAILS,
                             element.flowId,
-                            FlowDetailsTabs.HISTORY
+                            FlowDetailsTabs.HISTORY,
                         ]"
                         class="fw-500 description-link text-dark"
                     >
@@ -158,7 +158,7 @@
                     [routerLink]="[
                         '/',
                         datasetById(element.description.datasetId).owner.accountName,
-                        datasetById(element.description.datasetId).name
+                        datasetById(element.description.datasetId).name,
                     ]"
                     class="text-small"
                     >{{ datasetById(element.description.datasetId).name }}</a
@@ -182,7 +182,7 @@
                             datasetById(element.description.datasetId).name,
                             URL_FLOW_DETAILS,
                             element.flowId,
-                            FlowDetailsTabs.HISTORY
+                            FlowDetailsTabs.HISTORY,
                         ]"
                     >
                         Details

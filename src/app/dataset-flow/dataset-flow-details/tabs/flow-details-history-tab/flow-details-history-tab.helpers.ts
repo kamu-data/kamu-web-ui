@@ -1,5 +1,6 @@
 import moment from "moment";
 import {
+    FlowConfigSnapshotModified,
     FlowEventInitiated,
     FlowEventScheduledForActivation,
     FlowEventStartConditionUpdated,
@@ -11,7 +12,7 @@ import {
     FlowStartCondition,
     FlowStatus,
     FlowSummaryDataFragment,
-    FlowTrigger,
+    FlowTriggerType,
     TaskStatus,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
@@ -42,6 +43,8 @@ export class DatasetFlowDetailsHelpers {
             }
             case "FlowEventScheduledForActivation":
                 return "Flow scheduled for activation";
+            case "FlowConfigSnapshotModified":
+                return "Flow configuration was modified";
             /* istanbul ignore next */
             default:
                 throw new Error("Unknown event typename");
@@ -64,6 +67,8 @@ export class DatasetFlowDetailsHelpers {
                 return { icon: "downloading", class: "text-muted" };
             case "FlowEventScheduledForActivation":
                 return { icon: "timer", class: "text-muted" };
+            case "FlowConfigSnapshotModified":
+                return { icon: "outbound", class: "text-muted" };
             case "FlowEventTaskChanged": {
                 const event = flowEvent as FlowEventTaskChanged;
                 switch (event.taskStatus) {
@@ -108,6 +113,20 @@ export class DatasetFlowDetailsHelpers {
             case "FlowEventInitiated":
             case "FlowEventTriggerAdded":
                 return this.describeTriggerDetails((flowEvent as FlowEventInitiated).trigger);
+            case "FlowConfigSnapshotModified": {
+                const event = flowEvent as FlowConfigSnapshotModified;
+                switch (event.configSnapshot.__typename) {
+                    case "FlowConfigurationCompactionRule":
+                        return "Modified by compaction rule";
+                    case "FlowConfigurationIngest":
+                        return "Modified by ingest rule";
+                    case "FlowConfigurationReset":
+                        return "Modified by reset rule";
+                    /* istanbul ignore next */
+                    default:
+                        throw new Error("Unknown configSnapshot typename");
+                }
+            }
             case "FlowEventAborted":
                 return "";
             case "FlowEventScheduledForActivation": {
@@ -230,7 +249,7 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    private static describeTrigger(trigger: FlowTrigger): string {
+    private static describeTrigger(trigger: FlowTriggerType): string {
         switch (trigger.__typename) {
             case "FlowTriggerAutoPolling":
                 return "automatically";
@@ -246,7 +265,7 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    private static describeTriggerDetails(trigger: FlowTrigger): string {
+    private static describeTriggerDetails(trigger: FlowTriggerType): string {
         switch (trigger.__typename) {
             case "FlowTriggerAutoPolling":
                 return "";
@@ -287,7 +306,7 @@ export class DatasetFlowDetailsHelpers {
                 )}, shifted from ${moment(startCondition.shiftedFrom).format(AppValues.TIME_FORMAT)}`;
             case "FlowStartConditionBatching":
                 return `Accumulated ${startCondition.accumulatedRecordsCount}/${
-                    startCondition.activeTransformRule.minRecordsToAwait
+                    startCondition.activeBatchingRule.minRecordsToAwait
                 } records. Watermark ${
                     startCondition.watermarkModified ? "modified" : "unchanged"
                 }. Deadline at ${moment(startCondition.batchingDeadline).format(

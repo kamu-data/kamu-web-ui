@@ -282,9 +282,9 @@ export const mockAccountDatasetFlowsPausedQuery: AccountDatasetFlowsPausedQuery 
     accounts: {
         byName: {
             flows: {
-                configs: {
+                triggers: {
                     allPaused: true,
-                    __typename: "AccountFlowConfigs",
+                    __typename: "AccountFlowTriggers",
                 },
                 __typename: "AccountFlows",
             },
@@ -298,9 +298,9 @@ export const mockAccountPauseFlowsMutationSuccess: AccountPauseFlowsMutation = {
     accounts: {
         byName: {
             flows: {
-                configs: {
+                triggers: {
                     pauseAccountDatasetFlows: true,
-                    __typename: "AccountFlowConfigsMut",
+                    __typename: "AccountFlowTriggersMut",
                 },
                 __typename: "AccountFlowsMut",
             },
@@ -314,9 +314,9 @@ export const mockAccountPauseFlowsMutationError: AccountPauseFlowsMutation = {
     accounts: {
         byName: {
             flows: {
-                configs: {
+                triggers: {
                     pauseAccountDatasetFlows: false,
-                    __typename: "AccountFlowConfigsMut",
+                    __typename: "AccountFlowTriggersMut",
                 },
                 __typename: "AccountFlowsMut",
             },
@@ -330,9 +330,9 @@ export const mockAccountResumeFlowsMutationSuccess: AccountResumeFlowsMutation =
     accounts: {
         byName: {
             flows: {
-                configs: {
+                triggers: {
                     resumeAccountDatasetFlows: true,
-                    __typename: "AccountFlowConfigsMut",
+                    __typename: "AccountFlowTriggersMut",
                 },
                 __typename: "AccountFlowsMut",
             },
@@ -346,9 +346,9 @@ export const mockAccountResumeFlowsMutationError: AccountResumeFlowsMutation = {
     accounts: {
         byName: {
             flows: {
-                configs: {
+                triggers: {
                     resumeAccountDatasetFlows: false,
-                    __typename: "AccountFlowConfigsMut",
+                    __typename: "AccountFlowTriggersMut",
                 },
                 __typename: "AccountFlowsMut",
             },

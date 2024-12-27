@@ -1,13 +1,8 @@
 import { NavigationService } from "./../../../../../services/navigation.service";
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { AbstractControl, FormBuilder, Validators } from "@angular/forms";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
-import {
-    CompactionFull,
-    DatasetBasicsFragment,
-    DatasetFlowType,
-    GetDatasetFlowConfigsQuery,
-} from "src/app/api/kamu.graphql.interface";
+import { DatasetBasicsFragment, DatasetFlowType } from "src/app/api/kamu.graphql.interface";
 import { promiseWithCatch } from "src/app/common/app.helpers";
 import { CompactionTooltipsTexts } from "src/app/common/tooltips/compacting.text";
 import { ModalService } from "src/app/components/modal/modal.service";
@@ -16,9 +11,7 @@ import { DatasetCompactionService } from "../../services/dataset-compaction.serv
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import AppValues from "src/app/common/app.values";
 import { BaseComponent } from "src/app/common/base.component";
-import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { sliceSizeMapperReverse } from "src/app/common/data.helpers";
 
 @Component({
     selector: "app-dataset-settings-compacting-tab",
@@ -26,12 +19,11 @@ import { sliceSizeMapperReverse } from "src/app/common/data.helpers";
     styleUrls: ["./dataset-settings-compacting-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DatasetSettingsCompactingTabComponent extends BaseComponent implements OnInit {
+export class DatasetSettingsCompactingTabComponent extends BaseComponent {
     public modalService = inject(ModalService);
     private fb = inject(FormBuilder);
     private datasetCompactionService = inject(DatasetCompactionService);
     private navigationService = inject(NavigationService);
-    private datasetSchedulingService = inject(DatasetSchedulingService);
 
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     public hardCompactionForm = this.fb.group({
@@ -45,28 +37,6 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent impleme
     public readonly MAX_SLICE_RECORDS_TOOLTIP = CompactionTooltipsTexts.MAX_SLICE_RECORDS;
     public readonly RECURSIVE_TOOLTIP = CompactionTooltipsTexts.HARD_COMPACTION_RECURSIVE;
     public readonly MIN_VALUE_ERROR_TEXT = "The value must be positive";
-
-    ngOnInit(): void {
-        this.patchCompactionForm();
-    }
-
-    private patchCompactionForm(): void {
-        this.datasetSchedulingService
-            .fetchDatasetFlowConfigs(this.datasetBasics.id, DatasetFlowType.HardCompaction)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((data: GetDatasetFlowConfigsQuery) => {
-                const flowConfiguration = data.datasets.byId?.flows.configs.byType?.compaction as CompactionFull;
-                if (flowConfiguration) {
-                    const sizeOptions = sliceSizeMapperReverse(flowConfiguration.maxSliceSize);
-                    this.hardCompactionForm.patchValue({
-                        recordsCount: flowConfiguration.maxSliceRecords,
-                        recursive: flowConfiguration.recursive,
-                        sliceSize: sizeOptions.size,
-                        sliceUnit: sizeOptions.unit,
-                    });
-                }
-            });
-    }
 
     public get recursive(): AbstractControl {
         return this.hardCompactionForm.controls.recursive;

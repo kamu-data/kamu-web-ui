@@ -77,13 +77,11 @@
                         </mat-radio-group>
                     </div>
                     <div class="d-flex align-items-center pt-1 ms-2">
-                        <app-tooltip-icon class="mt-1" [tooltip]="RECURSIVE_TOOLTIP" />
-                        <span class="d-inline-block">Recursive:</span>
-                        <input
-                            class="form-check-input recursive-control d-inline-block ms-3"
-                            type="checkbox"
-                            formControlName="recursive"
-                        />
+                        <mat-checkbox formControlName="recursive" color="primary">
+                            <div class="d-flex align-items-center">
+                                Recursive<app-tooltip-icon class="ps-2 pt-1" [tooltip]="RECURSIVE_TOOLTIP" />
+                            </div>
+                        </mat-checkbox>
                     </div>
                 </div>
             </form>

@@ -663,11 +663,11 @@ type DatasetMetadata {
   """
   Current upstream dependencies of a dataset
   """
-  currentUpstreamDependencies: [Dataset!]!
+  currentUpstreamDependencies: [DependencyDatasetResult!]!
   """
   Current downstream dependencies of a dataset
   """
-  currentDownstreamDependencies: [Dataset!]!
+  currentDownstreamDependencies: [DependencyDatasetResult!]!
   """
   Current polling source used by the root dataset
   """
@@ -742,7 +742,7 @@ type DatasetMut {
   """
   Set visibility for the dataset
   """
-  setVisibility(visibility: DatasetVisibilityInput!): SetDatasetPropertyResult!
+  setVisibility(visibility: DatasetVisibilityInput!): SetDatasetVisibilityResult!
 }
 
 scalar DatasetName
@@ -871,6 +871,20 @@ type DeleteResultDanglingReference implements DeleteResult {
 
 type DeleteResultSuccess implements DeleteResult {
   deletedDataset: DatasetAlias!
+  message: String!
+}
+
+interface DependencyDatasetResult {
+  message: String!
+}
+
+type DependencyDatasetResultAccessible implements DependencyDatasetResult {
+  dataset: Dataset!
+  message: String!
+}
+
+type DependencyDatasetResultNotAccessible implements DependencyDatasetResult {
+  id: DatasetID!
   message: String!
 }
 
@@ -1816,11 +1830,11 @@ type SetDataSchema {
   schema: DataSchema!
 }
 
-interface SetDatasetPropertyResult {
+interface SetDatasetVisibilityResult {
   message: String!
 }
 
-type SetDatasetPropertyResultSuccess implements SetDatasetPropertyResult {
+type SetDatasetVisibilityResultSuccess implements SetDatasetVisibilityResult {
   dummy: String
   message: String!
 }
@@ -2067,7 +2081,7 @@ type ViewAccessToken {
   """
   createdAt: DateTime!
   """
-  Date of token revokation
+  Date of token revocation
   """
   revokedAt: DateTime
   """
@@ -2086,7 +2100,7 @@ type ViewDatasetEnvVar {
   """
   key: String!
   """
-  Non sercret value of dataset environment variable
+  Non secret value of dataset environment variable
   """
   value: String
   """

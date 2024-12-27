@@ -2,7 +2,7 @@ mutation setVisibilityDataset($datasetId: DatasetID!, $visibility: DatasetVisibi
   datasets {
     byId(datasetId: $datasetId) {
       setVisibility(visibility: $visibility) {
-        ... on SetDatasetPropertyResultSuccess {
+        ... on SetDatasetVisibilityResultSuccess {
           message
         }
       }

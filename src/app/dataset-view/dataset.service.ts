@@ -7,6 +7,7 @@ import {
     DatasetLineageFragment,
     DatasetPageInfoFragment,
     DatasetPermissionsFragment,
+    DependencyDatasetResultNotAccessible,
     GetDatasetBasicsWithPermissionsQuery,
     GetDatasetLineageQuery,
     GetDatasetSchemaQuery,
@@ -259,85 +260,149 @@ export class DatasetService {
         lineage: DatasetLineageFragment,
     ): DatasetLineageNode {
         const originMetadata = lineage.metadata;
+
         return {
             basics: originDatasetBasics,
             downstreamDependencies: originMetadata.currentDownstreamDependencies.map((downDependency) => {
                 return {
-                    basics: downDependency as DatasetLineageBasicsFragment,
-                    downstreamDependencies: downDependency.metadata.currentDownstreamDependencies.map(
-                        (downDependency2) => {
-                            return {
-                                basics: downDependency2 as DatasetLineageBasicsFragment,
-                                downstreamDependencies: downDependency2.metadata.currentDownstreamDependencies.map(
-                                    (downDependency3) => {
-                                        return {
-                                            basics: downDependency3 as DatasetLineageBasicsFragment,
-                                            downstreamDependencies:
-                                                downDependency3.metadata.currentDownstreamDependencies.map(
-                                                    (downDependency4) => {
+                    basics:
+                        downDependency.__typename === "DependencyDatasetResultAccessible"
+                            ? (downDependency.dataset as DatasetLineageBasicsFragment)
+                            : (downDependency as DependencyDatasetResultNotAccessible),
+                    upstreamDependencies: [],
+                    downstreamDependencies:
+                        downDependency.__typename === "DependencyDatasetResultAccessible"
+                            ? downDependency.dataset.metadata.currentDownstreamDependencies.map((downDependency2) => {
+                                  return {
+                                      basics:
+                                          downDependency2.__typename === "DependencyDatasetResultAccessible"
+                                              ? (downDependency2.dataset as DatasetLineageBasicsFragment)
+                                              : (downDependency2 as DependencyDatasetResultNotAccessible),
+                                      upstreamDependencies: [],
+                                      downstreamDependencies:
+                                          downDependency2.__typename === "DependencyDatasetResultAccessible"
+                                              ? downDependency2.dataset.metadata.currentDownstreamDependencies.map(
+                                                    (downDependency3) => {
                                                         return {
-                                                            basics: downDependency4 as DatasetLineageBasicsFragment,
-                                                            downstreamDependencies:
-                                                                downDependency4.metadata.currentDownstreamDependencies.map(
-                                                                    (downDependency5) => {
-                                                                        return {
-                                                                            basics: downDependency5 as DatasetLineageBasicsFragment,
-                                                                            downstreamDependencies: [],
-                                                                            upstreamDependencies: [],
-                                                                        };
-                                                                    },
-                                                                ),
+                                                            basics:
+                                                                downDependency3.__typename ===
+                                                                "DependencyDatasetResultAccessible"
+                                                                    ? (downDependency3.dataset as DatasetLineageBasicsFragment)
+                                                                    : (downDependency3 as DependencyDatasetResultNotAccessible),
                                                             upstreamDependencies: [],
+                                                            downstreamDependencies:
+                                                                downDependency3.__typename ===
+                                                                "DependencyDatasetResultAccessible"
+                                                                    ? downDependency3.dataset.metadata.currentDownstreamDependencies.map(
+                                                                          (downDependency4) => {
+                                                                              return {
+                                                                                  basics:
+                                                                                      downDependency4.__typename ===
+                                                                                      "DependencyDatasetResultAccessible"
+                                                                                          ? (downDependency4.dataset as DatasetLineageBasicsFragment)
+                                                                                          : (downDependency4 as DependencyDatasetResultNotAccessible),
+                                                                                  upstreamDependencies: [],
+                                                                                  downstreamDependencies:
+                                                                                      downDependency4.__typename ===
+                                                                                      "DependencyDatasetResultAccessible"
+                                                                                          ? downDependency4.dataset.metadata.currentDownstreamDependencies.map(
+                                                                                                (downDependency5) => {
+                                                                                                    return {
+                                                                                                        basics:
+                                                                                                            downDependency5.__typename ===
+                                                                                                            "DependencyDatasetResultAccessible"
+                                                                                                                ? (downDependency5.dataset as DatasetLineageBasicsFragment)
+                                                                                                                : (downDependency5 as DependencyDatasetResultNotAccessible),
+                                                                                                        upstreamDependencies:
+                                                                                                            [],
+                                                                                                        downstreamDependencies:
+                                                                                                            [],
+                                                                                                    };
+                                                                                                },
+                                                                                            )
+                                                                                          : [],
+                                                                              };
+                                                                          },
+                                                                      )
+                                                                    : [],
                                                         };
                                                     },
-                                                ),
-                                            upstreamDependencies: [],
-                                        };
-                                    },
-                                ),
-                                upstreamDependencies: [],
-                            };
-                        },
-                    ),
-                    upstreamDependencies: [],
+                                                )
+                                              : [],
+                                  };
+                              })
+                            : [],
                 };
             }),
             upstreamDependencies: originMetadata.currentUpstreamDependencies.map((upDependency) => {
                 return {
-                    basics: upDependency as DatasetLineageBasicsFragment,
+                    basics:
+                        upDependency.__typename === "DependencyDatasetResultAccessible"
+                            ? (upDependency.dataset as DatasetLineageBasicsFragment)
+                            : (upDependency as DependencyDatasetResultNotAccessible),
                     downstreamDependencies: [],
-                    upstreamDependencies: upDependency.metadata.currentUpstreamDependencies.map((upDependency2) => {
-                        return {
-                            basics: upDependency2 as DatasetLineageBasicsFragment,
-                            downstreamDependencies: [],
-                            upstreamDependencies: upDependency2.metadata.currentUpstreamDependencies.map(
-                                (upDependency3) => {
-                                    return {
-                                        basics: upDependency3 as DatasetLineageBasicsFragment,
-                                        downstreamDependencies: [],
-                                        upstreamDependencies: upDependency3.metadata.currentUpstreamDependencies.map(
-                                            (upDependency4) => {
-                                                return {
-                                                    basics: upDependency4 as DatasetLineageBasicsFragment,
-                                                    downstreamDependencies: [],
-                                                    upstreamDependencies:
-                                                        upDependency4.metadata.currentUpstreamDependencies.map(
-                                                            (upDependency5) => {
-                                                                return {
-                                                                    basics: upDependency5 as DatasetLineageBasicsFragment,
-                                                                    downstreamDependencies: [],
-                                                                    upstreamDependencies: [],
-                                                                };
-                                                            },
-                                                        ),
-                                                };
-                                            },
-                                        ),
-                                    };
-                                },
-                            ),
-                        };
-                    }),
+                    upstreamDependencies:
+                        upDependency.__typename === "DependencyDatasetResultAccessible"
+                            ? upDependency.dataset.metadata.currentUpstreamDependencies.map((upDependency2) => {
+                                  return {
+                                      basics:
+                                          upDependency2.__typename === "DependencyDatasetResultAccessible"
+                                              ? (upDependency2.dataset as DatasetLineageBasicsFragment)
+                                              : (upDependency2 as DependencyDatasetResultNotAccessible),
+                                      downstreamDependencies: [],
+                                      upstreamDependencies:
+                                          upDependency2.__typename === "DependencyDatasetResultAccessible"
+                                              ? upDependency2.dataset.metadata.currentUpstreamDependencies.map(
+                                                    (upDependency3) => {
+                                                        return {
+                                                            basics:
+                                                                upDependency3.__typename ===
+                                                                "DependencyDatasetResultAccessible"
+                                                                    ? (upDependency3.dataset as DatasetLineageBasicsFragment)
+                                                                    : (upDependency3 as DependencyDatasetResultNotAccessible),
+                                                            downstreamDependencies: [],
+                                                            upstreamDependencies:
+                                                                upDependency3.__typename ===
+                                                                "DependencyDatasetResultAccessible"
+                                                                    ? upDependency3.dataset.metadata.currentUpstreamDependencies.map(
+                                                                          (upDependency4) => {
+                                                                              return {
+                                                                                  basics:
+                                                                                      upDependency4.__typename ===
+                                                                                      "DependencyDatasetResultAccessible"
+                                                                                          ? (upDependency4.dataset as DatasetLineageBasicsFragment)
+                                                                                          : (upDependency4 as DependencyDatasetResultNotAccessible),
+                                                                                  downstreamDependencies: [],
+                                                                                  upstreamDependencies:
+                                                                                      upDependency4.__typename ===
+                                                                                      "DependencyDatasetResultAccessible"
+                                                                                          ? upDependency4.dataset.metadata.currentUpstreamDependencies.map(
+                                                                                                (upDependency5) => {
+                                                                                                    return {
+                                                                                                        basics:
+                                                                                                            upDependency5.__typename ===
+                                                                                                            "DependencyDatasetResultAccessible"
+                                                                                                                ? (upDependency5.dataset as DatasetLineageBasicsFragment)
+                                                                                                                : (upDependency5 as DependencyDatasetResultNotAccessible),
+                                                                                                        downstreamDependencies:
+                                                                                                            [],
+                                                                                                        upstreamDependencies:
+                                                                                                            [],
+                                                                                                    };
+                                                                                                },
+                                                                                            )
+                                                                                          : [],
+                                                                              };
+                                                                          },
+                                                                      )
+                                                                    : [],
+                                                        };
+                                                    },
+                                                )
+                                              : [],
+                                  };
+                              })
+                            : [],
                 };
             }),
         };
@@ -349,7 +414,7 @@ export class DatasetService {
 
         this.updateLineageGraphRecords(origin, lineageGraphNodes, lineageGraphEdges);
         this.datasetSubsService.emitLineageChanged({
-            origin: origin.basics,
+            origin: origin.basics as DatasetLineageBasicsFragment,
             nodes: lineageGraphNodes,
             edges: lineageGraphEdges,
         });
@@ -366,19 +431,26 @@ export class DatasetService {
     ) {
         if (
             !lineageGraphNodes.some(
-                (existingNode: DatasetLineageBasicsFragment) => existingNode.id === currentNode.basics.id,
+                (existingNode: DatasetLineageBasicsFragment) =>
+                    existingNode.id === (currentNode.basics as DatasetLineageBasicsFragment).id,
             )
         ) {
-            lineageGraphNodes.push(currentNode.basics);
+            lineageGraphNodes.push(currentNode.basics as DatasetLineageBasicsFragment);
         }
 
         currentNode.downstreamDependencies.forEach((dependency: DatasetLineageNode) => {
-            lineageGraphEdges.push([currentNode.basics, dependency.basics]);
+            lineageGraphEdges.push([
+                currentNode.basics as DatasetLineageBasicsFragment,
+                dependency.basics as DatasetLineageBasicsFragment,
+            ]);
             this.updateLineageGraphRecords(dependency, lineageGraphNodes, lineageGraphEdges);
         });
 
         currentNode.upstreamDependencies.forEach((dependency: DatasetLineageNode) => {
-            lineageGraphEdges.push([dependency.basics, currentNode.basics]);
+            lineageGraphEdges.push([
+                dependency.basics as DatasetLineageBasicsFragment,
+                currentNode.basics as DatasetLineageBasicsFragment,
+            ]);
             this.updateLineageGraphRecords(dependency, lineageGraphNodes, lineageGraphEdges);
         });
     }

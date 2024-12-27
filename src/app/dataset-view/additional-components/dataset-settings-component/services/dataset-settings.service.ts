@@ -117,7 +117,7 @@ export class DatasetSettingsService {
                 })
                 .pipe(
                     map((data: SetVisibilityDatasetMutation) => {
-                        if (data.datasets.byId?.setVisibility.__typename === "SetDatasetPropertyResultSuccess") {
+                        if (data.datasets.byId?.setVisibility.__typename === "SetDatasetVisibilityResultSuccess") {
                             this.datasetService
                                 .requestDatasetMainData({
                                     accountName: params.accountName,

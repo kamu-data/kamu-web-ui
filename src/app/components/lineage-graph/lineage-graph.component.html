@@ -81,7 +81,7 @@
             </svg:g>
             <svg:g
                 [attr.transform]="'translate(' + node.dimension.width + ', 0)'"
-                *ngIf="node.data.dataObject.access === LineageNodeAccess.PRIVATE"
+                *ngIf="node.data && node.data.dataObject && node.data.dataObject.access === LineageNodeAccess.PRIVATE"
             >
                 <image
                     [attr.x]="5"
@@ -142,6 +142,35 @@
                 >
                     {{ node.label }}
                 </svg:text>
+            </svg:g>
+
+            <svg:g class="node" *ngIf="node.data.kind === LineageGraphNodeKind.DatasetNotAccessable">
+                <svg:rect
+                    [attr.width]="node.dimension.width"
+                    [attr.height]="node.dimension.height"
+                    [attr.rx]="5"
+                    [attr.fill]="'#d6D6D6'"
+                    [attr.cursor]="'pointer'"
+                />
+
+                <svg:text
+                    alignment-baseline="central"
+                    [attr.x]="20"
+                    [attr.y]="node.dimension.height / 2"
+                    [attr.font-weight]="'600'"
+                    [attr.cursor]="'pointer'"
+                >
+                    ID: {{ node.label | slice: -8 }}
+                </svg:text>
+                <svg:g [attr.transform]="'translate(' + (node.dimension.width - 15) + ', 0)'">
+                    <image
+                        [attr.x]="5"
+                        [attr.y]="-12"
+                        [attr.width]="20"
+                        [attr.height]="20"
+                        [attr.href]="'../assets/images/question-mark.png'"
+                    />
+                </svg:g>
             </svg:g>
         </ng-template>
 

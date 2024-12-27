@@ -10,7 +10,15 @@ fragment DatasetSearchOverview on Dataset {
       ...License
     }
     currentDownstreamDependencies {
-      ...DatasetBasics
+      ... on DependencyDatasetResultNotAccessible {
+        id
+      }
+
+      ... on DependencyDatasetResultAccessible {
+        dataset {
+          ...DatasetBasics
+        }
+      }
     }
   }
 }

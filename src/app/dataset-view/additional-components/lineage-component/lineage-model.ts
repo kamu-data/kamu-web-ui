@@ -10,6 +10,7 @@ export enum LineageGraphNodeKind {
     Dataset = "dataset",
     Source = "source",
     Mqtt = "mqtt",
+    DatasetNotAccessable = "datasetNotAccessable",
 }
 
 export enum LineageNodeAccess {

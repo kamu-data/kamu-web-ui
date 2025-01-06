@@ -79,17 +79,22 @@ export const mockDatasetListItem: DatasetSearchOverviewFragment = {
         },
         currentDownstreamDependencies: [
             {
-                __typename: "Dataset",
-                id: "did:odf:z4k88e8kmp7wTEePmNDSprhY2TqwDxSiFwHiau8fnUk4V4Cpgu7",
-                name: "alberta.case-details.hm",
-                owner: {
-                    __typename: "Account",
-                    id: TEST_ACCOUNT_ID,
-                    accountName: "kamu",
+                dataset: {
+                    id: "did:odf:fed010918617c01c9fd17a7245c27533a475589e7e96b7a5cbe27407e71af41a8f8cd",
+                    kind: DatasetKind.Derivative,
+                    name: "rhine-basin.netherlands",
+                    owner: {
+                        id: "did:odf:fed011d18a62694a81fa4e3a0801f67721fa46c97c74617e6d07756eec09a6f6280d7",
+                        accountName: "deltares.nl",
+                        __typename: "Account",
+                    },
+                    alias: "deltares.nl/rhine-basin.netherlands",
+                    visibility: {
+                        __typename: "PrivateDatasetVisibility",
+                    },
+                    __typename: "Dataset",
                 },
-                kind: DatasetKind.Derivative,
-                alias: "kamu/alberta.case-details.hm",
-                visibility: mockPublicDatasetVisibility,
+                __typename: "DependencyDatasetResultAccessible",
             },
         ],
     },
@@ -212,17 +217,22 @@ export const mockDatasetsByAccountNameQuery: DatasetsByAccountNameQuery = {
                         },
                         currentDownstreamDependencies: [
                             {
-                                __typename: "Dataset",
-                                id: "did:odf:z4k88e8kmp7wTEePmNDSprhY2TqwDxSiFwHiau8fnUk4V4Cpgu7",
-                                kind: DatasetKind.Derivative,
-                                alias: "kamu/alberta.case-details.hm",
-                                name: "alberta.case-details.hm",
-                                owner: {
-                                    __typename: "Account",
-                                    id: TEST_ACCOUNT_ID,
-                                    accountName: "kamu",
+                                dataset: {
+                                    id: "did:odf:fed010918617c01c9fd17a7245c27533a475589e7e96b7a5cbe27407e71af41a8f8cd",
+                                    kind: DatasetKind.Derivative,
+                                    name: "rhine-basin.netherlands",
+                                    owner: {
+                                        id: "did:odf:fed011d18a62694a81fa4e3a0801f67721fa46c97c74617e6d07756eec09a6f6280d7",
+                                        accountName: "deltares.nl",
+                                        __typename: "Account",
+                                    },
+                                    alias: "deltares.nl/rhine-basin.netherlands",
+                                    visibility: {
+                                        __typename: "PrivateDatasetVisibility",
+                                    },
+                                    __typename: "Dataset",
                                 },
-                                visibility: mockPublicDatasetVisibility,
+                                __typename: "DependencyDatasetResultAccessible",
                             },
                         ],
                     },

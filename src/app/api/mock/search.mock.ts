@@ -39,17 +39,22 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                         },
                         currentDownstreamDependencies: [
                             {
-                                __typename: "Dataset",
-                                id: "did:odf:z4k88e8kmp7wTEePmNDSprhY2TqwDxSiFwHiau8fnUk4V4Cpgu7",
-                                kind: DatasetKind.Derivative,
-                                alias: "kamu/alberta.case-details.hm",
-                                name: "alberta.case-details.hm",
-                                owner: {
-                                    __typename: "Account",
-                                    id: TEST_ACCOUNT_ID,
-                                    accountName: "kamu",
+                                dataset: {
+                                    id: "did:odf:fed010918617c01c9fd17a7245c27533a475589e7e96b7a5cbe27407e71af41a8f8cd",
+                                    kind: DatasetKind.Derivative,
+                                    name: "rhine-basin.netherlands",
+                                    owner: {
+                                        id: "did:odf:fed011d18a62694a81fa4e3a0801f67721fa46c97c74617e6d07756eec09a6f6280d7",
+                                        accountName: "deltares.nl",
+                                        __typename: "Account",
+                                    },
+                                    alias: "deltares.nl/rhine-basin.netherlands",
+                                    visibility: {
+                                        __typename: "PrivateDatasetVisibility",
+                                    },
+                                    __typename: "Dataset",
                                 },
-                                visibility: mockPublicDatasetVisibility,
+                                __typename: "DependencyDatasetResultAccessible",
                             },
                         ],
                     },
@@ -94,17 +99,22 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                         },
                         currentDownstreamDependencies: [
                             {
-                                __typename: "Dataset",
-                                id: "did:odf:z4k88e8epAntnrFDUiDYxSGkCRcTc6wNzcwbpubzLCPQLVLUMcF",
-                                kind: DatasetKind.Derivative,
-                                alias: "kamu/canada.case-details.hm",
-                                visibility: mockPublicDatasetVisibility,
-                                name: "canada.case-details.hm",
-                                owner: {
-                                    __typename: "Account",
-                                    id: TEST_ACCOUNT_ID,
-                                    accountName: "kamu",
+                                dataset: {
+                                    id: "did:odf:fed010918617c01c9fd17a7245c27533a475589e7e96b7a5cbe27407e71af41a8f8cd",
+                                    kind: DatasetKind.Derivative,
+                                    name: "rhine-basin.netherlands",
+                                    owner: {
+                                        id: "did:odf:fed011d18a62694a81fa4e3a0801f67721fa46c97c74617e6d07756eec09a6f6280d7",
+                                        accountName: "deltares.nl",
+                                        __typename: "Account",
+                                    },
+                                    alias: "deltares.nl/rhine-basin.netherlands",
+                                    visibility: {
+                                        __typename: "PrivateDatasetVisibility",
+                                    },
+                                    __typename: "Dataset",
                                 },
+                                __typename: "DependencyDatasetResultAccessible",
                             },
                         ],
                     },
@@ -149,17 +159,22 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                         },
                         currentDownstreamDependencies: [
                             {
-                                __typename: "Dataset",
-                                id: "did:odf:z4k88e8rAFwtkT53U5hCMU2k5E1EqNLif5uYfC3AwN6FD62onvP",
-                                kind: DatasetKind.Derivative,
-                                alias: "kamu/british-columbia.case-details.hm",
-                                name: "british-columbia.case-details.hm",
-                                visibility: mockPublicDatasetVisibility,
-                                owner: {
-                                    __typename: "Account",
-                                    id: TEST_ACCOUNT_ID,
-                                    accountName: "kamu",
+                                dataset: {
+                                    id: "did:odf:fed010918617c01c9fd17a7245c27533a475589e7e96b7a5cbe27407e71af41a8f8cd",
+                                    kind: DatasetKind.Derivative,
+                                    name: "rhine-basin.netherlands",
+                                    owner: {
+                                        id: "did:odf:fed011d18a62694a81fa4e3a0801f67721fa46c97c74617e6d07756eec09a6f6280d7",
+                                        accountName: "deltares.nl",
+                                        __typename: "Account",
+                                    },
+                                    alias: "deltares.nl/rhine-basin.netherlands",
+                                    visibility: {
+                                        __typename: "PrivateDatasetVisibility",
+                                    },
+                                    __typename: "Dataset",
                                 },
+                                __typename: "DependencyDatasetResultAccessible",
                             },
                         ],
                     },
@@ -204,17 +219,22 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                         },
                         currentDownstreamDependencies: [
                             {
-                                __typename: "Dataset",
-                                id: "did:odf:z4k88e8epAntnrFDUiDYxSGkCRcTc6wNzcwbpubzLCPQLVLUMcF",
-                                kind: DatasetKind.Derivative,
-                                alias: "kamu/canada.case-details.hm",
-                                visibility: mockPublicDatasetVisibility,
-                                name: "canada.case-details.hm",
-                                owner: {
-                                    __typename: "Account",
-                                    id: TEST_ACCOUNT_ID,
-                                    accountName: "kamu",
+                                dataset: {
+                                    id: "did:odf:fed010918617c01c9fd17a7245c27533a475589e7e96b7a5cbe27407e71af41a8f8cd",
+                                    kind: DatasetKind.Derivative,
+                                    name: "rhine-basin.netherlands",
+                                    owner: {
+                                        id: "did:odf:fed011d18a62694a81fa4e3a0801f67721fa46c97c74617e6d07756eec09a6f6280d7",
+                                        accountName: "deltares.nl",
+                                        __typename: "Account",
+                                    },
+                                    alias: "deltares.nl/rhine-basin.netherlands",
+                                    visibility: {
+                                        __typename: "PrivateDatasetVisibility",
+                                    },
+                                    __typename: "Dataset",
                                 },
+                                __typename: "DependencyDatasetResultAccessible",
                             },
                         ],
                     },
@@ -259,17 +279,22 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                         },
                         currentDownstreamDependencies: [
                             {
-                                __typename: "Dataset",
-                                id: "did:odf:z4k88e8thqpQ7kupbJCiFbeXr5WZVCor7hmybhfmyUTLnWifwz6",
-                                kind: DatasetKind.Derivative,
-                                alias: "kamu/canada.case-details.hm",
-                                visibility: mockPublicDatasetVisibility,
-                                name: "canada.case-details.hm",
-                                owner: {
-                                    __typename: "Account",
-                                    id: TEST_ACCOUNT_ID,
-                                    accountName: "kamu",
+                                dataset: {
+                                    id: "did:odf:fed010918617c01c9fd17a7245c27533a475589e7e96b7a5cbe27407e71af41a8f8cd",
+                                    kind: DatasetKind.Derivative,
+                                    name: "rhine-basin.netherlands",
+                                    owner: {
+                                        id: "did:odf:fed011d18a62694a81fa4e3a0801f67721fa46c97c74617e6d07756eec09a6f6280d7",
+                                        accountName: "deltares.nl",
+                                        __typename: "Account",
+                                    },
+                                    alias: "deltares.nl/rhine-basin.netherlands",
+                                    visibility: {
+                                        __typename: "PrivateDatasetVisibility",
+                                    },
+                                    __typename: "Dataset",
                                 },
+                                __typename: "DependencyDatasetResultAccessible",
                             },
                         ],
                     },
@@ -426,17 +451,22 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                         },
                         currentDownstreamDependencies: [
                             {
-                                __typename: "Dataset",
-                                id: "did:odf:z4k88e8gCvWKoSD2eaVa7ocoLDzuUcGu8VW89Pks775fM5MgDom",
-                                kind: DatasetKind.Derivative,
-                                alias: "kamu/ontario.case-details.hm",
-                                visibility: mockPublicDatasetVisibility,
-                                name: "ontario.case-details.hm",
-                                owner: {
-                                    __typename: "Account",
-                                    id: TEST_ACCOUNT_ID,
-                                    accountName: "kamu",
+                                dataset: {
+                                    id: "did:odf:fed010918617c01c9fd17a7245c27533a475589e7e96b7a5cbe27407e71af41a8f8cd",
+                                    kind: DatasetKind.Derivative,
+                                    name: "rhine-basin.netherlands",
+                                    owner: {
+                                        id: "did:odf:fed011d18a62694a81fa4e3a0801f67721fa46c97c74617e6d07756eec09a6f6280d7",
+                                        accountName: "deltares.nl",
+                                        __typename: "Account",
+                                    },
+                                    alias: "deltares.nl/rhine-basin.netherlands",
+                                    visibility: {
+                                        __typename: "PrivateDatasetVisibility",
+                                    },
+                                    __typename: "Dataset",
                                 },
+                                __typename: "DependencyDatasetResultAccessible",
                             },
                         ],
                     },

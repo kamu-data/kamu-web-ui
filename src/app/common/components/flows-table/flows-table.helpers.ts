@@ -220,7 +220,7 @@ export class DatasetFlowTableHelpers {
                         return `deadline time: ${moment(node.startCondition.batchingDeadline).fromNow()}`;
                     /* istanbul ignore next */
                     default:
-                        return "";
+                        return "initializing...";
                 }
             case FlowStatus.Running:
                 return "running for " + excludeAgoWord(moment(node.timing.runningSince).fromNow());
@@ -257,7 +257,7 @@ export class DatasetFlowTableHelpers {
                 return "waiting for scheduled execution";
             /* istanbul ignore next */
             default:
-                return "";
+                return "waiting...";
         }
     }
 

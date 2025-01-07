@@ -16,6 +16,9 @@ import ProjectLinks from "src/app/project-links";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { MarkdownModule } from "ngx-markdown";
+import { HttpClient } from "@angular/common/http";
+import { SecurityContext } from "@angular/core";
 
 describe("InputDataSectionComponent", () => {
     let component: InputDataSectionComponent;
@@ -31,6 +34,10 @@ describe("InputDataSectionComponent", () => {
                 RouterModule,
                 AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
+                MarkdownModule.forRoot({
+                    loader: HttpClient,
+                    sanitize: SecurityContext.NONE,
+                }),
             ],
             providers: [
                 {

@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Query explainer: improved `INPUT DATA` section view
   - added `Run` and `Copy` buttons for a sql code
+- Modified "Scheduled updates" view
 ### Fixed
 - Flows table: fixed broken filters in pagination
 

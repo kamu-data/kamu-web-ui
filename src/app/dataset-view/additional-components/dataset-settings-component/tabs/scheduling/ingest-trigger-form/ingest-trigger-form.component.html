@@ -79,7 +79,7 @@
                         </div>
                     </mat-radio-button>
                 </mat-radio-group>
-                <div class="text-muted fs-12 border-top border-bottom px-4 py-4 mt-4">
+                <div class="text-muted fs-12 border-top px-4 py-4 mt-4">
                     Cron expression accepted values
                     <div class="fs-12">1. minutes: 0-59 * , -</div>
                     <div class="fs-12">2. hours: 0-23 * , -</div>
@@ -88,18 +88,6 @@
                     <div class="fs-12">5. day of week: (SUN-SAT or 1-7) * , - ?</div>
                 </div>
             </div>
-        </div>
-
-        <div class="mb-4 mt-2 d-flex justify-content-end me-4">
-            <button
-                type="button"
-                class="btn btn-success"
-                [disabled]="pollingForm.invalid"
-                (click)="savePollingTriggers()"
-                data-test-id="save-config-options"
-            >
-                Save Trigger
-            </button>
         </div>
     </form>
 </div>

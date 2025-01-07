@@ -1,26 +1,11 @@
-<div class="position-relative border border-1 rounded-3 align-self-start px-4 pb-4">
+<div class="position-relative border border-1 rounded-3 align-self-start px-4 pb-3">
     <form [formGroup]="ingestConfigurationForm">
         <span class="position-absolute text-muted group-box-label text-uppercase">Configuration</span>
 
-        <div class="d-flex align-items-center mt-4">
-            <input
-                class="checkbox-uncacheable me-3"
-                type="checkbox"
-                data-test-id="fetchUncacheable"
-                formControlName="fetchUncacheable"
-            />
-            <span class="d-inline-block">Fetch uncacheable</span>
-        </div>
-        <div class="border-top mt-4"></div>
-        <div class="mt-4 d-flex justify-content-end">
-            <button
-                type="button"
-                class="btn btn-success"
-                (click)="saveIngestConfiguration()"
-                data-test-id="save-polling-configuration"
-            >
-                Save configuration
-            </button>
+        <div class="d-flex align-items-center pt-3 ms-2">
+            <mat-checkbox data-test-id="fetchUncacheable" formControlName="fetchUncacheable" color="primary">
+                <div class="d-flex align-items-center">Fetch uncacheable</div>
+            </mat-checkbox>
         </div>
     </form>
 </div>

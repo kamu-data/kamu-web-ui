@@ -1,0 +1,7 @@
+:host {
+    ::ng-deep {
+        .mdc-checkbox__ripple {
+            display: none;
+        }
+    }
+}

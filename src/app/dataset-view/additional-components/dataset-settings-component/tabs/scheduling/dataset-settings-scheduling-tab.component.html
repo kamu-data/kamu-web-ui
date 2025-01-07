@@ -2,21 +2,34 @@
     <h2>Scheduled updates</h2>
     <mat-divider class="mt-1 mb-2" />
     <div class="box mt-3 p-4" *ngIf="isRootDataset">
-        <div class="d-flex flex-row gap-4">
+        <div class="d-flex flex-column gap-4">
             <div class="w-100">
                 <app-ingest-trigger-form
                     [datasetBasics]="datasetBasics"
                     [updateStateToggleLabel]="'Enable/Disable updates'"
-                    (saveTriggerEmit)="savePollingTriggers($event)"
+                    (changeTriggerEmit)="changePollingTriggers($event)"
                 />
             </div>
 
-            <div class="w-75">
+            <div class="w-100">
                 <app-ingest-configuration-form
+                    *ngIf="pollingForm"
                     [datasetBasics]="datasetBasics"
-                    (saveConfigurationEmit)="saveIngestConfiguration($event)"
+                    [disabled]="pollingForm.controls.updatesState.value"
+                    (changeConfigurationEmit)="changeIngestConfiguration($event)"
                 />
             </div>
+        </div>
+        <div class="mt-4 d-flex justify-content-end">
+            <button
+                type="button"
+                class="btn btn-success"
+                (click)="saveScheduledUpdates()"
+                [disabled]="invalidPollingForm || !enablePollingUpdates"
+                data-test-id="save-polling-triggers"
+            >
+                Save
+            </button>
         </div>
     </div>
 

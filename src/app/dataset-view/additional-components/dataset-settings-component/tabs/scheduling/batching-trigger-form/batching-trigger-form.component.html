@@ -63,11 +63,11 @@
             <button
                 type="button"
                 class="btn btn-success"
-                [disabled]="batchingForm.invalid"
+                [disabled]="batchingForm.invalid || !batchingUpdatesState.value"
                 (click)="saveBatchingTriggers()"
                 data-test-id="save-batching-triggers"
             >
-                Save Trigger
+                Save
             </button>
         </div>
     </div>

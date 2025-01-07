@@ -18,6 +18,7 @@ import {
 } from "./dataset-settings-scheduling-tab.component.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ToastrService } from "ngx-toastr";
+import { EMPTY, switchMap } from "rxjs";
 
 @Component({
     selector: "app-dataset-settings-scheduling-tab",
@@ -28,6 +29,9 @@ import { ToastrService } from "ngx-toastr";
 export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public datasetPermissions: DatasetPermissionsFragment;
+
+    public pollingForm: FormGroup<PollingGroupType>;
+    public ingestConfigurationForm: FormGroup<IngestConfigurationFormType>;
     public readonly throttlingGroupEnum: typeof ThrottlingGroupEnum = ThrottlingGroupEnum;
     public readonly timeUnit: typeof TimeUnit = TimeUnit;
 
@@ -38,23 +42,8 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
         return this.datasetBasics.kind === DatasetKind.Root;
     }
 
-    public saveIngestConfiguration(ingestConfigurationForm: FormGroup<IngestConfigurationFormType>): void {
-        this.datasetSchedulingService
-            .setDatasetFlowConfigs({
-                datasetId: this.datasetBasics.id,
-                datasetFlowType: DatasetFlowType.Ingest,
-                configInput: {
-                    ingest: {
-                        fetchUncacheable: ingestConfigurationForm.controls.fetchUncacheable.value,
-                    },
-                },
-            })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((success: boolean) => {
-                if (success) {
-                    this.toastrService.success("Configuration saved");
-                }
-            });
+    public changeIngestConfiguration(ingestConfigurationForm: FormGroup<IngestConfigurationFormType>): void {
+        this.ingestConfigurationForm = ingestConfigurationForm;
     }
 
     public saveBatchingTriggers(batchingTriggerForm: FormGroup<BatchingFormType>): void {
@@ -73,20 +62,50 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
             .subscribe();
     }
 
-    public savePollingTriggers(pollingForm: FormGroup<PollingGroupType>): void {
+    public changePollingTriggers(pollingForm: FormGroup<PollingGroupType>): void {
+        this.pollingForm = pollingForm;
+    }
+
+    public saveScheduledUpdates(): void {
         this.datasetSchedulingService
-            .setDatasetTriggers({
+            .setDatasetFlowConfigs({
                 datasetId: this.datasetBasics.id,
                 datasetFlowType: DatasetFlowType.Ingest,
-                paused: !pollingForm.controls.updatesState.value,
-                triggerInput: this.setPollingTriggerInput(pollingForm),
-                datasetInfo: {
-                    accountName: this.datasetBasics.owner.accountName,
-                    datasetName: this.datasetBasics.name,
+                configInput: {
+                    ingest: {
+                        fetchUncacheable: this.ingestConfigurationForm.controls.fetchUncacheable.value,
+                    },
                 },
             })
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(
+                switchMap((success) => {
+                    if (success) {
+                        return this.datasetSchedulingService.setDatasetTriggers({
+                            datasetId: this.datasetBasics.id,
+                            datasetFlowType: DatasetFlowType.Ingest,
+                            paused: !this.pollingForm.controls.updatesState.value,
+                            triggerInput: this.setPollingTriggerInput(this.pollingForm),
+                            datasetInfo: {
+                                accountName: this.datasetBasics.owner.accountName,
+                                datasetName: this.datasetBasics.name,
+                            },
+                        });
+                    } else {
+                        this.toastrService.error("Configuration is not saved");
+                        return EMPTY;
+                    }
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
             .subscribe();
+    }
+
+    public get enablePollingUpdates(): boolean {
+        return this.pollingForm && this.pollingForm.controls.updatesState.value;
+    }
+
+    public get invalidPollingForm(): boolean {
+        return this.pollingForm && this.pollingForm.invalid;
     }
 
     private setPollingTriggerInput(pollingForm: FormGroup<PollingGroupType>): FlowTriggerInput {

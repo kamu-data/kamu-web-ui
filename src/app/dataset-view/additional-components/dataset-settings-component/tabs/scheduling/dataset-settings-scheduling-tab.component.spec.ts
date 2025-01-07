@@ -109,23 +109,6 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         expect(fetchUncacheableCheckBox.value).toEqual(TimeUnit.Hours);
     });
 
-    it("should check save ingest configuration", () => {
-        const mockConfigurationForm = new FormGroup<IngestConfigurationFormType>({
-            fetchUncacheable: new FormControl<boolean>(false, { nonNullable: true }),
-        });
-        component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
-        fixture.detectChanges();
-        const setDatasetFlowScheduleSpy = spyOn(datasetSchedulingService, "setDatasetFlowConfigs").and.returnValue(
-            of(true),
-        );
-        const toastrServiceSpy = spyOn(toastrService, "success");
-
-        component.saveIngestConfiguration(mockConfigurationForm);
-
-        expect(setDatasetFlowScheduleSpy).toHaveBeenCalledTimes(1);
-        expect(toastrServiceSpy).toHaveBeenCalledTimes(1);
-    });
-
     it("should check 'Save triger' button works for DERIVATIVE dataset", () => {
         const setDatasetFlowBatchingSpy = spyOn(datasetSchedulingService, "setDatasetTriggers").and.callThrough();
         component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
@@ -162,12 +145,15 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         );
     });
 
-    it("should check 'Save trigger' button works for ROOT dataset with time delta", () => {
+    it("should check 'Save' button works for ROOT dataset with time delta", () => {
         const setDatasetFlowScheduleSpy = spyOn(datasetSchedulingService, "setDatasetTriggers").and.callThrough();
+        const setDatasetFlowConfigsSpy = spyOn(datasetSchedulingService, "setDatasetFlowConfigs").and.returnValue(
+            of(true),
+        );
         component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
 
         const mockPollingTriggerForm = new FormGroup<PollingGroupType>({
-            updatesState: new FormControl<boolean>(false, { nonNullable: true }),
+            updatesState: new FormControl<boolean>(true, { nonNullable: true }),
             __typename: new FormControl(PollingGroupEnum.TIME_DELTA, [Validators.required]),
             every: new FormControl<MaybeNull<number>>({ value: MOCK_PARAM_EVERY, disabled: false }, [
                 Validators.required,
@@ -181,9 +167,14 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
                 cronExpressionValidator(),
             ]),
         });
+        component.pollingForm = mockPollingTriggerForm;
+        component.ingestConfigurationForm = new FormGroup<IngestConfigurationFormType>({
+            fetchUncacheable: new FormControl<boolean>(false, { nonNullable: true }),
+        });
 
-        component.savePollingTriggers(mockPollingTriggerForm);
+        component.saveScheduledUpdates();
 
+        expect(setDatasetFlowConfigsSpy).toHaveBeenCalledTimes(1);
         expect(setDatasetFlowScheduleSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
                 triggerInput: {
@@ -195,12 +186,15 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         );
     });
 
-    it("should check 'Save trigger' button works for ROOT dataset with cron expression", () => {
+    it("should check 'Save' button works for ROOT dataset with cron expression", () => {
         const setDatasetFlowScheduleSpy = spyOn(datasetSchedulingService, "setDatasetTriggers").and.callThrough();
+        const setDatasetFlowConfigsSpy = spyOn(datasetSchedulingService, "setDatasetFlowConfigs").and.returnValue(
+            of(true),
+        );
         component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
 
         const mockPollingTriggerForm = new FormGroup<PollingGroupType>({
-            updatesState: new FormControl<boolean>(false, { nonNullable: true }),
+            updatesState: new FormControl<boolean>(true, { nonNullable: true }),
             __typename: new FormControl(PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION, [Validators.required]),
             every: new FormControl<MaybeNull<number>>({ value: null, disabled: false }, [
                 Validators.required,
@@ -212,9 +206,14 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
                 cronExpressionValidator(),
             ]),
         });
+        component.pollingForm = mockPollingTriggerForm;
+        component.ingestConfigurationForm = new FormGroup<IngestConfigurationFormType>({
+            fetchUncacheable: new FormControl<boolean>(false, { nonNullable: true }),
+        });
 
-        component.savePollingTriggers(mockPollingTriggerForm);
+        component.saveScheduledUpdates();
 
+        expect(setDatasetFlowConfigsSpy).toHaveBeenCalledTimes(1);
         expect(setDatasetFlowScheduleSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
                 triggerInput: {
@@ -224,5 +223,38 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
                 },
             }),
         );
+    });
+
+    it("should check 'Save' button works for ROOT dataset with error", () => {
+        const setDatasetFlowConfigsSpy = spyOn(datasetSchedulingService, "setDatasetFlowConfigs").and.returnValue(
+            of(false),
+        );
+        const toastrServiceErrorSpy = spyOn(toastrService, "error").and.callThrough();
+        component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
+
+        const mockPollingTriggerForm = new FormGroup<PollingGroupType>({
+            updatesState: new FormControl<boolean>(true, { nonNullable: true }),
+            __typename: new FormControl(PollingGroupEnum.TIME_DELTA, [Validators.required]),
+            every: new FormControl<MaybeNull<number>>({ value: MOCK_PARAM_EVERY, disabled: false }, [
+                Validators.required,
+                Validators.min(1),
+            ]),
+            unit: new FormControl<MaybeNull<TimeUnit>>({ value: MOCK_PARAM_UNIT, disabled: false }, [
+                Validators.required,
+            ]),
+            cronExpression: new FormControl<MaybeNull<string>>({ value: "", disabled: true }, [
+                Validators.required,
+                cronExpressionValidator(),
+            ]),
+        });
+        component.pollingForm = mockPollingTriggerForm;
+        component.ingestConfigurationForm = new FormGroup<IngestConfigurationFormType>({
+            fetchUncacheable: new FormControl<boolean>(false, { nonNullable: true }),
+        });
+
+        component.saveScheduledUpdates();
+
+        expect(setDatasetFlowConfigsSpy).toHaveBeenCalledTimes(1);
+        expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Configuration is not saved");
     });
 });

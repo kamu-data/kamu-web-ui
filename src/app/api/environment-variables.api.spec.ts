@@ -10,25 +10,23 @@ import {
     ExposedEnvVariableValueQuery,
     ListEnvVariablesDocument,
     ListEnvVariablesQuery,
-    ModifyEnvVariableDocument,
-    ModifyEnvVariableMutation,
-    SaveEnvVariableDocument,
-    SaveEnvVariableMutation,
+    UpsertEnvVariableDocument,
+    UpsertEnvVariableMutation,
 } from "./kamu.graphql.interface";
 import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "./mock/dataset.mock";
 import {
     MOCK_ENV_VAR_ID,
     MOCK_IS_SECRET,
     MOCK_KEY,
-    MOCK_NEW_VALUE,
     MOCK_PAGE,
     MOCK_PER_PAGE,
     MOCK_VALUE,
     mockDeleteEnvVariableMutation,
     mockExposedEnvVariableValueQuery,
     mockListEnvVariablesQuery,
-    mockModifyEnvVariableMutation,
-    mockSaveEnvVariableMutation,
+    mockUpsertEnvVariableMutationCreated,
+    mockUpsertEnvVariableMutationUpdated,
+    mockUpsertEnvVariableMutationUpToDate,
 } from "./mock/environment-variables-and-secrets.mock";
 import { TEST_ACCOUNT_ID } from "./mock/auth.mock";
 
@@ -49,32 +47,87 @@ describe("EnvironmentVariablesApi", () => {
         expect(service).toBeTruthy();
     });
 
-    it("should check save environment variables", () => {
+    it("should check upsert environment variable with 'Created' message ", () => {
         service
-            .saveEnvironmentVariable({
+            .upsertEnvironmentVariable({
                 accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
                 key: MOCK_KEY,
                 value: MOCK_VALUE,
                 isSecret: MOCK_IS_SECRET,
             })
-            .subscribe((result: SaveEnvVariableMutation) => {
-                if (result.datasets.byId?.envVars.saveEnvVariable.__typename === "SaveDatasetEnvVarResultSuccess") {
-                    expect(result.datasets.byId?.envVars.saveEnvVariable.message).toEqual(
-                        mockSaveEnvVariableMutation.datasets.byId?.envVars.saveEnvVariable.message as string,
+            .subscribe((result: UpsertEnvVariableMutation) => {
+                if (result.datasets.byId?.envVars.upsertEnvVariable.__typename === "UpsertDatasetEnvVarResultCreated") {
+                    expect(result.datasets.byId?.envVars.upsertEnvVariable.message).toEqual(
+                        mockUpsertEnvVariableMutationCreated.datasets.byId?.envVars.upsertEnvVariable.message as string,
                     );
                 }
             });
 
-        const op = controller.expectOne(SaveEnvVariableDocument);
-        expect(op.operation.variables.accountId).toEqual(TEST_ACCOUNT_ID);
+        const op = controller.expectOne(UpsertEnvVariableDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
         expect(op.operation.variables.key).toEqual(MOCK_KEY);
         expect(op.operation.variables.value).toEqual(MOCK_VALUE);
         expect(op.operation.variables.isSecret).toEqual(MOCK_IS_SECRET);
 
         op.flush({
-            data: mockSaveEnvVariableMutation,
+            data: mockUpsertEnvVariableMutationCreated,
+        });
+    });
+
+    it("should check upsert environment variable with 'Updated' message ", () => {
+        service
+            .upsertEnvironmentVariable({
+                accountId: TEST_ACCOUNT_ID,
+                datasetId: TEST_DATASET_ID,
+                key: MOCK_KEY,
+                value: MOCK_VALUE,
+                isSecret: MOCK_IS_SECRET,
+            })
+            .subscribe((result: UpsertEnvVariableMutation) => {
+                if (result.datasets.byId?.envVars.upsertEnvVariable.__typename === "UpsertDatasetEnvVarResultUpdated") {
+                    expect(result.datasets.byId?.envVars.upsertEnvVariable.message).toEqual(
+                        mockUpsertEnvVariableMutationCreated.datasets.byId?.envVars.upsertEnvVariable.message as string,
+                    );
+                }
+            });
+
+        const op = controller.expectOne(UpsertEnvVariableDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        expect(op.operation.variables.key).toEqual(MOCK_KEY);
+        expect(op.operation.variables.value).toEqual(MOCK_VALUE);
+        expect(op.operation.variables.isSecret).toEqual(MOCK_IS_SECRET);
+
+        op.flush({
+            data: mockUpsertEnvVariableMutationUpdated,
+        });
+    });
+
+    it("should check upsert environment variable with 'Up to date' message ", () => {
+        service
+            .upsertEnvironmentVariable({
+                accountId: TEST_ACCOUNT_ID,
+                datasetId: TEST_DATASET_ID,
+                key: MOCK_KEY,
+                value: MOCK_VALUE,
+                isSecret: MOCK_IS_SECRET,
+            })
+            .subscribe((result: UpsertEnvVariableMutation) => {
+                if (result.datasets.byId?.envVars.upsertEnvVariable.__typename === "UpsertDatasetEnvVarResultUpdated") {
+                    expect(result.datasets.byId?.envVars.upsertEnvVariable.message).toEqual(
+                        mockUpsertEnvVariableMutationCreated.datasets.byId?.envVars.upsertEnvVariable.message as string,
+                    );
+                }
+            });
+
+        const op = controller.expectOne(UpsertEnvVariableDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        expect(op.operation.variables.key).toEqual(MOCK_KEY);
+        expect(op.operation.variables.value).toEqual(MOCK_VALUE);
+        expect(op.operation.variables.isSecret).toEqual(MOCK_IS_SECRET);
+
+        op.flush({
+            data: mockUpsertEnvVariableMutationUpToDate,
         });
     });
 
@@ -100,35 +153,6 @@ describe("EnvironmentVariablesApi", () => {
 
         op.flush({
             data: mockListEnvVariablesQuery,
-        });
-    });
-
-    it("should check modify environment variable", () => {
-        service
-            .modifyEnvironmentVariable({
-                accountId: TEST_ACCOUNT_ID,
-                datasetId: TEST_DATASET_ID,
-                id: MOCK_ENV_VAR_ID,
-                newValue: MOCK_NEW_VALUE,
-                isSecret: MOCK_IS_SECRET,
-            })
-            .subscribe((result: ModifyEnvVariableMutation) => {
-                expect(result.datasets.byId?.envVars.modifyEnvVariable.envVarId).toEqual(
-                    result.datasets.byId?.envVars.modifyEnvVariable.envVarId as string,
-                );
-                expect(result.datasets.byId?.envVars.modifyEnvVariable.message).toEqual(
-                    result.datasets.byId?.envVars.modifyEnvVariable.message,
-                );
-            });
-
-        const op = controller.expectOne(ModifyEnvVariableDocument);
-        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
-        expect(op.operation.variables.id).toEqual(MOCK_ENV_VAR_ID);
-        expect(op.operation.variables.newValue).toEqual(MOCK_NEW_VALUE);
-        expect(op.operation.variables.isSecret).toEqual(MOCK_IS_SECRET);
-
-        op.flush({
-            data: mockModifyEnvVariableMutation,
         });
     });
 

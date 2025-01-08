@@ -5,8 +5,7 @@ import {
     DeleteEnvVariableMutation,
     ExposedEnvVariableValueQuery,
     ListEnvVariablesQuery,
-    ModifyEnvVariableMutation,
-    SaveEnvVariableMutation,
+    UpsertEnvVariableMutation,
     ViewDatasetEnvVarConnection,
 } from "../api/kamu.graphql.interface";
 import { ToastrService } from "ngx-toastr";
@@ -34,37 +33,23 @@ export class DatasetEvnironmentVariablesService {
             );
     }
 
-    public saveEnvVariable(params: {
+    public upsertEnvVariable(params: {
         accountId: string;
         datasetId: string;
         key: string;
         value: string;
         isSecret: boolean;
     }): Observable<void> {
-        return this.environmentVariablesApi.saveEnvironmentVariable(params).pipe(
-            map((result: SaveEnvVariableMutation) => {
-                if (result.datasets.byId?.envVars.saveEnvVariable.__typename === "SaveDatasetEnvVarResultSuccess") {
-                    this.toastrService.success(result.datasets.byId.envVars.saveEnvVariable.message);
+        return this.environmentVariablesApi.upsertEnvironmentVariable(params).pipe(
+            map((result: UpsertEnvVariableMutation) => {
+                if (
+                    result.datasets.byId?.envVars.upsertEnvVariable.__typename === "UpsertDatasetEnvVarResultCreated" ||
+                    result.datasets.byId?.envVars.upsertEnvVariable.__typename === "UpsertDatasetEnvVarResultUpdated" ||
+                    result.datasets.byId?.envVars.upsertEnvVariable.__typename === "UpsertDatasetEnvVarUpToDate"
+                ) {
+                    this.toastrService.success(result.datasets.byId.envVars.upsertEnvVariable?.message);
                 } else {
-                    this.toastrService.error(result.datasets.byId?.envVars.saveEnvVariable.message);
-                }
-            }),
-        );
-    }
-
-    public modifyEnvVariable(params: {
-        accountId: string;
-        datasetId: string;
-        id: string;
-        newValue: string;
-        isSecret: boolean;
-    }): Observable<void> {
-        return this.environmentVariablesApi.modifyEnvironmentVariable(params).pipe(
-            map((result: ModifyEnvVariableMutation) => {
-                if (result.datasets.byId?.envVars.modifyEnvVariable.__typename === "ModifyDatasetEnvVarResultSuccess") {
-                    this.toastrService.success(result.datasets.byId.envVars.modifyEnvVariable.message);
-                } else {
-                    this.toastrService.error(result.datasets.byId?.envVars.modifyEnvVariable.message);
+                    this.toastrService.error("Environment variable is not found");
                 }
             }),
         );

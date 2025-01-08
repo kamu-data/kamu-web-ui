@@ -53,33 +53,18 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
     }
 
     public onEditRow(): void {
-        if (!this.row) {
-            this.evnironmentVariablesService
-                .saveEnvVariable({
-                    accountId: this.datasetBasics.owner.id,
-                    datasetId: this.datasetBasics.id,
-                    key: this.keyControl.value ?? "",
-                    value: this.exposedValue ? this.exposedValue : (this.keyValueForm.controls.value.value ?? ""),
-                    isSecret: this.keyValueForm.controls.isSecret.value ? true : false,
-                })
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe(() => {
-                    this.activeModal.close("Success");
-                });
-        } else {
-            this.evnironmentVariablesService
-                .modifyEnvVariable({
-                    accountId: this.datasetBasics.owner.id,
-                    datasetId: this.datasetBasics.id,
-                    id: this.row.id,
-                    newValue: this.keyValueForm.controls.value.value ?? "",
-                    isSecret: this.keyValueForm.controls.isSecret.value ? true : false,
-                })
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe(() => {
-                    this.activeModal.close("Success");
-                });
-        }
+        this.evnironmentVariablesService
+            .upsertEnvVariable({
+                accountId: this.datasetBasics.owner.id,
+                datasetId: this.datasetBasics.id,
+                key: this.keyControl.value ?? "",
+                value: this.exposedValue ? this.exposedValue : (this.keyValueForm.controls.value.value ?? ""),
+                isSecret: this.keyValueForm.controls.isSecret.value ? true : false,
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.activeModal.close("Success");
+            });
     }
 
     public toggleExposedValue(): void {

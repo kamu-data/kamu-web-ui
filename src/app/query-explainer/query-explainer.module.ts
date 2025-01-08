@@ -13,6 +13,7 @@ import { DisplayHashModule } from "../components/display-hash/display-hash.modul
 import { DynamicTableModule } from "../components/dynamic-table/dynamic-table.module";
 import { FormsModule } from "@angular/forms";
 import { AutofocusModule } from "../common/directives/autofocus.module";
+import { MarkdownModule } from "ngx-markdown";
 
 @NgModule({
     declarations: [
@@ -32,6 +33,7 @@ import { AutofocusModule } from "../common/directives/autofocus.module";
         DynamicTableModule,
         FormsModule,
         AutofocusModule,
+        MarkdownModule,
     ],
 })
 export class QueryExplainerModule {}

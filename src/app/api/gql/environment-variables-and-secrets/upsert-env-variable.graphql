@@ -1,0 +1,27 @@
+mutation upsertEnvVariable($datasetId: DatasetID!, $key: String!, $value: String!, $isSecret: Boolean!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      envVars {
+        upsertEnvVariable(key: $key, value: $value, isSecret: $isSecret) {
+          ... on UpsertDatasetEnvVarUpToDate {
+            message
+          }
+
+          ... on UpsertDatasetEnvVarResultCreated {
+            message
+            envVar {
+              ...ViewDatasetEnvVarData
+            }
+          }
+
+          ... on UpsertDatasetEnvVarResultUpdated {
+            message
+            envVar {
+              ...ViewDatasetEnvVarData
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -111,7 +111,7 @@ describe("EditKeyValueModalComponent", () => {
     });
 
     it("should check add new variable", () => {
-        const evnironmentVariablesServiceSpy = spyOn(evnironmentVariablesService, "saveEnvVariable").and.returnValue(
+        const evnironmentVariablesServiceSpy = spyOn(evnironmentVariablesService, "upsertEnvVariable").and.returnValue(
             of(),
         );
         component.row = null;
@@ -127,7 +127,7 @@ describe("EditKeyValueModalComponent", () => {
     });
 
     it("should check edit new variable", () => {
-        const evnironmentVariablesServiceSpy = spyOn(evnironmentVariablesService, "modifyEnvVariable").and.returnValue(
+        const evnironmentVariablesServiceSpy = spyOn(evnironmentVariablesService, "upsertEnvVariable").and.returnValue(
             of(),
         );
         component.row = mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables

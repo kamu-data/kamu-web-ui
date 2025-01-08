@@ -617,21 +617,14 @@ export type DatasetEnvVarsListEnvVariablesArgs = {
 export type DatasetEnvVarsMut = {
     __typename?: "DatasetEnvVarsMut";
     deleteEnvVariable: DeleteDatasetEnvVarResult;
-    modifyEnvVariable: ModifyDatasetEnvVarResult;
-    saveEnvVariable: SaveDatasetEnvVarResult;
+    upsertEnvVariable: UpsertDatasetEnvVarResult;
 };
 
 export type DatasetEnvVarsMutDeleteEnvVariableArgs = {
     id: Scalars["DatasetEnvVarID"];
 };
 
-export type DatasetEnvVarsMutModifyEnvVariableArgs = {
-    id: Scalars["DatasetEnvVarID"];
-    isSecret: Scalars["Boolean"];
-    newValue: Scalars["String"];
-};
-
-export type DatasetEnvVarsMutSaveEnvVariableArgs = {
+export type DatasetEnvVarsMutUpsertEnvVariableArgs = {
     isSecret: Scalars["Boolean"];
     key: Scalars["String"];
     value: Scalars["String"];
@@ -1637,22 +1630,6 @@ export type MetadataManifestUnsupportedVersion = CommitResult &
         message: Scalars["String"];
     };
 
-export type ModifyDatasetEnvVarResult = {
-    message: Scalars["String"];
-};
-
-export type ModifyDatasetEnvVarResultNotFound = ModifyDatasetEnvVarResult & {
-    __typename?: "ModifyDatasetEnvVarResultNotFound";
-    envVarId: Scalars["DatasetEnvVarID"];
-    message: Scalars["String"];
-};
-
-export type ModifyDatasetEnvVarResultSuccess = ModifyDatasetEnvVarResult & {
-    __typename?: "ModifyDatasetEnvVarResultSuccess";
-    envVarId: Scalars["DatasetEnvVarID"];
-    message: Scalars["String"];
-};
-
 export enum MqttQos {
     AtLeastOnce = "AT_LEAST_ONCE",
     AtMostOnce = "AT_MOST_ONCE",
@@ -1892,23 +1869,6 @@ export type RevokeResultSuccess = RevokeResult & {
     __typename?: "RevokeResultSuccess";
     message: Scalars["String"];
     tokenId: Scalars["AccessTokenID"];
-};
-
-export type SaveDatasetEnvVarResult = {
-    message: Scalars["String"];
-};
-
-export type SaveDatasetEnvVarResultDuplicate = SaveDatasetEnvVarResult & {
-    __typename?: "SaveDatasetEnvVarResultDuplicate";
-    datasetEnvVarKey: Scalars["String"];
-    datasetName: Scalars["DatasetName"];
-    message: Scalars["String"];
-};
-
-export type SaveDatasetEnvVarResultSuccess = SaveDatasetEnvVarResult & {
-    __typename?: "SaveDatasetEnvVarResultSuccess";
-    envVar: ViewDatasetEnvVar;
-    message: Scalars["String"];
 };
 
 export type ScheduleInput =
@@ -2172,6 +2132,27 @@ export type TriggerFlowSuccess = TriggerFlowResult & {
 };
 
 export type UpdateReadmeResult = {
+    message: Scalars["String"];
+};
+
+export type UpsertDatasetEnvVarResult = {
+    message: Scalars["String"];
+};
+
+export type UpsertDatasetEnvVarResultCreated = UpsertDatasetEnvVarResult & {
+    __typename?: "UpsertDatasetEnvVarResultCreated";
+    envVar: ViewDatasetEnvVar;
+    message: Scalars["String"];
+};
+
+export type UpsertDatasetEnvVarResultUpdated = UpsertDatasetEnvVarResult & {
+    __typename?: "UpsertDatasetEnvVarResultUpdated";
+    envVar: ViewDatasetEnvVar;
+    message: Scalars["String"];
+};
+
+export type UpsertDatasetEnvVarUpToDate = UpsertDatasetEnvVarResult & {
+    __typename?: "UpsertDatasetEnvVarUpToDate";
     message: Scalars["String"];
 };
 
@@ -2922,37 +2903,14 @@ export type ListEnvVariablesQuery = {
     };
 };
 
-export type ModifyEnvVariableMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    id: Scalars["DatasetEnvVarID"];
-    newValue: Scalars["String"];
-    isSecret: Scalars["Boolean"];
-}>;
-
-export type ModifyEnvVariableMutation = {
-    __typename?: "Mutation";
-    datasets: {
-        __typename?: "DatasetsMut";
-        byId?: {
-            __typename?: "DatasetMut";
-            envVars: {
-                __typename?: "DatasetEnvVarsMut";
-                modifyEnvVariable:
-                    | { __typename?: "ModifyDatasetEnvVarResultNotFound"; message: string; envVarId: string }
-                    | { __typename?: "ModifyDatasetEnvVarResultSuccess"; message: string; envVarId: string };
-            };
-        } | null;
-    };
-};
-
-export type SaveEnvVariableMutationVariables = Exact<{
+export type UpsertEnvVariableMutationVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     key: Scalars["String"];
     value: Scalars["String"];
     isSecret: Scalars["Boolean"];
 }>;
 
-export type SaveEnvVariableMutation = {
+export type UpsertEnvVariableMutation = {
     __typename?: "Mutation";
     datasets: {
         __typename?: "DatasetsMut";
@@ -2960,13 +2918,18 @@ export type SaveEnvVariableMutation = {
             __typename?: "DatasetMut";
             envVars: {
                 __typename?: "DatasetEnvVarsMut";
-                saveEnvVariable:
-                    | { __typename?: "SaveDatasetEnvVarResultDuplicate"; message: string; datasetEnvVarKey: string }
+                upsertEnvVariable:
                     | {
-                          __typename?: "SaveDatasetEnvVarResultSuccess";
+                          __typename?: "UpsertDatasetEnvVarResultCreated";
                           message: string;
                           envVar: { __typename?: "ViewDatasetEnvVar" } & ViewDatasetEnvVarDataFragment;
-                      };
+                      }
+                    | {
+                          __typename?: "UpsertDatasetEnvVarResultUpdated";
+                          message: string;
+                          envVar: { __typename?: "ViewDatasetEnvVar" } & ViewDatasetEnvVarDataFragment;
+                      }
+                    | { __typename?: "UpsertDatasetEnvVarUpToDate"; message: string };
             };
         } | null;
     };
@@ -6484,56 +6447,26 @@ export class ListEnvVariablesGQL extends Apollo.Query<ListEnvVariablesQuery, Lis
         super(apollo);
     }
 }
-export const ModifyEnvVariableDocument = gql`
-    mutation modifyEnvVariable($datasetId: DatasetID!, $id: DatasetEnvVarID!, $newValue: String!, $isSecret: Boolean!) {
+export const UpsertEnvVariableDocument = gql`
+    mutation upsertEnvVariable($datasetId: DatasetID!, $key: String!, $value: String!, $isSecret: Boolean!) {
         datasets {
             byId(datasetId: $datasetId) {
                 envVars {
-                    modifyEnvVariable(id: $id, newValue: $newValue, isSecret: $isSecret) {
-                        ... on ModifyDatasetEnvVarResultSuccess {
+                    upsertEnvVariable(key: $key, value: $value, isSecret: $isSecret) {
+                        ... on UpsertDatasetEnvVarUpToDate {
                             message
-                            envVarId
                         }
-                        ... on ModifyDatasetEnvVarResultNotFound {
-                            message
-                            envVarId
-                        }
-                    }
-                }
-            }
-        }
-    }
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class ModifyEnvVariableGQL extends Apollo.Mutation<
-    ModifyEnvVariableMutation,
-    ModifyEnvVariableMutationVariables
-> {
-    document = ModifyEnvVariableDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
-export const SaveEnvVariableDocument = gql`
-    mutation saveEnvVariable($datasetId: DatasetID!, $key: String!, $value: String!, $isSecret: Boolean!) {
-        datasets {
-            byId(datasetId: $datasetId) {
-                envVars {
-                    saveEnvVariable(key: $key, value: $value, isSecret: $isSecret) {
-                        ... on SaveDatasetEnvVarResultSuccess {
+                        ... on UpsertDatasetEnvVarResultCreated {
                             message
                             envVar {
                                 ...ViewDatasetEnvVarData
                             }
                         }
-                        ... on SaveDatasetEnvVarResultDuplicate {
+                        ... on UpsertDatasetEnvVarResultUpdated {
                             message
-                            datasetEnvVarKey
-                            datasetEnvVarKey
+                            envVar {
+                                ...ViewDatasetEnvVarData
+                            }
                         }
                     }
                 }
@@ -6546,8 +6479,11 @@ export const SaveEnvVariableDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class SaveEnvVariableGQL extends Apollo.Mutation<SaveEnvVariableMutation, SaveEnvVariableMutationVariables> {
-    document = SaveEnvVariableDocument;
+export class UpsertEnvVariableGQL extends Apollo.Mutation<
+    UpsertEnvVariableMutation,
+    UpsertEnvVariableMutationVariables
+> {
+    document = UpsertEnvVariableDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

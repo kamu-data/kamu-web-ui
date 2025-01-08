@@ -7,7 +7,6 @@ import {
     MOCK_ENV_VAR_ID,
     MOCK_IS_SECRET,
     MOCK_KEY,
-    MOCK_NEW_VALUE,
     MOCK_PAGE,
     MOCK_PER_PAGE,
     MOCK_VALUE,
@@ -15,10 +14,7 @@ import {
     mockDeleteEnvVariableMutationError,
     mockExposedEnvVariableValueQuery,
     mockListEnvVariablesQuery,
-    mockModifyEnvVariableMutation,
-    mockModifyEnvVariableMutationError,
-    mockSaveEnvVariableMutation,
-    mockSaveEnvVariableMutationError,
+    mockUpsertEnvVariableMutationCreated,
 } from "../api/mock/environment-variables-and-secrets.mock";
 import { of } from "rxjs";
 import { TEST_ACCOUNT_ID, TEST_ACCOUNT_NAME, TEST_DATASET_ID, TEST_DATASET_NAME } from "../api/mock/dataset.mock";
@@ -66,14 +62,14 @@ describe("EvnironmentVariablesService", () => {
         expect(subscription$.closed).toBeTrue();
     });
 
-    it("should save environment variable with success", () => {
-        const saveEnvironmentVariableSpy = spyOn(environmentVariablesApi, "saveEnvironmentVariable").and.returnValue(
-            of(mockSaveEnvVariableMutation),
+    it("should upsert environment variable with success", () => {
+        const saveEnvironmentVariableSpy = spyOn(environmentVariablesApi, "upsertEnvironmentVariable").and.returnValue(
+            of(mockUpsertEnvVariableMutationCreated),
         );
         const toastrServiceSuccessSpy = spyOn(toastrService, "success");
 
         const subscription$ = service
-            .saveEnvVariable({
+            .upsertEnvVariable({
                 accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
                 key: MOCK_KEY,
@@ -84,71 +80,6 @@ describe("EvnironmentVariablesService", () => {
 
         expect(toastrServiceSuccessSpy).toHaveBeenCalledTimes(1);
         expect(saveEnvironmentVariableSpy).toHaveBeenCalledTimes(1);
-        expect(subscription$.closed).toBeTrue();
-    });
-
-    it("should save environment variable with error", () => {
-        const saveEnvironmentVariableSpy = spyOn(environmentVariablesApi, "saveEnvironmentVariable").and.returnValue(
-            of(mockSaveEnvVariableMutationError),
-        );
-        const toastrServiceErrorSpy = spyOn(toastrService, "error");
-
-        const subscription$ = service
-            .saveEnvVariable({
-                accountId: TEST_ACCOUNT_ID,
-                datasetId: TEST_DATASET_ID,
-                key: MOCK_KEY,
-                value: MOCK_VALUE,
-                isSecret: MOCK_IS_SECRET,
-            })
-            .subscribe();
-
-        expect(toastrServiceErrorSpy).toHaveBeenCalledTimes(1);
-        expect(saveEnvironmentVariableSpy).toHaveBeenCalledTimes(1);
-        expect(subscription$.closed).toBeTrue();
-    });
-
-    it("should modify environment variable with success", () => {
-        const modifyEnvironmentVariableSpy = spyOn(
-            environmentVariablesApi,
-            "modifyEnvironmentVariable",
-        ).and.returnValue(of(mockModifyEnvVariableMutation));
-        const toastrServiceSuccessSpy = spyOn(toastrService, "success");
-
-        const subscription$ = service
-            .modifyEnvVariable({
-                accountId: TEST_ACCOUNT_ID,
-                datasetId: TEST_DATASET_ID,
-                id: MOCK_ENV_VAR_ID,
-                newValue: MOCK_NEW_VALUE,
-                isSecret: MOCK_IS_SECRET,
-            })
-            .subscribe();
-
-        expect(toastrServiceSuccessSpy).toHaveBeenCalledTimes(1);
-        expect(modifyEnvironmentVariableSpy).toHaveBeenCalledTimes(1);
-        expect(subscription$.closed).toBeTrue();
-    });
-
-    it("should modify environment variable with error", () => {
-        const modifyEnvironmentVariableSpy = spyOn(
-            environmentVariablesApi,
-            "modifyEnvironmentVariable",
-        ).and.returnValue(of(mockModifyEnvVariableMutationError));
-        const toastrServiceErrorSpy = spyOn(toastrService, "error");
-
-        const subscription$ = service
-            .modifyEnvVariable({
-                accountId: TEST_ACCOUNT_ID,
-                datasetId: TEST_DATASET_ID,
-                id: MOCK_ENV_VAR_ID,
-                newValue: MOCK_NEW_VALUE,
-                isSecret: MOCK_IS_SECRET,
-            })
-            .subscribe();
-
-        expect(toastrServiceErrorSpy).toHaveBeenCalledTimes(1);
-        expect(modifyEnvironmentVariableSpy).toHaveBeenCalledTimes(1);
         expect(subscription$.closed).toBeTrue();
     });
 

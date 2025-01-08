@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Added initialization messages at the start of the flow
+### Fixed
+- Flows table: fixed broken filters in pagination
 
 ## [0.35.0] - 2024-12-27
 ### Added

@@ -45,7 +45,7 @@ export class SearchAndSchemasSectionComponent extends BaseComponent implements O
     public inputDatasets = new Set<string>();
     public searchDataset = "";
     private readonly delayTime: number = AppValues.SHORT_DELAY_MS;
-    private readonly SQL_DEFAULT_TEMPLATE = "select * from";
+    private readonly SQL_DEFAULT_TEMPLATE = `select\n  *\nfrom`;
 
     private cdr = inject(ChangeDetectorRef);
     private datasetService = inject(DatasetService);

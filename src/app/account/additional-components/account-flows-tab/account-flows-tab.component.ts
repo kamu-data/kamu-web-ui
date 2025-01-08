@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, NgZone, OnInit } from "@angular/core";
 import { combineLatest, map, of, switchMap, timer } from "rxjs";
 import { MaybeNull } from "src/app/common/app.types";
 import {
@@ -24,9 +24,11 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
     @Input({ required: true }) loggedUser: AccountFragment;
     public nodes: FlowSummaryDataFragment[] = [];
     public searchByDataset: DatasetListFlowsDataFragment[] = [];
+    public filters: MaybeNull<FlowsTableFiltersOptions>;
     public readonly DISPLAY_COLUMNS = ["description", "information", "creator", "dataset", "options"];
 
     private accountService = inject(AccountService);
+    private ngZone = inject(NgZone);
 
     ngOnInit(): void {
         this.getPageFromUrl();
@@ -66,11 +68,16 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
 
     public onPageChange(page: number): void {
         if (page === 1) {
-            this.navigationService.navigateToOwnerView(this.loggedUser.accountName, AccountTabs.FLOWS);
+            this.ngZone.run(() =>
+                this.navigationService.navigateToOwnerView(this.loggedUser.accountName, AccountTabs.FLOWS),
+            );
         } else {
-            this.navigationService.navigateToOwnerView(this.loggedUser.accountName, AccountTabs.FLOWS, page);
+            this.ngZone.run(() =>
+                this.navigationService.navigateToOwnerView(this.loggedUser.accountName, AccountTabs.FLOWS, page),
+            );
         }
-        this.fetchTableData(page);
+        this.currentPage = page;
+        this.onSearchByFiltersChange(this.filters);
     }
 
     public toggleStateAccountFlowConfigs(paused: boolean): void {
@@ -86,7 +93,8 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
     }
 
     public onSearchByFiltersChange(filters: MaybeNull<FlowsTableFiltersOptions>): void {
-        this.searchByDataset = filters?.datasets ?? [];
         this.searchByFilters(filters);
+        this.searchByDataset = filters?.datasets ?? [];
+        this.filters = filters;
     }
 }

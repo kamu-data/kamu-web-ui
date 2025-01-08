@@ -3,7 +3,7 @@ import { DatasetSettingsSchedulingTabComponent } from "./dataset-settings-schedu
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { ToastrModule, ToastrService } from "ngx-toastr";
+import { ToastrModule } from "ngx-toastr";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
@@ -40,7 +40,6 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
     let component: DatasetSettingsSchedulingTabComponent;
     let fixture: ComponentFixture<DatasetSettingsSchedulingTabComponent>;
     let datasetSchedulingService: DatasetSchedulingService;
-    let toastrService: ToastrService;
 
     const MOCK_PARAM_EVERY = 10;
     const MOCK_PARAM_UNIT = TimeUnit.Minutes;
@@ -72,7 +71,6 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
 
         fixture = TestBed.createComponent(DatasetSettingsSchedulingTabComponent);
         datasetSchedulingService = TestBed.inject(DatasetSchedulingService);
-        toastrService = TestBed.inject(ToastrService);
 
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsRootFragment;
@@ -223,38 +221,5 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
                 },
             }),
         );
-    });
-
-    it("should check 'Save' button works for ROOT dataset with error", () => {
-        const setDatasetFlowConfigsSpy = spyOn(datasetSchedulingService, "setDatasetFlowConfigs").and.returnValue(
-            of(false),
-        );
-        const toastrServiceErrorSpy = spyOn(toastrService, "error").and.callThrough();
-        component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
-
-        const mockPollingTriggerForm = new FormGroup<PollingGroupType>({
-            updatesState: new FormControl<boolean>(true, { nonNullable: true }),
-            __typename: new FormControl(PollingGroupEnum.TIME_DELTA, [Validators.required]),
-            every: new FormControl<MaybeNull<number>>({ value: MOCK_PARAM_EVERY, disabled: false }, [
-                Validators.required,
-                Validators.min(1),
-            ]),
-            unit: new FormControl<MaybeNull<TimeUnit>>({ value: MOCK_PARAM_UNIT, disabled: false }, [
-                Validators.required,
-            ]),
-            cronExpression: new FormControl<MaybeNull<string>>({ value: "", disabled: true }, [
-                Validators.required,
-                cronExpressionValidator(),
-            ]),
-        });
-        component.pollingForm = mockPollingTriggerForm;
-        component.ingestConfigurationForm = new FormGroup<IngestConfigurationFormType>({
-            fetchUncacheable: new FormControl<boolean>(false, { nonNullable: true }),
-        });
-
-        component.saveScheduledUpdates();
-
-        expect(setDatasetFlowConfigsSpy).toHaveBeenCalledTimes(1);
-        expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Configuration is not saved");
     });
 });

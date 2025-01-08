@@ -91,7 +91,6 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
                             },
                         });
                     } else {
-                        this.toastrService.error("Configuration is not saved");
                         return EMPTY;
                     }
                 }),

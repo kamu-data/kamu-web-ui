@@ -92,21 +92,16 @@ describe("IngestTriggerFormComponent", () => {
             of(mockGetDatasetFlowTriggersTimeDeltaQuery),
         );
         fixture.detectChanges();
+        component.pollingForm.patchValue({ updatesState: true });
+        fixture.detectChanges();
+        emitClickOnElementByDataTestId(fixture, "button-cron-expression");
+        expect(component.pollingType.value).toEqual(PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION);
+        fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "button-cron-expression");
         setFieldValue(fixture, "polling-group-cron-expression", MOCK_INVALID_CRON_EXPRESSION);
         fixture.detectChanges();
+
         const errorMessageElem = findElementByDataTestId(fixture, "cronExpression-error");
         expect(errorMessageElem?.textContent?.trim()).toEqual("Invalid expression");
-    });
-
-    it("should check save pollingTriggers", () => {
-        spyOn(datasetSchedulingService, "fetchDatasetFlowTriggers").and.returnValue(
-            of(mockGetDatasetFlowTriggersTimeDeltaQuery),
-        );
-        fixture.detectChanges();
-        const saveTriggerEmitSpy = spyOn(component.saveTriggerEmit, "emit");
-        emitClickOnElementByDataTestId(fixture, "save-config-options");
-
-        expect(saveTriggerEmitSpy).toHaveBeenCalledTimes(1);
     });
 });

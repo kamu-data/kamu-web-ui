@@ -18,7 +18,7 @@ export default class AppValues {
 
     public static readonly DISPLAY_DATE_FORMAT = "DD MMM YYYY";
     public static readonly DISPLAY_TOOLTIP_DATE_FORMAT = "MMM D, YYYY, HH:mm A";
-    public static readonly CRON_EXPRESSION_DATE_FORMAT = "MMM Do YYYY, h:mm:ss A";
+    public static readonly CRON_EXPRESSION_DATE_FORMAT = "MMM Do YYYY, h:mm:ss A ZZ";
     public static readonly DISPLAY_FLOW_DATE_FORMAT = "y-MM-dd, h:mm:ss a";
     public static readonly TIME_FORMAT = "h:mm:ss A";
     public static readonly UNIMPLEMENTED_MESSAGE = "Feature coming soon";

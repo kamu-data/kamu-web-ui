@@ -14,8 +14,15 @@
                 [inputFormatter]="formatter"
                 (selectItem)="onSelectItem($event)"
             />
-            <button class="inner-btn" *ngIf="searchDataset" (click)="clearSearch()" data-test-id="clear-input">
-                x
+
+            <button
+                title="Clear search"
+                class="inner-btn"
+                *ngIf="searchDataset"
+                (click)="clearSearch()"
+                data-test-id="clear-input"
+            >
+                <mat-icon class="fs-5 hover">close</mat-icon>
             </button>
         </div>
         <ng-template #rt let-r="result" let-t="term">
@@ -57,7 +64,7 @@
             >
                 <div class="datatab-expanding-row">
                     <div class="datatab-expanding-row-header" (click)="accordionItem.toggle()">
-                        <div class="datatab-expanding-row-header-content">
+                        <div class="datatab-expanding-row-header-content pt-1">
                             {{ item.datasetAlias }}
                         </div>
                         <ng-template [ngIf]="!accordionItem.expanded">
@@ -70,9 +77,9 @@
                             *ngIf="!disableSearch"
                             class="no-button d-flex"
                             (click)="removeDataset(item.datasetAlias)"
-                            title="Remove dataset"
+                            title="Hide schema"
                         >
-                            <mat-icon class="fs-4 hover">delete</mat-icon>
+                            <mat-icon class="fs-5 pt-1 hover">close</mat-icon>
                         </button>
                     </div>
                     <div

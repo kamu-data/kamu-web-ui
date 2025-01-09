@@ -35,7 +35,7 @@
                 placeholder="Please enter key..."
                 formControlName="keyEnvVariable"
                 data-test-id="key"
-                [readonly]="row && row.isSecret ? true : false"
+                [readonly]="row ? true : false"
             />
             <div *ngIf="keyControl?.invalid && (keyControl?.touched || keyControl?.dirty)">
                 <div *ngIf="keyControl?.errors?.maxlength" class="mt-1">

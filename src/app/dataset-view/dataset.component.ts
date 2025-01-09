@@ -315,6 +315,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
             .pipe(
                 finalize(() => {
                     this.sqlLoading = false;
+                    this.navigationService.navigateWithSqlQuery(params.query);
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )

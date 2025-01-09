@@ -149,4 +149,13 @@ describe("EditKeyValueModalComponent", () => {
 
         expect(exposedEnvVariableValueSpy).toHaveBeenCalledTimes(1);
     });
+
+    it("should check 'key' control has 'readonly' attribute", () => {
+        component.row = mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables
+            .nodes[1] as ViewDatasetEnvVar;
+
+        fixture.detectChanges();
+        const keyElement = findElementByDataTestId(fixture, "key");
+        expect(keyElement?.hasAttribute("readonly")).toEqual(true);
+    });
 });

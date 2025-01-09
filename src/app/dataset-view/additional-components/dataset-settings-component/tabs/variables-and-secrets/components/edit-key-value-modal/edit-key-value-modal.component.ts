@@ -58,7 +58,7 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
                 accountId: this.datasetBasics.owner.id,
                 datasetId: this.datasetBasics.id,
                 key: this.keyControl.value ?? "",
-                value: this.exposedValue ? this.exposedValue : (this.keyValueForm.controls.value.value ?? ""),
+                value: this.keyValueForm.controls.value.value ?? "",
                 isSecret: this.keyValueForm.controls.isSecret.value ? true : false,
             })
             .pipe(takeUntilDestroyed(this.destroyRef))

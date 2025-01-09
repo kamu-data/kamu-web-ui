@@ -55,4 +55,27 @@ describe("DynamicTableComponent", () => {
         expect(component.dataSource.data).toBeDefined();
         expect(component.displayedColumns).toBeDefined();
     });
+
+    [
+        { case: 0, expected: "+A" },
+        { case: 1, expected: "-R" },
+        { case: 2, expected: "-C" },
+        { case: 3, expected: "+C" },
+    ].forEach((item: { case: number; expected: string }) => {
+        it(`should check operation column mapper with ${item.case}`, () => {
+            expect(component.operationColumnMapper(item.case)).toEqual(item.expected);
+        });
+    });
+
+    it("should check set operation column class", () => {
+        const element = {
+            op: 1,
+        };
+        component.schemaFields = [];
+        component.dataSource.data = [element];
+        expect(component.setOperationColumnClass(element, "op")).toEqual({
+            correction: false,
+            retraction: true,
+        });
+    });
 });

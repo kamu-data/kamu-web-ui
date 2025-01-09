@@ -1,3 +1,4 @@
+import { MaybeNull } from "./../../common/app.types";
 import { AfterContentInit, ChangeDetectionStrategy, Component, Input, OnChanges, OnInit } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
@@ -28,6 +29,34 @@ export class DynamicTableComponent implements OnInit, OnChanges, AfterContentIni
 
     public ngAfterContentInit(): void {
         this.displayTable();
+    }
+
+    public operationColumnMapper(value: string | number): string {
+        if (typeof value === "number") {
+            switch (value) {
+                case 0:
+                    return "+A";
+                case 1:
+                    return "-R";
+                case 2:
+                    return "-C";
+                case 3:
+                    return "+C";
+                /* istanbul ignore next */
+                default:
+                    throw new Error("Unknown operation type");
+            }
+        } else return value;
+    }
+
+    public setOperationColumnClass(element: object, columnName: string): MaybeNull<object> {
+        if (columnName === "op") {
+            const key = columnName as keyof object;
+            return {
+                correction: key === "op" && [2, 3].includes(element[key]),
+                retraction: key === "op" && element[key] === 1,
+            };
+        } else return null;
     }
 
     private displayTable(): void {

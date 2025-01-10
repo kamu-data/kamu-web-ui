@@ -348,4 +348,11 @@ describe("DatasetComponent", () => {
         expect(router.url.includes("/?sqlQuery=select%20*from%20'kamu%2Faccount.tokens.portfolio'")).toEqual(true);
         flush();
     }));
+
+    it(`should check remove daaset sql code`, () => {
+        const removeDatasetSqlCodeSpy = spyOn(sessionStorage, "removeItem");
+
+        component.ngOnDestroy();
+        expect(removeDatasetSqlCodeSpy).toHaveBeenCalledTimes(1);
+    });
 });

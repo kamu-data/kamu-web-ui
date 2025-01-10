@@ -7,12 +7,12 @@
             <td
                 [title]="element[disCol]"
                 mat-cell
-                class="truncate-cell"
-                [ngClass]="setOperationColumnClass(element, disCol)"
+                [ngClass]="disCol === 'op' ? element['cssClass'] : ''"
+                [class]="'truncate-cell'"
                 *matCellDef="let element"
                 [attr.data-test-id]="'column-name-' + element[disCol]"
             >
-                {{ disCol === "op" && dataRows?.length ? operationColumnMapper(element[disCol]) : element[disCol] }}
+                {{ element[disCol] }}
             </td>
         </ng-container>
 

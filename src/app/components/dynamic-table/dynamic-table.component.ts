@@ -1,8 +1,8 @@
-import { MaybeNull } from "./../../common/app.types";
 import { AfterContentInit, ChangeDetectionStrategy, Component, Input, OnChanges, OnInit } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
 import { TableSourceRowInterface } from "./dynamic-table.interface";
+import { operationColumnMapper, setOperationColumnClass } from "src/app/common/app.helpers";
 
 @Component({
     selector: "app-dynamic-table",
@@ -31,34 +31,6 @@ export class DynamicTableComponent implements OnInit, OnChanges, AfterContentIni
         this.displayTable();
     }
 
-    public operationColumnMapper(value: string | number): string {
-        if (typeof value === "number") {
-            switch (value) {
-                case 0:
-                    return "+A";
-                case 1:
-                    return "-R";
-                case 2:
-                    return "-C";
-                case 3:
-                    return "+C";
-                /* istanbul ignore next */
-                default:
-                    throw new Error("Unknown operation type");
-            }
-        } else return value;
-    }
-
-    public setOperationColumnClass(element: object, columnName: string): MaybeNull<object> {
-        if (columnName === "op") {
-            const key = columnName as keyof object;
-            return {
-                correction: key === "op" && [2, 3].includes(element[key]),
-                retraction: key === "op" && element[key] === 1,
-            };
-        } else return null;
-    }
-
     private displayTable(): void {
         // Corner case - schema is empty, nothing to display
         if (this.schemaFields.length === 0) {
@@ -75,7 +47,12 @@ export class DynamicTableComponent implements OnInit, OnChanges, AfterContentIni
             // Casual case, displaying data
         } else {
             this.displayedColumns = this.schemaFields.map((f: DataSchemaField) => f.name);
-            this.dataSource.data = this.dataRows;
+            const modifiedRows = this.dataRows.map((x: DataRow) => ({
+                ...x,
+                op: operationColumnMapper(x.op),
+                cssClass: setOperationColumnClass(x.op),
+            }));
+            this.dataSource.data = modifiedRows;
         }
     }
 }

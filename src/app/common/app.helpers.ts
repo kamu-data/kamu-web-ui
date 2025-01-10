@@ -147,3 +147,37 @@ export function addMarkdownRunButton(sqlQueries: RegExpMatchArray | null, path: 
         });
     }
 }
+
+export function operationColumnMapper(value: string | number): string {
+    if (typeof value === "number") {
+        switch (value) {
+            case 0:
+                return "+A";
+            case 1:
+                return "-R";
+            case 2:
+                return "-C";
+            case 3:
+                return "+C";
+            /* istanbul ignore next */
+            default:
+                throw new Error("Unknown operation type");
+        }
+    } else return value;
+}
+
+export function setOperationColumnClass(value: string | number): string {
+    if (typeof value === "number") {
+        switch (value) {
+            case 1:
+                return "retraction";
+            case 2:
+            case 3:
+                return "correction";
+
+            /* istanbul ignore next */
+            default:
+                return "";
+        }
+    } else return "";
+}

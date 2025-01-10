@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
+import { SessionStorageService } from "src/app/services/session-storage.service";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { NavigationEnd, Router } from "@angular/router";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
@@ -23,7 +24,7 @@ import { AppConfigService } from "../app-config.service";
     templateUrl: "./dataset.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DatasetComponent extends BaseDatasetDataComponent implements OnInit {
+export class DatasetComponent extends BaseDatasetDataComponent implements OnInit, OnDestroy {
     public datasetBasics: MaybeUndefined<DatasetBasicsFragment>;
     public datasetInfo: DatasetInfo;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
@@ -38,6 +39,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
     private cdr = inject(ChangeDetectorRef);
     private sqlQueryService = inject(SqlQueryService);
     private configService = inject(AppConfigService);
+    private sessionStorageService = inject(SessionStorageService);
 
     public ngOnInit(): void {
         const urlDatasetInfo = this.getDatasetInfoFromUrl();
@@ -61,6 +63,10 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
             });
 
         this.datasetPermissions$ = this.datasetSubsService.permissionsChanges;
+    }
+
+    ngOnDestroy(): void {
+        this.sessionStorageService.removeDatasetSqlCode();
     }
 
     public get enableScheduling(): boolean {
@@ -97,6 +103,13 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
                         takeUntilDestroyed(this.destroyRef),
                     )
                     .subscribe();
+
+                if (
+                    this.datasetBasics?.name !== urlDatasetInfo.datasetName ||
+                    this.datasetBasics.owner.accountName !== urlDatasetInfo.accountName
+                ) {
+                    this.sessionStorageService.removeDatasetSqlCode();
+                }
             }
         }
     }
@@ -315,6 +328,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
             .pipe(
                 finalize(() => {
                     this.sqlLoading = false;
+                    this.navigationService.navigateWithSqlQuery(params.query);
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )

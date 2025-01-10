@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Saved sql request in the URL after completing the network request
 ### Changed
 - Environment variables and secrets: made `key` field unavailable for editing
 

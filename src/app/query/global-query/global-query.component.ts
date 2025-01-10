@@ -8,6 +8,7 @@ import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
 import ProjectLinks from "src/app/project-links";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 import { SqlQueryResponseState } from "./global-query.model";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-global-query",
@@ -24,6 +25,7 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
 
     private sqlQueryService = inject(SqlQueryService);
     private cdr = inject(ChangeDetectorRef);
+    private navigationService = inject(NavigationService);
 
     ngOnInit(): void {
         this.initSqlQueryFromUrl();
@@ -53,6 +55,7 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
             .pipe(
                 finalize(() => {
                     this.sqlLoading = false;
+                    this.navigationService.navigateWithSqlQuery(params.query);
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )

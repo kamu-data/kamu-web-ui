@@ -18,6 +18,7 @@ import { DatasetFlowsService } from "../flows-component/services/dataset-flows.s
 import { NavigationService } from "src/app/services/navigation.service";
 import { SqlQueryResponseState } from "src/app/query/global-query/global-query.model";
 import { SqlQueryService } from "src/app/services/sql-query.service";
+import { SessionStorageService } from "src/app/services/session-storage.service";
 
 @Component({
     selector: "app-data",
@@ -44,6 +45,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     private datasetFlowsService = inject(DatasetFlowsService);
     private navigationService = inject(NavigationService);
     private sqlQueryService = inject(SqlQueryService);
+    private sessionStorageService = inject(SessionStorageService);
 
     public ngOnInit(): void {
         this.overviewUpdate$ = this.datasetSubsService.overviewChanges;
@@ -56,6 +58,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     }
 
     public runSQLRequest(params: DatasetRequestBySql): void {
+        this.sessionStorageService.setDatasetSqlCode(params.query);
         this.runSQLRequestEmit.emit(params);
     }
 
@@ -64,10 +67,14 @@ export class DataComponent extends BaseComponent implements OnInit {
         if (sqlQueryFromUrl) {
             this.sqlRequestCode = sqlQueryFromUrl;
         } else {
-            this.sqlRequestCode += `'${this.datasetBasics.alias}'`;
-            const offset = this.location.getState() as MaybeNull<Partial<OffsetInterval>>;
-            if (offset && typeof offset.start !== "undefined" && typeof offset.end !== "undefined") {
-                this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;
+            if (this.sessionStorageService.datasetSqlCode) {
+                this.sqlRequestCode = this.sessionStorageService.datasetSqlCode;
+            } else {
+                this.sqlRequestCode += `'${this.datasetBasics.alias}'`;
+                const offset = this.location.getState() as MaybeNull<Partial<OffsetInterval>>;
+                if (offset && typeof offset.start !== "undefined" && typeof offset.end !== "undefined") {
+                    this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;
+                }
             }
         }
     }

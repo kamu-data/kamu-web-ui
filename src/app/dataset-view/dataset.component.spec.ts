@@ -55,6 +55,7 @@ import { SavedQueriesSectionComponent } from "../query/shared/saved-queries-sect
 import { SqlQueryService } from "../services/sql-query.service";
 import { SearchAndSchemasSectionComponent } from "../query/global-query/search-and-schemas-section/search-and-schemas-section.component";
 import { SharedModule } from "../shared/shared/shared.module";
+import { DatasetRequestBySql } from "../interface/dataset.interface";
 
 describe("DatasetComponent", () => {
     let component: DatasetComponent;
@@ -312,6 +313,7 @@ describe("DatasetComponent", () => {
 
                 expect(requestDatasetMainDataSpy).toHaveBeenCalledTimes(1);
                 expect(isHeadHashBlockChangedSpy).toHaveBeenCalledTimes(1);
+                flush();
             }));
         },
     );
@@ -331,7 +333,26 @@ describe("DatasetComponent", () => {
 
                 expect(requestDatasetMainDataSpy).toHaveBeenCalledTimes(2);
                 expect(isHeadHashBlockChangedSpy).toHaveBeenCalledTimes(1);
+                flush();
             }));
         },
     );
+
+    it(`should check Data tab has sql request in the URL`, fakeAsync(() => {
+        spyOn(sqlQueryService, "requestDataSqlRun").and.returnValue(of());
+        const params: DatasetRequestBySql = {
+            query: "select *from 'kamu/account.tokens.portfolio'",
+        };
+        component.onRunSQLRequest(params);
+        tick();
+        expect(router.url.includes("/?sqlQuery=select%20*from%20'kamu%2Faccount.tokens.portfolio'")).toEqual(true);
+        flush();
+    }));
+
+    it(`should check remove daaset sql code`, () => {
+        const removeDatasetSqlCodeSpy = spyOn(sessionStorage, "removeItem");
+
+        component.ngOnDestroy();
+        expect(removeDatasetSqlCodeSpy).toHaveBeenCalledTimes(1);
+    });
 });

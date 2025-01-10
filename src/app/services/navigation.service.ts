@@ -135,4 +135,15 @@ export class NavigationService {
             ]),
         );
     }
+
+    public navigateWithSqlQuery(sqlQuery: string): void {
+        promiseWithCatch(
+            this.router.navigate([], {
+                queryParams: {
+                    [ProjectLinks.URL_QUERY_PARAM_SQL_QUERY]: sqlQuery,
+                },
+                queryParamsHandling: "merge",
+            }),
+        );
+    }
 }

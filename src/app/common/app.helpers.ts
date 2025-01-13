@@ -3,7 +3,7 @@ import cronParser from "cron-parser";
 
 import { MaybeNull, MaybeNullOrUndefined } from "./app.types";
 import { DataSchema } from "../api/kamu.graphql.interface";
-import { DatasetSchema, OperationColumnClassEnum } from "../interface/dataset.interface";
+import { DatasetSchema } from "../interface/dataset.interface";
 import AppValues from "./app.values";
 
 export function requireValue<T>(input: MaybeNull<T>) {
@@ -145,49 +145,5 @@ export function addMarkdownRunButton(sqlQueries: RegExpMatchArray | null, path: 
             divElement.appendChild(linkElement);
             preElement.after(divElement);
         });
-    }
-}
-
-export function operationColumnMapper(value: string | number): string {
-    if (typeof value === "number") {
-        switch (value) {
-            case 0:
-                return "+A";
-            case 1:
-                return "-R";
-            case 2:
-                return "-C";
-            case 3:
-                return "+C";
-            /* istanbul ignore next */
-            default:
-                throw new Error("Unknown operation type");
-        }
-    } else return value;
-}
-
-export function setOperationColumnClass(value: number): OperationColumnClassEnum {
-    switch (value) {
-        case 1:
-            return OperationColumnClassEnum.ERROR_COLOR;
-        case 2:
-        case 3:
-            return OperationColumnClassEnum.SECONDARY_COLOR;
-
-        default:
-            return OperationColumnClassEnum.PRIMARY_COLOR;
-    }
-}
-
-export function setOperationColumnType(value: number): string {
-    switch (value) {
-        case 1:
-            return "secondary-color";
-        case 2:
-        case 3:
-            return "error-color";
-
-        default:
-            return "primary-color";
     }
 }

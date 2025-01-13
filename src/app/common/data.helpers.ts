@@ -13,14 +13,9 @@ import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { isValidCronExpression } from "./cron-expression-validator.helper";
 import { ErrorPolicy, WatchQueryFetchPolicy } from "@apollo/client";
 import moment from "moment";
-import {
-    convertSecondsToHumanReadableFormat,
-    operationColumnMapper,
-    removeAllLineBreaks,
-    setOperationColumnClass,
-} from "./app.helpers";
+import { convertSecondsToHumanReadableFormat, removeAllLineBreaks } from "./app.helpers";
 import { SliceUnit } from "../dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
-import { DataRow, DatasetSchema } from "../interface/dataset.interface";
+import { DataRow, DatasetSchema, OperationColumnClassEnum } from "../interface/dataset.interface";
 
 export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";
@@ -377,7 +372,12 @@ export function parseDataRows(successResult: DataQueryResultSuccessViewFragment)
     const content: string = successResult.data.content;
     const parsedData = JSON.parse(content) as object[];
     const columnNames = Object.keys(parsedData[0]);
-    const dataRowArray = parsedData.map((dataItem: object) => {
+    const dataRowArray = parseDataFromJsonAoSFormat(parsedData, columnNames);
+    return dataRowArray;
+}
+
+export function parseDataFromJsonAoSFormat(data: object[], columnNames: string[]): DataRow[] {
+    return data.map((dataItem: object) => {
         const arr = columnNames.map((key: string) => {
             const keyObject = key as keyof typeof dataItem;
             return {
@@ -389,5 +389,35 @@ export function parseDataRows(successResult: DataQueryResultSuccessViewFragment)
         });
         return arr.reduce((resultObj, obj) => Object.assign(resultObj, obj), {});
     });
-    return dataRowArray as DataRow[];
+}
+
+export function operationColumnMapper(value: string | number): string {
+    if (typeof value === "number") {
+        switch (value) {
+            case 0:
+                return "+A";
+            case 1:
+                return "-R";
+            case 2:
+                return "-C";
+            case 3:
+                return "+C";
+            /* istanbul ignore next */
+            default:
+                throw new Error("Unknown operation type");
+        }
+    } else return value;
+}
+
+export function setOperationColumnClass(value: number): OperationColumnClassEnum {
+    switch (value) {
+        case 1:
+            return OperationColumnClassEnum.ERROR_COLOR;
+        case 2:
+        case 3:
+            return OperationColumnClassEnum.SECONDARY_COLOR;
+
+        default:
+            return OperationColumnClassEnum.PRIMARY_COLOR;
+    }
 }

@@ -13,7 +13,12 @@ import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { isValidCronExpression } from "./cron-expression-validator.helper";
 import { ErrorPolicy, WatchQueryFetchPolicy } from "@apollo/client";
 import moment from "moment";
-import { convertSecondsToHumanReadableFormat, removeAllLineBreaks } from "./app.helpers";
+import {
+    convertSecondsToHumanReadableFormat,
+    operationColumnMapper,
+    removeAllLineBreaks,
+    setOperationColumnClass,
+} from "./app.helpers";
 import { SliceUnit } from "../dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
 import { DataRow, DatasetSchema } from "../interface/dataset.interface";
 
@@ -370,5 +375,19 @@ export function parseSchema(schemaContent: string): DatasetSchema {
 
 export function parseDataRows(successResult: DataQueryResultSuccessViewFragment): DataRow[] {
     const content: string = successResult.data.content;
-    return JSON.parse(content) as DataRow[];
+    const parsedData = JSON.parse(content) as object[];
+    const columnNames = Object.keys(parsedData[0]);
+    const dataRowArray = parsedData.map((dataItem: object) => {
+        const arr = columnNames.map((key: string) => {
+            const keyObject = key as keyof typeof dataItem;
+            return {
+                [key]: {
+                    value: key === "op" ? operationColumnMapper(dataItem[keyObject]) : dataItem[keyObject],
+                    cssClass: key === "op" ? setOperationColumnClass(dataItem[keyObject]) : dataItem[keyObject],
+                },
+            };
+        });
+        return arr.reduce((resultObj, obj) => Object.assign(resultObj, obj), {});
+    });
+    return dataRowArray as DataRow[];
 }

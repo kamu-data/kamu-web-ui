@@ -14,8 +14,14 @@ export class SchemaPropertyComponent extends BasePropertyComponent {
 
     public get tableSource(): DataRow[] {
         return this.data.map((item: string) => ({
-            name: item.split(" ")[0],
-            type: item.split(" ")[1],
+            name: {
+                value: item.split(" ")[0],
+                cssClass: "default",
+            },
+            type: {
+                value: item.split(" ")[1],
+                cssClass: "default",
+            },
         }));
     }
 

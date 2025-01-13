@@ -15,7 +15,18 @@ export class TopicsPropertyComponent extends BasePropertyComponent {
 
     public get tableSource(): DataRow[] {
         const result: DataRow[] = [];
-        this.data.forEach(({ path, qos }: MqttTopicSubscription) => result.push({ path, qos: (qos as string) ?? "" }));
+        this.data.forEach(({ path, qos }: MqttTopicSubscription) =>
+            result.push({
+                path: {
+                    value: path,
+                    cssClass: "default",
+                },
+                qos: {
+                    value: (qos as string) ?? "",
+                    cssClass: "default",
+                },
+            }),
+        );
         return result;
     }
 

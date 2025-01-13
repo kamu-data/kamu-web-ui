@@ -166,18 +166,15 @@ export function operationColumnMapper(value: string | number): string {
     } else return value;
 }
 
-export function setOperationColumnClass(value: string | number): string {
-    if (typeof value === "number") {
-        switch (value) {
-            case 1:
-                return "retraction";
-            case 2:
-            case 3:
-                return "correction";
+export function setOperationColumnClass(value: number): string {
+    switch (value) {
+        case 1:
+            return "retraction";
+        case 2:
+        case 3:
+            return "correction";
 
-            /* istanbul ignore next */
-            default:
-                return "";
-        }
-    } else return "";
+        default:
+            return "default";
+    }
 }

@@ -4,7 +4,12 @@ import {
     PageBasedInfo,
 } from "../api/kamu.graphql.interface";
 
-export type DataRow = Record<string, string | number>;
+export interface DataRow {
+    [key: string]: {
+        value: string | number;
+        cssClass: string;
+    };
+}
 
 export interface DatasetLineageNode {
     basics: DatasetLineageBasicsFragment;

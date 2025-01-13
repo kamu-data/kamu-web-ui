@@ -30,6 +30,12 @@ export interface DataSchemaField {
     logicalType?: string;
 }
 
+export enum OperationColumnClassEnum {
+    SECONDARY_COLOR = "secondary-color",
+    ERROR_COLOR = "error-color",
+    PRIMARY_COLOR = "primary-color",
+}
+
 export interface DatasetsAccountResponse {
     datasets: DatasetSearchOverviewFragment[];
     pageInfo: PageBasedInfo;

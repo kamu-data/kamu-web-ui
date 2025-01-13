@@ -7,7 +7,7 @@
             <td
                 [title]="hasData ? element[disCol].value : element[disCol]"
                 mat-cell
-                [ngClass]="hasData ? element[disCol].cssClass : ''"
+                [ngClass]="hasData ? element[disCol].cssClass : OperationColumnClassEnum.PRIMARY_COLOR"
                 [class]="'truncate-cell'"
                 *matCellDef="let element"
                 [attr.data-test-id]="'column-name-' + (hasData ? element[disCol].value : element[disCol])"

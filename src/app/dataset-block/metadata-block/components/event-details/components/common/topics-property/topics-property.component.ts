@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MqttTopicSubscription } from "src/app/api/kamu.graphql.interface";
 import { BasePropertyComponent } from "../base-property/base-property.component";
-import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
+import { DataRow, DataSchemaField, OperationColumnClassEnum } from "src/app/interface/dataset.interface";
 import { extractSchemaFieldsFromData } from "src/app/common/table.helper";
 
 @Component({
@@ -19,11 +19,11 @@ export class TopicsPropertyComponent extends BasePropertyComponent {
             result.push({
                 path: {
                     value: path,
-                    cssClass: "default",
+                    cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
                 },
                 qos: {
                     value: (qos as string) ?? "",
-                    cssClass: "default",
+                    cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
                 },
             }),
         );

@@ -3,7 +3,7 @@ import cronParser from "cron-parser";
 
 import { MaybeNull, MaybeNullOrUndefined } from "./app.types";
 import { DataSchema } from "../api/kamu.graphql.interface";
-import { DatasetSchema } from "../interface/dataset.interface";
+import { DatasetSchema, OperationColumnClassEnum } from "../interface/dataset.interface";
 import AppValues from "./app.values";
 
 export function requireValue<T>(input: MaybeNull<T>) {
@@ -166,15 +166,28 @@ export function operationColumnMapper(value: string | number): string {
     } else return value;
 }
 
-export function setOperationColumnClass(value: number): string {
+export function setOperationColumnClass(value: number): OperationColumnClassEnum {
     switch (value) {
         case 1:
-            return "retraction";
+            return OperationColumnClassEnum.ERROR_COLOR;
         case 2:
         case 3:
-            return "correction";
+            return OperationColumnClassEnum.SECONDARY_COLOR;
 
         default:
-            return "default";
+            return OperationColumnClassEnum.PRIMARY_COLOR;
+    }
+}
+
+export function setOperationColumnType(value: number): string {
+    switch (value) {
+        case 1:
+            return "secondary-color";
+        case 2:
+        case 3:
+            return "error-color";
+
+        default:
+            return "primary-color";
     }
 }

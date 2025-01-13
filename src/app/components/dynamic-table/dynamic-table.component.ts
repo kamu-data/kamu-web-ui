@@ -1,6 +1,6 @@
 import { AfterContentInit, ChangeDetectionStrategy, Component, Input, OnChanges, OnInit } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
-import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
+import { DataRow, DataSchemaField, OperationColumnClassEnum } from "src/app/interface/dataset.interface";
 import { TableSourceRowInterface } from "./dynamic-table.interface";
 
 @Component({
@@ -17,6 +17,7 @@ export class DynamicTableComponent implements OnInit, OnChanges, AfterContentIni
 
     public dataSource = new MatTableDataSource<TableSourceRowInterface>([]);
     public displayedColumns: string[] = [];
+    public readonly OperationColumnClassEnum: typeof OperationColumnClassEnum = OperationColumnClassEnum;
 
     public ngOnInit(): void {
         this.displayTable();

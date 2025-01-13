@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { extractSchemaFieldsFromData } from "src/app/common/table.helper";
-import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
+import { DataRow, DataSchemaField, OperationColumnClassEnum } from "src/app/interface/dataset.interface";
 import { BasePropertyComponent } from "../base-property/base-property.component";
 
 @Component({
@@ -16,11 +16,11 @@ export class SchemaPropertyComponent extends BasePropertyComponent {
         return this.data.map((item: string) => ({
             name: {
                 value: item.split(" ")[0],
-                cssClass: "default",
+                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
             },
             type: {
                 value: item.split(" ")[1],
-                cssClass: "default",
+                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
             },
         }));
     }

@@ -1,7 +1,7 @@
 import { extractSchemaFieldsFromData } from "../../../../../../../common/table.helper";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { EnvVar } from "src/app/api/kamu.graphql.interface";
-import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
+import { DataRow, DataSchemaField, OperationColumnClassEnum } from "src/app/interface/dataset.interface";
 import { BasePropertyComponent } from "../base-property/base-property.component";
 
 @Component({
@@ -19,11 +19,11 @@ export class EnvVariablesPropertyComponent extends BasePropertyComponent {
             result.push({
                 name: {
                     value: name,
-                    cssClass: "default",
+                    cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
                 },
                 value: {
                     value: value ? value : "null",
-                    cssClass: "default",
+                    cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
                 },
             }),
         );

@@ -151,6 +151,7 @@
                     [attr.rx]="5"
                     [attr.fill]="'#d6D6D6'"
                     [attr.cursor]="'pointer'"
+                    (click)="onClickPrivateNode(node)"
                 />
 
                 <svg:text
@@ -159,6 +160,7 @@
                     [attr.y]="node.dimension.height / 2"
                     [attr.font-weight]="'600'"
                     [attr.cursor]="'pointer'"
+                    (click)="onClickPrivateNode(node)"
                 >
                     {{ node.label | displayDatasetId }}
                 </svg:text>

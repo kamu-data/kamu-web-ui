@@ -46,6 +46,7 @@
             <app-lineage
                 *ngIf="datasetViewType === DatasetViewTypeEnum.Lineage"
                 (onClickNodeEmit)="onClickLineageNode($event)"
+                (onClickPrivateNodeEmit)="onClickPrivateLineageNode($event)"
             />
 
             <app-flows *ngIf="datasetViewType === DatasetViewTypeEnum.Flows" [datasetBasics]="datasetBasics" />

@@ -34,6 +34,7 @@ export class LineageGraphComponent implements OnInit, OnChanges {
     @Input({ required: true }) public graph: LineageGraph;
     @Input({ required: true }) public currentDataset: DatasetLineageBasicsFragment;
     @Output() public onClickNodeEvent = new EventEmitter<Node>();
+    @Output() public onClickPrivateNodeEvent = new EventEmitter<Node>();
     public readonly LineageGraphNodeKind: typeof LineageGraphNodeKind = LineageGraphNodeKind;
     public readonly LineageNodeAccess: typeof LineageNodeAccess = LineageNodeAccess;
     public readonly DatasetKind: typeof DatasetKind = DatasetKind;
@@ -76,6 +77,10 @@ export class LineageGraphComponent implements OnInit, OnChanges {
 
     public onClickNode(node: Node): void {
         this.onClickNodeEvent.emit(node);
+    }
+
+    public onClickPrivateNode(node: Node): void {
+        this.onClickPrivateNodeEvent.emit(node);
     }
 
     public onClickInfo(): void {

@@ -4,6 +4,7 @@
             [graph]="lineageGraphUpdate.graph"
             [currentDataset]="lineageGraphUpdate.originDataset"
             (onClickNodeEvent)="onClickNode($event)"
+            (onClickPrivateNodeEvent)="onClickPrivateNode($event)"
         />
     </ng-container>
     <ng-container *ngIf="!lineageGraphUpdate.graph.nodes.length">

@@ -25,12 +25,14 @@ import { ToastrModule } from "ngx-toastr";
 import { SavedQueriesSectionComponent } from "../../../query/shared/saved-queries-section/saved-queries-section.component";
 import { QueryAndResultSectionsComponent } from "../../../query/shared/query-and-result-sections/query-and-result-sections.component";
 import { SearchAndSchemasSectionComponent } from "src/app/query/global-query/search-and-schemas-section/search-and-schemas-section.component";
+import { SessionStorageService } from "src/app/services/session-storage.service";
 
 describe("DataComponent", () => {
     let component: DataComponent;
     let fixture: ComponentFixture<DataComponent>;
     let location: Location;
     let ngbModalService: NgbModal;
+    let sessionStorageService: SessionStorageService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -62,6 +64,7 @@ describe("DataComponent", () => {
         fixture = TestBed.createComponent(DataComponent);
         location = TestBed.inject(Location);
         ngbModalService = TestBed.inject(NgbModal);
+        sessionStorageService = TestBed.inject(SessionStorageService);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
         component.sqlLoading = false;
@@ -75,6 +78,7 @@ describe("DataComponent", () => {
 
     it("should check run sql button", fakeAsync(() => {
         const runSQLRequestEmitSpy = spyOn(component.runSQLRequestEmit, "emit");
+        const setDatasetSqlCodeSpy = spyOn(sessionStorageService, "setDatasetSqlCode");
         tick();
         fixture.detectChanges();
         runSQLRequestEmitSpy.calls.reset();
@@ -82,6 +86,7 @@ describe("DataComponent", () => {
         emitClickOnElementByDataTestId(fixture, "runSqlQueryButton");
 
         expect(runSQLRequestEmitSpy).toHaveBeenCalledTimes(1);
+        expect(setDatasetSqlCodeSpy).toHaveBeenCalledTimes(2);
         flush();
     }));
 
@@ -96,5 +101,13 @@ describe("DataComponent", () => {
             size: mockOverviewDataUpdate.size,
         } as OverviewUpdate);
         expect(ngbModalServiceSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check set query from session storage", () => {
+        const query = "select * from 'accounts.portfolio.usd'";
+        sessionStorageService.setDatasetSqlCode(query);
+        component.ngOnInit();
+
+        expect(component.sqlRequestCode).toEqual(query);
     });
 });

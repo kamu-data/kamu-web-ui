@@ -19,12 +19,12 @@ h2 {
 
 .inner-btn {
     position: absolute;
-    width: 10px;
     font-weight: 550;
     border: none;
     background-color: transparent;
     line-height: 32px;
-    left: calc(100% - 30px);
+    left: calc(100% - 48px);
+    top: 8px;
 
     &:hover {
         color: blue;

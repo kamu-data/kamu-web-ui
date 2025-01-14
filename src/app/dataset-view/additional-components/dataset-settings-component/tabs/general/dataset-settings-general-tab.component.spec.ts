@@ -34,6 +34,7 @@ import AppValues from "src/app/common/app.values";
 import { DatasetFlowsService } from "../../../flows-component/services/dataset-flows.service";
 import { DatasetService } from "../../../../dataset.service";
 import { MatCheckboxModule } from "@angular/material/checkbox";
+import { DatasetVisibilityModule } from "src/app/components/dataset-visibility/dataset-visibility.module";
 
 describe("DatasetSettingsGeneralTabComponent", () => {
     let component: DatasetSettingsGeneralTabComponent;
@@ -62,6 +63,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
                 NgbTooltipModule,
                 MatCheckboxModule,
                 FormsModule,
+                DatasetVisibilityModule,
             ],
             providers: [FormBuilder],
         }).compileComponents();

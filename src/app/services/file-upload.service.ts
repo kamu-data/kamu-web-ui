@@ -1,20 +1,20 @@
 import { AppConfigService } from "src/app/app-config.service";
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
-import { inject, Injectable, Injector } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Observable, Subject, catchError, finalize, first, of, switchMap, tap } from "rxjs";
 import { MaybeUndefined } from "../common/app.types";
 import { LocalStorageService } from "./local-storage.service";
 import { DatasetInfo } from "../interface/navigation.interface";
 import { DatasetBasicsFragment, DatasetEndpoints } from "../api/kamu.graphql.interface";
-import { APOLLO_OPTIONS } from "apollo-angular";
 import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
-import { DatasetService } from "../dataset-view/dataset.service";
 import { NavigationService } from "./navigation.service";
 import { ProtocolsService } from "./protocols.service";
-import { UploadPrepareResponse, UploadPerareData, UploadAvailableMethod } from "../common/ingest-via-file-upload.types";
-import { updateCacheHelper } from "../apollo-cache.helper";
+import {
+    UploadPrepareResponse,
+    UploadPrepareData,
+    UploadAvailableMethod,
+} from "../common/ingest-via-file-upload.types";
 import { FileUploadError } from "../common/errors";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { UnsubscribeDestroyRefAdapter } from "../common/unsubscribe.ondestroy.adapter";
 
 @Injectable({
@@ -25,8 +25,6 @@ export class FileUploadService extends UnsubscribeDestroyRefAdapter {
     private localStorageService = inject(LocalStorageService);
     private appConfigService = inject(AppConfigService);
     private navigationService = inject(NavigationService);
-    private datasetService = inject(DatasetService);
-    private injector = inject(Injector);
     private protocolsService = inject(ProtocolsService);
 
     private uploadFileLoading$ = new Subject<boolean>();
@@ -44,7 +42,7 @@ export class FileUploadService extends UnsubscribeDestroyRefAdapter {
             switchMap((uploadPrepareResponse: UploadPrepareResponse) =>
                 this.prepareUploadData(uploadPrepareResponse, file),
             ),
-            switchMap(({ uploadPrepareResponse, bodyObject, uploadHeaders }: UploadPerareData) =>
+            switchMap(({ uploadPrepareResponse, bodyObject, uploadHeaders }: UploadPrepareData) =>
                 this.uploadFileByMethod(
                     uploadPrepareResponse.method,
                     uploadPrepareResponse.uploadUrl,
@@ -82,30 +80,11 @@ export class FileUploadService extends UnsubscribeDestroyRefAdapter {
     }
 
     private updatePage(datasetBasics: DatasetBasicsFragment): void {
-        this.updateCache(datasetBasics);
-        this.datasetService
-            .requestDatasetMainData({
-                accountName: datasetBasics.owner.accountName,
-                datasetName: datasetBasics.name,
-            })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(),
-            this.navigationService.navigateToDatasetView({
-                accountName: datasetBasics.owner.accountName,
-                datasetName: datasetBasics.name,
-                tab: DatasetViewTypeEnum.Overview,
-            });
-    }
-
-    private updateCache(datasetBasics: DatasetBasicsFragment): void {
-        const cache = this.injector.get(APOLLO_OPTIONS).cache;
-        if (cache) {
-            updateCacheHelper(cache, {
-                accountId: datasetBasics.owner.id,
-                datasetId: datasetBasics.id,
-                fieldNames: ["metadata"],
-            });
-        }
+        this.navigationService.navigateToDatasetView({
+            accountName: datasetBasics.owner.accountName,
+            datasetName: datasetBasics.name,
+            tab: DatasetViewTypeEnum.Overview,
+        });
     }
 
     public uploadFilePrepare(file: File): Observable<UploadPrepareResponse> {
@@ -113,21 +92,39 @@ export class FileUploadService extends UnsubscribeDestroyRefAdapter {
         url.searchParams.append("fileName", file.name);
         url.searchParams.append("contentLength", file.size.toString());
         url.searchParams.append("contentType", file.type);
-        return this.http.post<UploadPrepareResponse>(url.href, null, {
-            headers: { Authorization: `Bearer ${this.localStorageService.accessToken}` },
-        });
+        return this.http
+            .post<UploadPrepareResponse>(url.href, null, {
+                headers: { Authorization: `Bearer ${this.localStorageService.accessToken}` },
+            })
+            .pipe(
+                catchError((e: HttpErrorResponse) => {
+                    throw new FileUploadError([new Error(`File could not be prepare for upload, ${e.error}`)]);
+                }),
+            );
     }
 
     public uploadPostFile(url: string, bodyObject: File | FormData, uploadHeaders: HttpHeaders): Observable<object> {
-        return this.http.post(url, bodyObject, {
-            headers: uploadHeaders,
-        });
+        return this.http
+            .post(url, bodyObject, {
+                headers: uploadHeaders,
+            })
+            .pipe(
+                catchError((e: HttpErrorResponse) => {
+                    throw new FileUploadError([new Error(`File could not be loaded with POST, ${e.error}`)]);
+                }),
+            );
     }
 
     public uploadPutFile(url: string, bodyObject: File | FormData, uploadHeaders: HttpHeaders): Observable<object> {
-        return this.http.put(url, bodyObject, {
-            headers: uploadHeaders,
-        });
+        return this.http
+            .put(url, bodyObject, {
+                headers: uploadHeaders,
+            })
+            .pipe(
+                catchError((e: HttpErrorResponse) => {
+                    throw new FileUploadError([new Error(`File could not be loaded with PUT, ${e.error}`)]);
+                }),
+            );
     }
 
     public ingestDataToDataset(datasetInfo: DatasetInfo, uploadToken: string): Observable<object> {
@@ -140,7 +137,7 @@ export class FileUploadService extends UnsubscribeDestroyRefAdapter {
         );
     }
 
-    private prepareUploadData(uploadPrepareResponse: UploadPrepareResponse, file: File): Observable<UploadPerareData> {
+    public prepareUploadData(uploadPrepareResponse: UploadPrepareResponse, file: File): Observable<UploadPrepareData> {
         let uploadHeaders = new HttpHeaders();
         uploadPrepareResponse.headers.forEach((header: [string, string]) => {
             uploadHeaders = uploadHeaders.append(header[0], header[1]);
@@ -163,7 +160,7 @@ export class FileUploadService extends UnsubscribeDestroyRefAdapter {
         });
     }
 
-    private uploadFileByMethod(
+    public uploadFileByMethod(
         method: UploadAvailableMethod,
         uploadUrl: string,
         bodyObject: File | FormData,

@@ -37,10 +37,15 @@
 
     &__additional-block {
         display: flex;
+        align-items: baseline;
         gap: 5px;
     }
 
     &__description {
         font-size: 14px;
     }
+}
+
+.disabled {
+    opacity: 0.4 !important;
 }

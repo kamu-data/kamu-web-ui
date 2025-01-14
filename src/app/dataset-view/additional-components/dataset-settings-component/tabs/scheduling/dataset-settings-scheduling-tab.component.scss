@@ -25,34 +25,6 @@
 
 .custom-container {
     padding-bottom: 100px;
-
-    h4 {
-        font-weight: 500;
-        letter-spacing: normal;
-    }
-
-    .form-control-width {
-        width: 132px;
-    }
-
-    .form-control-expression {
-        width: 132px;
-    }
-
-    .form-control-label {
-        min-width: 140px;
-    }
-
-    .cron-expression-hint {
-        padding-left: 150px;
-    }
-
-    .checkbox-uncacheable {
-        width: 16px;
-        height: 16px;
-        accent-color: rgba(63 81 181);
-        margin-left: 0.85rem;
-    }
 }
 
 @media (width <=1085px) {

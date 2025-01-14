@@ -1,51 +1,51 @@
 import { SqlExecutionError } from "../common/errors";
 import {
-    DataQueryResultErrorKind,
+    BlockRef,
+    CompareChainsResultStatus,
+    CompareChainsStatus,
     DataQueryResultSuccessViewFragment,
     DatasetByIdQuery,
+    DatasetHeadBlockHashQuery,
     DatasetLineageBasicsFragment,
     DatasetLineageFragment,
     DatasetPageInfoFragment,
     DatasetPermissionsFragment,
     DependencyDatasetResultNotAccessible,
+    DatasetPushSyncStatusesQuery,
     GetDatasetBasicsWithPermissionsQuery,
     GetDatasetLineageQuery,
     GetDatasetSchemaQuery,
-    SetVocab,
 } from "../api/kamu.graphql.interface";
 import { DatasetInfo } from "../interface/navigation.interface";
-import { inject, Injectable } from "@angular/core";
-import { Observable, Subject } from "rxjs";
-import { DataRow, DatasetLineageNode, DatasetRequestBySql, DatasetSchema } from "../interface/dataset.interface";
+import { inject, Injectable, Injector } from "@angular/core";
+import { combineLatest, Observable, of, Subject } from "rxjs";
+import { DataRow, DatasetLineageNode, DatasetSchema } from "../interface/dataset.interface";
 import {
     DatasetBasicsFragment,
     DatasetDataSizeFragment,
     DatasetMetadataSummaryFragment,
     DatasetOverviewFragment,
-    GetDatasetDataSqlRunQuery,
     GetDatasetHistoryQuery,
     GetDatasetMainDataQuery,
     MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
 import { DatasetSubscriptionsService } from "./dataset.subscriptions.service";
-import {
-    DatasetHistoryUpdate,
-    DataUpdate,
-    MetadataSchemaUpdate,
-    OverviewUpdate,
-} from "./dataset.subscriptions.interface";
+import { DatasetHistoryUpdate, MetadataSchemaUpdate, OverviewUpdate } from "./dataset.subscriptions.interface";
 import { DatasetApi } from "../api/dataset.api";
 import { DatasetNotFoundError } from "../common/errors";
 import { map } from "rxjs/operators";
 import { MaybeNull } from "../common/app.types";
 import { parseCurrentSchema } from "../common/app.helpers";
+import { APOLLO_OPTIONS } from "apollo-angular";
+import { resetCacheHelper } from "../apollo-cache.helper";
+import { parseDataRows } from "../common/data.helpers";
 
 @Injectable({ providedIn: "root" })
 export class DatasetService {
     private datasetApi = inject(DatasetApi);
     private datasetSubsService = inject(DatasetSubscriptionsService);
-
-    private currentSetVocab: SetVocab;
+    private injector = inject(Injector);
+    private currentHeadBlockHash: string;
     private dataset$: Subject<DatasetBasicsFragment> = new Subject<DatasetBasicsFragment>();
 
     public get datasetChanges(): Observable<DatasetBasicsFragment> {
@@ -73,10 +73,10 @@ export class DatasetService {
                             dataTail,
                         );
                         this.permissionsDataUpdate(data.datasets.byOwnerAndName);
-                        this.currentSetVocab = data.datasets.byOwnerAndName.metadata.currentVocab as SetVocab;
                         this.metadataTabDataUpdate(data, schema);
                         this.lineageDataReset();
                         this.historyDataReset();
+                        this.setHeadBlockHash(data.datasets.byOwnerAndName.metadata.chain.refs as BlockRef[]);
                     } else {
                         throw new SqlExecutionError(dataTail.errorMessage);
                     }
@@ -85,6 +85,31 @@ export class DatasetService {
                 }
             }),
         );
+    }
+
+    private setHeadBlockHash(refs: BlockRef[]): void {
+        const head = refs?.find((item) => item.name === "head");
+        this.currentHeadBlockHash = head?.blockHash ?? "";
+    }
+
+    public isHeadHashBlockChanged(datasetBasics: DatasetBasicsFragment): Observable<boolean> {
+        return combineLatest([
+            this.requestDatasetHeadBlockHash(datasetBasics.owner.accountName, datasetBasics.name),
+            of(this.currentHeadBlockHash),
+        ]).pipe(
+            map(([newHeadBlockHash, currentHeadBlockHash]) => {
+                if (currentHeadBlockHash !== newHeadBlockHash) {
+                    this.resetCache(datasetBasics);
+                    return true;
+                }
+                return false;
+            }),
+        );
+    }
+
+    private resetCache(datasetBasics: DatasetBasicsFragment): void {
+        const cache = this.injector.get(APOLLO_OPTIONS).cache;
+        resetCacheHelper(cache, { accountId: datasetBasics.owner.id, datasetId: datasetBasics.id });
     }
 
     public requestDatasetBasicDataWithPermissions(info: DatasetInfo): Observable<void> {
@@ -167,40 +192,41 @@ export class DatasetService {
         );
     }
 
-    public requestDatasetDataSqlRun(params: DatasetRequestBySql): Observable<void> {
-        return this.datasetApi.getDatasetDataSqlRun(params).pipe(
-            map((result: GetDatasetDataSqlRunQuery) => {
-                const queryResult = result.data.query;
-                if (queryResult.__typename === "DataQueryResultSuccess") {
-                    const content: DataRow[] = DatasetService.parseDataRows(queryResult);
-                    const schema: MaybeNull<DatasetSchema> = queryResult.schema
-                        ? DatasetService.parseSchema(queryResult.schema.content)
-                        : null;
-
-                    const dataUpdate: DataUpdate = {
-                        content,
-                        schema,
-                        currentVocab: this.currentSetVocab,
-                    };
-                    this.datasetSubsService.emitSqlQueryDataChanged(dataUpdate);
-                    this.datasetSubsService.resetSqlError();
-                } else if (queryResult.errorKind === DataQueryResultErrorKind.InvalidSql) {
-                    this.datasetSubsService.emitSqlErrorOccurred({
-                        error: queryResult.errorMessage,
-                    });
-                } else {
-                    throw new SqlExecutionError(queryResult.errorMessage);
-                }
-            }),
-        );
-    }
-
     public requestDatasetInfoById(datasetId: string): Observable<DatasetByIdQuery> {
         return this.datasetApi.getDatasetInfoById(datasetId);
     }
 
+    public requestDatasetHeadBlockHash(accountName: string, datasetName: string): Observable<string> {
+        return this.datasetApi.datasetHeadBlockHash(accountName, datasetName).pipe(
+            map((data: DatasetHeadBlockHashQuery) => {
+                const refs = data.datasets.byOwnerAndName?.metadata.chain.refs;
+                const head = refs?.find((item) => item.name === "head");
+                return head?.blockHash ?? "";
+            }),
+        );
+    }
+
     public requestDatasetSchema(datasetId: string): Observable<GetDatasetSchemaQuery> {
         return this.datasetApi.getDatasetSchema(datasetId);
+    }
+
+    public hasOutOfSyncPushRemotes(datasetId: string): Observable<boolean> {
+        return this.datasetApi.datasetPushSyncStatuses(datasetId).pipe(
+            map((data: DatasetPushSyncStatusesQuery) => {
+                const statuses = data.datasets.byId?.metadata.pushSyncStatuses.statuses ?? [];
+                return statuses.some((status) => {
+                    if (status.result.__typename === "CompareChainsResultStatus") {
+                        const result: CompareChainsResultStatus = status.result;
+                        if (result.message !== CompareChainsStatus.Equal) {
+                            return true;
+                        }
+                    } else if (status.result.__typename === "CompareChainsResultError") {
+                        return true;
+                    }
+                    return false;
+                });
+            }),
+        );
     }
 
     private datasetUpdate(data: DatasetBasicsFragment): void {
@@ -213,7 +239,7 @@ export class DatasetService {
         schema: MaybeNull<DatasetSchema>,
         tail: DataQueryResultSuccessViewFragment,
     ): void {
-        const content: DataRow[] = DatasetService.parseDataRows(tail);
+        const content: DataRow[] = parseDataRows(tail);
 
         const overviewDataUpdate: OverviewUpdate = {
             schema,
@@ -453,14 +479,5 @@ export class DatasetService {
             ]);
             this.updateLineageGraphRecords(dependency, lineageGraphNodes, lineageGraphEdges);
         });
-    }
-
-    private static parseDataRows(successResult: DataQueryResultSuccessViewFragment): DataRow[] {
-        const content: string = successResult.data.content;
-        return JSON.parse(content) as DataRow[];
-    }
-
-    private static parseSchema(schemaContent: string): DatasetSchema {
-        return JSON.parse(schemaContent) as DatasetSchema;
     }
 }

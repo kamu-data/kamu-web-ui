@@ -1,13 +1,13 @@
 import { Injectable } from "@angular/core";
 import { catchError, first } from "rxjs/operators";
-import { Observable, ReplaySubject, Subject, of } from "rxjs";
+import { EMPTY, Observable, ReplaySubject, Subject } from "rxjs";
 import { NavigationService } from "../services/navigation.service";
 import { MaybeNull } from "../common/app.types";
 import { isNull } from "lodash";
 import { AppConfigService } from "../app-config.service";
 import { AccountFragment } from "../api/kamu.graphql.interface";
 import { UnsubscribeDestroyRefAdapter } from "../common/unsubscribe.ondestroy.adapter";
-import { AppConfigLoginInstructions } from "../app-config.model";
+import { AppLoginInstructions } from "../app-config.model";
 import { Apollo } from "apollo-angular";
 import { promiseWithCatch } from "../common/app.helpers";
 import { LoginService } from "./login/login.service";
@@ -39,7 +39,7 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
     }
 
     public initializeCompletes(): Observable<void> {
-        const loginInstructions: AppConfigLoginInstructions | null = this.appConfigService.loginInstructions;
+        const loginInstructions: AppLoginInstructions | null = this.appConfigService.loginInstructions;
         if (loginInstructions) {
             return this.loginService.genericLogin(
                 loginInstructions.loginMethod,
@@ -92,11 +92,11 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
                 first(),
                 catchError(() => {
                     this.terminateSession();
-                    return of();
+                    return EMPTY;
                 }),
             );
         } else {
-            return of(void {});
+            return EMPTY;
         }
     }
 

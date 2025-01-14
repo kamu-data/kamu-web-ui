@@ -5,6 +5,7 @@ export interface DatasetNavigationParams {
     page?: number;
     section?: string;
     state?: object;
+    sqlQuery?: string;
 }
 export interface DatasetInfo {
     accountName: string;

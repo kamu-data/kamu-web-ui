@@ -96,7 +96,7 @@ fragment FlowSummaryData on Flow {
     }
 
     ... on FlowStartConditionBatching {
-      activeTransformRule {
+      activeBatchingRule {
         minRecordsToAwait
         maxBatchingInterval {
           ...TimeDeltaData
@@ -118,15 +118,13 @@ fragment FlowSummaryData on Flow {
 
   configSnapshot {
     ... on FlowConfigurationIngest {
-      schedule {
-        ... on TimeDelta {
-          ...TimeDeltaData
-        }
-        ... on Cron5ComponentExpression {
-          cron5ComponentExpression
-        }
-      }
       fetchUncacheable
+    }
+
+    ... on FlowConfigurationCompactionRule {
+      compactionRule {
+        __typename
+      }
     }
   }
 }

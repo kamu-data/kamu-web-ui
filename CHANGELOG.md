@@ -5,15 +5,140 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [Unreleased]
 ### Added
 - Create dataset: unlock dataset visibility selection
+- Saved sql request in the URL after completing the network request
+### Changed
+- Environment variables and secrets: made `key` field unavailable for editing
+
+
+## [0.36.0] - 2025-01-08
+### Added
+- Added initialization messages at the start of the flow
+### Changed
+- Query explainer: improved `INPUT DATA` section view
+  - added `Run` and `Copy` buttons for a sql code
+- Modified "Scheduled updates" view
+- Implemented new API for environment variables
+### Fixed
+- Flows table: fixed broken filters in pagination
+
+## [0.35.0] - 2024-12-27
+### Added
+- Made `force update` link for a flow table
+- Disable the `Run` button during query execution
+### Changed
+- Flow configuration separation
+- Minor updates for most dependencies
+
+## [0.34.0] - 2024-12-18
+### Added
+- Handling feature elements in 3 modes
+  - `production` mode: only implemented features available
+  - `demo` mode: unimplemented features are disabled
+  - `develop` mode: unimplemented features are available
+- Made a tile element clickable
+### Fixed
+- Fixed error handling for the query explainer
+
+## [0.33.0] - 2024-12-03
+### Added
+- Warning when deleting datasets which are out of sync with their push remotes
+### Fixed
+- Visibility for Update button and Flows tab from configuration
+- Error in console during initialization
+- Readme section: redirection after clicking the `Run` button
+
+## [0.32.0] - 2024-11-28
+### Added
+- Query page: added default query after searching for first dataset
+- Set the container width for large screens
+- Added contextual schemas in Data tab
+### Changed
+- Readme section: modified 'Run' button into a link
+- Hint extension for tile widget account
+- Separated runtime and UI configurations
+### Fixed
+- Typo in feature flags (enableDatasetEnvVarsManagement)
+                                                  ^
+
+## [0.31.0] - 2024-11-22
+### Added
+- Added Terms of Service link
+
+## [0.30.0] - 2024-11-22
+### Added
+- Added a new page `Query` that allows you to make sql queries without being tied to a dataset
+- Impovements for readme section
+  - Add syntax highlight support for SQL in markdown
+  - Add copy to clipboard button for SQL blocks
+  - Add run button that opens "Data" tab in new window and executes the selected query
+
+## [0.29.0] - 2024-11-12
+### Fixed
+- Readme section refresh when navigating between datasets
+### Changed
+- `Get Data` panel redesign
+
+## [0.28.3] - 2024-10-30
+### Fixed
+- Query explainer successfully validates commitment and shows data
+- Simplify the language in flow scheduling
+
+## [0.28.2] - 2024-10-25
+### Fixed
+- The `/query-explainer` view allows anonymous access
+
+## [0.28.1] - 2024-10-25
+### Added
+- Switched to Node.JS v18.20.4
+### Fixed
+- Bug with line breaks for the schema content
+
+## [0.28.0] - 2024-10-25
+### Added
+- Added the ability to resize the monaco editor vertically
+- Added query explainer page for admin
+
+## [0.27.1] - 2024-10-04
+### Fixed
+- Lineage graph: redirect to another dataset
+- Application search: redirect to another dataset
+- Lineage tab displayed correctly
+- Prettified history timeline
+
+## [0.27.0] - 2024-09-25
+### Added
+- Added the ability to view task logs using Grafana only for the admin(Logs tab)
+- Detect dataset cache after the flows are completed
+- Added `Share query` button to the Data tab
+### Fixed
+- Added autofocus to the login field on the login page
+
+## [0.26.4] - 2024-09-13
+### Added
+- Support `FlowEventScheduleForActivationEvent` in flow history
+### Fixed
+- Replaced mock initiator for flows tab for account
+- Restored `Fetch uncacheable` checkbox when configuration exists
+
+## [0.26.3] - 2024-09-13
+### Fixed
+- Hid the `force-update` link
+- Renamed `Hard compaction` to `Reset` descriprion(flows table) when user choose reset with flatten metadata
+
+## [0.26.2] - 2024-09-09
+### Added
+- Added reset flatten option for derivative datasets
+
+## [0.26.1] - 2024-09-06
 ### Fixed
 - Set consistent state with `force update` link
 ### Changed
 - Replaced dataset names, account names, history blocks, settings vertical tabs to links
 - Replaced all trackSubscriptions with takeUntilDestroyed operator
-- Replaced all components with selh closing tag
+- Replaced all components with self closing tag
 
 ## [0.26.0] - 2024-08-30
 ### Fixed
@@ -67,7 +192,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added access token feature
 - Added environment variables and secrets for the dataset
-- Added new flag(enableDatasetEnvVarsManagment) in the runtime configuration
+- Added new flag(enableDatasetEnvVarsManagement) in the runtime configuration
 ### Fixed
 - Fixed bug with cache(Data tab) on the deployment version
 - Extended full source info for EthereumLogs(Metadata tab)

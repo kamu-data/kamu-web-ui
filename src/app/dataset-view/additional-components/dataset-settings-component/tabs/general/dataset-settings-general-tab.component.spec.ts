@@ -6,7 +6,7 @@ import { DatasetSettingsGeneralTabComponent } from "./dataset-settings-general-t
 import { DatasetSettingsService } from "../../services/dataset-settings.service";
 import { ModalService } from "../../../../../components/modal/modal.service";
 import { ApolloModule } from "apollo-angular";
-import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
+import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
@@ -32,6 +32,8 @@ import { DatasetFlowType } from "src/app/api/kamu.graphql.interface";
 import { DatasetResetMode } from "./dataset-settings-general-tab.types";
 import AppValues from "src/app/common/app.values";
 import { DatasetFlowsService } from "../../../flows-component/services/dataset-flows.service";
+import { DatasetService } from "../../../../dataset.service";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 
 describe("DatasetSettingsGeneralTabComponent", () => {
     let component: DatasetSettingsGeneralTabComponent;
@@ -41,6 +43,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     let datasetCompactionService: DatasetCompactionService;
     let navigationService: NavigationService;
     let flowsService: DatasetFlowsService;
+    let datasetService: DatasetService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -57,6 +60,8 @@ describe("DatasetSettingsGeneralTabComponent", () => {
                 MatRadioModule,
                 MatIconModule,
                 NgbTooltipModule,
+                MatCheckboxModule,
+                FormsModule,
             ],
             providers: [FormBuilder],
         }).compileComponents();
@@ -70,6 +75,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         modalService = TestBed.inject(ModalService);
         datasetCompactionService = TestBed.inject(DatasetCompactionService);
         flowsService = TestBed.inject(DatasetFlowsService);
+        datasetService = TestBed.inject(DatasetService);
 
         navigationService = TestBed.inject(NavigationService);
         fixture.detectChanges();
@@ -189,6 +195,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     }));
 
     it("should check delete modal window is shown and sends API call after confirm", fakeAsync(() => {
+        const hasOutOfSyncPushRemotesSpy = spyOn(datasetService, "hasOutOfSyncPushRemotes").and.returnValue(of(false));
         const modalServiceSpy = spyOn(modalService, "error").and.callFake((options) => {
             options.handler?.call(undefined, true);
             return Promise.resolve("");
@@ -197,6 +204,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
         emitClickOnElementByDataTestId(fixture, Elements.DeleteDatasetButton);
         expect(modalServiceSpy).toHaveBeenCalledTimes(1);
+        expect(hasOutOfSyncPushRemotesSpy).toHaveBeenCalledTimes(1);
         fixture.detectChanges();
 
         tick();
@@ -207,6 +215,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     }));
 
     it("should check delete modal window is shown and does not send API call after reject", fakeAsync(() => {
+        const hasOutOfSyncPushRemotesSpy = spyOn(datasetService, "hasOutOfSyncPushRemotes").and.returnValue(of(false));
         const modalServiceSpy = spyOn(modalService, "error").and.callFake((options) => {
             options.handler?.call(undefined, false);
             return Promise.resolve("");
@@ -215,6 +224,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
         emitClickOnElementByDataTestId(fixture, Elements.DeleteDatasetButton);
         expect(modalServiceSpy).toHaveBeenCalledTimes(1);
+        expect(hasOutOfSyncPushRemotesSpy).toHaveBeenCalledTimes(1);
         fixture.detectChanges();
 
         tick();
@@ -237,6 +247,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         expect(navigationServiceSpy).toHaveBeenCalledTimes(1);
         expect(modalServiceSpy).toHaveBeenCalledTimes(1);
         expect(resetToSeedSpy).toHaveBeenCalledWith({
+            accountId: component.datasetBasics.owner.id,
             datasetId: component.datasetBasics.id,
             datasetFlowType: DatasetFlowType.Reset,
             flowRunConfiguration: {

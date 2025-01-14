@@ -34,6 +34,7 @@
             <div class="search-result-container__content my-4">
                 <app-tile-base-widget
                     [nodes]="flowConnectionData.flowsData.connectionDataForWidget.nodes"
+                    [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
                 ></app-tile-base-widget>
             </div>
             <app-flows-table
@@ -43,7 +44,7 @@
                 [searchByDataset]="searchByDataset"
                 [searchByAccount]="searchByAccount"
                 [tableOptions]="{
-                    displayColumns: DISPLAY_COLUMNS
+                    displayColumns: DISPLAY_COLUMNS,
                 }"
                 [accountFlowInitiators]="flowConnectionData.flowInitiators"
                 [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"

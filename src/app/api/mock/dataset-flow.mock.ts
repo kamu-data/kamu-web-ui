@@ -2,9 +2,6 @@ import {
     AccountType,
     CancelScheduledTasksMutation,
     DatasetAllFlowsPausedQuery,
-    DatasetFlowBatchingMutation,
-    DatasetFlowCompactionMutation,
-    DatasetFlowScheduleMutation,
     DatasetFlowsInitiatorsQuery,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsMutation,
@@ -14,8 +11,11 @@ import {
     FlowOutcomeDataFragment,
     FlowStatus,
     FlowSummaryDataFragment,
+    GetDatasetFlowTriggersQuery,
     GetDatasetListFlowsQuery,
     GetFlowByIdQuery,
+    SetDatasetFlowConfigMutation,
+    SetDatasetFlowTriggersMutation,
     TaskStatus,
 } from "./../kamu.graphql.interface";
 import { GetDatasetFlowConfigsQuery, DatasetKind, TimeUnit, TimeDeltaInput } from "../kamu.graphql.interface";
@@ -46,16 +46,10 @@ export const mockIngestGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQuery 
                 configs: {
                     __typename: "DatasetFlowConfigs",
                     byType: {
-                        paused: true,
                         ingest: {
-                            schedule: {
-                                every: 3,
-                                unit: TimeUnit.Hours,
-                                __typename: "TimeDelta",
-                            },
                             fetchUncacheable: false,
                         },
-                        transform: null,
+
                         __typename: "FlowConfiguration",
                     },
                 },
@@ -66,66 +60,46 @@ export const mockIngestGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQuery 
     },
 };
 
-export const mockBatchingGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQuery = {
-    datasets: {
-        byId: {
-            id: "did:odf:fed0127044b7b7e427f627e0ffb9f2b9b1e36a3795c7400d5b209e6661a9ad2f5a2a4",
-            kind: DatasetKind.Derivative,
-            name: "account.tokens.portfolio",
-            owner: {
-                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                accountName: "kamu",
-                __typename: "Account",
-            },
-            alias: "account.tokens.portfolio",
-            visibility: mockPublicDatasetVisibility,
-            __typename: "Dataset",
-            flows: {
-                configs: {
-                    __typename: "DatasetFlowConfigs",
-                    byType: {
-                        paused: true,
-                        ingest: null,
-                        transform: {
-                            maxBatchingInterval: {
-                                every: 4,
-                                unit: TimeUnit.Minutes,
-                                __typename: "TimeDelta",
-                            },
-                            minRecordsToAwait: 10,
-                            __typename: "FlowConfigurationTransform",
-                        },
-                        __typename: "FlowConfiguration",
-                    },
-                },
-                __typename: "DatasetFlows",
-            },
-        },
-        __typename: "Datasets",
-    },
-};
-
-export const mockSetDatasetFlowScheduleSuccess: DatasetFlowScheduleMutation = {
+export const mockSetDatasetFlowConfigMutation: SetDatasetFlowConfigMutation = {
     datasets: {
         byId: {
             flows: {
                 configs: {
-                    setConfigIngest: {
+                    setConfig: {
                         __typename: "SetFlowConfigSuccess",
                         message: "Success",
-                        config: {
-                            ingest: {
-                                schedule: {
-                                    every: 10,
-                                    unit: TimeUnit.Hours,
-                                    __typename: "TimeDelta",
-                                },
-                                fetchUncacheable: false,
-                            },
-                            __typename: "FlowConfiguration",
-                        },
                     },
-                    __typename: "DatasetFlowConfigsMut",
+                },
+            },
+        },
+    },
+};
+
+export const mockSetDatasetFlowConfigMutationError: SetDatasetFlowConfigMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                configs: {
+                    setConfig: {
+                        __typename: "FlowTypeIsNotSupported",
+                        message: "Error flow type is not supported",
+                    },
+                },
+            },
+        },
+    },
+};
+
+export const mockSetDatasetFlowTriggersSuccess: SetDatasetFlowTriggersMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                triggers: {
+                    setTrigger: {
+                        __typename: "SetFlowTriggerSuccess",
+                        message: "Success",
+                    },
+                    __typename: "DatasetFlowTriggersMut",
                 },
                 __typename: "DatasetFlowsMut",
             },
@@ -135,18 +109,18 @@ export const mockSetDatasetFlowScheduleSuccess: DatasetFlowScheduleMutation = {
     },
 };
 
-export const mockSetDatasetFlowScheduleError: DatasetFlowScheduleMutation = {
+export const mockSetDatasetFlowTriggersError: SetDatasetFlowTriggersMutation = {
     datasets: {
         byId: {
             flows: {
-                configs: {
-                    setConfigIngest: {
+                triggers: {
+                    setTrigger: {
                         __typename: "FlowIncompatibleDatasetKind",
                         message: "Error",
                         expectedDatasetKind: DatasetKind.Root,
                         actualDatasetKind: DatasetKind.Derivative,
                     },
-                    __typename: "DatasetFlowConfigsMut",
+                    __typename: "DatasetFlowTriggersMut",
                 },
                 __typename: "DatasetFlowsMut",
             },
@@ -156,28 +130,77 @@ export const mockSetDatasetFlowScheduleError: DatasetFlowScheduleMutation = {
     },
 };
 
-export const mockSetDatasetFlowBatchingSuccess: DatasetFlowBatchingMutation = {
+export const mockGetDatasetFlowTriggersQuery: GetDatasetFlowTriggersQuery = {
     datasets: {
+        __typename: "Datasets",
         byId: {
             flows: {
-                configs: {
-                    setConfigTransform: {
-                        __typename: "SetFlowConfigSuccess",
-                        message: "Success",
-                        config: {
-                            transform: {
-                                maxBatchingInterval: {
-                                    every: 5,
-                                    unit: TimeUnit.Minutes,
-                                    __typename: "TimeDelta",
-                                },
-                                minRecordsToAwait: 123,
-                                __typename: "FlowConfigurationTransform",
-                            },
-                            __typename: "FlowConfiguration",
+                triggers: {
+                    byType: {
+                        paused: true,
+                        schedule: {
+                            __typename: "Cron5ComponentExpression",
+                            cron5ComponentExpression: "* * * * ?",
                         },
                     },
-                    __typename: "DatasetFlowConfigsMut",
+                },
+            },
+        },
+    },
+};
+
+export const mockGetDatasetFlowTriggersTimeDeltaQuery: GetDatasetFlowTriggersQuery = {
+    datasets: {
+        __typename: "Datasets",
+        byId: {
+            flows: {
+                triggers: {
+                    byType: {
+                        paused: true,
+                        schedule: {
+                            __typename: "TimeDelta",
+                            every: 10,
+                            unit: TimeUnit.Minutes,
+                        },
+                    },
+                },
+            },
+        },
+    },
+};
+
+export const mockGetDatasetFlowTriggersBatchingQuery: GetDatasetFlowTriggersQuery = {
+    datasets: {
+        __typename: "Datasets",
+        byId: {
+            flows: {
+                triggers: {
+                    byType: {
+                        paused: true,
+                        batching: {
+                            minRecordsToAwait: 100,
+                            maxBatchingInterval: {
+                                every: 10,
+                                unit: TimeUnit.Hours,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+};
+
+export const mockSetDatasetFlowTriggerSuccess: SetDatasetFlowTriggersMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                triggers: {
+                    setTrigger: {
+                        __typename: "SetFlowTriggerSuccess",
+                        message: "Success",
+                    },
+                    __typename: "DatasetFlowTriggersMut",
                 },
                 __typename: "DatasetFlowsMut",
             },
@@ -187,18 +210,18 @@ export const mockSetDatasetFlowBatchingSuccess: DatasetFlowBatchingMutation = {
     },
 };
 
-export const mockSetDatasetFlowBatchingError: DatasetFlowBatchingMutation = {
+export const mockSetDatasetFlowTriggegError: SetDatasetFlowTriggersMutation = {
     datasets: {
         byId: {
             flows: {
-                configs: {
-                    setConfigTransform: {
+                triggers: {
+                    setTrigger: {
                         __typename: "FlowIncompatibleDatasetKind",
                         message: "Error",
                         expectedDatasetKind: DatasetKind.Derivative,
                         actualDatasetKind: DatasetKind.Root,
                     },
-                    __typename: "DatasetFlowConfigsMut",
+                    __typename: "DatasetFlowTriggersMut",
                 },
                 __typename: "DatasetFlowsMut",
             },
@@ -324,7 +347,7 @@ export const mockDatasetPauseFlowsMutationSuccess: DatasetPauseFlowsMutation = {
     datasets: {
         byId: {
             flows: {
-                configs: {
+                triggers: {
                     pauseFlows: true,
                 },
             },
@@ -336,7 +359,7 @@ export const mockDatasetPauseFlowsMutationError: DatasetPauseFlowsMutation = {
     datasets: {
         byId: {
             flows: {
-                configs: {
+                triggers: {
                     pauseFlows: false,
                 },
             },
@@ -348,7 +371,7 @@ export const mockDatasetResumeFlowsMutationSuccess: DatasetResumeFlowsMutation =
     datasets: {
         byId: {
             flows: {
-                configs: {
+                triggers: {
                     resumeFlows: true,
                 },
             },
@@ -360,7 +383,7 @@ export const mockDatasetResumeFlowsMutationError: DatasetResumeFlowsMutation = {
     datasets: {
         byId: {
             flows: {
-                configs: {
+                triggers: {
                     resumeFlows: false,
                 },
             },
@@ -435,11 +458,6 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                 },
                                 startCondition: null,
                                 configSnapshot: {
-                                    schedule: {
-                                        every: 1,
-                                        unit: TimeUnit.Minutes,
-                                        __typename: "TimeDelta",
-                                    },
                                     fetchUncacheable: false,
                                     __typename: "FlowConfigurationIngest",
                                 },
@@ -470,11 +488,6 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                 },
                                 startCondition: null,
                                 configSnapshot: {
-                                    schedule: {
-                                        every: 1,
-                                        unit: TimeUnit.Minutes,
-                                        __typename: "TimeDelta",
-                                    },
                                     fetchUncacheable: false,
                                     __typename: "FlowConfigurationIngest",
                                 },
@@ -526,11 +539,6 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     },
                                     startCondition: null,
                                     configSnapshot: {
-                                        schedule: {
-                                            every: 1,
-                                            unit: TimeUnit.Minutes,
-                                            __typename: "TimeDelta",
-                                        },
                                         fetchUncacheable: false,
                                         __typename: "FlowConfigurationIngest",
                                     },
@@ -564,11 +572,6 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     },
                                     startCondition: null,
                                     configSnapshot: {
-                                        schedule: {
-                                            every: 1,
-                                            unit: TimeUnit.Minutes,
-                                            __typename: "TimeDelta",
-                                        },
                                         fetchUncacheable: false,
                                         __typename: "FlowConfigurationIngest",
                                     },
@@ -582,6 +585,11 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                     tiles: {
                         nodes: [
                             {
+                                flowId: "0",
+                                description: {
+                                    __typename: "FlowDescriptionDatasetPollingIngest",
+                                    datasetId: mockDatasetMainDataId,
+                                },
                                 status: FlowStatus.Finished,
                                 initiator: {
                                     accountName: "kamu",
@@ -600,6 +608,11 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                 __typename: "Flow",
                             },
                             {
+                                flowId: "1",
+                                description: {
+                                    __typename: "FlowDescriptionDatasetPollingIngest",
+                                    datasetId: mockDatasetMainDataId,
+                                },
                                 status: FlowStatus.Finished,
                                 initiator: null,
                                 outcome: {
@@ -644,11 +657,6 @@ export const mockDatasetTriggerFlowMutation: DatasetTriggerFlowMutation = {
                     triggerFlow: {
                         flow: {
                             configSnapshot: {
-                                schedule: {
-                                    every: 1,
-                                    unit: TimeUnit.Minutes,
-                                    __typename: "TimeDelta",
-                                },
                                 fetchUncacheable: true,
                                 __typename: "FlowConfigurationIngest",
                             },
@@ -722,11 +730,6 @@ export const mockCancelScheduledTasksMutationSuccess: CancelScheduledTasksMutati
                         message: "Success",
                         flow: {
                             configSnapshot: {
-                                schedule: {
-                                    every: 1,
-                                    unit: TimeUnit.Minutes,
-                                    __typename: "TimeDelta",
-                                },
                                 fetchUncacheable: true,
                                 __typename: "FlowConfigurationIngest",
                             },
@@ -821,7 +824,7 @@ export const mockDatasetAllFlowsPausedQuery: DatasetAllFlowsPausedQuery = {
         __typename: "Datasets",
         byId: {
             __typename: "Dataset",
-            flows: { __typename: "DatasetFlows", configs: { __typename: "DatasetFlowConfigs", allPaused: true } },
+            flows: { __typename: "DatasetFlows", triggers: { __typename: "DatasetFlowTriggers", allPaused: true } },
         },
     },
 };
@@ -850,11 +853,6 @@ export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
                     getFlow: {
                         flow: {
                             configSnapshot: {
-                                schedule: {
-                                    every: 1,
-                                    unit: TimeUnit.Minutes,
-                                    __typename: "TimeDelta",
-                                },
                                 fetchUncacheable: true,
                                 __typename: "FlowConfigurationIngest",
                             },
@@ -928,24 +926,17 @@ export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
     },
 };
 
-export const mockDatasetFlowCompactionMutationSuccess: DatasetFlowCompactionMutation = {
+export const mockDatasetFlowCompactionMutationSuccess: SetDatasetFlowTriggersMutation = {
     datasets: {
         byId: {
             flows: {
-                configs: {
-                    setConfigCompaction: {
+                triggers: {
+                    setTrigger: {
                         message: "Success",
-                        config: {
-                            compaction: {
-                                maxSliceSize: 10485760,
-                                maxSliceRecords: 10000,
-                                __typename: "CompactionFull",
-                            },
-                            __typename: "FlowConfiguration",
-                        },
-                        __typename: "SetFlowConfigSuccess",
+
+                        __typename: "SetFlowTriggerSuccess",
                     },
-                    __typename: "DatasetFlowConfigsMut",
+                    __typename: "DatasetFlowTriggersMut",
                 },
                 __typename: "DatasetFlowsMut",
             },
@@ -955,17 +946,17 @@ export const mockDatasetFlowCompactionMutationSuccess: DatasetFlowCompactionMuta
     },
 };
 
-export const mockDatasetFlowCompactionMutationError: DatasetFlowCompactionMutation = {
+export const mockDatasetFlowCompactionMutationError: SetDatasetFlowTriggersMutation = {
     datasets: {
         byId: {
             flows: {
-                configs: {
-                    setConfigCompaction: {
+                triggers: {
+                    setTrigger: {
                         message: "Error",
                         reason: "Failed",
-                        __typename: "FlowInvalidCompactionConfig",
+                        __typename: "FlowInvalidTriggerInputError",
                     },
-                    __typename: "DatasetFlowConfigsMut",
+                    __typename: "DatasetFlowTriggersMut",
                 },
                 __typename: "DatasetFlowsMut",
             },

@@ -1,6 +1,6 @@
 import { GraphQLError } from "graphql";
 import { AccountFragment, AccountType, FetchAccountDetailsMutation, LoginMutation } from "../kamu.graphql.interface";
-import { AppConfigLoginInstructions, LoginMethod } from "src/app/app-config.model";
+import { AppLoginInstructions, LoginMethod } from "src/app/app-config.model";
 import { PasswordLoginCredentials } from "../auth.api.model";
 
 export const TEST_GITHUB_CODE = "12345";
@@ -17,7 +17,7 @@ const mockPasswordLoginCredentials: PasswordLoginCredentials = {
     password: TEST_PASSWORD,
 };
 
-export const mockLoginInstructions: AppConfigLoginInstructions = {
+export const mockLoginInstructions: AppLoginInstructions = {
     loginMethod: LoginMethod.PASSWORD,
     loginCredentialsJson: JSON.stringify(mockPasswordLoginCredentials),
 };

@@ -128,7 +128,7 @@ td.mat-cell {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    width: 370px;
+    max-width: 370px;
 }
 
 .dynamic-icon {

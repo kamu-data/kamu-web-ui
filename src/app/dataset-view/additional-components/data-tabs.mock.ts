@@ -1088,6 +1088,12 @@ export const mockMetadataRootUpdate: MetadataSchemaUpdate = {
                 "# Confirmed positive cases of COVID-19 in Alberta\n\nThis dataset compiles daily snapshots of publicly reported data on 2019 Novel Coronavirus (COVID-19) testing in Alberta.\n\nData includes:\n- approximation of onset date\n- age group\n- patient gender\n- case acquisition information\n- patient outcome\n- reporting Public Health Unit (PHU)\n- postal code, website, longitude, and latitude of PHU\n\nThis dataset is subject to change. Please review the daily epidemiologic summaries for information on variables, methodology, and technical considerations.\n\n**Related dataset(s)**:\n- [Daily aggregate count of confirmed positive cases of COVID-19 in Alberta](#todo)\n",
             chain: {
                 __typename: "MetadataChain",
+                refs: [
+                    {
+                        name: "head",
+                        blockHash: "f16207c1039f6d9f5e107a2285ccfe04bc88cb65ddd2b217ceb62b717774b2f85f1f5",
+                    },
+                ],
                 blocks: {
                     __typename: "MetadataBlockConnection",
                     nodes: [
@@ -1272,6 +1278,12 @@ export const mockMetadataRootPushSourceUpdate: MetadataSchemaUpdate = {
                 "# Confirmed positive cases of COVID-19 in Alberta\n\nThis dataset compiles daily snapshots of publicly reported data on 2019 Novel Coronavirus (COVID-19) testing in Alberta.\n\nData includes:\n- approximation of onset date\n- age group\n- patient gender\n- case acquisition information\n- patient outcome\n- reporting Public Health Unit (PHU)\n- postal code, website, longitude, and latitude of PHU\n\nThis dataset is subject to change. Please review the daily epidemiologic summaries for information on variables, methodology, and technical considerations.\n\n**Related dataset(s)**:\n- [Daily aggregate count of confirmed positive cases of COVID-19 in Alberta](#todo)\n",
             chain: {
                 __typename: "MetadataChain",
+                refs: [
+                    {
+                        name: "head",
+                        blockHash: "f16207c1039f6d9f5e107a2285ccfe04bc88cb65ddd2b217ceb62b717774b2f85f1f5",
+                    },
+                ],
                 blocks: {
                     __typename: "MetadataBlockConnection",
                     nodes: [
@@ -1435,6 +1447,12 @@ export const mockMetadataDerivedUpdate: MetadataSchemaUpdate = {
                 "# Harmonized COVID-19 case data from Alberta\n\nSee [original dataset](#todo).\n\nSee [harmonization schema and semantics](#todo).\n",
             chain: {
                 __typename: "MetadataChain",
+                refs: [
+                    {
+                        name: "head",
+                        blockHash: "f16207c1039f6d9f5e107a2285ccfe04bc88cb65ddd2b217ceb62b717774b2f85f1f5",
+                    },
+                ],
                 blocks: {
                     __typename: "MetadataBlockConnection",
                     nodes: [

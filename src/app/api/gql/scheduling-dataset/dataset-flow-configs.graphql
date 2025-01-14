@@ -8,23 +8,18 @@ query getDatasetFlowConfigs($datasetId: DatasetID!, $datasetFlowType: DatasetFlo
         configs {
           __typename
           byType(datasetFlowType: $datasetFlowType) {
-            paused
             ingest {
-              schedule {
-                ... on TimeDelta {
-                  ...TimeDeltaData
-                }
-                ... on Cron5ComponentExpression {
-                  cron5ComponentExpression
-                }
-              }
               fetchUncacheable
             }
-            transform {
-              maxBatchingInterval {
-                ...TimeDeltaData
+
+            reset {
+              oldHeadHash
+              recursive
+              mode {
+                ... on SnapshotConfigurationResetToSeedDummy {
+                  dummy
+                }
               }
-              minRecordsToAwait
             }
 
             compaction {

@@ -1,0 +1,11 @@
+<div class="position-relative border border-1 rounded-3 align-self-start px-4 pb-3">
+    <form [formGroup]="ingestConfigurationForm">
+        <span class="position-absolute text-muted group-box-label text-uppercase">Configuration</span>
+
+        <div class="d-flex align-items-center pt-3 ms-2">
+            <mat-checkbox data-test-id="fetchUncacheable" formControlName="fetchUncacheable" color="primary">
+                <div class="d-flex align-items-center">Fetch uncacheable</div>
+            </mat-checkbox>
+        </div>
+    </form>
+</div>

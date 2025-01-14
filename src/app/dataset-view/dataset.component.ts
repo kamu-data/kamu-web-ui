@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
+import { SessionStorageService } from "src/app/services/session-storage.service";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { NavigationEnd, Router } from "@angular/router";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
@@ -15,24 +16,30 @@ import { LineageGraphNodeData, LineageGraphNodeKind } from "./additional-compone
 import _ from "lodash";
 import { BaseDatasetDataComponent } from "../common/base-dataset-data.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { SqlQueryService } from "../services/sql-query.service";
+import { AppConfigService } from "../app-config.service";
 
 @Component({
     selector: "app-dataset",
     templateUrl: "./dataset.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DatasetComponent extends BaseDatasetDataComponent implements OnInit {
+export class DatasetComponent extends BaseDatasetDataComponent implements OnInit, OnDestroy {
     public datasetBasics: MaybeUndefined<DatasetBasicsFragment>;
     public datasetInfo: DatasetInfo;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
     public readonly DatasetViewTypeEnum = DatasetViewTypeEnum;
     public sqlLoading: boolean = false;
+    public currentHeadBlockHash: string = "";
 
     private mainDatasetQueryComplete$: Subject<DatasetInfo> = new ReplaySubject<DatasetInfo>(1 /* bufferSize */);
 
     private datasetPermissionsServices = inject(DatasetPermissionsService);
     private router = inject(Router);
     private cdr = inject(ChangeDetectorRef);
+    private sqlQueryService = inject(SqlQueryService);
+    private configService = inject(AppConfigService);
+    private sessionStorageService = inject(SessionStorageService);
 
     public ngOnInit(): void {
         const urlDatasetInfo = this.getDatasetInfoFromUrl();
@@ -45,6 +52,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
             .subscribe(() => {
                 this.initDatasetViewByType(this.getDatasetInfoFromUrl(), this.getCurrentPageFromUrl());
                 this.requestMainDataIfChanged();
+                this.cdr.detectChanges();
             });
         this.datasetService.datasetChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -57,15 +65,52 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
         this.datasetPermissions$ = this.datasetSubsService.permissionsChanges;
     }
 
+    ngOnDestroy(): void {
+        this.sessionStorageService.removeDatasetSqlCode();
+    }
+
+    public get enableScheduling(): boolean {
+        return this.configService.featureFlags.enableScheduling;
+    }
+
     private requestMainDataIfChanged(): void {
         const urlDatasetInfo = this.getDatasetInfoFromUrl();
         if (
             _.isNil(this.datasetBasics) ||
             this.datasetBasics.name !== urlDatasetInfo.datasetName ||
             this.datasetBasics.owner.accountName !== urlDatasetInfo.accountName ||
-            this.datasetViewType === DatasetViewTypeEnum.Flows
+            [
+                DatasetViewTypeEnum.Overview,
+                DatasetViewTypeEnum.Metadata,
+                DatasetViewTypeEnum.Data,
+                DatasetViewTypeEnum.Lineage,
+            ].includes(this.datasetViewType)
         ) {
-            this.requestMainData(urlDatasetInfo);
+            if (this.datasetBasics) {
+                this.datasetService
+                    .isHeadHashBlockChanged(this.datasetBasics)
+                    .pipe(
+                        switchMap((isNewHead: boolean) => {
+                            return isNewHead ||
+                                this.datasetBasics?.name !== urlDatasetInfo.datasetName ||
+                                this.datasetBasics.owner.accountName !== urlDatasetInfo.accountName
+                                ? this.datasetService.requestDatasetMainData(urlDatasetInfo)
+                                : of();
+                        }),
+                        tap(() => {
+                            this.mainDatasetQueryComplete$.next(urlDatasetInfo);
+                        }),
+                        takeUntilDestroyed(this.destroyRef),
+                    )
+                    .subscribe();
+
+                if (
+                    this.datasetBasics?.name !== urlDatasetInfo.datasetName ||
+                    this.datasetBasics.owner.accountName !== urlDatasetInfo.accountName
+                ) {
+                    this.sessionStorageService.removeDatasetSqlCode();
+                }
+            }
         }
     }
 
@@ -123,7 +168,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe((datasetPermissions: DatasetPermissionsFragment) => {
-                if (this.datasetPermissionsServices.shouldAllowFlowsTab(datasetPermissions)) {
+                if (this.datasetPermissionsServices.shouldAllowFlowsTab(datasetPermissions) && this.enableScheduling) {
                     this.datasetViewType = DatasetViewTypeEnum.Flows;
                 } else {
                     this.datasetViewType = DatasetViewTypeEnum.Overview;
@@ -143,6 +188,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
                 ),
                 first(),
                 switchMap((info: DatasetInfo) => {
+                    /* istanbul ignore else */
                     if (this.datasetViewType === DatasetViewTypeEnum.History) {
                         return this.datasetService.requestDatasetHistory(info, 20, currentPage - 1);
                     } else {
@@ -165,6 +211,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
                 ),
                 first(),
                 switchMap((info) => {
+                    /* istanbul ignore else */
                     if (this.datasetViewType === DatasetViewTypeEnum.Lineage) {
                         return this.datasetService.requestDatasetLineage(info);
                     } else {
@@ -218,6 +265,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
 
     public onClickLineageNode(node: Node): void {
         const nodeData: LineageGraphNodeData = node.data as LineageGraphNodeData;
+        /* istanbul ignore else */
         if (nodeData.kind === LineageGraphNodeKind.Dataset) {
             this.onSelectDataset(nodeData.dataObject.accountName, nodeData.dataObject.name);
         } else {
@@ -274,12 +322,13 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
 
     public onRunSQLRequest(params: DatasetRequestBySql): void {
         this.sqlLoading = true;
-        this.datasetService
+        this.sqlQueryService
             // TODO: Propagate limit from UI and display when it was reached
-            .requestDatasetDataSqlRun(params)
+            .requestDataSqlRun(params)
             .pipe(
                 finalize(() => {
                     this.sqlLoading = false;
+                    this.navigationService.navigateWithSqlQuery(params.query);
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )

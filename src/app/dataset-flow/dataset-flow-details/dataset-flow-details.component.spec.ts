@@ -29,6 +29,7 @@ import { mockDatasetFlowByIdResponse, mockFlowSummaryDataFragments } from "src/a
 import { DataAccessPanelComponent } from "src/app/components/data-access-panel/data-access-panel.component";
 import { DataAccessPanelModule } from "src/app/components/data-access-panel/data-access-panel.module";
 import { DatasetVisibilityModule } from "src/app/components/dataset-visibility/dataset-visibility.module";
+import { SharedModule } from "src/app/shared/shared/shared.module";
 
 describe("DatasetFlowDetailsComponent", () => {
     let component: DatasetFlowDetailsComponent;
@@ -102,6 +103,7 @@ describe("DatasetFlowDetailsComponent", () => {
                 DataAccessPanelModule,
                 RouterModule,
                 DatasetVisibilityModule,
+                SharedModule,
             ],
         }).compileComponents();
 

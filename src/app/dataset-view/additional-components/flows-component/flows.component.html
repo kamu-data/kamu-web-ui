@@ -1,4 +1,4 @@
-<div class="search-result-container__content mb-20">
+<div class="search-result-container__content mb-20 container-main">
     <ng-container *ngIf="flowConnectionData$ | async as flowConnectionData">
         <ng-container *ngIf="flowConnectionData.flowsData.connectionDataForWidget.nodes.length; else noRuns">
             <div class="d-flex justify-content-between">
@@ -30,7 +30,7 @@
                                 [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name]"
                                 [queryParams]="{
                                     tab: DatasetViewTypeEnum.Settings,
-                                    section: SettingsTabsEnum.SCHEDULING
+                                    section: SettingsTabsEnum.SCHEDULING,
                                 }"
                                 >Update settings</a
                             >
@@ -58,7 +58,10 @@
             </div>
 
             <div class="search-result-container__content mt-2 mb-4">
-                <app-tile-base-widget [nodes]="flowConnectionData.flowsData.connectionDataForWidget.nodes" />
+                <app-tile-base-widget
+                    [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
+                    [nodes]="flowConnectionData.flowsData.connectionDataForWidget.nodes"
+                />
             </div>
 
             <ng-container *ngIf="flowConnectionData">
@@ -70,7 +73,7 @@
                     [accountFlowInitiators]="flowConnectionData.flowInitiators"
                     [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
                     [tableOptions]="{
-                        displayColumns: DISPLAY_COLUMNS
+                        displayColumns: DISPLAY_COLUMNS,
                     }"
                     (searchByFiltersChange)="onSearchByFiltersChange($event)"
                     (cancelFlowChange)="onCancelFlow($event)"
@@ -104,7 +107,7 @@
                         '/',
                         datasetBasics.owner.accountName,
                         datasetBasics.name,
-                        URL_PARAM_ADD_POLLING_SOURCE
+                        URL_PARAM_ADD_POLLING_SOURCE,
                     ]"
                     >add data polling source
                 </a>

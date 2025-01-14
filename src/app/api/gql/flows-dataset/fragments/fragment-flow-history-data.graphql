@@ -5,6 +5,7 @@ fragment FlowHistoryData on FlowEvent {
   ... on FlowEventAborted {
     __typename
   }
+
   ... on FlowEventInitiated {
     trigger {
       __typename
@@ -38,7 +39,7 @@ fragment FlowHistoryData on FlowEvent {
       }
 
       ... on FlowStartConditionBatching {
-        activeTransformRule {
+        activeBatchingRule {
           minRecordsToAwait
           maxBatchingInterval {
             ...TimeDeltaData
@@ -57,6 +58,10 @@ fragment FlowHistoryData on FlowEvent {
         taskId
       }
     }
+  }
+  ... on FlowEventScheduledForActivation {
+    __typename
+    scheduledForActivationAt
   }
   ... on FlowEventTaskChanged {
     __typename
@@ -84,6 +89,12 @@ fragment FlowHistoryData on FlowEvent {
         flowId
         flowType
       }
+    }
+  }
+
+  ... on FlowConfigSnapshotModified {
+    configSnapshot {
+      __typename
     }
   }
 }

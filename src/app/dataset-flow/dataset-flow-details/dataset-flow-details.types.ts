@@ -23,3 +23,8 @@ export interface ViewMenuData {
     datasetPermissions: DatasetPermissionsFragment;
     allFlowsPaused?: boolean;
 }
+
+export interface GrafanaFieldDescriptor {
+    key: string;
+    value: string;
+}

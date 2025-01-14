@@ -1,0 +1,118 @@
+<div class="box p-4 schemes-container">
+    <div appFeatureFlag="query.searchDatasets" class="search-container flex-column" *ngIf="!disableSearch">
+        <h2 class="mb-1">Search:</h2>
+        <div class="d-flex flex-row position-relative w-100">
+            <input
+                type="text"
+                class="form-control"
+                data-test-id="global-query-search-dataset"
+                #searchDatasets
+                placeholder="Enter dataset name..."
+                [(ngModel)]="searchDataset"
+                [ngbTypeahead]="search"
+                [resultTemplate]="rt"
+                [inputFormatter]="formatter"
+                (selectItem)="onSelectItem($event)"
+            />
+
+            <button
+                title="Clear search"
+                class="inner-btn"
+                *ngIf="searchDataset"
+                (click)="clearSearch()"
+                data-test-id="clear-input"
+            >
+                <mat-icon class="fs-5 hover">close</mat-icon>
+            </button>
+        </div>
+        <ng-template #rt let-r="result" let-t="term">
+            <div class="d-flex flex-row justify-content-between" [style.width.px]="searchDatasets.clientWidth - 28">
+                <div class="search-result-item">
+                    <i class="bi bi-journal-album mr-2"></i>
+                    <ng-container *ngIf="!r.dummy">{{ r.dataset.owner.accountName }}/</ng-container>
+                    <ngb-highlight [result]="r.dataset.name" [term]="t" />
+                </div>
+                <div
+                    class="border rounded-1 flex-shrink-0 color-bg-tertiary px-1 f6 button-add color-text-tertiary ml-1"
+                >
+                    Add
+                    <span class="d-inline-block ml-1 v-align-middle"><i class="bi bi-arrow-return-left"></i></span>
+                </div>
+            </div>
+        </ng-template>
+    </div>
+
+    <div class="search-datasets mt-4">
+        <h2>Schemas:</h2>
+        <mat-divider class="px-2 mt-2 mb-4"></mat-divider>
+
+        <cdk-accordion
+            [multi]="true"
+            class="example-accordion mt-4"
+            *ngIf="sortedSearchResult.length; else emptyTemplate"
+        >
+            <cdk-accordion-item
+                *ngFor="let item of sortedSearchResult; let index = index"
+                #accordionItem="cdkAccordionItem"
+                class="example-accordion-item"
+                role="button"
+                tabindex="0"
+                [expanded]="true"
+                [attr.id]="'accordion-header-' + index"
+                [attr.aria-expanded]="accordionItem.expanded"
+                [attr.aria-controls]="'accordion-body-' + index"
+            >
+                <div class="datatab-expanding-row">
+                    <div class="datatab-expanding-row-header" (click)="accordionItem.toggle()">
+                        <div class="datatab-expanding-row-header-content pt-1">
+                            {{ item.datasetAlias }}
+                        </div>
+                        <ng-template [ngIf]="!accordionItem.expanded">
+                            <mat-icon>keyboard_arrow_down</mat-icon>
+                        </ng-template>
+                        <ng-template [ngIf]="accordionItem.expanded">
+                            <mat-icon>keyboard_arrow_up</mat-icon>
+                        </ng-template>
+                        <button
+                            *ngIf="!disableSearch"
+                            class="no-button d-flex"
+                            (click)="removeDataset(item.datasetAlias)"
+                            title="Hide schema"
+                        >
+                            <mat-icon class="fs-5 pt-1 hover">close</mat-icon>
+                        </button>
+                    </div>
+                    <div
+                        class="example-accordion-item-body"
+                        role="region"
+                        [style.display]="accordionItem.expanded ? '' : 'none'"
+                        [attr.id]="'accordion-body-' + index"
+                        [attr.aria-labelledby]="'accordion-header-' + index"
+                    >
+                        <div *ngIf="item.schema; else emptySchemaTemplate">
+                            <app-dynamic-table
+                                [hasTableHeader]="true"
+                                [schemaFields]="item.schema.fields"
+                                [idTable]="'schema-block-table'"
+                            />
+                        </div>
+                        <ng-template #emptySchemaTemplate>
+                            <p class="mt-3 text-center">No schema</p>
+                        </ng-template>
+                    </div>
+                </div>
+            </cdk-accordion-item>
+        </cdk-accordion>
+        <ng-template #emptyTemplate>
+            <p appFeatureFlag="query.searchDatasets" *ngIf="!disableSearch" class="text-center mt-4">
+                No datasets selected
+            </p>
+        </ng-template>
+    </div>
+
+    <div class="mt-100" appFeatureFlag="query.savedQueries">
+        <h2>Saved queries:</h2>
+        <mat-divider class="px-2 mt-2 mb-4"></mat-divider>
+        <app-saved-queries-section></app-saved-queries-section>
+    </div>
+</div>

@@ -1,4 +1,5 @@
 export interface SearchAdditionalHeaderButtonInterface {
+    id: string;
     textButton: string;
     styleClassContainer?: string;
     styleClassButton?: string;

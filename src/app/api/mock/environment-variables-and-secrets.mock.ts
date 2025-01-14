@@ -4,8 +4,7 @@ import {
     DeleteEnvVariableMutation,
     ExposedEnvVariableValueQuery,
     ListEnvVariablesQuery,
-    ModifyEnvVariableMutation,
-    SaveEnvVariableMutation,
+    UpsertEnvVariableMutation,
 } from "../kamu.graphql.interface";
 
 export const MOCK_PER_PAGE = 5;
@@ -86,54 +85,20 @@ export const mockListEnvVariablesQuery: ListEnvVariablesQuery = {
     },
 };
 
-export const mockSaveEnvVariableMutation: SaveEnvVariableMutation = {
+export const mockUpsertEnvVariableMutationCreated: UpsertEnvVariableMutation = {
     datasets: {
-        __typename: "DatasetsMut",
         byId: {
-            __typename: "DatasetMut",
             envVars: {
-                __typename: "DatasetEnvVarsMut",
-                saveEnvVariable: {
-                    __typename: "SaveDatasetEnvVarResultSuccess",
-                    message: "Success",
+                upsertEnvVariable: {
+                    message: "Created",
                     envVar: {
+                        id: "05c146a0-f781-4bc6-a9d6-a4a7629c2b7c",
+                        key: "key-1",
+                        value: "value-1",
+                        isSecret: false,
                         __typename: "ViewDatasetEnvVar",
-                        id: "9ee366c3-d7c6-464b-b3df-39bfccfec3cc",
-                        key: "key-10",
-                        value: null,
-                        isSecret: true,
                     },
-                },
-            },
-        },
-    },
-};
-
-export const mockSaveEnvVariableMutationError: SaveEnvVariableMutation = {
-    datasets: {
-        __typename: "DatasetsMut",
-        byId: {
-            __typename: "DatasetMut",
-            envVars: {
-                __typename: "DatasetEnvVarsMut",
-                saveEnvVariable: {
-                    __typename: "SaveDatasetEnvVarResultDuplicate",
-                    message: "Error",
-                    datasetEnvVarKey: "9ee366c3-d7c6-464b-b3df-39bfccfec3cc",
-                },
-            },
-        },
-    },
-};
-
-export const mockModifyEnvVariableMutation: ModifyEnvVariableMutation = {
-    datasets: {
-        byId: {
-            envVars: {
-                modifyEnvVariable: {
-                    message: "Success",
-                    envVarId: "10937430-43ed-4f87-a687-3365fea9d942",
-                    __typename: "ModifyDatasetEnvVarResultSuccess",
+                    __typename: "UpsertDatasetEnvVarResultCreated",
                 },
                 __typename: "DatasetEnvVarsMut",
             },
@@ -143,14 +108,36 @@ export const mockModifyEnvVariableMutation: ModifyEnvVariableMutation = {
     },
 };
 
-export const mockModifyEnvVariableMutationError: ModifyEnvVariableMutation = {
+export const mockUpsertEnvVariableMutationUpdated: UpsertEnvVariableMutation = {
     datasets: {
         byId: {
             envVars: {
-                modifyEnvVariable: {
-                    message: "Error",
-                    envVarId: "10937430-43ed-4f87-a687-3365fea9d942",
-                    __typename: "ModifyDatasetEnvVarResultNotFound",
+                upsertEnvVariable: {
+                    message: "Updated",
+                    envVar: {
+                        id: "015854a3-74a7-4abc-908e-e49a5ebe904f",
+                        key: "key1",
+                        value: "value12",
+                        isSecret: false,
+                        __typename: "ViewDatasetEnvVar",
+                    },
+                    __typename: "UpsertDatasetEnvVarResultUpdated",
+                },
+                __typename: "DatasetEnvVarsMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockUpsertEnvVariableMutationUpToDate: UpsertEnvVariableMutation = {
+    datasets: {
+        byId: {
+            envVars: {
+                upsertEnvVariable: {
+                    message: "Dataset env var is up to date",
+                    __typename: "UpsertDatasetEnvVarUpToDate",
                 },
                 __typename: "DatasetEnvVarsMut",
             },

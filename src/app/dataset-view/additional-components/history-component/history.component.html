@@ -1,4 +1,8 @@
-<div class="search-result-container__content" id="dataset-view-history" *ngIf="historyUpdate$ | async as historyUpdate">
+<div
+    class="search-result-container__content container-main"
+    id="dataset-view-history"
+    *ngIf="historyUpdate$ | async as historyUpdate"
+>
     <div id="history-block">
         <ng-template [ngIf]="historyUpdate.history.length > 0">
             <app-timeline

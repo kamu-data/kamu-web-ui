@@ -6,10 +6,8 @@ import {
     ExposedEnvVariableValueQuery,
     ListEnvVariablesGQL,
     ListEnvVariablesQuery,
-    ModifyEnvVariableGQL,
-    ModifyEnvVariableMutation,
-    SaveEnvVariableGQL,
-    SaveEnvVariableMutation,
+    UpsertEnvVariableGQL,
+    UpsertEnvVariableMutation,
 } from "./kamu.graphql.interface";
 import { inject, Injectable } from "@angular/core";
 import { noCacheFetchPolicy } from "../common/data.helpers";
@@ -23,8 +21,7 @@ import { updateCacheHelper } from "../apollo-cache.helper";
 })
 export class EnvironmentVariablesApi {
     private listEnvVariablesGQL = inject(ListEnvVariablesGQL);
-    private saveEnvVariableGQL = inject(SaveEnvVariableGQL);
-    private modifyEnvVariableGQL = inject(ModifyEnvVariableGQL);
+    private upsertEnvVariableGQL = inject(UpsertEnvVariableGQL);
     private deleteEnvVariableGQL = inject(DeleteEnvVariableGQL);
     private exposedEnvVariableValueGQL = inject(ExposedEnvVariableValueGQL);
 
@@ -42,16 +39,16 @@ export class EnvironmentVariablesApi {
         );
     }
 
-    public saveEnvironmentVariable(params: {
+    public upsertEnvironmentVariable(params: {
         accountId: string;
         datasetId: string;
         key: string;
         value: string;
         isSecret: boolean;
-    }): Observable<SaveEnvVariableMutation> {
-        return this.saveEnvVariableGQL
+    }): Observable<UpsertEnvVariableMutation> {
+        return this.upsertEnvVariableGQL
             .mutate(
-                { ...params },
+                { datasetId: params.datasetId, key: params.key, value: params.value, isSecret: params.isSecret },
                 {
                     update: (cache) => {
                         updateCacheHelper(cache, {
@@ -64,40 +61,7 @@ export class EnvironmentVariablesApi {
             )
             .pipe(
                 first(),
-                map((result: MutationResult<SaveEnvVariableMutation>) => {
-                    /* istanbul ignore else */
-                    if (result.data) {
-                        return result.data;
-                    } else {
-                        throw new DatasetOperationError(result.errors ?? []);
-                    }
-                }),
-            );
-    }
-
-    public modifyEnvironmentVariable(params: {
-        accountId: string;
-        datasetId: string;
-        id: string;
-        newValue: string;
-        isSecret: boolean;
-    }): Observable<ModifyEnvVariableMutation> {
-        return this.modifyEnvVariableGQL
-            .mutate(
-                { ...params },
-                {
-                    update: (cache) => {
-                        updateCacheHelper(cache, {
-                            accountId: params.accountId,
-                            datasetId: params.datasetId,
-                            fieldNames: ["envVars"],
-                        });
-                    },
-                },
-            )
-            .pipe(
-                first(),
-                map((result: MutationResult<ModifyEnvVariableMutation>) => {
+                map((result: MutationResult<UpsertEnvVariableMutation>) => {
                     /* istanbul ignore else */
                     if (result.data) {
                         return result.data;

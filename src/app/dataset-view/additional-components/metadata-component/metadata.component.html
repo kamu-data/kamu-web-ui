@@ -1,6 +1,6 @@
-<div class="search-result-container__content">
+<div class="search-result-container__content container-main">
     <div id="metadata-block">
-        <div id="pagination-block" *ngIf="currentState">
+        <div appFeatureFlag="dataset.panel.metadata.pagination" id="pagination-block" *ngIf="currentState">
             <app-custom-pagination
                 [hash]="latestBlockHash"
                 [date]="latestBlockSystemTime"
@@ -13,7 +13,8 @@
 
         <div class="d-flex justify-content-end" *ngIf="canEditSetPollingSource">
             <button
-                class="border-1 bg-light border rounded-2 me-3 btn btn-sm d-flex justify-content-between align-items-center"
+                appFeatureFlag="dataset.panel.metadata.editPollingSource"
+                class="border-1 bg-light border edit-polling-source-btn rounded-2 me-3 btn btn-sm justify-content-between align-items-center"
                 data-test-id="'edit-source-link'"
                 (click)="navigateToEditPollingSource()"
             >
@@ -21,7 +22,8 @@
                 <span class="fs-12 me-2">Edit polling source</span>
             </button>
             <button
-                class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
+                appFeatureFlag="dataset.panel.metadata.deletePollingSource"
+                class="border-1 bg-light border delete-polling-source-btn rounded-2 px-2 btn btn-sm justify-content-between align-items-center"
                 data-test-id="'edit-source-link'"
                 (click)="onDeletePollingSource()"
             >
@@ -32,7 +34,8 @@
 
         <div class="d-flex justify-content-end" *ngIf="canEditSetTransform">
             <button
-                class="border-1 bg-light border rounded-2 me-3 btn btn-sm d-flex justify-content-between align-items-center"
+                appFeatureFlag="dataset.panel.metadata.editTransform"
+                class="border-1 bg-light border rounded-2 me-3 btn btn-sm justify-content-between align-items-center"
                 data-test-id="'edit-transformation-link'"
                 (click)="navigateToEditSetTransform()"
             >
@@ -44,7 +47,8 @@
         <ng-container *ngIf="currentState">
             <div class="d-flex justify-content-end" *ngIf="currentPushSources?.length">
                 <button
-                    class="border-1 bg-light border rounded-2 btn btn-sm d-flex justify-content-between align-items-center"
+                    appFeatureFlag="dataset.panel.metadata.newPushSource"
+                    class="new-push-source-btn border-1 bg-light border rounded-2 btn btn-sm justify-content-between align-items-center"
                     data-test-id="'add-new-push-source'"
                     (click)="navigateToAddPushSource()"
                 >
@@ -67,7 +71,8 @@
                         >
                         <div class="d-flex justify-content-end" *ngIf="canEditAddPushSource">
                             <button
-                                class="border-1 bg-light border rounded-2 me-3 btn btn-sm d-flex justify-content-between align-items-center"
+                                appFeatureFlag="dataset.panel.metadata.editPushSource"
+                                class="edit-push-source-btn border-1 bg-light border rounded-2 me-3 btn btn-sm justify-content-between align-items-center"
                                 data-test-id="'edit-source-link'"
                                 (click)="navigateToEditAddPushSource(source.sourceName!)"
                             >
@@ -75,7 +80,8 @@
                                 <span class="fs-12 me-2">Edit push source</span>
                             </button>
                             <button
-                                class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
+                                appFeatureFlag="dataset.panel.metadata.deletePushSource"
+                                class="delete-push-source-btn border-1 bg-light border rounded-2 px-2 btn btn-sm justify-content-between align-items-center"
                                 data-test-id="'edit-source-link'"
                                 (click)="onDeletePushSource()"
                             >
@@ -255,7 +261,7 @@
                                 <app-dataset-name-property
                                     [data]="{
                                         datasetName: input.dataset.name,
-                                        ownerAccountName: input.dataset.owner.accountName
+                                        ownerAccountName: input.dataset.owner.accountName,
                                     }"
                                 />
                             </app-block-row-data>
@@ -265,7 +271,7 @@
                                 <app-owner-property
                                     [data]="{
                                         id: input.dataset.owner.id,
-                                        accountName: input.dataset.owner.accountName
+                                        accountName: input.dataset.owner.accountName,
                                     }"
                                 />
                             </app-block-row-data>

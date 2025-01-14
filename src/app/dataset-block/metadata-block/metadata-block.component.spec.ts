@@ -25,6 +25,7 @@ import { YamlViewSectionComponent } from "./components/yaml-view-section/yaml-vi
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { DataAccessPanelModule } from "src/app/components/data-access-panel/data-access-panel.module";
 import { DatasetVisibilityModule } from "src/app/components/dataset-visibility/dataset-visibility.module";
+import { SharedModule } from "src/app/shared/shared/shared.module";
 
 describe("MetadataBlockComponent", () => {
     let component: MetadataBlockComponent;
@@ -59,6 +60,7 @@ describe("MetadataBlockComponent", () => {
                 DataAccessPanelModule,
                 RouterModule,
                 DatasetVisibilityModule,
+                SharedModule,
             ],
             providers: [
                 DatasetApi,

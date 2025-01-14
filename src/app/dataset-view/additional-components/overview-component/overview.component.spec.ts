@@ -200,6 +200,14 @@ describe("OverviewComponent", () => {
         expect(updateButton).toBe(undefined);
     });
 
+    it("should check Update now button is not visible when enableScheduling flag eqgual falsw", () => {
+        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+        spyOnProperty(component, "enableScheduling", "get").and.returnValue(false);
+        fixture.detectChanges();
+        const updateButton = findElementByDataTestId(fixture, "refresh-now-button");
+        expect(updateButton).toBe(undefined);
+    });
+
     it("should open set watermark window", () => {
         const openModalSpy = spyOn(modalService, "open").and.callThrough();
         component.openWatermarkModal();

@@ -12,7 +12,7 @@ import { MaybeNull } from "./common/app.types";
 import _ from "lodash";
 import { isMobileView, promiseWithCatch } from "./common/app.helpers";
 import { AppConfigService } from "./app-config.service";
-import { AppConfigFeatureFlags, LoginMethod } from "./app-config.model";
+import { AppUIConfigFeatureFlags, LoginMethod } from "./app-config.model";
 import { LoginService } from "./auth/login/login.service";
 import { loadErrorMessages } from "@apollo/client/dev";
 import { isDevMode } from "@angular/core";
@@ -37,18 +37,13 @@ export class AppComponent extends BaseComponent implements OnInit {
         accountType: AccountType.User,
         isAdmin: false,
     };
-    public static readonly DEFAULT_FEATURE_FLAGS: AppConfigFeatureFlags = {
-        enableLogout: true,
-        enableScheduling: true,
-        enableDatasetEnvVarsManagment: true,
-    };
 
     public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;
 
     public isMobileView = false;
     public isHeaderVisible = true;
 
-    public featureFlags: AppConfigFeatureFlags = AppComponent.DEFAULT_FEATURE_FLAGS;
+    public featureFlags: AppUIConfigFeatureFlags = AppValues.DEFAULT_UI_FEATURE_FLAGS;
     public loggedAccount: AccountFragment = AppComponent.ANONYMOUS_ACCOUNT_INFO;
     public loginMethods: LoginMethod[] = [];
 

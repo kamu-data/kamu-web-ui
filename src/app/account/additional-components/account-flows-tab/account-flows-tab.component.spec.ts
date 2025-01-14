@@ -20,6 +20,10 @@ import { mockDatasets } from "src/app/common/components/flows-table/flows-table.
 import { FlowsTableFiltersOptions } from "src/app/common/components/flows-table/flows-table.types";
 import { NgbPaginationModule } from "@ng-bootstrap/ng-bootstrap";
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { RouterTestingModule } from "@angular/router/testing";
+import { routes } from "src/app/app-routing.module";
 
 describe("AccountFlowsTabComponent", () => {
     let component: AccountFlowsTabComponent;
@@ -37,6 +41,8 @@ describe("AccountFlowsTabComponent", () => {
                 ToastrModule.forRoot(),
                 NgbPaginationModule,
                 AngularMultiSelectModule,
+                HttpClientTestingModule,
+                RouterTestingModule.withRoutes(routes),
             ],
             declarations: [AccountFlowsTabComponent, TileBaseWidgetComponent, FlowsTableComponent, PaginationComponent],
             providers: [
@@ -63,7 +69,7 @@ describe("AccountFlowsTabComponent", () => {
         navigationService = TestBed.inject(NavigationService);
         datasetFlowsService = TestBed.inject(DatasetFlowsService);
         component = fixture.componentInstance;
-        component.accountName = "mockAccountName";
+        component.loggedUser = mockAccountDetails;
     });
 
     it("should create", () => {
@@ -73,13 +79,13 @@ describe("AccountFlowsTabComponent", () => {
     it("should check navigate to owner view with page=1 ", () => {
         const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
         component.onPageChange(1);
-        expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(component.accountName, AccountTabs.FLOWS);
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(component.loggedUser.accountName, AccountTabs.FLOWS);
     });
 
     it("should check navigate to owner view with page>1 ", () => {
         const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
         component.onPageChange(2);
-        expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(component.accountName, AccountTabs.FLOWS, 2);
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(component.loggedUser.accountName, AccountTabs.FLOWS, 2);
     });
 
     it("should check cancel flow button", fakeAsync(() => {
@@ -173,5 +179,22 @@ describe("AccountFlowsTabComponent", () => {
         component.onSearchByFiltersChange(filterOptions);
 
         expect(fetchTableDataSpy).toHaveBeenCalledWith(component.currentPage, status, { system: true }, []);
+    });
+
+    it("should check change page with filters", () => {
+        const filterOptions: FlowsTableFiltersOptions = {
+            accounts: [],
+            datasets: [],
+            status: FlowStatus.Finished,
+            onlySystemFlows: true,
+        };
+        component.filters = filterOptions;
+        const MOCK_PAGE = 3;
+
+        const onSearchByFiltersChangeSpy = spyOn(component, "onSearchByFiltersChange").and.callThrough();
+        component.onPageChange(MOCK_PAGE);
+
+        expect(component.currentPage).toEqual(MOCK_PAGE);
+        expect(onSearchByFiltersChangeSpy).toHaveBeenCalledWith(filterOptions);
     });
 });

@@ -20,6 +20,9 @@
             >
                 Login with Password
             </a>
+            <ng-container *ngIf="enableTermsOfService">
+                <ng-container *ngTemplateOutlet="termsOfServiceFragment"></ng-container>
+            </ng-container>
         </div>
     </div>
 </ng-container>
@@ -43,8 +46,8 @@
                 class="form-control d-inline"
                 id="login"
                 data-test-id="input-login"
-                required
-                (keyup)="resetPasswordLoginError()"
+                (keyup)="onChangeInputField($event)"
+                appAutofocus
                 [class.error-border-color]="passwordLoginError$ | async"
             />
             <div *ngIf="loginControl?.invalid && (loginControl?.touched || loginControl?.dirty)">
@@ -65,8 +68,7 @@
                 class="form-control d-inline"
                 id="password"
                 data-test-id="input-password"
-                required
-                (keyup)="resetPasswordLoginError()"
+                (keyup)="onChangeInputField($event)"
                 [class.error-border-color]="passwordLoginError$ | async"
             />
             <div *ngIf="passwordControl?.invalid && (passwordControl?.touched || passwordControl?.dirty)">
@@ -89,5 +91,17 @@
         <div *ngIf="passwordLoginError$ | async as passwordLoginError" class="mt-4">
             <div class="error-block" data-test-id="password-method-error">{{ passwordLoginError }}</div>
         </div>
+        <div class="mt-30" *ngIf="enableTermsOfService">
+            <ng-container *ngTemplateOutlet="termsOfServiceFragment"></ng-container>
+        </div>
     </form>
 </div>
+
+<ng-template #termsOfServiceFragment>
+    <p class="text-center fs-12">
+        By logging in you accept the
+        <a class="fs-12 tos-link" href="https://docs.kamu.dev/terms-of-service" target="_blank"
+            >Kamu Terms of Service</a
+        >
+    </p>
+</ng-template>

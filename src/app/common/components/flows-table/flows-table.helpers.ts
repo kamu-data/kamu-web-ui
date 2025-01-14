@@ -9,6 +9,7 @@ import {
 import { MaybeNull } from "src/app/common/app.types";
 import AppValues from "src/app/common/app.values";
 import { DataHelpers } from "src/app/common/data.helpers";
+import { excludeAgoWord } from "../../app.helpers";
 
 export class DatasetFlowTableHelpers {
     public static descriptionColumnTableOptions(element: FlowSummaryDataFragment): { icon: string; class: string } {
@@ -97,14 +98,10 @@ export class DatasetFlowTableHelpers {
                                     : element.description.ingestResult?.__typename ===
                                             "FlowDescriptionUpdateResultUpToDate" &&
                                         element.description.ingestResult.uncacheable &&
-                                        element.configSnapshot?.__typename === "FlowConfigurationIngest" &&
-                                        !element.configSnapshot.fetchUncacheable &&
-                                        // TODO: Remove this condition
-                                        element.configSnapshot
-                                      ? // TODO: Replace when will be new API
-                                        // ||
-                                        //     !node.configSnapshot)
-                                        `Source is uncacheable: to re-scan the data, use`
+                                        ((element.configSnapshot?.__typename === "FlowConfigurationIngest" &&
+                                            !element.configSnapshot.fetchUncacheable) ||
+                                            !element.configSnapshot)
+                                      ? `Source is uncacheable: to re-scan the data, use`
                                       : "Dataset is up-to-date";
 
                             case "FlowDescriptionDatasetExecuteTransform":
@@ -120,6 +117,13 @@ export class DatasetFlowTableHelpers {
                             case "FlowDescriptionDatasetHardCompaction":
                                 switch (element.description.compactionResult?.__typename) {
                                     case "FlowDescriptionHardCompactionSuccess":
+                                        if (
+                                            element.configSnapshot?.__typename === "FlowConfigurationCompactionRule" &&
+                                            element.configSnapshot.compactionRule.__typename ===
+                                                "CompactionMetadataOnly"
+                                        ) {
+                                            return "All data except metadata has been deleted";
+                                        }
                                         return `Compacted ${element.description.compactionResult.originalBlocksCount} original blocks to ${element.description.compactionResult.resultingBlocksCount} resulting blocks`;
 
                                     case "FlowDescriptionHardCompactionNothingToDo":
@@ -132,7 +136,7 @@ export class DatasetFlowTableHelpers {
                             case "FlowDescriptionDatasetReset":
                                 switch (element.description.__typename) {
                                     case "FlowDescriptionDatasetReset":
-                                        return "All dataset history has been cleared.";
+                                        return "All dataset history has been cleared";
                                     /* istanbul ignore next */
                                     default:
                                         return "Unknown reset result typename";
@@ -207,7 +211,7 @@ export class DatasetFlowTableHelpers {
             case FlowStatus.Waiting:
                 switch (node.startCondition?.__typename) {
                     case "FlowStartConditionExecutor":
-                        return `awaiting since ${moment(node.timing.awaitingExecutorSince ?? "").fromNow()}`;
+                        return `waiting for ${excludeAgoWord(moment(node.timing.awaitingExecutorSince ?? "").fromNow())}`;
                     case "FlowStartConditionThrottling":
                     case "FlowStartConditionSchedule": {
                         return `wake up time: ${moment(node.startCondition.wakeUpAt).fromNow()}`;
@@ -216,10 +220,10 @@ export class DatasetFlowTableHelpers {
                         return `deadline time: ${moment(node.startCondition.batchingDeadline).fromNow()}`;
                     /* istanbul ignore next */
                     default:
-                        return "";
+                        return "initializing...";
                 }
             case FlowStatus.Running:
-                return "running since " + moment(node.timing.runningSince).fromNow();
+                return "running for " + excludeAgoWord(moment(node.timing.runningSince).fromNow());
             case FlowStatus.Finished:
                 switch (node.outcome?.__typename) {
                     case "FlowSuccessResult":
@@ -253,7 +257,7 @@ export class DatasetFlowTableHelpers {
                 return "waiting for scheduled execution";
             /* istanbul ignore next */
             default:
-                return "";
+                return "waiting...";
         }
     }
 
@@ -262,8 +266,10 @@ export class DatasetFlowTableHelpers {
             case FlowStatus.Waiting:
                 switch (node.startCondition?.__typename) {
                     case "FlowStartConditionExecutor":
-                        return `awaiting since: ${moment(node.timing.awaitingExecutorSince ?? "").format(
-                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                        return `waiting for: ${excludeAgoWord(
+                            moment(node.timing.awaitingExecutorSince ?? "").format(
+                                AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                            ),
                         )}`;
                     case "FlowStartConditionThrottling":
                     case "FlowStartConditionSchedule": {

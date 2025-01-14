@@ -1,0 +1,142 @@
+<div class="flex-column px-4 pb-4">
+    <fieldset class="fieldset-border w-100 mb-4">
+        <legend class="fieldset-border">FlightSQL</legend>
+        <div class="input-group mb-1">
+            <span class="fs-12 text-muted"> Connect using FlightSQL:</span>
+        </div>
+        <div class="select-menu-item align-items-start p-0 border-0 mb-2">
+            <div class="input-group">
+                <input
+                    type="text"
+                    class="form-control fs-12 rounded form-control-data-access"
+                    data-autoselect=""
+                    [value]="flightSql.url"
+                    #clipboardFlightSQL
+                    readonly
+                />
+                <div class="input-group-button ms-1">
+                    <button
+                        (click)="copyToClipboard($event, clipboardFlightSQL.value)"
+                        data-test-id="copyToClipboard-clipboardFlightSQL"
+                        aria-label="Copy to clipboard"
+                        class="copy-button-data-access ms-1"
+                        data-copy-feedback="Copied!"
+                        tabindex="0"
+                        role="button"
+                    >
+                        <div style="position: relative; display: inline-block">
+                            <svg-icon name="copy" />
+                        </div>
+                        <div style="position: relative; display: none">
+                            <svg-icon name="checked" />
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="w-100 mt-3">
+            <div class="d-flex align-items-center">
+                <mat-icon class="text-muted fs-5 pt-1">info</mat-icon>
+                <span class="fs-12">
+                    <a href="https://docs.kamu.dev/node/protocols/flight-sql/" target="_blank" class="fs-12"
+                        >FlightSQL protocol documentation</a
+                    >
+                </span>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="fieldset-border w-100 mb-4">
+        <legend class="fieldset-border">JDBC</legend>
+        <div class="input-group mb-1">
+            <span class="fs-12 text-muted"> Connect using JDBC:</span>
+        </div>
+        <div class="select-menu-item align-items-start p-0 border-0 mb-2">
+            <div class="input-group">
+                <input
+                    type="text"
+                    class="form-control fs-12 rounded form-control-data-access"
+                    data-autoselect=""
+                    [value]="jdbc.url"
+                    #clipboardJdbcURL
+                    readonly
+                />
+                <div class="input-group-button ms-1">
+                    <button
+                        (click)="copyToClipboard($event, clipboardJdbcURL.value)"
+                        data-test-id="copyToClipboard-clipboardJdbcURL"
+                        aria-label="Copy to clipboard"
+                        class="copy-button-data-access ms-1"
+                        data-copy-feedback="Copied!"
+                        tabindex="0"
+                        role="button"
+                    >
+                        <div style="position: relative; display: inline-block">
+                            <svg-icon name="copy" />
+                        </div>
+                        <div style="position: relative; display: none">
+                            <svg-icon name="checked" />
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="w-100 mt-3">
+            <div class="d-flex align-items-center">
+                <mat-icon class="text-muted fs-5 pt-1">info</mat-icon>
+                <span class="fs-12">
+                    <a href="https://docs.kamu.dev/node/protocols/jdbc/" target="_blank" class="fs-12"
+                        >JDBC adapter documentation</a
+                    >
+                </span>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="fieldset-border w-100 mb-4">
+        <legend class="fieldset-border">Postgres</legend>
+        <div class="input-group mb-1">
+            <span class="fs-12 text-muted"> Connect using Postgres wire protocol:</span>
+        </div>
+        <div class="select-menu-item align-items-start p-0 border-0 mb-2">
+            <div class="input-group">
+                <input
+                    type="text"
+                    class="form-control fs-12 rounded form-control-data-access"
+                    data-autoselect=""
+                    [value]="postgreSql.url"
+                    #clipboardPostgresURL
+                    readonly
+                />
+                <div class="input-group-button ms-1">
+                    <button
+                        (click)="copyToClipboard($event, clipboardPostgresURL.value)"
+                        data-test-id="copyToClipboard-clipboardPostgresURL"
+                        aria-label="Copy to clipboard"
+                        class="copy-button-data-access ms-1"
+                        data-copy-feedback="Copied!"
+                        tabindex="0"
+                        role="button"
+                    >
+                        <div style="position: relative; display: inline-block">
+                            <svg-icon name="copy" />
+                        </div>
+                        <div style="position: relative; display: none">
+                            <svg-icon name="checked" />
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="w-100 mt-3">
+            <div class="d-flex align-items-center">
+                <mat-icon class="text-muted fs-5 pt-1">info</mat-icon>
+                <span class="fs-12">
+                    <a href="https://docs.kamu.dev/node/protocols/postgres/" target="_blank" class="fs-12"
+                        >Postgres adapter documentation</a
+                    >
+                </span>
+            </div>
+        </div>
+    </fieldset>
+</div>

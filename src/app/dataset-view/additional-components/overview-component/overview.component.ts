@@ -105,6 +105,10 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         }
     }
 
+    public get enableScheduling(): boolean {
+        return this.configService.featureFlags.enableScheduling;
+    }
+
     public get canAddDatasetInfo(): boolean {
         if (!this.hasDatasetInfo) {
             return this.datasetPermissions.permissions.canCommit && !_.isNil(this.currentState);
@@ -219,6 +223,10 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         return this.loggedUserService.isAuthenticated;
     }
 
+    public get visibleUpdateButton(): boolean {
+        return this.isUserLogged && this.enableScheduling && this.canSchedule;
+    }
+
     public get hasSetPollingSource(): boolean {
         return !_.isNil(this.currentState?.overview.metadata.currentPollingSource);
     }
@@ -285,6 +293,11 @@ export class OverviewComponent extends BaseComponent implements OnInit {
                     this.datasetBasics.kind === DatasetKind.Root
                         ? DatasetFlowType.Ingest
                         : DatasetFlowType.ExecuteTransform,
+                flowRunConfiguration: {
+                    ingest: {
+                        fetchUncacheable: true,
+                    },
+                },
             })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((success: boolean) => {

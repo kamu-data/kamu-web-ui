@@ -10,6 +10,7 @@ import { MatMenuModule } from "@angular/material/menu";
 import { RouterModule } from "@angular/router";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { DatasetVisibilityModule } from "src/app/components/dataset-visibility/dataset-visibility.module";
+import { SharedModule } from "src/app/shared/shared/shared.module";
 
 describe("DatasetViewHeaderComponent", () => {
     let component: DatasetViewHeaderComponent;
@@ -30,6 +31,7 @@ describe("DatasetViewHeaderComponent", () => {
                 RouterModule,
                 SharedTestModule,
                 DatasetVisibilityModule,
+                SharedModule,
             ],
         }).compileComponents();
 

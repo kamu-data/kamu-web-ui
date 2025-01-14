@@ -31,6 +31,7 @@ import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { LoginMethod } from "src/app/app-config.model";
+import { MatIconModule } from "@angular/material/icon";
 
 describe("AppHeaderComponent", () => {
     let component: AppHeaderComponent;
@@ -55,6 +56,7 @@ describe("AppHeaderComponent", () => {
                 AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
                 RouterModule,
+                MatIconModule,
             ],
             declarations: [AppHeaderComponent, NotificationIndicatorComponent],
             providers: [
@@ -84,7 +86,8 @@ describe("AppHeaderComponent", () => {
         component.featureFlags = {
             enableLogout: true,
             enableScheduling: true,
-            enableDatasetEnvVarsManagment: true,
+            enableDatasetEnvVarsManagement: true,
+            enableTermsOfService: true,
         };
         component.loginMethods = [LoginMethod.GITHUB, LoginMethod.PASSWORD];
         component.isVisible = true;

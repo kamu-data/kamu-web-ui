@@ -7,4 +7,9 @@ fragment DataQueryResultSuccessView on DataQueryResultSuccess {
     format
     content
   }
+  datasets {
+    id
+    alias
+    blockHash
+  }
 }

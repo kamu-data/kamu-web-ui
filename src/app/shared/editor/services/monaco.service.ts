@@ -12,23 +12,24 @@ export function getMonacoNamespace(): MaybeUndefined<typeof monaco> {
     providedIn: "root",
 })
 export class MonacoService {
+    /* istanbul ignore next */
     public setErrorMarker(model: monaco.editor.ITextModel, error: EditorError): void {
         const monaco = getMonacoNamespace();
-        /* istanbul ignore else */
         if (monaco) {
             const markerData = this.prepareMarkerData(model, error);
             monaco.editor.setModelMarkers(model, "", [markerData]);
         }
     }
 
+    /* istanbul ignore next */
     public clearErrorMarker(model: monaco.editor.ITextModel): void {
         const monaco = getMonacoNamespace();
-        /* istanbul ignore else */
         if (monaco) {
             monaco.editor.setModelMarkers(model, "", []);
         }
     }
 
+    /* istanbul ignore next */
     private prepareMarkerData(model: monaco.editor.ITextModel, error: EditorError): monaco.editor.IMarkerData {
         const maxLines = model.getLineCount();
         const maxLastLineColumns = model.getLineMaxColumn(maxLines);

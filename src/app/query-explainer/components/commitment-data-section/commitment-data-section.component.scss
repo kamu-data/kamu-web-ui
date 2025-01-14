@@ -1,0 +1,19 @@
+.dataset-box {
+    border: 1px dashed #d0d7de;
+}
+
+.copy-button {
+    border: 0;
+    outline: 0;
+    background: transparent;
+    height: 30px;
+
+    &:hover {
+        background: rgb(245 240 240);
+        border-radius: 5px;
+    }
+}
+
+.error-color {
+    color: #ef6363;
+}

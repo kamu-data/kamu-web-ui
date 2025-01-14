@@ -55,6 +55,7 @@
             </ng-template>
             <app-dataset-visibility class="me-2" [datasetVisibility]="row.visibility"></app-dataset-visibility>
             <button
+                appFeatureFlag="search.verified"
                 data-test-id="button-popover-verified"
                 type="button"
                 class="signed-commit-badge verified signed-commit-badge-small"
@@ -78,25 +79,27 @@
                 </div>
             </mat-chip-set>
         </div>
-        <div class="dataset-list-container__additional-block mt-2">
-            <p class="text-small color-text-secondary mr-3">
+        <div class="dataset-list-container__additional-block mt-1">
+            <p class="text-small mr-3">
                 Updated
                 <app-display-time
                     [data]="row.lastUpdatedAt"
-                    class="text-small color-text-secondary no-wrap"
+                    class="text-small no-wrap"
                     [dataTestId]="'time-dataset-list-item'"
                 />
             </p>
-            <ngb-rating [rate]="4.5" [max]="5" [readonly]="true">
-                <ng-template let-fill="fill">
-                    <span class="rating-star" [class.filled]="fill === 100">&#9733;</span>
-                </ng-template>
-            </ngb-rating>
-            <p class="text-small color-text-secondary mr-3">
+            <p appFeatureFlag="search.rating">
+                <ngb-rating [rate]="4.5" [max]="5" [readonly]="true">
+                    <ng-template let-fill="fill">
+                        <span class="rating-star" [class.filled]="fill === 100">&#9733;</span>
+                    </ng-template>
+                </ngb-rating>
+            </p>
+            <p class="text-small mr-3">
                 {{ row.metadata.currentDownstreamDependencies.length }}
                 Downstream
             </p>
-            <p class="text-small color-text-secondary mr-3" *ngIf="row.metadata.currentLicense">
+            <p class="text-small mr-3" *ngIf="row.metadata.currentLicense">
                 {{ row.metadata.currentLicense.shortName }}
             </p>
         </div>

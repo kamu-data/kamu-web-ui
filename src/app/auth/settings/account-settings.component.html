@@ -1,4 +1,4 @@
-<div class="pt-4 p-responsive clearfix" *ngIf="user$ | async as user">
+<div class="pt-4 container-main p-responsive clearfix" *ngIf="user$ | async as user">
     <div class="d-md-flex align-items-center justify-content-between mt-1 mb-4">
         <div class="d-flex align-items-center mb-2 mb-md-0">
             <img
@@ -33,10 +33,10 @@
                     <nav>
                         <ul role="list" class="action-list">
                             <li
-                                data-item-id="settings_user_profile"
+                                appFeatureFlag="settings.profile"
                                 data-view-component="true"
                                 [ngClass]="{
-                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.PROFILE
+                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.PROFILE,
                                 }"
                                 class="action-list-item"
                             >
@@ -57,8 +57,9 @@
                                 </a>
                             </li>
                             <li
+                                appFeatureFlag="settings.account"
                                 [ngClass]="{
-                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.ACCOUNT
+                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.ACCOUNT,
                                 }"
                                 class="action-list-item"
                             >
@@ -77,10 +78,10 @@
                                 </a>
                             </li>
                             <li
-                                data-item-id=""
+                                appFeatureFlag="settings.appearance"
                                 data-view-component="true"
                                 [ngClass]="{
-                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.APPEARANCE
+                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.APPEARANCE,
                                 }"
                                 class="action-list-item"
                             >
@@ -99,10 +100,11 @@
                                 </a>
                             </li>
                             <li
+                                appFeatureFlag="settings.accessibility"
                                 data-item-id=""
                                 data-view-component="true"
                                 [ngClass]="{
-                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.ACCESSIBILITY
+                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.ACCESSIBILITY,
                                 }"
                                 class="action-list-item"
                             >
@@ -121,10 +123,10 @@
                                 </a>
                             </li>
                             <li
-                                data-item-id=""
+                                appFeatureFlag="settings.notifications"
                                 data-view-component="true"
                                 [ngClass]="{
-                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.NOTIFICATIONS
+                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.NOTIFICATIONS,
                                 }"
                                 class="action-list-item"
                             >
@@ -164,11 +166,11 @@
                                     class="action-list action-list--subGroup"
                                 >
                                     <li
-                                        data-item-id=""
+                                        appFeatureFlag="settings.billing"
                                         data-view-component="true"
                                         class="action-list-item"
                                         [ngClass]="{
-                                            'action-list-item--nav__active': activeTab === AccountSettingsTabs.BILLING
+                                            'action-list-item--nav__active': activeTab === AccountSettingsTabs.BILLING,
                                         }"
                                     >
                                         <!-- [routerLink]="getRouteLink(AccountSettingsTabs.BILLING)" -->
@@ -186,11 +188,11 @@
                                         </a>
                                     </li>
                                     <li
-                                        data-item-id=""
+                                        appFeatureFlag="settings.emails"
                                         data-view-component="true"
                                         class="action-list-item"
                                         [ngClass]="{
-                                            'action-list-item--nav__active': activeTab === AccountSettingsTabs.EMAILS
+                                            'action-list-item--nav__active': activeTab === AccountSettingsTabs.EMAILS,
                                         }"
                                     >
                                         <!-- [routerLink]="getRouteLink(AccountSettingsTabs.EMAILS)" -->
@@ -208,11 +210,11 @@
                                         </a>
                                     </li>
                                     <li
-                                        data-item-id=""
+                                        appFeatureFlag="settings.password"
                                         data-view-component="true"
                                         class="action-list-item"
                                         [ngClass]="{
-                                            'action-list-item--nav__active': activeTab === AccountSettingsTabs.SECURITY
+                                            'action-list-item--nav__active': activeTab === AccountSettingsTabs.SECURITY,
                                         }"
                                     >
                                         <!-- [routerLink]="getRouteLink(AccountSettingsTabs.SECURITY)" -->
@@ -230,12 +232,12 @@
                                         </a>
                                     </li>
                                     <li
-                                        data-item-id=""
+                                        appFeatureFlag="settings.organizations"
                                         data-view-component="true"
                                         class="action-list-item"
                                         [ngClass]="{
                                             'action-list-item--nav__active':
-                                                activeTab === AccountSettingsTabs.ORGANIZATIONS
+                                                activeTab === AccountSettingsTabs.ORGANIZATIONS,
                                         }"
                                     >
                                         <!-- [routerLink]="getRouteLink(AccountSettingsTabs.ORGANIZATIONS)" -->
@@ -253,12 +255,12 @@
                                         </a>
                                     </li>
                                     <li
-                                        data-item-id=""
+                                        appFeatureFlag="settings.tokens"
                                         data-view-component="true"
                                         class="action-list-item"
                                         [ngClass]="{
                                             'action-list-item--nav__active':
-                                                activeTab === AccountSettingsTabs.ACCESS_TOKENS
+                                                activeTab === AccountSettingsTabs.ACCESS_TOKENS,
                                         }"
                                     >
                                         <a

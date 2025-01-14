@@ -1,0 +1,29 @@
+query getDatasetFlowTriggers($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      flows {
+        triggers {
+          byType(datasetFlowType: $datasetFlowType) {
+            paused
+            schedule {
+              ... on TimeDelta {
+                ...TimeDeltaData
+              }
+
+              ... on Cron5ComponentExpression {
+                cron5ComponentExpression
+              }
+            }
+
+            batching {
+              maxBatchingInterval {
+                ...TimeDeltaData
+              }
+              minRecordsToAwait
+            }
+          }
+        }
+      }
+    }
+  }
+}

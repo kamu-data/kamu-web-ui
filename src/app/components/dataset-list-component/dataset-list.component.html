@@ -3,7 +3,7 @@
     *ngIf="hasResultQuantity"
 >
     <h2 class="dataset-list-total-count">{{ totalCount }} {{ resultUnitText }}</h2>
-    <div class="select-block form-group">
+    <div appFeatureFlag="search.sorting" class="select-block form-group">
         <div class="form-control input-group justify-content-left align-items-center">
             <p class="m-auto position-absolute">Sort:</p>
             <select title="Sort options" id="sort-options" class="border-0">

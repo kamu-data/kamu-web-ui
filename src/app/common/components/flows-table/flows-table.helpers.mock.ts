@@ -310,7 +310,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         },
         startCondition: {
             __typename: "FlowStartConditionBatching",
-            activeTransformRule: {
+            activeBatchingRule: {
                 minRecordsToAwait: 500,
                 maxBatchingInterval: {
                     every: 5,
@@ -417,25 +417,25 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
 ];
 
 export const durationBlockTextResults: string[] = [
-    "awaiting since 58 minutes ago",
+    "waiting for 58 minutes ",
     "wake up time: in an hour",
     "wake up time: in 2 hours",
     "deadline time: in an hour",
-    "running since 48 minutes ago",
+    "running for 48 minutes ",
     "finished in an hour",
     "aborted 2 hours ago",
     "failed 2 hours ago",
 ];
 
 export const tooltipTextResults: string[] = [
-    "awaiting since: Mar 14th 2024, 12:24:29 PM",
-    "Wake up time: Mar 14th 2024, 2:24:29 PM",
-    "Wake up time: Mar 14th 2024, 3:24:29 PM",
-    "Deadline time: Mar 14th 2024, 2:24:29 PM",
-    "Start running time: Mar 14th 2024, 12:34:29 PM",
-    "Completed time: Mar 14th 2024, 2:24:29 PM",
-    "Aborted time: Mar 14th 2024, 11:24:29 AM",
-    "Start running time: Mar 14th 2024, 11:24:29 AM",
+    "waiting for: Mar 14th 2024, 12:24:29 PM +0200",
+    "Wake up time: Mar 14th 2024, 2:24:29 PM +0200",
+    "Wake up time: Mar 14th 2024, 3:24:29 PM +0200",
+    "Deadline time: Mar 14th 2024, 2:24:29 PM +0200",
+    "Start running time: Mar 14th 2024, 12:34:29 PM +0200",
+    "Completed time: Mar 14th 2024, 2:24:29 PM +0200",
+    "Aborted time: Mar 14th 2024, 11:24:29 AM +0200",
+    "Start running time: Mar 14th 2024, 11:24:29 AM +0200",
 ];
 
 export const mockDatasets: DatasetListFlowsDataFragment[] = [
@@ -584,11 +584,6 @@ export const mockFlowSummaryDataFragmentShowForceLink: FlowSummaryDataFragment =
     },
     startCondition: null,
     configSnapshot: {
-        schedule: {
-            every: 1,
-            unit: TimeUnit.Minutes,
-            __typename: "TimeDelta",
-        },
         fetchUncacheable: false,
         __typename: "FlowConfigurationIngest",
     },

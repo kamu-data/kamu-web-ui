@@ -7,6 +7,10 @@
             --mat-radio-ripple-color: transparent;
         }
 
+        .mdc-checkbox__ripple {
+            display: none;
+        }
+
         .mat-mdc-radio-label {
             white-space: normal;
         }
@@ -26,6 +30,7 @@
 }
 
 .danger-zone__content {
+    display: flex;
     padding: 15px 25px;
     border: 1px solid rgb(27 31 36 / 25%);
     border-radius: 6px;

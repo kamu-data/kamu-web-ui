@@ -58,7 +58,7 @@ import { ClipboardModule } from "@angular/cdk/clipboard";
 import { HighlightModule, HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 import { ToastrModule } from "ngx-toastr";
 import { LoggedUserService } from "./auth/logged-user.service";
-import { firstValueFrom } from "rxjs";
+import { catchError, EMPTY, firstValueFrom } from "rxjs";
 import { LoginService } from "./auth/login/login.service";
 import { logError } from "./common/app.helpers";
 import { DatasetPermissionsService } from "./dataset-view/dataset.permissions.service";
@@ -67,12 +67,13 @@ import { apolloCache } from "./apollo-cache.helper";
 import { AdminDashboardComponent } from "./admin-view/admin-dashboard/admin-dashboard.component";
 import { DatasetFlowDetailsModule } from "./dataset-flow/dataset-flow-details/dataset-flow-details.module";
 import { MatSortModule } from "@angular/material/sort";
-
 import { AccountFlowsTabComponent } from "./account/additional-components/account-flows-tab/account-flows-tab.component";
 import { AccountComponent } from "./account/account.component";
 import { DatasetsTabComponent } from "./account/additional-components/datasets-tab/datasets-tab.component";
 import { AccessTokensTabComponent } from "./auth/settings/tabs/access-tokens-tab/access-tokens-tab.component";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { DynamicTableModule } from "./components/dynamic-table/dynamic-table.module";
+import { AutofocusModule } from "./common/directives/autofocus.module";
 
 const Services = [
     {
@@ -150,8 +151,13 @@ const Services = [
     {
         provide: APP_INITIALIZER,
         useFactory: (loggedUserService: LoggedUserService) => {
-            return (): Promise<void> => {
-                return firstValueFrom(loggedUserService.initializeCompletes()).catch((e) => logError(e));
+            return () => {
+                return loggedUserService.initializeCompletes().pipe(
+                    catchError((e) => {
+                        logError(e);
+                        return EMPTY;
+                    }),
+                );
             };
         },
         deps: [LoggedUserService],
@@ -244,6 +250,8 @@ const MatModules = [
             preventDuplicates: true,
         }), // ToastrModule added
         DatasetFlowDetailsModule,
+        DynamicTableModule,
+        AutofocusModule,
     ],
     providers: [...Services],
     bootstrap: [AppComponent],

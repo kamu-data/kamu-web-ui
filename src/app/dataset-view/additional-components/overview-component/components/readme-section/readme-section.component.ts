@@ -1,4 +1,15 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
+import { NavigationService } from "./../../../../../services/navigation.service";
+import {
+    AfterViewChecked,
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    OnChanges,
+    Output,
+    SimpleChanges,
+} from "@angular/core";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
@@ -6,6 +17,9 @@ import { EditMode } from "./readme-section.types";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import ProjectLinks from "src/app/project-links";
+import { addMarkdownRunButton } from "src/app/common/app.helpers";
 
 @Component({
     selector: "app-readme-section",
@@ -13,7 +27,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
     styleUrls: ["./readme-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReadmeSectionComponent extends BaseComponent implements OnInit {
+export class ReadmeSectionComponent extends BaseComponent implements OnChanges, AfterViewChecked {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public currentReadme?: MaybeNull<string>;
     @Input({ required: true }) public editingInProgress = false;
@@ -28,13 +42,19 @@ export class ReadmeSectionComponent extends BaseComponent implements OnInit {
         return this.currentReadme !== this.readmeState;
     }
 
+    private navigationService = inject(NavigationService);
     private datasetCommitService = inject(DatasetCommitService);
     private loggedUserService = inject(LoggedUserService);
 
-    public ngOnInit(): void {
-        if (this.currentReadme) {
-            this.readmeState = this.currentReadme;
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes.currentReadme && changes.currentReadme.currentValue !== changes.currentReadme.previousValue) {
+            this.readmeState = changes.currentReadme.currentValue as string;
+            this.editingInProgress = false;
         }
+    }
+
+    ngAfterViewChecked(): void {
+        this.addDynamicRunButton();
     }
 
     public get isEditView(): boolean {
@@ -77,5 +97,16 @@ export class ReadmeSectionComponent extends BaseComponent implements OnInit {
         this.viewMode = EditMode.Edit;
         this.editingInProgress = false;
         this.editViewShowEmitter.emit(this.editingInProgress);
+    }
+
+    private addDynamicRunButton(): void {
+        if (this.readmeState) {
+            // Find all sql queries between ```sql and ```
+            const sqlQueries = this.readmeState.match(/(?<=```sql\s+).*?(?=\s+```)/gs);
+            addMarkdownRunButton(
+                sqlQueries,
+                `/${this.datasetBasics.owner.accountName}/${this.datasetBasics.name}?${ProjectLinks.URL_QUERY_PARAM_TAB}=${DatasetViewTypeEnum.Data}&${ProjectLinks.URL_QUERY_PARAM_SQL_QUERY}`,
+            );
+        }
     }
 }

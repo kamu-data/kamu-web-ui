@@ -1,167 +1,39 @@
-<div class="w-75 custom-container">
-    <h2>Schedule</h2>
+<div class="custom-container">
+    <h2>Scheduled updates</h2>
     <mat-divider class="mt-1 mb-2" />
-    <form [formGroup]="pollingForm">
-        <div class="box p-4 mt-3">
-            <h4>Enable/Disable updates</h4>
-            <mat-slide-toggle color="primary" class="mat-elevation-z0" formControlName="updatesState">
-                <span class="ps-2"> {{ pollingForm.controls.updatesState.value ? "enabled" : "disabled" }}</span>
-            </mat-slide-toggle>
-        </div>
-        <div formGroupName="pollingGroup" class="box p-4 mt-3">
-            <h4>Root polling source</h4>
+    <div class="box mt-3 p-4" *ngIf="isRootDataset">
+        <div class="d-flex flex-column gap-4">
+            <div class="w-100">
+                <app-ingest-trigger-form
+                    [datasetBasics]="datasetBasics"
+                    [updateStateToggleLabel]="'Enable/Disable updates'"
+                    (changeTriggerEmit)="changePollingTriggers($event)"
+                />
+            </div>
 
-            <mat-radio-group
-                class="d-flex flex-column row-gap-4"
-                formControlName="__typename"
-                aria-label="Select an option"
-                color="primary"
+            <div class="w-100">
+                <app-ingest-configuration-form
+                    *ngIf="pollingForm"
+                    [datasetBasics]="datasetBasics"
+                    [disabled]="pollingForm.controls.updatesState.value"
+                    (changeConfigurationEmit)="changeIngestConfiguration($event)"
+                />
+            </div>
+        </div>
+        <div class="mt-4 d-flex justify-content-end">
+            <button
+                type="button"
+                class="btn btn-success"
+                (click)="saveScheduledUpdates()"
+                [disabled]="invalidPollingForm || !enablePollingUpdates"
+                data-test-id="save-polling-triggers"
             >
-                <mat-radio-button disableRipple="true" [value]="pollingGroupEnum.TIME_DELTA">
-                    <div class="d-flex align-items-center" data-test-id="button-time-delta">
-                        <span class="form-control-label">Update every:</span>
-                        <select
-                            formControlName="unit"
-                            class="form-select form-control-width me-3"
-                            data-test-id="polling-group-unit"
-                        >
-                            <option [value]="timeUnit.Minutes">Minutes</option>
-                            <option [value]="timeUnit.Hours">Hours</option>
-                            <option [value]="timeUnit.Days">Days</option>
-                            <option [value]="timeUnit.Weeks">Weeks</option>
-                        </select>
-                        <input
-                            type="number"
-                            formControlName="every"
-                            min="1"
-                            class="form-control form-control-width"
-                            data-test-id="polling-group-every"
-                        />
-                        <ng-container
-                            *ngIf="
-                                pollingGroup?.get('every')?.errors?.range &&
-                                (pollingGroup.get('every')?.touched || pollingGroup.get('every')?.dirty)
-                            "
-                        >
-                            <div class="text-danger fs-12 ms-4 text-break" data-test-id="range-error">
-                                {{ pollingGroup.get("every")?.errors?.range.message }}
-                            </div>
-                        </ng-container>
-                    </div>
-                </mat-radio-button>
-                <mat-radio-button [value]="pollingGroupEnum.CRON_5_COMPONENT_EXPRESSION">
-                    <div class="d-flex align-items-center" data-test-id="button-cron-expression">
-                        <div class="d-flex align-middle">
-                            <span class="form-control-label d-block"> Cron expression : </span>
-                        </div>
-                        <input
-                            type="text"
-                            formControlName="cronExpression"
-                            placeholder="Example: * * * * ?"
-                            class="form-control form-control-expression"
-                            data-test-id="cron-expression-input"
-                            data-test-id="polling-group-cron-expression"
-                        />
+                Save
+            </button>
+        </div>
+    </div>
 
-                        <ng-container
-                            *ngIf="
-                                pollingGroup?.get('cronExpression')?.errors?.invalidCronExpression &&
-                                    (pollingGroup.get('cronExpression')?.touched ||
-                                        pollingGroup.get('cronExpression')?.dirty);
-                                else nextTimeTemplate
-                            "
-                        >
-                            <div class="text-danger fs-12 ms-4 text-break" data-test-id="cronExpression-error">
-                                Invalid expression
-                            </div>
-                        </ng-container>
-                        <ng-template #nextTimeTemplate>
-                            <span *ngIf="pollingGroup?.get('cronExpression')?.valid" class="fs-12 ms-4"
-                                >Next time: {{ nextTime }}</span
-                            >
-                        </ng-template>
-                    </div>
-                </mat-radio-button>
-            </mat-radio-group>
-            <div class="text-muted box fs-12 px-4 py-2 mt-4">
-                Cron expression accepted values
-                <div class="fs-12">1. minutes: 0-59 * , -</div>
-                <div class="fs-12">2. hours: 0-23 * , -</div>
-                <div class="fs-12">3. day of month: 1-31 * , - ?</div>
-                <div class="fs-12">4. months: (JAN-DEC or 1-12) * , -</div>
-                <div class="fs-12">5. day of week: (SUN-SAT or 1-7) * , - ?</div>
-            </div>
-            <div class="d-flex align-items-center mt-4">
-                <input class="checkbox-uncacheable me-3" type="checkbox" formControlName="fetchUncacheable" />
-                <span class="d-inline-block">Fetch uncacheable</span>
-            </div>
-        </div>
-    </form>
-    <form [formGroup]="batchingForm">
-        <div class="box p-4 mt-3">
-            <h4>Derivative (batching configuration)</h4>
-            <div class="d-flex flex-column gap-4">
-                <div class="d-flex align-items-center gap-3">
-                    <span class="form-control-label">Max batching interval:</span>
-                    <select
-                        formControlName="unit"
-                        class="form-select form-control-width"
-                        data-test-id="batching-interval-unit"
-                    >
-                        <option [value]="timeUnit.Minutes">Minutes</option>
-                        <option [value]="timeUnit.Hours">Hours</option>
-                    </select>
-                    <input
-                        type="number"
-                        min="1"
-                        formControlName="every"
-                        class="form-control form-control-width"
-                        data-test-id="batching-interval-every"
-                    />
-                    <ng-container
-                        *ngIf="
-                            batchingForm?.get('every')?.errors?.range &&
-                            (batchingForm.get('every')?.touched || batchingForm.get('every')?.dirty)
-                        "
-                    >
-                        <div class="text-danger fs-12 ms-4 text-break" data-test-id="range-error">
-                            {{ batchingForm.get("every")?.errors?.range.message }}
-                        </div>
-                    </ng-container>
-                </div>
-                <div class="d-flex align-items-center gap-3">
-                    <span class="form-control-label">Min records to await:</span>
-                    <input
-                        type="number"
-                        min="1"
-                        formControlName="minRecordsToAwait"
-                        class="form-control form-control-width"
-                        data-test-id="batching-min-records"
-                    />
-                    <ng-container
-                        *ngIf="
-                            batchingForm?.get('minRecordsToAwait')?.errors?.min &&
-                            (batchingForm.get('minRecordsToAwait')?.touched ||
-                                batchingForm.get('minRecordsToAwait')?.dirty)
-                        "
-                    >
-                        <div class="text-danger fs-12 ms-4 text-break" data-test-id="min-value-error">
-                            Minimum value 1
-                        </div>
-                    </ng-container>
-                </div>
-            </div>
-        </div>
-    </form>
-    <div class="my-4 d-flex justify-content-end">
-        <button
-            type="button"
-            class="btn btn-success"
-            [disabled]="pollingForm.invalid || batchingForm.invalid"
-            (click)="onSubmit()"
-            data-test-id="save-config-options"
-        >
-            Save
-        </button>
+    <div *ngIf="!isRootDataset">
+        <app-batching-trigger-form [datasetBasics]="datasetBasics" (saveTriggerEmit)="saveBatchingTriggers($event)" />
     </div>
 </div>

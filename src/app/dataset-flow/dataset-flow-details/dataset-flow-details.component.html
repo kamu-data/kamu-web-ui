@@ -52,9 +52,10 @@
             <div class="sidebar my-4">
                 <ul class="action-list">
                     <li
+                        appFeatureFlag="flowDetails.summary"
                         class="action-list-item"
                         [ngClass]="{
-                            'action-list-item__nav-active': activeTab === FlowDetailsTabs.SUMMARY
+                            'action-list-item__nav-active': activeTab === FlowDetailsTabs.SUMMARY,
                         }"
                     >
                         <a routerLinkActive="active" [routerLink]="getRouteLink(FlowDetailsTabs.SUMMARY)">
@@ -66,9 +67,10 @@
                         >
                     </li>
                     <li
+                        appFeatureFlag="flowDetails.history"
                         class="action-list-item"
                         [ngClass]="{
-                            'action-list-item__nav-active': activeTab === FlowDetailsTabs.HISTORY
+                            'action-list-item__nav-active': activeTab === FlowDetailsTabs.HISTORY,
                         }"
                     >
                         <a routerLinkActive="active" [routerLink]="getRouteLink(FlowDetailsTabs.HISTORY)">
@@ -78,9 +80,10 @@
                         >
                     </li>
                     <li
+                        appFeatureFlag="flowDetails.logs"
                         class="action-list-item"
                         [ngClass]="{
-                            'action-list-item__nav-active': activeTab === FlowDetailsTabs.LOGS
+                            'action-list-item__nav-active': activeTab === FlowDetailsTabs.LOGS,
                         }"
                     >
                         <a routerLinkActive="active" [routerLink]="getRouteLink(FlowDetailsTabs.LOGS)">
@@ -91,9 +94,10 @@
                         >
                     </li>
                     <li
+                        appFeatureFlag="flowDetails.usage"
                         class="action-list-item"
                         [ngClass]="{
-                            'action-list-item__nav-active': activeTab === FlowDetailsTabs.USAGE
+                            'action-list-item__nav-active': activeTab === FlowDetailsTabs.USAGE,
                         }"
                     >
                         <a routerLinkActive="active" [routerLink]="getRouteLink(FlowDetailsTabs.USAGE)">
@@ -103,9 +107,10 @@
                         >
                     </li>
                     <li
+                        appFeatureFlag="flowDetails.admin"
                         class="action-list-item"
                         [ngClass]="{
-                            'action-list-item__nav-active': activeTab === FlowDetailsTabs.ADMIN
+                            'action-list-item__nav-active': activeTab === FlowDetailsTabs.ADMIN,
                         }"
                     >
                         <a routerLinkActive="active" [routerLink]="getRouteLink(FlowDetailsTabs.ADMIN)">
@@ -127,7 +132,10 @@
                             [flowHistory]="flowDetails.flowHistory"
                         />
                     </ng-container>
-                    <div *ngIf="activeTab === FlowDetailsTabs.LOGS">Logs tab coming soon</div>
+                    <ng-container *ngIf="activeTab === FlowDetailsTabs.LOGS">
+                        <app-flow-details-logs-tab [flowDetails]="flowDetails"></app-flow-details-logs-tab>
+                    </ng-container>
+
                     <div *ngIf="activeTab === FlowDetailsTabs.USAGE">Usage tab coming soon</div>
                     <div *ngIf="activeTab === FlowDetailsTabs.ADMIN">Admin tab coming soon</div>
                 </div>

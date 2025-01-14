@@ -2,7 +2,7 @@ query datasetAllFlowsPaused($datasetId: DatasetID!) {
   datasets {
     byId(datasetId: $datasetId) {
       flows {
-        configs {
+        triggers {
           allPaused
         }
       }

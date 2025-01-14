@@ -42,6 +42,12 @@ a {
     }
 }
 
+.container-main {
+    max-width: 1441px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
 markdown {
     line-height: normal;
 }
@@ -241,6 +247,13 @@ markdown {
 
 .header-link {
     text-decoration: none;
+    color: #f1f1f1;
+    display: flex;
+
+    &:hover {
+        text-decoration: none;
+        color: #d4d4c9;
+    }
 }
 
 #app-header {
@@ -252,10 +265,6 @@ markdown {
     align-items: center;
     justify-content: space-between;
     background-color: $app-dark;
-
-    * {
-        color: $app-primary;
-    }
 
     .navbar-nav {
         margin: auto;
@@ -384,10 +393,6 @@ markdown {
     }
 }
 
-a:visited {
-    color: inherit;
-}
-
 .mat-app-background,
 .mat-drawer-container {
     background-color: $app-alice-blue;
@@ -411,6 +416,7 @@ a:visited {
 
 .notification-indicator-container {
     width: 1.5em;
+    display: flex;
 }
 
 .app-main-container {
@@ -614,7 +620,9 @@ router-outlet {
 #result-query-table,
 #overview-data-table,
 #set-data-schema-event,
-#set-polling-source-topics {
+#set-polling-source-topics,
+#query-explainer-table,
+#global-query-table {
     * {
         padding: 0 8px;
         font-size: 12px;
@@ -944,6 +952,12 @@ router-outlet {
         display: flex;
         justify-content: flex-end;
         align-items: flex-end;
+    }
+
+    .header-link {
+        mat-icon {
+            display: none;
+        }
     }
 }
 
@@ -1445,6 +1459,7 @@ pre {
 
 .no-button {
     border: none;
+    outline: none;
     background: transparent;
 
     &:hover {
@@ -1530,4 +1545,71 @@ input {
     &:hover {
         text-decoration: none;
     }
+}
+
+.form-control-data-access {
+    &:focus {
+        box-shadow: none;
+        border-color: #dee2e6;
+    }
+}
+
+.copy-button-data-access {
+    border: 0;
+    outline: 0;
+    background: transparent;
+    height: 30px;
+
+    &:hover {
+        background: rgb(245 240 240);
+        border-radius: 5px;
+    }
+}
+
+.markdown-clipboard-button {
+    background-color: rgb(255 255 255 / 7%);
+    opacity: 1 !important;
+    border: none;
+    border-radius: 4px;
+    color: #ffff;
+    cursor: pointer;
+    font-size: 11px;
+    padding: 4px 0;
+    width: 50px;
+    transition: all 250ms ease-out;
+
+    &:hover {
+        background-color: rgb(255 255 255 / 14%);
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+}
+
+.markdown-clipboard-button.copied {
+    background-color: rgb(0 255 0 / 10%);
+    color: rgb(0 255 51 / 100%);
+}
+
+pre.language-sql {
+    ~ {
+        div {
+            opacity: 1 !important;
+        }
+    }
+}
+
+.query-container {
+    display: grid;
+    align-items: start;
+    grid-template-columns: minmax(16rem, 37%) 1fr;
+    column-gap: 1.5rem;
+}
+
+.disabled {
+    pointer-events: none; /* Prevent interaction */
+    opacity: 0.65; /* Reduce visibility */
+    filter: grayscale(100%); /* Grayscale effect */
+    cursor: not-allowed; /* Show "not allowed" cursor */
 }

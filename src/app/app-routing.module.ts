@@ -1,3 +1,4 @@
+import { GlobalQueryComponent } from "./query/global-query/global-query.component";
 import { AddPollingSourceComponent } from "./dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source.component";
 import { MetadataBlockComponent } from "./dataset-block/metadata-block/metadata-block.component";
 import { AuthenticatedGuard } from "./auth/guards/authenticated.guard";
@@ -19,6 +20,7 @@ import { AdminGuard } from "./auth/guards/admin.guard";
 import { AdminDashboardComponent } from "./admin-view/admin-dashboard/admin-dashboard.component";
 import { DatasetFlowDetailsComponent } from "./dataset-flow/dataset-flow-details/dataset-flow-details.component";
 import { AccountComponent } from "./account/account.component";
+import { QueryExplainerComponent } from "./query-explainer/query-explainer.component";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -45,6 +47,16 @@ export const routes: Routes = [
         canActivate: [AdminGuard],
         path: ProjectLinks.URL_ADMIN_DASHBOARD,
         component: AdminDashboardComponent,
+    },
+    {
+        path: ProjectLinks.URL_QUERY_EXPLAINER,
+        component: QueryExplainerComponent,
+        loadChildren: () => import("./query-explainer/query-explainer.module").then((m) => m.QueryExplainerModule),
+    },
+    {
+        path: ProjectLinks.URL_QUERY,
+        component: GlobalQueryComponent,
+        loadChildren: () => import("./query/query.module").then((m) => m.QueryModule),
     },
     {
         path:
@@ -118,7 +130,7 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes)],
+    imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: "reload" })],
     exports: [RouterModule],
 })
 export class AppRoutingModule {}

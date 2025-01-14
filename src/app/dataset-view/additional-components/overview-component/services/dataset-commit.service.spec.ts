@@ -23,7 +23,6 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { first } from "rxjs/operators";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DatasetNotFoundError, DatasetOperationError } from "src/app/common/errors";
@@ -32,14 +31,12 @@ import { TEST_ACCOUNT_ID } from "src/app/api/mock/auth.mock";
 
 describe("DatasetCommitService", () => {
     let commitService: DatasetCommitService;
-    let datasetService: DatasetService;
     let datasetApi: DatasetApi;
     let navigationService: NavigationService;
     let loggedUserService: LoggedUserService;
 
     let getDatasetInfoSpy: jasmine.Spy;
     let navigationServiceSpy: jasmine.Spy;
-    let requestDatasetMainDataSpy: jasmine.Spy;
 
     const TEST_ACCOUNT_NAME = "accountName";
     const TEST_DATASET_NAME = "datasetName";
@@ -54,15 +51,11 @@ describe("DatasetCommitService", () => {
         datasetApi = TestBed.inject(DatasetApi);
         navigationService = TestBed.inject(NavigationService);
         commitService = TestBed.inject(DatasetCommitService);
-        datasetService = TestBed.inject(DatasetService);
         loggedUserService = TestBed.inject(LoggedUserService);
 
         getDatasetInfoSpy = spyOn(datasetApi, "getDatasetInfoByAccountAndDatasetName").and.returnValue(
             of(mockDatasetMainDataResponse as DatasetByAccountAndDatasetNameQuery),
         );
-
-        requestDatasetMainDataSpy = spyOn(datasetService, "requestDatasetMainData").and.returnValue(of());
-
         navigationServiceSpy = spyOn(navigationService, "navigateToDatasetView");
     });
 
@@ -88,13 +81,6 @@ describe("DatasetCommitService", () => {
             accountName: TEST_ACCOUNT_NAME,
             datasetName: TEST_DATASET_NAME,
             tab: DatasetViewTypeEnum.Overview,
-        });
-    }
-
-    function expectRequestedDatasetMainData() {
-        expect(requestDatasetMainDataSpy).toHaveBeenCalledOnceWith({
-            accountName: TEST_ACCOUNT_NAME,
-            datasetName: TEST_DATASET_NAME,
         });
     }
 
@@ -160,7 +146,6 @@ describe("DatasetCommitService", () => {
             accountId: TEST_ACCOUNT_ID,
         });
         expectNavigatedToDatasetOverview();
-        expectRequestedDatasetMainData();
     }));
 
     [mockCommitEventToDatasetResultAppendError, mockCommitEventToDataseMetadataManifestMalformedError].forEach(
@@ -186,7 +171,6 @@ describe("DatasetCommitService", () => {
                     accountId: TEST_ACCOUNT_ID,
                 });
                 expect(navigationServiceSpy).not.toHaveBeenCalled();
-                expect(requestDatasetMainDataSpy).not.toHaveBeenCalled();
 
                 // If error triggered, our subscription will be closed
                 expect(errorSubscription$.closed).toBeTrue();
@@ -255,7 +239,6 @@ describe("DatasetCommitService", () => {
             content: README_CONTENT,
         });
         expectNavigatedToDatasetOverview();
-        expectRequestedDatasetMainData();
     }));
 
     it("should check update readme for dataset when not found", () => {

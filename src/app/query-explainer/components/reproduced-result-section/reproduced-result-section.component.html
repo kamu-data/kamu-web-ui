@@ -1,0 +1,12 @@
+<div class="box p-4 mx-4">
+    <div class="fw-semibold">Reproduced result:</div>
+    <div class="mt-4">
+        <app-dynamic-table
+            [hasTableHeader]="true"
+            [schemaFields]="schemaFields(dataJsonAoS)"
+            [idTable]="'query-explainer-table'"
+            [dataRows]="tableSource(dataJsonAoS)"
+            [attr.data-test-id]="'query-explainer-table'"
+        />
+    </div>
+</div>

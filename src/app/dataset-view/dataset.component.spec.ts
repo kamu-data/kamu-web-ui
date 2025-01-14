@@ -6,7 +6,7 @@ import {
 } from "../search/mock.data";
 import { DatasetService } from "./dataset.service";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
-import { ActivatedRoute, RouterModule } from "@angular/router";
+import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { DatasetApi } from "../api/dataset.api";
@@ -43,12 +43,20 @@ import { DatasetSettingsSchedulingTabComponent } from "./additional-components/d
 import { ToastrModule } from "ngx-toastr";
 import { DataAccessPanelModule } from "../components/data-access-panel/data-access-panel.module";
 import { SqlEditorComponent } from "../shared/editor/components/sql-editor/sql-editor.component";
-import { RequestTimerComponent } from "./additional-components/data-component/request-timer/request-timer.component";
+import { RequestTimerComponent } from "../query/shared/request-timer/request-timer.component";
 import { EditorModule } from "../shared/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { FlowsComponent } from "./additional-components/flows-component/flows.component";
 import { DatasetVisibilityModule } from "../components/dataset-visibility/dataset-visibility.module";
+import { RouterTestingModule } from "@angular/router/testing";
+import { promiseWithCatch } from "../common/app.helpers";
+import { QueryAndResultSectionsComponent } from "../query/shared/query-and-result-sections/query-and-result-sections.component";
+import { SavedQueriesSectionComponent } from "../query/shared/saved-queries-section/saved-queries-section.component";
+import { SqlQueryService } from "../services/sql-query.service";
+import { SearchAndSchemasSectionComponent } from "../query/global-query/search-and-schemas-section/search-and-schemas-section.component";
+import { SharedModule } from "../shared/shared/shared.module";
+import { DatasetRequestBySql } from "../interface/dataset.interface";
 
 describe("DatasetComponent", () => {
     let component: DatasetComponent;
@@ -56,7 +64,10 @@ describe("DatasetComponent", () => {
     let datasetService: DatasetService;
     let datasetSubsServices: DatasetSubscriptionsService;
     let navigationService: NavigationService;
+    let sqlQueryService: SqlQueryService;
     let route: ActivatedRoute;
+    let router: Router;
+    const MOCK_DATASET_ROUTE = "kamu/mockNameDerived";
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -77,6 +88,9 @@ describe("DatasetComponent", () => {
                 SqlEditorComponent,
                 RequestTimerComponent,
                 FlowsComponent,
+                QueryAndResultSectionsComponent,
+                SavedQueriesSectionComponent,
+                SearchAndSchemasSectionComponent,
             ],
             imports: [
                 AngularSvgIconModule.forRoot(),
@@ -98,6 +112,8 @@ describe("DatasetComponent", () => {
                 MatProgressBarModule,
                 CdkAccordionModule,
                 DatasetVisibilityModule,
+                SharedModule,
+                RouterTestingModule.withRoutes([{ path: MOCK_DATASET_ROUTE, component: DatasetComponent }]),
             ],
             providers: [
                 DatasetApi,
@@ -142,18 +158,24 @@ describe("DatasetComponent", () => {
         iconRegistryService.addSvg("account", "");
         iconRegistryService.addSvg("clock", "");
         iconRegistryService.addSvg("security", "");
+        iconRegistryService.addSvg("repository", "");
+        iconRegistryService.addSvg("close", "");
+        iconRegistryService.addSvg("notifications-checked", "");
 
         datasetSubsServices = TestBed.inject(DatasetSubscriptionsService);
         datasetSubsServices.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
-
+        sqlQueryService = TestBed.inject(SqlQueryService);
         datasetService = TestBed.inject(DatasetService);
+        router = TestBed.inject(Router);
         spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsDerivedFragment));
-        spyOn(datasetService, "requestDatasetMainData").and.returnValue(of(void {}));
 
         fixture = TestBed.createComponent(DatasetComponent);
+        router.initialNavigation();
         route = TestBed.inject(ActivatedRoute);
+
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
+        component.datasetBasics = mockDatasetBasicsDerivedFragment;
     });
 
     it("should create", () => {
@@ -192,7 +214,7 @@ describe("DatasetComponent", () => {
             limit: AppValues.SQL_QUERY_LIMIT,
         };
 
-        const requestDatasetDataSqlRunSpy = spyOn(datasetService, "requestDatasetDataSqlRun").and.returnValue(of());
+        const requestDatasetDataSqlRunSpy = spyOn(sqlQueryService, "requestDataSqlRun").and.returnValue(of());
         component.onRunSQLRequest(params);
         expect(requestDatasetDataSqlRunSpy).toHaveBeenCalledWith(params);
     });
@@ -270,11 +292,69 @@ describe("DatasetComponent", () => {
             limit: AppValues.SQL_QUERY_LIMIT,
         };
 
-        spyOn(datasetService, "requestDatasetDataSqlRun").and.returnValue(of().pipe(delay(1000)));
+        spyOn(sqlQueryService, "requestDataSqlRun").and.returnValue(of().pipe(delay(1000)));
         component.onRunSQLRequest(params);
         tick(500);
 
         expect(component.sqlLoading).toEqual(true);
         flush();
     }));
+
+    [DatasetViewTypeEnum.Lineage, DatasetViewTypeEnum.Settings, DatasetViewTypeEnum.Flows].forEach(
+        (tab: DatasetViewTypeEnum) => {
+            it(`should check navigate to ${tab} tab`, fakeAsync(() => {
+                const requestDatasetMainDataSpy = spyOn(datasetService, "requestDatasetMainData").and.returnValue(
+                    of(void {}),
+                );
+                const isHeadHashBlockChangedSpy = spyOn(datasetService, "isHeadHashBlockChanged").and.returnValue(
+                    of(false),
+                );
+                fixture.detectChanges();
+                promiseWithCatch(router.navigate([MOCK_DATASET_ROUTE], { queryParams: { tab } }));
+                tick();
+
+                expect(requestDatasetMainDataSpy).toHaveBeenCalledTimes(1);
+                expect(isHeadHashBlockChangedSpy).toHaveBeenCalledTimes(1);
+                flush();
+            }));
+        },
+    );
+
+    [DatasetViewTypeEnum.Overview, DatasetViewTypeEnum.Data, DatasetViewTypeEnum.Metadata].forEach(
+        (tab: DatasetViewTypeEnum) => {
+            it(`should check navigate to ${tab} tab`, fakeAsync(() => {
+                const requestDatasetMainDataSpy = spyOn(datasetService, "requestDatasetMainData").and.returnValue(
+                    of(void {}),
+                );
+                const isHeadHashBlockChangedSpy = spyOn(datasetService, "isHeadHashBlockChanged").and.returnValue(
+                    of(true),
+                );
+                fixture.detectChanges();
+                promiseWithCatch(router.navigate([MOCK_DATASET_ROUTE], { queryParams: { tab } }));
+                tick();
+
+                expect(requestDatasetMainDataSpy).toHaveBeenCalledTimes(2);
+                expect(isHeadHashBlockChangedSpy).toHaveBeenCalledTimes(1);
+                flush();
+            }));
+        },
+    );
+
+    it(`should check Data tab has sql request in the URL`, fakeAsync(() => {
+        spyOn(sqlQueryService, "requestDataSqlRun").and.returnValue(of());
+        const params: DatasetRequestBySql = {
+            query: "select *from 'kamu/account.tokens.portfolio'",
+        };
+        component.onRunSQLRequest(params);
+        tick();
+        expect(router.url.includes("/?sqlQuery=select%20*from%20'kamu%2Faccount.tokens.portfolio'")).toEqual(true);
+        flush();
+    }));
+
+    it(`should check remove daaset sql code`, () => {
+        const removeDatasetSqlCodeSpy = spyOn(sessionStorage, "removeItem");
+
+        component.ngOnDestroy();
+        expect(removeDatasetSqlCodeSpy).toHaveBeenCalledTimes(1);
+    });
 });

@@ -5,13 +5,13 @@ import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
-import { SecurityContext } from "@angular/core";
+import { SecurityContext, SimpleChanges } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { FormsModule } from "@angular/forms";
-import { AngularSvgIconModule } from "angular-svg-icon";
+import { AngularSvgIconModule, SvgIconRegistryService } from "angular-svg-icon";
 import { MarkdownModule } from "ngx-markdown";
-import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, findNativeElement } from "src/app/common/base-test.helpers.spec";
 import { EditMode } from "./readme-section.types";
 import { of } from "rxjs";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -43,6 +43,10 @@ describe("ReadmeSectionComponent", () => {
             ],
         }).compileComponents();
 
+        const iconRegistryService: SvgIconRegistryService = TestBed.inject(SvgIconRegistryService);
+        iconRegistryService.addSvg("code-square", "");
+        iconRegistryService.addSvg("pencil", "");
+
         fixture = TestBed.createComponent(ReadmeSectionComponent);
         component = fixture.componentInstance;
         datasetCommitService = TestBed.inject(DatasetCommitService);
@@ -50,8 +54,6 @@ describe("ReadmeSectionComponent", () => {
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
         component.currentReadme = mockReadmeContent;
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-
-        fixture.detectChanges();
     });
 
     it("should create", () => {
@@ -59,6 +61,7 @@ describe("ReadmeSectionComponent", () => {
     });
 
     it("should check show select tab", () => {
+        fixture.detectChanges();
         expect(component.editingInProgress).toEqual(false);
         emitClickOnElementByDataTestId(fixture, "show-edit-tabs");
         fixture.detectChanges();
@@ -66,6 +69,7 @@ describe("ReadmeSectionComponent", () => {
     });
 
     it("should check switch edit/preview mode", () => {
+        fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "show-edit-tabs");
         fixture.detectChanges();
         expect(component.viewMode).toEqual(EditMode.Edit);
@@ -76,6 +80,7 @@ describe("ReadmeSectionComponent", () => {
     });
 
     it("should check push button 'cancel changes' when currentReadme exist", () => {
+        fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "show-edit-tabs");
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "cancel-changes");
@@ -83,6 +88,7 @@ describe("ReadmeSectionComponent", () => {
     });
 
     it("should check push button 'cancel changes' when currentReadme is not exist", () => {
+        fixture.detectChanges();
         component.currentReadme = null;
         emitClickOnElementByDataTestId(fixture, "show-edit-tabs");
         fixture.detectChanges();
@@ -91,6 +97,7 @@ describe("ReadmeSectionComponent", () => {
     });
 
     it("should check save changes", fakeAsync(() => {
+        fixture.detectChanges();
         component.readmeState = mockReadmeContent + "modified";
         const updateReadmeSpy = spyOn(datasetCommitService, "updateReadme").and.returnValue(of());
         emitClickOnElementByDataTestId(fixture, "show-edit-tabs");
@@ -100,4 +107,57 @@ describe("ReadmeSectionComponent", () => {
         expect(updateReadmeSpy).toHaveBeenCalledTimes(1);
         flush();
     }));
+
+    it("should check readme updated in the onChanges hook", () => {
+        const modifiedReadmeContent = mockReadmeContent + "modified";
+        const readmeSimpleChanges: SimpleChanges = {
+            currentReadme: {
+                previousValue: mockReadmeContent,
+                currentValue: modifiedReadmeContent,
+                firstChange: false,
+                isFirstChange: () => false,
+            },
+        };
+        component.ngOnChanges(readmeSimpleChanges);
+        expect(component.readmeState).toEqual(modifiedReadmeContent);
+    });
+
+    it("should check Run and Copy buttons exist", () => {
+        component.readmeState = "```sql" + "\nselect * from 'account.tokens.portfolio.market-value'" + "\n```";
+        component.viewMode = EditMode.Preview;
+        fixture.detectChanges();
+        const copyButtonElement = findNativeElement(fixture, `.markdown-clipboard-button`);
+        expect(copyButtonElement).toBeDefined();
+
+        const runButtonElement = findNativeElement(fixture, `.markdown-run-button`);
+        expect(runButtonElement).toBeDefined();
+    });
+
+    it("should check Run button navigate to Data tab", () => {
+        component.readmeState = "```sql" + "\nselect * from 'account.tokens.portfolio.market-value'" + "\n```";
+        component.viewMode = EditMode.Preview;
+
+        fixture.detectChanges();
+
+        const runButtonElement = findNativeElement(fixture, `.markdown-run-button`) as HTMLLinkElement;
+        expect(
+            runButtonElement.href.includes(
+                "kamu/mockNameDerived?tab=data&sqlQuery=select%20*%20from%20%27account.tokens.portfolio.market-value%27",
+            ),
+        ).toBeTrue();
+    });
+
+    it("should check Run button navigate to Data tab with line breaks", () => {
+        component.readmeState = "```sql" + "\nselect\n*\nfrom 'account.tokens.portfolio.market-value'" + "\n```";
+        component.viewMode = EditMode.Preview;
+
+        fixture.detectChanges();
+
+        const runButtonElement = findNativeElement(fixture, `.markdown-run-button`) as HTMLLinkElement;
+        expect(
+            runButtonElement.href.includes(
+                "kamu/mockNameDerived?tab=data&sqlQuery=select%0A*%0Afrom%20%27account.tokens.portfolio.market-value%27",
+            ),
+        ).toBeTrue();
+    });
 });

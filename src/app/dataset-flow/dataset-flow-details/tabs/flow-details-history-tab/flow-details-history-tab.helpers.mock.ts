@@ -132,7 +132,7 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         startCondition: {
             __typename: "FlowStartConditionBatching",
-            activeTransformRule: {
+            activeBatchingRule: {
                 minRecordsToAwait: 500,
                 maxBatchingInterval: {
                     every: 5,
@@ -155,6 +155,12 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
             shiftedFrom: "2024-02-12T18:22:29+00:00",
         },
     },
+    {
+        __typename: "FlowEventScheduledForActivation",
+        eventId: "8",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        scheduledForActivationAt: "2024-03-13T14:54:30.656488373+00:00",
+    },
 ];
 
 export const eventFlowDescriptionsResultHistoryTab: string[] = [
@@ -169,6 +175,7 @@ export const eventFlowDescriptionsResultHistoryTab: string[] = [
     "Waiting for free executor",
     "Waiting for batching condition",
     "Waiting for throttling condition",
+    "Flow scheduled for activation",
 ];
 
 export const mockFlowHistoryDataFragmentForIconOptions: FlowHistoryDataFragment[] = [
@@ -211,6 +218,12 @@ export const mockFlowHistoryDataFragmentForIconOptions: FlowHistoryDataFragment[
             shiftedFrom: "2024-02-12T18:22:29+00:00",
         },
     },
+    {
+        __typename: "FlowEventScheduledForActivation",
+        eventId: "5",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        scheduledForActivationAt: "2024-03-13T14:54:30.656488373+00:00",
+    },
 ];
 
 export const flowEventIconOptionsResults: { icon: string; class: string }[] = [
@@ -219,6 +232,7 @@ export const flowEventIconOptionsResults: { icon: string; class: string }[] = [
     { icon: "radio_button_checked", class: "running-status" },
     { icon: "add_circle", class: "text-muted" },
     { icon: "downloading", class: "text-muted" },
+    { icon: "timer", class: "text-muted" },
     { icon: "check_circle", class: "completed-status" },
     { icon: "dangerous", class: "failed-status" },
     { icon: "cancel", class: "aborted-outcome" },
@@ -260,7 +274,7 @@ export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         startCondition: {
             __typename: "FlowStartConditionBatching",
-            activeTransformRule: {
+            activeBatchingRule: {
                 minRecordsToAwait: 500,
                 maxBatchingInterval: {
                     every: 5,
@@ -297,12 +311,13 @@ export const flowEventSubMessageResults: string[] = [
     "",
     "Task #1",
     "",
-    "Wake up time at Feb 12th 2024, 8:22:30 PM, shifted from 8:22:29 PM",
+    "Wake up time at Feb 12th 2024, 8:22:30 PM +0200, shifted from 8:22:29 PM",
+    "Activating at Mar 13th 2024, 4:54:30 PM +0200",
     "Triggered by kamu",
     "Input dataset: kamu/alberta.case-details",
-    "Accumulated 100/500 records. Watermark modified. Deadline at Aug 6th 2022, 12:17:30 AM", //1
+    "Accumulated 100/500 records. Watermark modified. Deadline at Aug 6th 2022, 12:17:30 AM +0300", //1
     "Task #5",
-    "Wake up time at Mar 13th 2024, 5:54:30 PM",
+    "Wake up time at Mar 13th 2024, 5:54:30 PM +0200",
     "An error occurred, see logs for more details",
     "Dataset is up-to-date",
     "Ingested 100 new records in 10 new blocks",

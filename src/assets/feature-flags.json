@@ -1,0 +1,453 @@
+[
+  {
+    "id": "analytics",
+    "developmentState": "reserved"
+  },
+  {
+    "id": "billing",
+    "developmentState": "reserved"
+  },
+  {
+    "id": "dashboard",
+    "developmentState": "reserved"
+  },
+  {
+    "id": "dataset",
+    "developmentState": "stable",
+    "subfeatures": [
+      {
+        "id": "badgePrivacy",
+        "developmentState": "mockup"
+      },
+      {
+        "id": "badgeVerified",
+        "developmentState": "mockup"
+      },
+      {
+        "id": "getData",
+        "developmentState": "stable",
+        "subfeatures": [
+          {
+            "id": "code",
+            "developmentState": "reserved"
+          },
+          {
+            "id": "export",
+            "developmentState": "reserved"
+          },
+          {
+            "id": "kamuCli",
+            "developmentState": "stable"
+          },
+          {
+            "id": "link",
+            "developmentState": "stable",
+            "subfeatures": [
+              {
+                "id": "checkboxes",
+                "developmentState": "mockup"
+              }
+            ]
+          },
+          {
+            "id": "odata",
+            "developmentState": "stable"
+          },
+          {
+            "id": "rest",
+            "developmentState": "stable"
+          },
+          {
+            "id": "sql",
+            "developmentState": "stable"
+          },
+          {
+            "id": "stream",
+            "developmentState": "mockup"
+          }
+        ]
+      },
+      {
+        "id": "panel",
+        "developmentState": "stable",
+        "subfeatures": [
+          {
+            "id": "data",
+            "developmentState": "stable",
+            "subfeatures": [
+              {
+                "id": "editRun",
+                "developmentState": "stable",
+                "subfeatures": [
+                  {
+                    "id": "curl",
+                    "developmentState": "stable"
+                  },
+                  {
+                    "id": "newDataset",
+                    "developmentState": "mockup"
+                  },
+                  {
+                    "id": "share",
+                    "developmentState": "stable"
+                  },
+                  {
+                    "id": "verify",
+                    "developmentState": "stable"
+                  }
+                ]
+              },
+              {
+                "id": "savedQueries",
+                "developmentState": "mockup"
+              }
+            ]
+          },
+          {
+            "id": "discussions",
+            "developmentState": "reserved"
+          },
+          {
+            "id": "flows",
+            "developmentState": "stable"
+          },
+          {
+            "id": "history",
+            "developmentState": "stable",
+            "subfeatures": [
+              {
+                "id": "blockActions",
+                "developmentState": "mockup"
+              },
+              {
+                "id": "verified",
+                "developmentState": "mockup"
+              }
+            ]
+          },
+          {
+            "id": "lineage",
+            "developmentState": "stable"
+          },
+          {
+            "id": "metadata",
+            "developmentState": "stable",
+            "subfeatures": [
+              {
+                "id": "deletePollingSource",
+                "developmentState": "mockup"
+              },
+              {
+                "id": "deletePushSource",
+                "developmentState": "mockup"
+              },
+              {
+                "id": "editPollingSource",
+                "developmentState": "stable"
+              },
+              {
+                "id": "editPushSource",
+                "developmentState": "stable"
+              },
+              {
+                "id": "editTransform",
+                "developmentState": "stable"
+              },
+              {
+                "id": "newPushSource",
+                "developmentState": "stable"
+              },
+              {
+                "id": "pagination",
+                "developmentState": "mockup"
+              }
+            ]
+          },
+          {
+            "id": "overview",
+            "developmentState": "stable",
+            "subfeatures": [
+              {
+                "id": "addData",
+                "developmentState": "stable",
+                "subfeatures": [
+                  {
+                    "id": "sync",
+                    "developmentState": "mockup"
+                  },
+                  {
+                    "id": "upload",
+                    "developmentState": "stable"
+                  }
+                ]
+              },
+              {
+                "id": "addPollingSource",
+                "developmentState": "stable"
+              },
+              {
+                "id": "addPushSource",
+                "developmentState": "stable"
+              },
+              {
+                "id": "addTransform",
+                "developmentState": "stable"
+              },
+              {
+                "id": "description",
+                "developmentState": "stable"
+              },
+              {
+                "id": "license",
+                "developmentState": "stable"
+              },
+              {
+                "id": "readme",
+                "developmentState": "stable"
+              },
+              {
+                "id": "update",
+                "developmentState": "stable"
+              },
+              {
+                "id": "watermark",
+                "developmentState": "stable"
+              }
+            ]
+          },
+
+          {
+            "id": "settings",
+            "developmentState": "stable",
+            "subfeatures": [
+              {
+                "id": "compaction",
+                "developmentState": "stable"
+              },
+              {
+                "id": "general",
+                "developmentState": "stable",
+                "subfeatures": [
+                  {
+                    "id": "delete",
+                    "developmentState": "stable"
+                  },
+                  {
+                    "id": "rename",
+                    "developmentState": "stable"
+                  },
+                  {
+                    "id": "reset",
+                    "developmentState": "stable"
+                  }
+                ]
+              },
+              {
+                "id": "scheduling",
+                "developmentState": "stable"
+              },
+              {
+                "id": "varsSecrets",
+                "developmentState": "stable"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "flowDetails",
+    "developmentState": "stable",
+    "subfeatures": [
+      {
+        "id": "admin",
+        "developmentState": "mockup"
+      },
+      {
+        "id": "history",
+        "developmentState": "stable"
+      },
+      {
+        "id": "logs",
+        "developmentState": "stable"
+      },
+      {
+        "id": "summary",
+        "developmentState": "stable"
+      },
+      {
+        "id": "usage",
+        "developmentState": "mockup"
+      }
+    ]
+  },
+  {
+    "id": "help",
+    "developmentState": "reserved"
+  },
+  {
+    "id": "newDataset",
+    "developmentState": "stable",
+    "subfeatures": [
+      {
+        "id": "privacy",
+        "developmentState": "mockup"
+      }
+    ]
+  },
+  {
+    "id": "notifications",
+    "developmentState": "reserved"
+  },
+  {
+    "id": "profile",
+    "developmentState": "stable",
+    "subfeatures": [
+      {
+        "id": "companies",
+        "developmentState": "mockup"
+      },
+      {
+        "id": "datasets",
+        "developmentState": "stable"
+      },
+      {
+        "id": "edit",
+        "developmentState": "reserved"
+      },
+      {
+        "id": "flows",
+        "developmentState": "stable"
+      },
+      {
+        "id": "inbox",
+        "developmentState": "reserved"
+      },
+      {
+        "id": "organizations",
+        "developmentState": "reserved"
+      },
+      {
+        "id": "overview",
+        "developmentState": "reserved"
+      },
+      {
+        "id": "stars",
+        "developmentState": "reserved"
+      }
+    ]
+  },
+  {
+    "id": "query",
+    "developmentState": "stable",
+    "subfeatures": [
+      {
+        "id": "datasetSchemas",
+        "developmentState": "stable"
+      },
+      {
+        "id": "editRun",
+        "developmentState": "stable",
+        "subfeatures": [
+          {
+            "id": "newDataset",
+            "developmentState": "mockup"
+          },
+          {
+            "id": "share",
+            "developmentState": "stable"
+          }
+        ]
+      },
+      {
+        "id": "savedQueries",
+        "developmentState": "mockup"
+      },
+      {
+        "id": "searchDatasets",
+        "developmentState": "stable"
+      }
+    ]
+  },
+  {
+    "id": "search",
+    "developmentState": "stable",
+    "subfeatures": [
+      {
+        "id": "derive",
+        "developmentState": "mockup"
+      },
+      {
+        "id": "filters",
+        "developmentState": "mockup"
+      },
+      {
+        "id": "rating",
+        "developmentState": "mockup"
+      },
+      {
+        "id": "sorting",
+        "developmentState": "mockup"
+      },
+      {
+        "id": "starred",
+        "developmentState": "mockup"
+      },
+      {
+        "id": "unwatch",
+        "developmentState": "mockup"
+      },
+      {
+        "id": "verified",
+        "developmentState": "mockup"
+      }
+    ]
+  },
+  {
+    "id": "settings",
+    "developmentState": "stable",
+    "subfeatures": [
+      {
+        "id": "accessibility",
+        "developmentState": "reserved"
+      },
+      {
+        "id": "account",
+        "developmentState": "reserved"
+      },
+      {
+        "id": "appearance",
+        "developmentState": "reserved"
+      },
+      {
+        "id": "billing",
+        "developmentState": "reserved"
+      },
+      {
+        "id": "emails",
+        "developmentState": "reserved"
+      },
+      {
+        "id": "notifications",
+        "developmentState": "reserved"
+      },
+      {
+        "id": "organizations",
+        "developmentState": "reserved"
+      },
+      {
+        "id": "password",
+        "developmentState": "reserved"
+      },
+      {
+        "id": "profile",
+        "developmentState": "reserved"
+      },
+      {
+        "id": "tokens",
+        "developmentState": "stable"
+      }
+    ]
+  }
+]

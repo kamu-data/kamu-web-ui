@@ -1,6 +1,8 @@
 import moment from "moment";
 import {
+    FlowConfigSnapshotModified,
     FlowEventInitiated,
+    FlowEventScheduledForActivation,
     FlowEventStartConditionUpdated,
     FlowEventTaskChanged,
     FlowEventTriggerAdded,
@@ -9,7 +11,7 @@ import {
     FlowStartCondition,
     FlowStatus,
     FlowSummaryDataFragment,
-    FlowTrigger,
+    FlowTriggerType,
     TaskStatus,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
@@ -38,6 +40,10 @@ export class DatasetFlowDetailsHelpers {
                 const startConditionEvent = flowEvent as FlowEventStartConditionUpdated;
                 return `Waiting for ${this.describeStartCondition(startConditionEvent)}`;
             }
+            case "FlowEventScheduledForActivation":
+                return "Flow scheduled for activation";
+            case "FlowConfigSnapshotModified":
+                return "Flow configuration was modified";
             /* istanbul ignore next */
             default:
                 throw new Error("Unknown event typename");
@@ -58,6 +64,10 @@ export class DatasetFlowDetailsHelpers {
                 return { icon: "add_circle", class: "text-muted" };
             case "FlowEventStartConditionUpdated":
                 return { icon: "downloading", class: "text-muted" };
+            case "FlowEventScheduledForActivation":
+                return { icon: "timer", class: "text-muted" };
+            case "FlowConfigSnapshotModified":
+                return { icon: "outbound", class: "text-muted" };
             case "FlowEventTaskChanged": {
                 const event = flowEvent as FlowEventTaskChanged;
                 switch (event.taskStatus) {
@@ -104,8 +114,28 @@ export class DatasetFlowDetailsHelpers {
             case "FlowEventInitiated":
             case "FlowEventTriggerAdded":
                 return this.describeTriggerDetails((flowEvent as FlowEventInitiated).trigger);
+            case "FlowConfigSnapshotModified": {
+                const event = flowEvent as FlowConfigSnapshotModified;
+                switch (event.configSnapshot.__typename) {
+                    case "FlowConfigurationCompactionRule":
+                        return "Modified by compaction rule";
+                    case "FlowConfigurationIngest":
+                        return "Modified by ingest rule";
+                    case "FlowConfigurationReset":
+                        return "Modified by reset rule";
+                    /* istanbul ignore next */
+                    default:
+                        throw new Error("Unknown configSnapshot typename");
+                }
+            }
             case "FlowEventAborted":
                 return "";
+            case "FlowEventScheduledForActivation": {
+                const event = flowEvent as FlowEventScheduledForActivation;
+                return `Activating at ${moment(event.scheduledForActivationAt).format(
+                    AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                )}`;
+            }
             case "FlowEventTaskChanged": {
                 const event = flowEvent as FlowEventTaskChanged;
                 switch (event.taskStatus) {
@@ -118,7 +148,7 @@ export class DatasetFlowDetailsHelpers {
                                     case "FlowFailureReasonGeneral":
                                         return `An error occurred, see logs for more details`;
                                     case "FlowFailureReasonInputDatasetCompacted":
-                                        return `Root dataset <span class="text-small text-danger">${flowDetails.outcome.reason.inputDataset.name}</span> was compacted`;
+                                        return `Input dataset <span class="text-small text-danger">${flowDetails.outcome.reason.inputDataset.name}</span> was compacted`;
                                     /* istanbul ignore next */
                                     default:
                                         return "Unknown flow failed error";
@@ -141,14 +171,11 @@ export class DatasetFlowDetailsHelpers {
                                             : flowDetails.description.ingestResult?.__typename ===
                                                     "FlowDescriptionUpdateResultUpToDate" &&
                                                 flowDetails.description.ingestResult.uncacheable &&
-                                                flowDetails.configSnapshot?.__typename === "FlowConfigurationIngest" &&
-                                                !flowDetails.configSnapshot.fetchUncacheable &&
-                                                // TODO: Remove this condition
-                                                flowDetails.configSnapshot
-                                              ? // TODO: Replace when will be new API
-                                                // ||
-                                                //     !flowDetails.configSnapshot)
-                                                "Source is uncacheable: to re-scan the data, use force update"
+                                                ((flowDetails.configSnapshot?.__typename ===
+                                                    "FlowConfigurationIngest" &&
+                                                    !flowDetails.configSnapshot.fetchUncacheable) ||
+                                                    !flowDetails.configSnapshot)
+                                              ? "Source is uncacheable: to re-scan the data, use force update"
                                               : "Dataset is up-to-date";
 
                                     case "FlowDescriptionDatasetExecuteTransform":
@@ -223,7 +250,7 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    private static describeTrigger(trigger: FlowTrigger): string {
+    private static describeTrigger(trigger: FlowTriggerType): string {
         switch (trigger.__typename) {
             case "FlowTriggerAutoPolling":
                 return "automatically";
@@ -239,7 +266,7 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    private static describeTriggerDetails(trigger: FlowTrigger): string {
+    private static describeTriggerDetails(trigger: FlowTriggerType): string {
         switch (trigger.__typename) {
             case "FlowTriggerAutoPolling":
                 return "";
@@ -280,7 +307,7 @@ export class DatasetFlowDetailsHelpers {
                 )}, shifted from ${moment(startCondition.shiftedFrom).format(AppValues.TIME_FORMAT)}`;
             case "FlowStartConditionBatching":
                 return `Accumulated ${startCondition.accumulatedRecordsCount}/${
-                    startCondition.activeTransformRule.minRecordsToAwait
+                    startCondition.activeBatchingRule.minRecordsToAwait
                 } records. Watermark ${
                     startCondition.watermarkModified ? "modified" : "unchanged"
                 }. Deadline at ${moment(startCondition.batchingDeadline).format(

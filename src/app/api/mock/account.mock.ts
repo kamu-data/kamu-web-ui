@@ -1,4 +1,5 @@
 import { mockPublicDatasetVisibility } from "src/app/search/mock.data";
+import { mockDatasetMainDataId } from "src/app/search/mock.data";
 import {
     AccountByNameQuery,
     AccountDatasetFlowsPausedQuery,
@@ -119,6 +120,11 @@ export const mockAccountListFlowsQuery: AccountListFlowsQuery = {
                     tiles: {
                         nodes: [
                             {
+                                flowId: "0",
+                                description: {
+                                    __typename: "FlowDescriptionDatasetPollingIngest",
+                                    datasetId: mockDatasetMainDataId,
+                                },
                                 status: FlowStatus.Finished,
 
                                 outcome: {
@@ -281,9 +287,9 @@ export const mockAccountDatasetFlowsPausedQuery: AccountDatasetFlowsPausedQuery 
     accounts: {
         byName: {
             flows: {
-                configs: {
+                triggers: {
                     allPaused: true,
-                    __typename: "AccountFlowConfigs",
+                    __typename: "AccountFlowTriggers",
                 },
                 __typename: "AccountFlows",
             },
@@ -297,9 +303,9 @@ export const mockAccountPauseFlowsMutationSuccess: AccountPauseFlowsMutation = {
     accounts: {
         byName: {
             flows: {
-                configs: {
+                triggers: {
                     pauseAccountDatasetFlows: true,
-                    __typename: "AccountFlowConfigsMut",
+                    __typename: "AccountFlowTriggersMut",
                 },
                 __typename: "AccountFlowsMut",
             },
@@ -313,9 +319,9 @@ export const mockAccountPauseFlowsMutationError: AccountPauseFlowsMutation = {
     accounts: {
         byName: {
             flows: {
-                configs: {
+                triggers: {
                     pauseAccountDatasetFlows: false,
-                    __typename: "AccountFlowConfigsMut",
+                    __typename: "AccountFlowTriggersMut",
                 },
                 __typename: "AccountFlowsMut",
             },
@@ -329,9 +335,9 @@ export const mockAccountResumeFlowsMutationSuccess: AccountResumeFlowsMutation =
     accounts: {
         byName: {
             flows: {
-                configs: {
+                triggers: {
                     resumeAccountDatasetFlows: true,
-                    __typename: "AccountFlowConfigsMut",
+                    __typename: "AccountFlowTriggersMut",
                 },
                 __typename: "AccountFlowsMut",
             },
@@ -345,9 +351,9 @@ export const mockAccountResumeFlowsMutationError: AccountResumeFlowsMutation = {
     accounts: {
         byName: {
             flows: {
-                configs: {
+                triggers: {
                     resumeAccountDatasetFlows: false,
-                    __typename: "AccountFlowConfigsMut",
+                    __typename: "AccountFlowTriggersMut",
                 },
                 __typename: "AccountFlowsMut",
             },

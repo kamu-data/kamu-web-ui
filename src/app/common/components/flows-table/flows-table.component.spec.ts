@@ -1,5 +1,5 @@
 import { Apollo } from "apollo-angular";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { FlowsTableComponent } from "./flows-table.component";
 import { MatTableModule } from "@angular/material/table";
 import { MatMenuModule } from "@angular/material/menu";
@@ -133,13 +133,22 @@ describe("FlowsTableComponent", () => {
         expect(component.showForceUpdateLink(mockFlowSummaryDataFragmentShowForceLink)).toEqual(true);
     });
 
-    it("should check trigger flow with force udate option", () => {
+    it("should check trigger flow with force udate option", fakeAsync(() => {
         const datasetTriggerFlowSpy = spyOn(datasetFlowsService, "datasetTriggerFlow").and.returnValue(of(true));
+        const forceUpdateModalSpy = spyOn(modalService, "error").and.callFake((options) => {
+            options.handler?.call(undefined, true);
+            return Promise.resolve("");
+        });
         const toastrServiceSuccessSpy = spyOn(toastService, "success");
 
         component.onForceUpdate(mockFlowSummaryDataFragmentShowForceLink);
 
+        fixture.detectChanges();
+        tick();
+
+        expect(forceUpdateModalSpy).toHaveBeenCalledTimes(1);
         expect(datasetTriggerFlowSpy).toHaveBeenCalledTimes(1);
-        expect(toastrServiceSuccessSpy).toHaveBeenCalledWith("Success");
-    });
+        expect(toastrServiceSuccessSpy).toHaveBeenCalledWith("Force update started");
+        flush();
+    }));
 });

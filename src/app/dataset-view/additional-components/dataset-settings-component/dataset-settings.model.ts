@@ -20,6 +20,7 @@ export interface DatasetSettingsSidePanelItem {
     iconName: string;
     showDivider: boolean;
     activeTab: SettingsTabsEnum;
+    id: string;
     visible?: boolean;
     iconClassName?: string;
 }
@@ -32,13 +33,15 @@ export const datasetSettingsSidePanelData: DatasetSettingsSidePanelItem[] = [
         activeTab: SettingsTabsEnum.GENERAL,
         visible: true,
         iconClassName: "mr-1",
+        id: "general",
     },
     {
-        name: "Scheduling",
+        name: "Scheduled updates",
         iconName: "clock",
         showDivider: false,
         activeTab: SettingsTabsEnum.SCHEDULING,
         iconClassName: "mr-1",
+        id: "scheduling",
     },
     {
         name: "Compaction",
@@ -46,6 +49,7 @@ export const datasetSettingsSidePanelData: DatasetSettingsSidePanelItem[] = [
         showDivider: false,
         activeTab: SettingsTabsEnum.COMPACTION,
         iconClassName: "mr-2",
+        id: "compaction",
     },
     {
         name: "Variables and secrets",
@@ -53,5 +57,6 @@ export const datasetSettingsSidePanelData: DatasetSettingsSidePanelItem[] = [
         showDivider: false,
         activeTab: SettingsTabsEnum.VARIABLES_AND_SECRETS,
         iconClassName: "mr-2 ms-3px",
+        id: "varsSecrets",
     },
 ];

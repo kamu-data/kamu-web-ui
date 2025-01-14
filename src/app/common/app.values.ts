@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { AppUIConfig, AppUIConfigFeatureFlags } from "../app-config.model";
 
 @Injectable()
 export default class AppValues {
@@ -8,6 +9,7 @@ export default class AppValues {
     public static readonly LOCAL_STORAGE_LOGIN_REDIRECT_URL = "login_redirect_url";
     public static readonly LOCAL_STORAGE_ACCOUNT_ID = "account_id";
     public static readonly SESSION_STORAGE_SIDE_PANEL_VISIBLE = "side_panel_visible";
+    public static readonly SESSION_STORAGE_SQL_CODE = "sql_code";
     public static readonly DEFAULT_USER_DISPLAY_NAME = "anonymous";
     public static readonly DEFAULT_AVATAR_URL = "https://avatars.githubusercontent.com/u/11951648?v=4";
     public static readonly URL_PATTERN = /^(http:\/\/)|(https:\/\/)/i;
@@ -17,7 +19,7 @@ export default class AppValues {
 
     public static readonly DISPLAY_DATE_FORMAT = "DD MMM YYYY";
     public static readonly DISPLAY_TOOLTIP_DATE_FORMAT = "MMM D, YYYY, HH:mm A";
-    public static readonly CRON_EXPRESSION_DATE_FORMAT = "MMM Do YYYY, h:mm:ss A";
+    public static readonly CRON_EXPRESSION_DATE_FORMAT = "MMM Do YYYY, h:mm:ss A ZZ";
     public static readonly DISPLAY_FLOW_DATE_FORMAT = "y-MM-dd, h:mm:ss a";
     public static readonly TIME_FORMAT = "h:mm:ss A";
     public static readonly UNIMPLEMENTED_MESSAGE = "Feature coming soon";
@@ -31,6 +33,8 @@ export default class AppValues {
     public static readonly HEADERS_SKIP_LOADING_KEY = "Skip-loading";
     public static readonly HEADERS_AUTHORIZATION_KEY = "Authorization";
     public static readonly UPLOAD_FILE_IMAGE = "assets/images/upload-file-gear.gif";
+    public static readonly DEFAULT_ADMIN_ACCOUNT_NAME = "kamu";
+    public static readonly DEFAULT_MONACO_EDITOR_PLACEHOLDER = "Please type your query here...";
 
     public static readonly MARKDOWN_CONTAIN = `## Markdown __rulez__!
 ---
@@ -48,4 +52,16 @@ const language = 'typescript';
 
 ### Blockquote
 > Blockquote to the max`;
+
+    public static readonly DEFAULT_UI_FEATURE_FLAGS: AppUIConfigFeatureFlags = {
+        enableLogout: true,
+        enableScheduling: true,
+        enableDatasetEnvVarsManagement: true,
+        enableTermsOfService: true,
+    };
+
+    public static readonly DEFAULT_UI_CONFIGURATION: AppUIConfig = {
+        ingestUploadFileLimitMb: 50,
+        featureFlags: AppValues.DEFAULT_UI_FEATURE_FLAGS,
+    };
 }

@@ -12,7 +12,6 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { MaybeUndefined } from "src/app/common/app.types";
 import { DatasetNotFoundError, DatasetOperationError } from "src/app/common/errors";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 
@@ -36,7 +35,6 @@ export class DatasetCommitService {
 
     private datasetApi = inject(DatasetApi);
     private navigationService = inject(NavigationService);
-    private datasetService = inject(DatasetService);
     private loggedUserService = inject(LoggedUserService);
 
     public commitEventToDataset(params: {
@@ -57,7 +55,7 @@ export class DatasetCommitService {
                 map((data: CommitEventToDatasetMutation) => {
                     if (data.datasets.byId) {
                         if (data.datasets.byId.metadata.chain.commitEvent.__typename === "CommitResultSuccess") {
-                            this.updatePage(params.accountName, params.datasetName);
+                            this.redirectToOverviewTab(params.accountName, params.datasetName);
                         } else if (
                             data.datasets.byId.metadata.chain.commitEvent.__typename === "CommitResultAppendError" ||
                             data.datasets.byId.metadata.chain.commitEvent.__typename === "MetadataManifestMalformed"
@@ -112,7 +110,7 @@ export class DatasetCommitService {
                 map((data: UpdateReadmeMutation) => {
                     if (data.datasets.byId) {
                         if (data.datasets.byId.metadata.updateReadme.__typename === "CommitResultSuccess") {
-                            this.updatePage(params.accountName, params.datasetName);
+                            this.redirectToOverviewTab(params.accountName, params.datasetName);
                         } else {
                             throw new DatasetOperationError([
                                 new Error(data.datasets.byId.metadata.updateReadme.message),
@@ -145,7 +143,10 @@ export class DatasetCommitService {
                     map((data: UpdateWatermarkMutation) => {
                         if (data.datasets.byId) {
                             if (data.datasets.byId.setWatermark.__typename === "SetWatermarkUpdated") {
-                                this.updatePage(params.datasetInfo.accountName, params.datasetInfo.datasetName);
+                                this.redirectToOverviewTab(
+                                    params.datasetInfo.accountName,
+                                    params.datasetInfo.datasetName,
+                                );
                             } else {
                                 throw new DatasetOperationError([new Error(data.datasets.byId.setWatermark.message)]);
                             }
@@ -159,14 +160,7 @@ export class DatasetCommitService {
         }
     }
 
-    private updatePage(accountName: string, datasetName: string): void {
-        this.datasetService
-            .requestDatasetMainData({
-                accountName,
-                datasetName,
-            })
-            .subscribe();
-
+    private redirectToOverviewTab(accountName: string, datasetName: string): void {
         this.navigationService.navigateToDatasetView({
             accountName,
             datasetName,

@@ -1,0 +1,32 @@
+<ng-container *ngIf="verifyResponse">
+    <div
+        class="alert alert-info message-success mx-4 mt-4 w-50 mx-auto d-flex align-items-center justify-content-center"
+        role="alert"
+        *ngIf="verifyResponse.ok"
+    >
+        <mat-icon class="me-1">check_circle</mat-icon>
+        <span class="fs-18" data-test-id="verification-success">Verification successful</span>
+    </div>
+    <div
+        *ngIf="verifyResponse.error"
+        class="alert alert-info message-error error-color mx-4 mt-4 w-50 mx-auto d-flex flex-column"
+        role="alert"
+    >
+        <div class="d-flex align-items-center justify-content-center mb-2 fs-18">
+            <mat-icon class="me-1">error</mat-icon>
+            <span class="fs-18" data-test-id="verification-failed"> Verification failed </span>
+        </div>
+
+        <div class="fs-13 text-center" *ngIf="verifyResponse.error.message">
+            {{ verifyResponse.error.message }}
+        </div>
+        <div class="mx-auto" *ngIf="isOutputMismatchError(verifyResponse.error)">
+            <div data-test-id="error-actual-hash" class="mt-4 ms-2 fs-13">
+                Actual hash: {{ outputMismatchError(verifyResponse.error).actual_hash }}
+            </div>
+            <div data-test-id="error-expected-hash" class="my-2 ms-2 fs-13">
+                Expected hash: {{ outputMismatchError(verifyResponse.error).expected_hash }}
+            </div>
+        </div>
+    </div>
+</ng-container>

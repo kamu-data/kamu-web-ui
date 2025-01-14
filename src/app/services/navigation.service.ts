@@ -33,6 +33,19 @@ export class NavigationService {
         promiseWithCatch(this.router.navigate([ProjectLinks.URL_SEARCH], { queryParams }));
     }
 
+    public navigateToQueryExplainer(commitmentUploadToken: string): void {
+        if (commitmentUploadToken) {
+            const link = this.router.serializeUrl(
+                this.router.createUrlTree([`/${ProjectLinks.URL_QUERY_EXPLAINER}`], {
+                    queryParams: {
+                        [ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN]: commitmentUploadToken,
+                    },
+                }),
+            );
+            window.open(link, "_blank");
+        }
+    }
+
     public navigateToDatasetCreate(): void {
         promiseWithCatch(this.router.navigate([ProjectLinks.URL_DATASET_CREATE]));
     }
@@ -77,7 +90,7 @@ export class NavigationService {
                 queryParams:
                     params.page === 1
                         ? { tab: params.tab }
-                        : { tab: params.tab, section: params.section, page: params.page },
+                        : { tab: params.tab, section: params.section, page: params.page, sqlQuery: params.sqlQuery },
                 state: params.state,
             }),
         );
@@ -120,6 +133,17 @@ export class NavigationService {
                 params.flowId,
                 FlowDetailsTabs.HISTORY,
             ]),
+        );
+    }
+
+    public navigateWithSqlQuery(sqlQuery: string): void {
+        promiseWithCatch(
+            this.router.navigate([], {
+                queryParams: {
+                    [ProjectLinks.URL_QUERY_PARAM_SQL_QUERY]: sqlQuery,
+                },
+                queryParamsHandling: "merge",
+            }),
         );
     }
 }

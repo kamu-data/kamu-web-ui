@@ -1,7 +1,5 @@
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DataAccessPanelComponent } from "./data-access-panel.component";
-import AppValues from "src/app/common/app.values";
-import { emitClickOnElementByDataTestId, getElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
@@ -18,11 +16,13 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { ProtocolsService } from "src/app/services/protocols.service";
 import { of } from "rxjs";
 import { mockDatasetEndPoints } from "./data-access-panel-mock.data";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 describe("DataAccessPanelComponent", () => {
     let component: DataAccessPanelComponent;
     let fixture: ComponentFixture<DataAccessPanelComponent>;
     let protocolsService: ProtocolsService;
+    let ngbModalService: NgbModal;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -46,6 +46,7 @@ describe("DataAccessPanelComponent", () => {
 
         fixture = TestBed.createComponent(DataAccessPanelComponent);
         protocolsService = TestBed.inject(ProtocolsService);
+        ngbModalService = TestBed.inject(NgbModal);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
         spyOn(protocolsService, "getProtocols").and.returnValue(of(mockDatasetEndPoints));
@@ -56,20 +57,9 @@ describe("DataAccessPanelComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should copy to clipboard", fakeAsync(() => {
-        emitClickOnElementByDataTestId(fixture, "searchAdditionalButtons");
-
-        const menu = getElementByDataTestId(fixture, "menu");
-        expect(menu).toBeDefined();
-
-        const copyToClipboardButton = getElementByDataTestId(fixture, "copyToClipboard-clipboardReference");
-        emitClickOnElementByDataTestId(fixture, "copyToClipboard-clipboardReference");
-        expect(copyToClipboardButton.classList.contains("clipboard-btn--success")).toEqual(true);
-
-        tick(AppValues.LONG_DELAY_MS);
-
-        expect(copyToClipboardButton.classList.contains("clipboard-btn--success")).toEqual(false);
-
-        flush();
-    }));
+    it("should check open modal window", () => {
+        const ngbModalOpenSpy = spyOn(ngbModalService, "open").and.callThrough();
+        component.openDataAccessModal();
+        expect(ngbModalOpenSpy).toHaveBeenCalledTimes(1);
+    });
 });

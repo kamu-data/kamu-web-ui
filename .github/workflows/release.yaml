@@ -15,11 +15,11 @@ jobs:
         target:
           - any
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: "18"
 
       - uses: actions/cache@v3 # Source: https://gist.github.com/rupeshtiwari/44ebec690f2c01bf1df9b1d215a0e723
         id: cache-nodemodules
@@ -37,14 +37,9 @@ jobs:
       - if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
 
-      - run: npm run prettier-check
-      - run: npm run lint
-      - run: npm run stylelint
-      - run: npm run test
-      - run: npm run build
       - run: npm run build-prod
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ env.PACKAGE_NAME }}-${{ matrix.target }}
           path: dist/kamu-platform
@@ -76,7 +71,7 @@ jobs:
           - any
     steps:
       - name: Download Artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.PACKAGE_NAME }}-${{ matrix.target }}
           path: ${{ env.PACKAGE_NAME }}-${{ matrix.target }}

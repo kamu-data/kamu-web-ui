@@ -10,6 +10,7 @@ import {
     DatasetKind,
     DatasetPermissionsFragment,
     DatasetVisibilityInput,
+    DatasetVisibilityOutput,
 } from "../../../../../api/kamu.graphql.interface";
 import { DatasetSettingsService } from "../../services/dataset-settings.service";
 import { Observable, shareReplay } from "rxjs";
@@ -90,6 +91,10 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
 
     public get isPrivate(): boolean {
         return this.datasetBasics.visibility.__typename === "PrivateDatasetVisibility";
+    }
+
+    public get datasetVisibility(): DatasetVisibilityOutput {
+        return this.datasetBasics.visibility;
     }
 
     public renameDataset(): void {

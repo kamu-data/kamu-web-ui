@@ -286,7 +286,7 @@ $app-color-tooltip-border: #ced4da;
 }
 
 .clipboard-btn {
-    height: 100%;
+    height: auto;
 
     &.clipboard-btn--success {
         border-color: $app-harmonies !important;

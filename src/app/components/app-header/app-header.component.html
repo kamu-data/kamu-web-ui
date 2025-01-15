@@ -192,12 +192,12 @@
                     </a>
                     <ng-container *ngIf="featureFlags.enableLogout">
                         <button
-                            class="header-link header-signout-btn d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-md-top-0 border-white-fade"
+                            class="header-link d-flex align-items-center header-signout-btn d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-md-top-0 border-white-fade"
                             data-test-id="openLogoutHeader"
                             (click)="onLogout()"
                         >
-                            <svg-icon name="sign-out"></svg-icon>
-                            Log out
+                            <mat-icon class="logout-icon me-1" svgIcon="sign-out" />
+                            <span class="d-inline-block">Log out</span>
                         </button>
                     </ng-container>
                 </ng-template>
@@ -306,9 +306,14 @@
                         <div role="none" class="dropdown-divider"></div>
 
                         <ng-container *ngIf="featureFlags.enableLogout">
-                            <a mat-menu-item data-test-id="openLogout" (click)="onLogout()">
-                                <svg-icon name="sign-out" />
-                                Log out
+                            <a
+                                mat-menu-item
+                                data-test-id="openLogout"
+                                class="d-flex align-items-center"
+                                (click)="onLogout()"
+                            >
+                                <mat-icon class="logout-icon me-1" svgIcon="sign-out" />
+                                <span class="d-inline-block"> Log out</span>
                             </a>
                         </ng-container>
                     </ng-template>

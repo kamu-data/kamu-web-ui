@@ -54,13 +54,14 @@
         <div appFeatureFlag="newDataset.privacy">
             <label for="visibility-public" class="my-3">
                 <input name="visibility" type="radio" value="public" checked="checked" disabled />
-                <svg-icon name="public" class="ms-1" />
+                <mat-icon class="ms-1 me-2 overflow-visible" svgIcon="public" />
+
                 <span>Public</span>
             </label>
             <br />
             <label for="visibility-private" class="my-3 text-muted">
                 <input name="visibility" type="radio" value="private" disabled />
-                <svg-icon name="private" class="text-muted ms-1" />
+                <mat-icon class="ms-1 me-2 overflow-visible" svgIcon="private" />
                 <span>Private</span>
             </label>
             <mat-divider />
@@ -99,7 +100,7 @@
     </ng-container>
     <mat-divider />
     <div class="my-4 d-flex align-items-center text-muted">
-        <svg-icon class="me-1" name="information" />
+        <mat-icon class="mat-icon-svg-size me-2" svgIcon="information" />
         <span class="fs-6 pt-1">You are creating a dataset in your personal account.</span>
     </div>
     <mat-divider />

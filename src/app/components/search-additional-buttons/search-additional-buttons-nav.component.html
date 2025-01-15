@@ -58,7 +58,7 @@
                                     aria-label="Close menu"
                                     data-action="click:notifications-list-subscription-form#closeMenu"
                                 >
-                                    <svg-icon name="close" />
+                                    <mat-icon class="fs-4"> close</mat-icon>
                                 </button>
                             </header>
 
@@ -84,9 +84,17 @@
                                             [attr.aria-checked]="option.isSelected"
                                             data-targets="notifications-list-subscription-form.subscriptionButtons"
                                         >
-                                            <span class="f5">
-                                                <svg-icon *ngIf="!option.isSelected" name="notifications-checked" />
-                                                <svg-icon *ngIf="option.isSelected" name="notifications-checked" />
+                                            <span class="f5 mr-1">
+                                                <mat-icon
+                                                    *ngIf="!option.isSelected"
+                                                    class="mat-icon-svg-size"
+                                                    svgIcon="notifications-checked"
+                                                />
+                                                <mat-icon
+                                                    *ngIf="option.isSelected"
+                                                    class="mat-icon-svg-size"
+                                                    svgIcon="notifications-checked"
+                                                />
                                             </span>
                                             <div>
                                                 <div class="f5 text-bold">

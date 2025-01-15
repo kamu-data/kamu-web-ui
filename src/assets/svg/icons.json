@@ -1,131 +1,125 @@
 {
   "iconImageFiles": [
     {
-      "iconName": "public-profile",
+      "iconName": "public-profile-&",
       "iconPath": "/assets/svg/profile.svg"
     },
     {
-      "iconName": "account",
+      "iconName": "account-&",
       "iconPath": "/assets/svg/account.svg"
     },
     {
-      "iconName": "appearance",
+      "iconName": "appearance-&",
       "iconPath": "/assets/svg/appearance.svg"
     },
     {
-      "iconName": "accessibility",
+      "iconName": "accessibility-&",
       "iconPath": "/assets/svg/accessibility.svg"
     },
     {
-      "iconName": "notifications",
+      "iconName": "notifications-&",
       "iconPath": "/assets/svg/notifications.svg"
     },
     {
-      "iconName": "billing",
+      "iconName": "billing-&",
       "iconPath": "/assets/svg/billing.svg"
     },
     {
-      "iconName": "emails",
+      "iconName": "emails-&",
       "iconPath": "/assets/svg/emails.svg"
     },
     {
-      "iconName": "security",
+      "iconName": "security-&",
       "iconPath": "/assets/svg/security.svg"
     },
     {
-      "iconName": "organizations",
+      "iconName": "organizations-&",
       "iconPath": "/assets/svg/organizations.svg"
     },
     {
-      "iconName": "sign-out",
+      "iconName": "sign-out-&",
       "iconPath": "/assets/svg/sign-out.svg"
     },
     {
-      "iconName": "notifications-large",
+      "iconName": "notifications-large-&",
       "iconPath": "/assets/svg/notifications-large.svg"
     },
+
     {
-      "iconName": "history",
+      "iconName": "history-&",
       "iconPath": "/assets/svg/history.svg"
     },
+
     {
-      "iconName": "verified-commit",
+      "iconName": "verified-commit-&",
       "iconPath": "/assets/svg/verified-commit.svg"
     },
     {
-      "iconName": "close",
-      "iconPath": "/assets/svg/close.svg"
-    },
-    {
-      "iconName": "git-commit",
+      "iconName": "git-commit-&",
       "iconPath": "/assets/svg/git-commit.svg"
     },
     {
-      "iconName": "copy",
+      "iconName": "copy-&",
       "iconPath": "/assets/svg/copy.svg"
     },
     {
-      "iconName": "code",
-      "iconPath": "/assets/svg/code.svg"
-    },
-    {
-      "iconName": "code-square",
+      "iconName": "code-square-&",
       "iconPath": "/assets/svg/code-square.svg"
     },
     {
-      "iconName": "pencil",
+      "iconName": "pencil-&",
       "iconPath": "/assets/svg/pencil.svg"
     },
     {
-      "iconName": "repository",
+      "iconName": "repository-&",
       "iconPath": "/assets/svg/repository.svg"
     },
     {
-      "iconName": "terminal",
+      "iconName": "terminal-&",
       "iconPath": "/assets/svg/terminal.svg"
     },
     {
-      "iconName": "checked",
+      "iconName": "checked-&",
       "iconPath": "/assets/svg/checked.svg"
     },
     {
-      "iconName": "notifications-checked",
+      "iconName": "notifications-checked-&",
       "iconPath": "/assets/svg/notifications-checked.svg"
     },
     {
-      "iconName": "search",
+      "iconName": "search-&",
       "iconPath": "/assets/svg/search.svg"
     },
     {
-      "iconName": "public",
+      "iconName": "public-&",
       "iconPath": "/assets/svg/public.svg"
     },
     {
-      "iconName": "private",
+      "iconName": "private-&",
       "iconPath": "/assets/svg/private.svg"
     },
     {
-      "iconName": "information",
+      "iconName": "information-&",
       "iconPath": "/assets/svg/information.svg"
     },
     {
-      "iconName": "github-logo",
+      "iconName": "github-logo-&",
       "iconPath": "/assets/svg/git-hub.svg"
     },
     {
-      "iconName": "show-options",
+      "iconName": "show-options-&",
       "iconPath": "/assets/svg/show-options.svg"
     },
     {
-      "iconName": "timer",
+      "iconName": "timer-&",
       "iconPath": "/assets/svg/timer.svg"
     },
     {
-      "iconName": "clock",
+      "iconName": "clock-&",
       "iconPath": "/assets/svg/clock.svg"
     },
     {
-      "iconName": "hour-glass",
+      "iconName": "hour-glass-&",
       "iconPath": "/assets/svg/hour-glass.svg"
     },
     {

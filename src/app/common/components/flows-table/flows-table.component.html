@@ -115,14 +115,15 @@
                     </span>
                 </div>
                 <div class="d-flex align-items-center" *ngIf="durationBlockVisible(element)">
-                    <svg-icon name="timer" class="ps-1 pe-2 text-muted" [title]="'duration'"></svg-icon>
+                    <mat-icon class="ps-1 pe-1 me-2px text-muted" [title]="'duration'" svgIcon="timer" />
+
                     <span class="text-small pt-1">
                         <span class="text-small">completed in </span>
                         {{ durationTask(element.timing.runningSince, element.timing.finishedAt) }}
                     </span>
                 </div>
                 <div class="d-flex align-items-center" *ngIf="waitingForBlockVisible(element)">
-                    <svg-icon name="hour-glass" class="ps-1 pe-2 text-muted" [title]="'waiting condition'"></svg-icon>
+                    <mat-icon class="ps-1 pe-1 me-2px text-muted" [title]="'waiting condition'" svgIcon="hour-glass" />
                     <span class="text-small pt-1"> {{ waitingBlockText(element.startCondition) }} </span>
                 </div>
             </div>
@@ -172,7 +173,9 @@
         <th mat-header-cell *matHeaderCellDef style="width: 20%"></th>
         <td mat-cell *matCellDef="let element">
             <div class="pe-2">
-                <button mat-button [matMenuTriggerFor]="tableOptions"><svg-icon name="show-options"></svg-icon></button>
+                <button mat-button [matMenuTriggerFor]="tableOptions">
+                    <mat-icon class="mat-icon-svg-size" svgIcon="show-options" />
+                </button>
                 <mat-menu #tableOptions="matMenu" xPosition="before" [hasBackdrop]="true">
                     <a
                         mat-menu-item

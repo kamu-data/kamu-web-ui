@@ -5,13 +5,14 @@
                 {{ disCol }}
             </th>
             <td
-                [title]="element[disCol]"
+                [title]="hasData ? element[disCol].value : element[disCol]"
                 mat-cell
-                class="truncate-cell"
-                *matCellDef="let element"
-                [attr.data-test-id]="'column-name-' + element[disCol]"
+                [ngClass]="hasData ? element[disCol].cssClass : OperationColumnClassEnum.PRIMARY_COLOR"
+                [class]="'truncate-cell'"
+                *matCellDef="let element; index as rowIndex"
+                [attr.data-test-id]="'column-name-' + disCol + '-' + rowIndex"
             >
-                {{ element[disCol] }}
+                {{ hasData ? element[disCol].value : element[disCol] }}
             </td>
         </ng-container>
 

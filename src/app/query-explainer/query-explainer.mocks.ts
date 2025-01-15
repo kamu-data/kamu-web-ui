@@ -43,7 +43,7 @@ export const mockTextareaCommitment: string = `
 `;
 
 export const mockQueryExplainerOutput: QueryExplainerOutputType = {
-    data: [["0", "0", "2024-10-22T11:54:24.234Z", "2024-10-22T11:54:24.100Z", "100", "200"]],
+    data: [["0", 0, "2024-10-22T11:54:24.234Z", "2024-10-22T11:54:24.100Z", "100", "200"]],
 
     dataFormat: "JsonAoA",
     schemaFormat: "ArrowJson",

@@ -1,6 +1,7 @@
 import { DataSchemaFormat, DatasetKind, MetadataBlockFragment } from "../api/kamu.graphql.interface";
+import { OperationColumnClassEnum } from "../interface/dataset.interface";
 import { mockOwnerFields } from "../search/mock.data";
-import { DataHelpers } from "./data.helpers";
+import { DataHelpers, operationColumnMapper, setOperationColumnClass } from "./data.helpers";
 
 export const metadataBlockSetVocab: MetadataBlockFragment = {
     __typename: "MetadataBlockExtended",
@@ -369,5 +370,28 @@ it(`should propagate the name for unknown engines`, () => {
 ].forEach((item: { key: string; description: string }) => {
     it(`should check description for ${item.key} order`, () => {
         expect(DataHelpers.descriptionOrder(item.key)).toEqual(item.description);
+    });
+});
+
+[
+    { case: 0, expected: "+A" },
+    { case: 1, expected: "-R" },
+    { case: 2, expected: "-C" },
+    { case: 3, expected: "+C" },
+    { case: "test", expected: "test" },
+].forEach((item: { case: number | string; expected: string }) => {
+    it(`should check result for operation column mapper with  ${item.case}`, () => {
+        expect(operationColumnMapper(item.case)).toEqual(item.expected);
+    });
+});
+
+[
+    { case: 0, expected: OperationColumnClassEnum.PRIMARY_COLOR },
+    { case: 1, expected: OperationColumnClassEnum.ERROR_COLOR },
+    { case: 2, expected: OperationColumnClassEnum.SECONDARY_COLOR },
+    { case: 3, expected: OperationColumnClassEnum.SECONDARY_COLOR },
+].forEach((item: { case: number; expected: OperationColumnClassEnum }) => {
+    it(`should check set operation column class with  ${item.case}`, () => {
+        expect(setOperationColumnClass(item.case)).toEqual(item.expected);
     });
 });

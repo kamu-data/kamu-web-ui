@@ -383,7 +383,10 @@ export function parseDataFromJsonAoSFormat(data: object[], columnNames: string[]
             return {
                 [key]: {
                     value: key === "op" ? operationColumnMapper(dataItem[keyObject]) : dataItem[keyObject],
-                    cssClass: key === "op" ? setOperationColumnClass(dataItem[keyObject]) : dataItem[keyObject],
+                    cssClass:
+                        key === "op"
+                            ? setOperationColumnClass(dataItem[keyObject])
+                            : OperationColumnClassEnum.PRIMARY_COLOR,
                 },
             };
         });

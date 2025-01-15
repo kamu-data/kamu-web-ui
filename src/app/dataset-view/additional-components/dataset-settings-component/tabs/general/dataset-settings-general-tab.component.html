@@ -89,7 +89,10 @@
         <button type="button" data-test-id="reset-dataset-button" (click)="resetDataset()">Reset this dataset</button>
     </div>
 
-    <div class="danger-zone__content justify-content-between align-items-center mt-4">
+    <div
+        appFeatureFlag="dataset.panel.settings.general.changeVisibility"
+        class="danger-zone__content justify-content-between align-items-center mt-4"
+    >
         <div class="danger-zone__description">
             <p class="description">
                 Change dataset visibility

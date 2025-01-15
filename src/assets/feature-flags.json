@@ -17,7 +17,7 @@
     "subfeatures": [
       {
         "id": "badgePrivacy",
-        "developmentState": "mockup"
+        "developmentState": "stable"
       },
       {
         "id": "badgeVerified",
@@ -239,6 +239,10 @@
                   {
                     "id": "reset",
                     "developmentState": "stable"
+                  },
+                  {
+                    "id": "changeVisibility",
+                    "developmentState": "stable"
                   }
                 ]
               },
@@ -292,7 +296,7 @@
     "subfeatures": [
       {
         "id": "privacy",
-        "developmentState": "mockup"
+        "developmentState": "stable"
       }
     ]
   },

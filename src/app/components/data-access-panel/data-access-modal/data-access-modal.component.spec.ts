@@ -22,10 +22,16 @@ import { DataAccessOdataTabComponent } from "./tabs/data-access-odata-tab/data-a
 import { DataAccessExportTabComponent } from "./tabs/data-access-export-tab/data-access-export-tab.component";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { SharedModule } from "src/app/shared/shared/shared.module";
+import { DataAccessTabsEnum } from "./data-access-modal.model";
+import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { AppConfigService } from "src/app/app-config.service";
 
 describe("DataAccessModalComponent", () => {
     let component: DataAccessModalComponent;
     let fixture: ComponentFixture<DataAccessModalComponent>;
+    let loggedUserService: LoggedUserService;
+    let appConfigService: AppConfigService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -56,12 +62,32 @@ describe("DataAccessModalComponent", () => {
             ],
         });
         fixture = TestBed.createComponent(DataAccessModalComponent);
+        loggedUserService = TestBed.inject(LoggedUserService);
+        appConfigService = TestBed.inject(AppConfigService);
         component = fixture.componentInstance;
+        component.datasetBasics = mockDatasetBasicsRootFragment;
         component.protocols$ = of(mockDatasetEndPoints);
         fixture.detectChanges();
     });
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should check navigate to section", () => {
+        expect(component.activeTab).toEqual(DataAccessTabsEnum.LINK);
+        component.navigateToSection(DataAccessTabsEnum.KAMU_CLI);
+        expect(component.activeTab).toEqual(DataAccessTabsEnum.KAMU_CLI);
+    });
+
+    it("should check showApiTokensLink getter", () => {
+        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+        spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue({
+            enableLogout: true,
+            enableScheduling: true,
+            enableDatasetEnvVarsManagement: true,
+            enableTermsOfService: true,
+        });
+        expect(component.showApiTokensLink).toEqual(true);
     });
 });

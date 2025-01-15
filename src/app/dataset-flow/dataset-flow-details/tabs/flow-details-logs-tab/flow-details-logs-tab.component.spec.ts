@@ -7,11 +7,13 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { MatIconModule } from "@angular/material/icon";
 import { mockDatasetFlowByIdResponse } from "src/app/api/mock/dataset-flow.mock";
+import { AppConfigService } from "src/app/app-config.service";
 
 describe("FlowDetailsLogsTabComponent", () => {
     let component: FlowDetailsLogsTabComponent;
     let fixture: ComponentFixture<FlowDetailsLogsTabComponent>;
     let loggedUserService: LoggedUserService;
+    let appConfigService: AppConfigService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -22,12 +24,23 @@ describe("FlowDetailsLogsTabComponent", () => {
         loggedUserService = TestBed.inject(LoggedUserService);
 
         fixture = TestBed.createComponent(FlowDetailsLogsTabComponent);
+        appConfigService = TestBed.inject(AppConfigService);
         component = fixture.componentInstance;
         component.flowDetails = mockDatasetFlowByIdResponse;
     });
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should check grafanaTaskDetailsURL getter with value", () => {
+        spyOnProperty(appConfigService, "grafanaLogs", "get").and.returnValue({ taskDetailsUrl: "mock-value" });
+        expect(component.grafanaTaskDetailsURL).toEqual("mock-value");
+    });
+
+    it("should check grafanaTaskDetailsURL getter with null", () => {
+        spyOnProperty(appConfigService, "grafanaLogs", "get").and.returnValue(null);
+        expect(component.grafanaTaskDetailsURL).toEqual("");
     });
 
     it("should check grafana logs block is visible", () => {

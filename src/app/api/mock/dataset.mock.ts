@@ -491,6 +491,25 @@ export const MOCK_NODES: Node[] = [
         },
         transform: "translate(428.9427490234375, 20)",
     },
+    {
+        id: "didodfz4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",
+        label: "covid19.canada.case-details",
+        data: {
+            kind: LineageGraphNodeKind.DatasetNotAccessable,
+        } as LineageGraphNodeData,
+        meta: {
+            forceDimensions: false,
+        },
+        dimension: {
+            width: 308.9427490234375,
+            height: 30,
+        },
+        position: {
+            x: 174.47137451171875,
+            y: 65,
+        },
+        transform: "translate(20, 50)",
+    },
 ];
 
 export const MOCK_LINKS = [

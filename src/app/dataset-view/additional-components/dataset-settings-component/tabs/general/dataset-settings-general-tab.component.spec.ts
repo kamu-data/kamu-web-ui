@@ -197,7 +197,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     }));
 
     it("should check delete modal window is shown and sends API call after confirm", fakeAsync(() => {
-        const hasOutOfSyncPushRemotesSpy = spyOn(datasetService, "hasOutOfSyncPushRemotes").and.returnValue(of(false));
+        const hasOutOfSyncPushRemotesSpy = spyOn(datasetService, "hasOutOfSyncPushRemotes").and.returnValue(of(true));
         const modalServiceSpy = spyOn(modalService, "error").and.callFake((options) => {
             options.handler?.call(undefined, true);
             return Promise.resolve("");
@@ -294,4 +294,16 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
         flush();
     }));
+
+    it("should check change dataset visibility", () => {
+        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options) => {
+            options.handler?.call(undefined, true);
+            return Promise.resolve("");
+        });
+        const setVisibilitySpy = spyOn(datasetSettingsService, "setVisibility").and.callFake(() => of());
+
+        component.changeVisibilityDataset();
+        expect(modalServiceSpy).toHaveBeenCalledTimes(1);
+        expect(setVisibilitySpy).toHaveBeenCalledTimes(1);
+    });
 });

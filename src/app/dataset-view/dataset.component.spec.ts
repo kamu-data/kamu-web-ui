@@ -40,7 +40,7 @@ import { HistoryComponent } from "./additional-components/history-component/hist
 import { LineageComponent } from "./additional-components/lineage-component/lineage.component";
 import { DatasetSettingsGeneralTabComponent } from "./additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.component";
 import { DatasetSettingsSchedulingTabComponent } from "./additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.component";
-import { ToastrModule } from "ngx-toastr";
+import { ToastrModule, ToastrService } from "ngx-toastr";
 import { DataAccessPanelModule } from "../components/data-access-panel/data-access-panel.module";
 import { SqlEditorComponent } from "../shared/editor/components/sql-editor/sql-editor.component";
 import { RequestTimerComponent } from "../query/shared/request-timer/request-timer.component";
@@ -57,6 +57,7 @@ import { SqlQueryService } from "../services/sql-query.service";
 import { SearchAndSchemasSectionComponent } from "../query/global-query/search-and-schemas-section/search-and-schemas-section.component";
 import { SharedModule } from "../shared/shared/shared.module";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
+import { MOCK_NODES } from "../api/mock/dataset.mock";
 
 describe("DatasetComponent", () => {
     let component: DatasetComponent;
@@ -67,6 +68,7 @@ describe("DatasetComponent", () => {
     let sqlQueryService: SqlQueryService;
     let route: ActivatedRoute;
     let router: Router;
+    let toastrService: ToastrService;
     const MOCK_DATASET_ROUTE = "kamu/mockNameDerived";
 
     beforeEach(async () => {
@@ -172,7 +174,7 @@ describe("DatasetComponent", () => {
         fixture = TestBed.createComponent(DatasetComponent);
         router.initialNavigation();
         route = TestBed.inject(ActivatedRoute);
-
+        toastrService = TestBed.inject(ToastrService);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
@@ -356,5 +358,11 @@ describe("DatasetComponent", () => {
 
         component.ngOnDestroy();
         expect(removeDatasetSqlCodeSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check click on private node", () => {
+        const toastrServiceSuccessSpy = spyOn(toastrService, "success");
+        component.onClickPrivateLineageNode(MOCK_NODES[2]);
+        expect(toastrServiceSuccessSpy).toHaveBeenCalledWith("Copied ID");
     });
 });

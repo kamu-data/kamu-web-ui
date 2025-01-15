@@ -75,10 +75,12 @@ export const mockOwnerFieldsWithAvatar: AccountBasicsFragment & { avatarUrl?: st
 };
 
 export const mockPublicDatasetVisibility: PublicDatasetVisibility = {
+    __typename: "PublicDatasetVisibility",
     anonymousAvailable: true,
 };
 
 export const mockPrivateDatasetVisibility: PrivateDatasetVisibility = {
+    __typename: "PrivateDatasetVisibility",
     dummy: "",
 };
 

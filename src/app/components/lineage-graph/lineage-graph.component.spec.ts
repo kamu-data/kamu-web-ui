@@ -15,6 +15,7 @@ import { SharedTestModule } from "src/app/common/shared-test.module";
 import { mockGraphNode } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import timekeeper from "timekeeper";
 import { WidgetHeightService } from "src/app/services/widget-height.service";
+import { DisplayDatasetIdPipeModule } from "src/app/common/pipes/display-dataset-id.pipe.module";
 
 describe("LineageGraphComponent", () => {
     let component: LineageGraphComponent;
@@ -35,6 +36,7 @@ describe("LineageGraphComponent", () => {
                 DisplaySizeModule,
                 DisplayTimeModule,
                 SharedTestModule,
+                DisplayDatasetIdPipeModule,
             ],
         })
             .overrideComponent(LineageGraphComponent, {
@@ -69,6 +71,12 @@ describe("LineageGraphComponent", () => {
         const onClickNodeEventSpy = spyOn(component.onClickNodeEvent, "emit");
         component.onClickNode(MOCK_NODES[0]);
         expect(onClickNodeEventSpy).toHaveBeenCalledWith(MOCK_NODES[0]);
+    });
+
+    it("should check click on private node", () => {
+        const onClickPrivateNodeEventSpy = spyOn(component.onClickPrivateNodeEvent, "emit");
+        component.onClickPrivateNode(MOCK_NODES[2]);
+        expect(onClickPrivateNodeEventSpy).toHaveBeenCalledWith(MOCK_NODES[2]);
     });
 
     it("should check render default account avatar", () => {

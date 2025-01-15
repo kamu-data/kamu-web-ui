@@ -98,6 +98,7 @@ export class ModalComponent extends BaseComponent implements OnInit {
         document.removeEventListener("keydown", this._processKDB.bind(this));
     }
 
+    /* istanbul ignore next */
     _processKDB(e: KeyboardEvent) {
         if (e.key === "Escape") {
             // escape

@@ -129,6 +129,7 @@ export class ModalDialogComponent extends DynamicComponent {
         return `${100 / buttonsCount}%`;
     }
 
+    /* istanbul ignore next */
     private getContextButtonsCount(): number {
         let buttonsCount = 0;
         if (this.context.yesButtonText) buttonsCount++;

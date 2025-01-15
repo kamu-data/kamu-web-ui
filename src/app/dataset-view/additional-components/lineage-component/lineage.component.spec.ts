@@ -9,6 +9,7 @@ import { ApolloModule } from "apollo-angular";
 import { AccountService } from "src/app/services/account.service";
 import { of } from "rxjs";
 import { ToastrModule } from "ngx-toastr";
+import { MOCK_NODES } from "src/app/api/mock/dataset.mock";
 
 describe("LineageComponent", () => {
     let component: LineageComponent;
@@ -40,5 +41,11 @@ describe("LineageComponent", () => {
 
         component.onClickNode(mockNode);
         expect(emitterSubscription$.closed).toBeTrue();
+    });
+
+    it("should check click on private node", () => {
+        const onClickPrivateNodeEmitSpy = spyOn(component.onClickPrivateNodeEmit, "emit");
+        component.onClickPrivateNode(MOCK_NODES[2]);
+        expect(onClickPrivateNodeEmitSpy).toHaveBeenCalledWith(MOCK_NODES[2]);
     });
 });

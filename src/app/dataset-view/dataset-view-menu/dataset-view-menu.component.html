@@ -3,113 +3,26 @@
     [style]="isMinimizeSearchAdditionalButtons ? 'grid-template-columns: 1fr;' : ''"
     id="container-dataset-tabs"
     #datasetViewMenu
+    *ngIf="adminPrivileges$ | async as adminPrivileges"
 >
     <div class="dataset-view-type-toggle-group">
         <mat-button-toggle-group name="datasetViewType" class="mat-button-toggle-group" aria-label="Dataset View Type">
-            <mat-button-toggle
-                appFeatureFlag="dataset.panel.overview"
-                data-test-id="navigateToOverview"
-                [class.active-link]="isDatasetViewTypeOverview"
-                value="overview"
-            >
-                <a [routerLink]="[datasetLink]" class="menu-link">
-                    <div class="d-flex align-items-center">
-                        <mat-icon class="fs-4 d-block me-1">visibility</mat-icon>
-                        <span class="d-block">Overview</span>
-                    </div>
-                </a>
-            </mat-button-toggle>
-            <mat-button-toggle
-                appFeatureFlag="dataset.panel.data"
-                data-test-id="navigateToData"
-                [class.active-link]="isDatasetViewTypeData"
-                value="data"
-            >
-                <a [routerLink]="[datasetLink]" [queryParams]="{ tab: DatasetViewTypeEnum.Data }" class="menu-link">
-                    <div class="d-flex align-items-center">
-                        <mat-icon class="fs-4 d-block me-1">dataset</mat-icon>
-                        <span class="d-block">Data</span>
-                    </div>
-                </a>
-            </mat-button-toggle>
-            <mat-button-toggle
-                appFeatureFlag="dataset.panel.metadata"
-                data-test-id="navigateToMetadata"
-                [class.active-link]="isDatasetViewTypeMetadata"
-                value="metadata"
-            >
-                <a [routerLink]="[datasetLink]" [queryParams]="{ tab: DatasetViewTypeEnum.Metadata }" class="menu-link">
-                    <div class="d-flex align-items-center">
-                        <mat-icon class="fs-4 d-block me-1">dataset_linked</mat-icon>
-                        <span class="d-block">Metadata</span>
-                    </div>
-                </a>
-            </mat-button-toggle>
-            <mat-button-toggle
-                appFeatureFlag="dataset.panel.history"
-                data-test-id="navigateToHistory"
-                [class.active-link]="isDatasetViewTypeHistory"
-                value="history"
-            >
-                <a [routerLink]="[datasetLink]" [queryParams]="{ tab: DatasetViewTypeEnum.History }" class="menu-link">
-                    <div class="d-flex align-items-center">
-                        <mat-icon class="fs-4 d-block me-1">manage_history</mat-icon>
-                        <span class="d-block">History</span>
-                    </div>
-                </a>
-            </mat-button-toggle>
-            <mat-button-toggle
-                appFeatureFlag="dataset.panel.lineage"
-                data-test-id="navigateToLineage"
-                [class.active-link]="isDatasetViewTypeLineage"
-                value="lineage"
-            >
-                <a [routerLink]="[datasetLink]" [queryParams]="{ tab: DatasetViewTypeEnum.Lineage }" class="menu-link">
-                    <div class="d-flex align-items-center">
-                        <mat-icon class="fs-4 d-block me-1">account_tree</mat-icon>
-                        <span class="d-block">Lineage</span>
-                    </div>
-                </a>
-            </mat-button-toggle>
-            <mat-button-toggle
-                appFeatureFlag="dataset.panel.discussions"
-                data-test-id="navigateToDiscussions"
-                value="discussions"
-                disabled
-            >
-                <div class="d-flex align-items-center">
-                    <mat-icon class="fs-4 d-block me-1">message</mat-icon>
-                    <span class="d-block">Discussions</span>
-                </div>
-            </mat-button-toggle>
-            <mat-button-toggle
-                appFeatureFlag="dataset.panel.flows"
-                data-test-id="navigateToFlows"
-                value="flows"
-                [class.active-link]="isDatasetViewTypeFlows"
-                *ngIf="shouldAllowFlowsTab"
-            >
-                <a [routerLink]="[datasetLink]" [queryParams]="{ tab: DatasetViewTypeEnum.Flows }" class="menu-link">
-                    <div class="d-flex align-items-center">
-                        <mat-icon class="fs-4 d-block me-1">add_task</mat-icon>
-                        <span class="d-block">Flows</span>
-                    </div>
-                </a>
-            </mat-button-toggle>
-            <mat-button-toggle
-                appFeatureFlag="dataset.panel.settings"
-                data-test-id="navigateToSettings"
-                value="settings"
-                [class.active-link]="isDatasetViewTypeSettings"
-                *ngIf="shouldAllowSettingsTab"
-            >
-                <a [routerLink]="[datasetLink]" [queryParams]="{ tab: DatasetViewTypeEnum.Settings }" class="menu-link">
-                    <div class="d-flex align-items-center">
-                        <svg-icon name="account" class="me-1" />
-                        <span class="d-block">Settings</span>
-                    </div>
-                </a>
-            </mat-button-toggle>
+            <ng-container *ngFor="let menuItem of datasetMenuItemDescriptors">
+                <app-dataset-view-menu-item
+                    [appFeatureFlag]="'dataset.panel.' + menuItem.value"
+                    [dataTestId]="menuItem.dataTestId"
+                    [activeLink]="datasetViewType === menuItem.value"
+                    [value]="menuItem.value"
+                    [label]="menuItem.label"
+                    [icon]="menuItem.icon"
+                    [adminPrivileges]="adminPrivileges.value"
+                    [disabled]="menuItem.disabled"
+                    [showAdminIcon]="menuItem.showAdminIcon"
+                    [visible]="menuItem.shouldAllowTab(datasetPermissions, adminPrivileges.value)"
+                    [datasetLink]="datasetLink"
+                >
+                </app-dataset-view-menu-item>
+            </ng-container>
         </mat-button-toggle-group>
     </div>
     <app-data-access-panel [datasetBasics]="datasetBasics" />

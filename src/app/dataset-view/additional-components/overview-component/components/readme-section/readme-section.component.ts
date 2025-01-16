@@ -15,7 +15,6 @@ import { MaybeNull } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
 import { EditMode } from "./readme-section.types";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import ProjectLinks from "src/app/project-links";
@@ -44,7 +43,6 @@ export class ReadmeSectionComponent extends BaseComponent implements OnChanges, 
 
     private navigationService = inject(NavigationService);
     private datasetCommitService = inject(DatasetCommitService);
-    private loggedUserService = inject(LoggedUserService);
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.currentReadme && changes.currentReadme.currentValue !== changes.currentReadme.previousValue) {

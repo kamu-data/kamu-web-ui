@@ -88,7 +88,7 @@
             class="d-flex flex-column align-items-center flex-md-row flex-self-stretch flex-md-self-auto width-full justify-content-between"
             aria-label="Global"
         >
-            <div class="d-flex flex-column flex-md-row flex-self-stretch flex-md-self-auto">
+            <div class="d-flex align-items-center flex-row">
                 <!-- <a
                     class="header-link py-2 py-md-3 mr-0 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
                     data-ga-click="Header, click, Nav menu - item:explore"
@@ -128,15 +128,18 @@
                         <span>Your Datasets </span>
                     </a>
 
-                    <a
-                        appFeatureFlag="dashboard"
-                        class="header-link align-items-center py-2 py-md-3 mr-4 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
-                        (click)="onDashboard()"
-                        *ngIf="isAdmin"
-                    >
-                        <mat-icon class="fs-4">dashboard</mat-icon>
-                        <span> Dashboard</span>
-                    </a>
+                    <ng-container *ngIf="adminPrivileges$ | async as adminPrivileges">
+                        <app-admin-link appFeatureFlag="dashboard" [adminPrivileges]="adminPrivileges.value">
+                            <a
+                                class="header-link d-flex align-items-center"
+                                (click)="onDashboard()"
+                                *ngIf="adminPrivileges.value"
+                            >
+                                <mat-icon class="fs-4">dashboard</mat-icon>
+                                <span> Dashboard</span>
+                            </a>
+                        </app-admin-link>
+                    </ng-container>
 
                     <a
                         class="header-link d-block d-md-none py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"

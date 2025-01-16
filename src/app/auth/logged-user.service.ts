@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { catchError, first } from "rxjs/operators";
-import { EMPTY, Observable, ReplaySubject, Subject } from "rxjs";
+
+import { EMPTY, BehaviorSubject, Observable, ReplaySubject, Subject } from "rxjs";
 import { NavigationService } from "../services/navigation.service";
 import { MaybeNull } from "../common/app.types";
 import { isNull } from "lodash";
@@ -20,6 +21,9 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
     private loggedInUser: MaybeNull<AccountFragment> = null;
     private loggedInUser$: Subject<MaybeNull<AccountFragment>> = new ReplaySubject<MaybeNull<AccountFragment>>(1);
+    private adminPrivileges$: BehaviorSubject<{ value: boolean }> = new BehaviorSubject<{ value: boolean }>({
+        value: false,
+    });
 
     constructor(
         private loginService: LoginService,
@@ -36,6 +40,14 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
             this.loginService.accountChanges
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe((user: AccountFragment) => this.changeUser(user));
+    }
+
+    public get adminPrivilegesChanges(): Observable<{ value: boolean }> {
+        return this.adminPrivileges$.asObservable();
+    }
+
+    public emitAdminPrivilegesChanges(value: boolean): void {
+        return this.adminPrivileges$.next({ value });
     }
 
     public initializeCompletes(): Observable<void> {
@@ -83,6 +95,7 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
         this.changeUser(null);
         this.resetAccessToken();
         this.clearGraphQLCache();
+        this.resetAdminPrivileges();
     }
 
     private attemptPreviousAuthenticationCompletes(): Observable<void> {
@@ -115,5 +128,10 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
 
     private saveAccessToken(token: string): void {
         this.localStorageService.setAccessToken(token);
+    }
+
+    private resetAdminPrivileges(): void {
+        this.localStorageService.setAdminPriveleges(null);
+        this.emitAdminPrivilegesChanges(false);
     }
 }

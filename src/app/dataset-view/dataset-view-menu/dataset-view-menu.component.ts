@@ -15,6 +15,9 @@ import { DatasetViewTypeEnum } from "../dataset-view.interface";
 import { SideNavHelper } from "../../common/sidenav.helper";
 import { isMobileView, promiseWithCatch } from "src/app/common/app.helpers";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
+import { Observable } from "rxjs";
+import { DatasetViewMenuItems } from "./dataset-view-menu.model";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DatasetPermissionsService } from "../dataset.permissions.service";
 import { AppConfigService } from "src/app/app-config.service";
 
@@ -33,13 +36,15 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
     @Input({ required: true }) datasetPermissions: DatasetPermissionsFragment;
     @Input({ required: true }) datasetViewType: DatasetViewTypeEnum;
     @Input() isMinimizeSearchAdditionalButtons: boolean;
+    public datasetMenuItemDescriptors = DatasetViewMenuItems;
+    public adminPrivileges$: Observable<{ value: boolean }>;
+    private sideNavHelper: SideNavHelper;
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 
-    private sideNavHelper: SideNavHelper;
-
-    private datasetPermissionsServices = inject(DatasetPermissionsService);
     private widgetHeightService = inject(WidgetHeightService);
+    private loggedUserService = inject(LoggedUserService);
     private configService = inject(AppConfigService);
+    private datasetPermissionsServices = inject(DatasetPermissionsService);
 
     public ngAfterViewInit(): void {
         this.widgetHeightService.setWidgetOffsetTop(
@@ -52,6 +57,7 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
         if (this.sidenav) {
             this.sideNavHelper = new SideNavHelper(this.sidenav);
         }
+        this.adminPrivileges$ = this.loggedUserService.adminPrivilegesChanges;
     }
 
     public get enableScheduling(): boolean {
@@ -99,7 +105,7 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
     }
 
     public get datasetLink(): string {
-        return `/${this.datasetBasics.owner.accountName}/${this.datasetBasics.name}/`;
+        return `/${this.datasetBasics.owner.accountName}/${this.datasetBasics.name}`;
     }
 
     @HostListener("window:resize")

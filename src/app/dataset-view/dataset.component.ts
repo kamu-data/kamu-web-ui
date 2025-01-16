@@ -10,12 +10,12 @@ import { DatasetInfo } from "../interface/navigation.interface";
 import { promiseWithCatch } from "../common/app.helpers";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { MaybeNull, MaybeUndefined } from "../common/app.types";
-import { DatasetPermissionsService } from "./dataset.permissions.service";
 import { ReplaySubject, Subject, of } from "rxjs";
 import { LineageGraphNodeData, LineageGraphNodeKind } from "./additional-components/lineage-component/lineage-model";
 import _ from "lodash";
 import { BaseDatasetDataComponent } from "../common/base-dataset-data.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { DatasetPermissionsService } from "./dataset.permissions.service";
 import { SqlQueryService } from "../services/sql-query.service";
 import { AppConfigService } from "../app-config.service";
 

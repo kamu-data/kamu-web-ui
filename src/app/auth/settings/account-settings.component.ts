@@ -3,13 +3,14 @@ import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import { AccountSettingsTabs } from "./account-settings.constants";
 import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
-import { filter } from "rxjs/operators";
+import { filter, map } from "rxjs/operators";
 import { BaseComponent } from "src/app/common/base.component";
 import AppValues from "src/app/common/app.values";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
-import { Observable } from "rxjs";
-import { LoggedUserService } from "../logged-user.service";
+import { combineLatest, Observable } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { MatSlideToggleChange } from "@angular/material/slide-toggle";
+import { LocalStorageService } from "src/app/services/local-storage.service";
 
 @Component({
     selector: "app-settings",
@@ -26,7 +27,12 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
 
     private router = inject(Router);
     private route = inject(ActivatedRoute);
-    private loggedUserService = inject(LoggedUserService);
+    private localStorageService = inject(LocalStorageService);
+
+    public userData$: Observable<{
+        user: AccountFragment;
+        adminPrivileges: boolean;
+    } | null>;
 
     public ngOnInit(): void {
         this.router.events
@@ -39,11 +45,33 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
             });
 
         this.extractActiveTabFromRoute();
-        this.user$ = this.loggedUserService.loggedInUserChanges;
+
+        this.userData$ = combineLatest([
+            this.loggedUserService.loggedInUserChanges,
+            this.loggedUserService.adminPrivilegesChanges,
+        ]).pipe(
+            map(([user, adminPrivileges]) => {
+                return user
+                    ? {
+                          user,
+                          adminPrivileges: adminPrivileges.value,
+                      }
+                    : null;
+            }),
+        );
     }
 
     public getRouteLink(tab: AccountSettingsTabs): string {
         return `/${ProjectLinks.URL_SETTINGS}/${tab}`;
+    }
+
+    public get isAdmin(): boolean {
+        return this.loggedUserService.isAdmin;
+    }
+
+    public adminSlideToggleChange(event: MatSlideToggleChange): void {
+        this.loggedUserService.emitAdminPrivilegesChanges(event.checked);
+        this.localStorageService.setAdminPriveleges(event.checked);
     }
 
     private extractActiveTabFromRoute(): void {

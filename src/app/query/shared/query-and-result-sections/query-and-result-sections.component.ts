@@ -12,7 +12,6 @@ import {
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ToastrService } from "ngx-toastr";
 import { switchMap, tap } from "rxjs";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import AppValues from "src/app/common/app.values";
 import { BaseComponent } from "src/app/common/base.component";
@@ -41,7 +40,6 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
     @Input({ required: true }) public monacoPlaceholder: string = "";
     @Output() public runSQLRequestEmit = new EventEmitter<DatasetRequestBySql>();
 
-    private loggedUserService = inject(LoggedUserService);
     private queryExplainerService = inject(QueryExplainerService);
     private fileUploadService = inject(FileUploadService);
     private navigationService = inject(NavigationService);

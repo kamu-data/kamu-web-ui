@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
@@ -18,7 +17,6 @@ export class FinalYamlModalComponent extends BaseComponent {
 
     public activeModal = inject(NgbActiveModal);
     private datasetCommitService = inject(DatasetCommitService);
-    private loggedUserService = inject(LoggedUserService);
 
     public saveEvent(): void {
         this.datasetCommitService

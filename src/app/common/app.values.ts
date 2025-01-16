@@ -8,6 +8,8 @@ export default class AppValues {
     public static readonly LOCAL_STORAGE_LOGIN_CALLBACK_URL = "login_callback_url";
     public static readonly LOCAL_STORAGE_LOGIN_REDIRECT_URL = "login_redirect_url";
     public static readonly LOCAL_STORAGE_ACCOUNT_ID = "account_id";
+    public static readonly LOCAL_STORAGE_ADMIN_PRIVILEGES = "admin_priveleges";
+
     public static readonly SESSION_STORAGE_SIDE_PANEL_VISIBLE = "side_panel_visible";
     public static readonly SESSION_STORAGE_SQL_CODE = "sql_code";
     public static readonly DEFAULT_USER_DISPLAY_NAME = "anonymous";

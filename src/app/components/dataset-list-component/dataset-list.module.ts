@@ -10,7 +10,6 @@ import { MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
 import { DatasetListComponent } from "./dataset-list.component";
 import { MatSelectModule } from "@angular/material/select";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { RouterModule } from "@angular/router";
 import { SharedModule } from "src/app/shared/shared/shared.module";
 
@@ -24,7 +23,6 @@ import { SharedModule } from "src/app/shared/shared/shared.module";
         FormsModule,
         MatChipsModule,
         MatSelectModule,
-        AngularSvgIconModule,
         DisplayTimeModule,
         RouterModule,
         SharedModule,

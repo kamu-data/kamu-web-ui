@@ -12,6 +12,7 @@ import {
     routerMockEventSubject,
     findElementByDataTestId,
     emitClickOnElementByDataTestId,
+    registerMatSvgIcons,
 } from "src/app/common/base-test.helpers.spec";
 import { AppHeaderComponent } from "./app-header.component";
 import { BrowserModule } from "@angular/platform-browser";
@@ -27,7 +28,6 @@ import ProjectLinks from "src/app/project-links";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { NavigationService } from "src/app/services/navigation.service";
 import { NotificationIndicatorComponent } from "../notification-indicator/notification-indicator.component";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { LoginMethod } from "src/app/app-config.model";
@@ -53,7 +53,6 @@ describe("AppHeaderComponent", () => {
                 NgbTypeaheadModule,
                 RouterTestingModule,
                 ApolloTestingModule,
-                AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
                 RouterModule,
                 MatIconModule,
@@ -73,6 +72,8 @@ describe("AppHeaderComponent", () => {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })
             .compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(AppHeaderComponent);
         component = fixture.componentInstance;

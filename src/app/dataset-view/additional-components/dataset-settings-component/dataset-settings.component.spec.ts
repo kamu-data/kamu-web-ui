@@ -6,14 +6,17 @@ import { Apollo } from "apollo-angular";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ActivatedRoute } from "@angular/router";
 import { ToastrModule } from "ngx-toastr";
 import { DatasetSettingsGeneralTabComponent } from "./tabs/general/dataset-settings-general-tab.component";
 import { DatasetSettingsSchedulingTabComponent } from "./tabs/scheduling/dataset-settings-scheduling-tab.component";
 import { SettingsTabsEnum } from "./dataset-settings.model";
-import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import {
+    emitClickOnElementByDataTestId,
+    findElementByDataTestId,
+    registerMatSvgIcons,
+} from "src/app/common/base-test.helpers.spec";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { ChangeDetectionStrategy } from "@angular/core";
@@ -67,7 +70,6 @@ describe("DatasetSettingsComponent", () => {
             ],
             imports: [
                 ReactiveFormsModule,
-                AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
                 MatDividerModule,
                 MatIconModule,
@@ -87,6 +89,9 @@ describe("DatasetSettingsComponent", () => {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })
             .compileComponents();
+
+        registerMatSvgIcons();
+
         fixture = TestBed.createComponent(DatasetSettingsComponent);
         navigationService = TestBed.inject(NavigationService);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);

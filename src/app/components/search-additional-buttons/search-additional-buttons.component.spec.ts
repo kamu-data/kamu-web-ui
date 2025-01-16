@@ -5,6 +5,7 @@ import { SearchAdditionalButtonsComponent } from "./search-additional-buttons.co
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
 import { SharedModule } from "src/app/shared/shared/shared.module";
+import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
 
 describe("SearchAdditionalButtonsComponent", () => {
     let component: SearchAdditionalButtonsComponent;
@@ -19,6 +20,8 @@ describe("SearchAdditionalButtonsComponent", () => {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })
             .compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(SearchAdditionalButtonsComponent);
         component = fixture.componentInstance;

@@ -15,7 +15,7 @@ import { ModalService } from "./components/modal/modal.service";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { of } from "rxjs";
 import ProjectLinks from "./project-links";
-import { routerMock, routerMockEventSubject } from "./common/base-test.helpers.spec";
+import { registerMatSvgIcons, routerMock, routerMockEventSubject } from "./common/base-test.helpers.spec";
 import { ActivatedRoute, NavigationEnd, RouterModule } from "@angular/router";
 import { mockAccountFromAccessToken } from "./api/mock/auth.mock";
 import { FetchAccountDetailsGQL } from "./api/kamu.graphql.interface";
@@ -25,7 +25,6 @@ import { LoggedUserService } from "./auth/logged-user.service";
 import { LoginService } from "./auth/login/login.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { NotificationIndicatorComponent } from "./components/notification-indicator/notification-indicator.component";
-import { AngularSvgIconModule, SvgIconRegistryService } from "angular-svg-icon";
 import { MatIconModule } from "@angular/material/icon";
 
 describe("AppComponent", () => {
@@ -48,7 +47,6 @@ describe("AppComponent", () => {
                 HttpClientTestingModule,
                 RouterModule,
                 MatIconModule,
-                AngularSvgIconModule.forRoot(),
             ],
             declarations: [
                 AppComponent,
@@ -63,7 +61,6 @@ describe("AppComponent", () => {
                 AuthApi,
                 NavigationService,
                 ModalService,
-                // { provide: Router, useValue: routerMock },
                 {
                     provide: ActivatedRoute,
                     useValue: {
@@ -73,8 +70,7 @@ describe("AppComponent", () => {
             ],
         }).compileComponents();
 
-        const iconRegistryService: SvgIconRegistryService = TestBed.inject(SvgIconRegistryService);
-        iconRegistryService.addSvg("sign-out", "");
+        registerMatSvgIcons();
 
         routerMock.url = ProjectLinks.URL_HOME;
 

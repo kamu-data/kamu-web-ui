@@ -13,12 +13,12 @@ import { ActivatedRoute, RouterModule } from "@angular/router";
 import { of } from "rxjs";
 import { mockDatasetInfo } from "src/app/search/mock.data";
 import ProjectLinks from "src/app/project-links";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
 import { MarkdownModule } from "ngx-markdown";
 import { HttpClient } from "@angular/common/http";
 import { SecurityContext } from "@angular/core";
+import { MatIconModule } from "@angular/material/icon";
 
 describe("InputDataSectionComponent", () => {
     let component: InputDataSectionComponent;
@@ -32,7 +32,7 @@ describe("InputDataSectionComponent", () => {
                 HighlightModule,
                 ToastrModule.forRoot(),
                 RouterModule,
-                AngularSvgIconModule.forRoot(),
+                MatIconModule,
                 HttpClientTestingModule,
                 MarkdownModule.forRoot({
                     loader: HttpClient,
@@ -66,6 +66,9 @@ describe("InputDataSectionComponent", () => {
                 },
             ],
         });
+
+        registerMatSvgIcons();
+
         fixture = TestBed.createComponent(InputDataSectionComponent);
         component = fixture.componentInstance;
         component.inputData = {

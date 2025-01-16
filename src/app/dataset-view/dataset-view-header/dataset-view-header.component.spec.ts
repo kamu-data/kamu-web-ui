@@ -4,12 +4,12 @@ import { mockDatasetInfo } from "src/app/search/mock.data";
 import { SearchAdditionalButtonsComponent } from "src/app/components/search-additional-buttons/search-additional-buttons.component";
 import { SearchAdditionalButtonsNavComponent } from "src/app/components/search-additional-buttons/search-additional-buttons-nav.component";
 import { MatIconModule } from "@angular/material/icon";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatMenuModule } from "@angular/material/menu";
 import { RouterModule } from "@angular/router";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { SharedModule } from "src/app/shared/shared/shared.module";
+import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
 
 describe("DatasetViewHeaderComponent", () => {
     let component: DatasetViewHeaderComponent;
@@ -25,13 +25,14 @@ describe("DatasetViewHeaderComponent", () => {
             imports: [
                 MatIconModule,
                 MatMenuModule,
-                AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
                 RouterModule,
                 SharedTestModule,
                 SharedModule,
             ],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(DatasetViewHeaderComponent);
         component = fixture.componentInstance;

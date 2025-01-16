@@ -5,12 +5,11 @@ import { FormsModule } from "@angular/forms";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { BlockNavigationComponent } from "./block-navigation.component";
 import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
-import { dispatchInputEvent, getElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { dispatchInputEvent, getElementByDataTestId, registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
 import { PaginationModule } from "src/app/components/pagination-component/pagination.module";
 import { MatIconModule } from "@angular/material/icon";
 import { DisplayHashModule } from "src/app/components/display-hash/display-hash.module";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { ToastrModule } from "ngx-toastr";
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 
@@ -26,13 +25,14 @@ describe("BlockNavigationComponent", () => {
                 NgMultiSelectDropDownModule,
                 PaginationModule,
                 MatIconModule,
-                AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
                 DisplayHashModule,
                 ToastrModule.forRoot(),
                 AngularMultiSelectModule,
             ],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(BlockNavigationComponent);
         component = fixture.componentInstance;

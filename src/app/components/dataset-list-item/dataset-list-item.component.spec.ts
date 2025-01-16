@@ -6,10 +6,9 @@ import { DatasetListItemComponent } from "./dataset-list-item.component";
 import { NgbModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatDividerModule } from "@angular/material/divider";
 import { mockDatasetListItem } from "src/app/api/mock/dataset.mock";
-import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
 import { DisplayTimeModule } from "../display-time/display-time.module";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { RouterModule } from "@angular/router";
 
@@ -28,12 +27,13 @@ describe("DatasetListItemComponent", () => {
                 MatIconModule,
                 NgbModule,
                 DisplayTimeModule,
-                AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
                 SharedTestModule,
                 RouterModule,
             ],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(DatasetListItemComponent);
         component = fixture.componentInstance;

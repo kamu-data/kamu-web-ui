@@ -6,7 +6,7 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
-import { AngularSvgIconModule } from "angular-svg-icon";
+import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
 
 describe("DataAccessSqlTabComponent", () => {
     let component: DataAccessSqlTabComponent;
@@ -15,14 +15,11 @@ describe("DataAccessSqlTabComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [DataAccessSqlTabComponent],
-            imports: [
-                FormsModule,
-                MatDividerModule,
-                MatIconModule,
-                AngularSvgIconModule.forRoot(),
-                HttpClientTestingModule,
-            ],
+            imports: [FormsModule, MatDividerModule, MatIconModule, HttpClientTestingModule],
         });
+
+        registerMatSvgIcons();
+
         fixture = TestBed.createComponent(DataAccessSqlTabComponent);
         component = fixture.componentInstance;
         component.flightSql = mockDatasetEndPoints.flightsql;

@@ -11,7 +11,6 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { DataAccessKamuCliTabComponent } from "./tabs/data-access-kamu-cli-tab/data-access-kamu-cli-tab.component";
 import { DataAccessRestTabComponent } from "./tabs/data-access-rest-tab/data-access-rest-tab.component";
@@ -22,6 +21,7 @@ import { DataAccessOdataTabComponent } from "./tabs/data-access-odata-tab/data-a
 import { DataAccessExportTabComponent } from "./tabs/data-access-export-tab/data-access-export-tab.component";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { SharedModule } from "src/app/shared/shared/shared.module";
+import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
 
 describe("DataAccessModalComponent", () => {
     let component: DataAccessModalComponent;
@@ -47,7 +47,6 @@ describe("DataAccessModalComponent", () => {
                 MatCheckboxModule,
                 MatIconModule,
                 MatTooltipModule,
-                AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
                 BrowserAnimationsModule,
                 ApolloModule,
@@ -55,6 +54,9 @@ describe("DataAccessModalComponent", () => {
                 SharedModule,
             ],
         });
+
+        registerMatSvgIcons();
+
         fixture = TestBed.createComponent(DataAccessModalComponent);
         component = fixture.componentInstance;
         component.protocols$ = of(mockDatasetEndPoints);

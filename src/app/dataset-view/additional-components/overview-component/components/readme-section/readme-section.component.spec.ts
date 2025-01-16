@@ -7,15 +7,19 @@ import { SharedTestModule } from "src/app/common/shared-test.module";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
 import { SecurityContext, SimpleChanges } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { FormsModule } from "@angular/forms";
-import { AngularSvgIconModule, SvgIconRegistryService } from "angular-svg-icon";
 import { MarkdownModule } from "ngx-markdown";
-import { emitClickOnElementByDataTestId, findNativeElement } from "src/app/common/base-test.helpers.spec";
+import {
+    emitClickOnElementByDataTestId,
+    findNativeElement,
+    registerMatSvgIcons,
+} from "src/app/common/base-test.helpers.spec";
 import { EditMode } from "./readme-section.types";
 import { of } from "rxjs";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { MatIconModule } from "@angular/material/icon";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("ReadmeSectionComponent", () => {
     let component: ReadmeSectionComponent;
@@ -37,15 +41,13 @@ describe("ReadmeSectionComponent", () => {
                     loader: HttpClient,
                     sanitize: SecurityContext.NONE,
                 }),
-                AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
                 FormsModule,
+                MatIconModule,
             ],
         }).compileComponents();
 
-        const iconRegistryService: SvgIconRegistryService = TestBed.inject(SvgIconRegistryService);
-        iconRegistryService.addSvg("code-square", "");
-        iconRegistryService.addSvg("pencil", "");
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(ReadmeSectionComponent);
         component = fixture.componentInstance;

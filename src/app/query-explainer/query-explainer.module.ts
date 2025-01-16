@@ -2,7 +2,6 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { QueryExplainerComponent } from "./query-explainer.component";
 import { MatIconModule } from "@angular/material/icon";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { RouterModule } from "@angular/router";
 import { HighlightModule } from "ngx-highlightjs";
 import { VerifyResultSectionComponent } from "./components/verify-result-section/verify-result-section.component";
@@ -26,7 +25,6 @@ import { MarkdownModule } from "ngx-markdown";
     imports: [
         CommonModule,
         MatIconModule,
-        AngularSvgIconModule.forRoot(),
         DisplayHashModule,
         RouterModule,
         HighlightModule,

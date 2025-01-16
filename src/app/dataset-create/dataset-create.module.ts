@@ -9,7 +9,6 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { EditorModule } from "../shared/editor/editor.module";
 import { SharedModule } from "../shared/shared/shared.module";
 
@@ -24,7 +23,6 @@ import { SharedModule } from "../shared/shared/shared.module";
         SearchAdditionalButtonsModule,
         FormsModule,
         MatDividerModule,
-        AngularSvgIconModule,
         ReactiveFormsModule,
         EditorModule,
         SharedModule,

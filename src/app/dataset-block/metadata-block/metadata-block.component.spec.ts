@@ -19,12 +19,12 @@ import { DatasetViewHeaderComponent } from "src/app/dataset-view/dataset-view-he
 import { SearchAdditionalButtonsComponent } from "src/app/components/search-additional-buttons/search-additional-buttons.component";
 import { SearchAdditionalButtonsNavComponent } from "src/app/components/search-additional-buttons/search-additional-buttons-nav.component";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { MatTabsModule } from "@angular/material/tabs";
 import { YamlViewSectionComponent } from "./components/yaml-view-section/yaml-view-section.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { DataAccessPanelModule } from "src/app/components/data-access-panel/data-access-panel.module";
 import { SharedModule } from "src/app/shared/shared/shared.module";
+import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
 
 describe("MetadataBlockComponent", () => {
     let component: MetadataBlockComponent;
@@ -52,7 +52,6 @@ describe("MetadataBlockComponent", () => {
                 FormsModule,
                 MatButtonToggleModule,
                 MatMenuModule,
-                AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
                 MatTabsModule,
                 BrowserAnimationsModule,
@@ -86,6 +85,8 @@ describe("MetadataBlockComponent", () => {
                 },
             ],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(MetadataBlockComponent);
         component = fixture.componentInstance;

@@ -1,14 +1,18 @@
 import { TEST_BLOCK_HASH } from "../../api/mock/dataset.mock";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { emitClickOnElementByDataTestId, getElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import {
+    emitClickOnElementByDataTestId,
+    getElementByDataTestId,
+    registerMatSvgIcons,
+} from "src/app/common/base-test.helpers.spec";
 import { mockDatasetInfo } from "src/app/search/mock.data";
 import { DisplayHashComponent } from "./display-hash.component";
 import { ToastrModule, ToastrService } from "ngx-toastr";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { RouterModule } from "@angular/router";
 import { SharedTestModule } from "src/app/common/shared-test.module";
+import { MatIconModule } from "@angular/material/icon";
 
 describe("DisplayHashComponent", () => {
     let component: DisplayHashComponent;
@@ -21,12 +25,14 @@ describe("DisplayHashComponent", () => {
             imports: [
                 ToastrModule.forRoot(),
                 BrowserAnimationsModule,
-                AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
                 RouterModule,
                 SharedTestModule,
+                MatIconModule,
             ],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(DisplayHashComponent);
         toastService = TestBed.inject(ToastrService);

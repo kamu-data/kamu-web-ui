@@ -7,8 +7,9 @@ import { of } from "rxjs";
 import { DisplayHashModule } from "src/app/components/display-hash/display-hash.module";
 import { ToastrModule } from "ngx-toastr";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { SharedTestModule } from "src/app/common/shared-test.module";
+import { MatIconModule } from "@angular/material/icon";
+import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
 
 describe("BlockIntervalPropertyComponent", () => {
     let component: BlockIntervalPropertyComponent;
@@ -22,11 +23,13 @@ describe("BlockIntervalPropertyComponent", () => {
                 ApolloTestingModule,
                 DisplayHashModule,
                 ToastrModule.forRoot(),
-                AngularSvgIconModule.forRoot(),
+                MatIconModule,
                 HttpClientTestingModule,
                 SharedTestModule,
             ],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(BlockIntervalPropertyComponent);
         datasetService = TestBed.inject(DatasetService);

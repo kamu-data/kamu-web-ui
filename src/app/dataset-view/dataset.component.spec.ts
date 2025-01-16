@@ -24,7 +24,6 @@ import { SearchAdditionalButtonsComponent } from "../components/search-additiona
 import { MatTabsModule } from "@angular/material/tabs";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { SearchAdditionalButtonsNavComponent } from "../components/search-additional-buttons/search-additional-buttons-nav.component";
-import { AngularSvgIconModule, SvgIconRegistryService } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatIconModule } from "@angular/material/icon";
 import AppValues from "../common/app.values";
@@ -56,6 +55,7 @@ import { SqlQueryService } from "../services/sql-query.service";
 import { SearchAndSchemasSectionComponent } from "../query/global-query/search-and-schemas-section/search-and-schemas-section.component";
 import { SharedModule } from "../shared/shared/shared.module";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
+import { registerMatSvgIcons } from "../common/base-test.helpers.spec";
 
 describe("DatasetComponent", () => {
     let component: DatasetComponent;
@@ -92,7 +92,6 @@ describe("DatasetComponent", () => {
                 SearchAndSchemasSectionComponent,
             ],
             imports: [
-                AngularSvgIconModule.forRoot(),
                 ApolloModule,
                 ApolloTestingModule,
                 BrowserAnimationsModule,
@@ -152,13 +151,7 @@ describe("DatasetComponent", () => {
             .compileComponents();
 
         // Note: for some reason this icon is not loaded when activating Settings tab, so stub it
-        const iconRegistryService: SvgIconRegistryService = TestBed.inject(SvgIconRegistryService);
-        iconRegistryService.addSvg("account", "");
-        iconRegistryService.addSvg("clock", "");
-        iconRegistryService.addSvg("security", "");
-        iconRegistryService.addSvg("repository", "");
-        iconRegistryService.addSvg("close", "");
-        iconRegistryService.addSvg("notifications-checked", "");
+        registerMatSvgIcons();
 
         datasetSubsServices = TestBed.inject(DatasetSubscriptionsService);
         datasetSubsServices.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);

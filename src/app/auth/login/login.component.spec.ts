@@ -3,7 +3,6 @@ import { LoginComponent } from "./login.component";
 import { ReactiveFormsModule } from "@angular/forms";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
 import { AppConfigService } from "src/app/app-config.service";
 import { LoginMethod } from "src/app/app-config.model";
@@ -14,6 +13,7 @@ import {
     checkVisible,
     emitClickOnElementByDataTestId,
     getElementByDataTestId,
+    registerMatSvgIcons,
     setFieldValue,
 } from "src/app/common/base-test.helpers.spec";
 import {
@@ -29,6 +29,7 @@ import { ActivatedRoute } from "@angular/router";
 import { AuthApi } from "src/app/api/auth.api";
 import { NavigationService } from "src/app/services/navigation.service";
 import { LocalStorageService } from "src/app/services/local-storage.service";
+import { MatIconModule } from "@angular/material/icon";
 
 describe("LoginComponent", () => {
     let component: LoginComponent;
@@ -77,13 +78,10 @@ describe("LoginComponent", () => {
                     },
                 },
             ],
-            imports: [
-                ApolloTestingModule,
-                ReactiveFormsModule,
-                AngularSvgIconModule.forRoot(),
-                HttpClientTestingModule,
-            ],
+            imports: [ApolloTestingModule, ReactiveFormsModule, HttpClientTestingModule, MatIconModule],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         localStorageService = TestBed.inject(LocalStorageService);
         localStorageService.reset();

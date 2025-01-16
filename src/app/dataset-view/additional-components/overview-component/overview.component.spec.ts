@@ -18,7 +18,6 @@ import { ReadmeSectionComponent } from "./components/readme-section/readme-secti
 import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
 import { DisplayTimeComponent } from "src/app/components/display-time/display-time.component";
 import { DisplayHashComponent } from "src/app/components/display-hash/display-hash.component";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ToastrModule } from "ngx-toastr";
 import { DynamicTableComponent } from "src/app/components/dynamic-table/dynamic-table.component";
@@ -34,7 +33,11 @@ import { HttpClient } from "@angular/common/http";
 import { MatIconModule } from "@angular/material/icon";
 import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
 import { of } from "rxjs";
-import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import {
+    emitClickOnElementByDataTestId,
+    findElementByDataTestId,
+    registerMatSvgIcons,
+} from "src/app/common/base-test.helpers.spec";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import AppValues from "src/app/common/app.values";
@@ -60,7 +63,6 @@ describe("OverviewComponent", () => {
                 DynamicTableComponent,
             ],
             imports: [
-                AngularSvgIconModule.forRoot(),
                 ApolloModule,
                 DisplaySizeModule,
                 HttpClientTestingModule,
@@ -87,6 +89,8 @@ describe("OverviewComponent", () => {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })
             .compileComponents();
+
+        registerMatSvgIcons();
 
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         datasetSubsService.emitOverviewChanged({

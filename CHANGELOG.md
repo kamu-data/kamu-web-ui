@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Saved sql request in the URL after completing the network request
 ### Changed
 - Environment variables and secrets: made `key` field unavailable for editing
+- Improved representation of retractions and corrections in data table
 
 
 ## [0.36.0] - 2025-01-08

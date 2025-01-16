@@ -1,7 +1,8 @@
 import { DataSchemaFormat, DatasetKind, MetadataBlockFragment } from "../api/kamu.graphql.interface";
 import { SliceUnit } from "../dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
 import { mockOwnerFields, mockPublicDatasetVisibility } from "../search/mock.data";
-import { DataHelpers, sliceSizeMapperReverse } from "./data.helpers";
+import { OperationColumnClassEnum } from "../interface/dataset.interface";
+import { DataHelpers, sliceSizeMapperReverse, operationColumnMapper, setOperationColumnClass } from "./data.helpers";
 
 export const metadataBlockSetVocab: MetadataBlockFragment = {
     __typename: "MetadataBlockExtended",
@@ -385,6 +386,18 @@ it(`should propagate the name for unknown engines`, () => {
 });
 
 [
+    { case: 0, expected: "+A" },
+    { case: 1, expected: "-R" },
+    { case: 2, expected: "-C" },
+    { case: 3, expected: "+C" },
+    { case: "test", expected: "test" },
+].forEach((item: { case: number | string; expected: string }) => {
+    it(`should check result for operation column mapper with  ${item.case}`, () => {
+        expect(operationColumnMapper(item.case)).toEqual(item.expected);
+    });
+});
+
+[
     { case: "ReadStepCsv", expectation: "Csv" },
     { case: "ReadStepEsriShapefile", expectation: "Esri Shapefile" },
     { case: "ReadStepGeoJson", expectation: "Geo Json" },
@@ -404,5 +417,16 @@ it(`should propagate the name for unknown engines`, () => {
 ].forEach((item: { case: string; expectation: string }) => {
     it(`should check description for SetPollingSource steps  with ${item.case}`, () => {
         expect(DataHelpers.descriptionSetPollingSourceSteps(item.case)).toEqual(item.expectation);
+    });
+});
+
+[
+    { case: 0, expected: OperationColumnClassEnum.PRIMARY_COLOR },
+    { case: 1, expected: OperationColumnClassEnum.ERROR_COLOR },
+    { case: 2, expected: OperationColumnClassEnum.SECONDARY_COLOR },
+    { case: 3, expected: OperationColumnClassEnum.SECONDARY_COLOR },
+].forEach((item: { case: number; expected: OperationColumnClassEnum }) => {
+    it(`should check set operation column class with  ${item.case}`, () => {
+        expect(setOperationColumnClass(item.case)).toEqual(item.expected);
     });
 });

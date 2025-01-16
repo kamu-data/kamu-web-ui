@@ -5,7 +5,12 @@ import {
     PageBasedInfo,
 } from "../api/kamu.graphql.interface";
 
-export type DataRow = Record<string, string | number>;
+export interface DataRow {
+    [key: string]: {
+        value: string | number;
+        cssClass: string;
+    };
+}
 
 export interface DatasetLineageNode {
     basics: DatasetLineageBasicsFragment | DependencyDatasetResultNotAccessible;
@@ -24,6 +29,12 @@ export interface DataSchemaField {
     repetition: string;
     type: string;
     logicalType?: string;
+}
+
+export enum OperationColumnClassEnum {
+    SECONDARY_COLOR = "secondary-color",
+    ERROR_COLOR = "error-color",
+    PRIMARY_COLOR = "primary-color",
 }
 
 export interface DatasetsAccountResponse {

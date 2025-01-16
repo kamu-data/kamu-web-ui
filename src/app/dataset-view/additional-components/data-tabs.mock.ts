@@ -13,6 +13,7 @@ import {
 } from "../dataset.subscriptions.interface";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 import { Node } from "@swimlane/ngx-graph";
+import { OperationColumnClassEnum } from "src/app/interface/dataset.interface";
 
 export const mockDataUpdate: DataUpdate = {
     schema: {
@@ -28,7 +29,10 @@ export const mockDataUpdate: DataUpdate = {
     },
     content: [
         {
-            mockName: "someValueOfMockType",
+            mockName: {
+                value: "someValueOfMockType",
+                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+            },
         },
     ],
 };
@@ -672,18 +676,54 @@ export const mockBuildGraphNodesResult: Node[] = [
 export const mockOverviewDataUpdate = {
     content: [
         {
-            offset: 6908,
-            system_time: "2022-08-05 21:15:03.947",
-            block_time: "2022-08-05 20:24:55",
-            token_symbol: "rETH",
-            event_name: "TokensMinted",
-            amount: 0.009679238156255232,
-            eth_amount: 0.010000000272564223,
-            block_number: 15284454,
-            block_hash: "0x887569ff02456b8cde2ade8e0ee5b48d441800c8c6d92d1414a9648902807558",
-            transaction_index: 224,
-            transaction_hash: "0xa88698d288550d09653e6cec3038ea30fe8f74eb40941eba93b05024037426d7",
-            log_index: 355,
+            offset: {
+                value: 6908,
+                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+            },
+            system_time: {
+                value: "2022-08-05 21:15:03.947",
+                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+            },
+            block_time: {
+                value: "2022-08-05 20:24:55",
+                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+            },
+            token_symbol: {
+                value: "rETH",
+                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+            },
+            event_name: {
+                value: "TokensMinted",
+                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+            },
+            amount: {
+                value: 0.009679238156255232,
+                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+            },
+            eth_amount: {
+                value: 0.010000000272564223,
+                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+            },
+            block_number: {
+                value: 15284454,
+                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+            },
+            block_hash: {
+                value: "0x887569ff02456b8cde2ade8e0ee5b48d441800c8c6d92d1414a9648902807558",
+                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+            },
+            transaction_index: {
+                value: 224,
+                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+            },
+            transaction_hash: {
+                value: "0xa88698d288550d09653e6cec3038ea30fe8f74eb40941eba93b05024037426d7",
+                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+            },
+            log_index: {
+                value: 355,
+                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+            },
         },
     ],
     overview: {
@@ -1329,32 +1369,55 @@ export const mockMetadataDerivedUpdate: MetadataSchemaUpdate = {
                 type: "INT96",
             },
             {
-                name: "id",
-                repetition: "OPTIONAL",
-                type: "INT64",
-            },
-            {
-                name: "reported_date",
-                repetition: "OPTIONAL",
+                name: "block_time",
+                repetition: "REQUIRED",
                 type: "INT96",
             },
             {
-                name: "gender",
+                name: "token_symbol",
                 repetition: "REQUIRED",
-                type: "BYTE_ARRAY",
-                logicalType: "UTF8",
+                type: "INT96",
             },
             {
-                name: "age_group",
+                name: "event_name",
                 repetition: "REQUIRED",
-                type: "BYTE_ARRAY",
-                logicalType: "UTF8",
+                type: "INT96",
             },
             {
-                name: "location",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "UTF8",
+                name: "amount",
+                repetition: "REQUIRED",
+                type: "INT96",
+            },
+            {
+                name: "eth_amount",
+                repetition: "REQUIRED",
+                type: "INT96",
+            },
+            {
+                name: "block_number",
+                repetition: "REQUIRED",
+                type: "INT96",
+            },
+            {
+                name: "block_hash",
+                repetition: "REQUIRED",
+                type: "INT96",
+            },
+            {
+                name: "transaction_index",
+                repetition: "REQUIRED",
+                type: "INT96",
+            },
+
+            {
+                name: "transaction_hash",
+                repetition: "REQUIRED",
+                type: "INT96",
+            },
+            {
+                name: "log_index",
+                repetition: "REQUIRED",
+                type: "INT96",
             },
         ],
     },

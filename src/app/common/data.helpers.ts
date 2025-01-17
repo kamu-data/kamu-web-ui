@@ -358,9 +358,13 @@ export function parseSchema(schemaContent: string): DatasetSchema {
 export function parseDataRows(successResult: DataQueryResultSuccessViewFragment): DataRow[] {
     const content: string = successResult.data.content;
     const parsedData = JSON.parse(content) as object[];
-    const columnNames = Object.keys(parsedData[0]);
-    const dataRowArray = parseDataFromJsonAoSFormat(parsedData, columnNames);
-    return dataRowArray;
+    if (parsedData.length) {
+        const columnNames = Object.keys(parsedData[0]);
+        const dataRowArray = parseDataFromJsonAoSFormat(parsedData, columnNames);
+        return dataRowArray;
+    } else {
+        return [];
+    }
 }
 
 export function parseDataFromJsonAoSFormat(data: object[], columnNames: string[]): DataRow[] {

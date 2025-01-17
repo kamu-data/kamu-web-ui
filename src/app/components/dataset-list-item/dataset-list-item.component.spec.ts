@@ -12,6 +12,7 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { AngularSvgIconModule } from "angular-svg-icon";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { RouterModule } from "@angular/router";
+import { DatasetVisibilityModule } from "../dataset-visibility/dataset-visibility.module";
 
 describe("DatasetListItemComponent", () => {
     let component: DatasetListItemComponent;
@@ -32,6 +33,7 @@ describe("DatasetListItemComponent", () => {
                 HttpClientTestingModule,
                 SharedTestModule,
                 RouterModule,
+                DatasetVisibilityModule,
             ],
         }).compileComponents();
 

@@ -1,3 +1,4 @@
+import { mockPublicDatasetVisibility } from "src/app/search/mock.data";
 import { mockDatasetMainDataId } from "src/app/search/mock.data";
 import {
     AccountByNameQuery,
@@ -171,6 +172,7 @@ export const mockAccountListDatasetsWithFlowsQuery: AccountListDatasetsWithFlows
                                     __typename: "Account",
                                 },
                                 alias: "account.tokens.transfers",
+                                visibility: mockPublicDatasetVisibility,
                                 __typename: "Dataset",
                                 metadata: {
                                     currentPollingSource: {
@@ -197,6 +199,7 @@ export const mockAccountListDatasetsWithFlowsQuery: AccountListDatasetsWithFlows
                                     __typename: "Account",
                                 },
                                 alias: "account.tokens.transfers",
+                                visibility: mockPublicDatasetVisibility,
                                 __typename: "Dataset",
                                 metadata: {
                                     currentPollingSource: {
@@ -223,6 +226,7 @@ export const mockAccountListDatasetsWithFlowsQuery: AccountListDatasetsWithFlows
                                     __typename: "Account",
                                 },
                                 alias: "caccount.tokens.transfers",
+                                visibility: mockPublicDatasetVisibility,
                                 __typename: "Dataset",
                                 metadata: {
                                     currentPollingSource: {
@@ -249,6 +253,7 @@ export const mockAccountListDatasetsWithFlowsQuery: AccountListDatasetsWithFlows
                                     __typename: "Account",
                                 },
                                 alias: "account.tokens.transfers",
+                                visibility: mockPublicDatasetVisibility,
                                 __typename: "Dataset",
                                 metadata: {
                                     currentPollingSource: {

@@ -79,7 +79,10 @@
                     {{ node.data.dataObject.accountName }}
                 </svg:text>
             </svg:g>
-            <svg:g [attr.transform]="'translate(' + node.dimension.width + ', 0)'" *ngIf="false">
+            <svg:g
+                [attr.transform]="'translate(' + node.dimension.width + ', 0)'"
+                *ngIf="node.data && node.data.dataObject && node.data.dataObject.access === LineageNodeAccess.PRIVATE"
+            >
                 <image
                     [attr.x]="5"
                     [attr.y]="-12"
@@ -140,6 +143,37 @@
                     {{ node.label }}
                 </svg:text>
             </svg:g>
+
+            <svg:g class="node" *ngIf="node.data.kind === LineageGraphNodeKind.DatasetNotAccessable">
+                <svg:rect
+                    [attr.width]="node.dimension.width + 12"
+                    [attr.height]="node.dimension.height"
+                    [attr.rx]="5"
+                    [attr.fill]="'#d6D6D6'"
+                    [attr.cursor]="'pointer'"
+                    (click)="onClickPrivateNode(node)"
+                />
+
+                <svg:text
+                    alignment-baseline="central"
+                    [attr.x]="node.dimension.width * 0.12"
+                    [attr.y]="node.dimension.height / 2"
+                    [attr.font-weight]="'600'"
+                    [attr.cursor]="'pointer'"
+                    (click)="onClickPrivateNode(node)"
+                >
+                    {{ node.label | displayDatasetId }}
+                </svg:text>
+                <svg:g [attr.transform]="'translate(' + (node.dimension.width - 15) + ', 0)'">
+                    <image
+                        [attr.x]="17"
+                        [attr.y]="-12"
+                        [attr.width]="20"
+                        [attr.height]="20"
+                        [attr.href]="'../assets/images/question-mark.png'"
+                    />
+                </svg:g>
+            </svg:g>
         </ng-template>
 
         <ng-template #linkTemplate let-link>
@@ -170,7 +204,7 @@
             </div>
         </div>
         <div class="side-panel__permissions mt-1">
-            <span class="badge-access">Public</span>
+            <span class="badge-access">{{ isPrivateVisibility ? "Private" : "Public" }}</span>
             <span class="badge-verified">Verified</span>
         </div>
         <div class="mt-3 info d-flex align-items-center">

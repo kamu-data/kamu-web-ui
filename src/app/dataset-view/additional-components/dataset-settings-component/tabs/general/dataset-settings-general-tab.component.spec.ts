@@ -34,6 +34,7 @@ import AppValues from "src/app/common/app.values";
 import { DatasetFlowsService } from "../../../flows-component/services/dataset-flows.service";
 import { DatasetService } from "../../../../dataset.service";
 import { MatCheckboxModule } from "@angular/material/checkbox";
+import { DatasetVisibilityModule } from "src/app/components/dataset-visibility/dataset-visibility.module";
 
 describe("DatasetSettingsGeneralTabComponent", () => {
     let component: DatasetSettingsGeneralTabComponent;
@@ -62,6 +63,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
                 NgbTooltipModule,
                 MatCheckboxModule,
                 FormsModule,
+                DatasetVisibilityModule,
             ],
             providers: [FormBuilder],
         }).compileComponents();
@@ -195,7 +197,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     }));
 
     it("should check delete modal window is shown and sends API call after confirm", fakeAsync(() => {
-        const hasOutOfSyncPushRemotesSpy = spyOn(datasetService, "hasOutOfSyncPushRemotes").and.returnValue(of(false));
+        const hasOutOfSyncPushRemotesSpy = spyOn(datasetService, "hasOutOfSyncPushRemotes").and.returnValue(of(true));
         const modalServiceSpy = spyOn(modalService, "error").and.callFake((options) => {
             options.handler?.call(undefined, true);
             return Promise.resolve("");
@@ -292,4 +294,16 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
         flush();
     }));
+
+    it("should check change dataset visibility", () => {
+        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options) => {
+            options.handler?.call(undefined, true);
+            return Promise.resolve("");
+        });
+        const setVisibilitySpy = spyOn(datasetSettingsService, "setVisibility").and.callFake(() => of());
+
+        component.changeVisibilityDataset();
+        expect(modalServiceSpy).toHaveBeenCalledTimes(1);
+        expect(setVisibilitySpy).toHaveBeenCalledTimes(1);
+    });
 });

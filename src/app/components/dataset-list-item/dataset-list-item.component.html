@@ -10,6 +10,7 @@
             >
                 {{ row.owner.accountName }}/{{ row.name }}
             </a>
+            <app-dataset-visibility class="ms-2" [datasetVisibility]="row.visibility"></app-dataset-visibility>
         </div>
         <div>
             <ng-template #popTitle class="signed-commit__popup-header">
@@ -68,7 +69,7 @@
         </div>
     </div>
     <div>
-        <p class="dataset-list-container__description mb-2">
+        <p class="dataset-list-container__description my-2">
             {{ row.metadata.currentInfo.description }}
         </p>
         <div class="app-mat-chip">

@@ -20,7 +20,7 @@ import {
 } from "./../kamu.graphql.interface";
 import { GetDatasetFlowConfigsQuery, DatasetKind, TimeUnit, TimeDeltaInput } from "../kamu.graphql.interface";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
-import { mockDatasetMainDataId } from "src/app/search/mock.data";
+import { mockDatasetMainDataId, mockPublicDatasetVisibility } from "src/app/search/mock.data";
 import { FlowsTableData } from "src/app/common/components/flows-table/flows-table.types";
 
 export const mockTimeDeltaInput: TimeDeltaInput = {
@@ -40,6 +40,7 @@ export const mockIngestGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQuery 
                 __typename: "Account",
             },
             alias: "account.transactions",
+            visibility: mockPublicDatasetVisibility,
             __typename: "Dataset",
             flows: {
                 configs: {
@@ -402,6 +403,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                 __typename: "Account",
             },
             alias: "test-dataset",
+            visibility: mockPublicDatasetVisibility,
             __typename: "Dataset",
             metadata: {
                 currentPollingSource: {

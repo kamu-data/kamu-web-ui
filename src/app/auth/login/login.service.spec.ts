@@ -18,12 +18,14 @@ import { LoginResponse } from "src/app/api/kamu.graphql.interface";
 import { MaybeUndefined } from "src/app/common/app.types";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { LocalStorageService } from "src/app/services/local-storage.service";
+import { AppConfigService } from "src/app/app-config.service";
 
 describe("LoginService", () => {
     let service: LoginService;
     let navigationService: NavigationService;
     let authApi: AuthApi;
     let localStorageService: LocalStorageService;
+    let appConfigService: AppConfigService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -37,6 +39,7 @@ describe("LoginService", () => {
         service = TestBed.inject(LoginService);
         navigationService = TestBed.inject(NavigationService);
         authApi = TestBed.inject(AuthApi);
+        appConfigService = TestBed.inject(AppConfigService);
     });
 
     it("should be created", () => {
@@ -175,5 +178,14 @@ describe("LoginService", () => {
         expect(accountSubscription$.closed).toBeFalse();
         tokenSubscription$.unsubscribe();
         accountSubscription$.unsubscribe();
+    });
+
+    it("should check githubLoginLink method", () => {
+        spyOnProperty(appConfigService, "githubClientId", "get").and.returnValue("mockId");
+        expect(
+            service
+                .githubLoginLink()
+                .includes("https://github.com/login/oauth/authorize?scope=user:email&client_id=mockId"),
+        ).toEqual(true);
     });
 });

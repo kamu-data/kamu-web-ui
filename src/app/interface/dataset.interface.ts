@@ -1,6 +1,7 @@
 import {
     DatasetLineageBasicsFragment,
     DatasetSearchOverviewFragment,
+    DependencyDatasetResultNotAccessible,
     PageBasedInfo,
 } from "../api/kamu.graphql.interface";
 
@@ -12,7 +13,7 @@ export interface DataRow {
 }
 
 export interface DatasetLineageNode {
-    basics: DatasetLineageBasicsFragment;
+    basics: DatasetLineageBasicsFragment | DependencyDatasetResultNotAccessible;
     downstreamDependencies: DatasetLineageNode[];
     upstreamDependencies: DatasetLineageNode[];
 }

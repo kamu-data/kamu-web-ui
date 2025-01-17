@@ -17,6 +17,7 @@ import {
 import { DeleteDatasetMutation, RenameDatasetMutation } from "src/app/api/kamu.graphql.interface";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { TEST_ACCOUNT_ID } from "src/app/api/mock/auth.mock";
+import { ToastrModule } from "ngx-toastr";
 
 describe("DatasetSettingsService", () => {
     let service: DatasetSettingsService;
@@ -31,7 +32,7 @@ describe("DatasetSettingsService", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [Apollo],
-            imports: [ApolloModule, ApolloTestingModule, HttpClientTestingModule],
+            imports: [ApolloModule, ApolloTestingModule, HttpClientTestingModule, ToastrModule.forRoot()],
         });
         service = TestBed.inject(DatasetSettingsService);
         navigationService = TestBed.inject(NavigationService);

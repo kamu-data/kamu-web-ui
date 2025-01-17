@@ -9,6 +9,8 @@ import {
     DatasetFlowType,
     DatasetKind,
     DatasetPermissionsFragment,
+    DatasetVisibilityInput,
+    DatasetVisibilityOutput,
 } from "../../../../../api/kamu.graphql.interface";
 import { DatasetSettingsService } from "../../services/dataset-settings.service";
 import { Observable, shareReplay } from "rxjs";
@@ -85,6 +87,14 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
 
     public get isRoot(): boolean {
         return this.datasetBasics.kind === DatasetKind.Root;
+    }
+
+    public get isPrivate(): boolean {
+        return this.datasetBasics.visibility.__typename === "PrivateDatasetVisibility";
+    }
+
+    public get datasetVisibility(): DatasetVisibilityOutput {
+        return this.datasetBasics.visibility;
     }
 
     public renameDataset(): void {
@@ -216,5 +226,65 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
 
     public changeName(): void {
         this.datasetSettingsService.resetRenameError();
+    }
+
+    public changeVisibilityDataset(): void {
+        promiseWithCatch(
+            this.modalService.error({
+                title: "Change visibility",
+                message: `Do you want to make dataset ${this.isPrivate ? "public" : "private"}?`,
+                bigTextBlock: "Ok",
+                listDescription: this.isPrivate
+                    ? [
+                          "It will appear in search results for everyone",
+                          "Anyone can read data and metadata",
+                          "Anyone can query and download it",
+                          "Flow history and logs will be visible to everyone",
+                      ]
+                    : [
+                          "You will decide who else has access",
+                          "It will appear in search results on for people with access",
+                          "You can control the level of access others have",
+                      ],
+                warningText: !this.isPrivate
+                    ? "Warning: Changing dataset to private may impact the downstream datasets that rely on it."
+                    : "",
+
+                yesButtonText: "Ok",
+                noButtonText: "Cancel",
+                handler: (ok) => {
+                    if (ok) {
+                        this.datasetSettingsService
+                            .setVisibility({
+                                accountId: this.datasetBasics.owner.id,
+                                accountName: this.datasetBasics.owner.accountName,
+                                datasetId: this.datasetBasics.id,
+                                datasetName: this.datasetBasics.name,
+                                visibility: this.setVisibilityParams(),
+                            })
+                            .pipe(takeUntilDestroyed(this.destroyRef))
+                            .subscribe(() => {
+                                this.navigationService.navigateToDatasetView({
+                                    accountName: this.datasetBasics.owner.accountName,
+                                    datasetName: this.datasetBasics.name,
+                                    tab: DatasetViewTypeEnum.Overview,
+                                });
+                            });
+                    }
+                },
+            }),
+        );
+    }
+
+    private setVisibilityParams(): DatasetVisibilityInput {
+        return this.isPrivate
+            ? {
+                  public: {
+                      anonymousAvailable: true,
+                  },
+              }
+            : {
+                  private: {},
+              };
     }
 }

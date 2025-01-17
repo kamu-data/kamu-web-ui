@@ -23,7 +23,6 @@ export class MetadataBlockComponent extends BaseDatasetDataComponent implements 
     public datasetInfo$: Observable<DatasetInfo>;
     public blockHash$: Observable<string>;
     public datasetHistoryUpdate$: Observable<MaybeNull<DatasetHistoryUpdate>>;
-
     private blockService = inject(BlockService);
 
     public ngOnInit(): void {

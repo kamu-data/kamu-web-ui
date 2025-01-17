@@ -1,4 +1,7 @@
 import {
+    DatasetVisibility,
+    DatasetVisibilityInput,
+    SetVisibilityDatasetMutation,
     DatasetSystemTimeBlockByHashGQL,
     DatasetSystemTimeBlockByHashQuery,
     UpdateWatermarkGQL,
@@ -38,6 +41,7 @@ import {
     GetDatasetLineageQuery,
     GetDatasetLineageGQL,
     UpdateWatermarkMutation,
+    SetVisibilityDatasetGQL,
     DatasetHeadBlockHashGQL,
     DatasetHeadBlockHashQuery,
     DatasetPushSyncStatusesGQL,
@@ -74,6 +78,7 @@ export class DatasetApi {
     private renameDatasetGQL = inject(RenameDatasetGQL);
     private datasetLineageGQL = inject(GetDatasetLineageGQL);
     private updateWatermarkGQL = inject(UpdateWatermarkGQL);
+    private setVisibilityDatasetGQL = inject(SetVisibilityDatasetGQL);
     private datasetHeadBlockHashGQL = inject(DatasetHeadBlockHashGQL);
     private datasetSystemTimeBlockByHashGQL = inject(DatasetSystemTimeBlockByHashGQL);
     private datasetPushSyncStatusesGQL = inject(DatasetPushSyncStatusesGQL);
@@ -266,8 +271,11 @@ export class DatasetApi {
             );
     }
 
-    public createDatasetFromSnapshot(snapshot: string): Observable<CreateDatasetFromSnapshotMutation> {
-        return this.createDatasetFromSnapshotGQL.mutate({ snapshot }).pipe(
+    public createDatasetFromSnapshot(params: {
+        snapshot: string;
+        datasetVisibility: DatasetVisibility;
+    }): Observable<CreateDatasetFromSnapshotMutation> {
+        return this.createDatasetFromSnapshotGQL.mutate({ ...params }).pipe(
             first(),
             map((result: MutationResult<CreateDatasetFromSnapshotMutation>) => {
                 /* istanbul ignore else */
@@ -280,18 +288,26 @@ export class DatasetApi {
         );
     }
 
-    public createEmptyDataset(datasetKind: DatasetKind, datasetAlias: string): Observable<CreateEmptyDatasetMutation> {
-        return this.createEmptyDatasetGQL.mutate({ datasetKind, datasetAlias }).pipe(
-            first(),
-            map((result: MutationResult<CreateEmptyDatasetMutation>) => {
-                /* istanbul ignore else */
-                if (result.data) {
-                    return result.data;
-                } else {
-                    throw new DatasetOperationError(result.errors ?? []);
-                }
-            }),
-        );
+    public createEmptyDataset(params: {
+        datasetKind: DatasetKind;
+        datasetAlias: string;
+        datasetVisibility: DatasetVisibility;
+    }): Observable<CreateEmptyDatasetMutation> {
+        return this.createEmptyDatasetGQL
+            .mutate({
+                ...params,
+            })
+            .pipe(
+                first(),
+                map((result: MutationResult<CreateEmptyDatasetMutation>) => {
+                    /* istanbul ignore else */
+                    if (result.data) {
+                        return result.data;
+                    } else {
+                        throw new DatasetOperationError(result.errors ?? []);
+                    }
+                }),
+            );
     }
 
     public commitEvent(params: {
@@ -413,6 +429,40 @@ export class DatasetApi {
             .pipe(
                 first(),
                 map((result: MutationResult<UpdateWatermarkMutation>) => {
+                    /* istanbul ignore else */
+                    if (result.data) {
+                        return result.data;
+                    } else {
+                        throw new DatasetOperationError(result.errors ?? []);
+                    }
+                }),
+            );
+    }
+
+    public setVisibilityDataset(params: {
+        accountId: string;
+        datasetId: string;
+        visibility: DatasetVisibilityInput;
+    }): Observable<SetVisibilityDatasetMutation> {
+        return this.setVisibilityDatasetGQL
+            .mutate(
+                {
+                    datasetId: params.datasetId,
+                    visibility: params.visibility,
+                },
+                {
+                    update: (cache) => {
+                        updateCacheHelper(cache, {
+                            accountId: params.accountId,
+                            datasetId: params.datasetId,
+                            fieldNames: ["visibility"],
+                        });
+                    },
+                },
+            )
+            .pipe(
+                first(),
+                map((result: MutationResult<SetVisibilityDatasetMutation>) => {
                     /* istanbul ignore else */
                     if (result.data) {
                         return result.data;

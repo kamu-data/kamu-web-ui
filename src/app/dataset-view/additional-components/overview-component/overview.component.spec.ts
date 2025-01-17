@@ -1,7 +1,11 @@
 import { ReactiveFormsModule } from "@angular/forms";
 import { ApolloModule } from "apollo-angular";
 import { Apollo } from "apollo-angular";
-import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "../../../search/mock.data";
+import {
+    mockDatasetBasicsDerivedFragment,
+    mockFullPowerDatasetPermissionsFragment,
+    mockPublicDatasetVisibility,
+} from "../../../search/mock.data";
 import { mockMetadataDerivedUpdate, mockOverviewDataUpdate } from "../data-tabs.mock";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
@@ -113,6 +117,7 @@ describe("OverviewComponent", () => {
                 id: mockOverviewDataUpdate.overview.owner.id,
                 accountName: mockOverviewDataUpdate.overview.owner.accountName,
             },
+            visibility: mockPublicDatasetVisibility,
         };
         component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment); // clone, as we modify this data in the tests
 

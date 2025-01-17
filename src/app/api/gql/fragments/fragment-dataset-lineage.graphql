@@ -1,25 +1,110 @@
 fragment DatasetLineage on Dataset {
+  __typename
   ...DatasetLineageBasics
   metadata {
     ...CurrentSourceFetchUrl
+    currentLicense {
+      ...License
+    }
+    currentWatermark
     currentUpstreamDependencies {
-      ...DatasetLineageBasics
-      metadata {
-        ...CurrentSourceFetchUrl
-        currentUpstreamDependencies {
-          ...DatasetLineageBasics
+      ... on DependencyDatasetResultNotAccessible {
+        id
+      }
+      ... on DependencyDatasetResultAccessible {
+        dataset {
+          ...DatasetStreamLineageBasics
           metadata {
             ...CurrentSourceFetchUrl
+            currentLicense {
+              ...License
+            }
+            currentWatermark
             currentUpstreamDependencies {
-              ...DatasetLineageBasics
-              metadata {
-                ...CurrentSourceFetchUrl
-                currentUpstreamDependencies {
-                  ...DatasetLineageBasics
+              ... on DependencyDatasetResultNotAccessible {
+                id
+              }
+
+              ... on DependencyDatasetResultAccessible {
+                dataset {
+                  ...DatasetStreamLineageBasics
                   metadata {
                     ...CurrentSourceFetchUrl
+                    currentLicense {
+                      ...License
+                    }
+                    currentWatermark
                     currentUpstreamDependencies {
-                      ...DatasetLineageBasics
+                      ... on DependencyDatasetResultNotAccessible {
+                        id
+                      }
+
+                      ... on DependencyDatasetResultAccessible {
+                        dataset {
+                          ...DatasetStreamLineageBasics
+                          metadata {
+                            ...CurrentSourceFetchUrl
+                            currentLicense {
+                              ...License
+                            }
+                            currentWatermark
+                            currentUpstreamDependencies {
+                              ... on DependencyDatasetResultNotAccessible {
+                                id
+                              }
+
+                              ... on DependencyDatasetResultAccessible {
+                                dataset {
+                                  ...DatasetStreamLineageBasics
+                                  metadata {
+                                    ...CurrentSourceFetchUrl
+                                    currentLicense {
+                                      ...License
+                                    }
+                                    currentWatermark
+                                    currentUpstreamDependencies {
+                                      ... on DependencyDatasetResultNotAccessible {
+                                        id
+                                      }
+
+                                      ... on DependencyDatasetResultAccessible {
+                                        dataset {
+                                          ...DatasetStreamLineageBasics
+                                          metadata {
+                                            ...CurrentSourceFetchUrl
+                                            currentLicense {
+                                              ...License
+                                            }
+                                            currentWatermark
+                                            currentUpstreamDependencies {
+                                              ... on DependencyDatasetResultNotAccessible {
+                                                id
+                                              }
+
+                                              ... on DependencyDatasetResultAccessible {
+                                                dataset {
+                                                  ...DatasetStreamLineageBasics
+                                                  metadata {
+                                                    ...CurrentSourceFetchUrl
+                                                    currentLicense {
+                                                      ...License
+                                                    }
+                                                    currentWatermark
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -30,23 +115,59 @@ fragment DatasetLineage on Dataset {
       }
     }
     currentDownstreamDependencies {
-      ...DatasetLineageBasics
-      metadata {
-        ...CurrentSourceFetchUrl
-        currentDownstreamDependencies {
-          ...DatasetLineageBasics
+      ... on DependencyDatasetResultNotAccessible {
+        id
+      }
+
+      ... on DependencyDatasetResultAccessible {
+        dataset {
+          ...DatasetStreamLineageBasics
           metadata {
-            ...CurrentSourceFetchUrl
             currentDownstreamDependencies {
-              ...DatasetLineageBasics
-              metadata {
-                ...CurrentSourceFetchUrl
-                currentDownstreamDependencies {
-                  ...DatasetLineageBasics
+              ... on DependencyDatasetResultNotAccessible {
+                id
+              }
+
+              ... on DependencyDatasetResultAccessible {
+                dataset {
+                  ...DatasetStreamLineageBasics
                   metadata {
-                    ...CurrentSourceFetchUrl
                     currentDownstreamDependencies {
-                      ...DatasetLineageBasics
+                      ... on DependencyDatasetResultNotAccessible {
+                        id
+                      }
+
+                      ... on DependencyDatasetResultAccessible {
+                        dataset {
+                          ...DatasetStreamLineageBasics
+                          metadata {
+                            currentDownstreamDependencies {
+                              ... on DependencyDatasetResultNotAccessible {
+                                id
+                              }
+
+                              ... on DependencyDatasetResultAccessible {
+                                dataset {
+                                  ...DatasetStreamLineageBasics
+                                  metadata {
+                                    currentDownstreamDependencies {
+                                      ... on DependencyDatasetResultNotAccessible {
+                                        id
+                                      }
+
+                                      ... on DependencyDatasetResultAccessible {
+                                        dataset {
+                                          ...DatasetStreamLineageBasics
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -72,6 +193,18 @@ fragment DatasetLineageBasics on Dataset {
       ...License
     }
     currentWatermark
+  }
+  owner {
+    avatarUrl
+  }
+}
+
+fragment DatasetStreamLineageBasics on Dataset {
+  createdAt
+  lastUpdatedAt
+  ...DatasetBasics
+  data {
+    ...DatasetDataSize
   }
   owner {
     avatarUrl

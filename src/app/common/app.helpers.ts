@@ -148,13 +148,11 @@ export function addMarkdownRunButton(sqlQueries: RegExpMatchArray | null, path: 
     }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function isNil(x: any): boolean {
+export function isNil(x: unknown): boolean {
     return x == null;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function isNull(x: object | null): boolean {
+export function isNull(x: unknown): boolean {
     return x === null;
 }
 
@@ -177,9 +175,6 @@ export function isEqual(value: any, other: any) {
     }
     if (typeof value !== typeof other) {
         return false;
-    }
-    if (value === other) {
-        return true;
     }
     if (Array.isArray(value) && Array.isArray(other)) {
         if (value.length !== other.length) {

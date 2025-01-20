@@ -1,6 +1,15 @@
+import { MaybeNullOrUndefined } from "src/app/common/app.types";
 import { fakeAsync, flush, tick } from "@angular/core/testing";
 import moment from "moment";
-import { momentConvertDateToLocalWithFormat, promiseWithCatch, requireValue } from "./app.helpers";
+import {
+    has,
+    isEqual,
+    isNil,
+    isNull,
+    momentConvertDateToLocalWithFormat,
+    promiseWithCatch,
+    requireValue,
+} from "./app.helpers";
 import AppValues from "./app.values";
 
 describe("AppHelpers", () => {
@@ -65,5 +74,57 @@ describe("AppHelpers", () => {
             isTextDate: true,
         });
         expect(result).toEqual("Yesterday");
+    });
+
+    [
+        { testCase: null, expectation: true },
+        { testCase: undefined, expectation: true },
+        { testCase: { a: 1 }, expectation: false },
+    ].forEach((item: { testCase: MaybeNullOrUndefined<object>; expectation: boolean }) => {
+        it(`should check isNil method with ${item.testCase?.toString()} `, () => {
+            expect(isNil(item.testCase)).toEqual(item.expectation);
+        });
+    });
+
+    [
+        { testCase: null, expectation: true },
+        { testCase: undefined, expectation: false },
+        { testCase: { a: 1 }, expectation: false },
+    ].forEach((item: { testCase: MaybeNullOrUndefined<object>; expectation: boolean }) => {
+        it(`should check isNull method with ${item.testCase?.toString()} `, () => {
+            expect(isNull(item.testCase)).toEqual(item.expectation);
+        });
+    });
+
+    [
+        { testValue1: { a: 1 }, testValue2: { a: 1 }, expectation: true },
+        { testValue1: { a: 1 }, testValue2: { a: 2 }, expectation: false },
+        { testValue1: null, testValue2: null, expectation: true },
+        { testValue1: "test", testValue2: "test", expectation: true },
+        { testValue1: "test", testValue2: 5, expectation: false },
+        { testValue1: [1], testValue2: 5, expectation: false },
+        { testValue1: [1], testValue2: { a: 1 }, expectation: false },
+        { testValue1: undefined, testValue2: undefined, expectation: true },
+        { testValue1: [1], testValue2: [1], expectation: true },
+        { testValue1: [1], testValue2: [1, 2], expectation: false },
+        { testValue1: [{ a: 1 }], testValue2: [{ a: 1 }], expectation: true },
+        { testValue1: [{ a: 1 }], testValue2: [{ a: 1, b: 1 }], expectation: false },
+        { testValue1: [{ a: 1 }], testValue2: [{ a: 1 }, { b: 1 }], expectation: false },
+        { testValue1: [{ a: 1 }], testValue2: [{ b: 1 }], expectation: false },
+    ].forEach((item: { testValue1: unknown; testValue2: unknown; expectation: boolean }) => {
+        it(`should check isEqual method with test case1 = ${item.testValue1?.toString()} and test case2 = ${item.testValue2?.toString()}`, () => {
+            expect(isEqual(item.testValue1, item.testValue2)).toEqual(item.expectation);
+        });
+    });
+
+    [
+        { testValue1: { a: 1 }, testValue2: "a", expectation: true },
+        { testValue1: { a: 1 }, testValue2: "b", expectation: false },
+        { testValue1: [1, 2, 3], testValue2: [2], expectation: true },
+        { testValue1: [1, 2, 3], testValue2: [5], expectation: false },
+    ].forEach((item: { testValue1: object; testValue2: unknown; expectation: boolean }) => {
+        it(`should check has method with ${item.testValue2?.toString()} `, () => {
+            expect(has(item.testValue1, item.testValue2)).toEqual(item.expectation);
+        });
     });
 });

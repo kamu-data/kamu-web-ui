@@ -16,7 +16,6 @@ import {
     TopicsType,
 } from "../components/source-events/add-polling-source/add-polling-source-form.types";
 import AppValues from "src/app/common/app.values";
-import { has } from "src/app/common/app.helpers";
 
 @Injectable({
     providedIn: "root",
@@ -25,7 +24,7 @@ export class ProcessFormService {
     public transformForm(formGroup: FormGroup): void {
         this.transformSchema(formGroup);
         this.processEmptyPrepareStep(formGroup);
-        if (has(formGroup.value, "fetch")) {
+        if ("fetch" in formGroup.value) {
             this.processFetchOrderControl(formGroup);
             this.processEventTimeControl(formGroup);
             this.processPipeCommandControl(formGroup);

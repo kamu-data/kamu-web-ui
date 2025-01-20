@@ -2,7 +2,6 @@ import { MaybeNullOrUndefined } from "src/app/common/app.types";
 import { fakeAsync, flush, tick } from "@angular/core/testing";
 import moment from "moment";
 import {
-    has,
     isEqual,
     isNil,
     isNull,
@@ -114,17 +113,6 @@ describe("AppHelpers", () => {
     ].forEach((item: { testValue1: unknown; testValue2: unknown; expectation: boolean }) => {
         it(`should check isEqual method with test case1 = ${item.testValue1?.toString()} and test case2 = ${item.testValue2?.toString()}`, () => {
             expect(isEqual(item.testValue1, item.testValue2)).toEqual(item.expectation);
-        });
-    });
-
-    [
-        { testValue1: { a: 1 }, testValue2: "a", expectation: true },
-        { testValue1: { a: 1 }, testValue2: "b", expectation: false },
-        { testValue1: [1, 2, 3], testValue2: [2], expectation: true },
-        { testValue1: [1, 2, 3], testValue2: [5], expectation: false },
-    ].forEach((item: { testValue1: object; testValue2: unknown; expectation: boolean }) => {
-        it(`should check has method with ${item.testValue2?.toString()} `, () => {
-            expect(has(item.testValue1, item.testValue2)).toEqual(item.expectation);
         });
     });
 });

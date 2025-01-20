@@ -157,15 +157,6 @@ export function isNull(x: unknown): boolean {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function has(obj: any, path: any): boolean {
-    // Regex explained: https://regexr.com/58j0k
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    const pathArray = Array.isArray(path) ? path : path.match(/([^[.\]])+/g);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    return !!pathArray?.reduce((prevObj: object, key: keyof object) => prevObj && prevObj[key], obj);
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isEqual(value: any, other: any) {
     if (typeof value !== "object" && typeof other !== "object") {
         return Object.is(value, other);

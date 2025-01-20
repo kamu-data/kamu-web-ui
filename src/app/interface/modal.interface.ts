@@ -12,7 +12,9 @@ export interface ModalArgumentsInterface {
     title?: string;
     message?: string;
     description?: string;
+    listDescription?: string[];
     bigTextBlock?: string;
+    warningText?: string;
     status?: string;
     yesButtonText?: string;
     noButtonText?: string;

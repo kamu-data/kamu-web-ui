@@ -83,6 +83,7 @@ import { FlowsComponent } from "./additional-components/flows-component/flows.co
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatChipsModule } from "@angular/material/chips";
+import { DatasetVisibilityModule } from "../components/dataset-visibility/dataset-visibility.module";
 import { QuerySharedModule } from "../query/shared/query-shared/query-shared.module";
 import { IngestConfigurationModule } from "./additional-components/dataset-settings-component/tabs/scheduling/ingest-configuration-form/ingest-configuration.module";
 import { IngestTriggerModule } from "./additional-components/dataset-settings-component/tabs/scheduling/ingest-trigger-form/ingest-trigger.module";
@@ -140,6 +141,7 @@ import { BatchingTriggerModule } from "./additional-components/dataset-settings-
         DataAccessPanelModule,
         MatSortModule,
         AngularMultiSelectModule,
+        DatasetVisibilityModule,
         QuerySharedModule,
         IngestConfigurationModule,
         IngestTriggerModule,

@@ -90,8 +90,24 @@
     </div>
 
     <div
-        appFeatureFlag="dataset.panel.settings.general.delete"
+        appFeatureFlag="dataset.panel.settings.general.changeVisibility"
         class="danger-zone__content justify-content-between align-items-center mt-4"
+    >
+        <div class="danger-zone__description">
+            <p class="description">
+                Change dataset visibility
+                <app-dataset-visibility class="ms-2" [datasetVisibility]="datasetVisibility"></app-dataset-visibility>
+            </p>
+            <p class="hint mt-2">This dataset is currently {{ isPrivate ? "private" : "public" }}.</p>
+        </div>
+        <button type="button" (click)="changeVisibilityDataset()" data-test-id="change-visibility-dataset-button">
+            Change visibility
+        </button>
+    </div>
+
+    <div
+        appFeatureFlag="dataset.panel.settings.general.delete"
+        class="danger-zone__content d-flex justify-content-between align-items-center w-75 mt-4"
     >
         <div class="danger-zone__description">
             <p class="description">Delete this dataset</p>

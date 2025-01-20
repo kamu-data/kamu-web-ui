@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { SearchAdditionalHeaderButtonInterface } from "../../components/search-additional-buttons/search-additional-buttons.interface";
 import { searchAdditionalButtonsEnum } from "../../search/search.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
+import { DatasetVisibilityOutput } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-dataset-view-header",
@@ -11,6 +12,7 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
 })
 export class DatasetViewHeaderComponent {
     @Input({ required: true }) datasetInfo: DatasetInfo;
+    @Input({ required: true }) datasetVisibility: DatasetVisibilityOutput;
     @Output() public onClickSearchAdditionalButtonEmit = new EventEmitter<string>();
 
     public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[] = [

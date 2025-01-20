@@ -3,11 +3,17 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { inject, Injectable } from "@angular/core";
 import { DatasetApi } from "src/app/api/dataset.api";
 import { map } from "rxjs/operators";
-import { DeleteDatasetMutation, RenameDatasetMutation } from "src/app/api/kamu.graphql.interface";
+import {
+    DatasetVisibilityInput,
+    DeleteDatasetMutation,
+    RenameDatasetMutation,
+    SetVisibilityDatasetMutation,
+} from "src/app/api/kamu.graphql.interface";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DatasetNotFoundError, DatasetOperationError } from "src/app/common/errors";
+import { ToastrService } from "ngx-toastr";
 
 @Injectable({
     providedIn: "root",
@@ -16,6 +22,7 @@ export class DatasetSettingsService {
     public static readonly NOT_LOGGED_USER_ERROR = "User must be logged in to configure dataset";
 
     private renameDatasetError$: Subject<string> = new Subject<string>();
+    private toastrService = inject(ToastrService);
 
     public emitRenameDatasetErrorOccurred(message: string): void {
         this.renameDatasetError$.next(message);
@@ -92,5 +99,42 @@ export class DatasetSettingsService {
 
     public resetRenameError(): void {
         this.emitRenameDatasetErrorOccurred("");
+    }
+
+    public setVisibility(params: {
+        accountId: string;
+        accountName: string;
+        datasetId: string;
+        datasetName: string;
+        visibility: DatasetVisibilityInput;
+    }): Observable<void> {
+        if (this.loggedUserService.isAuthenticated) {
+            return this.datasetApi
+                .setVisibilityDataset({
+                    accountId: params.accountId,
+                    datasetId: params.datasetId,
+                    visibility: params.visibility,
+                })
+                .pipe(
+                    map((data: SetVisibilityDatasetMutation) => {
+                        if (data.datasets.byId?.setVisibility.__typename === "SetDatasetVisibilityResultSuccess") {
+                            this.datasetService
+                                .requestDatasetMainData({
+                                    accountName: params.accountName,
+                                    datasetName: params.datasetName,
+                                })
+                                .subscribe();
+                            this.navigationService.navigateToDatasetView({
+                                accountName: params.accountName,
+                                datasetName: params.datasetName,
+                                tab: DatasetViewTypeEnum.Overview,
+                            });
+                            this.toastrService.success("Visibility changed");
+                        }
+                    }),
+                );
+        } else {
+            throw new DatasetOperationError([new Error(DatasetSettingsService.NOT_LOGGED_USER_ERROR)]);
+        }
     }
 }

@@ -533,6 +533,8 @@ export type Dataset = {
     owner: Account;
     /** Permissions of the current user */
     permissions: DatasetPermissions;
+    /** Returns the visibility of dataset */
+    visibility: DatasetVisibilityOutput;
 };
 
 export type DatasetConnection = {
@@ -755,7 +757,7 @@ export type DatasetMetadata = {
     /** Access to the temporal metadata chain of the dataset */
     chain: MetadataChain;
     /** Current downstream dependencies of a dataset */
-    currentDownstreamDependencies: Array<Dataset>;
+    currentDownstreamDependencies: Array<DependencyDatasetResult>;
     /** Current descriptive information about the dataset */
     currentInfo: SetInfo;
     /** Current license associated with the dataset */
@@ -774,7 +776,7 @@ export type DatasetMetadata = {
     /** Current transformation used by the derivative dataset */
     currentTransform?: Maybe<SetTransform>;
     /** Current upstream dependencies of a dataset */
-    currentUpstreamDependencies: Array<Dataset>;
+    currentUpstreamDependencies: Array<DependencyDatasetResult>;
     /** Current vocabulary associated with the dataset */
     currentVocab?: Maybe<SetVocab>;
     /** Last recorded watermark */
@@ -811,12 +813,18 @@ export type DatasetMut = {
     metadata: DatasetMetadataMut;
     /** Rename the dataset */
     rename: RenameResult;
+    /** Set visibility for the dataset */
+    setVisibility: SetDatasetVisibilityResult;
     /** Manually advances the watermark of a root dataset */
     setWatermark: SetWatermarkResult;
 };
 
 export type DatasetMutRenameArgs = {
     newName: Scalars["DatasetName"];
+};
+
+export type DatasetMutSetVisibilityArgs = {
+    visibility: DatasetVisibilityInput;
 };
 
 export type DatasetMutSetWatermarkArgs = {
@@ -860,6 +868,12 @@ export enum DatasetVisibility {
     Private = "PRIVATE",
     Public = "PUBLIC",
 }
+
+export type DatasetVisibilityInput =
+    | { private: PrivateDatasetVisibilityInput; public?: never }
+    | { private?: never; public: PublicDatasetVisibilityInput };
+
+export type DatasetVisibilityOutput = PrivateDatasetVisibility | PublicDatasetVisibility;
 
 export type Datasets = {
     __typename?: "Datasets";
@@ -950,6 +964,22 @@ export type DeleteResultDanglingReference = DeleteResult & {
 export type DeleteResultSuccess = DeleteResult & {
     __typename?: "DeleteResultSuccess";
     deletedDataset: Scalars["DatasetAlias"];
+    message: Scalars["String"];
+};
+
+export type DependencyDatasetResult = {
+    message: Scalars["String"];
+};
+
+export type DependencyDatasetResultAccessible = DependencyDatasetResult & {
+    __typename?: "DependencyDatasetResultAccessible";
+    dataset: Dataset;
+    message: Scalars["String"];
+};
+
+export type DependencyDatasetResultNotAccessible = DependencyDatasetResult & {
+    __typename?: "DependencyDatasetResultNotAccessible";
+    id: Scalars["DatasetID"];
     message: Scalars["String"];
 };
 
@@ -1713,9 +1743,27 @@ export type PrepStepPipe = {
     command: Array<Scalars["String"]>;
 };
 
+export type PrivateDatasetVisibility = {
+    __typename?: "PrivateDatasetVisibility";
+    dummy?: Maybe<Scalars["String"]>;
+};
+
+export type PrivateDatasetVisibilityInput = {
+    dummy?: InputMaybe<Scalars["String"]>;
+};
+
 export type PropagationMode =
     | { custom: FlowConfigurationResetCustom; toSeed?: never }
     | { custom?: never; toSeed: FlowConfigurationResetToSeedDummy };
+
+export type PublicDatasetVisibility = {
+    __typename?: "PublicDatasetVisibility";
+    anonymousAvailable: Scalars["Boolean"];
+};
+
+export type PublicDatasetVisibilityInput = {
+    anonymousAvailable: Scalars["Boolean"];
+};
 
 export type Query = {
     __typename?: "Query";
@@ -1920,6 +1968,16 @@ export type SetAttachments = {
 export type SetDataSchema = {
     __typename?: "SetDataSchema";
     schema: DataSchema;
+};
+
+export type SetDatasetVisibilityResult = {
+    message: Scalars["String"];
+};
+
+export type SetDatasetVisibilityResultSuccess = SetDatasetVisibilityResult & {
+    __typename?: "SetDatasetVisibilityResultSuccess";
+    dummy?: Maybe<Scalars["String"]>;
+    message: Scalars["String"];
 };
 
 export type SetFlowConfigResult = {
@@ -2166,7 +2224,7 @@ export type ViewAccessToken = {
     id: Scalars["AccessTokenID"];
     /** Name of the access token */
     name: Scalars["String"];
-    /** Date of token revokation */
+    /** Date of token revocation */
     revokedAt?: Maybe<Scalars["DateTime"]>;
 };
 
@@ -2179,7 +2237,7 @@ export type ViewDatasetEnvVar = {
     isSecret: Scalars["Boolean"];
     /** Key of the dataset environment variable */
     key: Scalars["String"];
-    /** Non sercret value of dataset environment variable */
+    /** Non secret value of dataset environment variable */
     value?: Maybe<Scalars["String"]>;
 };
 
@@ -2424,6 +2482,22 @@ export type FetchAccountDetailsMutation = {
     auth: { __typename?: "AuthMut"; accountDetails: { __typename?: "Account" } & AccountFragment };
 };
 
+export type SetVisibilityDatasetMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    visibility: DatasetVisibilityInput;
+}>;
+
+export type SetVisibilityDatasetMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            setVisibility: { __typename?: "SetDatasetVisibilityResultSuccess"; message: string };
+        } | null;
+    };
+};
+
 export type CommitEventToDatasetMutationVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     event: Scalars["String"];
@@ -2459,6 +2533,7 @@ export type CommitEventToDatasetMutation = {
 export type CreateEmptyDatasetMutationVariables = Exact<{
     datasetKind: DatasetKind;
     datasetAlias: Scalars["DatasetAlias"];
+    datasetVisibility?: InputMaybe<DatasetVisibility>;
 }>;
 
 export type CreateEmptyDatasetMutation = {
@@ -2466,13 +2541,23 @@ export type CreateEmptyDatasetMutation = {
     datasets: {
         __typename?: "DatasetsMut";
         createEmpty:
-            | { __typename?: "CreateDatasetResultNameCollision"; message: string }
-            | { __typename?: "CreateDatasetResultSuccess"; message: string };
+            | {
+                  __typename?: "CreateDatasetResultNameCollision";
+                  message: string;
+                  accountName?: string | null;
+                  datasetName: string;
+              }
+            | {
+                  __typename?: "CreateDatasetResultSuccess";
+                  message: string;
+                  dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+              };
     };
 };
 
 export type CreateDatasetFromSnapshotMutationVariables = Exact<{
     snapshot: Scalars["String"];
+    datasetVisibility?: InputMaybe<DatasetVisibility>;
 }>;
 
 export type CreateDatasetFromSnapshotMutation = {
@@ -2481,8 +2566,13 @@ export type CreateDatasetFromSnapshotMutation = {
         __typename?: "DatasetsMut";
         createFromSnapshot:
             | { __typename?: "CreateDatasetResultInvalidSnapshot"; message: string }
-            | { __typename?: "CreateDatasetResultMissingInputs"; message: string }
-            | { __typename?: "CreateDatasetResultNameCollision"; message: string }
+            | { __typename?: "CreateDatasetResultMissingInputs"; missingInputs: Array<string>; message: string }
+            | {
+                  __typename?: "CreateDatasetResultNameCollision";
+                  message: string;
+                  accountName?: string | null;
+                  datasetName: string;
+              }
             | {
                   __typename?: "CreateDatasetResultSuccess";
                   message: string;
@@ -3722,6 +3812,9 @@ export type DatasetBasicsFragment = {
     name: string;
     alias: string;
     owner: { __typename?: "Account" } & AccountBasicsFragment;
+    visibility:
+        | { __typename: "PrivateDatasetVisibility" }
+        | { __typename?: "PublicDatasetVisibility"; anonymousAvailable: boolean };
 };
 
 export type DatasetCurrentInfoFragment = {
@@ -3780,78 +3873,184 @@ export type DatasetLastUpdateFragment = {
 };
 
 export type DatasetLineageFragment = {
-    __typename?: "Dataset";
+    __typename: "Dataset";
     metadata: {
         __typename?: "DatasetMetadata";
+        currentWatermark?: string | null;
+        currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
         currentUpstreamDependencies: Array<
-            {
-                __typename?: "Dataset";
-                metadata: {
-                    __typename?: "DatasetMetadata";
-                    currentUpstreamDependencies: Array<
-                        {
-                            __typename?: "Dataset";
-                            metadata: {
-                                __typename?: "DatasetMetadata";
-                                currentUpstreamDependencies: Array<
-                                    {
+            | {
+                  __typename?: "DependencyDatasetResultAccessible";
+                  dataset: {
+                      __typename?: "Dataset";
+                      metadata: {
+                          __typename?: "DatasetMetadata";
+                          currentWatermark?: string | null;
+                          currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
+                          currentUpstreamDependencies: Array<
+                              | {
+                                    __typename?: "DependencyDatasetResultAccessible";
+                                    dataset: {
                                         __typename?: "Dataset";
                                         metadata: {
                                             __typename?: "DatasetMetadata";
+                                            currentWatermark?: string | null;
+                                            currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
                                             currentUpstreamDependencies: Array<
-                                                {
-                                                    __typename?: "Dataset";
-                                                    metadata: {
-                                                        __typename?: "DatasetMetadata";
-                                                        currentUpstreamDependencies: Array<
-                                                            { __typename?: "Dataset" } & DatasetLineageBasicsFragment
-                                                        >;
-                                                    } & CurrentSourceFetchUrlFragment;
-                                                } & DatasetLineageBasicsFragment
+                                                | {
+                                                      __typename?: "DependencyDatasetResultAccessible";
+                                                      dataset: {
+                                                          __typename?: "Dataset";
+                                                          metadata: {
+                                                              __typename?: "DatasetMetadata";
+                                                              currentWatermark?: string | null;
+                                                              currentLicense?:
+                                                                  | ({ __typename?: "SetLicense" } & LicenseFragment)
+                                                                  | null;
+                                                              currentUpstreamDependencies: Array<
+                                                                  | {
+                                                                        __typename?: "DependencyDatasetResultAccessible";
+                                                                        dataset: {
+                                                                            __typename?: "Dataset";
+                                                                            metadata: {
+                                                                                __typename?: "DatasetMetadata";
+                                                                                currentWatermark?: string | null;
+                                                                                currentLicense?:
+                                                                                    | ({
+                                                                                          __typename?: "SetLicense";
+                                                                                      } & LicenseFragment)
+                                                                                    | null;
+                                                                                currentUpstreamDependencies: Array<
+                                                                                    | {
+                                                                                          __typename?: "DependencyDatasetResultAccessible";
+                                                                                          dataset: {
+                                                                                              __typename?: "Dataset";
+                                                                                              metadata: {
+                                                                                                  __typename?: "DatasetMetadata";
+                                                                                                  currentWatermark?:
+                                                                                                      | string
+                                                                                                      | null;
+                                                                                                  currentLicense?:
+                                                                                                      | ({
+                                                                                                            __typename?: "SetLicense";
+                                                                                                        } & LicenseFragment)
+                                                                                                      | null;
+                                                                                                  currentUpstreamDependencies: Array<
+                                                                                                      | {
+                                                                                                            __typename?: "DependencyDatasetResultAccessible";
+                                                                                                            dataset: {
+                                                                                                                __typename?: "Dataset";
+                                                                                                                metadata: {
+                                                                                                                    __typename?: "DatasetMetadata";
+                                                                                                                    currentWatermark?:
+                                                                                                                        | string
+                                                                                                                        | null;
+                                                                                                                    currentLicense?:
+                                                                                                                        | ({
+                                                                                                                              __typename?: "SetLicense";
+                                                                                                                          } & LicenseFragment)
+                                                                                                                        | null;
+                                                                                                                } & CurrentSourceFetchUrlFragment;
+                                                                                                            } & DatasetStreamLineageBasicsFragment;
+                                                                                                        }
+                                                                                                      | {
+                                                                                                            __typename?: "DependencyDatasetResultNotAccessible";
+                                                                                                            id: string;
+                                                                                                        }
+                                                                                                  >;
+                                                                                              } & CurrentSourceFetchUrlFragment;
+                                                                                          } & DatasetStreamLineageBasicsFragment;
+                                                                                      }
+                                                                                    | {
+                                                                                          __typename?: "DependencyDatasetResultNotAccessible";
+                                                                                          id: string;
+                                                                                      }
+                                                                                >;
+                                                                            } & CurrentSourceFetchUrlFragment;
+                                                                        } & DatasetStreamLineageBasicsFragment;
+                                                                    }
+                                                                  | {
+                                                                        __typename?: "DependencyDatasetResultNotAccessible";
+                                                                        id: string;
+                                                                    }
+                                                              >;
+                                                          } & CurrentSourceFetchUrlFragment;
+                                                      } & DatasetStreamLineageBasicsFragment;
+                                                  }
+                                                | { __typename?: "DependencyDatasetResultNotAccessible"; id: string }
                                             >;
                                         } & CurrentSourceFetchUrlFragment;
-                                    } & DatasetLineageBasicsFragment
-                                >;
-                            } & CurrentSourceFetchUrlFragment;
-                        } & DatasetLineageBasicsFragment
-                    >;
-                } & CurrentSourceFetchUrlFragment;
-            } & DatasetLineageBasicsFragment
+                                    } & DatasetStreamLineageBasicsFragment;
+                                }
+                              | { __typename?: "DependencyDatasetResultNotAccessible"; id: string }
+                          >;
+                      } & CurrentSourceFetchUrlFragment;
+                  } & DatasetStreamLineageBasicsFragment;
+              }
+            | { __typename?: "DependencyDatasetResultNotAccessible"; id: string }
         >;
         currentDownstreamDependencies: Array<
-            {
-                __typename?: "Dataset";
-                metadata: {
-                    __typename?: "DatasetMetadata";
-                    currentDownstreamDependencies: Array<
-                        {
-                            __typename?: "Dataset";
-                            metadata: {
-                                __typename?: "DatasetMetadata";
-                                currentDownstreamDependencies: Array<
-                                    {
+            | {
+                  __typename?: "DependencyDatasetResultAccessible";
+                  dataset: {
+                      __typename?: "Dataset";
+                      metadata: {
+                          __typename?: "DatasetMetadata";
+                          currentDownstreamDependencies: Array<
+                              | {
+                                    __typename?: "DependencyDatasetResultAccessible";
+                                    dataset: {
                                         __typename?: "Dataset";
                                         metadata: {
                                             __typename?: "DatasetMetadata";
                                             currentDownstreamDependencies: Array<
-                                                {
-                                                    __typename?: "Dataset";
-                                                    metadata: {
-                                                        __typename?: "DatasetMetadata";
-                                                        currentDownstreamDependencies: Array<
-                                                            { __typename?: "Dataset" } & DatasetLineageBasicsFragment
-                                                        >;
-                                                    } & CurrentSourceFetchUrlFragment;
-                                                } & DatasetLineageBasicsFragment
+                                                | {
+                                                      __typename?: "DependencyDatasetResultAccessible";
+                                                      dataset: {
+                                                          __typename?: "Dataset";
+                                                          metadata: {
+                                                              __typename?: "DatasetMetadata";
+                                                              currentDownstreamDependencies: Array<
+                                                                  | {
+                                                                        __typename?: "DependencyDatasetResultAccessible";
+                                                                        dataset: {
+                                                                            __typename?: "Dataset";
+                                                                            metadata: {
+                                                                                __typename?: "DatasetMetadata";
+                                                                                currentDownstreamDependencies: Array<
+                                                                                    | {
+                                                                                          __typename?: "DependencyDatasetResultAccessible";
+                                                                                          dataset: {
+                                                                                              __typename?: "Dataset";
+                                                                                          } & DatasetStreamLineageBasicsFragment;
+                                                                                      }
+                                                                                    | {
+                                                                                          __typename?: "DependencyDatasetResultNotAccessible";
+                                                                                          id: string;
+                                                                                      }
+                                                                                >;
+                                                                            };
+                                                                        } & DatasetStreamLineageBasicsFragment;
+                                                                    }
+                                                                  | {
+                                                                        __typename?: "DependencyDatasetResultNotAccessible";
+                                                                        id: string;
+                                                                    }
+                                                              >;
+                                                          };
+                                                      } & DatasetStreamLineageBasicsFragment;
+                                                  }
+                                                | { __typename?: "DependencyDatasetResultNotAccessible"; id: string }
                                             >;
-                                        } & CurrentSourceFetchUrlFragment;
-                                    } & DatasetLineageBasicsFragment
-                                >;
-                            } & CurrentSourceFetchUrlFragment;
-                        } & DatasetLineageBasicsFragment
-                    >;
-                } & CurrentSourceFetchUrlFragment;
-            } & DatasetLineageBasicsFragment
+                                        };
+                                    } & DatasetStreamLineageBasicsFragment;
+                                }
+                              | { __typename?: "DependencyDatasetResultNotAccessible"; id: string }
+                          >;
+                      };
+                  } & DatasetStreamLineageBasicsFragment;
+              }
+            | { __typename?: "DependencyDatasetResultNotAccessible"; id: string }
         >;
     } & CurrentSourceFetchUrlFragment;
 } & DatasetLineageBasicsFragment;
@@ -3866,6 +4065,14 @@ export type DatasetLineageBasicsFragment = {
         currentWatermark?: string | null;
         currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
     } & CurrentSourceFetchUrlFragment;
+    owner: { __typename?: "Account"; avatarUrl?: string | null };
+} & DatasetBasicsFragment;
+
+export type DatasetStreamLineageBasicsFragment = {
+    __typename?: "Dataset";
+    createdAt: string;
+    lastUpdatedAt: string;
+    data: { __typename?: "DatasetData" } & DatasetDataSizeFragment;
     owner: { __typename?: "Account"; avatarUrl?: string | null };
 } & DatasetBasicsFragment;
 
@@ -3935,7 +4142,13 @@ export type DatasetSearchOverviewFragment = {
         __typename?: "DatasetMetadata";
         currentInfo: { __typename?: "SetInfo" } & DatasetCurrentInfoFragment;
         currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
-        currentDownstreamDependencies: Array<{ __typename?: "Dataset" } & DatasetBasicsFragment>;
+        currentDownstreamDependencies: Array<
+            | {
+                  __typename?: "DependencyDatasetResultAccessible";
+                  dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+              }
+            | { __typename?: "DependencyDatasetResultNotAccessible"; id: string }
+        >;
     };
 } & DatasetBasicsFragment;
 
@@ -4232,6 +4445,14 @@ export const DatasetBasicsFragmentDoc = gql`
             ...AccountBasics
         }
         alias
+        visibility {
+            ... on PrivateDatasetVisibility {
+                __typename
+            }
+            ... on PublicDatasetVisibility {
+                anonymousAvailable
+            }
+        }
     }
     ${AccountBasicsFragmentDoc}
 `;
@@ -4790,29 +5011,124 @@ export const DatasetLineageBasicsFragmentDoc = gql`
     ${CurrentSourceFetchUrlFragmentDoc}
     ${LicenseFragmentDoc}
 `;
+export const DatasetStreamLineageBasicsFragmentDoc = gql`
+    fragment DatasetStreamLineageBasics on Dataset {
+        createdAt
+        lastUpdatedAt
+        ...DatasetBasics
+        data {
+            ...DatasetDataSize
+        }
+        owner {
+            avatarUrl
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+    ${DatasetDataSizeFragmentDoc}
+`;
 export const DatasetLineageFragmentDoc = gql`
     fragment DatasetLineage on Dataset {
+        __typename
         ...DatasetLineageBasics
         metadata {
             ...CurrentSourceFetchUrl
+            currentLicense {
+                ...License
+            }
+            currentWatermark
             currentUpstreamDependencies {
-                ...DatasetLineageBasics
-                metadata {
-                    ...CurrentSourceFetchUrl
-                    currentUpstreamDependencies {
-                        ...DatasetLineageBasics
+                ... on DependencyDatasetResultNotAccessible {
+                    id
+                }
+                ... on DependencyDatasetResultAccessible {
+                    dataset {
+                        ...DatasetStreamLineageBasics
                         metadata {
                             ...CurrentSourceFetchUrl
+                            currentLicense {
+                                ...License
+                            }
+                            currentWatermark
                             currentUpstreamDependencies {
-                                ...DatasetLineageBasics
-                                metadata {
-                                    ...CurrentSourceFetchUrl
-                                    currentUpstreamDependencies {
-                                        ...DatasetLineageBasics
+                                ... on DependencyDatasetResultNotAccessible {
+                                    id
+                                }
+                                ... on DependencyDatasetResultAccessible {
+                                    dataset {
+                                        ...DatasetStreamLineageBasics
                                         metadata {
                                             ...CurrentSourceFetchUrl
+                                            currentLicense {
+                                                ...License
+                                            }
+                                            currentWatermark
                                             currentUpstreamDependencies {
-                                                ...DatasetLineageBasics
+                                                ... on DependencyDatasetResultNotAccessible {
+                                                    id
+                                                }
+                                                ... on DependencyDatasetResultAccessible {
+                                                    dataset {
+                                                        ...DatasetStreamLineageBasics
+                                                        metadata {
+                                                            ...CurrentSourceFetchUrl
+                                                            currentLicense {
+                                                                ...License
+                                                            }
+                                                            currentWatermark
+                                                            currentUpstreamDependencies {
+                                                                ... on DependencyDatasetResultNotAccessible {
+                                                                    id
+                                                                }
+                                                                ... on DependencyDatasetResultAccessible {
+                                                                    dataset {
+                                                                        ...DatasetStreamLineageBasics
+                                                                        metadata {
+                                                                            ...CurrentSourceFetchUrl
+                                                                            currentLicense {
+                                                                                ...License
+                                                                            }
+                                                                            currentWatermark
+                                                                            currentUpstreamDependencies {
+                                                                                ... on DependencyDatasetResultNotAccessible {
+                                                                                    id
+                                                                                }
+                                                                                ... on DependencyDatasetResultAccessible {
+                                                                                    dataset {
+                                                                                        ...DatasetStreamLineageBasics
+                                                                                        metadata {
+                                                                                            ...CurrentSourceFetchUrl
+                                                                                            currentLicense {
+                                                                                                ...License
+                                                                                            }
+                                                                                            currentWatermark
+                                                                                            currentUpstreamDependencies {
+                                                                                                ... on DependencyDatasetResultNotAccessible {
+                                                                                                    id
+                                                                                                }
+                                                                                                ... on DependencyDatasetResultAccessible {
+                                                                                                    dataset {
+                                                                                                        ...DatasetStreamLineageBasics
+                                                                                                        metadata {
+                                                                                                            ...CurrentSourceFetchUrl
+                                                                                                            currentLicense {
+                                                                                                                ...License
+                                                                                                            }
+                                                                                                            currentWatermark
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -4823,23 +5139,54 @@ export const DatasetLineageFragmentDoc = gql`
                 }
             }
             currentDownstreamDependencies {
-                ...DatasetLineageBasics
-                metadata {
-                    ...CurrentSourceFetchUrl
-                    currentDownstreamDependencies {
-                        ...DatasetLineageBasics
+                ... on DependencyDatasetResultNotAccessible {
+                    id
+                }
+                ... on DependencyDatasetResultAccessible {
+                    dataset {
+                        ...DatasetStreamLineageBasics
                         metadata {
-                            ...CurrentSourceFetchUrl
                             currentDownstreamDependencies {
-                                ...DatasetLineageBasics
-                                metadata {
-                                    ...CurrentSourceFetchUrl
-                                    currentDownstreamDependencies {
-                                        ...DatasetLineageBasics
+                                ... on DependencyDatasetResultNotAccessible {
+                                    id
+                                }
+                                ... on DependencyDatasetResultAccessible {
+                                    dataset {
+                                        ...DatasetStreamLineageBasics
                                         metadata {
-                                            ...CurrentSourceFetchUrl
                                             currentDownstreamDependencies {
-                                                ...DatasetLineageBasics
+                                                ... on DependencyDatasetResultNotAccessible {
+                                                    id
+                                                }
+                                                ... on DependencyDatasetResultAccessible {
+                                                    dataset {
+                                                        ...DatasetStreamLineageBasics
+                                                        metadata {
+                                                            currentDownstreamDependencies {
+                                                                ... on DependencyDatasetResultNotAccessible {
+                                                                    id
+                                                                }
+                                                                ... on DependencyDatasetResultAccessible {
+                                                                    dataset {
+                                                                        ...DatasetStreamLineageBasics
+                                                                        metadata {
+                                                                            currentDownstreamDependencies {
+                                                                                ... on DependencyDatasetResultNotAccessible {
+                                                                                    id
+                                                                                }
+                                                                                ... on DependencyDatasetResultAccessible {
+                                                                                    dataset {
+                                                                                        ...DatasetStreamLineageBasics
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -4853,6 +5200,8 @@ export const DatasetLineageFragmentDoc = gql`
     }
     ${DatasetLineageBasicsFragmentDoc}
     ${CurrentSourceFetchUrlFragmentDoc}
+    ${LicenseFragmentDoc}
+    ${DatasetStreamLineageBasicsFragmentDoc}
 `;
 export const DatasetCurrentInfoFragmentDoc = gql`
     fragment DatasetCurrentInfo on SetInfo {
@@ -5380,7 +5729,14 @@ export const DatasetSearchOverviewFragmentDoc = gql`
                 ...License
             }
             currentDownstreamDependencies {
-                ...DatasetBasics
+                ... on DependencyDatasetResultNotAccessible {
+                    id
+                }
+                ... on DependencyDatasetResultAccessible {
+                    dataset {
+                        ...DatasetBasics
+                    }
+                }
             }
         }
     }
@@ -5705,6 +6061,33 @@ export class FetchAccountDetailsGQL extends Apollo.Mutation<
         super(apollo);
     }
 }
+export const SetVisibilityDatasetDocument = gql`
+    mutation setVisibilityDataset($datasetId: DatasetID!, $visibility: DatasetVisibilityInput!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                setVisibility(visibility: $visibility) {
+                    ... on SetDatasetVisibilityResultSuccess {
+                        message
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class SetVisibilityDatasetGQL extends Apollo.Mutation<
+    SetVisibilityDatasetMutation,
+    SetVisibilityDatasetMutationVariables
+> {
+    document = SetVisibilityDatasetDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
 export const CommitEventToDatasetDocument = gql`
     mutation commitEventToDataset($datasetId: DatasetID!, $event: String!) {
         datasets {
@@ -5752,13 +6135,28 @@ export class CommitEventToDatasetGQL extends Apollo.Mutation<
     }
 }
 export const CreateEmptyDatasetDocument = gql`
-    mutation createEmptyDataset($datasetKind: DatasetKind!, $datasetAlias: DatasetAlias!) {
+    mutation createEmptyDataset(
+        $datasetKind: DatasetKind!
+        $datasetAlias: DatasetAlias!
+        $datasetVisibility: DatasetVisibility
+    ) {
         datasets {
-            createEmpty(datasetKind: $datasetKind, datasetAlias: $datasetAlias) {
-                message
+            createEmpty(datasetKind: $datasetKind, datasetAlias: $datasetAlias, datasetVisibility: $datasetVisibility) {
+                ... on CreateDatasetResultSuccess {
+                    dataset {
+                        ...DatasetBasics
+                    }
+                    message
+                }
+                ... on CreateDatasetResultNameCollision {
+                    message
+                    accountName
+                    datasetName
+                }
             }
         }
     }
+    ${DatasetBasicsFragmentDoc}
 `;
 
 @Injectable({
@@ -5775,14 +6173,32 @@ export class CreateEmptyDatasetGQL extends Apollo.Mutation<
     }
 }
 export const CreateDatasetFromSnapshotDocument = gql`
-    mutation createDatasetFromSnapshot($snapshot: String!) {
+    mutation createDatasetFromSnapshot($snapshot: String!, $datasetVisibility: DatasetVisibility) {
         datasets {
-            createFromSnapshot(snapshot: $snapshot, snapshotFormat: YAML) {
-                message
+            createFromSnapshot(snapshot: $snapshot, snapshotFormat: YAML, datasetVisibility: $datasetVisibility) {
                 ... on CreateDatasetResultSuccess {
                     dataset {
                         ...DatasetBasics
                     }
+                    message
+                }
+                ... on CreateDatasetResultNameCollision {
+                    message
+                    accountName
+                    datasetName
+                }
+                ... on CreateDatasetResultInvalidSnapshot {
+                    message
+                }
+                ... on CreateDatasetResultMissingInputs {
+                    missingInputs
+                    message
+                }
+                ... on MetadataManifestMalformed {
+                    message
+                }
+                ... on MetadataManifestUnsupportedVersion {
+                    message
                 }
             }
         }

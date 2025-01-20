@@ -1,6 +1,11 @@
 import { Injectable, inject } from "@angular/core";
 import { Observable, map } from "rxjs";
-import { DatasetLineageBasicsFragment, DatasetKind, FetchStep } from "src/app/api/kamu.graphql.interface";
+import {
+    DatasetLineageBasicsFragment,
+    DatasetKind,
+    FetchStep,
+    DependencyDatasetResultNotAccessible,
+} from "src/app/api/kamu.graphql.interface";
 import { LineageUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
@@ -69,39 +74,64 @@ export class LineageGraphBuilderService {
     }
 
     private buildDatasetGraphNodes(
-        uniqueDatasets: DatasetLineageBasicsFragment[],
+        uniqueDatasets: (DatasetLineageBasicsFragment | DependencyDatasetResultNotAccessible)[],
         currentDataset: DatasetLineageBasicsFragment,
     ): Node[] {
-        return uniqueDatasets.map((dataset: DatasetLineageBasicsFragment) => {
-            return {
-                id: this.sanitizeID(dataset.id),
-                label: dataset.name,
-                data: {
-                    kind: LineageGraphNodeKind.Dataset,
-                    dataObject: {
-                        id: dataset.id,
-                        name: dataset.name,
-                        kind: dataset.kind,
-                        isCurrent: dataset.id === currentDataset.id,
-                        access: LineageNodeAccess.PRIVATE,
-                        accountName: dataset.owner.accountName,
-                        avatarUrl: dataset.owner.avatarUrl,
+        return uniqueDatasets.map((dataset: DatasetLineageBasicsFragment | DependencyDatasetResultNotAccessible) => {
+            if (dataset.__typename === "Dataset") {
+                return {
+                    id: this.sanitizeID(dataset.id),
+                    label: dataset.name,
+                    data: {
+                        kind: LineageGraphNodeKind.Dataset,
+                        dataObject: {
+                            id: dataset.id,
+                            name: dataset.name,
+                            kind: dataset.kind,
+                            isCurrent: dataset.id === currentDataset.id,
+                            access:
+                                dataset.visibility.__typename === "PrivateDatasetVisibility"
+                                    ? LineageNodeAccess.PRIVATE
+                                    : LineageNodeAccess.PUBLIC,
+                            accountName: dataset.owner.accountName,
+                            avatarUrl: dataset.owner.avatarUrl,
+                        },
+                    } as LineageGraphNodeData,
+                } as Node;
+            } else {
+                const id = (dataset as DependencyDatasetResultNotAccessible).id;
+                return {
+                    id: this.sanitizeID(id),
+                    label: id,
+                    data: {
+                        kind: LineageGraphNodeKind.DatasetNotAccessable,
                     },
-                } as LineageGraphNodeData,
-            } as Node;
+                };
+            }
         });
     }
 
     private buildDatasetEdges(lineageUpdate: LineageUpdate): Edge[] {
-        return lineageUpdate.edges.map((edge: DatasetLineageBasicsFragment[]) => {
-            const source: string = this.sanitizeID(edge[0].id);
-            const target: string = this.sanitizeID(edge[1].id);
-            return {
-                id: `${source}__and__${target}`,
-                source,
-                target,
-            } as Edge;
-        });
+        return lineageUpdate.edges.map(
+            (edge: (DatasetLineageBasicsFragment | DependencyDatasetResultNotAccessible)[]) => {
+                const edgeStart =
+                    edge[0].__typename === "Dataset"
+                        ? edge[0].id
+                        : (edge[0] as DependencyDatasetResultNotAccessible).id;
+
+                const edgeEnd =
+                    edge[1].__typename === "Dataset"
+                        ? edge[1].id
+                        : (edge[1] as DependencyDatasetResultNotAccessible).id;
+                const source: string = this.sanitizeID(edgeStart);
+                const target: string = this.sanitizeID(edgeEnd);
+                return {
+                    id: `${source}__and__${target}`,
+                    source,
+                    target,
+                } as Edge;
+            },
+        );
     }
 
     private buildSourceSubgraph(uniqueDatasets: DatasetLineageBasicsFragment[]): LineageGraph {

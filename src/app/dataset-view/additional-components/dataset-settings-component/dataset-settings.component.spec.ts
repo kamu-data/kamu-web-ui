@@ -30,6 +30,7 @@ import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { SharedModule } from "src/app/shared/shared/shared.module";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { BatchingTriggerModule } from "./tabs/scheduling/batching-trigger-form/batching-trigger.module";
+import { DatasetVisibilityModule } from "src/app/components/dataset-visibility/dataset-visibility.module";
 
 describe("DatasetSettingsComponent", () => {
     let component: DatasetSettingsComponent;
@@ -83,6 +84,7 @@ describe("DatasetSettingsComponent", () => {
                 SharedModule,
                 MatCheckboxModule,
                 BatchingTriggerModule,
+                DatasetVisibilityModule,
             ],
         })
             .overrideComponent(DatasetSettingsComponent, {

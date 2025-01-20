@@ -11,13 +11,18 @@ import { MaybeNull } from "src/app/common/app.types";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LineageComponent extends BaseComponent implements OnInit {
-    @Output() onClickNodeEmit = new EventEmitter<Node>();
+    @Output() public onClickNodeEmit = new EventEmitter<Node>();
+    @Output() public onClickPrivateNodeEmit = new EventEmitter<Node>();
     public lineageGraphUpdate$: Observable<MaybeNull<LineageGraphUpdate>>;
 
     private lineageGraphBuilderService = inject(LineageGraphBuilderService);
 
     public onClickNode(node: Node): void {
         this.onClickNodeEmit.emit(node);
+    }
+
+    public onClickPrivateNode(node: Node): void {
+        this.onClickPrivateNodeEmit.emit(node);
     }
 
     public ngOnInit(): void {

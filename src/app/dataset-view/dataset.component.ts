@@ -18,6 +18,8 @@ import { BaseDatasetDataComponent } from "../common/base-dataset-data.component"
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { SqlQueryService } from "../services/sql-query.service";
 import { AppConfigService } from "../app-config.service";
+import { ToastrService } from "ngx-toastr";
+import { Clipboard } from "@angular/cdk/clipboard";
 
 @Component({
     selector: "app-dataset",
@@ -40,6 +42,8 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
     private sqlQueryService = inject(SqlQueryService);
     private configService = inject(AppConfigService);
     private sessionStorageService = inject(SessionStorageService);
+    private clipboard = inject(Clipboard);
+    private toastr = inject(ToastrService);
 
     public ngOnInit(): void {
         const urlDatasetInfo = this.getDatasetInfoFromUrl();
@@ -271,6 +275,11 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
         } else {
             throw new Error("Clicked lineage node of unexpected type");
         }
+    }
+
+    public onClickPrivateLineageNode(node: Node): void {
+        this.clipboard.copy(node.id);
+        this.toastr.success("Copied ID");
     }
 
     private initDatasetViewByType(datasetInfo: DatasetInfo, currentPage: number): void {

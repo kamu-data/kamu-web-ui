@@ -7,7 +7,6 @@ import {
     FlowEventTaskChanged,
     FlowEventTriggerAdded,
     FlowHistoryDataFragment,
-    FlowOutcome,
     FlowOutcomeDataFragment,
     FlowStartCondition,
     FlowStatus,
@@ -73,7 +72,9 @@ export class DatasetFlowDetailsHelpers {
                 const event = flowEvent as FlowEventTaskChanged;
                 switch (event.taskStatus) {
                     case TaskStatus.Finished:
-                        return DatasetFlowDetailsHelpers.flowOutcomeOptions(flowDetails.outcome as FlowOutcome);
+                        return DatasetFlowDetailsHelpers.flowOutcomeOptions(
+                            flowDetails.outcome as FlowOutcomeDataFragment,
+                        );
                     case TaskStatus.Queued:
                         return { icon: "radio_button_checked", class: "scheduled-status" };
                     case TaskStatus.Running:

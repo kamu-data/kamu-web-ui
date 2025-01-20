@@ -44,6 +44,7 @@ export class LoginService {
 
     public githubLoginLink(): string {
         const githubClientId: MaybeUndefined<string> = this.appConfigService.githubClientId;
+        /* istanbul ignore else */
         if (githubClientId) {
             return `https://github.com/login/oauth/authorize?scope=user:email&client_id=${githubClientId}`;
         } else {

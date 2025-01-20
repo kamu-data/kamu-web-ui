@@ -35,6 +35,14 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         dataTestId: "set-transform-dataset-kind",
     },
 
+    "SetTransform.Dataset.visibility": {
+        label: "Dataset visibility:",
+        tooltip: SetTransformTooltipsTexts.DATASET_VISIBILITY,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "set-transform-dataset-visibility",
+    },
+
     "SetTransform.Dataset.name": {
         label: "Name:",
         tooltip: SetTransformTooltipsTexts.DATASET_NAME,

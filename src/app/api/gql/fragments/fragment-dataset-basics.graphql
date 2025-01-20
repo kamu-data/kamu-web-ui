@@ -6,4 +6,13 @@ fragment DatasetBasics on Dataset {
     ...AccountBasics
   }
   alias
+  visibility {
+    ... on PrivateDatasetVisibility {
+      __typename
+    }
+
+    ... on PublicDatasetVisibility {
+      anonymousAvailable
+    }
+  }
 }

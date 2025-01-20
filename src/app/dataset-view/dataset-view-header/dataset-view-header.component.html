@@ -16,11 +16,7 @@
                     >{{ datasetInfo.datasetName }}</a
                 >
             </span>
-
-            <span></span
-            ><span appFeatureFlag="dataset.badgePrivacy" class="label label--secondary v-align-middle mr-1"
-                >Public</span
-            >
+            <app-dataset-visibility [datasetVisibility]="datasetVisibility"></app-dataset-visibility>
 
             <button
                 appFeatureFlag="dataset.badgeVerified"

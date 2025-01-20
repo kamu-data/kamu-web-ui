@@ -118,7 +118,7 @@ export class DataHelpers {
                 return "Newline-delimited Json";
             }
             case "ReadStepNdGeoJson": {
-                return "Newline-delimited Geo Json ";
+                return "Newline-delimited Geo Json";
             }
             case "ReadStepParquet": {
                 return "Parquet";
@@ -191,6 +191,7 @@ export class DataHelpers {
             //     return DataHelpers.BLOCK_DESCRIBE_DISABLE_POLLING_SOURCE;
             // case "DisablePushSource":
             //     return DataHelpers.BLOCK_DESCRIBE_DISABLE_ADD_PUSH_SOURCE;
+            /* istanbul ignore next */
             default:
                 return "Unsupported event type";
         }
@@ -218,24 +219,10 @@ export class DataHelpers {
                 return `Garbage collector`;
             case "FlowDescriptionDatasetReset":
                 return `Reset to seed`;
+            /* istanbul ignore next */
             default:
                 return "Unsupported flow description";
         }
-    }
-
-    public static escapeText(text: string): string {
-        const htmlEscapes: Record<string, string> = {
-            "#": "#",
-            "<": "/<",
-            ">": "/>",
-        };
-        const reUnescapedHtml = /[#<>]/g;
-        const reHasUnescapedHtml = RegExp(reUnescapedHtml.source);
-        return reHasUnescapedHtml.test(text)
-            ? `|\n${this.SHIFT_ATTACHMENTS_VIEW}${text
-                  .replace(reUnescapedHtml, (chr) => htmlEscapes[chr])
-                  .replace(/(\r\n|\n|\r)/gm, "\n" + this.SHIFT_ATTACHMENTS_VIEW)}`
-            : text;
     }
 
     public static durationTask(startTime: string, endTime: string): string {
@@ -371,9 +358,13 @@ export function parseSchema(schemaContent: string): DatasetSchema {
 export function parseDataRows(successResult: DataQueryResultSuccessViewFragment): DataRow[] {
     const content: string = successResult.data.content;
     const parsedData = JSON.parse(content) as object[];
-    const columnNames = Object.keys(parsedData[0]);
-    const dataRowArray = parseDataFromJsonAoSFormat(parsedData, columnNames);
-    return dataRowArray;
+    if (parsedData.length) {
+        const columnNames = Object.keys(parsedData[0]);
+        const dataRowArray = parseDataFromJsonAoSFormat(parsedData, columnNames);
+        return dataRowArray;
+    } else {
+        return [];
+    }
 }
 
 export function parseDataFromJsonAoSFormat(data: object[], columnNames: string[]): DataRow[] {

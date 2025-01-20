@@ -1,7 +1,8 @@
 import { DataSchemaFormat, DatasetKind, MetadataBlockFragment } from "../api/kamu.graphql.interface";
+import { SliceUnit } from "../dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
+import { mockOwnerFields, mockPublicDatasetVisibility } from "../search/mock.data";
 import { OperationColumnClassEnum } from "../interface/dataset.interface";
-import { mockOwnerFields } from "../search/mock.data";
-import { DataHelpers, operationColumnMapper, setOperationColumnClass } from "./data.helpers";
+import { DataHelpers, sliceSizeMapperReverse, operationColumnMapper, setOperationColumnClass } from "./data.helpers";
 
 export const metadataBlockSetVocab: MetadataBlockFragment = {
     __typename: "MetadataBlockExtended",
@@ -177,6 +178,7 @@ it("should check description for SetTransform block", () => {
                             accountName: "kamu",
                         },
                         alias: "kamu/quebec.case-details",
+                        visibility: mockPublicDatasetVisibility,
                     },
                 },
             ],
@@ -374,6 +376,16 @@ it(`should propagate the name for unknown engines`, () => {
 });
 
 [
+    { case: Math.pow(2, 10), expectation: { size: 1, unit: SliceUnit.KB } },
+    { case: Math.pow(2, 20), expectation: { size: 1, unit: SliceUnit.MB } },
+    { case: Math.pow(2, 30), expectation: { size: 1, unit: SliceUnit.GB } },
+].forEach((item: { case: number; expectation: { size: number; unit: SliceUnit } }) => {
+    it(`should check slice size mapper with ${item.case} bytes`, () => {
+        expect(sliceSizeMapperReverse(item.case)).toEqual(item.expectation);
+    });
+});
+
+[
     { case: 0, expected: "+A" },
     { case: 1, expected: "-R" },
     { case: 2, expected: "-C" },
@@ -382,6 +394,29 @@ it(`should propagate the name for unknown engines`, () => {
 ].forEach((item: { case: number | string; expected: string }) => {
     it(`should check result for operation column mapper with  ${item.case}`, () => {
         expect(operationColumnMapper(item.case)).toEqual(item.expected);
+    });
+});
+
+[
+    { case: "ReadStepCsv", expectation: "Csv" },
+    { case: "ReadStepEsriShapefile", expectation: "Esri Shapefile" },
+    { case: "ReadStepGeoJson", expectation: "Geo Json" },
+    { case: "ReadStepJson", expectation: "Json" },
+    { case: "ReadStepNdJson", expectation: "Newline-delimited Json" },
+    { case: "ReadStepNdGeoJson", expectation: "Newline-delimited Geo Json" },
+    { case: "ReadStepParquet", expectation: "Parquet" },
+    { case: "FetchStepUrl", expectation: "Url" },
+    { case: "FetchStepContainer", expectation: "Container" },
+    { case: "FetchStepFilesGlob", expectation: "Files Glob" },
+    { case: "FetchStepMqtt", expectation: "Mqtt" },
+    { case: "MergeStrategyLedger", expectation: "Ledger" },
+    { case: "MergeStrategyAppend", expectation: "Append" },
+    { case: "MergeStrategySnapshot", expectation: "Snapshot" },
+    { case: "FetchStepEthereumLogs", expectation: "Ethereum Logs" },
+    { case: "", expectation: "Unknown type" },
+].forEach((item: { case: string; expectation: string }) => {
+    it(`should check description for SetPollingSource steps  with ${item.case}`, () => {
+        expect(DataHelpers.descriptionSetPollingSourceSteps(item.case)).toEqual(item.expectation);
     });
 });
 

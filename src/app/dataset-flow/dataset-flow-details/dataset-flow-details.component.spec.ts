@@ -27,6 +27,7 @@ import ProjectLinks from "src/app/project-links";
 import { mockDatasetFlowByIdResponse, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import { DataAccessPanelComponent } from "src/app/components/data-access-panel/data-access-panel.component";
 import { DataAccessPanelModule } from "src/app/components/data-access-panel/data-access-panel.module";
+import { DatasetVisibilityModule } from "src/app/components/dataset-visibility/dataset-visibility.module";
 import { SharedModule } from "src/app/shared/shared/shared.module";
 import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
 
@@ -100,6 +101,7 @@ describe("DatasetFlowDetailsComponent", () => {
                 BrowserAnimationsModule,
                 DataAccessPanelModule,
                 RouterModule,
+                DatasetVisibilityModule,
                 SharedModule,
             ],
         }).compileComponents();

@@ -39,7 +39,7 @@ import { HistoryComponent } from "./additional-components/history-component/hist
 import { LineageComponent } from "./additional-components/lineage-component/lineage.component";
 import { DatasetSettingsGeneralTabComponent } from "./additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.component";
 import { DatasetSettingsSchedulingTabComponent } from "./additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.component";
-import { ToastrModule } from "ngx-toastr";
+import { ToastrModule, ToastrService } from "ngx-toastr";
 import { DataAccessPanelModule } from "../components/data-access-panel/data-access-panel.module";
 import { SqlEditorComponent } from "../shared/editor/components/sql-editor/sql-editor.component";
 import { RequestTimerComponent } from "../query/shared/request-timer/request-timer.component";
@@ -47,6 +47,7 @@ import { EditorModule } from "../shared/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { FlowsComponent } from "./additional-components/flows-component/flows.component";
+import { DatasetVisibilityModule } from "../components/dataset-visibility/dataset-visibility.module";
 import { RouterTestingModule } from "@angular/router/testing";
 import { promiseWithCatch } from "../common/app.helpers";
 import { QueryAndResultSectionsComponent } from "../query/shared/query-and-result-sections/query-and-result-sections.component";
@@ -56,6 +57,7 @@ import { SearchAndSchemasSectionComponent } from "../query/global-query/search-a
 import { SharedModule } from "../shared/shared/shared.module";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { registerMatSvgIcons } from "../common/base-test.helpers.spec";
+import { MOCK_NODES } from "../api/mock/dataset.mock";
 
 describe("DatasetComponent", () => {
     let component: DatasetComponent;
@@ -66,6 +68,7 @@ describe("DatasetComponent", () => {
     let sqlQueryService: SqlQueryService;
     let route: ActivatedRoute;
     let router: Router;
+    let toastrService: ToastrService;
     const MOCK_DATASET_ROUTE = "kamu/mockNameDerived";
 
     beforeEach(async () => {
@@ -109,6 +112,7 @@ describe("DatasetComponent", () => {
                 EditorModule,
                 MatProgressBarModule,
                 CdkAccordionModule,
+                DatasetVisibilityModule,
                 SharedModule,
                 RouterTestingModule.withRoutes([{ path: MOCK_DATASET_ROUTE, component: DatasetComponent }]),
             ],
@@ -163,7 +167,7 @@ describe("DatasetComponent", () => {
         fixture = TestBed.createComponent(DatasetComponent);
         router.initialNavigation();
         route = TestBed.inject(ActivatedRoute);
-
+        toastrService = TestBed.inject(ToastrService);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
@@ -347,5 +351,11 @@ describe("DatasetComponent", () => {
 
         component.ngOnDestroy();
         expect(removeDatasetSqlCodeSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check click on private node", () => {
+        const toastrServiceSuccessSpy = spyOn(toastrService, "success");
+        component.onClickPrivateLineageNode(MOCK_NODES[2]);
+        expect(toastrServiceSuccessSpy).toHaveBeenCalledWith("Copied ID");
     });
 });

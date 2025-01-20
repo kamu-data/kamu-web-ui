@@ -5,9 +5,10 @@ import { ModalDialogComponent } from "./modal-dialog.component";
 import { CommonModule } from "@angular/common";
 import { ModalImageComponent } from "./modal-image.component";
 import { ModalSpinnerComponent } from "./modal-spinner.component";
+import { MatDividerModule } from "@angular/material/divider";
 
 @NgModule({
-    imports: [CommonModule],
+    imports: [CommonModule, MatDividerModule],
     declarations: [ModalComponent, ModalDialogComponent, ModalImageComponent, ModalSpinnerComponent],
     exports: [ModalComponent],
 })

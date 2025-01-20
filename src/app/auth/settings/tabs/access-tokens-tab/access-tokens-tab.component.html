@@ -69,10 +69,10 @@
                             role="button"
                         >
                             <div style="position: relative; display: inline-block">
-                                <svg-icon name="copy" />
+                                <mat-icon class="mat-icon-svg-size" svgIcon="copy" />
                             </div>
                             <div style="position: relative; display: none">
-                                <svg-icon name="checked" />
+                                <mat-icon class="mat-icon-svg-size" svgIcon="checked" />
                             </div>
                         </button>
                     </div>
@@ -119,7 +119,7 @@
                 Show revoked tokens
             </mat-slide-toggle>
         </div>
-        <div class="text-center position-relative align-items-center">
+        <div class="text-center position-relative d-flex align-items-center">
             <input
                 class="form-control placeholder-padding-left"
                 type="text"
@@ -129,7 +129,7 @@
                 (keyup)="applyFilter(tokenSearch.value)"
                 [(ngModel)]="searchTokenName"
             />
-            <svg-icon name="search" />
+            <mat-icon class="mat-icon-svg-size search-icon" svgIcon="search" />
             <mat-icon
                 *ngIf="searchTokenName"
                 (click)="refreshSearchByName()"

@@ -7,6 +7,7 @@ import { EventDetailsComponent } from "./event-details.component";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
 import { SharedTestModule } from "src/app/common/shared-test.module";
+import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
 
 describe("EventDetailsComponent", () => {
     let component: EventDetailsComponent;
@@ -19,6 +20,8 @@ describe("EventDetailsComponent", () => {
             imports: [SharedTestModule],
             providers: [Apollo, DatasetApi],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(EventDetailsComponent);
         blockService = TestBed.inject(BlockService);

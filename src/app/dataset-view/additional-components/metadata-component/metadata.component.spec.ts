@@ -18,8 +18,8 @@ import { SharedTestModule } from "src/app/common/shared-test.module";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetKind } from "src/app/api/kamu.graphql.interface";
 import _ from "lodash";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
 
 describe("MetadataComponent", () => {
     let component: MetadataComponent;
@@ -30,14 +30,7 @@ describe("MetadataComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [MetadataComponent, BlockRowDataComponent, TooltipIconComponent],
-            imports: [
-                NgbTooltipModule,
-                MatIconModule,
-                MetadataBlockModule,
-                SharedTestModule,
-                AngularSvgIconModule.forRoot(),
-                HttpClientTestingModule,
-            ],
+            imports: [NgbTooltipModule, MatIconModule, MetadataBlockModule, SharedTestModule, HttpClientTestingModule],
             providers: [
                 {
                     provide: HIGHLIGHT_OPTIONS,
@@ -55,6 +48,8 @@ describe("MetadataComponent", () => {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })
             .compileComponents();
+
+        registerMatSvgIcons();
 
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         datasetSubsService.emitMetadataSchemaChanged(mockMetadataDerivedUpdate);

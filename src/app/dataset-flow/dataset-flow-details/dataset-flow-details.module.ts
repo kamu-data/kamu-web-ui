@@ -4,7 +4,6 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatMenuModule } from "@angular/material/menu";
 import { RouterModule } from "@angular/router";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { DatasetModule } from "src/app/dataset-view/dataset.module";
 import { DatasetFlowDetailsComponent } from "./dataset-flow-details.component";
 import { FlowDetailsHistoryTabComponent } from "./tabs/flow-details-history-tab/flow-details-history-tab.component";
@@ -18,14 +17,6 @@ import { FlowDetailsLogsTabComponent } from "./tabs/flow-details-logs-tab/flow-d
         FlowDetailsSummaryTabComponent,
         FlowDetailsLogsTabComponent,
     ],
-    imports: [
-        CommonModule,
-        MatIconModule,
-        MatDividerModule,
-        DatasetModule,
-        RouterModule,
-        AngularSvgIconModule,
-        MatMenuModule,
-    ],
+    imports: [CommonModule, MatIconModule, MatDividerModule, DatasetModule, RouterModule, MatMenuModule],
 })
 export class DatasetFlowDetailsModule {}

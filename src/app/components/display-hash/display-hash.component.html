@@ -15,12 +15,10 @@
     <button
         *ngIf="showCopyButton"
         (click)="copyToClipboard(value)"
-        class="btn btn-sm btn-gray clipboard-btn"
+        class="btn btn-sm btn-gray clipboard-btn d-inline-flex align-items-center justify-content-center"
         role="button"
         data-test-id="copyToClipboardButton"
     >
-        <div style="position: relative; display: inline-block">
-            <svg-icon name="copy" />
-        </div>
+        <mat-icon class="mat-icon" svgIcon="copy" />
     </button>
 </ng-container>

@@ -4,14 +4,18 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { AccountSettingsComponent } from "./account-settings.component";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { LoggedUserService } from "../logged-user.service";
-import { findElementByDataTestId, getElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import {
+    findElementByDataTestId,
+    getElementByDataTestId,
+    registerMatSvgIcons,
+} from "src/app/common/base-test.helpers.spec";
 import { AccountSettingsTabs } from "./account-settings.constants";
 import { of } from "rxjs";
 import ProjectLinks from "src/app/project-links";
 import { LoginService } from "../login/login.service";
+import { MatIconModule } from "@angular/material/icon";
 
 describe("AccountSettingsComponent", () => {
     let component: AccountSettingsComponent;
@@ -24,13 +28,10 @@ describe("AccountSettingsComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [AccountSettingsComponent],
-            imports: [
-                ApolloTestingModule,
-                RouterTestingModule,
-                AngularSvgIconModule.forRoot(),
-                HttpClientTestingModule,
-            ],
+            imports: [ApolloTestingModule, RouterTestingModule, HttpClientTestingModule, MatIconModule],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         activatedRoute = TestBed.inject(ActivatedRoute);
         router = TestBed.inject(Router);

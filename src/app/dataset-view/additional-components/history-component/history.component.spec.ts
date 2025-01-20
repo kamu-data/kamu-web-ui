@@ -9,11 +9,11 @@ import { TimelineComponent } from "src/app/components/timeline-component/timelin
 import { NgbPaginationModule, NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
 import { DisplayHashComponent } from "src/app/components/display-hash/display-hash.component";
 import { DisplayTimeComponent } from "src/app/components/display-time/display-time.component";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ToastrModule } from "ngx-toastr";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterTestingModule } from "@angular/router/testing";
+import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
 
 describe("HistoryComponent", () => {
     let component: HistoryComponent;
@@ -30,7 +30,6 @@ describe("HistoryComponent", () => {
                 DisplayHashComponent,
             ],
             imports: [
-                AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
                 NgbPaginationModule,
                 NgbPopoverModule,
@@ -40,6 +39,8 @@ describe("HistoryComponent", () => {
                 ToastrModule.forRoot(),
             ],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(HistoryComponent);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);

@@ -21,6 +21,8 @@ import { LoggedUserService } from "./auth/logged-user.service";
 import packageFile from "../../package.json";
 import { LocalStorageService } from "./services/local-storage.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { MatIconRegistry } from "@angular/material/icon";
+import { DomSanitizer } from "@angular/platform-browser";
 
 export const ALL_URLS_WITHOUT_HEADER: string[] = [ProjectLinks.URL_LOGIN, ProjectLinks.URL_GITHUB_CALLBACK];
 
@@ -60,11 +62,14 @@ export class AppComponent extends BaseComponent implements OnInit {
     private cdr = inject(ChangeDetectorRef);
     private loggedUserService = inject(LoggedUserService);
     private localStorageService = inject(LocalStorageService);
+    private matIconRegistry = inject(MatIconRegistry);
+    private domSanitizer = inject(DomSanitizer);
 
     public ngOnInit(): void {
         if (isDevMode()) {
             loadErrorMessages();
         }
+        this.registerMaterialIcons();
         this.outputAppVersion();
         this.setMomentOptions();
         this.readConfiguration();
@@ -101,6 +106,65 @@ export class AppComponent extends BaseComponent implements OnInit {
 
     private checkView(): void {
         this.isMobileView = isMobileView();
+    }
+
+    private registerMaterialIcons(): void {
+        this.matIconRegistry
+            .addSvgIcon("history", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/history.svg"))
+            .addSvgIcon("public-profile", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/profile.svg"))
+            .addSvgIcon("account", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/account.svg"))
+            .addSvgIcon("appearance", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/appearance.svg"))
+            .addSvgIcon(
+                "accessibility",
+                this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/accessibility.svg"),
+            )
+            .addSvgIcon(
+                "notifications",
+                this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/notifications.svg"),
+            )
+            .addSvgIcon("billing", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/billing.svg"))
+            .addSvgIcon("emails", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/emails.svg"))
+            .addSvgIcon("security", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/security.svg"))
+            .addSvgIcon(
+                "organizations",
+                this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/organizations.svg"),
+            )
+            .addSvgIcon("sign-out", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/sign-out.svg"))
+            .addSvgIcon(
+                "notifications-large",
+                this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/notifications-large.svg"),
+            )
+            .addSvgIcon(
+                "verified-commit",
+                this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/verified-commit.svg"),
+            )
+            .addSvgIcon("git-commit", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/git-commit.svg"))
+            .addSvgIcon("copy", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/copy.svg"))
+            .addSvgIcon("code-square", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/code-square.svg"))
+            .addSvgIcon("pencil", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/pencil.svg"))
+            .addSvgIcon("repository", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/repository.svg"))
+            .addSvgIcon("checked", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/checked.svg"))
+            .addSvgIcon(
+                "notifications-checked",
+                this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/notifications-checked.svg"),
+            )
+            .addSvgIcon("search", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/search.svg"))
+            .addSvgIcon("public", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/public.svg"))
+            .addSvgIcon("private", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/private.svg"))
+            .addSvgIcon("information", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/information.svg"))
+            .addSvgIcon("github-logo", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/git-hub.svg"))
+            .addSvgIcon(
+                "show-options",
+                this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/show-options.svg"),
+            )
+            .addSvgIcon("timer", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/timer.svg"))
+            .addSvgIcon("clock", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/clock.svg"))
+            .addSvgIcon("hour-glass", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/hour-glass.svg"))
+            .addSvgIcon("compact", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/compress.svg"))
+            .addSvgIcon(
+                "access-token",
+                this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/access-token.svg"),
+            );
     }
 
     private shouldHeaderBeVisible(url: string): boolean {

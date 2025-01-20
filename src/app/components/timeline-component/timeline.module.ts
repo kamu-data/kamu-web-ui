@@ -7,7 +7,6 @@ import { MatButtonModule } from "@angular/material/button";
 import { CommonModule } from "@angular/common";
 import { NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
 import { TimelineComponent } from "./timeline.component";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { RouterModule } from "@angular/router";
 import { SharedModule } from "src/app/shared/shared/shared.module";
 
@@ -18,7 +17,6 @@ import { SharedModule } from "src/app/shared/shared/shared.module";
         MatButtonModule,
         CommonModule,
         NgbPopoverModule,
-        AngularSvgIconModule,
         RouterModule,
         DisplayTimeModule,
         DisplayHashModule,

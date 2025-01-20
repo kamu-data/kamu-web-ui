@@ -1613,3 +1613,9 @@ pre.language-sql {
     filter: grayscale(100%); /* Grayscale effect */
     cursor: not-allowed; /* Show "not allowed" cursor */
 }
+
+.mat-icon-svg-size {
+    overflow: visible !important;
+    width: 16px !important;
+    height: 18px !important;
+}

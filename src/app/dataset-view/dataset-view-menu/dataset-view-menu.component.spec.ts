@@ -4,7 +4,6 @@ import { MatMenuModule } from "@angular/material/menu";
 import { DatasetViewMenuComponent } from "./dataset-view-menu.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatIconModule } from "@angular/material/icon";
@@ -18,7 +17,7 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { DatasetViewTypeEnum } from "../dataset-view.interface";
 import { RouterModule } from "@angular/router";
 import { SharedTestModule } from "src/app/common/shared-test.module";
-import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
 
 describe("DatasetViewMenuComponent", () => {
     let component: DatasetViewMenuComponent;
@@ -34,7 +33,6 @@ describe("DatasetViewMenuComponent", () => {
                 MatButtonToggleModule,
                 MatTabsModule,
                 MatIconModule,
-                AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
                 MatDividerModule,
                 MatCheckboxModule,
@@ -46,6 +44,8 @@ describe("DatasetViewMenuComponent", () => {
             ],
             declarations: [DatasetViewMenuComponent, DataAccessPanelComponent],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(DatasetViewMenuComponent);
         component = fixture.componentInstance;

@@ -32,7 +32,6 @@ import { DatasetViewMenuComponent } from "./dataset-view-menu/dataset-view-menu.
 import { SideNavModule } from "../sidenav/side-nav.module";
 import { RouterModule } from "@angular/router";
 import { OverviewHistorySummaryHeaderComponent } from "../components/overview-history-summary-header/overview-history-summary-header.component";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { DisplaySizeModule } from "../common/pipes/display-size.module";
 import { SharedModule } from "../shared/shared/shared.module";
 import { EditDetailsModalComponent } from "./additional-components/overview-component/components/edit-details-modal/edit-details-modal.component";
@@ -114,7 +113,6 @@ import { BatchingTriggerModule } from "./additional-components/dataset-settings-
         CdkAccordionModule,
         CustomPaginationModule,
         SideNavModule,
-        AngularSvgIconModule,
         DisplayTimeModule,
         DisplayHashModule,
         DisplaySizeModule,

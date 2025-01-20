@@ -52,8 +52,6 @@ import { AccountSettingsComponent } from "./auth/settings/account-settings.compo
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { DatasetListModule } from "./components/dataset-list-component/dataset-list.module";
 import { PaginationModule } from "./components/pagination-component/pagination.module";
-import { AngularSvgIconModule } from "angular-svg-icon";
-import { AngularSvgIconPreloaderModule } from "angular-svg-icon-preloader";
 import { ClipboardModule } from "@angular/cdk/clipboard";
 import { HighlightModule, HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 import { ToastrModule } from "ngx-toastr";
@@ -238,10 +236,6 @@ const MatModules = [
         DatasetListModule,
         PaginationModule,
         ClipboardModule,
-        AngularSvgIconModule.forRoot(),
-        AngularSvgIconPreloaderModule.forRoot({
-            configUrl: "./assets/svg/icons.json",
-        }),
         HighlightModule,
         ToastrModule.forRoot({
             timeOut: 2000,

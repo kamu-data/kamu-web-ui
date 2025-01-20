@@ -16,14 +16,19 @@ import {
 } from "./query-explainer.mocks";
 import ProjectLinks from "src/app/project-links";
 import { HIGHLIGHT_OPTIONS, HighlightModule } from "ngx-highlightjs";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { ReproducedResultSectionComponent } from "./components/reproduced-result-section/reproduced-result-section.component";
 import { DisplayHashModule } from "../components/display-hash/display-hash.module";
 import { DynamicTableModule } from "../components/dynamic-table/dynamic-table.module";
 import { DatasetService } from "../dataset-view/dataset.service";
 import { mockDatasetByIdQuery } from "../api/mock/dataset.mock";
-import { checkButtonDisabled, emitClickOnElementByDataTestId, setFieldValue } from "../common/base-test.helpers.spec";
+import {
+    checkButtonDisabled,
+    emitClickOnElementByDataTestId,
+    registerMatSvgIcons,
+    setFieldValue,
+} from "../common/base-test.helpers.spec";
 import { FormsModule } from "@angular/forms";
+import { MatIconModule } from "@angular/material/icon";
 
 describe("QueryExplainerComponent", () => {
     let component: QueryExplainerComponent;
@@ -44,12 +49,12 @@ describe("QueryExplainerComponent", () => {
             imports: [
                 HttpClientTestingModule,
                 DynamicTableModule,
-                AngularSvgIconModule.forRoot(),
                 ToastrModule.forRoot(),
                 DisplayHashModule,
                 HighlightModule,
                 RouterModule,
                 FormsModule,
+                MatIconModule,
             ],
             providers: [
                 Apollo,
@@ -80,6 +85,9 @@ describe("QueryExplainerComponent", () => {
                 },
             ],
         });
+
+        registerMatSvgIcons();
+
         datasetService = TestBed.inject(DatasetService);
         toastrService = TestBed.inject(ToastrService);
         queryExplainerService = TestBed.inject(QueryExplainerService);

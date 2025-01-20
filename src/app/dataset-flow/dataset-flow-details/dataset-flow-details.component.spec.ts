@@ -13,7 +13,6 @@ import { SearchAdditionalButtonsComponent } from "src/app/components/search-addi
 import { SearchAdditionalButtonsNavComponent } from "src/app/components/search-additional-buttons/search-additional-buttons-nav.component";
 import { MatMenuModule } from "@angular/material/menu";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
@@ -30,6 +29,7 @@ import { DataAccessPanelComponent } from "src/app/components/data-access-panel/d
 import { DataAccessPanelModule } from "src/app/components/data-access-panel/data-access-panel.module";
 import { DatasetVisibilityModule } from "src/app/components/dataset-visibility/dataset-visibility.module";
 import { SharedModule } from "src/app/shared/shared/shared.module";
+import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
 
 describe("DatasetFlowDetailsComponent", () => {
     let component: DatasetFlowDetailsComponent;
@@ -95,7 +95,6 @@ describe("DatasetFlowDetailsComponent", () => {
                 MatMenuModule,
                 MatButtonToggleModule,
                 ToastrModule.forRoot(),
-                AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
                 MatTabsModule,
                 FormsModule,
@@ -106,6 +105,8 @@ describe("DatasetFlowDetailsComponent", () => {
                 SharedModule,
             ],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(DatasetFlowDetailsComponent);
         datasetFlowsService = TestBed.inject(DatasetFlowsService);

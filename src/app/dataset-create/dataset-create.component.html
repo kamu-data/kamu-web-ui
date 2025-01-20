@@ -57,7 +57,7 @@
             </label>
         </div>
         <mat-divider />
-        <div>
+        <div appFeatureFlag="newDataset.privacy">
             <label for="visibility-private" class="mt-3 d-flex align-items-center">
                 <input
                     name="visibility"
@@ -65,7 +65,7 @@
                     [value]="DatasetVisibility.Private"
                     formControlName="visibility"
                 />
-                <svg-icon name="private" class="text-muted ms-3" />
+                <mat-icon class="ms-1 me-2 mb-2 overflow-visible" svgIcon="private" />
                 <div>
                     <span class="d-block">Private</span>
                     <span class="d-block fs-12 text-muted">You choose who can see and add data to this dataset.</span>
@@ -74,7 +74,7 @@
             <br />
             <label for="visibility-public" class="mb-3 d-flex align-items-center">
                 <input name="visibility" type="radio" [value]="DatasetVisibility.Public" formControlName="visibility" />
-                <svg-icon name="public" class="ms-3" />
+                <mat-icon class="ms-1 me-2 mb-2 overflow-visible" svgIcon="public" />
                 <div>
                     <span class="d-block">Public</span>
                     <span class="d-block fs-12 text-muted">Anyone on the internet can see this dataset.</span>
@@ -116,7 +116,7 @@
     </ng-container>
     <mat-divider />
     <div class="my-4 d-flex align-items-center text-muted">
-        <svg-icon class="me-1" name="information" />
+        <mat-icon class="mat-icon-svg-size me-2" svgIcon="information" />
         <span class="fs-6 pt-1">You are creating a dataset in your personal account.</span>
     </div>
     <mat-divider />

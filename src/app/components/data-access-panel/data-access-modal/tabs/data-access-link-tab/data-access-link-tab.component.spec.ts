@@ -5,11 +5,14 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import AppValues from "src/app/common/app.values";
-import { getElementByDataTestId, emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import {
+    getElementByDataTestId,
+    emitClickOnElementByDataTestId,
+    registerMatSvgIcons,
+} from "src/app/common/base-test.helpers.spec";
 
 describe("DataAccessLinkTabComponent", () => {
     let component: DataAccessLinkTabComponent;
@@ -23,11 +26,13 @@ describe("DataAccessLinkTabComponent", () => {
                 MatDividerModule,
                 MatIconModule,
                 MatTooltipModule,
-                AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
                 MatCheckboxModule,
             ],
         });
+
+        registerMatSvgIcons();
+
         fixture = TestBed.createComponent(DataAccessLinkTabComponent);
         component = fixture.componentInstance;
         component.webLink = mockDatasetEndPoints.webLink;

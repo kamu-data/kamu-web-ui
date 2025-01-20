@@ -6,7 +6,6 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTabsModule } from "@angular/material/tabs";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatTooltipModule } from "@angular/material/tooltip";
@@ -43,7 +42,6 @@ import { SharedModule } from "src/app/shared/shared/shared.module";
         MatIconModule,
         MatTabsModule,
         FormsModule,
-        AngularSvgIconModule,
         MatCheckboxModule,
         MatDividerModule,
         MatTooltipModule,

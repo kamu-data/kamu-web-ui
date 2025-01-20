@@ -8,12 +8,12 @@ import { mockAddData } from "../../mock.events";
 import { AddDataEventComponent } from "./add-data-event.component";
 import { OffsetIntervalPropertyComponent } from "../common/offset-interval-property/offset-interval-property.component";
 import { BlockRowDataComponent } from "../../../block-row-data/block-row-data.component";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { TooltipIconComponent } from "../../../tooltip-icon/tooltip-icon.component";
 import { MatIconModule } from "@angular/material/icon";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { SharedTestModule } from "src/app/common/shared-test.module";
+import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
 
 describe("AddDataEventComponent", () => {
     let component: AddDataEventComponent;
@@ -43,7 +43,6 @@ describe("AddDataEventComponent", () => {
                 MatIconModule,
                 NgbTooltipModule,
                 ToastrModule.forRoot(),
-                AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
                 SharedTestModule,
             ],
@@ -52,6 +51,8 @@ describe("AddDataEventComponent", () => {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })
             .compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(AddDataEventComponent);
         component = fixture.componentInstance;

@@ -1,9 +1,10 @@
-import { ComponentFixture } from "@angular/core/testing";
-import { By } from "@angular/platform-browser";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { By, DomSanitizer } from "@angular/platform-browser";
 import { DebugElement } from "@angular/core";
 import { ReplaySubject } from "rxjs";
 import { ActivatedRoute, RouterEvent } from "@angular/router";
 import { MaybeNull } from "./app.types";
+import { MatIconRegistry } from "@angular/material/icon";
 
 export function findElement<T>(fixture: ComponentFixture<T>, selector: string): DebugElement {
     return fixture.debugElement.query(By.css(selector));
@@ -120,4 +121,45 @@ export function dispatchInputEvent<T>(fixture: ComponentFixture<T>, id: string, 
     element.value = value;
     element.dispatchEvent(new Event("input"));
     fixture.detectChanges();
+}
+
+export function registerMatSvgIcons(): void {
+    const matIconRegistry = TestBed.inject(MatIconRegistry);
+    const domSanitizer = TestBed.inject(DomSanitizer);
+    const icons: string[] = [
+        "history",
+        "public-profile",
+        "account",
+        "appearance",
+        "accessibility",
+        "notifications",
+        "billing",
+        "emails",
+        "security",
+        "organizations",
+        "sign-out",
+        "notifications-large",
+        "verified-commit",
+        "git-commit",
+        "copy",
+        "code-square",
+        "pencil",
+        "repository",
+        "checked",
+        "notifications-checked",
+        "search",
+        "public",
+        "private",
+        "information",
+        "github-logo",
+        "show-options",
+        "timer",
+        "clock",
+        "hour-glass",
+        "compact",
+        "access-token",
+    ];
+    icons.forEach((icon: string) => {
+        matIconRegistry.addSvgIcon(icon, domSanitizer.bypassSecurityTrustResourceUrl("/fake-path/fake-icon.svg"));
+    });
 }

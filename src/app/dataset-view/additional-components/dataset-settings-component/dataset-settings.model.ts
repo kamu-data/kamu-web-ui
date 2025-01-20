@@ -32,7 +32,7 @@ export const datasetSettingsSidePanelData: DatasetSettingsSidePanelItem[] = [
         showDivider: true,
         activeTab: SettingsTabsEnum.GENERAL,
         visible: true,
-        iconClassName: "mr-1",
+        iconClassName: "ms-1 me-2",
         id: "general",
     },
     {
@@ -40,7 +40,7 @@ export const datasetSettingsSidePanelData: DatasetSettingsSidePanelItem[] = [
         iconName: "clock",
         showDivider: false,
         activeTab: SettingsTabsEnum.SCHEDULING,
-        iconClassName: "mr-1",
+        iconClassName: "ms-1 me-2 mb-1 scheduled-icon",
         id: "scheduling",
     },
     {
@@ -48,7 +48,7 @@ export const datasetSettingsSidePanelData: DatasetSettingsSidePanelItem[] = [
         iconName: "compact",
         showDivider: false,
         activeTab: SettingsTabsEnum.COMPACTION,
-        iconClassName: "mr-2",
+        iconClassName: "ms-1 me-2",
         id: "compaction",
     },
     {

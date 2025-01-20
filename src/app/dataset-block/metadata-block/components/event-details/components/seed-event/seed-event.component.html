@@ -5,15 +5,15 @@
             <span class="fs-12 font-monospace text-break">{{ event.datasetId }}</span>
             <button
                 (click)="copyToClipboard(event.datasetId)"
-                class="btn btn-sm btn-gray ms-2"
+                class="btn btn-sm btn-gray clipboard-btn d-inline-flex align-items-center justify-content-center ms-2"
                 role="button"
                 data-test-id="copyToClipboardId"
             >
                 <div style="position: relative; display: inline-block">
-                    <svg-icon name="copy" />
+                    <mat-icon class="mat-icon-svg-size" svgIcon="copy" />
                 </div>
                 <div style="position: relative; display: none">
-                    <svg-icon name="checked" />
+                    <mat-icon class="mat-icon-svg-size" svgIcon="checked" />
                 </div>
             </button>
         </app-block-row-data>

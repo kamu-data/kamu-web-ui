@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { CommitmentDataSectionComponent } from "./commitment-data-section.component";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { mockQueryExplainerResponse, mockVerifyQueryResponseSuccess } from "../../query-explainer.mocks";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
+import { MatIconModule } from "@angular/material/icon";
 
 describe("CommitmentDataSectionComponent", () => {
     let component: CommitmentDataSectionComponent;
@@ -12,8 +12,10 @@ describe("CommitmentDataSectionComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [CommitmentDataSectionComponent],
-            imports: [AngularSvgIconModule.forRoot(), HttpClientTestingModule],
+            imports: [MatIconModule, HttpClientTestingModule],
         });
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(CommitmentDataSectionComponent);
         component = fixture.componentInstance;

@@ -20,7 +20,7 @@
                             #menuTrigger="matMenuTrigger"
                             [matMenuTriggerFor]="menu"
                         >
-                            <svg-icon name="show-options" />
+                            <mat-icon class="mat-icon-svg-size pt-1px" svgIcon="show-options" />
                         </button>
                         <mat-menu #menu="matMenu" xPosition="before" [hasBackdrop]="true">
                             <button mat-menu-item [disabled]="false" (click)="updateNow()">Update now</button>

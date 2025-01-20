@@ -5,7 +5,6 @@ import { DatasetSettingsSecretsManagerTabComponent } from "./dataset-settings-se
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { PaginationComponent } from "src/app/components/pagination-component/pagination.component";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { MatDividerModule } from "@angular/material/divider";
 import { HttpClientModule } from "@angular/common/http";
 import { ActivatedRoute } from "@angular/router";
@@ -21,6 +20,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ModalService } from "src/app/components/modal/modal.service";
 import { EditKeyValueModalComponent } from "./components/edit-key-value-modal/edit-key-value-modal.component";
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
 
 export class MockNgbModalRef {
     result: Promise<unknown> = new Promise((resolve) => resolve("x"));
@@ -70,7 +70,6 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
             imports: [
                 ToastrModule.forRoot(),
                 ApolloTestingModule,
-                AngularSvgIconModule.forRoot(),
                 MatDividerModule,
                 MatTableModule,
                 HttpClientModule,
@@ -79,6 +78,8 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
                 MatTooltipModule,
             ],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(DatasetSettingsSecretsManagerTabComponent);
         navigationService = TestBed.inject(NavigationService);

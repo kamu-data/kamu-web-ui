@@ -5,11 +5,12 @@ import { TEST_DATASET_NAME, mockGetMetadataBlockQuery } from "src/app/api/mock/d
 import { DisplayTimeModule } from "../display-time/display-time.module";
 import { DisplayHashModule } from "../display-hash/display-hash.module";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { ToastrModule } from "ngx-toastr";
 import AppValues from "src/app/common/app.values";
 import { RouterModule } from "@angular/router";
 import { SharedTestModule } from "src/app/common/shared-test.module";
+import { MatIconModule } from "@angular/material/icon";
+import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
 
 describe("OverviewHistorySummaryHeaderComponent", () => {
     let component: OverviewHistorySummaryHeaderComponent;
@@ -21,13 +22,15 @@ describe("OverviewHistorySummaryHeaderComponent", () => {
             imports: [
                 DisplayTimeModule,
                 DisplayHashModule,
-                AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
                 ToastrModule.forRoot(),
                 RouterModule,
                 SharedTestModule,
+                MatIconModule,
             ],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(OverviewHistorySummaryHeaderComponent);
         component = fixture.componentInstance;

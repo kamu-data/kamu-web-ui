@@ -4,12 +4,11 @@ import { TimelineComponent } from "./timeline.component";
 import { TEST_DATASET_NAME, mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
 import { mockPageBasedInfo } from "src/app/search/mock.data";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
-import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
 import { DisplayHashModule } from "../display-hash/display-hash.module";
 import { ToastrModule } from "ngx-toastr";
 import { DisplayTimeModule } from "../display-time/display-time.module";
 import { MatIconModule } from "@angular/material/icon";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { RouterTestingModule } from "@angular/router/testing";
 import AppValues from "src/app/common/app.values";
@@ -27,13 +26,14 @@ describe("TimelineComponent", () => {
                 ToastrModule.forRoot(),
                 DisplayTimeModule,
                 MatIconModule,
-                AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
                 NgbPopoverModule,
                 RouterTestingModule,
                 RouterModule,
             ],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(TimelineComponent);
         component = fixture.componentInstance;

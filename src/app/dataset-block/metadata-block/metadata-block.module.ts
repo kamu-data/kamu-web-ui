@@ -14,7 +14,6 @@ import { BlockNavigationComponent } from "./components/block-navigation/block-na
 import { MatMenuModule } from "@angular/material/menu";
 import { DisplayHashModule } from "src/app/components/display-hash/display-hash.module";
 import { AddDataEventComponent } from "./components/event-details/components/add-data-event/add-data-event.component";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { PaginationModule } from "src/app/components/pagination-component/pagination.module";
 import { BlockHashFilterPipe } from "./components/block-navigation/pipes/block-hash-filter.pipe";
 import { EventTypeFilterPipe } from "./components/block-navigation/pipes/event-type-filter.pipe";
@@ -96,7 +95,6 @@ import { TimePropertyComponent } from "./components/event-details/components/com
         MatDividerModule,
         FormsModule,
         PaginationModule,
-        AngularSvgIconModule,
         HighlightModule,
         DynamicTableModule,
         DisplayTimeModule,

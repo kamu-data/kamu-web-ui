@@ -7,7 +7,7 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { ActivatedRoute, RouterModule } from "@angular/router";
 import { mockDatasetBasicsRootFragment, mockDatasetMainDataId } from "src/app/search/mock.data";
 import { ToastrModule } from "ngx-toastr";
-import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
 import { DatasetFlowsService } from "./services/dataset-flows.service";
 import { of } from "rxjs";
 import { MatMenuModule } from "@angular/material/menu";
@@ -17,7 +17,6 @@ import { DisplayTimeModule } from "src/app/components/display-time/display-time.
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { NgbPaginationModule, NgbPopoverModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -82,7 +81,6 @@ describe("FlowsComponent", () => {
                 FormsModule,
                 MatDividerModule,
                 MatIconModule,
-                AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
                 NgbPopoverModule,
                 NgbTypeaheadModule,
@@ -90,6 +88,8 @@ describe("FlowsComponent", () => {
                 RouterModule,
             ],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(FlowsComponent);
         datasetFlowsService = TestBed.inject(DatasetFlowsService);

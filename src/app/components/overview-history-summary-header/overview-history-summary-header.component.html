@@ -81,10 +81,10 @@
                             data-pjax="#repo-content-pjax-container"
                             [routerLink]="['/', metadataBlockFragment.author.accountName, this.datasetName]"
                             [queryParams]="{ tab: DatasetViewTypeEnum.History }"
-                            class="pl-3 pr-3 py-3 p-md-0 mt-n3 mb-n3 mr-n3 m-md-0 link--primary text-decoration-none flex-nowrap"
+                            class="pl-3 d-flex align-items-center pr-3 py-3 p-md-0 mt-n3 mb-n3 mr-n3 m-md-0 link--primary text-decoration-none flex-nowrap"
                         >
-                            <span class="mr-1">
-                                <svg-icon name="history" />
+                            <span class="mr-1 mt-1">
+                                <mat-icon class="mat-icon-size" svgIcon="history" />
                             </span>
                             <span class="d-none d-sm-inline">
                                 <strong>{{ numBlocksTotal }}</strong>

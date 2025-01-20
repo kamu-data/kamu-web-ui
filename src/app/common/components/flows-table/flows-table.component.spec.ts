@@ -11,7 +11,6 @@ import { mockDatasetFlowsInitiatorsQuery, mockFlowSummaryDataFragments } from "s
 import { DisplayTimeModule } from "src/app/components/display-time/display-time.module";
 import { Account } from "src/app/api/kamu.graphql.interface";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { AngularSvgIconModule, SvgIconRegistryService } from "angular-svg-icon";
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { MatTableHarness } from "@angular/material/table/testing";
@@ -27,6 +26,7 @@ import { ToastrModule, ToastrService } from "ngx-toastr";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { of } from "rxjs";
 import { RouterModule } from "@angular/router";
+import { registerMatSvgIcons } from "../../base-test.helpers.spec";
 
 describe("FlowsTableComponent", () => {
     let component: FlowsTableComponent;
@@ -49,7 +49,6 @@ describe("FlowsTableComponent", () => {
                 MatIconModule,
                 FormsModule,
                 DisplayTimeModule,
-                AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
                 SharedTestModule,
                 SharedModule,
@@ -61,10 +60,7 @@ describe("FlowsTableComponent", () => {
         }).compileComponents();
 
         // Note: for some reason this icon is not loaded
-        const iconRegistryService: SvgIconRegistryService = TestBed.inject(SvgIconRegistryService);
-        iconRegistryService.addSvg("show-options", "");
-        iconRegistryService.addSvg("hour-glass", "");
-        iconRegistryService.addSvg("timer", "");
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(FlowsTableComponent);
         modalService = TestBed.inject(ModalService);

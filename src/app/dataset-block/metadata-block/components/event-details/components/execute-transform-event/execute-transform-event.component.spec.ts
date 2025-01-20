@@ -11,9 +11,9 @@ import { ToastrModule } from "ngx-toastr";
 import { TooltipIconComponent } from "../../../tooltip-icon/tooltip-icon.component";
 import { MatIconModule } from "@angular/material/icon";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { SharedTestModule } from "src/app/common/shared-test.module";
+import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
 
 describe("ExecuteTransformEventComponent", () => {
     let component: ExecuteTransformEventComponent;
@@ -34,11 +34,12 @@ describe("ExecuteTransformEventComponent", () => {
                 MatIconModule,
                 NgbTooltipModule,
                 ToastrModule.forRoot(),
-                AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
                 SharedTestModule,
             ],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(ExecuteTransformEventComponent);
         component = fixture.componentInstance;

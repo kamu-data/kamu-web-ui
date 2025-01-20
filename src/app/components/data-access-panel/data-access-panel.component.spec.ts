@@ -6,7 +6,6 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { MatMenuModule } from "@angular/material/menu";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatTabsModule } from "@angular/material/tabs";
@@ -34,7 +33,6 @@ describe("DataAccessPanelComponent", () => {
                 MatCheckboxModule,
                 MatIconModule,
                 MatTooltipModule,
-                AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
                 MatMenuModule,
                 MatTabsModule,

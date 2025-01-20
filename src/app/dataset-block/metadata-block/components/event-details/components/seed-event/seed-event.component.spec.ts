@@ -1,5 +1,9 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { getElementByDataTestId, emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import {
+    getElementByDataTestId,
+    emitClickOnElementByDataTestId,
+    registerMatSvgIcons,
+} from "src/app/common/base-test.helpers.spec";
 import { mockSeed } from "../../mock.events";
 
 import { SeedEventComponent } from "./seed-event.component";
@@ -8,9 +12,9 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BlockRowDataComponent } from "../../../block-row-data/block-row-data.component";
 import { TooltipIconComponent } from "../../../tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
-import { AngularSvgIconModule } from "angular-svg-icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { SharedTestModule } from "src/app/common/shared-test.module";
+import { MatIconModule } from "@angular/material/icon";
 
 describe("SeedEventComponent", () => {
     let component: SeedEventComponent;
@@ -24,11 +28,13 @@ describe("SeedEventComponent", () => {
                 ToastrModule.forRoot(),
                 BrowserAnimationsModule,
                 NgbTooltipModule,
-                AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
                 SharedTestModule,
+                MatIconModule,
             ],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(SeedEventComponent);
         toastService = TestBed.inject(ToastrService);

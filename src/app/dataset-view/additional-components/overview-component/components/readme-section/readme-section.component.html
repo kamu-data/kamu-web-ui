@@ -1,8 +1,8 @@
 <div id="file-readme-dataset-template-md" class="file my-4" *ngIf="currentReadme || editingInProgress">
     <div class="file-header d-flex align-items-center">
         <div class="file-info pr-4 d-flex flex-order-1 flex-auto align-items-center">
-            <span class="mr-2">
-                <svg-icon name="code-square" />
+            <span class="mr-2 mt-1">
+                <mat-icon class="mat-icon-svg-size" svgIcon="code-square" />
             </span>
             <h2 class="box-title align-items-center m-0">
                 <a href="#readme" data-view-component="true" class="link--primary">README.md</a>
@@ -15,7 +15,7 @@
             (click)="showEditTabs()"
             *ngIf="editable"
         >
-            <svg-icon name="pencil" />
+            <mat-icon class="mat-icon-svg-size" svgIcon="pencil" />
         </button>
     </div>
     <div *ngIf="editingInProgress" class="edit-title d-flex align-items-center justify-content-between">

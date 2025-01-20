@@ -16,7 +16,6 @@ import {
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
 import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
-import _ from "lodash";
 import { TimeDelta, TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { of } from "rxjs";
 import {
@@ -77,13 +76,13 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
     });
 
     it("should create", () => {
-        component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
+        component.datasetPermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
         fixture.detectChanges();
         expect(component).toBeTruthy();
     });
 
     it("should check initial state", () => {
-        component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
+        component.datasetPermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
         spyOn(datasetSchedulingService, "fetchDatasetFlowConfigs").and.returnValue(
             of(mockIngestGetDatasetFlowConfigsSuccess),
         );
@@ -96,7 +95,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
     });
 
     it("should check initial state for derivative dataset", () => {
-        component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
+        component.datasetPermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
 
         spyOn(datasetSchedulingService, "fetchDatasetFlowTriggers").and.returnValue(
@@ -109,7 +108,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
 
     it("should check 'Save triger' button works for DERIVATIVE dataset", () => {
         const setDatasetFlowBatchingSpy = spyOn(datasetSchedulingService, "setDatasetTriggers").and.callThrough();
-        component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
+        component.datasetPermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
         const mockBatchingTriggerForm = new FormGroup<BatchingFormType>({
             updatesState: new FormControl<boolean>(false, { nonNullable: true }),
@@ -148,7 +147,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         const setDatasetFlowConfigsSpy = spyOn(datasetSchedulingService, "setDatasetFlowConfigs").and.returnValue(
             of(true),
         );
-        component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
+        component.datasetPermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
 
         const mockPollingTriggerForm = new FormGroup<PollingGroupType>({
             updatesState: new FormControl<boolean>(true, { nonNullable: true }),
@@ -189,7 +188,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         const setDatasetFlowConfigsSpy = spyOn(datasetSchedulingService, "setDatasetFlowConfigs").and.returnValue(
             of(true),
         );
-        component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
+        component.datasetPermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
 
         const mockPollingTriggerForm = new FormGroup<PollingGroupType>({
             updatesState: new FormControl<boolean>(true, { nonNullable: true }),

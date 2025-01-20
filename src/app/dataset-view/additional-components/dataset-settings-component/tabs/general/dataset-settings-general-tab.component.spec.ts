@@ -16,7 +16,6 @@ import {
     mockDatasetBasicsDerivedFragment,
     mockFullPowerDatasetPermissionsFragment,
 } from "../../../../../search/mock.data";
-import _ from "lodash";
 import { of } from "rxjs";
 import {
     checkVisible,
@@ -71,7 +70,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         fixture = TestBed.createComponent(DatasetSettingsGeneralTabComponent);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
-        component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
+        component.datasetPermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
 
         datasetSettingsService = TestBed.inject(DatasetSettingsService);
         modalService = TestBed.inject(ModalService);

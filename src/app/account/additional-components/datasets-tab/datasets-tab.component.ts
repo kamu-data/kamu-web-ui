@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, inject, Input } from "@angular/core";
 import { Component } from "@angular/core";
 import { DatasetSearchOverviewFragment, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
 import { AccountTabs } from "../../account.constants";
-import _ from "lodash";
 import { NavigationService } from "src/app/services/navigation.service";
+import { isNil } from "src/app/common/app.helpers";
 
 @Component({
     selector: "app-datasets-tab",
@@ -23,7 +23,7 @@ export class DatasetsTabComponent {
     }
 
     public onPageChange(currentPage?: number): void {
-        if (_.isNil(currentPage) || currentPage === 1) {
+        if (isNil(currentPage) || currentPage === 1) {
             this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.DATASETS);
             return;
         }

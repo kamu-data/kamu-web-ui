@@ -15,7 +15,6 @@ import { DynamicTableModule } from "../../../components/dynamic-table/dynamic-ta
 import { EditorModule } from "src/app/shared/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
-import _ from "lodash";
 import { RequestTimerComponent } from "../../../query/shared/request-timer/request-timer.component";
 import { SqlEditorComponent } from "src/app/shared/editor/components/sql-editor/sql-editor.component";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
@@ -97,7 +96,7 @@ describe("DataComponent", () => {
         component.addData({
             schema: mockMetadataDerivedUpdate.schema,
             content: mockOverviewDataUpdate.content,
-            overview: _.cloneDeep(mockOverviewDataUpdateNullable.overview),
+            overview: structuredClone(mockOverviewDataUpdateNullable.overview),
             size: mockOverviewDataUpdate.size,
         } as OverviewUpdate);
         expect(ngbModalServiceSpy).toHaveBeenCalledTimes(1);

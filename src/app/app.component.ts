@@ -9,7 +9,6 @@ import { BaseComponent } from "./common/base.component";
 import ProjectLinks from "./project-links";
 import { AccountFragment, AccountType } from "./api/kamu.graphql.interface";
 import { MaybeNull } from "./common/app.types";
-import _ from "lodash";
 import { isMobileView, promiseWithCatch } from "./common/app.helpers";
 import { AppConfigService } from "./app-config.service";
 import { AppUIConfigFeatureFlags, LoginMethod } from "./app-config.model";
@@ -88,7 +87,7 @@ export class AppComponent extends BaseComponent implements OnInit {
         this.loggedUserService.loggedInUserChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((user: MaybeNull<AccountFragment>) => {
-                this.loggedAccount = user ? _.cloneDeep(user) : AppComponent.ANONYMOUS_ACCOUNT_INFO;
+                this.loggedAccount = user ? structuredClone(user) : AppComponent.ANONYMOUS_ACCOUNT_INFO;
                 this.cdr.detectChanges();
             });
     }

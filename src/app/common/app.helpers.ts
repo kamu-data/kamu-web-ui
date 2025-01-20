@@ -147,3 +147,67 @@ export function addMarkdownRunButton(sqlQueries: RegExpMatchArray | null, path: 
         });
     }
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isNil(x: any): boolean {
+    return x == null;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isNull(x: object | null): boolean {
+    return x === null;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function has(obj: any, path: any): boolean {
+    // Regex explained: https://regexr.com/58j0k
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    const pathArray = Array.isArray(path) ? path : path.match(/([^[.\]])+/g);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    return !!pathArray?.reduce((prevObj: object, key: keyof object) => prevObj && prevObj[key], obj);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isEqual(value: any, other: any) {
+    if (typeof value !== "object" && typeof other !== "object") {
+        return Object.is(value, other);
+    }
+    if (value === null && other === null) {
+        return true;
+    }
+    if (typeof value !== typeof other) {
+        return false;
+    }
+    if (value === other) {
+        return true;
+    }
+    if (Array.isArray(value) && Array.isArray(other)) {
+        if (value.length !== other.length) {
+            return false;
+        }
+        for (let i = 0; i < value.length; i++) {
+            if (!isEqual(value[i], other[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+    if (Array.isArray(value) || Array.isArray(other)) {
+        return false;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    if (Object.keys(value).length !== Object.keys(other).length) {
+        return false;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    for (const [k, v] of Object.entries(value)) {
+        if (!(k in other)) {
+            return false;
+        }
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        if (!isEqual(v, other[k])) {
+            return false;
+        }
+    }
+    return true;
+}

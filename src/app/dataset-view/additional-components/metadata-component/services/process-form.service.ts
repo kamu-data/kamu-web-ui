@@ -16,7 +16,7 @@ import {
     TopicsType,
 } from "../components/source-events/add-polling-source/add-polling-source-form.types";
 import AppValues from "src/app/common/app.values";
-import { has } from "lodash";
+import { has } from "src/app/common/app.helpers";
 
 @Injectable({
     providedIn: "root",

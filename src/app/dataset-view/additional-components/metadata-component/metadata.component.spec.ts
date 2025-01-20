@@ -17,7 +17,6 @@ import { HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetKind } from "src/app/api/kamu.graphql.interface";
-import _ from "lodash";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
 
@@ -59,7 +58,7 @@ describe("MetadataComponent", () => {
         fixture = TestBed.createComponent(MetadataComponent);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
-        component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment);
+        component.datasetPermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
         fixture.detectChanges();
     });
 
@@ -143,7 +142,7 @@ describe("MetadataComponent", () => {
 
         it("should not be possible to edit SetPollingSource for root dataset if no source is defined yet", () => {
             component.datasetBasics = mockDatasetBasicsRootFragment;
-            component.currentState = _.cloneDeep(mockMetadataRootUpdate);
+            component.currentState = structuredClone(mockMetadataRootUpdate);
             component.currentState.metadataSummary.metadata.currentPollingSource = undefined;
             fixture.detectChanges();
 
@@ -228,7 +227,7 @@ describe("MetadataComponent", () => {
         });
 
         it("should not be possible to edit SetTransform for derived dataset if no transform is defined yet", () => {
-            component.currentState = _.cloneDeep(mockMetadataDerivedUpdate);
+            component.currentState = structuredClone(mockMetadataDerivedUpdate);
             component.currentState.metadataSummary.metadata.currentTransform = undefined;
             fixture.detectChanges();
 

@@ -1,7 +1,6 @@
 import { Component, inject, Input, OnInit } from "@angular/core";
 import { MatChipInputEvent } from "@angular/material/chips";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import { isEqual } from "lodash";
 import {
     DatasetOverviewFragment,
     DatasetDataSizeFragment,
@@ -15,6 +14,7 @@ import { DatasetCommitService } from "../../services/dataset-commit.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { finalize } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { isEqual } from "src/app/common/app.helpers";
 
 @Component({
     selector: "app-details-modal",

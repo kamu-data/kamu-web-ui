@@ -27,7 +27,6 @@ import { ToastrModule } from "ngx-toastr";
 import { DynamicTableComponent } from "src/app/components/dynamic-table/dynamic-table.component";
 import { MatTableModule } from "@angular/material/table";
 import { RouterTestingModule } from "@angular/router/testing";
-import _ from "lodash";
 import { mockSetLicense } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
@@ -100,7 +99,7 @@ describe("OverviewComponent", () => {
         datasetSubsService.emitOverviewChanged({
             schema: mockMetadataDerivedUpdate.schema,
             content: mockOverviewDataUpdate.content,
-            overview: _.cloneDeep(mockOverviewDataUpdate.overview), // clone, as we modify this data in the tests
+            overview: structuredClone(mockOverviewDataUpdate.overview), // clone, as we modify this data in the tests
             size: mockOverviewDataUpdate.size,
         } as OverviewUpdate);
 
@@ -123,7 +122,7 @@ describe("OverviewComponent", () => {
             },
             visibility: mockPublicDatasetVisibility,
         };
-        component.datasetPermissions = _.cloneDeep(mockFullPowerDatasetPermissionsFragment); // clone, as we modify this data in the tests
+        component.datasetPermissions = structuredClone(mockFullPowerDatasetPermissionsFragment); // clone, as we modify this data in the tests
 
         fixture.detectChanges();
     });

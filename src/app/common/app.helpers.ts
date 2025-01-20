@@ -147,3 +147,53 @@ export function addMarkdownRunButton(sqlQueries: RegExpMatchArray | null, path: 
         });
     }
 }
+
+export function isNil(x: unknown): boolean {
+    return x == null;
+}
+
+export function isNull(x: unknown): boolean {
+    return x === null;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isEqual(value: any, other: any) {
+    if (typeof value !== "object" && typeof other !== "object") {
+        return Object.is(value, other);
+    }
+    if (value === null && other === null) {
+        return true;
+    }
+    if (typeof value !== typeof other) {
+        return false;
+    }
+    if (Array.isArray(value) && Array.isArray(other)) {
+        if (value.length !== other.length) {
+            return false;
+        }
+        for (let i = 0; i < value.length; i++) {
+            if (!isEqual(value[i], other[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+    if (Array.isArray(value) || Array.isArray(other)) {
+        return false;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    if (Object.keys(value).length !== Object.keys(other).length) {
+        return false;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    for (const [k, v] of Object.entries(value)) {
+        if (!(k in other)) {
+            return false;
+        }
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        if (!isEqual(v, other[k])) {
+            return false;
+        }
+    }
+    return true;
+}

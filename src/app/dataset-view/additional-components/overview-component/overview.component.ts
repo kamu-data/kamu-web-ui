@@ -21,14 +21,13 @@ import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { EditDetailsModalComponent } from "./components/edit-details-modal/edit-details-modal.component";
 import { EditWatermarkModalComponent } from "./components/edit-watermark-modal/edit-watermark-modal.component";
-import _ from "lodash";
 import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { AddDataModalComponent } from "./components/add-data-modal/add-data-modal.component";
 
 import { Observable } from "rxjs";
 import { AppConfigService } from "src/app/app-config.service";
-import { promiseWithCatch } from "src/app/common/app.helpers";
+import { isNil, promiseWithCatch } from "src/app/common/app.helpers";
 import { ModalService } from "src/app/components/modal/modal.service";
 import AppValues from "src/app/common/app.values";
 import { FileUploadService } from "src/app/services/file-upload.service";
@@ -111,7 +110,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     public get canAddDatasetInfo(): boolean {
         if (!this.hasDatasetInfo) {
-            return this.datasetPermissions.permissions.canCommit && !_.isNil(this.currentState);
+            return this.datasetPermissions.permissions.canCommit && !isNil(this.currentState);
         } else {
             return false;
         }
@@ -121,7 +120,8 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         if (this.currentState) {
             const currentInfo: DatasetCurrentInfoFragment = this.currentState.overview.metadata.currentInfo;
             return (
-                !_.isNil(currentInfo.description) || (!_.isNil(currentInfo.keywords) && currentInfo.keywords.length > 0)
+                !isNil(currentInfo.description) ||
+                (!isNil(currentInfo.keywords) && Boolean(currentInfo.keywords && currentInfo.keywords.length))
             );
         } else {
             return false;
@@ -173,7 +173,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     public get canEditReadme(): boolean {
         if (this.currentState && this.datasetPermissions.permissions.canCommit) {
-            return !_.isNil(this.currentState.overview.metadata.currentReadme);
+            return !isNil(this.currentState.overview.metadata.currentReadme);
         } else {
             return false;
         }
@@ -181,7 +181,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     public get canAddLicense(): boolean {
         if (this.currentState && this.datasetPermissions.permissions.canCommit) {
-            return _.isNil(this.currentState.overview.metadata.currentLicense);
+            return isNil(this.currentState.overview.metadata.currentLicense);
         } else {
             return false;
         }
@@ -189,7 +189,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     public get canEditLicense(): boolean {
         if (this.currentState && this.datasetPermissions.permissions.canCommit) {
-            return !_.isNil(this.currentState.overview.metadata.currentLicense);
+            return !isNil(this.currentState.overview.metadata.currentLicense);
         } else {
             return false;
         }
@@ -228,7 +228,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get hasSetPollingSource(): boolean {
-        return !_.isNil(this.currentState?.overview.metadata.currentPollingSource);
+        return !isNil(this.currentState?.overview.metadata.currentPollingSource);
     }
 
     public get showDragAndDropBlock(): boolean {
@@ -236,11 +236,11 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get hasCurrentTransform(): boolean {
-        return !_.isNil(this.currentState?.overview.metadata.currentTransform);
+        return !isNil(this.currentState?.overview.metadata.currentTransform);
     }
 
     private get hasWatermark(): boolean {
-        return !_.isNil(this.currentState?.overview.metadata.currentWatermark);
+        return !isNil(this.currentState?.overview.metadata.currentWatermark);
     }
 
     public get isPrivate(): boolean {

@@ -22,7 +22,6 @@ import { NgbPaginationModule, NgbPopoverModule, NgbTypeaheadModule } from "@ng-b
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
-import _ from "lodash";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { mockMetadataDerivedUpdate, mockOverviewDataUpdate } from "../data-tabs.mock";
 import { TileBaseWidgetComponent } from "src/app/common/components/tile-base-widget/tile-base-widget.component";
@@ -100,7 +99,7 @@ describe("FlowsComponent", () => {
         datasetSubsService.emitOverviewChanged({
             schema: mockMetadataDerivedUpdate.schema,
             content: mockOverviewDataUpdate.content,
-            overview: _.cloneDeep(mockOverviewDataUpdate.overview), // clone, as we modify this data in the tests
+            overview: structuredClone(mockOverviewDataUpdate.overview), // clone, as we modify this data in the tests
             size: mockOverviewDataUpdate.size,
         } as OverviewUpdate);
     });

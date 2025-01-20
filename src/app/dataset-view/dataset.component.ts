@@ -7,13 +7,12 @@ import { filter, finalize, first, switchMap, tap } from "rxjs/operators";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "../api/kamu.graphql.interface";
 import ProjectLinks from "../project-links";
 import { DatasetInfo } from "../interface/navigation.interface";
-import { promiseWithCatch } from "../common/app.helpers";
+import { isNil, promiseWithCatch } from "../common/app.helpers";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { MaybeNull, MaybeUndefined } from "../common/app.types";
 import { DatasetPermissionsService } from "./dataset.permissions.service";
 import { ReplaySubject, Subject, of } from "rxjs";
 import { LineageGraphNodeData, LineageGraphNodeKind } from "./additional-components/lineage-component/lineage-model";
-import _ from "lodash";
 import { BaseDatasetDataComponent } from "../common/base-dataset-data.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { SqlQueryService } from "../services/sql-query.service";
@@ -80,8 +79,8 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
     private requestMainDataIfChanged(): void {
         const urlDatasetInfo = this.getDatasetInfoFromUrl();
         if (
-            _.isNil(this.datasetBasics) ||
-            this.datasetBasics.name !== urlDatasetInfo.datasetName ||
+            isNil(this.datasetBasics) ||
+            this.datasetBasics?.name !== urlDatasetInfo.datasetName ||
             this.datasetBasics.owner.accountName !== urlDatasetInfo.accountName ||
             [
                 DatasetViewTypeEnum.Overview,

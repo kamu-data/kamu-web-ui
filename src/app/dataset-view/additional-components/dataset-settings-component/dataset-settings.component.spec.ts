@@ -22,7 +22,6 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { ChangeDetectionStrategy } from "@angular/core";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
-import _ from "lodash";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { mockMetadataRootUpdate, mockOverviewDataUpdate } from "../data-tabs.mock";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
@@ -103,7 +102,7 @@ describe("DatasetSettingsComponent", () => {
         datasetSubsService.emitOverviewChanged({
             schema: mockMetadataRootUpdate.schema,
             content: mockOverviewDataUpdate.content,
-            overview: _.cloneDeep(mockOverviewDataUpdate.overview), // clone, as we modify this data in the tests
+            overview: structuredClone(mockOverviewDataUpdate.overview), // clone, as we modify this data in the tests
             size: mockOverviewDataUpdate.size,
         } as OverviewUpdate);
         fixture.detectChanges();

@@ -17,10 +17,9 @@ import {
     DatasetMetadataSummaryFragment,
     PageBasedInfo,
 } from "src/app/api/kamu.graphql.interface";
-import { momentConvertDateToLocalWithFormat, promiseWithCatch } from "src/app/common/app.helpers";
+import { isNil, momentConvertDateToLocalWithFormat, promiseWithCatch } from "src/app/common/app.helpers";
 import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "src/app/common/app.types";
 import { NavigationService } from "src/app/services/navigation.service";
-import _ from "lodash";
 import { ModalService } from "src/app/components/modal/modal.service";
 import ProjectLinks from "src/app/project-links";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -122,7 +121,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         if (this.currentState) {
             return (
                 this.datasetBasics.kind === DatasetKind.Root &&
-                !_.isNil(this.currentState.metadataSummary.metadata.currentPollingSource) &&
+                !isNil(this.currentState.metadataSummary.metadata.currentPollingSource) &&
                 this.datasetPermissions.permissions.canCommit
             );
         } else {
@@ -146,7 +145,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         if (this.currentState) {
             return (
                 this.datasetBasics.kind === DatasetKind.Derivative &&
-                !_.isNil(this.currentState.metadataSummary.metadata.currentTransform) &&
+                !isNil(this.currentState.metadataSummary.metadata.currentTransform) &&
                 this.datasetPermissions.permissions.canCommit
             );
         } else {

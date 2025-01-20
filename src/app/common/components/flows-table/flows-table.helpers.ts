@@ -1,4 +1,3 @@
-import _ from "lodash";
 import moment from "moment";
 import {
     DatasetListFlowsDataFragment,
@@ -9,17 +8,17 @@ import {
 import { MaybeNull } from "src/app/common/app.types";
 import AppValues from "src/app/common/app.values";
 import { DataHelpers } from "src/app/common/data.helpers";
-import { excludeAgoWord } from "../../app.helpers";
+import { excludeAgoWord, isNil } from "../../app.helpers";
 
 export class DatasetFlowTableHelpers {
     public static descriptionColumnTableOptions(element: FlowSummaryDataFragment): { icon: string; class: string } {
         switch (element.status) {
             case FlowStatus.Finished:
                 /* istanbul ignore next */
-                if (_.isNil(element.outcome)) {
+                if (isNil(element.outcome)) {
                     throw new Error("Expected to have flow outcome in Finished state");
                 }
-                switch (element.outcome.__typename) {
+                switch (element.outcome?.__typename) {
                     case "FlowSuccessResult":
                         return { icon: "check_circle", class: "completed-status" };
                     case "FlowFailedError":
@@ -43,10 +42,10 @@ export class DatasetFlowTableHelpers {
         switch (element.status) {
             case FlowStatus.Finished:
                 /* istanbul ignore next */
-                if (_.isNil(element.outcome)) {
+                if (isNil(element.outcome)) {
                     throw new Error("Expected to have flow outcome in Finished state");
                 }
-                switch (element.outcome.__typename) {
+                switch (element.outcome?.__typename) {
                     case "FlowSuccessResult":
                         return "finished";
                     case "FlowAbortedResult":
@@ -80,10 +79,10 @@ export class DatasetFlowTableHelpers {
         switch (element.status) {
             case FlowStatus.Finished:
                 /* istanbul ignore next */
-                if (_.isNil(element.outcome)) {
+                if (isNil(element.outcome)) {
                     throw new Error("Expected to have flow outcome in Finished state");
                 }
-                switch (element.outcome.__typename) {
+                switch (element.outcome?.__typename) {
                     case "FlowSuccessResult":
                         switch (element.description.__typename) {
                             case "FlowDescriptionDatasetPollingIngest":
@@ -178,7 +177,7 @@ export class DatasetFlowTableHelpers {
                         return "Running hard compaction";
                     case "FlowDescriptionDatasetPollingIngest":
                         /* istanbul ignore next */
-                        if (_.isNil(fetchStep)) {
+                        if (isNil(fetchStep)) {
                             throw new Error("FetchStep expected for polling ingest flow");
                         }
                         switch (fetchStep?.__typename) {

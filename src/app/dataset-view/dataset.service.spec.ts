@@ -27,7 +27,6 @@ import { of } from "rxjs";
 import { DatasetNotFoundError, SqlExecutionError } from "../common/errors";
 import { DatasetHistoryUpdate, LineageUpdate, OverviewUpdate } from "./dataset.subscriptions.interface";
 import { first } from "rxjs/operators";
-import _ from "lodash";
 import {
     mockDatasetBasicsWithPermissionQuery,
     mockDatasetPushSyncStatusesAllInSyncQuery,
@@ -133,7 +132,7 @@ describe("AppDatasetService", () => {
 
     it("should check get main data from api when SQL execution fails softly", () => {
         const executionFailureMessage = "data extraction failed";
-        const sqlFailureResponse = _.cloneDeep(mockDatasetMainDataResponse);
+        const sqlFailureResponse = structuredClone(mockDatasetMainDataResponse);
         if (sqlFailureResponse.datasets.byOwnerAndName) {
             sqlFailureResponse.datasets.byOwnerAndName.data.tail = {
                 __typename: "DataQueryResultError",

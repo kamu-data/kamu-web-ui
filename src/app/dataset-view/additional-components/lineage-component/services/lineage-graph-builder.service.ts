@@ -16,8 +16,8 @@ import {
     LineageGraphUpdate,
 } from "../lineage-model";
 import { Node, Edge } from "@swimlane/ngx-graph";
-import _ from "lodash";
 import { MaybeNull } from "src/app/common/app.types";
+import { isNil } from "src/app/common/app.helpers";
 
 @Injectable({
     providedIn: "root",
@@ -162,7 +162,7 @@ export class LineageGraphBuilderService {
                 sourceNodeLabel = this.buildSourceNodeLabel(dataset.metadata.currentPollingSource?.fetch as FetchStep);
 
                 let sourceNode: Node | undefined = sourceNodesByLabel.get(sourceNodeLabel);
-                if (_.isNil(sourceNode)) {
+                if (isNil(sourceNode)) {
                     sourceNode = {
                         id: `source-node-${datasetId}`,
                         label: sourceNodeLabel,
@@ -175,8 +175,8 @@ export class LineageGraphBuilderService {
                 }
 
                 source2DatasetLinks.push({
-                    id: `${sourceNode.id}__and__${datasetId}`,
-                    source: sourceNode.id,
+                    id: `${sourceNode?.id}__and__${datasetId}`,
+                    source: sourceNode?.id,
                     target: datasetId,
                 } as Edge);
             });

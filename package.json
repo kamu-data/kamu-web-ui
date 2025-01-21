@@ -51,7 +51,6 @@
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "graphql": "^16.10.0",
-    "moment-timezone": "^0.5.46",
     "monaco-editor": "^0.41.0",
     "ng-multiselect-dropdown": "^1.0.0",
     "ngx-highlightjs": "^7.0.1",

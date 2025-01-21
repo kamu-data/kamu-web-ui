@@ -1,10 +1,10 @@
-import moment from "moment";
 import cronParser from "cron-parser";
 
 import { MaybeNull, MaybeNullOrUndefined } from "./app.types";
 import { DataSchema } from "../api/kamu.graphql.interface";
 import { DatasetSchema } from "../interface/dataset.interface";
 import AppValues from "./app.values";
+import { format, isEqual as dnsIsEqual, subDays } from "date-fns";
 
 export function requireValue<T>(input: MaybeNull<T>) {
     if (input === null) throw Error("value is required!");
@@ -41,19 +41,19 @@ export function momentConvertDateToLocalWithFormat(dateParams: {
     const stringDate: Date = new Date(dateParams.date);
 
     // solution for all browsers
-    const UTCStringDate: string = moment(stringDate).format("YYYY-MM-DDTHH:mm:ss.sss");
+    const UTCStringDate: string = format(stringDate, "dd MMM yyyy");
     const ISOStringDate: string = new Date(String(UTCStringDate)).toISOString();
 
     if (dateParams.isTextDate) {
-        if (moment(dateParams.date).isSame(moment().subtract(1, "day"), "day")) {
+        if (dnsIsEqual(dateParams.date, subDays(new Date(), 1))) {
             return "Yesterday";
         }
-        if (moment(dateParams.date).isSame(moment(), "day")) {
+        if (dnsIsEqual(dateParams.date, new Date())) {
             return "Today";
         }
     }
 
-    return moment(ISOStringDate).format(dateParams.format);
+    return format(ISOStringDate, "dd MMM yyyy");
 }
 
 export function parseCurrentSchema(data: MaybeNullOrUndefined<DataSchema>): MaybeNull<DatasetSchema> {
@@ -70,7 +70,7 @@ export function excludeAgoWord(value: string): string {
 
 export function cronExpressionNextTime(cronExpression: string): string {
     const date = cronParser.parseExpression(cronExpression).next().toDate();
-    return moment(date).format(AppValues.CRON_EXPRESSION_DATE_FORMAT as string);
+    return format(date, AppValues.CRON_EXPRESSION_DATE_FORMAT);
 }
 
 export function convertSecondsToHumanReadableFormat(seconds: number): string {

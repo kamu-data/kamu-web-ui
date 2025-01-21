@@ -41,9 +41,9 @@ describe("DisplayTimeComponent", () => {
         timekeeper.freeze(FROZEN_TIME);
     });
 
-    function testRelativeTime(expectedResult: string, date: Date, threshold?: moment.argThresholdOpts): void {
+    function testRelativeTime(expectedResult: string, date: Date): void {
         component.data = date.toISOString();
-        component.threshold = threshold;
+
         expect(component.relativeTime).toBe(expectedResult);
     }
 
@@ -121,7 +121,7 @@ describe("DisplayTimeComponent", () => {
         },
     ].forEach(({ date, expectedResult }) => {
         it("#relativeTime days threshold", () => {
-            testRelativeTime(expectedResult, date, { d: 3 });
+            testRelativeTime(expectedResult, date);
         });
     });
 
@@ -140,7 +140,7 @@ describe("DisplayTimeComponent", () => {
         },
     ].forEach(({ date, expectedResult }) => {
         it("#relativeTime weeks threshold", () => {
-            testRelativeTime(expectedResult, date, { w: 1 });
+            testRelativeTime(expectedResult, date);
         });
     });
 

@@ -1,6 +1,5 @@
 import { MaybeNullOrUndefined } from "src/app/common/app.types";
 import { fakeAsync, flush, tick } from "@angular/core/testing";
-import moment from "moment";
 import {
     isEqual,
     isNil,
@@ -10,6 +9,7 @@ import {
     requireValue,
 } from "./app.helpers";
 import AppValues from "./app.values";
+import { subDays } from "date-fns";
 
 describe("AppHelpers", () => {
     it("should check non-null requireValue", () => {
@@ -68,7 +68,7 @@ describe("AppHelpers", () => {
 
     it("should convert data to yesterday ", () => {
         const result = momentConvertDateToLocalWithFormat({
-            date: moment().subtract(1, "day").toDate(),
+            date: subDays(new Date(), 1),
             format: AppValues.DISPLAY_DATE_FORMAT,
             isTextDate: true,
         });

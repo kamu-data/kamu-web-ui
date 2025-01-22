@@ -16,9 +16,7 @@ import timekeeper from "timekeeper";
 
 describe("DatasetFlowDetailsHelpers", () => {
     beforeAll(() => {
-        timekeeper.freeze(new Date("2024-03-14T11:22:29+00:00"));
-        // eslint-disable-next-line no-console
-        console.log("==>", Intl.DateTimeFormat().resolvedOptions().timeZone);
+        timekeeper.freeze("2024-03-14T11:22:29+00:00");
     });
 
     afterAll(() => {

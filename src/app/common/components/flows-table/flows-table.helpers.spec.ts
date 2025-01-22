@@ -23,7 +23,7 @@ import { mockDatasetMainDataId } from "src/app/search/mock.data";
 
 describe("DatasetFlowTableHelpers", () => {
     beforeAll(() => {
-        timekeeper.freeze(new Date("2024-03-14T11:22:29+00:00").toLocaleString("en-US", { timeZone: "Europe/Kiev" }));
+        timekeeper.freeze("2024-03-14T11:22:29+00:00");
     });
 
     afterAll(() => {

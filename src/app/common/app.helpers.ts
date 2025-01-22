@@ -35,7 +35,7 @@ export function isMobileView(): boolean {
  */
 export function momentConvertDateToLocalWithFormat(dateParams: {
     date: Date | number;
-    format?: string;
+    format: string;
     isTextDate?: boolean;
 }): string {
     const stringDate: Date = new Date(dateParams.date);
@@ -53,7 +53,7 @@ export function momentConvertDateToLocalWithFormat(dateParams: {
         }
     }
 
-    return format(ISOStringDate, "dd MMM yyyy");
+    return format(ISOStringDate, dateParams.format);
 }
 
 export function parseCurrentSchema(data: MaybeNullOrUndefined<DataSchema>): MaybeNull<DatasetSchema> {

@@ -20,15 +20,16 @@ import {
 } from "./flows-table.helpers.mock";
 import timekeeper from "timekeeper";
 import { mockDatasetMainDataId } from "src/app/search/mock.data";
-import { toZonedTime } from "date-fns-tz";
+import { toDate } from "date-fns-tz";
 
 describe("DatasetFlowTableHelpers", () => {
     beforeAll(() => {
-        const date = toZonedTime("2024-03-14T11:22:29+00:00", "Europe/Kiev").toISOString();
+        const date = toDate("2024-03-14T11:22:29+00:00", { timeZone: "Europe/Kiev" }).toISOString();
         timekeeper.freeze(date);
     });
 
     afterAll(() => {
+        toDate(Date.now(), { timeZone: "Europe/Kiev" });
         timekeeper.reset();
     });
 

@@ -59,7 +59,7 @@ describe("AppHelpers", () => {
 
     it("should convert data to today ", () => {
         const result = momentConvertDateToLocalWithFormat({
-            date: Date.now(),
+            date: new Date(),
             format: AppValues.DISPLAY_DATE_FORMAT,
             isTextDate: true,
         });

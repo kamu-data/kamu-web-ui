@@ -12,13 +12,11 @@ import {
 } from "./flow-details-history-tab.helpers.mock";
 import { FlowStatus } from "src/app/api/kamu.graphql.interface";
 import { mockDatasetExecuteTransformFlowSummaryData } from "src/app/common/components/flows-table/flows-table.helpers.mock";
-import { toDate } from "date-fns-tz";
 import timekeeper from "timekeeper";
 
 describe("DatasetFlowDetailsHelpers", () => {
     beforeAll(() => {
-        const date = toDate("2024-03-14T11:22:29+00:00", { timeZone: "America/New_York" }).toISOString();
-        timekeeper.freeze(date);
+        timekeeper.freeze(new Date("2024-03-14T11:22:29+00:00").toLocaleString("en-US", { timeZone: "Europe/Kiev" }));
     });
 
     afterAll(() => {

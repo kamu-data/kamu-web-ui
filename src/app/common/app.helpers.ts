@@ -4,7 +4,7 @@ import { MaybeNull, MaybeNullOrUndefined } from "./app.types";
 import { DataSchema } from "../api/kamu.graphql.interface";
 import { DatasetSchema } from "../interface/dataset.interface";
 import AppValues from "./app.values";
-import { format, isEqual as dnsIsEqual, subDays } from "date-fns";
+import { format, isSameDay, subDays } from "date-fns";
 
 export function requireValue<T>(input: MaybeNull<T>) {
     if (input === null) throw Error("value is required!");
@@ -45,10 +45,10 @@ export function momentConvertDateToLocalWithFormat(dateParams: {
     const ISOStringDate: string = new Date(String(UTCStringDate)).toISOString();
 
     if (dateParams.isTextDate) {
-        if (dnsIsEqual(dateParams.date, subDays(new Date(), 1))) {
+        if (isSameDay(dateParams.date, subDays(new Date(), 1))) {
             return "Yesterday";
         }
-        if (dnsIsEqual(dateParams.date, new Date())) {
+        if (isSameDay(dateParams.date, new Date())) {
             return "Today";
         }
     }

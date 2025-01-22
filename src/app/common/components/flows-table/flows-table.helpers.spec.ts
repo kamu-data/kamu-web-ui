@@ -24,12 +24,11 @@ import { toDate } from "date-fns-tz";
 
 describe("DatasetFlowTableHelpers", () => {
     beforeAll(() => {
-        const date = toDate("2024-03-14T11:22:29+00:00", { timeZone: "Europe/Kiev" }).toISOString();
+        const date = toDate("2024-03-14T11:22:29+00:00", { timeZone: "America/New_York" }).toISOString();
         timekeeper.freeze(date);
     });
 
     afterAll(() => {
-        toDate(Date.now(), { timeZone: "Europe/Kiev" });
         timekeeper.reset();
     });
 

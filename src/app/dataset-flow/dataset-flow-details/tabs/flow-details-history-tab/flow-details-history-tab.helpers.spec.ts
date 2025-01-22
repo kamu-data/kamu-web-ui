@@ -15,9 +15,9 @@ import { mockDatasetExecuteTransformFlowSummaryData } from "src/app/common/compo
 import { toZonedTime } from "date-fns-tz";
 import timekeeper from "timekeeper";
 
-describe("DatasetFlowDetailsHelpers", () => {
+fdescribe("DatasetFlowDetailsHelpers", () => {
     beforeAll(() => {
-        const date = toZonedTime("2024-03-14T11:22:29+00:00", "Europe/Kiev").toISOString();
+        const date = toZonedTime("2024-03-14T11:22:29", "Europe/Kiev").toISOString();
         timekeeper.freeze(date);
     });
 

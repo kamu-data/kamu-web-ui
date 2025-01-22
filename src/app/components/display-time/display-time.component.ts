@@ -1,7 +1,7 @@
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import AppValues from "src/app/common/app.values";
-import { format, formatDistance } from "date-fns";
+import { format, formatDistanceStrict } from "date-fns";
 
 @Component({
     selector: "app-display-time",
@@ -22,7 +22,7 @@ export class DisplayTimeComponent extends BasePropertyComponent {
     }
 
     private dateTime(rfc3339: string): string {
-        return formatDistance(rfc3339, new Date(), {
+        return formatDistanceStrict(rfc3339, new Date(), {
             addSuffix: true,
         });
     }

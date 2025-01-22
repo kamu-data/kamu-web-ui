@@ -116,13 +116,13 @@ describe("LineageGraphComponent", () => {
         expect(license?.textContent?.trim()).toEqual("No  license");
 
         const createdDate = findElementByDataTestId(fixture, "side-panel-dataset-created");
-        expect(createdDate?.textContent?.trim()).toEqual("a month ago");
+        expect(createdDate?.textContent?.trim()).toEqual("26 days ago");
 
         const updatedDate = findElementByDataTestId(fixture, "side-panel-dataset-updated");
-        expect(updatedDate?.textContent?.trim()).toEqual("a month ago");
+        expect(updatedDate?.textContent?.trim()).toEqual("26 days ago");
 
         const watermark = findElementByDataTestId(fixture, "side-panel-dataset-watermark");
-        expect(watermark?.textContent?.trim()).toEqual("a month ago");
+        expect(watermark?.textContent?.trim()).toEqual("26 days ago");
     });
 
     it("should check height for the lineage graph", () => {

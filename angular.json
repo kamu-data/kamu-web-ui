@@ -21,11 +21,9 @@
               "lodash",
               "zen-observable",
               "dagre",
-              "moment-timezone",
               "webcola",
               "fast-json-stable-stringify",
               "marked",
-              "moment",
               "cron-parser",
               "@tweenjs/tween.js"
             ],

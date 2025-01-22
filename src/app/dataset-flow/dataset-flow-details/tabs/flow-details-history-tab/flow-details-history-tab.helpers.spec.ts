@@ -10,19 +10,10 @@ import {
     mockFlowSummaryDataFragmentIngestResult,
     mockHistoryFragmentWithFinishedStatus,
 } from "./flow-details-history-tab.helpers.mock";
-import moment from "moment";
 import { FlowStatus } from "src/app/api/kamu.graphql.interface";
 import { mockDatasetExecuteTransformFlowSummaryData } from "src/app/common/components/flows-table/flows-table.helpers.mock";
 
 describe("DatasetFlowDetailsHelpers", () => {
-    beforeAll(() => {
-        moment.tz.setDefault("Europe/Kiev");
-    });
-
-    afterAll(() => {
-        moment.tz.setDefault();
-    });
-
     mockFlowHistoryDataFragmentForDescriptions.forEach((item, index) => {
         it(`should check flow event description with typename = ${item.__typename}`, () => {
             expect(DatasetFlowDetailsHelpers.flowEventDescription(item, mockFlowSummaryDataFragments[2])).toEqual(

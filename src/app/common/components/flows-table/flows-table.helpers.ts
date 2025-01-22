@@ -1,4 +1,3 @@
-import moment from "moment";
 import {
     DatasetListFlowsDataFragment,
     FlowStartCondition,
@@ -10,6 +9,7 @@ import AppValues from "src/app/common/app.values";
 import { DataHelpers } from "src/app/common/data.helpers";
 import { excludeAgoWord, isNil } from "../../app.helpers";
 import { format } from "date-fns/format";
+import { formatDistanceToNowStrict } from "date-fns";
 
 export class DatasetFlowTableHelpers {
     public static descriptionColumnTableOptions(element: FlowSummaryDataFragment): { icon: string; class: string } {
@@ -212,27 +212,39 @@ export class DatasetFlowTableHelpers {
             case FlowStatus.Waiting:
                 switch (node.startCondition?.__typename) {
                     case "FlowStartConditionExecutor":
-                        return `waiting for ${excludeAgoWord(moment(node.timing.awaitingExecutorSince ?? "").fromNow())}`;
+                        return `waiting for ${excludeAgoWord(formatDistanceToNowStrict(node.timing.awaitingExecutorSince as string, { addSuffix: true }))}`;
                     case "FlowStartConditionThrottling":
                     case "FlowStartConditionSchedule": {
-                        return `wake up time: ${moment(node.startCondition.wakeUpAt).fromNow()}`;
+                        return `wake up time: ${formatDistanceToNowStrict(node.startCondition.wakeUpAt, { addSuffix: true })}`;
                     }
                     case "FlowStartConditionBatching":
-                        return `deadline time: ${moment(node.startCondition.batchingDeadline).fromNow()}`;
+                        return `deadline time: ${formatDistanceToNowStrict(node.startCondition.batchingDeadline, { addSuffix: true })}`;
                     /* istanbul ignore next */
                     default:
                         return "initializing...";
                 }
             case FlowStatus.Running:
-                return "running for " + excludeAgoWord(moment(node.timing.runningSince).fromNow());
+                return (
+                    "running for " +
+                    excludeAgoWord(formatDistanceToNowStrict(node.timing.runningSince as string, { addSuffix: true }))
+                );
             case FlowStatus.Finished:
                 switch (node.outcome?.__typename) {
                     case "FlowSuccessResult":
-                        return "finished " + moment(node.timing.finishedAt).fromNow();
+                        return (
+                            "finished " +
+                            formatDistanceToNowStrict(node.timing.finishedAt as string, { addSuffix: true })
+                        );
                     case "FlowAbortedResult":
-                        return "aborted " + moment(node.timing.finishedAt).fromNow();
+                        return (
+                            "aborted " +
+                            formatDistanceToNowStrict(node.timing.finishedAt as string, { addSuffix: true })
+                        );
                     case "FlowFailedError":
-                        return "failed " + moment(node.timing.runningSince).fromNow();
+                        return (
+                            "failed " +
+                            formatDistanceToNowStrict(node.timing.runningSince as string, { addSuffix: true })
+                        );
                     /* istanbul ignore next */
                     default:
                         throw new Error("Unknown flow outsome");

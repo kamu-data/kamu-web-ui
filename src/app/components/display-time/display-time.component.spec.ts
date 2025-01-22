@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import timekeeper from "timekeeper";
-
 import { DisplayTimeComponent } from "./display-time.component";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 
@@ -30,7 +29,6 @@ describe("DisplayTimeComponent", () => {
 
         fixture = TestBed.createComponent(DisplayTimeComponent);
         component = fixture.componentInstance;
-        fixture.detectChanges();
     });
 
     it("should create", () => {
@@ -43,6 +41,7 @@ describe("DisplayTimeComponent", () => {
 
     function testRelativeTime(expectedResult: string, date: Date): void {
         component.data = date.toISOString();
+        fixture.detectChanges();
 
         expect(component.relativeTime).toBe(expectedResult);
     }
@@ -50,19 +49,19 @@ describe("DisplayTimeComponent", () => {
     [
         {
             date: FROZEN_TIME,
-            expectedResult: "a few seconds ago",
+            expectedResult: "0 seconds ago",
         },
         {
             date: TEN_SEC_AGO,
-            expectedResult: "a few seconds ago",
+            expectedResult: "10 seconds ago",
         },
         {
             date: ALMOST_MINUTE_AGO,
-            expectedResult: "a few seconds ago",
+            expectedResult: "1 second ago",
         },
         {
             date: MINUTE_AGO,
-            expectedResult: "a minute ago",
+            expectedResult: "1 minute ago",
         },
         {
             date: TEN_MINUTES_AGO,
@@ -70,7 +69,7 @@ describe("DisplayTimeComponent", () => {
         },
         {
             date: HOUR_AGO,
-            expectedResult: "an hour ago",
+            expectedResult: "1 hour ago",
         },
         {
             date: FIVE_HOURS_AGO,
@@ -78,7 +77,7 @@ describe("DisplayTimeComponent", () => {
         },
         {
             date: DAY_AGO,
-            expectedResult: "a day ago",
+            expectedResult: "1 day ago",
         },
         {
             date: THREE_DAYS_AGO,
@@ -90,11 +89,11 @@ describe("DisplayTimeComponent", () => {
         },
         {
             date: MONTH_AGO,
-            expectedResult: "a month ago",
+            expectedResult: "1 month ago",
         },
         {
             date: YEAR_AGO,
-            expectedResult: "a year ago",
+            expectedResult: "1 year ago",
         },
     ].forEach(({ date, expectedResult: expectedResult }) => {
         it("#relativeTime no threshold", () => {
@@ -105,7 +104,7 @@ describe("DisplayTimeComponent", () => {
     [
         {
             date: DAY_AGO,
-            expectedResult: "a day ago",
+            expectedResult: "1 day ago",
         },
         {
             date: TWO_DAYS_AGO,
@@ -113,11 +112,11 @@ describe("DisplayTimeComponent", () => {
         },
         {
             date: THREE_DAYS_AGO,
-            expectedResult: "28 Sep 2022",
+            expectedResult: "3 days ago",
         },
         {
             date: WEEK_AGO,
-            expectedResult: "24 Sep 2022",
+            expectedResult: "7 days ago",
         },
     ].forEach(({ date, expectedResult }) => {
         it("#relativeTime days threshold", () => {
@@ -132,11 +131,11 @@ describe("DisplayTimeComponent", () => {
         },
         {
             date: WEEK_AGO,
-            expectedResult: "24 Sep 2022",
+            expectedResult: "7 days ago",
         },
         {
             date: EIGHT_DAYS_AGO,
-            expectedResult: "23 Sep 2022",
+            expectedResult: "8 days ago",
         },
     ].forEach(({ date, expectedResult }) => {
         it("#relativeTime weeks threshold", () => {

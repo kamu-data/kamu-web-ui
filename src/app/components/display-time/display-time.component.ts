@@ -18,7 +18,7 @@ export class DisplayTimeComponent extends BasePropertyComponent {
     }
 
     get formatTitle(): string {
-        return format(this.data, AppValues.DISPLAY_TOOLTIP_DATE_FORMAT);
+        return format(this.data, AppValues.CRON_EXPRESSION_DATE_FORMAT);
     }
 
     private dateTime(rfc3339: string): string {

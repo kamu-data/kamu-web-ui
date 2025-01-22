@@ -18,7 +18,6 @@ export default class AppValues {
     public static readonly SPLIT_ARGUMENTS_PATTERN = /[^\s"']+|"([^"]*)"+|'([^']*)'/g;
 
     public static readonly DISPLAY_DATE_FORMAT = "DD MMM YYYY";
-    public static readonly DISPLAY_TOOLTIP_DATE_FORMAT = "MMM do yyyy pppp";
     public static readonly CRON_EXPRESSION_DATE_FORMAT = "MMM do yyyy pppp";
     public static readonly DISPLAY_FLOW_DATE_FORMAT = "y-MM-dd, h:mm:ss a";
     public static readonly TIME_FORMAT = "h:mm:ss a";

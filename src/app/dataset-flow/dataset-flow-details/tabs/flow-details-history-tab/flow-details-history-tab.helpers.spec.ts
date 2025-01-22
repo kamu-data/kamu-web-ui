@@ -12,8 +12,19 @@ import {
 } from "./flow-details-history-tab.helpers.mock";
 import { FlowStatus } from "src/app/api/kamu.graphql.interface";
 import { mockDatasetExecuteTransformFlowSummaryData } from "src/app/common/components/flows-table/flows-table.helpers.mock";
+import { toZonedTime } from "date-fns-tz";
+import timekeeper from "timekeeper";
 
 describe("DatasetFlowDetailsHelpers", () => {
+    beforeAll(() => {
+        const date = toZonedTime("2024-03-14T11:22:29+00:00", "Europe/Kiev").toISOString();
+        timekeeper.freeze(date);
+    });
+
+    afterAll(() => {
+        timekeeper.reset();
+    });
+
     mockFlowHistoryDataFragmentForDescriptions.forEach((item, index) => {
         it(`should check flow event description with typename = ${item.__typename}`, () => {
             expect(DatasetFlowDetailsHelpers.flowEventDescription(item, mockFlowSummaryDataFragments[2])).toEqual(

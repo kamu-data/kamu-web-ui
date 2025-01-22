@@ -42,7 +42,7 @@
     "@swimlane/ngx-graph": "8.4.0",
     "angular2-multiselect-dropdown": "^10.0.0",
     "apollo-angular": "^5.0.2",
-    "autoprefixer": "^10.4.20",
+    "autoprefixer": "10.4.5",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "clipboard": "^2.0.11",

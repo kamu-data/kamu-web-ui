@@ -15,7 +15,6 @@ import { AppUIConfigFeatureFlags, LoginMethod } from "./app-config.model";
 import { LoginService } from "./auth/login/login.service";
 import { loadErrorMessages } from "@apollo/client/dev";
 import { isDevMode } from "@angular/core";
-import moment from "moment";
 import { LoggedUserService } from "./auth/logged-user.service";
 import packageFile from "../../package.json";
 import { LocalStorageService } from "./services/local-storage.service";
@@ -70,7 +69,6 @@ export class AppComponent extends BaseComponent implements OnInit {
         }
         this.registerMaterialIcons();
         this.outputAppVersion();
-        this.setMomentOptions();
         this.readConfiguration();
         this.checkView();
 
@@ -90,12 +88,6 @@ export class AppComponent extends BaseComponent implements OnInit {
                 this.loggedAccount = user ? structuredClone(user) : AppComponent.ANONYMOUS_ACCOUNT_INFO;
                 this.cdr.detectChanges();
             });
-    }
-
-    private setMomentOptions(): void {
-        moment.relativeTimeThreshold("s", 59);
-        moment.relativeTimeThreshold("m", 59);
-        moment.relativeTimeThreshold("h", 23);
     }
 
     private readConfiguration(): void {

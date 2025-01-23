@@ -1,4 +1,3 @@
-import moment from "moment";
 import {
     DatasetListFlowsDataFragment,
     FlowStartCondition,
@@ -9,6 +8,8 @@ import { MaybeNull } from "src/app/common/app.types";
 import AppValues from "src/app/common/app.values";
 import { DataHelpers } from "src/app/common/data.helpers";
 import { excludeAgoWord, isNil } from "../../app.helpers";
+import { format } from "date-fns/format";
+import { formatDistanceToNowStrict } from "date-fns";
 
 export class DatasetFlowTableHelpers {
     public static descriptionColumnTableOptions(element: FlowSummaryDataFragment): { icon: string; class: string } {
@@ -148,7 +149,8 @@ export class DatasetFlowTableHelpers {
                         }
 
                     case "FlowAbortedResult":
-                        return `Aborted at ${moment(element.timing.finishedAt).format(
+                        return `Aborted at ${format(
+                            element.timing.finishedAt as string,
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
 
@@ -210,27 +212,39 @@ export class DatasetFlowTableHelpers {
             case FlowStatus.Waiting:
                 switch (node.startCondition?.__typename) {
                     case "FlowStartConditionExecutor":
-                        return `waiting for ${excludeAgoWord(moment(node.timing.awaitingExecutorSince ?? "").fromNow())}`;
+                        return `waiting for ${excludeAgoWord(formatDistanceToNowStrict(node.timing.awaitingExecutorSince as string, { addSuffix: true }))}`;
                     case "FlowStartConditionThrottling":
                     case "FlowStartConditionSchedule": {
-                        return `wake up time: ${moment(node.startCondition.wakeUpAt).fromNow()}`;
+                        return `wake up time: ${formatDistanceToNowStrict(node.startCondition.wakeUpAt, { addSuffix: true })}`;
                     }
                     case "FlowStartConditionBatching":
-                        return `deadline time: ${moment(node.startCondition.batchingDeadline).fromNow()}`;
+                        return `deadline time: ${formatDistanceToNowStrict(node.startCondition.batchingDeadline, { addSuffix: true })}`;
                     /* istanbul ignore next */
                     default:
                         return "initializing...";
                 }
             case FlowStatus.Running:
-                return "running for " + excludeAgoWord(moment(node.timing.runningSince).fromNow());
+                return (
+                    "running for " +
+                    excludeAgoWord(formatDistanceToNowStrict(node.timing.runningSince as string, { addSuffix: true }))
+                );
             case FlowStatus.Finished:
                 switch (node.outcome?.__typename) {
                     case "FlowSuccessResult":
-                        return "finished " + moment(node.timing.finishedAt).fromNow();
+                        return (
+                            "finished " +
+                            formatDistanceToNowStrict(node.timing.finishedAt as string, { addSuffix: true })
+                        );
                     case "FlowAbortedResult":
-                        return "aborted " + moment(node.timing.finishedAt).fromNow();
+                        return (
+                            "aborted " +
+                            formatDistanceToNowStrict(node.timing.finishedAt as string, { addSuffix: true })
+                        );
                     case "FlowFailedError":
-                        return "failed " + moment(node.timing.runningSince).fromNow();
+                        return (
+                            "failed " +
+                            formatDistanceToNowStrict(node.timing.runningSince as string, { addSuffix: true })
+                        );
                     /* istanbul ignore next */
                     default:
                         throw new Error("Unknown flow outsome");
@@ -266,18 +280,18 @@ export class DatasetFlowTableHelpers {
                 switch (node.startCondition?.__typename) {
                     case "FlowStartConditionExecutor":
                         return `waiting for: ${excludeAgoWord(
-                            moment(node.timing.awaitingExecutorSince ?? "").format(
-                                AppValues.CRON_EXPRESSION_DATE_FORMAT,
-                            ),
+                            format(node.timing.awaitingExecutorSince as string, AppValues.CRON_EXPRESSION_DATE_FORMAT),
                         )}`;
                     case "FlowStartConditionThrottling":
                     case "FlowStartConditionSchedule": {
-                        return `Wake up time: ${moment(node.startCondition.wakeUpAt).format(
+                        return `Wake up time: ${format(
+                            node.startCondition.wakeUpAt,
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
                     }
                     case "FlowStartConditionBatching":
-                        return `Deadline time: ${moment(node.startCondition.batchingDeadline).format(
+                        return `Deadline time: ${format(
+                            node.startCondition.batchingDeadline,
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
                     /* istanbul ignore next */
@@ -287,15 +301,18 @@ export class DatasetFlowTableHelpers {
             case FlowStatus.Finished:
                 switch (node.outcome?.__typename) {
                     case "FlowSuccessResult":
-                        return `Completed time: ${moment(node.timing.finishedAt).format(
+                        return `Completed time: ${format(
+                            node.timing.finishedAt as string,
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
                     case "FlowAbortedResult":
-                        return `Aborted time: ${moment(node.timing.finishedAt).format(
+                        return `Aborted time: ${format(
+                            node.timing.finishedAt as string,
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
                     case "FlowFailedError":
-                        return `Start running time: ${moment(node.timing.runningSince).format(
+                        return `Start running time: ${format(
+                            node.timing.runningSince as string,
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
                     /* istanbul ignore next */
@@ -304,7 +321,8 @@ export class DatasetFlowTableHelpers {
                 }
 
             case FlowStatus.Running:
-                return `Start running time: ${moment(node.timing.runningSince).format(
+                return `Start running time: ${format(
+                    node.timing.runningSince as string,
                     AppValues.CRON_EXPRESSION_DATE_FORMAT,
                 )}`;
             /* istanbul ignore next */

@@ -10,17 +10,17 @@ import {
     mockFlowSummaryDataFragmentIngestResult,
     mockHistoryFragmentWithFinishedStatus,
 } from "./flow-details-history-tab.helpers.mock";
-import moment from "moment";
 import { FlowStatus } from "src/app/api/kamu.graphql.interface";
 import { mockDatasetExecuteTransformFlowSummaryData } from "src/app/common/components/flows-table/flows-table.helpers.mock";
+import timekeeper from "timekeeper";
 
 describe("DatasetFlowDetailsHelpers", () => {
     beforeAll(() => {
-        moment.tz.setDefault("Europe/Kiev");
+        timekeeper.freeze("2024-03-14T11:22:29+00:00");
     });
 
     afterAll(() => {
-        moment.tz.setDefault();
+        timekeeper.reset();
     });
 
     mockFlowHistoryDataFragmentForDescriptions.forEach((item, index) => {

@@ -418,24 +418,24 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
 
 export const durationBlockTextResults: string[] = [
     "waiting for 58 minutes ",
-    "wake up time: in an hour",
+    "wake up time: in 1 hour",
     "wake up time: in 2 hours",
-    "deadline time: in an hour",
+    "deadline time: in 1 hour",
     "running for 48 minutes ",
-    "finished in an hour",
+    "finished in 1 hour",
     "aborted 2 hours ago",
     "failed 2 hours ago",
 ];
 
 export const tooltipTextResults: string[] = [
-    "waiting for: Mar 14th 2024, 12:24:29 PM +0200",
-    "Wake up time: Mar 14th 2024, 2:24:29 PM +0200",
-    "Wake up time: Mar 14th 2024, 3:24:29 PM +0200",
-    "Deadline time: Mar 14th 2024, 2:24:29 PM +0200",
-    "Start running time: Mar 14th 2024, 12:34:29 PM +0200",
-    "Completed time: Mar 14th 2024, 2:24:29 PM +0200",
-    "Aborted time: Mar 14th 2024, 11:24:29 AM +0200",
-    "Start running time: Mar 14th 2024, 11:24:29 AM +0200",
+    "waiting for: Mar 14th 2024 12:24:29 PM GMT+02:00",
+    "Wake up time: Mar 14th 2024 2:24:29 PM GMT+02:00",
+    "Wake up time: Mar 14th 2024 3:24:29 PM GMT+02:00",
+    "Deadline time: Mar 14th 2024 2:24:29 PM GMT+02:00",
+    "Start running time: Mar 14th 2024 12:34:29 PM GMT+02:00",
+    "Completed time: Mar 14th 2024 2:24:29 PM GMT+02:00",
+    "Aborted time: Mar 14th 2024 11:24:29 AM GMT+02:00",
+    "Start running time: Mar 14th 2024 11:24:29 AM GMT+02:00",
 ];
 
 export const mockDatasets: DatasetListFlowsDataFragment[] = [

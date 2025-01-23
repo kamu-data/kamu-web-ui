@@ -1,0 +1,31 @@
+<h2>Emails</h2>
+<mat-divider />
+<form [formGroup]="changeEmailForm">
+    <dl class="form-group d-inline-block mt-3 mb-0">
+        <dt class="input-label mb-2 fw-600">
+            <label for="email-address">Your email address</label>
+        </dt>
+        <dd>
+            <input
+                formControlName="emailAddress"
+                type="text"
+                name="email"
+                class="form-control email-control"
+                id="email-address"
+                data-test-id="email-address"
+            />
+        </dd>
+    </dl>
+    <button
+        [disabled]="changeEmailForm.invalid"
+        class="ms-4 change-email-btn"
+        type="button"
+        data-test-id="change-email-button"
+    >
+        Change email
+    </button>
+    <div *ngIf="(emailAddress?.invalid && emailAddress?.touched) || emailAddress?.dirty">
+        <small *ngIf="emailAddress?.errors?.required" class="text-danger"> Email address is required</small>
+        <small *ngIf="emailAddress?.errors?.email" class="text-danger">Please provide a valid email address</small>
+    </div>
+</form>

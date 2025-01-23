@@ -1,0 +1,19 @@
+.change-email-btn {
+    padding: 3px 12px;
+    font-size: 14px;
+    height: 32px;
+    border: 1px solid rgb(27 31 36 / 25%);
+    border-radius: 6px;
+
+    &:hover {
+        background: rgb(27 31 36 / 16%);
+    }
+}
+
+.email-control {
+    width: 270px;
+}
+
+.fw-600 {
+    font-weight: 600;
+}

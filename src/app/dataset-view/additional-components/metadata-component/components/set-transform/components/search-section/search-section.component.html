@@ -35,7 +35,7 @@
 <div class="mt-4">
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="tree">
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
-            {{ node.name }}&nbsp;&nbsp; ( <span class="fw-bold">{{ node.type }}</span> )
+            {{ node.name }}&nbsp;&nbsp; <span *ngIf="node.type" class="fw-bold">({{ node.type }})</span>
         </mat-tree-node>
         <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
             <div class="mat-tree-node">

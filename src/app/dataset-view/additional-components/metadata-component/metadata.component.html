@@ -243,26 +243,26 @@
                         class="position-relative border border-1 p-2 rounded-3"
                         *ngFor="let input of currentTransform.inputs; let i = index"
                     >
-                        <ng-container *ngIf="input.dataset.__typename === 'TransformInputDatasetAccessible'">
+                        <ng-container *ngIf="input.inputDataset.__typename === 'TransformInputDatasetAccessible'">
                             <span class="position-absolute text-muted group-box-label text-uppercase"
                                 >Inputs {{ i + 1 }}</span
                             >
                             <div class="mx-4">
                                 <app-block-row-data [tooltip]="'Unique dataset identifier.'" [label]="'Id:'">
-                                    <span>{{ input.dataset.dataset.id }}</span>
+                                    <span>{{ input.inputDataset.dataset.id }}</span>
                                 </app-block-row-data>
                             </div>
                             <div class="mx-4">
                                 <app-block-row-data [tooltip]="'Type of the dataset.'" [label]="'Dataset type:'">
-                                    <span>{{ input.dataset.dataset.kind | titlecase }}</span>
+                                    <span>{{ input.inputDataset.dataset.kind | titlecase }}</span>
                                 </app-block-row-data>
                             </div>
                             <div class="mx-4">
                                 <app-block-row-data [tooltip]="'Type of the dataset.'" [label]="'Name:'">
                                     <app-dataset-name-property
                                         [data]="{
-                                            datasetName: input.dataset.dataset.name,
-                                            ownerAccountName: input.dataset.dataset.owner.accountName,
+                                            datasetName: input.inputDataset.dataset.name,
+                                            ownerAccountName: input.inputDataset.dataset.owner.accountName,
                                         }"
                                     />
                                 </app-block-row-data>
@@ -271,8 +271,8 @@
                                 <app-block-row-data [tooltip]="'Owner of the dataset.'" [label]="'Owner:'">
                                     <app-owner-property
                                         [data]="{
-                                            id: input.dataset.dataset.owner.id,
-                                            accountName: input.dataset.dataset.owner.accountName,
+                                            id: input.inputDataset.dataset.owner.id,
+                                            accountName: input.inputDataset.dataset.owner.accountName,
                                         }"
                                     />
                                 </app-block-row-data>
@@ -283,10 +283,16 @@
                                 </app-block-row-data>
                             </div>
                         </ng-container>
-                        <ng-container *ngIf="input.dataset.__typename === 'TransformInputDatasetNotAccessible'">
+                        <ng-container *ngIf="input.inputDataset.__typename === 'TransformInputDatasetNotAccessible'">
+                            <span class="position-absolute text-muted group-box-label text-uppercase"
+                                >Inputs {{ i + 1 }}</span
+                            >
                             <div class="mx-4">
-                                <app-block-row-data [tooltip]="'Unique dataset identifier.'" [label]="'Id:'">
-                                    <span>{{ input.dataset.datasetRef }}</span>
+                                <app-block-row-data
+                                    [tooltip]="'Unique dataset identifier. Dataset is private'"
+                                    [label]="'Id:'"
+                                >
+                                    <span>{{ input.inputDataset.datasetRef }}</span>
                                 </app-block-row-data>
                             </div>
                         </ng-container>

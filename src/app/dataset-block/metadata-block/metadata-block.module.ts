@@ -47,6 +47,7 @@ import { SetDataSchemaEventComponent } from "./components/event-details/componen
 import { UnsupportedEventComponent } from "./components/event-details/components/unsupported-event/unsupported-event.component";
 import { TopicsPropertyComponent } from "./components/event-details/components/common/topics-property/topics-property.component";
 import { TimePropertyComponent } from "./components/event-details/components/common/time-property/time-property.component";
+import { VisibilityPropertyComponent } from './components/event-details/components/common/visibility-property/visibility-property.component';
 
 @NgModule({
     declarations: [
@@ -87,6 +88,7 @@ import { TimePropertyComponent } from "./components/event-details/components/com
         UnsupportedEventComponent,
         TopicsPropertyComponent,
         TimePropertyComponent,
+        VisibilityPropertyComponent,
     ],
     imports: [
         CommonModule,

@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "apollo-angular";
+import { gql } from "@apollo/client/core";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -2167,8 +2167,8 @@ export type Transform = TransformSql;
 export type TransformInput = {
     __typename?: "TransformInput";
     alias: Scalars["String"];
-    dataset: TransformInputDataset;
     datasetRef: Scalars["DatasetRef"];
+    inputDataset: TransformInputDataset;
 };
 
 export type TransformInputDataset = {
@@ -4182,7 +4182,7 @@ export type DatasetTransformFragment = {
         __typename?: "TransformInput";
         datasetRef: string;
         alias: string;
-        dataset:
+        inputDataset:
             | {
                   __typename?: "TransformInputDatasetAccessible";
                   dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
@@ -5412,7 +5412,7 @@ export const DatasetTransformFragmentDoc = gql`
         inputs {
             datasetRef
             alias
-            dataset {
+            inputDataset {
                 ... on TransformInputDatasetAccessible {
                     dataset {
                         ...DatasetBasics

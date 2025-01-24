@@ -1,4 +1,8 @@
-import { Dataset } from "../../../../../../api/kamu.graphql.interface";
+import {
+    Dataset,
+    TransformInputDatasetAccessible,
+    TransformInputDatasetNotAccessible,
+} from "../../../../../../api/kamu.graphql.interface";
 import { SetTransform, TransformInput } from "src/app/api/kamu.graphql.interface";
 import { EventSectionBuilder } from "./event-section.builder";
 import { SET_TRANSFORM_SOURCE_DESCRIPTORS } from "../../components/set-transform-event/set-transform-event.source";
@@ -28,41 +32,56 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform
                         break;
                     }
 
-                    // case SetTransformSection.INPUTS: {
-                    //     const numInputsParts = event.inputs.length;
-                    //     (data as TransformInput[]).forEach((item, index) => {
-                    //         const rows: EventRow[] = [];
-                    //         const object = item.datasetRef
-                    //             ? {
-                    //                   ...item.dataset,
-                    //                   alias: item.alias,
-                    //                   datasetRef: item.datasetRef,
-                    //               }
-                    //             : {
-                    //                   ...item.dataset,
-                    //                   alias: item.alias,
-                    //               };
-                    //         console.log("==>object", object);
-                    //         Object.entries(object).forEach(([key, value]) => {
-                    //             if (event.__typename && item.dataset.__typename && key !== "__typename") {
-                    //                 rows.push(
-                    //                     this.buildSupportedRow(
-                    //                         event.__typename,
-                    //                         SET_TRANSFORM_SOURCE_DESCRIPTORS,
-                    //                         item.dataset.__typename,
-                    //                         key,
-                    //                         this.valueTransformMapper(key as keyof Dataset, value, item),
-                    //                     ),
-                    //                 );
-                    //             }
-                    //         });
-                    //         result.push({
-                    //             title: section + (numInputsParts > 1 ? `#${index + 1}` : ""),
-                    //             rows,
-                    //         });
-                    //     });
-                    //     break;
-                    // }
+                    case SetTransformSection.INPUTS: {
+                        const numInputsParts = event.inputs.length;
+
+                        (data as TransformInput[]).forEach((item, index) => {
+                            const rows: EventRow[] = [];
+                            const object = item.datasetRef
+                                ? {
+                                      dataset: item.inputDataset,
+                                      alias: item.alias,
+                                      datasetRef: item.datasetRef,
+                                  }
+                                : {
+                                      dataset: item.inputDataset,
+                                      alias: item.alias,
+                                  };
+
+                            const notAccessibleType =
+                                "__typename" in object.dataset &&
+                                object.dataset.__typename === "TransformInputDatasetNotAccessible";
+
+                            Object.entries(
+                                notAccessibleType
+                                    ? (object.dataset as TransformInputDatasetNotAccessible)
+                                    : (object.dataset as TransformInputDatasetAccessible).dataset,
+                            ).forEach(([key, value]) => {
+                                if (event.__typename && item.inputDataset && key !== "__typename") {
+                                    rows.push(
+                                        this.buildSupportedRow(
+                                            event.__typename,
+                                            SET_TRANSFORM_SOURCE_DESCRIPTORS,
+                                            notAccessibleType
+                                                ? ((item.inputDataset as TransformInputDatasetNotAccessible)
+                                                      .__typename as string)
+                                                : ((item.inputDataset as TransformInputDatasetAccessible).dataset
+                                                      .__typename as string),
+                                            key,
+
+                                            this.valueTransformMapper(key as keyof Dataset, value, item),
+                                        ),
+                                    );
+                                }
+                            });
+
+                            result.push({
+                                title: section + (numInputsParts > 1 ? `#${index + 1}` : ""),
+                                rows,
+                            });
+                        });
+                        break;
+                    }
 
                     default: {
                         result.push({ title: section, rows: [] });
@@ -78,15 +97,15 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform
         return kind.slice(0, 1) + kind.slice(1).toLowerCase();
     }
 
-    // private valueTransformMapper(key: keyof Dataset, value: unknown, inputItem: TransformInput): unknown {
-    //     switch (key) {
-    //         case "kind":
-    //             return this.kindDatasetCapitalize(value as string);
-    //         case "name":
-    //             return inputItem.dataset.id;
+    private valueTransformMapper(key: keyof Dataset, value: unknown, inputItem: TransformInput): unknown {
+        switch (key) {
+            case "kind":
+                return this.kindDatasetCapitalize(value as string);
+            case "name":
+                return (inputItem.inputDataset as TransformInputDatasetAccessible).dataset.id;
 
-    //         default:
-    //             return value;
-    //     }
-    // }
+            default:
+                return value;
+        }
+    }
 }

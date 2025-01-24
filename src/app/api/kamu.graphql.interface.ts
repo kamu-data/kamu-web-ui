@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "@apollo/client/core";
+import { gql } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -2167,8 +2167,24 @@ export type Transform = TransformSql;
 export type TransformInput = {
     __typename?: "TransformInput";
     alias: Scalars["String"];
-    dataset: Dataset;
+    dataset: TransformInputDataset;
     datasetRef: Scalars["DatasetRef"];
+};
+
+export type TransformInputDataset = {
+    message: Scalars["String"];
+};
+
+export type TransformInputDatasetAccessible = TransformInputDataset & {
+    __typename?: "TransformInputDatasetAccessible";
+    dataset: Dataset;
+    message: Scalars["String"];
+};
+
+export type TransformInputDatasetNotAccessible = TransformInputDataset & {
+    __typename?: "TransformInputDatasetNotAccessible";
+    datasetRef: Scalars["DatasetRef"];
+    message: Scalars["String"];
 };
 
 export type TransformSql = {
@@ -4166,7 +4182,12 @@ export type DatasetTransformFragment = {
         __typename?: "TransformInput";
         datasetRef: string;
         alias: string;
-        dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+        dataset:
+            | {
+                  __typename?: "TransformInputDatasetAccessible";
+                  dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+              }
+            | { __typename?: "TransformInputDatasetNotAccessible"; datasetRef: string };
     }>;
     transform: { __typename?: "TransformSql" } & DatasetTransformContentFragment;
 };
@@ -5392,7 +5413,14 @@ export const DatasetTransformFragmentDoc = gql`
             datasetRef
             alias
             dataset {
-                ...DatasetBasics
+                ... on TransformInputDatasetAccessible {
+                    dataset {
+                        ...DatasetBasics
+                    }
+                }
+                ... on TransformInputDatasetNotAccessible {
+                    datasetRef
+                }
             }
         }
         transform {

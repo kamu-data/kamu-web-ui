@@ -3,7 +3,15 @@ fragment DatasetTransform on SetTransform {
     datasetRef
     alias
     dataset {
-      ...DatasetBasics
+      ... on TransformInputDatasetAccessible {
+        dataset {
+          ...DatasetBasics
+        }
+      }
+
+      ... on TransformInputDatasetNotAccessible {
+        datasetRef
+      }
     }
   }
   transform {

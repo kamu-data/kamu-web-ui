@@ -11,5 +11,6 @@ import { SECTION_BUILDERS_BY_EVENT_TYPE } from "../../dynamic-events/builders/ev
 export class SetTransformEventComponent extends BaseDynamicEventComponent<SetTransform> implements OnInit {
     ngOnInit(): void {
         this.eventSections = SECTION_BUILDERS_BY_EVENT_TYPE.SetTransform.buildEventSections(this.event);
+        console.log("==>", this.eventSections);
     }
 }

@@ -243,44 +243,53 @@
                         class="position-relative border border-1 p-2 rounded-3"
                         *ngFor="let input of currentTransform.inputs; let i = index"
                     >
-                        <span class="position-absolute text-muted group-box-label text-uppercase"
-                            >Inputs {{ i + 1 }}</span
-                        >
-                        <div class="mx-4">
-                            <app-block-row-data [tooltip]="'Unique dataset identifier.'" [label]="'Id:'">
-                                <span>{{ input.dataset.id }}</span>
-                            </app-block-row-data>
-                        </div>
-                        <div class="mx-4">
-                            <app-block-row-data [tooltip]="'Type of the dataset.'" [label]="'Dataset type:'">
-                                <span>{{ input.dataset.kind | titlecase }}</span>
-                            </app-block-row-data>
-                        </div>
-                        <div class="mx-4">
-                            <app-block-row-data [tooltip]="'Type of the dataset.'" [label]="'Name:'">
-                                <app-dataset-name-property
-                                    [data]="{
-                                        datasetName: input.dataset.name,
-                                        ownerAccountName: input.dataset.owner.accountName,
-                                    }"
-                                />
-                            </app-block-row-data>
-                        </div>
-                        <div class="mx-4">
-                            <app-block-row-data [tooltip]="'Owner of the dataset.'" [label]="'Owner:'">
-                                <app-owner-property
-                                    [data]="{
-                                        id: input.dataset.owner.id,
-                                        accountName: input.dataset.owner.accountName,
-                                    }"
-                                />
-                            </app-block-row-data>
-                        </div>
-                        <div class="mx-4">
-                            <app-block-row-data [tooltip]="'Query alias of the dataset.'" [label]="'Query alias:'">
-                                <span>{{ input.alias }}</span>
-                            </app-block-row-data>
-                        </div>
+                        <ng-container *ngIf="input.dataset.__typename === 'TransformInputDatasetAccessible'">
+                            <span class="position-absolute text-muted group-box-label text-uppercase"
+                                >Inputs {{ i + 1 }}</span
+                            >
+                            <div class="mx-4">
+                                <app-block-row-data [tooltip]="'Unique dataset identifier.'" [label]="'Id:'">
+                                    <span>{{ input.dataset.dataset.id }}</span>
+                                </app-block-row-data>
+                            </div>
+                            <div class="mx-4">
+                                <app-block-row-data [tooltip]="'Type of the dataset.'" [label]="'Dataset type:'">
+                                    <span>{{ input.dataset.dataset.kind | titlecase }}</span>
+                                </app-block-row-data>
+                            </div>
+                            <div class="mx-4">
+                                <app-block-row-data [tooltip]="'Type of the dataset.'" [label]="'Name:'">
+                                    <app-dataset-name-property
+                                        [data]="{
+                                            datasetName: input.dataset.dataset.name,
+                                            ownerAccountName: input.dataset.dataset.owner.accountName,
+                                        }"
+                                    />
+                                </app-block-row-data>
+                            </div>
+                            <div class="mx-4">
+                                <app-block-row-data [tooltip]="'Owner of the dataset.'" [label]="'Owner:'">
+                                    <app-owner-property
+                                        [data]="{
+                                            id: input.dataset.dataset.owner.id,
+                                            accountName: input.dataset.dataset.owner.accountName,
+                                        }"
+                                    />
+                                </app-block-row-data>
+                            </div>
+                            <div class="mx-4">
+                                <app-block-row-data [tooltip]="'Query alias of the dataset.'" [label]="'Query alias:'">
+                                    <span>{{ input.alias }}</span>
+                                </app-block-row-data>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="input.dataset.__typename === 'TransformInputDatasetNotAccessible'">
+                            <div class="mx-4">
+                                <app-block-row-data [tooltip]="'Unique dataset identifier.'" [label]="'Id:'">
+                                    <span>{{ input.dataset.datasetRef }}</span>
+                                </app-block-row-data>
+                            </div>
+                        </ng-container>
                     </div>
                     <div class="position-relative border border-1 p-2 rounded-3">
                         <span class="position-absolute text-muted group-box-label text-uppercase">Transform</span>

@@ -27,6 +27,14 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         dataTestId: "set-transform-dataset-id",
     },
 
+    "SetTransform.TransformInputDatasetNotAccessible.datasetRef": {
+        label: "Id:",
+        tooltip: SetTransformTooltipsTexts.DATASET_ID,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "set-transform-datasetNotAccessible-datasetRef",
+    },
+
     "SetTransform.Dataset.kind": {
         label: "Dataset type:",
         tooltip: SetTransformTooltipsTexts.DATASET_KIND,

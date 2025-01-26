@@ -1471,18 +1471,21 @@ export const mockMetadataDerivedUpdate: MetadataSchemaUpdate = {
                         __typename: "TransformInput",
                         datasetRef: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
                         alias: "alberta.case-details",
-                        dataset: {
-                            __typename: "Dataset",
-                            id: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
-                            kind: DatasetKind.Root,
-                            name: "alberta.case-details",
-                            owner: {
-                                __typename: "Account",
-                                id: TEST_ACCOUNT_ID,
-                                accountName: "kamu",
+                        inputDataset: {
+                            __typename: "TransformInputDatasetAccessible",
+                            dataset: {
+                                __typename: "Dataset",
+                                id: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
+                                kind: DatasetKind.Root,
+                                name: "alberta.case-details",
+                                owner: {
+                                    __typename: "Account",
+                                    id: TEST_ACCOUNT_ID,
+                                    accountName: "kamu",
+                                },
+                                alias: "kamu/alberta.case-details",
+                                visibility: mockPublicDatasetVisibility,
                             },
-                            alias: "kamu/alberta.case-details",
-                            visibility: mockPublicDatasetVisibility,
                         },
                     },
                 ],

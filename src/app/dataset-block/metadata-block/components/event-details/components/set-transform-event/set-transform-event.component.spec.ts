@@ -3,7 +3,6 @@ import { VisibilityPropertyComponent } from "./../common/visibility-property/vis
 import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { SetTransform } from "src/app/api/kamu.graphql.interface";
 import { mockSetTransform } from "../../mock.events";
 import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
 import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
@@ -50,7 +49,7 @@ describe("SetTransformEventComponent", () => {
 
         fixture = TestBed.createComponent(SetTransformEventComponent);
         component = fixture.componentInstance;
-        component.event = mockSetTransform as unknown as SetTransform;
+        component.event = mockSetTransform;
         fixture.detectChanges();
     });
 

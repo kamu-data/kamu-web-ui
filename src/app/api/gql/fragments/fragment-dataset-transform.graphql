@@ -4,12 +4,14 @@ fragment DatasetTransform on SetTransform {
     alias
     inputDataset {
       ... on TransformInputDatasetAccessible {
+        message
         dataset {
           ...DatasetBasics
         }
       }
 
       ... on TransformInputDatasetNotAccessible {
+        message
         datasetRef
       }
     }

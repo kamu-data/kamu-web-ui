@@ -140,22 +140,22 @@ export const mockSetTransform: DatasetTransformFragment = {
     inputs: [
         {
             __typename: "TransformInput",
-            datasetRef: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
-            alias: "alberta.case-details",
+            datasetRef: "did:odf:fed0180891d1a8dd7744447baab2a269542a7185052bdfe9e60d2641449ba24f4ea22",
+            alias: "covid19.quebec.case-details",
             inputDataset: {
                 __typename: "TransformInputDatasetAccessible",
-
+                message: "Success",
                 dataset: {
                     __typename: "Dataset",
-                    id: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
+                    id: "did:odf:fed0180891d1a8dd7744447baab2a269542a7185052bdfe9e60d2641449ba24f4ea22",
                     kind: DatasetKind.Root,
-                    name: "alberta.case-details",
+                    name: "covid19.quebec.case-details",
                     owner: {
                         __typename: "Account",
                         id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
                         accountName: "kamu",
                     },
-                    alias: "kamu/alberta.case-details",
+                    alias: "kamu/covid19.quebec.case-details",
                     visibility: mockPublicDatasetVisibility,
                 },
             },
@@ -163,27 +163,16 @@ export const mockSetTransform: DatasetTransformFragment = {
     ],
     transform: {
         __typename: "TransformSql",
-        engine: "spark",
+        engine: "datafusion",
         version: null,
         queries: [
             {
                 __typename: "SqlQueryStep",
                 alias: null,
-                query: "SELECT\n  id,\n  date_reported as reported_date,\n  case when lower(gender) = 'male' then 'M' \n       when lower(gender) = 'female' then 'F' \n       else 'U' end as gender,\n  case when age_group = 'Under 1 year' then '<20'\n       when age_group = '1-4 years' then '<20'\n       when age_group = '5-9 years' then '<20'\n       when age_group = '10-19 years' then '<20'\n       when age_group = '20-29 years' then '20s'\n       when age_group = '30-39 years' then '30s'\n       when age_group = '40-49 years' then '40s'\n       when age_group = '50-59 years' then '50s'\n       when age_group = '60-69 years' then '60s'\n       when age_group = '70-79 years' then '70s'\n       when age_group = '80+ years' then '80s'\n       else 'UNKNOWN' end as age_group,\n  zone as location\n  FROM `alberta.case-details`\n",
+                query: "SELECT\n  row_id as id,\n  date_reported as reported_date,\n  case when lower(gender) = 'male' then 'M' \n       when lower(gender) = 'female' then 'F' \n       else 'U' end as gender,\n  case when age_group = '<20' then '<20'\n       when age_group = '20-29' then '20s'\n       when age_group = '30-39' then '30s'\n       when age_group = '40-49' then '40s'\n       when age_group = '50-59' then '50s'\n       when age_group = '60-69' then '60s'\n       when age_group = '70-79' then '70s'\n       when age_group = '80+' then '80s'\n       else 'UNKNOWN' end as age_group,\n  health_region as location\n  FROM \"covid19.quebec.case-details\"\n",
             },
         ],
-        temporalTables: [
-            {
-                __typename: "TemporalTable",
-                name: "account.tokens.portfolio.usd",
-                primaryKey: ["token_symbol"],
-            },
-            {
-                __typename: "TemporalTable",
-                name: "com.cryptocompare.ohlcv.eth-usd",
-                primaryKey: ["from_symbol"],
-            },
-        ],
+        temporalTables: null,
     },
 };
 

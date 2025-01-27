@@ -4185,9 +4185,10 @@ export type DatasetTransformFragment = {
         inputDataset:
             | {
                   __typename?: "TransformInputDatasetAccessible";
+                  message: string;
                   dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
               }
-            | { __typename?: "TransformInputDatasetNotAccessible"; datasetRef: string };
+            | { __typename?: "TransformInputDatasetNotAccessible"; message: string; datasetRef: string };
     }>;
     transform: { __typename?: "TransformSql" } & DatasetTransformContentFragment;
 };
@@ -5414,11 +5415,13 @@ export const DatasetTransformFragmentDoc = gql`
             alias
             inputDataset {
                 ... on TransformInputDatasetAccessible {
+                    message
                     dataset {
                         ...DatasetBasics
                     }
                 }
                 ... on TransformInputDatasetNotAccessible {
+                    message
                     datasetRef
                 }
             }

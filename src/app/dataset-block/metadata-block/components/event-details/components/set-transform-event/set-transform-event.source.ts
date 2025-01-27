@@ -5,6 +5,7 @@ import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.
 import { DatasetNameByIdPropertyComponent } from "../common/dataset-name-by-id-property/dataset-name-by-id-property.component";
 import { SetTransformTooltipsTexts } from "src/app/common/tooltips/set-transform.text";
 import { getSourcesDescriptors } from "../common-sources/sources-event.source";
+import { VisibilityPropertyComponent } from "../common/visibility-property/visibility-property.component";
 
 export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetTransform.TransformSql.engine": getSourcesDescriptors("SetTransform.TransformSql.engine"),
@@ -27,6 +28,14 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         dataTestId: "set-transform-dataset-id",
     },
 
+    "SetTransform.TransformInputDatasetNotAccessible.datasetRef": {
+        label: "Id:",
+        tooltip: SetTransformTooltipsTexts.DATASET_ID_PRIVATE,
+        presentationComponent: SimplePropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "set-transform-datasetNotAccessible-datasetRef",
+    },
+
     "SetTransform.Dataset.kind": {
         label: "Dataset type:",
         tooltip: SetTransformTooltipsTexts.DATASET_KIND,
@@ -38,7 +47,7 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetTransform.Dataset.visibility": {
         label: "Dataset visibility:",
         tooltip: SetTransformTooltipsTexts.DATASET_VISIBILITY,
-        presentationComponent: SimplePropertyComponent,
+        presentationComponent: VisibilityPropertyComponent,
         separateRowForValue: false,
         dataTestId: "set-transform-dataset-visibility",
     },

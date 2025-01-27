@@ -2167,8 +2167,24 @@ export type Transform = TransformSql;
 export type TransformInput = {
     __typename?: "TransformInput";
     alias: Scalars["String"];
-    dataset: Dataset;
     datasetRef: Scalars["DatasetRef"];
+    inputDataset: TransformInputDataset;
+};
+
+export type TransformInputDataset = {
+    message: Scalars["String"];
+};
+
+export type TransformInputDatasetAccessible = TransformInputDataset & {
+    __typename?: "TransformInputDatasetAccessible";
+    dataset: Dataset;
+    message: Scalars["String"];
+};
+
+export type TransformInputDatasetNotAccessible = TransformInputDataset & {
+    __typename?: "TransformInputDatasetNotAccessible";
+    datasetRef: Scalars["DatasetRef"];
+    message: Scalars["String"];
 };
 
 export type TransformSql = {
@@ -4166,7 +4182,13 @@ export type DatasetTransformFragment = {
         __typename?: "TransformInput";
         datasetRef: string;
         alias: string;
-        dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+        inputDataset:
+            | {
+                  __typename?: "TransformInputDatasetAccessible";
+                  message: string;
+                  dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+              }
+            | { __typename?: "TransformInputDatasetNotAccessible"; message: string; datasetRef: string };
     }>;
     transform: { __typename?: "TransformSql" } & DatasetTransformContentFragment;
 };
@@ -5391,8 +5413,17 @@ export const DatasetTransformFragmentDoc = gql`
         inputs {
             datasetRef
             alias
-            dataset {
-                ...DatasetBasics
+            inputDataset {
+                ... on TransformInputDatasetAccessible {
+                    message
+                    dataset {
+                        ...DatasetBasics
+                    }
+                }
+                ... on TransformInputDatasetNotAccessible {
+                    message
+                    datasetRef
+                }
             }
         }
         transform {

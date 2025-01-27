@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
@@ -27,8 +27,4 @@ import { DynamicTableComponent } from "./dynamic-table.component";
     exports: [DynamicTableComponent],
     declarations: [DynamicTableComponent],
 })
-export class DynamicTableModule {
-    public static forRoot(): ModuleWithProviders<DynamicTableModule> {
-        return { ngModule: DynamicTableModule };
-    }
-}
+export class DynamicTableModule {}

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { BasePropertyComponent } from "../base-property/base-property.component";
+import { BasePropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 
 @Component({
     selector: "app-yaml-event-viewer",

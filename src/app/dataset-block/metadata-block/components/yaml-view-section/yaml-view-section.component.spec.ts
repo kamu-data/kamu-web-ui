@@ -5,7 +5,7 @@ import { YamlViewSectionComponent } from "./yaml-view-section.component";
 import { ChangeDetectionStrategy, NO_ERRORS_SCHEMA } from "@angular/core";
 import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { metadataBlockSetVocab } from "src/app/common/helpers/data.helpers.spec";
-import { YamlEventViewerComponent } from "../event-details/components/common/yaml-event-viewer/yaml-event-viewer.component";
+import { YamlEventViewerComponent } from "../../../../common/components/yaml-event-viewer/yaml-event-viewer.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
 describe("YamlViewSectionComponent", () => {

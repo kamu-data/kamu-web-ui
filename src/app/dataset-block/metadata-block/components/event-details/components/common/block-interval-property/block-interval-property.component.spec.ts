@@ -4,7 +4,7 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { BlockIntervalPropertyComponent } from "./block-interval-property.component";
 import { of } from "rxjs";
-import { DisplayHashModule } from "src/app/components/display-hash/display-hash.module";
+import { DisplayHashModule } from "src/app/common/components/display-hash/display-hash.module";
 import { ToastrModule } from "ngx-toastr";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";

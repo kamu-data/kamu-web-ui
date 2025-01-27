@@ -1,3 +1,4 @@
+import { EventDetailsPropertiesModule } from "./../dataset-block/metadata-block/components/event-details/components/common/event-details-properties.module";
 import { MatIconModule } from "@angular/material/icon";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatDividerModule } from "@angular/material/divider";
@@ -145,6 +146,7 @@ import { FlowsViewModule } from "../common/modules/flows-view.module";
         IngestTriggerModule,
         BatchingTriggerModule,
         FlowsViewModule,
+        EventDetailsPropertiesModule,
     ],
     exports: [
         DatasetViewHeaderComponent,

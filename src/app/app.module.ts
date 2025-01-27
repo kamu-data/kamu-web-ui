@@ -53,7 +53,7 @@ import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { DatasetListModule } from "./common/components/dataset-list-component/dataset-list.module";
 import { PaginationModule } from "./common/components/pagination-component/pagination.module";
 import { ClipboardModule } from "@angular/cdk/clipboard";
-import { HighlightModule, HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
+import { HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 import { ToastrModule } from "ngx-toastr";
 import { LoggedUserService } from "./auth/logged-user.service";
 import { catchError, EMPTY, firstValueFrom } from "rxjs";
@@ -231,7 +231,6 @@ const MatModules = [
         DatasetListModule,
         PaginationModule,
         ClipboardModule,
-        HighlightModule,
         ToastrModule.forRoot({
             timeOut: 2000,
             positionClass: "toast-bottom-right",

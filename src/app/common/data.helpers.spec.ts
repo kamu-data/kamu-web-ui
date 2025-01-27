@@ -168,6 +168,7 @@ it("should check description for SetTransform block", () => {
                     datasetRef: "did:odf:z4k88e8uENDqbAKHbhZF2xXAQrAF19cnqGqArUB9RVStSZHQNeP",
                     alias: "alias",
                     inputDataset: {
+                        message: "Success",
                         __typename: "TransformInputDatasetAccessible",
                         dataset: {
                             __typename: "Dataset",

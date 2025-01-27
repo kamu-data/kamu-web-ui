@@ -1472,6 +1472,7 @@ export const mockMetadataDerivedUpdate: MetadataSchemaUpdate = {
                         datasetRef: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
                         alias: "alberta.case-details",
                         inputDataset: {
+                            message: "Success",
                             __typename: "TransformInputDatasetAccessible",
                             dataset: {
                                 __typename: "Dataset",

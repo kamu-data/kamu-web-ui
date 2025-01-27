@@ -2,11 +2,11 @@ import { DatasetBasicsFragment, DatasetKind, TransformInput } from "../../../../
 import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { MatTreeNestedDataSource } from "@angular/material/tree";
-import { MaybeNull, MaybeNullOrUndefined } from "src/app/common/app.types";
+import { MaybeNull, MaybeNullOrUndefined } from "src/app/common/types/app.types";
 import { DatasetSchema } from "src/app/interface/dataset.interface";
 import { GetDatasetSchemaQuery, SqlQueryStep } from "src/app/api/kamu.graphql.interface";
 import { EditSetTransformService } from "./edit-set-transform..service";
-import { parseCurrentSchema } from "src/app/common/app.helpers";
+import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";
 import { DatasetNode, SetTransformYamlType } from "./set-transform.types";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";

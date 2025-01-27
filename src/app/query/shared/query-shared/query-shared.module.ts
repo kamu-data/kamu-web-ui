@@ -14,7 +14,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
-import { DynamicTableModule } from "src/app/components/dynamic-table/dynamic-table.module";
+import { DynamicTableModule } from "src/app/common/components/dynamic-table/dynamic-table.module";
 import { EditorModule } from "src/app/shared/editor/editor.module";
 import { SharedModule } from "src/app/shared/shared/shared.module";
 

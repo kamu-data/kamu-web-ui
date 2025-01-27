@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject } from "@angular/core";
 import ProjectLinks from "src/app/project-links";
-import AppValues from "src/app/common/app.values";
+import AppValues from "src/app/common/values/app.values";
 import { LoginMethod } from "src/app/app-config.model";
 import { LoginService } from "./login.service";
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { PasswordLoginCredentials } from "src/app/api/auth.api.model";
-import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
+import { MaybeNull, MaybeUndefined } from "src/app/common/types/app.types";
 import { Observable, shareReplay } from "rxjs";
 import { ActivatedRoute, Params } from "@angular/router";
-import { BaseComponent } from "src/app/common/base.component";
+import { BaseComponent } from "src/app/common/components/base.component";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { LoginFormType } from "./login.component.model";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { CommitmentDataSectionComponent } from "./commitment-data-section.component";
 import { mockQueryExplainerResponse, mockVerifyQueryResponseSuccess } from "../../query-explainer.mocks";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
+import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { MatIconModule } from "@angular/material/icon";
 
 describe("CommitmentDataSectionComponent", () => {

@@ -2,7 +2,7 @@ import { ToastrService } from "ngx-toastr";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { Seed } from "src/app/api/kamu.graphql.interface";
 import { Clipboard } from "@angular/cdk/clipboard";
-import { BaseComponent } from "src/app/common/base.component";
+import { BaseComponent } from "src/app/common/components/base.component";
 
 @Component({
     selector: "app-seed-event",

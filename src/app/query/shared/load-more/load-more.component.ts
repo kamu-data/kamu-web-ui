@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 
-import AppValues from "../../../common/app.values";
+import AppValues from "../../../common/values/app.values";
 
 @Component({
     selector: "app-load-more",

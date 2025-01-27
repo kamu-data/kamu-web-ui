@@ -6,7 +6,7 @@ import { OffsetInterval } from "src/app/api/kamu.graphql.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { MaybeNull } from "src/app/common/app.types";
+import { MaybeNull } from "src/app/common/types/app.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({

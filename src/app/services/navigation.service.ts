@@ -1,5 +1,5 @@
 import { DatasetInfo, FlowDetailsNavigationParams } from "../interface/navigation.interface";
-import { promiseWithCatch } from "src/app/common/app.helpers";
+import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { DatasetNavigationParams, MetadataBlockNavigationParams } from "../interface/navigation.interface";

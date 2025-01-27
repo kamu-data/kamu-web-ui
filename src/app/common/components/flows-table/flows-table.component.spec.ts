@@ -8,15 +8,15 @@ import { MatRadioModule } from "@angular/material/radio";
 import { MatIconModule } from "@angular/material/icon";
 import { FormsModule } from "@angular/forms";
 import { mockDatasetFlowsInitiatorsQuery, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
-import { DisplayTimeModule } from "src/app/components/display-time/display-time.module";
+import { DisplayTimeModule } from "src/app/common/components/display-time/display-time.module";
 import { Account } from "src/app/api/kamu.graphql.interface";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { MatTableHarness } from "@angular/material/table/testing";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { SimpleChanges } from "@angular/core";
-import { ModalService } from "src/app/components/modal/modal.service";
+import { ModalService } from "src/app/common/components/modal/modal.service";
 import { SharedModule } from "src/app/shared/shared/shared.module";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { mockDatasets, mockFlowSummaryDataFragmentShowForceLink } from "./flows-table.helpers.mock";
@@ -26,7 +26,7 @@ import { ToastrModule, ToastrService } from "ngx-toastr";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { of } from "rxjs";
 import { RouterModule } from "@angular/router";
-import { registerMatSvgIcons } from "../../base-test.helpers.spec";
+import { registerMatSvgIcons } from "../../helpers/base-test.helpers.spec";
 
 describe("FlowsTableComponent", () => {
     let component: FlowsTableComponent;

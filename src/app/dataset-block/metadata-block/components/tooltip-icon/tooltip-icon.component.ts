@@ -1,4 +1,4 @@
-import AppValues from "src/app/common/app.values";
+import AppValues from "src/app/common/values/app.values";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 @Component({

@@ -12,7 +12,7 @@ import {
     LoginResponse,
 } from "./kamu.graphql.interface";
 import { MutationResult } from "apollo-angular";
-import { AuthenticationError } from "../common/errors";
+import { AuthenticationError } from "../common/values/errors";
 import { GithubLoginCredentials, PasswordLoginCredentials } from "./auth.api.model";
 import { LoginMethod } from "../app-config.model";
 import { ApolloQueryResult } from "@apollo/client";

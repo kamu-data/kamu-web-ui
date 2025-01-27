@@ -10,7 +10,7 @@ import {
     findElementByDataTestId,
     getElementByDataTestId,
     registerMatSvgIcons,
-} from "src/app/common/base-test.helpers.spec";
+} from "src/app/common/helpers/base-test.helpers.spec";
 import { AccountSettingsTabs } from "./account-settings.constants";
 import { of } from "rxjs";
 import ProjectLinks from "src/app/project-links";

@@ -9,8 +9,8 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { DatasetViewHeaderComponent } from "src/app/dataset-view/dataset-view-header/dataset-view-header.component";
 import { FlowDetailsHistoryTabComponent } from "./tabs/flow-details-history-tab/flow-details-history-tab.component";
-import { SearchAdditionalButtonsComponent } from "src/app/components/search-additional-buttons/search-additional-buttons.component";
-import { SearchAdditionalButtonsNavComponent } from "src/app/components/search-additional-buttons/search-additional-buttons-nav.component";
+import { SearchAdditionalButtonsComponent } from "src/app/common/components/search-additional-buttons/search-additional-buttons.component";
+import { SearchAdditionalButtonsNavComponent } from "src/app/common/components/search-additional-buttons/search-additional-buttons-nav.component";
 import { MatMenuModule } from "@angular/material/menu";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
@@ -25,11 +25,11 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FlowDetailsTabs } from "./dataset-flow-details.types";
 import ProjectLinks from "src/app/project-links";
 import { mockDatasetFlowByIdResponse, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
-import { DataAccessPanelComponent } from "src/app/components/data-access-panel/data-access-panel.component";
-import { DataAccessPanelModule } from "src/app/components/data-access-panel/data-access-panel.module";
-import { DatasetVisibilityModule } from "src/app/components/dataset-visibility/dataset-visibility.module";
+import { DataAccessPanelComponent } from "src/app/data-access-panel/data-access-panel.component";
+import { DataAccessPanelModule } from "src/app/data-access-panel/data-access-panel.module";
+import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
 import { SharedModule } from "src/app/shared/shared/shared.module";
-import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
+import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 
 describe("DatasetFlowDetailsComponent", () => {
     let component: DatasetFlowDetailsComponent;

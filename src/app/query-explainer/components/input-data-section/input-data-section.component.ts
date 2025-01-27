@@ -7,11 +7,11 @@ import {
     VerifyQueryKindError,
 } from "../../query-explainer.types";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { MaybeUndefined } from "src/app/common/app.types";
-import AppValues from "src/app/common/app.values";
+import { MaybeUndefined } from "src/app/common/types/app.types";
+import AppValues from "src/app/common/values/app.values";
 import { QueryExplainerComponentData } from "../../query-explainer.component";
 import ProjectLinks from "src/app/project-links";
-import { addMarkdownRunButton } from "src/app/common/app.helpers";
+import { addMarkdownRunButton } from "src/app/common/helpers/app.helpers";
 
 @Component({
     selector: "app-input-data-section",

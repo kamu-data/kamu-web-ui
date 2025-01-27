@@ -33,8 +33,8 @@ import {
 } from "./kamu.graphql.interface";
 import { Observable, first, map } from "rxjs";
 import { ApolloQueryResult } from "@apollo/client";
-import { DatasetOperationError } from "../common/errors";
-import { noCacheFetchPolicy } from "../common/data.helpers";
+import { DatasetOperationError } from "../common/values/errors";
+import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
 
 @Injectable({ providedIn: "root" })
 export class DatasetFlowApi {

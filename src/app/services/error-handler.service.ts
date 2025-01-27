@@ -1,7 +1,7 @@
-import { AuthenticationError, CustomApolloError, KamuError, KamuErrorHandler } from "../common/errors";
+import { AuthenticationError, CustomApolloError, KamuError, KamuErrorHandler } from "../common/values/errors";
 import { NavigationService } from "src/app/services/navigation.service";
 import { ErrorHandler, Inject, Injectable, Injector, NgZone } from "@angular/core";
-import { logError } from "../common/app.helpers";
+import { logError } from "../common/helpers/app.helpers";
 import { ApolloError } from "@apollo/client/core";
 import { LoggedUserService } from "../auth/logged-user.service";
 

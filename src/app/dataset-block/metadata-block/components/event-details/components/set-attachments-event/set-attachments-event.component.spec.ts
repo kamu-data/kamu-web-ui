@@ -2,7 +2,7 @@ import { mockSetAttachments } from "../../mock.events";
 import { SecurityContext } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { SetAttachmentsEventComponent } from "./set-attachments-event.component";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { BlockRowDataComponent } from "../../../block-row-data/block-row-data.component";
 import { TooltipIconComponent } from "../../../tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";

@@ -15,7 +15,7 @@ import {
     PrepareKind,
     TopicsType,
 } from "../components/source-events/add-polling-source/add-polling-source-form.types";
-import AppValues from "src/app/common/app.values";
+import AppValues from "src/app/common/values/app.values";
 
 @Injectable({
     providedIn: "root",

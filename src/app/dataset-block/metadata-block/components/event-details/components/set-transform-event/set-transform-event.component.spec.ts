@@ -8,7 +8,7 @@ import { SimplePropertyComponent } from "../common/simple-property/simple-proper
 import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-viewer.component";
 import { SetTransformEventComponent } from "./set-transform-event.component";
 import { TemporalTablesPropertyComponent } from "../common/temporal-tables-property/temporal-tables-property.component";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
 describe("SetTransformEventComponent", () => {
     let component: SetTransformEventComponent;

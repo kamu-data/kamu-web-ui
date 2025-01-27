@@ -4,7 +4,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { CommonModule } from "@angular/common";
 import { DatasetCreateComponent } from "./dataset-create.component";
-import { SearchAdditionalButtonsModule } from "../components/search-additional-buttons/search-additional-buttons.module";
+import { SearchAdditionalButtonsModule } from "../common/components/search-additional-buttons/search-additional-buttons.module";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";

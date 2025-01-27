@@ -3,14 +3,14 @@ import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core
 import { AbstractControl, FormBuilder, Validators } from "@angular/forms";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { DatasetBasicsFragment, DatasetFlowType } from "src/app/api/kamu.graphql.interface";
-import { promiseWithCatch } from "src/app/common/app.helpers";
+import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { CompactionTooltipsTexts } from "src/app/common/tooltips/compacting.text";
-import { ModalService } from "src/app/components/modal/modal.service";
+import { ModalService } from "src/app/common/components/modal/modal.service";
 import { SliceUnit, sliceSizeMapper } from "./dataset-settings-compacting-tab.types";
 import { DatasetCompactionService } from "../../services/dataset-compaction.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import AppValues from "src/app/common/app.values";
-import { BaseComponent } from "src/app/common/base.component";
+import AppValues from "src/app/common/values/app.values";
+import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({

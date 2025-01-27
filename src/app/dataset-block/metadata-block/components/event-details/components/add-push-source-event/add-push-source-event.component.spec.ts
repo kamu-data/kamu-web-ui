@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AddPushSourceEventComponent } from "./add-push-source-event.component";
 import { mockAddPushSource } from "../../mock.events";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { BlockRowDataComponent } from "../../../block-row-data/block-row-data.component";
 import { TooltipIconComponent } from "../../../tooltip-icon/tooltip-icon.component";
 import { MatIconModule } from "@angular/material/icon";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
-import { getElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { ReadStepCsv } from "src/app/api/kamu.graphql.interface";
 
 describe("AddPushSourceEventComponent", () => {

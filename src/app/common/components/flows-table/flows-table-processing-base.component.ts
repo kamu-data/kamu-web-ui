@@ -1,11 +1,11 @@
 import { Observable } from "rxjs";
-import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
-import { BaseComponent } from "src/app/common/base.component";
+import { MaybeNull, MaybeUndefined } from "src/app/common/types/app.types";
+import { BaseComponent } from "src/app/common/components/base.component";
 import { CancelFlowArgs, FlowsTableData, FlowsTableFiltersOptions } from "./flows-table.types";
 import { Account, FlowStatus, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
 import { ChangeDetectorRef, Directive, inject } from "@angular/core";
 import { NavigationService } from "src/app/services/navigation.service";
-import { requireValue } from "src/app/common/app.helpers";
+import { requireValue } from "src/app/common/helpers/app.helpers";
 import ProjectLinks from "src/app/project-links";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";

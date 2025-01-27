@@ -21,7 +21,7 @@ import {
 } from "./kamu.graphql.interface";
 import { TEST_LOGIN, mockAccountDetails } from "./mock/auth.mock";
 import { first } from "rxjs";
-import { MaybeNull } from "../common/app.types";
+import { MaybeNull } from "../common/types/app.types";
 import {
     mockAccountByNameNotFoundResponse,
     mockAccountByNameResponse,

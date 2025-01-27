@@ -2,7 +2,7 @@ import { DatasetHistoryUpdate } from "../../../../dataset-view/dataset.subscript
 import { SupportedEvents } from "../event-details/supported.events";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { MaybeNull } from "src/app/common/app.types";
+import { MaybeNull } from "src/app/common/types/app.types";
 import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.interface";
 
 @Component({

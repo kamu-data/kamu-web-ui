@@ -10,12 +10,12 @@ import { SqlEditorComponent } from "src/app/shared/editor/components/sql-editor/
 import { EditorModule } from "src/app/shared/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatIconModule } from "@angular/material/icon";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import {
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
     getElementByDataTestId,
-} from "src/app/common/base-test.helpers.spec";
+} from "src/app/common/helpers/base-test.helpers.spec";
 import { mockSqlErrorUpdate } from "../../../dataset-view/additional-components/data-tabs.mock";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { QueryExplainerService } from "src/app/query-explainer/query-explainer.service";

@@ -11,7 +11,7 @@ import { SqlQueryViewerComponent } from "src/app/dataset-block/metadata-block/co
 import { HighlightModule } from "ngx-highlightjs";
 import { EnginePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/engine-property/engine-property.component";
 import { SchemaPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/schema-property/schema-property.component";
-import { DynamicTableModule } from "src/app/components/dynamic-table/dynamic-table.module";
+import { DynamicTableModule } from "src/app/common/components/dynamic-table/dynamic-table.module";
 import { MergeStrategyPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/merge-strategy-property/merge-strategy-property.component";
 import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
 import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";

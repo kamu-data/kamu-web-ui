@@ -13,9 +13,9 @@ import {
     mockPasswordLoginResponse,
 } from "src/app/api/mock/auth.mock";
 import { GithubLoginCredentials, PasswordLoginCredentials } from "src/app/api/auth.api.model";
-import { AuthenticationError } from "src/app/common/errors";
+import { AuthenticationError } from "src/app/common/values/errors";
 import { LoginResponse } from "src/app/api/kamu.graphql.interface";
-import { MaybeUndefined } from "src/app/common/app.types";
+import { MaybeUndefined } from "src/app/common/types/app.types";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { AppConfigService } from "src/app/app-config.service";

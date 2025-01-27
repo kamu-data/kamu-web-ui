@@ -3,7 +3,7 @@ import { AddPollingSourceComponent } from "./dataset-view/additional-components/
 import { MetadataBlockComponent } from "./dataset-block/metadata-block/metadata-block.component";
 import { AuthenticatedGuard } from "./auth/guards/authenticated.guard";
 import { AccountSettingsComponent } from "./auth/settings/account-settings.component";
-import { PageNotFoundComponent } from "./components/page-not-found/page-not-found.component";
+import { PageNotFoundComponent } from "./common/components/page-not-found/page-not-found.component";
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { SearchComponent } from "./search/search.component";
@@ -14,7 +14,7 @@ import { GithubCallbackComponent } from "./auth/github-callback/github.callback"
 import ProjectLinks from "./project-links";
 import { SetTransformComponent } from "./dataset-view/additional-components/metadata-component/components/set-transform/set-transform.component";
 import { LoginGuard } from "./auth/guards/login.guard";
-import { ReturnToCliComponent } from "./components/return-to-cli/return-to-cli.component";
+import { ReturnToCliComponent } from "./common/components/return-to-cli/return-to-cli.component";
 import { AddPushSourceComponent } from "./dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source.component";
 import { AdminGuard } from "./auth/guards/admin.guard";
 import { AdminDashboardComponent } from "./admin-view/admin-dashboard/admin-dashboard.component";

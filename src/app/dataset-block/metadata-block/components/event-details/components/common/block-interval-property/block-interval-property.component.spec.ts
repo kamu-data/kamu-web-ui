@@ -7,9 +7,9 @@ import { of } from "rxjs";
 import { DisplayHashModule } from "src/app/components/display-hash/display-hash.module";
 import { ToastrModule } from "ngx-toastr";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { MatIconModule } from "@angular/material/icon";
-import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
+import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 
 describe("BlockIntervalPropertyComponent", () => {
     let component: BlockIntervalPropertyComponent;

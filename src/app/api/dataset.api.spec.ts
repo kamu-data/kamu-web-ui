@@ -78,7 +78,7 @@ import { TEST_ACCOUNT_ID, TEST_LOGIN } from "./mock/auth.mock";
 import { first, Observable } from "rxjs";
 import { DocumentNode } from "graphql";
 import { mockGetDatasetSchemaQuery } from "../dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
-import AppValues from "../common/app.values";
+import AppValues from "../common/values/app.values";
 import { ApolloError } from "@apollo/client/core";
 
 describe("DatasetApi", () => {

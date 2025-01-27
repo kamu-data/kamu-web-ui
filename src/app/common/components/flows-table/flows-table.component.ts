@@ -1,4 +1,4 @@
-import { DataHelpers } from "src/app/common/data.helpers";
+import { DataHelpers } from "src/app/common/helpers/data.helpers";
 import {
     ChangeDetectionStrategy,
     Component,
@@ -22,9 +22,9 @@ import {
     DatasetListFlowsDataFragment,
     DatasetFlowType,
 } from "src/app/api/kamu.graphql.interface";
-import AppValues from "src/app/common/app.values";
+import AppValues from "src/app/common/values/app.values";
 import { MatTableDataSource } from "@angular/material/table";
-import { capitalizeString, promiseWithCatch } from "src/app/common/app.helpers";
+import { capitalizeString, promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { MatMenuTrigger } from "@angular/material/menu";
 import { DatasetFlowTableHelpers } from "./flows-table.helpers";
 import {
@@ -36,12 +36,12 @@ import {
     FlowsTableFiltersOptions,
     FlowsTableOptions,
 } from "./flows-table.types";
-import { ModalService } from "src/app/components/modal/modal.service";
+import { ModalService } from "src/app/common/components/modal/modal.service";
 import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
-import { MaybeNull } from "../../app.types";
+import { MaybeNull } from "../../types/app.types";
 import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.interface";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
-import { BaseComponent } from "../../base.component";
+import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ToastrService } from "ngx-toastr";
 import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";

@@ -5,8 +5,8 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { of } from "rxjs";
 import { mockDatasetMainDataResponse } from "src/app/search/mock.data";
-import { SharedTestModule } from "src/app/common/shared-test.module";
-import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 
 describe("OffsetIntervalPropertyComponent", () => {
     let component: OffsetIntervalPropertyComponent;

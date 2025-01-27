@@ -6,7 +6,7 @@ import { BlockRowDataComponent } from "../../../block-row-data/block-row-data.co
 import { TooltipIconComponent } from "../../../tooltip-icon/tooltip-icon.component";
 import { MatIconModule } from "@angular/material/icon";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
 describe("SetVocabEventComponent", () => {
     let component: SetVocabEventComponent;

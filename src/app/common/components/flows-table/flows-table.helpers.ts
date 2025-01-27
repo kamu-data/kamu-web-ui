@@ -4,10 +4,10 @@ import {
     FlowStatus,
     FlowSummaryDataFragment,
 } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/common/app.types";
-import AppValues from "src/app/common/app.values";
-import { DataHelpers } from "src/app/common/data.helpers";
-import { excludeAgoWord, isNil } from "../../app.helpers";
+import { MaybeNull } from "src/app/common/types/app.types";
+import AppValues from "src/app/common/values/app.values";
+import { DataHelpers } from "src/app/common/helpers/data.helpers";
+import { excludeAgoWord, isNil } from "../../helpers/app.helpers";
 import { format } from "date-fns/format";
 import { formatDistanceToNowStrict } from "date-fns";
 

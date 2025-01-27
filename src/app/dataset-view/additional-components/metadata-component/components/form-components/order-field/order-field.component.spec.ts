@@ -3,9 +3,9 @@ import { OrderFieldComponent } from "./order-field.component";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { SourceOrder } from "../../source-events/add-polling-source/process-form.service.types";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
 describe("OrderFieldComponent", () => {
     let component: OrderFieldComponent;

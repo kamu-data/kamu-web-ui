@@ -1,4 +1,4 @@
-import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { MatTableModule } from "@angular/material/table";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AccessTokensTabComponent } from "./access-tokens-tab.component";
@@ -16,10 +16,10 @@ import { AccessTokenService } from "src/app/services/access-token.service";
 import { TOKEN_ID, mockCreateAccessTokenMutation, mockListAccessTokensQuery } from "src/app/api/mock/access-token.mock";
 import { of } from "rxjs";
 import { AccessTokenConnection, CreateAccessTokenResultSuccess } from "src/app/api/kamu.graphql.interface";
-import { PaginationComponent } from "src/app/components/pagination-component/pagination.component";
+import { PaginationComponent } from "src/app/common/components/pagination-component/pagination.component";
 import { NgbPaginationModule } from "@ng-bootstrap/ng-bootstrap";
 import { TokenCreateStep } from "../../account-settings.constants";
-import { ModalService } from "src/app/components/modal/modal.service";
+import { ModalService } from "src/app/common/components/modal/modal.service";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 describe("AccessTokensTabComponent", () => {

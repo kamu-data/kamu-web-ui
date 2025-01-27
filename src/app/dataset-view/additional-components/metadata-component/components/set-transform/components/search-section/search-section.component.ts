@@ -6,14 +6,14 @@ import { OperatorFunction, Observable } from "rxjs";
 import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
 import { DatasetBasicsFragment, GetDatasetSchemaQuery } from "src/app/api/kamu.graphql.interface";
 import { SearchApi } from "src/app/api/search.api";
-import { MaybeNull } from "src/app/common/app.types";
-import AppValues from "src/app/common/app.values";
+import { MaybeNull } from "src/app/common/types/app.types";
+import AppValues from "src/app/common/values/app.values";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSchema } from "src/app/interface/dataset.interface";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 import { DatasetNode } from "../../set-transform.types";
-import { BaseComponent } from "src/app/common/base.component";
-import { parseCurrentSchema } from "src/app/common/app.helpers";
+import { BaseComponent } from "src/app/common/components/base.component";
+import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 

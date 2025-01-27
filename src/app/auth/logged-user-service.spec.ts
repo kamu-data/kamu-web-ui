@@ -16,7 +16,7 @@ import {
 } from "../api/mock/auth.mock";
 import { AccountFragment, FetchAccountDetailsDocument, LoginDocument } from "../api/kamu.graphql.interface";
 import { first } from "rxjs/operators";
-import { MaybeNull } from "../common/app.types";
+import { MaybeNull } from "../common/types/app.types";
 import { AppConfigService } from "../app-config.service";
 import { GithubLoginCredentials, PasswordLoginCredentials } from "../api/auth.api.model";
 import { LoginService } from "./login/login.service";

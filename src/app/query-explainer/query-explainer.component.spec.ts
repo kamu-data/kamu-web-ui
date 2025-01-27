@@ -26,7 +26,7 @@ import {
     emitClickOnElementByDataTestId,
     registerMatSvgIcons,
     setFieldValue,
-} from "../common/base-test.helpers.spec";
+} from "../common/helpers/base-test.helpers.spec";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 

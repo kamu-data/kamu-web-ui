@@ -6,15 +6,15 @@ import {
     DatasetDataSizeFragment,
     DatasetBasicsFragment,
 } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/common/app.types";
-import { BaseComponent } from "src/app/common/base.component";
+import { MaybeNull } from "src/app/common/types/app.types";
+import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetSchema, DataRow } from "src/app/interface/dataset.interface";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { finalize } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { isEqual } from "src/app/common/app.helpers";
+import { isEqual } from "src/app/common/helpers/app.helpers";
 
 @Component({
     selector: "app-details-modal",

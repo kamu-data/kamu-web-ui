@@ -4,11 +4,11 @@ import { FormBuilder, FormGroupDirective, ReactiveFormsModule } from "@angular/f
 import { Apollo } from "apollo-angular";
 import { DatasetApi } from "src/app/api/dataset.api";
 import { formGroupDirective } from "../base-step/base-step.component.spec";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import { MatIconModule } from "@angular/material/icon";
 import { mockSetPollingSourceEventYaml } from "../../../set-transform/mock.data";
-import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { DecompressFormat, PrepareKind } from "../../add-polling-source/add-polling-source-form.types";
 
 describe("PrepareStepComponent", () => {

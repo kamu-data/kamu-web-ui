@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
 import { Location } from "@angular/common";
 import { map, Observable } from "rxjs";
-import AppValues from "src/app/common/app.values";
+import AppValues from "src/app/common/values/app.values";
 import { DatasetFlowType, DatasetKind, OffsetInterval } from "../../../api/kamu.graphql.interface";
 import { DataSqlErrorUpdate, OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetRequestBySql } from "../../../interface/dataset.interface";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
-import { BaseComponent } from "src/app/common/base.component";
+import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/common/app.types";
+import { MaybeNull } from "src/app/common/types/app.types";
 import ProjectLinks from "src/app/project-links";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { AddDataModalComponent } from "../overview-component/components/add-data-modal/add-data-modal.component";

@@ -3,7 +3,7 @@ import {
     getElementByDataTestId,
     emitClickOnElementByDataTestId,
     registerMatSvgIcons,
-} from "src/app/common/base-test.helpers.spec";
+} from "src/app/common/helpers/base-test.helpers.spec";
 import { mockSeed } from "../../mock.events";
 
 import { SeedEventComponent } from "./seed-event.component";
@@ -13,7 +13,7 @@ import { BlockRowDataComponent } from "../../../block-row-data/block-row-data.co
 import { TooltipIconComponent } from "../../../tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { MatIconModule } from "@angular/material/icon";
 
 describe("SeedEventComponent", () => {

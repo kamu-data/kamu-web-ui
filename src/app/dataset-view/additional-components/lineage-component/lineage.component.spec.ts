@@ -4,7 +4,7 @@ import { LineageComponent } from "./lineage.component";
 
 import { first } from "rxjs/operators";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { ApolloModule } from "apollo-angular";
 import { AccountService } from "src/app/services/account.service";
 import { of } from "rxjs";

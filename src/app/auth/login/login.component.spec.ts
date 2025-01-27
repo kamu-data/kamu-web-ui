@@ -6,7 +6,7 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
 import { AppConfigService } from "src/app/app-config.service";
 import { LoginMethod } from "src/app/app-config.model";
-import { SpinnerComponent } from "src/app/components/spinner/spinner/spinner.component";
+import { SpinnerComponent } from "src/app/common/components/spinner/spinner/spinner.component";
 import { LoginService } from "./login.service";
 import {
     checkInputDisabled,
@@ -15,7 +15,7 @@ import {
     getElementByDataTestId,
     registerMatSvgIcons,
     setFieldValue,
-} from "src/app/common/base-test.helpers.spec";
+} from "src/app/common/helpers/base-test.helpers.spec";
 import {
     TEST_ACCESS_TOKEN_PASSWORD,
     TEST_LOGIN,

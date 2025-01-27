@@ -4,8 +4,8 @@ import { CacheFieldComponent } from "./cache-field.component";
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
-import { findElement } from "src/app/common/base-test.helpers.spec";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { findElement } from "src/app/common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
 describe("CacheFieldComponent", () => {
     let component: CacheFieldComponent;

@@ -3,13 +3,13 @@ import { BatchingTriggerFormComponent } from "./batching-trigger-form.component"
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { Apollo } from "apollo-angular";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { DatasetSchedulingService } from "../../../services/dataset-scheduling.service";
 import { mockGetDatasetFlowTriggersBatchingQuery } from "src/app/api/mock/dataset-flow.mock";
 import { of } from "rxjs";
 import { ToastrModule } from "ngx-toastr";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
-import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 
 describe("BatchingTriggerFormComponent", () => {
     let component: BatchingTriggerFormComponent;

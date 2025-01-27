@@ -1,4 +1,4 @@
-import { MaybeUndefined } from "../../../../common/app.types";
+import { MaybeUndefined } from "../../../../common/types/app.types";
 import { TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { DatasetCommitService } from "./dataset-commit.service";
 import { Apollo, ApolloModule } from "apollo-angular";
@@ -25,7 +25,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { first } from "rxjs/operators";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { DatasetNotFoundError, DatasetOperationError } from "src/app/common/errors";
+import { DatasetNotFoundError, DatasetOperationError } from "src/app/common/values/errors";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { TEST_ACCOUNT_ID } from "src/app/api/mock/auth.mock";
 

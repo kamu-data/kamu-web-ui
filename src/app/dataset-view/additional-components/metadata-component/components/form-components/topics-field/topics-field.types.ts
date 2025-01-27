@@ -1,4 +1,4 @@
-import { MaybeNull } from "./../../../../../../common/app.types";
+import { MaybeNull } from "../../../../../../common/types/app.types";
 import { FormControl } from "@angular/forms";
 
 export interface KeyValueFormType {

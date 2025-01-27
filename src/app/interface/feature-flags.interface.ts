@@ -1,4 +1,4 @@
-import { MaybeUndefined } from "../common/app.types";
+import { MaybeUndefined } from "../common/types/app.types";
 
 export interface Feature {
     id: string;

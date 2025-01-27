@@ -1,5 +1,5 @@
 import { NavigationService } from "./../../../../services/navigation.service";
-import { MaybeNull } from "../../../../common/app.types";
+import { MaybeNull } from "../../../../common/types/app.types";
 import {
     AccessTokenConnection,
     AccountFragment,
@@ -12,12 +12,12 @@ import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { AccountSettingsTabs, TokenCreateStep } from "../../account-settings.constants";
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { ModalService } from "src/app/components/modal/modal.service";
-import { changeCopyIcon, promiseWithCatch, requireValue } from "src/app/common/app.helpers";
+import { ModalService } from "src/app/common/components/modal/modal.service";
+import { changeCopyIcon, promiseWithCatch, requireValue } from "src/app/common/helpers/app.helpers";
 import { Clipboard } from "@angular/cdk/clipboard";
-import AppValues from "src/app/common/app.values";
+import AppValues from "src/app/common/values/app.values";
 import { AccessTokenService } from "src/app/services/access-token.service";
-import { BaseComponent } from "src/app/common/base.component";
+import { BaseComponent } from "src/app/common/components/base.component";
 import ProjectLinks from "src/app/project-links";
 import { CreateTokenFormType } from "./access-tokens-tab.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";

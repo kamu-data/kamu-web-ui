@@ -12,21 +12,21 @@ import { AccountService } from "src/app/services/account.service";
 import ProjectLinks from "src/app/project-links";
 import { AccountPageQueryParams } from "./account.component.model";
 import { DatasetsTabComponent } from "./additional-components/datasets-tab/datasets-tab.component";
-import AppValues from "src/app/common/app.values";
+import AppValues from "src/app/common/values/app.values";
 import { DatasetListItemComponent } from "src/app/components/dataset-list-item/dataset-list-item.component";
-import { PaginationComponent } from "src/app/components/pagination-component/pagination.component";
+import { PaginationComponent } from "src/app/common/components/pagination-component/pagination.component";
 import { NgbPaginationModule, NgbPopoverModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
-import { DisplayTimeComponent } from "src/app/components/display-time/display-time.component";
+import { DisplayTimeComponent } from "src/app/common/components/display-time/display-time.component";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
-import { AccountNotFoundError } from "src/app/common/errors";
+import { AccountNotFoundError } from "src/app/common/values/errors";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ToastrModule } from "ngx-toastr";
 import { AccountFlowsTabComponent } from "./additional-components/account-flows-tab/account-flows-tab.component";
 import { LoggedUserService } from "../auth/logged-user.service";
 import { mockAccountDetails, TEST_AVATAR_URL, TEST_LOGIN } from "../api/mock/auth.mock";
-import { findElementByDataTestId } from "../common/base-test.helpers.spec";
-import { DatasetVisibilityModule } from "../components/dataset-visibility/dataset-visibility.module";
+import { findElementByDataTestId } from "../common/helpers/base-test.helpers.spec";
+import { DatasetVisibilityModule } from "../common/components/dataset-visibility/dataset-visibility.module";
 
 describe("AccountComponent", () => {
     let component: AccountComponent;

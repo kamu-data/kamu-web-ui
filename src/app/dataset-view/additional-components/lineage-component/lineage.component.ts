@@ -1,10 +1,10 @@
 import { Observable } from "rxjs";
 import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output, inject } from "@angular/core";
 import { Node } from "@swimlane/ngx-graph";
-import { BaseComponent } from "src/app/common/base.component";
+import { BaseComponent } from "src/app/common/components/base.component";
 import { LineageGraphBuilderService } from "./services/lineage-graph-builder.service";
 import { LineageGraphUpdate } from "./lineage-model";
-import { MaybeNull } from "src/app/common/app.types";
+import { MaybeNull } from "src/app/common/types/app.types";
 @Component({
     selector: "app-lineage",
     templateUrl: "./lineage.component.html",

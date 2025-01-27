@@ -1,4 +1,4 @@
-import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
+import { MaybeNull, MaybeUndefined } from "src/app/common/types/app.types";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import {
     VerifyQueryError,

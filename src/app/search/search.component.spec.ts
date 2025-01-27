@@ -6,7 +6,7 @@ import { SearchComponent } from "./search.component";
 import { NavigationService } from "../services/navigation.service";
 import { SearchService } from "./search.service";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { ModalService } from "../components/modal/modal.service";
+import { ModalService } from "../common/components/modal/modal.service";
 import { RouterTestingModule } from "@angular/router/testing";
 import { mockSearchOverviewResponse } from "../api/mock/search.mock";
 import { of } from "rxjs";
@@ -16,17 +16,17 @@ import {
     activeRouteMock,
     activeRouteMockQueryParamMap,
     findElementByDataTestId,
-} from "../common/base-test.helpers.spec";
+} from "../common/helpers/base-test.helpers.spec";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { DatasetListComponent } from "../components/dataset-list-component/dataset-list.component";
+import { DatasetListComponent } from "../common/components/dataset-list-component/dataset-list.component";
 import { FormsModule } from "@angular/forms";
 import { DatasetListItemComponent } from "../components/dataset-list-item/dataset-list-item.component";
 import { NgbPaginationModule, NgbPopoverModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
-import { DisplayTimeModule } from "../components/display-time/display-time.module";
+import { DisplayTimeModule } from "../common/components/display-time/display-time.module";
 import { MatIconModule } from "@angular/material/icon";
-import { PaginationComponent } from "../components/pagination-component/pagination.component";
+import { PaginationComponent } from "../common/components/pagination-component/pagination.component";
 import { MatDividerModule } from "@angular/material/divider";
-import { DatasetVisibilityModule } from "../components/dataset-visibility/dataset-visibility.module";
+import { DatasetVisibilityModule } from "../common/components/dataset-visibility/dataset-visibility.module";
 
 describe("SearchComponent", () => {
     let component: SearchComponent;

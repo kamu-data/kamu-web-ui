@@ -16,11 +16,11 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { first } from "rxjs/operators";
 import { NgbModal, NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatChipsModule } from "@angular/material/chips";
-import { SharedTestModule } from "src/app/common/shared-test.module";
-import { OverviewHistorySummaryHeaderComponent } from "src/app/components/overview-history-summary-header/overview-history-summary-header.component";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { OverviewHistorySummaryHeaderComponent } from "src/app/common/components/overview-history-summary-header/overview-history-summary-header.component";
 import { ReadmeSectionComponent } from "./components/readme-section/readme-section.component";
 import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
-import { DisplayTimeComponent } from "src/app/components/display-time/display-time.component";
+import { DisplayTimeComponent } from "src/app/common/components/display-time/display-time.component";
 import { DisplayHashComponent } from "src/app/components/display-hash/display-hash.component";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ToastrModule } from "ngx-toastr";
@@ -40,10 +40,10 @@ import {
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
     registerMatSvgIcons,
-} from "src/app/common/base-test.helpers.spec";
+} from "src/app/common/helpers/base-test.helpers.spec";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import AppValues from "src/app/common/app.values";
+import AppValues from "src/app/common/values/app.values";
 import { RouterModule } from "@angular/router";
 
 describe("OverviewComponent", () => {

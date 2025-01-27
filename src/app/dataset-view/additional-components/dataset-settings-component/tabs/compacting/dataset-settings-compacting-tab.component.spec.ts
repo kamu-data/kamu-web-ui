@@ -14,13 +14,13 @@ import {
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
     setFieldValue,
-} from "src/app/common/base-test.helpers.spec";
+} from "src/app/common/helpers/base-test.helpers.spec";
 import { mockDatasetBasicsDerivedFragment, mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
-import { ModalService } from "src/app/components/modal/modal.service";
+import { ModalService } from "src/app/common/components/modal/modal.service";
 import { DatasetCompactionService } from "../../services/dataset-compaction.service";
 import { of } from "rxjs";
 import { NavigationService } from "src/app/services/navigation.service";
-import AppValues from "src/app/common/app.values";
+import AppValues from "src/app/common/values/app.values";
 import { ActivatedRoute } from "@angular/router";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 

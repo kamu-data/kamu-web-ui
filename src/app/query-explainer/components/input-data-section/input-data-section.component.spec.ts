@@ -14,7 +14,7 @@ import { of } from "rxjs";
 import { mockDatasetInfo } from "src/app/search/mock.data";
 import ProjectLinks from "src/app/project-links";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
+import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { MarkdownModule } from "ngx-markdown";
 import { HttpClient } from "@angular/common/http";
 import { SecurityContext } from "@angular/core";

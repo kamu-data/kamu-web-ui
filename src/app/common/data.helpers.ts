@@ -12,10 +12,10 @@ import { MaybeUndefined } from "./app.types";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { isValidCronExpression } from "./cron-expression-validator.helper";
 import { ErrorPolicy, WatchQueryFetchPolicy } from "@apollo/client";
-import moment from "moment";
 import { convertSecondsToHumanReadableFormat, removeAllLineBreaks } from "./app.helpers";
 import { SliceUnit } from "../dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
 import { DataRow, DatasetSchema, OperationColumnClassEnum } from "../interface/dataset.interface";
+import { differenceInSeconds } from "date-fns";
 
 export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";
@@ -226,7 +226,7 @@ export class DataHelpers {
     }
 
     public static durationTask(startTime: string, endTime: string): string {
-        const durationSeconds = Math.round(moment.duration(moment(endTime).diff(moment(startTime))).asSeconds());
+        const durationSeconds = Math.round(differenceInSeconds(endTime, startTime));
         const result = convertSecondsToHumanReadableFormat(durationSeconds);
         return result ? result : "less than 1 second";
     }

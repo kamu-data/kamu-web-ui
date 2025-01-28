@@ -1,4 +1,4 @@
-import { DatasetBasicsFragment, DatasetKind, TransformInput } from "../../../../../api/kamu.graphql.interface";
+import { DatasetKind, TransformInput } from "../../../../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { MatTreeNestedDataSource } from "@angular/material/tree";
@@ -13,6 +13,7 @@ import { SupportedEvents } from "src/app/dataset-block/metadata-block/components
 import { from } from "rxjs";
 import { BaseMainEventComponent } from "../source-events/base-main-event.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import AppValues from "src/app/common/app.values";
 
 @Component({
     selector: "app-set-transform",
@@ -81,17 +82,23 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
                     .pipe(takeUntilDestroyed(this.destroyRef))
                     .subscribe((data: GetDatasetSchemaQuery) => {
                         if (data.datasets.byId) {
-                            const owner = (data.datasets.byId as DatasetBasicsFragment).owner.accountName;
                             const schema: MaybeNull<DatasetSchema> = parseCurrentSchema(
                                 data.datasets.byId.metadata.currentSchema,
                             );
+                            const datasetInfo = item.alias.split("/");
                             this.TREE_DATA.push({
-                                name: item.alias,
+                                name: datasetInfo.length > 1 ? datasetInfo[1] : item.alias,
                                 children: schema?.fields,
-                                owner,
+                                owner: datasetInfo.length > 1 ? datasetInfo[0] : AppValues.DEFAULT_ADMIN_ACCOUNT_NAME,
                             });
-                            this.dataSource.data = this.TREE_DATA;
+                        } else {
+                            this.TREE_DATA.push({
+                                name: "-  Dataset is unavailable",
+                                children: [],
+                                owner: "",
+                            });
                         }
+                        this.dataSource.data = this.TREE_DATA;
                     });
             } else {
                 throw new Error("TransformInput without an 'datasetRef' is unexpected");

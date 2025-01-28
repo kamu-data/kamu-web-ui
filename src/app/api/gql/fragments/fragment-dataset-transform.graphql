@@ -2,8 +2,18 @@ fragment DatasetTransform on SetTransform {
   inputs {
     datasetRef
     alias
-    dataset {
-      ...DatasetBasics
+    inputDataset {
+      ... on TransformInputDatasetAccessible {
+        message
+        dataset {
+          ...DatasetBasics
+        }
+      }
+
+      ... on TransformInputDatasetNotAccessible {
+        message
+        datasetRef
+      }
     }
   }
   transform {

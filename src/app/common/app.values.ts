@@ -17,11 +17,10 @@ export default class AppValues {
     public static readonly SCHEMA_NAME_PATTERN = /^[a-zA-Z0-9]+[a-zA-Z0-9\s(_)]*$/i;
     public static readonly SPLIT_ARGUMENTS_PATTERN = /[^\s"']+|"([^"]*)"+|'([^']*)'/g;
 
-    public static readonly DISPLAY_DATE_FORMAT = "DD MMM YYYY";
-    public static readonly DISPLAY_TOOLTIP_DATE_FORMAT = "MMM D, YYYY, HH:mm A";
-    public static readonly CRON_EXPRESSION_DATE_FORMAT = "MMM Do YYYY, h:mm:ss A ZZ";
+    public static readonly DISPLAY_DATE_FORMAT = "dd MMM yyyy";
+    public static readonly CRON_EXPRESSION_DATE_FORMAT = "MMM do yyyy pppp";
     public static readonly DISPLAY_FLOW_DATE_FORMAT = "y-MM-dd, h:mm:ss a";
-    public static readonly TIME_FORMAT = "h:mm:ss A";
+    public static readonly TIME_FORMAT = "h:mm:ss a";
     public static readonly UNIMPLEMENTED_MESSAGE = "Feature coming soon";
     public static readonly SAMPLE_DATA_LIMIT = 10;
     public static readonly SQL_QUERY_LIMIT = 50;

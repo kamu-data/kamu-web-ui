@@ -1,4 +1,4 @@
-import moment from "moment";
+import { format } from "date-fns/format";
 import {
     FlowConfigSnapshotModified,
     FlowEventInitiated,
@@ -132,9 +132,7 @@ export class DatasetFlowDetailsHelpers {
                 return "";
             case "FlowEventScheduledForActivation": {
                 const event = flowEvent as FlowEventScheduledForActivation;
-                return `Activating at ${moment(event.scheduledForActivationAt).format(
-                    AppValues.CRON_EXPRESSION_DATE_FORMAT,
-                )}`;
+                return `Activating at ${format(event.scheduledForActivationAt, AppValues.CRON_EXPRESSION_DATE_FORMAT)}`;
             }
             case "FlowEventTaskChanged": {
                 const event = flowEvent as FlowEventTaskChanged;
@@ -302,23 +300,20 @@ export class DatasetFlowDetailsHelpers {
         const startCondition: FlowStartCondition = startConditionEvent.startCondition;
         switch (startCondition.__typename) {
             case "FlowStartConditionThrottling":
-                return `Wake up time at ${moment(startCondition.wakeUpAt).format(
+                return `Wake up time at ${format(
+                    startCondition.wakeUpAt,
                     AppValues.CRON_EXPRESSION_DATE_FORMAT,
-                )}, shifted from ${moment(startCondition.shiftedFrom).format(AppValues.TIME_FORMAT)}`;
+                )}, shifted from ${format(startCondition.shiftedFrom, AppValues.TIME_FORMAT)}`;
             case "FlowStartConditionBatching":
                 return `Accumulated ${startCondition.accumulatedRecordsCount}/${
                     startCondition.activeBatchingRule.minRecordsToAwait
                 } records. Watermark ${
                     startCondition.watermarkModified ? "modified" : "unchanged"
-                }. Deadline at ${moment(startCondition.batchingDeadline).format(
-                    AppValues.CRON_EXPRESSION_DATE_FORMAT,
-                )}`;
+                }. Deadline at ${format(startCondition.batchingDeadline, AppValues.CRON_EXPRESSION_DATE_FORMAT)}`;
             case "FlowStartConditionExecutor":
                 return `Task #${startCondition.taskId}`;
             case "FlowStartConditionSchedule":
-                return `Wake up time at ${moment(startCondition.wakeUpAt).format(
-                    AppValues.CRON_EXPRESSION_DATE_FORMAT,
-                )}`;
+                return `Wake up time at ${format(startCondition.wakeUpAt, AppValues.CRON_EXPRESSION_DATE_FORMAT)}`;
             /* istanbul ignore next */
             default:
                 throw new Error("Unknown start condition typename");

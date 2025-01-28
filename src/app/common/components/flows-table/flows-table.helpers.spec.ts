@@ -19,20 +19,15 @@ import {
     tooltipTextResults,
 } from "./flows-table.helpers.mock";
 import timekeeper from "timekeeper";
-import moment from "moment";
 import { mockDatasetMainDataId } from "src/app/search/mock.data";
 
 describe("DatasetFlowTableHelpers", () => {
     beforeAll(() => {
         timekeeper.freeze("2024-03-14T11:22:29+00:00");
-        moment.relativeTimeThreshold("s", 59);
-        moment.relativeTimeThreshold("m", 59);
-        moment.relativeTimeThreshold("h", 23);
-        moment.tz.setDefault("Europe/Kiev");
     });
 
     afterAll(() => {
-        moment.tz.setDefault();
+        timekeeper.reset();
     });
 
     it("should check waiting block text with FlowStartConditionThrottling typename", () => {

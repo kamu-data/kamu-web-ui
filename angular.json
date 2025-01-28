@@ -18,14 +18,12 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "allowedCommonJsDependencies": [
-              "lodash",
               "zen-observable",
               "dagre",
-              "moment-timezone",
               "webcola",
               "fast-json-stable-stringify",
-              "marked",
               "moment",
+              "marked",
               "cron-parser",
               "@tweenjs/tween.js"
             ],

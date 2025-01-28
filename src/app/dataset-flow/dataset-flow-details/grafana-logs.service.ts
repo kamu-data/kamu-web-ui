@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { DatasetFlowByIdResponse, GrafanaFieldDescriptor } from "./dataset-flow-details.types";
-import moment from "moment";
 import { FlowEventTaskChanged } from "src/app/api/kamu.graphql.interface";
+import { addSeconds, subSeconds } from "date-fns";
 
 @Injectable({
     providedIn: "root",
@@ -36,14 +36,16 @@ export class GrafanaLogsService {
             this.availableFields.push({ key: "taskId", value: (events[0] as FlowEventTaskChanged).taskId });
             this.availableFields.push({
                 key: "fromTime",
-                value: moment(flowDetails.flow.timing.runningSince).subtract(30, "seconds").valueOf().toString(),
+                value: subSeconds(flowDetails.flow.timing.runningSince as string, 30)
+                    .valueOf()
+                    .toString(),
             });
             const finishedTime = flowDetails.flow.timing.finishedAt;
             this.availableFields.push({
                 key: "toTime",
                 value: finishedTime
-                    ? moment(finishedTime).add(30, "seconds").valueOf().toString()
-                    : moment.now().toString(),
+                    ? addSeconds(finishedTime, 30).valueOf().toString()
+                    : Date.now().valueOf().toString(),
             });
         }
     }

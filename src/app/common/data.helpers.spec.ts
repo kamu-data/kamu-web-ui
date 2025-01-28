@@ -167,18 +167,22 @@ it("should check description for SetTransform block", () => {
                     __typename: "TransformInput",
                     datasetRef: "did:odf:z4k88e8uENDqbAKHbhZF2xXAQrAF19cnqGqArUB9RVStSZHQNeP",
                     alias: "alias",
-                    dataset: {
-                        __typename: "Dataset",
-                        id: "did:odf:z4k88e8uENDqbAKHbhZF2xXAQrAF19cnqGqArUB9RVStSZHQNeP",
-                        kind: DatasetKind.Root,
-                        name: "quebec.case-details",
-                        owner: {
-                            __typename: "Account",
-                            id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                            accountName: "kamu",
+                    inputDataset: {
+                        message: "Success",
+                        __typename: "TransformInputDatasetAccessible",
+                        dataset: {
+                            __typename: "Dataset",
+                            id: "did:odf:z4k88e8uENDqbAKHbhZF2xXAQrAF19cnqGqArUB9RVStSZHQNeP",
+                            kind: DatasetKind.Root,
+                            name: "quebec.case-details",
+                            owner: {
+                                __typename: "Account",
+                                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+                                accountName: "kamu",
+                            },
+                            alias: "kamu/quebec.case-details",
+                            visibility: mockPublicDatasetVisibility,
                         },
-                        alias: "kamu/quebec.case-details",
-                        visibility: mockPublicDatasetVisibility,
                     },
                 },
             ],

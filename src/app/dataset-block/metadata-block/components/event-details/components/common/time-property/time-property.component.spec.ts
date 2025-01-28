@@ -15,6 +15,7 @@ describe("TimePropertyComponent", () => {
 
         fixture = TestBed.createComponent(TimePropertyComponent);
         component = fixture.componentInstance;
+        component.data = new Date("2021-10-03 12:00:00").toISOString();
         fixture.detectChanges();
     });
 

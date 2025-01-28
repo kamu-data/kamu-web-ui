@@ -40,23 +40,18 @@ export class AccountApi {
     public changeAccountEmail(params: {
         accountName: string;
         newEmail: string;
-    }): Observable<AccountChangeEmailMutation | null> {
-        return this.accountChangeEmailGQL
-            .mutate({
-                accountName: params.accountName,
-                newEmail: params.newEmail,
-            })
-            .pipe(
-                first(),
-                map((result: MutationResult<AccountChangeEmailMutation>) => {
-                    /* istanbul ignore else */
-                    if (result.data) {
-                        return result.data;
-                    } else {
-                        throw new DatasetOperationError(result.errors ?? []);
-                    }
-                }),
-            );
+    }): Observable<AccountChangeEmailMutation> {
+        return this.accountChangeEmailGQL.mutate(params).pipe(
+            first(),
+            map((result: MutationResult<AccountChangeEmailMutation>) => {
+                /* istanbul ignore else */
+                if (result.data) {
+                    return result.data;
+                } else {
+                    throw new DatasetOperationError(result.errors ?? []);
+                }
+            }),
+        );
     }
 
     public fetchAccountWithEmail(accountName: string): Observable<AccountWithEmailQuery> {

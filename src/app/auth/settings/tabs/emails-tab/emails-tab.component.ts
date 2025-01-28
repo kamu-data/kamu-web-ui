@@ -1,10 +1,11 @@
-import { inject, Input, OnInit } from "@angular/core";
+import { EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ChangeEmailFormType } from "./email-tabs.types";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { AccountEmailService } from "src/app/services/account-email.service";
 import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
+import { Observable } from "rxjs";
 
 @Component({
     selector: "app-emails-tab",
@@ -14,8 +15,10 @@ import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
 })
 export class EmailsTabComponent implements OnInit {
     @Input({ required: true }) public account: AccountWithEmailFragment;
+    @Output() public accountEmailChange = new EventEmitter();
 
     public changeEmailForm: FormGroup<ChangeEmailFormType>;
+    public changeEmailError$: Observable<string>;
     private fb = inject(FormBuilder);
     private accountEmailService = inject(AccountEmailService);
 
@@ -27,12 +30,23 @@ export class EmailsTabComponent implements OnInit {
         this.changeEmailForm = this.fb.nonNullable.group({
             emailAddress: [this.account.email, [Validators.required, RxwebValidators.email()]],
         });
+        this.changeEmailError$ = this.accountEmailService.renameAccountEmailErrorOccurrences;
+    }
+
+    public changeEmail(): void {
+        this.accountEmailService.resetChangeEmailError();
     }
 
     public changeEmailAddress(): void {
-        this.accountEmailService.changeEmailAddress({
-            accountName: this.account.accountName,
-            currentEmailAddress: this.emailAddress.value,
-        });
+        this.accountEmailService
+            .changeEmailAddress({
+                accountName: this.account.accountName,
+                newEmail: this.emailAddress.value,
+            })
+            .subscribe((result: boolean) => {
+                if (result) {
+                    this.accountEmailChange.emit();
+                }
+            });
     }
 }

@@ -289,7 +289,7 @@
                 <app-access-tokens-tab [account]="user" />
             </ng-container>
             <ng-container *ngIf="activeTab === AccountSettingsTabs.EMAILS">
-                <app-emails-tab [account]="user" />
+                <app-emails-tab [account]="user" (accountEmailChange)="changeAccountEmail()" />
             </ng-container>
         </div>
     </div>

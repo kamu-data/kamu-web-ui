@@ -1,7 +1,7 @@
 import ProjectLinks from "src/app/project-links";
 import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
 import { AccountSettingsTabs } from "./account-settings.constants";
-import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { filter, switchMap } from "rxjs/operators";
 import { BaseComponent } from "src/app/common/base.component";
@@ -29,6 +29,7 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
     private route = inject(ActivatedRoute);
     private accountEmailService = inject(AccountEmailService);
     private loggedUserService = inject(LoggedUserService);
+    private cdr = inject(ChangeDetectorRef);
 
     public ngOnInit(): void {
         this.router.events
@@ -41,6 +42,14 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
             });
 
         this.extractActiveTabFromRoute();
+        this.fetchAccountInfo();
+    }
+
+    public getRouteLink(tab: AccountSettingsTabs): string {
+        return `/${ProjectLinks.URL_SETTINGS}/${tab}`;
+    }
+
+    private fetchAccountInfo(): void {
         this.user$ = this.loggedUserService.loggedInUserChanges.pipe(
             switchMap((loggedUser) => {
                 if (loggedUser) {
@@ -52,8 +61,8 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
         );
     }
 
-    public getRouteLink(tab: AccountSettingsTabs): string {
-        return `/${ProjectLinks.URL_SETTINGS}/${tab}`;
+    public changeAccountEmail(): void {
+        this.fetchAccountInfo();
     }
 
     private extractActiveTabFromRoute(): void {

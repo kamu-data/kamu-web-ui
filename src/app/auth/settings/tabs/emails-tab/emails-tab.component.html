@@ -13,6 +13,7 @@
                 class="form-control email-control"
                 id="email-address"
                 data-test-id="email-address"
+                (keyup)="changeEmail()"
             />
         </dd>
     </dl>
@@ -21,11 +22,15 @@
         class="ms-4 change-email-btn"
         type="button"
         data-test-id="change-email-button"
+        (click)="changeEmailAddress()"
     >
         Change email
     </button>
     <div *ngIf="(emailAddress?.invalid && emailAddress?.touched) || emailAddress?.dirty">
         <small *ngIf="emailAddress?.errors?.required" class="text-danger"> Email address is required</small>
         <small *ngIf="emailAddress?.errors?.email" class="text-danger">Please provide a valid email address</small>
+    </div>
+    <div *ngIf="changeEmailError$ | async as changeEmailError">
+        <div class="error-block" data-test-id="change-email-error">{{ changeEmailError }}</div>
     </div>
 </form>

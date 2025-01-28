@@ -1,7 +1,11 @@
 import { inject, Injectable } from "@angular/core";
 import { AccountApi } from "../api/account.api";
-import { map, Observable } from "rxjs";
-import { AccountWithEmailFragment, AccountWithEmailQuery } from "../api/kamu.graphql.interface";
+import { map, Observable, Subject } from "rxjs";
+import {
+    AccountChangeEmailMutation,
+    AccountWithEmailFragment,
+    AccountWithEmailQuery,
+} from "../api/kamu.graphql.interface";
 import { MaybeNull } from "../common/app.types";
 import { ToastrService } from "ngx-toastr";
 
@@ -11,6 +15,20 @@ import { ToastrService } from "ngx-toastr";
 export class AccountEmailService {
     private accountApi = inject(AccountApi);
     private toastrService = inject(ToastrService);
+
+    private renameAccountEmailError$: Subject<string> = new Subject<string>();
+
+    public emitRenameAccountEmailErrorOccurred(message: string): void {
+        this.renameAccountEmailError$.next(message);
+    }
+
+    public get renameAccountEmailErrorOccurrences(): Observable<string> {
+        return this.renameAccountEmailError$.asObservable();
+    }
+
+    public resetChangeEmailError(): void {
+        this.emitRenameAccountEmailErrorOccurred("");
+    }
 
     public fetchAccountWithEmail(accountName: string): Observable<MaybeNull<AccountWithEmailFragment>> {
         return this.accountApi.fetchAccountWithEmail(accountName).pipe(
@@ -25,5 +43,17 @@ export class AccountEmailService {
         );
     }
 
-    public changeEmailAddress(params: { accountName: string; currentEmailAddress: string }): void {}
+    public changeEmailAddress(params: { accountName: string; newEmail: string }): Observable<boolean> {
+        return this.accountApi.changeAccountEmail(params).pipe(
+            map((data: AccountChangeEmailMutation) => {
+                if (data.accounts.byName?.updateEmail.__typename === "UpdateEmailSuccess") {
+                    this.toastrService.success(data.accounts.byName.updateEmail.message);
+                    return true;
+                } else {
+                    this.emitRenameAccountEmailErrorOccurred(data.accounts.byName?.updateEmail.message ?? "");
+                    return false;
+                }
+            }),
+        );
+    }
 }

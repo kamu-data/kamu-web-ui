@@ -4,7 +4,7 @@ import { ChangeEmailFormType } from "./email-tabs.types";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { AccountEmailService } from "src/app/services/account-email.service";
-import { AccountFragment } from "src/app/api/kamu.graphql.interface";
+import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-emails-tab",
@@ -13,7 +13,7 @@ import { AccountFragment } from "src/app/api/kamu.graphql.interface";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmailsTabComponent implements OnInit {
-    @Input({ required: true }) public account: AccountFragment;
+    @Input({ required: true }) public account: AccountWithEmailFragment;
 
     public changeEmailForm: FormGroup<ChangeEmailFormType>;
     private fb = inject(FormBuilder);
@@ -25,7 +25,7 @@ export class EmailsTabComponent implements OnInit {
 
     public ngOnInit(): void {
         this.changeEmailForm = this.fb.nonNullable.group({
-            emailAddress: ["", [Validators.required, RxwebValidators.email()]],
+            emailAddress: [this.account.email, [Validators.required, RxwebValidators.email()]],
         });
     }
 

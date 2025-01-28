@@ -62,6 +62,8 @@ export type Account = {
     avatarUrl?: Maybe<Scalars["String"]>;
     /** Account name to display */
     displayName: Scalars["AccountDisplayName"];
+    /** Email address */
+    email: Scalars["String"];
     /** Access to the flow configurations of this account */
     flows?: Maybe<AccountFlows>;
     /** Unique and stable identifier of this account */
@@ -134,6 +136,12 @@ export type AccountMut = {
     __typename?: "AccountMut";
     /** Access to the mutable flow configurations of this account */
     flows: AccountFlowsMut;
+    /** Update account email */
+    updateEmail: UpdateEmailResult;
+};
+
+export type AccountMutUpdateEmailArgs = {
+    newEmail: Scalars["String"];
 };
 
 export enum AccountType {
@@ -2205,6 +2213,28 @@ export type TriggerFlowSuccess = TriggerFlowResult & {
     message: Scalars["String"];
 };
 
+export type UpdateEmailInvalid = UpdateEmailResult & {
+    __typename?: "UpdateEmailInvalid";
+    dummy: Scalars["Boolean"];
+    message: Scalars["String"];
+};
+
+export type UpdateEmailNonUnique = UpdateEmailResult & {
+    __typename?: "UpdateEmailNonUnique";
+    dummy: Scalars["Boolean"];
+    message: Scalars["String"];
+};
+
+export type UpdateEmailResult = {
+    message: Scalars["String"];
+};
+
+export type UpdateEmailSuccess = UpdateEmailResult & {
+    __typename?: "UpdateEmailSuccess";
+    message: Scalars["String"];
+    newEmail: Scalars["String"];
+};
+
 export type UpdateReadmeResult = {
     message: Scalars["String"];
 };
@@ -2345,6 +2375,25 @@ export type AccountByNameQuery = {
     accounts: { __typename?: "Accounts"; byName?: ({ __typename?: "Account" } & AccountFragment) | null };
 };
 
+export type AccountChangeEmailMutationVariables = Exact<{
+    accountName: Scalars["AccountName"];
+    newEmail: Scalars["String"];
+}>;
+
+export type AccountChangeEmailMutation = {
+    __typename?: "Mutation";
+    accounts: {
+        __typename?: "AccountsMut";
+        byName?: {
+            __typename?: "AccountMut";
+            updateEmail:
+                | { __typename?: "UpdateEmailInvalid"; message: string }
+                | { __typename?: "UpdateEmailNonUnique"; message: string }
+                | { __typename?: "UpdateEmailSuccess"; newEmail: string; message: string };
+        } | null;
+    };
+};
+
 export type AccountDatasetFlowsPausedQueryVariables = Exact<{
     accountName: Scalars["AccountName"];
 }>;
@@ -2446,6 +2495,17 @@ export type AccountResumeFlowsMutation = {
     };
 };
 
+export type AccountWithEmailQueryVariables = Exact<{
+    accountName: Scalars["AccountName"];
+}>;
+
+export type AccountWithEmailQuery = {
+    __typename?: "Query";
+    accounts: { __typename?: "Accounts"; byName?: ({ __typename?: "Account" } & AccountWithEmailFragment) | null };
+};
+
+export type AccountBasicsFragment = { __typename?: "Account"; id: string; accountName: string };
+
 export type DatasetConnectionDataFragment = {
     __typename?: "DatasetConnection";
     nodes: Array<
@@ -2470,6 +2530,32 @@ export type DatasetConnectionDataFragment = {
             };
         } & DatasetBasicsFragment
     >;
+};
+
+export type AccountExtendedFragment = {
+    __typename?: "Account";
+    id: string;
+    accountName: string;
+    avatarUrl?: string | null;
+};
+
+export type AccountWithEmailFragment = {
+    __typename?: "Account";
+    id: string;
+    accountName: string;
+    displayName: string;
+    avatarUrl?: string | null;
+    email: string;
+};
+
+export type AccountFragment = {
+    __typename?: "Account";
+    id: string;
+    accountName: string;
+    displayName: string;
+    accountType: AccountType;
+    avatarUrl?: string | null;
+    isAdmin: boolean;
 };
 
 export type LoginMutationVariables = Exact<{
@@ -3782,25 +3868,6 @@ export type AccessTokenDataFragment = {
     account: { __typename?: "Account" } & AccountFragment;
 };
 
-export type AccountBasicsFragment = { __typename?: "Account"; id: string; accountName: string };
-
-export type AccountExtendedFragment = {
-    __typename?: "Account";
-    id: string;
-    accountName: string;
-    avatarUrl?: string | null;
-};
-
-export type AccountFragment = {
-    __typename?: "Account";
-    id: string;
-    accountName: string;
-    displayName: string;
-    accountType: AccountType;
-    avatarUrl?: string | null;
-    isAdmin: boolean;
-};
-
 export type CurrentSourceFetchUrlFragment = {
     __typename?: "DatasetMetadata";
     currentPollingSource?: {
@@ -4563,6 +4630,15 @@ export const DatasetConnectionDataFragmentDoc = gql`
     ${FetchStepUrlDataFragmentDoc}
     ${FetchStepFilesGlobDataFragmentDoc}
     ${FetchStepContainerDataFragmentDoc}
+`;
+export const AccountWithEmailFragmentDoc = gql`
+    fragment AccountWithEmail on Account {
+        id
+        accountName
+        displayName
+        avatarUrl
+        email
+    }
 `;
 export const ViewDatasetEnvVarDataFragmentDoc = gql`
     fragment ViewDatasetEnvVarData on ViewDatasetEnvVar {
@@ -5892,6 +5968,40 @@ export class AccountByNameGQL extends Apollo.Query<AccountByNameQuery, AccountBy
         super(apollo);
     }
 }
+export const AccountChangeEmailDocument = gql`
+    mutation accountChangeEmail($accountName: AccountName!, $newEmail: String!) {
+        accounts {
+            byName(accountName: $accountName) {
+                updateEmail(newEmail: $newEmail) {
+                    ... on UpdateEmailSuccess {
+                        newEmail
+                        message
+                    }
+                    ... on UpdateEmailNonUnique {
+                        message
+                    }
+                    ... on UpdateEmailInvalid {
+                        message
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class AccountChangeEmailGQL extends Apollo.Mutation<
+    AccountChangeEmailMutation,
+    AccountChangeEmailMutationVariables
+> {
+    document = AccountChangeEmailDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
 export const AccountDatasetFlowsPausedDocument = gql`
     query accountDatasetFlowsPaused($accountName: AccountName!) {
         accounts {
@@ -6039,6 +6149,27 @@ export class AccountResumeFlowsGQL extends Apollo.Mutation<
     AccountResumeFlowsMutationVariables
 > {
     document = AccountResumeFlowsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const AccountWithEmailDocument = gql`
+    query accountWithEmail($accountName: AccountName!) {
+        accounts {
+            byName(name: $accountName) {
+                ...AccountWithEmail
+            }
+        }
+    }
+    ${AccountWithEmailFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class AccountWithEmailGQL extends Apollo.Query<AccountWithEmailQuery, AccountWithEmailQueryVariables> {
+    document = AccountWithEmailDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

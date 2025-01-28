@@ -1,0 +1,7 @@
+fragment AccountWithEmail on Account {
+  id
+  accountName
+  displayName
+  avatarUrl
+  email
+}

@@ -3,6 +3,8 @@ import { inject, Injectable } from "@angular/core";
 import {
     AccountByNameGQL,
     AccountByNameQuery,
+    AccountChangeEmailGQL,
+    AccountChangeEmailMutation,
     AccountDatasetFlowsPausedGQL,
     AccountDatasetFlowsPausedQuery,
     AccountFlowFilters,
@@ -15,6 +17,8 @@ import {
     AccountPauseFlowsMutation,
     AccountResumeFlowsGQL,
     AccountResumeFlowsMutation,
+    AccountWithEmailGQL,
+    AccountWithEmailQuery,
 } from "./kamu.graphql.interface";
 import { MaybeNull } from "../common/app.types";
 import { ApolloQueryResult } from "@apollo/client";
@@ -30,6 +34,46 @@ export class AccountApi {
     private accountDatasetFlowsPausedGql = inject(AccountDatasetFlowsPausedGQL);
     private accountPauseFlowsGql = inject(AccountPauseFlowsGQL);
     private accountResumeFlowsGql = inject(AccountResumeFlowsGQL);
+    private accountWithEmailGql = inject(AccountWithEmailGQL);
+    private accountChangeEmailGQL = inject(AccountChangeEmailGQL);
+
+    public changeAccountEmail(params: {
+        accountName: string;
+        newEmail: string;
+    }): Observable<AccountChangeEmailMutation | null> {
+        return this.accountChangeEmailGQL
+            .mutate({
+                accountName: params.accountName,
+                newEmail: params.newEmail,
+            })
+            .pipe(
+                first(),
+                map((result: MutationResult<AccountChangeEmailMutation>) => {
+                    /* istanbul ignore else */
+                    if (result.data) {
+                        return result.data;
+                    } else {
+                        throw new DatasetOperationError(result.errors ?? []);
+                    }
+                }),
+            );
+    }
+
+    public fetchAccountWithEmail(accountName: string): Observable<AccountWithEmailQuery> {
+        return this.accountWithEmailGql
+            .watch(
+                {
+                    accountName,
+                },
+                noCacheFetchPolicy,
+            )
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<AccountWithEmailQuery>) => {
+                    return result.data;
+                }),
+            );
+    }
 
     public fetchAccountByName(accountName: string): Observable<MaybeNull<AccountFragment>> {
         return this.accountByNameGql

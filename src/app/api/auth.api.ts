@@ -68,7 +68,7 @@ export class AuthApi {
                 map((result: MutationResult<LoginMutation>) => {
                     /* istanbul ignore else */
                     if (result.data) {
-                        return result.data.auth.login;
+                        return result.data.auth.login as LoginResponse;
                     } else {
                         // Normally, this code should not be reachable
                         throw new AuthenticationError(result.errors ?? []);

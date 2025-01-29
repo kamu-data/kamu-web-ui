@@ -72,7 +72,7 @@ import { AccessTokensTabComponent } from "./auth/settings/tabs/access-tokens-tab
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { DynamicTableModule } from "./components/dynamic-table/dynamic-table.module";
 import { AutofocusModule } from "./common/directives/autofocus.module";
-import { EmailsTabComponent } from './auth/settings/tabs/emails-tab/emails-tab.component';
+import { EmailsTabComponent } from "./auth/settings/tabs/emails-tab/emails-tab.component";
 
 const Services = [
     {

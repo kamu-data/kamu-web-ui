@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Added a feature for changing account mail
+- Added a feature for changing account email
 
 ## [0.38.0] - 2025-01-27
 ### Changed

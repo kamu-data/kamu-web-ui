@@ -30,6 +30,7 @@ import { AuthApi } from "src/app/api/auth.api";
 import { NavigationService } from "src/app/services/navigation.service";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { MatIconModule } from "@angular/material/icon";
+import ProjectLinks from "src/app/project-links";
 
 describe("LoginComponent", () => {
     let component: LoginComponent;
@@ -40,6 +41,7 @@ describe("LoginComponent", () => {
     let localStorageService: LocalStorageService;
     let authApi: AuthApi;
     let httpController: HttpTestingController;
+
     const MOCK_FEATURE_FLAGS = {
         enableLogout: true,
         enableScheduling: true,
@@ -75,6 +77,16 @@ describe("LoginComponent", () => {
                     provide: ActivatedRoute,
                     useValue: {
                         queryParams: mockQueryParams.asObservable(),
+                        snapshot: {
+                            queryParamMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL:
+                                            return "";
+                                    }
+                                },
+                            },
+                        },
                     },
                 },
             ],

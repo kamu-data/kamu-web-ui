@@ -17,10 +17,10 @@ import {
     FlowSummaryDataFragment,
     FlowStatus,
     FlowStartCondition,
-    Account,
     Dataset,
     DatasetListFlowsDataFragment,
     DatasetFlowType,
+    AccountFragment,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/app.values";
 import { MatTableDataSource } from "@angular/material/table";
@@ -57,7 +57,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     @Input({ required: true }) public nodes: FlowSummaryDataFragment[];
     @Input({ required: true }) public filterByStatus: MaybeNull<FlowStatus>;
     @Input({ required: true }) public onlySystemFlows: boolean;
-    @Input({ required: true }) public searchByAccount: Account[] = [];
+    @Input({ required: true }) public searchByAccount: AccountFragment[] = [];
     @Input() public searchByDataset: DatasetListFlowsDataFragment[] = [];
     @Input({ required: true }) tableOptions: FlowsTableOptions;
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
@@ -71,7 +71,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
 
     public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>();
     @ViewChildren(MatMenuTrigger) triggersMatMenu: QueryList<MatMenuTrigger>;
-    @Input({ required: true }) public accountFlowInitiators: Account[];
+    @Input({ required: true }) public accountFlowInitiators: AccountFragment[];
     @Input({ required: true }) public involvedDatasets: DatasetListFlowsDataFragment[];
 
     public readonly URL_FLOW_DETAILS = ProjectLinks.URL_FLOW_DETAILS;
@@ -80,8 +80,8 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     public filterAccountSettings: DropdownSettings = DROPDOWN_ACCOUNT_SETTINGS;
     public dropdownDatasetList: DatasetListFlowsDataFragment[] = [];
     public selectedDatasetItems: DatasetListFlowsDataFragment[] = [];
-    public dropdownAccountList: Account[] = [];
-    public selectedAccountItems: Account[] = [];
+    public dropdownAccountList: AccountFragment[] = [];
+    public selectedAccountItems: AccountFragment[] = [];
     public dropdownStatustList: FilterStatusType[] = [];
     public selectedStatusItems: FilterStatusType[] = [];
 

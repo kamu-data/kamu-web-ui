@@ -2,12 +2,14 @@ import { mockPublicDatasetVisibility } from "src/app/search/mock.data";
 import { mockDatasetMainDataId } from "src/app/search/mock.data";
 import {
     AccountByNameQuery,
+    AccountChangeEmailMutation,
     AccountDatasetFlowsPausedQuery,
     AccountListDatasetsWithFlowsQuery,
     AccountListFlowsQuery,
     AccountPauseFlowsMutation,
     AccountResumeFlowsMutation,
     AccountType,
+    AccountWithEmailQuery,
     DatasetKind,
     FlowStatus,
 } from "../kamu.graphql.interface";
@@ -360,5 +362,46 @@ export const mockAccountResumeFlowsMutationError: AccountResumeFlowsMutation = {
             __typename: "AccountMut",
         },
         __typename: "AccountsMut",
+    },
+};
+
+export const mockAccountChangeEmailMutationSuccess: AccountChangeEmailMutation = {
+    accounts: {
+        byName: {
+            updateEmail: {
+                newEmail: "kamu23@example.com",
+                message: "Success",
+                __typename: "UpdateEmailSuccess",
+            },
+            __typename: "AccountMut",
+        },
+        __typename: "AccountsMut",
+    },
+};
+
+export const mockAccountChangeEmailMutationError: AccountChangeEmailMutation = {
+    accounts: {
+        byName: {
+            updateEmail: {
+                message: "Non unique email",
+                __typename: "UpdateEmailNonUnique",
+            },
+            __typename: "AccountMut",
+        },
+        __typename: "AccountsMut",
+    },
+};
+
+export const mockAccountWithEmailQuery: AccountWithEmailQuery = {
+    accounts: {
+        byName: {
+            id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+            accountName: "kamu",
+            displayName: "kamu",
+            avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+            email: "kamu23@example.com",
+            __typename: "Account",
+        },
+        __typename: "Accounts",
     },
 };

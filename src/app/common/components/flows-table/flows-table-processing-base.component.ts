@@ -2,7 +2,7 @@ import { Observable } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
 import { BaseComponent } from "src/app/common/base.component";
 import { CancelFlowArgs, FlowsTableData, FlowsTableFiltersOptions } from "./flows-table.types";
-import { Account, FlowStatus, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
+import { AccountFragment, FlowStatus, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
 import { ChangeDetectorRef, Directive, inject } from "@angular/core";
 import { NavigationService } from "src/app/services/navigation.service";
 import { requireValue } from "src/app/common/app.helpers";
@@ -15,7 +15,7 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
     public tileWidgetData$: Observable<MaybeUndefined<FlowsTableData>>;
     public filterByStatus: MaybeNull<FlowStatus> = null;
     public onlySystemFlows = false;
-    public searchByAccount: Account[] = [];
+    public searchByAccount: AccountFragment[] = [];
     public currentPage = 1;
     public readonly WIDGET_FLOW_RUNS_PER_PAGE: number = 150;
     public readonly TABLE_FLOW_RUNS_PER_PAGE: number = 15;
@@ -24,7 +24,7 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
     public flowConnectionData$: Observable<{
         flowsData: FlowsTableData;
         allFlowsPaused: MaybeUndefined<boolean>;
-        flowInitiators: Account[];
+        flowInitiators: AccountFragment[];
     }>;
 
     protected flowsService = inject(DatasetFlowsService);
@@ -79,7 +79,7 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
                 ? { system: true }
                 : accounts.length
                   ? {
-                        accounts: accounts.map((item: Account) => item.id),
+                        accounts: accounts.map((item: AccountFragment) => item.id),
                     }
                   : null;
 

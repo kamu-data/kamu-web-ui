@@ -34,7 +34,7 @@ export class AccessTokenService {
                 const typename = result.auth.createAccessToken.__typename;
                 if (typename === "CreateAccessTokenResultSuccess") {
                     this.toastrService.success(result.auth.createAccessToken.message);
-                    return result.auth.createAccessToken.token;
+                    return result.auth.createAccessToken.token as CreatedAccessToken;
                 } else {
                     this.toastrService.error(result.auth.createAccessToken.message);
                     return null;

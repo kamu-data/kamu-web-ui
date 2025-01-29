@@ -5,6 +5,8 @@ import { Apollo } from "apollo-angular";
 import {
     AccountByNameDocument,
     AccountByNameQuery,
+    AccountChangeEmailDocument,
+    AccountChangeEmailMutation,
     AccountDatasetFlowsPausedDocument,
     AccountDatasetFlowsPausedQuery,
     AccountFlowFilters,
@@ -17,19 +19,23 @@ import {
     AccountPauseFlowsMutation,
     AccountResumeFlowsDocument,
     AccountResumeFlowsMutation,
+    AccountWithEmailDocument,
+    AccountWithEmailQuery,
     FlowConnectionDataFragment,
 } from "./kamu.graphql.interface";
-import { TEST_LOGIN, mockAccountDetails } from "./mock/auth.mock";
+import { TEST_ACCOUNT_EMAIL, TEST_LOGIN, mockAccountDetails } from "./mock/auth.mock";
 import { first } from "rxjs";
 import { MaybeNull } from "../common/app.types";
 import {
     mockAccountByNameNotFoundResponse,
     mockAccountByNameResponse,
+    mockAccountChangeEmailMutationSuccess,
     mockAccountDatasetFlowsPausedQuery,
     mockAccountListDatasetsWithFlowsQuery,
     mockAccountListFlowsQuery,
     mockAccountPauseFlowsMutationSuccess,
     mockAccountResumeFlowsMutationSuccess,
+    mockAccountWithEmailQuery,
 } from "./mock/account.mock";
 
 describe("AccountApi", () => {
@@ -185,6 +191,35 @@ describe("AccountApi", () => {
 
         op.flush({
             data: mockAccountResumeFlowsMutationSuccess,
+        });
+    });
+
+    it("should check change account email", () => {
+        service
+            .changeAccountEmail({ accountName: ACCOUNT_NAME, newEmail: TEST_ACCOUNT_EMAIL })
+            .subscribe((state: AccountChangeEmailMutation) => {
+                expect(state.accounts.byName?.updateEmail.message).toEqual(
+                    mockAccountChangeEmailMutationSuccess.accounts.byName?.updateEmail.message,
+                );
+            });
+        const op = controller.expectOne(AccountChangeEmailDocument);
+        expect(op.operation.variables.accountName).toEqual(ACCOUNT_NAME);
+        expect(op.operation.variables.newEmail).toEqual(TEST_ACCOUNT_EMAIL);
+
+        op.flush({
+            data: mockAccountChangeEmailMutationSuccess,
+        });
+    });
+
+    it("should check fetch account email", () => {
+        service.fetchAccountWithEmail(ACCOUNT_NAME).subscribe((state: AccountWithEmailQuery) => {
+            expect(state.accounts.byName?.email).toEqual(mockAccountWithEmailQuery.accounts.byName?.email);
+        });
+        const op = controller.expectOne(AccountWithEmailDocument);
+        expect(op.operation.variables.accountName).toEqual(ACCOUNT_NAME);
+
+        op.flush({
+            data: mockAccountWithEmailQuery,
         });
     });
 });

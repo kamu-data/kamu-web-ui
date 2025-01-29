@@ -6,7 +6,6 @@ import {
     AccountWithEmailFragment,
     AccountWithEmailQuery,
 } from "../api/kamu.graphql.interface";
-import { MaybeNull } from "../common/app.types";
 import { ToastrService } from "ngx-toastr";
 
 @Injectable({
@@ -30,15 +29,10 @@ export class AccountEmailService {
         this.emitRenameAccountEmailErrorOccurred("");
     }
 
-    public fetchAccountWithEmail(accountName: string): Observable<MaybeNull<AccountWithEmailFragment>> {
+    public fetchAccountWithEmail(accountName: string): Observable<AccountWithEmailFragment> {
         return this.accountApi.fetchAccountWithEmail(accountName).pipe(
-            map((data: MaybeNull<AccountWithEmailQuery>) => {
-                if (data) {
-                    return data.accounts.byName as AccountWithEmailFragment;
-                } else {
-                    this.toastrService.error("Account not found");
-                    return null;
-                }
+            map((data: AccountWithEmailQuery) => {
+                return data.accounts.byName as AccountWithEmailFragment;
             }),
         );
     }
@@ -50,7 +44,7 @@ export class AccountEmailService {
                     this.toastrService.success(data.accounts.byName.updateEmail.message);
                     return true;
                 } else {
-                    this.emitRenameAccountEmailErrorOccurred(data.accounts.byName?.updateEmail.message ?? "");
+                    this.emitRenameAccountEmailErrorOccurred(data.accounts.byName?.updateEmail.message as string);
                     return false;
                 }
             }),

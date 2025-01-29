@@ -12,9 +12,8 @@ import {
     mockGithubLoginResponse,
     mockPasswordLoginResponse,
 } from "src/app/api/mock/auth.mock";
-import { GithubLoginCredentials, PasswordLoginCredentials } from "src/app/api/auth.api.model";
+import { GithubLoginCredentials, LoginResponseType, PasswordLoginCredentials } from "src/app/api/auth.api.model";
 import { AuthenticationError } from "src/app/common/errors";
-import { LoginResponse } from "src/app/api/kamu.graphql.interface";
 import { MaybeUndefined } from "src/app/common/app.types";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { LocalStorageService } from "src/app/services/local-storage.service";
@@ -152,9 +151,9 @@ describe("LoginService", () => {
     });
 
     it("custom login callback", () => {
-        let callbackLoginResponse: MaybeUndefined<LoginResponse>;
+        let callbackLoginResponse: MaybeUndefined<LoginResponseType>;
 
-        service.setLoginCallback((loginResponse: LoginResponse) => {
+        service.setLoginCallback((loginResponse: LoginResponseType) => {
             callbackLoginResponse = loginResponse;
         });
 

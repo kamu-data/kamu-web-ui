@@ -9,11 +9,10 @@ import {
     GetEnabledLoginMethodsQuery,
     LoginGQL,
     LoginMutation,
-    LoginResponse,
 } from "./kamu.graphql.interface";
 import { MutationResult } from "apollo-angular";
 import { AuthenticationError } from "../common/errors";
-import { GithubLoginCredentials, PasswordLoginCredentials } from "./auth.api.model";
+import { GithubLoginCredentials, LoginResponseType, PasswordLoginCredentials } from "./auth.api.model";
 import { LoginMethod } from "../app-config.model";
 import { ApolloQueryResult } from "@apollo/client";
 
@@ -34,18 +33,20 @@ export class AuthApi {
         );
     }
 
-    public fetchAccountAndTokenFromPasswordLogin(credentials: PasswordLoginCredentials): Observable<LoginResponse> {
+    public fetchAccountAndTokenFromPasswordLogin(credentials: PasswordLoginCredentials): Observable<LoginResponseType> {
         return this.fetchAccountAndTokenFromLoginMethod(LoginMethod.PASSWORD, JSON.stringify(credentials));
     }
 
-    public fetchAccountAndTokenFromGithubCallbackCode(credentials: GithubLoginCredentials): Observable<LoginResponse> {
+    public fetchAccountAndTokenFromGithubCallbackCode(
+        credentials: GithubLoginCredentials,
+    ): Observable<LoginResponseType> {
         return this.fetchAccountAndTokenFromLoginMethod(LoginMethod.GITHUB, JSON.stringify(credentials));
     }
 
     public fetchAccountAndTokenFromLoginMethod(
         loginMethod: string,
         loginCredentialsJson: string,
-    ): Observable<LoginResponse> {
+    ): Observable<LoginResponseType> {
         return this.loginGQL
             .mutate(
                 { login_method: loginMethod, login_credentials_json: loginCredentialsJson },
@@ -68,7 +69,7 @@ export class AuthApi {
                 map((result: MutationResult<LoginMutation>) => {
                     /* istanbul ignore else */
                     if (result.data) {
-                        return result.data.auth.login as LoginResponse;
+                        return result.data.auth.login;
                     } else {
                         // Normally, this code should not be reachable
                         throw new AuthenticationError(result.errors ?? []);

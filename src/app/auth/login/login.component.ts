@@ -13,6 +13,7 @@ import { LocalStorageService } from "src/app/services/local-storage.service";
 import { LoginFormType } from "./login.component.model";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AppConfigService } from "src/app/app-config.service";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-login",
@@ -29,6 +30,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
     private fb = inject(FormBuilder);
     private loginService = inject(LoginService);
     private appConfigService = inject(AppConfigService);
+    private navigationService = inject(NavigationService);
 
     public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;
     public readonly LoginMethod = LoginMethod;
@@ -42,20 +44,28 @@ export class LoginComponent extends BaseComponent implements OnInit {
         this.loginService.passwordLoginErrorOccurrences.pipe(shareReplay());
 
     public ngOnInit(): void {
-        const loginMethods: LoginMethod[] = this.loginService.loginMethods;
-        if (loginMethods.length === 1) {
-            this.onSelectedLoginMethod(loginMethods[0]);
-        } else if (loginMethods.length === 0) {
-            throw new Error(LoginComponent.ERROR_ZERO_METHODS_IN_CONFIG);
+        const redirectUrl = this.route.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL);
+        if (redirectUrl && this.localStorageService.accessToken) {
+            this.navigationService.navigateToReplacedPath(redirectUrl);
+        } else if (redirectUrl) {
+            this.localStorageService.setRedirectAfterLoginUrl(redirectUrl);
+            this.navigationService.navigateToReplacedPath(ProjectLinks.URL_LOGIN);
+        } else {
+            const loginMethods: LoginMethod[] = this.loginService.loginMethods;
+            if (loginMethods.length === 1) {
+                this.onSelectedLoginMethod(loginMethods[0]);
+            } else if (loginMethods.length === 0) {
+                throw new Error(LoginComponent.ERROR_ZERO_METHODS_IN_CONFIG);
+            }
+
+            this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((queryParams: Params) => {
+                const callbackUrl: MaybeUndefined<string> = queryParams[
+                    ProjectLinks.URL_QUERY_PARAM_CALLBACK_URL
+                ] as MaybeUndefined<string>;
+
+                this.localStorageService.setLoginCallbackUrl(callbackUrl ?? null);
+            });
         }
-
-        this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((queryParams: Params) => {
-            const callbackUrl: MaybeUndefined<string> = queryParams[
-                ProjectLinks.URL_QUERY_PARAM_CALLBACK_URL
-            ] as MaybeUndefined<string>;
-
-            this.localStorageService.setLoginCallbackUrl(callbackUrl ?? null);
-        });
     }
 
     public get loginControl(): MaybeNull<AbstractControl> {

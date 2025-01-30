@@ -21,10 +21,10 @@ import { OverviewHistorySummaryHeaderComponent } from "src/app/common/components
 import { ReadmeSectionComponent } from "./components/readme-section/readme-section.component";
 import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
 import { DisplayTimeComponent } from "src/app/common/components/display-time/display-time.component";
-import { DisplayHashComponent } from "src/app/components/display-hash/display-hash.component";
+import { DisplayHashComponent } from "src/app/common/components/display-hash/display-hash.component";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ToastrModule } from "ngx-toastr";
-import { DynamicTableComponent } from "src/app/components/dynamic-table/dynamic-table.component";
+import { DynamicTableComponent } from "src/app/common/components/dynamic-table/dynamic-table.component";
 import { MatTableModule } from "@angular/material/table";
 import { RouterTestingModule } from "@angular/router/testing";
 import { mockSetLicense } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";

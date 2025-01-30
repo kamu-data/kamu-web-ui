@@ -1,5 +1,5 @@
 import { SavedQueriesSectionComponent } from "../shared/saved-queries-section/saved-queries-section.component";
-import { DynamicTableModule } from "./../../components/dynamic-table/dynamic-table.module";
+import { DynamicTableModule } from "./../../common/components/dynamic-table/dynamic-table.module";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { GlobalQueryComponent } from "./global-query.component";
 import { EditorModule } from "src/app/shared/editor/editor.module";

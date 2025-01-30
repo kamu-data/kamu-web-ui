@@ -1,4 +1,3 @@
-import { TEST_BLOCK_HASH } from "../../api/mock/dataset.mock";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import {
     emitClickOnElementByDataTestId,
@@ -13,6 +12,7 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { RouterModule } from "@angular/router";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { MatIconModule } from "@angular/material/icon";
+import { TEST_BLOCK_HASH } from "src/app/api/mock/dataset.mock";
 
 describe("DisplayHashComponent", () => {
     let component: DisplayHashComponent;

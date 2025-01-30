@@ -13,7 +13,7 @@ import ProjectLinks from "src/app/project-links";
 import { AccountPageQueryParams } from "./account.component.model";
 import { DatasetsTabComponent } from "./additional-components/datasets-tab/datasets-tab.component";
 import AppValues from "src/app/common/values/app.values";
-import { DatasetListItemComponent } from "src/app/components/dataset-list-item/dataset-list-item.component";
+import { DatasetListItemComponent } from "src/app/common/components/dataset-list-item/dataset-list-item.component";
 import { PaginationComponent } from "src/app/common/components/pagination-component/pagination.component";
 import { NgbPaginationModule, NgbPopoverModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
 import { DisplayTimeComponent } from "src/app/common/components/display-time/display-time.component";

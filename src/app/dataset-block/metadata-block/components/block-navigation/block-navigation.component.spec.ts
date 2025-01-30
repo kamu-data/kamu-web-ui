@@ -12,7 +12,7 @@ import {
 } from "src/app/common/helpers/base-test.helpers.spec";
 import { PaginationModule } from "src/app/common/components/pagination-component/pagination.module";
 import { MatIconModule } from "@angular/material/icon";
-import { DisplayHashModule } from "src/app/components/display-hash/display-hash.module";
+import { DisplayHashModule } from "src/app/common/components/display-hash/display-hash.module";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ToastrModule } from "ngx-toastr";
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";

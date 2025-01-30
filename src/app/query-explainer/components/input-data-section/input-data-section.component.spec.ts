@@ -6,7 +6,7 @@ import {
     mockQueryExplainerResponse,
     mockVerifyQueryResponseSuccess,
 } from "../../query-explainer.mocks";
-import { DisplayHashModule } from "src/app/components/display-hash/display-hash.module";
+import { DisplayHashModule } from "src/app/common/components/display-hash/display-hash.module";
 import { HIGHLIGHT_OPTIONS, HighlightModule } from "ngx-highlightjs";
 import { ToastrModule } from "ngx-toastr";
 import { ActivatedRoute, RouterModule } from "@angular/router";

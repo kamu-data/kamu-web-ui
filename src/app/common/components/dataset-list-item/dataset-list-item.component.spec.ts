@@ -1,4 +1,3 @@
-import { NavigationService } from "../../services/navigation.service";
 import { MatIconModule } from "@angular/material/icon";
 import { MatChipsModule } from "@angular/material/chips";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
@@ -12,6 +11,7 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { RouterModule } from "@angular/router";
 import { DatasetVisibilityModule } from "../dataset-visibility/dataset-visibility.module";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("DatasetListItemComponent", () => {
     let component: DatasetListItemComponent;

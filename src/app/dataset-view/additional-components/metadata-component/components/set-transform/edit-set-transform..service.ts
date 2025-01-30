@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { SetTransform, SqlQueryStep, TransformInput } from "src/app/api/kamu.graphql.interface";
 import { parse } from "yaml";
 import { EditSetTransformParseType, SetTransformYamlType } from "./set-transform.types";
-import { BaseYamlEventService } from "src/app/common/base-yaml-event.service";
+import { BaseYamlEventService } from "src/app/services/base-yaml-event.service";
 
 @Injectable({
     providedIn: "root",

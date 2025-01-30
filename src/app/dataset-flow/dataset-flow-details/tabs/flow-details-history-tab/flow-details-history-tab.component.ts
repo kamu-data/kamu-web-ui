@@ -6,8 +6,8 @@ import {
     TaskStatus,
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowDetailsHelpers } from "./flow-details-history-tab.helpers";
-import { BaseComponent } from "src/app/common/base.component";
-import { DataHelpers } from "src/app/common/data.helpers";
+import { BaseComponent } from "src/app/common/components/base.component";
+import { DataHelpers } from "src/app/common/helpers/data.helpers";
 
 @Component({
     selector: "app-flow-details-history-tab",

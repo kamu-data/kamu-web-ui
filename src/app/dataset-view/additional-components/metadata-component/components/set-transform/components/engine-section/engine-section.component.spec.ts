@@ -8,7 +8,7 @@ import { mockEngines } from "../../mock.data";
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 import { mockSetPollingSourceEvent } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { EngineSelectComponent } from "./components/engine-select/engine-select.component";
 
 describe("EngineSectionComponent", () => {

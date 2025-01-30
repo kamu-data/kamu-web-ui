@@ -3,7 +3,7 @@ import { ReadmeSectionComponent } from "./readme-section.component";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
 import { SecurityContext, SimpleChanges } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
@@ -13,7 +13,7 @@ import {
     emitClickOnElementByDataTestId,
     findNativeElement,
     registerMatSvgIcons,
-} from "src/app/common/base-test.helpers.spec";
+} from "src/app/common/helpers/base-test.helpers.spec";
 import { EditMode } from "./readme-section.types";
 import { of } from "rxjs";
 import { LoggedUserService } from "src/app/auth/logged-user.service";

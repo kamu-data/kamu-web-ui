@@ -1,4 +1,4 @@
-import { extractSchemaFieldsFromData } from "../../../../../../../common/table.helper";
+import { extractSchemaFieldsFromData } from "../../../../../../../common/helpers/table.helper";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { EnvVar } from "src/app/api/kamu.graphql.interface";
 import { DataRow, DataSchemaField, OperationColumnClassEnum } from "src/app/interface/dataset.interface";

@@ -7,8 +7,8 @@ import { NgbTypeaheadModule, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/n
 import { MatIconModule } from "@angular/material/icon";
 import { FormsModule } from "@angular/forms";
 import { of } from "rxjs";
-import AppValues from "src/app/common/app.values";
-import { dispatchInputEvent, emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import AppValues from "src/app/common/values/app.values";
+import { dispatchInputEvent, emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 import { mockDatasetBasicsDerivedFragment, mockDatasetInfo } from "src/app/search/mock.data";
 import { SearchApi } from "src/app/api/search.api";
@@ -16,7 +16,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { mockGetDatasetSchemaQuery } from "../../mock.data";
 import { DatasetNode } from "../../set-transform.types";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
 describe("SearchSectionComponent", () => {
     let component: SearchSectionComponent;

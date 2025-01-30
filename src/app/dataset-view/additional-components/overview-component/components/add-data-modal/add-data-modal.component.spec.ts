@@ -1,4 +1,4 @@
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AddDataModalComponent } from "./add-data-modal.component";
@@ -10,7 +10,7 @@ import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { FileFromUrlModalComponent } from "../file-from-url-modal/file-from-url-modal.component";
 import { FileUploadService } from "src/app/services/file-upload.service";
 import { mockFile } from "src/app/api/mock/upload-file.mock";
-import { ModalService } from "src/app/components/modal/modal.service";
+import { ModalService } from "src/app/common/components/modal/modal.service";
 import { of } from "rxjs";
 
 describe("AddDataModalComponent", () => {

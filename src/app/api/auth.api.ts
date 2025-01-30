@@ -11,10 +11,10 @@ import {
     LoginMutation,
 } from "./kamu.graphql.interface";
 import { MutationResult } from "apollo-angular";
-import { AuthenticationError } from "../common/errors";
 import { GithubLoginCredentials, LoginResponseType, PasswordLoginCredentials } from "./auth.api.model";
 import { LoginMethod } from "../app-config.model";
 import { ApolloQueryResult } from "@apollo/client";
+import { AuthenticationError } from "../common/values/errors";
 
 @Injectable({
     providedIn: "root",

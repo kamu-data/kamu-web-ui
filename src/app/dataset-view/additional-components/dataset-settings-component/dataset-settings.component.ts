@@ -1,4 +1,4 @@
-import { MaybeNull } from "./../../../common/app.types";
+import { MaybeNull } from "../../../common/types/app.types";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import {
     DatasetBasicsFragment,
@@ -6,7 +6,7 @@ import {
     DatasetOverviewFragment,
     DatasetPermissionsFragment,
 } from "src/app/api/kamu.graphql.interface";
-import { BaseComponent } from "src/app/common/base.component";
+import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetSettingsSidePanelItem, SettingsTabsEnum, datasetSettingsSidePanelData } from "./dataset-settings.model";
 import { AppConfigService } from "src/app/app-config.service";
 import { ParamMap } from "@angular/router";

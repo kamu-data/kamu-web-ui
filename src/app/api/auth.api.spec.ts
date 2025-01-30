@@ -18,7 +18,7 @@ import {
     TEST_LOGIN,
     TEST_PASSWORD,
 } from "./mock/auth.mock";
-import { AuthenticationError } from "../common/errors";
+import { AuthenticationError } from "../common/values/errors";
 import { first } from "rxjs/operators";
 import { GithubLoginCredentials, PasswordLoginCredentials } from "./auth.api.model";
 import { LoginMethod } from "../app-config.model";

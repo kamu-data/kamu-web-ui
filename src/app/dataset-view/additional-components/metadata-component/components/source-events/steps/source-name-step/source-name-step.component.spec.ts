@@ -4,7 +4,7 @@ import { SourceNameStepComponent } from "./source-name-step.component";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
 describe("SourceNameStepComponent", () => {
     let component: SourceNameStepComponent;

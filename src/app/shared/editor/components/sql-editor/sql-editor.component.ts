@@ -17,7 +17,7 @@ import { BaseEditorComponent } from "../base-editor/base-editor.component";
 import { getSqlError } from "../../helpers/editor-error-formatter";
 import { fromEvent, filter, take, Subscription, takeWhile } from "rxjs";
 import { EditorComponent } from "ngx-monaco-editor-v2";
-import AppValues from "src/app/common/app.values";
+import AppValues from "src/app/common/values/app.values";
 
 const SQL_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
     theme: "vs",

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetNamePropertyComponent } from "./dataset-name-property.component";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { RouterModule } from "@angular/router";
 
 describe("DatasetNamePropertyComponent", () => {

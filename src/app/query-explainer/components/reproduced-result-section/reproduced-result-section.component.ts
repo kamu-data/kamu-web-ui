@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { QueryExplainerOutputType } from "../../query-explainer.types";
-import { extractSchemaFieldsFromData } from "src/app/common/table.helper";
+import { extractSchemaFieldsFromData } from "src/app/common/helpers/table.helper";
 import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
-import { parseDataFromJsonAoSFormat } from "src/app/common/data.helpers";
+import { parseDataFromJsonAoSFormat } from "src/app/common/helpers/data.helpers";
 
 @Component({
     selector: "app-reproduced-result-section",

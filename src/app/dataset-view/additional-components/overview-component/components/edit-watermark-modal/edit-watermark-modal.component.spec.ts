@@ -9,9 +9,9 @@ import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-
 import { FormsModule } from "@angular/forms";
 import timekeeper from "timekeeper";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
-import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { of } from "rxjs";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { LoggedUserService } from "src/app/auth/logged-user.service";

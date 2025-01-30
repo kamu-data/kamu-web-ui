@@ -16,7 +16,7 @@ import {
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
     registerMatSvgIcons,
-} from "src/app/common/base-test.helpers.spec";
+} from "src/app/common/helpers/base-test.helpers.spec";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { ChangeDetectionStrategy } from "@angular/core";
@@ -29,7 +29,7 @@ import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { SharedModule } from "src/app/shared/shared/shared.module";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { BatchingTriggerModule } from "./tabs/scheduling/batching-trigger-form/batching-trigger.module";
-import { DatasetVisibilityModule } from "src/app/components/dataset-visibility/dataset-visibility.module";
+import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
 
 describe("DatasetSettingsComponent", () => {
     let component: DatasetSettingsComponent;

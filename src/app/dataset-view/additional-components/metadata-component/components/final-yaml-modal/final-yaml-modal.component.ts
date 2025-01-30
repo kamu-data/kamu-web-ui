@@ -1,4 +1,4 @@
-import { BaseComponent } from "src/app/common/base.component";
+import { BaseComponent } from "src/app/common/components/base.component";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetInfo } from "src/app/interface/navigation.interface";

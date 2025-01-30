@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { SelectKindFieldComponent } from "./select-kind-field.component";
 import { FetchKind } from "../../source-events/add-polling-source/add-polling-source-form.types";
-import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { FETCH_STEP_RADIO_CONTROLS } from "../../source-events/add-polling-source/form-control.source";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatIconModule } from "@angular/material/icon";

@@ -5,7 +5,7 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { AccountApi } from "../api/account.api";
 import { TEST_LOGIN, TEST_PAGE_NUMBER, mockAccountDetails } from "../api/mock/auth.mock";
 import { first, of } from "rxjs";
-import { MaybeNull, MaybeUndefined } from "../common/app.types";
+import { MaybeNull, MaybeUndefined } from "../common/types/app.types";
 import { AccountFlowFilters, AccountFragment, Dataset } from "../api/kamu.graphql.interface";
 import { mockDatasetsByAccountNameQuery } from "../api/mock/dataset.mock";
 import { DatasetsAccountResponse } from "../interface/dataset.interface";

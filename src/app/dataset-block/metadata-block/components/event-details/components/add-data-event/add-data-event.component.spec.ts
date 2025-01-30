@@ -12,8 +12,8 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { TooltipIconComponent } from "../../../tooltip-icon/tooltip-icon.component";
 import { MatIconModule } from "@angular/material/icon";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
-import { SharedTestModule } from "src/app/common/shared-test.module";
-import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 
 describe("AddDataEventComponent", () => {
     let component: AddDataEventComponent;

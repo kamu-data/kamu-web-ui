@@ -1,4 +1,4 @@
-import { MaybeNull } from "./../common/app.types";
+import { MaybeNull } from "../common/types/app.types";
 import { inject, Injectable } from "@angular/core";
 import { AccessTokenApi } from "../api/access-token.api";
 import { Observable, map } from "rxjs";

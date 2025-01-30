@@ -3,13 +3,13 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 
 import { LoadMoreComponent } from "./load-more.component";
-import AppValues from "../../../common/app.values";
+import AppValues from "../../../common/values/app.values";
 import { FormsModule } from "@angular/forms";
 import {
     dispatchInputEvent,
     emitClickOnElement,
     emitClickOnElementByDataTestId,
-} from "../../../common/base-test.helpers.spec";
+} from "../../../common/helpers/base-test.helpers.spec";
 
 describe("LoadMoreComponent", () => {
     let component: LoadMoreComponent;

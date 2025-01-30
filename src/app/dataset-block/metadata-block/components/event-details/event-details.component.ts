@@ -1,4 +1,4 @@
-import { MaybeNull, MaybeUndefined } from "./../../../../common/app.types";
+import { MaybeNull, MaybeUndefined } from "../../../../common/types/app.types";
 import { SetVocabEventComponent } from "./components/set-vocab-event/set-vocab-event.component";
 import { SupportedEvents } from "./supported.events";
 import {
@@ -16,7 +16,7 @@ import { BlockService } from "../../block.service";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { Observable } from "rxjs";
 import { SetPollingSourceEventComponent } from "./components/set-polling-source-event/set-polling-source-event.component";
-import { BaseComponent } from "src/app/common/base.component";
+import { BaseComponent } from "src/app/common/components/base.component";
 import { AddPushSourceEventComponent } from "./components/add-push-source-event/add-push-source-event.component";
 import { UnsupportedEventComponent } from "./components/unsupported-event/unsupported-event.component";
 import { SetDataSchemaEventComponent } from "./components/set-data-schema-event/set-data-schema-event.component";

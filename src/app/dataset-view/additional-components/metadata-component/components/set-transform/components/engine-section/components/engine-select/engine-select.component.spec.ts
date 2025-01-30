@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { EngineSelectComponent } from "./engine-select.component";
 import { mockEngines } from "../../../../mock.data";
-import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { Engine } from "../../engine-section.types";
 
 describe("EngineSelectComponent", () => {

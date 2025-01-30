@@ -1,4 +1,4 @@
-import { SqlExecutionError } from "../common/errors";
+import { SqlExecutionError } from "../common/values/errors";
 import {
     BlockRef,
     CompareChainsResultStatus,
@@ -32,13 +32,13 @@ import {
 import { DatasetSubscriptionsService } from "./dataset.subscriptions.service";
 import { DatasetHistoryUpdate, MetadataSchemaUpdate, OverviewUpdate } from "./dataset.subscriptions.interface";
 import { DatasetApi } from "../api/dataset.api";
-import { DatasetNotFoundError } from "../common/errors";
+import { DatasetNotFoundError } from "../common/values/errors";
 import { map } from "rxjs/operators";
-import { MaybeNull } from "../common/app.types";
-import { parseCurrentSchema } from "../common/app.helpers";
+import { MaybeNull } from "../common/types/app.types";
+import { parseCurrentSchema } from "../common/helpers/app.helpers";
 import { APOLLO_OPTIONS } from "apollo-angular";
-import { resetCacheHelper } from "../apollo-cache.helper";
-import { parseDataRows } from "../common/data.helpers";
+import { resetCacheHelper } from "../common/helpers/apollo-cache.helper";
+import { parseDataRows } from "../common/helpers/data.helpers";
 
 @Injectable({ providedIn: "root" })
 export class DatasetService {

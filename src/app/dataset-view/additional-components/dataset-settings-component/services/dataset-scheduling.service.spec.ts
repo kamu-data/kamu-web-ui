@@ -1,4 +1,4 @@
-import AppValues from "src/app/common/app.values";
+import AppValues from "src/app/common/values/app.values";
 import { NavigationService } from "./../../../../services/navigation.service";
 import { TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { DatasetSchedulingService } from "./dataset-scheduling.service";

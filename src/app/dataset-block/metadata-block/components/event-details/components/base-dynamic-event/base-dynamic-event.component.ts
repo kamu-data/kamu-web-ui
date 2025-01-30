@@ -12,7 +12,7 @@ import {
 } from "@angular/core";
 import { EventRow, EventSection } from "../../dynamic-events/dynamic-events.model";
 import { BasePropertyComponent } from "../common/base-property/base-property.component";
-import { BaseComponent } from "src/app/common/base.component";
+import { BaseComponent } from "src/app/common/components/base.component";
 
 @Component({
     selector: "app-dynamic-base-event",

@@ -13,9 +13,9 @@ import {
 import { QueriesSectionComponent } from "../../../set-transform/components/queries-section/queries-section.component";
 import { EngineSectionComponent } from "../../../set-transform/components/engine-section/engine-section.component";
 import { MatIconModule } from "@angular/material/icon";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { ChangeDetectionStrategy } from "@angular/core";
-import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { EditorModule } from "../../../../../../../shared/editor/editor.module";
 
 describe("PreprocessStepComponent", () => {

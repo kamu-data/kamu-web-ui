@@ -1,5 +1,5 @@
 import { Directive, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
-import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
+import { MaybeNull, MaybeUndefined } from "src/app/common/types/app.types";
 
 import * as monaco from "monaco-editor";
 import { getDefaultError } from "../../helpers/editor-error-formatter";

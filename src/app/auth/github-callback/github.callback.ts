@@ -1,7 +1,7 @@
 import { NavigationService } from "../../services/navigation.service";
 import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { ActivatedRoute, Params } from "@angular/router";
-import { BaseComponent } from "src/app/common/base.component";
+import { BaseComponent } from "src/app/common/components/base.component";
 import { LoginService } from "../login/login.service";
 import { GithubLoginCredentials } from "src/app/api/auth.api.model";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { extractSchemaFieldsFromData } from "src/app/common/table.helper";
+import { extractSchemaFieldsFromData } from "src/app/common/helpers/table.helper";
 import { DataRow, DataSchemaField, OperationColumnClassEnum } from "src/app/interface/dataset.interface";
 import { BasePropertyComponent } from "../base-property/base-property.component";
 

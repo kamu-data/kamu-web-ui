@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { EnginePropertyComponent } from "./engine-property.component";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
 describe("EnginePropertyComponent", () => {
     let component: EnginePropertyComponent;

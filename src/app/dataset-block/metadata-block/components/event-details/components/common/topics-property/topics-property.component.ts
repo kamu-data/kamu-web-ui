@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MqttTopicSubscription } from "src/app/api/kamu.graphql.interface";
 import { BasePropertyComponent } from "../base-property/base-property.component";
 import { DataRow, DataSchemaField, OperationColumnClassEnum } from "src/app/interface/dataset.interface";
-import { extractSchemaFieldsFromData } from "src/app/common/table.helper";
+import { extractSchemaFieldsFromData } from "src/app/common/helpers/table.helper";
 
 @Component({
     selector: "app-topics-property",

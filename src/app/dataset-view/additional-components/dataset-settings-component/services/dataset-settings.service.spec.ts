@@ -6,7 +6,7 @@ import { DatasetApi } from "src/app/api/dataset.api";
 import { NavigationService } from "src/app/services/navigation.service";
 import { of } from "rxjs";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { DatasetNotFoundError, DatasetOperationError } from "src/app/common/errors";
+import { DatasetNotFoundError, DatasetOperationError } from "src/app/common/values/errors";
 import {
     mockDeleteDanglingReferenceError,
     mockDeleteSuccessResponse,

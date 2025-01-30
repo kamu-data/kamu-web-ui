@@ -1,4 +1,4 @@
-import { MaybeNull } from "src/app/common/app.types";
+import { MaybeNull } from "src/app/common/types/app.types";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import {
     Dataset,
@@ -9,9 +9,9 @@ import {
     FlowStatus,
 } from "src/app/api/kamu.graphql.interface";
 import { TileBaseWidgetHelpers } from "./tile-base-widget.helpers";
-import { DataHelpers } from "src/app/common/data.helpers";
-import AppValues from "src/app/common/app.values";
-import { MaybeNullOrUndefined } from "../../app.types";
+import { DataHelpers } from "src/app/common/helpers/data.helpers";
+import AppValues from "src/app/common/values/app.values";
+import { MaybeNullOrUndefined } from "../../types/app.types";
 import ProjectLinks from "src/app/project-links";
 import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 

@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetSettingsSecretsManagerTabComponent } from "./dataset-settings-secrets-manager-tab.component";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { PaginationComponent } from "src/app/components/pagination-component/pagination.component";
+import { PaginationComponent } from "src/app/common/components/pagination-component/pagination.component";
 import { MatDividerModule } from "@angular/material/divider";
 import { HttpClientModule } from "@angular/common/http";
 import { ActivatedRoute } from "@angular/router";
@@ -17,10 +17,10 @@ import { of } from "rxjs";
 import { MOCK_ENV_VAR_ID, mockListEnvVariablesQuery } from "src/app/api/mock/environment-variables-and-secrets.mock";
 import { ViewDatasetEnvVarConnection } from "src/app/api/kamu.graphql.interface";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { ModalService } from "src/app/components/modal/modal.service";
+import { ModalService } from "src/app/common/components/modal/modal.service";
 import { EditKeyValueModalComponent } from "./components/edit-key-value-modal/edit-key-value-modal.component";
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
+import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 
 export class MockNgbModalRef {
     result: Promise<unknown> = new Promise((resolve) => resolve("x"));

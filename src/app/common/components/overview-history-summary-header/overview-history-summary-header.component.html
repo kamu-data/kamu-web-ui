@@ -1,0 +1,96 @@
+<div class="overview-summary-background">
+    <div class="box-header position-relative" *ngIf="metadataBlockFragment">
+        <div class="d-flex border-bottom-0 align-items-center flex-wrap">
+            <div class="flex-shrink-0 ml-n1 mr-n1 mt-n1 mb-n1 hx_avatar_stack_commit">
+                <div class="align-self-start">
+                    <div>
+                        <a>
+                            <img
+                                data-test-selector="commits-avatar-stack-avatar-image"
+                                [src]="authorInfo.avatarUrl || DEFAULT_AVATAR_URL"
+                                class="avatar-image"
+                            />
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-grow-1 d-flex align-items-center ms-3 min-width-0">
+                <div class="css-truncate css-truncate-overflow color-fg-muted">
+                    <a
+                        class="commit-author user-mention"
+                        *ngIf="authorInfo?.accountName"
+                        [title]="'Account name: ' + authorInfo.accountName"
+                        [routerLink]="['/', authorInfo.accountName]"
+                        >{{ authorInfo.accountName }}</a
+                    >
+                    <span class="d-none d-sm-inline mb-0 ml-3">
+                        <a
+                            *ngIf="metadataBlockFragment?.event"
+                            class="link--primary"
+                            data-test-id="navigate-to-metadata-block"
+                            [routerLink]="[
+                                '/',
+                                metadataBlockFragment.author.accountName,
+                                datasetName,
+                                URL_BLOCK,
+                                metadataBlockFragment.blockHash,
+                            ]"
+                            >{{ descriptionForMetadataBlock }}</a
+                        >
+                    </span>
+                </div>
+                <span class="hidden-text-expander m-2 d-inline-block d-inline-block d-lg-none">
+                    <button
+                        id="more-button"
+                        type="button"
+                        class="color-fg-default ellipsis-expander js-details-target"
+                        aria-expanded="false"
+                    >
+                        …
+                    </button>
+                </span>
+                <div
+                    *ngIf="metadataBlockFragment"
+                    class="d-flex flex-auto justify-content-end ml-3 align-items-baseline"
+                >
+                    <app-display-hash
+                        [value]="metadataBlockFragment.blockHash"
+                        [navigationTargetDataset]="{
+                            accountName: metadataBlockFragment.author.accountName,
+                            datasetName: this.datasetName,
+                        }"
+                        [class]="'f6 link--secondary text-mono ml-2 d-none d-lg-inline'"
+                    />
+                    <a class="link--secondary ml-3">
+                        <app-display-time
+                            [data]="systemTime"
+                            class="no-wrap"
+                            [dataTestId]="'time-overview-history-summary'"
+                        />
+                    </a>
+                </div>
+            </div>
+            <div class="flex-shrink-0">
+                <h2 class="sr-only">Git stats</h2>
+                <ul class="list-unstyled d-flex mb-0 ml-3">
+                    <li class="ml-0 ml-md-3">
+                        <a
+                            data-pjax="#repo-content-pjax-container"
+                            [routerLink]="['/', metadataBlockFragment.author.accountName, this.datasetName]"
+                            [queryParams]="{ tab: DatasetViewTypeEnum.History }"
+                            class="pl-3 d-flex align-items-center pr-3 py-3 p-md-0 mt-n3 mb-n3 mr-n3 m-md-0 link--primary text-decoration-none flex-nowrap"
+                        >
+                            <span class="mr-1 mt-1">
+                                <mat-icon class="mat-icon-size" svgIcon="history" />
+                            </span>
+                            <span class="d-none d-sm-inline">
+                                <strong>{{ numBlocksTotal }}</strong>
+                                <span> blocks </span>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

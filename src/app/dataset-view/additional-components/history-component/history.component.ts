@@ -1,9 +1,9 @@
 import { Observable } from "rxjs";
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from "@angular/core";
-import { BaseComponent } from "src/app/common/base.component";
+import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetHistoryUpdate } from "../../dataset.subscriptions.interface";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
-import { MaybeNull } from "src/app/common/app.types";
+import { MaybeNull } from "src/app/common/types/app.types";
 
 @Component({
     selector: "app-history",

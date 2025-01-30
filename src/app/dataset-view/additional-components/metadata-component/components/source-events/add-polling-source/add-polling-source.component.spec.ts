@@ -19,7 +19,7 @@ import {
 } from "src/app/search/mock.data";
 import { DatasetPageInfoFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { EditPollingSourceService } from "./edit-polling-source.service";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { DatasetCommitService } from "../../../../overview-component/services/dataset-commit.service";
 import { PrepareStepComponent } from "../steps/prepare-step/prepare-step.component";
 import { MatStepperModule } from "@angular/material/stepper";
@@ -32,7 +32,7 @@ import { DatasetNavigationParams } from "src/app/interface/navigation.interface"
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { EditorModule } from "src/app/shared/editor/editor.module";
 import { EventTimeSourceKind, FetchKind, MergeKind, ReadKind } from "./add-polling-source-form.types";
-import { OdfDefaultValues } from "src/app/common/app-odf-default.values";
+import { OdfDefaultValues } from "src/app/common/values/app-odf-default.values";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 

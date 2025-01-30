@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { NgbActiveModal, NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { BaseComponent } from "src/app/common/base.component";
+import { BaseComponent } from "src/app/common/components/base.component";
 import { FileFromUrlModalComponent } from "../file-from-url-modal/file-from-url-modal.component";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { FileUploadService } from "src/app/services/file-upload.service";
-import { ModalService } from "src/app/components/modal/modal.service";
+import { ModalService } from "src/app/common/components/modal/modal.service";
 import { AppConfigService } from "src/app/app-config.service";
-import { promiseWithCatch } from "src/app/common/app.helpers";
+import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 
 @Component({

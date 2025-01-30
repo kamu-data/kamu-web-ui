@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { CachePropertyComponent } from "./cache-property.component";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
 describe("CachePropertyComponent", () => {
     let component: CachePropertyComponent;

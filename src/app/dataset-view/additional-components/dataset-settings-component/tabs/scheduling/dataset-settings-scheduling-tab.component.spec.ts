@@ -4,7 +4,7 @@ import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ToastrModule } from "ngx-toastr";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatRadioModule } from "@angular/material/radio";
@@ -15,7 +15,7 @@ import {
 } from "src/app/search/mock.data";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
-import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { TimeDelta, TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { of } from "rxjs";
 import {
@@ -31,9 +31,9 @@ import {
     IngestConfigurationFormType,
     PollingGroupType,
 } from "./dataset-settings-scheduling-tab.component.types";
-import { MaybeNull } from "src/app/common/app.types";
+import { MaybeNull } from "src/app/common/types/app.types";
 import { PollingGroupEnum } from "../../dataset-settings.model";
-import { cronExpressionValidator } from "src/app/common/data.helpers";
+import { cronExpressionValidator } from "src/app/common/helpers/data.helpers";
 
 describe("DatasetSettingsSchedulingTabComponent", () => {
     let component: DatasetSettingsSchedulingTabComponent;

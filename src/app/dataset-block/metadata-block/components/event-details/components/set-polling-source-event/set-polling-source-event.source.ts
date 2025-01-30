@@ -12,7 +12,7 @@ import { StepTypePropertyComponent } from "../common/step-type-property/step-typ
 import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
 import { getSourcesDescriptors } from "../common-sources/sources-event.source";
 import { TopicsPropertyComponent } from "../common/topics-property/topics-property.component";
-import { YamlEventViewerComponent } from "../common/yaml-event-viewer/yaml-event-viewer.component";
+import { YamlEventViewerComponent } from "../../../../../../common/components/yaml-event-viewer/yaml-event-viewer.component";
 
 export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetPollingSource.FetchStepUrl.__typename": {

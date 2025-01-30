@@ -14,8 +14,8 @@ import {
     FlowTriggerType,
     TaskStatus,
 } from "src/app/api/kamu.graphql.interface";
-import AppValues from "src/app/common/app.values";
-import { DataHelpers } from "src/app/common/data.helpers";
+import AppValues from "src/app/common/values/app.values";
+import { DataHelpers } from "src/app/common/helpers/data.helpers";
 
 export class DatasetFlowDetailsHelpers {
     public static flowEventDescription(

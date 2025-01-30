@@ -4,7 +4,7 @@ import { mockFlowsOutcome, mockFlowSummaryDataFragments } from "src/app/api/mock
 import { NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
 import { FlowOutcomeDataFragment } from "src/app/api/kamu.graphql.interface";
 import { mockDatasets } from "../flows-table/flows-table.helpers.mock";
-import { findElementByDataTestId } from "../../base-test.helpers.spec";
+import { findElementByDataTestId } from "../../helpers/base-test.helpers.spec";
 
 describe("TileBaseWidgetComponent", () => {
     let component: TileBaseWidgetComponent;

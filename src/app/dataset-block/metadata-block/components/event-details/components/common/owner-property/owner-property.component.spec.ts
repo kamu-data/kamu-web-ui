@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { OwnerPropertyComponent } from "./owner-property.component";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { AccountBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { RouterModule } from "@angular/router";
 

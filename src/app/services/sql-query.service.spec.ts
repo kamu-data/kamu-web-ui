@@ -10,7 +10,7 @@ import {
 import { Apollo } from "apollo-angular";
 import { DataQueryResultError } from "../api/kamu.graphql.interface";
 import { DataSqlErrorUpdate } from "../dataset-view/dataset.subscriptions.interface";
-import { SqlExecutionError } from "../common/errors";
+import { SqlExecutionError } from "../common/values/errors";
 
 describe("SqlQueryService", () => {
     let service: SqlQueryService;

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { SetDataSchema } from "src/app/api/kamu.graphql.interface";
-import { parseCurrentSchema } from "src/app/common/app.helpers";
-import { MaybeNull } from "src/app/common/app.types";
-import { BaseComponent } from "src/app/common/base.component";
+import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";
+import { MaybeNull } from "src/app/common/types/app.types";
+import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetSchema } from "src/app/interface/dataset.interface";
 
 @Component({

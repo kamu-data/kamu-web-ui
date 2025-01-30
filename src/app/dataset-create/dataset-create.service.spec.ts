@@ -14,7 +14,7 @@ import { NavigationService } from "../services/navigation.service";
 import { DatasetCreateService } from "./dataset-create.service";
 import { LoggedUserService } from "../auth/logged-user.service";
 import { mockAccountDetails } from "../api/mock/auth.mock";
-import { DatasetOperationError } from "../common/errors";
+import { DatasetOperationError } from "../common/values/errors";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("DatasetCreateService", () => {

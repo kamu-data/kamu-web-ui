@@ -12,7 +12,7 @@ import {
     SetDatasetFlowConfigMutation,
     SetDatasetFlowTriggersMutation,
 } from "src/app/api/kamu.graphql.interface";
-import AppValues from "src/app/common/app.values";
+import AppValues from "src/app/common/values/app.values";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 

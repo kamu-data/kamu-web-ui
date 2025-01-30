@@ -7,7 +7,7 @@ import {
     OverviewUpdate,
 } from "./dataset.subscriptions.interface";
 import { DatasetPermissionsFragment } from "../api/kamu.graphql.interface";
-import { MaybeNull } from "../common/app.types";
+import { MaybeNull } from "../common/types/app.types";
 
 @Injectable({ providedIn: "root" })
 export class DatasetSubscriptionsService {

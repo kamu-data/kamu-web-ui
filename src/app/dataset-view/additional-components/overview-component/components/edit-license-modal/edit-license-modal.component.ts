@@ -1,5 +1,5 @@
-import { BaseComponent } from "src/app/common/base.component";
-import AppValues from "src/app/common/app.values";
+import { BaseComponent } from "src/app/common/components/base.component";
+import AppValues from "src/app/common/values/app.values";
 import { Component, inject, Input, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
@@ -9,7 +9,7 @@ import {
     DatasetOverviewFragment,
     SetLicense,
 } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/common/app.types";
+import { MaybeNull } from "src/app/common/types/app.types";
 import { DatasetSchema, DataRow } from "src/app/interface/dataset.interface";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 import { DatasetCommitService } from "../../services/dataset-commit.service";

@@ -2,13 +2,13 @@ import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { SearchService } from "./search.service";
 import { DatasetSearchResult, SearchFilters } from "../interface/search.interface";
 import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
-import { BaseComponent } from "../common/base.component";
 import { NavigationService } from "../services/navigation.service";
-import { requireValue } from "../common/app.helpers";
+import { requireValue } from "../common/helpers/app.helpers";
 import ProjectLinks from "../project-links";
 import { filter, map } from "rxjs/operators";
 import { Observable } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { BaseComponent } from "../common/components/base.component";
 
 @Component({
     selector: "app-search",

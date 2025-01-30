@@ -7,7 +7,7 @@ import { ToastrModule } from "ngx-toastr";
 import { ActivatedRoute } from "@angular/router";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatDividerModule } from "@angular/material/divider";
-import { findElementByDataTestId, setFieldValue } from "src/app/common/base-test.helpers.spec";
+import { findElementByDataTestId, setFieldValue } from "src/app/common/helpers/base-test.helpers.spec";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { DatasetEvnironmentVariablesService } from "src/app/services/dataset-evnironment-variables.service";
 import { of } from "rxjs";

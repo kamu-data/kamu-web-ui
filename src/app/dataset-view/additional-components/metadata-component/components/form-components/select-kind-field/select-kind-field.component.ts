@@ -2,7 +2,7 @@ import { FormGroup } from "@angular/forms";
 import { RadioControlType } from "../../source-events/add-polling-source/form-control.source";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { NgbTooltipConfig } from "@ng-bootstrap/ng-bootstrap";
-import AppValues from "src/app/common/app.values";
+import AppValues from "src/app/common/values/app.values";
 
 @Component({
     selector: "app-select-kind-field",

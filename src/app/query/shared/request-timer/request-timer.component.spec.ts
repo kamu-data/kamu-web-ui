@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { RequestTimerComponent } from "./request-timer.component";
-import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 
 describe("RequestTimerComponent", () => {
     let component: RequestTimerComponent;

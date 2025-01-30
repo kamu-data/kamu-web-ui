@@ -1,4 +1,4 @@
-import { ErrorTexts } from "../common/errors.text";
+import { ErrorTexts } from "../common/values/errors.text";
 import { ApolloError } from "@apollo/client/core";
 import {
     AccountNotFoundError,
@@ -7,8 +7,8 @@ import {
     DatasetOperationError,
     InvalidSqlError,
     SqlExecutionError,
-} from "../common/errors";
-import { ModalService } from "../components/modal/modal.service";
+} from "../common/values/errors";
+import { ModalService } from "../common/components/modal/modal.service";
 import { TestBed } from "@angular/core/testing";
 import { ErrorHandlerService } from "./error-handler.service";
 import { NavigationService } from "./navigation.service";

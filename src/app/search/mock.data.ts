@@ -48,7 +48,7 @@ import {
 import { GraphQLError } from "graphql";
 import { TEST_AVATAR_URL } from "../api/mock/auth.mock";
 import { AddPushSourceEditFormType } from "../dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
-import { OdfDefaultValues } from "../common/app-odf-default.values";
+import { OdfDefaultValues } from "../common/values/app-odf-default.values";
 import { SqlQueryResponseState } from "../query/global-query/global-query.model";
 import { OperationColumnClassEnum } from "../interface/dataset.interface";
 

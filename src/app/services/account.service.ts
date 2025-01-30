@@ -1,4 +1,4 @@
-import { MaybeUndefined } from "./../common/app.types";
+import { MaybeUndefined } from "../common/types/app.types";
 import {
     AccountDatasetFlowsPausedQuery,
     AccountListDatasetsWithFlowsQuery,
@@ -15,7 +15,7 @@ import { inject, Injectable } from "@angular/core";
 import { DatasetsByAccountNameQuery } from "../api/kamu.graphql.interface";
 import { DatasetsAccountResponse } from "../interface/dataset.interface";
 import { map } from "rxjs/operators";
-import { MaybeNull } from "../common/app.types";
+import { MaybeNull } from "../common/types/app.types";
 import { ToastrService } from "ngx-toastr";
 import { FlowsTableData } from "../common/components/flows-table/flows-table.types";
 

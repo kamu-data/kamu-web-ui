@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AccessTokensTabComponent } from "./access-tokens-tab.component";
 import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { Apollo } from "apollo-angular";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { mockAccountDetailsWithEmail } from "src/app/api/mock/auth.mock";
 import { ToastrModule } from "ngx-toastr";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { MatIconModule } from "@angular/material/icon";
@@ -86,7 +86,7 @@ describe("AccessTokensTabComponent", () => {
         spyOn(accessTokenService, "listAccessTokens").and.returnValue(
             of(mockListAccessTokensQuery.auth.listAccessTokens as AccessTokenConnection),
         );
-        component.account = mockAccountDetails;
+        component.account = mockAccountDetailsWithEmail;
     });
 
     it("should create", () => {

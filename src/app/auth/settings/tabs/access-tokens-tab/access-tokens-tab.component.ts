@@ -2,7 +2,7 @@ import { NavigationService } from "./../../../../services/navigation.service";
 import { MaybeNull } from "../../../../common/types/app.types";
 import {
     AccessTokenConnection,
-    AccountFragment,
+    AccountWithEmailFragment,
     CreatedAccessToken,
     PageBasedInfo,
     ViewAccessToken,
@@ -36,7 +36,7 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
     private navigationService = inject(NavigationService);
     private cdr = inject(ChangeDetectorRef);
 
-    @Input({ required: true }) public account: AccountFragment;
+    @Input({ required: true }) public account: AccountWithEmailFragment;
     @ViewChild(MatSort) sort: MatSort;
     public searchTokenName: string = "";
     public dataSource = new MatTableDataSource();

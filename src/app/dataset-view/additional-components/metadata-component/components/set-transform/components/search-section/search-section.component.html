@@ -35,8 +35,17 @@
 <div class="mt-4">
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="tree">
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
-            {{ node.name }}&nbsp;&nbsp; ( <span class="fw-bold">{{ node.type }}</span> )
+            {{ node.name }}&nbsp;&nbsp; <span *ngIf="node.type" class="fw-bold">({{ node.type }})</span>
+            <button
+                *ngIf="!node.children?.length"
+                class="no-button d-flex"
+                (click)="deleteInputDataset(node.name)"
+                title="Delete input dataset"
+            >
+                <mat-icon class="fs-4 hover">delete</mat-icon>
+            </button>
         </mat-tree-node>
+
         <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
             <div class="mat-tree-node">
                 <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">

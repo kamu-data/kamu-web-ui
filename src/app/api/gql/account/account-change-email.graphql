@@ -1,0 +1,20 @@
+mutation accountChangeEmail($accountName: AccountName!, $newEmail: String!) {
+  accounts {
+    byName(accountName: $accountName) {
+      updateEmail(newEmail: $newEmail) {
+        ... on UpdateEmailSuccess {
+          newEmail
+          message
+        }
+
+        ... on UpdateEmailNonUnique {
+          message
+        }
+
+        ... on UpdateEmailInvalid {
+          message
+        }
+      }
+    }
+  }
+}

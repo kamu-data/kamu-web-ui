@@ -1,5 +1,11 @@
 import { GraphQLError } from "graphql";
-import { AccountFragment, AccountType, FetchAccountDetailsMutation, LoginMutation } from "../kamu.graphql.interface";
+import {
+    AccountFragment,
+    AccountType,
+    AccountWithEmailFragment,
+    FetchAccountDetailsMutation,
+    LoginMutation,
+} from "../kamu.graphql.interface";
 import { AppLoginInstructions, LoginMethod } from "src/app/app-config.model";
 import { PasswordLoginCredentials } from "../auth.api.model";
 
@@ -23,6 +29,7 @@ export const mockLoginInstructions: AppLoginInstructions = {
 };
 
 export const TEST_AVATAR_URL = "http://example.com/image.jpg";
+export const TEST_ACCOUNT_EMAIL = "http://kamu@example.com";
 
 export const mockAccountDetails: AccountFragment = {
     id: TEST_ACCOUNT_ID,
@@ -31,6 +38,14 @@ export const mockAccountDetails: AccountFragment = {
     accountType: AccountType.User,
     avatarUrl: TEST_AVATAR_URL,
     isAdmin: false,
+};
+
+export const mockAccountDetailsWithEmail: AccountWithEmailFragment = {
+    id: TEST_ACCOUNT_ID,
+    accountName: TEST_LOGIN,
+    displayName: TEST_USER_NAME,
+    avatarUrl: TEST_AVATAR_URL,
+    email: TEST_ACCOUNT_EMAIL,
 };
 
 export const mockAccountFromAccessToken: FetchAccountDetailsMutation = {

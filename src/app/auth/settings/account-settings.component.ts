@@ -1,15 +1,16 @@
 import ProjectLinks from "src/app/project-links";
-import { AccountFragment } from "src/app/api/kamu.graphql.interface";
+import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
 import { AccountSettingsTabs } from "./account-settings.constants";
-import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
-import { filter } from "rxjs/operators";
+import { filter, switchMap } from "rxjs/operators";
 import { BaseComponent } from "src/app/common/components/base.component";
 import AppValues from "src/app/common/values/app.values";
 import { MaybeNull, MaybeUndefined } from "src/app/common/types/app.types";
-import { Observable } from "rxjs";
-import { LoggedUserService } from "../logged-user.service";
+import { EMPTY, Observable } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { AccountEmailService } from "src/app/services/account-email.service";
+import { LoggedUserService } from "../logged-user.service";
 
 @Component({
     selector: "app-settings",
@@ -22,11 +23,13 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
     public readonly AccountSettingsTabs: typeof AccountSettingsTabs = AccountSettingsTabs;
 
     public activeTab: AccountSettingsTabs = AccountSettingsTabs.PROFILE;
-    public user$: Observable<MaybeNull<AccountFragment>>;
+    public user$: Observable<MaybeNull<AccountWithEmailFragment>>;
 
     private router = inject(Router);
     private route = inject(ActivatedRoute);
+    private accountEmailService = inject(AccountEmailService);
     private loggedUserService = inject(LoggedUserService);
+    private cdr = inject(ChangeDetectorRef);
 
     public ngOnInit(): void {
         this.router.events
@@ -39,11 +42,27 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
             });
 
         this.extractActiveTabFromRoute();
-        this.user$ = this.loggedUserService.loggedInUserChanges;
+        this.fetchAccountInfo();
     }
 
     public getRouteLink(tab: AccountSettingsTabs): string {
         return `/${ProjectLinks.URL_SETTINGS}/${tab}`;
+    }
+
+    private fetchAccountInfo(): void {
+        this.user$ = this.loggedUserService.loggedInUserChanges.pipe(
+            switchMap((loggedUser) => {
+                if (loggedUser) {
+                    return this.accountEmailService.fetchAccountWithEmail(loggedUser.accountName);
+                } else {
+                    return EMPTY;
+                }
+            }),
+        );
+    }
+
+    public changeAccountEmail(): void {
+        this.fetchAccountInfo();
     }
 
     private extractActiveTabFromRoute(): void {

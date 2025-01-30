@@ -195,11 +195,11 @@
                                             'action-list-item--nav__active': activeTab === AccountSettingsTabs.EMAILS,
                                         }"
                                     >
-                                        <!-- [routerLink]="getRouteLink(AccountSettingsTabs.EMAILS)" -->
                                         <a
                                             routerLinkActive="active"
                                             data-view-component="true"
-                                            class="action-list-content disabled"
+                                            class="action-list-content"
+                                            [routerLink]="getRouteLink(AccountSettingsTabs.EMAILS)"
                                         >
                                             <span
                                                 class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
@@ -287,6 +287,9 @@
         <div class="content">
             <ng-container *ngIf="activeTab === AccountSettingsTabs.ACCESS_TOKENS">
                 <app-access-tokens-tab [account]="user" />
+            </ng-container>
+            <ng-container *ngIf="activeTab === AccountSettingsTabs.EMAILS">
+                <app-emails-tab [account]="user" (accountEmailChange)="changeAccountEmail()" />
             </ng-container>
         </div>
     </div>

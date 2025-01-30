@@ -15,7 +15,7 @@ import { mockDatasetFlowsInitiatorsQuery, mockFlowsTableData } from "src/app/api
 import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { FlowsTableComponent } from "src/app/common/components/flows-table/flows-table.component";
 import { TileBaseWidgetComponent } from "src/app/common/components/tile-base-widget/tile-base-widget.component";
-import { Account, FlowStatus } from "src/app/api/kamu.graphql.interface";
+import { Account, AccountFragment, FlowStatus } from "src/app/api/kamu.graphql.interface";
 import { mockDatasets } from "src/app/common/components/flows-table/flows-table.helpers.mock";
 import { FlowsTableFiltersOptions } from "src/app/common/components/flows-table/flows-table.types";
 import { NgbPaginationModule } from "@ng-bootstrap/ng-bootstrap";
@@ -159,7 +159,7 @@ describe("AccountFlowsTabComponent", () => {
         expect(fetchTableDataSpy).toHaveBeenCalledWith(
             component.currentPage,
             status,
-            { accounts: accounts.map((item: Account) => item.id) },
+            { accounts: accounts.map((item: AccountFragment) => item.id) },
             datasets.map((item) => item.id),
         );
     });

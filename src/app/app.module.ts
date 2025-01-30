@@ -70,6 +70,7 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { DynamicTableModule } from "./common/components/dynamic-table/dynamic-table.module";
 import { AutofocusModule } from "./common/directives/autofocus.module";
 import { AccountModule } from "./account/account.module";
+import { EmailsTabComponent } from "./auth/settings/tabs/emails-tab/emails-tab.component";
 
 const Services = [
     {
@@ -203,6 +204,7 @@ const MatModules = [
         AccountSettingsComponent,
         AdminDashboardComponent,
         AccessTokensTabComponent,
+        EmailsTabComponent,
     ],
     imports: [
         AppRoutingModule,

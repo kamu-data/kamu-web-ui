@@ -31,6 +31,7 @@ import { TimePropertyComponent } from "./time-property/time-property.component";
 import { DisplayTimeModule } from "src/app/common/components/display-time/display-time.module";
 import { TopicsPropertyComponent } from "./topics-property/topics-property.component";
 import { UnsupportedPropertyComponent } from "./unsupported-property/unsupported-property.component";
+import { VisibilityPropertyComponent } from "./visibility-property/visibility-property.component";
 
 @NgModule({
     declarations: [
@@ -59,6 +60,7 @@ import { UnsupportedPropertyComponent } from "./unsupported-property/unsupported
         TimePropertyComponent,
         TopicsPropertyComponent,
         UnsupportedPropertyComponent,
+        VisibilityPropertyComponent,
     ],
     exports: [
         BlockIntervalPropertyComponent,
@@ -86,6 +88,7 @@ import { UnsupportedPropertyComponent } from "./unsupported-property/unsupported
         TimePropertyComponent,
         TopicsPropertyComponent,
         UnsupportedPropertyComponent,
+        VisibilityPropertyComponent,
     ],
     imports: [
         CommonModule,

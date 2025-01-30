@@ -24,6 +24,10 @@ export class NavigationService {
         promiseWithCatch(this.router.navigateByUrl(url));
     }
 
+    public navigateToReplacedPath(url: string): void {
+        promiseWithCatch(this.router.navigateByUrl(url, { replaceUrl: true }));
+    }
+
     public navigateToAdminDashBoard(): void {
         promiseWithCatch(this.router.navigate([ProjectLinks.URL_ADMIN_DASHBOARD]));
     }

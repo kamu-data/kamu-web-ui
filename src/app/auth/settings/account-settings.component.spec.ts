@@ -1,4 +1,4 @@
-import { mockAccountDetails } from "../../api/mock/auth.mock";
+import { mockAccountDetails, mockAccountDetailsWithEmail } from "../../api/mock/auth.mock";
 import { RouterTestingModule } from "@angular/router/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -16,6 +16,8 @@ import { of } from "rxjs";
 import ProjectLinks from "src/app/project-links";
 import { LoginService } from "../login/login.service";
 import { MatIconModule } from "@angular/material/icon";
+import { ToastrModule } from "ngx-toastr";
+import { AccountEmailService } from "src/app/services/account-email.service";
 
 describe("AccountSettingsComponent", () => {
     let component: AccountSettingsComponent;
@@ -23,26 +25,34 @@ describe("AccountSettingsComponent", () => {
     let loggedUserService: LoggedUserService;
     let loginService: LoginService;
     let activatedRoute: ActivatedRoute;
+    let accountEmailService: AccountEmailService;
     let router: Router;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [AccountSettingsComponent],
-            imports: [ApolloTestingModule, RouterTestingModule, HttpClientTestingModule, MatIconModule],
+            imports: [
+                ApolloTestingModule,
+                ToastrModule.forRoot(),
+                RouterTestingModule,
+                HttpClientTestingModule,
+                MatIconModule,
+            ],
         }).compileComponents();
 
         registerMatSvgIcons();
 
         activatedRoute = TestBed.inject(ActivatedRoute);
         router = TestBed.inject(Router);
+        accountEmailService = TestBed.inject(AccountEmailService);
 
         loginService = TestBed.inject(LoginService);
+        spyOn(accountEmailService, "fetchAccountWithEmail").and.returnValue(of(mockAccountDetailsWithEmail));
         spyOnProperty(loginService, "accountChanges", "get").and.returnValue(of(mockAccountDetails));
         loggedUserService = TestBed.inject(LoggedUserService);
 
         fixture = TestBed.createComponent(AccountSettingsComponent);
         component = fixture.componentInstance;
-        fixture.detectChanges();
     });
 
     enum Elements {
@@ -54,6 +64,7 @@ describe("AccountSettingsComponent", () => {
     });
 
     it("should see logged user", () => {
+        fixture.detectChanges();
         const userNameLinKElement: HTMLElement = getElementByDataTestId(fixture, Elements.UserNameLink);
         expect(userNameLinKElement.innerText).toEqual(
             `${mockAccountDetails.displayName} (${mockAccountDetails.accountName})`,
@@ -61,13 +72,14 @@ describe("AccountSettingsComponent", () => {
     });
 
     it("should not show user data for logged off case", () => {
-        loggedUserService.logout();
+        loggedUserService.terminateSession();
         fixture.detectChanges();
 
         expect(findElementByDataTestId(fixture, Elements.UserNameLink)).toBeFalsy();
     });
 
     it("should open profile tab by default", () => {
+        fixture.detectChanges();
         expect(component.activeTab).toEqual(AccountSettingsTabs.PROFILE);
     });
 

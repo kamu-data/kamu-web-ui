@@ -1,8 +1,8 @@
 import { inject, Injectable } from "@angular/core";
 import { Observable, ReplaySubject, Subject, map } from "rxjs";
 import { AuthApi } from "src/app/api/auth.api";
-import { GithubLoginCredentials, PasswordLoginCredentials } from "src/app/api/auth.api.model";
-import { AccountFragment, LoginResponse } from "src/app/api/kamu.graphql.interface";
+import { GithubLoginCredentials, LoginResponseType, PasswordLoginCredentials } from "src/app/api/auth.api.model";
+import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import { LoginMethod } from "src/app/app-config.model";
 import { AuthenticationError } from "src/app/common/values/errors";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -28,7 +28,7 @@ export class LoginService {
 
     private enabledLoginMethods: LoginMethod[] = [];
 
-    private loginCallback: (loginResponse: LoginResponse) => void = this.redirectUrlLoginCallback.bind(this);
+    private loginCallback: (loginResponse: LoginResponseType) => void = this.redirectUrlLoginCallback.bind(this);
 
     public get accessTokenChanges(): Observable<string> {
         return this.accessToken$.asObservable();
@@ -72,7 +72,7 @@ export class LoginService {
         return this.enabledLoginMethods;
     }
 
-    public setLoginCallback(loginCallback: (loginResponse: LoginResponse) => void): void {
+    public setLoginCallback(loginCallback: (loginResponse: LoginResponseType) => void): void {
         this.loginCallback = loginCallback;
     }
 
@@ -101,7 +101,7 @@ export class LoginService {
 
     public genericLogin(loginMethod: string, loginCredentialsJson: string): Observable<void> {
         return this.authApi.fetchAccountAndTokenFromLoginMethod(loginMethod, loginCredentialsJson).pipe(
-            map((loginResponse: LoginResponse): void => {
+            map((loginResponse: LoginResponseType): void => {
                 this.loginCallback(loginResponse);
             }),
         );
@@ -117,7 +117,7 @@ export class LoginService {
         this.passwordLoginError$.next("");
     }
 
-    private defaultLoginCallback(loginResponse: LoginResponse): void {
+    private defaultLoginCallback(loginResponse: LoginResponseType): void {
         this.accessToken$.next(loginResponse.accessToken);
         this.account$.next(loginResponse.account);
         const url = this.localStorageService.redirectAfterLoginUrl;
@@ -129,7 +129,7 @@ export class LoginService {
         }
     }
 
-    private redirectUrlLoginCallback(loginResponse: LoginResponse): void {
+    private redirectUrlLoginCallback(loginResponse: LoginResponseType): void {
         const callbackUrl: MaybeNull<string> = this.localStorageService.loginCallbackUrl;
         if (callbackUrl) {
             this.localStorageService.setLoginCallbackUrl(null);

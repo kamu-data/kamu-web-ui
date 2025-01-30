@@ -32,6 +32,7 @@ import { AddPushSourceEventComponent } from "./components/event-details/componen
 import { SetDataSchemaEventComponent } from "./components/event-details/components/set-data-schema-event/set-data-schema-event.component";
 import { UnsupportedEventComponent } from "./components/event-details/components/unsupported-event/unsupported-event.component";
 import { EventDetailsPropertiesModule } from "./components/event-details/components/common/event-details-properties.module";
+import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 
 @NgModule({
     declarations: [
@@ -70,6 +71,7 @@ import { EventDetailsPropertiesModule } from "./components/event-details/compone
         DisplayHashModule,
         SharedModule,
         EventDetailsPropertiesModule,
+        AngularMultiSelectModule,
     ],
     exports: [MetadataBlockComponent],
 })

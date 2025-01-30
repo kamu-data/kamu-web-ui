@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { CommonModule } from "@angular/common";
@@ -13,8 +13,4 @@ import { CustomPaginationComponent } from "./custom-pagination.component";
     exports: [CustomPaginationComponent],
     declarations: [CustomPaginationComponent],
 })
-export class CustomPaginationModule {
-    public static forRoot(): ModuleWithProviders<CustomPaginationModule> {
-        return { ngModule: CustomPaginationModule };
-    }
-}
+export class CustomPaginationModule {}

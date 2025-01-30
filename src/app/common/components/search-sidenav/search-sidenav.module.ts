@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { SearchSidenavComponent } from "./search-sidenav.component";
 import { NgbModule, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
@@ -26,8 +26,4 @@ import { FormsModule } from "@angular/forms";
     exports: [SearchSidenavComponent],
     declarations: [SearchSidenavComponent],
 })
-export class SearchSidenavModule {
-    public static forRoot(): ModuleWithProviders<SearchSidenavModule> {
-        return { ngModule: SearchSidenavModule };
-    }
-}
+export class SearchSidenavModule {}

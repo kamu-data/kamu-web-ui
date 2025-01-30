@@ -48,7 +48,6 @@ import { DatasetSubscriptionsService } from "./dataset-view/dataset.subscription
 import { SpinnerModule } from "./common/components/spinner/spinner.module";
 import { DatasetApi } from "./api/dataset.api";
 import { ErrorHandlerService } from "./services/error-handler.service";
-import { AccountSettingsComponent } from "./auth/settings/account-settings.component";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { DatasetListModule } from "./common/components/dataset-list-component/dataset-list.module";
 import { PaginationModule } from "./common/components/pagination-component/pagination.module";
@@ -65,12 +64,11 @@ import { apolloCache } from "./common/helpers/apollo-cache.helper";
 import { AdminDashboardComponent } from "./admin-view/admin-dashboard/admin-dashboard.component";
 import { DatasetFlowDetailsModule } from "./dataset-flow/dataset-flow-details/dataset-flow-details.module";
 import { MatSortModule } from "@angular/material/sort";
-import { AccessTokensTabComponent } from "./auth/settings/tabs/access-tokens-tab/access-tokens-tab.component";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { DynamicTableModule } from "./common/components/dynamic-table/dynamic-table.module";
 import { AutofocusModule } from "./common/directives/autofocus.module";
 import { AccountModule } from "./account/account.module";
-import { EmailsTabComponent } from "./auth/settings/tabs/emails-tab/emails-tab.component";
+import { AccountSettingsModule } from "./auth/settings/account-settings.module";
 
 const Services = [
     {
@@ -201,10 +199,7 @@ const MatModules = [
         LoginComponent,
         GithubCallbackComponent,
         NotificationIndicatorComponent,
-        AccountSettingsComponent,
         AdminDashboardComponent,
-        AccessTokensTabComponent,
-        EmailsTabComponent,
     ],
     imports: [
         AppRoutingModule,
@@ -212,7 +207,7 @@ const MatModules = [
         DatasetCreateModule,
         MetadataBlockModule,
         ModalModule.forRoot(),
-        SearchModule.forRoot(),
+        SearchModule,
         MarkdownModule.forRoot({
             loader: HttpClient,
             sanitize: SecurityContext.NONE,
@@ -243,6 +238,7 @@ const MatModules = [
         DynamicTableModule,
         AutofocusModule,
         AccountModule,
+        AccountSettingsModule,
     ],
     providers: [...Services],
     bootstrap: [AppComponent],

@@ -79,7 +79,6 @@ import { DatasetSettingsCompactingTabComponent } from "./additional-components/d
 import { AddDataModalComponent } from "./additional-components/overview-component/components/add-data-modal/add-data-modal.component";
 import { FileFromUrlModalComponent } from "./additional-components/overview-component/components/file-from-url-modal/file-from-url-modal.component";
 import { FlowsComponent } from "./additional-components/flows-component/flows.component";
-import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatChipsModule } from "@angular/material/chips";
 import { DatasetVisibilityModule } from "../common/components/dataset-visibility/dataset-visibility.module";
@@ -162,14 +161,6 @@ import { FlowsViewModule } from "../common/modules/flows-view.module";
         OverviewComponent,
         LineageComponent,
         HistoryComponent,
-        DisplayHashModule,
-        MatTreeModule,
-        MatTooltipModule,
-        DataAccessPanelModule,
-        SharedModule,
-
-        AngularMultiSelectModule,
-        MatChipsModule,
     ],
     declarations: [
         DatasetViewHeaderComponent,
@@ -200,7 +191,6 @@ import { FlowsViewModule } from "../common/modules/flows-view.module";
         ReadmeSectionComponent,
         DatasetSettingsComponent,
         FlowsComponent,
-
         AddPushSourceComponent,
         SourceNameStepComponent,
         DatasetSettingsGeneralTabComponent,

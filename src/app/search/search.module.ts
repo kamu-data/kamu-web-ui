@@ -1,5 +1,5 @@
 import { DisplayTimeModule } from "../common/components/display-time/display-time.module";
-import { ModuleWithProviders, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { SearchComponent } from "./search.component";
 import { SearchAdditionalButtonsModule } from "../common/components/search-additional-buttons/search-additional-buttons.module";
@@ -29,8 +29,4 @@ import { SharedModule } from "../shared/shared/shared.module";
     exports: [SearchComponent],
     declarations: [SearchComponent],
 })
-export class SearchModule {
-    public static forRoot(): ModuleWithProviders<SearchModule> {
-        return { ngModule: SearchModule };
-    }
-}
+export class SearchModule {}

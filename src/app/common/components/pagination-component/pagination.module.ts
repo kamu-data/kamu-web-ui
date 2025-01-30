@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { CommonModule } from "@angular/common";
@@ -13,8 +13,4 @@ import { PaginationComponent } from "./pagination.component";
     exports: [PaginationComponent],
     declarations: [PaginationComponent],
 })
-export class PaginationModule {
-    public static forRoot(): ModuleWithProviders<PaginationModule> {
-        return { ngModule: PaginationModule };
-    }
-}
+export class PaginationModule {}

@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
@@ -30,8 +30,4 @@ import { SharedModule } from "../shared/shared/shared.module";
     exports: [DatasetCreateComponent],
     declarations: [DatasetCreateComponent],
 })
-export class DatasetCreateModule {
-    public static forRoot(): ModuleWithProviders<DatasetCreateModule> {
-        return { ngModule: DatasetCreateModule };
-    }
-}
+export class DatasetCreateModule {}

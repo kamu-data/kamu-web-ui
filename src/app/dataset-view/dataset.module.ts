@@ -29,7 +29,6 @@ import { HistoryComponent } from "./additional-components/history-component/hist
 import { TimelineModule } from "../common/components/timeline-component/timeline.module";
 import { CustomPaginationModule } from "../common/components/custom-pagination-component/custom-pagination.module";
 import { DatasetViewHeaderComponent } from "./dataset-view-header/dataset-view-header.component";
-import { DatasetViewMenuComponent } from "./dataset-view-menu/dataset-view-menu.component";
 import { SideNavModule } from "../sidenav/side-nav.module";
 import { RouterModule } from "@angular/router";
 import { OverviewHistorySummaryHeaderComponent } from "../common/components/overview-history-summary-header/overview-history-summary-header.component";
@@ -87,6 +86,7 @@ import { IngestConfigurationModule } from "./additional-components/dataset-setti
 import { IngestTriggerModule } from "./additional-components/dataset-settings-component/tabs/scheduling/ingest-trigger-form/ingest-trigger.module";
 import { BatchingTriggerModule } from "./additional-components/dataset-settings-component/tabs/scheduling/batching-trigger-form/batching-trigger.module";
 import { FlowsViewModule } from "../common/modules/flows-view.module";
+import { DatasetViewMenuModule } from "./dataset-view-menu/dataset-view-menu.module";
 @NgModule({
     imports: [
         CommonModule,
@@ -146,12 +146,12 @@ import { FlowsViewModule } from "../common/modules/flows-view.module";
         BatchingTriggerModule,
         FlowsViewModule,
         EventDetailsPropertiesModule,
+        DatasetViewMenuModule,
     ],
     exports: [
         DatasetViewHeaderComponent,
         OverviewHistorySummaryHeaderComponent,
         DatasetComponent,
-        DatasetViewMenuComponent,
         MetadataComponent,
         DataComponent,
         BaseStepComponent,
@@ -166,7 +166,6 @@ import { FlowsViewModule } from "../common/modules/flows-view.module";
         DatasetViewHeaderComponent,
         OverviewHistorySummaryHeaderComponent,
         DatasetComponent,
-        DatasetViewMenuComponent,
         MetadataComponent,
         DataComponent,
         OverviewComponent,

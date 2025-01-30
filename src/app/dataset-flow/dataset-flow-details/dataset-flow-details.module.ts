@@ -10,6 +10,7 @@ import { FlowDetailsHistoryTabComponent } from "./tabs/flow-details-history-tab/
 import { FlowDetailsSummaryTabComponent } from "./tabs/flow-details-summary-tab/flow-details-summary-tab.component";
 import { FlowDetailsLogsTabComponent } from "./tabs/flow-details-logs-tab/flow-details-logs-tab.component";
 import { SharedModule } from "src/app/shared/shared/shared.module";
+import { DatasetViewMenuModule } from "src/app/dataset-view/dataset-view-menu/dataset-view-menu.module";
 
 @NgModule({
     declarations: [
@@ -18,6 +19,15 @@ import { SharedModule } from "src/app/shared/shared/shared.module";
         FlowDetailsSummaryTabComponent,
         FlowDetailsLogsTabComponent,
     ],
-    imports: [CommonModule, MatIconModule, MatDividerModule, DatasetModule, RouterModule, SharedModule, MatMenuModule],
+    imports: [
+        CommonModule,
+        MatIconModule,
+        MatDividerModule,
+        DatasetModule,
+        RouterModule,
+        DatasetViewMenuModule,
+        SharedModule,
+        MatMenuModule,
+    ],
 })
 export class DatasetFlowDetailsModule {}

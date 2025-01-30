@@ -33,6 +33,7 @@ import { SetDataSchemaEventComponent } from "./components/event-details/componen
 import { UnsupportedEventComponent } from "./components/event-details/components/unsupported-event/unsupported-event.component";
 import { EventDetailsPropertiesModule } from "./components/event-details/components/common/event-details-properties.module";
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
+import { DatasetViewMenuModule } from "src/app/dataset-view/dataset-view-menu/dataset-view-menu.module";
 
 @NgModule({
     declarations: [
@@ -72,6 +73,7 @@ import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
         SharedModule,
         EventDetailsPropertiesModule,
         AngularMultiSelectModule,
+        DatasetViewMenuModule,
     ],
     exports: [MetadataBlockComponent],
 })

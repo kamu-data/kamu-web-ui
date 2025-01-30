@@ -8,7 +8,6 @@ import { APP_INITIALIZER, ErrorHandler, NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
-import { LoginComponent } from "./auth/login/login.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { NgbModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
@@ -69,6 +68,7 @@ import { DynamicTableModule } from "./common/components/dynamic-table/dynamic-ta
 import { AutofocusModule } from "./common/directives/autofocus.module";
 import { AccountModule } from "./account/account.module";
 import { AccountSettingsModule } from "./auth/settings/account-settings.module";
+import { LoginModule } from "./auth/login/login.module";
 
 const Services = [
     {
@@ -190,13 +190,13 @@ const MatModules = [
     MatButtonToggleModule,
     MatSortModule,
     MatSlideToggleModule,
+    MatOptionModule,
 ];
 
 @NgModule({
     declarations: [
         AppComponent,
         AppHeaderComponent,
-        LoginComponent,
         GithubCallbackComponent,
         NotificationIndicatorComponent,
         AdminDashboardComponent,
@@ -221,7 +221,6 @@ const MatModules = [
         CdkTableModule,
         ...MatModules,
         FormsModule,
-        MatOptionModule,
         ReactiveFormsModule,
         NgxGraphModule,
         SpinnerModule,
@@ -239,6 +238,7 @@ const MatModules = [
         AutofocusModule,
         AccountModule,
         AccountSettingsModule,
+        LoginModule,
     ],
     providers: [...Services],
     bootstrap: [AppComponent],

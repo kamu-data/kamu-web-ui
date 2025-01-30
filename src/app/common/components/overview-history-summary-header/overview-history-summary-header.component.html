@@ -19,16 +19,13 @@
                     <a
                         class="commit-author user-mention"
                         *ngIf="authorInfo?.accountName"
-                        [title]="'View all commits by ' + authorInfo.accountName"
+                        [title]="'Account name: ' + authorInfo.accountName"
                         [routerLink]="['/', authorInfo.accountName]"
                         >{{ authorInfo.accountName }}</a
                     >
                     <span class="d-none d-sm-inline mb-0 ml-3">
                         <a
                             *ngIf="metadataBlockFragment?.event"
-                            data-pjax="true"
-                            data-test-selector="commit-tease-commit-message"
-                            title="Styles was changed"
                             class="link--primary"
                             data-test-id="navigate-to-metadata-block"
                             [routerLink]="[

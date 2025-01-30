@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added a feature for changing account email
 - Added `redirectUrl` parameter in the URL for login page
+### Changed
+- Restructuring of the application catalogs
 
 ## [0.38.0] - 2025-01-27
 ### Changed

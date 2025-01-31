@@ -1,3 +1,4 @@
+import { LocalStorageService } from "src/app/services/local-storage.service";
 import { SqlExecutionError } from "../common/errors";
 import {
     BlockRef,
@@ -39,12 +40,15 @@ import { parseCurrentSchema } from "../common/app.helpers";
 import { APOLLO_OPTIONS } from "apollo-angular";
 import { resetCacheHelper } from "../apollo-cache.helper";
 import { parseDataRows } from "../common/data.helpers";
+import { Router } from "@angular/router";
 
 @Injectable({ providedIn: "root" })
 export class DatasetService {
     private datasetApi = inject(DatasetApi);
     private datasetSubsService = inject(DatasetSubscriptionsService);
     private injector = inject(Injector);
+    private router = inject(Router);
+    private localStorageService = inject(LocalStorageService);
     private currentHeadBlockHash: string;
     private dataset$: Subject<DatasetBasicsFragment> = new Subject<DatasetBasicsFragment>();
 
@@ -81,6 +85,12 @@ export class DatasetService {
                         throw new SqlExecutionError(dataTail.errorMessage);
                     }
                 } else {
+                    this.localStorageService.setRedirectAfterLoginUrl(this.router.url);
+                    const cache = this.injector.get(APOLLO_OPTIONS).cache;
+                    cache.evict({
+                        id: "ROOT_QUERY",
+                        fieldName: "datasets",
+                    });
                     throw new DatasetNotFoundError();
                 }
             }),

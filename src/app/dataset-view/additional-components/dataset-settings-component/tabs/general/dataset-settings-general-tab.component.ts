@@ -243,7 +243,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                       ]
                     : [
                           "You will decide who else has access",
-                          "It will appear in search results on for people with access",
+                          "It will appear in search results only for people with access",
                           "You can control the level of access others have",
                       ],
                 warningText: !this.isPrivate

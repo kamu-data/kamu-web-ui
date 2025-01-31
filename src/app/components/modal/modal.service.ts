@@ -31,14 +31,14 @@ export class ModalService {
     /**
      * Setter for type of currently displayed modal.
      */
-    set modalType(type: string) {
+    public set modalType(type: string) {
         this.currentModalType = type;
     }
 
     /**
      * Getter for type of currently displayed modal.
      */
-    get modalType(): string {
+    public get modalType(): string {
         return this.currentModalType;
     }
 
@@ -85,7 +85,7 @@ export class ModalService {
         });
     }
 
-    getCommand() {
+    public getCommand() {
         return this.showModal$.asObservable();
     }
 }

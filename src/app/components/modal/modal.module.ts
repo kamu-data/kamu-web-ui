@@ -13,7 +13,7 @@ import { MatDividerModule } from "@angular/material/divider";
     exports: [ModalComponent],
 })
 export class ModalModule {
-    static forRoot(): ModuleWithProviders<ModalModule> {
+    public static forRoot(): ModuleWithProviders<ModalModule> {
         return {
             ngModule: ModalModule,
             providers: [ModalService],

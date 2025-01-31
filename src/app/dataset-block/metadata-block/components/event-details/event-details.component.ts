@@ -42,7 +42,7 @@ export class EventDetailsComponent extends BaseComponent implements AfterViewIni
     @ViewChild("dynamicContainer", { read: ViewContainerRef })
     public dynamicContainer: MaybeNull<ViewContainerRef>;
 
-    ngAfterViewInit(): void {
+    public ngAfterViewInit(): void {
         this.blockService.metadataBlockChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((block: MetadataBlockFragment) => {

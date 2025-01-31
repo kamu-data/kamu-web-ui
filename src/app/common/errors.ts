@@ -8,13 +8,13 @@ import { ToastrService } from "ngx-toastr";
 import { GraphQLFormattedError } from "graphql";
 
 export abstract class KamuError extends Error {
-    abstract accept(visitor: KamuErrorVisitor): void;
+    public abstract accept(visitor: KamuErrorVisitor): void;
 }
 
 export class CustomApolloError extends KamuError {
     private apolloError: ApolloError;
 
-    constructor(apolloError: ApolloError) {
+    public constructor(apolloError: ApolloError) {
         super();
         this.apolloError = apolloError;
     }
@@ -51,7 +51,7 @@ export class AccountNotFoundError extends KamuError {
 export abstract class KamuMultiError extends KamuError {
     public readonly errors: ReadonlyArray<GraphQLFormattedError>;
 
-    constructor(errors: ReadonlyArray<GraphQLFormattedError>) {
+    public constructor(errors: ReadonlyArray<GraphQLFormattedError>) {
         super();
         this.errors = errors;
     }
@@ -95,7 +95,7 @@ interface KamuErrorVisitor {
 }
 
 export class KamuErrorHandler implements KamuErrorVisitor {
-    constructor(
+    public constructor(
         private injector: Injector,
         private navigationService: NavigationService,
         private loggedUserService: LoggedUserService,

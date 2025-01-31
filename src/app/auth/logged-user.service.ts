@@ -20,7 +20,7 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
     private loggedInUser: MaybeNull<AccountFragment> = null;
     private loggedInUser$: Subject<MaybeNull<AccountFragment>> = new ReplaySubject<MaybeNull<AccountFragment>>(1);
 
-    constructor(
+    public constructor(
         private loginService: LoginService,
         private navigationService: NavigationService,
         private appConfigService: AppConfigService,

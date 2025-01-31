@@ -50,7 +50,7 @@ export class EditDetailsModalComponent extends BaseComponent implements OnInit {
         return this.description === this.initialDescription && isEqual(this.keywords, this.initialKeywords);
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         if (this.currentState?.overview.metadata.currentInfo.keywords) {
             this.initialKeywords = this.currentState.overview.metadata.currentInfo.keywords;
             this.currentState.overview.metadata.currentInfo.keywords.reduce(

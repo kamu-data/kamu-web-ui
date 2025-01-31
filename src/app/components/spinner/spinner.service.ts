@@ -11,11 +11,11 @@ export class SpinnerService {
         return this._isLoading$.asObservable();
     }
 
-    show(): void {
+    public show(): void {
         this._isLoading$.next(true);
     }
 
-    hide(): void {
+    public hide(): void {
         this._isLoading$.next(false);
     }
 }

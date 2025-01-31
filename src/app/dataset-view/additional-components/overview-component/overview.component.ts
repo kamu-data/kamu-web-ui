@@ -44,8 +44,8 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 export class OverviewComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public datasetPermissions: DatasetPermissionsFragment;
-    @Output() toggleReadmeViewEmit = new EventEmitter<null>();
-    @Output() selectTopicEmit = new EventEmitter<string>();
+    @Output() public toggleReadmeViewEmit = new EventEmitter<null>();
+    @Output() public selectTopicEmit = new EventEmitter<string>();
     public editingReadme = false;
     public droppedFile: File;
     public uploadFileLoading$: Observable<boolean>;

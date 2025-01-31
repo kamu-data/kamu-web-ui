@@ -26,13 +26,13 @@ import { AppConfigService } from "src/app/app-config.service";
 })
 export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
-    @ViewChild("menuTrigger") trigger: ElementRef;
-    @ViewChild("datasetViewMenu") datasetViewMenuComponent: ElementRef<HTMLDivElement>;
+    @ViewChild("menuTrigger") public trigger: ElementRef;
+    @ViewChild("datasetViewMenu") public datasetViewMenuComponent: ElementRef<HTMLDivElement>;
 
-    @Input({ required: true }) datasetBasics: DatasetBasicsFragment;
-    @Input({ required: true }) datasetPermissions: DatasetPermissionsFragment;
-    @Input({ required: true }) datasetViewType: DatasetViewTypeEnum;
-    @Input() isMinimizeSearchAdditionalButtons: boolean;
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public datasetPermissions: DatasetPermissionsFragment;
+    @Input({ required: true }) public datasetViewType: DatasetViewTypeEnum;
+    @Input() public isMinimizeSearchAdditionalButtons: boolean;
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 
     private sideNavHelper: SideNavHelper;

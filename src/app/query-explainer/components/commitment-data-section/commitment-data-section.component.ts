@@ -12,7 +12,7 @@ import { QueryExplainerComponentData } from "../../query-explainer.component";
 })
 export class CommitmentDataSectionComponent {
     private clipboard = inject(Clipboard);
-    @Input({ required: true }) commitmentData: QueryExplainerComponentData;
+    @Input({ required: true }) public commitmentData: QueryExplainerComponentData;
 
     /* istanbul ignore next */
     public copyToClipboard(event: MouseEvent, text: string): void {

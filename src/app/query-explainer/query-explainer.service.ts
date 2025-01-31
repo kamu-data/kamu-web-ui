@@ -20,7 +20,7 @@ export class QueryExplainerService {
     private toastrService = inject(ToastrService);
     private baseUrl: string;
 
-    constructor() {
+    public constructor() {
         this.baseUrl = `${this.appConfigService.apiServerHttpUrl}`;
     }
 

@@ -12,16 +12,16 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Directive()
 export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
-    public tileWidgetData$: Observable<MaybeUndefined<FlowsTableData>>;
-    public filterByStatus: MaybeNull<FlowStatus> = null;
-    public onlySystemFlows = false;
-    public searchByAccount: AccountFragment[] = [];
-    public currentPage = 1;
-    public readonly WIDGET_FLOW_RUNS_PER_PAGE: number = 150;
-    public readonly TABLE_FLOW_RUNS_PER_PAGE: number = 15;
-    public readonly FlowStatus: typeof FlowStatus = FlowStatus;
-    public readonly TIMEOUT_REFRESH_FLOW = 800;
-    public flowConnectionData$: Observable<{
+    protected tileWidgetData$: Observable<MaybeUndefined<FlowsTableData>>;
+    protected filterByStatus: MaybeNull<FlowStatus> = null;
+    protected onlySystemFlows = false;
+    protected searchByAccount: AccountFragment[] = [];
+    protected currentPage = 1;
+    protected readonly WIDGET_FLOW_RUNS_PER_PAGE: number = 150;
+    protected readonly TABLE_FLOW_RUNS_PER_PAGE: number = 15;
+    protected readonly FlowStatus: typeof FlowStatus = FlowStatus;
+    protected readonly TIMEOUT_REFRESH_FLOW = 800;
+    protected flowConnectionData$: Observable<{
         flowsData: FlowsTableData;
         allFlowsPaused: MaybeUndefined<boolean>;
         flowInitiators: AccountFragment[];
@@ -31,21 +31,21 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
     protected navigationService = inject(NavigationService);
     protected cdr = inject(ChangeDetectorRef);
 
-    abstract fetchTableData(
+    protected abstract fetchTableData(
         page: number,
         filterByStatus?: MaybeNull<FlowStatus>,
         filterByInitiator?: MaybeNull<InitiatorFilterInput>,
         datasetsIds?: string[],
     ): void;
 
-    public getPageFromUrl(): void {
+    protected getPageFromUrl(): void {
         const pageParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE);
         if (pageParam) {
             this.currentPage = +requireValue(pageParam);
         }
     }
 
-    public onCancelFlow(params: CancelFlowArgs): void {
+    protected onCancelFlow(params: CancelFlowArgs): void {
         this.flowsService
             .cancelScheduledTasks({
                 datasetId: params.datasetId,
@@ -61,12 +61,12 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
             });
     }
 
-    public refreshFlow(): void {
+    protected refreshFlow(): void {
         this.getPageFromUrl();
         this.fetchTableData(this.currentPage);
     }
 
-    public searchByFilters(filters: MaybeNull<FlowsTableFiltersOptions>): void {
+    protected searchByFilters(filters: MaybeNull<FlowsTableFiltersOptions>): void {
         this.filterByStatus = filters?.status ?? null;
         this.onlySystemFlows = filters?.onlySystemFlows ?? false;
         this.searchByAccount = filters?.accounts ?? [];

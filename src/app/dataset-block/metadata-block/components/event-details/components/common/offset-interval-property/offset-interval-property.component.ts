@@ -24,7 +24,7 @@ export class OffsetIntervalPropertyComponent extends BasePropertyComponent imple
     private navigationService = inject(NavigationService);
     private datasetService = inject(DatasetService);
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         if (this.data.datasetId) {
             this.datasetService
                 .requestDatasetInfoById(this.data.datasetId)

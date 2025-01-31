@@ -8,13 +8,12 @@ import {
     mockDatasetLineageResponse,
 } from "../search/mock.data";
 import { TestBed } from "@angular/core/testing";
-import { Apollo, ApolloModule } from "apollo-angular";
+import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
 import { DatasetApi } from "../api/dataset.api";
 import { ModalService } from "../components/modal/modal.service";
 import { DatasetService } from "./dataset.service";
 import { DatasetSubscriptionsService } from "./dataset.subscriptions.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { ApolloTestingModule } from "apollo-angular/testing";
 import {
     DataQueryResultErrorKind,
     DatasetBasicsFragment,
@@ -45,8 +44,24 @@ describe("AppDatasetService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [ApolloModule, ApolloTestingModule, HttpClientTestingModule],
-            providers: [DatasetApi, ModalService, DatasetService, DatasetSubscriptionsService, Apollo],
+            imports: [HttpClientTestingModule],
+            providers: [
+                DatasetApi,
+                ModalService,
+                DatasetService,
+                DatasetSubscriptionsService,
+                Apollo,
+                {
+                    provide: APOLLO_OPTIONS,
+                    useFactory: () => {
+                        return {
+                            cache: {
+                                evict: () => null,
+                            },
+                        };
+                    },
+                },
+            ],
         });
         service = TestBed.inject(DatasetService);
         datasetApi = TestBed.inject(DatasetApi);

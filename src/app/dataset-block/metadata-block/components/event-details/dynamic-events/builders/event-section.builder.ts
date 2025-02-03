@@ -24,7 +24,7 @@ export abstract class EventSectionBuilder<TEvent extends GenericDynamicEventType
 
     public abstract buildEventSections(event: TEvent): EventSection[];
 
-    public buildEventRows(
+    protected buildEventRows(
         event: TEvent,
         rowDescriptors: EventRowDescriptorsByField,
         section: keyof TEvent,
@@ -41,7 +41,7 @@ export abstract class EventSectionBuilder<TEvent extends GenericDynamicEventType
         return rows;
     }
 
-    public buildEventRow(
+    protected buildEventRow(
         event: TEvent,
         rowDescriptors: EventRowDescriptorsByField,
         sectionObject: GenericEventSectionType,

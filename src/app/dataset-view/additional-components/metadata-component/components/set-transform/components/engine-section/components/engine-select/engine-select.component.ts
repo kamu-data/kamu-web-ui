@@ -22,26 +22,26 @@ import { EventPropertyLogo } from "src/app/dataset-block/metadata-block/componen
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EngineSelectComponent implements OnInit {
-    @ViewChild("input", { static: true }) input: ElementRef;
+    @ViewChild("input", { static: true }) public input: ElementRef;
     @ViewChild("dropdown", { static: true })
-    dropdown: ElementRef<HTMLDivElement>;
+    private dropdown: ElementRef<HTMLDivElement>;
     @ViewChild("selectedImage", { static: true })
-    selectedImage: ElementRef<HTMLImageElement>;
+    private selectedImage: ElementRef<HTMLImageElement>;
     public showDropdown = false;
-    @Input({ required: true }) data: EngineDesc[];
-    @Input({ required: true }) engine: string;
-    @Output() selectedEngineEmitter = new EventEmitter<string>();
+    @Input({ required: true }) public data: EngineDesc[];
+    @Input({ required: true }) public engine: string;
+    @Output() public selectedEngineEmitter = new EventEmitter<string>();
 
     private render = inject(Renderer2);
 
     @HostListener("document:click", ["$event"])
-    clickOut(event: Event) {
+    public clickOut(event: Event) {
         if (!this.dropdown.nativeElement.contains(event.target as Element)) {
             this.showDropdown = false;
         }
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         const defaultEngine = this.data.find((item: EngineDesc) => item.name === this.engine);
         if (defaultEngine) {
             this.clickShowDropdown(defaultEngine);

@@ -29,7 +29,7 @@ export class EditWatermarkModalComponent extends BaseComponent implements OnInit
     private datasetCommitService = inject(DatasetCommitService);
     private loggedUserService = inject(LoggedUserService);
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.date = new Date();
     }
 

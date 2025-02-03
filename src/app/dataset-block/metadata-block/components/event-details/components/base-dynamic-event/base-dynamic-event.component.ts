@@ -22,12 +22,12 @@ import { BaseComponent } from "src/app/common/base.component";
 export class BaseDynamicEventComponent<TEvent extends object> extends BaseComponent implements AfterViewChecked {
     @Input({ required: true }) public event: TEvent;
     @ViewChildren("container", { read: ViewContainerRef })
-    container: QueryList<ViewContainerRef>;
-    public eventSections: EventSection[];
+    private container: QueryList<ViewContainerRef>;
+    protected eventSections: EventSection[];
 
     protected cdr = inject(ChangeDetectorRef);
 
-    ngAfterViewChecked(): void {
+    public ngAfterViewChecked(): void {
         let componentRef: ComponentRef<BasePropertyComponent>;
         const rows: EventRow[] = [];
         this.eventSections

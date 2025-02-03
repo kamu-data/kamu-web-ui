@@ -9,7 +9,7 @@ import { BaseDynamicEventComponent } from "../base-dynamic-event/base-dynamic-ev
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExecuteTransformEventComponent extends BaseDynamicEventComponent<ExecuteTransform> implements OnInit {
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.eventSections = SECTION_BUILDERS_BY_EVENT_TYPE.ExecuteTransform.buildEventSections(this.event);
     }
 }

@@ -42,7 +42,7 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
     public componentData$: Observable<QueryExplainerComponentData>;
 
     /* istanbul ignore next */
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.commitmentUploadToken = this.extractCommitmentUploadToken();
         if (this.commitmentUploadToken) {
             this.componentData$ = this.queryExplainerService

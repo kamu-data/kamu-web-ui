@@ -53,16 +53,16 @@ export class SqlEditorComponent extends BaseEditorComponent implements OnInit, O
     private readonly INITIAL_EDITOR_HEIGHT = 200;
     private readonly EDITOR_VERTICAL_PADDINGS = 30;
 
-    rectOld: DOMRect | undefined;
-    origin: {
+    private rectOld: DOMRect | undefined;
+    private origin: {
         x: number;
         y: number;
     };
-    moveSubscription: Subscription | undefined;
-    div: HTMLElement | null;
-    alive: boolean = true;
+    private moveSubscription: Subscription | undefined;
+    private div: HTMLElement | null;
+    private alive: boolean = true;
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         /* istanbul ignore next */
         fromEvent(document, "mousedown")
             .pipe(
@@ -137,7 +137,7 @@ export class SqlEditorComponent extends BaseEditorComponent implements OnInit, O
         this.monaco["_editor"].focus();
     }
 
-    ngOnDestroy() {
+    public ngOnDestroy() {
         this.alive = false;
     }
 }

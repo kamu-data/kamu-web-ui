@@ -59,7 +59,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     @Input({ required: true }) public onlySystemFlows: boolean;
     @Input({ required: true }) public searchByAccount: AccountFragment[] = [];
     @Input() public searchByDataset: DatasetListFlowsDataFragment[] = [];
-    @Input({ required: true }) tableOptions: FlowsTableOptions;
+    @Input({ required: true }) public tableOptions: FlowsTableOptions;
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
     @Output() public searchByFiltersChange = new EventEmitter<MaybeNull<FlowsTableFiltersOptions>>();
     @Output() public cancelFlowChange = new EventEmitter<CancelFlowArgs>();
@@ -70,7 +70,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     private readonly FILTERED_ITEMS_COUNT = 10;
 
     public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>();
-    @ViewChildren(MatMenuTrigger) triggersMatMenu: QueryList<MatMenuTrigger>;
+    @ViewChildren(MatMenuTrigger) private triggersMatMenu: QueryList<MatMenuTrigger>;
     @Input({ required: true }) public accountFlowInitiators: AccountFragment[];
     @Input({ required: true }) public involvedDatasets: DatasetListFlowsDataFragment[];
 
@@ -89,14 +89,14 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     private datasetFlowsService = inject(DatasetFlowsService);
     private toastrService = inject(ToastrService);
 
-    ngOnChanges(changes: SimpleChanges): void {
+    public ngOnChanges(changes: SimpleChanges): void {
         const nodes: SimpleChange = changes.nodes;
         if (nodes && nodes.currentValue !== nodes.previousValue) {
             this.dataSource.data = nodes.currentValue as FlowSummaryDataFragment[];
         }
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.dataSource.data = this.nodes;
         this.initializeFilters();
     }

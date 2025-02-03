@@ -33,7 +33,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 export class MetadataComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public datasetPermissions: DatasetPermissionsFragment;
-    @Output() pageChangeEmit = new EventEmitter<number>();
+    @Output() public pageChangeEmit = new EventEmitter<number>();
 
     public readonly ReadSectionMapping: Record<string, string> = {
         ReadStepCsv: "Csv",

@@ -35,7 +35,7 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
     public isShowExposedValue: boolean = false;
     public readonly STUB_VALUE = "stub-value";
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.fetchExposedValue();
         this.setInitialFormValue();
     }

@@ -68,7 +68,7 @@ export class DatasetComponent extends BaseDatasetDataComponent implements OnInit
         this.datasetPermissions$ = this.datasetSubsService.permissionsChanges;
     }
 
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         this.sessionStorageService.removeDatasetSqlCode();
     }
 

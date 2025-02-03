@@ -16,8 +16,8 @@ import { DataHelpers } from "src/app/common/data.helpers";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlowDetailsHistoryTabComponent extends BaseComponent {
-    @Input({ required: true }) flowHistory: FlowHistoryDataFragment[];
-    @Input({ required: true }) flowDetails: FlowSummaryDataFragment;
+    @Input({ required: true }) public flowHistory: FlowHistoryDataFragment[];
+    @Input({ required: true }) public flowDetails: FlowSummaryDataFragment;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
 
     public get history(): FlowHistoryDataFragment[] {

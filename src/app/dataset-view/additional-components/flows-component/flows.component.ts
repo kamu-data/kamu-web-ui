@@ -37,7 +37,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
 
     private datasetSubsService = inject(DatasetSubscriptionsService);
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.getPageFromUrl();
         this.fetchTableData(this.currentPage);
         this.datasetSubsService.overviewChanges

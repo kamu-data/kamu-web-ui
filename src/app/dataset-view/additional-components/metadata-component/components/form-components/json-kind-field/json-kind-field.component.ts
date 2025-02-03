@@ -18,7 +18,7 @@ export class JsonKindFieldComponent extends BaseField implements OnInit {
     public readonly READ_SUB_PATH_PLACEHOLDER = "Enter path to data file...";
     public readonly READ_JSON_KIND_CONTROL = "jsonKind";
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.form.addControl(this.READ_SUB_PATH_CONTROL, new FormControl(""));
     }
 

@@ -113,18 +113,18 @@ import { DynamicComponent } from "./dynamic.component";
     `,
 })
 export class ModalDialogComponent extends DynamicComponent {
-    onClick(action: boolean | string, locationBack?: boolean) {
+    public onClick(action: boolean | string, locationBack?: boolean) {
         this.context._close?.(locationBack);
         this.context.handler?.(action);
     }
 
-    hideAll() {
+    public hideAll() {
         if (this.context.title === "Search for:") {
             this.context._close?.();
         }
     }
 
-    computeWidth(): string {
+    public computeWidth(): string {
         const buttonsCount = this.getContextButtonsCount();
         return `${100 / buttonsCount}%`;
     }

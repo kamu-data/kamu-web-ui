@@ -9,6 +9,6 @@ export abstract class BaseDatasetDataComponent extends BaseProcessingComponent {
     protected datasetService = inject(DatasetService);
     protected datasetSubsService = inject(DatasetSubscriptionsService);
 
-    public datasetBasics$: Observable<DatasetBasicsFragment>;
-    public datasetPermissions$: Observable<DatasetPermissionsFragment>;
+    protected datasetBasics$: Observable<DatasetBasicsFragment>;
+    protected datasetPermissions$: Observable<DatasetPermissionsFragment>;
 }

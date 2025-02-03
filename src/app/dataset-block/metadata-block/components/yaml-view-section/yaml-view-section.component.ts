@@ -14,7 +14,7 @@ export class YamlViewSectionComponent implements OnInit {
     private blockService = inject(BlockService);
     public yamlEventText$: Observable<string>;
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.yamlEventText$ = this.blockService.metadataBlockAsYamlChanges;
     }
 

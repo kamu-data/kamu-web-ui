@@ -17,10 +17,10 @@ import {
 export class RequestTimerComponent implements OnChanges, OnDestroy {
     private cdr = inject(ChangeDetectorRef);
 
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         this.stopTimer();
     }
-    ngOnChanges(changes: SimpleChanges): void {
+    public ngOnChanges(changes: SimpleChanges): void {
         if (changes.sqlLoading.currentValue) {
             this.resetTimer();
             this.runTimer();

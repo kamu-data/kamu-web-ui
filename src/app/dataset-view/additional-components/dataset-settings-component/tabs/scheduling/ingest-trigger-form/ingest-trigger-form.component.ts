@@ -46,7 +46,7 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
         ]),
     });
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.setPollingEveryTimeValidator();
         this.initPollingForm();
         this.pollingTypeChanges();

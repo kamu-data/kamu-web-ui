@@ -4,7 +4,7 @@ import { Pipe, PipeTransform } from "@angular/core";
     name: "displayDatasetId",
 })
 export class DisplayDatasetIdPipe implements PipeTransform {
-    transform(id: string): string {
+    public transform(id: string): string {
         return id.slice(0, 11) + "..." + id.slice(-7);
     }
 }

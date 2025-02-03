@@ -22,7 +22,7 @@ export class PreprocessStepComponent extends BaseComponent implements OnInit {
 
     private editService = inject(EditPollingSourceService);
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         if (this.eventYamlByHash) {
             this.setPollingSourceEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
             if (this.setPollingSourceEvent.preprocess) {

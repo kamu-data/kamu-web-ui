@@ -30,7 +30,7 @@ export class SelectDateFormatFieldComponent extends BaseField implements OnInit 
 
     private fb = inject(FormBuilder);
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.chooseEventTimeSource();
     }
 

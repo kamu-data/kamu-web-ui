@@ -18,14 +18,8 @@ import { MOCK_ENV_VAR_ID, mockListEnvVariablesQuery } from "src/app/api/mock/env
 import { ViewDatasetEnvVarConnection } from "src/app/api/kamu.graphql.interface";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ModalService } from "src/app/common/components/modal/modal.service";
-import { EditKeyValueModalComponent } from "./components/edit-key-value-modal/edit-key-value-modal.component";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-
-export class MockNgbModalRef {
-    result: Promise<unknown> = new Promise((resolve) => resolve("x"));
-    componentInstance: EditKeyValueModalComponent;
-}
 
 describe("DatasetSettingsSecretsManagerTabComponent", () => {
     let component: DatasetSettingsSecretsManagerTabComponent;

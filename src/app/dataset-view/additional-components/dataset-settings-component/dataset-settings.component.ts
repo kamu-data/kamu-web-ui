@@ -71,7 +71,7 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
         );
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.activeTab = this.getSectionFromUrl() ?? SettingsTabsEnum.GENERAL;
 
         this.datasetSubsService.overviewChanges

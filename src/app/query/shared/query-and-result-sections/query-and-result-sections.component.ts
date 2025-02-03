@@ -35,7 +35,7 @@ import { SqlQueryResponseState } from "src/app/query/global-query/global-query.m
 })
 export class QueryAndResultSectionsComponent extends BaseComponent implements OnChanges {
     @Input({ required: true }) public sqlLoading: boolean;
-    @Input({ required: true }) sqlError: MaybeNull<string>;
+    @Input({ required: true }) public sqlError: MaybeNull<string>;
     @Input({ required: true }) public sqlRequestCode: string;
     @Input({ required: true }) public sqlQueryResponse: MaybeNull<SqlQueryResponseState>;
     @Input({ required: true }) public monacoPlaceholder: string = "";
@@ -56,7 +56,7 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
     public currentData: DataRow[] = [];
     public isAllDataLoaded: boolean;
 
-    ngOnChanges(changes: SimpleChanges): void {
+    public ngOnChanges(changes: SimpleChanges): void {
         if (
             changes.sqlQueryResponse &&
             changes.sqlQueryResponse.currentValue &&

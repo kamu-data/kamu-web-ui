@@ -9,11 +9,11 @@ import { UnsubscribeDestroyRefAdapter } from "./unsubscribe.ondestroy.adapter";
 export abstract class BaseComponent extends UnsubscribeDestroyRefAdapter {
     protected activatedRoute = inject(ActivatedRoute);
 
-    public get searchString(): string {
+    protected get searchString(): string {
         return window.location.search;
     }
 
-    public getDatasetInfoFromUrl(): DatasetInfo {
+    protected getDatasetInfoFromUrl(): DatasetInfo {
         const paramMap: ParamMap = this.activatedRoute.snapshot.paramMap;
         return {
             // Both parameters are mandatory in URL, router would not activate this component otherwise
@@ -22,7 +22,7 @@ export abstract class BaseComponent extends UnsubscribeDestroyRefAdapter {
         };
     }
 
-    public get datasetInfoFromUrlChanges(): Observable<DatasetInfo> {
+    protected get datasetInfoFromUrlChanges(): Observable<DatasetInfo> {
         return this.activatedRoute.params.pipe(
             map((params: Params) => {
                 return {

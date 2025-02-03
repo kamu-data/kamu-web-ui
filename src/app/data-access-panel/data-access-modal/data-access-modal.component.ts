@@ -18,8 +18,8 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataAccessModalComponent {
-    @Input({ required: true }) protocols$: Observable<MaybeUndefined<DatasetEndpoints>>;
-    @Input({ required: true }) datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public protocols$: Observable<MaybeUndefined<DatasetEndpoints>>;
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
 
     private clipboard = inject(Clipboard);
     private appConfigService = inject(AppConfigService);

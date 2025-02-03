@@ -8,7 +8,7 @@ import { DatasetVisibilityOutput } from "src/app/api/kamu.graphql.interface";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetVisibilityComponent {
-    @Input({ required: true }) datasetVisibility: DatasetVisibilityOutput;
+    @Input({ required: true }) public datasetVisibility: DatasetVisibilityOutput;
 
     public get isPrivate(): boolean {
         return this.datasetVisibility.__typename === "PrivateDatasetVisibility";

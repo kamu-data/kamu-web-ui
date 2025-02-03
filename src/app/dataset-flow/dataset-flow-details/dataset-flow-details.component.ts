@@ -45,7 +45,7 @@ export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implem
     private datasetFlowsService = inject(DatasetFlowsService);
     private cdr = inject(ChangeDetectorRef);
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.datasetBasics$ = this.datasetService.datasetChanges.pipe(shareReplay());
         this.datasetPermissions$ = this.datasetSubsService.permissionsChanges;
         this.datasetViewMenuData$ = combineLatest([this.datasetBasics$, this.datasetPermissions$]).pipe(

@@ -13,11 +13,11 @@ export class DisplayTimeComponent extends BasePropertyComponent {
     @Input() public class?: string;
     @Input() public dataTestId: string;
 
-    get relativeTime(): string {
+    public get relativeTime(): string {
         return this.dateTime(this.data);
     }
 
-    get formatTitle(): string {
+    public get formatTitle(): string {
         return format(this.data, AppValues.CRON_EXPRESSION_DATE_FORMAT);
     }
 

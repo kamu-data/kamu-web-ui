@@ -29,9 +29,9 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 })
 export class ModalComponent extends BaseComponent implements OnInit {
     @ViewChild("container", { read: ViewContainerRef })
-    container: ViewContainerRef;
-    isVisible: boolean;
-    type: MaybeUndefined<string>;
+    private container: ViewContainerRef;
+    public isVisible: boolean;
+    public type: MaybeUndefined<string>;
 
     private componentRef: ComponentRef<unknown>;
     private mappings: ModalMappingsComponent = {
@@ -45,7 +45,7 @@ export class ModalComponent extends BaseComponent implements OnInit {
     private cdr = inject(ChangeDetectorRef);
     private location = inject(Location);
 
-    ngOnInit() {
+    public ngOnInit() {
         this.modalService
             .getCommand()
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -55,7 +55,7 @@ export class ModalComponent extends BaseComponent implements OnInit {
             });
     }
 
-    _execute(command: ModalCommandInterface) {
+    public _execute(command: ModalCommandInterface) {
         this.modalService.modalType = command.type;
 
         this._close();
@@ -63,7 +63,7 @@ export class ModalComponent extends BaseComponent implements OnInit {
         this._renderModal(command);
     }
 
-    _renderModal(command: ModalCommandInterface) {
+    public _renderModal(command: ModalCommandInterface) {
         const componentType = this._getComponentType(command.type);
 
         const factory = this.componentFactoryResolver.resolveComponentFactory(componentType);
@@ -77,17 +77,17 @@ export class ModalComponent extends BaseComponent implements OnInit {
         this._handleKBD(command.type);
     }
 
-    _getComponentType(typeName: ModalComponentType) {
+    public _getComponentType(typeName: ModalComponentType) {
         return this.mappings[typeName];
     }
 
-    _handleKBD(type?: string) {
+    public _handleKBD(type?: string) {
         this.isVisible = true;
         this.type = type;
         document.addEventListener("keydown", this._processKDB.bind(this));
     }
 
-    _close(location?: boolean) {
+    public _close(location?: boolean) {
         if (location === true) {
             this.location.back();
         }
@@ -99,7 +99,7 @@ export class ModalComponent extends BaseComponent implements OnInit {
     }
 
     /* istanbul ignore next */
-    _processKDB(e: KeyboardEvent) {
+    public _processKDB(e: KeyboardEvent) {
         if (e.key === "Escape") {
             // escape
             this._close();

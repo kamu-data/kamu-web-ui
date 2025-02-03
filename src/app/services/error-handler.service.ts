@@ -14,7 +14,7 @@ export class ErrorHandlerService implements ErrorHandler {
 
     private kamuHandlerError = new KamuErrorHandler(this.injector, this.navigationService, this.loggedUserService);
 
-    constructor(
+    public constructor(
         @Inject(Injector) private injector: Injector,
         private navigationService: NavigationService,
         private loggedUserService: LoggedUserService,

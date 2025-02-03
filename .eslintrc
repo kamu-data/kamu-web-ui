@@ -28,7 +28,25 @@
     ],
     "jasmine/new-line-before-expect": 0,
     "jasmine/no-unsafe-spy": ["off"],
-    "no-console": "warn"
+    "no-console": "warn",
+    "@typescript-eslint/explicit-member-accessibility": [
+      "error",
+      {
+        "accessibility": "explicit"
+      }
+    ],
+    "@typescript-eslint/naming-convention": [
+        "error",
+        {
+          "selector": "classProperty",
+          "modifiers": ["public"],
+          "format": null,
+          "custom": {
+            "regex": "^(?!static readonly).*$",
+            "match": true
+          }
+        }
+    ]
   },
   "ignorePatterns": ["node_modules", "dist", "kamu.graphql.interface.ts"]
 }

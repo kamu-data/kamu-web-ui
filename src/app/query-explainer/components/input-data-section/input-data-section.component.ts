@@ -22,10 +22,10 @@ import { addMarkdownRunButton } from "src/app/common/helpers/app.helpers";
 export class InputDataSectionComponent implements AfterViewChecked {
     @Input({ required: true }) public blockHashObservables$: Observable<Date>[];
     @Input({ required: true }) public datasetInfoObservables$: Observable<DatasetInfo>[];
-    @Input({ required: true }) inputData: QueryExplainerComponentData;
+    @Input({ required: true }) public inputData: QueryExplainerComponentData;
     public readonly DATE_FORMAT = AppValues.DISPLAY_FLOW_DATE_FORMAT;
 
-    ngAfterViewChecked(): void {
+    public ngAfterViewChecked(): void {
         this.addDynamicRunButton();
     }
 

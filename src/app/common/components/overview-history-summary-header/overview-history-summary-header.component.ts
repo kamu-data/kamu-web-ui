@@ -21,11 +21,11 @@ export class OverviewHistorySummaryHeaderComponent {
     public readonly URL_BLOCK = ProjectLinks.URL_BLOCK;
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 
-    get systemTime(): string {
+    public get systemTime(): string {
         return this.metadataBlockFragment ? this.metadataBlockFragment.systemTime : "";
     }
 
-    get authorInfo(): AccountExtendedFragment {
+    public get authorInfo(): AccountExtendedFragment {
         return this.metadataBlockFragment?.author
             ? this.metadataBlockFragment.author
             : {
@@ -35,7 +35,7 @@ export class OverviewHistorySummaryHeaderComponent {
               };
     }
 
-    get descriptionForMetadataBlock(): string {
+    public get descriptionForMetadataBlock(): string {
         return this.metadataBlockFragment ? DataHelpers.descriptionForMetadataBlock(this.metadataBlockFragment) : "";
     }
 }

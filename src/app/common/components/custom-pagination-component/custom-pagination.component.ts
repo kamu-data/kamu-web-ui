@@ -7,13 +7,13 @@ import { Component, Input, Output, EventEmitter, OnChanges, ChangeDetectionStrat
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomPaginationComponent implements OnChanges {
-    @Input({ required: true }) date = "";
-    @Input({ required: true }) hash = "";
-    @Input({ required: true }) pageIndex: number; // current offset
-    @Input({ required: true }) limit: number; // record per page
-    @Input({ required: true }) total: number; // total records
-    @Input() range = 5;
-    @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
+    @Input({ required: true }) public date = "";
+    @Input({ required: true }) public hash = "";
+    @Input({ required: true }) public pageIndex: number; // current offset
+    @Input({ required: true }) public limit: number; // record per page
+    @Input({ required: true }) public total: number; // total records
+    @Input() public range = 5;
+    @Output() public pageChange: EventEmitter<number> = new EventEmitter<number>();
     public totalPageNo: number[] = [];
     public totalSizeOfPages: number = 0;
 
@@ -27,14 +27,14 @@ export class CustomPaginationComponent implements OnChanges {
         }
     }
 
-    pageChangeBackward() {
+    public pageChangeBackward() {
         if (this.pageIndex > 0) {
             this.pageIndex = this.pageIndex - 1;
         }
         this.pageChange.emit(this.pageIndex);
     }
 
-    pageChangeForward() {
+    public pageChangeForward() {
         if (this.pageIndex < this.totalSizeOfPages) {
             this.pageIndex = this.pageIndex + 1;
         }

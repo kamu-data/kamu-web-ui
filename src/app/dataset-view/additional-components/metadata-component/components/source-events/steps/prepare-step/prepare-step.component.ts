@@ -28,7 +28,7 @@ export class PrepareStepComponent extends BaseComponent implements OnInit {
     private fb = inject(FormBuilder);
     private editService = inject(EditPollingSourceService);
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.parentForm = this.rootFormGroupDirective.form;
         if (this.eventYamlByHash) {
             this.setPollingSourceEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);

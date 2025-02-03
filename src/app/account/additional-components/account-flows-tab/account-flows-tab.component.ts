@@ -21,7 +21,7 @@ import { FlowsTableFiltersOptions } from "src/app/common/components/flows-table/
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent implements OnInit {
-    @Input({ required: true }) loggedUser: AccountFragment;
+    @Input({ required: true }) public loggedUser: AccountFragment;
     public nodes: FlowSummaryDataFragment[] = [];
     public searchByDataset: DatasetListFlowsDataFragment[] = [];
     public filters: MaybeNull<FlowsTableFiltersOptions>;
@@ -30,7 +30,7 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
     private accountService = inject(AccountService);
     private ngZone = inject(NgZone);
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.getPageFromUrl();
         this.fetchTableData(this.currentPage);
     }

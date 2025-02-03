@@ -12,7 +12,7 @@ import { AppConfigService } from "src/app/app-config.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlowDetailsLogsTabComponent extends BaseComponent {
-    @Input({ required: true }) flowDetails: DatasetFlowByIdResponse;
+    @Input({ required: true }) public flowDetails: DatasetFlowByIdResponse;
     private loggedUserService = inject(LoggedUserService);
     private grafanaLogsService = inject(GrafanaLogsService);
     private appConfigService = inject(AppConfigService);

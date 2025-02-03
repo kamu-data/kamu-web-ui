@@ -11,7 +11,7 @@ import { SourceOrder } from "../../source-events/add-polling-source/process-form
 })
 export class OrderFieldComponent extends BaseField implements OnInit {
     public readonly ORDER_RADIO_CONTROL = ORDER_RADIO_CONTROL;
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.form.addControl("order", new FormControl(SourceOrder.NONE));
     }
 }

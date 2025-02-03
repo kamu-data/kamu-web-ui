@@ -43,7 +43,7 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
         spdxId: [""],
     });
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         if (this.currentState?.overview.metadata.currentLicense) {
             const { name, shortName, spdxId, websiteUrl } = this.currentState.overview.metadata.currentLicense;
             this.licenseForm.patchValue({

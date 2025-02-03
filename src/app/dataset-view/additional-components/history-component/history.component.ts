@@ -14,7 +14,7 @@ export class HistoryComponent extends BaseComponent {
     private datasetSubsService = inject(DatasetSubscriptionsService);
 
     @Input({ required: true }) public datasetName: string;
-    @Output() onPageChangeEmit = new EventEmitter<number>();
+    @Output() public onPageChangeEmit = new EventEmitter<number>();
     public historyUpdate$: Observable<MaybeNull<DatasetHistoryUpdate>> = this.datasetSubsService.historyChanges;
 
     public onPageChange(currentPage: number): void {

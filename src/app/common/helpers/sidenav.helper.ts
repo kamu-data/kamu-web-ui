@@ -3,7 +3,7 @@ import { MatDrawerToggleResult, MatSidenav } from "@angular/material/sidenav";
 export class SideNavHelper {
     private sidenav: MatSidenav;
 
-    constructor(sidenav: MatSidenav) {
+    public constructor(sidenav: MatSidenav) {
         this.sidenav = sidenav;
     }
 

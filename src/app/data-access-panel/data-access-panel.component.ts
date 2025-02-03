@@ -13,13 +13,13 @@ import { DataAccessModalComponent } from "./data-access-modal/data-access-modal.
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataAccessPanelComponent implements OnInit {
-    @Input({ required: true }) datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     public protocols$: Observable<MaybeUndefined<DatasetEndpoints>>;
 
     private protocolsService = inject(ProtocolsService);
     private ngbModalService = inject(NgbModal);
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.initClipboardHints();
     }
 

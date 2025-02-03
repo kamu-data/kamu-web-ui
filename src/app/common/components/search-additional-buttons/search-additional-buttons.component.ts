@@ -23,7 +23,7 @@ export class SearchAdditionalButtonsComponent implements OnInit {
     public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[];
     @Output() public searchAdditionalButtonsMethod = new EventEmitter<string>();
     public shouldMinimizeSearchAdditionalButtons = false;
-    @ViewChild("menuTrigger") trigger: ElementRef;
+    @ViewChild("menuTrigger") public trigger: ElementRef;
 
     @HostListener("window:resize")
     public checkWindowSize(): void {

@@ -6,7 +6,7 @@ import { AfterViewInit, Directive, ElementRef, inject } from "@angular/core";
 export class AutofocusDirective implements AfterViewInit {
     private elementRef = inject(ElementRef);
 
-    ngAfterViewInit(): void {
+    public ngAfterViewInit(): void {
         setTimeout(() => {
             (this.elementRef.nativeElement as HTMLElement).focus();
         });

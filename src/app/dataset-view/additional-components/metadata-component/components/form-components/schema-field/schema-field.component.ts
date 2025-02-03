@@ -22,8 +22,8 @@ export interface SchemaType {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SchemaFieldComponent extends BaseField implements AfterViewInit {
-    @ViewChild(MatTable) table: MatTable<unknown>;
-    @ViewChildren("ngbTypeahead") ngbType: QueryList<NgbTypeahead>;
+    @ViewChild(MatTable) private table: MatTable<unknown>;
+    @ViewChildren("ngbTypeahead") private ngbType: QueryList<NgbTypeahead>;
     public focus$ = new Subject<SchemaType>();
     public click$ = new Subject<SchemaType>();
     private focusObservableList = Array<Subject<SchemaType>>();
@@ -49,7 +49,7 @@ export class SchemaFieldComponent extends BaseField implements AfterViewInit {
         pattern: "Incorrect character",
     };
 
-    ngAfterViewInit(): void {
+    public ngAfterViewInit(): void {
         let focusItem$ = new Subject<SchemaType>();
         this.focus$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((item) => {
             const tableIndex = this.items.controls.findIndex(

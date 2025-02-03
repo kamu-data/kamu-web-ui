@@ -8,5 +8,5 @@ import { BaseComponent } from "src/app/common/components/base.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetInfoEventComponent extends BaseComponent {
-    @Input({ required: true }) event: SetInfo;
+    @Input({ required: true }) public event: SetInfo;
 }

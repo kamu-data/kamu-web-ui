@@ -21,7 +21,7 @@ export class DatasetNameByIdPropertyComponent extends BasePropertyComponent impl
     private navigationService = inject(NavigationService);
     private cdr = inject(ChangeDetectorRef);
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.datasetService
             .requestDatasetInfoById(this.data)
             .pipe(takeUntilDestroyed(this.destroyRef))

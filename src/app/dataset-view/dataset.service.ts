@@ -1,4 +1,4 @@
-import { SqlExecutionError } from "../common/values/errors";
+import { LocalStorageService } from "src/app/services/local-storage.service";
 import {
     BlockRef,
     CompareChainsResultStatus,
@@ -32,11 +32,12 @@ import {
 import { DatasetSubscriptionsService } from "./dataset.subscriptions.service";
 import { DatasetHistoryUpdate, MetadataSchemaUpdate, OverviewUpdate } from "./dataset.subscriptions.interface";
 import { DatasetApi } from "../api/dataset.api";
-import { DatasetNotFoundError } from "../common/values/errors";
+import { DatasetNotFoundError, SqlExecutionError } from "../common/values/errors";
 import { map } from "rxjs/operators";
 import { MaybeNull } from "../common/types/app.types";
 import { parseCurrentSchema } from "../common/helpers/app.helpers";
 import { APOLLO_OPTIONS } from "apollo-angular";
+import { Router } from "@angular/router";
 import { resetCacheHelper } from "../common/helpers/apollo-cache.helper";
 import { parseDataRows } from "../common/helpers/data.helpers";
 
@@ -45,6 +46,8 @@ export class DatasetService {
     private datasetApi = inject(DatasetApi);
     private datasetSubsService = inject(DatasetSubscriptionsService);
     private injector = inject(Injector);
+    private router = inject(Router);
+    private localStorageService = inject(LocalStorageService);
     private currentHeadBlockHash: string;
     private dataset$: Subject<DatasetBasicsFragment> = new Subject<DatasetBasicsFragment>();
 
@@ -81,6 +84,12 @@ export class DatasetService {
                         throw new SqlExecutionError(dataTail.errorMessage);
                     }
                 } else {
+                    this.localStorageService.setRedirectAfterLoginUrl(this.router.url);
+                    const cache = this.injector.get(APOLLO_OPTIONS).cache;
+                    cache.evict({
+                        id: "ROOT_QUERY",
+                        fieldName: "datasets",
+                    });
                     throw new DatasetNotFoundError();
                 }
             }),

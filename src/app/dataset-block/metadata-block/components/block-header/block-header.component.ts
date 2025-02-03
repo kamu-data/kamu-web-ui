@@ -18,7 +18,7 @@ export class BlockHeaderComponent extends BaseComponent implements OnInit {
 
     private blockService = inject(BlockService);
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.block$ = this.blockService.metadataBlockChanges;
     }
 }

@@ -22,7 +22,7 @@ export class EmailsTabComponent implements OnInit {
     private fb = inject(FormBuilder);
     private accountEmailService = inject(AccountEmailService);
 
-    get emailAddress(): FormControl<string> {
+    public get emailAddress(): FormControl<string> {
         return this.changeEmailForm.get("emailAddress") as FormControl<string>;
     }
 

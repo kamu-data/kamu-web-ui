@@ -44,7 +44,7 @@ export class LineageGraphComponent implements OnInit, OnChanges {
     public view: [number, number];
     public showSidePanel = true;
 
-    @ViewChild("containerRef", { static: false }) element: MaybeUndefined<ElementRef>;
+    @ViewChild("containerRef", { static: false }) private element: MaybeUndefined<ElementRef>;
     @HostListener("window:resize")
     public checkWindowSize(): void {
         this.changeLineageGraphView();

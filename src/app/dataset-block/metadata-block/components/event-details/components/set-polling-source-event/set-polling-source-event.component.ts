@@ -9,7 +9,7 @@ import { SECTION_BUILDERS_BY_EVENT_TYPE } from "../../dynamic-events/builders/ev
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetPollingSourceEventComponent extends BaseDynamicEventComponent<SetPollingSource> implements OnInit {
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.eventSections = SECTION_BUILDERS_BY_EVENT_TYPE.SetPollingSource.buildEventSections(this.event);
     }
 }

@@ -27,7 +27,7 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
     private cdr = inject(ChangeDetectorRef);
     private navigationService = inject(NavigationService);
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.initSqlQueryFromUrl();
         this.sqlQueryService.resetSqlError();
         this.sqlQueryService.emitSqlQueryResponseChanged(null);

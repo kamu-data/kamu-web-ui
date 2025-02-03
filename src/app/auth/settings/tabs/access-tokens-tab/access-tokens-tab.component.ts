@@ -37,7 +37,7 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
     private cdr = inject(ChangeDetectorRef);
 
     @Input({ required: true }) public account: AccountWithEmailFragment;
-    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatSort) private sort: MatSort;
     public searchTokenName: string = "";
     public dataSource = new MatTableDataSource();
     public currentPage = 1;
@@ -53,7 +53,7 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
     public readonly PER_PAGE = 15;
     public readonly DATE_FORMAT = AppValues.DISPLAY_FLOW_DATE_FORMAT;
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.getPageFromUrl();
         this.updateTable(this.currentPage);
     }

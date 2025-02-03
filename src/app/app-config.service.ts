@@ -23,27 +23,27 @@ export class AppConfigService {
         this.appUiConfig = AppConfigService.loadAppUIConfig(this.appRuntimeConfig);
     }
 
-    get apiServerUrl(): string {
+    public get apiServerUrl(): string {
         return new URL(this.apiServerGqlUrl).origin;
     }
 
-    get apiServerGqlUrl(): string {
+    public get apiServerGqlUrl(): string {
         return this.appRuntimeConfig.apiServerGqlUrl;
     }
 
-    get apiServerHttpUrl(): string {
+    public get apiServerHttpUrl(): string {
         return this.appRuntimeConfig.apiServerHttpUrl;
     }
 
-    get githubClientId(): MaybeUndefined<string> {
+    public get githubClientId(): MaybeUndefined<string> {
         return this.appRuntimeConfig.githubClientId;
     }
 
-    get grafanaLogs(): GrafanaLogsConfiguration | null {
+    public get grafanaLogs(): GrafanaLogsConfiguration | null {
         return this.appRuntimeConfig.grafanaLogs ?? null;
     }
 
-    get loginInstructions(): AppLoginInstructions | null {
+    public get loginInstructions(): AppLoginInstructions | null {
         if (this.appRuntimeConfig.loginInstructions) {
             return this.appRuntimeConfig.loginInstructions;
         } else {
@@ -51,7 +51,7 @@ export class AppConfigService {
         }
     }
 
-    get featuresRuntimeConfig(): FeaturesRuntimeConfig | null {
+    public get featuresRuntimeConfig(): FeaturesRuntimeConfig | null {
         if (this.appRuntimeConfig.features) {
             return this.appRuntimeConfig.features;
         } else {
@@ -59,11 +59,11 @@ export class AppConfigService {
         }
     }
 
-    get ingestUploadFileLimitMb(): number {
+    public get ingestUploadFileLimitMb(): number {
         return this.appUiConfig.ingestUploadFileLimitMb;
     }
 
-    get featureFlags(): AppUIConfigFeatureFlags {
+    public get featureFlags(): AppUIConfigFeatureFlags {
         return this.appUiConfig.featureFlags;
     }
 

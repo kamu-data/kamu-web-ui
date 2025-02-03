@@ -17,7 +17,7 @@ export class BlockIntervalPropertyComponent extends BasePropertyComponent implem
 
     private datasetService = inject(DatasetService);
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.datasetService
             .requestDatasetInfoById(this.data.datasetId)
             .pipe(takeUntilDestroyed(this.destroyRef))

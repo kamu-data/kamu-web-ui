@@ -4,7 +4,7 @@ import { Pipe, PipeTransform } from "@angular/core";
     name: "displaySize",
 })
 export class DisplaySizePipe implements PipeTransform {
-    transform(value: number, decimalPlaces = 1): string {
+    public transform(value: number, decimalPlaces = 1): string {
         return this.dataSize(value, decimalPlaces);
     }
 

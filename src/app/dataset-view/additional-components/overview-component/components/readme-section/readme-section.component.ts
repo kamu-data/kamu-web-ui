@@ -46,14 +46,14 @@ export class ReadmeSectionComponent extends BaseComponent implements OnChanges, 
     private datasetCommitService = inject(DatasetCommitService);
     private loggedUserService = inject(LoggedUserService);
 
-    ngOnChanges(changes: SimpleChanges): void {
+    public ngOnChanges(changes: SimpleChanges): void {
         if (changes.currentReadme && changes.currentReadme.currentValue !== changes.currentReadme.previousValue) {
             this.readmeState = changes.currentReadme.currentValue as string;
             this.editingInProgress = false;
         }
     }
 
-    ngAfterViewChecked(): void {
+    public ngAfterViewChecked(): void {
         this.addDynamicRunButton();
     }
 

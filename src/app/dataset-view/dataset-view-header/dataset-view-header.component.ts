@@ -11,8 +11,8 @@ import { DatasetVisibilityOutput } from "src/app/api/kamu.graphql.interface";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetViewHeaderComponent {
-    @Input({ required: true }) datasetInfo: DatasetInfo;
-    @Input({ required: true }) datasetVisibility: DatasetVisibilityOutput;
+    @Input({ required: true }) public datasetInfo: DatasetInfo;
+    @Input({ required: true }) public datasetVisibility: DatasetVisibilityOutput;
     @Output() public onClickSearchAdditionalButtonEmit = new EventEmitter<string>();
 
     public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[] = [

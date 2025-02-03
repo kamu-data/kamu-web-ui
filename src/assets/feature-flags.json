@@ -430,7 +430,7 @@
       },
       {
         "id": "emails",
-        "developmentState": "reserved"
+        "developmentState": "stable"
       },
       {
         "id": "notifications",

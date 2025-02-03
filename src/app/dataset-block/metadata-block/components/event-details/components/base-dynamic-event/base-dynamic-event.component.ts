@@ -23,7 +23,7 @@ export class BaseDynamicEventComponent<TEvent extends object> extends BaseCompon
     @Input({ required: true }) public event: TEvent;
     @ViewChildren("container", { read: ViewContainerRef })
     private container: QueryList<ViewContainerRef>;
-    public eventSections: EventSection[];
+    protected eventSections: EventSection[];
 
     protected cdr = inject(ChangeDetectorRef);
 

@@ -14,13 +14,13 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
     protected tileWidgetData$: Observable<MaybeUndefined<FlowsTableData>>;
     protected filterByStatus: MaybeNull<FlowStatus> = null;
-    protected onlySystemFlows = false;
-    protected searchByAccount: AccountFragment[] = [];
-    protected currentPage = 1;
+    public onlySystemFlows = false;
+    public searchByAccount: AccountFragment[] = [];
+    public currentPage = 1;
     protected readonly WIDGET_FLOW_RUNS_PER_PAGE: number = 150;
     protected readonly TABLE_FLOW_RUNS_PER_PAGE: number = 15;
     protected readonly FlowStatus: typeof FlowStatus = FlowStatus;
-    protected readonly TIMEOUT_REFRESH_FLOW = 800;
+    public readonly TIMEOUT_REFRESH_FLOW = 800;
     protected flowConnectionData$: Observable<{
         flowsData: FlowsTableData;
         allFlowsPaused: MaybeUndefined<boolean>;
@@ -38,14 +38,14 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
         datasetsIds?: string[],
     ): void;
 
-    protected getPageFromUrl(): void {
+    public getPageFromUrl(): void {
         const pageParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE);
         if (pageParam) {
             this.currentPage = +requireValue(pageParam);
         }
     }
 
-    protected onCancelFlow(params: CancelFlowArgs): void {
+    public onCancelFlow(params: CancelFlowArgs): void {
         this.flowsService
             .cancelScheduledTasks({
                 datasetId: params.datasetId,
@@ -61,7 +61,7 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
             });
     }
 
-    protected refreshFlow(): void {
+    public refreshFlow(): void {
         this.getPageFromUrl();
         this.fetchTableData(this.currentPage);
     }

@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Restructuring of the application catalogs
 
+## [0.39.1] - 2025-02-03
+### Changed
+- Feature flags: set  the "account-settings.email" to "stable" value
+
 ## [0.39.0] - 2025-02-03
 ### Added
 - Added a feature for changing account email

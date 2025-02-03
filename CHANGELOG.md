@@ -4,12 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.39.0] - 2025-02-03
 ### Added
 - Added a feature for changing account email
 - Added `redirectUrl` parameter in the URL for login page
 ### Fixed
 - Private datasets: return to the previously opened page after login
+- Cleanup of access modifiers in Angular classes
 
 ## [0.38.0] - 2025-01-27
 ### Changed

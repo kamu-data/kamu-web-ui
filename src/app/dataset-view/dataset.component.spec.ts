@@ -57,6 +57,7 @@ import { SearchAndSchemasSectionComponent } from "../query/global-query/search-a
 import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { registerMatSvgIcons } from "../common/helpers/base-test.helpers.spec";
 import { MOCK_NODES } from "../api/mock/dataset.mock";
+import { FeatureFlagModule } from "../common/directives/feature-flag.module";
 
 describe("DatasetComponent", () => {
     let component: DatasetComponent;
@@ -112,6 +113,7 @@ describe("DatasetComponent", () => {
                 MatProgressBarModule,
                 CdkAccordionModule,
                 DatasetVisibilityModule,
+                FeatureFlagModule,
                 RouterTestingModule.withRoutes([{ path: MOCK_DATASET_ROUTE, component: DatasetComponent }]),
             ],
             providers: [

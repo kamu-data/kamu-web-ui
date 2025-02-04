@@ -6,7 +6,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AddPollingSourceComponent } from "./add-polling-source.component";
 import { NgbModal, NgbModalRef, NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { FinalYamlModalComponent } from "../../final-yaml-modal/final-yaml-modal.component";
-import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import { StepperNavigationComponent } from "../../stepper-navigation/stepper-navigation.component";
 import { BaseStepComponent } from "../steps/base-step/base-step.component";
 import { PollingSourceFormComponentsModule } from "../../form-components/polling-source-form-components.module";
@@ -31,7 +30,13 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetNavigationParams } from "src/app/interface/navigation.interface";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { EditorModule } from "src/app/editor/editor.module";
-import { EventTimeSourceKind, FetchKind, MergeKind, ReadKind } from "./add-polling-source-form.types";
+import {
+    EventTimeSourceKind,
+    FetchKind,
+    MergeKind,
+    ReadKind,
+    SetPollingSourceSection,
+} from "./add-polling-source-form.types";
 import { OdfDefaultValues } from "src/app/common/values/app-odf-default.values";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";

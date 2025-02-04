@@ -27,6 +27,7 @@ import { of } from "rxjs";
 import { RouterModule } from "@angular/router";
 import { registerMatSvgIcons } from "../../common/helpers/base-test.helpers.spec";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
+import { SafeHtmlModule } from "src/app/common/pipes/safe-html.module";
 
 describe("FlowsTableComponent", () => {
     let component: FlowsTableComponent;
@@ -55,6 +56,7 @@ describe("FlowsTableComponent", () => {
                 AngularMultiSelectModule,
                 ToastrModule.forRoot(),
                 RouterModule,
+                SafeHtmlModule,
             ],
         }).compileComponents();
 

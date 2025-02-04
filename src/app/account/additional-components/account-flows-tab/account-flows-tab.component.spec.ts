@@ -14,7 +14,6 @@ import { mockDatasetMainDataId } from "src/app/search/mock.data";
 import { mockDatasetFlowsInitiatorsQuery, mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
 import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { FlowsTableComponent } from "src/app/dataset-flow/flows-table/flows-table.component";
-import { TileBaseWidgetComponent } from "src/app/common/components/tile-base-widget/tile-base-widget.component";
 import { Account, AccountFragment, FlowStatus } from "src/app/api/kamu.graphql.interface";
 import { mockDatasets } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
 import { FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
@@ -24,6 +23,7 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { RouterTestingModule } from "@angular/router/testing";
 import { routes } from "src/app/app-routing.module";
+import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/tile-base-widget.component";
 
 describe("AccountFlowsTabComponent", () => {
     let component: AccountFlowsTabComponent;

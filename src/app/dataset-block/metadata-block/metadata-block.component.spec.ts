@@ -25,6 +25,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { DataAccessPanelModule } from "src/app/data-access-panel/data-access-panel.module";
 import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
 
 describe("MetadataBlockComponent", () => {
     let component: MetadataBlockComponent;
@@ -58,6 +59,7 @@ describe("MetadataBlockComponent", () => {
                 DataAccessPanelModule,
                 RouterModule,
                 DatasetVisibilityModule,
+                FeatureFlagModule,
             ],
             providers: [
                 DatasetApi,

@@ -29,6 +29,7 @@ import { DataAccessPanelComponent } from "src/app/data-access-panel/data-access-
 import { DataAccessPanelModule } from "src/app/data-access-panel/data-access-panel.module";
 import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
 
 describe("DatasetFlowDetailsComponent", () => {
     let component: DatasetFlowDetailsComponent;
@@ -101,6 +102,7 @@ describe("DatasetFlowDetailsComponent", () => {
                 DataAccessPanelModule,
                 RouterModule,
                 DatasetVisibilityModule,
+                FeatureFlagModule,
             ],
         }).compileComponents();
 

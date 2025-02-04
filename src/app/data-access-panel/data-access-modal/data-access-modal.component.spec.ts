@@ -25,6 +25,7 @@ import { DataAccessTabsEnum } from "./data-access-modal.model";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { AppConfigService } from "src/app/app-config.service";
+import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
 
 describe("DataAccessModalComponent", () => {
     let component: DataAccessModalComponent;
@@ -56,6 +57,7 @@ describe("DataAccessModalComponent", () => {
                 BrowserAnimationsModule,
                 ApolloModule,
                 ApolloTestingModule,
+                FeatureFlagModule,
             ],
         });
 

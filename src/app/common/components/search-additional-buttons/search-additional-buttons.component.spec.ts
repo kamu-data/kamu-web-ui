@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { SearchAdditionalButtonsNavComponent } from "./search-additional-buttons-nav.component";
 import { SearchAdditionalButtonsComponent } from "./search-additional-buttons.component";
-import { MatIconModule } from "@angular/material/icon";
-import { MatMenuModule } from "@angular/material/menu";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { SearchAdditionalButtonsModule } from "./search-additional-buttons.module";
 
 describe("SearchAdditionalButtonsComponent", () => {
     let component: SearchAdditionalButtonsComponent;
@@ -12,8 +10,7 @@ describe("SearchAdditionalButtonsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SearchAdditionalButtonsComponent, SearchAdditionalButtonsNavComponent],
-            imports: [MatIconModule, MatMenuModule],
+            imports: [SearchAdditionalButtonsModule],
         })
             .overrideComponent(SearchAdditionalButtonsComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },

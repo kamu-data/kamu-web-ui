@@ -24,9 +24,9 @@ import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { mockMetadataDerivedUpdate, mockOverviewDataUpdate } from "../data-tabs.mock";
-import { TileBaseWidgetComponent } from "src/app/common/components/tile-base-widget/tile-base-widget.component";
 import { FlowsTableComponent } from "src/app/dataset-flow/flows-table/flows-table.component";
 import { mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
+import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/tile-base-widget.component";
 
 describe("FlowsComponent", () => {
     let component: FlowsComponent;

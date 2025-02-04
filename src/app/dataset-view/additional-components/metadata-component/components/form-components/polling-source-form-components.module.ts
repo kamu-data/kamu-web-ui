@@ -15,11 +15,11 @@ import { CacheFieldComponent } from "./cache-field/cache-field.component";
 import { OrderFieldComponent } from "./order-field/order-field.component";
 import { NgxTrimDirectiveModule } from "ngx-trim-directive";
 import { TypeaheadFieldComponent } from "./typeahead-field/typeahead-field.component";
-import { SharedModule } from "src/app/shared/shared/shared.module";
 import { SelectDateFormatFieldComponent } from "./select-date-format-field/select-date-format-field.component";
 import { JsonKindFieldComponent } from "./json-kind-field/json-kind-field.component";
 import { NumberFieldComponent } from "./number-field/number-field.component";
 import { TopicsFieldComponent } from "./topics-field/topics-field.component";
+import { TooltipIconModule } from "src/app/common/components/tooltip-icon/tooltip-icon.module";
 
 @NgModule({
     declarations: [
@@ -63,7 +63,7 @@ import { TopicsFieldComponent } from "./topics-field/topics-field.component";
         RxReactiveFormsModule,
         NgxTrimDirectiveModule,
         NgbTooltipModule,
-        SharedModule,
+        TooltipIconModule,
     ],
 })
 export class PollingSourceFormComponentsModule {}

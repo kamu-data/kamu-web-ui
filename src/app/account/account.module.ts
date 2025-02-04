@@ -12,8 +12,8 @@ import { RouterModule } from "@angular/router";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetListModule } from "../common/components/dataset-list-component/dataset-list.module";
 import { PaginationModule } from "../common/components/pagination-component/pagination.module";
-import { SharedModule } from "../shared/shared/shared.module";
-import { FlowsViewModule } from "../common/modules/flows-view.module";
+import { FlowsViewModule } from "../dataset-flow/flows-view.module";
+import { FeatureFlagModule } from "../common/directives/feature-flag.module";
 
 @NgModule({
     declarations: [AccountComponent, AccountFlowsTabComponent, DatasetsTabComponent],
@@ -24,13 +24,13 @@ import { FlowsViewModule } from "../common/modules/flows-view.module";
         MatDividerModule,
         DatasetListModule,
         PaginationModule,
-        SharedModule,
         MatTableModule,
         RouterModule,
         MatButtonToggleModule,
         FormsModule,
         ReactiveFormsModule,
         NgbModule,
+        FeatureFlagModule,
     ],
 })
 export class AccountModule {}

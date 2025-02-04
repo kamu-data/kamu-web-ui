@@ -8,8 +8,8 @@ import {
     NameValue,
     ReadKind,
     TopicsType,
+    SetPollingSourceSection,
 } from "./add-polling-source-form.types";
-import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { BaseYamlEventService } from "src/app/services/base-yaml-event.service";

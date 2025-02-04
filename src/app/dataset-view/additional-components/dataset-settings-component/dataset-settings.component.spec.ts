@@ -24,9 +24,8 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { mockMetadataRootUpdate, mockOverviewDataUpdate } from "../data-tabs.mock";
-import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
+import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
-import { SharedModule } from "src/app/shared/shared/shared.module";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { BatchingTriggerModule } from "./tabs/scheduling/batching-trigger-form/batching-trigger.module";
 import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
@@ -80,7 +79,6 @@ describe("DatasetSettingsComponent", () => {
                 MatRadioModule,
                 MatIconModule,
                 NgbTooltipModule,
-                SharedModule,
                 MatCheckboxModule,
                 BatchingTriggerModule,
                 DatasetVisibilityModule,

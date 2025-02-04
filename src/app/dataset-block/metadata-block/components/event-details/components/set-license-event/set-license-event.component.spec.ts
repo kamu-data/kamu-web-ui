@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { mockSetLicense } from "../../mock.events";
 import { SetLicenseEventComponent } from "./set-license-event.component";
-import { BlockRowDataComponent } from "../../../block-row-data/block-row-data.component";
-import { TooltipIconComponent } from "../../../tooltip-icon/tooltip-icon.component";
+import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";
+import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
 import { MatIconModule } from "@angular/material/icon";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { LinkPropertyComponent } from "../common/link-property/link-property.component";

@@ -10,6 +10,7 @@ import { PaginationModule } from "src/app/common/components/pagination-component
 import { MatDividerModule } from "@angular/material/divider";
 import { MatTableModule } from "@angular/material/table";
 import { RouterModule } from "@angular/router";
+import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
 
 @NgModule({
     declarations: [AccountSettingsComponent, EmailsTabComponent, AccessTokensTabComponent],
@@ -24,6 +25,7 @@ import { RouterModule } from "@angular/router";
         PaginationModule,
         MatTableModule,
         RouterModule,
+        FeatureFlagModule,
     ],
 })
 export class AccountSettingsModule {}

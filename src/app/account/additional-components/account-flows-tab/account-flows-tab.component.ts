@@ -11,8 +11,8 @@ import {
 import { AccountService } from "src/app/services/account.service";
 import { AccountTabs } from "../../account.constants";
 import { environment } from "src/environments/environment";
-import { FlowsTableProcessingBaseComponent } from "src/app/common/components/flows-table/flows-table-processing-base.component";
-import { FlowsTableFiltersOptions } from "src/app/common/components/flows-table/flows-table.types";
+import { FlowsTableProcessingBaseComponent } from "src/app/dataset-flow/flows-table/flows-table-processing-base.component";
+import { FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
 
 @Component({
     selector: "app-account-flows-tab",

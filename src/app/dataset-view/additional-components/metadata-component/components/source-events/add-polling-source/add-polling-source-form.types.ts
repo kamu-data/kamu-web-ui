@@ -1,5 +1,13 @@
 import { SqlQueryStep, Transform } from "src/app/api/kamu.graphql.interface";
 
+export enum SetPollingSourceSection {
+    READ = "read",
+    FETCH = "fetch",
+    MERGE = "merge",
+    PREPROCESS = "preprocess",
+    PREPARE = "prepare",
+}
+
 export interface JsonFormValidators {
     required?: boolean;
     minLength?: number;

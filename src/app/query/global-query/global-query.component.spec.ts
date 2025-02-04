@@ -2,7 +2,7 @@ import { SavedQueriesSectionComponent } from "../shared/saved-queries-section/sa
 import { DynamicTableModule } from "./../../common/components/dynamic-table/dynamic-table.module";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { GlobalQueryComponent } from "./global-query.component";
-import { EditorModule } from "src/app/shared/editor/editor.module";
+import { EditorModule } from "src/app/editor/editor.module";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { QueryAndResultSectionsComponent } from "src/app/query/shared/query-and-result-sections/query-and-result-sections.component";
 import { Apollo } from "apollo-angular";

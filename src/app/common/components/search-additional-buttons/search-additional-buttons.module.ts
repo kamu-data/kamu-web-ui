@@ -6,10 +6,10 @@ import { MatButtonModule } from "@angular/material/button";
 import { CommonModule } from "@angular/common";
 import { NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
 import { SearchAdditionalButtonsNavComponent } from "./search-additional-buttons-nav.component";
-import { SharedModule } from "src/app/shared/shared/shared.module";
+import { FeatureFlagModule } from "../../directives/feature-flag.module";
 
 @NgModule({
-    imports: [MatMenuModule, MatIconModule, MatButtonModule, CommonModule, NgbPopoverModule, SharedModule],
+    imports: [MatMenuModule, FeatureFlagModule, MatIconModule, MatButtonModule, CommonModule, NgbPopoverModule],
     exports: [SearchAdditionalButtonsComponent, SearchAdditionalButtonsNavComponent],
     declarations: [SearchAdditionalButtonsComponent, SearchAdditionalButtonsNavComponent],
 })

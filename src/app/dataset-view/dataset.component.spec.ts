@@ -41,9 +41,9 @@ import { DatasetSettingsGeneralTabComponent } from "./additional-components/data
 import { DatasetSettingsSchedulingTabComponent } from "./additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.component";
 import { ToastrModule, ToastrService } from "ngx-toastr";
 import { DataAccessPanelModule } from "../data-access-panel/data-access-panel.module";
-import { SqlEditorComponent } from "../shared/editor/components/sql-editor/sql-editor.component";
+import { SqlEditorComponent } from "../editor/components/sql-editor/sql-editor.component";
 import { RequestTimerComponent } from "../query/shared/request-timer/request-timer.component";
-import { EditorModule } from "../shared/editor/editor.module";
+import { EditorModule } from "../editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { FlowsComponent } from "./additional-components/flows-component/flows.component";
@@ -54,7 +54,6 @@ import { QueryAndResultSectionsComponent } from "../query/shared/query-and-resul
 import { SavedQueriesSectionComponent } from "../query/shared/saved-queries-section/saved-queries-section.component";
 import { SqlQueryService } from "../services/sql-query.service";
 import { SearchAndSchemasSectionComponent } from "../query/global-query/search-and-schemas-section/search-and-schemas-section.component";
-import { SharedModule } from "../shared/shared/shared.module";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { registerMatSvgIcons } from "../common/helpers/base-test.helpers.spec";
 import { MOCK_NODES } from "../api/mock/dataset.mock";
@@ -113,7 +112,6 @@ describe("DatasetComponent", () => {
                 MatProgressBarModule,
                 CdkAccordionModule,
                 DatasetVisibilityModule,
-                SharedModule,
                 RouterTestingModule.withRoutes([{ path: MOCK_DATASET_ROUTE, component: DatasetComponent }]),
             ],
             providers: [

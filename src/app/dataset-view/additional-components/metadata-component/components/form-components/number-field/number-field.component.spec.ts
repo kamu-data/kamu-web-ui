@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { NumberFieldComponent } from "./number-field.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
+import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 
 describe("NumberFieldComponent", () => {

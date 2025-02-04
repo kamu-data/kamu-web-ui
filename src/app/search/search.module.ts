@@ -10,7 +10,7 @@ import { DatasetListModule } from "../common/components/dataset-list-component/d
 import { PaginationModule } from "../common/components/pagination-component/pagination.module";
 import { ModalModule } from "../common/components/modal/modal.module";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { SharedModule } from "../shared/shared/shared.module";
+import { FeatureFlagModule } from "../common/directives/feature-flag.module";
 
 @NgModule({
     imports: [
@@ -24,7 +24,7 @@ import { SharedModule } from "../shared/shared/shared.module";
         ModalModule,
         MatCheckboxModule,
         DisplayTimeModule,
-        SharedModule,
+        FeatureFlagModule,
     ],
     exports: [SearchComponent],
     declarations: [SearchComponent],

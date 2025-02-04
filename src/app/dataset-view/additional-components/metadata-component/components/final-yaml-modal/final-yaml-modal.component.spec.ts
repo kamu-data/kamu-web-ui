@@ -9,7 +9,7 @@ import { FormsModule } from "@angular/forms";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { EditorModule } from "src/app/shared/editor/editor.module";
+import { EditorModule } from "src/app/editor/editor.module";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 

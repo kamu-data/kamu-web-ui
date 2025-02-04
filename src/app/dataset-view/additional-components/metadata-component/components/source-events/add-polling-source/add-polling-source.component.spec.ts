@@ -30,7 +30,7 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetNavigationParams } from "src/app/interface/navigation.interface";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { EditorModule } from "src/app/shared/editor/editor.module";
+import { EditorModule } from "src/app/editor/editor.module";
 import { EventTimeSourceKind, FetchKind, MergeKind, ReadKind } from "./add-polling-source-form.types";
 import { OdfDefaultValues } from "src/app/common/values/app-odf-default.values";
 import { LoggedUserService } from "src/app/auth/logged-user.service";

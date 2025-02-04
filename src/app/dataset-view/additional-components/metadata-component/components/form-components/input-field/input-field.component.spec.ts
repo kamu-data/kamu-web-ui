@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { InputFieldComponent } from "./input-field.component";
-import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
+import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { dispatchInputEvent, getInputElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { ChangeDetectionStrategy } from "@angular/core";

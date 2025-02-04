@@ -5,10 +5,18 @@ import { DataAccessPanelModule } from "src/app/data-access-panel/data-access-pan
 import { MatIconModule } from "@angular/material/icon";
 import { RouterModule } from "@angular/router";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
+import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
 
 @NgModule({
     declarations: [DatasetViewMenuComponent],
     exports: [DatasetViewMenuComponent],
-    imports: [CommonModule, DataAccessPanelModule, MatIconModule, RouterModule, MatButtonToggleModule],
+    imports: [
+        CommonModule,
+        DataAccessPanelModule,
+        MatIconModule,
+        RouterModule,
+        MatButtonToggleModule,
+        FeatureFlagModule,
+    ],
 })
 export class DatasetViewMenuModule {}

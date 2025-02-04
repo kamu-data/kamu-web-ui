@@ -22,7 +22,7 @@ import ProjectLinks from "src/app/project-links";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { DataHelpers } from "src/app/common/helpers/data.helpers";
 import { BaseDatasetDataComponent } from "src/app/common/components/base-dataset-data.component";
-import { DatasetFlowTableHelpers } from "src/app/common/components/flows-table/flows-table.helpers";
+import { DatasetFlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({

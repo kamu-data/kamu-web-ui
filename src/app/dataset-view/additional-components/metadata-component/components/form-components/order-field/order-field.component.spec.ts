@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { OrderFieldComponent } from "./order-field.component";
-import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
+import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";

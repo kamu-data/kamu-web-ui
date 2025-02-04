@@ -3,7 +3,7 @@ import { TileBaseWidgetComponent } from "./tile-base-widget.component";
 import { mockFlowsOutcome, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import { NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
 import { FlowOutcomeDataFragment } from "src/app/api/kamu.graphql.interface";
-import { mockDatasets } from "../flows-table/flows-table.helpers.mock";
+import { mockDatasets } from "../../../dataset-flow/flows-table/flows-table.helpers.mock";
 import { findElementByDataTestId } from "../../helpers/base-test.helpers.spec";
 
 describe("TileBaseWidgetComponent", () => {

@@ -17,7 +17,6 @@ import { MatTableHarness } from "@angular/material/table/testing";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { SimpleChanges } from "@angular/core";
 import { ModalService } from "src/app/common/components/modal/modal.service";
-import { SharedModule } from "src/app/shared/shared/shared.module";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { mockDatasets, mockFlowSummaryDataFragmentShowForceLink } from "./flows-table.helpers.mock";
 import { mockDatasetMainDataId } from "src/app/search/mock.data";
@@ -26,7 +25,8 @@ import { ToastrModule, ToastrService } from "ngx-toastr";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { of } from "rxjs";
 import { RouterModule } from "@angular/router";
-import { registerMatSvgIcons } from "../../helpers/base-test.helpers.spec";
+import { registerMatSvgIcons } from "../../common/helpers/base-test.helpers.spec";
+import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 
 describe("FlowsTableComponent", () => {
     let component: FlowsTableComponent;
@@ -51,7 +51,6 @@ describe("FlowsTableComponent", () => {
                 DisplayTimeModule,
                 HttpClientTestingModule,
                 SharedTestModule,
-                SharedModule,
                 NgbTypeaheadModule,
                 AngularMultiSelectModule,
                 ToastrModule.forRoot(),
@@ -105,7 +104,7 @@ describe("FlowsTableComponent", () => {
     });
 
     it("should check show modal window with warning", () => {
-        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options) => {
+        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
             options.handler?.call(undefined, false);
             return Promise.resolve("");
         });
@@ -131,7 +130,7 @@ describe("FlowsTableComponent", () => {
 
     it("should check trigger flow with force udate option", fakeAsync(() => {
         const datasetTriggerFlowSpy = spyOn(datasetFlowsService, "datasetTriggerFlow").and.returnValue(of(true));
-        const forceUpdateModalSpy = spyOn(modalService, "error").and.callFake((options) => {
+        const forceUpdateModalSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
             options.handler?.call(undefined, true);
             return Promise.resolve("");
         });

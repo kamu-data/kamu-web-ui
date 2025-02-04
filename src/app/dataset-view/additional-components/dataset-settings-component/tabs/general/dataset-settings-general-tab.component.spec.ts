@@ -1,6 +1,6 @@
 import { NavigationService } from "./../../../../../services/navigation.service";
 import { DatasetCompactionService } from "./../../services/dataset-compaction.service";
-import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
+import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { DatasetSettingsGeneralTabComponent } from "./dataset-settings-general-tab.component";
 import { DatasetSettingsService } from "../../services/dataset-settings.service";

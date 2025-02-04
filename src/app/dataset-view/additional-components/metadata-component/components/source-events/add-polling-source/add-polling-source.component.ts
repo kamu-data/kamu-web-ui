@@ -1,7 +1,6 @@
-import { FetchKind } from "./add-polling-source-form.types";
+import { FetchKind, SetPollingSourceSection } from "./add-polling-source-form.types";
 import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { FormArray, FormGroup } from "@angular/forms";
-import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import { FETCH_STEP_RADIO_CONTROLS } from "./form-control.source";
 import { FETCH_FORM_DATA } from "../steps/data/fetch-form-data";
 import { EditPollingSourceService } from "./edit-polling-source.service";

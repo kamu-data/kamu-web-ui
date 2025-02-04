@@ -8,7 +8,7 @@ import { CommonModule } from "@angular/common";
 import { NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
 import { TimelineComponent } from "./timeline.component";
 import { RouterModule } from "@angular/router";
-import { SharedModule } from "src/app/shared/shared/shared.module";
+import { FeatureFlagModule } from "../../directives/feature-flag.module";
 
 @NgModule({
     imports: [
@@ -20,7 +20,7 @@ import { SharedModule } from "src/app/shared/shared/shared.module";
         RouterModule,
         DisplayTimeModule,
         DisplayHashModule,
-        SharedModule,
+        FeatureFlagModule,
     ],
     exports: [TimelineComponent],
     declarations: [TimelineComponent],

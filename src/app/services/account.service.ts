@@ -17,7 +17,7 @@ import { DatasetsAccountResponse } from "../interface/dataset.interface";
 import { map } from "rxjs/operators";
 import { MaybeNull } from "../common/types/app.types";
 import { ToastrService } from "ngx-toastr";
-import { FlowsTableData } from "../common/components/flows-table/flows-table.types";
+import { FlowsTableData } from "../dataset-flow/flows-table/flows-table.types";
 
 @Injectable({
     providedIn: "root",

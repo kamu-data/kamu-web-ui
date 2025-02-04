@@ -1,6 +1,13 @@
 import { Transform } from "stream";
 import { ReadKind, MergeKind, PreprocessKind } from "../add-polling-source/add-polling-source-form.types";
 
+export enum AddPushSourceSection {
+    SOURCE_NAME = "sourceName",
+    READ = "read",
+    MERGE = "merge",
+    PREPROCESS = "preprocess",
+}
+
 export interface EditAddPushSourceParseType {
     content: {
         event: AddPushSourceEditFormType;

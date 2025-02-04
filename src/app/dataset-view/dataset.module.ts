@@ -29,11 +29,9 @@ import { HistoryComponent } from "./additional-components/history-component/hist
 import { TimelineModule } from "../common/components/timeline-component/timeline.module";
 import { CustomPaginationModule } from "../common/components/custom-pagination-component/custom-pagination.module";
 import { DatasetViewHeaderComponent } from "./dataset-view-header/dataset-view-header.component";
-import { SideNavModule } from "../sidenav/side-nav.module";
 import { RouterModule } from "@angular/router";
 import { OverviewHistorySummaryHeaderComponent } from "../common/components/overview-history-summary-header/overview-history-summary-header.component";
 import { DisplaySizeModule } from "../common/pipes/display-size.module";
-import { SharedModule } from "../shared/shared/shared.module";
 import { EditDetailsModalComponent } from "./additional-components/overview-component/components/edit-details-modal/edit-details-modal.component";
 import { EditLicenseModalComponent } from "./additional-components/overview-component/components/edit-license-modal/edit-license-modal.component";
 import { FinalYamlModalComponent } from "./additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
@@ -58,7 +56,7 @@ import { ReadmeSectionComponent } from "./additional-components/overview-compone
 import { DatasetSettingsComponent } from "./additional-components/dataset-settings-component/dataset-settings.component";
 import { MatInputModule } from "@angular/material/input";
 import { ReturnToCliComponent } from "../common/components/return-to-cli/return-to-cli.component";
-import { EditorModule } from "../shared/editor/editor.module";
+import { EditorModule } from "../editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatTableModule } from "@angular/material/table";
@@ -81,12 +79,17 @@ import { FlowsComponent } from "./additional-components/flows-component/flows.co
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatChipsModule } from "@angular/material/chips";
 import { DatasetVisibilityModule } from "../common/components/dataset-visibility/dataset-visibility.module";
-import { QuerySharedModule } from "../query/shared/query-shared/query-shared.module";
+import { QuerySharedModule } from "../query/shared/query-shared.module";
 import { IngestConfigurationModule } from "./additional-components/dataset-settings-component/tabs/scheduling/ingest-configuration-form/ingest-configuration.module";
 import { IngestTriggerModule } from "./additional-components/dataset-settings-component/tabs/scheduling/ingest-trigger-form/ingest-trigger.module";
 import { BatchingTriggerModule } from "./additional-components/dataset-settings-component/tabs/scheduling/batching-trigger-form/batching-trigger.module";
-import { FlowsViewModule } from "../common/modules/flows-view.module";
+import { FlowsViewModule } from "../dataset-flow/flows-view.module";
 import { DatasetViewMenuModule } from "./dataset-view-menu/dataset-view-menu.module";
+import { DragAndDropModule } from "../common/directives/drag-and-drop.module";
+import { BlockRowDataModule } from "../common/components/block-row-data/block-row-data.module";
+import { TooltipIconModule } from "../common/components/tooltip-icon/tooltip-icon.module";
+import { FeatureFlagModule } from "../common/directives/feature-flag.module";
+import { YamlEventViewerModule } from "../common/components/yaml-event-viewer/yaml-event-viewer.module";
 @NgModule({
     imports: [
         CommonModule,
@@ -111,13 +114,11 @@ import { DatasetViewMenuModule } from "./dataset-view-menu/dataset-view-menu.mod
         MatTabsModule,
         CdkAccordionModule,
         CustomPaginationModule,
-        SideNavModule,
         DisplayTimeModule,
         DisplayHashModule,
         DisplaySizeModule,
         MatDividerModule,
         MatFormFieldModule,
-        SharedModule,
         ReactiveFormsModule,
         MatIconModule,
         PollingSourceFormComponentsModule,
@@ -147,6 +148,11 @@ import { DatasetViewMenuModule } from "./dataset-view-menu/dataset-view-menu.mod
         FlowsViewModule,
         EventDetailsPropertiesModule,
         DatasetViewMenuModule,
+        DragAndDropModule,
+        BlockRowDataModule,
+        TooltipIconModule,
+        FeatureFlagModule,
+        YamlEventViewerModule,
     ],
     exports: [
         DatasetViewHeaderComponent,

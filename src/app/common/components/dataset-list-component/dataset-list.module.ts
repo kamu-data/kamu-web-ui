@@ -12,7 +12,7 @@ import { DatasetListComponent } from "./dataset-list.component";
 import { MatSelectModule } from "@angular/material/select";
 import { RouterModule } from "@angular/router";
 import { DatasetVisibilityModule } from "../dataset-visibility/dataset-visibility.module";
-import { SharedModule } from "src/app/shared/shared/shared.module";
+import { FeatureFlagModule } from "../../directives/feature-flag.module";
 
 @NgModule({
     imports: [
@@ -27,7 +27,7 @@ import { SharedModule } from "src/app/shared/shared/shared.module";
         DisplayTimeModule,
         RouterModule,
         DatasetVisibilityModule,
-        SharedModule,
+        FeatureFlagModule,
     ],
     exports: [DatasetListComponent, DatasetListItemComponent],
     declarations: [DatasetListComponent, DatasetListItemComponent],

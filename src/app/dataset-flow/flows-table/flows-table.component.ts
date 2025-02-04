@@ -38,7 +38,7 @@ import {
 } from "./flows-table.types";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
-import { MaybeNull } from "../../types/app.types";
+import { MaybeNull } from "../../common/types/app.types";
 import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.interface";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { BaseComponent } from "src/app/common/components/base.component";

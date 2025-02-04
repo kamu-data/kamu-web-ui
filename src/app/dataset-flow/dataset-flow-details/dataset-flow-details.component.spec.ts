@@ -28,7 +28,6 @@ import { mockDatasetFlowByIdResponse, mockFlowSummaryDataFragments } from "src/a
 import { DataAccessPanelComponent } from "src/app/data-access-panel/data-access-panel.component";
 import { DataAccessPanelModule } from "src/app/data-access-panel/data-access-panel.module";
 import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
-import { SharedModule } from "src/app/shared/shared/shared.module";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 
 describe("DatasetFlowDetailsComponent", () => {
@@ -102,7 +101,6 @@ describe("DatasetFlowDetailsComponent", () => {
                 DataAccessPanelModule,
                 RouterModule,
                 DatasetVisibilityModule,
-                SharedModule,
             ],
         }).compileComponents();
 

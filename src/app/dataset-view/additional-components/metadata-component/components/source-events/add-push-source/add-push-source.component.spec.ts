@@ -9,7 +9,7 @@ import { from, of } from "rxjs";
 import { AddPushSourceSection } from "src/app/shared/shared.types";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { FinalYamlModalComponent } from "../../final-yaml-modal/final-yaml-modal.component";
-import { EditorModule } from "src/app/shared/editor/editor.module";
+import { EditorModule } from "src/app/editor/editor.module";
 import { ActivatedRoute } from "@angular/router";
 import { EditAddPushSourceService } from "./edit-add-push-source.service";
 

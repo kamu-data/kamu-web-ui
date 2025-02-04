@@ -20,7 +20,7 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { MaybeUndefined } from "src/app/common/types/app.types";
-import { FlowsTableData } from "src/app/common/components/flows-table/flows-table.types";
+import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 
 @Injectable({

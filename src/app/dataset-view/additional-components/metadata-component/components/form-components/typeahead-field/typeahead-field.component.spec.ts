@@ -2,7 +2,7 @@ import { NgbTooltipModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 
 import { TypeaheadFieldComponent } from "./typeahead-field.component";
-import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
+import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 import { MatIconModule } from "@angular/material/icon";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { getInputElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";

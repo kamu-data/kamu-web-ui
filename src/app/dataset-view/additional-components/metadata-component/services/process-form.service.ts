@@ -7,15 +7,16 @@ import {
     SourceOrder,
 } from "../components/source-events/add-polling-source/process-form.service.types";
 import { AddPushSource, SetPollingSource } from "src/app/api/kamu.graphql.interface";
-import { AddPushSourceSection, SetPollingSourceSection } from "src/app/shared/shared.types";
 import {
     AddPollingSourceEditFormType,
     EventTimeSourceKind,
     FetchKind,
     PrepareKind,
+    SetPollingSourceSection,
     TopicsType,
 } from "../components/source-events/add-polling-source/add-polling-source-form.types";
 import AppValues from "src/app/common/values/app.values";
+import { AddPushSourceSection } from "../components/source-events/add-push-source/add-push-source-form.types";
 
 @Injectable({
     providedIn: "root",

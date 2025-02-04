@@ -1,5 +1,8 @@
 import { Injectable } from "@angular/core";
-import { DatasetFlowByIdResponse, GrafanaFieldDescriptor } from "./dataset-flow-details.types";
+import {
+    DatasetFlowByIdResponse,
+    GrafanaFieldDescriptor,
+} from "../dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { FlowEventTaskChanged } from "src/app/api/kamu.graphql.interface";
 import { addSeconds, subSeconds } from "date-fns";
 

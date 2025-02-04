@@ -1,4 +1,3 @@
-import { SharedModule } from "../../shared/shared/shared.module";
 import { FormsModule } from "@angular/forms";
 import { DisplayTimeModule } from "../../common/components/display-time/display-time.module";
 import { MatDividerModule } from "@angular/material/divider";
@@ -34,6 +33,11 @@ import { UnsupportedEventComponent } from "./components/event-details/components
 import { EventDetailsPropertiesModule } from "./components/event-details/components/common/event-details-properties.module";
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 import { DatasetViewMenuModule } from "src/app/dataset-view/dataset-view-menu/dataset-view-menu.module";
+import { MatIconModule } from "@angular/material/icon";
+import { BlockRowDataModule } from "src/app/common/components/block-row-data/block-row-data.module";
+import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
+import { MarkdownModule } from "ngx-markdown";
+import { YamlEventViewerModule } from "src/app/common/components/yaml-event-viewer/yaml-event-viewer.module";
 
 @NgModule({
     declarations: [
@@ -70,10 +74,14 @@ import { DatasetViewMenuModule } from "src/app/dataset-view/dataset-view-menu/da
         DynamicTableModule,
         DisplayTimeModule,
         DisplayHashModule,
-        SharedModule,
         EventDetailsPropertiesModule,
         AngularMultiSelectModule,
         DatasetViewMenuModule,
+        MatIconModule,
+        BlockRowDataModule,
+        FeatureFlagModule,
+        MarkdownModule,
+        YamlEventViewerModule,
     ],
     exports: [MetadataBlockComponent],
 })

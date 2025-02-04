@@ -173,7 +173,7 @@
         <th mat-header-cell *matHeaderCellDef style="width: 20%"></th>
         <td mat-cell *matCellDef="let element">
             <div class="pe-2">
-                <button mat-button [matMenuTriggerFor]="tableOptions">
+                <button mat-button [matMenuTriggerFor]="tableOptions" class="border-0">
                     <mat-icon class="mat-icon-svg-size" svgIcon="show-options" />
                 </button>
                 <mat-menu #tableOptions="matMenu" xPosition="before" [hasBackdrop]="true">

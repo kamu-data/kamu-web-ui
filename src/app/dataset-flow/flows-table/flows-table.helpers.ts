@@ -7,7 +7,7 @@ import {
 import { MaybeNull } from "src/app/common/types/app.types";
 import AppValues from "src/app/common/values/app.values";
 import { DataHelpers } from "src/app/common/helpers/data.helpers";
-import { excludeAgoWord, isNil } from "../../helpers/app.helpers";
+import { excludeAgoWord, isNil } from "../../common/helpers/app.helpers";
 import { format } from "date-fns/format";
 import { formatDistanceToNowStrict } from "date-fns";
 

@@ -9,8 +9,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
-import { EditorModule } from "../shared/editor/editor.module";
-import { SharedModule } from "../shared/shared/shared.module";
+import { EditorModule } from "../editor/editor.module";
 
 @NgModule({
     imports: [
@@ -25,7 +24,6 @@ import { SharedModule } from "../shared/shared/shared.module";
         MatDividerModule,
         ReactiveFormsModule,
         EditorModule,
-        SharedModule,
     ],
     exports: [DatasetCreateComponent],
     declarations: [DatasetCreateComponent],

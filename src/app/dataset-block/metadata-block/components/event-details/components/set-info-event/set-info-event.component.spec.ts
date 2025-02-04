@@ -2,8 +2,8 @@ import { CardsPropertyComponent } from "../common/cards-property/cards-property.
 import { mockSetInfo } from "../../mock.events";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { SetInfoEventComponent } from "./set-info-event.component";
-import { BlockRowDataComponent } from "../../../block-row-data/block-row-data.component";
-import { TooltipIconComponent } from "../../../tooltip-icon/tooltip-icon.component";
+import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";
+import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
 import { MatIconModule } from "@angular/material/icon";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";

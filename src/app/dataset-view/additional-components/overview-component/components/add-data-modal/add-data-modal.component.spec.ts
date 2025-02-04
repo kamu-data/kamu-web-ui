@@ -12,6 +12,7 @@ import { FileUploadService } from "src/app/services/file-upload.service";
 import { mockFile } from "src/app/api/mock/upload-file.mock";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { of } from "rxjs";
+import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 
 describe("AddDataModalComponent", () => {
     let component: AddDataModalComponent;
@@ -58,7 +59,7 @@ describe("AddDataModalComponent", () => {
     });
 
     it("should check if file selected and file size > 50MB", () => {
-        const modalServiceSpy = spyOn(modalService, "warning").and.callFake((options) => {
+        const modalServiceSpy = spyOn(modalService, "warning").and.callFake((options: ModalArgumentsInterface) => {
             options.handler?.call(undefined, false);
             return Promise.resolve("");
         });

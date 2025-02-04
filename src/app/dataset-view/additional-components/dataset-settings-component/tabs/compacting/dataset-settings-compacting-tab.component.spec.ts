@@ -23,6 +23,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import AppValues from "src/app/common/values/app.values";
 import { ActivatedRoute } from "@angular/router";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 
 describe("DatasetSettingsCompactingTabComponent", () => {
     let component: DatasetSettingsCompactingTabComponent;
@@ -99,7 +100,7 @@ describe("DatasetSettingsCompactingTabComponent", () => {
     it("should check run hard compacting", fakeAsync(() => {
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         const runHardCompactionSpy = spyOn(datasetCompactionService, "runHardCompaction").and.returnValue(of(true));
-        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options) => {
+        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
             options.handler?.call(undefined, true);
             return Promise.resolve("");
         });

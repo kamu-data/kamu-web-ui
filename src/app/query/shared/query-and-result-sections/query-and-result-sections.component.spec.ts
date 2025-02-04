@@ -24,6 +24,7 @@ import { mockUploadPrepareResponse } from "src/app/api/mock/upload-file.mock";
 import { mockQueryExplainerResponse } from "src/app/query-explainer/query-explainer.mocks";
 import { FileUploadService } from "src/app/services/file-upload.service";
 import { MatDividerModule } from "@angular/material/divider";
+import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
 
 describe("QueryAndResultSectionsComponent", () => {
     let component: QueryAndResultSectionsComponent;
@@ -105,7 +106,7 @@ describe("QueryAndResultSectionsComponent", () => {
         fixture.detectChanges();
         const sqlReq = spyOn(component.runSQLRequestEmit, "emit");
         const limit = 1;
-        const params = {
+        const params: DatasetRequestBySql = {
             query: component.sqlRequestCode,
             skip: component.currentData.length,
             limit: limit,
@@ -117,7 +118,7 @@ describe("QueryAndResultSectionsComponent", () => {
         component.loadMore(limit);
         params.skip = component.currentData.length;
 
-        const secondCallParams = sqlReq.calls.allArgs()[1];
+        const secondCallParams = sqlReq.calls.allArgs()[1] as DatasetRequestBySql[];
         expect(secondCallParams).toEqual([params]);
     });
 

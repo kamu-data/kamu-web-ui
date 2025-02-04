@@ -21,6 +21,7 @@ import { NgbPaginationModule } from "@ng-bootstrap/ng-bootstrap";
 import { TokenCreateStep } from "../../account-settings.constants";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 
 describe("AccessTokensTabComponent", () => {
     let component: AccessTokensTabComponent;
@@ -143,7 +144,7 @@ describe("AccessTokensTabComponent", () => {
 
     it("should check revoke token", () => {
         const revokeAccessTokensSpy = spyOn(accessTokenService, "revokeAccessTokens").and.returnValue(of());
-        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options) => {
+        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
             options.handler?.call(undefined, true);
             return Promise.resolve("");
         });

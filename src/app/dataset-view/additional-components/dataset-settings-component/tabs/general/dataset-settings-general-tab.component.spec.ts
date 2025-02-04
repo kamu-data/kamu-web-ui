@@ -34,6 +34,7 @@ import { DatasetFlowsService } from "../../../flows-component/services/dataset-f
 import { DatasetService } from "../../../../dataset.service";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
+import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 
 describe("DatasetSettingsGeneralTabComponent", () => {
     let component: DatasetSettingsGeneralTabComponent;
@@ -197,7 +198,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
     it("should check delete modal window is shown and sends API call after confirm", fakeAsync(() => {
         const hasOutOfSyncPushRemotesSpy = spyOn(datasetService, "hasOutOfSyncPushRemotes").and.returnValue(of(true));
-        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options) => {
+        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
             options.handler?.call(undefined, true);
             return Promise.resolve("");
         });
@@ -217,7 +218,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
     it("should check delete modal window is shown and does not send API call after reject", fakeAsync(() => {
         const hasOutOfSyncPushRemotesSpy = spyOn(datasetService, "hasOutOfSyncPushRemotes").and.returnValue(of(false));
-        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options) => {
+        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
             options.handler?.call(undefined, false);
             return Promise.resolve("");
         });
@@ -236,7 +237,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     }));
 
     it("should check reset modal window is shown and sends API call after confirm for Reset to Seed mode", fakeAsync(() => {
-        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options) => {
+        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
             options.handler?.call(undefined, true);
             return Promise.resolve("");
         });
@@ -267,7 +268,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
     it("should check reset modal window is shown and sends API call after confirm for Flatten metadata mode", fakeAsync(() => {
         component.resetDatasetForm.patchValue({ mode: DatasetResetMode.RESET_METADATA_ONLY });
-        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options) => {
+        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
             options.handler?.call(undefined, true);
             return Promise.resolve("");
         });
@@ -295,7 +296,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     }));
 
     it("should check change dataset visibility", () => {
-        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options) => {
+        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
             options.handler?.call(undefined, true);
             return Promise.resolve("");
         });

@@ -20,6 +20,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 
 describe("DatasetSettingsSecretsManagerTabComponent", () => {
     let component: DatasetSettingsSecretsManagerTabComponent;
@@ -119,7 +120,7 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
     });
 
     it("should check delete env variable", () => {
-        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options) => {
+        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
             options.handler?.call(undefined, true);
             return Promise.resolve("");
         });

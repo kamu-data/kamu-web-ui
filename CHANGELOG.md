@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Fixed
-- Batching trigger form: reemoved disabled state when updates turn off
+- Batching trigger form: removed disabled state when updates turn off
 
 ## [0.39.1] - 2025-02-03
 ### Changed

@@ -71,11 +71,6 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
     public ngOnInit(): void {
         this.setBatchingEveryTimeValidator();
         this.initBatchingForm();
-        this.batchingUpdatesState.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((enableUpdates: boolean) => {
-                enableUpdates ? this.enableControls() : this.disableControls();
-            });
     }
 
     public initBatchingForm(): void {
@@ -91,21 +86,7 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
                         minRecordsToAwait: batching.minRecordsToAwait,
                         updatesState: !flowTriggers.paused,
                     });
-                } else {
-                    this.disableControls();
                 }
             });
-    }
-
-    private disableControls(): void {
-        this.batchingEveryTime.disable();
-        this.batchingUnitTime.disable();
-        this.batchingMinRecordsToAwait.disable();
-    }
-
-    private enableControls(): void {
-        this.batchingEveryTime.enable();
-        this.batchingUnitTime.enable();
-        this.batchingMinRecordsToAwait.enable();
     }
 }

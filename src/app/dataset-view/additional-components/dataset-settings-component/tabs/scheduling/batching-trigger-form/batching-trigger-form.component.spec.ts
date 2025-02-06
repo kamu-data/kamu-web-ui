@@ -45,17 +45,4 @@ describe("BatchingTriggerFormComponent", () => {
 
         expect(saveTriggerEmitSpy).toHaveBeenCalledTimes(1);
     });
-
-    it("should check disable all controls", () => {
-        const disableBatchingEveryTimeSpy = spyOn(component.batchingEveryTime, "disable");
-        const disableBatchingUnitTimeSpy = spyOn(component.batchingUnitTime, "disable");
-        const disableBatchingMinRecordsToAwaitSpy = spyOn(component.batchingMinRecordsToAwait, "disable");
-
-        component.batchingForm.patchValue({ updatesState: false });
-        fixture.detectChanges();
-
-        expect(disableBatchingEveryTimeSpy).toHaveBeenCalledTimes(1);
-        expect(disableBatchingUnitTimeSpy).toHaveBeenCalledTimes(1);
-        expect(disableBatchingMinRecordsToAwaitSpy).toHaveBeenCalledTimes(1);
-    });
 });

@@ -10,9 +10,8 @@ import { of } from "rxjs";
 import AppValues from "src/app/common/app.values";
 import { dispatchInputEvent, emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
-import { mockDatasetBasicsDerivedFragment, mockDatasetInfo } from "src/app/search/mock.data";
+import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 import { SearchApi } from "src/app/api/search.api";
-import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { mockGetDatasetSchemaQuery } from "../../mock.data";
 import { DatasetNode } from "../../set-transform.types";
@@ -22,7 +21,6 @@ describe("SearchSectionComponent", () => {
     let component: SearchSectionComponent;
     let fixture: ComponentFixture<SearchSectionComponent>;
     let searchApi: SearchApi;
-    let navigationService: NavigationService;
     let datasetService: DatasetService;
 
     beforeEach(async () => {
@@ -47,7 +45,6 @@ describe("SearchSectionComponent", () => {
         component.dataSource = new MatTreeNestedDataSource<DatasetNode>();
         searchApi = TestBed.inject(SearchApi);
         datasetService = TestBed.inject(DatasetService);
-        navigationService = TestBed.inject(NavigationService);
         fixture.detectChanges();
     });
 
@@ -81,24 +78,6 @@ describe("SearchSectionComponent", () => {
         emitClickOnElementByDataTestId(fixture, "clear-input");
 
         expect(component.searchDataset).toEqual("");
-    });
-
-    it("should navigate to dataset overview tab", () => {
-        const datasetInfo = mockDatasetInfo;
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
-
-        component.navigateToDataset(datasetInfo.accountName, datasetInfo.datasetName);
-
-        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(datasetInfo);
-    });
-
-    it("should navigate to owner view", () => {
-        const owner = "kamu";
-        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
-
-        component.navigateToOwner(owner);
-
-        expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(owner);
     });
 
     it("should check select input dataset", () => {

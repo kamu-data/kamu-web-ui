@@ -96,15 +96,4 @@ export class SearchSectionComponent extends BaseComponent {
     public hasChild(_: number, node: DatasetNode): boolean {
         return !!node.children && node.children.length > 0;
     }
-
-    public navigateToDataset(accountName: string, datasetName: string): void {
-        this.navigationService.navigateToDatasetView({
-            accountName,
-            datasetName,
-        });
-    }
-
-    public navigateToOwner(owner: string): void {
-        this.navigationService.navigateToOwnerView(owner);
-    }
 }

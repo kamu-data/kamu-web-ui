@@ -52,10 +52,10 @@ export class SearchSectionComponent extends BaseComponent {
     public onSelectItem(event: NgbTypeaheadSelectItemEvent): void {
         const value = event.item as DatasetAutocompleteItem;
         const id = value.dataset.id;
-        const name = value.dataset.name;
+        const alias = value.dataset.alias;
         const inputDataset = JSON.stringify({
             datasetRef: id,
-            alias: name,
+            alias,
         });
         if (value.__typename !== TypeNames.allDataType && !this.inputDatasets.has(inputDataset)) {
             this.inputDatasets.add(inputDataset);

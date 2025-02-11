@@ -6,11 +6,11 @@ import { NgbModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatDividerModule } from "@angular/material/divider";
 import { mockDatasetListItem } from "src/app/api/mock/dataset.mock";
 import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { DisplayTimeModule } from "../display-time/display-time.module";
+import { DisplayTimeModule } from "../../display-time/display-time.module";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { RouterModule } from "@angular/router";
-import { DatasetVisibilityModule } from "../dataset-visibility/dataset-visibility.module";
+import { DatasetVisibilityModule } from "../../dataset-visibility/dataset-visibility.module";
 import { NavigationService } from "src/app/services/navigation.service";
 
 describe("DatasetListItemComponent", () => {

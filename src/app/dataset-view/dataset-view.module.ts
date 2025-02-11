@@ -11,7 +11,6 @@ import { SearchAdditionalButtonsModule } from "../common/components/search-addit
 import { NgbModule, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { DynamicTableModule } from "../common/components/dynamic-table/dynamic-table.module";
-import { SearchSidenavModule } from "../common/components/search-sidenav/search-sidenav.module";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { NgxGraphModule } from "@swimlane/ngx-graph";
 import { LineageGraphModule } from "../common/components/lineage-graph/lineage-graph.module";
@@ -30,7 +29,7 @@ import { TimelineModule } from "../common/components/timeline-component/timeline
 import { CustomPaginationModule } from "../common/components/custom-pagination-component/custom-pagination.module";
 import { DatasetViewHeaderComponent } from "./dataset-view-header/dataset-view-header.component";
 import { RouterModule } from "@angular/router";
-import { OverviewHistorySummaryHeaderComponent } from "../common/components/overview-history-summary-header/overview-history-summary-header.component";
+import { OverviewHistorySummaryHeaderComponent } from "./additional-components/overview-component/components/overview-history-summary-header/overview-history-summary-header.component";
 import { DisplaySizeModule } from "../common/pipes/display-size.module";
 import { EditDetailsModalComponent } from "./additional-components/overview-component/components/edit-details-modal/edit-details-modal.component";
 import { EditLicenseModalComponent } from "./additional-components/overview-component/components/edit-license-modal/edit-license-modal.component";
@@ -48,14 +47,12 @@ import { MatTreeModule } from "@angular/material/tree";
 import { SearchSectionComponent } from "./additional-components/metadata-component/components/set-transform/components/search-section/search-section.component";
 import { EngineSectionComponent } from "./additional-components/metadata-component/components/set-transform/components/engine-section/engine-section.component";
 import { QueriesSectionComponent } from "./additional-components/metadata-component/components/set-transform/components/queries-section/queries-section.component";
-import { PageNotFoundComponent } from "../common/components/page-not-found/page-not-found.component";
 import { AddPollingSourceComponent } from "./additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source.component";
 import { MatStepperModule } from "@angular/material/stepper";
 import { EngineSelectComponent } from "./additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
 import { ReadmeSectionComponent } from "./additional-components/overview-component/components/readme-section/readme-section.component";
 import { DatasetSettingsComponent } from "./additional-components/dataset-settings-component/dataset-settings.component";
 import { MatInputModule } from "@angular/material/input";
-import { ReturnToCliComponent } from "../common/components/return-to-cli/return-to-cli.component";
 import { EditorModule } from "../editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatTooltipModule } from "@angular/material/tooltip";
@@ -100,7 +97,6 @@ import { YamlEventViewerModule } from "../common/components/yaml-event-viewer/ya
         NgbNavModule,
         MatButtonToggleModule,
         DynamicTableModule,
-        SearchSidenavModule,
         SearchAdditionalButtonsModule,
         TimelineModule,
         NgxGraphModule,
@@ -189,8 +185,6 @@ import { YamlEventViewerModule } from "../common/components/yaml-event-viewer/ya
         SearchSectionComponent,
         EngineSectionComponent,
         QueriesSectionComponent,
-        PageNotFoundComponent,
-        ReturnToCliComponent,
         AddPollingSourceComponent,
         EngineSelectComponent,
         ReadmeSectionComponent,

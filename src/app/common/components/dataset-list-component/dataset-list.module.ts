@@ -1,5 +1,5 @@
 import { DisplayTimeModule } from "../display-time/display-time.module";
-import { DatasetListItemComponent } from "../../components/dataset-list-item/dataset-list-item.component";
+import { DatasetListItemComponent } from "./dataset-list-item/dataset-list-item.component";
 import { NgModule } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";

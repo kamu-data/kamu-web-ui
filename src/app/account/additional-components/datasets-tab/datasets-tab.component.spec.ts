@@ -6,7 +6,7 @@ import { mockDatasetListItem } from "src/app/api/mock/dataset.mock";
 import { NavigationService } from "src/app/services/navigation.service";
 import { AccountTabs } from "../../account.constants";
 import { DatasetsTabComponent } from "./datasets-tab.component";
-import { DatasetListItemComponent } from "src/app/common/components/dataset-list-item/dataset-list-item.component";
+import { DatasetListItemComponent } from "src/app/common/components/dataset-list-component/dataset-list-item/dataset-list-item.component";
 import { NgbPopoverModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
 import { DisplayTimeModule } from "src/app/common/components/display-time/display-time.module";
 import { MatChipsModule } from "@angular/material/chips";

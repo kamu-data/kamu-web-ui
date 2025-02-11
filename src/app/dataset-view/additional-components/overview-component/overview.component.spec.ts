@@ -17,7 +17,7 @@ import { first } from "rxjs/operators";
 import { NgbModal, NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatChipsModule } from "@angular/material/chips";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { OverviewHistorySummaryHeaderComponent } from "src/app/common/components/overview-history-summary-header/overview-history-summary-header.component";
+import { OverviewHistorySummaryHeaderComponent } from "src/app/dataset-view/additional-components/overview-component/components/overview-history-summary-header/overview-history-summary-header.component";
 import { ReadmeSectionComponent } from "./components/readme-section/readme-section.component";
 import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
 import { DisplayTimeComponent } from "src/app/common/components/display-time/display-time.component";

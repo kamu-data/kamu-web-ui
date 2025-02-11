@@ -1,4 +1,4 @@
-import { ModalService } from "../modal/modal.service";
+import { ModalService } from "../../modal/modal.service";
 import { Component, inject, Input } from "@angular/core";
 import { DatasetSearchOverviewFragment } from "src/app/api/kamu.graphql.interface";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";

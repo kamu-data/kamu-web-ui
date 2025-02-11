@@ -20,7 +20,7 @@ import {
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { DatasetListComponent } from "../common/components/dataset-list-component/dataset-list.component";
 import { FormsModule } from "@angular/forms";
-import { DatasetListItemComponent } from "../common/components/dataset-list-item/dataset-list-item.component";
+import { DatasetListItemComponent } from "../common/components/dataset-list-component/dataset-list-item/dataset-list-item.component";
 import { NgbPaginationModule, NgbPopoverModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
 import { DisplayTimeModule } from "../common/components/display-time/display-time.module";
 import { MatIconModule } from "@angular/material/icon";

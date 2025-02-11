@@ -9,47 +9,27 @@ import { BrowserModule } from "@angular/platform-browser";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { MatToolbarModule } from "@angular/material/toolbar";
-import { NgbModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatIconModule } from "@angular/material/icon";
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS, HttpHeaders } from "@angular/common/http";
-import { MatTableModule } from "@angular/material/table";
-import { CdkTableModule } from "@angular/cdk/table";
 import { ApolloLink, NextLink, Operation } from "@apollo/client/core";
 import { SearchApi } from "./api/search.api";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { SearchService } from "./search/search.service";
-import { MatChipsModule } from "@angular/material/chips";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatSidenavModule } from "@angular/material/sidenav";
-import { MatMenuModule } from "@angular/material/menu";
-import { MatButtonModule } from "@angular/material/button";
 import { SearchModule } from "./search/search.module";
 import { DatasetViewModule } from "./dataset-view/dataset-view.module";
 import { DatasetService } from "./dataset-view/dataset.service";
 import { DatasetCreateModule } from "./dataset-create/dataset-create.module";
-import { AppHeaderComponent } from "./common/components/app-header/app-header.component";
 import { MAT_RIPPLE_GLOBAL_OPTIONS } from "@angular/material/core";
-import { MatOptionModule } from "@angular/material/core";
-import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { NgxGraphModule } from "@swimlane/ngx-graph";
-import { GithubCallbackComponent } from "./auth/github-callback/github.callback";
 import { AuthApi } from "./api/auth.api";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { ModalModule } from "./common/components/modal/modal.module";
 import { MarkdownModule } from "ngx-markdown";
 import { SecurityContext } from "@angular/core";
-import { NotificationIndicatorComponent } from "./common/components/notification-indicator/notification-indicator.component";
 import { AppConfigService } from "./app-config.service";
 import { NavigationService } from "./services/navigation.service";
 import { DatasetSubscriptionsService } from "./dataset-view/dataset.subscriptions.service";
 import { SpinnerModule } from "./common/components/spinner/spinner.module";
 import { DatasetApi } from "./api/dataset.api";
 import { ErrorHandlerService } from "./services/error-handler.service";
-import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { DatasetListModule } from "./common/components/dataset-list-component/dataset-list.module";
-import { PaginationModule } from "./common/components/pagination-component/pagination.module";
 import { ClipboardModule } from "@angular/cdk/clipboard";
 import { HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 import { ToastrModule } from "ngx-toastr";
@@ -60,15 +40,13 @@ import { logError } from "./common/helpers/app.helpers";
 import { DatasetPermissionsService } from "./dataset-view/dataset.permissions.service";
 import { LocalStorageService } from "./services/local-storage.service";
 import { apolloCache } from "./common/helpers/apollo-cache.helper";
-import { AdminDashboardComponent } from "./admin-view/admin-dashboard/admin-dashboard.component";
 import { DatasetFlowDetailsModule } from "./dataset-flow/dataset-flow-details/dataset-flow-details.module";
-import { MatSortModule } from "@angular/material/sort";
-import { MatSlideToggleModule } from "@angular/material/slide-toggle";
-import { DynamicTableModule } from "./common/components/dynamic-table/dynamic-table.module";
 import { AutofocusModule } from "./common/directives/autofocus.module";
 import { AccountModule } from "./account/account.module";
 import { AccountSettingsModule } from "./auth/settings/account-settings.module";
 import { LoginModule } from "./auth/login/login.module";
+import { AdminViewModule } from "./admin-view/admin-view.module";
+import { HeaderModule } from "./header/header.module";
 
 const Services = [
     {
@@ -175,32 +153,8 @@ const Services = [
         },
     },
 ];
-const MatModules = [
-    MatChipsModule,
-    MatDividerModule,
-    MatToolbarModule,
-    MatFormFieldModule,
-    MatTableModule,
-    MatIconModule,
-    MatSidenavModule,
-    MatMenuModule,
-    MatButtonModule,
-    MatAutocompleteModule,
-    MatProgressSpinnerModule,
-    MatButtonToggleModule,
-    MatSortModule,
-    MatSlideToggleModule,
-    MatOptionModule,
-];
-
 @NgModule({
-    declarations: [
-        AppComponent,
-        AppHeaderComponent,
-        GithubCallbackComponent,
-        NotificationIndicatorComponent,
-        AdminDashboardComponent,
-    ],
+    declarations: [AppComponent],
     imports: [
         AppRoutingModule,
         DatasetViewModule,
@@ -212,20 +166,12 @@ const MatModules = [
             loader: HttpClient,
             sanitize: SecurityContext.NONE,
         }),
-
         BrowserModule,
         BrowserAnimationsModule,
-        NgbModule,
-        NgbTypeaheadModule,
         HttpClientModule,
-        CdkTableModule,
-        ...MatModules,
-        FormsModule,
-        ReactiveFormsModule,
         NgxGraphModule,
         SpinnerModule,
         DatasetListModule,
-        PaginationModule,
         ClipboardModule,
         ToastrModule.forRoot({
             timeOut: 2000,
@@ -234,11 +180,12 @@ const MatModules = [
             preventDuplicates: true,
         }), // ToastrModule added
         DatasetFlowDetailsModule,
-        DynamicTableModule,
         AutofocusModule,
         AccountModule,
         AccountSettingsModule,
         LoginModule,
+        AdminViewModule,
+        HeaderModule,
     ],
     providers: [...Services],
     bootstrap: [AppComponent],

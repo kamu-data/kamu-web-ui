@@ -1,5 +1,3 @@
-import { AccountTabs } from "../../../account/account.constants";
-import { MaybeNull } from "../../types/app.types";
 import { ActivatedRoute, NavigationEnd, Params, Router, RouterEvent } from "@angular/router";
 import {
     ChangeDetectionStrategy,
@@ -15,9 +13,6 @@ import {
 } from "@angular/core";
 import { Observable, OperatorFunction } from "rxjs";
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap } from "rxjs/operators";
-import { DatasetAutocompleteItem, TypeNames } from "../../../interface/search.interface";
-import { SearchApi } from "../../../api/search.api";
-import AppValues from "../../values/app.values";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
@@ -26,6 +21,11 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { AppUIConfigFeatureFlags, LoginMethod } from "src/app/app-config.model";
 import { AccountSettingsTabs } from "src/app/auth/settings/account-settings.constants";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { SearchApi } from "src/app/api/search.api";
+import AppValues from "src/app/common/values/app.values";
+import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
+import { AccountTabs } from "src/app/account/account.constants";
+import { MaybeNull } from "src/app/common/types/app.types";
 
 @Component({
     selector: "app-header",

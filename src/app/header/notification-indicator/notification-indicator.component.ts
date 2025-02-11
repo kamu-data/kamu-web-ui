@@ -1,5 +1,5 @@
 import { Component, inject } from "@angular/core";
-import { ModalService } from "../modal/modal.service";
+import { ModalService } from "../../common/components/modal/modal.service";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import AppValues from "src/app/common/values/app.values";
 

@@ -24,7 +24,7 @@ import { SpinnerComponent } from "./common/components/spinner/spinner/spinner.co
 import { LoggedUserService } from "./auth/logged-user.service";
 import { LoginService } from "./auth/login/login.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { NotificationIndicatorComponent } from "./common/components/notification-indicator/notification-indicator.component";
+import { NotificationIndicatorComponent } from "./header/notification-indicator/notification-indicator.component";
 import { MatIconModule } from "@angular/material/icon";
 
 describe("AppComponent", () => {

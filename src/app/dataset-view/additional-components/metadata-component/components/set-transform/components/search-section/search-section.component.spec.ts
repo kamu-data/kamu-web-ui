@@ -99,12 +99,36 @@ describe("SearchSectionComponent", () => {
     });
 
     it("should check delete input dataset", () => {
-        const deletedName = "mockDataset1";
-        component.inputDatasets = new Set([deletedName, "mockDataset2"]);
-        component.TREE_DATA = [{ name: deletedName }, { name: "mockDataset2" }];
+        const deletedDatasetAlias = "test-account/com.youtube.playlist.featuring-kamu-data.videos.stats";
+        component.inputDatasets = new Set([
+            '{"datasetRef":"did:odf:fed0176ed321fcd2fc471d4d1ab06662223be2c76b7e3d3f14c37413e0802e1dca3c1","alias":"kamu/github.stats"}',
+            '{"datasetRef":"did:odf:fed01ae1c46fe64c9d50d741989b406b89b6c40f3810e1b7bcc0ed83edc050fba2d9d","alias":"test-account/com.youtube.playlist.featuring-kamu-data.videos.stats"}',
+        ]);
+        component.TREE_DATA = [
+            { name: "kamu/github.stats", owner: "kamu" },
+            { name: "com.youtube.playlist.featuring-kamu-data.videos.stats", owner: "test-account" },
+        ];
         fixture.detectChanges();
 
-        component.deleteInputDataset(deletedName);
+        component.deleteInputDataset(deletedDatasetAlias);
+
+        expect(component.inputDatasets.size).toBe(1);
+        expect(component.TREE_DATA.length).toBe(1);
+    });
+
+    it("should check deleting with same dataset name, but different account name", () => {
+        const deletedDatasetAlias = "test-account/com.youtube.playlist.featuring-kamu-data.videos.stats";
+        component.inputDatasets = new Set([
+            '{"datasetRef":"did:odf:fed0176ed321fcd2fc471d4d1ab06662223be2c76b7e3d3f14c37413e0802e1dca3c1","alias":"kamu/com.youtube.playlist.featuring-kamu-data.videos.stats"}',
+            '{"datasetRef":"did:odf:fed01ae1c46fe64c9d50d741989b406b89b6c40f3810e1b7bcc0ed83edc050fba2d9d","alias":"test-account/com.youtube.playlist.featuring-kamu-data.videos.stats"}',
+        ]);
+        component.TREE_DATA = [
+            { name: "com.youtube.playlist.featuring-kamu-data.videos.stats", owner: "kamu" },
+            { name: "com.youtube.playlist.featuring-kamu-data.videos.stats", owner: "test-account" },
+        ];
+        fixture.detectChanges();
+
+        component.deleteInputDataset(deletedDatasetAlias);
 
         expect(component.inputDatasets.size).toBe(1);
         expect(component.TREE_DATA.length).toBe(1);

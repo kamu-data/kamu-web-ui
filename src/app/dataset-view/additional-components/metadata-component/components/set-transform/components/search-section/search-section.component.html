@@ -5,7 +5,7 @@
         <div class="d-flex flex-row position-relative">
             <input
                 type="text"
-                class="form-control w-350"
+                class="form-control w-350 search-control"
                 data-test-id="searchInputDatasets"
                 #searchDatasets
                 placeholder="Look up a dataset..."
@@ -37,7 +37,7 @@
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
             {{ node.name }}&nbsp;&nbsp; <span *ngIf="node.type" class="fw-bold">({{ node.type }})</span>
             <button
-                *ngIf="!node.children?.length"
+                *ngIf="node.name === UNAVAILABLE_INPUT_LABEL"
                 class="no-button d-flex"
                 (click)="deleteInputDataset(node.name)"
                 title="Delete input dataset"
@@ -62,7 +62,7 @@
                     </div>
                     <button
                         class="no-button d-flex"
-                        (click)="deleteInputDataset(node.name)"
+                        (click)="deleteInputDataset(node.owner + '/' + node.name)"
                         title="Delete input dataset"
                     >
                         <mat-icon class="fs-4 hover">delete</mat-icon>

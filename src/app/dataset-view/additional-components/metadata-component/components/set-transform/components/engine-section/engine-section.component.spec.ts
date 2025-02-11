@@ -10,6 +10,8 @@ import { MatDividerModule } from "@angular/material/divider";
 import { mockSetPollingSourceEvent } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 import { SharedTestModule } from "src/app/common/shared-test.module";
 import { EngineSelectComponent } from "./components/engine-select/engine-select.component";
+import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { EngineDesc } from "src/app/api/kamu.graphql.interface";
 
 describe("EngineSectionComponent", () => {
     let component: EngineSectionComponent;
@@ -26,7 +28,7 @@ describe("EngineSectionComponent", () => {
         fixture = TestBed.createComponent(EngineSectionComponent);
         component = fixture.componentInstance;
         engineService = TestBed.inject(EngineService);
-        component.selectedEngine = "spark";
+        component.knownEngines = mockEngines.data.knownEngines;
         spyOn(engineService, "engines").and.returnValue(of(mockEngines));
         fixture.detectChanges();
     });
@@ -35,13 +37,23 @@ describe("EngineSectionComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check init default engine and image", fakeAsync(() => {
-        component.ngOnInit();
-        tick();
-        expect(component.selectedEngine.toUpperCase()).toBe(mockEngines.data.knownEngines[0].name.toUpperCase());
-        expect(component.selectedImage).toBe(mockEngines.data.knownEngines[0].latestImage);
-        flush();
-    }));
+    [
+        { testCase: "spark", expected: mockEngines.data.knownEngines[0] },
+        { testCase: "datafusion", expected: mockEngines.data.knownEngines[1] },
+        { testCase: "flink", expected: mockEngines.data.knownEngines[2] },
+        { testCase: "risingwave", expected: mockEngines.data.knownEngines[3] },
+    ].forEach((item: { testCase: string; expected: EngineDesc }) => {
+        it(`should check init ${item.testCase} engine and image`, fakeAsync(() => {
+            component.selectedEngine = item.testCase;
+            component.ngOnInit();
+            tick();
+            const image = findElementByDataTestId(fixture, "engine-image") as HTMLInputElement;
+            expect(image.value).toEqual(item.expected.latestImage);
+            expect(component.selectedEngine.toUpperCase()).toBe(item.expected.name.toUpperCase());
+            expect(component.selectedImage).toBe(item.expected.latestImage);
+            flush();
+        }));
+    });
 
     it("should check init engine and image when currentSetTransformEvent is not null", fakeAsync(() => {
         component.currentSetTransformEvent = mockSetPollingSourceEvent.preprocess;

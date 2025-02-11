@@ -31,6 +31,7 @@ export class SearchSectionComponent extends BaseComponent {
     public treeControl = new NestedTreeControl<DatasetNode>((node) => node.children);
     @Input({ required: true }) public dataSource: MatTreeNestedDataSource<DatasetNode>;
     @Input({ required: true }) public TREE_DATA: DatasetNode[];
+    public readonly UNAVAILABLE_INPUT_LABEL: string = AppValues.SET_TRANSFORM_UNAVAILABLE_INPUT_LABEL;
 
     private appSearchAPI = inject(SearchApi);
     private datasetService = inject(DatasetService);
@@ -51,10 +52,10 @@ export class SearchSectionComponent extends BaseComponent {
     public onSelectItem(event: NgbTypeaheadSelectItemEvent): void {
         const value = event.item as DatasetAutocompleteItem;
         const id = value.dataset.id;
-        const name = value.dataset.name;
+        const alias = value.dataset.alias;
         const inputDataset = JSON.stringify({
             datasetRef: id,
-            alias: name,
+            alias,
         });
         if (value.__typename !== TypeNames.allDataType && !this.inputDatasets.has(inputDataset)) {
             this.inputDatasets.add(inputDataset);
@@ -68,9 +69,12 @@ export class SearchSectionComponent extends BaseComponent {
                         const schema: MaybeNull<DatasetSchema> = parseCurrentSchema(
                             data.datasets.byId.metadata.currentSchema,
                         );
+
                         this.TREE_DATA.push({
                             name: value.dataset.name,
-                            children: schema?.fields,
+                            children: schema?.fields.length
+                                ? schema.fields
+                                : [{ name: "No schema", type: "", repetition: "" }],
                             owner,
                         });
                         this.dataSource.data = this.TREE_DATA;
@@ -83,11 +87,11 @@ export class SearchSectionComponent extends BaseComponent {
         this.searchDataset = "";
     }
 
-    public deleteInputDataset(datasetName: string): void {
-        this.TREE_DATA = this.TREE_DATA.filter((item: DatasetNode) => item.name !== datasetName);
+    public deleteInputDataset(alias: string): void {
+        this.TREE_DATA = this.TREE_DATA.filter((item: DatasetNode) => `${item.owner}/${item.name}` !== alias);
         this.dataSource.data = this.TREE_DATA;
         this.inputDatasets.forEach((item) => {
-            if (item.includes(datasetName)) {
+            if (item.includes(alias)) {
                 this.inputDatasets.delete(item);
             }
         });

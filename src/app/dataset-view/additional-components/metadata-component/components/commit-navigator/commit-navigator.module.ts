@@ -6,11 +6,11 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormsModule } from "@angular/forms";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
-import { CustomPaginationComponent } from "./custom-pagination.component";
+import { CommitNavigatorComponent } from "./commit-navigator.component";
 
 @NgModule({
     imports: [MatIconModule, MatButtonModule, MatDividerModule, NgbModule, CommonModule, FormsModule, MatChipsModule],
-    exports: [CustomPaginationComponent],
-    declarations: [CustomPaginationComponent],
+    exports: [CommitNavigatorComponent],
+    declarations: [CommitNavigatorComponent],
 })
-export class CustomPaginationModule {}
+export class CommitNavigatorModule {}

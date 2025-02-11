@@ -1,22 +1,22 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { CustomPaginationComponent } from "./custom-pagination.component";
+import { CommitNavigatorComponent } from "./commit-navigator.component";
 import { MatIconModule } from "@angular/material/icon";
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 
-describe("CustomPaginationComponent", () => {
-    let component: CustomPaginationComponent;
-    let fixture: ComponentFixture<CustomPaginationComponent>;
+describe("CommitNavigatorComponent", () => {
+    let component: CommitNavigatorComponent;
+    let fixture: ComponentFixture<CommitNavigatorComponent>;
     const INITIAL_PAGE_INDEX = 2;
     const INITIAL_LIMIT = 3;
     const INITIAL_TOTAL = 30;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [CustomPaginationComponent],
+            declarations: [CommitNavigatorComponent],
             imports: [MatIconModule],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(CustomPaginationComponent);
+        fixture = TestBed.createComponent(CommitNavigatorComponent);
         component = fixture.componentInstance;
         component.pageIndex = INITIAL_PAGE_INDEX;
         component.limit = INITIAL_LIMIT;

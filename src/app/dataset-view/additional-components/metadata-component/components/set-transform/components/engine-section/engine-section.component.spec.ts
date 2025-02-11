@@ -10,8 +10,8 @@ import { MatDividerModule } from "@angular/material/divider";
 import { mockSetPollingSourceEvent } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { EngineSelectComponent } from "./components/engine-select/engine-select.component";
-import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
 import { EngineDesc } from "src/app/api/kamu.graphql.interface";
+import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 
 describe("EngineSectionComponent", () => {
     let component: EngineSectionComponent;

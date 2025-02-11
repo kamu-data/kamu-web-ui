@@ -26,7 +26,6 @@ import { LineageComponent as LineageComponent } from "./additional-components/li
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { HistoryComponent } from "./additional-components/history-component/history.component";
 import { TimelineModule } from "../common/components/timeline-component/timeline.module";
-import { CustomPaginationModule } from "../common/components/custom-pagination-component/custom-pagination.module";
 import { DatasetViewHeaderComponent } from "./dataset-view-header/dataset-view-header.component";
 import { RouterModule } from "@angular/router";
 import { OverviewHistorySummaryHeaderComponent } from "./additional-components/overview-component/components/overview-history-summary-header/overview-history-summary-header.component";
@@ -87,6 +86,7 @@ import { BlockRowDataModule } from "../common/components/block-row-data/block-ro
 import { TooltipIconModule } from "../common/components/tooltip-icon/tooltip-icon.module";
 import { FeatureFlagModule } from "../common/directives/feature-flag.module";
 import { YamlEventViewerModule } from "../common/components/yaml-event-viewer/yaml-event-viewer.module";
+import { CommitNavigatorModule } from "./additional-components/metadata-component/components/commit-navigator/commit-navigator.module";
 @NgModule({
     imports: [
         CommonModule,
@@ -109,7 +109,6 @@ import { YamlEventViewerModule } from "../common/components/yaml-event-viewer/ya
         ClipboardModule,
         MatTabsModule,
         CdkAccordionModule,
-        CustomPaginationModule,
         DisplayTimeModule,
         DisplayHashModule,
         DisplaySizeModule,
@@ -149,6 +148,7 @@ import { YamlEventViewerModule } from "../common/components/yaml-event-viewer/ya
         TooltipIconModule,
         FeatureFlagModule,
         YamlEventViewerModule,
+        CommitNavigatorModule,
     ],
     exports: [
         DatasetViewHeaderComponent,

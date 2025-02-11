@@ -2,11 +2,11 @@ import { Component, Input, Output, EventEmitter, OnChanges, ChangeDetectionStrat
 
 @Component({
     selector: "app-custom-pagination",
-    templateUrl: "custom-pagination.component.html",
-    styleUrls: ["custom-pagination.component.scss"],
+    templateUrl: "commit-navigator.component.html",
+    styleUrls: ["commit-navigator.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CustomPaginationComponent implements OnChanges {
+export class CommitNavigatorComponent implements OnChanges {
     @Input({ required: true }) public date = "";
     @Input({ required: true }) public hash = "";
     @Input({ required: true }) public pageIndex: number; // current offset

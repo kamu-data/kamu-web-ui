@@ -8,6 +8,7 @@
             <div class="col-lg-4 left-section">
                 <app-search-section [inputDatasets]="inputDatasets" [TREE_DATA]="TREE_DATA" [dataSource]="dataSource" />
                 <app-engine-section
+                    [selectedEngine]="currentSetTransformEvent?.transform?.engine!"
                     [currentSetTransformEvent]="currentSetTransformEvent?.transform"
                     (onEmitSelectedEngine)="onSelectEngine($event)"
                 />

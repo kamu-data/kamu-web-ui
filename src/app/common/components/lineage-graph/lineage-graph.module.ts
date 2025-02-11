@@ -12,11 +12,12 @@ import { DisplayDatasetIdPipeModule } from "src/app/common/pipes/display-dataset
     imports: [
         CommonModule,
         FormsModule,
-        NgxGraphModule,
         MatIconModule,
-        DisplaySizeModule,
-        DisplayTimeModule,
+        NgxGraphModule,
+
         DisplayDatasetIdPipeModule,
+        DisplayTimeModule,
+        DisplaySizeModule,
     ],
     exports: [LineageGraphComponent],
     declarations: [LineageGraphComponent],

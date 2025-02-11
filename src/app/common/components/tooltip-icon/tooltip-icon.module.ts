@@ -7,6 +7,6 @@ import { MatIconModule } from "@angular/material/icon";
 @NgModule({
     declarations: [TooltipIconComponent],
     exports: [TooltipIconComponent],
-    imports: [CommonModule, NgbTooltipModule, MatIconModule],
+    imports: [CommonModule, MatIconModule, NgbTooltipModule],
 })
 export class TooltipIconModule {}

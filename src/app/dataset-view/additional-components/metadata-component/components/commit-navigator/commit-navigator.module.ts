@@ -9,7 +9,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { CommitNavigatorComponent } from "./commit-navigator.component";
 
 @NgModule({
-    imports: [MatIconModule, MatButtonModule, MatDividerModule, NgbModule, CommonModule, FormsModule, MatChipsModule],
+    imports: [CommonModule, FormsModule, MatButtonModule, MatChipsModule, MatIconModule, MatDividerModule, NgbModule],
     exports: [CommitNavigatorComponent],
     declarations: [CommitNavigatorComponent],
 })

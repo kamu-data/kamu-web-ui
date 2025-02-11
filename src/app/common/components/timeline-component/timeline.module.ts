@@ -12,14 +12,15 @@ import { FeatureFlagModule } from "../../directives/feature-flag.module";
 
 @NgModule({
     imports: [
+        CommonModule,
         MatMenuModule,
         MatIconModule,
         MatButtonModule,
-        CommonModule,
         NgbPopoverModule,
         RouterModule,
-        DisplayTimeModule,
+
         DisplayHashModule,
+        DisplayTimeModule,
         FeatureFlagModule,
     ],
     exports: [TimelineComponent],

@@ -12,10 +12,11 @@ import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module
     exports: [DatasetViewMenuComponent],
     imports: [
         CommonModule,
-        DataAccessPanelModule,
         MatIconModule,
-        RouterModule,
         MatButtonToggleModule,
+        RouterModule,
+
+        DataAccessPanelModule,
         FeatureFlagModule,
     ],
 })

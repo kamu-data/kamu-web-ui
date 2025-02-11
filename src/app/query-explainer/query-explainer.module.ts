@@ -16,22 +16,23 @@ import { MarkdownModule } from "ngx-markdown";
 
 @NgModule({
     declarations: [
-        QueryExplainerComponent,
-        VerifyResultSectionComponent,
-        ReproducedResultSectionComponent,
-        InputDataSectionComponent,
         CommitmentDataSectionComponent,
+        InputDataSectionComponent,
+        QueryExplainerComponent,
+        ReproducedResultSectionComponent,
+        VerifyResultSectionComponent,
     ],
     imports: [
         CommonModule,
-        MatIconModule,
-        DisplayHashModule,
-        RouterModule,
-        HighlightModule,
-        DynamicTableModule,
         FormsModule,
-        AutofocusModule,
+        HighlightModule,
+        MatIconModule,
         MarkdownModule,
+        RouterModule,
+
+        AutofocusModule,
+        DisplayHashModule,
+        DynamicTableModule,
     ],
 })
 export class QueryExplainerModule {}

@@ -16,16 +16,17 @@ import { SafeHtmlModule } from "../common/pipes/safe-html.module";
     declarations: [FlowsTableComponent, TileBaseWidgetComponent],
     exports: [FlowsTableComponent, TileBaseWidgetComponent],
     imports: [
+        AngularMultiSelectModule,
         CommonModule,
-        NgbPopoverModule,
+        FormsModule,
         MatDividerModule,
-        RouterModule,
         MatMenuModule,
         MatIconModule,
         MatTableModule,
+        NgbPopoverModule,
         ReactiveFormsModule,
-        FormsModule,
-        AngularMultiSelectModule,
+        RouterModule,
+
         SafeHtmlModule,
     ],
 })

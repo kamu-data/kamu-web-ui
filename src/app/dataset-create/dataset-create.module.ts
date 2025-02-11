@@ -13,17 +13,18 @@ import { EditorModule } from "../editor/editor.module";
 
 @NgModule({
     imports: [
-        MatMenuModule,
-        MatIconModule,
-        MatButtonModule,
-        MatFormFieldModule,
-        NgbModule,
         CommonModule,
-        SearchAdditionalButtonsModule,
         FormsModule,
+        MatButtonModule,
         MatDividerModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatMenuModule,
+        NgbModule,
         ReactiveFormsModule,
+
         EditorModule,
+        SearchAdditionalButtonsModule,
     ],
     exports: [DatasetCreateComponent],
     declarations: [DatasetCreateComponent],

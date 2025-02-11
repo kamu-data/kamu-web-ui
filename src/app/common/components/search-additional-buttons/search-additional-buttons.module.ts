@@ -9,7 +9,7 @@ import { SearchAdditionalButtonsNavComponent } from "./search-additional-buttons
 import { FeatureFlagModule } from "../../directives/feature-flag.module";
 
 @NgModule({
-    imports: [MatMenuModule, FeatureFlagModule, MatIconModule, MatButtonModule, CommonModule, NgbPopoverModule],
+    imports: [CommonModule, MatMenuModule, MatIconModule, MatButtonModule, NgbPopoverModule, FeatureFlagModule],
     exports: [SearchAdditionalButtonsComponent, SearchAdditionalButtonsNavComponent],
     declarations: [SearchAdditionalButtonsComponent, SearchAdditionalButtonsNavComponent],
 })

@@ -15,13 +15,13 @@ import { FormsModule } from "@angular/forms";
     exports: [AppHeaderComponent],
     imports: [
         CommonModule,
-        RouterModule,
+        FormsModule,
+        HighlightModule,
         MatMenuModule,
         MatIconModule,
         MatProgressSpinnerModule,
         NgbTypeaheadModule,
-        HighlightModule,
-        FormsModule,
+        RouterModule,
     ],
 })
 export class HeaderModule {}

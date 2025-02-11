@@ -16,17 +16,18 @@ import { FeatureFlagModule } from "../../directives/feature-flag.module";
 
 @NgModule({
     imports: [
-        MatIconModule,
-        MatButtonModule,
-        MatDividerModule,
-        NgbModule,
         CommonModule,
         FormsModule,
+        MatButtonModule,
         MatChipsModule,
+        MatIconModule,
+        MatDividerModule,
         MatSelectModule,
-        DisplayTimeModule,
+        NgbModule,
         RouterModule,
+
         DatasetVisibilityModule,
+        DisplayTimeModule,
         FeatureFlagModule,
     ],
     exports: [DatasetListComponent, DatasetListItemComponent],

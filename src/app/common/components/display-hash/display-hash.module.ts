@@ -8,6 +8,6 @@ import { MatIconModule } from "@angular/material/icon";
 @NgModule({
     declarations: [DisplayHashComponent],
     exports: [DisplayHashComponent],
-    imports: [CommonModule, ClipboardModule, RouterModule, MatIconModule],
+    imports: [CommonModule, ClipboardModule, MatIconModule, RouterModule],
 })
 export class DisplayHashModule {}

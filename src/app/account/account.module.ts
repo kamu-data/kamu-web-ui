@@ -19,18 +19,19 @@ import { FeatureFlagModule } from "../common/directives/feature-flag.module";
     declarations: [AccountComponent, AccountFlowsTabComponent, DatasetsTabComponent],
     imports: [
         CommonModule,
-        MatIconModule,
-        FlowsViewModule,
-        MatDividerModule,
-        DatasetListModule,
-        PaginationModule,
-        MatTableModule,
-        RouterModule,
-        MatButtonToggleModule,
         FormsModule,
-        ReactiveFormsModule,
+        MatButtonToggleModule,
+        MatIconModule,
+        MatDividerModule,
+        MatTableModule,
         NgbModule,
+        ReactiveFormsModule,
+        RouterModule,
+
+        DatasetListModule,
         FeatureFlagModule,
+        FlowsViewModule,
+        PaginationModule,
     ],
 })
 export class AccountModule {}

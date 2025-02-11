@@ -7,6 +7,6 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 @NgModule({
     declarations: [BatchingTriggerFormComponent],
     exports: [BatchingTriggerFormComponent],
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, MatSlideToggleModule],
+    imports: [CommonModule, FormsModule, MatSlideToggleModule, ReactiveFormsModule],
 })
 export class BatchingTriggerModule {}

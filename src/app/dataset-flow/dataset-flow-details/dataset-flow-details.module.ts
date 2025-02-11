@@ -17,19 +17,20 @@ import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module
     declarations: [
         DatasetFlowDetailsComponent,
         FlowDetailsHistoryTabComponent,
-        FlowDetailsSummaryTabComponent,
         FlowDetailsLogsTabComponent,
+        FlowDetailsSummaryTabComponent,
     ],
     imports: [
         CommonModule,
-        MatIconModule,
         MatDividerModule,
-        DatasetViewModule,
-        RouterModule,
-        DatasetViewMenuModule,
+        MatIconModule,
         MatMenuModule,
-        SafeHtmlModule,
+        RouterModule,
+
+        DatasetViewModule,
+        DatasetViewMenuModule,
         FeatureFlagModule,
+        SafeHtmlModule,
     ],
 })
 export class DatasetFlowDetailsModule {}

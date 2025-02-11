@@ -15,16 +15,17 @@ import { FeatureFlagModule } from "../common/directives/feature-flag.module";
 @NgModule({
     imports: [
         CommonModule,
-        SearchAdditionalButtonsModule,
         FormsModule,
-        DynamicTableModule,
-        PaginationModule,
         MatChipsModule,
-        DatasetListModule,
-        ModalModule,
         MatCheckboxModule,
+
+        DatasetListModule,
         DisplayTimeModule,
+        DynamicTableModule,
         FeatureFlagModule,
+        ModalModule,
+        PaginationModule,
+        SearchAdditionalButtonsModule,
     ],
     exports: [SearchComponent],
     declarations: [SearchComponent],

@@ -19,25 +19,26 @@ import { EditorModule } from "src/app/editor/editor.module";
 
 @NgModule({
     declarations: [
-        RequestTimerComponent,
-        LoadMoreComponent,
-        SearchAndSchemasSectionComponent,
         QueryAndResultSectionsComponent,
+        LoadMoreComponent,
+        RequestTimerComponent,
+        SearchAndSchemasSectionComponent,
         SavedQueriesSectionComponent,
     ],
     imports: [
+        CdkAccordionModule,
         CommonModule,
-        MatProgressBarModule,
-        DynamicTableModule,
+        FormsModule,
         EditorModule,
+        MatButtonModule,
+        MatButtonToggleModule,
         MatDividerModule,
         MatMenuModule,
         MatIconModule,
-        FormsModule,
+        MatProgressBarModule,
         NgbTypeaheadModule,
-        CdkAccordionModule,
-        MatButtonModule,
-        MatButtonToggleModule,
+
+        DynamicTableModule,
     ],
     exports: [QueryAndResultSectionsComponent, SavedQueriesSectionComponent, SearchAndSchemasSectionComponent],
 })

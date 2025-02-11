@@ -8,8 +8,8 @@ import { GithubCallbackComponent } from "../github-callback/github.callback";
 import { ReturnToCliComponent } from "./return-to-cli/return-to-cli.component";
 
 @NgModule({
-    declarations: [LoginComponent, GithubCallbackComponent, ReturnToCliComponent],
-    exports: [LoginComponent, GithubCallbackComponent, ReturnToCliComponent],
+    declarations: [GithubCallbackComponent, LoginComponent, ReturnToCliComponent],
+    exports: [GithubCallbackComponent, LoginComponent, ReturnToCliComponent],
     imports: [CommonModule, MatIconModule, ReactiveFormsModule, SpinnerModule],
 })
 export class LoginModule {}

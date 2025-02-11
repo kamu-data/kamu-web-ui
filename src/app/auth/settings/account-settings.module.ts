@@ -13,19 +13,20 @@ import { RouterModule } from "@angular/router";
 import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
 
 @NgModule({
-    declarations: [AccountSettingsComponent, EmailsTabComponent, AccessTokensTabComponent],
+    declarations: [AccessTokensTabComponent, AccountSettingsComponent, EmailsTabComponent],
     exports: [AccountSettingsComponent],
     imports: [
         CommonModule,
         FormsModule,
+        MatDividerModule,
         MatIconModule,
         MatSlideToggleModule,
-        ReactiveFormsModule,
-        MatDividerModule,
-        PaginationModule,
         MatTableModule,
+        ReactiveFormsModule,
         RouterModule,
+
         FeatureFlagModule,
+        PaginationModule,
     ],
 })
 export class AccountSettingsModule {}

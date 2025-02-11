@@ -26,7 +26,7 @@ import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatButtonModule } from "@angular/material/button";
 import { SearchModule } from "./search/search.module";
-import { DatasetModule } from "./dataset-view/dataset.module";
+import { DatasetViewModule } from "./dataset-view/dataset-view.module";
 import { DatasetService } from "./dataset-view/dataset.service";
 import { DatasetCreateModule } from "./dataset-create/dataset-create.module";
 import { AppHeaderComponent } from "./common/components/app-header/app-header.component";
@@ -203,7 +203,7 @@ const MatModules = [
     ],
     imports: [
         AppRoutingModule,
-        DatasetModule,
+        DatasetViewModule,
         DatasetCreateModule,
         MetadataBlockModule,
         ModalModule.forRoot(),

@@ -4,7 +4,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatMenuModule } from "@angular/material/menu";
 import { RouterModule } from "@angular/router";
-import { DatasetModule } from "src/app/dataset-view/dataset.module";
+import { DatasetViewModule } from "src/app/dataset-view/dataset-view.module";
 import { DatasetFlowDetailsComponent } from "./dataset-flow-details.component";
 import { FlowDetailsHistoryTabComponent } from "./tabs/flow-details-history-tab/flow-details-history-tab.component";
 import { FlowDetailsSummaryTabComponent } from "./tabs/flow-details-summary-tab/flow-details-summary-tab.component";
@@ -24,7 +24,7 @@ import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module
         CommonModule,
         MatIconModule,
         MatDividerModule,
-        DatasetModule,
+        DatasetViewModule,
         RouterModule,
         DatasetViewMenuModule,
         MatMenuModule,

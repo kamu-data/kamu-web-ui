@@ -1,4 +1,4 @@
-import { EventDetailsPropertiesModule } from "./../dataset-block/metadata-block/components/event-details/components/common/event-details-properties.module";
+import { EventDetailsPropertiesModule } from "../dataset-block/metadata-block/components/event-details/components/common/event-details-properties.module";
 import { MatIconModule } from "@angular/material/icon";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatDividerModule } from "@angular/material/divider";
@@ -6,7 +6,7 @@ import { DisplayHashModule } from "src/app/common/components/display-hash/displa
 import { DisplayTimeModule } from "../common/components/display-time/display-time.module";
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { DatasetComponent } from "./dataset.component";
+import { DatasetViewComponent } from "./dataset-view.component";
 import { SearchAdditionalButtonsModule } from "../common/components/search-additional-buttons/search-additional-buttons.module";
 import { NgbModule, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -157,7 +157,7 @@ import { YamlEventViewerModule } from "../common/components/yaml-event-viewer/ya
     exports: [
         DatasetViewHeaderComponent,
         OverviewHistorySummaryHeaderComponent,
-        DatasetComponent,
+        DatasetViewComponent,
         MetadataComponent,
         DataComponent,
         BaseStepComponent,
@@ -171,7 +171,7 @@ import { YamlEventViewerModule } from "../common/components/yaml-event-viewer/ya
     declarations: [
         DatasetViewHeaderComponent,
         OverviewHistorySummaryHeaderComponent,
-        DatasetComponent,
+        DatasetViewComponent,
         MetadataComponent,
         DataComponent,
         OverviewComponent,
@@ -207,4 +207,4 @@ import { YamlEventViewerModule } from "../common/components/yaml-event-viewer/ya
         FileFromUrlModalComponent,
     ],
 })
-export class DatasetModule {}
+export class DatasetViewModule {}

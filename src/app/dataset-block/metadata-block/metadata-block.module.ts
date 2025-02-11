@@ -5,7 +5,7 @@ import { EventDetailsComponent } from "./components/event-details/event-details.
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MetadataBlockComponent } from "./metadata-block.component";
-import { DatasetModule } from "src/app/dataset-view/dataset.module";
+import { DatasetViewModule } from "src/app/dataset-view/dataset-view.module";
 import { BlockHeaderComponent } from "./components/block-header/block-header.component";
 import { BlockNavigationComponent } from "./components/block-navigation/block-navigation.component";
 import { MatMenuModule } from "@angular/material/menu";
@@ -65,7 +65,7 @@ import { YamlEventViewerModule } from "src/app/common/components/yaml-event-view
     ],
     imports: [
         CommonModule,
-        DatasetModule,
+        DatasetViewModule,
         MatMenuModule,
         MatDividerModule,
         FormsModule,

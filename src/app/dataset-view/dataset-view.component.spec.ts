@@ -10,7 +10,7 @@ import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { DatasetApi } from "../api/dataset.api";
-import { DatasetComponent } from "./dataset.component";
+import { DatasetViewComponent } from "./dataset-view.component";
 import { NavigationService } from "../services/navigation.service";
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { delay, of } from "rxjs";
@@ -59,9 +59,9 @@ import { registerMatSvgIcons } from "../common/helpers/base-test.helpers.spec";
 import { MOCK_NODES } from "../api/mock/dataset.mock";
 import { FeatureFlagModule } from "../common/directives/feature-flag.module";
 
-describe("DatasetComponent", () => {
-    let component: DatasetComponent;
-    let fixture: ComponentFixture<DatasetComponent>;
+describe("DatasetViewComponent", () => {
+    let component: DatasetViewComponent;
+    let fixture: ComponentFixture<DatasetViewComponent>;
     let datasetService: DatasetService;
     let datasetSubsServices: DatasetSubscriptionsService;
     let navigationService: NavigationService;
@@ -74,7 +74,7 @@ describe("DatasetComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [
-                DatasetComponent,
+                DatasetViewComponent,
                 OverviewComponent,
                 DataComponent,
                 MetadataComponent,
@@ -114,7 +114,7 @@ describe("DatasetComponent", () => {
                 CdkAccordionModule,
                 DatasetVisibilityModule,
                 FeatureFlagModule,
-                RouterTestingModule.withRoutes([{ path: MOCK_DATASET_ROUTE, component: DatasetComponent }]),
+                RouterTestingModule.withRoutes([{ path: MOCK_DATASET_ROUTE, component: DatasetViewComponent }]),
             ],
             providers: [
                 DatasetApi,
@@ -149,7 +149,7 @@ describe("DatasetComponent", () => {
                 },
             ],
         })
-            .overrideComponent(DatasetComponent, {
+            .overrideComponent(DatasetViewComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })
             .compileComponents();
@@ -164,7 +164,7 @@ describe("DatasetComponent", () => {
         router = TestBed.inject(Router);
         spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsDerivedFragment));
 
-        fixture = TestBed.createComponent(DatasetComponent);
+        fixture = TestBed.createComponent(DatasetViewComponent);
         router.initialNavigation();
         route = TestBed.inject(ActivatedRoute);
         toastrService = TestBed.inject(ToastrService);

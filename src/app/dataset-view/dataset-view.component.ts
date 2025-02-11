@@ -22,10 +22,10 @@ import { Clipboard } from "@angular/cdk/clipboard";
 
 @Component({
     selector: "app-dataset",
-    templateUrl: "./dataset.component.html",
+    templateUrl: "./dataset-view.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DatasetComponent extends BaseDatasetDataComponent implements OnInit, OnDestroy {
+export class DatasetViewComponent extends BaseDatasetDataComponent implements OnInit, OnDestroy {
     public datasetBasics: MaybeUndefined<DatasetBasicsFragment>;
     public datasetInfo: DatasetInfo;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;

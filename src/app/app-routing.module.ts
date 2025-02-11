@@ -8,7 +8,7 @@ import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { SearchComponent } from "./search/search.component";
 import { LoginComponent } from "./auth/login/login.component";
-import { DatasetComponent } from "./dataset-view/dataset.component";
+import { DatasetViewComponent } from "./dataset-view/dataset-view.component";
 import { DatasetCreateComponent } from "./dataset-create/dataset-create.component";
 import { GithubCallbackComponent } from "./auth/github-callback/github.callback";
 import ProjectLinks from "./project-links";
@@ -98,7 +98,7 @@ export const routes: Routes = [
             },
             {
                 path: `:${ProjectLinks.URL_PARAM_DATASET_NAME}`,
-                component: DatasetComponent,
+                component: DatasetViewComponent,
             },
         ],
     },

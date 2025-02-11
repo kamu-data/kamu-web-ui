@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Restructuring of the application catalogs
+### Fixed
+- Batching trigger form: removed disabled state when updates turn off
+- Edit SetTransform: initializing the correct engine
+- Edit SetTransform: deleting input datasets with same name
 
 ## [0.39.1] - 2025-02-03
 ### Changed

@@ -28,6 +28,7 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
     public queries: Omit<SqlQueryStep, "__typename">[] = [];
     public dataSource = new MatTreeNestedDataSource<DatasetNode>();
     public TREE_DATA: DatasetNode[] = [];
+    private readonly UNAVAILABLE_INPUT_LABEL: string = AppValues.SET_TRANSFORM_UNAVAILABLE_INPUT_LABEL;
 
     private editService = inject(EditSetTransformService);
 
@@ -85,6 +86,7 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
                             const schema: MaybeNull<DatasetSchema> = parseCurrentSchema(
                                 data.datasets.byId.metadata.currentSchema,
                             );
+
                             const datasetInfo = item.alias.split("/");
                             this.TREE_DATA.push({
                                 name: datasetInfo.length > 1 ? datasetInfo[1] : item.alias,
@@ -93,7 +95,7 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
                             });
                         } else {
                             this.TREE_DATA.push({
-                                name: "-  Dataset is unavailable",
+                                name: this.UNAVAILABLE_INPUT_LABEL,
                                 children: [],
                                 owner: "",
                             });

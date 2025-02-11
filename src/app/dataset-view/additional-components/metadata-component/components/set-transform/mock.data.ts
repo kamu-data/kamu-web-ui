@@ -28,6 +28,11 @@ export const mockEngines: EnginesQuery = {
                 latestImage: "ghcr.io/kamu-data/engine-flink:0.1.2",
                 name: Engine.Flink,
             },
+            {
+                dialect: QueryDialect.SqlRisingWave,
+                latestImage: "ghcr.io/kamu-data/engine-risingwave:0.1.2",
+                name: Engine.RisingWave,
+            },
         ],
     },
 };

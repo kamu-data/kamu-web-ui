@@ -15,7 +15,6 @@ import { PaginationModule } from "src/app/common/components/pagination-component
 import { BlockHashFilterPipe } from "./components/block-navigation/pipes/block-hash-filter.pipe";
 import { EventTypeFilterPipe } from "./components/block-navigation/pipes/event-type-filter.pipe";
 import { SetPollingSourceEventComponent } from "./components/event-details/components/set-polling-source-event/set-polling-source-event.component";
-import { ToggleComponent } from "src/app/common/components/toggle/toggle.component";
 import { SeedEventComponent } from "./components/event-details/components/seed-event/seed-event.component";
 import { HighlightModule } from "ngx-highlightjs";
 import { DynamicTableModule } from "src/app/common/components/dynamic-table/dynamic-table.module";
@@ -51,7 +50,6 @@ import { YamlEventViewerModule } from "src/app/common/components/yaml-event-view
         SeedEventComponent,
         EventTypeFilterPipe,
         BlockHashFilterPipe,
-        ToggleComponent,
         BaseDynamicEventComponent,
         ExecuteTransformEventComponent,
         YamlViewSectionComponent,

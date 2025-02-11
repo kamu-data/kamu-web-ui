@@ -2,15 +2,15 @@ import { TestBed } from "@angular/core/testing";
 import { AccountEmailService } from "./account-email.service";
 import { Apollo } from "apollo-angular";
 import { ToastrModule, ToastrService } from "ngx-toastr";
-import { AccountApi } from "../api/account.api";
+import { AccountApi } from "../../../../api/account.api";
 import { of } from "rxjs";
 import {
     mockAccountChangeEmailMutationError,
     mockAccountChangeEmailMutationSuccess,
     mockAccountWithEmailQuery,
-} from "../api/mock/account.mock";
-import { TEST_ACCOUNT_EMAIL } from "../api/mock/auth.mock";
-import { TEST_ACCOUNT_NAME } from "../api/mock/dataset.mock";
+} from "../../../../api/mock/account.mock";
+import { TEST_ACCOUNT_EMAIL } from "../../../../api/mock/auth.mock";
+import { TEST_ACCOUNT_NAME } from "../../../../api/mock/dataset.mock";
 
 describe("AccountEmailService", () => {
     let service: AccountEmailService;

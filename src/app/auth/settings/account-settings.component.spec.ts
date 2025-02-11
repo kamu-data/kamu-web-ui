@@ -17,7 +17,7 @@ import ProjectLinks from "src/app/project-links";
 import { LoginService } from "../login/login.service";
 import { MatIconModule } from "@angular/material/icon";
 import { ToastrModule } from "ngx-toastr";
-import { AccountEmailService } from "src/app/services/account-email.service";
+import { AccountEmailService } from "src/app/auth/settings/tabs/emails-tab/account-email.service";
 
 describe("AccountSettingsComponent", () => {
     let component: AccountSettingsComponent;

@@ -6,7 +6,7 @@ import { first } from "rxjs/operators";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { ApolloModule } from "apollo-angular";
-import { AccountService } from "src/app/services/account.service";
+import { AccountService } from "src/app/account/account.service";
 import { of } from "rxjs";
 import { ToastrModule } from "ngx-toastr";
 import { MOCK_NODES } from "src/app/api/mock/dataset.mock";

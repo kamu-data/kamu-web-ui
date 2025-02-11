@@ -6,7 +6,7 @@ import { AccountTabs } from "./account.constants";
 import { ActivatedRoute, Params } from "@angular/router";
 import AppValues from "src/app/common/values/app.values";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
-import { AccountService } from "src/app/services/account.service";
+import { AccountService } from "src/app/account/account.service";
 import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
 import { distinctUntilChanged, map, shareReplay, switchMap } from "rxjs/operators";
 import { Observable, combineLatest } from "rxjs";

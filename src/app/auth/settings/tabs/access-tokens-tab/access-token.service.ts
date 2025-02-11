@@ -1,6 +1,6 @@
-import { MaybeNull } from "../common/types/app.types";
+import { MaybeNull } from "../../../../common/types/app.types";
 import { inject, Injectable } from "@angular/core";
-import { AccessTokenApi } from "../api/access-token.api";
+import { AccessTokenApi } from "../../../../api/access-token.api";
 import { Observable, map } from "rxjs";
 import {
     AccessTokenConnection,
@@ -8,7 +8,7 @@ import {
     CreatedAccessToken,
     ListAccessTokensQuery,
     RevokeAccessTokenMutation,
-} from "../api/kamu.graphql.interface";
+} from "../../../../api/kamu.graphql.interface";
 import { ToastrService } from "ngx-toastr";
 
 @Injectable({

@@ -6,7 +6,7 @@ import {
     AccountResumeFlowsMutation,
     Dataset,
     DatasetListFlowsDataFragment,
-} from "./../api/kamu.graphql.interface";
+} from "../api/kamu.graphql.interface";
 import { AccountFlowFilters, AccountFragment, FlowConnectionDataFragment } from "../api/kamu.graphql.interface";
 import { AccountApi } from "../api/account.api";
 import { Observable, combineLatest, forkJoin } from "rxjs";

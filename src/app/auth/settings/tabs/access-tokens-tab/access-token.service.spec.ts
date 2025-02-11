@@ -2,7 +2,7 @@ import { TestBed } from "@angular/core/testing";
 import { AccessTokenService } from "./access-token.service";
 import { Apollo } from "apollo-angular";
 import { ToastrModule, ToastrService } from "ngx-toastr";
-import { AccessTokenApi } from "../api/access-token.api";
+import { AccessTokenApi } from "../../../../api/access-token.api";
 import {
     PAGE,
     PER_PAGE,
@@ -13,11 +13,11 @@ import {
     mockListAccessTokensQuery,
     mockRevokeAccessTokenMutation,
     mockRevokeAccessTokenMutationError,
-} from "../api/mock/access-token.mock";
+} from "../../../../api/mock/access-token.mock";
 import { of } from "rxjs";
-import { AccessTokenConnection, CreatedAccessToken } from "../api/kamu.graphql.interface";
-import { TEST_ACCOUNT_ID } from "../search/mock.data";
-import { MaybeNull } from "../common/types/app.types";
+import { AccessTokenConnection, CreatedAccessToken } from "../../../../api/kamu.graphql.interface";
+import { TEST_ACCOUNT_ID } from "../../../../search/mock.data";
+import { MaybeNull } from "../../../../common/types/app.types";
 
 describe("AccessTokenService", () => {
     let service: AccessTokenService;

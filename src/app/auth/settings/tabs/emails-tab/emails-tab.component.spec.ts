@@ -5,7 +5,7 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { ToastrModule } from "ngx-toastr";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
-import { AccountEmailService } from "src/app/services/account-email.service";
+import { AccountEmailService } from "src/app/auth/settings/tabs/emails-tab/account-email.service";
 import { of } from "rxjs";
 
 describe("EmailsTabComponent", () => {

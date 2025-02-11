@@ -1,4 +1,4 @@
-import { WidgetHeightService } from "../../services/widget-height.service";
+import { WidgetHeightService } from "../../common/components/lineage-graph/widget-height.service";
 import {
     AfterViewInit,
     ChangeDetectionStrategy,

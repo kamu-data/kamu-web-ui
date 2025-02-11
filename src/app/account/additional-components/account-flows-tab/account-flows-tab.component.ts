@@ -8,7 +8,7 @@ import {
     FlowSummaryDataFragment,
     InitiatorFilterInput,
 } from "src/app/api/kamu.graphql.interface";
-import { AccountService } from "src/app/services/account.service";
+import { AccountService } from "src/app/account/account.service";
 import { AccountTabs } from "../../account.constants";
 import { environment } from "src/environments/environment";
 import { FlowsTableProcessingBaseComponent } from "src/app/dataset-flow/flows-table/flows-table-processing-base.component";

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core
 import { EngineSectionComponent } from "./engine-section.component";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { EngineService } from "src/app/services/engine.service";
+import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { of } from "rxjs";
 import { mockEngines } from "../../mock.data";
 import { FormsModule } from "@angular/forms";

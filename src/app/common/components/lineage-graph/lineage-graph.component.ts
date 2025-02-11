@@ -1,4 +1,4 @@
-import { WidgetHeightService } from "../../../services/widget-height.service";
+import { WidgetHeightService } from "./widget-height.service";
 import {
     ChangeDetectionStrategy,
     Component,

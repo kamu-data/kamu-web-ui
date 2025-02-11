@@ -13,7 +13,7 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
 import ProjectLinks from "src/app/project-links";
-import { DatasetEvnironmentVariablesService } from "src/app/services/dataset-evnironment-variables.service";
+import { DatasetEvnironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-evnironment-variables.service";
 import { from } from "rxjs";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";

@@ -9,7 +9,7 @@ import AppValues from "src/app/common/values/app.values";
 import { MaybeNull, MaybeUndefined } from "src/app/common/types/app.types";
 import { EMPTY, Observable } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { AccountEmailService } from "src/app/services/account-email.service";
+import { AccountEmailService } from "src/app/auth/settings/tabs/emails-tab/account-email.service";
 import { LoggedUserService } from "../logged-user.service";
 
 @Component({

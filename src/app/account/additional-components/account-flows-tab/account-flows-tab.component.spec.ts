@@ -9,7 +9,7 @@ import { of } from "rxjs";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { AccountTabs } from "../../account.constants";
-import { AccountService } from "src/app/services/account.service";
+import { AccountService } from "src/app/account/account.service";
 import { mockDatasetMainDataId } from "src/app/search/mock.data";
 import { mockDatasetFlowsInitiatorsQuery, mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
 import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";

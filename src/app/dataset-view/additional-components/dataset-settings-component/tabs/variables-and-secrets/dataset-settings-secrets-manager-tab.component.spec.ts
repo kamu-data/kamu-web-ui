@@ -12,7 +12,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { FormBuilder, FormsModule } from "@angular/forms";
 import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetEvnironmentVariablesService } from "src/app/services/dataset-evnironment-variables.service";
+import { DatasetEvnironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-evnironment-variables.service";
 import { of } from "rxjs";
 import { MOCK_ENV_VAR_ID, mockListEnvVariablesQuery } from "src/app/api/mock/environment-variables-and-secrets.mock";
 import { ViewDatasetEnvVarConnection } from "src/app/api/kamu.graphql.interface";

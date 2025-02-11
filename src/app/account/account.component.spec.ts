@@ -8,7 +8,7 @@ import { AccountComponent } from "./account.component";
 import { BehaviorSubject, delay, of } from "rxjs";
 import { DatasetApi } from "src/app/api/dataset.api";
 import { mockDatasetsAccountResponse } from "src/app/api/mock/dataset.mock";
-import { AccountService } from "src/app/services/account.service";
+import { AccountService } from "src/app/account/account.service";
 import ProjectLinks from "src/app/project-links";
 import { AccountPageQueryParams } from "./account.component.model";
 import { DatasetsTabComponent } from "./additional-components/datasets-tab/datasets-tab.component";

@@ -1,8 +1,8 @@
 import { TestBed } from "@angular/core/testing";
-import { DatasetEvnironmentVariablesService } from "./dataset-evnironment-variables.service";
+import { DatasetEvnironmentVariablesService } from "../../../../../services/dataset-evnironment-variables.service";
 import { Apollo } from "apollo-angular";
 import { ToastrModule, ToastrService } from "ngx-toastr";
-import { EnvironmentVariablesApi } from "../api/environment-variables.api";
+import { EnvironmentVariablesApi } from "../../../../../api/environment-variables.api";
 import {
     MOCK_ENV_VAR_ID,
     MOCK_IS_SECRET,
@@ -15,10 +15,15 @@ import {
     mockExposedEnvVariableValueQuery,
     mockListEnvVariablesQuery,
     mockUpsertEnvVariableMutationCreated,
-} from "../api/mock/environment-variables-and-secrets.mock";
+} from "../../../../../api/mock/environment-variables-and-secrets.mock";
 import { of } from "rxjs";
-import { TEST_ACCOUNT_ID, TEST_ACCOUNT_NAME, TEST_DATASET_ID, TEST_DATASET_NAME } from "../api/mock/dataset.mock";
-import { ViewDatasetEnvVar, ViewDatasetEnvVarConnection } from "../api/kamu.graphql.interface";
+import {
+    TEST_ACCOUNT_ID,
+    TEST_ACCOUNT_NAME,
+    TEST_DATASET_ID,
+    TEST_DATASET_NAME,
+} from "../../../../../api/mock/dataset.mock";
+import { ViewDatasetEnvVar, ViewDatasetEnvVarConnection } from "../../../../../api/kamu.graphql.interface";
 
 describe("EvnironmentVariablesService", () => {
     let service: DatasetEvnironmentVariablesService;

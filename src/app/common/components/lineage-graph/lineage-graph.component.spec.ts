@@ -14,7 +14,7 @@ import { DisplayTimeModule } from "../display-time/display-time.module";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { mockGraphNode } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import timekeeper from "timekeeper";
-import { WidgetHeightService } from "src/app/services/widget-height.service";
+import { WidgetHeightService } from "src/app/common/components/lineage-graph/widget-height.service";
 import { DisplayDatasetIdPipeModule } from "src/app/common/pipes/display-dataset-id.pipe.module";
 
 describe("LineageGraphComponent", () => {

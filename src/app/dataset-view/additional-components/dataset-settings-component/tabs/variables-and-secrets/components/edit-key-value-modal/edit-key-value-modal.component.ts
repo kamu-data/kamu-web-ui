@@ -5,7 +5,7 @@ import { DatasetBasicsFragment, ViewDatasetEnvVar } from "src/app/api/kamu.graph
 import { MaybeNull } from "src/app/common/types/app.types";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { noWhitespaceValidator } from "src/app/common/helpers/data.helpers";
-import { DatasetEvnironmentVariablesService } from "src/app/services/dataset-evnironment-variables.service";
+import { DatasetEvnironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-evnironment-variables.service";
 import { EnvAndSecretsFormType } from "./edit-key-value-modal.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 

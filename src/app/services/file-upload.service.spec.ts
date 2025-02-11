@@ -11,7 +11,7 @@ import { AppConfigService } from "../app-config.service";
 import { mockFile, mockUploadPrepareResponse } from "../api/mock/upload-file.mock";
 import { SharedTestModule } from "../common/modules/shared-test.module";
 import { RouterTestingModule } from "@angular/router/testing";
-import { DatasetComponent } from "../dataset-view/dataset-view.component";
+import { DatasetViewComponent } from "../dataset-view/dataset-view.component";
 
 describe("FileUploadService", () => {
     let service: FileUploadService;
@@ -26,7 +26,7 @@ describe("FileUploadService", () => {
             imports: [
                 HttpClientTestingModule,
                 SharedTestModule,
-                RouterTestingModule.withRoutes([{ path: "kamu/mockNameRoot", component: DatasetComponent }]),
+                RouterTestingModule.withRoutes([{ path: "kamu/mockNameRoot", component: DatasetViewComponent }]),
             ],
             providers: [Apollo],
         });

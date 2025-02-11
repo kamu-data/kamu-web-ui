@@ -19,13 +19,13 @@ import { registerMatSvgIcons, routerMock, routerMockEventSubject } from "./commo
 import { ActivatedRoute, NavigationEnd, RouterModule } from "@angular/router";
 import { mockAccountFromAccessToken } from "./api/mock/auth.mock";
 import { FetchAccountDetailsGQL } from "./api/kamu.graphql.interface";
-import { AppHeaderComponent } from "./common/components/app-header/app-header.component";
 import { SpinnerComponent } from "./common/components/spinner/spinner/spinner.component";
 import { LoggedUserService } from "./auth/logged-user.service";
 import { LoginService } from "./auth/login/login.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { NotificationIndicatorComponent } from "./header/notification-indicator/notification-indicator.component";
 import { MatIconModule } from "@angular/material/icon";
+import { AppHeaderComponent } from "./header/app-header/app-header.component";
 
 describe("AppComponent", () => {
     let component: AppComponent;

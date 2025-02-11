@@ -1,5 +1,4 @@
 import { TestBed } from "@angular/core/testing";
-import { DatasetEvnironmentVariablesService } from "../../../../../services/dataset-evnironment-variables.service";
 import { Apollo } from "apollo-angular";
 import { ToastrModule, ToastrService } from "ngx-toastr";
 import { EnvironmentVariablesApi } from "../../../../../api/environment-variables.api";
@@ -24,6 +23,7 @@ import {
     TEST_DATASET_NAME,
 } from "../../../../../api/mock/dataset.mock";
 import { ViewDatasetEnvVar, ViewDatasetEnvVarConnection } from "../../../../../api/kamu.graphql.interface";
+import { DatasetEvnironmentVariablesService } from "./dataset-evnironment-variables.service";
 
 describe("EvnironmentVariablesService", () => {
     let service: DatasetEvnironmentVariablesService;

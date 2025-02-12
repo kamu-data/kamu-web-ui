@@ -1,6 +1,6 @@
-import { BaseComponent } from "src/app/common/base.component";
+import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetKind, DatasetVisibility } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "../common/app.types";
+import { MaybeNull } from "../interface/app.types";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { DatasetCreateService } from "./dataset-create.service";

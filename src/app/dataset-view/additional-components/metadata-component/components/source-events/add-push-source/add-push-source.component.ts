@@ -1,10 +1,9 @@
 import { AddPushSource, MetadataBlockFragment } from "../../../../../../api/kamu.graphql.interface";
 import { SupportedEvents } from "../../../../../../dataset-block/metadata-block/components/event-details/supported.events";
 import ProjectLinks from "src/app/project-links";
-import { MaybeNull, MaybeNullOrUndefined } from "../../../../../../common/app.types";
+import { MaybeNull, MaybeNullOrUndefined } from "../../../../../../interface/app.types";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { AddPushSourceSection } from "src/app/shared/shared.types";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { SourcesSection } from "../add-polling-source/process-form.service.types";
 import { ParamMap } from "@angular/router";
@@ -12,6 +11,7 @@ import { EditAddPushSourceService } from "./edit-add-push-source.service";
 import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { BaseSourceEventComponent } from "../../base-source-event.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { AddPushSourceSection } from "./add-push-source-form.types";
 
 @Component({
     selector: "app-add-push-source",

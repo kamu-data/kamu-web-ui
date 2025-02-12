@@ -6,8 +6,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { BlockHeaderComponent } from "./block-header.component";
 import { Apollo } from "apollo-angular";
 import { MatMenuModule } from "@angular/material/menu";
-import { SharedTestModule } from "src/app/common/shared-test.module";
-import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 
 describe("BlockHeaderComponent", () => {
     let component: BlockHeaderComponent;

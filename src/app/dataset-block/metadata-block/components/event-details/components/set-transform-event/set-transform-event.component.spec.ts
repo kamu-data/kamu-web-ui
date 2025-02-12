@@ -1,4 +1,4 @@
-import { BlockRowDataComponent } from "src/app/dataset-block/metadata-block/components/block-row-data/block-row-data.component";
+import { BlockRowDataComponent } from "src/app/common/components/block-row-data/block-row-data.component";
 import { VisibilityPropertyComponent } from "./../common/visibility-property/visibility-property.component";
 import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
 import { ApolloTestingModule } from "apollo-angular/testing";
@@ -9,9 +9,9 @@ import { SimplePropertyComponent } from "../common/simple-property/simple-proper
 import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-viewer.component";
 import { SetTransformEventComponent } from "./set-transform-event.component";
 import { TemporalTablesPropertyComponent } from "../common/temporal-tables-property/temporal-tables-property.component";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { HIGHLIGHT_OPTIONS, HighlightModule } from "ngx-highlightjs";
-import { TooltipIconComponent } from "../../../tooltip-icon/tooltip-icon.component";
+import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
 import { MatIconModule } from "@angular/material/icon";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 

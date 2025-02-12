@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { StepperNavigationComponent } from "./stepper-navigation.component";
-import { SetPollingSourceSection } from "src/app/shared/shared.types";
-import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { SetPollingSourceSection } from "../source-events/add-polling-source/add-polling-source-form.types";
 
 describe("StepperNavigationComponent", () => {
     let component: StepperNavigationComponent;

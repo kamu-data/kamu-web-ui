@@ -1,12 +1,12 @@
 import { of } from "rxjs";
-import { getInputElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { getInputElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { ApolloModule } from "apollo-angular";
 import { DatasetCreateComponent } from "./dataset-create.component";
 import { DatasetCreateService } from "./dataset-create.service";
-import { SharedTestModule } from "../common/shared-test.module";
+import { SharedTestModule } from "../common/modules/shared-test.module";
 import { LoggedUserService } from "../auth/logged-user.service";
 import { mockAccountDetails } from "../api/mock/auth.mock";
 import { HttpClientTestingModule } from "@angular/common/http/testing";

@@ -26,7 +26,7 @@ import {
     mockDatasetBasicsDerivedFragment,
 } from "src/app/search/mock.data";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { EditorModule } from "../../../../../shared/editor/editor.module";
+import { EditorModule } from "../../../../../editor/editor.module";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 

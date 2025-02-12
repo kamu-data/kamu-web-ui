@@ -1,16 +1,14 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetViewHeaderComponent } from "./dataset-view-header.component";
 import { mockDatasetInfo, mockPublicDatasetVisibility } from "src/app/search/mock.data";
-import { SearchAdditionalButtonsComponent } from "src/app/components/search-additional-buttons/search-additional-buttons.component";
-import { SearchAdditionalButtonsNavComponent } from "src/app/components/search-additional-buttons/search-additional-buttons-nav.component";
 import { MatIconModule } from "@angular/material/icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatMenuModule } from "@angular/material/menu";
 import { RouterModule } from "@angular/router";
-import { SharedTestModule } from "src/app/common/shared-test.module";
-import { DatasetVisibilityModule } from "src/app/components/dataset-visibility/dataset-visibility.module";
-import { SharedModule } from "src/app/shared/shared/shared.module";
-import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
+import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { SearchAdditionalButtonsModule } from "src/app/common/components/search-additional-buttons/search-additional-buttons.module";
 
 describe("DatasetViewHeaderComponent", () => {
     let component: DatasetViewHeaderComponent;
@@ -18,11 +16,7 @@ describe("DatasetViewHeaderComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                DatasetViewHeaderComponent,
-                SearchAdditionalButtonsComponent,
-                SearchAdditionalButtonsNavComponent,
-            ],
+            declarations: [DatasetViewHeaderComponent],
             imports: [
                 MatIconModule,
                 MatMenuModule,
@@ -30,7 +24,7 @@ describe("DatasetViewHeaderComponent", () => {
                 RouterModule,
                 SharedTestModule,
                 DatasetVisibilityModule,
-                SharedModule,
+                SearchAdditionalButtonsModule,
             ],
         }).compileComponents();
 

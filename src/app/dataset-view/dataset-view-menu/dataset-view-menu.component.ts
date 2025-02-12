@@ -1,4 +1,4 @@
-import { WidgetHeightService } from "../../services/widget-height.service";
+import { WidgetHeightService } from "../../common/components/lineage-graph/widget-height.service";
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -12,8 +12,8 @@ import {
 } from "@angular/core";
 import { MatSidenav } from "@angular/material/sidenav";
 import { DatasetViewTypeEnum } from "../dataset-view.interface";
-import { SideNavHelper } from "../../common/sidenav.helper";
-import { isMobileView, promiseWithCatch } from "src/app/common/app.helpers";
+import { SideNavHelper } from "../../common/helpers/sidenav.helper";
+import { isMobileView, promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
 import { DatasetPermissionsService } from "../dataset.permissions.service";
 import { AppConfigService } from "src/app/app-config.service";

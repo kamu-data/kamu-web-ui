@@ -7,6 +7,6 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 @NgModule({
     declarations: [IngestConfigurationFormComponent],
     exports: [IngestConfigurationFormComponent],
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, MatCheckboxModule],
+    imports: [CommonModule, FormsModule, MatCheckboxModule, ReactiveFormsModule],
 })
 export class IngestConfigurationModule {}

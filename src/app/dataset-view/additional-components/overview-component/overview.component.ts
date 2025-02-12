@@ -7,7 +7,7 @@ import {
     DatasetPermissionsFragment,
 } from "../../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
-import { BaseComponent } from "src/app/common/base.component";
+import { BaseComponent } from "src/app/common/components/base.component";
 import { NavigationService } from "src/app/services/navigation.service";
 import {
     DatasetBasicsFragment,
@@ -17,19 +17,18 @@ import {
 } from "../../../api/kamu.graphql.interface";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { DataRow, DatasetSchema } from "src/app/interface/dataset.interface";
-import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
+import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { EditDetailsModalComponent } from "./components/edit-details-modal/edit-details-modal.component";
 import { EditWatermarkModalComponent } from "./components/edit-watermark-modal/edit-watermark-modal.component";
 import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { AddDataModalComponent } from "./components/add-data-modal/add-data-modal.component";
-
 import { Observable } from "rxjs";
 import { AppConfigService } from "src/app/app-config.service";
-import { isNil, promiseWithCatch } from "src/app/common/app.helpers";
-import { ModalService } from "src/app/components/modal/modal.service";
-import AppValues from "src/app/common/app.values";
+import { isNil, promiseWithCatch } from "src/app/common/helpers/app.helpers";
+import { ModalService } from "src/app/common/components/modal/modal.service";
+import AppValues from "src/app/common/values/app.values";
 import { FileUploadService } from "src/app/services/file-upload.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import ProjectLinks from "src/app/project-links";

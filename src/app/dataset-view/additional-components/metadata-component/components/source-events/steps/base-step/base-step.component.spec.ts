@@ -1,17 +1,20 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormArray, FormBuilder, FormControl, FormGroupDirective, ReactiveFormsModule } from "@angular/forms";
 import { BaseStepComponent } from "./base-step.component";
-import { EventTimeSourceKind, FetchKind } from "../../add-polling-source/add-polling-source-form.types";
+import {
+    EventTimeSourceKind,
+    FetchKind,
+    SetPollingSourceSection,
+} from "../../add-polling-source/add-polling-source-form.types";
 import { FETCH_FORM_DATA } from "../data/fetch-form-data";
 import { FETCH_STEP_RADIO_CONTROLS } from "../../add-polling-source/form-control.source";
-import { SetPollingSourceSection } from "src/app/shared/shared.types";
-import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
+import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { PollingSourceFormComponentsModule } from "../../../form-components/polling-source-form-components.module";
-import { emitClickOnElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { Apollo } from "apollo-angular";
 import { DatasetApi } from "src/app/api/dataset.api";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
 const fb = new FormBuilder();
 export const formGroupDirective = new FormGroupDirective([], []);

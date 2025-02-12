@@ -1,4 +1,4 @@
-import { BaseComponent } from "src/app/common/base.component";
+import { BaseComponent } from "src/app/common/components/base.component";
 import {
     ControlType,
     AddPollingSourceEditFormType,
@@ -11,9 +11,9 @@ import { ControlContainer, FormGroupDirective } from "@angular/forms";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { JsonFormControl } from "../../add-polling-source/add-polling-source-form.types";
-import { getValidators } from "src/app/common/data.helpers";
+import { getValidators } from "src/app/common/helpers/data.helpers";
 import { EditPollingSourceService } from "../../add-polling-source/edit-polling-source.service";
-import { MaybeNull } from "src/app/common/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { SourcesSection } from "../../add-polling-source/process-form.service.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 

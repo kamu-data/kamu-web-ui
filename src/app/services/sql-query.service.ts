@@ -1,12 +1,12 @@
 import { inject, Injectable } from "@angular/core";
 import { Observable, ReplaySubject, Subject, map } from "rxjs";
 import { GetDatasetDataSqlRunQuery, DataQueryResultErrorKind } from "../api/kamu.graphql.interface";
-import { MaybeNull } from "../common/app.types";
-import { SqlExecutionError } from "../common/errors";
+import { MaybeNull } from "../interface/app.types";
+import { SqlExecutionError } from "../common/values/errors";
 import { DataSqlErrorUpdate } from "../dataset-view/dataset.subscriptions.interface";
 import { DatasetRequestBySql, DataRow, DatasetSchema } from "../interface/dataset.interface";
 import { DatasetApi } from "../api/dataset.api";
-import { parseDataRows, parseSchema } from "../common/data.helpers";
+import { parseDataRows, parseSchema } from "../common/helpers/data.helpers";
 import { SqlQueryResponseState } from "../query/global-query/global-query.model";
 
 @Injectable({

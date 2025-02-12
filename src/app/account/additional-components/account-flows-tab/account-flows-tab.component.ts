@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, Input, NgZone, OnInit } from "@angular/core";
 import { combineLatest, map, of, switchMap, timer } from "rxjs";
-import { MaybeNull } from "src/app/common/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import {
     AccountFragment,
     DatasetListFlowsDataFragment,
@@ -8,11 +8,11 @@ import {
     FlowSummaryDataFragment,
     InitiatorFilterInput,
 } from "src/app/api/kamu.graphql.interface";
-import { AccountService } from "src/app/services/account.service";
+import { AccountService } from "src/app/account/account.service";
 import { AccountTabs } from "../../account.constants";
 import { environment } from "src/environments/environment";
-import { FlowsTableProcessingBaseComponent } from "src/app/common/components/flows-table/flows-table-processing-base.component";
-import { FlowsTableFiltersOptions } from "src/app/common/components/flows-table/flows-table.types";
+import { FlowsTableProcessingBaseComponent } from "src/app/dataset-flow/flows-table/flows-table-processing-base.component";
+import { FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
 
 @Component({
     selector: "app-account-flows-tab",

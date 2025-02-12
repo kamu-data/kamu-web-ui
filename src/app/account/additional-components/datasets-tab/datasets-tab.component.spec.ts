@@ -6,14 +6,14 @@ import { mockDatasetListItem } from "src/app/api/mock/dataset.mock";
 import { NavigationService } from "src/app/services/navigation.service";
 import { AccountTabs } from "../../account.constants";
 import { DatasetsTabComponent } from "./datasets-tab.component";
-import { DatasetListItemComponent } from "src/app/components/dataset-list-item/dataset-list-item.component";
+import { DatasetListItemComponent } from "src/app/common/components/dataset-list-component/dataset-list-item/dataset-list-item.component";
 import { NgbPopoverModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
-import { DisplayTimeModule } from "src/app/components/display-time/display-time.module";
+import { DisplayTimeModule } from "src/app/common/components/display-time/display-time.module";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { RouterModule } from "@angular/router";
-import { DatasetVisibilityModule } from "src/app/components/dataset-visibility/dataset-visibility.module";
+import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
 
 describe("DatasetsTabComponent", () => {
     let component: DatasetsTabComponent;

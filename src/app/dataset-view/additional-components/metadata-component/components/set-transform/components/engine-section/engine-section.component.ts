@@ -12,9 +12,9 @@ import {
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { EngineDesc, EnginesQuery, TransformSql } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull, MaybeNullOrUndefined } from "src/app/common/app.types";
-import { BaseComponent } from "src/app/common/base.component";
-import { EngineService } from "src/app/services/engine.service";
+import { MaybeNull, MaybeNullOrUndefined } from "src/app/interface/app.types";
+import { BaseComponent } from "src/app/common/components/base.component";
+import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 
 @Component({
     selector: "app-engine-section",

@@ -5,10 +5,14 @@ import { FormsModule } from "@angular/forms";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { BlockNavigationComponent } from "./block-navigation.component";
 import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
-import { dispatchInputEvent, getElementByDataTestId, registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
-import { PaginationModule } from "src/app/components/pagination-component/pagination.module";
+import {
+    dispatchInputEvent,
+    getElementByDataTestId,
+    registerMatSvgIcons,
+} from "src/app/common/helpers/base-test.helpers.spec";
+import { PaginationModule } from "src/app/common/components/pagination-component/pagination.module";
 import { MatIconModule } from "@angular/material/icon";
-import { DisplayHashModule } from "src/app/components/display-hash/display-hash.module";
+import { DisplayHashModule } from "src/app/common/components/display-hash/display-hash.module";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ToastrModule } from "ngx-toastr";
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";

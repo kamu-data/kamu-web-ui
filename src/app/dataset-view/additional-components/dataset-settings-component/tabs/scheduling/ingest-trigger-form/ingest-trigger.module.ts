@@ -9,6 +9,6 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
     declarations: [IngestTriggerFormComponent],
     exports: [IngestTriggerFormComponent],
 
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, MatRadioModule, MatSlideToggleModule],
+    imports: [CommonModule, FormsModule, MatSlideToggleModule, MatRadioModule, ReactiveFormsModule],
 })
 export class IngestTriggerModule {}

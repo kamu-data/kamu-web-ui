@@ -1,5 +1,5 @@
 import { MatRadioModule } from "@angular/material/radio";
-import { PaginationModule } from "./../../../components/pagination-component/pagination.module";
+import { PaginationModule } from "../../../common/components/pagination-component/pagination.module";
 import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, tick } from "@angular/core/testing";
 import { FlowsComponent } from "./flows.component";
 import { Apollo } from "apollo-angular";
@@ -7,13 +7,13 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { ActivatedRoute, RouterModule } from "@angular/router";
 import { mockDatasetBasicsRootFragment, mockDatasetMainDataId } from "src/app/search/mock.data";
 import { ToastrModule } from "ngx-toastr";
-import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
+import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { DatasetFlowsService } from "./services/dataset-flows.service";
 import { of } from "rxjs";
 import { MatMenuModule } from "@angular/material/menu";
-import { PaginationComponent } from "src/app/components/pagination-component/pagination.component";
+import { PaginationComponent } from "src/app/common/components/pagination-component/pagination.component";
 import { MatTableModule } from "@angular/material/table";
-import { DisplayTimeModule } from "src/app/components/display-time/display-time.module";
+import { DisplayTimeModule } from "src/app/common/components/display-time/display-time.module";
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
@@ -24,9 +24,9 @@ import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { mockMetadataDerivedUpdate, mockOverviewDataUpdate } from "../data-tabs.mock";
-import { TileBaseWidgetComponent } from "src/app/common/components/tile-base-widget/tile-base-widget.component";
-import { FlowsTableComponent } from "src/app/common/components/flows-table/flows-table.component";
+import { FlowsTableComponent } from "src/app/dataset-flow/flows-table/flows-table.component";
 import { mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
+import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/tile-base-widget.component";
 
 describe("FlowsComponent", () => {
     let component: FlowsComponent;

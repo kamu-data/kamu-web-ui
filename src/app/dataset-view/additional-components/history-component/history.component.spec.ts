@@ -3,17 +3,17 @@ import { first } from "rxjs/operators";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { mockHistoryUpdate } from "../data-tabs.mock";
 import { HistoryComponent } from "./history.component";
-import { SharedTestModule } from "src/app/common/shared-test.module";
-import { PaginationComponent } from "src/app/components/pagination-component/pagination.component";
-import { TimelineComponent } from "src/app/components/timeline-component/timeline.component";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { PaginationComponent } from "src/app/common/components/pagination-component/pagination.component";
+import { TimelineComponent } from "src/app/common/components/timeline-component/timeline.component";
 import { NgbPaginationModule, NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
-import { DisplayHashComponent } from "src/app/components/display-hash/display-hash.component";
-import { DisplayTimeComponent } from "src/app/components/display-time/display-time.component";
+import { DisplayHashComponent } from "src/app/common/components/display-hash/display-hash.component";
+import { DisplayTimeComponent } from "src/app/common/components/display-time/display-time.component";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ToastrModule } from "ngx-toastr";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterTestingModule } from "@angular/router/testing";
-import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
+import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 
 describe("HistoryComponent", () => {
     let component: HistoryComponent;

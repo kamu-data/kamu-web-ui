@@ -3,7 +3,7 @@ import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/tes
 import { ProtocolsApi } from "./protocols.api";
 import { mockDatasetInfo } from "../search/mock.data";
 import { DatasetProtocolsDocument, DatasetProtocolsQuery } from "./kamu.graphql.interface";
-import { mockDatasetProtocolsQuery } from "../components/data-access-panel/data-access-panel-mock.data";
+import { mockDatasetProtocolsQuery } from "../data-access-panel/data-access-panel-mock.data";
 
 describe("ProtocolsApi", () => {
     let service: ProtocolsApi;

@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FlowDetailsSummaryTabComponent } from "./flow-details-summary-tab.component";
-import { findElementByDataTestId } from "src/app/common/base-test.helpers.spec";
-import AppValues from "src/app/common/app.values";
-import { mockTableFlowSummaryDataFragments } from "src/app/common/components/flows-table/flows-table.helpers.mock";
+import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import AppValues from "src/app/common/values/app.values";
+import { mockTableFlowSummaryDataFragments } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
 
 describe("FlowDetailsSummaryTabComponent", () => {
     let component: FlowDetailsSummaryTabComponent;

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { BasePropertyComponent } from "../base-property/base-property.component";
-import { DataHelpers } from "src/app/common/data.helpers";
+import { DataHelpers } from "src/app/common/helpers/data.helpers";
 @Component({
     selector: "app-order-property",
     templateUrl: "./order-property.component.html",

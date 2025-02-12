@@ -3,13 +3,18 @@ import { EditPollingSourceService } from "./edit-polling-source.service";
 import { Apollo } from "apollo-angular";
 import { DatasetApi } from "src/app/api/dataset.api";
 import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
-import { AddPollingSourceEditFormType, FetchKind, MergeKind, ReadKind } from "./add-polling-source-form.types";
+import {
+    AddPollingSourceEditFormType,
+    FetchKind,
+    MergeKind,
+    ReadKind,
+    SetPollingSourceSection,
+} from "./add-polling-source-form.types";
 import {
     mockDatasetInfo,
     mockHistoryEditPollingSourceService,
     mockParseSetPollingSourceEventFromYamlToObject,
 } from "src/app/search/mock.data";
-import { SetPollingSourceSection } from "src/app/shared/shared.types";
 import { of } from "rxjs";
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";

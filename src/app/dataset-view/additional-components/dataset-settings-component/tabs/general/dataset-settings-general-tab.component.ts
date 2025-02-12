@@ -1,9 +1,9 @@
 import { DatasetFlowsService } from "./../../../flows-component/services/dataset-flows.service";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
-import { BaseComponent } from "../../../../../common/base.component";
-import { promiseWithCatch } from "../../../../../common/app.helpers";
-import { ModalService } from "../../../../../components/modal/modal.service";
+import { BaseComponent } from "src/app/common/components/base.component";
+import { promiseWithCatch } from "../../../../../common/helpers/app.helpers";
+import { ModalService } from "../../../../../common/components/modal/modal.service";
 import {
     DatasetBasicsFragment,
     DatasetFlowType,
@@ -18,7 +18,7 @@ import { CompactionTooltipsTexts } from "src/app/common/tooltips/compacting.text
 import { DatasetResetMode, RenameDatasetFormType, ResetDatasetFormType } from "./dataset-settings-general-tab.types";
 import { DatasetCompactionService } from "../../services/dataset-compaction.service";
 import { NavigationService } from "src/app/services/navigation.service";
-import AppValues from "src/app/common/app.values";
+import AppValues from "src/app/common/values/app.values";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DatasetService } from "../../../../dataset.service";

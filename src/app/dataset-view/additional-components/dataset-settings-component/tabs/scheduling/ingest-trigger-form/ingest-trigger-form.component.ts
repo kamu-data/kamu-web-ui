@@ -8,11 +8,11 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { PollingGroupType } from "../dataset-settings-scheduling-tab.component.types";
 import { PollingGroupEnum } from "../../../dataset-settings.model";
-import { cronExpressionNextTime, logError } from "src/app/common/app.helpers";
-import { BaseComponent } from "src/app/common/base.component";
+import { cronExpressionNextTime, logError } from "src/app/common/helpers/app.helpers";
+import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { cronExpressionValidator, everyTimeMapperValidators } from "src/app/common/data.helpers";
-import { MaybeNull } from "src/app/common/app.types";
+import { cronExpressionValidator, everyTimeMapperValidators } from "src/app/common/helpers/data.helpers";
+import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetSchedulingService } from "../../../services/dataset-scheduling.service";
 
 @Component({

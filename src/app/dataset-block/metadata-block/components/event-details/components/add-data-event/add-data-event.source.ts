@@ -1,4 +1,4 @@
-import { DisplayTimeComponent } from "src/app/components/display-time/display-time.component";
+import { DisplayTimeComponent } from "src/app/common/components/display-time/display-time.component";
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
 import { HashPropertyComponent } from "../common/hash-property/hash-property.component";
 import { OffsetIntervalPropertyComponent } from "../common/offset-interval-property/offset-interval-property.component";

@@ -1,5 +1,5 @@
 import { FetchStepMqtt, FetchStepUrl, PrepStepDecompress } from "../../../../../../api/kamu.graphql.interface";
-import { getElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
@@ -14,8 +14,8 @@ import { SeparatorPropertyComponent } from "../common/separator-property/separat
 import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
 import { MergeStrategyPropertyComponent } from "../common/merge-strategy-property/merge-strategy-property.component";
 import { UnsupportedPropertyComponent } from "../common/unsupported-property/unsupported-property.component";
-import { YamlEventViewerComponent } from "../common/yaml-event-viewer/yaml-event-viewer.component";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { YamlEventViewerComponent } from "../../../../../../common/components/yaml-event-viewer/yaml-event-viewer.component";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
 describe("SetPollingSourceEventComponent", () => {
     let component: SetPollingSourceEventComponent;

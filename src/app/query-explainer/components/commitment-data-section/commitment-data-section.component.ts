@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { VerifyQueryError, VerifyQueryKindError } from "../../query-explainer.types";
 import { Clipboard } from "@angular/cdk/clipboard";
-import { changeCopyIcon } from "src/app/common/app.helpers";
-import { MaybeUndefined } from "src/app/common/app.types";
+import { changeCopyIcon } from "src/app/common/helpers/app.helpers";
+import { MaybeUndefined } from "src/app/interface/app.types";
 import { QueryExplainerComponentData } from "../../query-explainer.component";
 @Component({
     selector: "app-commitment-data-section",

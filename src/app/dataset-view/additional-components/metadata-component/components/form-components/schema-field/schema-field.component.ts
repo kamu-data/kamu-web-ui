@@ -1,4 +1,4 @@
-import { MaybeNull } from "../../../../../../common/app.types";
+import { MaybeNull } from "../../../../../../interface/app.types";
 import { AfterViewInit, ChangeDetectionStrategy, Component, QueryList, ViewChild, ViewChildren } from "@angular/core";
 import { BaseField } from "../base-field";
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from "@angular/forms";
@@ -7,7 +7,7 @@ import { Observable, OperatorFunction, Subject, merge } from "rxjs";
 import { NgbTypeahead } from "@ng-bootstrap/ng-bootstrap";
 import { debounceTime, distinctUntilChanged, map } from "rxjs/operators";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
-import AppValues from "src/app/common/app.values";
+import AppValues from "src/app/common/values/app.values";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 export interface SchemaType {

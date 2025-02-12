@@ -1,4 +1,4 @@
-import { OdfDefaultValues } from "src/app/common/app-odf-default.values";
+import { OdfDefaultValues } from "src/app/common/values/app-odf-default.values";
 import { ControlType, JsonFormData, ReadKind } from "../../add-polling-source/add-polling-source-form.types";
 import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
 

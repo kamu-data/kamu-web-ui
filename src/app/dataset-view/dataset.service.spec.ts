@@ -10,7 +10,7 @@ import {
 import { TestBed } from "@angular/core/testing";
 import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
 import { DatasetApi } from "../api/dataset.api";
-import { ModalService } from "../components/modal/modal.service";
+import { ModalService } from "../common/components/modal/modal.service";
 import { DatasetService } from "./dataset.service";
 import { DatasetSubscriptionsService } from "./dataset.subscriptions.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
@@ -23,7 +23,7 @@ import {
     MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
 import { of } from "rxjs";
-import { DatasetNotFoundError, SqlExecutionError } from "../common/errors";
+import { DatasetNotFoundError, SqlExecutionError } from "../common/values/errors";
 import { DatasetHistoryUpdate, LineageUpdate, OverviewUpdate } from "./dataset.subscriptions.interface";
 import { first } from "rxjs/operators";
 import {
@@ -35,7 +35,7 @@ import {
     TEST_DATASET_ID,
     TEST_DATASET_NAME,
 } from "../api/mock/dataset.mock";
-import { MaybeNull } from "../common/app.types";
+import { MaybeNull } from "../interface/app.types";
 
 describe("AppDatasetService", () => {
     let service: DatasetService;

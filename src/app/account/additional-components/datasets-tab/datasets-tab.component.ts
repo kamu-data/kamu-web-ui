@@ -3,7 +3,7 @@ import { Component } from "@angular/core";
 import { DatasetSearchOverviewFragment, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
 import { AccountTabs } from "../../account.constants";
 import { NavigationService } from "src/app/services/navigation.service";
-import { isNil } from "src/app/common/app.helpers";
+import { isNil } from "src/app/common/helpers/app.helpers";
 
 @Component({
     selector: "app-datasets-tab",

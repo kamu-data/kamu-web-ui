@@ -9,7 +9,7 @@ import {
     Output,
 } from "@angular/core";
 import { GlobalQuerySearchItem, SqlQueryResponseState } from "../global-query.model";
-import { BaseComponent } from "src/app/common/base.component";
+import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
     combineLatest,
@@ -22,14 +22,14 @@ import {
     switchMap,
 } from "rxjs";
 import { DatasetBasicsFragment, GetDatasetSchemaQuery } from "src/app/api/kamu.graphql.interface";
-import { parseCurrentSchema } from "src/app/common/app.helpers";
+import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
-import { MaybeNull } from "src/app/common/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetSchema } from "src/app/interface/dataset.interface";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 import { SearchApi } from "src/app/api/search.api";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import AppValues from "src/app/common/app.values";
+import AppValues from "src/app/common/values/app.values";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 
 @Component({

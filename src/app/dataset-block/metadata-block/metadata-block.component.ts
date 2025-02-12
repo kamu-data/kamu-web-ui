@@ -7,7 +7,7 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { map, switchMap } from "rxjs/operators";
 import { Params } from "@angular/router";
 import { BlockService } from "./block.service";
-import { MaybeNull } from "src/app/common/types/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { BaseDatasetDataComponent } from "src/app/common/components/base-dataset-data.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 

@@ -9,7 +9,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { LoginCallbackResponse } from "./login.component.model";
 import { HttpClient } from "@angular/common/http";
 import { AppConfigService } from "src/app/app-config.service";
-import { MaybeNull, MaybeUndefined } from "src/app/common/types/app.types";
+import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 
 @Injectable({

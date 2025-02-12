@@ -6,7 +6,7 @@ import { OperatorFunction, Observable } from "rxjs";
 import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
 import { DatasetBasicsFragment, GetDatasetSchemaQuery } from "src/app/api/kamu.graphql.interface";
 import { SearchApi } from "src/app/api/search.api";
-import { MaybeNull } from "src/app/common/types/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import AppValues from "src/app/common/values/app.values";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSchema } from "src/app/interface/dataset.interface";

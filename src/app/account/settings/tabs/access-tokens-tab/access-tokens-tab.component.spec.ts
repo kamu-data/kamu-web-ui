@@ -12,7 +12,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { HttpClientModule } from "@angular/common/http";
 import { ActivatedRoute } from "@angular/router";
 import { NavigationService } from "src/app/services/navigation.service";
-import { AccessTokenService } from "src/app/auth/settings/tabs/access-tokens-tab/access-token.service";
+import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
 import { TOKEN_ID, mockCreateAccessTokenMutation, mockListAccessTokensQuery } from "src/app/api/mock/access-token.mock";
 import { of } from "rxjs";
 import { AccessTokenConnection, CreateAccessTokenResultSuccess } from "src/app/api/kamu.graphql.interface";

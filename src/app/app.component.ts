@@ -8,7 +8,7 @@ import { ModalService } from "./common/components/modal/modal.service";
 import { BaseComponent } from "src/app/common/components/base.component";
 import ProjectLinks from "./project-links";
 import { AccountFragment, AccountType } from "./api/kamu.graphql.interface";
-import { MaybeNull } from "./common/types/app.types";
+import { MaybeNull } from "./interface/app.types";
 import { isMobileView, promiseWithCatch } from "./common/helpers/app.helpers";
 import { AppConfigService } from "./app-config.service";
 import { AppUIConfigFeatureFlags, LoginMethod } from "./app-config.model";

@@ -1,4 +1,4 @@
-import { MaybeUndefined } from "src/app/common/types/app.types";
+import { MaybeUndefined } from "src/app/interface/app.types";
 import { inject, Injectable } from "@angular/core";
 import { ProtocolsApi } from "../api/protocols.api";
 import { Observable, map } from "rxjs";

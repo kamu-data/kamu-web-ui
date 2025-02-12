@@ -1,6 +1,6 @@
 import cronParser from "cron-parser";
 
-import { MaybeNull, MaybeNullOrUndefined } from "../types/app.types";
+import { MaybeNull, MaybeNullOrUndefined } from "../../interface/app.types";
 import { DataSchema } from "../../api/kamu.graphql.interface";
 import { DatasetSchema } from "../../interface/dataset.interface";
 import AppValues from "../values/app.values";

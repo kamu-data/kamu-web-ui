@@ -12,7 +12,7 @@ import { cronExpressionNextTime, logError } from "src/app/common/helpers/app.hel
 import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { cronExpressionValidator, everyTimeMapperValidators } from "src/app/common/helpers/data.helpers";
-import { MaybeNull } from "src/app/common/types/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetSchedulingService } from "../../../services/dataset-scheduling.service";
 
 @Component({

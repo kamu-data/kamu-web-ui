@@ -10,7 +10,7 @@ import { AccountService } from "src/app/account/account.service";
 import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
 import { distinctUntilChanged, map, shareReplay, switchMap } from "rxjs/operators";
 import { Observable, combineLatest } from "rxjs";
-import { MaybeNull } from "src/app/common/types/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { AccountNotFoundError } from "src/app/common/values/errors";
 import { AccountPageQueryParams } from "./account.component.model";
 import { ModalService } from "../common/components/modal/modal.service";

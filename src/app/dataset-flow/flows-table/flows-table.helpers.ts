@@ -4,7 +4,7 @@ import {
     FlowStatus,
     FlowSummaryDataFragment,
 } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/common/types/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import AppValues from "src/app/common/values/app.values";
 import { DataHelpers } from "src/app/common/helpers/data.helpers";
 import { excludeAgoWord, isNil } from "../../common/helpers/app.helpers";

@@ -8,7 +8,7 @@ import {
     InitiatorFilterInput,
 } from "src/app/api/kamu.graphql.interface";
 import { combineLatest, map, switchMap, timer } from "rxjs";
-import { MaybeNull } from "src/app/common/types/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";

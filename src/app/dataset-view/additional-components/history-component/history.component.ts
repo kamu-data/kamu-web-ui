@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output
 import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetHistoryUpdate } from "../../dataset.subscriptions.interface";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
-import { MaybeNull } from "src/app/common/types/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 
 @Component({
     selector: "app-history",

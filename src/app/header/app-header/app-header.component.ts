@@ -19,13 +19,13 @@ import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 import { AppUIConfigFeatureFlags, LoginMethod } from "src/app/app-config.model";
-import { AccountSettingsTabs } from "src/app/auth/settings/account-settings.constants";
+import { AccountSettingsTabs } from "src/app/account/settings/account-settings.constants";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { SearchApi } from "src/app/api/search.api";
 import AppValues from "src/app/common/values/app.values";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 import { AccountTabs } from "src/app/account/account.constants";
-import { MaybeNull } from "src/app/common/types/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 
 @Component({
     selector: "app-header",

@@ -34,7 +34,7 @@ import { DatasetHistoryUpdate, MetadataSchemaUpdate, OverviewUpdate } from "./da
 import { DatasetApi } from "../api/dataset.api";
 import { DatasetNotFoundError, SqlExecutionError } from "../common/values/errors";
 import { map } from "rxjs/operators";
-import { MaybeNull } from "../common/types/app.types";
+import { MaybeNull } from "../interface/app.types";
 import { parseCurrentSchema } from "../common/helpers/app.helpers";
 import { APOLLO_OPTIONS } from "apollo-angular";
 import { Router } from "@angular/router";

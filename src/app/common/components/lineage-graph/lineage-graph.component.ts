@@ -22,7 +22,7 @@ import {
 } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
 import { LineageGraphConfig, LINEAGE_CONFIG } from "./ligeage-graph.settings";
 import { SessionStorageService } from "src/app/services/session-storage.service";
-import { MaybeUndefined } from "src/app/common/types/app.types";
+import { MaybeUndefined } from "src/app/interface/app.types";
 
 @Component({
     selector: "app-lineage-graph",

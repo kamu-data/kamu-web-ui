@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, Input, NgZone, OnInit } from "@angular/core";
 import { combineLatest, map, of, switchMap, timer } from "rxjs";
-import { MaybeNull } from "src/app/common/types/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import {
     AccountFragment,
     DatasetListFlowsDataFragment,

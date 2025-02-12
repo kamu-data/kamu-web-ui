@@ -1,4 +1,4 @@
-import { MaybeNull, MaybeNullOrUndefined } from "src/app/common/types/app.types";
+import { MaybeNull, MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import {
     Dataset,

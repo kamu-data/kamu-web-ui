@@ -1,4 +1,4 @@
-import { MaybeNull } from "src/app/common/types/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
 import {
     DataQueryResultSuccessViewFragment,
@@ -8,7 +8,7 @@ import {
 } from "../../api/kamu.graphql.interface";
 import { EventPropertyLogo } from "../../dataset-block/metadata-block/components/event-details/supported.events";
 import { JsonFormValidators } from "../../dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
-import { MaybeUndefined } from "../types/app.types";
+import { MaybeUndefined } from "../../interface/app.types";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { isValidCronExpression } from "./cron-expression-validator.helper";
 import { ErrorPolicy, WatchQueryFetchPolicy } from "@apollo/client";

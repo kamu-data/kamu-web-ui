@@ -17,7 +17,7 @@ import {
 import { of } from "rxjs";
 import { AccessTokenConnection, CreatedAccessToken } from "../../../../api/kamu.graphql.interface";
 import { TEST_ACCOUNT_ID } from "../../../../search/mock.data";
-import { MaybeNull } from "../../../../common/types/app.types";
+import { MaybeNull } from "../../../../interface/app.types";
 
 describe("AccessTokenService", () => {
     let service: AccessTokenService;

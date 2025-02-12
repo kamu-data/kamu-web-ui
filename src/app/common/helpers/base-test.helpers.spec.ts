@@ -3,7 +3,7 @@ import { By, DomSanitizer } from "@angular/platform-browser";
 import { DebugElement } from "@angular/core";
 import { ReplaySubject } from "rxjs";
 import { ActivatedRoute, RouterEvent } from "@angular/router";
-import { MaybeNull } from "../types/app.types";
+import { MaybeNull } from "../../interface/app.types";
 import { MatIconRegistry } from "@angular/material/icon";
 
 export function findElement<T>(fixture: ComponentFixture<T>, selector: string): DebugElement {

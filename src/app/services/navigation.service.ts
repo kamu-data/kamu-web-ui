@@ -6,7 +6,7 @@ import { DatasetNavigationParams, MetadataBlockNavigationParams } from "../inter
 import ProjectLinks from "../project-links";
 import { FlowDetailsTabs } from "../dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { AccountTabs } from "../account/account.constants";
-import { AccountSettingsTabs } from "../auth/settings/account-settings.constants";
+import { AccountSettingsTabs } from "../account/settings/account-settings.constants";
 
 @Injectable({ providedIn: "root" })
 export class NavigationService {

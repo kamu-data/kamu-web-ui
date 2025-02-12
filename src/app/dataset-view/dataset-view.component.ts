@@ -9,7 +9,7 @@ import ProjectLinks from "../project-links";
 import { DatasetInfo } from "../interface/navigation.interface";
 import { isNil, promiseWithCatch } from "../common/helpers/app.helpers";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
-import { MaybeNull, MaybeUndefined } from "../common/types/app.types";
+import { MaybeNull, MaybeUndefined } from "../interface/app.types";
 import { DatasetPermissionsService } from "./dataset.permissions.service";
 import { ReplaySubject, Subject, of } from "rxjs";
 import { LineageGraphNodeData, LineageGraphNodeKind } from "./additional-components/lineage-component/lineage-model";

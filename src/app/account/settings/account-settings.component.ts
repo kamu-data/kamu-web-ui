@@ -6,11 +6,11 @@ import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { filter, switchMap } from "rxjs/operators";
 import { BaseComponent } from "src/app/common/components/base.component";
 import AppValues from "src/app/common/values/app.values";
-import { MaybeNull, MaybeUndefined } from "src/app/common/types/app.types";
+import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { EMPTY, Observable } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { AccountEmailService } from "src/app/auth/settings/tabs/emails-tab/account-email.service";
-import { LoggedUserService } from "../logged-user.service";
+import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
+import { LoggedUserService } from "../../auth/logged-user.service";
 
 @Component({
     selector: "app-settings",

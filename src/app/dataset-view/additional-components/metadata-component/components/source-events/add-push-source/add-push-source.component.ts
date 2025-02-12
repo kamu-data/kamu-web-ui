@@ -1,7 +1,7 @@
 import { AddPushSource, MetadataBlockFragment } from "../../../../../../api/kamu.graphql.interface";
 import { SupportedEvents } from "../../../../../../dataset-block/metadata-block/components/event-details/supported.events";
 import ProjectLinks from "src/app/project-links";
-import { MaybeNull, MaybeNullOrUndefined } from "../../../../../../common/types/app.types";
+import { MaybeNull, MaybeNullOrUndefined } from "../../../../../../interface/app.types";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";

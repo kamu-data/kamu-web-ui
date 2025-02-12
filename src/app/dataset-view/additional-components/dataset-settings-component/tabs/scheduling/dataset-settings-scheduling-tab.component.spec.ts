@@ -31,7 +31,7 @@ import {
     IngestConfigurationFormType,
     PollingGroupType,
 } from "./dataset-settings-scheduling-tab.component.types";
-import { MaybeNull } from "src/app/common/types/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { PollingGroupEnum } from "../../dataset-settings.model";
 import { cronExpressionValidator } from "src/app/common/helpers/data.helpers";
 

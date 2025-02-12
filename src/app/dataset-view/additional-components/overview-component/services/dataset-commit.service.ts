@@ -9,7 +9,7 @@ import {
     UpdateWatermarkMutation,
 } from "src/app/api/kamu.graphql.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { MaybeUndefined } from "src/app/common/types/app.types";
+import { MaybeUndefined } from "src/app/interface/app.types";
 import { DatasetNotFoundError, DatasetOperationError } from "src/app/common/values/errors";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";

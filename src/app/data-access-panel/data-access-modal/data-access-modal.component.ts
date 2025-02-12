@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { Observable } from "rxjs";
 import { DatasetBasicsFragment, DatasetEndpoints, DatasetKind } from "src/app/api/kamu.graphql.interface";
-import { MaybeUndefined } from "src/app/common/types/app.types";
+import { MaybeUndefined } from "src/app/interface/app.types";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { DataAccessMenuItem, dataAccessMenuOptions, DataAccessTabsEnum } from "./data-access-modal.model";
 import { changeCopyIcon } from "src/app/common/helpers/app.helpers";

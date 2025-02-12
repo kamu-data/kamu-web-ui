@@ -1,4 +1,4 @@
-import { MaybeUndefined } from "src/app/common/types/app.types";
+import { MaybeUndefined } from "src/app/interface/app.types";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { AccountExtendedFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/values/app.values";

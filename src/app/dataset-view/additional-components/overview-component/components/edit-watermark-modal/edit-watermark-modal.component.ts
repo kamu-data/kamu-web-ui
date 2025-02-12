@@ -1,4 +1,4 @@
-import { MaybeNullOrUndefined } from "../../../../../common/types/app.types";
+import { MaybeNullOrUndefined } from "../../../../../interface/app.types";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { OWL_DATE_TIME_FORMATS } from "@danielmoncada/angular-datetime-picker";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";

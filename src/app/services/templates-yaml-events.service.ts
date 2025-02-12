@@ -1,6 +1,6 @@
 import { SetLicense, SetTransform } from "../api/kamu.graphql.interface";
 import { Injectable } from "@angular/core";
-import { MaybeNull } from "../common/types/app.types";
+import { MaybeNull } from "../interface/app.types";
 import { stringify } from "yaml";
 import {
     AddPollingSourceEditFormType,

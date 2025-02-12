@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ChangeEmailFormType } from "./email-tabs.types";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
-import { AccountEmailService } from "src/app/auth/settings/tabs/emails-tab/account-email.service";
+import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
 import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
 import { Observable } from "rxjs";
 

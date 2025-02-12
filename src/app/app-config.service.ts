@@ -8,7 +8,7 @@ import {
     FeaturesRuntimeConfig,
 } from "./app-config.model";
 import { environment } from "src/environments/environment";
-import { MaybeUndefined } from "./common/types/app.types";
+import { MaybeUndefined } from "./interface/app.types";
 import AppValues from "./common/values/app.values";
 
 @Injectable({

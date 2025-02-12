@@ -35,7 +35,7 @@ import {
     TEST_DATASET_ID,
     TEST_DATASET_NAME,
 } from "../api/mock/dataset.mock";
-import { MaybeNull } from "../common/types/app.types";
+import { MaybeNull } from "../interface/app.types";
 
 describe("AppDatasetService", () => {
     let service: DatasetService;

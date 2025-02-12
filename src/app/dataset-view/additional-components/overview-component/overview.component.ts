@@ -17,7 +17,7 @@ import {
 } from "../../../api/kamu.graphql.interface";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { DataRow, DatasetSchema } from "src/app/interface/dataset.interface";
-import { MaybeNull, MaybeUndefined } from "src/app/common/types/app.types";
+import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { EditDetailsModalComponent } from "./components/edit-details-modal/edit-details-modal.component";
 import { EditWatermarkModalComponent } from "./components/edit-watermark-modal/edit-watermark-modal.component";

@@ -1,5 +1,5 @@
-import { NavigationService } from "./../../../../services/navigation.service";
-import { MaybeNull } from "../../../../common/types/app.types";
+import { NavigationService } from "../../../../services/navigation.service";
+import { MaybeNull } from "../../../../interface/app.types";
 import {
     AccessTokenConnection,
     AccountWithEmailFragment,
@@ -16,7 +16,7 @@ import { ModalService } from "src/app/common/components/modal/modal.service";
 import { changeCopyIcon, promiseWithCatch, requireValue } from "src/app/common/helpers/app.helpers";
 import { Clipboard } from "@angular/cdk/clipboard";
 import AppValues from "src/app/common/values/app.values";
-import { AccessTokenService } from "src/app/auth/settings/tabs/access-tokens-tab/access-token.service";
+import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
 import { BaseComponent } from "src/app/common/components/base.component";
 import ProjectLinks from "src/app/project-links";
 import { CreateTokenFormType } from "./access-tokens-tab.types";

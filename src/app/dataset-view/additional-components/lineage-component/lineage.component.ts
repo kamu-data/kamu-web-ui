@@ -4,7 +4,7 @@ import { Node } from "@swimlane/ngx-graph";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { LineageGraphBuilderService } from "./services/lineage-graph-builder.service";
 import { LineageGraphUpdate } from "./lineage-model";
-import { MaybeNull } from "src/app/common/types/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 @Component({
     selector: "app-lineage",
     templateUrl: "./lineage.component.html",

@@ -8,7 +8,7 @@ import { DatasetRequestBySql } from "../../../interface/dataset.interface";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/common/types/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import ProjectLinks from "src/app/project-links";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { AddDataModalComponent } from "../overview-component/components/add-data-modal/add-data-modal.component";

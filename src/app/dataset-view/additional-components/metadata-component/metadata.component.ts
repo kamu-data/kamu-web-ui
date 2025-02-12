@@ -18,7 +18,7 @@ import {
     PageBasedInfo,
 } from "src/app/api/kamu.graphql.interface";
 import { isNil, momentConvertDateToLocalWithFormat, promiseWithCatch } from "src/app/common/helpers/app.helpers";
-import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "src/app/common/types/app.types";
+import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "src/app/interface/app.types";
 import { NavigationService } from "src/app/services/navigation.service";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import ProjectLinks from "src/app/project-links";

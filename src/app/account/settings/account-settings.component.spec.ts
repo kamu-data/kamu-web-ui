@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { AccountSettingsComponent } from "./account-settings.component";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { LoggedUserService } from "../logged-user.service";
+import { LoggedUserService } from "../../auth/logged-user.service";
 import {
     findElementByDataTestId,
     getElementByDataTestId,
@@ -14,10 +14,10 @@ import {
 import { AccountSettingsTabs } from "./account-settings.constants";
 import { of } from "rxjs";
 import ProjectLinks from "src/app/project-links";
-import { LoginService } from "../login/login.service";
+import { LoginService } from "../../auth/login/login.service";
 import { MatIconModule } from "@angular/material/icon";
 import { ToastrModule } from "ngx-toastr";
-import { AccountEmailService } from "src/app/auth/settings/tabs/emails-tab/account-email.service";
+import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
 
 describe("AccountSettingsComponent", () => {
     let component: AccountSettingsComponent;

@@ -1,4 +1,4 @@
-import { MaybeNull } from "src/app/common/types/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { SourcesSection } from "../source-events/add-polling-source/process-form.service.types";
 

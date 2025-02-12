@@ -11,7 +11,7 @@ import {
     SimpleChanges,
 } from "@angular/core";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/common/types/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { EditMode } from "./readme-section.types";
 import { DatasetCommitService } from "../../services/dataset-commit.service";

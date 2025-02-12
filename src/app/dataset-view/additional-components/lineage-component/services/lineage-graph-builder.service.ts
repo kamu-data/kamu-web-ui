@@ -16,7 +16,7 @@ import {
     LineageGraphUpdate,
 } from "../lineage-model";
 import { Node, Edge } from "@swimlane/ngx-graph";
-import { MaybeNull } from "src/app/common/types/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { isNil } from "src/app/common/helpers/app.helpers";
 
 @Injectable({

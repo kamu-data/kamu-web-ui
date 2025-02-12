@@ -1,4 +1,4 @@
-import { MaybeNull, MaybeUndefined } from "../../../../common/types/app.types";
+import { MaybeNull, MaybeUndefined } from "../../../../interface/app.types";
 import { SetVocabEventComponent } from "./components/set-vocab-event/set-vocab-event.component";
 import { SupportedEvents } from "./supported.events";
 import {

@@ -1,4 +1,4 @@
-import { MaybeNullOrUndefined } from "src/app/common/types/app.types";
+import { MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { fakeAsync, flush, tick } from "@angular/core/testing";
 import {
     isEqual,

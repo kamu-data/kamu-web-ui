@@ -7,7 +7,7 @@ import {
     VerifyQueryKindError,
 } from "../../query-explainer.types";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { MaybeUndefined } from "src/app/common/types/app.types";
+import { MaybeUndefined } from "src/app/interface/app.types";
 import AppValues from "src/app/common/values/app.values";
 import { QueryExplainerComponentData } from "../../query-explainer.component";
 import ProjectLinks from "src/app/project-links";

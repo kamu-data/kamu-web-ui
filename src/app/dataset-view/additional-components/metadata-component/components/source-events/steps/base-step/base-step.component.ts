@@ -13,7 +13,7 @@ import { FormGroup } from "@angular/forms";
 import { JsonFormControl } from "../../add-polling-source/add-polling-source-form.types";
 import { getValidators } from "src/app/common/helpers/data.helpers";
 import { EditPollingSourceService } from "../../add-polling-source/edit-polling-source.service";
-import { MaybeNull } from "src/app/common/types/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { SourcesSection } from "../../add-polling-source/process-form.service.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 

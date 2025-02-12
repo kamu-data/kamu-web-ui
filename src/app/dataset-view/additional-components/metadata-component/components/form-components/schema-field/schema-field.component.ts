@@ -1,4 +1,4 @@
-import { MaybeNull } from "../../../../../../common/types/app.types";
+import { MaybeNull } from "../../../../../../interface/app.types";
 import { AfterViewInit, ChangeDetectionStrategy, Component, QueryList, ViewChild, ViewChildren } from "@angular/core";
 import { BaseField } from "../base-field";
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from "@angular/forms";

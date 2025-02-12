@@ -1,4 +1,4 @@
-import { MaybeNull } from "../../../common/types/app.types";
+import { MaybeNull } from "../../../interface/app.types";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import {
     DatasetBasicsFragment,

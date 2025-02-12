@@ -20,7 +20,7 @@ import {
     mockGetFlowByIdQueryError,
     mockGetFlowByIdQuerySuccess,
 } from "src/app/api/mock/dataset-flow.mock";
-import { MaybeUndefined } from "src/app/common/types/app.types";
+import { MaybeUndefined } from "src/app/interface/app.types";
 import { AccountFragment, DatasetFlowType } from "src/app/api/kamu.graphql.interface";
 import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 import { HttpClientTestingModule } from "@angular/common/http/testing";

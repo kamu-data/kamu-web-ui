@@ -6,7 +6,7 @@ import {
     DatasetDataSizeFragment,
     DatasetBasicsFragment,
 } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/common/types/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetSchema, DataRow } from "src/app/interface/dataset.interface";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";

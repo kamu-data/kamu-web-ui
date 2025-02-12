@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/cor
 import AppValues from "src/app/common/values/app.values";
 import { QueryExplainerService } from "./query-explainer.service";
 import { BaseComponent } from "src/app/common/components/base.component";
-import { MaybeNull } from "src/app/common/types/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import ProjectLinks from "src/app/project-links";
 import { combineLatest, map, Observable, of, switchMap, tap } from "rxjs";
 import {

@@ -1,5 +1,5 @@
 import { Observable } from "rxjs";
-import { MaybeNull, MaybeUndefined } from "src/app/common/types/app.types";
+import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { CancelFlowArgs, FlowsTableData, FlowsTableFiltersOptions } from "./flows-table.types";
 import { AccountFragment, FlowStatus, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";

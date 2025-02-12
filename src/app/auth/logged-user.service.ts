@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { catchError, first } from "rxjs/operators";
 import { EMPTY, Observable, ReplaySubject, Subject } from "rxjs";
 import { NavigationService } from "../services/navigation.service";
-import { MaybeNull } from "../common/types/app.types";
+import { MaybeNull } from "../interface/app.types";
 import { AppConfigService } from "../app-config.service";
 import { AccountFragment } from "../api/kamu.graphql.interface";
 import { UnsubscribeDestroyRefAdapter } from "../common/components/unsubscribe.ondestroy.adapter";

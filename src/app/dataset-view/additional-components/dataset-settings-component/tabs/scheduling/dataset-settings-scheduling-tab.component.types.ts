@@ -1,7 +1,7 @@
 import { FormControl, FormGroup } from "@angular/forms";
 import { PollingGroupEnum } from "../../dataset-settings.model";
 import { TimeUnit } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/common/types/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 
 export interface PollingFormType {
     pollingGroup: FormGroup<PollingGroupType>;

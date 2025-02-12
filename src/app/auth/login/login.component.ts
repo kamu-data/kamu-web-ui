@@ -5,7 +5,7 @@ import { LoginMethod } from "src/app/app-config.model";
 import { LoginService } from "./login.service";
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { PasswordLoginCredentials } from "src/app/api/auth.api.model";
-import { MaybeNull, MaybeUndefined } from "src/app/common/types/app.types";
+import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { Observable, shareReplay } from "rxjs";
 import { ActivatedRoute, Params } from "@angular/router";
 import { BaseComponent } from "src/app/common/components/base.component";

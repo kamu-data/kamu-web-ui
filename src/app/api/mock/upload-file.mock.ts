@@ -1,4 +1,4 @@
-import { UploadPrepareResponse } from "src/app/common/types/ingest-via-file-upload.types";
+import { UploadPrepareResponse } from "src/app/interface/ingest-via-file-upload.types";
 
 export const mockUploadPrepareResponse: UploadPrepareResponse = {
     fields: [["1", "2"]],

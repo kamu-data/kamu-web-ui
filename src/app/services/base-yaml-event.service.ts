@@ -7,7 +7,7 @@ import { BlockService } from "../dataset-block/metadata-block/block.service";
 import { SupportedEvents } from "../dataset-block/metadata-block/components/event-details/supported.events";
 import { DatasetHistoryUpdate } from "../dataset-view/dataset.subscriptions.interface";
 import { DatasetInfo } from "../interface/navigation.interface";
-import { MaybeNull, MaybeNullOrUndefined } from "../common/types/app.types";
+import { MaybeNull, MaybeNullOrUndefined } from "../interface/app.types";
 
 export abstract class BaseYamlEventService {
     private static readonly HISTORY_PAGE_SIZE = 100;

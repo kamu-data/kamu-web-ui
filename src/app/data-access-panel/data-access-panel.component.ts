@@ -1,4 +1,4 @@
-import { MaybeUndefined } from "../common/types/app.types";
+import { MaybeUndefined } from "../interface/app.types";
 import { ProtocolsService } from "../services/protocols.service";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { DatasetBasicsFragment, DatasetEndpoints } from "src/app/api/kamu.graphql.interface";

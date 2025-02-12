@@ -18,7 +18,7 @@ import { ModalSpinnerComponent } from "./modal-spinner.component";
 import { Location } from "@angular/common";
 import { ModalMappingsComponent } from "../../../interface/modal.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
-import { MaybeUndefined } from "src/app/common/types/app.types";
+import { MaybeUndefined } from "src/app/interface/app.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({

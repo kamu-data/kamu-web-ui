@@ -2,7 +2,7 @@ import { DatasetKind, TransformInput } from "../../../../../api/kamu.graphql.int
 import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { MatTreeNestedDataSource } from "@angular/material/tree";
-import { MaybeNull, MaybeNullOrUndefined } from "src/app/common/types/app.types";
+import { MaybeNull, MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { DatasetSchema } from "src/app/interface/dataset.interface";
 import { GetDatasetSchemaQuery, SqlQueryStep } from "src/app/api/kamu.graphql.interface";
 import { EditSetTransformService } from "./edit-set-transform..service";

@@ -55,8 +55,10 @@
                 </button>
                 <div class="d-flex align-items-center justify-content-between node-name-block">
                     <div class="node-link">
-                        <a class="node-name" (click)="navigateToOwner(node.owner)"> {{ node.owner }} </a>/
-                        <a class="node-name" (click)="navigateToDataset(node.owner, node.name)"> {{ node.name }}</a>
+                        <a class="node-name" [routerLink]="['/', node.owner]" target="_blank"> {{ node.owner }} </a>/
+                        <a class="node-name" [routerLink]="['/', node.owner, node.name]" target="_blank">
+                            {{ node.name }}</a
+                        >
                     </div>
                     <button
                         class="no-button d-flex"

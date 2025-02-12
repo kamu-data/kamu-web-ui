@@ -20,11 +20,11 @@ import {
     AccountWithEmailGQL,
     AccountWithEmailQuery,
 } from "./kamu.graphql.interface";
-import { MaybeNull } from "../common/app.types";
+import { MaybeNull } from "../interface/app.types";
 import { ApolloQueryResult } from "@apollo/client";
 import { MutationResult } from "apollo-angular";
-import { noCacheFetchPolicy } from "../common/data.helpers";
-import { DatasetOperationError } from "../common/errors";
+import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
+import { DatasetOperationError } from "../common/values/errors";
 
 @Injectable({ providedIn: "root" })
 export class AccountApi {

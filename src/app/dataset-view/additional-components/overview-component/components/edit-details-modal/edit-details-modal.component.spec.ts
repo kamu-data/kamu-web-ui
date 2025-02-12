@@ -1,5 +1,5 @@
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { emitClickOnElementByDataTestId, getElementByDataTestId } from "src/app/common/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { MatChipInputEvent, MatChipsModule } from "@angular/material/chips";
 import { FormsModule } from "@angular/forms";
 import { mockDatasetBasicsDerivedFragment } from "../../../../../search/mock.data";
@@ -11,7 +11,7 @@ import { mockMetadataDerivedUpdate, mockOverviewDataUpdate, mockOverviewWithSetI
 import { DatasetDataSizeFragment, DatasetOverviewFragment } from "src/app/api/kamu.graphql.interface";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("EditDetailsModalComponent", () => {

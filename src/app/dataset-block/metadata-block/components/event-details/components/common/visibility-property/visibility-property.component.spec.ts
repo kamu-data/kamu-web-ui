@@ -1,4 +1,4 @@
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { VisibilityPropertyComponent } from "./visibility-property.component";
 import { mockPublicDatasetVisibility } from "src/app/search/mock.data";

@@ -6,7 +6,7 @@ import {
     MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
 import { DataRow, DatasetSchema } from "../interface/dataset.interface";
-import { MaybeNull } from "../common/app.types";
+import { MaybeNull } from "../interface/app.types";
 
 export interface OverviewUpdate {
     schema: MaybeNull<DatasetSchema>;

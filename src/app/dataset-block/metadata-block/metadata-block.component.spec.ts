@@ -16,16 +16,16 @@ import { DatasetViewMenuComponent } from "src/app/dataset-view/dataset-view-menu
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatMenuModule } from "@angular/material/menu";
 import { DatasetViewHeaderComponent } from "src/app/dataset-view/dataset-view-header/dataset-view-header.component";
-import { SearchAdditionalButtonsComponent } from "src/app/components/search-additional-buttons/search-additional-buttons.component";
-import { SearchAdditionalButtonsNavComponent } from "src/app/components/search-additional-buttons/search-additional-buttons-nav.component";
+import { SearchAdditionalButtonsComponent } from "src/app/common/components/search-additional-buttons/search-additional-buttons.component";
+import { SearchAdditionalButtonsNavComponent } from "src/app/common/components/search-additional-buttons/search-additional-buttons-nav.component";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatTabsModule } from "@angular/material/tabs";
 import { YamlViewSectionComponent } from "./components/yaml-view-section/yaml-view-section.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { DataAccessPanelModule } from "src/app/components/data-access-panel/data-access-panel.module";
-import { DatasetVisibilityModule } from "src/app/components/dataset-visibility/dataset-visibility.module";
-import { SharedModule } from "src/app/shared/shared/shared.module";
-import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
+import { DataAccessPanelModule } from "src/app/data-access-panel/data-access-panel.module";
+import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
+import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
 
 describe("MetadataBlockComponent", () => {
     let component: MetadataBlockComponent;
@@ -59,7 +59,7 @@ describe("MetadataBlockComponent", () => {
                 DataAccessPanelModule,
                 RouterModule,
                 DatasetVisibilityModule,
-                SharedModule,
+                FeatureFlagModule,
             ],
             providers: [
                 DatasetApi,

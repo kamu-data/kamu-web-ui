@@ -11,9 +11,9 @@ import { DatasetKind } from "../api/kamu.graphql.interface";
 import { map } from "rxjs/operators";
 import { NavigationService } from "../services/navigation.service";
 import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
-import { MaybeNull } from "../common/app.types";
+import { MaybeNull } from "../interface/app.types";
 import { LoggedUserService } from "../auth/logged-user.service";
-import { DatasetOperationError } from "../common/errors";
+import { DatasetOperationError } from "../common/values/errors";
 
 @Injectable({ providedIn: "root" })
 export class DatasetCreateService {

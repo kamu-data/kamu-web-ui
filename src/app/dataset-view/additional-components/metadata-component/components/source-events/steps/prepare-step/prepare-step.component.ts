@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { ControlContainer, FormArray, FormBuilder, FormGroup, FormGroupDirective, Validators } from "@angular/forms";
-import { MaybeNull } from "src/app/common/app.types";
-import { BaseComponent } from "src/app/common/base.component";
-import { SetPollingSourceSection } from "src/app/shared/shared.types";
+import { MaybeNull } from "src/app/interface/app.types";
+import { BaseComponent } from "src/app/common/components/base.component";
 import {
     DecompressFormat,
     AddPollingSourceEditFormType,
     PrepareKind,
+    SetPollingSourceSection,
 } from "../../add-polling-source/add-polling-source-form.types";
 import { EditPollingSourceService } from "../../add-polling-source/edit-polling-source.service";
 

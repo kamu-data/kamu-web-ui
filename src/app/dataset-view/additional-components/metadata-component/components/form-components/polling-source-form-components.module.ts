@@ -15,55 +15,56 @@ import { CacheFieldComponent } from "./cache-field/cache-field.component";
 import { OrderFieldComponent } from "./order-field/order-field.component";
 import { NgxTrimDirectiveModule } from "ngx-trim-directive";
 import { TypeaheadFieldComponent } from "./typeahead-field/typeahead-field.component";
-import { SharedModule } from "src/app/shared/shared/shared.module";
 import { SelectDateFormatFieldComponent } from "./select-date-format-field/select-date-format-field.component";
 import { JsonKindFieldComponent } from "./json-kind-field/json-kind-field.component";
 import { NumberFieldComponent } from "./number-field/number-field.component";
 import { TopicsFieldComponent } from "./topics-field/topics-field.component";
+import { TooltipIconModule } from "src/app/common/components/tooltip-icon/tooltip-icon.module";
 
 @NgModule({
     declarations: [
-        InputFieldComponent,
-        CheckboxFieldComponent,
         ArrayKeysFieldComponent,
+        CacheFieldComponent,
+        CheckboxFieldComponent,
+        InputFieldComponent,
+        JsonKindFieldComponent,
         KeyValueFieldComponent,
+        NumberFieldComponent,
+        OrderFieldComponent,
+        SelectDateFormatFieldComponent,
         SelectKindFieldComponent,
         SchemaFieldComponent,
-        SelectDateFormatFieldComponent,
-        CacheFieldComponent,
-        OrderFieldComponent,
-        TypeaheadFieldComponent,
-        JsonKindFieldComponent,
-        NumberFieldComponent,
         TopicsFieldComponent,
+        TypeaheadFieldComponent,
     ],
     exports: [
-        InputFieldComponent,
-        CheckboxFieldComponent,
         ArrayKeysFieldComponent,
+        CacheFieldComponent,
+        CheckboxFieldComponent,
+        InputFieldComponent,
+        JsonKindFieldComponent,
         KeyValueFieldComponent,
+        NumberFieldComponent,
+        OrderFieldComponent,
+        SelectDateFormatFieldComponent,
         SelectKindFieldComponent,
         SchemaFieldComponent,
-        SelectDateFormatFieldComponent,
-        CacheFieldComponent,
-        OrderFieldComponent,
-        TypeaheadFieldComponent,
-        JsonKindFieldComponent,
-        NumberFieldComponent,
         TopicsFieldComponent,
+        TypeaheadFieldComponent,
     ],
     imports: [
         CommonModule,
-        ReactiveFormsModule,
         FormsModule,
+        JsonPipe,
         MatIconModule,
         MatTableModule,
         NgbTypeaheadModule,
-        JsonPipe,
-        RxReactiveFormsModule,
         NgxTrimDirectiveModule,
         NgbTooltipModule,
-        SharedModule,
+        ReactiveFormsModule,
+        RxReactiveFormsModule,
+
+        TooltipIconModule,
     ],
 })
 export class PollingSourceFormComponentsModule {}

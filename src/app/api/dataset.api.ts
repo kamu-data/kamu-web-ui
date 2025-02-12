@@ -47,17 +47,17 @@ import {
     DatasetPushSyncStatusesGQL,
     DatasetPushSyncStatusesQuery,
 } from "src/app/api/kamu.graphql.interface";
-import AppValues from "src/app/common/app.values";
+import AppValues from "src/app/common/values/app.values";
 import { ApolloQueryResult } from "@apollo/client/core";
 import { inject, Injectable } from "@angular/core";
 import { map, first } from "rxjs/operators";
 import { Observable } from "rxjs";
 import { MutationResult } from "apollo-angular";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
-import { DatasetOperationError } from "../common/errors";
+import { DatasetOperationError } from "../common/values/errors";
 import { StoreObject } from "@apollo/client/cache";
-import { noCacheFetchPolicy } from "../common/data.helpers";
-import { resetCacheHelper, updateCacheHelper } from "../apollo-cache.helper";
+import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
+import { resetCacheHelper, updateCacheHelper } from "../common/helpers/apollo-cache.helper";
 
 @Injectable({ providedIn: "root" })
 export class DatasetApi {

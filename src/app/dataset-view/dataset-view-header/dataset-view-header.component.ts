@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
-import { SearchAdditionalHeaderButtonInterface } from "../../components/search-additional-buttons/search-additional-buttons.interface";
+import { SearchAdditionalHeaderButtonInterface } from "../../common/components/search-additional-buttons/search-additional-buttons.interface";
 import { searchAdditionalButtonsEnum } from "../../search/search.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DatasetVisibilityOutput } from "src/app/api/kamu.graphql.interface";

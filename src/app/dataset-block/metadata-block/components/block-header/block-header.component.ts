@@ -1,4 +1,4 @@
-import { BaseComponent } from "src/app/common/base.component";
+import { BaseComponent } from "src/app/common/components/base.component";
 import { MetadataBlockFragment } from "../../../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { Observable } from "rxjs";

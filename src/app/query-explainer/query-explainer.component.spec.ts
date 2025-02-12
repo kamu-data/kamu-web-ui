@@ -17,8 +17,8 @@ import {
 import ProjectLinks from "src/app/project-links";
 import { HIGHLIGHT_OPTIONS, HighlightModule } from "ngx-highlightjs";
 import { ReproducedResultSectionComponent } from "./components/reproduced-result-section/reproduced-result-section.component";
-import { DisplayHashModule } from "../components/display-hash/display-hash.module";
-import { DynamicTableModule } from "../components/dynamic-table/dynamic-table.module";
+import { DisplayHashModule } from "../common/components/display-hash/display-hash.module";
+import { DynamicTableModule } from "../common/components/dynamic-table/dynamic-table.module";
 import { DatasetService } from "../dataset-view/dataset.service";
 import { mockDatasetByIdQuery } from "../api/mock/dataset.mock";
 import {
@@ -26,7 +26,7 @@ import {
     emitClickOnElementByDataTestId,
     registerMatSvgIcons,
     setFieldValue,
-} from "../common/base-test.helpers.spec";
+} from "../common/helpers/base-test.helpers.spec";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 

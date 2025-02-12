@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetSettingsSecretsManagerTabComponent } from "./dataset-settings-secrets-manager-tab.component";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { PaginationComponent } from "src/app/components/pagination-component/pagination.component";
+import { PaginationComponent } from "src/app/common/components/pagination-component/pagination.component";
 import { MatDividerModule } from "@angular/material/divider";
 import { HttpClientModule } from "@angular/common/http";
 import { ActivatedRoute } from "@angular/router";
@@ -12,14 +12,15 @@ import { MatIconModule } from "@angular/material/icon";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { FormBuilder, FormsModule } from "@angular/forms";
 import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetEvnironmentVariablesService } from "src/app/services/dataset-evnironment-variables.service";
+import { DatasetEvnironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-evnironment-variables.service";
 import { of } from "rxjs";
 import { MOCK_ENV_VAR_ID, mockListEnvVariablesQuery } from "src/app/api/mock/environment-variables-and-secrets.mock";
 import { ViewDatasetEnvVarConnection } from "src/app/api/kamu.graphql.interface";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { ModalService } from "src/app/components/modal/modal.service";
+import { ModalService } from "src/app/common/components/modal/modal.service";
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
+import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 
 describe("DatasetSettingsSecretsManagerTabComponent", () => {
     let component: DatasetSettingsSecretsManagerTabComponent;
@@ -119,7 +120,7 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
     });
 
     it("should check delete env variable", () => {
-        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options) => {
+        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
             options.handler?.call(undefined, true);
             return Promise.resolve("");
         });

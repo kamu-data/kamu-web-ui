@@ -6,7 +6,7 @@ import { DatasetNameByIdPropertyComponent } from "./dataset-name-by-id-property.
 import { of } from "rxjs";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { mockDatasetMainDataResponse } from "src/app/search/mock.data";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
 describe("DatasetIdAndNamePropertyComponent", () => {
     let component: DatasetNameByIdPropertyComponent;

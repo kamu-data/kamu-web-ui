@@ -1,4 +1,4 @@
-import { ModalComponent } from "./components/modal/modal.component";
+import { ModalComponent } from "./common/components/modal/modal.component";
 import { FormsModule } from "@angular/forms";
 import { mockAutocompleteItems } from "./search/mock.data";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
@@ -6,26 +6,26 @@ import { MatMenuModule } from "@angular/material/menu";
 import { RouterTestingModule } from "@angular/router/testing";
 import { SearchApi } from "./api/search.api";
 import { ALL_URLS_WITHOUT_HEADER, AppComponent } from "./app.component";
-import { isMobileView } from "./common/app.helpers";
+import { isMobileView } from "./common/helpers/app.helpers";
 import { SearchService } from "./search/search.service";
 import { NavigationService } from "./services/navigation.service";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { AuthApi } from "./api/auth.api";
-import { ModalService } from "./components/modal/modal.service";
+import { ModalService } from "./common/components/modal/modal.service";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { of } from "rxjs";
 import ProjectLinks from "./project-links";
-import { registerMatSvgIcons, routerMock, routerMockEventSubject } from "./common/base-test.helpers.spec";
+import { registerMatSvgIcons, routerMock, routerMockEventSubject } from "./common/helpers/base-test.helpers.spec";
 import { ActivatedRoute, NavigationEnd, RouterModule } from "@angular/router";
 import { mockAccountFromAccessToken } from "./api/mock/auth.mock";
 import { FetchAccountDetailsGQL } from "./api/kamu.graphql.interface";
-import { AppHeaderComponent } from "./components/app-header/app-header.component";
-import { SpinnerComponent } from "./components/spinner/spinner/spinner.component";
+import { SpinnerComponent } from "./common/components/spinner/spinner/spinner.component";
 import { LoggedUserService } from "./auth/logged-user.service";
 import { LoginService } from "./auth/login/login.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { NotificationIndicatorComponent } from "./components/notification-indicator/notification-indicator.component";
+import { NotificationIndicatorComponent } from "./header/notification-indicator/notification-indicator.component";
 import { MatIconModule } from "@angular/material/icon";
+import { AppHeaderComponent } from "./header/app-header/app-header.component";
 
 describe("AppComponent", () => {
     let component: AppComponent;

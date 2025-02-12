@@ -1,4 +1,4 @@
-import AppValues from "src/app/common/app.values";
+import AppValues from "src/app/common/values/app.values";
 import { ControlType, JsonFormData } from "../../add-polling-source/add-polling-source-form.types";
 import { SetPollingSourceTooltipsTexts } from "src/app/common/tooltips/tooltips.text";
 import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";

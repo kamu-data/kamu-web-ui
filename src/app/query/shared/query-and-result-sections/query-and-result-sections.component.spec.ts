@@ -6,16 +6,16 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ToastrModule, ToastrService } from "ngx-toastr";
 import { MatMenuModule } from "@angular/material/menu";
 import { RequestTimerComponent } from "../request-timer/request-timer.component";
-import { SqlEditorComponent } from "src/app/shared/editor/components/sql-editor/sql-editor.component";
-import { EditorModule } from "src/app/shared/editor/editor.module";
+import { SqlEditorComponent } from "src/app/editor/components/sql-editor/sql-editor.component";
+import { EditorModule } from "src/app/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatIconModule } from "@angular/material/icon";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import {
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
     getElementByDataTestId,
-} from "src/app/common/base-test.helpers.spec";
+} from "src/app/common/helpers/base-test.helpers.spec";
 import { mockSqlErrorUpdate } from "../../../dataset-view/additional-components/data-tabs.mock";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { QueryExplainerService } from "src/app/query-explainer/query-explainer.service";
@@ -24,6 +24,7 @@ import { mockUploadPrepareResponse } from "src/app/api/mock/upload-file.mock";
 import { mockQueryExplainerResponse } from "src/app/query-explainer/query-explainer.mocks";
 import { FileUploadService } from "src/app/services/file-upload.service";
 import { MatDividerModule } from "@angular/material/divider";
+import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
 
 describe("QueryAndResultSectionsComponent", () => {
     let component: QueryAndResultSectionsComponent;
@@ -105,7 +106,7 @@ describe("QueryAndResultSectionsComponent", () => {
         fixture.detectChanges();
         const sqlReq = spyOn(component.runSQLRequestEmit, "emit");
         const limit = 1;
-        const params = {
+        const params: DatasetRequestBySql = {
             query: component.sqlRequestCode,
             skip: component.currentData.length,
             limit: limit,
@@ -117,7 +118,7 @@ describe("QueryAndResultSectionsComponent", () => {
         component.loadMore(limit);
         params.skip = component.currentData.length;
 
-        const secondCallParams = sqlReq.calls.allArgs()[1];
+        const secondCallParams = sqlReq.calls.allArgs()[1] as DatasetRequestBySql[];
         expect(secondCallParams).toEqual([params]);
     });
 

@@ -1,19 +1,19 @@
 import ProjectLinks from "src/app/project-links";
-import { BaseComponent } from "src/app/common/base.component";
+import { BaseComponent } from "src/app/common/components/base.component";
 import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import { AccountTabs } from "./account.constants";
 import { ActivatedRoute, Params } from "@angular/router";
-import AppValues from "src/app/common/app.values";
-import { promiseWithCatch } from "src/app/common/app.helpers";
-import { AccountService } from "src/app/services/account.service";
+import AppValues from "src/app/common/values/app.values";
+import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
+import { AccountService } from "src/app/account/account.service";
 import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
 import { distinctUntilChanged, map, shareReplay, switchMap } from "rxjs/operators";
 import { Observable, combineLatest } from "rxjs";
-import { MaybeNull } from "src/app/common/app.types";
-import { AccountNotFoundError } from "src/app/common/errors";
+import { MaybeNull } from "src/app/interface/app.types";
+import { AccountNotFoundError } from "src/app/common/values/errors";
 import { AccountPageQueryParams } from "./account.component.model";
-import { ModalService } from "../components/modal/modal.service";
+import { ModalService } from "../common/components/modal/modal.service";
 import { LoggedUserService } from "../auth/logged-user.service";
 
 @Component({

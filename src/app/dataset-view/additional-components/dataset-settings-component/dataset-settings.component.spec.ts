@@ -16,7 +16,7 @@ import {
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
     registerMatSvgIcons,
-} from "src/app/common/base-test.helpers.spec";
+} from "src/app/common/helpers/base-test.helpers.spec";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { ChangeDetectionStrategy } from "@angular/core";
@@ -24,12 +24,12 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { mockMetadataRootUpdate, mockOverviewDataUpdate } from "../data-tabs.mock";
-import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
+import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
-import { SharedModule } from "src/app/shared/shared/shared.module";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { BatchingTriggerModule } from "./tabs/scheduling/batching-trigger-form/batching-trigger.module";
-import { DatasetVisibilityModule } from "src/app/components/dataset-visibility/dataset-visibility.module";
+import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
+import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
 
 describe("DatasetSettingsComponent", () => {
     let component: DatasetSettingsComponent;
@@ -80,10 +80,10 @@ describe("DatasetSettingsComponent", () => {
                 MatRadioModule,
                 MatIconModule,
                 NgbTooltipModule,
-                SharedModule,
                 MatCheckboxModule,
                 BatchingTriggerModule,
                 DatasetVisibilityModule,
+                FeatureFlagModule,
             ],
         })
             .overrideComponent(DatasetSettingsComponent, {

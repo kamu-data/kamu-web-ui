@@ -8,14 +8,14 @@ import {
     InitiatorFilterInput,
 } from "src/app/api/kamu.graphql.interface";
 import { combineLatest, map, switchMap, timer } from "rxjs";
-import { MaybeNull } from "src/app/common/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { environment } from "src/environments/environment";
-import { FlowsTableProcessingBaseComponent } from "src/app/common/components/flows-table/flows-table-processing-base.component";
+import { FlowsTableProcessingBaseComponent } from "src/app/dataset-flow/flows-table/flows-table-processing-base.component";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
-import { FlowsTableFiltersOptions } from "src/app/common/components/flows-table/flows-table.types";
+import { FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
 import ProjectLinks from "src/app/project-links";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 

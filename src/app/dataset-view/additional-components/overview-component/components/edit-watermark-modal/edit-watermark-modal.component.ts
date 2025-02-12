@@ -1,10 +1,10 @@
-import { MaybeNullOrUndefined } from "../../../../../common/app.types";
+import { MaybeNullOrUndefined } from "../../../../../interface/app.types";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { OWL_DATE_TIME_FORMATS } from "@danielmoncada/angular-datetime-picker";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
-import { BaseComponent } from "src/app/common/base.component";
-import { MY_MOMENT_FORMATS } from "src/app/common/data.helpers";
+import { BaseComponent } from "src/app/common/components/base.component";
+import { MY_MOMENT_FORMATS } from "src/app/common/helpers/data.helpers";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { finalize } from "rxjs";

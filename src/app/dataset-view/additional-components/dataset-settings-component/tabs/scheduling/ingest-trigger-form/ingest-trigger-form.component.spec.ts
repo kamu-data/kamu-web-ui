@@ -4,7 +4,7 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatRadioModule } from "@angular/material/radio";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
-import { SharedTestModule } from "src/app/common/shared-test.module";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { ToastrModule } from "ngx-toastr";
 import { DatasetSchedulingService } from "../../../services/dataset-scheduling.service";
@@ -17,7 +17,7 @@ import {
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
     setFieldValue,
-} from "src/app/common/base-test.helpers.spec";
+} from "src/app/common/helpers/base-test.helpers.spec";
 import { TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { PollingGroupEnum } from "../../../dataset-settings.model";
 

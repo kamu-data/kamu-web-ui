@@ -12,7 +12,7 @@ import {
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { DatasetNotFoundError, DatasetOperationError } from "src/app/common/errors";
+import { DatasetNotFoundError, DatasetOperationError } from "src/app/common/values/errors";
 import { ToastrService } from "ngx-toastr";
 
 @Injectable({

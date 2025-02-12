@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { BaseComponent } from "../../../../../common/base.component";
+import { BaseComponent } from "src/app/common/components/base.component";
 import { PollingGroupEnum, ThrottlingGroupEnum } from "../../dataset-settings.model";
 import {
     DatasetBasicsFragment,

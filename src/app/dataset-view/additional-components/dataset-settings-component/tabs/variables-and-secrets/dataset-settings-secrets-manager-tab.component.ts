@@ -3,17 +3,17 @@ import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { EditKeyValueModalComponent } from "./components/edit-key-value-modal/edit-key-value-modal.component";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { ModalService } from "src/app/components/modal/modal.service";
-import { promiseWithCatch, requireValue } from "src/app/common/app.helpers";
+import { ModalService } from "src/app/common/components/modal/modal.service";
+import { promiseWithCatch, requireValue } from "src/app/common/helpers/app.helpers";
 import {
     DatasetBasicsFragment,
     PageBasedInfo,
     ViewDatasetEnvVar,
     ViewDatasetEnvVarConnection,
 } from "src/app/api/kamu.graphql.interface";
-import { BaseComponent } from "src/app/common/base.component";
+import { BaseComponent } from "src/app/common/components/base.component";
 import ProjectLinks from "src/app/project-links";
-import { DatasetEvnironmentVariablesService } from "src/app/services/dataset-evnironment-variables.service";
+import { DatasetEvnironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-evnironment-variables.service";
 import { from } from "rxjs";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";

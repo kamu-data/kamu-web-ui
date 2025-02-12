@@ -6,14 +6,14 @@ import { ExecuteTransformEventComponent } from "./execute-transform-event.compon
 import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
 import { SizePropertyComponent } from "../common/size-property/size-property.component";
 import { OffsetIntervalPropertyComponent } from "../common/offset-interval-property/offset-interval-property.component";
-import { BlockRowDataComponent } from "../../../block-row-data/block-row-data.component";
+import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";
 import { ToastrModule } from "ngx-toastr";
-import { TooltipIconComponent } from "../../../tooltip-icon/tooltip-icon.component";
+import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
 import { MatIconModule } from "@angular/material/icon";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { SharedTestModule } from "src/app/common/shared-test.module";
-import { registerMatSvgIcons } from "src/app/common/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 
 describe("ExecuteTransformEventComponent", () => {
     let component: ExecuteTransformEventComponent;

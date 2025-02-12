@@ -1,0 +1,215 @@
+<div class="mt-4 d-flex">
+    <div class="w-250px">
+        <angular2-multiselect
+            [settings]="filterAccountSettings"
+            [data]="dropdownAccountList"
+            [(ngModel)]="selectedAccountItems"
+        />
+    </div>
+
+    <div class="ms-4" *ngIf="hasDatasetColumn">
+        <angular2-multiselect
+            [settings]="FILTER_DATASET_SETTINGS"
+            [data]="dropdownDatasetList"
+            [(ngModel)]="selectedDatasetItems"
+        />
+    </div>
+
+    <div class="ms-4">
+        <angular2-multiselect
+            [settings]="FILTER_STATUS_SETTINGS"
+            [data]="dropdownStatustList"
+            [(ngModel)]="selectedStatusItems"
+        />
+    </div>
+
+    <div class="d-flex ms-4 align-items-center">
+        <button
+            type="button"
+            class="border-1 bg-light border search-creator-button rounded-2 ps-2 pe-4 btn btn-sm d-flex justify-content-between align-items-center"
+            (click)="onSearch()"
+        >
+            <mat-icon class="fs-4 search-creator-icon d-block me-2">search</mat-icon>
+            <span class="d-block">Search</span>
+        </button>
+
+        <a (click)="onResetFilters()" class="ms-4"> Reset filters </a>
+    </div>
+</div>
+
+<div class="form-check my-3 d-flex gap-2">
+    <input
+        class="form-check-input"
+        type="checkbox"
+        [(ngModel)]="onlySystemFlows"
+        [attr.data-test-id]="'only-system-flow'"
+    />
+    <label class="form-check-label"> Only system flows </label>
+</div>
+
+<table mat-table [dataSource]="dataSource">
+    <!-- Description Column -->
+    <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>
+            <span class="text-dark"> Status </span>
+        </th>
+        <td mat-cell *matCellDef="let element" style="height: 62px">
+            <div class="d-flex py-1 ps-3">
+                <mat-icon class="icon-status margin-top-5" [ngClass]="descriptionColumnOptions(element).class">{{
+                    descriptionColumnOptions(element).icon
+                }}</mat-icon>
+                <div class="ms-1 py-2 position-relative">
+                    <img
+                        *ngIf="element.status !== FlowStatus.Finished"
+                        [src]="dynamicImgSrc(element.status)"
+                        class="dynamic-icon"
+                    />
+                    <a
+                        [routerLink]="[
+                            '/',
+                            datasetById(element.description.datasetId).owner.accountName,
+                            datasetById(element.description.datasetId).name,
+                            URL_FLOW_DETAILS,
+                            element.flowId,
+                            FlowDetailsTabs.HISTORY,
+                        ]"
+                        class="fw-500 description-link text-dark"
+                    >
+                        {{ flowTypeDescription(element) }}
+                        <span>{{ descriptionDatasetFlowEndOfMessage(element) }}</span>
+                    </a>
+                    <div class="d-flex flex-row truncate-sub-message pe-4">
+                        <div
+                            class="text-small d-block truncate-sub-message"
+                            [innerHTML]="
+                                descriptionDatasetFlowSubMessage(element, element.description.datasetId) | safeHtml
+                            "
+                        ></div>
+                        &nbsp;
+
+                        <a
+                            *ngIf="showForceUpdateLink(element)"
+                            class="text-small text-primary d-inline-block"
+                            (click)="onForceUpdate(element)"
+                            >force update</a
+                        >
+                    </div>
+                </div>
+            </div>
+        </td>
+    </ng-container>
+
+    <!-- Information Column -->
+    <ng-container matColumnDef="information">
+        <th mat-header-cell *matHeaderCellDef style="width: 30%">
+            <div class="text-dark mt-1 ps-4">Duration</div>
+        </th>
+        <td mat-cell *matCellDef="let element">
+            <div class="d-flex flex-column py-1">
+                <div class="d-flex align-items-center">
+                    <mat-icon class="icon-status overflow-visible text-muted" [title]="tooltipText(element)"
+                        >calendar_today</mat-icon
+                    >
+                    <span class="ml-2px pt-1 text-small">
+                        {{ durationBlockText(element) }}
+                    </span>
+                </div>
+                <div class="d-flex align-items-center" *ngIf="durationBlockVisible(element)">
+                    <mat-icon class="ps-1 pe-1 me-2px text-muted" [title]="'duration'" svgIcon="timer" />
+
+                    <span class="text-small pt-1">
+                        <span class="text-small">completed in </span>
+                        {{ durationTask(element.timing.runningSince, element.timing.finishedAt) }}
+                    </span>
+                </div>
+                <div class="d-flex align-items-center" *ngIf="waitingForBlockVisible(element)">
+                    <mat-icon class="ps-1 pe-1 me-2px text-muted" [title]="'waiting condition'" svgIcon="hour-glass" />
+                    <span class="text-small pt-1"> {{ waitingBlockText(element.startCondition) }} </span>
+                </div>
+            </div>
+        </td>
+    </ng-container>
+
+    <!-- Creator Column -->
+    <ng-container matColumnDef="creator">
+        <th mat-header-cell *matHeaderCellDef style="width: 15%">
+            <span class="text-dark ps-4"> Initiated By </span>
+        </th>
+        <td mat-cell *matCellDef="let element" style="height: 62px">
+            <div class="d-flex align-items-center ps-3">
+                <ng-container *ngIf="element.initiator; else noInitiator">
+                    <img class="img-creator" [src]="element.initiator.avatarUrl ?? DEFAULT_AVATAR_URL" />
+                    <span class="ms-2 text-small"> {{ element.initiator.displayName }}</span>
+                </ng-container>
+                <ng-template #noInitiator>
+                    <span class="text-small">{{ DEFAULT_FLOW_INITIATOR }}</span>
+                </ng-template>
+            </div>
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="dataset" *ngIf="hasDatasetColumn">
+        <th mat-header-cell *matHeaderCellDef>
+            <div class="text-dark mt-1 ps-4">Dataset</div>
+        </th>
+
+        <td mat-cell *matCellDef="let element">
+            <div class="d-flex align-items-center ps-3">
+                <a
+                    [routerLink]="[
+                        '/',
+                        datasetById(element.description.datasetId).owner.accountName,
+                        datasetById(element.description.datasetId).name,
+                    ]"
+                    class="text-small"
+                    >{{ datasetById(element.description.datasetId).name }}</a
+                >
+            </div>
+        </td>
+    </ng-container>
+
+    <!-- Options Column -->
+    <ng-container matColumnDef="options">
+        <th mat-header-cell *matHeaderCellDef style="width: 20%"></th>
+        <td mat-cell *matCellDef="let element">
+            <div class="pe-2">
+                <button mat-button [matMenuTriggerFor]="tableOptions" class="border-0">
+                    <mat-icon class="mat-icon-svg-size" svgIcon="show-options" />
+                </button>
+                <mat-menu #tableOptions="matMenu" xPosition="before" [hasBackdrop]="true">
+                    <a
+                        mat-menu-item
+                        [routerLink]="[
+                            '/',
+                            datasetById(element.description.datasetId).owner.accountName,
+                            datasetById(element.description.datasetId).name,
+                            URL_FLOW_DETAILS,
+                            element.flowId,
+                            FlowDetailsTabs.HISTORY,
+                        ]"
+                    >
+                        Details
+                    </a>
+                    <mat-divider />
+                    <button
+                        (click)="cancelFlow(element.flowId, element.description.datasetId)"
+                        mat-menu-item
+                        [disabled]="element.status === FlowStatus.Finished"
+                    >
+                        Cancel flow
+                    </button>
+                </mat-menu>
+            </div>
+        </td>
+    </ng-container>
+
+    <!-- Row shown when there is no matching data. -->
+    <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell text-center p-4" [attr.colspan]="tableOptions.displayColumns.length">
+            No data matching the filter
+        </td>
+    </tr>
+
+    <tr mat-header-row *matHeaderRowDef="tableOptions.displayColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: tableOptions.displayColumns"></tr>
+</table>

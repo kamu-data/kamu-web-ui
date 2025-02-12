@@ -17,12 +17,12 @@ import {
 import { FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
-import { MaybeUndefined } from "src/app/common/app.types";
+import { MaybeUndefined } from "src/app/interface/app.types";
 import ProjectLinks from "src/app/project-links";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
-import { DataHelpers } from "src/app/common/data.helpers";
-import { BaseDatasetDataComponent } from "src/app/common/base-dataset-data.component";
-import { DatasetFlowTableHelpers } from "src/app/common/components/flows-table/flows-table.helpers";
+import { DataHelpers } from "src/app/common/helpers/data.helpers";
+import { BaseDatasetDataComponent } from "src/app/common/components/base-dataset-data.component";
+import { DatasetFlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({

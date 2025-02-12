@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { BaseComponent } from "src/app/common/base.component";
-import { GrafanaLogsService } from "../../grafana-logs.service";
+import { BaseComponent } from "src/app/common/components/base.component";
+import { GrafanaLogsService } from "../../../../services/grafana-logs.service";
 import { DatasetFlowByIdResponse } from "../../dataset-flow-details.types";
 import { AppConfigService } from "src/app/app-config.service";
 

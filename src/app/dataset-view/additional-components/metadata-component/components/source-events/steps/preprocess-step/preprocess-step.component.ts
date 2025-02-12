@@ -3,9 +3,9 @@ import {
     AddPollingSourceEditFormType,
     PreprocessStepValue,
 } from "../../add-polling-source/add-polling-source-form.types";
-import { MaybeNull } from "src/app/common/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { EditPollingSourceService } from "../../add-polling-source/edit-polling-source.service";
-import { BaseComponent } from "src/app/common/base.component";
+import { BaseComponent } from "src/app/common/components/base.component";
 
 @Component({
     selector: "app-preprocess-step",

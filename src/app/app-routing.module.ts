@@ -2,19 +2,19 @@ import { GlobalQueryComponent } from "./query/global-query/global-query.componen
 import { AddPollingSourceComponent } from "./dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source.component";
 import { MetadataBlockComponent } from "./dataset-block/metadata-block/metadata-block.component";
 import { AuthenticatedGuard } from "./auth/guards/authenticated.guard";
-import { AccountSettingsComponent } from "./auth/settings/account-settings.component";
-import { PageNotFoundComponent } from "./components/page-not-found/page-not-found.component";
+import { AccountSettingsComponent } from "./account/settings/account-settings.component";
+import { PageNotFoundComponent } from "./common/components/page-not-found/page-not-found.component";
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { SearchComponent } from "./search/search.component";
 import { LoginComponent } from "./auth/login/login.component";
-import { DatasetComponent } from "./dataset-view/dataset.component";
+import { DatasetViewComponent } from "./dataset-view/dataset-view.component";
 import { DatasetCreateComponent } from "./dataset-create/dataset-create.component";
-import { GithubCallbackComponent } from "./auth/github-callback/github.callback";
+import { GithubCallbackComponent } from "./auth/login/github-callback/github.callback";
 import ProjectLinks from "./project-links";
 import { SetTransformComponent } from "./dataset-view/additional-components/metadata-component/components/set-transform/set-transform.component";
 import { LoginGuard } from "./auth/guards/login.guard";
-import { ReturnToCliComponent } from "./components/return-to-cli/return-to-cli.component";
+import { ReturnToCliComponent } from "./auth/login/return-to-cli/return-to-cli.component";
 import { AddPushSourceComponent } from "./dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source.component";
 import { AdminGuard } from "./auth/guards/admin.guard";
 import { AdminDashboardComponent } from "./admin-view/admin-dashboard/admin-dashboard.component";
@@ -98,7 +98,7 @@ export const routes: Routes = [
             },
             {
                 path: `:${ProjectLinks.URL_PARAM_DATASET_NAME}`,
-                component: DatasetComponent,
+                component: DatasetViewComponent,
             },
         ],
     },

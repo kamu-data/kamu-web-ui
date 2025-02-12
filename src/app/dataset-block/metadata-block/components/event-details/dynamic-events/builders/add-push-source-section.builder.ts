@@ -1,8 +1,8 @@
 import { AddPushSource } from "src/app/api/kamu.graphql.interface";
 import { EventSectionBuilder } from "./event-section.builder";
 import { EventSection } from "../dynamic-events.model";
-import { AddPushSourceSection } from "src/app/shared/shared.types";
 import { ADD_PUSH_SOURCE_DESCRIPTORS } from "../../components/add-push-source-event/add-push-source-event.source";
+import { AddPushSourceSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
 
 export class AddPushSourceSectionBuilder extends EventSectionBuilder<AddPushSource> {
     private sectionTitleMapper: Record<string, string> = {

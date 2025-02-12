@@ -6,13 +6,11 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { DatasetCommitService } from "../../../../overview-component/services/dataset-commit.service";
 import { from, of } from "rxjs";
-import { AddPushSourceSection } from "src/app/shared/shared.types";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { FinalYamlModalComponent } from "../../final-yaml-modal/final-yaml-modal.component";
-import { EditorModule } from "src/app/shared/editor/editor.module";
+import { EditorModule } from "src/app/editor/editor.module";
 import { ActivatedRoute } from "@angular/router";
 import { EditAddPushSourceService } from "./edit-add-push-source.service";
-
 import { mockDatasetHistoryResponse } from "src/app/search/mock.data";
 import { DatasetPageInfoFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { StepperNavigationComponent } from "../../stepper-navigation/stepper-navigation.component";
@@ -26,6 +24,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { MergeKind, ReadKind } from "../add-polling-source/add-polling-source-form.types";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { AddPushSourceSection } from "./add-push-source-form.types";
 
 const providersSection = (name: string) => {
     return [

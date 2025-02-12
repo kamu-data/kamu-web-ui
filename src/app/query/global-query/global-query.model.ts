@@ -1,4 +1,4 @@
-import { MaybeNull } from "./../../common/app.types";
+import { MaybeNull } from "../../interface/app.types";
 import { DataRow, DatasetSchema } from "src/app/interface/dataset.interface";
 
 export interface GlobalQuerySearchItem {

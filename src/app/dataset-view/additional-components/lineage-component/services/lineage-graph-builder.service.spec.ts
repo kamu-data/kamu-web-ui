@@ -7,7 +7,7 @@ import {
     mockLineageGraphUpdateWithMqttSource,
 } from "../../data-tabs.mock";
 import { LineageGraphNodeData, LineageGraphNodeKind, LineageGraphUpdate } from "../lineage-model";
-import { MaybeNull } from "src/app/common/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 
 describe("LineageGraphBuilderService", () => {
     let service: LineageGraphBuilderService;

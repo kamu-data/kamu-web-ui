@@ -5,13 +5,13 @@ import {
     GetDatasetFlowTriggersQuery,
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
-import { BaseComponent } from "src/app/common/base.component";
+import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetSchedulingService } from "../../../services/dataset-scheduling.service";
 import { FormGroup, FormControl, Validators, AbstractControl, ValidatorFn } from "@angular/forms";
-import { MaybeNull } from "src/app/common/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { BatchingFormType } from "../dataset-settings-scheduling-tab.component.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { everyTimeMapperValidators } from "src/app/common/data.helpers";
+import { everyTimeMapperValidators } from "src/app/common/helpers/data.helpers";
 
 @Component({
     selector: "app-batching-trigger-form",

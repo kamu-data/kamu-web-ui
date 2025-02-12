@@ -1,9 +1,9 @@
 import { ToastrService } from "ngx-toastr";
 import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
-import AppValues from "src/app/common/app.values";
+import AppValues from "src/app/common/values/app.values";
 import { QueryExplainerService } from "./query-explainer.service";
-import { BaseComponent } from "src/app/common/base.component";
-import { MaybeNull } from "src/app/common/app.types";
+import { BaseComponent } from "src/app/common/components/base.component";
+import { MaybeNull } from "src/app/interface/app.types";
 import ProjectLinks from "src/app/project-links";
 import { combineLatest, map, Observable, of, switchMap, tap } from "rxjs";
 import {

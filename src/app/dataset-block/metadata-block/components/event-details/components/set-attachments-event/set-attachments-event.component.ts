@@ -1,4 +1,4 @@
-import { BaseComponent } from "src/app/common/base.component";
+import { BaseComponent } from "src/app/common/components/base.component";
 import { SetAttachments } from "../../../../../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 

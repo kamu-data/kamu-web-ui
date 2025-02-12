@@ -2,18 +2,18 @@ import { DatasetKind, TransformInput } from "../../../../../api/kamu.graphql.int
 import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { MatTreeNestedDataSource } from "@angular/material/tree";
-import { MaybeNull, MaybeNullOrUndefined } from "src/app/common/app.types";
+import { MaybeNull, MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { DatasetSchema } from "src/app/interface/dataset.interface";
 import { GetDatasetSchemaQuery, SqlQueryStep } from "src/app/api/kamu.graphql.interface";
 import { EditSetTransformService } from "./edit-set-transform..service";
-import { parseCurrentSchema } from "src/app/common/app.helpers";
+import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";
 import { DatasetNode, SetTransformYamlType } from "./set-transform.types";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { from } from "rxjs";
 import { BaseMainEventComponent } from "../source-events/base-main-event.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import AppValues from "src/app/common/app.values";
+import AppValues from "src/app/common/values/app.values";
 
 @Component({
     selector: "app-set-transform",

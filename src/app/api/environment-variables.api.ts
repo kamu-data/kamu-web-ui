@@ -10,11 +10,11 @@ import {
     UpsertEnvVariableMutation,
 } from "./kamu.graphql.interface";
 import { inject, Injectable } from "@angular/core";
-import { noCacheFetchPolicy } from "../common/data.helpers";
+import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
 import { ApolloQueryResult } from "@apollo/client";
-import { DatasetOperationError } from "../common/errors";
+import { DatasetOperationError } from "../common/values/errors";
 import { MutationResult } from "apollo-angular";
-import { updateCacheHelper } from "../apollo-cache.helper";
+import { updateCacheHelper } from "../common/helpers/apollo-cache.helper";
 
 @Injectable({
     providedIn: "root",

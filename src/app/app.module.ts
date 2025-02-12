@@ -1,80 +1,66 @@
-import AppValues from "src/app/common/app.values";
+import AppValues from "src/app/common/values/app.values";
 import { MetadataBlockModule } from "./dataset-block/metadata-block/metadata-block.module";
-import { SpinnerService } from "./components/spinner/spinner.service";
-import { SpinnerInterceptor } from "./components/spinner/spinner.interceptor";
+import { SpinnerService } from "./common/components/spinner/spinner.service";
+import { SpinnerInterceptor } from "./common/components/spinner/spinner.interceptor";
 import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
 import { HttpLink } from "apollo-angular/http";
 import { APP_INITIALIZER, ErrorHandler, NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
-import { LoginComponent } from "./auth/login/login.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { MatToolbarModule } from "@angular/material/toolbar";
-import { NgbModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatIconModule } from "@angular/material/icon";
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS, HttpHeaders } from "@angular/common/http";
-import { MatTableModule } from "@angular/material/table";
-import { CdkTableModule } from "@angular/cdk/table";
 import { ApolloLink, NextLink, Operation } from "@apollo/client/core";
 import { SearchApi } from "./api/search.api";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { SearchService } from "./search/search.service";
-import { MatChipsModule } from "@angular/material/chips";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatSidenavModule } from "@angular/material/sidenav";
-import { MatMenuModule } from "@angular/material/menu";
-import { MatButtonModule } from "@angular/material/button";
 import { SearchModule } from "./search/search.module";
-import { DatasetModule } from "./dataset-view/dataset.module";
+import { DatasetViewModule } from "./dataset-view/dataset-view.module";
 import { DatasetService } from "./dataset-view/dataset.service";
 import { DatasetCreateModule } from "./dataset-create/dataset-create.module";
-import { AppHeaderComponent } from "./components/app-header/app-header.component";
 import { MAT_RIPPLE_GLOBAL_OPTIONS } from "@angular/material/core";
-import { MatOptionModule } from "@angular/material/core";
-import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { NgxGraphModule } from "@swimlane/ngx-graph";
-import { GithubCallbackComponent } from "./auth/github-callback/github.callback";
 import { AuthApi } from "./api/auth.api";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { ModalModule } from "./components/modal/modal.module";
+import { ModalModule } from "./common/components/modal/modal.module";
 import { MarkdownModule } from "ngx-markdown";
 import { SecurityContext } from "@angular/core";
-import { NotificationIndicatorComponent } from "./components/notification-indicator/notification-indicator.component";
 import { AppConfigService } from "./app-config.service";
 import { NavigationService } from "./services/navigation.service";
 import { DatasetSubscriptionsService } from "./dataset-view/dataset.subscriptions.service";
-import { SpinnerModule } from "./components/spinner/spinner.module";
+import { SpinnerModule } from "./common/components/spinner/spinner.module";
 import { DatasetApi } from "./api/dataset.api";
 import { ErrorHandlerService } from "./services/error-handler.service";
-import { AccountSettingsComponent } from "./auth/settings/account-settings.component";
-import { MatButtonToggleModule } from "@angular/material/button-toggle";
-import { DatasetListModule } from "./components/dataset-list-component/dataset-list.module";
-import { PaginationModule } from "./components/pagination-component/pagination.module";
+import { DatasetListModule } from "./common/components/dataset-list-component/dataset-list.module";
 import { ClipboardModule } from "@angular/cdk/clipboard";
-import { HighlightModule, HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
+import { HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 import { ToastrModule } from "ngx-toastr";
 import { LoggedUserService } from "./auth/logged-user.service";
 import { catchError, EMPTY, firstValueFrom } from "rxjs";
 import { LoginService } from "./auth/login/login.service";
-import { logError } from "./common/app.helpers";
+import { logError } from "./common/helpers/app.helpers";
 import { DatasetPermissionsService } from "./dataset-view/dataset.permissions.service";
 import { LocalStorageService } from "./services/local-storage.service";
-import { apolloCache } from "./apollo-cache.helper";
-import { AdminDashboardComponent } from "./admin-view/admin-dashboard/admin-dashboard.component";
+import { apolloCache } from "./common/helpers/apollo-cache.helper";
 import { DatasetFlowDetailsModule } from "./dataset-flow/dataset-flow-details/dataset-flow-details.module";
-import { MatSortModule } from "@angular/material/sort";
-import { AccountFlowsTabComponent } from "./account/additional-components/account-flows-tab/account-flows-tab.component";
-import { AccountComponent } from "./account/account.component";
-import { DatasetsTabComponent } from "./account/additional-components/datasets-tab/datasets-tab.component";
-import { AccessTokensTabComponent } from "./auth/settings/tabs/access-tokens-tab/access-tokens-tab.component";
-import { MatSlideToggleModule } from "@angular/material/slide-toggle";
-import { DynamicTableModule } from "./components/dynamic-table/dynamic-table.module";
 import { AutofocusModule } from "./common/directives/autofocus.module";
-import { EmailsTabComponent } from "./auth/settings/tabs/emails-tab/emails-tab.component";
+import { AccountModule } from "./account/account.module";
+import { AccountSettingsModule } from "./account/settings/account-settings.module";
+import { LoginModule } from "./auth/login/login.module";
+import { AdminViewModule } from "./admin-view/admin-view.module";
+import { HeaderModule } from "./header/header.module";
 
 const Services = [
+    Apollo,
+    AuthApi,
+    DatasetApi,
+    DatasetPermissionsService,
+    DatasetService,
+    DatasetSubscriptionsService,
+    HttpLink,
+    LoginService,
+    LoggedUserService,
+    NavigationService,
+    SearchApi,
+    SearchService,
     {
         provide: HTTP_INTERCEPTORS,
         useClass: SpinnerInterceptor,
@@ -85,19 +71,6 @@ const Services = [
         provide: ErrorHandler,
         useClass: ErrorHandlerService,
     },
-    Apollo,
-    AuthApi,
-    LoginService,
-    LoggedUserService,
-    SearchApi,
-    DatasetApi,
-    HttpLink,
-    SearchService,
-    DatasetService,
-    NavigationService,
-    DatasetSubscriptionsService,
-    DatasetPermissionsService,
-
     {
         provide: APOLLO_OPTIONS,
         useFactory: (httpLink: HttpLink, appConfig: AppConfigService, localStorageService: LocalStorageService) => {
@@ -179,75 +152,40 @@ const Services = [
         },
     },
 ];
-const MatModules = [
-    MatChipsModule,
-    MatDividerModule,
-    MatToolbarModule,
-    MatFormFieldModule,
-    MatTableModule,
-    MatIconModule,
-    MatSidenavModule,
-    MatMenuModule,
-    MatButtonModule,
-    MatAutocompleteModule,
-    MatProgressSpinnerModule,
-    MatButtonToggleModule,
-    MatSortModule,
-    MatSlideToggleModule,
-];
-
 @NgModule({
-    declarations: [
-        AppComponent,
-        AppHeaderComponent,
-        LoginComponent,
-        GithubCallbackComponent,
-        AccountComponent,
-        NotificationIndicatorComponent,
-        AccountSettingsComponent,
-        DatasetsTabComponent,
-        AdminDashboardComponent,
-        AccessTokensTabComponent,
-        AccountFlowsTabComponent,
-        EmailsTabComponent,
-    ],
+    declarations: [AppComponent],
     imports: [
-        AppRoutingModule,
-        DatasetModule,
-        DatasetCreateModule,
-        MetadataBlockModule,
-        ModalModule.forRoot(),
-        SearchModule.forRoot(),
+        BrowserModule,
+        BrowserAnimationsModule,
+        ClipboardModule,
+        HttpClientModule,
         MarkdownModule.forRoot({
             loader: HttpClient,
             sanitize: SecurityContext.NONE,
         }),
-
-        BrowserModule,
-        BrowserAnimationsModule,
-        NgbModule,
-        NgbTypeaheadModule,
-        HttpClientModule,
-        CdkTableModule,
-        ...MatModules,
-        FormsModule,
-        MatOptionModule,
-        ReactiveFormsModule,
+        ModalModule.forRoot(),
         NgxGraphModule,
-        SpinnerModule,
-        DatasetListModule,
-        PaginationModule,
-        ClipboardModule,
-        HighlightModule,
         ToastrModule.forRoot({
             timeOut: 2000,
             positionClass: "toast-bottom-right",
             newestOnTop: false,
             preventDuplicates: true,
         }), // ToastrModule added
-        DatasetFlowDetailsModule,
-        DynamicTableModule,
+
+        AccountModule,
+        AccountSettingsModule,
+        AdminViewModule,
+        AppRoutingModule,
         AutofocusModule,
+        HeaderModule,
+        DatasetCreateModule,
+        DatasetFlowDetailsModule,
+        DatasetListModule,
+        DatasetViewModule,
+        LoginModule,
+        MetadataBlockModule,
+        SearchModule,
+        SpinnerModule,
     ],
     providers: [...Services],
     bootstrap: [AppComponent],

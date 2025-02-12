@@ -4,12 +4,12 @@ import { AuthApi } from "src/app/api/auth.api";
 import { GithubLoginCredentials, LoginResponseType, PasswordLoginCredentials } from "src/app/api/auth.api.model";
 import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import { LoginMethod } from "src/app/app-config.model";
-import { AuthenticationError } from "src/app/common/errors";
+import { AuthenticationError } from "src/app/common/values/errors";
 import { NavigationService } from "src/app/services/navigation.service";
 import { LoginCallbackResponse } from "./login.component.model";
 import { HttpClient } from "@angular/common/http";
 import { AppConfigService } from "src/app/app-config.service";
-import { MaybeNull, MaybeUndefined } from "src/app/common/app.types";
+import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 
 @Injectable({

@@ -1,17 +1,17 @@
 import { NavigationService } from "./../../../../../services/navigation.service";
 import { DatasetCompactionService } from "./../../services/dataset-compaction.service";
-import { TooltipIconComponent } from "src/app/dataset-block/metadata-block/components/tooltip-icon/tooltip-icon.component";
+import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { DatasetSettingsGeneralTabComponent } from "./dataset-settings-general-tab.component";
 import { DatasetSettingsService } from "../../services/dataset-settings.service";
-import { ModalService } from "../../../../../components/modal/modal.service";
+import { ModalService } from "../../../../../common/components/modal/modal.service";
 import { ApolloModule } from "apollo-angular";
 import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { SharedTestModule } from "../../../../../common/shared-test.module";
+import { SharedTestModule } from "../../../../../common/modules/shared-test.module";
 import {
     mockDatasetBasicsDerivedFragment,
     mockFullPowerDatasetPermissionsFragment,
@@ -22,18 +22,19 @@ import {
     dispatchInputEvent,
     emitClickOnElementByDataTestId,
     getInputElementByDataTestId,
-} from "../../../../../common/base-test.helpers.spec";
+} from "../../../../../common/helpers/base-test.helpers.spec";
 import { TEST_ACCOUNT_ID } from "src/app/api/mock/auth.mock";
 import { ToastrModule } from "ngx-toastr";
 import { MatRadioModule } from "@angular/material/radio";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetFlowType } from "src/app/api/kamu.graphql.interface";
 import { DatasetResetMode } from "./dataset-settings-general-tab.types";
-import AppValues from "src/app/common/app.values";
+import AppValues from "src/app/common/values/app.values";
 import { DatasetFlowsService } from "../../../flows-component/services/dataset-flows.service";
 import { DatasetService } from "../../../../dataset.service";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { DatasetVisibilityModule } from "src/app/components/dataset-visibility/dataset-visibility.module";
+import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
+import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 
 describe("DatasetSettingsGeneralTabComponent", () => {
     let component: DatasetSettingsGeneralTabComponent;
@@ -197,7 +198,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
     it("should check delete modal window is shown and sends API call after confirm", fakeAsync(() => {
         const hasOutOfSyncPushRemotesSpy = spyOn(datasetService, "hasOutOfSyncPushRemotes").and.returnValue(of(true));
-        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options) => {
+        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
             options.handler?.call(undefined, true);
             return Promise.resolve("");
         });
@@ -217,7 +218,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
     it("should check delete modal window is shown and does not send API call after reject", fakeAsync(() => {
         const hasOutOfSyncPushRemotesSpy = spyOn(datasetService, "hasOutOfSyncPushRemotes").and.returnValue(of(false));
-        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options) => {
+        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
             options.handler?.call(undefined, false);
             return Promise.resolve("");
         });
@@ -236,7 +237,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     }));
 
     it("should check reset modal window is shown and sends API call after confirm for Reset to Seed mode", fakeAsync(() => {
-        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options) => {
+        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
             options.handler?.call(undefined, true);
             return Promise.resolve("");
         });
@@ -267,7 +268,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
     it("should check reset modal window is shown and sends API call after confirm for Flatten metadata mode", fakeAsync(() => {
         component.resetDatasetForm.patchValue({ mode: DatasetResetMode.RESET_METADATA_ONLY });
-        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options) => {
+        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
             options.handler?.call(undefined, true);
             return Promise.resolve("");
         });
@@ -295,7 +296,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     }));
 
     it("should check change dataset visibility", () => {
-        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options) => {
+        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
             options.handler?.call(undefined, true);
             return Promise.resolve("");
         });

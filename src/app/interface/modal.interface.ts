@@ -1,7 +1,7 @@
-import { MaybeNull } from "../common/app.types";
-import { ModalDialogComponent } from "../components/modal/modal-dialog.component";
-import { ModalImageComponent } from "../components/modal/modal-image.component";
-import { ModalSpinnerComponent } from "../components/modal/modal-spinner.component";
+import { MaybeNull } from "./app.types";
+import { ModalDialogComponent } from "../common/components/modal/modal-dialog.component";
+import { ModalImageComponent } from "../common/components/modal/modal-image.component";
+import { ModalSpinnerComponent } from "../common/components/modal/modal-spinner.component";
 
 export interface ModalCommandInterface {
     type: ModalComponentType;

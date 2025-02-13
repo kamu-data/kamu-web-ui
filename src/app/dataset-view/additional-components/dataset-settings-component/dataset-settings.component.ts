@@ -110,7 +110,10 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
             case SettingsTabsEnum.COMPACTION:
                 return this.datasetBasics.kind === DatasetKind.Root;
             case SettingsTabsEnum.TRANSFORM_SETTINGS:
-                return this.datasetBasics.kind === DatasetKind.Derivative;
+                return (
+                    this.datasetBasics.kind === DatasetKind.Derivative &&
+                    this.appConfigService.featureFlags.enableScheduling
+                );
             case SettingsTabsEnum.VARIABLES_AND_SECRETS:
                 return (
                     this.appConfigService.featureFlags.enableDatasetEnvVarsManagement &&

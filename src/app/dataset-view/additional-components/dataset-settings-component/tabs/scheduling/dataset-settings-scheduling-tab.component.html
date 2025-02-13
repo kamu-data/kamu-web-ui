@@ -32,8 +32,4 @@
             </button>
         </div>
     </div>
-
-    <div *ngIf="!isRootDataset">
-        <app-batching-trigger-form [datasetBasics]="datasetBasics" (saveTriggerEmit)="saveBatchingTriggers($event)" />
-    </div>
 </div>

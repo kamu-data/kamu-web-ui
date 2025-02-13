@@ -16,6 +16,7 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { mockGetDatasetSchemaQuery } from "../../mock.data";
 import { DatasetNode } from "../../set-transform.types";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { RouterModule } from "@angular/router";
 
 describe("SearchSectionComponent", () => {
     let component: SearchSectionComponent;
@@ -35,6 +36,7 @@ describe("SearchSectionComponent", () => {
                 MatIconModule,
                 FormsModule,
                 SharedTestModule,
+                RouterModule,
             ],
         }).compileComponents();
 

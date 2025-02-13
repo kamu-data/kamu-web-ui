@@ -11,13 +11,8 @@ import {
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
-import {
-    BatchingFormType,
-    IngestConfigurationFormType,
-    PollingGroupType,
-} from "./dataset-settings-scheduling-tab.component.types";
+import { IngestConfigurationFormType, PollingGroupType } from "./dataset-settings-scheduling-tab.component.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { ToastrService } from "ngx-toastr";
 import { EMPTY, switchMap } from "rxjs";
 
 @Component({
@@ -36,7 +31,6 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
     public readonly timeUnit: typeof TimeUnit = TimeUnit;
 
     private datasetSchedulingService = inject(DatasetSchedulingService);
-    private toastrService = inject(ToastrService);
 
     public get isRootDataset(): boolean {
         return this.datasetBasics.kind === DatasetKind.Root;
@@ -44,22 +38,6 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
 
     public changeIngestConfiguration(ingestConfigurationForm: FormGroup<IngestConfigurationFormType>): void {
         this.ingestConfigurationForm = ingestConfigurationForm;
-    }
-
-    public saveBatchingTriggers(batchingTriggerForm: FormGroup<BatchingFormType>): void {
-        this.datasetSchedulingService
-            .setDatasetTriggers({
-                datasetId: this.datasetBasics.id,
-                datasetFlowType: DatasetFlowType.ExecuteTransform,
-                paused: !batchingTriggerForm.controls.updatesState.value,
-                triggerInput: this.setBatchingTriggerInput(batchingTriggerForm),
-                datasetInfo: {
-                    accountName: this.datasetBasics.owner.accountName,
-                    datasetName: this.datasetBasics.name,
-                },
-            })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe();
     }
 
     public changePollingTriggers(pollingForm: FormGroup<PollingGroupType>): void {
@@ -125,17 +103,5 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
                 },
             };
         }
-    }
-
-    private setBatchingTriggerInput(batchingTriggerForm: FormGroup<BatchingFormType>): FlowTriggerInput {
-        return {
-            batching: {
-                minRecordsToAwait: batchingTriggerForm.controls.minRecordsToAwait.value as number,
-                maxBatchingInterval: {
-                    every: batchingTriggerForm.controls.every.value as number,
-                    unit: batchingTriggerForm.controls.unit.value as TimeUnit,
-                },
-            },
-        };
     }
 }

@@ -155,6 +155,10 @@ export class AppComponent extends BaseComponent implements OnInit {
             .addSvgIcon(
                 "access-token",
                 this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/access-token.svg"),
+            )
+            .addSvgIcon(
+                "tree-structure",
+                this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/tree-structure.svg"),
             );
     }
 

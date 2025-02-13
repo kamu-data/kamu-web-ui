@@ -13,7 +13,6 @@ import {
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
 import { IngestConfigurationFormType, PollingGroupType } from "./dataset-settings-scheduling-tab.component.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { ToastrService } from "ngx-toastr";
 import { EMPTY, switchMap } from "rxjs";
 
 @Component({
@@ -32,7 +31,6 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
     public readonly timeUnit: typeof TimeUnit = TimeUnit;
 
     private datasetSchedulingService = inject(DatasetSchedulingService);
-    private toastrService = inject(ToastrService);
 
     public get isRootDataset(): boolean {
         return this.datasetBasics.kind === DatasetKind.Root;

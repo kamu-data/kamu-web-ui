@@ -9,7 +9,8 @@ import { mockGetDatasetFlowTriggersBatchingQuery } from "src/app/api/mock/datase
 import { of } from "rxjs";
 import { ToastrModule } from "ngx-toastr";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
-import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { TimeUnit } from "src/app/api/kamu.graphql.interface";
 
 describe("BatchingTriggerFormComponent", () => {
     let component: BatchingTriggerFormComponent;
@@ -44,5 +45,12 @@ describe("BatchingTriggerFormComponent", () => {
         emitClickOnElementByDataTestId(fixture, "save-batching-triggers");
 
         expect(saveTriggerEmitSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check initial state for derivative dataset", () => {
+        fixture.detectChanges();
+
+        const batchingInterval = findElementByDataTestId(fixture, "batching-interval-unit") as HTMLInputElement;
+        expect(batchingInterval.value).toEqual(TimeUnit.Hours);
     });
 });

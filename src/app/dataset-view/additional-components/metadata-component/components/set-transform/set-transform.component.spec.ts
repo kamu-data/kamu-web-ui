@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { SetTransformComponent } from "./set-transform.component";
 import { Apollo, ApolloModule } from "apollo-angular";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, RouterModule } from "@angular/router";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { EditSetTransformService } from "./edit-set-transform..service";
 import { of } from "rxjs";
@@ -59,6 +59,7 @@ describe("SetTransformComponent", () => {
                 FormsModule,
                 HttpClientTestingModule,
                 ReactiveFormsModule,
+                RouterModule,
                 EditorModule,
             ],
             providers: [

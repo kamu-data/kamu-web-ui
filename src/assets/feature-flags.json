@@ -251,6 +251,10 @@
                 "developmentState": "stable"
               },
               {
+                "id": "transformOptions",
+                "developmentState": "stable"
+              },
+              {
                 "id": "varsSecrets",
                 "developmentState": "stable"
               }

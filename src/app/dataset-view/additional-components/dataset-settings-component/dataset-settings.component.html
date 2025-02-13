@@ -46,6 +46,13 @@
                 data-test-id="settings-scheduling-tab"
             />
         </ng-container>
+        <ng-container *ngIf="showTransformSettingsTab">
+            <app-dataset-settings-transform-options-tab
+                appFeatureFlag="dataset.panel.settings.transformOptions"
+                [datasetBasics]="datasetBasics"
+                data-test-id="settings-transform-tab"
+            />
+        </ng-container>
         <ng-container *ngIf="showSecretsManagerTab">
             <app-dataset-settings-secrets-manager-tab
                 appFeatureFlag="dataset.panel.settings.varsSecrets"

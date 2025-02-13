@@ -3,6 +3,7 @@ export enum SettingsTabsEnum {
     SCHEDULING = "scheduling",
     VARIABLES_AND_SECRETS = "variables-and-secrets",
     COMPACTION = "compaction",
+    TRANSFORM_SETTINGS = "transform-settings",
 }
 
 export enum PollingGroupEnum {
@@ -42,6 +43,14 @@ export const datasetSettingsSidePanelData: DatasetSettingsSidePanelItem[] = [
         activeTab: SettingsTabsEnum.SCHEDULING,
         iconClassName: "ms-1 me-2 mb-1 scheduled-icon",
         id: "scheduling",
+    },
+    {
+        name: "Transform settings",
+        iconName: "tree-structure",
+        showDivider: false,
+        activeTab: SettingsTabsEnum.TRANSFORM_SETTINGS,
+        iconClassName: "ms-1 me-2 mb-1 transform-icon",
+        id: "transformOptions",
     },
     {
         name: "Compaction",

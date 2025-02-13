@@ -87,6 +87,7 @@ import { TooltipIconModule } from "../common/components/tooltip-icon/tooltip-ico
 import { FeatureFlagModule } from "../common/directives/feature-flag.module";
 import { YamlEventViewerModule } from "../common/components/yaml-event-viewer/yaml-event-viewer.module";
 import { CommitNavigatorModule } from "./additional-components/metadata-component/components/commit-navigator/commit-navigator.module";
+import { DatasetSettingsTransformOptionsTabComponent } from "./additional-components/dataset-settings-component/tabs/transform-options/dataset-settings-transform-options-tab.component";
 @NgModule({
     imports: [
         DynamicTableModule,
@@ -176,6 +177,7 @@ import { CommitNavigatorModule } from "./additional-components/metadata-componen
         DatasetSettingsGeneralTabComponent,
         DatasetSettingsSchedulingTabComponent,
         DatasetSettingsSecretsManagerTabComponent,
+        DatasetSettingsTransformOptionsTabComponent,
         DatasetViewHeaderComponent,
         DatasetViewComponent,
         EditDetailsModalComponent,

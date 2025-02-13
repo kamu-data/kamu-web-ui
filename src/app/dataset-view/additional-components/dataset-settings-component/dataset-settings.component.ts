@@ -40,7 +40,8 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
         return (
             this.appConfigService.featureFlags.enableScheduling &&
             !this.isSetTransformEmpty &&
-            !this.isSetPollingSourceEmpty
+            !this.isSetPollingSourceEmpty &&
+            this.isRootDataset
         );
     }
 
@@ -62,6 +63,12 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
 
     public get showCompactionTab(): boolean {
         return this.datasetBasics.kind === DatasetKind.Root && this.activeTab === SettingsTabsEnum.COMPACTION;
+    }
+
+    public get showTransformSettingsTab(): boolean {
+        return (
+            this.datasetBasics.kind === DatasetKind.Derivative && this.activeTab === SettingsTabsEnum.TRANSFORM_SETTINGS
+        );
     }
 
     public get showSecretsManagerTab(): boolean {
@@ -102,6 +109,8 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
                 return this.isSchedulingAvailable;
             case SettingsTabsEnum.COMPACTION:
                 return this.datasetBasics.kind === DatasetKind.Root;
+            case SettingsTabsEnum.TRANSFORM_SETTINGS:
+                return this.datasetBasics.kind === DatasetKind.Derivative;
             case SettingsTabsEnum.VARIABLES_AND_SECRETS:
                 return (
                     this.appConfigService.featureFlags.enableDatasetEnvVarsManagement &&

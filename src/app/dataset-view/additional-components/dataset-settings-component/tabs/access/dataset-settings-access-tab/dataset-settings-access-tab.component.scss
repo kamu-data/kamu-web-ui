@@ -1,0 +1,17 @@
+.fw-500 {
+    font-weight: 500;
+}
+
+.manage-button {
+    background: #f0f0f0;
+    color: #25292e;
+    text-decoration: none;
+    display: inline-flex;
+    border: 1px solid rgb(27 31 36 / 25%);
+    border-radius: 5px;
+    padding: 0.3rem 0.95rem;
+
+    &:hover {
+        background: rgb(27 31 36 / 16%);
+    }
+}

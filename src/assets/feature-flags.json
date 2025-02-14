@@ -255,6 +255,10 @@
                 "developmentState": "stable"
               },
               {
+                "id": "access",
+                "developmentState": "stable"
+              },
+              {
                 "id": "varsSecrets",
                 "developmentState": "stable"
               }

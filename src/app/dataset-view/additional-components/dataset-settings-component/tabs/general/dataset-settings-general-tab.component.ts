@@ -67,6 +67,14 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
         if (!this.datasetPermissions.permissions.canRename) {
             this.renameDatasetForm.disable();
         }
+
+        this.activatedRoute.fragment.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((fragment: string | null) => {
+            if (fragment) this.jumpToSection(fragment);
+        });
+    }
+
+    public jumpToSection(section: string | null) {
+        if (section) document.getElementById(section)?.scrollIntoView({ behavior: "smooth" });
     }
 
     public get datasetNameControl(): AbstractControl {

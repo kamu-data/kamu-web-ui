@@ -1,5 +1,5 @@
 import { MaybeNull } from "../../../interface/app.types";
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import {
     DatasetBasicsFragment,
     DatasetKind,
@@ -9,13 +9,14 @@ import {
 import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetSettingsSidePanelItem, SettingsTabsEnum, datasetSettingsSidePanelData } from "./dataset-settings.model";
 import { AppConfigService } from "src/app/app-config.service";
-import { ParamMap } from "@angular/router";
+import { NavigationEnd, ParamMap, Router } from "@angular/router";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { filter } from "rxjs";
 
 @Component({
     selector: "app-dataset-settings",
@@ -35,6 +36,8 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
     private appConfigService = inject(AppConfigService);
     private navigationService = inject(NavigationService);
     private datasetSubsService = inject(DatasetSubscriptionsService);
+    private router = inject(Router);
+    private cdr = inject(ChangeDetectorRef);
 
     public get isSchedulingAvailable(): boolean {
         return (
@@ -80,6 +83,14 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
 
     public ngOnInit(): void {
         this.activeTab = this.getSectionFromUrl() ?? SettingsTabsEnum.GENERAL;
+
+        this.router.events
+            .pipe(filter((event) => event instanceof NavigationEnd))
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.activeTab = this.getSectionFromUrl() ?? SettingsTabsEnum.GENERAL;
+                this.cdr.detectChanges();
+            });
 
         this.datasetSubsService.overviewChanges
             .pipe(takeUntilDestroyed(this.destroyRef))

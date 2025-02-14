@@ -65,5 +65,11 @@
                 [datasetBasics]="datasetBasics"
             />
         </ng-container>
+        <ng-container *ngIf="activeTab === settingsTabsEnum.ACCESS">
+            <app-dataset-settings-access-tab
+                appFeatureFlag="dataset.panel.settings.access"
+                [datasetBasics]="datasetBasics"
+            />
+        </ng-container>
     </div>
 </div>

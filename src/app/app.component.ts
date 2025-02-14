@@ -159,7 +159,8 @@ export class AppComponent extends BaseComponent implements OnInit {
             .addSvgIcon(
                 "tree-structure",
                 this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/tree-structure.svg"),
-            );
+            )
+            .addSvgIcon("people", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/people.svg"));
     }
 
     private shouldHeaderBeVisible(url: string): boolean {

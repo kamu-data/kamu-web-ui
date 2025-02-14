@@ -17,7 +17,7 @@
 
 .admin-icon {
     position: absolute;
-    left: 53px;
+    left: 51px;
     bottom: 4px;
     color: #ffff;
 }
@@ -25,6 +25,11 @@
 .logout-icon {
     width: 16px !important;
     height: 20px !important;
+}
+
+.avatar-icon {
+    border-radius: 50%;
+    border: 2px solid #d1d9e0;
 }
 
 .container-spinner {

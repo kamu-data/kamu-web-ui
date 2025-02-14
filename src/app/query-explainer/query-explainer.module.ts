@@ -11,7 +11,6 @@ import { CommitmentDataSectionComponent } from "./components/commitment-data-sec
 import { DisplayHashModule } from "src/app/common/components/display-hash/display-hash.module";
 import { DynamicTableModule } from "../common/components/dynamic-table/dynamic-table.module";
 import { FormsModule } from "@angular/forms";
-import { AutofocusModule } from "../common/directives/autofocus.module";
 import { MarkdownModule } from "ngx-markdown";
 
 @NgModule({
@@ -30,7 +29,6 @@ import { MarkdownModule } from "ngx-markdown";
         MarkdownModule,
         RouterModule,
 
-        AutofocusModule,
         DisplayHashModule,
         DynamicTableModule,
     ],

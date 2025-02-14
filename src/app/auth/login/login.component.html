@@ -47,7 +47,7 @@
                 id="login"
                 data-test-id="input-login"
                 (keyup)="onChangeInputField($event)"
-                appAutofocus
+                autofocus
                 [class.error-border-color]="passwordLoginError$ | async"
             />
             <div *ngIf="loginControl?.invalid && (loginControl?.touched || loginControl?.dirty)">

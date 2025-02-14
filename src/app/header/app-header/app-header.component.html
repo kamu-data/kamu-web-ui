@@ -228,23 +228,24 @@
                 </ng-container>
                 <div class="position-relative">
                     <button
-                        class="button-round d-block d-sm-none d-md-block m-2"
+                        class="button-round m-2"
                         data-test-id="openUserInfoBlock"
                         mat-button
                         [matMenuTriggerFor]="menu"
                     >
-                        <div class="img-container-round">
-                            <img
-                                [src]="
-                                    isUserLoggedIn() && loggedAccount.avatarUrl
-                                        ? loggedAccount.avatarUrl
-                                        : DEFAULT_AVATAR_URL
-                                "
-                                (click)="onOpenUserInfo()"
-                                data-test-id="openUserInfoImage"
-                                alt="User icon"
-                            />
-                        </div>
+                        <img
+                            [src]="
+                                isUserLoggedIn() && loggedAccount.avatarUrl
+                                    ? loggedAccount.avatarUrl
+                                    : DEFAULT_AVATAR_URL
+                            "
+                            (click)="onOpenUserInfo()"
+                            data-test-id="openUserInfoImage"
+                            alt="User icon"
+                            width="47"
+                            height="47"
+                            class="avatar-icon"
+                        />
                     </button>
                     <mat-icon class="admin-icon" *ngIf="isAdmin"> admin_panel_settings</mat-icon>
                 </div>

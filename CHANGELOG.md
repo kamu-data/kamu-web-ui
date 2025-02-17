@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] 
 ### Changed
 - Dataset Settings: separated "Scheduled updates" and "Transform settings" tabs
+### Fixed
+- Autofocus for `Login` page
+- Color for buttons from stepper navigation
+- Styles for avatar from app header
+
 
 ## [0.40.0] - 2025-02-13
 ### Changed

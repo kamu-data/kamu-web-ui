@@ -41,7 +41,6 @@ import { DatasetPermissionsService } from "./dataset-view/dataset.permissions.se
 import { LocalStorageService } from "./services/local-storage.service";
 import { apolloCache } from "./common/helpers/apollo-cache.helper";
 import { DatasetFlowDetailsModule } from "./dataset-flow/dataset-flow-details/dataset-flow-details.module";
-import { AutofocusModule } from "./common/directives/autofocus.module";
 import { AccountModule } from "./account/account.module";
 import { AccountSettingsModule } from "./account/settings/account-settings.module";
 import { LoginModule } from "./auth/login/login.module";
@@ -176,7 +175,6 @@ const Services = [
         AccountSettingsModule,
         AdminViewModule,
         AppRoutingModule,
-        AutofocusModule,
         HeaderModule,
         DatasetCreateModule,
         DatasetFlowDetailsModule,

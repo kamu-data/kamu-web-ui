@@ -22,3 +22,9 @@
         background: #69e18b;
     }
 }
+
+.mat-mdc-button {
+    &:not(:disabled) {
+        color: #ffff;
+    }
+}

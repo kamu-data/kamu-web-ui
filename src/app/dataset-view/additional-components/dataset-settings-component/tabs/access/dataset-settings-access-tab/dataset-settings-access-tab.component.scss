@@ -1,5 +1,23 @@
+@import "var";
+
+:host {
+    ::ng-deep {
+        .mdc-checkbox__ripple {
+            display: none;
+        }
+    }
+}
+
 .fw-500 {
     font-weight: 500;
+}
+
+.bg-subtitle {
+    background: $app-color-action-list-item-default-selected-bg;
+}
+
+.mt-6 {
+    margin-top: 2.5rem;
 }
 
 .manage-button {
@@ -11,7 +29,31 @@
     border-radius: 5px;
     padding: 0.3rem 0.95rem;
 
+    // &:hover {
+    //     background: rgb(27 31 36 / 16%);
+    // }
+}
+
+.delete-button,
+.edit-button {
+    padding: 2px 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     &:hover {
         background: rgb(27 31 36 / 16%);
     }
+
+    .pt-1px {
+        padding-top: 1px;
+    }
+}
+
+.avatar-user {
+    border-radius: 50%;
+}
+
+.account-info {
+    font-size: 12px;
 }

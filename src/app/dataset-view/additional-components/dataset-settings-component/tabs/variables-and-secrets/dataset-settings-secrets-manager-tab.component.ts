@@ -69,14 +69,11 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
         }
         from(modalRef.result)
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(
-                (result: string) => {
-                    if (result === "Success") {
-                        this.updateTable(this.currentPage);
-                    }
-                },
-                () => null,
-            );
+            .subscribe((result: string) => {
+                if (result === "Success") {
+                    this.updateTable(this.currentPage);
+                }
+            });
     }
 
     public applyFilter(search: string): void {

@@ -89,6 +89,7 @@ import { YamlEventViewerModule } from "../common/components/yaml-event-viewer/ya
 import { CommitNavigatorModule } from "./additional-components/metadata-component/components/commit-navigator/commit-navigator.module";
 import { DatasetSettingsTransformOptionsTabComponent } from "./additional-components/dataset-settings-component/tabs/transform-options/dataset-settings-transform-options-tab.component";
 import { DatasetSettingsAccessTabComponent } from "./additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-settings-access-tab.component";
+import { AddPeopleModalComponent } from './additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/add-people-modal/add-people-modal.component';
 @NgModule({
     imports: [
         DynamicTableModule,
@@ -204,6 +205,7 @@ import { DatasetSettingsAccessTabComponent } from "./additional-components/datas
         SearchSectionComponent,
         SourceNameStepComponent,
         QueriesSectionComponent,
+        AddPeopleModalComponent,
     ],
 })
 export class DatasetViewModule {}

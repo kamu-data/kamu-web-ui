@@ -5,6 +5,7 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { finalize } from "rxjs";
 
 @Component({
     selector: "app-final-yaml-modal",
@@ -28,9 +29,10 @@ export class FinalYamlModalComponent extends BaseComponent {
                 datasetName: this.datasetInfo.datasetName,
                 event: this.yamlTemplate,
             })
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(
+                finalize(() => this.activeModal.close(this.yamlTemplate)),
+                takeUntilDestroyed(this.destroyRef),
+            )
             .subscribe();
-
-        this.activeModal.close(this.yamlTemplate);
     }
 }

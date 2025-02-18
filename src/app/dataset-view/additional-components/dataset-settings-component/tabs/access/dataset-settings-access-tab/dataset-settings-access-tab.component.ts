@@ -1,14 +1,16 @@
+import { MaybeNull } from "src/app/interface/app.types";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { DatasetBasicsFragment, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { SettingsTabsEnum } from "../../../dataset-settings.model";
 import { MatTableDataSource } from "@angular/material/table";
 import { BaseComponent } from "src/app/common/components/base.component";
-import { requireValue } from "src/app/common/helpers/app.helpers";
+import { promiseWithCatch, requireValue } from "src/app/common/helpers/app.helpers";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { AddPeopleModalComponent } from "./add-people-modal/add-people-modal.component";
+import { ModalService } from "src/app/common/components/modal/modal.service";
 
 @Component({
     selector: "app-dataset-settings-access-tab",
@@ -31,6 +33,11 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
 
     private navigationService = inject(NavigationService);
     private ngbModalService = inject(NgbModal);
+    private modalService = inject(ModalService);
+
+    public get isPrivate(): boolean {
+        return this.datasetBasics.visibility.__typename === "PrivateDatasetVisibility";
+    }
 
     public ngOnInit(): void {
         this.getPageFromUrl();
@@ -69,9 +76,27 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
         this.selectAll = false;
     }
 
-    public addPeople(): void {
+    public addEditPeople(member: MaybeNull<unknown>): void {
         const modalRef = this.ngbModalService.open(AddPeopleModalComponent);
         const modalRefInstance = modalRef.componentInstance as AddPeopleModalComponent;
         modalRefInstance.datasetBasics = this.datasetBasics;
+        modalRefInstance.member = member;
+    }
+
+    public removeMemeber(name: string): void {
+        promiseWithCatch(
+            this.modalService.error({
+                title: "Remove member",
+                message: `Do you want to remove ${name}?`,
+
+                yesButtonText: "Ok",
+                noButtonText: "Cancel",
+                handler: (ok) => {
+                    if (ok) {
+                        //TODO: Implement real API
+                    }
+                },
+            }),
+        );
     }
 }

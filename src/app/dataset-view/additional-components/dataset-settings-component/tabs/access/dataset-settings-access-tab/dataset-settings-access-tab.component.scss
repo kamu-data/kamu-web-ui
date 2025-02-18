@@ -8,6 +8,10 @@
     }
 }
 
+h2 {
+    margin: 0;
+}
+
 .fw-500 {
     font-weight: 500;
 }
@@ -29,9 +33,9 @@
     border-radius: 5px;
     padding: 0.3rem 0.95rem;
 
-    // &:hover {
-    //     background: rgb(27 31 36 / 16%);
-    // }
+    &:hover {
+        background: rgb(27 31 36 / 16%);
+    }
 }
 
 .delete-button,
@@ -56,4 +60,8 @@
 
 .account-info {
     font-size: 12px;
+}
+
+.mb-100 {
+    margin-bottom: 100px;
 }

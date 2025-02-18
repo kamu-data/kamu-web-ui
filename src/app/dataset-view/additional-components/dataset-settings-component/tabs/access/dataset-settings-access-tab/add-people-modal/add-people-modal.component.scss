@@ -35,3 +35,23 @@ input[type="radio"] {
     margin-right: 5px;
     position: relative;
 }
+
+.placeholder-padding-left {
+    padding: 6px 30px 6px 35px;
+}
+
+.search-icon {
+    position: absolute;
+    bottom: 19px;
+    left: 2px;
+}
+
+.close-icon {
+    transform: scale(0.7);
+}
+
+.close-button {
+    outline: none;
+    border: none;
+    background: transparent;
+}

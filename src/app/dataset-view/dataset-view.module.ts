@@ -8,7 +8,7 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { DatasetViewComponent } from "./dataset-view.component";
 import { SearchAdditionalButtonsModule } from "../common/components/search-additional-buttons/search-additional-buttons.module";
-import { NgbModule, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModule, NgbNavModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { DynamicTableModule } from "../common/components/dynamic-table/dynamic-table.module";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
@@ -89,7 +89,7 @@ import { YamlEventViewerModule } from "../common/components/yaml-event-viewer/ya
 import { CommitNavigatorModule } from "./additional-components/metadata-component/components/commit-navigator/commit-navigator.module";
 import { DatasetSettingsTransformOptionsTabComponent } from "./additional-components/dataset-settings-component/tabs/transform-options/dataset-settings-transform-options-tab.component";
 import { DatasetSettingsAccessTabComponent } from "./additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-settings-access-tab.component";
-import { AddPeopleModalComponent } from './additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/add-people-modal/add-people-modal.component';
+import { AddPeopleModalComponent } from "./additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/add-people-modal/add-people-modal.component";
 @NgModule({
     imports: [
         DynamicTableModule,
@@ -147,6 +147,7 @@ import { AddPeopleModalComponent } from './additional-components/dataset-setting
         IngestConfigurationModule,
         IngestTriggerModule,
         QuerySharedModule,
+        NgbTypeaheadModule,
         PaginationModule,
         PollingSourceFormComponentsModule,
         SearchAdditionalButtonsModule,

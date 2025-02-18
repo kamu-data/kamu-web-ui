@@ -1,6 +1,6 @@
 <div class="d-flex p-4">
     <div class="flex-grow-1 ms-2">
-        <span class="fs-5 fw-bold">Add people to dataset</span>
+        <span class="fs-5 fw-bold">{{ member ? "Edit role" : "Add people to dataset" }}</span>
     </div>
     <div>
         <button
@@ -17,15 +17,60 @@
 </div>
 
 <div class="body p-4">
-    <div class="d-flex flex-column">
+    <div *ngIf="!member && !selectedMember" class="d-flex flex-column position-relative">
         <label for="" class="form-label d-block">Search by account name, display info </label>
-        <input type="text" placeholder="Find people" id="name" class="w-100 form-control d-block" />
+        <input
+            type="text"
+            placeholder="Find people..."
+            id="name"
+            #searchInput
+            [(ngModel)]="searchMember"
+            [ngbTypeahead]="search"
+            [resultTemplate]="rt"
+            [inputFormatter]="formatter"
+            (selectItem)="onSelectItem($event)"
+            class="w-100 form-control d-block placeholder-padding-left"
+        />
+        <mat-icon class="mat-icon-svg-size search-icon" svgIcon="search" />
+        <ng-template #rt let-r="result" let-t="term">
+            <div class="d-flex flex-row align-items-start" [style.width.px]="searchInput.clientWidth - 28">
+                <img class="rounded-circle mt-1 border border-1" [src]="r.avatarUrl" height="30" width="30" />
+                <div class="d-flex flex-column ms-3">
+                    <div class="fw-semibold">{{ r.accountName }}</div>
+                    <div class="fs-10 text-muted">{{ r.displayName }}</div>
+                </div>
+            </div>
+        </ng-template>
+    </div>
+    <div *ngIf="selectedMember" class="pt-2 px-1">
+        <div class="d-flex align-items-center justify-content-between p-2 rounded-2 border alert alert-info">
+            <div class="d-flex align-items-start">
+                <img
+                    class="rounded-circle mt-1 border border-1"
+                    [src]="selectedMember.avatarUrl"
+                    height="30"
+                    width="30"
+                />
+                <div class="d-flex flex-column ms-3">
+                    <div class="fw-semibold">{{ selectedMember.accountName }}</div>
+                    <div class="fs-10 text-muted">{{ selectedMember.displayName }}</div>
+                </div>
+            </div>
+            <button class="close-button" (click)="closeSelectedMember()" type="button">
+                <mat-icon class="close-icon">close</mat-icon>
+            </button>
+        </div>
+    </div>
+
+    <div *ngIf="member" class="d-flex flex-column">
+        <label for="" class="form-label d-block">Account name </label>
+        <input type="text" id="name" class="w-100 form-control d-block" [value]="'Bill'" readonly />
     </div>
     <div class="mt-4"><label for="" class="form-label d-block">Choose a role </label></div>
     <mat-divider class="mt-1 mb-2" />
     <div class="mt-4 ps-2">
         <div class="d-flex align-items-start">
-            <input class="d-block mt-1" type="radio" id="Reader" name="role" value="Reader" />
+            <input class="d-block mt-1" [(ngModel)]="role" type="radio" id="Reader" name="role" value="Reader" />
             <label for="Reader" class="ps-3">
                 <div>Reader</div>
                 <div class="fs-12 text-muted">
@@ -35,17 +80,12 @@
         </div>
 
         <div class="d-flex align-items-start mt-4">
-            <input type="radio" class="d-block mt-1" id="Writer" name="role" value="Writer" />
+            <input type="radio" class="d-block mt-1" [(ngModel)]="role" id="Writer" name="role" value="Writer" />
             <label for="Writer" class="ps-3">
                 <div>Writer</div>
                 <div class="fs-12 text-muted">Recommended for people who actively push to your dataset</div>
             </label>
         </div>
-
-        <!-- <mat-radio-group class="d-flex flex-column align-items-start" [color]="'primary'" disableRipple="true">
-            <mat-radio-button disableRipple="true" class="example-radio-button"> Reader </mat-radio-button>
-            <mat-radio-button disableRipple="true" class="example-radio-button"> Writer </mat-radio-button>
-        </mat-radio-group> -->
     </div>
 </div>
 
@@ -53,5 +93,14 @@
     <button type="button" (click)="activeModal.close()" class="btn btn-light me-2" data-test-id="save-member">
         Cancel
     </button>
-    <button type="button" class="btn btn-success" data-test-id="save-member">Add member</button>
+    <button
+        *ngIf="!member"
+        type="button"
+        [disabled]="!role || !selectedMember"
+        class="btn btn-success"
+        data-test-id="add-member"
+    >
+        Add member
+    </button>
+    <button *ngIf="member" type="button" class="btn btn-success" data-test-id="save-role">Save role</button>
 </div>

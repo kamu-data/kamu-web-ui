@@ -1,12 +1,16 @@
 <div class="custom-container">
     <h2>Who has access</h2>
-    <div class="d-flex flex-row mb-3 pb-3 border-bottom">
+    <div class="d-flex flex-row my-3 pb-3 border-bottom">
         <div class="d-flex flex-column border rounded-2 p-3">
-            <mat-icon class="fs-4"> lock_outline</mat-icon>
+            <mat-icon class="fs-4">{{ isPrivate ? "lock_outline" : "lock_open" }} </mat-icon>
         </div>
         <div class="ms-4">
-            <h3 class="m-0 fw-500">Private dataset</h3>
-            <span class="flex-1 text-muted">Only those with access to this dataset can view it</span>
+            <h3 class="m-0 fw-500">{{ isPrivate ? "Private dataset" : "Public dataset" }}</h3>
+            <span class="flex-1 text-muted">{{
+                isPrivate
+                    ? "Only those with access to this dataset can view it"
+                    : "This dataset is public and visible to anyone"
+            }}</span>
         </div>
 
         <div class="ms-auto mt-auto">
@@ -26,12 +30,18 @@
     <div class="d-flex flex-md-row flex-column mt-4">
         <div class="bg-subtitle p-3 rounded-2 col-md-4 col-12 mr-md-3 mr-0 mb-md-0 mb-3">
             <div class="d-flex mb-2">
-                <span class="flex-auto f6 text-mono text-uppercase color-fg-muted">private repository</span>
-                <mat-icon class="fs-4">visibility_off</mat-icon>
-                <mat-icon *ngIf="false" class="fs-4">visibility</mat-icon>
+                <span class="flex-auto f6 text-mono text-uppercase color-fg-muted">{{
+                    isPrivate ? "private dataset" : "public dataset"
+                }}</span>
+                <mat-icon class="fs-4">{{ isPrivate ? "visibility_off" : "visibility" }}</mat-icon>
             </div>
-            <p>Only those with access to this dataset can view it.</p>
-            <p *ngIf="false">This dataset is public and visible to anyone.</p>
+            <p>
+                {{
+                    isPrivate
+                        ? "Only those with access to this dataset can view it."
+                        : "This dataset is public and visible to anyone."
+                }}
+            </p>
         </div>
         <div class="bg-subtitle p-3 rounded-2 color-shadow-small col-md-4 col-12">
             <div class="d-flex mb-2">
@@ -42,102 +52,120 @@
                 <strong>1 user</strong>
                 has access to this dataset.
             </p>
-            <p *ngIf="false">
-                <strong>0</strong>member(s) have access to this dataset. Only you can contribute to this repository.
-            </p>
         </div>
     </div>
 
     <div class="d-flex flex-wrap flex-justify-end mt-6 mb-3 flex-items-center">
         <h2 class="flex-auto">Manage access</h2>
-        <div>
-            <button (click)="addPeople()" class="btn btn-success" type="button">Add people</button>
+        <div *ngIf="dataSource.data.length">
+            <button (click)="addEditPeople(null)" class="btn btn-success" type="button">Add people</button>
         </div>
     </div>
 
-    <div class="box rounded-0 rounded-top-2 border-bottom-0">
-        <div class="border-bottom d-flex align-items-center p-3">
-            <mat-checkbox
-                [(ngModel)]="selectAll"
-                [disabled]="!dataSource.data.length"
-                data-test-id="fetchUncacheable"
-                color="primary"
-            >
-                <div class="d-flex align-items-center">Select all</div>
-            </mat-checkbox>
-            <div *ngIf="selectAll && dataSource.data.length" class="ms-4">
-                <a class="text-danger" (click)="removeAll()">Remove all</a>
+    <div *ngIf="!dataSource.data.length; else membersTableTemplate">
+        <div class="box text-center p-5 mb-100">
+            <img
+                class="mb-3"
+                src="https://github.githubassets.com/assets/permissions-4a54b38b5f93.png"
+                width="56"
+                height="56"
+            />
+            <h3 class="mb-3">You haven't invited any member yet</h3>
+            <button (click)="addEditPeople(null)" class="btn btn-success" type="button">Add people</button>
+        </div>
+    </div>
+
+    <ng-template #membersTableTemplate>
+        <div class="box rounded-0 rounded-top-2 border-bottom-0">
+            <div class="border-bottom d-flex align-items-center p-3">
+                <mat-checkbox
+                    [(ngModel)]="selectAll"
+                    [disabled]="!dataSource.data.length"
+                    data-test-id="fetchUncacheable"
+                    color="primary"
+                >
+                    <div class="d-flex align-items-center">Select all</div>
+                </mat-checkbox>
+                <div *ngIf="selectAll && dataSource.data.length" class="ms-4">
+                    <a class="text-danger" (click)="removeAll()">Remove all</a>
+                </div>
             </div>
         </div>
-    </div>
-    <div id="dataset-access-table">
-        <div class="border border-top-0">
-            <table mat-table [dataSource]="dataSource" class="w-100">
-                <!-- Name Column -->
-                <ng-container matColumnDef="user">
-                    <td mat-cell *matCellDef="let element">
-                        <div class="d-flex align-items-center">
-                            <mat-checkbox class="d-blcok" color="primary"> </mat-checkbox>
-                            <div class="me-3">
-                                <a [routerLink]="['/', 'kamu']">
-                                    <img
-                                        class="avatar-user border border-1"
-                                        width="32"
-                                        height="32"
-                                        src="https://avatars.githubusercontent.com/u/11951648?v=4"
-                                        alt=""
-                                    />
-                                </a>
+        <div id="dataset-access-table">
+            <div class="border border-top-0">
+                <table mat-table [dataSource]="dataSource" class="w-100">
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="user">
+                        <td mat-cell *matCellDef="let element">
+                            <div class="d-flex align-items-center">
+                                <mat-checkbox class="d-blcok" color="primary"> </mat-checkbox>
+                                <div class="me-3">
+                                    <a [routerLink]="['/', 'kamu']">
+                                        <img
+                                            class="avatar-user border border-1"
+                                            width="32"
+                                            height="32"
+                                            src="https://avatars.githubusercontent.com/u/11951648?v=4"
+                                            alt=""
+                                        />
+                                    </a>
+                                </div>
+                                <div class="d-flex flex-column flex-auto col-6">
+                                    <a [routerLink]="['/', 'kamu']">
+                                        <strong> {{ element.user.name }}</strong></a
+                                    >
+                                    <div class="fs-12 text-muted">Account info</div>
+                                </div>
                             </div>
-                            <div class="d-flex flex-column flex-auto col-6">
-                                <a [routerLink]="['/', 'kamu']">
-                                    <strong> {{ element.user.name }}</strong></a
+                        </td>
+                    </ng-container>
+
+                    <!-- Added Column -->
+                    <ng-container matColumnDef="role">
+                        <td mat-cell *matCellDef="let element">
+                            <div class="d-flex">
+                                <span>{{ element.role.role }}</span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- Actions Column -->
+                    <ng-container matColumnDef="actions">
+                        <td mat-cell *matCellDef="let element">
+                            <div class="d-flex justify-content-end py-3">
+                                <button
+                                    (click)="addEditPeople(element)"
+                                    class="edit-button me-3 border border-1 rounded-2"
                                 >
-                                <div class="fs-12 text-muted">Account info</div>
+                                    <mat-icon class="fs-4 pt-1px">edit</mat-icon>
+                                </button>
+                                <button
+                                    (click)="removeMemeber(element.user.name)"
+                                    class="delete-button border border-1 rounded-2"
+                                >
+                                    <mat-icon class="fs-4 pt-1px">delete</mat-icon>
+                                </button>
                             </div>
-                        </div>
-                    </td>
-                </ng-container>
+                        </td>
+                    </ng-container>
 
-                <!-- Added Column -->
-                <ng-container matColumnDef="role">
-                    <td mat-cell *matCellDef="let element">
-                        <div class="d-flex">
-                            <span>{{ element.role.role }}</span>
-                        </div>
-                    </td>
-                </ng-container>
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell text-center p-4" colspan="3">No data</td>
+                    </tr>
 
-                <!-- Actions Column -->
-                <ng-container matColumnDef="actions">
-                    <td mat-cell *matCellDef="let element">
-                        <div class="d-flex justify-content-end py-3">
-                            <button class="edit-button me-3 border border-1 rounded-2">
-                                <mat-icon class="fs-4 pt-1px">edit</mat-icon>
-                            </button>
-                            <button class="delete-button border border-1 rounded-2">
-                                <mat-icon class="fs-4 pt-1px">delete</mat-icon>
-                            </button>
-                        </div>
-                    </td>
-                </ng-container>
-
-                <!-- Row shown when there is no matching data. -->
-                <tr class="mat-row" *matNoDataRow>
-                    <td class="mat-cell text-center p-4" colspan="3">No data</td>
-                </tr>
-
-                <tr mat-row *matRowDef="let row; columns: DISPLAY_COLUMNS"></tr>
-            </table>
+                    <tr mat-row *matRowDef="let row; columns: DISPLAY_COLUMNS"></tr>
+                </table>
+            </div>
         </div>
-    </div>
 
-    <div class="mt-60">
-        <app-pagination
-            *ngIf="dataSource.data.length"
-            [currentPage]="currentPage"
-            [pageInfo]="pageBasedInfo"
-            (pageChangeEvent)="onPageChange($event)"
-        />
-    </div>
+        <div class="mt-60">
+            <app-pagination
+                *ngIf="dataSource.data.length"
+                [currentPage]="currentPage"
+                [pageInfo]="pageBasedInfo"
+                (pageChangeEvent)="onPageChange($event)"
+            />
+        </div>
+    </ng-template>
 </div>

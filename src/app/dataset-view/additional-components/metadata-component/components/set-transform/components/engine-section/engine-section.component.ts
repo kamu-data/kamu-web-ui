@@ -1,3 +1,4 @@
+import AppValues from "src/app/common/values/app.values";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -63,8 +64,8 @@ export class EngineSectionComponent extends BaseComponent implements OnInit, OnC
             .subscribe((result: EnginesQuery) => {
                 this.knownEngines = result.data.knownEngines;
                 if (!this.selectedEngine) {
-                    this.selectedEngine = this.knownEngines[0].name;
-                    this.selectedImage = this.knownEngines[0].latestImage;
+                    this.selectedEngine = AppValues.DEFAULT_ENGINE_NAME;
+                    this.selectedImage = AppValues.DEFAULT_ENGINE_IMAGE;
                     this.initCurrentEngine();
                 } else {
                     this.onSelectType(this.selectedEngine);

@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Autofocus for `Login` page
 - Color for buttons from stepper navigation
 - Styles for avatar from app header
+- Edit SetTransform event: set `DataFusion` as default engine
 - Edit SetTransform event: return to the `Overview` tab after editing an event
 - Edit SetTransform event: rename some labels
 

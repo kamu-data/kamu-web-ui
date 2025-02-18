@@ -91,6 +91,20 @@
                 </div>
             </div>
         </div>
+        <div class="border p-3">
+            <div class="d-flex flex-column position-relative">
+                <input
+                    type="text"
+                    placeholder="Find a member..."
+                    id="name"
+                    #search
+                    (keyup)="applyFilter(search.value)"
+                    [(ngModel)]="searchMember"
+                    class="w-100 form-control d-block placeholder-padding-left"
+                />
+                <mat-icon class="mat-icon-svg-size search-icon" svgIcon="search" />
+            </div>
+        </div>
         <div id="dataset-access-table">
             <div class="border border-top-0">
                 <table mat-table [dataSource]="dataSource" class="w-100">

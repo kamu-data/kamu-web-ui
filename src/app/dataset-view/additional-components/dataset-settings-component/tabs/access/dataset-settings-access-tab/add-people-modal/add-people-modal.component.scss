@@ -55,3 +55,10 @@ input[type="radio"] {
     border: none;
     background: transparent;
 }
+
+.container-spinner {
+    position: absolute;
+    z-index: 100;
+    bottom: 7px;
+    right: 15px;
+}

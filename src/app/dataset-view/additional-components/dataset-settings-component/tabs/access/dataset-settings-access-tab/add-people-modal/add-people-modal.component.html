@@ -19,6 +19,9 @@
 <div class="body p-4">
     <div *ngIf="!member && !selectedMember" class="d-flex flex-column position-relative">
         <label for="" class="form-label d-block">Search by account name, display info </label>
+        <div *ngIf="searching" class="container-spinner">
+            <mat-spinner [diameter]="20" color="primary" mode="indeterminate" />
+        </div>
         <input
             type="text"
             placeholder="Find people..."
@@ -102,5 +105,7 @@
     >
         Add member
     </button>
-    <button *ngIf="member" type="button" class="btn btn-success" data-test-id="save-role">Save role</button>
+    <button *ngIf="member" type="button" (click)="activeModal.close()" class="btn btn-success" data-test-id="save-role">
+        Save role
+    </button>
 </div>

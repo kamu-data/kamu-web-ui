@@ -12,6 +12,17 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { AddPeopleModalComponent } from "./add-people-modal/add-people-modal.component";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 
+export interface TestInterface {
+    // { user: { id: "0", name: "Bill" }, role: { role: "Editor" } }
+    user: {
+        id: string;
+        name: string;
+    };
+    role: {
+        role: string;
+    };
+}
+
 @Component({
     selector: "app-dataset-settings-access-tab",
     templateUrl: "./dataset-settings-access-tab.component.html",
@@ -26,6 +37,7 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
     public pageBasedInfo: PageBasedInfo;
     public readonly PER_PAGE = 15;
     public selectAll: boolean = false;
+    public searchMember = "";
 
     public readonly DISPLAY_COLUMNS: string[] = ["user", "role", "actions"];
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
@@ -98,5 +110,12 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
                 },
             }),
         );
+    }
+
+    public applyFilter(search: string): void {
+        this.dataSource.filterPredicate = (data: unknown, filter: string): boolean => {
+            return (data as TestInterface).user.name.toLowerCase().includes(filter.trim().toLowerCase());
+        };
+        this.dataSource.filter = search.trim().toLowerCase();
     }
 }

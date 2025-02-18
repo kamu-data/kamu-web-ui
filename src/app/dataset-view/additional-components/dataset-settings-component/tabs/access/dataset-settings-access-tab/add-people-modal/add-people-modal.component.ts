@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { NgbActiveModal, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
-import { OperatorFunction, Observable, debounceTime, distinctUntilChanged, map } from "rxjs";
+import { OperatorFunction, Observable, debounceTime, distinctUntilChanged, map, tap, delay } from "rxjs";
 import { AccountWithEmailFragment, DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
 import AppValues from "src/app/common/values/app.values";
@@ -35,22 +35,23 @@ export class AddPeopleModalComponent extends BaseComponent implements OnInit {
     public role: string = "";
     public searchMember: string = "";
     public selectedMember: MaybeNull<AccountWithEmailFragment>;
+    public searching: boolean = false;
 
     public activeModal = inject(NgbActiveModal);
+    private cdr = inject(ChangeDetectorRef);
 
     public ngOnInit(): void {
         this.initState();
     }
     private initState(): void {
-        if (this.member)
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            this.role = "Reader";
+        if (this.member) this.role = "Reader";
     }
 
     public search: OperatorFunction<string, readonly AccountWithEmailFragment[]> = (text$: Observable<string>) =>
         text$.pipe(
             debounceTime(200),
             distinctUntilChanged(),
+
             map((term) =>
                 term.length < 2
                     ? []
@@ -61,6 +62,12 @@ export class AddPeopleModalComponent extends BaseComponent implements OnInit {
                           )
                           .slice(0, 10),
             ),
+            tap(() => (this.searching = true)),
+            delay(2000),
+            tap(() => {
+                this.searching = false;
+                this.cdr.detectChanges();
+            }),
         );
 
     public formatter(x: AccountWithEmailFragment | string): string {
@@ -76,5 +83,9 @@ export class AddPeopleModalComponent extends BaseComponent implements OnInit {
     public closeSelectedMember(): void {
         this.selectedMember = null;
         this.searchMember = "";
+    }
+
+    public saveRole(): void {
+        // TODO: Implement service
     }
 }

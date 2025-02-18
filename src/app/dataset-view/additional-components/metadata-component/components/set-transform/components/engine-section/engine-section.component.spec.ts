@@ -39,8 +39,8 @@ describe("EngineSectionComponent", () => {
 
     [
         { testCase: "spark", expected: mockEngines.data.knownEngines[0] },
-        { testCase: "datafusion", expected: mockEngines.data.knownEngines[1] },
-        { testCase: "flink", expected: mockEngines.data.knownEngines[2] },
+        { testCase: "flink", expected: mockEngines.data.knownEngines[1] },
+        { testCase: "datafusion", expected: mockEngines.data.knownEngines[2] },
         { testCase: "risingwave", expected: mockEngines.data.knownEngines[3] },
     ].forEach((item: { testCase: string; expected: EngineDesc }) => {
         it(`should check init ${item.testCase} engine and image`, fakeAsync(() => {
@@ -57,11 +57,23 @@ describe("EngineSectionComponent", () => {
 
     it("should check init engine and image when currentSetTransformEvent is not null", fakeAsync(() => {
         component.currentSetTransformEvent = mockSetPollingSourceEvent.preprocess;
+        component.selectedEngine = "spark";
         fixture.detectChanges();
         component.ngOnInit();
         tick();
         if (mockSetPollingSourceEvent.preprocess)
             expect(component.selectedEngine).toBe(mockSetPollingSourceEvent.preprocess.engine);
+        flush();
+    }));
+
+    it("should check init engine and image when currentSetTransformEvent is null", fakeAsync(() => {
+        component.currentSetTransformEvent = null;
+        component.selectedEngine = "";
+        fixture.detectChanges();
+        component.ngOnInit();
+        tick();
+
+        expect(component.selectedEngine).toBe(mockEngines.data.knownEngines[2].name);
         flush();
     }));
 });

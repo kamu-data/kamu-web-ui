@@ -19,14 +19,14 @@ export const mockEngines: EnginesQuery = {
                 name: Engine.Spark,
             },
             {
-                dialect: QueryDialect.SqlDataFusion,
-                latestImage: "ghcr.io/kamu-data/engine-datafusion:0.1.2",
-                name: Engine.DataFusion,
-            },
-            {
                 dialect: QueryDialect.SqlFlink,
                 latestImage: "ghcr.io/kamu-data/engine-flink:0.1.2",
                 name: Engine.Flink,
+            },
+            {
+                dialect: QueryDialect.SqlDataFusion,
+                latestImage: "ghcr.io/kamu-data/engine-datafusion:0.1.2",
+                name: Engine.DataFusion,
             },
             {
                 dialect: QueryDialect.SqlRisingWave,

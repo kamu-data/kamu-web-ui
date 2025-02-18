@@ -63,8 +63,8 @@ export class EngineSectionComponent extends BaseComponent implements OnInit, OnC
             .subscribe((result: EnginesQuery) => {
                 this.knownEngines = result.data.knownEngines;
                 if (!this.selectedEngine) {
-                    this.selectedEngine = this.knownEngines[0].name;
-                    this.selectedImage = this.knownEngines[0].latestImage;
+                    this.selectedEngine = this.knownEngines[2].name;
+                    this.selectedImage = this.knownEngines[2].latestImage;
                     this.initCurrentEngine();
                 } else {
                     this.onSelectType(this.selectedEngine);

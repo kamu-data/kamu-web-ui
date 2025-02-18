@@ -12,6 +12,7 @@ import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { EngineSelectComponent } from "./components/engine-select/engine-select.component";
 import { EngineDesc } from "src/app/api/kamu.graphql.interface";
 import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import AppValues from "src/app/common/values/app.values";
 
 describe("EngineSectionComponent", () => {
     let component: EngineSectionComponent;
@@ -73,7 +74,7 @@ describe("EngineSectionComponent", () => {
         component.ngOnInit();
         tick();
 
-        expect(component.selectedEngine).toBe(mockEngines.data.knownEngines[2].name);
+        expect(component.selectedEngine).toBe(AppValues.DEFAULT_ENGINE_NAME);
         flush();
     }));
 });

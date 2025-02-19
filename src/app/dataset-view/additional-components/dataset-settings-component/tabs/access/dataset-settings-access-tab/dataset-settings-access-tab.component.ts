@@ -37,7 +37,6 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
     public currentPage = 1;
     public pageBasedInfo: PageBasedInfo;
     public readonly PER_PAGE = 15;
-    public selectAll: boolean = false;
     public searchMember = "";
     public selection = new SelectionModel<TestInterface>(true, []);
 
@@ -111,7 +110,6 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
 
     public removeAllMember(): void {
         this.dataSource.data = [];
-        this.selectAll = false;
         promiseWithCatch(
             this.modalService.error({
                 title: "Remove member",

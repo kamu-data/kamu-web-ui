@@ -79,7 +79,6 @@
         <div class="box rounded-0 rounded-top-2 border-bottom-0">
             <div class="border-bottom d-flex align-items-center p-3">
                 <mat-checkbox
-                    [(ngModel)]="selectAll"
                     [disabled]="!dataSource.data.length"
                     (change)="$event ? masterToggle() : null"
                     [checked]="selection.hasValue() && isAllSelected()"
@@ -89,7 +88,7 @@
                 >
                     <div class="d-flex align-items-center">Select all</div>
                 </mat-checkbox>
-                <div *ngIf="selectAll && dataSource.data.length" class="ms-4">
+                <div *ngIf="selection.hasValue()" class="ms-4">
                     <a class="text-danger" (click)="removeAllMember()">Remove all</a>
                 </div>
             </div>

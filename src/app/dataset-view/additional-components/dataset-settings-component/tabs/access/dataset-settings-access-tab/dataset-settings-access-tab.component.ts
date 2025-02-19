@@ -11,6 +11,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { AddPeopleModalComponent } from "./add-people-modal/add-people-modal.component";
 import { ModalService } from "src/app/common/components/modal/modal.service";
+import { SelectionModel } from "@angular/cdk/collections";
 
 export interface TestInterface {
     // { user: { id: "0", name: "Bill" }, role: { role: "Editor" } }
@@ -38,6 +39,7 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
     public readonly PER_PAGE = 15;
     public selectAll: boolean = false;
     public searchMember = "";
+    public selection = new SelectionModel<TestInterface>(true, []);
 
     public readonly DISPLAY_COLUMNS: string[] = ["user", "role", "actions"];
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
@@ -83,11 +85,6 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
         });
     }
 
-    public removeAll(): void {
-        this.dataSource.data = [];
-        this.selectAll = false;
-    }
-
     public addEditPeople(member: MaybeNull<unknown>): void {
         const modalRef = this.ngbModalService.open(AddPeopleModalComponent);
         const modalRefInstance = modalRef.componentInstance as AddPeopleModalComponent;
@@ -95,11 +92,30 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
         modalRefInstance.member = member;
     }
 
-    public removeMemeber(name: string): void {
+    public removeMember(name: string): void {
         promiseWithCatch(
             this.modalService.error({
                 title: "Remove member",
                 message: `Do you want to remove ${name}?`,
+
+                yesButtonText: "Ok",
+                noButtonText: "Cancel",
+                handler: (ok) => {
+                    if (ok) {
+                        //TODO: Implement real API
+                    }
+                },
+            }),
+        );
+    }
+
+    public removeAllMember(): void {
+        this.dataSource.data = [];
+        this.selectAll = false;
+        promiseWithCatch(
+            this.modalService.error({
+                title: "Remove member",
+                message: `Do you want to remove all member?`,
 
                 yesButtonText: "Ok",
                 noButtonText: "Cancel",
@@ -117,5 +133,24 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
             return (data as TestInterface).user.name.toLowerCase().includes(filter.trim().toLowerCase());
         };
         this.dataSource.filter = search.trim().toLowerCase();
+    }
+
+    public isAllSelected() {
+        const numSelected = this.selection.selected.length;
+        const numRows = this.dataSource.data.length;
+        return numSelected === numRows;
+    }
+
+    public masterToggle() {
+        this.isAllSelected()
+            ? this.selection.clear()
+            : this.dataSource.data.forEach((row) => this.selection.select(row as TestInterface));
+    }
+
+    public logSelection(): void {
+        console.log(
+            "==>",
+            this.selection.selected.map((s: TestInterface) => s.user.name),
+        );
     }
 }

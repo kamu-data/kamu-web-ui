@@ -1,12 +1,10 @@
-import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { SearchService } from "./search.service";
 import { DatasetSearchResult, SearchFilters } from "../interface/search.interface";
-import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, numberAttribute, OnInit } from "@angular/core";
 import { NavigationService } from "../services/navigation.service";
-import { requireValue } from "../common/helpers/app.helpers";
 import ProjectLinks from "../project-links";
-import { filter, map } from "rxjs/operators";
-import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
+import { BehaviorSubject, combineLatest, Observable } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { BaseComponent } from "../common/components/base.component";
 
@@ -17,11 +15,20 @@ import { BaseComponent } from "../common/components/base.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchComponent extends BaseComponent implements OnInit {
+    @Input({ transform: numberAttribute, alias: ProjectLinks.URL_QUERY_PARAM_PAGE }) public set page(value: number) {
+        this.page$.next(value ? value : 1);
+    }
+    @Input(ProjectLinks.URL_QUERY_PARAM_QUERY) public set searchValue(value: string) {
+        this.searchValue$.next(value ? value : "");
+    }
+
+    public searchValue$: BehaviorSubject<string> = new BehaviorSubject<string>("");
+    public page$: BehaviorSubject<number> = new BehaviorSubject<number>(1);
+
     private navigationService = inject(NavigationService);
     private searchService = inject(SearchService);
-    private router = inject(Router);
 
-    public searchValue = "";
+    private currentSearchValue = "";
     public currentPage = 1; // TODO: Should be zero-based and only offset for display
     public tableData$: Observable<DatasetSearchResult> = this.searchService.searchOverviewChanges;
 
@@ -132,34 +139,20 @@ export class SearchComponent extends BaseComponent implements OnInit {
 
     public ngOnInit(): void {
         this.initTableData();
-
         this.changePageAndSearch();
-
-        this.router.events
-            .pipe(
-                filter((event) => event instanceof NavigationEnd),
-                map((event) => event as RouterEvent),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(() => this.changePageAndSearch());
     }
 
     private changePageAndSearch(): void {
-        let queryValue = "";
-        const queryParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_QUERY);
-        if (queryParam) {
-            queryValue = requireValue(queryParam);
-        }
-        this.searchValue = queryValue;
-
-        let page = 1;
-        const pageParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE);
-        if (pageParam) {
-            page = +requireValue(pageParam);
-        }
-        this.currentPage = page;
-
-        this.onSearchDatasets();
+        combineLatest([this.searchValue$.asObservable(), this.page$.asObservable()])
+            .pipe(
+                map(([searchValue, page]: [string, number]) => {
+                    this.currentSearchValue = searchValue;
+                    this.currentPage = page;
+                    this.searchService.searchDatasets(searchValue, page - 1);
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe();
     }
 
     private initTableData(): void {
@@ -172,16 +165,11 @@ export class SearchComponent extends BaseComponent implements OnInit {
     }
 
     public onPageChange(currentPage: number): void {
-        currentPage ? (this.currentPage = currentPage) : (this.currentPage = 1);
-        if (this.currentPage === 1) {
-            this.navigationService.navigateToSearch(this.searchValue);
+        if (currentPage === 1) {
+            this.navigationService.navigateToSearch(this.currentSearchValue);
             return;
         }
-        this.navigationService.navigateToSearch(this.searchValue, currentPage);
-    }
-
-    private onSearchDatasets(): void {
-        this.searchService.searchDatasets(this.searchValue, this.currentPage - 1);
+        this.navigationService.navigateToSearch(this.currentSearchValue, currentPage);
     }
 
     public updateAllComplete() {

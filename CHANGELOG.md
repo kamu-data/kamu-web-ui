@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Edit SetTransform event: set `DataFusion` as default engine
 - Edit SetTransform event: return to the `Overview` tab after editing an event
 - Edit SetTransform event: rename some labels
+- Data access panel: after navigating to another datase the links are not updated 
 
 ## [0.40.0] - 2025-02-13
 ### Changed

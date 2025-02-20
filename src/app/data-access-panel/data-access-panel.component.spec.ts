@@ -12,15 +12,12 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { ProtocolsService } from "src/app/services/protocols.service";
-import { of } from "rxjs";
-import { mockDatasetEndPoints } from "./data-access-panel-mock.data";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { SharedTestModule } from "../common/modules/shared-test.module";
 
 describe("DataAccessPanelComponent", () => {
     let component: DataAccessPanelComponent;
     let fixture: ComponentFixture<DataAccessPanelComponent>;
-    let protocolsService: ProtocolsService;
     let ngbModalService: NgbModal;
 
     beforeEach(async () => {
@@ -39,15 +36,14 @@ describe("DataAccessPanelComponent", () => {
                 BrowserAnimationsModule,
                 ApolloModule,
                 ApolloTestingModule,
+                SharedTestModule,
             ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DataAccessPanelComponent);
-        protocolsService = TestBed.inject(ProtocolsService);
         ngbModalService = TestBed.inject(NgbModal);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
-        spyOn(protocolsService, "getProtocols").and.returnValue(of(mockDatasetEndPoints));
         fixture.detectChanges();
     });
 

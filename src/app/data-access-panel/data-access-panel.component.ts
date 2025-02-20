@@ -1,10 +1,10 @@
 import { MaybeUndefined } from "../interface/app.types";
-import { ProtocolsService } from "../services/protocols.service";
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { DatasetBasicsFragment, DatasetEndpoints } from "src/app/api/kamu.graphql.interface";
 import { Observable } from "rxjs";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { DataAccessModalComponent } from "./data-access-modal/data-access-modal.component";
+import { BaseComponent } from "../common/components/base.component";
 
 @Component({
     selector: "app-data-access-panel",
@@ -12,23 +12,11 @@ import { DataAccessModalComponent } from "./data-access-modal/data-access-modal.
     styleUrls: ["./data-access-panel.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DataAccessPanelComponent implements OnInit {
+export class DataAccessPanelComponent extends BaseComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     public protocols$: Observable<MaybeUndefined<DatasetEndpoints>>;
 
-    private protocolsService = inject(ProtocolsService);
     private ngbModalService = inject(NgbModal);
-
-    public ngOnInit(): void {
-        this.initClipboardHints();
-    }
-
-    private initClipboardHints(): void {
-        this.protocols$ = this.protocolsService.getProtocols({
-            accountName: this.datasetBasics.owner.accountName,
-            datasetName: this.datasetBasics.name,
-        });
-    }
 
     public openDataAccessModal(): void {
         const modalRef: NgbModalRef = this.ngbModalService.open(DataAccessModalComponent, {
@@ -36,7 +24,6 @@ export class DataAccessPanelComponent implements OnInit {
             centered: true,
         });
         const modalRefInstance = modalRef.componentInstance as DataAccessModalComponent;
-        modalRefInstance.protocols$ = this.protocols$;
         modalRefInstance.datasetBasics = this.datasetBasics;
     }
 }

@@ -25,7 +25,6 @@
         </div>
     </div>
     <div
-        *ngIf="activeTabChanges | async as activeTab"
         class="d-flex layout layout--flowRow-until-md layout--sidebar-position-start layout--sidebarPosition-flowRow-start"
     >
         <div class="layout-sidebar">
@@ -287,7 +286,7 @@
         </div>
         <div class="content">
             <ng-container *ngIf="activeTab === AccountSettingsTabs.ACCESS_TOKENS">
-                <app-access-tokens-tab [account]="user" />
+                <app-access-tokens-tab [currentPage]="currentPage" [account]="user" />
             </ng-container>
             <ng-container *ngIf="activeTab === AccountSettingsTabs.EMAILS">
                 <app-emails-tab [account]="user" (accountEmailChange)="changeAccountEmail()" />

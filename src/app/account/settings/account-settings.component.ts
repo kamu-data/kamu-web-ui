@@ -6,7 +6,7 @@ import { switchMap } from "rxjs/operators";
 import { BaseComponent } from "src/app/common/components/base.component";
 import AppValues from "src/app/common/values/app.values";
 import { MaybeNull } from "src/app/interface/app.types";
-import { BehaviorSubject, EMPTY, Observable } from "rxjs";
+import { EMPTY, Observable } from "rxjs";
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
 import { LoggedUserService } from "../../auth/logged-user.service";
 
@@ -17,20 +17,16 @@ import { LoggedUserService } from "../../auth/logged-user.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountSettingsComponent extends BaseComponent implements OnInit {
-    @Input(ProjectLinks.URL_PARAM_CATEGORY) public set category(value: MaybeNull<string>) {
-        this.activeTab$.next(
-            value && (Object.values(AccountSettingsTabs) as string[]).includes(value)
-                ? value
-                : AccountSettingsTabs.ACCESS_TOKENS,
-        );
+    @Input(ProjectLinks.URL_PARAM_CATEGORY) public set category(value: MaybeNull<AccountSettingsTabs>) {
+        this.activeTab =
+            value && Object.values(AccountSettingsTabs).includes(value) ? value : AccountSettingsTabs.ACCESS_TOKENS;
     }
-    public get activeTabChanges(): Observable<MaybeNull<string>> {
-        return this.activeTab$.asObservable();
+    @Input(ProjectLinks.URL_QUERY_PARAM_PAGE) public set page(value: number) {
+        this.currentPage = value ?? 1;
     }
 
-    private activeTab$: BehaviorSubject<MaybeNull<string>> = new BehaviorSubject<MaybeNull<string>>(
-        AccountSettingsTabs.ACCESS_TOKENS,
-    );
+    public activeTab: AccountSettingsTabs;
+    public currentPage: number;
 
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public readonly AccountSettingsTabs: typeof AccountSettingsTabs = AccountSettingsTabs;

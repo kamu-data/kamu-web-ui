@@ -17,7 +17,6 @@ import { MatIconModule } from "@angular/material/icon";
 import { ToastrModule } from "ngx-toastr";
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
 import { AccountSettingsModule } from "./account-settings.module";
-import { MaybeNull } from "src/app/interface/app.types";
 
 describe("AccountSettingsComponent", () => {
     let component: AccountSettingsComponent;
@@ -76,10 +75,9 @@ describe("AccountSettingsComponent", () => {
     });
 
     it("should open profile tab by default", () => {
+        component.category = null;
         fixture.detectChanges();
-        component.activeTabChanges.subscribe((category: MaybeNull<string>) => {
-            expect(category).toEqual(AccountSettingsTabs.ACCESS_TOKENS);
-        });
+        expect(component.activeTab).toEqual(AccountSettingsTabs.ACCESS_TOKENS);
     });
 
     [
@@ -96,17 +94,13 @@ describe("AccountSettingsComponent", () => {
         it(`should activate ${tab} tab`, () => {
             component.category = tab;
             fixture.detectChanges();
-            component.activeTabChanges.subscribe((category: MaybeNull<string>) => {
-                expect(category).toEqual(tab);
-            });
+            expect(component.activeTab).toEqual(tab);
         });
     });
 
     it("should open access token tab for a wrong tab", () => {
-        component.category = "wrong-tab";
+        component.category = "wrong-tab" as AccountSettingsTabs;
         fixture.detectChanges();
-        component.activeTabChanges.subscribe((category: MaybeNull<string>) => {
-            expect(category).toEqual(AccountSettingsTabs.ACCESS_TOKENS);
-        });
+        expect(component.activeTab).toEqual(AccountSettingsTabs.ACCESS_TOKENS);
     });
 });

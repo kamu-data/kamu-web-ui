@@ -13,12 +13,11 @@ import { MatTableDataSource } from "@angular/material/table";
 import { AccountSettingsTabs, TokenCreateStep } from "../../account-settings.constants";
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ModalService } from "src/app/common/components/modal/modal.service";
-import { changeCopyIcon, promiseWithCatch, requireValue } from "src/app/common/helpers/app.helpers";
+import { changeCopyIcon, promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { Clipboard } from "@angular/cdk/clipboard";
 import AppValues from "src/app/common/values/app.values";
 import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
 import { BaseComponent } from "src/app/common/components/base.component";
-import ProjectLinks from "src/app/project-links";
 import { CreateTokenFormType } from "./access-tokens-tab.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
@@ -37,10 +36,11 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
     private cdr = inject(ChangeDetectorRef);
 
     @Input({ required: true }) public account: AccountWithEmailFragment;
+    @Input({ required: true }) public currentPage: number;
+
     @ViewChild(MatSort) private sort: MatSort;
     public searchTokenName: string = "";
     public dataSource = new MatTableDataSource();
-    public currentPage = 1;
     public composedToken = "";
     public currentCreateStep = TokenCreateStep.INITIAL;
     public pageBasedInfo: PageBasedInfo;
@@ -54,15 +54,7 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
     public readonly DATE_FORMAT = AppValues.DISPLAY_FLOW_DATE_FORMAT;
 
     public ngOnInit(): void {
-        this.getPageFromUrl();
         this.updateTable(this.currentPage);
-    }
-
-    public getPageFromUrl(): void {
-        const pageParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE);
-        if (pageParam) {
-            this.currentPage = +requireValue(pageParam);
-        }
     }
 
     public get tokenNameControl(): AbstractControl {

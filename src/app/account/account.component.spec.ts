@@ -149,18 +149,9 @@ describe("AccountComponent", () => {
     it("should check activeTab when URL not exist query param tab", () => {
         fixture.detectChanges();
         mockQueryParams.next({ page: 1 });
+        component.tab = undefined;
 
-        let nCalls = 0;
-        component.activeTab$.subscribe((activeTab: AccountTabs) => {
-            // Ignore first call (default event)
-            if (nCalls == 1) {
-                expect(activeTab).toEqual(AccountTabs.DATASETS);
-            } else if (nCalls > 2) {
-                fail("Unexpected number of calls");
-            }
-            nCalls++;
-        });
-        expect(nCalls).toBeLessThan(3);
+        expect(component.activeTab).toEqual(AccountTabs.DATASETS);
     });
     // TODO: test wrong tab
 

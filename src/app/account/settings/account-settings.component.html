@@ -25,6 +25,7 @@
         </div>
     </div>
     <div
+        *ngIf="activeTabChanges | async as activeTab"
         class="d-flex layout layout--flowRow-until-md layout--sidebar-position-start layout--sidebarPosition-flowRow-start"
     >
         <div class="layout-sidebar">

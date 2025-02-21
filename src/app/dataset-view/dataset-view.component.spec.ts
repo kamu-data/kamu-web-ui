@@ -49,7 +49,6 @@ import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { FlowsComponent } from "./additional-components/flows-component/flows.component";
 import { DatasetVisibilityModule } from "../common/components/dataset-visibility/dataset-visibility.module";
 import { RouterTestingModule } from "@angular/router/testing";
-import { promiseWithCatch } from "../common/helpers/app.helpers";
 import { QueryAndResultSectionsComponent } from "../query/shared/query-and-result-sections/query-and-result-sections.component";
 import { SavedQueriesSectionComponent } from "../query/shared/saved-queries-section/saved-queries-section.component";
 import { SqlQueryService } from "../services/sql-query.service";
@@ -58,6 +57,9 @@ import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { registerMatSvgIcons } from "../common/helpers/base-test.helpers.spec";
 import { MOCK_NODES } from "../api/mock/dataset.mock";
 import { FeatureFlagModule } from "../common/directives/feature-flag.module";
+import { MatRadioModule } from "@angular/material/radio";
+import { TooltipIconModule } from "../common/components/tooltip-icon/tooltip-icon.module";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 
 describe("DatasetViewComponent", () => {
     let component: DatasetViewComponent;
@@ -66,7 +68,6 @@ describe("DatasetViewComponent", () => {
     let datasetSubsServices: DatasetSubscriptionsService;
     let navigationService: NavigationService;
     let sqlQueryService: SqlQueryService;
-    let route: ActivatedRoute;
     let router: Router;
     let toastrService: ToastrService;
     const MOCK_DATASET_ROUTE = "kamu/mockNameDerived";
@@ -114,6 +115,9 @@ describe("DatasetViewComponent", () => {
                 CdkAccordionModule,
                 DatasetVisibilityModule,
                 FeatureFlagModule,
+                MatRadioModule,
+                TooltipIconModule,
+                MatCheckboxModule,
                 RouterTestingModule.withRoutes([{ path: MOCK_DATASET_ROUTE, component: DatasetViewComponent }]),
             ],
             providers: [
@@ -166,11 +170,11 @@ describe("DatasetViewComponent", () => {
 
         fixture = TestBed.createComponent(DatasetViewComponent);
         router.initialNavigation();
-        route = TestBed.inject(ActivatedRoute);
         toastrService = TestBed.inject(ToastrService);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
+        component.page = 2;
     });
 
     it("should create", () => {
@@ -188,7 +192,7 @@ describe("DatasetViewComponent", () => {
         DatasetViewTypeEnum.Settings,
     ].forEach((tab: DatasetViewTypeEnum) => {
         it(`should check init ${tab} tab`, () => {
-            spyOn(route.snapshot.queryParamMap, "get").and.returnValue(tab);
+            component.tab = tab;
             fixture.detectChanges();
 
             expect(component.datasetViewType).toEqual(tab);
@@ -196,7 +200,7 @@ describe("DatasetViewComponent", () => {
     });
 
     it("attempt navigating to non-existing tab lands on overview", () => {
-        spyOn(route.snapshot.queryParamMap, "get").and.returnValue("wrong");
+        component.tab = "wrong tab" as DatasetViewTypeEnum;
         fixture.detectChanges();
 
         expect(component.datasetViewType).toEqual(DatasetViewTypeEnum.Overview);
@@ -295,45 +299,40 @@ describe("DatasetViewComponent", () => {
         flush();
     }));
 
-    [DatasetViewTypeEnum.Lineage, DatasetViewTypeEnum.Settings, DatasetViewTypeEnum.Flows].forEach(
-        (tab: DatasetViewTypeEnum) => {
-            it(`should check navigate to ${tab} tab`, fakeAsync(() => {
-                const requestDatasetMainDataSpy = spyOn(datasetService, "requestDatasetMainData").and.returnValue(
-                    of(void {}),
-                );
-                const isHeadHashBlockChangedSpy = spyOn(datasetService, "isHeadHashBlockChanged").and.returnValue(
-                    of(false),
-                );
-                fixture.detectChanges();
-                promiseWithCatch(router.navigate([MOCK_DATASET_ROUTE], { queryParams: { tab } }));
-                tick();
+    [DatasetViewTypeEnum.Settings, DatasetViewTypeEnum.Flows].forEach((tab: DatasetViewTypeEnum) => {
+        it(`should check navigate to ${tab} tab`, () => {
+            const requestDatasetMainDataSpy = spyOn(datasetService, "requestDatasetMainData").and.returnValue(
+                of(void {}),
+            );
+            const isHeadHashBlockChangedSpy = spyOn(datasetService, "isHeadHashBlockChanged").and.returnValue(
+                of(false),
+            );
+            component.tab = tab;
+            fixture.detectChanges();
 
-                expect(requestDatasetMainDataSpy).toHaveBeenCalledTimes(1);
-                expect(isHeadHashBlockChangedSpy).toHaveBeenCalledTimes(1);
-                flush();
-            }));
-        },
-    );
+            expect(requestDatasetMainDataSpy).toHaveBeenCalledTimes(1);
+            expect(isHeadHashBlockChangedSpy).toHaveBeenCalledTimes(0);
+        });
+    });
 
-    [DatasetViewTypeEnum.Overview, DatasetViewTypeEnum.Data, DatasetViewTypeEnum.Metadata].forEach(
-        (tab: DatasetViewTypeEnum) => {
-            it(`should check navigate to ${tab} tab`, fakeAsync(() => {
-                const requestDatasetMainDataSpy = spyOn(datasetService, "requestDatasetMainData").and.returnValue(
-                    of(void {}),
-                );
-                const isHeadHashBlockChangedSpy = spyOn(datasetService, "isHeadHashBlockChanged").and.returnValue(
-                    of(true),
-                );
-                fixture.detectChanges();
-                promiseWithCatch(router.navigate([MOCK_DATASET_ROUTE], { queryParams: { tab } }));
-                tick();
+    [
+        DatasetViewTypeEnum.Overview,
+        DatasetViewTypeEnum.Data,
+        DatasetViewTypeEnum.Metadata,
+        DatasetViewTypeEnum.Lineage,
+    ].forEach((tab: DatasetViewTypeEnum) => {
+        it(`should check navigate to ${tab} tab`, () => {
+            const requestDatasetMainDataSpy = spyOn(datasetService, "requestDatasetMainData").and.returnValue(
+                of(void {}),
+            );
+            const isHeadHashBlockChangedSpy = spyOn(datasetService, "isHeadHashBlockChanged").and.returnValue(of(true));
+            component.tab = tab;
+            fixture.detectChanges();
 
-                expect(requestDatasetMainDataSpy).toHaveBeenCalledTimes(2);
-                expect(isHeadHashBlockChangedSpy).toHaveBeenCalledTimes(1);
-                flush();
-            }));
-        },
-    );
+            expect(requestDatasetMainDataSpy).toHaveBeenCalledTimes(2);
+            expect(isHeadHashBlockChangedSpy).toHaveBeenCalledTimes(1);
+        });
+    });
 
     it(`should check Data tab has sql request in the URL`, fakeAsync(() => {
         spyOn(sqlQueryService, "requestDataSqlRun").and.returnValue(of());

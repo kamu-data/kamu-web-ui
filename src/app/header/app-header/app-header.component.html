@@ -89,15 +89,6 @@
             aria-label="Global"
         >
             <div class="d-flex flex-column flex-md-row flex-self-stretch flex-md-self-auto">
-                <!-- <a
-                    class="header-link py-2 py-md-3 mr-0 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
-                    data-ga-click="Header, click, Nav menu - item:explore"
-                    data-selected-links="/explore /trending /trending/developers /integrations /integrations/feature/code /integrations/feature/collaborate /integrations/feature/ship showcases showcases_search showcases_landing /explore"
-                    href="#"
-                >
-                    Explore
-                </a> -->
-
                 <ng-template [ngIf]="!isUserLoggedIn() && loginMethods.length > 0">
                     <a
                         class="header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
@@ -128,7 +119,7 @@
                         <span>Your Datasets </span>
                     </a>
 
-                    <a
+                    <!-- <a
                         appFeatureFlag="dashboard"
                         class="header-link align-items-center py-2 py-md-3 mr-4 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
                         (click)="onDashboard()"
@@ -136,7 +127,7 @@
                     >
                         <mat-icon class="fs-4">dashboard</mat-icon>
                         <span> Dashboard</span>
-                    </a>
+                    </a> -->
 
                     <a
                         class="header-link d-block d-md-none py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"

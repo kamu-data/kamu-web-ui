@@ -75,7 +75,7 @@
         <div class="app-mat-chip">
             <mat-chip-set aria-label="Tags selection">
                 <div *ngFor="let keyword of row.metadata.currentInfo.keywords">
-                    <mat-chip (click)="selectTopic(row.kind)">{{ keyword }}</mat-chip>
+                    <mat-chip appFeatureFlag="search.keywords" (click)="selectTopic(row.kind)">{{ keyword }}</mat-chip>
                 </div>
             </mat-chip-set>
         </div>

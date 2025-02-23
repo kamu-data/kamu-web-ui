@@ -16,7 +16,11 @@
                         <h2 class="box-title align-items-center pt-3">Keywords</h2>
                         <mat-chip-set aria-label="Tags selection">
                             <div *ngFor="let keyword of currentState.overview.metadata.currentInfo?.keywords">
-                                <mat-chip (click)="selectTopic(datasetBasics.kind)">{{ keyword }}</mat-chip>
+                                <mat-chip
+                                    appFeatureFlag="dataset.panel.overview.keywords"
+                                    (click)="selectTopic(datasetBasics.kind)"
+                                    >{{ keyword }}</mat-chip
+                                >
                             </div>
                         </mat-chip-set>
                     </div>

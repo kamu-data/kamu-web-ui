@@ -1,9 +1,10 @@
+import { SharedTestModule } from "./../common/modules/shared-test.module";
 import { CommitmentDataSectionComponent } from "./components/commitment-data-section/commitment-data-section.component";
 import { InputDataSectionComponent } from "./components/input-data-section/input-data-section.component";
 import { VerifyResultSectionComponent } from "./components/verify-result-section/verify-result-section.component";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { QueryExplainerComponent } from "./query-explainer.component";
-import { ActivatedRoute, RouterModule } from "@angular/router";
+import { RouterModule } from "@angular/router";
 import { of } from "rxjs";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ToastrModule, ToastrService } from "ngx-toastr";
@@ -14,7 +15,6 @@ import {
     mockTextareaCommitment,
     mockVerifyQueryResponseSuccess,
 } from "./query-explainer.mocks";
-import ProjectLinks from "src/app/project-links";
 import { HIGHLIGHT_OPTIONS, HighlightModule } from "ngx-highlightjs";
 import { ReproducedResultSectionComponent } from "./components/reproduced-result-section/reproduced-result-section.component";
 import { DisplayHashModule } from "../common/components/display-hash/display-hash.module";
@@ -55,25 +55,10 @@ describe("QueryExplainerComponent", () => {
                 RouterModule,
                 FormsModule,
                 MatIconModule,
+                SharedTestModule,
             ],
             providers: [
                 Apollo,
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            queryParamMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN:
-                                            return "";
-                                    }
-                                },
-                            },
-                        },
-                    },
-                },
-
                 {
                     provide: HIGHLIGHT_OPTIONS,
                     useValue: {
@@ -98,6 +83,7 @@ describe("QueryExplainerComponent", () => {
         spyOn(datasetService, "requestDatasetInfoById").and.returnValue(of(mockDatasetByIdQuery));
         fixture = TestBed.createComponent(QueryExplainerComponent);
         component = fixture.componentInstance;
+        component.uploadToken = "";
         fixture.detectChanges();
     });
 

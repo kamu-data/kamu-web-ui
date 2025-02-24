@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { finalize, map, Observable } from "rxjs";
 import { MaybeNull } from "src/app/interface/app.types";
@@ -17,6 +17,9 @@ import { NavigationService } from "src/app/services/navigation.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GlobalQueryComponent extends BaseComponent implements OnInit {
+    @Input(ProjectLinks.URL_QUERY_PARAM_SQL_QUERY) public set sqlQuery(value: string) {
+        this.sqlRequestCode = value ?? "";
+    }
     public sqlRequestCode = "";
     public sqlLoading = false;
     public sqlErrorMarker$: Observable<string>;
@@ -28,20 +31,12 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
     private navigationService = inject(NavigationService);
 
     public ngOnInit(): void {
-        this.initSqlQueryFromUrl();
         this.sqlQueryService.resetSqlError();
         this.sqlQueryService.emitSqlQueryResponseChanged(null);
         this.sqlErrorMarker$ = this.sqlQueryService.sqlErrorOccurrences.pipe(
             map((data: DataSqlErrorUpdate) => data.error),
         );
         this.sqlQueryResponse$ = this.sqlQueryService.sqlQueryResponseChanges;
-    }
-
-    private initSqlQueryFromUrl(): void {
-        const sqlQueryFromUrl = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_SQL_QUERY);
-        if (sqlQueryFromUrl) {
-            this.sqlRequestCode = sqlQueryFromUrl;
-        }
     }
 
     public setDefaultQuery(sqlRequestCode: string): void {
@@ -53,11 +48,11 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
         this.sqlQueryService
             .requestDataSqlRun(params)
             .pipe(
+                takeUntilDestroyed(this.destroyRef),
                 finalize(() => {
                     this.sqlLoading = false;
                     this.navigationService.navigateWithSqlQuery(params.query);
                 }),
-                takeUntilDestroyed(this.destroyRef),
             )
             .subscribe();
         this.cdr.detectChanges();

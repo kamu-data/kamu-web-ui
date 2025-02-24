@@ -11,8 +11,6 @@ import { MatMenuModule } from "@angular/material/menu";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { ToastrModule } from "ngx-toastr";
 import { RequestTimerComponent } from "src/app/query/shared/request-timer/request-timer.component";
-import { ActivatedRoute } from "@angular/router";
-import ProjectLinks from "src/app/project-links";
 import { MatIconModule } from "@angular/material/icon";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatDividerModule } from "@angular/material/divider";
@@ -20,6 +18,7 @@ import { FormsModule } from "@angular/forms";
 import { SearchAndSchemasSectionComponent } from "./search-and-schemas-section/search-and-schemas-section.component";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 import { of } from "rxjs";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
 describe("GlobalQueryComponent", () => {
     let component: GlobalQueryComponent;
@@ -48,38 +47,13 @@ describe("GlobalQueryComponent", () => {
                 NgbTypeaheadModule,
                 MatDividerModule,
                 FormsModule,
+                SharedTestModule,
             ],
-            providers: [
-                Apollo,
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return "accountName";
-                                        case "datasetName":
-                                            return "datasetName";
-                                    }
-                                },
-                            },
-                            queryParamMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case ProjectLinks.URL_QUERY_PARAM_SQL_QUERY:
-                                            return SQL_QUERY;
-                                    }
-                                },
-                            },
-                        },
-                    },
-                },
-            ],
+            providers: [Apollo],
         });
         fixture = TestBed.createComponent(GlobalQueryComponent);
         component = fixture.componentInstance;
+        component.sqlQuery = SQL_QUERY;
         sqlQueryService = TestBed.inject(SqlQueryService);
         fixture.detectChanges();
     });

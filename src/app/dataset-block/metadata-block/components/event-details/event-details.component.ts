@@ -14,7 +14,6 @@ import {
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { BlockService } from "../../block.service";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { Observable } from "rxjs";
 import { SetPollingSourceEventComponent } from "./components/set-polling-source-event/set-polling-source-event.component";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { AddPushSourceEventComponent } from "./components/add-push-source-event/add-push-source-event.component";
@@ -37,7 +36,6 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 export class EventDetailsComponent extends BaseComponent implements AfterViewInit {
     private blockService = inject(BlockService);
 
-    public block$: Observable<MetadataBlockFragment> = this.blockService.metadataBlockChanges;
     @Input({ required: true }) public datasetInfo: DatasetInfo;
     @ViewChild("dynamicContainer", { read: ViewContainerRef })
     public dynamicContainer: MaybeNull<ViewContainerRef>;
@@ -45,15 +43,14 @@ export class EventDetailsComponent extends BaseComponent implements AfterViewIni
     public ngAfterViewInit(): void {
         this.blockService.metadataBlockChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((block: MetadataBlockFragment) => {
+            .subscribe((block: MaybeNull<MetadataBlockFragment>) => {
                 if (this.dynamicContainer) {
                     this.dynamicContainer.clear();
                     const componentRef = this.dynamicContainer.createComponent<BaseComponent>(
-                        this.componentEventTypeFactory[block.event.__typename as SupportedEvents] ??
+                        this.componentEventTypeFactory[block?.event.__typename as SupportedEvents] ??
                             UnsupportedEventComponent,
                     );
-                    componentRef.setInput("event", block.event);
-                    componentRef.changeDetectorRef.detectChanges();
+                    componentRef.setInput("event", block?.event);
                 }
             });
     }

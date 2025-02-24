@@ -21,6 +21,7 @@ import { AdminDashboardComponent } from "./admin-view/admin-dashboard/admin-dash
 import { DatasetFlowDetailsComponent } from "./dataset-flow/dataset-flow-details/dataset-flow-details.component";
 import { AccountComponent } from "./account/account.component";
 import { QueryExplainerComponent } from "./query-explainer/query-explainer.component";
+import { blockMetadataResolver } from "./common/resolvers/block-metadata.resolver";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -63,6 +64,7 @@ export const routes: Routes = [
             `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}` +
             `/${ProjectLinks.URL_BLOCK}/:${ProjectLinks.URL_PARAM_BLOCK_HASH}`,
         component: MetadataBlockComponent,
+        resolve: { blockData: blockMetadataResolver },
     },
     {
         canActivate: [AuthenticatedGuard],

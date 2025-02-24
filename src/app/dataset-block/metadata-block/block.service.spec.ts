@@ -2,12 +2,12 @@ import { MetadataBlockFragment } from "../../api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery, TEST_BLOCK_HASH } from "../../api/mock/dataset.mock";
 import { Apollo } from "apollo-angular";
 import { TestBed } from "@angular/core/testing";
-
 import { BlockService } from "./block.service";
 import { DatasetApi } from "src/app/api/dataset.api";
 import { of } from "rxjs";
 import { first } from "rxjs/operators";
 import { mockDatasetInfo } from "src/app/search/mock.data";
+import { MaybeNull } from "src/app/interface/app.types";
 
 describe("BlockService", () => {
     let service: BlockService;
@@ -29,10 +29,12 @@ describe("BlockService", () => {
         spyOn(datasetApi, "getBlockByHash").and.returnValue(of(mockGetMetadataBlockQuery));
         const metadataBlockChanges$ = service.metadataBlockChanges
             .pipe(first())
-            .subscribe((block: MetadataBlockFragment) => {
-                const expectedBlock = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
-                    .blockByHash as MetadataBlockFragment;
-                expect(block).toEqual(expectedBlock);
+            .subscribe((block: MaybeNull<MetadataBlockFragment>) => {
+                if (block) {
+                    const expectedBlock = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
+                        .blockByHash as MetadataBlockFragment;
+                    expect(block).toEqual(expectedBlock);
+                }
             });
 
         service.requestMetadataBlock(mockDatasetInfo, TEST_BLOCK_HASH).subscribe();

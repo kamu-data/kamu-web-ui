@@ -1,0 +1,24 @@
+import { inject } from "@angular/core";
+import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
+import { catchError, EMPTY } from "rxjs";
+import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
+import ProjectLinks from "src/app/project-links";
+import { NavigationService } from "src/app/services/navigation.service";
+
+export const blockMetadataResolver: ResolveFn<void> = (route: ActivatedRouteSnapshot) => {
+    const blockService = inject(BlockService);
+    const navigationService = inject(NavigationService);
+    const blockHash = route.paramMap.get(ProjectLinks.URL_PARAM_BLOCK_HASH) as string;
+    const datasetInfo = {
+        accountName: route.paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME),
+        datasetName: route.paramMap.get(ProjectLinks.URL_PARAM_DATASET_NAME),
+    } as DatasetInfo;
+
+    return blockService.requestMetadataBlock(datasetInfo, blockHash).pipe(
+        catchError(() => {
+            navigationService.navigateToPageNotFound();
+            return EMPTY;
+        }),
+    );
+};

@@ -26,10 +26,19 @@ import { DataAccessPanelModule } from "src/app/data-access-panel/data-access-pan
 import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
+import { BlockService } from "./block.service";
+import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
+import { mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
+import { DisplayHashModule } from "src/app/common/components/display-hash/display-hash.module";
+import { ToastrModule } from "ngx-toastr";
+import { DisplayTimeModule } from "src/app/common/components/display-time/display-time.module";
+import { BlockRowDataModule } from "src/app/common/components/block-row-data/block-row-data.module";
+import { MatDividerModule } from "@angular/material/divider";
 
 describe("MetadataBlockComponent", () => {
     let component: MetadataBlockComponent;
     let fixture: ComponentFixture<MetadataBlockComponent>;
+    let blockService: BlockService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -60,6 +69,11 @@ describe("MetadataBlockComponent", () => {
                 RouterModule,
                 DatasetVisibilityModule,
                 FeatureFlagModule,
+                DisplayHashModule,
+                ToastrModule.forRoot(),
+                DisplayTimeModule,
+                BlockRowDataModule,
+                MatDividerModule,
             ],
             providers: [
                 DatasetApi,
@@ -91,7 +105,11 @@ describe("MetadataBlockComponent", () => {
         registerMatSvgIcons();
 
         fixture = TestBed.createComponent(MetadataBlockComponent);
+        blockService = TestBed.inject(BlockService);
         component = fixture.componentInstance;
+        const blockFragment = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
+            .blockByHash as MetadataBlockFragment;
+        blockService.emitMetadataBlockChanged(blockFragment);
         fixture.detectChanges();
     });
 

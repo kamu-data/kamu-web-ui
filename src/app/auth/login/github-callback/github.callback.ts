@@ -1,10 +1,9 @@
+import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "../../../services/navigation.service";
-import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
-import { ActivatedRoute, Params } from "@angular/router";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { LoginService } from "../login.service";
 import { GithubLoginCredentials } from "src/app/api/auth.api.model";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-github-callback",
@@ -12,7 +11,12 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GithubCallbackComponent extends BaseComponent implements OnInit {
-    private route = inject(ActivatedRoute);
+    @Input(ProjectLinks.URL_QUERY_PARAM_CODE) public set code(value: string) {
+        if (value) {
+            this.loginService.githubLogin({ code: value } as GithubLoginCredentials);
+        }
+    }
+
     private navigationService = inject(NavigationService);
     private loginService = inject(LoginService);
 
@@ -20,9 +24,5 @@ export class GithubCallbackComponent extends BaseComponent implements OnInit {
         if (!this.searchString.includes("?code=")) {
             this.navigationService.navigateToHome();
         }
-
-        this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((param: Params) => {
-            this.loginService.githubLogin({ code: param.code as string } as GithubLoginCredentials);
-        });
     }
 }

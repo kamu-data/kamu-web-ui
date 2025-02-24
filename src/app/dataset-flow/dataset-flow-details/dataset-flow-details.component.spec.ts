@@ -23,7 +23,6 @@ import { FormsModule } from "@angular/forms";
 import { MatTabsModule } from "@angular/material/tabs";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FlowDetailsTabs } from "./dataset-flow-details.types";
-import ProjectLinks from "src/app/project-links";
 import { mockDatasetFlowByIdResponse, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import { DataAccessPanelComponent } from "src/app/data-access-panel/data-access-panel.component";
 import { DataAccessPanelModule } from "src/app/data-access-panel/data-access-panel.module";
@@ -37,7 +36,6 @@ describe("DatasetFlowDetailsComponent", () => {
     let datasetFlowsService: DatasetFlowsService;
     let datasetSubsService: DatasetSubscriptionsService;
     let datasetService: DatasetService;
-    let activatedRoute: ActivatedRoute;
     const MOCK_FLOW_ID = "3";
 
     beforeEach(async () => {
@@ -52,23 +50,11 @@ describe("DatasetFlowDetailsComponent", () => {
                 DataAccessPanelComponent,
             ],
             providers: [
+                Apollo,
                 {
-                    Apollo,
                     provide: ActivatedRoute,
                     useValue: {
                         snapshot: {
-                            params: of({
-                                accountName: "accountName",
-                                datasetName: "datasetName",
-                            }),
-                            queryParamMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "tab":
-                                            return "flows";
-                                    }
-                                },
-                            },
                             paramMap: {
                                 get: (key: string) => {
                                     switch (key) {
@@ -76,10 +62,6 @@ describe("DatasetFlowDetailsComponent", () => {
                                             return "accountName";
                                         case "datasetName":
                                             return "datasetName";
-                                        case "flow-id":
-                                            return 1;
-                                        case "category":
-                                            return "history";
                                     }
                                 },
                             },
@@ -112,9 +94,9 @@ describe("DatasetFlowDetailsComponent", () => {
         datasetFlowsService = TestBed.inject(DatasetFlowsService);
         datasetService = TestBed.inject(DatasetService);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
-        activatedRoute = TestBed.inject(ActivatedRoute);
         component = fixture.componentInstance;
-        component.flowId = "5";
+        component.id = MOCK_FLOW_ID;
+        component.category = FlowDetailsTabs.HISTORY;
         spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(
             of(mockFullPowerDatasetPermissionsFragment),
         );
@@ -139,10 +121,6 @@ describe("DatasetFlowDetailsComponent", () => {
     }));
 
     it(`should check extract flow id`, () => {
-        activatedRoute.snapshot.params = {
-            [ProjectLinks.URL_PARAM_FLOW_ID]: MOCK_FLOW_ID,
-        };
-        component.ngOnInit();
         expect(component.flowId).toEqual(MOCK_FLOW_ID);
     });
 
@@ -157,7 +135,7 @@ describe("DatasetFlowDetailsComponent", () => {
     });
 
     it(`should check created router link`, () => {
-        const expectedResult = "/accountName/datasetName/flow-details/5/history";
+        const expectedResult = `/accountName/datasetName/flow-details/${MOCK_FLOW_ID}/history`;
         expect(component.getRouteLink(FlowDetailsTabs.HISTORY)).toEqual(expectedResult);
     });
 

@@ -9,12 +9,14 @@ import { HighlightModule } from "ngx-highlightjs";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormsModule } from "@angular/forms";
+import { FeatureFlagModule } from "../common/directives/feature-flag.module";
 
 @NgModule({
     declarations: [AppHeaderComponent, NotificationIndicatorComponent],
     exports: [AppHeaderComponent],
     imports: [
         CommonModule,
+        FeatureFlagModule,
         FormsModule,
         HighlightModule,
         MatMenuModule,

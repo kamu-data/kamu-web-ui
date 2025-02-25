@@ -18,6 +18,7 @@ import { SqlQueryService } from "../services/sql-query.service";
 import { AppConfigService } from "../app-config.service";
 import { ToastrService } from "ngx-toastr";
 import { Clipboard } from "@angular/cdk/clipboard";
+import { NavigationEnd, Router } from "@angular/router";
 
 @Component({
     selector: "app-dataset",
@@ -25,29 +26,25 @@ import { Clipboard } from "@angular/cdk/clipboard";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetViewComponent extends BaseDatasetDataComponent implements OnInit, OnDestroy {
-    public datasetBasics: MaybeUndefined<DatasetBasicsFragment>;
-    public datasetInfo: DatasetInfo;
-    public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
-    public readonly DatasetViewTypeEnum = DatasetViewTypeEnum;
-    public sqlLoading: boolean = false;
-    public currentHeadBlockHash: string = "";
-
     @Input(ProjectLinks.URL_QUERY_PARAM_PAGE) public set page(value: number) {
         this.currentPage = value ?? 1;
     }
     @Input(ProjectLinks.URL_QUERY_PARAM_TAB) public set tab(value: MaybeUndefined<DatasetViewTypeEnum>) {
         this.datasetViewType =
             value && Object.values(DatasetViewTypeEnum).includes(value) ? value : DatasetViewTypeEnum.Overview;
-        this.initDatasetViewByType(this.getDatasetInfoFromUrl(), this.currentPage);
-        this.requestMainDataIfChanged();
     }
 
+    public datasetBasics: MaybeUndefined<DatasetBasicsFragment>;
+    public datasetInfo: DatasetInfo;
+    public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
+    public readonly DatasetViewTypeEnum = DatasetViewTypeEnum;
+    public sqlLoading: boolean = false;
+    public currentHeadBlockHash: string = "";
     public currentPage: number;
-    public activeTab: DatasetViewTypeEnum;
-
     private mainDatasetQueryComplete$: Subject<DatasetInfo> = new ReplaySubject<DatasetInfo>(1 /* bufferSize */);
 
     private datasetPermissionsServices = inject(DatasetPermissionsService);
+    private router = inject(Router);
     private cdr = inject(ChangeDetectorRef);
     private sqlQueryService = inject(SqlQueryService);
     private configService = inject(AppConfigService);
@@ -59,6 +56,15 @@ export class DatasetViewComponent extends BaseDatasetDataComponent implements On
         const urlDatasetInfo = this.getDatasetInfoFromUrl();
         this.initDatasetViewByType(urlDatasetInfo, this.currentPage);
         this.requestMainData(urlDatasetInfo);
+
+        this.router.events
+            .pipe(filter((event) => event instanceof NavigationEnd))
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.initDatasetViewByType(this.getDatasetInfoFromUrl(), this.currentPage);
+                this.requestMainDataIfChanged();
+                this.cdr.detectChanges();
+            });
 
         this.datasetService.datasetChanges
             .pipe(takeUntilDestroyed(this.destroyRef))

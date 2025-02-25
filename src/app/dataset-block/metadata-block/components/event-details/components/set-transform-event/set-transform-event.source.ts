@@ -38,7 +38,7 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetTransform.TransformInputDatasetNotAccessible.message": {
         label: "Dataset:",
-        tooltip: SetTransformTooltipsTexts.DATASET_NOT_ACCEESSABLE,
+        tooltip: SetTransformTooltipsTexts.DATASET_NOT_ACCESSIBLE,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "set-transform-datasetNotAccessible-type",

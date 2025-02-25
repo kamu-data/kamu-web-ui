@@ -1,6 +1,7 @@
 import { SessionStorageService } from "src/app/services/session-storage.service";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
+import { NavigationEnd, Router } from "@angular/router";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { filter, finalize, first, switchMap, tap } from "rxjs/operators";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "../api/kamu.graphql.interface";
@@ -8,7 +9,7 @@ import ProjectLinks from "../project-links";
 import { DatasetInfo } from "../interface/navigation.interface";
 import { isNil, promiseWithCatch } from "../common/helpers/app.helpers";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
-import { MaybeUndefined } from "../interface/app.types";
+import { MaybeNull, MaybeUndefined } from "../interface/app.types";
 import { DatasetPermissionsService } from "./dataset.permissions.service";
 import { ReplaySubject, Subject, of } from "rxjs";
 import { LineageGraphNodeData, LineageGraphNodeKind } from "./additional-components/lineage-component/lineage-model";
@@ -18,7 +19,6 @@ import { SqlQueryService } from "../services/sql-query.service";
 import { AppConfigService } from "../app-config.service";
 import { ToastrService } from "ngx-toastr";
 import { Clipboard } from "@angular/cdk/clipboard";
-import { NavigationEnd, Router } from "@angular/router";
 
 @Component({
     selector: "app-dataset",
@@ -26,21 +26,13 @@ import { NavigationEnd, Router } from "@angular/router";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetViewComponent extends BaseDatasetDataComponent implements OnInit, OnDestroy {
-    @Input(ProjectLinks.URL_QUERY_PARAM_PAGE) public set page(value: number) {
-        this.currentPage = value ?? 1;
-    }
-    @Input(ProjectLinks.URL_QUERY_PARAM_TAB) public set tab(value: MaybeUndefined<DatasetViewTypeEnum>) {
-        this.datasetViewType =
-            value && Object.values(DatasetViewTypeEnum).includes(value) ? value : DatasetViewTypeEnum.Overview;
-    }
-
     public datasetBasics: MaybeUndefined<DatasetBasicsFragment>;
     public datasetInfo: DatasetInfo;
     public datasetViewType: DatasetViewTypeEnum = DatasetViewTypeEnum.Overview;
     public readonly DatasetViewTypeEnum = DatasetViewTypeEnum;
     public sqlLoading: boolean = false;
     public currentHeadBlockHash: string = "";
-    public currentPage: number;
+
     private mainDatasetQueryComplete$: Subject<DatasetInfo> = new ReplaySubject<DatasetInfo>(1 /* bufferSize */);
 
     private datasetPermissionsServices = inject(DatasetPermissionsService);
@@ -54,18 +46,17 @@ export class DatasetViewComponent extends BaseDatasetDataComponent implements On
 
     public ngOnInit(): void {
         const urlDatasetInfo = this.getDatasetInfoFromUrl();
-        this.initDatasetViewByType(urlDatasetInfo, this.currentPage);
+        this.initDatasetViewByType(urlDatasetInfo, this.getCurrentPageFromUrl());
         this.requestMainData(urlDatasetInfo);
 
         this.router.events
             .pipe(filter((event) => event instanceof NavigationEnd))
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
-                this.initDatasetViewByType(this.getDatasetInfoFromUrl(), this.currentPage);
+                this.initDatasetViewByType(this.getDatasetInfoFromUrl(), this.getCurrentPageFromUrl());
                 this.requestMainDataIfChanged();
                 this.cdr.detectChanges();
             });
-
         this.datasetService.datasetChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((basics: DatasetBasicsFragment) => {
@@ -301,7 +292,30 @@ export class DatasetViewComponent extends BaseDatasetDataComponent implements On
             [DatasetViewTypeEnum.Flows]: () => this.initFlowsTab(datasetInfo),
             [DatasetViewTypeEnum.Settings]: () => this.initSettingsTab(datasetInfo),
         };
+
+        this.datasetViewType = this.getDatasetViewTypeFromUrl();
         mapperTabs[this.datasetViewType]();
+    }
+
+    private getCurrentPageFromUrl(): number {
+        const page: MaybeNull<string> = this.activatedRoute.snapshot.queryParamMap.get(
+            ProjectLinks.URL_QUERY_PARAM_PAGE,
+        );
+        return page ? Number(page) : 1;
+    }
+
+    private getDatasetViewTypeFromUrl(): DatasetViewTypeEnum {
+        const tabValue: MaybeNull<string> = this.activatedRoute.snapshot.queryParamMap.get(
+            ProjectLinks.URL_QUERY_PARAM_TAB,
+        );
+        if (tabValue) {
+            const tab = tabValue as DatasetViewTypeEnum;
+            if (Object.values(DatasetViewTypeEnum).includes(tab)) {
+                return tab;
+            }
+        }
+
+        return DatasetViewTypeEnum.Overview;
     }
 
     public onSelectDataset(accountName?: string, datasetName?: string): void {

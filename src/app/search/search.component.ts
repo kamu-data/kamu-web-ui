@@ -3,11 +3,10 @@ import { DatasetSearchResult, SearchFilters } from "../interface/search.interfac
 import { ChangeDetectionStrategy, Component, inject, Input, numberAttribute, OnInit } from "@angular/core";
 import { NavigationService } from "../services/navigation.service";
 import ProjectLinks from "../project-links";
-import { filter, map } from "rxjs/operators";
+import { map } from "rxjs/operators";
 import { BehaviorSubject, combineLatest, Observable } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { BaseComponent } from "../common/components/base.component";
-import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 
 @Component({
     selector: "app-search",
@@ -28,7 +27,6 @@ export class SearchComponent extends BaseComponent implements OnInit {
 
     private navigationService = inject(NavigationService);
     private searchService = inject(SearchService);
-    private router = inject(Router);
 
     private currentSearchValue = "";
     public currentPage = 1; // TODO: Should be zero-based and only offset for display
@@ -142,13 +140,6 @@ export class SearchComponent extends BaseComponent implements OnInit {
     public ngOnInit(): void {
         this.initTableData();
         this.changePageAndSearch();
-        this.router.events
-            .pipe(
-                filter((event) => event instanceof NavigationEnd),
-                map((event) => event as RouterEvent),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(() => this.changePageAndSearch());
     }
 
     private changePageAndSearch(): void {

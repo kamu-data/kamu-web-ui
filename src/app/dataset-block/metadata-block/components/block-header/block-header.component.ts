@@ -4,6 +4,7 @@ import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angu
 import { Observable } from "rxjs";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { BlockService } from "../../block.service";
+import { MaybeNull } from "src/app/interface/app.types";
 
 @Component({
     selector: "app-block-header",
@@ -12,8 +13,7 @@ import { BlockService } from "../../block.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BlockHeaderComponent extends BaseComponent implements OnInit {
-    public block$: Observable<MetadataBlockFragment>;
-    @Input({ required: true }) public blockHash: string;
+    public block$: Observable<MaybeNull<MetadataBlockFragment>>;
     @Input({ required: true }) public datasetInfo: DatasetInfo;
 
     private blockService = inject(BlockService);

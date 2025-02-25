@@ -84,6 +84,7 @@ describe("AccessTokensTabComponent", () => {
         accessTokenService = TestBed.inject(AccessTokenService);
         modalService = TestBed.inject(ModalService);
         component = fixture.componentInstance;
+        component.currentPage = 1;
         spyOn(accessTokenService, "listAccessTokens").and.returnValue(
             of(mockListAccessTokensQuery.auth.listAccessTokens as AccessTokenConnection),
         );

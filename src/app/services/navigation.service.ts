@@ -93,7 +93,7 @@ export class NavigationService {
             this.router.navigate([params.accountName, params.datasetName], {
                 queryParams:
                     params.page === 1
-                        ? { tab: params.tab }
+                        ? { tab: params.tab, section: params.section }
                         : { tab: params.tab, section: params.section, page: params.page, sqlQuery: params.sqlQuery },
                 state: params.state,
             }),

@@ -89,6 +89,10 @@ export const routes: Routes = [
                 path: `:${ProjectLinks.URL_PARAM_CATEGORY}`,
                 component: AccountSettingsComponent,
             },
+            {
+                path: ``,
+                component: AccountSettingsComponent,
+            },
         ],
     },
     {

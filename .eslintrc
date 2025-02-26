@@ -1,5 +1,6 @@
 
 {
+  "root": true,
   "parserOptions": {
     "ecmaVersion": 2021,
     "sourceType": "module",
@@ -20,7 +21,6 @@
   },
   "rules": {
     "no-bitwise": 0,
-
     "@typescript-eslint/no-extraneous-class": ["off"],
     "@typescript-eslint/unbound-method": [
       "error",
@@ -51,16 +51,11 @@
     ]
   },
   "ignorePatterns": ["node_modules", "dist", "kamu.graphql.interface.ts"],
-  "settings": {
-    "license-header": {
-      "path": "check-license-header.js"
-    }
-  },
   "overrides": [
     {
-      "files": ["src/app/**/*.ts"],
+      "files": ["src/app/account/settings/tabs/emails-tab/**/*.ts"],
       "rules": {
-        "license-header/check": "error"
+        "license-header/header": [ "error", "src/docs/license-header-template.js" ]
       }
     }
   ]

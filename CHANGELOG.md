@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Disabled "keywords" feature for "demo" mode
 - Metadata block page for SetTransfom: private inputs are not displayed for non-admin
 
+## [Unreleased]
+### Added
+- Added `DEVELOPER.md` file
+### Changed
+- Modified `README.md` file
+
 ## [0.40.1] - 2025-02-20
 ### Changed
 - Dataset Settings: separated "Scheduled updates" and "Transform settings" tabs

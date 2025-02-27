@@ -20,7 +20,7 @@
 
 ### Technologies
 
-- TypeScript, version: 5.1.6;
+- [TypeScript](https://www.typescriptlang.org/), version: 5.1.6;
 - [Node.js](https://nodejs.org/en/download/releases/), version: 18.20.4;
 - [Angular CLI](https://github.com/angular/angular-cli), version 16.2.14.
 

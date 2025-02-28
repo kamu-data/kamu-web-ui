@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { MaybeNullOrUndefined } from "../../../../../interface/app.types";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { OWL_DATE_TIME_FORMATS } from "@danielmoncada/angular-datetime-picker";

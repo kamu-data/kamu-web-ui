@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 export class AddDataTooltipsTexts {
     public static readonly NEW_WATERMARK = "Last watermark of the output data stream.";
     public static readonly PREV_CHECKPOINT = "Hash of the checkpoint file used to restore ingestion state.";

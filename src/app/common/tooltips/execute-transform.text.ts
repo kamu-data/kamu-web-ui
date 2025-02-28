@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 export class ExecuteTransformTooltipsTexts {
     public static readonly DATA_SLICE_LOGICAL_HASH = "Logical hash sum of the data in this slice.";
     public static readonly DATA_SLICE_PHYSICAL_HASH = "Hash sum of the data part file.";

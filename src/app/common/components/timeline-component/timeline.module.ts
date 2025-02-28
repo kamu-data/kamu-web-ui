@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { DisplayHashModule } from "src/app/common/components/display-hash/display-hash.module";
 import { DisplayTimeModule } from "src/app/common/components/display-time/display-time.module";
 import { NgModule } from "@angular/core";

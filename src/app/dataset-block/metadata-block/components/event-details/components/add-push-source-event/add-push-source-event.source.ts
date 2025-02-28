@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
 import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
 import { AddPushSourceTooltipsTexts } from "src/app/common/tooltips/add-push-source.text";

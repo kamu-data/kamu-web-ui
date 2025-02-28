@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 export class CompactionTooltipsTexts {
     public static readonly MAX_SLICE_SIZE = "Maximum size of a single data slice file.";
     public static readonly MAX_SLICE_RECORDS = "Maximum amount of records in a single data slice file";

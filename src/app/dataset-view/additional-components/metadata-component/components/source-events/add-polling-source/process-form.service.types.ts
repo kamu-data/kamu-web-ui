@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { SchemaType } from "../../form-components/schema-field/schema-field.component";
 import { AddPushSourceSection } from "../add-push-source/add-push-source-form.types";
 import { EventTimeSourceKind, FetchKind, SetPollingSourceSection } from "./add-polling-source-form.types";

@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { inject, Injectable } from "@angular/core";
 import { EnvironmentVariablesApi } from "../../../../../api/environment-variables.api";
 import { map, Observable } from "rxjs";

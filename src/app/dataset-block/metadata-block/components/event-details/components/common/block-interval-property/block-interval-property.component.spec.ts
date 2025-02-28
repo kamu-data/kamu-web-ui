@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { mockDatasetMainDataResponse } from "../../../../../../../search/mock.data";
 import { DatasetService } from "../../../../../../../dataset-view/dataset.service";
 import { ApolloTestingModule } from "apollo-angular/testing";

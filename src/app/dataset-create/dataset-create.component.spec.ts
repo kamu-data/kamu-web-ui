@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { of } from "rxjs";
 import { getInputElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";

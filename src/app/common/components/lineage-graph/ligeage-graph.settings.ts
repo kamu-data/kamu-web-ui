@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { MiniMapPosition } from "@swimlane/ngx-graph";
 
 export const LINEAGE_CONFIG: LineageGraphConfig = {

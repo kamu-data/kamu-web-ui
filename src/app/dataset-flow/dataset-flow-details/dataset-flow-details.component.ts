@@ -6,24 +6,12 @@
  */
 
 import { FlowStatus } from "./../../api/kamu.graphql.interface";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { DatasetFlowByIdResponse, FlowDetailsTabs, ViewMenuData } from "./dataset-flow-details.types";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import {
-    Observable,
-    Subscription,
-    combineLatest,
-    filter,
-    map,
-    shareReplay,
-    switchMap,
-    takeWhile,
-    tap,
-    timer,
-} from "rxjs";
+import { Observable, Subscription, combineLatest, map, shareReplay, switchMap, takeWhile, tap, timer } from "rxjs";
 import { FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
 import { MaybeUndefined } from "src/app/interface/app.types";
 import ProjectLinks from "src/app/project-links";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
@@ -39,16 +27,20 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implements OnInit {
+    @Input(ProjectLinks.URL_PARAM_CATEGORY) public set category(value: MaybeUndefined<FlowDetailsTabs>) {
+        this.activeTab = value && Object.values(FlowDetailsTabs).includes(value) ? value : FlowDetailsTabs.SUMMARY;
+    }
+    @Input(ProjectLinks.URL_PARAM_FLOW_ID) public set id(value: string) {
+        this.flowId = value;
+    }
     public readonly FlowDetailsTabs: typeof FlowDetailsTabs = FlowDetailsTabs;
     public readonly FLOWS_TYPE = DatasetViewTypeEnum.Flows;
-    public activeTab: FlowDetailsTabs = FlowDetailsTabs.SUMMARY;
+    public activeTab: FlowDetailsTabs;
     public flowId = "";
     public datasetViewMenuData$: Observable<ViewMenuData>;
     public datasetFlowDetails$: Observable<MaybeUndefined<DatasetFlowByIdResponse>>;
     public readonly TIMEOUT_REFRESH_FLOW = 800;
 
-    private router = inject(Router);
-    private route = inject(ActivatedRoute);
     private datasetFlowsService = inject(DatasetFlowsService);
     private cdr = inject(ChangeDetectorRef);
 
@@ -62,15 +54,6 @@ export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implem
             shareReplay(),
         );
 
-        this.router.events
-            .pipe(filter((event) => event instanceof NavigationEnd))
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.extractActiveTabFromRoute();
-            });
-
-        this.extractActiveTabFromRoute();
-        this.extractFlowIdFromRoute();
         this.loadDatasetBasicDataWithPermissions();
         this.datasetFlowDetails$ = timer(0, 5000).pipe(
             switchMap(() => this.datasetViewMenuData$),
@@ -98,29 +81,6 @@ export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implem
 
     public get datasetInfo(): DatasetInfo {
         return this.getDatasetInfoFromUrl();
-    }
-
-    private extractActiveTabFromRoute(): void {
-        const categoryParam: MaybeUndefined<string> = this.route.snapshot.params[
-            ProjectLinks.URL_PARAM_CATEGORY
-        ] as MaybeUndefined<string>;
-        if (categoryParam) {
-            const category = categoryParam as FlowDetailsTabs;
-            if (Object.values(FlowDetailsTabs).includes(category)) {
-                this.activeTab = category;
-                return;
-            }
-        }
-        this.activeTab = FlowDetailsTabs.SUMMARY;
-    }
-
-    private extractFlowIdFromRoute(): void {
-        const flowIdParam: MaybeUndefined<string> = this.route.snapshot.params[
-            ProjectLinks.URL_PARAM_FLOW_ID
-        ] as MaybeUndefined<string>;
-        if (flowIdParam) {
-            this.flowId = flowIdParam;
-        }
     }
 
     private loadDatasetBasicDataWithPermissions(): Subscription {

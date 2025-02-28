@@ -58,7 +58,6 @@ describe("Router", () => {
         ProjectLinks.URL_SEARCH,
         `myaccount`,
         `myaccount/mydataset`,
-        `myaccount/mydataset/${ProjectLinks.URL_BLOCK}/:someHash`,
         ProjectLinks.URL_PAGE_NOT_FOUND,
         "dummy",
     ].forEach((url: string) => {

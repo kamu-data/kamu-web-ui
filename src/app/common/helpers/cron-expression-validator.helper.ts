@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 export function isValidCronExpression(cronExpression: string): boolean {
     const MAX_MIN_SEC_VALUE = 59;
     const MAX_HOUR_VALUE = 23;

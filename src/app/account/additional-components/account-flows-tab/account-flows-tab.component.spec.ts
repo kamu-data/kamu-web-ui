@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, tick } from "@angular/core/testing";
 import { AccountFlowsTabComponent } from "./account-flows-tab.component";
 import { PaginationComponent } from "src/app/common/components/pagination-component/pagination.component";

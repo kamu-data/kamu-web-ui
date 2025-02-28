@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { SetPollingSourceEventComponent } from "./components/set-polling-source-event/set-polling-source-event.component";
 import { BlockService } from "../../block.service";
 import { ComponentFixture, TestBed } from "@angular/core/testing";

@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { FetchKind, SetPollingSourceSection } from "./add-polling-source-form.types";
 import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { FormArray, FormGroup } from "@angular/forms";

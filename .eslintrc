@@ -1,4 +1,6 @@
+
 {
+  "root": true,
   "parserOptions": {
     "ecmaVersion": 2021,
     "sourceType": "module",
@@ -13,7 +15,7 @@
     "plugin:jasmine/recommended"
   ],
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "jasmine"],
+  "plugins": ["@typescript-eslint", "jasmine","license-header"],
   "env": {
     "jasmine": true
   },
@@ -48,5 +50,13 @@
         }
     ]
   },
-  "ignorePatterns": ["node_modules", "dist", "kamu.graphql.interface.ts"]
+  "ignorePatterns": ["node_modules", "dist", "kamu.graphql.interface.ts","add-license.js"],
+  "overrides": [
+    {
+      "files": ["src/app/**/*.ts"],
+      "rules": {
+        "license-header/header": [ "error", "src/docs/license-header-template.js" ]
+      }
+    }
+  ]
 }

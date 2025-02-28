@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { DataSchemaFormat, DatasetKind, MetadataBlockFragment } from "../../api/kamu.graphql.interface";
 import { SliceUnit } from "../../dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
 import { mockOwnerFields, mockPublicDatasetVisibility } from "../../search/mock.data";

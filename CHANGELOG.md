@@ -5,10 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-
 ### Added
 - Added resolver `BlockMetadataResolver` for metadata block page
+- Added `DEVELOPER.md` file
+- Added license header for all *.ts files
 ### Changed
+- Modified `README.md` file
 - Changed the method of getting route and query parameters via input decorator for some components
 ### Fixed
 - Remove "Dashboard" link from application header

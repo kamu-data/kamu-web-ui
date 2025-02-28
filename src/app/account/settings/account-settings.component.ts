@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import ProjectLinks from "src/app/project-links";
 import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
 import { AccountSettingsTabs } from "./account-settings.constants";

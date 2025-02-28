@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { OdfDefaultValues } from "src/app/common/values/app-odf-default.values";
 import { ControlType, JsonFormData, ReadKind } from "../../add-polling-source/add-polling-source-form.types";
 import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";

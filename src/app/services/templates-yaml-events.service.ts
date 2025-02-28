@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { SetLicense, SetTransform } from "../api/kamu.graphql.interface";
 import { Injectable } from "@angular/core";
 import { MaybeNull } from "../interface/app.types";

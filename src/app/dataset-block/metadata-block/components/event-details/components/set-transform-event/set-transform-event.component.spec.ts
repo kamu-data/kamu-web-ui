@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { BlockRowDataComponent } from "src/app/common/components/block-row-data/block-row-data.component";
 import { VisibilityPropertyComponent } from "./../common/visibility-property/visibility-property.component";
 import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";

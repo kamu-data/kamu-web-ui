@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 export class SetTransformTooltipsTexts {
     public static readonly ENGINE = "Identifier of the engine used for this transformation.";
     public static readonly QUERIES = "Queries use for specifying multi-step SQL transformations.";

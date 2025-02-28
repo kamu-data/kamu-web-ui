@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetKind, DatasetVisibility } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "../interface/app.types";

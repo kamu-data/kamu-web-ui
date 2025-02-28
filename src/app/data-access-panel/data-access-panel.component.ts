@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { MaybeUndefined } from "../interface/app.types";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { DatasetBasicsFragment, DatasetEndpoints } from "src/app/api/kamu.graphql.interface";

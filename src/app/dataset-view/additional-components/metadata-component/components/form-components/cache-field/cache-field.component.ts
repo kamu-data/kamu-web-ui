@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { BaseField } from "../base-field";

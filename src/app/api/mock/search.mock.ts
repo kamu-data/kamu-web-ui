@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { mockPublicDatasetVisibility } from "src/app/search/mock.data";
 import { DatasetAutocompleteItem, TypeNames } from "../../interface/search.interface";
 import { DatasetKind, SearchDatasetsAutocompleteQuery, SearchDatasetsOverviewQuery } from "../kamu.graphql.interface";

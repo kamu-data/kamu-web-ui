@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import ProjectLinks from "src/app/project-links";
 import { ChangeDetectionStrategy, Component, inject, Input, numberAttribute, OnInit } from "@angular/core";
 import { AccountFragment } from "src/app/api/kamu.graphql.interface";

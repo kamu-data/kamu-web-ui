@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { AddPushSource, MetadataBlockFragment } from "../../../../../../api/kamu.graphql.interface";
 import { SupportedEvents } from "../../../../../../dataset-block/metadata-block/components/event-details/supported.events";
 import ProjectLinks from "src/app/project-links";

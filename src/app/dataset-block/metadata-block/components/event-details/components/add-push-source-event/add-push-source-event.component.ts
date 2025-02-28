@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { AddPushSource } from "src/app/api/kamu.graphql.interface";
 import { BaseDynamicEventComponent } from "../base-dynamic-event/base-dynamic-event.component";

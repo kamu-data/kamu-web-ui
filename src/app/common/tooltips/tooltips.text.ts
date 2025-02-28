@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 export class SetPollingSourceTooltipsTexts {
     public static readonly URL = "URL of the data source.";
     public static readonly EVENT_TIME = "Describes how event time is extracted from the source metadata.";

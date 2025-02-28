@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { TemporalTablesPropertyComponent } from "../common/temporal-tables-property/temporal-tables-property.component";
 import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
 import { OwnerPropertyComponent } from "../common/owner-property/owner-property.component";

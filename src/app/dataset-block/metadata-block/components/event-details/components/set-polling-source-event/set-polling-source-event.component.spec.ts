@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { FetchStepMqtt, FetchStepUrl, PrepStepDecompress } from "../../../../../../api/kamu.graphql.interface";
 import { getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";

@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { EventSectionBuilder, GenericDynamicEventType } from "./event-section.builder";
 import { SetPollingSourceSectionBuilder } from "./set-polling-source-section.builder";
 import { SetTransformSectionBuilder } from "./set-transform-section.builder";

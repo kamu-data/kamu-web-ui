@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import { DatasetFlowDetailsHelpers } from "./flow-details-history-tab.helpers";
 import {

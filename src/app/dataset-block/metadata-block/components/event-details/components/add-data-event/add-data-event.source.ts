@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { DisplayTimeComponent } from "src/app/common/components/display-time/display-time.component";
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
 import { HashPropertyComponent } from "../common/hash-property/hash-property.component";

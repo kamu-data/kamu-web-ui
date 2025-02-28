@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { ToastrService } from "ngx-toastr";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { Seed } from "src/app/api/kamu.graphql.interface";

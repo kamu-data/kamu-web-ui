@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { DataSlice, ExecuteTransform, ExecuteTransformInput } from "src/app/api/kamu.graphql.interface";
 import { EXECUTE_TRANSFORM_SOURCE_DESCRIPTORS } from "../../components/execute-transform-event/execute-transform-event.source";
 import { EventRow, EventSection } from "../dynamic-events.model";

@@ -34,5 +34,5 @@ function processDirectory(directory) {
   });
 }
 
-processDirectory("./src/app/account/settings/tabs/emails-tab"); // Change directory as needed
+processDirectory("./src/app"); // Change directory as needed
 console.log("License headers added to all files.");

@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { EventTypeFilterPipe } from "./pipes/event-type-filter.pipe";
 import { BlockHashFilterPipe } from "./pipes/block-hash-filter.pipe";
 import { mockHistoryUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";

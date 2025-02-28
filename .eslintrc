@@ -50,10 +50,10 @@
         }
     ]
   },
-  "ignorePatterns": ["node_modules", "dist", "kamu.graphql.interface.ts"],
+  "ignorePatterns": ["node_modules", "dist", "kamu.graphql.interface.ts","add-license.js"],
   "overrides": [
     {
-      "files": ["src/app/account/settings/tabs/emails-tab/**/*.ts"],
+      "files": ["src/app/**/*.ts"],
       "rules": {
         "license-header/header": [ "error", "src/docs/license-header-template.js" ]
       }

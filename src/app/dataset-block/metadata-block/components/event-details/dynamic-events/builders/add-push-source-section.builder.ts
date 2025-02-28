@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { AddPushSource } from "src/app/api/kamu.graphql.interface";
 import { EventSectionBuilder } from "./event-section.builder";
 import { EventSection } from "../dynamic-events.model";

@@ -8,12 +8,21 @@
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { SearchService } from "./search.service";
 import { DatasetSearchResult, SearchFilters } from "../interface/search.interface";
-import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    Input,
+    numberAttribute,
+    OnChanges,
+    OnInit,
+    SimpleChanges,
+} from "@angular/core";
 import { NavigationService } from "../services/navigation.service";
 import { requireValue } from "../common/helpers/app.helpers";
 import ProjectLinks from "../project-links";
 import { filter, map } from "rxjs/operators";
-import { Observable } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { BaseComponent } from "../common/components/base.component";
 
@@ -24,6 +33,17 @@ import { BaseComponent } from "../common/components/base.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchComponent extends BaseComponent implements OnInit {
+    @Input({ transform: numberAttribute, alias: ProjectLinks.URL_QUERY_PARAM_PAGE }) public set page(value: number) {
+        this.currentPage = value ? value : 1;
+        console.log("bind-page==>", this.currentPage);
+    }
+    @Input(ProjectLinks.URL_QUERY_PARAM_QUERY) public set search(value: string) {
+        this.searchValue = value ? value : "";
+        console.log("bind-query==>", this.searchValue);
+    }
+
+    public page$: BehaviorSubject<number> = new BehaviorSubject<number>(1);
+
     private navigationService = inject(NavigationService);
     private searchService = inject(SearchService);
     private router = inject(Router);
@@ -152,20 +172,20 @@ export class SearchComponent extends BaseComponent implements OnInit {
     }
 
     private changePageAndSearch(): void {
-        let queryValue = "";
-        const queryParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_QUERY);
-        if (queryParam) {
-            queryValue = requireValue(queryParam);
-        }
-        this.searchValue = queryValue;
+        // let queryValue = "";
+        // const queryParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_QUERY);
+        // if (queryParam) {
+        //     queryValue = requireValue(queryParam);
+        // }
+        // this.searchValue = queryValue;
 
-        let page = 1;
-        const pageParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE);
-        if (pageParam) {
-            page = +requireValue(pageParam);
-        }
-        this.currentPage = page;
-
+        // let page = 1;
+        // const pageParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE);
+        // if (pageParam) {
+        //     page = +requireValue(pageParam);
+        // }
+        // this.currentPage = page;
+        console.log("==>", this.currentPage, this.searchValue);
         this.onSearchDatasets();
     }
 

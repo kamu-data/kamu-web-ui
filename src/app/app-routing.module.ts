@@ -29,6 +29,7 @@ import { DatasetFlowDetailsComponent } from "./dataset-flow/dataset-flow-details
 import { AccountComponent } from "./account/account.component";
 import { QueryExplainerComponent } from "./query-explainer/query-explainer.component";
 import { blockMetadataResolver } from "./common/resolvers/block-metadata.resolver";
+import { searchResolver } from "./common/resolvers/search.resolver";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -44,7 +45,8 @@ export const routes: Routes = [
     {
         path: ProjectLinks.URL_SEARCH,
         component: SearchComponent,
-        children: [{ path: ":id", component: SearchComponent }],
+        resolve: { searchData: searchResolver },
+        runGuardsAndResolvers: "always",
     },
     {
         canActivate: [AuthenticatedGuard],

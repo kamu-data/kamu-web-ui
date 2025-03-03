@@ -30,6 +30,7 @@ import { AccountComponent } from "./account/account.component";
 import { QueryExplainerComponent } from "./query-explainer/query-explainer.component";
 import { blockMetadataResolver } from "./common/resolvers/block-metadata.resolver";
 import { searchResolver } from "./common/resolvers/search.resolver";
+import { addPollingSourceResolver } from "./common/resolvers/add-polling-source.resolver";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -123,6 +124,7 @@ export const routes: Routes = [
             `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}` +
             `/${ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE}`,
         component: AddPollingSourceComponent,
+        resolve: { pollingSourceData: addPollingSourceResolver },
     },
     {
         canActivate: [AuthenticatedGuard],

@@ -7,7 +7,7 @@
 
 import { SearchService } from "./search.service";
 import { DatasetSearchResult, SearchFilters } from "../interface/search.interface";
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, numberAttribute, OnInit } from "@angular/core";
 import { NavigationService } from "../services/navigation.service";
 import ProjectLinks from "../project-links";
 import { Observable } from "rxjs";
@@ -19,15 +19,17 @@ import { Observable } from "rxjs";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchComponent implements OnInit {
-    private navigationService = inject(NavigationService);
-    private searchService = inject(SearchService);
-
     @Input(ProjectLinks.URL_QUERY_PARAM_QUERY) public set search(value: string) {
         this.searchValue = value ?? "";
     }
+    @Input({ transform: numberAttribute, alias: ProjectLinks.URL_QUERY_PARAM_PAGE }) public set page(value: number) {
+        this.currentPage = value ? value : 1;
+    }
+    private navigationService = inject(NavigationService);
+    private searchService = inject(SearchService);
 
-    public searchValue: string = "";
-    public currentPage = 1; // TODO: Should be zero-based and only offset for display
+    public searchValue: string;
+    public currentPage: number; // TODO: Should be zero-based and only offset for display
     public tableData$: Observable<DatasetSearchResult> = this.searchService.searchOverviewChanges;
 
     private sortOptions: { value: string; label: string; active: boolean }[] = [

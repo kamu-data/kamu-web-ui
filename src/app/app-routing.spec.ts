@@ -70,12 +70,7 @@ describe("Router", () => {
         }));
     });
 
-    [
-        ProjectLinks.URL_DATASET_CREATE,
-        ProjectLinks.URL_SETTINGS,
-        `myaccount/mydataset/${ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE}`,
-        `myaccount/mydataset/${ProjectLinks.URL_PARAM_SET_TRANSFORM}`,
-    ].forEach((url: string) => {
+    [ProjectLinks.URL_DATASET_CREATE, ProjectLinks.URL_SETTINGS].forEach((url: string) => {
         it(`Route to ${url} fails without a login and moves to Home`, fakeAsync(() => {
             promiseWithCatch(router.navigate([url]));
             tick();

@@ -31,6 +31,7 @@ import { QueryExplainerComponent } from "./query-explainer/query-explainer.compo
 import { blockMetadataResolver } from "./common/resolvers/block-metadata.resolver";
 import { searchResolver } from "./common/resolvers/search.resolver";
 import { addPollingSourceResolver } from "./common/resolvers/add-polling-source.resolver";
+import { setTransformResolver } from "./common/resolvers/set-transform.resolver";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -139,6 +140,7 @@ export const routes: Routes = [
             `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}` +
             `/${ProjectLinks.URL_PARAM_SET_TRANSFORM}`,
         component: SetTransformComponent,
+        resolve: { setTransformData: setTransformResolver },
     },
     {
         path: "**",

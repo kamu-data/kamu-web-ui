@@ -5,17 +5,12 @@
  * included in the LICENSE file.
  */
 
-import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { SearchService } from "./search.service";
 import { DatasetSearchResult, SearchFilters } from "../interface/search.interface";
-import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, numberAttribute, OnInit } from "@angular/core";
 import { NavigationService } from "../services/navigation.service";
-import { requireValue } from "../common/helpers/app.helpers";
 import ProjectLinks from "../project-links";
-import { filter, map } from "rxjs/operators";
 import { Observable } from "rxjs";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { BaseComponent } from "../common/components/base.component";
 
 @Component({
     selector: "app-search",
@@ -23,13 +18,18 @@ import { BaseComponent } from "../common/components/base.component";
     styleUrls: ["./search.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchComponent extends BaseComponent implements OnInit {
+export class SearchComponent implements OnInit {
+    @Input(ProjectLinks.URL_QUERY_PARAM_QUERY) public set search(value: string) {
+        this.searchValue = value ?? "";
+    }
+    @Input({ transform: numberAttribute, alias: ProjectLinks.URL_QUERY_PARAM_PAGE }) public set page(value: number) {
+        this.currentPage = value ? value : 1;
+    }
     private navigationService = inject(NavigationService);
     private searchService = inject(SearchService);
-    private router = inject(Router);
 
-    public searchValue = "";
-    public currentPage = 1; // TODO: Should be zero-based and only offset for display
+    public searchValue: string;
+    public currentPage: number; // TODO: Should be zero-based and only offset for display
     public tableData$: Observable<DatasetSearchResult> = this.searchService.searchOverviewChanges;
 
     private sortOptions: { value: string; label: string; active: boolean }[] = [
@@ -139,34 +139,6 @@ export class SearchComponent extends BaseComponent implements OnInit {
 
     public ngOnInit(): void {
         this.initTableData();
-
-        this.changePageAndSearch();
-
-        this.router.events
-            .pipe(
-                filter((event) => event instanceof NavigationEnd),
-                map((event) => event as RouterEvent),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(() => this.changePageAndSearch());
-    }
-
-    private changePageAndSearch(): void {
-        let queryValue = "";
-        const queryParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_QUERY);
-        if (queryParam) {
-            queryValue = requireValue(queryParam);
-        }
-        this.searchValue = queryValue;
-
-        let page = 1;
-        const pageParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE);
-        if (pageParam) {
-            page = +requireValue(pageParam);
-        }
-        this.currentPage = page;
-
-        this.onSearchDatasets();
     }
 
     private initTableData(): void {
@@ -179,16 +151,12 @@ export class SearchComponent extends BaseComponent implements OnInit {
     }
 
     public onPageChange(currentPage: number): void {
-        currentPage ? (this.currentPage = currentPage) : (this.currentPage = 1);
-        if (this.currentPage === 1) {
+        this.currentPage = currentPage;
+        if (currentPage === 1) {
             this.navigationService.navigateToSearch(this.searchValue);
             return;
         }
         this.navigationService.navigateToSearch(this.searchValue, currentPage);
-    }
-
-    private onSearchDatasets(): void {
-        this.searchService.searchDatasets(this.searchValue, this.currentPage - 1);
     }
 
     public updateAllComplete() {

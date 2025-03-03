@@ -8,7 +8,6 @@
 import { mockAccountDetails, mockAccountDetailsWithEmail } from "../../api/mock/auth.mock";
 import { RouterTestingModule } from "@angular/router/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ActivatedRoute, Router } from "@angular/router";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { AccountSettingsComponent } from "./account-settings.component";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
@@ -20,20 +19,18 @@ import {
 } from "src/app/common/helpers/base-test.helpers.spec";
 import { AccountSettingsTabs } from "./account-settings.constants";
 import { of } from "rxjs";
-import ProjectLinks from "src/app/project-links";
 import { LoginService } from "../../auth/login/login.service";
 import { MatIconModule } from "@angular/material/icon";
 import { ToastrModule } from "ngx-toastr";
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
+import { AccountSettingsModule } from "./account-settings.module";
 
 describe("AccountSettingsComponent", () => {
     let component: AccountSettingsComponent;
     let fixture: ComponentFixture<AccountSettingsComponent>;
     let loggedUserService: LoggedUserService;
     let loginService: LoginService;
-    let activatedRoute: ActivatedRoute;
     let accountEmailService: AccountEmailService;
-    let router: Router;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -44,13 +41,12 @@ describe("AccountSettingsComponent", () => {
                 RouterTestingModule,
                 HttpClientTestingModule,
                 MatIconModule,
+                AccountSettingsModule,
             ],
         }).compileComponents();
 
         registerMatSvgIcons();
 
-        activatedRoute = TestBed.inject(ActivatedRoute);
-        router = TestBed.inject(Router);
         accountEmailService = TestBed.inject(AccountEmailService);
 
         loginService = TestBed.inject(LoginService);
@@ -86,8 +82,9 @@ describe("AccountSettingsComponent", () => {
     });
 
     it("should open profile tab by default", () => {
+        component.category = null;
         fixture.detectChanges();
-        expect(component.activeTab).toEqual(AccountSettingsTabs.PROFILE);
+        expect(component.activeTab).toEqual(AccountSettingsTabs.ACCESS_TOKENS);
     });
 
     [
@@ -102,19 +99,15 @@ describe("AccountSettingsComponent", () => {
         AccountSettingsTabs.SECURITY,
     ].forEach((tab: AccountSettingsTabs) => {
         it(`should activate ${tab} tab`, () => {
-            activatedRoute.snapshot.params = {
-                [ProjectLinks.URL_PARAM_CATEGORY]: tab,
-            };
-            component.ngOnInit();
+            component.category = tab;
+            fixture.detectChanges();
             expect(component.activeTab).toEqual(tab);
         });
     });
 
-    it("should open profile tab for a wrong tab", async () => {
-        activatedRoute.snapshot.params = {
-            [ProjectLinks.URL_PARAM_CATEGORY]: "wrong",
-        };
-        await router.navigate(["/"]);
-        expect(component.activeTab).toEqual(AccountSettingsTabs.PROFILE);
+    it("should open access token tab for a wrong tab", () => {
+        component.category = "wrong-tab" as AccountSettingsTabs;
+        fixture.detectChanges();
+        expect(component.activeTab).toEqual(AccountSettingsTabs.ACCESS_TOKENS);
     });
 });

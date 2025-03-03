@@ -28,6 +28,11 @@ import { AdminDashboardComponent } from "./admin-view/admin-dashboard/admin-dash
 import { DatasetFlowDetailsComponent } from "./dataset-flow/dataset-flow-details/dataset-flow-details.component";
 import { AccountComponent } from "./account/account.component";
 import { QueryExplainerComponent } from "./query-explainer/query-explainer.component";
+import { blockMetadataResolver } from "./common/resolvers/block-metadata.resolver";
+import { searchResolver } from "./common/resolvers/search.resolver";
+import { addPollingSourceResolver } from "./common/resolvers/add-polling-source.resolver";
+import { setTransformResolver } from "./common/resolvers/set-transform.resolver";
+import { addPushSourceResolver } from "./common/resolvers/add-push-source.resolver";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -43,7 +48,8 @@ export const routes: Routes = [
     {
         path: ProjectLinks.URL_SEARCH,
         component: SearchComponent,
-        children: [{ path: ":id", component: SearchComponent }],
+        resolve: { searchData: searchResolver },
+        runGuardsAndResolvers: "always",
     },
     {
         canActivate: [AuthenticatedGuard],
@@ -70,6 +76,7 @@ export const routes: Routes = [
             `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}` +
             `/${ProjectLinks.URL_BLOCK}/:${ProjectLinks.URL_PARAM_BLOCK_HASH}`,
         component: MetadataBlockComponent,
+        resolve: { blockData: blockMetadataResolver },
     },
     {
         canActivate: [AuthenticatedGuard],
@@ -94,6 +101,10 @@ export const routes: Routes = [
                 path: `:${ProjectLinks.URL_PARAM_CATEGORY}`,
                 component: AccountSettingsComponent,
             },
+            {
+                path: ``,
+                component: AccountSettingsComponent,
+            },
         ],
     },
     {
@@ -115,6 +126,7 @@ export const routes: Routes = [
             `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}` +
             `/${ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE}`,
         component: AddPollingSourceComponent,
+        resolve: { pollingSourceData: addPollingSourceResolver },
     },
     {
         canActivate: [AuthenticatedGuard],
@@ -122,6 +134,7 @@ export const routes: Routes = [
             `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}` +
             `/${ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE}`,
         component: AddPushSourceComponent,
+        resolve: { addPushSourceData: addPushSourceResolver },
     },
     {
         canActivate: [AuthenticatedGuard],
@@ -129,6 +142,7 @@ export const routes: Routes = [
             `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}` +
             `/${ProjectLinks.URL_PARAM_SET_TRANSFORM}`,
         component: SetTransformComponent,
+        resolve: { setTransformData: setTransformResolver },
     },
     {
         path: "**",
@@ -137,7 +151,12 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: "reload" })],
+    imports: [
+        RouterModule.forRoot(routes, {
+            onSameUrlNavigation: "reload",
+            bindToComponentInputs: true,
+        }),
+    ],
     exports: [RouterModule],
 })
 export class AppRoutingModule {}

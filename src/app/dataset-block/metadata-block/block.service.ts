@@ -5,8 +5,9 @@
  * included in the LICENSE file.
  */
 
+import { MaybeNull } from "./../../interface/app.types";
 import { inject, Injectable } from "@angular/core";
-import { Subject, Observable } from "rxjs";
+import { Subject, Observable, BehaviorSubject } from "rxjs";
 import { map } from "rxjs/operators";
 import { DatasetApi } from "src/app/api/dataset.api";
 import { GetMetadataBlockQuery, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
@@ -21,9 +22,11 @@ export class BlockService {
 
     public currentBlock: MetadataBlockFragment;
 
-    private metadataBlockChanges$: Subject<MetadataBlockFragment> = new Subject<MetadataBlockFragment>();
+    private metadataBlockChanges$: BehaviorSubject<MaybeNull<MetadataBlockFragment>> = new BehaviorSubject<
+        MaybeNull<MetadataBlockFragment>
+    >(null);
 
-    public get metadataBlockChanges(): Observable<MetadataBlockFragment> {
+    public get metadataBlockChanges(): Observable<MaybeNull<MetadataBlockFragment>> {
         return this.metadataBlockChanges$.asObservable();
     }
 

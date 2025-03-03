@@ -26,10 +26,10 @@
         </div>
     </div>
 
-    <div class="container-main row" *ngIf="blockHash$ | async as blockHash">
+    <div class="container-main row">
         <div class="col-md-6">
             <div class="container-content mb-4">
-                <app-block-header [datasetInfo]="datasetInfo" [blockHash]="blockHash" />
+                <app-block-header [datasetInfo]="datasetInfo" />
                 <app-event-details [datasetInfo]="datasetInfo" />
             </div>
         </div>

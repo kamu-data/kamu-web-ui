@@ -97,7 +97,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     public get canEditDatasetInfo(): boolean {
         if (this.hasDatasetInfo) {
-            return this.datasetPermissions.permissions.canCommit;
+            return this.datasetPermissions.permissions.metadata.canCommit;
         } else {
             return false;
         }
@@ -109,7 +109,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     public get canAddDatasetInfo(): boolean {
         if (!this.hasDatasetInfo) {
-            return this.datasetPermissions.permissions.canCommit && !isNil(this.currentState);
+            return this.datasetPermissions.permissions.metadata.canCommit && !isNil(this.currentState);
         } else {
             return false;
         }
@@ -128,7 +128,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get canAddSetPollingSource(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.canCommit) {
+        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
             return (
                 !this.currentState.overview.metadata.currentPollingSource &&
                 this.datasetBasics.kind === DatasetKind.Root &&
@@ -140,7 +140,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get canAddPushSource(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.canCommit) {
+        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
             return (
                 !this.currentState.overview.metadata.chain.blocks.nodes.filter(
                     (item) => item.event.__typename === "AddPushSource",
@@ -152,7 +152,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get canAddSetTransform(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.canCommit) {
+        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
             return (
                 !this.currentState.overview.metadata.currentTransform &&
                 this.datasetBasics.kind === DatasetKind.Derivative
@@ -163,7 +163,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get canAddReadme(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.canCommit) {
+        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
             return !this.currentState.overview.metadata.currentReadme && !this.editingReadme;
         } else {
             return false;
@@ -171,7 +171,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get canEditReadme(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.canCommit) {
+        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
             return !isNil(this.currentState.overview.metadata.currentReadme);
         } else {
             return false;
@@ -179,7 +179,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get canAddLicense(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.canCommit) {
+        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
             return isNil(this.currentState.overview.metadata.currentLicense);
         } else {
             return false;
@@ -187,7 +187,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get canEditLicense(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.canCommit) {
+        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
             return !isNil(this.currentState.overview.metadata.currentLicense);
         } else {
             return false;
@@ -195,7 +195,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get canAddWatermark(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.canCommit) {
+        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
             return !this.hasWatermark && this.datasetBasics.kind === DatasetKind.Root;
         } else {
             return false;
@@ -203,7 +203,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get canEditWatermark(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.canCommit) {
+        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
             return this.hasWatermark && this.datasetBasics.kind === DatasetKind.Root;
         } else {
             return false;
@@ -211,7 +211,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get canSchedule(): boolean {
-        return this.datasetPermissions.permissions.canSchedule;
+        return this.datasetPermissions.permissions.flows.canRun;
     }
 
     public get canRefresh(): boolean {

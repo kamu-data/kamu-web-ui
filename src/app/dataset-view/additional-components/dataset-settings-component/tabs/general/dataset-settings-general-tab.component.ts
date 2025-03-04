@@ -64,7 +64,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
             recursive: [false],
         });
 
-        if (!this.datasetPermissions.permissions.canRename) {
+        if (!this.datasetPermissions.permissions.general.canRename) {
             this.renameDatasetForm.disable();
         }
 
@@ -90,7 +90,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     }
 
     public get isDeleteDatasetDisabled(): boolean {
-        return !this.datasetPermissions.permissions.canDelete;
+        return !this.datasetPermissions.permissions.general.canDelete;
     }
 
     public get isRoot(): boolean {

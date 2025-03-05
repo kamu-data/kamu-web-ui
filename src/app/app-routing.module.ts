@@ -33,6 +33,7 @@ import { searchResolver } from "./common/resolvers/search.resolver";
 import { addPollingSourceResolver } from "./common/resolvers/add-polling-source.resolver";
 import { setTransformResolver } from "./common/resolvers/set-transform.resolver";
 import { addPushSourceResolver } from "./common/resolvers/add-push-source.resolver";
+import { AccountSettingsTabs } from "./account/settings/account-settings.constants";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -72,20 +73,6 @@ export const routes: Routes = [
         loadChildren: () => import("./query/query.module").then((m) => m.QueryModule),
     },
     {
-        path:
-            `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}` +
-            `/${ProjectLinks.URL_BLOCK}/:${ProjectLinks.URL_PARAM_BLOCK_HASH}`,
-        component: MetadataBlockComponent,
-        resolve: { blockData: blockMetadataResolver },
-    },
-    {
-        canActivate: [AuthenticatedGuard],
-        path:
-            `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}` +
-            `/${ProjectLinks.URL_FLOW_DETAILS}/:${ProjectLinks.URL_PARAM_FLOW_ID}/:${ProjectLinks.URL_PARAM_CATEGORY}`,
-        component: DatasetFlowDetailsComponent,
-    },
-    {
         path: ProjectLinks.URL_PAGE_NOT_FOUND,
         component: PageNotFoundComponent,
     },
@@ -94,18 +81,14 @@ export const routes: Routes = [
         component: ReturnToCliComponent,
     },
     {
-        path: ProjectLinks.URL_SETTINGS,
+        path: `${ProjectLinks.URL_SETTINGS}`,
+        redirectTo: `/${ProjectLinks.URL_SETTINGS}/${AccountSettingsTabs.ACCESS_TOKENS}`,
+        pathMatch: "full",
+    },
+    {
+        path: `${ProjectLinks.URL_SETTINGS}/:${ProjectLinks.URL_PARAM_CATEGORY}`,
         canActivate: [AuthenticatedGuard],
-        children: [
-            {
-                path: `:${ProjectLinks.URL_PARAM_CATEGORY}`,
-                component: AccountSettingsComponent,
-            },
-            {
-                path: ``,
-                component: AccountSettingsComponent,
-            },
-        ],
+        component: AccountSettingsComponent,
     },
     {
         path: `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}`,
@@ -121,29 +104,39 @@ export const routes: Routes = [
         ],
     },
     {
-        canActivate: [AuthenticatedGuard],
-        path:
-            `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}` +
-            `/${ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE}`,
-        component: AddPollingSourceComponent,
-        resolve: { pollingSourceData: addPollingSourceResolver },
+        path: `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}`,
+        children: [
+            {
+                path: `${ProjectLinks.URL_BLOCK}/:${ProjectLinks.URL_PARAM_BLOCK_HASH}`,
+                component: MetadataBlockComponent,
+                resolve: { blockData: blockMetadataResolver },
+            },
+            {
+                canActivate: [AuthenticatedGuard],
+                path: `${ProjectLinks.URL_FLOW_DETAILS}/:${ProjectLinks.URL_PARAM_FLOW_ID}/:${ProjectLinks.URL_PARAM_CATEGORY}`,
+                component: DatasetFlowDetailsComponent,
+            },
+            {
+                canActivate: [AuthenticatedGuard],
+                path: `${ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE}`,
+                component: AddPollingSourceComponent,
+                resolve: { pollingSourceData: addPollingSourceResolver },
+            },
+            {
+                canActivate: [AuthenticatedGuard],
+                path: `${ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE}`,
+                component: AddPushSourceComponent,
+                resolve: { addPushSourceData: addPushSourceResolver },
+            },
+            {
+                canActivate: [AuthenticatedGuard],
+                path: `${ProjectLinks.URL_PARAM_SET_TRANSFORM}`,
+                component: SetTransformComponent,
+                resolve: { setTransformData: setTransformResolver },
+            },
+        ],
     },
-    {
-        canActivate: [AuthenticatedGuard],
-        path:
-            `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}` +
-            `/${ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE}`,
-        component: AddPushSourceComponent,
-        resolve: { addPushSourceData: addPushSourceResolver },
-    },
-    {
-        canActivate: [AuthenticatedGuard],
-        path:
-            `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}` +
-            `/${ProjectLinks.URL_PARAM_SET_TRANSFORM}`,
-        component: SetTransformComponent,
-        resolve: { setTransformData: setTransformResolver },
-    },
+
     {
         path: "**",
         component: PageNotFoundComponent,

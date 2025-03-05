@@ -5,14 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { MaybeNull } from "./../../interface/app.types";
 import { inject, Injectable } from "@angular/core";
-import { Subject, Observable, BehaviorSubject } from "rxjs";
+import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { DatasetApi } from "src/app/api/dataset.api";
 import { GetMetadataBlockQuery, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { MaybeUndefined } from "src/app/interface/app.types";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
+import { MetadataBlockInfo } from "./metadata-block.types";
 
 @Injectable({
     providedIn: "root",
@@ -20,42 +20,13 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
 export class BlockService {
     private datasetApi = inject(DatasetApi);
 
-    public currentBlock: MetadataBlockFragment;
-
-    private metadataBlockChanges$: BehaviorSubject<MaybeNull<MetadataBlockFragment>> = new BehaviorSubject<
-        MaybeNull<MetadataBlockFragment>
-    >(null);
-
-    public get metadataBlockChanges(): Observable<MaybeNull<MetadataBlockFragment>> {
-        return this.metadataBlockChanges$.asObservable();
-    }
-
-    public emitMetadataBlockChanged(block: MetadataBlockFragment): void {
-        this.metadataBlockChanges$.next(block);
-    }
-
-    private metadataBlockAsYamlChanges$: Subject<string> = new Subject<string>();
-
-    public get metadataBlockAsYamlChanges(): Observable<string> {
-        return this.metadataBlockAsYamlChanges$.asObservable();
-    }
-
-    public emitMetadataBlockAsYamlChanged(block: string): void {
-        this.metadataBlockAsYamlChanges$.next(block);
-    }
-
-    public requestMetadataBlock(info: DatasetInfo, blockHash: string): Observable<void> {
+    public requestMetadataBlock(info: DatasetInfo, blockHash: string): Observable<MaybeUndefined<MetadataBlockInfo>> {
         return this.datasetApi.getBlockByHash({ ...info, blockHash }).pipe(
             map((data: GetMetadataBlockQuery) => {
                 if (data.datasets.byOwnerAndName) {
-                    this.currentBlock = data.datasets.byOwnerAndName.metadata.chain
-                        .blockByHash as MetadataBlockFragment;
-                    const blockAsYaml = data.datasets.byOwnerAndName.metadata.chain
-                        .blockByHashEncoded as MaybeUndefined<string>;
-                    this.emitMetadataBlockChanged(this.currentBlock);
-                    if (blockAsYaml) {
-                        this.emitMetadataBlockAsYamlChanged(blockAsYaml);
-                    }
+                    const block = data.datasets.byOwnerAndName.metadata.chain.blockByHash as MetadataBlockFragment;
+                    const blockAsYaml = data.datasets.byOwnerAndName.metadata.chain.blockByHashEncoded as string;
+                    return { block, blockAsYaml };
                 }
             }),
         );

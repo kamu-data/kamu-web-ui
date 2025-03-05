@@ -52,7 +52,6 @@ describe("EditAddPushSourceService", () => {
         const mockHistory = mockHistoryEditAddPushSourceService;
         spyOn(datasetService, "getDatasetHistory").and.returnValue(of(mockHistory));
         spyOn(blockService, "requestMetadataBlock").and.returnValue(of());
-        blockService.emitMetadataBlockAsYamlChanged("test yaml");
         service.getEventAsYaml(mockDatasetInfo, SupportedEvents.AddPushSource, "mockSourceName").subscribe(
             () => null,
             () => {

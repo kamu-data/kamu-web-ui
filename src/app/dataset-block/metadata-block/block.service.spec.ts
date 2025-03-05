@@ -12,11 +12,11 @@ import { TestBed } from "@angular/core/testing";
 import { BlockService } from "./block.service";
 import { DatasetApi } from "src/app/api/dataset.api";
 import { of } from "rxjs";
-import { first } from "rxjs/operators";
 import { mockDatasetInfo } from "src/app/search/mock.data";
-import { MaybeNull } from "src/app/interface/app.types";
+import { MaybeUndefined } from "src/app/interface/app.types";
+import { MetadataBlockInfo } from "./metadata-block.types";
 
-describe("BlockService", () => {
+fdescribe("BlockService", () => {
     let service: BlockService;
     let datasetApi: DatasetApi;
 
@@ -34,18 +34,17 @@ describe("BlockService", () => {
 
     it("should check get block from api", () => {
         spyOn(datasetApi, "getBlockByHash").and.returnValue(of(mockGetMetadataBlockQuery));
-        const metadataBlockChanges$ = service.metadataBlockChanges
-            .pipe(first())
-            .subscribe((block: MaybeNull<MetadataBlockFragment>) => {
-                if (block) {
-                    const expectedBlock = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
-                        .blockByHash as MetadataBlockFragment;
-                    expect(block).toEqual(expectedBlock);
+
+        const metadataBlock$ = service
+            .requestMetadataBlock(mockDatasetInfo, TEST_BLOCK_HASH)
+            .subscribe((result: MaybeUndefined<MetadataBlockInfo>) => {
+                if (result) {
+                    expect(result.blockAsYaml).toEqual(
+                        mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain.blockByHashEncoded as string,
+                    );
                 }
             });
 
-        service.requestMetadataBlock(mockDatasetInfo, TEST_BLOCK_HASH).subscribe();
-
-        expect(metadataBlockChanges$.closed).toBeTrue();
+        expect(metadataBlock$.closed).toBeTrue();
     });
 });

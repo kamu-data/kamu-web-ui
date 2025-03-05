@@ -82,13 +82,19 @@ export const routes: Routes = [
     },
     {
         path: `${ProjectLinks.URL_SETTINGS}`,
-        redirectTo: `/${ProjectLinks.URL_SETTINGS}/${AccountSettingsTabs.ACCESS_TOKENS}`,
-        pathMatch: "full",
-    },
-    {
-        path: `${ProjectLinks.URL_SETTINGS}/:${ProjectLinks.URL_PARAM_CATEGORY}`,
-        canActivate: [AuthenticatedGuard],
         component: AccountSettingsComponent,
+        children: [
+            {
+                path: "",
+                redirectTo: `/${ProjectLinks.URL_SETTINGS}/${AccountSettingsTabs.ACCESS_TOKENS}`,
+                pathMatch: "full",
+            },
+            {
+                path: `:${ProjectLinks.URL_PARAM_CATEGORY}`,
+                canActivate: [AuthenticatedGuard],
+                component: AccountSettingsComponent,
+            },
+        ],
     },
     {
         path: `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}`,

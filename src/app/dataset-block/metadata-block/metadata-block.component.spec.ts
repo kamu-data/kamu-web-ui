@@ -116,7 +116,6 @@ describe("MetadataBlockComponent", () => {
         component = fixture.componentInstance;
         const blockFragment = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
             .blockByHash as MetadataBlockFragment;
-        blockService.emitMetadataBlockChanged(blockFragment);
         fixture.detectChanges();
     });
 

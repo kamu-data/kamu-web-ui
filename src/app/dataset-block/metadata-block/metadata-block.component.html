@@ -26,11 +26,11 @@
         </div>
     </div>
 
-    <div class="container-main row">
+    <div class="container-main row" *ngIf="block$ | async as data">
         <div class="col-md-6">
             <div class="container-content mb-4">
-                <app-block-header [datasetInfo]="datasetInfo" />
-                <app-event-details [datasetInfo]="datasetInfo" />
+                <app-block-header [block]="data.block" [datasetInfo]="datasetInfo" />
+                <app-event-details [block]="data.block" [datasetInfo]="datasetInfo" />
             </div>
         </div>
         <div class="col-md-6">
@@ -42,7 +42,7 @@
                     (onPageChangeEmit)="onPageChange($event)"
                 />
             </div>
-            <app-yaml-view-section />
+            <app-yaml-view-section [blockAsYaml]="data.blockAsYaml" [block]="data.block" />
         </div>
     </div>
 </div>

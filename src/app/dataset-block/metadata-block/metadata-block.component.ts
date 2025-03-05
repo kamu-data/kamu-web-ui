@@ -6,16 +6,15 @@
  */
 
 import { DatasetHistoryUpdate } from "../../dataset-view/dataset.subscriptions.interface";
-import { Observable, Subscription } from "rxjs";
+import { map, Observable, Subscription } from "rxjs";
 import { DatasetViewTypeEnum } from "../../dataset-view/dataset-view.interface";
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { BlockService } from "./block.service";
-import { MaybeNull } from "src/app/interface/app.types";
+import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { BaseDatasetDataComponent } from "src/app/common/components/base-dataset-data.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import ProjectLinks from "src/app/project-links";
+import { MetadataBlockInfo } from "./metadata-block.types";
 
 @Component({
     selector: "app-metadata-block",
@@ -23,20 +22,16 @@ import ProjectLinks from "src/app/project-links";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataBlockComponent extends BaseDatasetDataComponent implements OnInit {
-    @Input(ProjectLinks.URL_PARAM_BLOCK_HASH) public set hash(value: string) {
-        this.blockHash = value;
-    }
+    @Input(ProjectLinks.URL_PARAM_BLOCK_HASH) public blockHash: string;
     public readonly HISTORY_TYPE = DatasetViewTypeEnum.History;
     private static readonly BLOCKS_PER_PAGE = 10;
 
     public datasetInfo$: Observable<DatasetInfo>;
-    public block$: Observable<MaybeNull<MetadataBlockFragment>>;
-    public blockHash: string;
+    public block$: Observable<MaybeUndefined<MetadataBlockInfo>>;
     public datasetHistoryUpdate$: Observable<MaybeNull<DatasetHistoryUpdate>>;
-    private blockService = inject(BlockService);
 
     public ngOnInit(): void {
-        this.block$ = this.blockService.metadataBlockChanges;
+        this.block$ = this.activatedRoute.data.pipe(map(({ blockData }) => blockData as MetadataBlockInfo));
         this.datasetBasics$ = this.datasetService.datasetChanges;
         this.datasetPermissions$ = this.datasetSubsService.permissionsChanges;
         this.datasetHistoryUpdate$ = this.datasetSubsService.historyChanges;

@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { MetadataBlockFragment } from "../../api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery, TEST_BLOCK_HASH } from "../../api/mock/dataset.mock";
 import { Apollo } from "apollo-angular";
 import { TestBed } from "@angular/core/testing";
@@ -16,7 +15,7 @@ import { mockDatasetInfo } from "src/app/search/mock.data";
 import { MaybeUndefined } from "src/app/interface/app.types";
 import { MetadataBlockInfo } from "./metadata-block.types";
 
-fdescribe("BlockService", () => {
+describe("BlockService", () => {
     let service: BlockService;
     let datasetApi: DatasetApi;
 

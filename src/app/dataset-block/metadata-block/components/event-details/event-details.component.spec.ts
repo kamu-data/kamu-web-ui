@@ -6,7 +6,6 @@
  */
 
 import { SetPollingSourceEventComponent } from "./components/set-polling-source-event/set-polling-source-event.component";
-import { BlockService } from "../../block.service";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { DatasetApi } from "src/app/api/dataset.api";
@@ -19,7 +18,6 @@ import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.sp
 describe("EventDetailsComponent", () => {
     let component: EventDetailsComponent;
     let fixture: ComponentFixture<EventDetailsComponent>;
-    let blockService: BlockService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -31,11 +29,10 @@ describe("EventDetailsComponent", () => {
         registerMatSvgIcons();
 
         fixture = TestBed.createComponent(EventDetailsComponent);
-        blockService = TestBed.inject(BlockService);
         component = fixture.componentInstance;
-        const blockFragment = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
+        component.block = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
             .blockByHash as MetadataBlockFragment;
-        blockService.emitMetadataBlockChanged(blockFragment);
+        component.datasetInfo = { accountName: "accountName", datasetName: "datasetName" };
         fixture.detectChanges();
     });
 

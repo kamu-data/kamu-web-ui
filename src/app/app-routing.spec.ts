@@ -85,7 +85,11 @@ describe("Router", () => {
             promiseWithCatch(router.navigate([url]));
             tick();
 
-            expect(location.path()).toBe("/" + url);
+            if (url === ProjectLinks.URL_SETTINGS) {
+                expect(location.path()).toBe("/" + url + "/access-tokens");
+            } else {
+                expect(location.path()).toBe("/" + url);
+            }
             flush();
         }));
     });

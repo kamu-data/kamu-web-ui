@@ -5,9 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { Injectable } from "@angular/core";
-
-@Injectable()
 export default class RoutingResolvers {
     public static readonly METADATA_BLOCK_KEY = "blockData";
     public static readonly ADD_POLLING_SOURCE_KEY = "pollingSourceData";

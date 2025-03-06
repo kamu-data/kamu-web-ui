@@ -7,15 +7,14 @@
 
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
-import { catchError, EMPTY } from "rxjs";
+import { catchError, EMPTY, map } from "rxjs";
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import { MetadataBlockInfo } from "src/app/dataset-block/metadata-block/metadata-block.types";
-import { MaybeUndefined } from "src/app/interface/app.types";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 
-export const blockMetadataResolver: ResolveFn<MaybeUndefined<MetadataBlockInfo>> = (route: ActivatedRouteSnapshot) => {
+export const blockMetadataResolver: ResolveFn<MetadataBlockInfo> = (route: ActivatedRouteSnapshot) => {
     const blockService = inject(BlockService);
     const navigationService = inject(NavigationService);
     const blockHash = route.paramMap.get(ProjectLinks.URL_PARAM_BLOCK_HASH) as string;
@@ -25,6 +24,7 @@ export const blockMetadataResolver: ResolveFn<MaybeUndefined<MetadataBlockInfo>>
     } as DatasetInfo;
 
     return blockService.requestMetadataBlock(datasetInfo, blockHash).pipe(
+        map((data) => data as MetadataBlockInfo),
         catchError(() => {
             navigationService.navigateToPageNotFound();
             return EMPTY;

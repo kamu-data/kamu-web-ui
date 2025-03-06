@@ -5,9 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { Injectable } from "@angular/core";
-
-@Injectable()
 export default class ProjectLinks {
     public static readonly URL_GITHUB_CALLBACK: string = "github_callback";
     public static readonly URL_BLOCK: string = "block";

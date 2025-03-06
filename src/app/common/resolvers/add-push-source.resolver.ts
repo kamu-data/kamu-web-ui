@@ -7,13 +7,13 @@
 
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
+import { map } from "rxjs";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { EditAddPushSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/edit-add-push-source.service";
-import { MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
 
-export const addPushSourceResolver: ResolveFn<MaybeNullOrUndefined<string>> = (route: ActivatedRouteSnapshot) => {
+export const addPushSourceResolver: ResolveFn<string> = (route: ActivatedRouteSnapshot) => {
     const editService = inject(EditAddPushSourceService);
     const datasetInfo = {
         accountName: route.paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME),
@@ -21,5 +21,7 @@ export const addPushSourceResolver: ResolveFn<MaybeNullOrUndefined<string>> = (r
     } as DatasetInfo;
     const sourceName = route.paramMap.get(ProjectLinks.URL_QUERY_PARAM_PUSH_SOURCE_NAME) ?? "";
 
-    return editService.getEventAsYaml(datasetInfo, SupportedEvents.AddPushSource, sourceName);
+    return editService
+        .getEventAsYaml(datasetInfo, SupportedEvents.AddPushSource, sourceName)
+        .pipe(map((data) => data as string));
 };

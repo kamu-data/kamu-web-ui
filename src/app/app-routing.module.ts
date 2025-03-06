@@ -118,27 +118,29 @@ export const routes: Routes = [
                 resolve: { blockData: blockMetadataResolver },
             },
             {
+                path: "",
                 canActivate: [AuthenticatedGuard],
-                path: `${ProjectLinks.URL_FLOW_DETAILS}/:${ProjectLinks.URL_PARAM_FLOW_ID}/:${ProjectLinks.URL_PARAM_CATEGORY}`,
-                component: DatasetFlowDetailsComponent,
-            },
-            {
-                canActivate: [AuthenticatedGuard],
-                path: `${ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE}`,
-                component: AddPollingSourceComponent,
-                resolve: { pollingSourceData: addPollingSourceResolver },
-            },
-            {
-                canActivate: [AuthenticatedGuard],
-                path: `${ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE}`,
-                component: AddPushSourceComponent,
-                resolve: { addPushSourceData: addPushSourceResolver },
-            },
-            {
-                canActivate: [AuthenticatedGuard],
-                path: `${ProjectLinks.URL_PARAM_SET_TRANSFORM}`,
-                component: SetTransformComponent,
-                resolve: { setTransformData: setTransformResolver },
+                children: [
+                    {
+                        path: `${ProjectLinks.URL_FLOW_DETAILS}/:${ProjectLinks.URL_PARAM_FLOW_ID}/:${ProjectLinks.URL_PARAM_CATEGORY}`,
+                        component: DatasetFlowDetailsComponent,
+                    },
+                    {
+                        path: `${ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE}`,
+                        component: AddPollingSourceComponent,
+                        resolve: { pollingSourceData: addPollingSourceResolver },
+                    },
+                    {
+                        path: `${ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE}`,
+                        component: AddPushSourceComponent,
+                        resolve: { addPushSourceData: addPushSourceResolver },
+                    },
+                    {
+                        path: `${ProjectLinks.URL_PARAM_SET_TRANSFORM}`,
+                        component: SetTransformComponent,
+                        resolve: { setTransformData: setTransformResolver },
+                    },
+                ],
             },
         ],
     },

@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove "Dashboard" link from application header
 - Disabled "keywords" feature for "demo" mode
 - Metadata block page for SetTransfom: private inputs are not displayed for non-admin
+- Query explainer: page empty if query returns empty result
 
 ## [0.40.1] - 2025-02-20
 ### Changed

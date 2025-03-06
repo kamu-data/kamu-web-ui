@@ -39,13 +39,17 @@ import RoutingResolvers from "./common/resolvers/routing-resolvers";
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
     {
+        path: ProjectLinks.URL_LOGIN,
+        component: LoginComponent,
+        canActivate: [LoginGuard],
+    },
+    {
         path: ProjectLinks.URL_GITHUB_CALLBACK,
         component: GithubCallbackComponent,
     },
     {
-        path: ProjectLinks.URL_LOGIN,
-        component: LoginComponent,
-        canActivate: [LoginGuard],
+        path: ProjectLinks.URL_RETURN_TO_CLI,
+        component: ReturnToCliComponent,
     },
     {
         path: ProjectLinks.URL_SEARCH,
@@ -59,11 +63,6 @@ export const routes: Routes = [
         component: DatasetCreateComponent,
     },
     {
-        canActivate: [AdminGuard],
-        path: ProjectLinks.URL_ADMIN_DASHBOARD,
-        component: AdminDashboardComponent,
-    },
-    {
         path: ProjectLinks.URL_QUERY_EXPLAINER,
         component: QueryExplainerComponent,
         loadChildren: () => import("./query-explainer/query-explainer.module").then((m) => m.QueryExplainerModule),
@@ -72,14 +71,6 @@ export const routes: Routes = [
         path: ProjectLinks.URL_QUERY,
         component: GlobalQueryComponent,
         loadChildren: () => import("./query/query.module").then((m) => m.QueryModule),
-    },
-    {
-        path: ProjectLinks.URL_PAGE_NOT_FOUND,
-        component: PageNotFoundComponent,
-    },
-    {
-        path: ProjectLinks.URL_RETURN_TO_CLI,
-        component: ReturnToCliComponent,
     },
     {
         path: `${ProjectLinks.URL_SETTINGS}`,
@@ -144,6 +135,15 @@ export const routes: Routes = [
                 ],
             },
         ],
+    },
+    {
+        canActivate: [AdminGuard],
+        path: ProjectLinks.URL_ADMIN_DASHBOARD,
+        component: AdminDashboardComponent,
+    },
+    {
+        path: ProjectLinks.URL_PAGE_NOT_FOUND,
+        component: PageNotFoundComponent,
     },
 
     {

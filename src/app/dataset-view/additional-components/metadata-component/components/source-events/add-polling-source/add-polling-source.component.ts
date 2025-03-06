@@ -6,7 +6,7 @@
  */
 
 import { FetchKind, SetPollingSourceSection } from "./add-polling-source-form.types";
-import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { FormArray, FormGroup } from "@angular/forms";
 import { FETCH_STEP_RADIO_CONTROLS } from "./form-control.source";
 import { FETCH_FORM_DATA } from "../steps/data/fetch-form-data";
@@ -15,7 +15,7 @@ import { SupportedEvents } from "src/app/dataset-block/metadata-block/components
 import { STEPPER_GLOBAL_OPTIONS } from "@angular/cdk/stepper";
 import { SourcesSection } from "./process-form.service.types";
 import { BaseSourceEventComponent } from "../../base-source-event.component";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 
 @Component({
     selector: "app-add-polling-source",
@@ -30,6 +30,8 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
     ],
 })
 export class AddPollingSourceComponent extends BaseSourceEventComponent implements OnInit {
+    @Input(RoutingResolvers.ADD_POLLING_SOURCE_KEY) public eventYamlByHash: string;
+
     public currentStep: SetPollingSourceSection = SetPollingSourceSection.FETCH;
     public steps: typeof SetPollingSourceSection = SetPollingSourceSection;
     // ---------------------------------
@@ -74,12 +76,7 @@ export class AddPollingSourceComponent extends BaseSourceEventComponent implemen
     }
 
     public initEditForm(): void {
-        this.activatedRoute.data.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(({ pollingSourceData }) => {
-            if (pollingSourceData) {
-                this.eventYamlByHash = pollingSourceData as string;
-            }
-            this.history = this.editService.history;
-        });
+        this.history = this.editService.history;
     }
 
     public changeStep(step: SourcesSection): void {

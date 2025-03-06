@@ -34,6 +34,7 @@ import { addPollingSourceResolver } from "./common/resolvers/add-polling-source.
 import { setTransformResolver } from "./common/resolvers/set-transform.resolver";
 import { addPushSourceResolver } from "./common/resolvers/add-push-source.resolver";
 import { AccountSettingsTabs } from "./account/settings/account-settings.constants";
+import RoutingResolvers from "./common/resolvers/routing-resolvers";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -49,7 +50,7 @@ export const routes: Routes = [
     {
         path: ProjectLinks.URL_SEARCH,
         component: SearchComponent,
-        resolve: { searchData: searchResolver },
+        resolve: { [RoutingResolvers.SEARCH_KEY]: searchResolver },
         runGuardsAndResolvers: "always",
     },
     {
@@ -115,7 +116,7 @@ export const routes: Routes = [
             {
                 path: `${ProjectLinks.URL_BLOCK}/:${ProjectLinks.URL_PARAM_BLOCK_HASH}`,
                 component: MetadataBlockComponent,
-                resolve: { blockData: blockMetadataResolver },
+                resolve: { [RoutingResolvers.METADATA_BLOCK_KEY]: blockMetadataResolver },
             },
             {
                 path: "",
@@ -128,17 +129,17 @@ export const routes: Routes = [
                     {
                         path: `${ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE}`,
                         component: AddPollingSourceComponent,
-                        resolve: { pollingSourceData: addPollingSourceResolver },
+                        resolve: { [RoutingResolvers.ADD_POLLING_SOURCE_KEY]: addPollingSourceResolver },
                     },
                     {
                         path: `${ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE}`,
                         component: AddPushSourceComponent,
-                        resolve: { addPushSourceData: addPushSourceResolver },
+                        resolve: { [RoutingResolvers.ADD_PUSH_SOURCE_KEY]: addPushSourceResolver },
                     },
                     {
                         path: `${ProjectLinks.URL_PARAM_SET_TRANSFORM}`,
                         component: SetTransformComponent,
-                        resolve: { setTransformData: setTransformResolver },
+                        resolve: { [RoutingResolvers.SET_TRANSFORM_KEY]: setTransformResolver },
                     },
                 ],
             },

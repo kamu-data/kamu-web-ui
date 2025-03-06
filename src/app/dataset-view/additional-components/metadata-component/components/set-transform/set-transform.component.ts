@@ -6,7 +6,7 @@
  */
 
 import { DatasetKind, TransformInput } from "../../../../../api/kamu.graphql.interface";
-import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { MatTreeNestedDataSource } from "@angular/material/tree";
 import { MaybeNull } from "src/app/interface/app.types";
@@ -20,6 +20,7 @@ import { from } from "rxjs";
 import { BaseMainEventComponent } from "../source-events/base-main-event.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import AppValues from "src/app/common/values/app.values";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 
 @Component({
     selector: "app-set-transform",
@@ -28,6 +29,8 @@ import AppValues from "src/app/common/values/app.values";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetTransformComponent extends BaseMainEventComponent implements OnInit {
+    @Input(RoutingResolvers.SET_TRANSFORM_KEY) public eventYamlByHash: string;
+
     public inputDatasets = new Set<string>();
     public selectedEngine: string;
     public currentSetTransformEvent: MaybeNull<SetTransformYamlType>;
@@ -53,22 +56,19 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
     }
 
     private initQueriesSection(): void {
-        this.activatedRoute.data.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(({ setTransformData }) => {
-            if (setTransformData) {
-                this.eventYamlByHash = setTransformData as string;
-                this.currentSetTransformEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
+        if (this.eventYamlByHash) {
+            this.currentSetTransformEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
 
-                if (this.currentSetTransformEvent.transform.query) {
-                    this.initDefaultQueriesSection(this.currentSetTransformEvent.transform.query);
-                } else {
-                    this.queries = this.currentSetTransformEvent.transform.queries;
-                }
-                this.getInputDatasetsInfo();
+            if (this.currentSetTransformEvent.transform.query) {
+                this.initDefaultQueriesSection(this.currentSetTransformEvent.transform.query);
             } else {
-                this.initDefaultQueriesSection();
+                this.queries = this.currentSetTransformEvent.transform.queries;
             }
-            this.history = this.editService.history;
-        });
+            this.getInputDatasetsInfo();
+        } else {
+            this.initDefaultQueriesSection();
+        }
+        this.history = this.editService.history;
     }
 
     private initDefaultQueriesSection(query = ""): void {

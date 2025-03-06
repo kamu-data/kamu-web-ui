@@ -7,7 +7,7 @@
 
 import { inject } from "@angular/core";
 import { DatasetService } from "../dataset-view/dataset.service";
-import { Observable, EMPTY } from "rxjs";
+import { Observable, EMPTY, of } from "rxjs";
 import { expand, last, map, switchMap } from "rxjs/operators";
 import { AddPushSource, MetadataBlockFragment } from "../api/kamu.graphql.interface";
 import { BlockService } from "../dataset-block/metadata-block/block.service";
@@ -48,7 +48,9 @@ export abstract class BaseYamlEventService {
                     return filteredHistory;
                 }),
                 switchMap((filteredHistory: MetadataBlockFragment[]) => {
-                    return this.blockService.requestMetadataBlock(info, filteredHistory[0]?.blockHash);
+                    return filteredHistory[0]
+                        ? this.blockService.requestMetadataBlock(info, filteredHistory[0].blockHash)
+                        : of(undefined);
                 }),
                 map((result: MaybeUndefined<MetadataBlockInfo>) => {
                     if (result) return result.blockAsYaml;

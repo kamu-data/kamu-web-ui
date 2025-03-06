@@ -15,8 +15,8 @@ import { SourcesSection } from "../add-polling-source/process-form.service.types
 import { EditAddPushSourceService } from "./edit-add-push-source.service";
 import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { BaseSourceEventComponent } from "../../base-source-event.component";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AddPushSourceSection } from "./add-push-source-form.types";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 
 @Component({
     selector: "app-add-push-source",
@@ -26,6 +26,7 @@ import { AddPushSourceSection } from "./add-push-source-form.types";
 })
 export class AddPushSourceComponent extends BaseSourceEventComponent {
     @Input(ProjectLinks.URL_QUERY_PARAM_PUSH_SOURCE_NAME) public queryParamName: string;
+    @Input(RoutingResolvers.ADD_PUSH_SOURCE_KEY) public eventYamlByHash: string;
 
     public currentStep: AddPushSourceSection = AddPushSourceSection.READ;
     public steps: typeof AddPushSourceSection = AddPushSourceSection;
@@ -47,26 +48,23 @@ export class AddPushSourceComponent extends BaseSourceEventComponent {
     });
 
     public initEditForm(): void {
-        this.activatedRoute.data.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(({ addPushSourceData }) => {
-            this.history = this.editService.history;
-            if (this.unsupportedSourceName()) {
-                this.navigationServices.navigateToPageNotFound();
-            }
-            if (addPushSourceData) {
-                this.eventYamlByHash = addPushSourceData as string;
-                const currentPushSourceEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
-                this.addPushSourceForm.patchValue({
-                    sourceName: this.queryParamName ? currentPushSourceEvent.sourceName : "",
-                });
-            }
-            if (!this.queryParamName) {
-                this.addPushSourceForm.controls.sourceName.addValidators(
-                    RxwebValidators.noneOf({
-                        matchValues: [...this.getAllSourceNames(this.history)],
-                    }),
-                );
-            }
-        });
+        this.history = this.editService.history;
+        if (this.unsupportedSourceName()) {
+            this.navigationServices.navigateToPageNotFound();
+        }
+        if (this.eventYamlByHash) {
+            const currentPushSourceEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
+            this.addPushSourceForm.patchValue({
+                sourceName: this.queryParamName ? currentPushSourceEvent.sourceName : "",
+            });
+        }
+        if (!this.queryParamName) {
+            this.addPushSourceForm.controls.sourceName.addValidators(
+                RxwebValidators.noneOf({
+                    matchValues: [...this.getAllSourceNames(this.history)],
+                }),
+            );
+        }
     }
 
     private getAllSourceNames(historyUpdate: DatasetHistoryUpdate): string[] {

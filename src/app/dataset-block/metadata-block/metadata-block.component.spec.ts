@@ -90,12 +90,6 @@ describe("MetadataBlockComponent", () => {
                 {
                     provide: ActivatedRoute,
                     useValue: {
-                        data: of({
-                            blockData: {
-                                block: blockFragment,
-                                blockAsYaml: "test yaml",
-                            },
-                        }),
                         params: of({
                             accountName: "accountName",
                             datasetName: "datasetName",
@@ -122,7 +116,11 @@ describe("MetadataBlockComponent", () => {
 
         fixture = TestBed.createComponent(MetadataBlockComponent);
         component = fixture.componentInstance;
-        fixture.detectChanges();
+        (component.metadata = {
+            block: blockFragment,
+            blockAsYaml: "test yaml",
+        }),
+            fixture.detectChanges();
     });
 
     it("should create", () => {

@@ -99,6 +99,7 @@ describe("AddPushSourceComponent with query parameter name", () => {
         navigationService = TestBed.inject(NavigationService);
         loggedUserService = TestBed.inject(LoggedUserService);
         component = fixture.componentInstance;
+        component.eventYamlByHash = mockAddPushSourceYaml;
         component.queryParamName = "mockSourceName";
         editService.history = {
             history: datasetHistoryResponse?.nodes as MetadataBlockFragment[],
@@ -225,6 +226,7 @@ describe("AddPushSourceComponent without query parameter name", () => {
         editService = TestBed.inject(EditAddPushSourceService);
         component = fixture.componentInstance;
         component.queryParamName = "";
+        component.eventYamlByHash = mockAddPushSourceYaml;
         component.addPushSourceForm = new FormGroup({
             sourceName: new FormControl("mockName"),
             read: new FormGroup({
@@ -241,18 +243,15 @@ describe("AddPushSourceComponent without query parameter name", () => {
             }),
             prepare: new FormArray([]),
         });
-        fixture.detectChanges();
-    });
-
-    it("should check add validator when query parameter name equal null", () => {
         editService.history = {
             history: datasetHistoryResponse?.nodes as MetadataBlockFragment[],
             pageInfo: datasetHistoryResponse?.pageInfo as DatasetPageInfoFragment,
         };
+        fixture.detectChanges();
+    });
+
+    it("should check add validator when query parameter name equal null", () => {
         const addValidatorSpy = spyOn(component.addPushSourceForm.controls.sourceName, "addValidators");
-        const mockEventYamlByHash =
-            "kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2023-12-28T09:41:56.469218218Z\n  prevBlockHash: zW1jaUXuf1HLoKvdQhYNq1e3x6KCFrY7UCqXsgVMfJBJF77\n  sequenceNumber: 1\n  event:\n    kind: AddPushSource\n    sourceName: mockSource\n    read:\n      kind: Csv\n      schema:\n      - id INT\n      separator: ','\n      encoding: utf8\n      quote: '\"'\n      escape: \\\n      dateFormat: rfc3339\n      timestampFormat: rfc3339\n    merge:\n      kind: Append\n";
-        spyOn(editService, "getEventAsYaml").and.returnValue(of(mockEventYamlByHash));
         component.ngOnInit();
         expect(addValidatorSpy).toHaveBeenCalledTimes(1);
     });

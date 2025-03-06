@@ -72,7 +72,6 @@ describe("SetTransformComponent", () => {
                 {
                     provide: ActivatedRoute,
                     useValue: {
-                        data: of({ setTransformData: mockSetTransformEventYaml }),
                         snapshot: {
                             paramMap: {
                                 get: (key: string) => {
@@ -99,6 +98,7 @@ describe("SetTransformComponent", () => {
         fixture = TestBed.createComponent(SetTransformComponent);
         component = fixture.componentInstance;
         component.selectedEngine = "Spark";
+        component.eventYamlByHash = mockSetTransformEventYaml;
         component.dataSource = new MatTreeNestedDataSource<DatasetNode>();
         component.inputDatasets = new Set<string>([
             '{"id":"did:odf:z4k88e8ctFydBwcEhtvaB9AuBL6L2kfGnNvS1LjPGLA51owXkxX","name":"account.tokens.portfolio.usd"}',

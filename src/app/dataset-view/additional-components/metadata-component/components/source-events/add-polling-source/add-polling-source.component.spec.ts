@@ -87,7 +87,6 @@ describe("AddPollingSourceComponent", () => {
                 {
                     provide: ActivatedRoute,
                     useValue: {
-                        data: of({ pollingSourceData: MOCK_EVENT_YAML }),
                         snapshot: {
                             paramMap: {
                                 get: (key: string) => {
@@ -120,6 +119,7 @@ describe("AddPollingSourceComponent", () => {
         modalRef = modalService.open(FinalYamlModalComponent);
         component = fixture.componentInstance;
         component.showPreprocessStep = false;
+        component.eventYamlByHash = MOCK_EVENT_YAML;
         component.currentStep = SetPollingSourceSection.FETCH;
         component.history = {
             history: mockDatasetHistoryResponse.datasets.byOwnerAndName?.metadata.chain.blocks

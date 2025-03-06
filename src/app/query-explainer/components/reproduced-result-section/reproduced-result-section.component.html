@@ -2,11 +2,15 @@
     <div class="fw-semibold">Reproduced result:</div>
     <div class="mt-4">
         <app-dynamic-table
+            *ngIf="tableSource(dataJsonAoS).length; else emptyResult"
             [hasTableHeader]="true"
             [schemaFields]="schemaFields(dataJsonAoS)"
             [idTable]="'query-explainer-table'"
             [dataRows]="tableSource(dataJsonAoS)"
             [attr.data-test-id]="'query-explainer-table'"
         />
+        <ng-template #emptyResult>
+            <p data-test-id="emptyResult">0 records</p>
+        </ng-template>
     </div>
 </div>

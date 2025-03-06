@@ -10,11 +10,22 @@
 }
 
 .vcard-username {
-    font-size: 20px;
+    font-size: 18px;
     font-style: normal;
     font-weight: 300;
     line-height: 24px;
     color: $app-color-fg-muted;
+}
+
+.vcard-fullname {
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+}
+
+.mt-50px {
+    margin-top: 50px;
 }
 
 .organization {

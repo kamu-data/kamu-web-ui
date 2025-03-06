@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { AuthApi } from "src/app/api/auth.api";
 import { NavigationService } from "src/app/services/navigation.service";

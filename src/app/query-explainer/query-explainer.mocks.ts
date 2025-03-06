@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import {
     QueryExplainerOutputType,
     QueryExplainerProofResponse,
@@ -44,6 +51,35 @@ export const mockTextareaCommitment: string = `
 
 export const mockQueryExplainerOutput: QueryExplainerOutputType = {
     data: [["0", 0, "2024-10-22T11:54:24.234Z", "2024-10-22T11:54:24.100Z", "100", "200"]],
+
+    dataFormat: "JsonAoA",
+    schemaFormat: "ArrowJson",
+    schema: {
+        fields: [
+            {
+                name: "offset",
+            },
+            {
+                name: "op",
+            },
+            {
+                name: "system_time",
+            },
+            {
+                name: "event_time",
+            },
+            {
+                name: "A",
+            },
+            {
+                name: "B",
+            },
+        ],
+    },
+};
+
+export const mockQueryExplainerEmptyOutput: QueryExplainerOutputType = {
+    data: [],
 
     dataFormat: "JsonAoA",
     schemaFormat: "ArrowJson",

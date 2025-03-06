@@ -212,6 +212,10 @@
               {
                 "id": "watermark",
                 "developmentState": "stable"
+              },
+              {
+                "id": "keywords",
+                "developmentState": "mockup"
               }
             ]
           },
@@ -412,6 +416,10 @@
       },
       {
         "id": "verified",
+        "developmentState": "mockup"
+      },
+      {
+        "id": "keywords",
         "developmentState": "mockup"
       }
     ]

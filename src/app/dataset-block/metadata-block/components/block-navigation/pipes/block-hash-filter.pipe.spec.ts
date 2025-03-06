@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
 import { BlockHashFilterPipe } from "./block-hash-filter.pipe";

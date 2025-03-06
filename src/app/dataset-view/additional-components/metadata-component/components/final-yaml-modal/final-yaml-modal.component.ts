@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { BaseComponent } from "src/app/common/components/base.component";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
@@ -5,6 +12,7 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { finalize } from "rxjs";
 
 @Component({
     selector: "app-final-yaml-modal",
@@ -28,9 +36,10 @@ export class FinalYamlModalComponent extends BaseComponent {
                 datasetName: this.datasetInfo.datasetName,
                 event: this.yamlTemplate,
             })
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(
+                finalize(() => this.activeModal.close(this.yamlTemplate)),
+                takeUntilDestroyed(this.destroyRef),
+            )
             .subscribe();
-
-        this.activeModal.close(this.yamlTemplate);
     }
 }

@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import ProjectLinks from "src/app/project-links";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";

@@ -4,15 +4,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Added
+- Added `DEVELOPER.md` file
+- Added license header for all *.ts files
+### Changed
+- Modified `README.md` file
+### Fixed
+- Remove "Dashboard" link from application header
+- Disabled "keywords" feature for "demo" mode
+- Metadata block page for SetTransfom: private inputs are not displayed for non-admin
+- Query explainer: page empty if query returns empty result
 
-## [Unreleased] 
+## [0.40.1] - 2025-02-20
 ### Changed
 - Dataset Settings: separated "Scheduled updates" and "Transform settings" tabs
 ### Fixed
 - Autofocus for `Login` page
 - Color for buttons from stepper navigation
 - Styles for avatar from app header
-
+- Edit SetTransform event: set `DataFusion` as default engine
+- Edit SetTransform event: return to the `Overview` tab after editing an event
+- Edit SetTransform event: rename some labels
+- Data access panel: after navigating to another datase the links are not updated 
 
 ## [0.40.0] - 2025-02-13
 ### Changed

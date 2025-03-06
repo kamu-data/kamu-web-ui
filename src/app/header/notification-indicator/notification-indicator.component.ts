@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { Component, inject } from "@angular/core";
 import { ModalService } from "../../common/components/modal/modal.service";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";

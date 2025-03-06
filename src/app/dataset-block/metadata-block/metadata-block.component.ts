@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { DatasetHistoryUpdate } from "../../dataset-view/dataset.subscriptions.interface";
 import { Observable, Subscription, combineLatest } from "rxjs";
 import ProjectLinks from "src/app/project-links";

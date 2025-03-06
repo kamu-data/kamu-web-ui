@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { MaybeNull } from "./app.types";
 import { ModalDialogComponent } from "../common/components/modal/modal-dialog.component";
 import { ModalImageComponent } from "../common/components/modal/modal-image.component";

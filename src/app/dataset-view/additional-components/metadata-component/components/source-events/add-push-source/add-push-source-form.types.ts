@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { Transform } from "stream";
 import { ReadKind, MergeKind, PreprocessKind } from "../add-polling-source/add-polling-source-form.types";
 

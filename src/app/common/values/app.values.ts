@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { Injectable } from "@angular/core";
 import { AppUIConfig, AppUIConfigFeatureFlags } from "../../app-config.model";
 
@@ -35,6 +42,8 @@ export default class AppValues {
     public static readonly UPLOAD_FILE_IMAGE = "assets/images/upload-file-gear.gif";
     public static readonly DEFAULT_ADMIN_ACCOUNT_NAME = "kamu";
     public static readonly DEFAULT_MONACO_EDITOR_PLACEHOLDER = "Please type your query here...";
+    public static readonly DEFAULT_ENGINE_NAME = "DataFusion";
+    public static readonly DEFAULT_ENGINE_IMAGE = "ghcr.io/kamu-data/engine-datafusion:0.8.1";
 
     public static readonly MARKDOWN_CONTAIN = `## Markdown __rulez__!
 ---

@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import {
     DataSchemaFormat,
     DatasetKind,
@@ -19,14 +26,14 @@ export const mockEngines: EnginesQuery = {
                 name: Engine.Spark,
             },
             {
-                dialect: QueryDialect.SqlDataFusion,
-                latestImage: "ghcr.io/kamu-data/engine-datafusion:0.1.2",
-                name: Engine.DataFusion,
-            },
-            {
                 dialect: QueryDialect.SqlFlink,
                 latestImage: "ghcr.io/kamu-data/engine-flink:0.1.2",
                 name: Engine.Flink,
+            },
+            {
+                dialect: QueryDialect.SqlDataFusion,
+                latestImage: "ghcr.io/kamu-data/engine-datafusion:0.1.2",
+                name: Engine.DataFusion,
             },
             {
                 dialect: QueryDialect.SqlRisingWave,

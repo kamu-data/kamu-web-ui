@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { QueryExplainerOutputType } from "../../query-explainer.types";
 import { extractSchemaFieldsFromData } from "src/app/common/helpers/table.helper";
@@ -18,6 +25,6 @@ export class ReproducedResultSectionComponent {
     }
 
     public schemaFields(output: QueryExplainerOutputType): DataSchemaField[] {
-        return extractSchemaFieldsFromData(this.tableSource(output)[0]);
+        return extractSchemaFieldsFromData(this.tableSource(output)[0] ?? []);
     }
 }

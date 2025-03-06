@@ -1,6 +1,6 @@
 {
   "name": "kamu-platform",
-  "version": "0.40.0",
+  "version": "0.40.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --watch",
@@ -82,8 +82,9 @@
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
     "codelyzer": "^6.0.2",
-    "eslint": "^8.57.0",
+    "eslint": "^8.57.1",
     "eslint-plugin-jasmine": "^4.2.2",
+    "eslint-plugin-license-header": "^0.8.0",
     "jasmine": "^5.5.0",
     "jasmine-spec-reporter": "^7.0.0",
     "karma": "~6.4.4",

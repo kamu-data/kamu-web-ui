@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { MatIconModule } from "@angular/material/icon";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DataAccessExportTabComponent } from "./data-access-export-tab.component";

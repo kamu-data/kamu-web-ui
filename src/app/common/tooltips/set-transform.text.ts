@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 export class SetTransformTooltipsTexts {
     public static readonly ENGINE = "Identifier of the engine used for this transformation.";
     public static readonly QUERIES = "Queries use for specifying multi-step SQL transformations.";
@@ -11,4 +18,5 @@ export class SetTransformTooltipsTexts {
     public static readonly DATASET_OWNER = "Owner of the dataset.";
     public static readonly DATASET_ALIAS = "Query alias of the dataset.";
     public static readonly DATASET_REF = "A local or remote dataset reference to use in dataset resolutions.";
+    public static readonly DATASET_NOT_ACCESSIBLE = "Dataset accessibility";
 }

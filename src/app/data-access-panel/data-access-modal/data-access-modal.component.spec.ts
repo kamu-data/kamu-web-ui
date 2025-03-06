@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { DataAccessLinkTabComponent } from "./tabs/data-access-link-tab/data-access-link-tab.component";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DataAccessModalComponent } from "./data-access-modal.component";
@@ -26,12 +33,15 @@ import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { AppConfigService } from "src/app/app-config.service";
 import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
+import { ProtocolsService } from "src/app/services/protocols.service";
 
 describe("DataAccessModalComponent", () => {
     let component: DataAccessModalComponent;
     let fixture: ComponentFixture<DataAccessModalComponent>;
     let loggedUserService: LoggedUserService;
     let appConfigService: AppConfigService;
+    let protocolsService: ProtocolsService;
+    let getProtocolsSpy: jasmine.Spy;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -66,14 +76,21 @@ describe("DataAccessModalComponent", () => {
         fixture = TestBed.createComponent(DataAccessModalComponent);
         loggedUserService = TestBed.inject(LoggedUserService);
         appConfigService = TestBed.inject(AppConfigService);
+        protocolsService = TestBed.inject(ProtocolsService);
+        getProtocolsSpy = spyOn(protocolsService, "getProtocols").and.returnValue(of(mockDatasetEndPoints));
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsRootFragment;
-        component.protocols$ = of(mockDatasetEndPoints);
         fixture.detectChanges();
     });
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should check init protocols", () => {
+        const accountName = component.datasetBasics.owner.accountName;
+        const datasetName = component.datasetBasics.name;
+        expect(getProtocolsSpy).toHaveBeenCalledOnceWith({ accountName, datasetName });
     });
 
     it("should check navigate to section", () => {

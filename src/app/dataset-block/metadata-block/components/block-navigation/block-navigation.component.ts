@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { DatasetHistoryUpdate } from "../../../../dataset-view/dataset.subscriptions.interface";
 import { SupportedEvents } from "../event-details/supported.events";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";

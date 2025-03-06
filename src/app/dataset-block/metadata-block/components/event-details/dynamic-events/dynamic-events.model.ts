@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { Type } from "@angular/core";
 import { BasePropertyComponent } from "../components/common/base-property/base-property.component";
 

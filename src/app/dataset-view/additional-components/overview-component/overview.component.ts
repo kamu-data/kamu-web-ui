@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { EditLicenseModalComponent } from "./components/edit-license-modal/edit-license-modal.component";
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import {

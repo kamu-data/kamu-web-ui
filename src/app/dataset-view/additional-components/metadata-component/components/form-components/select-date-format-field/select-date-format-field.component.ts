@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { BaseField } from "../base-field";
 import { EventTimeSourceKind } from "../../source-events/add-polling-source/add-polling-source-form.types";

@@ -8,7 +8,6 @@
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, Router } from "@angular/router";
 import { addPushSourceResolver } from "./add-push-source.resolver";
-import { MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { EditAddPushSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/edit-add-push-source.service";
 import { Apollo } from "apollo-angular";
 import { of } from "rxjs";
@@ -21,7 +20,7 @@ describe("addPushSourceResolver", () => {
     let routeSnapshot: ActivatedRouteSnapshot;
     let router: Router;
 
-    const executeResolver: ResolveFn<MaybeNullOrUndefined<string>> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<string> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => addPushSourceResolver(...resolverParameters));
 
     beforeEach(() => {

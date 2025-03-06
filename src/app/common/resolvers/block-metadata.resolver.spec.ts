@@ -14,7 +14,6 @@ import ProjectLinks from "src/app/project-links";
 import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "src/app/api/mock/dataset.mock";
 import { of } from "rxjs";
 import { MetadataBlockInfo } from "src/app/dataset-block/metadata-block/metadata-block.types";
-import { MaybeUndefined } from "src/app/interface/app.types";
 
 describe("blockMetadataResolver", () => {
     let routeSnapshot: ActivatedRouteSnapshot;
@@ -22,7 +21,7 @@ describe("blockMetadataResolver", () => {
     let router: Router;
     const MOCK_HASH_BLOCK = "weqwKwqeqwdfsdf";
 
-    const executeResolver: ResolveFn<MaybeUndefined<MetadataBlockInfo>> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<MetadataBlockInfo> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => blockMetadataResolver(...resolverParameters));
 
     beforeEach(() => {

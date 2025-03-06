@@ -8,7 +8,6 @@
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, Router } from "@angular/router";
 import { setTransformResolver } from "./set-transform.resolver";
-import { MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { Apollo } from "apollo-angular";
 import { EditSetTransformService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/edit-set-transform..service";
 import { of } from "rxjs";
@@ -21,7 +20,7 @@ describe("setTransformResolver", () => {
     let routeSnapshot: ActivatedRouteSnapshot;
     let router: Router;
 
-    const executeResolver: ResolveFn<MaybeNullOrUndefined<string>> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<string> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => setTransformResolver(...resolverParameters));
 
     beforeEach(() => {

@@ -8,7 +8,6 @@
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, Router } from "@angular/router";
 import { addPollingSourceResolver } from "./add-polling-source.resolver";
-import { MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { Apollo } from "apollo-angular";
 import { EditPollingSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/edit-polling-source.service";
 import ProjectLinks from "src/app/project-links";
@@ -21,7 +20,7 @@ describe("addPollingSourceResolver", () => {
     let routeSnapshot: ActivatedRouteSnapshot;
     let router: Router;
 
-    const executeResolver: ResolveFn<MaybeNullOrUndefined<string>> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<string> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => addPollingSourceResolver(...resolverParameters));
 
     beforeEach(() => {

@@ -25,6 +25,6 @@ export class ReproducedResultSectionComponent {
     }
 
     public schemaFields(output: QueryExplainerOutputType): DataSchemaField[] {
-        return extractSchemaFieldsFromData(this.tableSource(output)[0]);
+        return extractSchemaFieldsFromData(this.tableSource(output)[0] ?? []);
     }
 }

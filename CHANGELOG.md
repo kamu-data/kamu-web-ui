@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added resolver `BlockMetadataResolver` for metadata block page
 - Added `DEVELOPER.md` file
 - Added license header for all *.ts files
+- Account page: added account name
 ### Changed
 - Modified `README.md` file
 - Changed the method of getting route and query parameters via input decorator for some components
@@ -16,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove "Dashboard" link from application header
 - Disabled "keywords" feature for "demo" mode
 - Metadata block page for SetTransfom: private inputs are not displayed for non-admin
+- Query explainer: page empty if query returns empty result
 
 ## [0.40.1] - 2025-02-20
 ### Changed

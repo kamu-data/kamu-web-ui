@@ -78,6 +78,35 @@ export const mockQueryExplainerOutput: QueryExplainerOutputType = {
     },
 };
 
+export const mockQueryExplainerEmptyOutput: QueryExplainerOutputType = {
+    data: [],
+
+    dataFormat: "JsonAoA",
+    schemaFormat: "ArrowJson",
+    schema: {
+        fields: [
+            {
+                name: "offset",
+            },
+            {
+                name: "op",
+            },
+            {
+                name: "system_time",
+            },
+            {
+                name: "event_time",
+            },
+            {
+                name: "A",
+            },
+            {
+                name: "B",
+            },
+        ],
+    },
+};
+
 export const mockVerifyQueryResponseSuccess: VerifyQueryResponse = { ok: true };
 export const mockVerifyQueryResponseError: VerifyQueryResponse = {
     ok: false,

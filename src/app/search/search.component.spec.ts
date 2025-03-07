@@ -17,13 +17,8 @@ import { ModalService } from "../common/components/modal/modal.service";
 import { RouterTestingModule } from "@angular/router/testing";
 import { mockSearchOverviewResponse } from "../api/mock/search.mock";
 import { of } from "rxjs";
-import { ActivatedRoute, RouterModule } from "@angular/router";
-import ProjectLinks from "../project-links";
-import {
-    activeRouteMock,
-    activeRouteMockQueryParamMap,
-    findElementByDataTestId,
-} from "../common/helpers/base-test.helpers.spec";
+import { RouterModule } from "@angular/router";
+import { findElementByDataTestId } from "../common/helpers/base-test.helpers.spec";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { DatasetListComponent } from "../common/components/dataset-list-component/dataset-list.component";
 import { FormsModule } from "@angular/forms";
@@ -63,35 +58,11 @@ describe("SearchComponent", () => {
                 RouterModule,
                 DatasetVisibilityModule,
             ],
-            providers: [
-                NavigationService,
-                SearchService,
-                AuthApi,
-                SearchApi,
-                ModalService,
-                { provide: ActivatedRoute, useValue: activeRouteMock },
-            ],
+            providers: [NavigationService, SearchService, AuthApi, SearchApi, ModalService],
         }).compileComponents();
     });
 
-    function setSearchUrl(searchQuery?: string, page?: number): void {
-        if (searchQuery) {
-            activeRouteMockQueryParamMap.set(ProjectLinks.URL_QUERY_PARAM_QUERY, searchQuery);
-        } else if (activeRouteMockQueryParamMap.has(ProjectLinks.URL_QUERY_PARAM_QUERY)) {
-            activeRouteMockQueryParamMap.delete(ProjectLinks.URL_QUERY_PARAM_QUERY);
-        }
-
-        if (page) {
-            activeRouteMockQueryParamMap.set(ProjectLinks.URL_QUERY_PARAM_PAGE, page.toString());
-        } else if (activeRouteMockQueryParamMap.has(ProjectLinks.URL_QUERY_PARAM_PAGE)) {
-            activeRouteMockQueryParamMap.delete(ProjectLinks.URL_QUERY_PARAM_PAGE);
-        }
-    }
-
     beforeEach(() => {
-        activeRouteMockQueryParamMap.clear();
-        setSearchUrl(DEFAULT_SEARCH_QUERY, DEFAULT_SEARCH_PAGE);
-
         fixture = TestBed.createComponent(SearchComponent);
         navigationService = TestBed.inject(NavigationService);
         searchService = TestBed.inject(SearchService);
@@ -106,6 +77,9 @@ describe("SearchComponent", () => {
     });
 
     it("should initially search query/page from active route", () => {
+        component.search = DEFAULT_SEARCH_QUERY;
+        component.page = DEFAULT_SEARCH_PAGE;
+
         expect(component.searchValue).toEqual(DEFAULT_SEARCH_QUERY);
         expect(component.currentPage).toEqual(DEFAULT_SEARCH_PAGE);
     });
@@ -118,7 +92,7 @@ describe("SearchComponent", () => {
     it("should check onPageChange method with page", () => {
         const testSearchValue = "test";
         const testCurrentPage = 2;
-        component.searchValue = testSearchValue;
+        component.search = testSearchValue;
         fixture.detectChanges();
         const navigationServiceSpy = spyOn(navigationService, "navigateToSearch");
         component.onPageChange(testCurrentPage);
@@ -128,10 +102,10 @@ describe("SearchComponent", () => {
 
     it("should check onPageChange method when page equal 0", () => {
         const testSearchValue = "test";
-        component.searchValue = testSearchValue;
+        component.search = testSearchValue;
         fixture.detectChanges();
         const navigationServiceSpy = spyOn(navigationService, "navigateToSearch");
-        component.onPageChange(0);
+        component.onPageChange(1);
         expect(component.currentPage).toBe(1);
         expect(navigationServiceSpy).toHaveBeenCalledWith(testSearchValue);
     });
@@ -139,7 +113,7 @@ describe("SearchComponent", () => {
     it("should check search results update the dataset table", fakeAsync(() => {
         spyOn(searchApi, "overviewDatasetSearch").and.returnValue(of(mockSearchOverviewResponse));
         const testSearchQuery = "test";
-        component.currentPage = 1;
+        component.page = 1;
 
         searchService.searchDatasets(testSearchQuery);
         tick();

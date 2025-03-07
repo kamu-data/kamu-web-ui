@@ -6,21 +6,21 @@
  */
 
 import { DatasetKind, TransformInput } from "../../../../../api/kamu.graphql.interface";
-import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { MatTreeNestedDataSource } from "@angular/material/tree";
-import { MaybeNull, MaybeNullOrUndefined } from "src/app/interface/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetSchema } from "src/app/interface/dataset.interface";
 import { GetDatasetSchemaQuery, SqlQueryStep } from "src/app/api/kamu.graphql.interface";
 import { EditSetTransformService } from "./edit-set-transform..service";
 import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";
 import { DatasetNode, SetTransformYamlType } from "./set-transform.types";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
-import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { from } from "rxjs";
 import { BaseMainEventComponent } from "../source-events/base-main-event.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import AppValues from "src/app/common/values/app.values";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 
 @Component({
     selector: "app-set-transform",
@@ -29,6 +29,8 @@ import AppValues from "src/app/common/values/app.values";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetTransformComponent extends BaseMainEventComponent implements OnInit {
+    @Input(RoutingResolvers.SET_TRANSFORM_KEY) public eventYamlByHash: string;
+
     public inputDatasets = new Set<string>();
     public selectedEngine: string;
     public currentSetTransformEvent: MaybeNull<SetTransformYamlType>;
@@ -54,26 +56,19 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
     }
 
     private initQueriesSection(): void {
-        this.editService
-            .getEventAsYaml(this.getDatasetInfoFromUrl(), SupportedEvents.SetTransform)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((result: MaybeNullOrUndefined<string>) => {
-                if (result) {
-                    this.eventYamlByHash = result;
-                    this.currentSetTransformEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
+        if (this.eventYamlByHash) {
+            this.currentSetTransformEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
 
-                    if (this.currentSetTransformEvent.transform.query) {
-                        this.initDefaultQueriesSection(this.currentSetTransformEvent.transform.query);
-                    } else {
-                        this.queries = this.currentSetTransformEvent.transform.queries;
-                    }
-                    this.getInputDatasetsInfo();
-                } else {
-                    this.initDefaultQueriesSection();
-                }
-                this.history = this.editService.history;
-                this.cdr.detectChanges();
-            });
+            if (this.currentSetTransformEvent.transform.query) {
+                this.initDefaultQueriesSection(this.currentSetTransformEvent.transform.query);
+            } else {
+                this.queries = this.currentSetTransformEvent.transform.queries;
+            }
+            this.getInputDatasetsInfo();
+        } else {
+            this.initDefaultQueriesSection();
+        }
+        this.history = this.editService.history;
     }
 
     private initDefaultQueriesSection(query = ""): void {

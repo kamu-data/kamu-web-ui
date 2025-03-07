@@ -5,9 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { Injectable } from "@angular/core";
-
-@Injectable()
 export default class ProjectLinks {
     public static readonly URL_GITHUB_CALLBACK: string = "github_callback";
     public static readonly URL_BLOCK: string = "block";
@@ -57,4 +54,5 @@ export default class ProjectLinks {
     public static readonly URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN: string = "commitmentUploadToken";
     public static readonly URL_QUERY_PARAM_SQL_QUERY: string = "sqlQuery";
     public static readonly URL_QUERY_PARAM_REDIRECT_URL: string = "redirectUrl";
+    public static readonly URL_QUERY_PARAM_CODE: string = "code";
 }

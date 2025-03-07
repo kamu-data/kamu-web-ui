@@ -5,16 +5,15 @@
  * included in the LICENSE file.
  */
 
-import { MetadataBlockFragment } from "../../api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery, TEST_BLOCK_HASH } from "../../api/mock/dataset.mock";
 import { Apollo } from "apollo-angular";
 import { TestBed } from "@angular/core/testing";
-
 import { BlockService } from "./block.service";
 import { DatasetApi } from "src/app/api/dataset.api";
 import { of } from "rxjs";
-import { first } from "rxjs/operators";
 import { mockDatasetInfo } from "src/app/search/mock.data";
+import { MaybeUndefined } from "src/app/interface/app.types";
+import { MetadataBlockInfo } from "./metadata-block.types";
 
 describe("BlockService", () => {
     let service: BlockService;
@@ -34,16 +33,17 @@ describe("BlockService", () => {
 
     it("should check get block from api", () => {
         spyOn(datasetApi, "getBlockByHash").and.returnValue(of(mockGetMetadataBlockQuery));
-        const metadataBlockChanges$ = service.metadataBlockChanges
-            .pipe(first())
-            .subscribe((block: MetadataBlockFragment) => {
-                const expectedBlock = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
-                    .blockByHash as MetadataBlockFragment;
-                expect(block).toEqual(expectedBlock);
+
+        const metadataBlock$ = service
+            .requestMetadataBlock(mockDatasetInfo, TEST_BLOCK_HASH)
+            .subscribe((result: MaybeUndefined<MetadataBlockInfo>) => {
+                if (result) {
+                    expect(result.blockAsYaml).toEqual(
+                        mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain.blockByHashEncoded as string,
+                    );
+                }
             });
 
-        service.requestMetadataBlock(mockDatasetInfo, TEST_BLOCK_HASH).subscribe();
-
-        expect(metadataBlockChanges$.closed).toBeTrue();
+        expect(metadataBlock$.closed).toBeTrue();
     });
 });

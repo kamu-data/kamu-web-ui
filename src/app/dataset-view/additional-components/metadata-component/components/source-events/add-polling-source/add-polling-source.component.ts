@@ -6,17 +6,16 @@
  */
 
 import { FetchKind, SetPollingSourceSection } from "./add-polling-source-form.types";
-import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { FormArray, FormGroup } from "@angular/forms";
 import { FETCH_STEP_RADIO_CONTROLS } from "./form-control.source";
 import { FETCH_FORM_DATA } from "../steps/data/fetch-form-data";
 import { EditPollingSourceService } from "./edit-polling-source.service";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { STEPPER_GLOBAL_OPTIONS } from "@angular/cdk/stepper";
-import { MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { SourcesSection } from "./process-form.service.types";
 import { BaseSourceEventComponent } from "../../base-source-event.component";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 
 @Component({
     selector: "app-add-polling-source",
@@ -31,6 +30,8 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
     ],
 })
 export class AddPollingSourceComponent extends BaseSourceEventComponent implements OnInit {
+    @Input(RoutingResolvers.ADD_POLLING_SOURCE_KEY) public eventYamlByHash: string;
+
     public currentStep: SetPollingSourceSection = SetPollingSourceSection.FETCH;
     public steps: typeof SetPollingSourceSection = SetPollingSourceSection;
     // ---------------------------------
@@ -75,16 +76,7 @@ export class AddPollingSourceComponent extends BaseSourceEventComponent implemen
     }
 
     public initEditForm(): void {
-        this.editService
-            .getEventAsYaml(this.getDatasetInfoFromUrl(), SupportedEvents.SetPollingSource)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((result: MaybeNullOrUndefined<string>) => {
-                if (result) {
-                    this.eventYamlByHash = result;
-                }
-                this.history = this.editService.history;
-                this.cdr.detectChanges();
-            });
+        this.history = this.editService.history;
     }
 
     public changeStep(step: SourcesSection): void {

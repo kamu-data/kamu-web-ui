@@ -28,32 +28,39 @@ import { AdminDashboardComponent } from "./admin-view/admin-dashboard/admin-dash
 import { DatasetFlowDetailsComponent } from "./dataset-flow/dataset-flow-details/dataset-flow-details.component";
 import { AccountComponent } from "./account/account.component";
 import { QueryExplainerComponent } from "./query-explainer/query-explainer.component";
+import { blockMetadataResolver } from "./common/resolvers/block-metadata.resolver";
+import { searchResolver } from "./common/resolvers/search.resolver";
+import { addPollingSourceResolver } from "./common/resolvers/add-polling-source.resolver";
+import { setTransformResolver } from "./common/resolvers/set-transform.resolver";
+import { addPushSourceResolver } from "./common/resolvers/add-push-source.resolver";
+import { AccountSettingsTabs } from "./account/settings/account-settings.constants";
+import RoutingResolvers from "./common/resolvers/routing-resolvers";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
-    {
-        path: ProjectLinks.URL_GITHUB_CALLBACK,
-        component: GithubCallbackComponent,
-    },
     {
         path: ProjectLinks.URL_LOGIN,
         component: LoginComponent,
         canActivate: [LoginGuard],
     },
     {
+        path: ProjectLinks.URL_GITHUB_CALLBACK,
+        component: GithubCallbackComponent,
+    },
+    {
+        path: ProjectLinks.URL_RETURN_TO_CLI,
+        component: ReturnToCliComponent,
+    },
+    {
         path: ProjectLinks.URL_SEARCH,
         component: SearchComponent,
-        children: [{ path: ":id", component: SearchComponent }],
+        resolve: { [RoutingResolvers.SEARCH_KEY]: searchResolver },
+        runGuardsAndResolvers: "always",
     },
     {
         canActivate: [AuthenticatedGuard],
         path: ProjectLinks.URL_DATASET_CREATE,
         component: DatasetCreateComponent,
-    },
-    {
-        canActivate: [AdminGuard],
-        path: ProjectLinks.URL_ADMIN_DASHBOARD,
-        component: AdminDashboardComponent,
     },
     {
         path: ProjectLinks.URL_QUERY_EXPLAINER,
@@ -66,32 +73,17 @@ export const routes: Routes = [
         loadChildren: () => import("./query/query.module").then((m) => m.QueryModule),
     },
     {
-        path:
-            `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}` +
-            `/${ProjectLinks.URL_BLOCK}/:${ProjectLinks.URL_PARAM_BLOCK_HASH}`,
-        component: MetadataBlockComponent,
-    },
-    {
-        canActivate: [AuthenticatedGuard],
-        path:
-            `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}` +
-            `/${ProjectLinks.URL_FLOW_DETAILS}/:${ProjectLinks.URL_PARAM_FLOW_ID}/:${ProjectLinks.URL_PARAM_CATEGORY}`,
-        component: DatasetFlowDetailsComponent,
-    },
-    {
-        path: ProjectLinks.URL_PAGE_NOT_FOUND,
-        component: PageNotFoundComponent,
-    },
-    {
-        path: ProjectLinks.URL_RETURN_TO_CLI,
-        component: ReturnToCliComponent,
-    },
-    {
-        path: ProjectLinks.URL_SETTINGS,
-        canActivate: [AuthenticatedGuard],
+        path: `${ProjectLinks.URL_SETTINGS}`,
+        component: AccountSettingsComponent,
         children: [
             {
+                path: "",
+                redirectTo: `/${ProjectLinks.URL_SETTINGS}/${AccountSettingsTabs.ACCESS_TOKENS}`,
+                pathMatch: "full",
+            },
+            {
                 path: `:${ProjectLinks.URL_PARAM_CATEGORY}`,
+                canActivate: [AuthenticatedGuard],
                 component: AccountSettingsComponent,
             },
         ],
@@ -110,26 +102,50 @@ export const routes: Routes = [
         ],
     },
     {
-        canActivate: [AuthenticatedGuard],
-        path:
-            `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}` +
-            `/${ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE}`,
-        component: AddPollingSourceComponent,
+        path: `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}`,
+        children: [
+            {
+                path: `${ProjectLinks.URL_BLOCK}/:${ProjectLinks.URL_PARAM_BLOCK_HASH}`,
+                component: MetadataBlockComponent,
+                resolve: { [RoutingResolvers.METADATA_BLOCK_KEY]: blockMetadataResolver },
+            },
+            {
+                path: "",
+                canActivate: [AuthenticatedGuard],
+                children: [
+                    {
+                        path: `${ProjectLinks.URL_FLOW_DETAILS}/:${ProjectLinks.URL_PARAM_FLOW_ID}/:${ProjectLinks.URL_PARAM_CATEGORY}`,
+                        component: DatasetFlowDetailsComponent,
+                    },
+                    {
+                        path: `${ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE}`,
+                        component: AddPollingSourceComponent,
+                        resolve: { [RoutingResolvers.ADD_POLLING_SOURCE_KEY]: addPollingSourceResolver },
+                    },
+                    {
+                        path: `${ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE}`,
+                        component: AddPushSourceComponent,
+                        resolve: { [RoutingResolvers.ADD_PUSH_SOURCE_KEY]: addPushSourceResolver },
+                    },
+                    {
+                        path: `${ProjectLinks.URL_PARAM_SET_TRANSFORM}`,
+                        component: SetTransformComponent,
+                        resolve: { [RoutingResolvers.SET_TRANSFORM_KEY]: setTransformResolver },
+                    },
+                ],
+            },
+        ],
     },
     {
-        canActivate: [AuthenticatedGuard],
-        path:
-            `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}` +
-            `/${ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE}`,
-        component: AddPushSourceComponent,
+        canActivate: [AdminGuard],
+        path: ProjectLinks.URL_ADMIN_DASHBOARD,
+        component: AdminDashboardComponent,
     },
     {
-        canActivate: [AuthenticatedGuard],
-        path:
-            `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}` +
-            `/${ProjectLinks.URL_PARAM_SET_TRANSFORM}`,
-        component: SetTransformComponent,
+        path: ProjectLinks.URL_PAGE_NOT_FOUND,
+        component: PageNotFoundComponent,
     },
+
     {
         path: "**",
         component: PageNotFoundComponent,
@@ -137,7 +153,12 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: "reload" })],
+    imports: [
+        RouterModule.forRoot(routes, {
+            onSameUrlNavigation: "reload",
+            bindToComponentInputs: true,
+        }),
+    ],
     exports: [RouterModule],
 })
 export class AppRoutingModule {}

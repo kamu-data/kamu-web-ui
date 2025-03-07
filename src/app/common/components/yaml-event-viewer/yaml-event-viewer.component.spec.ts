@@ -5,10 +5,10 @@
  * included in the LICENSE file.
  */
 
-import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { YamlEventViewerComponent } from "./yaml-event-viewer.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { HIGHLIGHT_OPTIONS, HighlightModule } from "ngx-highlightjs";
 
 describe("YamlEventViewerComponent with SetTransform", () => {
     let component: YamlEventViewerComponent;
@@ -17,8 +17,18 @@ describe("YamlEventViewerComponent with SetTransform", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [YamlEventViewerComponent],
-            schemas: [NO_ERRORS_SCHEMA],
-            imports: [SharedTestModule],
+            providers: [
+                {
+                    provide: HIGHLIGHT_OPTIONS,
+                    useValue: {
+                        coreLibraryLoader: () => import("highlight.js/lib/core"),
+                        languages: {
+                            yaml: () => import("highlight.js/lib/languages/yaml"),
+                        },
+                    },
+                },
+            ],
+            imports: [SharedTestModule, HighlightModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent<YamlEventViewerComponent>(YamlEventViewerComponent);

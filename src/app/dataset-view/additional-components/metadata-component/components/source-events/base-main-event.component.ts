@@ -31,7 +31,6 @@ export abstract class BaseMainEventComponent extends BaseComponent {
     protected navigationServices = inject(NavigationService);
     protected loggedUserService = inject(LoggedUserService);
 
-    public eventYamlByHash: MaybeNull<string> = null;
     public history: DatasetHistoryUpdate;
     public errorMessage = "";
     public changedEventYamlByHash: MaybeNull<string> = null;

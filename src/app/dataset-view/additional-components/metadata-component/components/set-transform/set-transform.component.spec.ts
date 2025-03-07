@@ -10,7 +10,6 @@ import { SetTransformComponent } from "./set-transform.component";
 import { Apollo, ApolloModule } from "apollo-angular";
 import { ActivatedRoute, RouterModule } from "@angular/router";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { EditSetTransformService } from "./edit-set-transform..service";
 import { of } from "rxjs";
 import { mockGetDatasetSchemaQuery, mockParseSetTransformYamlType, mockSetTransformEventYaml } from "./mock.data";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
@@ -41,7 +40,6 @@ describe("SetTransformComponent", () => {
     let component: SetTransformComponent;
     let fixture: ComponentFixture<SetTransformComponent>;
 
-    let editService: EditSetTransformService;
     let datasetCommitService: DatasetCommitService;
     let datasetService: DatasetService;
     let datasetSubsService: DatasetSubscriptionsService;
@@ -92,7 +90,6 @@ describe("SetTransformComponent", () => {
         }).compileComponents();
 
         navigationService = TestBed.inject(NavigationService);
-        editService = TestBed.inject(EditSetTransformService);
         datasetCommitService = TestBed.inject(DatasetCommitService);
         datasetService = TestBed.inject(DatasetService);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
@@ -101,6 +98,7 @@ describe("SetTransformComponent", () => {
         fixture = TestBed.createComponent(SetTransformComponent);
         component = fixture.componentInstance;
         component.selectedEngine = "Spark";
+        component.eventYamlByHash = mockSetTransformEventYaml;
         component.dataSource = new MatTreeNestedDataSource<DatasetNode>();
         component.inputDatasets = new Set<string>([
             '{"id":"did:odf:z4k88e8ctFydBwcEhtvaB9AuBL6L2kfGnNvS1LjPGLA51owXkxX","name":"account.tokens.portfolio.usd"}',
@@ -165,19 +163,17 @@ describe("SetTransformComponent", () => {
     });
 
     it("should check init queries section with queries", () => {
-        spyOn(editService, "getEventAsYaml").and.callFake(() => of(mockSetTransformEventYaml));
         spyOn(datasetService, "requestDatasetSchema").and.callFake(() => of(mockGetDatasetSchemaQuery));
         component.ngOnInit();
         expect(component.currentSetTransformEvent).toEqual(mockParseSetTransformYamlType);
         expect(component.TREE_DATA.length).toBe(2);
     });
 
-    it("should check init queries section when event is null", () => {
-        spyOn(editService, "getEventAsYaml").and.callFake(() => of(null));
+    it("should check init queries section when event is not null", () => {
         spyOn(datasetService, "requestDatasetSchema").and.callFake(() => of(mockGetDatasetSchemaQuery));
         component.ngOnInit();
 
-        expect(component.queries.length).toBe(1);
-        expect(component.queries[0].query).toBe("");
+        expect(component.queries.length).toBe(4);
+        expect(component.queries[0].query).toBeDefined();
     });
 });

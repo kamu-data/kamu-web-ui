@@ -1,5 +1,5 @@
 <div class="mx-4 mt-4 p-responsive clearfix" *ngIf="user$ | async as user">
-    <div class="custom-container" *ngIf="activeTab$ | async as activeTab">
+    <div class="custom-container">
         <div class="container-sidebar">
             <div class="d-flex mb-3 justify-content-center align-items-center">
                 <a *ngIf="isLoggedUser; else notLoggedUserLink">
@@ -23,9 +23,13 @@
                     </a>
                 </ng-template>
             </div>
-            <span class="vcard-username d-block p-2" itemprop="additionalName">
+            <span class="vcard-fullname d-block p-2 overflow-hidden">
                 {{ user.displayName }}
             </span>
+            <span class="vcard-username d-block px-2">
+                {{ user.accountName }}
+            </span>
+
             <div class="my-3 text-center me-4">
                 <button
                     appFeatureFlag="profile.edit"
@@ -37,7 +41,7 @@
                     {{ isLoggedUser(user) ? "Edit profile" : "Follow" }}
                 </button>
             </div>
-            <mat-divider class="w-90"></mat-divider>
+            <mat-divider class="w-90 mt-50px"></mat-divider>
             <div appFeatureFlag="profile.companies" class="mt-2 me-4">
                 <h3 class="text-start pt-3 px-3 organization">Organizations</h3>
                 <div class="d-flex flex-row gap-2 text-start px-3">

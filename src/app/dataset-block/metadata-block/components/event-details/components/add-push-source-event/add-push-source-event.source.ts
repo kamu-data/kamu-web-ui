@@ -65,8 +65,6 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepJson.dateFormat": getSourcesDescriptors("AddPushSource.ReadStepJson.dateFormat"),
 
-    "AddPushSource.ReadStepNdGeoJson.__typename": getSourcesDescriptors("AddPushSource.ReadStepNdGeoJson.__typename"),
-
     "AddPushSource.ReadStepJson.timestampFormat": getSourcesDescriptors("AddPushSource.ReadStepJson.timestampFormat"),
 
     "AddPushSource.ReadStepJson.subPath": getSourcesDescriptors("AddPushSource.ReadStepJson.subPath"),
@@ -101,7 +99,7 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepNdJson.__typename": getSourcesDescriptors("AddPushSource.ReadStepNdJson.__typename"),
 
-    "AddPushSource.ReadStepNdGeoJson.schema": getSourcesDescriptors("AddPushSource.ReadStepNdGeoJson.schema"),
+    "AddPushSource.ReadStepNdJson.schema": getSourcesDescriptors("AddPushSource.ReadStepNdJson.schema"),
 
     "AddPushSource.ReadStepNdJson.dateFormat": getSourcesDescriptors("AddPushSource.ReadStepNdJson.dateFormat"),
 
@@ -110,4 +108,8 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "AddPushSource.ReadStepNdJson.timestampFormat": getSourcesDescriptors(
         "AddPushSource.ReadStepNdJson.timestampFormat",
     ),
+
+    "AddPushSource.ReadStepNdGeoJson.__typename": getSourcesDescriptors("AddPushSource.ReadStepNdGeoJson.__typename"),
+
+    "AddPushSource.ReadStepNdGeoJson.schema": getSourcesDescriptors("AddPushSource.ReadStepNdGeoJson.schema"),
 };

@@ -33,10 +33,21 @@ import { DataAccessPanelModule } from "src/app/data-access-panel/data-access-pan
 import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
+import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
+import { mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
+import { DisplayHashModule } from "src/app/common/components/display-hash/display-hash.module";
+import { ToastrModule } from "ngx-toastr";
+import { DisplayTimeModule } from "src/app/common/components/display-time/display-time.module";
+import { BlockRowDataModule } from "src/app/common/components/block-row-data/block-row-data.module";
+import { MatDividerModule } from "@angular/material/divider";
+import { HighlightModule } from "ngx-highlightjs";
 
 describe("MetadataBlockComponent", () => {
     let component: MetadataBlockComponent;
     let fixture: ComponentFixture<MetadataBlockComponent>;
+
+    const blockFragment = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
+        .blockByHash as MetadataBlockFragment;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -67,6 +78,12 @@ describe("MetadataBlockComponent", () => {
                 RouterModule,
                 DatasetVisibilityModule,
                 FeatureFlagModule,
+                DisplayHashModule,
+                ToastrModule.forRoot(),
+                DisplayTimeModule,
+                BlockRowDataModule,
+                MatDividerModule,
+                HighlightModule,
             ],
             providers: [
                 DatasetApi,
@@ -99,7 +116,11 @@ describe("MetadataBlockComponent", () => {
 
         fixture = TestBed.createComponent(MetadataBlockComponent);
         component = fixture.componentInstance;
-        fixture.detectChanges();
+        (component.metadata = {
+            block: blockFragment,
+            blockAsYaml: "test yaml",
+        }),
+            fixture.detectChanges();
     });
 
     it("should create", () => {

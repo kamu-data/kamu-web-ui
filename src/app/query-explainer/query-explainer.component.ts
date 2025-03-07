@@ -6,7 +6,7 @@
  */
 
 import { ToastrService } from "ngx-toastr";
-import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import AppValues from "src/app/common/values/app.values";
 import { QueryExplainerService } from "./query-explainer.service";
 import { BaseComponent } from "src/app/common/components/base.component";
@@ -36,6 +36,10 @@ export interface QueryExplainerComponentData {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QueryExplainerComponent extends BaseComponent implements OnInit {
+    @Input(ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN) public set uploadToken(value: string) {
+        this.commitmentUploadToken = value ?? "";
+    }
+
     private queryExplainerService = inject(QueryExplainerService);
     private blockService = inject(BlockService);
     private datasetService = inject(DatasetService);
@@ -50,7 +54,6 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
 
     /* istanbul ignore next */
     public ngOnInit(): void {
-        this.commitmentUploadToken = this.extractCommitmentUploadToken();
         if (this.commitmentUploadToken) {
             this.componentData$ = this.queryExplainerService
                 .fetchCommitmentDataByUploadToken(this.commitmentUploadToken)
@@ -79,13 +82,6 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
                 );
                 this.blockHashObservables$.push(this.blockService.requestSystemTimeBlockByHash(datasetId, blockHash));
             });
-    }
-
-    public extractCommitmentUploadToken(): string {
-        const commitmentUploadToken: MaybeNull<string> = this.activatedRoute.snapshot.queryParamMap.get(
-            ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN,
-        );
-        return commitmentUploadToken ?? "";
     }
 
     /* istanbul ignore next */

@@ -7,14 +7,15 @@
 
 import { inject } from "@angular/core";
 import { DatasetService } from "../dataset-view/dataset.service";
-import { Observable, EMPTY, iif, of, zip } from "rxjs";
+import { Observable, EMPTY, of } from "rxjs";
 import { expand, last, map, switchMap } from "rxjs/operators";
 import { AddPushSource, MetadataBlockFragment } from "../api/kamu.graphql.interface";
 import { BlockService } from "../dataset-block/metadata-block/block.service";
 import { SupportedEvents } from "../dataset-block/metadata-block/components/event-details/supported.events";
 import { DatasetHistoryUpdate } from "../dataset-view/dataset.subscriptions.interface";
 import { DatasetInfo } from "../interface/navigation.interface";
-import { MaybeNull, MaybeNullOrUndefined } from "../interface/app.types";
+import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "../interface/app.types";
+import { MetadataBlockInfo } from "../dataset-block/metadata-block/metadata-block.types";
 
 export abstract class BaseYamlEventService {
     private static readonly HISTORY_PAGE_SIZE = 100;
@@ -46,18 +47,13 @@ export abstract class BaseYamlEventService {
                     const filteredHistory = this.filterHistoryByType(h.history, typename, sourceName);
                     return filteredHistory;
                 }),
-                switchMap((filteredHistory: MetadataBlockFragment[]) =>
-                    iif(
-                        () => !filteredHistory.length,
-                        of(null),
-                        zip(
-                            this.blockService.metadataBlockAsYamlChanges,
-                            this.blockService.requestMetadataBlock(info, filteredHistory[0]?.blockHash),
-                        ),
-                    ),
-                ),
-                map((result: MaybeNull<[string, unknown]>) => {
-                    if (result) return result[0];
+                switchMap((filteredHistory: MetadataBlockFragment[]) => {
+                    return filteredHistory[0]
+                        ? this.blockService.requestMetadataBlock(info, filteredHistory[0].blockHash)
+                        : of(undefined);
+                }),
+                map((result: MaybeUndefined<MetadataBlockInfo>) => {
+                    if (result) return result.blockAsYaml;
                     else return null;
                 }),
                 last(),

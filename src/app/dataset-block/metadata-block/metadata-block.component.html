@@ -26,11 +26,11 @@
         </div>
     </div>
 
-    <div class="container-main row" *ngIf="blockHash$ | async as blockHash">
+    <div class="container-main row">
         <div class="col-md-6">
             <div class="container-content mb-4">
-                <app-block-header [datasetInfo]="datasetInfo" [blockHash]="blockHash" />
-                <app-event-details [datasetInfo]="datasetInfo" />
+                <app-block-header [block]="metadata.block" [datasetInfo]="datasetInfo" />
+                <app-event-details [block]="metadata.block" [datasetInfo]="datasetInfo" />
             </div>
         </div>
         <div class="col-md-6">
@@ -42,7 +42,7 @@
                     (onPageChangeEmit)="onPageChange($event)"
                 />
             </div>
-            <app-yaml-view-section />
+            <app-yaml-view-section [blockAsYaml]="metadata.blockAsYaml" [block]="metadata.block" />
         </div>
     </div>
 </div>

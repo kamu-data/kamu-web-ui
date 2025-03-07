@@ -24,8 +24,6 @@ import {
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
 import { DatasetPageInfoFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
-import { EditPollingSourceService } from "./edit-polling-source.service";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { DatasetCommitService } from "../../../../overview-component/services/dataset-commit.service";
 import { PrepareStepComponent } from "../steps/prepare-step/prepare-step.component";
 import { MatStepperModule } from "@angular/material/stepper";
@@ -47,6 +45,7 @@ import {
 import { OdfDefaultValues } from "src/app/common/values/app-odf-default.values";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { ActivatedRoute } from "@angular/router";
 
 describe("AddPollingSourceComponent", () => {
     let component: AddPollingSourceComponent;
@@ -57,9 +56,10 @@ describe("AddPollingSourceComponent", () => {
     let datasetCommitService: DatasetCommitService;
     let datasetService: DatasetService;
     let datasetSubsService: DatasetSubscriptionsService;
-    let editService: EditPollingSourceService;
     let navigationService: NavigationService;
     let loggedUserService: LoggedUserService;
+
+    const MOCK_EVENT_YAML = "test_tyaml";
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -78,11 +78,30 @@ describe("AddPollingSourceComponent", () => {
                 MatStepperModule,
                 PollingSourceFormComponentsModule,
                 ReactiveFormsModule,
-                SharedTestModule,
                 HttpClientTestingModule,
                 EditorModule,
             ],
-            providers: [FormBuilder, Apollo],
+            providers: [
+                FormBuilder,
+                Apollo,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return "accountName";
+                                        case "datasetName":
+                                            return "datasetName";
+                                    }
+                                },
+                            },
+                        },
+                    },
+                },
+            ],
         })
             .overrideComponent(AddPollingSourceComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
@@ -91,7 +110,6 @@ describe("AddPollingSourceComponent", () => {
 
         fixture = TestBed.createComponent(AddPollingSourceComponent);
         modalService = TestBed.inject(NgbModal);
-        editService = TestBed.inject(EditPollingSourceService);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         datasetCommitService = TestBed.inject(DatasetCommitService);
         datasetService = TestBed.inject(DatasetService);
@@ -101,6 +119,7 @@ describe("AddPollingSourceComponent", () => {
         modalRef = modalService.open(FinalYamlModalComponent);
         component = fixture.componentInstance;
         component.showPreprocessStep = false;
+        component.eventYamlByHash = MOCK_EVENT_YAML;
         component.currentStep = SetPollingSourceSection.FETCH;
         component.history = {
             history: mockDatasetHistoryResponse.datasets.byOwnerAndName?.metadata.chain.blocks
@@ -215,10 +234,8 @@ describe("AddPollingSourceComponent", () => {
     });
 
     it("should check eventYamlByHash is not null", () => {
-        const mockEventYamlByHash = "test_tyaml";
-        spyOn(editService, "getEventAsYaml").and.returnValue(of(mockEventYamlByHash));
         component.ngOnInit();
-        expect(component.eventYamlByHash).toEqual(mockEventYamlByHash);
+        expect(component.eventYamlByHash).toEqual(MOCK_EVENT_YAML);
     });
 
     it("should check submit yaml", () => {

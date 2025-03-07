@@ -82,7 +82,6 @@ describe("AccountComponent", () => {
                     provide: ActivatedRoute,
                     useValue: {
                         queryParams: mockQueryParams.asObservable(),
-                        params: mockParams.asObservable(),
                     },
                 },
             ],
@@ -100,7 +99,7 @@ describe("AccountComponent", () => {
 
         fixture = TestBed.createComponent(AccountComponent);
         component = fixture.componentInstance;
-        fixture.detectChanges();
+        component.accountName = TEST_LOGIN;
     });
 
     it("should create", () => {
@@ -128,11 +127,7 @@ describe("AccountComponent", () => {
     });
 
     it("should check API calls when account is found", () => {
-        fetchAccountByNameSpy.calls.reset();
-        getDatasetsByAccountNameSpy.calls.reset();
-
-        mockParams.next({ [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: mockAccountDetails.accountName });
-
+        fixture.detectChanges();
         expect(fetchAccountByNameSpy).toHaveBeenCalledOnceWith(mockAccountDetails.accountName);
         expect(getDatasetsByAccountNameSpy).toHaveBeenCalledOnceWith(
             mockAccountDetails.accountName,
@@ -143,54 +138,47 @@ describe("AccountComponent", () => {
     it("should check API calls when account is not found", fakeAsync(() => {
         fetchAccountByNameSpy = fetchAccountByNameSpy.and.returnValue(of(null).pipe(delay(0)));
         getDatasetsByAccountNameSpy = getDatasetsByAccountNameSpy.and.stub();
-        fetchAccountByNameSpy.calls.reset();
-        getDatasetsByAccountNameSpy.calls.reset();
 
-        mockParams.next({ [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_LOGIN });
+        fixture.detectChanges();
 
         expect(fetchAccountByNameSpy).toHaveBeenCalledOnceWith(TEST_LOGIN);
         expect(getDatasetsByAccountNameSpy).not.toHaveBeenCalled();
-
-        expect(() => tick()).toThrow(new AccountNotFoundError());
-        expect(() => flush()).toThrow(new AccountNotFoundError());
+        expect(() => {
+            tick();
+        }).toThrow(new AccountNotFoundError());
+        expect(() => {
+            flush();
+        }).toThrow(new AccountNotFoundError());
 
         flush();
     }));
 
     it("should check activeTab when URL not exist query param tab", () => {
+        fixture.detectChanges();
         mockQueryParams.next({ page: 1 });
+        component.tab = undefined;
 
-        let nCalls = 0;
-        component.activeTab$.subscribe((activeTab: AccountTabs) => {
-            // Ignore first call (default event)
-            if (nCalls == 1) {
-                expect(activeTab).toEqual(AccountTabs.DATASETS);
-            } else if (nCalls > 2) {
-                fail("Unexpected number of calls");
-            }
-            nCalls++;
-        });
-        expect(nCalls).toBeLessThan(3);
+        expect(component.activeTab).toEqual(AccountTabs.DATASETS);
     });
     // TODO: test wrong tab
 
     it("should check page when not specified in the query", () => {
-        getDatasetsByAccountNameSpy.calls.reset();
-
-        mockQueryParams.next({ tab: AccountTabs.DATASETS });
+        component.activeTab = AccountTabs.DATASETS;
+        fixture.detectChanges();
 
         expect(getDatasetsByAccountNameSpy).toHaveBeenCalledOnceWith(mockAccountDetails.accountName, 0);
     });
 
     it("should check page when specified in the query", () => {
-        getDatasetsByAccountNameSpy.calls.reset();
-
-        mockQueryParams.next({ tab: AccountTabs.DATASETS, page: 3 });
+        component.page = 3;
+        component.activeTab = AccountTabs.DATASETS;
+        fixture.detectChanges();
 
         expect(getDatasetsByAccountNameSpy).toHaveBeenCalledOnceWith(mockAccountDetails.accountName, 2 /* 3 - 1 */);
     });
 
     it("should check routers link ", () => {
+        fixture.detectChanges();
         const datasetsTabLink = findElementByDataTestId(fixture, "link-account-datasets-tab") as HTMLLinkElement;
         expect(datasetsTabLink.href).toContain(`?tab=${AccountTabs.DATASETS}`);
 

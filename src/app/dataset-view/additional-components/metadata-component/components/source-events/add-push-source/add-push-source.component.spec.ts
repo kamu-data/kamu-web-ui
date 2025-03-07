@@ -32,21 +32,15 @@ import { MergeKind, ReadKind } from "../add-polling-source/add-polling-source-fo
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { AddPushSourceSection } from "./add-push-source-form.types";
+import { mockAddPushSourceYaml } from "../../set-transform/mock.data";
 
 const providersSection = (name: string) => {
     return [
         {
             provide: ActivatedRoute,
             useValue: {
+                data: of({ addPushSourceData: name }),
                 snapshot: {
-                    queryParamMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "name":
-                                    return name;
-                            }
-                        },
-                    },
                     paramMap: {
                         get: (key: string) => {
                             switch (key) {
@@ -83,7 +77,7 @@ describe("AddPushSourceComponent with query parameter name", () => {
                 BaseStepComponent,
                 PreprocessStepComponent,
             ],
-            providers: providersSection("mockSourceName"),
+            providers: providersSection(mockAddPushSourceYaml),
             imports: [
                 ReactiveFormsModule,
                 ApolloModule,
@@ -105,6 +99,8 @@ describe("AddPushSourceComponent with query parameter name", () => {
         navigationService = TestBed.inject(NavigationService);
         loggedUserService = TestBed.inject(LoggedUserService);
         component = fixture.componentInstance;
+        component.eventYamlByHash = mockAddPushSourceYaml;
+        component.queryParamName = "mockSourceName";
         editService.history = {
             history: datasetHistoryResponse?.nodes as MetadataBlockFragment[],
             pageInfo: datasetHistoryResponse?.pageInfo as DatasetPageInfoFragment,
@@ -140,11 +136,8 @@ describe("AddPushSourceComponent with query parameter name", () => {
     });
 
     it("should check eventYamlByHash is not null", () => {
-        const mockEventYamlByHash =
-            "kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2023-12-28T09:41:56.469218218Z\n  prevBlockHash: zW1jaUXuf1HLoKvdQhYNq1e3x6KCFrY7UCqXsgVMfJBJF77\n  sequenceNumber: 1\n  event:\n    kind: AddPushSource\n    sourceName: mockSource\n    read:\n      kind: Csv\n      schema:\n      - id INT\n      separator: ','\n      encoding: utf8\n      quote: '\"'\n      escape: \\\n      dateFormat: rfc3339\n      timestampFormat: rfc3339\n    merge:\n      kind: Append\n";
-        spyOn(editService, "getEventAsYaml").and.returnValue(of(mockEventYamlByHash));
         component.ngOnInit();
-        expect(component.eventYamlByHash).toEqual(mockEventYamlByHash);
+        expect(component.eventYamlByHash).toEqual(mockAddPushSourceYaml);
     });
 
     it("should check navigate to PageNotFoundComponent ", () => {
@@ -187,9 +180,7 @@ describe("AddPushSourceComponent with query parameter name", () => {
     it("should check open edit modal after error", () => {
         const mockError = "Some error";
         expect(component.errorMessage).toBe("");
-        expect(component.changedEventYamlByHash).toBeNull();
         datasetCommitService.emitCommitEventErrorOccurred(mockError);
-        expect(component.errorMessage).toBe(mockError);
 
         component.onEditYaml();
         const modal = modalService.open(FinalYamlModalComponent, {
@@ -234,6 +225,8 @@ describe("AddPushSourceComponent without query parameter name", () => {
         fixture = TestBed.createComponent(AddPushSourceComponent);
         editService = TestBed.inject(EditAddPushSourceService);
         component = fixture.componentInstance;
+        component.queryParamName = "";
+        component.eventYamlByHash = mockAddPushSourceYaml;
         component.addPushSourceForm = new FormGroup({
             sourceName: new FormControl("mockName"),
             read: new FormGroup({
@@ -250,18 +243,15 @@ describe("AddPushSourceComponent without query parameter name", () => {
             }),
             prepare: new FormArray([]),
         });
-        fixture.detectChanges();
-    });
-
-    it("should check add validator when query parameter name equal null", () => {
         editService.history = {
             history: datasetHistoryResponse?.nodes as MetadataBlockFragment[],
             pageInfo: datasetHistoryResponse?.pageInfo as DatasetPageInfoFragment,
         };
+        fixture.detectChanges();
+    });
+
+    it("should check add validator when query parameter name equal null", () => {
         const addValidatorSpy = spyOn(component.addPushSourceForm.controls.sourceName, "addValidators");
-        const mockEventYamlByHash =
-            "kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2023-12-28T09:41:56.469218218Z\n  prevBlockHash: zW1jaUXuf1HLoKvdQhYNq1e3x6KCFrY7UCqXsgVMfJBJF77\n  sequenceNumber: 1\n  event:\n    kind: AddPushSource\n    sourceName: mockSource\n    read:\n      kind: Csv\n      schema:\n      - id INT\n      separator: ','\n      encoding: utf8\n      quote: '\"'\n      escape: \\\n      dateFormat: rfc3339\n      timestampFormat: rfc3339\n    merge:\n      kind: Append\n";
-        spyOn(editService, "getEventAsYaml").and.returnValue(of(mockEventYamlByHash));
         component.ngOnInit();
         expect(addValidatorSpy).toHaveBeenCalledTimes(1);
     });

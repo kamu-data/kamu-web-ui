@@ -6,17 +6,16 @@
  */
 
 import { DatasetHistoryUpdate } from "../../dataset-view/dataset.subscriptions.interface";
-import { Observable, Subscription, combineLatest } from "rxjs";
-import ProjectLinks from "src/app/project-links";
+import { Observable, Subscription } from "rxjs";
 import { DatasetViewTypeEnum } from "../../dataset-view/dataset-view.interface";
-import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { map, switchMap } from "rxjs/operators";
-import { Params } from "@angular/router";
-import { BlockService } from "./block.service";
 import { MaybeNull } from "src/app/interface/app.types";
 import { BaseDatasetDataComponent } from "src/app/common/components/base-dataset-data.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import ProjectLinks from "src/app/project-links";
+import { MetadataBlockInfo } from "./metadata-block.types";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 
 @Component({
     selector: "app-metadata-block",
@@ -24,29 +23,19 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataBlockComponent extends BaseDatasetDataComponent implements OnInit {
+    @Input(ProjectLinks.URL_PARAM_BLOCK_HASH) public blockHash: string;
+    @Input(RoutingResolvers.METADATA_BLOCK_KEY) public metadata: MetadataBlockInfo;
+
     public readonly HISTORY_TYPE = DatasetViewTypeEnum.History;
     private static readonly BLOCKS_PER_PAGE = 10;
-
     public datasetInfo$: Observable<DatasetInfo>;
-    public blockHash$: Observable<string>;
     public datasetHistoryUpdate$: Observable<MaybeNull<DatasetHistoryUpdate>>;
-    private blockService = inject(BlockService);
 
     public ngOnInit(): void {
         this.datasetBasics$ = this.datasetService.datasetChanges;
         this.datasetPermissions$ = this.datasetSubsService.permissionsChanges;
         this.datasetHistoryUpdate$ = this.datasetSubsService.historyChanges;
         this.datasetInfo$ = this.datasetInfoFromUrlChanges;
-        this.blockHash$ = this.activatedRoute.params.pipe(
-            map((params: Params) => params[ProjectLinks.URL_PARAM_BLOCK_HASH] as string),
-        );
-        combineLatest([this.datasetInfo$, this.blockHash$])
-            .pipe(
-                switchMap(([datasetInfo, blockHash]: [DatasetInfo, string]) =>
-                    this.blockService.requestMetadataBlock(datasetInfo, blockHash),
-                ),
-            )
-            .subscribe();
         this.loadHistory();
         this.loadDatasetBasicDataWithPermissions();
     }

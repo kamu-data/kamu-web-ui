@@ -5,10 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { Injectable } from "@angular/core";
 import { AppUIConfig, AppUIConfigFeatureFlags } from "../../app-config.model";
 
-@Injectable()
 export default class AppValues {
     public static readonly APP_LOGO = "assets/icons/kamu_logo_icon.svg";
     public static readonly LOCAL_STORAGE_ACCESS_TOKEN = "access_token";

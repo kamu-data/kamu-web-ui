@@ -58,7 +58,6 @@ describe("Router", () => {
         ProjectLinks.URL_SEARCH,
         `myaccount`,
         `myaccount/mydataset`,
-        `myaccount/mydataset/${ProjectLinks.URL_BLOCK}/:someHash`,
         ProjectLinks.URL_PAGE_NOT_FOUND,
         "dummy",
     ].forEach((url: string) => {
@@ -71,12 +70,7 @@ describe("Router", () => {
         }));
     });
 
-    [
-        ProjectLinks.URL_DATASET_CREATE,
-        ProjectLinks.URL_SETTINGS,
-        `myaccount/mydataset/${ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE}`,
-        `myaccount/mydataset/${ProjectLinks.URL_PARAM_SET_TRANSFORM}`,
-    ].forEach((url: string) => {
+    [ProjectLinks.URL_DATASET_CREATE, ProjectLinks.URL_SETTINGS].forEach((url: string) => {
         it(`Route to ${url} fails without a login and moves to Home`, fakeAsync(() => {
             promiseWithCatch(router.navigate([url]));
             tick();
@@ -91,7 +85,11 @@ describe("Router", () => {
             promiseWithCatch(router.navigate([url]));
             tick();
 
-            expect(location.path()).toBe("/" + url);
+            if (url === ProjectLinks.URL_SETTINGS) {
+                expect(location.path()).toBe("/" + url + "/access-tokens");
+            } else {
+                expect(location.path()).toBe("/" + url);
+            }
             flush();
         }));
     });

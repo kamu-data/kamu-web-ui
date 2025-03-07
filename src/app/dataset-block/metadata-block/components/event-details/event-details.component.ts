@@ -12,16 +12,15 @@ import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
-    inject,
     Input,
+    OnChanges,
+    SimpleChanges,
     Type,
     ViewChild,
     ViewContainerRef,
 } from "@angular/core";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
-import { BlockService } from "../../block.service";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { Observable } from "rxjs";
 import { SetPollingSourceEventComponent } from "./components/set-polling-source-event/set-polling-source-event.component";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { AddPushSourceEventComponent } from "./components/add-push-source-event/add-push-source-event.component";
@@ -34,35 +33,37 @@ import { SetTransformEventComponent } from "./components/set-transform-event/set
 import { SeedEventComponent } from "./components/seed-event/seed-event.component";
 import { AddDataEventComponent } from "./components/add-data-event/add-data-event.component";
 import { SetLicenseEventComponent } from "./components/set-license-event/set-license-event.component";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-event-details",
     templateUrl: "./event-details.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EventDetailsComponent extends BaseComponent implements AfterViewInit {
-    private blockService = inject(BlockService);
-
-    public block$: Observable<MetadataBlockFragment> = this.blockService.metadataBlockChanges;
+export class EventDetailsComponent implements AfterViewInit, OnChanges {
+    @Input({ required: true }) public block: MetadataBlockFragment;
     @Input({ required: true }) public datasetInfo: DatasetInfo;
     @ViewChild("dynamicContainer", { read: ViewContainerRef })
     public dynamicContainer: MaybeNull<ViewContainerRef>;
 
     public ngAfterViewInit(): void {
-        this.blockService.metadataBlockChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((block: MetadataBlockFragment) => {
-                if (this.dynamicContainer) {
-                    this.dynamicContainer.clear();
-                    const componentRef = this.dynamicContainer.createComponent<BaseComponent>(
-                        this.componentEventTypeFactory[block.event.__typename as SupportedEvents] ??
-                            UnsupportedEventComponent,
-                    );
-                    componentRef.setInput("event", block.event);
-                    componentRef.changeDetectorRef.detectChanges();
-                }
-            });
+        this.createView();
+    }
+
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (changes.block && !changes.block.firstChange && changes.block.previousValue !== changes.block.currentValue) {
+            this.createView();
+        }
+    }
+
+    private createView(): void {
+        if (this.dynamicContainer) {
+            this.dynamicContainer.clear();
+            const componentRef = this.dynamicContainer.createComponent<BaseComponent>(
+                this.componentEventTypeFactory[this.block.event.__typename as SupportedEvents] ??
+                    UnsupportedEventComponent,
+            );
+            componentRef.setInput("event", this.block.event);
+        }
     }
 
     private componentEventTypeFactory: { [key in SupportedEvents]: MaybeUndefined<Type<BaseComponent>> } = {

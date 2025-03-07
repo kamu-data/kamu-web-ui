@@ -39,6 +39,10 @@ import RoutingResolvers from "./common/resolvers/routing-resolvers";
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
     {
+        path: ProjectLinks.URL_PAGE_NOT_FOUND,
+        component: PageNotFoundComponent,
+    },
+    {
         path: ProjectLinks.URL_LOGIN,
         component: LoginComponent,
         canActivate: [LoginGuard],
@@ -140,10 +144,6 @@ export const routes: Routes = [
         canActivate: [AdminGuard],
         path: ProjectLinks.URL_ADMIN_DASHBOARD,
         component: AdminDashboardComponent,
-    },
-    {
-        path: ProjectLinks.URL_PAGE_NOT_FOUND,
-        component: PageNotFoundComponent,
     },
 
     {

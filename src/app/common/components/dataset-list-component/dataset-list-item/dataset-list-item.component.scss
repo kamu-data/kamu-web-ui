@@ -1,5 +1,19 @@
 @import "var";
 
+:host {
+    ::ng-deep {
+        .mat-mdc-standard-chip {
+            --mdc-chip-elevated-container-color: #f6f8fa;
+
+            .mdc-evolution-chip__text-label {
+                color: #0969da !important;
+                font-size: 12px;
+                font-weight: 500;
+            }
+        }
+    }
+}
+
 .dataset-list-container {
     width: 100%;
     display: grid;

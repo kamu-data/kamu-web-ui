@@ -57,7 +57,7 @@
                 </div>
             </div>
         </div>
-        <div class="container-content px-4 overflow-unset" *ngIf="datasetsAccount$ | async as datasetsData">
+        <div class="container-content px-4 overflow-unset">
             <div>
                 <mat-button-toggle-group
                     name="activeTab"
@@ -94,7 +94,7 @@
                                 <mat-icon class="fs-4 d-block me-1">book</mat-icon>
                                 <span class="d-block me-2">Datasets</span>
                                 <span title="1" data-view-component="true" class="counter">{{
-                                    datasetsData.datasetTotalCount
+                                    accountDatasets.datasetTotalCount
                                 }}</span>
                             </div>
                         </a>
@@ -161,9 +161,9 @@
             </ng-container>
             <ng-container *ngIf="activeTab === AccountTabs.DATASETS">
                 <app-datasets-tab
-                    [datasets]="datasetsData.datasets"
+                    [datasets]="accountDatasets.datasets"
                     [accountName]="user.accountName"
-                    [pageInfo]="datasetsData.pageInfo"
+                    [pageInfo]="accountDatasets.pageInfo"
                 ></app-datasets-tab>
             </ng-container>
             <ng-container *ngIf="activeTab === AccountTabs.FLOWS">

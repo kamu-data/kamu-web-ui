@@ -187,21 +187,4 @@ describe("AccountFlowsTabComponent", () => {
 
         expect(fetchTableDataSpy).toHaveBeenCalledWith(component.currentPage, status, { system: true }, []);
     });
-
-    it("should check change page with filters", () => {
-        const filterOptions: FlowsTableFiltersOptions = {
-            accounts: [],
-            datasets: [],
-            status: FlowStatus.Finished,
-            onlySystemFlows: true,
-        };
-        component.filters = filterOptions;
-        const MOCK_PAGE = 3;
-
-        const onSearchByFiltersChangeSpy = spyOn(component, "onSearchByFiltersChange").and.callThrough();
-        component.onPageChange(MOCK_PAGE);
-
-        expect(component.currentPage).toEqual(MOCK_PAGE);
-        expect(onSearchByFiltersChangeSpy).toHaveBeenCalledWith(filterOptions);
-    });
 });

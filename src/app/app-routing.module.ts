@@ -35,6 +35,7 @@ import { setTransformResolver } from "./common/resolvers/set-transform.resolver"
 import { addPushSourceResolver } from "./common/resolvers/add-push-source.resolver";
 import { AccountSettingsTabs } from "./account/settings/account-settings.constants";
 import RoutingResolvers from "./common/resolvers/routing-resolvers";
+import { accountResolver } from "./common/resolvers/account.resolver";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -98,6 +99,8 @@ export const routes: Routes = [
             {
                 path: "",
                 component: AccountComponent,
+                resolve: { [RoutingResolvers.ACCOUNT_KEY]: accountResolver },
+                runGuardsAndResolvers: "always",
             },
             {
                 path: `:${ProjectLinks.URL_PARAM_DATASET_NAME}`,

@@ -11,4 +11,5 @@ export default class RoutingResolvers {
     public static readonly SET_TRANSFORM_KEY = "setTransformData";
     public static readonly ADD_PUSH_SOURCE_KEY = "addPushSourceData";
     public static readonly SEARCH_KEY = "searchData";
+    public static readonly ACCOUNT_KEY = "accountData";
 }

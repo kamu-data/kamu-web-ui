@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Login page: added ability to switch buttons with tab
+- Added account resolver for account page
 ### Fixed
 - Flows tab: fixed redirection for derivative dataset when list flows is empty
 

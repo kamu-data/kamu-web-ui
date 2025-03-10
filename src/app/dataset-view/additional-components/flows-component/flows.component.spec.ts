@@ -34,6 +34,8 @@ import { mockMetadataDerivedUpdate, mockOverviewDataUpdate } from "../data-tabs.
 import { FlowsTableComponent } from "src/app/dataset-flow/flows-table/flows-table.component";
 import { mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
 import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/tile-base-widget.component";
+import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
+import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 
 describe("FlowsComponent", () => {
     let component: FlowsComponent;
@@ -198,5 +200,12 @@ describe("FlowsComponent", () => {
             tab: DatasetViewTypeEnum.Flows,
             page,
         });
+    });
+
+    it("should check redirect section", () => {
+        expect(component.redirectSection).toEqual(SettingsTabsEnum.SCHEDULING);
+
+        component.datasetBasics = mockDatasetBasicsDerivedFragment;
+        expect(component.redirectSection).toEqual(SettingsTabsEnum.TRANSFORM_SETTINGS);
     });
 });

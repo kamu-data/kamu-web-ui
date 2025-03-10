@@ -54,6 +54,12 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             });
     }
 
+    public get redirectSection(): SettingsTabsEnum {
+        return this.datasetBasics.kind === DatasetKind.Root
+            ? SettingsTabsEnum.SCHEDULING
+            : SettingsTabsEnum.TRANSFORM_SETTINGS;
+    }
+
     public fetchTableData(
         page: number,
         filterByStatus?: MaybeNull<FlowStatus>,

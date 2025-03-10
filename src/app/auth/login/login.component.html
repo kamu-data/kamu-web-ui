@@ -3,23 +3,24 @@
         <img [src]="APP_LOGO" class="logo" alt="Application logo" />
         <h1 class="text-center text-muted mt-4">Select your Login Method</h1>
         <div class="inner-container">
-            <a
+            <button
                 data-test-id="select-method-github"
                 (click)="onSelectedLoginMethod(LoginMethod.GITHUB)"
                 class="login__btn"
                 md-raised-button="primary"
+                autofocus
             >
                 Sign in with GitHub
                 <mat-icon class="github-logo" svgIcon="github-logo" />
-            </a>
-            <a
+            </button>
+            <button
                 data-test-id="select-method-password"
                 (click)="onSelectedLoginMethod(LoginMethod.PASSWORD)"
                 class="login__btn"
                 md-raised-button="primary"
             >
                 Login with Password
-            </a>
+            </button>
             <ng-container *ngIf="enableTermsOfService">
                 <ng-container *ngTemplateOutlet="termsOfServiceFragment"></ng-container>
             </ng-container>

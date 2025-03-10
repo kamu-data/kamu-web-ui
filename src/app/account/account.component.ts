@@ -30,7 +30,7 @@ import RoutingResolvers from "../common/resolvers/routing-resolvers";
 export class AccountComponent implements OnInit {
     @Input(ProjectLinks.URL_PARAM_ACCOUNT_NAME) public accountName: string;
     @Input(ProjectLinks.URL_QUERY_PARAM_TAB) public set tab(value: MaybeUndefined<AccountTabs>) {
-        this.activeTab = value ?? AccountTabs.DATASETS;
+        this.activeTab = value && Object.values(AccountTabs).includes(value) ? value : AccountTabs.DATASETS;
     }
     @Input(RoutingResolvers.ACCOUNT_KEY) public accountDatasets: DatasetsAccountResponse;
 

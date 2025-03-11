@@ -6,27 +6,7 @@ h5 {
     padding: 3px;
 }
 
-::ng-deep .mat-radio-button {
-    .mat-radio-container {
-        .mat-radio-ripple {
-            position: relative;
-        }
-
-        .mat-radio-outer-circle {
-            height: 16px;
-            width: 16px;
-            top: 2px;
-        }
-
-        .mat-radio-inner-circle {
-            height: 16px;
-            width: 16px;
-            top: 2px;
-        }
-    }
-}
-
-input[type="radio"] {
+.radio-item {
     border-radius: 50%;
     width: 16px;
     height: 16px;

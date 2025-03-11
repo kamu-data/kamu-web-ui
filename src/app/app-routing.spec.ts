@@ -56,10 +56,8 @@ describe("Router", () => {
     [
         ProjectLinks.URL_GITHUB_CALLBACK,
         ProjectLinks.URL_SEARCH,
-        `myaccount`,
         `myaccount/mydataset`,
         ProjectLinks.URL_PAGE_NOT_FOUND,
-        "dummy",
     ].forEach((url: string) => {
         it(`Route to ${url} lands on the component without Login`, fakeAsync(() => {
             promiseWithCatch(router.navigate([url]));

@@ -8,6 +8,10 @@ a {
 .tos-link {
     text-decoration: underline;
     color: #0d6efd;
+
+    &:focus-visible {
+        outline-color: #a78d9f;
+    }
 }
 
 p {
@@ -47,6 +51,10 @@ p {
 
         &:hover {
             background: $app-background-btn;
+        }
+
+        &:focus-visible {
+            outline-color: #a78d9f;
         }
     }
 

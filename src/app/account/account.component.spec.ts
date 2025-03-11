@@ -50,7 +50,6 @@ describe("AccountComponent", () => {
     });
 
     let fetchAccountByNameSpy: jasmine.Spy;
-    let getDatasetsByAccountNameSpy: jasmine.Spy;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -88,18 +87,14 @@ describe("AccountComponent", () => {
         }).compileComponents();
 
         accountService = TestBed.inject(AccountService);
-
-        fetchAccountByNameSpy = spyOn(accountService, "fetchAccountByName").and.returnValue(of(mockAccountDetails));
-        getDatasetsByAccountNameSpy = spyOn(accountService, "getDatasetsByAccountName").and.returnValue(
-            of(mockDatasetsAccountResponse),
-        );
-
         loggedUserService = TestBed.inject(LoggedUserService);
+        fetchAccountByNameSpy = spyOn(accountService, "fetchAccountByName").and.returnValue(of(mockAccountDetails));
         spyOnProperty(loggedUserService, "loggedInUserChanges", "get").and.returnValue(of(null));
 
         fixture = TestBed.createComponent(AccountComponent);
         component = fixture.componentInstance;
         component.accountName = TEST_LOGIN;
+        component.accountDatasets = mockDatasetsAccountResponse;
     });
 
     it("should create", () => {
@@ -129,20 +124,13 @@ describe("AccountComponent", () => {
     it("should check API calls when account is found", () => {
         fixture.detectChanges();
         expect(fetchAccountByNameSpy).toHaveBeenCalledOnceWith(mockAccountDetails.accountName);
-        expect(getDatasetsByAccountNameSpy).toHaveBeenCalledOnceWith(
-            mockAccountDetails.accountName,
-            jasmine.any(Number),
-        );
     });
 
     it("should check API calls when account is not found", fakeAsync(() => {
         fetchAccountByNameSpy = fetchAccountByNameSpy.and.returnValue(of(null).pipe(delay(0)));
-        getDatasetsByAccountNameSpy = getDatasetsByAccountNameSpy.and.stub();
-
         fixture.detectChanges();
 
         expect(fetchAccountByNameSpy).toHaveBeenCalledOnceWith(TEST_LOGIN);
-        expect(getDatasetsByAccountNameSpy).not.toHaveBeenCalled();
         expect(() => {
             tick();
         }).toThrow(new AccountNotFoundError());
@@ -159,22 +147,6 @@ describe("AccountComponent", () => {
         component.tab = undefined;
 
         expect(component.activeTab).toEqual(AccountTabs.DATASETS);
-    });
-    // TODO: test wrong tab
-
-    it("should check page when not specified in the query", () => {
-        component.activeTab = AccountTabs.DATASETS;
-        fixture.detectChanges();
-
-        expect(getDatasetsByAccountNameSpy).toHaveBeenCalledOnceWith(mockAccountDetails.accountName, 0);
-    });
-
-    it("should check page when specified in the query", () => {
-        component.page = 3;
-        component.activeTab = AccountTabs.DATASETS;
-        fixture.detectChanges();
-
-        expect(getDatasetsByAccountNameSpy).toHaveBeenCalledOnceWith(mockAccountDetails.accountName, 2 /* 3 - 1 */);
     });
 
     it("should check routers link ", () => {

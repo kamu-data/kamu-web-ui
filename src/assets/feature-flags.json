@@ -215,7 +215,7 @@
               },
               {
                 "id": "keywords",
-                "developmentState": "mockup"
+                "developmentState": "stable"
               }
             ]
           },
@@ -420,7 +420,7 @@
       },
       {
         "id": "keywords",
-        "developmentState": "mockup"
+        "developmentState": "stable"
       }
     ]
   },

@@ -1,6 +1,6 @@
 <div class="d-flex p-4">
     <div class="flex-grow-1 ms-2">
-        <span class="fs-5 fw-bold">{{ member ? "Edit role" : "Add people to dataset" }}</span>
+        <span class="fs-5 fw-bold">{{ collaborator ? "Edit role" : "Add people to dataset" }}</span>
     </div>
     <div>
         <button
@@ -17,7 +17,7 @@
 </div>
 
 <div class="body p-4">
-    <div *ngIf="!member && !selectedMember" class="d-flex flex-column position-relative">
+    <div *ngIf="!collaborator && !selectedCollaborator" class="d-flex flex-column position-relative">
         <label for="" class="form-label d-block">Search by account name, display info </label>
         <div *ngIf="searching" class="container-spinner">
             <mat-spinner [diameter]="20" color="primary" mode="indeterminate" />
@@ -27,7 +27,7 @@
             placeholder="Find people..."
             id="name"
             #searchInput
-            [(ngModel)]="searchMember"
+            [(ngModel)]="searchPerson"
             [ngbTypeahead]="search"
             [resultTemplate]="rt"
             [inputFormatter]="formatter"
@@ -45,18 +45,18 @@
             </div>
         </ng-template>
     </div>
-    <div *ngIf="selectedMember" class="pt-2 px-1">
+    <div *ngIf="selectedCollaborator" class="pt-2 px-1">
         <div class="d-flex align-items-center justify-content-between p-2 rounded-2 border alert alert-info">
             <div class="d-flex align-items-start">
                 <img
                     class="rounded-circle mt-1 border border-1"
-                    [src]="selectedMember.avatarUrl"
+                    [src]="selectedCollaborator.avatarUrl"
                     height="30"
                     width="30"
                 />
                 <div class="d-flex flex-column ms-3">
-                    <div class="fw-semibold">{{ selectedMember.accountName }}</div>
-                    <div class="fs-10 text-muted">{{ selectedMember.displayName }}</div>
+                    <div class="fw-semibold">{{ selectedCollaborator.accountName }}</div>
+                    <div class="fs-10 text-muted">{{ selectedCollaborator.displayName }}</div>
                 </div>
             </div>
             <button class="close-button" (click)="closeSelectedMember()" type="button">
@@ -65,9 +65,15 @@
         </div>
     </div>
 
-    <div *ngIf="member" class="d-flex flex-column">
+    <div *ngIf="collaborator" class="d-flex flex-column">
         <label for="" class="form-label d-block">Account name </label>
-        <input type="text" id="name" class="w-100 form-control d-block" [value]="'Bill'" readonly />
+        <input
+            type="text"
+            id="name"
+            class="w-100 form-control d-block"
+            [value]="collaborator.account.accountName"
+            disabled
+        />
     </div>
     <div class="mt-4"><label for="" class="form-label d-block">Choose a role </label></div>
     <mat-divider class="mt-1 mb-2" />
@@ -80,7 +86,7 @@
                     type="radio"
                     id="Reader"
                     name="role"
-                    value="Reader"
+                    [value]="DatasetAccessRole.Reader"
                 />
             </div>
             <label for="Reader" class="ps-3">
@@ -99,11 +105,11 @@
                     [(ngModel)]="role"
                     id="Writer"
                     name="role"
-                    value="Writer"
+                    [value]="DatasetAccessRole.Editor"
                 />
             </div>
             <label for="Writer" class="ps-3">
-                <div>Writer</div>
+                <div>Editor</div>
                 <div class="fs-12 text-muted">Recommended for people who actively push to your dataset</div>
             </label>
         </div>
@@ -116,7 +122,7 @@
                     [(ngModel)]="role"
                     id="Maintainer"
                     name="role"
-                    value="Maintainer"
+                    [value]="DatasetAccessRole.Maintainer"
                 />
             </div>
             <label for="Maintainer" class="ms-3">
@@ -135,15 +141,16 @@
         Cancel
     </button>
     <button
-        *ngIf="!member"
+        *ngIf="!collaborator"
         type="button"
-        [disabled]="!role || !selectedMember"
+        [disabled]="!role || !selectedCollaborator"
         class="btn btn-success"
         data-test-id="add-member"
+        (click)="saveChanges()"
     >
-        Add member
+        Add collaborator
     </button>
-    <button *ngIf="member" type="button" (click)="activeModal.close()" class="btn btn-success" data-test-id="save-role">
+    <button *ngIf="collaborator" type="button" (click)="saveChanges()" class="btn btn-success" data-test-id="save-role">
         Save role
     </button>
 </div>

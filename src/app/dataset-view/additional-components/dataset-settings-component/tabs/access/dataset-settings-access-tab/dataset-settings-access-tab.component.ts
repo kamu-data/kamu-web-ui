@@ -21,17 +21,7 @@ import { ModalService } from "src/app/common/components/modal/modal.service";
 import { SelectionModel } from "@angular/cdk/collections";
 import { DatasetCollaborationsService } from "./dataset-collaborations.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-
-export interface TestInterface {
-    // { user: { id: "0", name: "Bill" }, role: { role: "Editor" } }
-    user: {
-        id: string;
-        name: string;
-    };
-    role: {
-        role: string;
-    };
-}
+import { from } from "rxjs";
 
 @Component({
     selector: "app-dataset-settings-access-tab",
@@ -101,24 +91,42 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
         });
     }
 
-    public addEditPeople(member: MaybeNull<unknown>): void {
+    public addEditPeople(collaborator: MaybeNull<AccountWithRole>): void {
         const modalRef = this.ngbModalService.open(AddPeopleModalComponent);
         const modalRefInstance = modalRef.componentInstance as AddPeopleModalComponent;
         modalRefInstance.datasetBasics = this.datasetBasics;
-        modalRefInstance.member = member;
+        modalRefInstance.collaborator = collaborator;
+        modalRefInstance.currentPage = this.currentPage;
+        from(modalRef.result)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((result: string) => {
+                if (result === "Success") {
+                    this.selection.clear();
+                    this.updateTable(this.currentPage);
+                }
+            });
     }
 
-    public removeMember(name: string): void {
+    public removeCollaborator(collaborator: AccountWithRole): void {
         promiseWithCatch(
             this.modalService.error({
-                title: "Remove member",
-                message: `Do you want to remove ${name}?`,
+                title: "Remove collaborator",
+                message: `Do you want to remove ${collaborator.account.accountName}?`,
 
                 yesButtonText: "Ok",
                 noButtonText: "Cancel",
                 handler: (ok) => {
                     if (ok) {
-                        //TODO: Implement real API
+                        this.datasetCollaborationsService
+                            .unsetRoleCollaborator({
+                                datasetId: this.datasetBasics.id,
+                                accountIds: [collaborator.account.id],
+                            })
+                            .pipe(takeUntilDestroyed(this.destroyRef))
+                            .subscribe(() => {
+                                this.selection.clear();
+                                this.updateTable(this.currentPage);
+                            });
                     }
                 },
             }),
@@ -126,17 +134,25 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
     }
 
     public removeAllMember(): void {
-        this.dataSource.data = [];
+        const selectedCollaboratorsIds = this.selection.selected.map((s: AccountWithRole) => s.account.id);
         promiseWithCatch(
             this.modalService.error({
-                title: "Remove member",
-                message: `Do you want to remove all member?`,
-
+                title: "Remove collaborators",
+                message: `Do you want to remove selected collaborators?`,
                 yesButtonText: "Ok",
                 noButtonText: "Cancel",
                 handler: (ok) => {
                     if (ok) {
-                        //TODO: Implement real API
+                        this.datasetCollaborationsService
+                            .unsetRoleCollaborator({
+                                datasetId: this.datasetBasics.id,
+                                accountIds: [...selectedCollaboratorsIds],
+                            })
+                            .pipe(takeUntilDestroyed(this.destroyRef))
+                            .subscribe(() => {
+                                this.selection.clear();
+                                this.updateTable(this.currentPage);
+                            });
                     }
                 },
             }),
@@ -160,12 +176,5 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
         this.isAllSelected()
             ? this.selection.clear()
             : this.dataSource.data.forEach((row) => this.selection.select(row as AccountWithRole));
-    }
-
-    public logSelection(): void {
-        console.log(
-            "==>",
-            this.selection.selected.map((s: AccountWithRole) => s.account.id),
-        );
     }
 }

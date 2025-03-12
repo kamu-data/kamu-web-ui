@@ -38,6 +38,7 @@ export class DatasetCollaborationApi {
     }): Observable<DatasetListCollaboratorsQuery> {
         return this.datasetListCollaboratorsGQL.watch(params).valueChanges.pipe(
             first(),
+
             map((result: ApolloQueryResult<DatasetListCollaboratorsQuery>) => {
                 return result.data;
             }),

@@ -6,8 +6,8 @@
  */
 
 import { MaybeNull } from "src/app/interface/app.types";
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { DatasetBasicsFragment, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
+import { AccountWithRole, DatasetBasicsFragment, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { SettingsTabsEnum } from "../../../dataset-settings.model";
 import { MatTableDataSource } from "@angular/material/table";
@@ -20,6 +20,7 @@ import { AddPeopleModalComponent } from "./add-people-modal/add-people-modal.com
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { SelectionModel } from "@angular/cdk/collections";
 import { DatasetCollaborationsService } from "./dataset-collaborations.service";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 export interface TestInterface {
     // { user: { id: "0", name: "Bill" }, role: { role: "Editor" } }
@@ -46,7 +47,7 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
     public pageBasedInfo: PageBasedInfo;
     public readonly PER_PAGE = 15;
     public searchMember = "";
-    public selection = new SelectionModel<TestInterface>(true, []);
+    public selection = new SelectionModel<AccountWithRole>(true, []);
 
     public readonly DISPLAY_COLUMNS: string[] = ["user", "role", "actions"];
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
@@ -56,6 +57,7 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
     private ngbModalService = inject(NgbModal);
     private modalService = inject(ModalService);
     private datasetCollaborationsService = inject(DatasetCollaborationsService);
+    private cdr = inject(ChangeDetectorRef);
 
     public get isPrivate(): boolean {
         return this.datasetBasics.visibility.__typename === "PrivateDatasetVisibility";
@@ -63,16 +65,22 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
 
     public ngOnInit(): void {
         this.getPageFromUrl();
-        this.dataSource.data = [
-            { user: { id: "0", name: "Bill" }, role: { role: "Editor" } },
-            { user: { id: "0", name: "John" }, role: { role: "Editor" } },
-        ];
-        this.pageBasedInfo = {
-            currentPage: 0,
-            hasNextPage: false,
-            hasPreviousPage: false,
-            totalPages: 1,
-        };
+        this.updateTable(this.currentPage);
+    }
+
+    private updateTable(page: number): void {
+        this.datasetCollaborationsService
+            .listCollaborators({
+                datasetId: this.datasetBasics.id,
+                page: page - 1,
+                perPage: this.PER_PAGE,
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((result) => {
+                this.dataSource.data = result.nodes;
+                this.pageBasedInfo = result.pageInfo;
+                this.cdr.detectChanges();
+            });
     }
 
     public getPageFromUrl(): void {
@@ -137,7 +145,7 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
 
     public applyFilter(search: string): void {
         this.dataSource.filterPredicate = (data: unknown, filter: string): boolean => {
-            return (data as TestInterface).user.name.toLowerCase().includes(filter.trim().toLowerCase());
+            return (data as AccountWithRole).account.accountName.toLowerCase().includes(filter.trim().toLowerCase());
         };
         this.dataSource.filter = search.trim().toLowerCase();
     }
@@ -151,13 +159,13 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
     public masterToggle() {
         this.isAllSelected()
             ? this.selection.clear()
-            : this.dataSource.data.forEach((row) => this.selection.select(row as TestInterface));
+            : this.dataSource.data.forEach((row) => this.selection.select(row as AccountWithRole));
     }
 
     public logSelection(): void {
         console.log(
             "==>",
-            this.selection.selected.map((s: TestInterface) => s.user.name),
+            this.selection.selected.map((s: AccountWithRole) => s.account.id),
         );
     }
 }

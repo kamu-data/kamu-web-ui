@@ -3601,22 +3601,24 @@ export type DatasetListCollaboratorsQuery = {
     __typename?: "Query";
     datasets: {
         __typename?: "Datasets";
-        byId?: {
-            __typename?: "Dataset";
-            collaboration: {
-                __typename?: "DatasetCollaboration";
-                accountRoles: {
-                    __typename?: "AccountWithRoleConnection";
-                    totalCount: number;
-                    nodes: Array<{
-                        __typename?: "AccountWithRole";
-                        role: DatasetAccessRole;
-                        account: { __typename?: "Account" } & AccountFragment;
-                    }>;
-                    pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
-                };
-            };
-        } | null;
+        byId?:
+            | ({
+                  __typename?: "Dataset";
+                  collaboration: {
+                      __typename?: "DatasetCollaboration";
+                      accountRoles: {
+                          __typename?: "AccountWithRoleConnection";
+                          totalCount: number;
+                          nodes: Array<{
+                              __typename?: "AccountWithRole";
+                              role: DatasetAccessRole;
+                              account: { __typename?: "Account" } & AccountFragment;
+                          }>;
+                          pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
+                      };
+                  };
+              } & DatasetBasicsFragment)
+            | null;
     };
 };
 
@@ -7457,6 +7459,7 @@ export const DatasetListCollaboratorsDocument = gql`
     query datasetListCollaborators($datasetId: DatasetID!, $page: Int, $perPage: Int) {
         datasets {
             byId(datasetId: $datasetId) {
+                ...DatasetBasics
                 collaboration {
                     accountRoles(page: $page, perPage: $perPage) {
                         nodes {
@@ -7474,6 +7477,7 @@ export const DatasetListCollaboratorsDocument = gql`
             }
         }
     }
+    ${DatasetBasicsFragmentDoc}
     ${AccountFragmentDoc}
     ${DatasetPageInfoFragmentDoc}
 `;

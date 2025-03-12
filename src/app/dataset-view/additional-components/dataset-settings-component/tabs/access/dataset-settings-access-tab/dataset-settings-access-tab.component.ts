@@ -19,6 +19,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { AddPeopleModalComponent } from "./add-people-modal/add-people-modal.component";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { SelectionModel } from "@angular/cdk/collections";
+import { DatasetCollaborationsService } from "./dataset-collaborations.service";
 
 export interface TestInterface {
     // { user: { id: "0", name: "Bill" }, role: { role: "Editor" } }
@@ -54,6 +55,7 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
     private navigationService = inject(NavigationService);
     private ngbModalService = inject(NgbModal);
     private modalService = inject(ModalService);
+    private datasetCollaborationsService = inject(DatasetCollaborationsService);
 
     public get isPrivate(): boolean {
         return this.datasetBasics.visibility.__typename === "PrivateDatasetVisibility";

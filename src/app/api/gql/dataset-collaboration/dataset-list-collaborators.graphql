@@ -1,0 +1,20 @@
+query datasetListCollaborators($datasetId: DatasetID!, $page: Int, $perPage: Int) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      collaboration {
+        accountRoles(page: $page, perPage: $perPage) {
+          nodes {
+            account {
+              ...Account
+            }
+            role
+          }
+          totalCount
+          pageInfo {
+            ...DatasetPageInfo
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,10 +1,3 @@
-/**
- * Copyright Kamu Data, Inc. and contributors. All rights reserved.
- *
- * Use of this software is governed by the Business Source License
- * included in the LICENSE file.
- */
-
 // THIS FILE IS GENERATED, DO NOT EDIT!
 import { gql } from "@apollo/client/core";
 import { Injectable } from "@angular/core";
@@ -137,6 +130,10 @@ export type AccountFlows = {
 export type AccountFlowsMut = {
     __typename?: "AccountFlowsMut";
     triggers: AccountFlowTriggersMut;
+};
+
+export type AccountLookupFilter = {
+    excludeAccountsByIds?: InputMaybe<Array<Scalars["AccountID"]>>;
 };
 
 export type AccountMut = {
@@ -691,7 +688,7 @@ export type DatasetCollaborationMutSetRoleArgs = {
 };
 
 export type DatasetCollaborationMutUnsetRolesArgs = {
-    accountId: Array<Scalars["AccountID"]>;
+    accountIds: Array<Scalars["AccountID"]>;
 };
 
 export type DatasetCollaborationPermissions = {
@@ -1548,7 +1545,7 @@ export type FlowConfigurationResetCustom = {
 };
 
 export type FlowConfigurationResetToSeedDummy = {
-    dummy: Scalars["String"];
+    dummy?: InputMaybe<Scalars["String"]>;
 };
 
 export type FlowConfigurationSnapshot =
@@ -1613,7 +1610,7 @@ export type FlowDescriptionDatasetReset = {
 
 export type FlowDescriptionHardCompactionNothingToDo = {
     __typename?: "FlowDescriptionHardCompactionNothingToDo";
-    dummy: Scalars["String"];
+    dummy?: Maybe<Scalars["String"]>;
     message: Scalars["String"];
 };
 
@@ -1917,6 +1914,10 @@ export type LoginResponse = {
     account: Account;
 };
 
+export type LookupFilters = {
+    byAccount?: InputMaybe<AccountLookupFilter>;
+};
+
 /**
  * Merge strategy determines how newly ingested data should be combined with
  * the data that already exists in the dataset.
@@ -2150,6 +2151,24 @@ export type Mutation = {
      * schema.
      */
     datasets: DatasetsMut;
+};
+
+export type NameLookupResult = Account;
+
+export type NameLookupResultConnection = {
+    __typename?: "NameLookupResultConnection";
+    edges: Array<NameLookupResultEdge>;
+    /** A shorthand for `edges { node { ... } }` */
+    nodes: Array<NameLookupResult>;
+    /** Page information */
+    pageInfo: PageBasedInfo;
+    /** Approximate number of total nodes */
+    totalCount: Scalars["Int"];
+};
+
+export type NameLookupResultEdge = {
+    __typename?: "NameLookupResultEdge";
+    node: NameLookupResult;
 };
 
 export type NoChanges = CommitResult &
@@ -2596,8 +2615,20 @@ export type ScheduleInput =
 
 export type Search = {
     __typename?: "Search";
+    /**
+     * Perform lightweight search among resource names.
+     * Useful for autocomplete.
+     */
+    nameLookup: NameLookupResultConnection;
     /** Perform search across all resources */
     query: SearchResultConnection;
+};
+
+export type SearchNameLookupArgs = {
+    filters: LookupFilters;
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+    query: Scalars["String"];
 };
 
 export type SearchQueryArgs = {
@@ -2808,7 +2839,7 @@ export type SnapshotConfigurationResetCustom = {
 
 export type SnapshotConfigurationResetToSeedDummy = {
     __typename?: "SnapshotConfigurationResetToSeedDummy";
-    dummy: Scalars["String"];
+    dummy?: Maybe<Scalars["String"]>;
 };
 
 export type SnapshotPropagationMode = SnapshotConfigurationResetCustom | SnapshotConfigurationResetToSeedDummy;
@@ -3560,6 +3591,92 @@ export type DatasetByIdQuery = {
     datasets: { __typename?: "Datasets"; byId?: ({ __typename?: "Dataset" } & DatasetBasicsFragment) | null };
 };
 
+export type DatasetListCollaboratorsQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+}>;
+
+export type DatasetListCollaboratorsQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            collaboration: {
+                __typename?: "DatasetCollaboration";
+                accountRoles: {
+                    __typename?: "AccountWithRoleConnection";
+                    totalCount: number;
+                    nodes: Array<{
+                        __typename?: "AccountWithRole";
+                        role: DatasetAccessRole;
+                        account: { __typename?: "Account" } & AccountFragment;
+                    }>;
+                    pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
+                };
+            };
+        } | null;
+    };
+};
+
+export type DatasetSearchCollaboratorQueryVariables = Exact<{
+    query: Scalars["String"];
+    filters: LookupFilters;
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+}>;
+
+export type DatasetSearchCollaboratorQuery = {
+    __typename?: "Query";
+    search: {
+        __typename?: "Search";
+        nameLookup: {
+            __typename?: "NameLookupResultConnection";
+            nodes: Array<{ __typename?: "Account" } & AccountFragment>;
+        };
+    };
+};
+
+export type SetRoleCollaboratorMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    accountId: Scalars["AccountID"];
+    role: DatasetAccessRole;
+}>;
+
+export type SetRoleCollaboratorMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            collaboration: {
+                __typename?: "DatasetCollaborationMut";
+                setRole: { __typename?: "SetRoleResultSuccess"; message: string };
+            };
+        } | null;
+    };
+};
+
+export type UnsetRoleCollaboratorMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    accountIds: Array<Scalars["AccountID"]> | Scalars["AccountID"];
+}>;
+
+export type UnsetRoleCollaboratorMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            collaboration: {
+                __typename?: "DatasetCollaborationMut";
+                unsetRoles: { __typename?: "UnsetRoleResultSuccess"; message: string };
+            };
+        } | null;
+    };
+};
+
 export type GetDatasetDataSqlRunQueryVariables = Exact<{
     query: Scalars["String"];
     limit: Scalars["Int"];
@@ -4176,7 +4293,7 @@ export type FlowSummaryDataFragment = {
               __typename?: "FlowDescriptionDatasetHardCompaction";
               datasetId: string;
               compactionResult?:
-                  | { __typename?: "FlowDescriptionHardCompactionNothingToDo"; message: string; dummy: string }
+                  | { __typename?: "FlowDescriptionHardCompactionNothingToDo"; message: string; dummy?: string | null }
                   | {
                         __typename?: "FlowDescriptionHardCompactionSuccess";
                         originalBlocksCount: number;
@@ -5168,7 +5285,7 @@ export type GetDatasetFlowConfigsQuery = {
                                   recursive: boolean;
                                   mode:
                                       | { __typename?: "SnapshotConfigurationResetCustom" }
-                                      | { __typename?: "SnapshotConfigurationResetToSeedDummy"; dummy: string };
+                                      | { __typename?: "SnapshotConfigurationResetToSeedDummy"; dummy?: string | null };
                               } | null;
                               compaction?:
                                   | {
@@ -7331,6 +7448,124 @@ export const DatasetByIdDocument = gql`
 })
 export class DatasetByIdGQL extends Apollo.Query<DatasetByIdQuery, DatasetByIdQueryVariables> {
     document = DatasetByIdDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetListCollaboratorsDocument = gql`
+    query datasetListCollaborators($datasetId: DatasetID!, $page: Int, $perPage: Int) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                collaboration {
+                    accountRoles(page: $page, perPage: $perPage) {
+                        nodes {
+                            account {
+                                ...Account
+                            }
+                            role
+                        }
+                        totalCount
+                        pageInfo {
+                            ...DatasetPageInfo
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${AccountFragmentDoc}
+    ${DatasetPageInfoFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetListCollaboratorsGQL extends Apollo.Query<
+    DatasetListCollaboratorsQuery,
+    DatasetListCollaboratorsQueryVariables
+> {
+    document = DatasetListCollaboratorsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetSearchCollaboratorDocument = gql`
+    query datasetSearchCollaborator($query: String!, $filters: LookupFilters!, $page: Int, $perPage: Int) {
+        search {
+            nameLookup(query: $query, filters: $filters, page: $page, perPage: $perPage) {
+                nodes {
+                    ...Account
+                }
+            }
+        }
+    }
+    ${AccountFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetSearchCollaboratorGQL extends Apollo.Query<
+    DatasetSearchCollaboratorQuery,
+    DatasetSearchCollaboratorQueryVariables
+> {
+    document = DatasetSearchCollaboratorDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const SetRoleCollaboratorDocument = gql`
+    mutation setRoleCollaborator($datasetId: DatasetID!, $accountId: AccountID!, $role: DatasetAccessRole!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                collaboration {
+                    setRole(accountId: $accountId, role: $role) {
+                        message
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class SetRoleCollaboratorGQL extends Apollo.Mutation<
+    SetRoleCollaboratorMutation,
+    SetRoleCollaboratorMutationVariables
+> {
+    document = SetRoleCollaboratorDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const UnsetRoleCollaboratorDocument = gql`
+    mutation unsetRoleCollaborator($datasetId: DatasetID!, $accountIds: [AccountID!]!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                collaboration {
+                    unsetRoles(accountIds: $accountIds) {
+                        message
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class UnsetRoleCollaboratorGQL extends Apollo.Mutation<
+    UnsetRoleCollaboratorMutation,
+    UnsetRoleCollaboratorMutationVariables
+> {
+    document = UnsetRoleCollaboratorDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

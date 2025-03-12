@@ -1,0 +1,9 @@
+query datasetSearchCollaborator($query: String!, $filters: LookupFilters!, $page: Int, $perPage: Int) {
+  search {
+    nameLookup(query: $query, filters: $filters, page: $page, perPage: $perPage) {
+      nodes {
+        ...Account
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+mutation unsetRoleCollaborator($datasetId: DatasetID!, $accountIds: [AccountID!]!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      collaboration {
+        unsetRoles(accountIds: $accountIds) {
+          message
+        }
+      }
+    }
+  }
+}

@@ -7,7 +7,12 @@
 
 import { MaybeNull } from "src/app/interface/app.types";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
-import { AccountWithRole, DatasetBasicsFragment, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
+import {
+    AccountWithRole,
+    DatasetAccessRole,
+    DatasetBasicsFragment,
+    PageBasedInfo,
+} from "src/app/api/kamu.graphql.interface";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { SettingsTabsEnum } from "../../../dataset-settings.model";
 import { MatTableDataSource } from "@angular/material/table";
@@ -176,5 +181,18 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
         this.isAllSelected()
             ? this.selection.clear()
             : this.dataSource.data.forEach((row) => this.selection.select(row as AccountWithRole));
+    }
+
+    public setRoleIcon(row: AccountWithRole): string {
+        switch (row.role) {
+            case DatasetAccessRole.Reader:
+                return "library_books";
+            case DatasetAccessRole.Editor:
+                return "edit_document";
+            case DatasetAccessRole.Maintainer:
+                return "manage_accounts";
+            default:
+                return "";
+        }
     }
 }

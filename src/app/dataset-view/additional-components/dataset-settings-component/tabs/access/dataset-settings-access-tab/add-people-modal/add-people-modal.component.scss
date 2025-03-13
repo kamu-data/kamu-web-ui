@@ -1,0 +1,44 @@
+h5 {
+    margin: 0;
+}
+
+.find-people-search {
+    padding: 3px;
+}
+
+.radio-item {
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #999;
+    transition: 0.2s all linear;
+    margin-right: 5px;
+    position: relative;
+}
+
+.placeholder-padding-left {
+    padding: 6px 30px 6px 35px;
+}
+
+.search-icon {
+    position: absolute;
+    bottom: 19px;
+    left: 2px;
+}
+
+.close-icon {
+    transform: scale(0.7);
+}
+
+.close-button {
+    outline: none;
+    border: none;
+    background: transparent;
+}
+
+.container-spinner {
+    position: absolute;
+    z-index: 100;
+    bottom: 7px;
+    right: 15px;
+}

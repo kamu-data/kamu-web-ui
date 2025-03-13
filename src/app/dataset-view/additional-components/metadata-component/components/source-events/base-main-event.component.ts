@@ -52,7 +52,7 @@ export abstract class BaseMainEventComponent extends BaseComponent {
         combineLatest([this.datasetSubsService.permissionsChanges, this.datasetService.datasetChanges])
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(([datasetPermissions, datasetBasics]: [DatasetPermissionsFragment, DatasetBasicsFragment]) => {
-                if (!datasetPermissions.permissions.canCommit || datasetBasics.kind !== expectedKind) {
+                if (!datasetPermissions.permissions.metadata.canCommit || datasetBasics.kind !== expectedKind) {
                     this.navigationServices.navigateToDatasetView({
                         accountName: datasetBasics.owner.accountName,
                         datasetName: datasetBasics.name,

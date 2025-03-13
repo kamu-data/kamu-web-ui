@@ -71,9 +71,17 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
             recursive: [false],
         });
 
-        if (!this.datasetPermissions.permissions.canRename) {
+        if (!this.datasetPermissions.permissions.general.canRename) {
             this.renameDatasetForm.disable();
         }
+
+        this.activatedRoute.fragment.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((fragment: string | null) => {
+            if (fragment) this.jumpToSection(fragment);
+        });
+    }
+
+    public jumpToSection(section: string | null) {
+        if (section) document.getElementById(section)?.scrollIntoView({ behavior: "smooth" });
     }
 
     public get datasetNameControl(): AbstractControl {
@@ -89,7 +97,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     }
 
     public get isDeleteDatasetDisabled(): boolean {
-        return !this.datasetPermissions.permissions.canDelete;
+        return !this.datasetPermissions.permissions.general.canDelete;
     }
 
     public get isRoot(): boolean {

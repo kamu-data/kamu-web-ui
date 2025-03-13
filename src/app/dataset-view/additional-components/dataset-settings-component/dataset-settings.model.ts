@@ -11,6 +11,7 @@ export enum SettingsTabsEnum {
     VARIABLES_AND_SECRETS = "variables-and-secrets",
     COMPACTION = "compaction",
     TRANSFORM_SETTINGS = "transform-settings",
+    ACCESS = "access",
 }
 
 export enum PollingGroupEnum {
@@ -74,5 +75,14 @@ export const datasetSettingsSidePanelData: DatasetSettingsSidePanelItem[] = [
         activeTab: SettingsTabsEnum.VARIABLES_AND_SECRETS,
         iconClassName: "mr-2 ms-3px",
         id: "varsSecrets",
+    },
+    {
+        name: "Access",
+        iconName: "people",
+        showDivider: false,
+        visible: true,
+        activeTab: SettingsTabsEnum.ACCESS,
+        iconClassName: "ms-1 me-2 mb-1 access-icon",
+        id: "access",
     },
 ];

@@ -10,6 +10,7 @@ import { NgbActiveModal, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bo
 import { OperatorFunction, Observable, debounceTime, distinctUntilChanged, tap, finalize, switchMap } from "rxjs";
 import {
     AccountWithRole,
+    AccountWithRoleConnection,
     DatasetAccessRole,
     DatasetBasicsFragment,
     NameLookupResult,
@@ -20,6 +21,7 @@ import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetCollaborationsService } from "../dataset-collaborations.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { ROLE_OPTIONS } from "./add-people-modal.model";
 
 @Component({
     selector: "app-add-people-modal",
@@ -31,13 +33,14 @@ export class AddPeopleModalComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public collaborator: MaybeNull<AccountWithRole>;
     @Input({ required: true }) public currentPage: number;
-    @Input({ required: true }) public activeCollaboratorsIds: string[] = [];
+    public activeCollaboratorsIds: string[] = [];
     public role: MaybeNull<DatasetAccessRole> = null;
     public searchPerson: string = "";
     public selectedCollaborator: MaybeNull<NameLookupResult>;
     public searching: boolean = false;
 
     public readonly DatasetAccessRole: typeof DatasetAccessRole = DatasetAccessRole;
+    public readonly SELECT_ROLE_OPTIONS = ROLE_OPTIONS;
     private readonly DEFAULT_PER_PAGE = 10;
 
     public activeModal = inject(NgbActiveModal);
@@ -52,12 +55,12 @@ export class AddPeopleModalComponent extends BaseComponent implements OnInit {
         if (this.collaborator) {
             this.role = this.collaborator.role;
         }
-        // this.datasetCollaborationsService
-        //     .listCollaborators({ datasetId: this.datasetBasics.id })
-        //     .pipe(takeUntilDestroyed(this.destroyRef))
-        //     .subscribe((result: AccountWithRoleConnection) => {
-        //         this.activeCollaboratorsIds = result.nodes.map((node) => node.account.id);
-        //     });
+        this.datasetCollaborationsService
+            .listCollaborators({ datasetId: this.datasetBasics.id })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((result: AccountWithRoleConnection) => {
+                this.activeCollaboratorsIds = result.nodes.map((node) => node.account.id);
+            });
     }
 
     public search: OperatorFunction<string, readonly NameLookupResult[]> = (text$: Observable<string>) =>

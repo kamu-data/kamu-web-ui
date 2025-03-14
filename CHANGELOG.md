@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added account resolver for account page
 ### Fixed
 - Flows tab: fixed redirection for derivative dataset when list flows is empty
+- Scheduled updates: remove disabled state for "Save" button
 
 
 ## [0.41.1] - 2025-03-07

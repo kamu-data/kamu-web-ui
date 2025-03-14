@@ -5,7 +5,16 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    OnInit,
+    Output,
+} from "@angular/core";
 import {
     DatasetBasicsFragment,
     DatasetFlowType,
@@ -19,6 +28,7 @@ import { MaybeNull } from "src/app/interface/app.types";
 import { BatchingFormType } from "../dataset-settings-scheduling-tab.component.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { everyTimeMapperValidators } from "src/app/common/helpers/data.helpers";
+import { TriggersTooltipsTexts } from "src/app/common/tooltips/triggers.text";
 
 @Component({
     selector: "app-batching-trigger-form",
@@ -30,7 +40,9 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Output() public saveTriggerEmit = new EventEmitter<FormGroup<BatchingFormType>>();
     public readonly timeUnit: typeof TimeUnit = TimeUnit;
+    public readonly UPDATES_TOOLTIP = TriggersTooltipsTexts.UPDATE_SELECTOR_TOOLTIP;
     private everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = everyTimeMapperValidators;
+    public isLoading: boolean;
 
     public batchingForm = new FormGroup<BatchingFormType>({
         updatesState: new FormControl<boolean>(false, { nonNullable: true }),
@@ -46,6 +58,7 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
     });
 
     private datasetSchedulingService = inject(DatasetSchedulingService);
+    private cdr = inject(ChangeDetectorRef);
 
     public get batchingUpdatesState(): AbstractControl {
         return this.batchingForm.controls.updatesState;
@@ -94,6 +107,8 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
                         updatesState: !flowTriggers.paused,
                     });
                 }
+                this.isLoading = true;
+                this.cdr.detectChanges();
             });
     }
 }

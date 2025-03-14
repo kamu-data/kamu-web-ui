@@ -27,6 +27,8 @@ import {
 } from "src/app/common/helpers/base-test.helpers.spec";
 import { TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { PollingGroupEnum } from "../../../dataset-settings.model";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { TooltipIconModule } from "src/app/common/components/tooltip-icon/tooltip-icon.module";
 
 describe("IngestTriggerFormComponent", () => {
     let component: IngestTriggerFormComponent;
@@ -46,12 +48,15 @@ describe("IngestTriggerFormComponent", () => {
                 MatRadioModule,
                 SharedTestModule,
                 MatSlideToggleModule,
+                MatProgressBarModule,
+                TooltipIconModule,
             ],
         });
         fixture = TestBed.createComponent(IngestTriggerFormComponent);
         component = fixture.componentInstance;
         datasetSchedulingService = TestBed.inject(DatasetSchedulingService);
         component.datasetBasics = mockDatasetBasicsRootFragment;
+        component.isLoading = true;
     });
 
     it("should create", () => {

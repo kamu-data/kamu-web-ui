@@ -26,7 +26,8 @@ import { ModalService } from "src/app/common/components/modal/modal.service";
 import { SelectionModel } from "@angular/cdk/collections";
 import { DatasetCollaborationsService } from "./dataset-collaborations.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { from } from "rxjs";
+import { filter, from } from "rxjs";
+import { NavigationEnd, Router } from "@angular/router";
 
 @Component({
     selector: "app-dataset-settings-access-tab",
@@ -53,6 +54,7 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
     private modalService = inject(ModalService);
     private datasetCollaborationsService = inject(DatasetCollaborationsService);
     private cdr = inject(ChangeDetectorRef);
+    private router = inject(Router);
 
     public get isPrivate(): boolean {
         return this.datasetBasics.visibility.__typename === "PrivateDatasetVisibility";
@@ -61,6 +63,13 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
     public ngOnInit(): void {
         this.getPageFromUrl();
         this.updateTable(this.currentPage);
+        this.router.events
+            .pipe(filter((event) => event instanceof NavigationEnd))
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.getDatasetInfoFromUrl();
+                this.updateTable(this.currentPage);
+            });
     }
 
     private updateTable(page: number): void {
@@ -91,7 +100,7 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
             accountName: this.getDatasetInfoFromUrl().accountName,
             datasetName: this.getDatasetInfoFromUrl().datasetName,
             tab: DatasetViewTypeEnum.Settings,
-            section: SettingsTabsEnum.VARIABLES_AND_SECRETS,
+            section: SettingsTabsEnum.ACCESS,
             page: this.currentPage,
         });
     }
@@ -101,7 +110,6 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
         const modalRefInstance = modalRef.componentInstance as AddPeopleModalComponent;
         modalRefInstance.datasetBasics = this.datasetBasics;
         modalRefInstance.collaborator = collaborator;
-        modalRefInstance.currentPage = this.currentPage;
         from(modalRef.result)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((result: string) => {

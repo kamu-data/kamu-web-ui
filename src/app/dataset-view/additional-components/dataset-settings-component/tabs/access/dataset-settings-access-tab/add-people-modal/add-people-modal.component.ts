@@ -32,7 +32,6 @@ import { ROLE_OPTIONS } from "./add-people-modal.model";
 export class AddPeopleModalComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public collaborator: MaybeNull<AccountWithRole>;
-    @Input({ required: true }) public currentPage: number;
     public activeCollaboratorsIds: string[] = [];
     public role: MaybeNull<DatasetAccessRole> = null;
     public searchPerson: string = "";

@@ -18,6 +18,8 @@ import { ToastrModule } from "ngx-toastr";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { TimeUnit } from "src/app/api/kamu.graphql.interface";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { TooltipIconModule } from "src/app/common/components/tooltip-icon/tooltip-icon.module";
 
 describe("BatchingTriggerFormComponent", () => {
     let component: BatchingTriggerFormComponent;
@@ -28,7 +30,15 @@ describe("BatchingTriggerFormComponent", () => {
         TestBed.configureTestingModule({
             declarations: [BatchingTriggerFormComponent],
             providers: [Apollo],
-            imports: [FormsModule, ReactiveFormsModule, ToastrModule.forRoot(), MatSlideToggleModule, SharedTestModule],
+            imports: [
+                FormsModule,
+                ReactiveFormsModule,
+                MatProgressBarModule,
+                TooltipIconModule,
+                ToastrModule.forRoot(),
+                MatSlideToggleModule,
+                SharedTestModule,
+            ],
         });
         fixture = TestBed.createComponent(BatchingTriggerFormComponent);
         component = fixture.componentInstance;

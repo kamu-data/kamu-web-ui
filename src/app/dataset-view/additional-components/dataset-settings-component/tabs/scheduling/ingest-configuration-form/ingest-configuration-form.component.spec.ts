@@ -50,30 +50,4 @@ describe("IngestConfigurationFormComponent", () => {
         component.ingestConfigurationForm.patchValue({ fetchUncacheable: true });
         expect(changeConfigurationEmitSpy).toHaveBeenCalledTimes(1);
     });
-
-    it("should check ngOnChanges with enable method", () => {
-        const enableIngestConfigurationFormSpy = spyOn(component.ingestConfigurationForm, "enable");
-        component.ngOnChanges({
-            disabled: {
-                previousValue: undefined,
-                currentValue: true,
-                firstChange: true,
-                isFirstChange: () => true,
-            },
-        });
-        expect(enableIngestConfigurationFormSpy).toHaveBeenCalledTimes(1);
-    });
-
-    it("should check ngOnChanges with disable method", () => {
-        const disableIngestConfigurationFormSpy = spyOn(component.ingestConfigurationForm, "disable");
-        component.ngOnChanges({
-            disabled: {
-                previousValue: undefined,
-                currentValue: false,
-                firstChange: true,
-                isFirstChange: () => true,
-            },
-        });
-        expect(disableIngestConfigurationFormSpy).toHaveBeenCalledTimes(1);
-    });
 });

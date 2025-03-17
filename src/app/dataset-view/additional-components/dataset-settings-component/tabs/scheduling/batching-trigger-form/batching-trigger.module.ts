@@ -10,10 +10,19 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { BatchingTriggerFormComponent } from "./batching-trigger-form.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { TooltipIconModule } from "src/app/common/components/tooltip-icon/tooltip-icon.module";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
 
 @NgModule({
     declarations: [BatchingTriggerFormComponent],
     exports: [BatchingTriggerFormComponent],
-    imports: [CommonModule, FormsModule, MatSlideToggleModule, ReactiveFormsModule],
+    imports: [
+        CommonModule,
+        FormsModule,
+        MatProgressBarModule,
+        MatSlideToggleModule,
+        ReactiveFormsModule,
+        TooltipIconModule,
+    ],
 })
 export class BatchingTriggerModule {}

@@ -5,7 +5,16 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    OnInit,
+    Output,
+} from "@angular/core";
 import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from "@angular/forms";
 import {
     DatasetBasicsFragment,
@@ -21,6 +30,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { cronExpressionValidator, everyTimeMapperValidators } from "src/app/common/helpers/data.helpers";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetSchedulingService } from "../../../services/dataset-scheduling.service";
+import { TriggersTooltipsTexts } from "src/app/common/tooltips/triggers.text";
 
 @Component({
     selector: "app-ingest-trigger-form",
@@ -33,11 +43,14 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
     @Output() public changeTriggerEmit = new EventEmitter<FormGroup<PollingGroupType>>();
     @Input({ required: true }) public updateStateToggleLabel: string;
 
+    public isLoading = false;
     public readonly timeUnit: typeof TimeUnit = TimeUnit;
     public readonly pollingGroupEnum: typeof PollingGroupEnum = PollingGroupEnum;
+    public readonly UPDATES_TOOLTIP = TriggersTooltipsTexts.UPDATE_SELECTOR_TOOLTIP;
     private everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = everyTimeMapperValidators;
 
     private datasetSchedulingService = inject(DatasetSchedulingService);
+    private cdr = inject(ChangeDetectorRef);
 
     public pollingForm = new FormGroup<PollingGroupType>({
         updatesState: new FormControl<boolean>(false, { nonNullable: true }),
@@ -57,18 +70,6 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
         this.setPollingEveryTimeValidator();
         this.initPollingForm();
         this.pollingTypeChanges();
-        this.changePollingForm();
-        this.pollingForm.controls.updatesState.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((enableUpdates: boolean) => {
-                enableUpdates ? this.enableControls() : this.disableControls();
-            });
-    }
-
-    public changePollingForm(): void {
-        this.pollingForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.changeTriggerEmit.emit(this.pollingForm);
-        });
     }
 
     public initPollingForm(): void {
@@ -94,10 +95,10 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
                             cronExpression: schedule.cron5ComponentExpression,
                         });
                     }
-                } else {
-                    this.disableControls();
                 }
                 this.changeTriggerEmit.emit(this.pollingForm);
+                this.isLoading = true;
+                this.cdr.detectChanges();
             });
     }
 
@@ -127,20 +128,6 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
         control.markAsPristine();
     }
 
-    private disableControls(): void {
-        this.disableAndClearControl(this.cronExpression);
-        this.disableAndClearControl(this.pollingEveryTime);
-        this.disableAndClearControl(this.pollingUnitTime);
-        this.disableAndClearControl(this.pollingType);
-    }
-
-    private enableControls(): void {
-        this.cronExpression.enable();
-        this.pollingEveryTime.enable();
-        this.pollingUnitTime.enable();
-        this.pollingType.enable();
-    }
-
     private setPollingEveryTimeValidator(): void {
         this.pollingUnitTime.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((data: TimeUnit) => {
             if (data) {
@@ -157,19 +144,17 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
         this.pollingType.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((value: PollingGroupEnum) => {
             switch (value) {
                 case PollingGroupEnum.TIME_DELTA: {
-                    if (this.pollingUpdatesState.value) {
-                        this.pollingEveryTime.enable();
-                        this.pollingUnitTime.enable();
-                        this.disableAndClearControl(this.cronExpression);
-                    }
+                    this.pollingEveryTime.enable();
+                    this.pollingUnitTime.enable();
+                    this.disableAndClearControl(this.cronExpression);
+
                     break;
                 }
                 case PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION: {
-                    if (this.pollingUpdatesState.value) {
-                        this.cronExpression.enable();
-                        this.disableAndClearControl(this.pollingEveryTime);
-                        this.disableAndClearControl(this.pollingUnitTime);
-                    }
+                    this.cronExpression.enable();
+                    this.disableAndClearControl(this.pollingEveryTime);
+                    this.disableAndClearControl(this.pollingUnitTime);
+
                     break;
                 }
                 /* istanbul ignore next */

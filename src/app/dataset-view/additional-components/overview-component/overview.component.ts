@@ -40,6 +40,7 @@ import { FileUploadService } from "src/app/services/file-upload.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import ProjectLinks from "src/app/project-links";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { DatasetPermissionsService } from "../../dataset.permissions.service";
 
 @Component({
     selector: "app-overview",
@@ -75,6 +76,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     private configService = inject(AppConfigService);
     private modalService = inject(ModalService);
     private loggedUserService = inject(LoggedUserService);
+    private datasetPermissionsService = inject(DatasetPermissionsService);
 
     public ngOnInit(): void {
         this.uploadFileLoading$ = this.fileUploadService.isUploadFile;
@@ -104,7 +106,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     public get canEditDatasetInfo(): boolean {
         if (this.hasDatasetInfo) {
-            return this.datasetPermissions.permissions.metadata.canCommit;
+            return this.datasetPermissionsService.isEditor(this.datasetPermissions);
         } else {
             return false;
         }
@@ -116,7 +118,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     public get canAddDatasetInfo(): boolean {
         if (!this.hasDatasetInfo) {
-            return this.datasetPermissions.permissions.metadata.canCommit && !isNil(this.currentState);
+            return this.datasetPermissionsService.isEditor(this.datasetPermissions) && !isNil(this.currentState);
         } else {
             return false;
         }
@@ -135,7 +137,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get canAddSetPollingSource(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
+        if (this.currentState && this.datasetPermissionsService.isEditor(this.datasetPermissions)) {
             return (
                 !this.currentState.overview.metadata.currentPollingSource &&
                 this.datasetBasics.kind === DatasetKind.Root &&
@@ -147,7 +149,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get canAddPushSource(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
+        if (this.currentState && this.datasetPermissionsService.isEditor(this.datasetPermissions)) {
             return (
                 !this.currentState.overview.metadata.chain.blocks.nodes.filter(
                     (item) => item.event.__typename === "AddPushSource",
@@ -159,7 +161,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get canAddSetTransform(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
+        if (this.currentState && this.datasetPermissionsService.isEditor(this.datasetPermissions)) {
             return (
                 !this.currentState.overview.metadata.currentTransform &&
                 this.datasetBasics.kind === DatasetKind.Derivative
@@ -170,7 +172,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get canAddReadme(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
+        if (this.currentState && this.datasetPermissionsService.isEditor(this.datasetPermissions)) {
             return !this.currentState.overview.metadata.currentReadme && !this.editingReadme;
         } else {
             return false;
@@ -178,7 +180,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get canEditReadme(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
+        if (this.currentState && this.datasetPermissionsService.isEditor(this.datasetPermissions)) {
             return !isNil(this.currentState.overview.metadata.currentReadme);
         } else {
             return false;
@@ -186,7 +188,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get canAddLicense(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
+        if (this.currentState && this.datasetPermissionsService.isEditor(this.datasetPermissions)) {
             return isNil(this.currentState.overview.metadata.currentLicense);
         } else {
             return false;
@@ -194,7 +196,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get canEditLicense(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
+        if (this.currentState && this.datasetPermissionsService.isEditor(this.datasetPermissions)) {
             return !isNil(this.currentState.overview.metadata.currentLicense);
         } else {
             return false;
@@ -202,7 +204,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get canAddWatermark(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
+        if (this.currentState && this.datasetPermissionsService.isEditor(this.datasetPermissions)) {
             return !this.hasWatermark && this.datasetBasics.kind === DatasetKind.Root;
         } else {
             return false;
@@ -210,7 +212,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get canEditWatermark(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
+        if (this.currentState && this.datasetPermissionsService.isEditor(this.datasetPermissions)) {
             return this.hasWatermark && this.datasetBasics.kind === DatasetKind.Root;
         } else {
             return false;
@@ -218,7 +220,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get canSchedule(): boolean {
-        return this.datasetPermissions.permissions.flows.canRun;
+        return this.datasetPermissionsService.isMaintainer(this.datasetPermissions);
     }
 
     public get canRefresh(): boolean {

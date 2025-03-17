@@ -30,7 +30,7 @@
         </div>
     </div>
     <div class="content-container w-75">
-        <ng-container *ngIf="activeTab === settingsTabsEnum.GENERAL">
+        <ng-container *ngIf="showGeneralTab">
             <app-dataset-settings-general-tab
                 appFeatureFlag="dataset.panel.settings.general"
                 [datasetBasics]="datasetBasics"
@@ -57,6 +57,7 @@
             <app-dataset-settings-secrets-manager-tab
                 appFeatureFlag="dataset.panel.settings.varsSecrets"
                 [datasetBasics]="datasetBasics"
+                [datasetPermissions]="datasetPermissions"
             />
         </ng-container>
         <ng-container *ngIf="showCompactionTab">
@@ -65,7 +66,7 @@
                 [datasetBasics]="datasetBasics"
             />
         </ng-container>
-        <ng-container *ngIf="activeTab === settingsTabsEnum.ACCESS">
+        <ng-container *ngIf="showAccessTab">
             <app-dataset-settings-access-tab
                 appFeatureFlag="dataset.panel.settings.access"
                 [datasetBasics]="datasetBasics"

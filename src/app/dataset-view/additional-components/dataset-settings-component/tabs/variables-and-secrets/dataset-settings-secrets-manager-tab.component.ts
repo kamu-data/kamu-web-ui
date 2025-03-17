@@ -14,6 +14,7 @@ import { ModalService } from "src/app/common/components/modal/modal.service";
 import { promiseWithCatch, requireValue } from "src/app/common/helpers/app.helpers";
 import {
     DatasetBasicsFragment,
+    DatasetPermissionsFragment,
     PageBasedInfo,
     ViewDatasetEnvVar,
     ViewDatasetEnvVarConnection,
@@ -26,6 +27,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { SettingsTabsEnum } from "../../dataset-settings.model";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { DatasetPermissionsService } from "src/app/dataset-view/dataset.permissions.service";
 
 export interface EnvVariableElement {
     key: string;
@@ -41,6 +43,7 @@ export interface EnvVariableElement {
 })
 export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public datasetPermissions: DatasetPermissionsFragment;
     public readonly DISPLAY_COLUMNS: string[] = ["key", "value", "actions"];
     public dataSource = new MatTableDataSource();
     public currentPage = 1;
@@ -53,10 +56,15 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
     private modalService = inject(ModalService);
     private evnironmentVariablesService = inject(DatasetEvnironmentVariablesService);
     private navigationService = inject(NavigationService);
+    private datasetPermissionsService = inject(DatasetPermissionsService);
 
     public ngOnInit(): void {
         this.getPageFromUrl();
         this.updateTable(this.currentPage);
+    }
+
+    public get isMaintainer(): boolean {
+        return this.datasetPermissionsService.isMaintainer(this.datasetPermissions);
     }
 
     public getPageFromUrl(): void {

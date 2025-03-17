@@ -11,6 +11,7 @@ import {
     DatasetFlowType,
     DatasetKind,
     DatasetOverviewFragment,
+    DatasetPermissionsFragment,
     FlowStatus,
     InitiatorFilterInput,
 } from "src/app/api/kamu.graphql.interface";
@@ -25,6 +26,7 @@ import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
 import ProjectLinks from "src/app/project-links";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { DatasetPermissionsService } from "../../dataset.permissions.service";
 
 @Component({
     selector: "app-flows",
@@ -34,6 +36,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 })
 export class FlowsComponent extends FlowsTableProcessingBaseComponent implements OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public datasetPermissions: DatasetPermissionsFragment;
     public searchFilter = "";
     public overview: DatasetOverviewFragment;
     public readonly DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"]; //1
@@ -43,6 +46,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
 
     private datasetSubsService = inject(DatasetSubscriptionsService);
+    private datasetPermissionsService = inject(DatasetPermissionsService);
 
     public ngOnInit(): void {
         this.getPageFromUrl();
@@ -91,6 +95,10 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
 
     public get isSetTransformEmpty(): boolean {
         return !this.overview.metadata.currentTransform && this.datasetBasics.kind === DatasetKind.Derivative;
+    }
+
+    public get canRunFlows(): boolean {
+        return this.datasetPermissionsService.shouldRunFlows(this.datasetPermissions);
     }
 
     public navigateToAddPollingSource(): void {

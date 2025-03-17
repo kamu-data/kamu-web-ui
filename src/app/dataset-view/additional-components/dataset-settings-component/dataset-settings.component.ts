@@ -24,6 +24,7 @@ import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { filter } from "rxjs";
+import { DatasetPermissionsService } from "../../dataset.permissions.service";
 
 @Component({
     selector: "app-dataset-settings",
@@ -45,6 +46,7 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
     private datasetSubsService = inject(DatasetSubscriptionsService);
     private router = inject(Router);
     private cdr = inject(ChangeDetectorRef);
+    private datasetPermissionsService = inject(DatasetPermissionsService);
 
     public get isSchedulingAvailable(): boolean {
         return (
@@ -68,16 +70,40 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
     }
 
     public get showSchedulingTab(): boolean {
-        return this.isSchedulingAvailable && this.activeTab === SettingsTabsEnum.SCHEDULING;
+        return (
+            this.isSchedulingAvailable &&
+            this.activeTab === SettingsTabsEnum.SCHEDULING &&
+            this.datasetPermissionsService.isMaintainer(this.datasetPermissions)
+        );
+    }
+
+    public get showGeneralTab(): boolean {
+        return (
+            this.activeTab === SettingsTabsEnum.GENERAL &&
+            this.datasetPermissionsService.isMaintainer(this.datasetPermissions)
+        );
+    }
+
+    public get showAccessTab(): boolean {
+        return (
+            this.activeTab === SettingsTabsEnum.ACCESS &&
+            this.datasetPermissionsService.isMaintainer(this.datasetPermissions)
+        );
     }
 
     public get showCompactionTab(): boolean {
-        return this.datasetBasics.kind === DatasetKind.Root && this.activeTab === SettingsTabsEnum.COMPACTION;
+        return (
+            this.datasetBasics.kind === DatasetKind.Root &&
+            this.activeTab === SettingsTabsEnum.COMPACTION &&
+            this.datasetPermissionsService.isMaintainer(this.datasetPermissions)
+        );
     }
 
     public get showTransformSettingsTab(): boolean {
         return (
-            this.datasetBasics.kind === DatasetKind.Derivative && this.activeTab === SettingsTabsEnum.TRANSFORM_SETTINGS
+            this.datasetBasics.kind === DatasetKind.Derivative &&
+            this.activeTab === SettingsTabsEnum.TRANSFORM_SETTINGS &&
+            this.datasetPermissionsService.isMaintainer(this.datasetPermissions)
         );
     }
 
@@ -89,7 +115,14 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.activeTab = this.getSectionFromUrl() ?? SettingsTabsEnum.GENERAL;
+        if (
+            !this.datasetPermissionsService.isMaintainer(this.datasetPermissions) &&
+            this.appConfigService.featureFlags.enableDatasetEnvVarsManagement
+        ) {
+            this.activeTab = SettingsTabsEnum.VARIABLES_AND_SECRETS;
+        } else {
+            this.activeTab = this.getSectionFromUrl() ?? SettingsTabsEnum.GENERAL;
+        }
 
         this.router.events
             .pipe(filter((event) => event instanceof NavigationEnd))
@@ -123,20 +156,32 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
 
     public visibilitySettingsMenuItem(item: DatasetSettingsSidePanelItem): boolean {
         switch (item.activeTab) {
+            case SettingsTabsEnum.GENERAL:
+                return this.datasetPermissionsService.isMaintainer(this.datasetPermissions);
+
             case SettingsTabsEnum.SCHEDULING:
-                return this.isSchedulingAvailable;
+                return (
+                    this.isSchedulingAvailable && this.datasetPermissionsService.isMaintainer(this.datasetPermissions)
+                );
             case SettingsTabsEnum.COMPACTION:
-                return this.datasetBasics.kind === DatasetKind.Root;
+                return (
+                    this.datasetBasics.kind === DatasetKind.Root &&
+                    this.datasetPermissionsService.isMaintainer(this.datasetPermissions)
+                );
             case SettingsTabsEnum.TRANSFORM_SETTINGS:
                 return (
                     this.datasetBasics.kind === DatasetKind.Derivative &&
-                    this.appConfigService.featureFlags.enableScheduling
+                    this.appConfigService.featureFlags.enableScheduling &&
+                    this.datasetPermissionsService.isMaintainer(this.datasetPermissions)
                 );
             case SettingsTabsEnum.VARIABLES_AND_SECRETS:
                 return (
                     this.appConfigService.featureFlags.enableDatasetEnvVarsManagement &&
-                    this.datasetBasics.kind === DatasetKind.Root
+                    this.datasetBasics.kind === DatasetKind.Root &&
+                    this.datasetPermissionsService.isReader(this.datasetPermissions)
                 );
+            case SettingsTabsEnum.ACCESS:
+                return this.datasetPermissionsService.isMaintainer(this.datasetPermissions);
             default:
                 return Boolean(item.visible);
         }

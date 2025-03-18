@@ -6,7 +6,15 @@
  */
 
 import { SessionStorageService } from "src/app/services/session-storage.service";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    inject,
+    NgZone,
+    OnDestroy,
+    OnInit,
+} from "@angular/core";
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { NavigationEnd, Router } from "@angular/router";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
@@ -50,6 +58,7 @@ export class DatasetViewComponent extends BaseDatasetDataComponent implements On
     private sessionStorageService = inject(SessionStorageService);
     private clipboard = inject(Clipboard);
     private toastr = inject(ToastrService);
+    private ngZone = inject(NgZone);
 
     public ngOnInit(): void {
         const urlDatasetInfo = this.getDatasetInfoFromUrl();
@@ -343,7 +352,9 @@ export class DatasetViewComponent extends BaseDatasetDataComponent implements On
             .pipe(
                 finalize(() => {
                     this.sqlLoading = false;
-                    this.navigationService.navigateWithSqlQuery(params.query);
+                    this.ngZone.run(() => {
+                        this.navigationService.navigateWithSqlQuery(params.query);
+                    });
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )

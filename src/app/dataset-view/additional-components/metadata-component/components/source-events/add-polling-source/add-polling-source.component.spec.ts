@@ -187,7 +187,11 @@ describe("AddPollingSourceComponent", () => {
         datasetSubsService.emitPermissionsChanged({
             permissions: {
                 ...mockFullPowerDatasetPermissionsFragment.permissions,
-                canCommit: false,
+                ...{
+                    metadata: {
+                        canCommit: false,
+                    },
+                },
             },
         });
 

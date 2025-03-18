@@ -24,7 +24,6 @@ import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { filter } from "rxjs";
-import { DatasetPermissionsService } from "../../dataset.permissions.service";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 
@@ -48,7 +47,6 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
     private datasetSubsService = inject(DatasetSubscriptionsService);
     private router = inject(Router);
     private cdr = inject(ChangeDetectorRef);
-    private datasetPermissionsService = inject(DatasetPermissionsService);
     private modalService = inject(ModalService);
 
     public get isSchedulingAvailable(): boolean {

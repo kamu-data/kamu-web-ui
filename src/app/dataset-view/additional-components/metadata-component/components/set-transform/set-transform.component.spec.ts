@@ -127,7 +127,11 @@ describe("SetTransformComponent", () => {
         datasetSubsService.emitPermissionsChanged({
             permissions: {
                 ...mockFullPowerDatasetPermissionsFragment.permissions,
-                canCommit: false,
+                ...{
+                    metadata: {
+                        canCommit: false,
+                    },
+                },
             },
         });
 

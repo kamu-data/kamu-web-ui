@@ -7,12 +7,18 @@
 
 import { TestBed } from "@angular/core/testing";
 import { DatasetCollaborationsService } from "./dataset-collaborations.service";
+import { Apollo } from "apollo-angular";
+import { ApolloTestingModule } from "apollo-angular/testing";
+import { ToastrModule } from "ngx-toastr";
 
 describe("DatasetCollaborationsService", () => {
     let service: DatasetCollaborationsService;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
+        TestBed.configureTestingModule({
+            providers: [Apollo],
+            imports: [ApolloTestingModule, ToastrModule.forRoot()],
+        });
         service = TestBed.inject(DatasetCollaborationsService);
     });
 

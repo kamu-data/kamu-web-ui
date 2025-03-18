@@ -131,7 +131,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
             return (
                 this.datasetBasics.kind === DatasetKind.Root &&
                 !isNil(this.currentState.metadataSummary.metadata.currentPollingSource) &&
-                this.datasetPermissionsService.isEditor(this.datasetPermissions)
+                this.datasetPermissions.permissions.metadata.canCommit
             );
         } else {
             return false;
@@ -143,7 +143,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
             return (
                 this.datasetBasics.kind === DatasetKind.Root &&
                 this.currentState.metadataSummary.metadata.currentPushSources.length > 0 &&
-                this.datasetPermissionsService.isEditor(this.datasetPermissions)
+                this.datasetPermissions.permissions.metadata.canCommit
             );
         } else {
             return false;
@@ -155,7 +155,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
             return (
                 this.datasetBasics.kind === DatasetKind.Derivative &&
                 !isNil(this.currentState.metadataSummary.metadata.currentTransform) &&
-                this.datasetPermissionsService.isEditor(this.datasetPermissions)
+                this.datasetPermissions.permissions.metadata.canCommit
             );
         } else {
             return false;

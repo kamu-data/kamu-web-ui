@@ -29,7 +29,6 @@ import AppValues from "src/app/common/values/app.values";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DatasetService } from "../../../../dataset.service";
-import { DatasetPermissionsService } from "src/app/dataset-view/dataset.permissions.service";
 
 @Component({
     selector: "app-dataset-settings-general-tab",
@@ -57,7 +56,6 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     private flowsService = inject(DatasetFlowsService);
     private navigationService = inject(NavigationService);
     private datasetService = inject(DatasetService);
-    private datasetPermissionsService = inject(DatasetPermissionsService);
 
     public ngOnInit(): void {
         this.renameError$ = this.datasetSettingsService.renameDatasetErrorOccurrences.pipe(shareReplay());
@@ -73,7 +71,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
             recursive: [false],
         });
 
-        if (!this.datasetPermissionsService.isMaintainer(this.datasetPermissions)) {
+        if (!this.datasetPermissions.permissions.general.canRename) {
             this.renameDatasetForm.disable();
         }
 
@@ -99,7 +97,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     }
 
     public get isAllowedDeleteDataset(): boolean {
-        return this.datasetPermissionsService.isOwner(this.datasetPermissions);
+        return this.datasetPermissions.permissions.general.canDelete;
     }
 
     public get isRoot(): boolean {

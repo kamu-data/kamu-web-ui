@@ -63,8 +63,8 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
         this.updateTable(this.currentPage);
     }
 
-    public get isMaintainer(): boolean {
-        return this.datasetPermissionsService.isMaintainer(this.datasetPermissions);
+    public get allowUpdateEnvVars(): boolean {
+        return this.datasetPermissions.permissions.envVars.canUpdate;
     }
 
     public getPageFromUrl(): void {

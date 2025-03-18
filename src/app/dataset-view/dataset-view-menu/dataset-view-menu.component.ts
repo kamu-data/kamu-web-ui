@@ -98,11 +98,11 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
     }
 
     public get shouldAllowSettingsTab(): boolean {
-        return this.datasetPermissionsServices.isReader(this.datasetPermissions);
+        return this.datasetPermissions.permissions.envVars.canView;
     }
 
     public get shouldAllowFlowsTab(): boolean {
-        return this.datasetPermissionsServices.isReader(this.datasetPermissions) && this.enableScheduling;
+        return this.datasetPermissions.permissions.flows.canView && this.enableScheduling;
     }
 
     public get datasetLink(): string {

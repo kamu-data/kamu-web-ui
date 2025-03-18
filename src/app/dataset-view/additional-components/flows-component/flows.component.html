@@ -1,5 +1,5 @@
 <div class="search-result-container__content mb-20 container-main">
-    <ng-container *ngIf="flowConnectionData$ | async as flowConnectionData">
+    <ng-container *ngIf="flowConnectionData$ | async as flowConnectionData; else loading">
         <ng-container *ngIf="flowConnectionData.flowsData.connectionDataForWidget.nodes.length; else noRuns">
             <div class="d-flex justify-content-between">
                 <div class="mt-4">
@@ -121,5 +121,11 @@
                 </a>
             </ng-container>
         </p>
+    </ng-template>
+    <ng-template #loading>
+        <div class="position-relative">
+            <mat-progress-bar data-test-id="init-progress-bar" class="position-absolute" mode="indeterminate" />
+        </div>
+        <div class="text-center text-primary mt-4">Loading...</div>
     </ng-template>
 </div>

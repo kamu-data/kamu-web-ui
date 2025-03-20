@@ -4,14 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.42.0] - 2025-03-20
 ### Added
 - Login page: added ability to switch buttons with tab
 - Added account resolver for account page
 ### Fixed
 - Flows tab: fixed redirection for derivative dataset when list flows is empty
 - Scheduled updates: remove disabled state for "Save" button
-
 
 ## [0.41.1] - 2025-03-07
 ### Fixed

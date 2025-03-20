@@ -5,11 +5,11 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { AddPeopleModalComponent } from "./add-people-modal.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
-import { NgbActiveModal, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
+import { NgbActiveModal, NgbTypeaheadModule, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { ToastrModule } from "ngx-toastr";
 import { MatDividerModule } from "@angular/material/divider";
@@ -18,10 +18,23 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { FormsModule } from "@angular/forms";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { DatasetCollaborationsService } from "../dataset-collaborations.service";
+import { of } from "rxjs";
+import { AccountWithRoleConnection, DatasetAccessRole, NameLookupResult } from "src/app/api/kamu.graphql.interface";
+import {
+    MOCK_ACCOUNT_WITH_ROLE,
+    mockDatasetListCollaboratorsQuery,
+    mockDatasetSearchCollaboratorQuery,
+} from "src/app/api/mock/dataset-collaborations.mock";
+import AppValues from "src/app/common/values/app.values";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 
 describe("AddPeopleModalComponent", () => {
     let component: AddPeopleModalComponent;
     let fixture: ComponentFixture<AddPeopleModalComponent>;
+    let datasetCollaborationsService: DatasetCollaborationsService;
+    let loggedUserService: LoggedUserService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -41,13 +54,89 @@ describe("AddPeopleModalComponent", () => {
         registerMatSvgIcons();
 
         fixture = TestBed.createComponent(AddPeopleModalComponent);
+        datasetCollaborationsService = TestBed.inject(DatasetCollaborationsService);
+        loggedUserService = TestBed.inject(LoggedUserService);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsRootFragment;
         component.collaborator = null;
+        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
         fixture.detectChanges();
     });
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should check init active collaborators Id", () => {
+        const listCollaboratorsSpy = spyOn(datasetCollaborationsService, "listCollaborators").and.returnValue(
+            of(
+                mockDatasetListCollaboratorsQuery.datasets.byId?.collaboration
+                    .accountRoles as AccountWithRoleConnection,
+            ),
+        );
+        component.ngOnInit();
+        expect(listCollaboratorsSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check init role of the collaborators", () => {
+        component.collaborator = MOCK_ACCOUNT_WITH_ROLE;
+        component.ngOnInit();
+        expect(component.role).toBeDefined();
+    });
+
+    it("should check clear selected collaborator", () => {
+        component.selectedCollaborator = mockDatasetSearchCollaboratorQuery.search.nameLookup
+            .nodes[0] as NameLookupResult;
+        component.searchPerson = "qwe";
+
+        component.closeSelectedMember();
+        expect(component.selectedCollaborator).toBeNull();
+        expect(component.searchPerson).toEqual("");
+    });
+
+    it("should check select collaborator", () => {
+        const nameLookupResult = mockDatasetSearchCollaboratorQuery.search.nameLookup.nodes[0] as NameLookupResult;
+
+        const item: NgbTypeaheadSelectItemEvent<NameLookupResult> = {
+            item: nameLookupResult,
+            preventDefault: () => null,
+        };
+        component.onSelectItem(item);
+
+        expect(component.selectedCollaborator).toEqual(nameLookupResult);
+        expect(component.searchPerson).toEqual("");
+    });
+
+    it("should check search collaborator", fakeAsync(() => {
+        const searchCollaboratorSpy = spyOn(datasetCollaborationsService, "searchCollaborator").and.returnValue(of([]));
+        component.search(of("test")).subscribe();
+        tick(AppValues.SHORT_DELAY_MS);
+        expect(searchCollaboratorSpy).toHaveBeenCalledTimes(1);
+        flush();
+    }));
+
+    it("should check save changes without selected collaborator", () => {
+        component.role = DatasetAccessRole.Editor;
+        const setRoleCollaboratorrSpy = spyOn(datasetCollaborationsService, "setRoleCollaborator").and.returnValue(
+            of(),
+        );
+        component.saveChanges();
+        expect(setRoleCollaboratorrSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({ role: component.role }));
+    });
+
+    it("should check save changes with selected collaborator", () => {
+        component.role = DatasetAccessRole.Editor;
+        component.selectedCollaborator = mockDatasetSearchCollaboratorQuery.search.nameLookup
+            .nodes[0] as NameLookupResult;
+        const setRoleCollaboratorrSpy = spyOn(datasetCollaborationsService, "setRoleCollaborator").and.returnValue(
+            of(),
+        );
+        component.saveChanges();
+        expect(setRoleCollaboratorrSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({ role: component.role }));
+    });
+
+    it("should check save formatter", () => {
+        const result = mockDatasetSearchCollaboratorQuery.search.nameLookup.nodes[0] as NameLookupResult;
+        expect(component.formatter(result)).toEqual(result.accountName);
     });
 });

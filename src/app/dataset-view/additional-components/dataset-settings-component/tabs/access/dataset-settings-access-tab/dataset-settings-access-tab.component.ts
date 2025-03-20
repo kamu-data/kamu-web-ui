@@ -146,7 +146,7 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
         );
     }
 
-    public removeAllMember(): void {
+    public removeAllMembers(): void {
         const selectedCollaboratorsIds = this.selection.selected.map((s: AccountWithRole) => s.account.id);
         promiseWithCatch(
             this.modalService.error({
@@ -199,6 +199,7 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
                 return "edit_document";
             case DatasetAccessRole.Maintainer:
                 return "manage_accounts";
+            /* istanbul ignore next */
             default:
                 return "";
         }

@@ -58,7 +58,14 @@
     <div class="d-flex flex-wrap flex-justify-end mt-6 mb-3 flex-items-center">
         <h2 class="flex-auto">Manage access</h2>
         <div *ngIf="dataSource.data.length">
-            <button (click)="addEditPeople(null)" class="btn btn-success" type="button">Add people</button>
+            <button
+                (click)="addEditPeople(null)"
+                class="btn btn-success"
+                type="button"
+                data-test-id="add-people-button"
+            >
+                Add people
+            </button>
         </div>
     </div>
 
@@ -89,7 +96,9 @@
                     <div class="d-flex align-items-center">Select all</div>
                 </mat-checkbox>
                 <div *ngIf="selection.hasValue()" class="ms-4">
-                    <a class="text-danger" (click)="removeAllMember()">Remove all</a>
+                    <a class="text-danger" data-test-id="remove-all-collaborators" (click)="removeAllMembers()"
+                        >Remove all</a
+                    >
                 </div>
             </div>
         </div>

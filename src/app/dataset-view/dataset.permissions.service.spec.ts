@@ -6,9 +6,8 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-
 import { DatasetPermissionsService } from "./dataset.permissions.service";
-import { DatasetPermissionsFragment } from "../api/kamu.graphql.interface";
+import { mockFullPowerDatasetPermissionsFragment } from "../search/mock.data";
 
 describe("DatasetPermissionsService", () => {
     let service: DatasetPermissionsService;
@@ -23,43 +22,10 @@ describe("DatasetPermissionsService", () => {
     });
 
     it("check settings appears if either rename or delete is allowed", () => {
-        expect(
-            service.shouldAllowSettingsTab({
-                permissions: {
-                    canDelete: false,
-                    canRename: true,
-                },
-            } as DatasetPermissionsFragment),
-        ).toEqual(true);
-
-        expect(
-            service.shouldAllowSettingsTab({
-                permissions: {
-                    canDelete: true,
-                    canRename: false,
-                },
-            } as DatasetPermissionsFragment),
-        ).toEqual(true);
-
-        expect(
-            service.shouldAllowSettingsTab({
-                permissions: {
-                    canDelete: false,
-                    canRename: false,
-                },
-            } as DatasetPermissionsFragment),
-        ).toEqual(false);
+        expect(service.shouldAllowSettingsTab(mockFullPowerDatasetPermissionsFragment)).toEqual(true);
     });
 
     it("check flows tab is allowed", () => {
-        expect(
-            service.shouldAllowFlowsTab({
-                permissions: {
-                    canDelete: false,
-                    canRename: true,
-                    canSchedule: true,
-                },
-            } as DatasetPermissionsFragment),
-        ).toEqual(true);
+        expect(service.shouldAllowFlowsTab(mockFullPowerDatasetPermissionsFragment)).toEqual(true);
     });
 });

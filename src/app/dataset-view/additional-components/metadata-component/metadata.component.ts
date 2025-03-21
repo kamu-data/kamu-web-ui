@@ -30,6 +30,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import ProjectLinks from "src/app/project-links";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { DatasetPermissionsService } from "../../dataset.permissions.service";
 
 @Component({
     selector: "app-metadata",
@@ -63,6 +64,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     private datasetSubsService = inject(DatasetSubscriptionsService);
     private navigationService = inject(NavigationService);
     private modalService = inject(ModalService);
+    private datasetPermissionsService = inject(DatasetPermissionsService);
 
     public ngOnInit() {
         this.datasetSubsService.metadataSchemaChanges
@@ -129,7 +131,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
             return (
                 this.datasetBasics.kind === DatasetKind.Root &&
                 !isNil(this.currentState.metadataSummary.metadata.currentPollingSource) &&
-                this.datasetPermissions.permissions.canCommit
+                this.datasetPermissions.permissions.metadata.canCommit
             );
         } else {
             return false;
@@ -141,7 +143,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
             return (
                 this.datasetBasics.kind === DatasetKind.Root &&
                 this.currentState.metadataSummary.metadata.currentPushSources.length > 0 &&
-                this.datasetPermissions.permissions.canCommit
+                this.datasetPermissions.permissions.metadata.canCommit
             );
         } else {
             return false;
@@ -153,7 +155,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
             return (
                 this.datasetBasics.kind === DatasetKind.Derivative &&
                 !isNil(this.currentState.metadataSummary.metadata.currentTransform) &&
-                this.datasetPermissions.permissions.canCommit
+                this.datasetPermissions.permissions.metadata.canCommit
             );
         } else {
             return false;

@@ -243,13 +243,13 @@ describe("OverviewComponent", () => {
         it("should be possible to add polling source for root dataset and commit permissions", () => {
             // By default, we have a root dataset and commit permissions, and a ready polling source, swe reset it here
             currentOverview().metadata.currentPollingSource = undefined;
-            expect(component.datasetPermissions.permissions.canCommit).toBeTrue();
+            expect(component.datasetPermissions.permissions.metadata.canCommit).toBeTrue();
 
             expect(component.canAddSetPollingSource).toBeTrue();
         });
 
         it("cannot add set polling source when no permissions", () => {
-            component.datasetPermissions.permissions.canCommit = false;
+            component.datasetPermissions.permissions.metadata.canCommit = false;
             fixture.detectChanges();
 
             expect(component.canAddSetPollingSource).toBeFalse();
@@ -302,13 +302,13 @@ describe("OverviewComponent", () => {
         });
 
         it("should be possible to add transform for derived dataset and with commit permissions", () => {
-            expect(component.datasetPermissions.permissions.canCommit).toBeTrue();
+            expect(component.datasetPermissions.permissions.metadata.canCommit).toBeTrue();
 
             expect(component.canAddSetTransform).toBeTrue();
         });
 
         it("cannot add set transform when no permissions", () => {
-            component.datasetPermissions.permissions.canCommit = false;
+            component.datasetPermissions.permissions.metadata.canCommit = false;
             fixture.detectChanges();
 
             expect(component.canAddSetTransform).toBeFalse();
@@ -360,7 +360,7 @@ describe("OverviewComponent", () => {
         it("can add dataset info, but not edit it, with full permissions and no info predefined", () => {
             // All permissions set by default
             // No info by default
-            expect(component.datasetPermissions.permissions.canCommit).toBeTrue();
+            expect(component.datasetPermissions.permissions.metadata.canCommit).toBeTrue();
             expect(currentOverview().metadata.currentInfo.description).toBeFalsy();
             expect(currentOverview().metadata.currentInfo.keywords).toBeFalsy();
 
@@ -370,7 +370,7 @@ describe("OverviewComponent", () => {
         });
 
         it("cannot add or edit dataset info without commit permissions and without existing info", () => {
-            component.datasetPermissions.permissions.canCommit = false;
+            component.datasetPermissions.permissions.metadata.canCommit = false;
             fixture.detectChanges();
 
             expect(component.canAddDatasetInfo).toBeFalse();
@@ -378,7 +378,7 @@ describe("OverviewComponent", () => {
         });
 
         it("cannot add or edit dataset info without commit permissions, but with existing info", () => {
-            component.datasetPermissions.permissions.canCommit = false;
+            component.datasetPermissions.permissions.metadata.canCommit = false;
             currentInfo().description = "someDescription";
             fixture.detectChanges();
 
@@ -418,7 +418,7 @@ describe("OverviewComponent", () => {
         it("can add readme but not edit it, with full permissions and no readme predefined", () => {
             // All permissions set by default
             // No readme by default
-            expect(component.datasetPermissions.permissions.canCommit).toBeTrue();
+            expect(component.datasetPermissions.permissions.metadata.canCommit).toBeTrue();
             expect(currentOverview().metadata.currentReadme).toBeFalsy();
 
             expect(component.canAddReadme).toBeTrue();
@@ -433,7 +433,7 @@ describe("OverviewComponent", () => {
         });
 
         it("cannot add or edit readme without commit permissions and without existing readme", () => {
-            component.datasetPermissions.permissions.canCommit = false;
+            component.datasetPermissions.permissions.metadata.canCommit = false;
             fixture.detectChanges();
 
             expect(component.canAddReadme).toBeFalse();
@@ -453,7 +453,7 @@ describe("OverviewComponent", () => {
         it("can add license  but not edit it, with full permissions and no license predefined", () => {
             // All permissions set by default
             // No license by default
-            expect(component.datasetPermissions.permissions.canCommit).toBeTrue();
+            expect(component.datasetPermissions.permissions.metadata.canCommit).toBeTrue();
             expect(currentOverview().metadata.currentLicense).toBeFalsy();
 
             expect(component.canAddLicense).toBeTrue();
@@ -461,7 +461,7 @@ describe("OverviewComponent", () => {
         });
 
         it("cannot add or edit license without commit permissions and without existing license", () => {
-            component.datasetPermissions.permissions.canCommit = false;
+            component.datasetPermissions.permissions.metadata.canCommit = false;
             fixture.detectChanges();
 
             expect(component.canAddLicense).toBeFalse();
@@ -482,7 +482,7 @@ describe("OverviewComponent", () => {
             // All permissions set by default
             // Root dataset by default
             // Having watermark by default
-            expect(component.datasetPermissions.permissions.canCommit).toBeTrue();
+            expect(component.datasetPermissions.permissions.metadata.canCommit).toBeTrue();
             expect(currentOverview().metadata.currentWatermark).toBeTruthy();
 
             expect(component.canAddWatermark).toBeFalse();
@@ -498,7 +498,7 @@ describe("OverviewComponent", () => {
         });
 
         it("cannot add or edit watermark without commit permissions", () => {
-            component.datasetPermissions.permissions.canCommit = false;
+            component.datasetPermissions.permissions.metadata.canCommit = false;
             fixture.detectChanges();
 
             expect(component.canAddWatermark).toBeFalse();

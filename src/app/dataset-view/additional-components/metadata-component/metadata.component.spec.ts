@@ -130,7 +130,7 @@ describe("MetadataComponent", () => {
 
         it("should be possible to edit SetPollingSource for root dataset with full permissions", () => {
             // Full permissions by default
-            expect(component.datasetPermissions.permissions.canCommit).toEqual(true);
+            expect(component.datasetPermissions.permissions.metadata.canCommit).toEqual(true);
             component.datasetBasics = mockDatasetBasicsRootFragment;
             component.currentState = mockMetadataRootUpdate;
             fixture.detectChanges();
@@ -139,7 +139,7 @@ describe("MetadataComponent", () => {
         });
 
         it("should not be possible to edit SetPollingSource for root dataset without commit permissions", () => {
-            component.datasetPermissions.permissions.canCommit = false;
+            component.datasetPermissions.permissions.metadata.canCommit = false;
             component.datasetBasics = mockDatasetBasicsRootFragment;
             component.currentState = mockMetadataRootUpdate;
             fixture.detectChanges();
@@ -173,7 +173,7 @@ describe("MetadataComponent", () => {
     describe("AddPushSource", () => {
         it("should be possible to edit AddPushSourceSource for root dataset with full permissions", () => {
             // Full permissions by default
-            expect(component.datasetPermissions.permissions.canCommit).toEqual(true);
+            expect(component.datasetPermissions.permissions.metadata.canCommit).toEqual(true);
             component.datasetBasics = mockDatasetBasicsRootFragment;
             component.currentState = mockMetadataRootPushSourceUpdate;
             fixture.detectChanges();
@@ -182,7 +182,7 @@ describe("MetadataComponent", () => {
         });
 
         it("should not be possible to edit AddPushSourceSource for root dataset without commit permissions", () => {
-            component.datasetPermissions.permissions.canCommit = false;
+            component.datasetPermissions.permissions.metadata.canCommit = false;
             component.datasetBasics = mockDatasetBasicsRootFragment;
             component.currentState = mockMetadataRootPushSourceUpdate;
             fixture.detectChanges();
@@ -212,7 +212,7 @@ describe("MetadataComponent", () => {
         it("should be possible to edit SetTransform for derivative dataset with full permissions", () => {
             // Full permissions by default
             // Derivative dataset by default
-            expect(component.datasetPermissions.permissions.canCommit).toEqual(true);
+            expect(component.datasetPermissions.permissions.metadata.canCommit).toEqual(true);
             expect(component.datasetBasics.kind).toEqual(DatasetKind.Derivative);
 
             expect(component.canEditSetTransform).toEqual(true);
@@ -227,7 +227,7 @@ describe("MetadataComponent", () => {
         });
 
         it("should not be possible to edit SetTransform for derived dataset without commit permissions", () => {
-            component.datasetPermissions.permissions.canCommit = false;
+            component.datasetPermissions.permissions.metadata.canCommit = false;
             fixture.detectChanges();
 
             expect(component.canEditSetTransform).toEqual(false);

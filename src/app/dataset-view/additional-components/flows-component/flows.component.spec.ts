@@ -12,7 +12,11 @@ import { FlowsComponent } from "./flows.component";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ActivatedRoute, RouterModule } from "@angular/router";
-import { mockDatasetBasicsRootFragment, mockDatasetMainDataId } from "src/app/search/mock.data";
+import {
+    mockDatasetBasicsRootFragment,
+    mockDatasetMainDataId,
+    mockFullPowerDatasetPermissionsFragment,
+} from "src/app/search/mock.data";
 import { ToastrModule } from "ngx-toastr";
 import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { DatasetFlowsService } from "./services/dataset-flows.service";
@@ -109,6 +113,7 @@ describe("FlowsComponent", () => {
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsRootFragment;
+        component.datasetPermissions = mockFullPowerDatasetPermissionsFragment;
         datasetSubsService.emitOverviewChanged({
             schema: mockMetadataDerivedUpdate.schema,
             content: mockOverviewDataUpdate.content,

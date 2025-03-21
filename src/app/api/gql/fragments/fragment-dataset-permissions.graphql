@@ -1,9 +1,24 @@
 fragment DatasetPermissions on Dataset {
   permissions {
-    canView
-    canDelete
-    canRename
-    canCommit
-    canSchedule
+    collaboration {
+      canView
+      canUpdate
+    }
+    envVars {
+      canView
+      canUpdate
+    }
+    flows {
+      canView
+      canRun
+    }
+    general {
+      canRename
+      canSetVisibility
+      canDelete
+    }
+    metadata {
+      canCommit
+    }
   }
 }

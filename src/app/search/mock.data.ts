@@ -216,31 +216,76 @@ export const mockDatasetBasicsDerivedFragment: DatasetBasicsFragment = {
 
 export const mockFullPowerDatasetPermissionsFragment: DatasetPermissionsFragment = {
     permissions: {
-        canView: true,
-        canDelete: true,
-        canRename: true,
-        canCommit: true,
-        canSchedule: true,
+        collaboration: {
+            canUpdate: true,
+            canView: true,
+        },
+        envVars: {
+            canUpdate: true,
+            canView: true,
+        },
+        flows: {
+            canRun: true,
+            canView: true,
+        },
+        general: {
+            canDelete: true,
+            canRename: true,
+            canSetVisibility: true,
+        },
+        metadata: {
+            canCommit: true,
+        },
     },
 };
 
 export const mockNotScheduleDatasetPermissionsFragment: DatasetPermissionsFragment = {
     permissions: {
-        canView: true,
-        canDelete: true,
-        canRename: true,
-        canCommit: true,
-        canSchedule: false,
+        collaboration: {
+            canUpdate: true,
+            canView: true,
+        },
+        envVars: {
+            canUpdate: true,
+            canView: true,
+        },
+        flows: {
+            canRun: false,
+            canView: true,
+        },
+        general: {
+            canDelete: true,
+            canRename: true,
+            canSetVisibility: true,
+        },
+        metadata: {
+            canCommit: true,
+        },
     },
 };
 
 export const mockReadonlyDatasetPermissionsFragment: DatasetPermissionsFragment = {
     permissions: {
-        canView: true,
-        canDelete: false,
-        canRename: false,
-        canCommit: false,
-        canSchedule: true,
+        collaboration: {
+            canUpdate: false,
+            canView: false,
+        },
+        envVars: {
+            canUpdate: false,
+            canView: true,
+        },
+        flows: {
+            canRun: false,
+            canView: false,
+        },
+        general: {
+            canDelete: false,
+            canRename: false,
+            canSetVisibility: false,
+        },
+        metadata: {
+            canCommit: false,
+        },
     },
 };
 
@@ -442,12 +487,29 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
             },
             permissions: {
                 __typename: "DatasetPermissions",
-                canView: true,
-                canDelete: true,
-                canRename: true,
-                canCommit: true,
-                canSchedule: true,
+
+                collaboration: {
+                    canUpdate: true,
+                    canView: true,
+                },
+                envVars: {
+                    canUpdate: true,
+                    canView: true,
+                },
+                flows: {
+                    canRun: false,
+                    canView: true,
+                },
+                general: {
+                    canDelete: true,
+                    canRename: true,
+                    canSetVisibility: true,
+                },
+                metadata: {
+                    canCommit: true,
+                },
             },
+
             createdAt: "2023-09-03T01:08:55.104604199+00:00",
             lastUpdatedAt: "2023-09-03T01:09:31.587025138+00:00",
         },

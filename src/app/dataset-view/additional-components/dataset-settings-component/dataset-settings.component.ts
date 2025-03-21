@@ -6,7 +6,7 @@
  */
 
 import { MaybeNull } from "../../../interface/app.types";
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import {
     DatasetBasicsFragment,
     DatasetKind,
@@ -16,13 +16,16 @@ import {
 import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetSettingsSidePanelItem, SettingsTabsEnum, datasetSettingsSidePanelData } from "./dataset-settings.model";
 import { AppConfigService } from "src/app/app-config.service";
-import { ParamMap } from "@angular/router";
+import { NavigationEnd, ParamMap, Router } from "@angular/router";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { filter } from "rxjs";
+import { ModalService } from "src/app/common/components/modal/modal.service";
+import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 
 @Component({
     selector: "app-dataset-settings",
@@ -42,6 +45,9 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
     private appConfigService = inject(AppConfigService);
     private navigationService = inject(NavigationService);
     private datasetSubsService = inject(DatasetSubscriptionsService);
+    private router = inject(Router);
+    private cdr = inject(ChangeDetectorRef);
+    private modalService = inject(ModalService);
 
     public get isSchedulingAvailable(): boolean {
         return (
@@ -65,16 +71,34 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
     }
 
     public get showSchedulingTab(): boolean {
-        return this.isSchedulingAvailable && this.activeTab === SettingsTabsEnum.SCHEDULING;
+        return (
+            this.isSchedulingAvailable &&
+            this.activeTab === SettingsTabsEnum.SCHEDULING &&
+            this.datasetPermissions.permissions.flows.canRun
+        );
+    }
+
+    public get showGeneralTab(): boolean {
+        return this.activeTab === SettingsTabsEnum.GENERAL && this.datasetPermissions.permissions.general.canRename;
+    }
+
+    public get showAccessTab(): boolean {
+        return this.activeTab === SettingsTabsEnum.ACCESS && this.datasetPermissions.permissions.collaboration.canView;
     }
 
     public get showCompactionTab(): boolean {
-        return this.datasetBasics.kind === DatasetKind.Root && this.activeTab === SettingsTabsEnum.COMPACTION;
+        return (
+            this.datasetBasics.kind === DatasetKind.Root &&
+            this.activeTab === SettingsTabsEnum.COMPACTION &&
+            this.datasetPermissions.permissions.flows.canRun
+        );
     }
 
     public get showTransformSettingsTab(): boolean {
         return (
-            this.datasetBasics.kind === DatasetKind.Derivative && this.activeTab === SettingsTabsEnum.TRANSFORM_SETTINGS
+            this.datasetBasics.kind === DatasetKind.Derivative &&
+            this.activeTab === SettingsTabsEnum.TRANSFORM_SETTINGS &&
+            this.datasetPermissions.permissions.flows.canRun
         );
     }
 
@@ -86,13 +110,43 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.activeTab = this.getSectionFromUrl() ?? SettingsTabsEnum.GENERAL;
+        this.initializationActiveTab();
+
+        this.router.events
+            .pipe(filter((event) => event instanceof NavigationEnd))
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.activeTab = this.getSectionFromUrl() ?? SettingsTabsEnum.GENERAL;
+                this.cdr.detectChanges();
+            });
 
         this.datasetSubsService.overviewChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((overviewUpdate: OverviewUpdate) => {
                 this.overview = overviewUpdate.overview;
             });
+    }
+
+    private initializationActiveTab(): void {
+        if (this.datasetPermissions.permissions.general.canSetVisibility) {
+            this.activeTab = this.getSectionFromUrl() ?? SettingsTabsEnum.GENERAL;
+        } else {
+            if (this.appConfigService.featureFlags.enableDatasetEnvVarsManagement) {
+                this.activeTab = SettingsTabsEnum.VARIABLES_AND_SECRETS;
+            } else {
+                promiseWithCatch(
+                    this.modalService.warning({
+                        message: "You don't have access to the variables and secrets manager",
+                        yesButtonText: "Ok",
+                    }),
+                );
+                this.navigationService.navigateToDatasetView({
+                    accountName: this.datasetBasics.owner.accountName,
+                    datasetName: this.datasetBasics.name,
+                    tab: DatasetViewTypeEnum.Overview,
+                });
+            }
+        }
     }
 
     public getSectionFromUrl(): MaybeNull<SettingsTabsEnum> {
@@ -112,20 +166,27 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
 
     public visibilitySettingsMenuItem(item: DatasetSettingsSidePanelItem): boolean {
         switch (item.activeTab) {
+            case SettingsTabsEnum.GENERAL:
+                return this.datasetPermissions.permissions.general.canRename;
+
             case SettingsTabsEnum.SCHEDULING:
-                return this.isSchedulingAvailable;
+                return this.isSchedulingAvailable && this.datasetPermissions.permissions.flows.canRun;
             case SettingsTabsEnum.COMPACTION:
-                return this.datasetBasics.kind === DatasetKind.Root;
+                return this.datasetBasics.kind === DatasetKind.Root && this.datasetPermissions.permissions.flows.canRun;
             case SettingsTabsEnum.TRANSFORM_SETTINGS:
                 return (
                     this.datasetBasics.kind === DatasetKind.Derivative &&
-                    this.appConfigService.featureFlags.enableScheduling
+                    this.appConfigService.featureFlags.enableScheduling &&
+                    this.datasetPermissions.permissions.flows.canRun
                 );
             case SettingsTabsEnum.VARIABLES_AND_SECRETS:
                 return (
                     this.appConfigService.featureFlags.enableDatasetEnvVarsManagement &&
-                    this.datasetBasics.kind === DatasetKind.Root
+                    this.datasetBasics.kind === DatasetKind.Root &&
+                    this.datasetPermissions.permissions.envVars.canView
                 );
+            case SettingsTabsEnum.ACCESS:
+                return this.datasetPermissions.permissions.collaboration.canView;
             default:
                 return Boolean(item.visible);
         }

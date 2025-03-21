@@ -1619,3 +1619,9 @@ pre.language-sql {
     width: 16px !important;
     height: 18px !important;
 }
+
+.btn-close {
+    &:focus {
+        box-shadow: none !important;
+    }
+}

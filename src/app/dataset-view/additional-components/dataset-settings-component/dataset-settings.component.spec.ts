@@ -37,6 +37,8 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { BatchingTriggerModule } from "./tabs/scheduling/batching-trigger-form/batching-trigger.module";
 import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
 import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
+import { RouterTestingModule } from "@angular/router/testing";
+import { of } from "rxjs";
 
 describe("DatasetSettingsComponent", () => {
     let component: DatasetSettingsComponent;
@@ -57,6 +59,7 @@ describe("DatasetSettingsComponent", () => {
                 {
                     provide: ActivatedRoute,
                     useValue: {
+                        fragment: of(""),
                         snapshot: {
                             queryParamMap: {
                                 get: () => null,
@@ -91,6 +94,7 @@ describe("DatasetSettingsComponent", () => {
                 BatchingTriggerModule,
                 DatasetVisibilityModule,
                 FeatureFlagModule,
+                RouterTestingModule,
             ],
         })
             .overrideComponent(DatasetSettingsComponent, {

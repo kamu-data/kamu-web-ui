@@ -13,6 +13,7 @@
                 <div class="d-flex flex-column">
                     <div class="d-flex justify-content-end">
                         <button
+                            *ngIf="canRunFlows"
                             class="btn-sm btn custom-edit"
                             aria-label="Show tasks options"
                             data-test-id="show-tasks-options"
@@ -91,13 +92,16 @@
     <ng-template #noRuns>
         <p class="ps-2 pt-2" data-test-id="empty-flow-runs-block">
             <ng-container *ngIf="!isSetTransformEmpty && !isSetPollingSourceEmpty">
-                No flow runs. You can
-                <a
-                    class="text-decoration-none"
-                    [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name]"
-                    [queryParams]="{ tab: DatasetViewTypeEnum.Settings, section: redirectSection }"
-                    >update configuration settings</a
-                >
+                No flow runs.
+                <span *ngIf="canRunFlows">
+                    You can
+                    <a
+                        class="text-decoration-none"
+                        [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name]"
+                        [queryParams]="{ tab: DatasetViewTypeEnum.Settings, section: redirectSection }"
+                        >update configuration settings</a
+                    >
+                </span>
             </ng-container>
             <ng-container *ngIf="isSetPollingSourceEmpty">
                 No flow runs.To set the configuration you first need to

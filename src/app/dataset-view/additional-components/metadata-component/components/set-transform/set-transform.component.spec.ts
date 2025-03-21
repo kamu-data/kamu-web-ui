@@ -21,7 +21,7 @@ import { EngineSectionComponent } from "./components/engine-section/engine-secti
 import { SearchSectionComponent } from "./components/search-section/search-section.component";
 import { MatIconModule } from "@angular/material/icon";
 import { StepperNavigationComponent } from "../stepper-navigation/stepper-navigation.component";
-import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModal, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -45,6 +45,7 @@ describe("SetTransformComponent", () => {
     let datasetSubsService: DatasetSubscriptionsService;
     let navigationService: NavigationService;
     let loggedUserService: LoggedUserService;
+    let modalService: NgbModal;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -94,6 +95,7 @@ describe("SetTransformComponent", () => {
         datasetService = TestBed.inject(DatasetService);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         loggedUserService = TestBed.inject(LoggedUserService);
+        modalService = TestBed.inject(NgbModal);
 
         fixture = TestBed.createComponent(SetTransformComponent);
         component = fixture.componentInstance;
@@ -127,7 +129,11 @@ describe("SetTransformComponent", () => {
         datasetSubsService.emitPermissionsChanged({
             permissions: {
                 ...mockFullPowerDatasetPermissionsFragment.permissions,
-                canCommit: false,
+                ...{
+                    metadata: {
+                        canCommit: false,
+                    },
+                },
             },
         });
 
@@ -175,5 +181,25 @@ describe("SetTransformComponent", () => {
 
         expect(component.queries.length).toBe(4);
         expect(component.queries[0].query).toBeDefined();
+    });
+
+    it("should check init default queries section when event is  null", () => {
+        component.eventYamlByHash = "";
+        component.ngOnInit();
+
+        expect(component.queries.length).toBe(5);
+    });
+
+    it("should check edit yaml", () => {
+        component.eventYamlByHash = "";
+        component.ngOnInit();
+
+        expect(component.queries.length).toBe(5);
+    });
+
+    it("should check open modal window to edit event", () => {
+        const modalServiceOpenSpy = spyOn(modalService, "open").and.callThrough();
+        component.onEditYaml();
+        expect(modalServiceOpenSpy).toHaveBeenCalledTimes(1);
     });
 });

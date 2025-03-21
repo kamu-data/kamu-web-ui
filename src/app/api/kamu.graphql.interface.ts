@@ -3622,24 +3622,6 @@ export type DatasetListCollaboratorsQuery = {
     };
 };
 
-export type DatasetSearchCollaboratorQueryVariables = Exact<{
-    query: Scalars["String"];
-    filters: LookupFilters;
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
-}>;
-
-export type DatasetSearchCollaboratorQuery = {
-    __typename?: "Query";
-    search: {
-        __typename?: "Search";
-        nameLookup: {
-            __typename?: "NameLookupResultConnection";
-            nodes: Array<{ __typename?: "Account" } & AccountFragment>;
-        };
-    };
-};
-
 export type SetRoleCollaboratorMutationVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     accountId: Scalars["AccountID"];
@@ -5408,6 +5390,24 @@ export type GetDatasetFlowTriggersQuery = {
 };
 
 export type TimeDeltaDataFragment = { __typename?: "TimeDelta"; every: number; unit: TimeUnit };
+
+export type SearchCollaboratorQueryVariables = Exact<{
+    query: Scalars["String"];
+    filters: LookupFilters;
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+}>;
+
+export type SearchCollaboratorQuery = {
+    __typename?: "Query";
+    search: {
+        __typename?: "Search";
+        nameLookup: {
+            __typename?: "NameLookupResultConnection";
+            nodes: Array<{ __typename?: "Account" } & AccountFragment>;
+        };
+    };
+};
 
 export type SearchDatasetsAutocompleteQueryVariables = Exact<{
     query: Scalars["String"];
@@ -7495,32 +7495,6 @@ export class DatasetListCollaboratorsGQL extends Apollo.Query<
         super(apollo);
     }
 }
-export const DatasetSearchCollaboratorDocument = gql`
-    query datasetSearchCollaborator($query: String!, $filters: LookupFilters!, $page: Int, $perPage: Int) {
-        search {
-            nameLookup(query: $query, filters: $filters, page: $page, perPage: $perPage) {
-                nodes {
-                    ...Account
-                }
-            }
-        }
-    }
-    ${AccountFragmentDoc}
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class DatasetSearchCollaboratorGQL extends Apollo.Query<
-    DatasetSearchCollaboratorQuery,
-    DatasetSearchCollaboratorQueryVariables
-> {
-    document = DatasetSearchCollaboratorDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
 export const SetRoleCollaboratorDocument = gql`
     mutation setRoleCollaborator($datasetId: DatasetID!, $accountId: AccountID!, $role: DatasetAccessRole!) {
         datasets {
@@ -8669,6 +8643,29 @@ export class GetDatasetFlowTriggersGQL extends Apollo.Query<
     GetDatasetFlowTriggersQueryVariables
 > {
     document = GetDatasetFlowTriggersDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const SearchCollaboratorDocument = gql`
+    query searchCollaborator($query: String!, $filters: LookupFilters!, $page: Int, $perPage: Int) {
+        search {
+            nameLookup(query: $query, filters: $filters, page: $page, perPage: $perPage) {
+                nodes {
+                    ...Account
+                }
+            }
+        }
+    }
+    ${AccountFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class SearchCollaboratorGQL extends Apollo.Query<SearchCollaboratorQuery, SearchCollaboratorQueryVariables> {
+    document = SearchCollaboratorDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

@@ -11,7 +11,7 @@ import {
     DatasetAccessRole,
     DatasetKind,
     DatasetListCollaboratorsQuery,
-    DatasetSearchCollaboratorQuery,
+    SearchCollaboratorQuery,
     SetRoleCollaboratorMutation,
     UnsetRoleCollaboratorMutation,
 } from "../kamu.graphql.interface";
@@ -80,7 +80,7 @@ export const mockDatasetListCollaboratorsQuery: DatasetListCollaboratorsQuery = 
     },
 };
 
-export const mockDatasetSearchCollaboratorQuery: DatasetSearchCollaboratorQuery = {
+export const mockDatasetSearchCollaboratorQuery: SearchCollaboratorQuery = {
     search: {
         __typename: "Search",
         nameLookup: {

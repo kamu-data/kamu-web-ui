@@ -96,7 +96,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
         return this.resetDatasetForm.controls.mode;
     }
 
-    public get isAllowedDeleteDataset(): boolean {
+    public get isAllowedToDeleteDataset(): boolean {
         return this.datasetPermissions.permissions.general.canDelete;
     }
 

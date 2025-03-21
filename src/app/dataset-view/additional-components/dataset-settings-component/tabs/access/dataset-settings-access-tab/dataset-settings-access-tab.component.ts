@@ -28,6 +28,7 @@ import { DatasetCollaborationsService } from "./dataset-collaborations.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { filter, from } from "rxjs";
 import { NavigationEnd, Router } from "@angular/router";
+import AppValues from "src/app/common/values/app.values";
 
 @Component({
     selector: "app-dataset-settings-access-tab",
@@ -48,6 +49,7 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
     public readonly DISPLAY_COLUMNS: string[] = ["user", "role", "actions"];
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
     public readonly SettingsTabsEnum: typeof SettingsTabsEnum = SettingsTabsEnum;
+    public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
 
     private navigationService = inject(NavigationService);
     private ngbModalService = inject(NgbModal);
@@ -67,7 +69,6 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
             .pipe(filter((event) => event instanceof NavigationEnd))
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
-                this.getDatasetInfoFromUrl();
                 this.updateTable(this.currentPage);
             });
     }

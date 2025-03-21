@@ -23,8 +23,4 @@ export class DatasetPermissionsService {
     public shouldAllowFlowsTab(datasetPermissions: DatasetPermissionsFragment): boolean {
         return datasetPermissions.permissions.flows.canView;
     }
-
-    public shouldRunFlows(datasetPermissions: DatasetPermissionsFragment): boolean {
-        return datasetPermissions.permissions.flows.canRun;
-    }
 }

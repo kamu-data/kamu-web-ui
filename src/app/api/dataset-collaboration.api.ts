@@ -10,8 +10,8 @@ import {
     DatasetAccessRole,
     DatasetListCollaboratorsGQL,
     DatasetListCollaboratorsQuery,
-    DatasetSearchCollaboratorGQL,
-    DatasetSearchCollaboratorQuery,
+    SearchCollaboratorGQL,
+    SearchCollaboratorQuery,
     LookupFilters,
     SetRoleCollaboratorGQL,
     SetRoleCollaboratorMutation,
@@ -27,7 +27,7 @@ import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
 @Injectable({ providedIn: "root" })
 export class DatasetCollaborationApi {
     private datasetListCollaboratorsGQL = inject(DatasetListCollaboratorsGQL);
-    private datasetSearchCollaboratorGQL = inject(DatasetSearchCollaboratorGQL);
+    private searchCollaboratorGQL = inject(SearchCollaboratorGQL);
     private setRoleCollaboratorGQL = inject(SetRoleCollaboratorGQL);
     private unsetRoleCollaboratorGQL = inject(UnsetRoleCollaboratorGQL);
 
@@ -50,10 +50,10 @@ export class DatasetCollaborationApi {
         filters: LookupFilters;
         page: number;
         perPage: number;
-    }): Observable<DatasetSearchCollaboratorQuery> {
-        return this.datasetSearchCollaboratorGQL.watch(params).valueChanges.pipe(
+    }): Observable<SearchCollaboratorQuery> {
+        return this.searchCollaboratorGQL.watch(params, noCacheFetchPolicy).valueChanges.pipe(
             first(),
-            map((result: ApolloQueryResult<DatasetSearchCollaboratorQuery>) => {
+            map((result: ApolloQueryResult<SearchCollaboratorQuery>) => {
                 return result.data;
             }),
         );

@@ -38,7 +38,12 @@
         <mat-icon class="mat-icon-svg-size search-icon" svgIcon="search" />
         <ng-template #rt let-r="result" let-t="term">
             <div class="d-flex flex-row align-items-start" [style.width.px]="searchInput.clientWidth - 28">
-                <img class="rounded-circle mt-1 border border-1" [src]="r.avatarUrl" height="30" width="30" />
+                <img
+                    class="rounded-circle mt-1 border border-1"
+                    [src]="r.avatarUrl ?? DEFAULT_AVATAR_URL"
+                    height="30"
+                    width="30"
+                />
                 <div class="d-flex flex-column ms-3">
                     <div class="fw-semibold">{{ r.accountName }}</div>
                     <div class="fs-10 text-muted">{{ r.displayName }}</div>
@@ -51,7 +56,7 @@
             <div class="d-flex align-items-start">
                 <img
                     class="rounded-circle mt-1 border border-1"
-                    [src]="selectedCollaborator.avatarUrl"
+                    [src]="selectedCollaborator.avatarUrl ?? DEFAULT_AVATAR_URL"
                     height="30"
                     width="30"
                 />

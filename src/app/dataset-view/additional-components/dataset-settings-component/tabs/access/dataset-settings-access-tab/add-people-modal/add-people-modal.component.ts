@@ -41,6 +41,7 @@ export class AddPeopleModalComponent extends BaseComponent implements OnInit {
     public readonly DatasetAccessRole: typeof DatasetAccessRole = DatasetAccessRole;
     public readonly SELECT_ROLE_OPTIONS = ROLE_OPTIONS;
     private readonly DEFAULT_PER_PAGE = 10;
+    public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
 
     public activeModal = inject(NgbActiveModal);
     private cdr = inject(ChangeDetectorRef);
@@ -68,24 +69,27 @@ export class AddPeopleModalComponent extends BaseComponent implements OnInit {
             distinctUntilChanged(),
             tap(() => (this.searching = true)),
             switchMap((term: string) =>
-                this.datasetCollaborationsService.searchCollaborator({
-                    query: term,
-                    filters: {
-                        byAccount: {
-                            excludeAccountsByIds: [
-                                ...this.activeCollaboratorsIds,
-                                this.loggedUserService.currentlyLoggedInUser.id,
-                            ],
+                this.datasetCollaborationsService
+                    .searchCollaborator({
+                        query: term,
+                        filters: {
+                            byAccount: {
+                                excludeAccountsByIds: [
+                                    ...this.activeCollaboratorsIds,
+                                    this.loggedUserService.currentlyLoggedInUser.id,
+                                ],
+                            },
                         },
-                    },
-                    page: 0,
-                    perPage: this.DEFAULT_PER_PAGE,
-                }),
+                        page: 0,
+                        perPage: this.DEFAULT_PER_PAGE,
+                    })
+                    .pipe(
+                        finalize(() => {
+                            this.searching = false;
+                            this.cdr.detectChanges();
+                        }),
+                    ),
             ),
-            tap(() => {
-                this.searching = false;
-                this.cdr.detectChanges();
-            }),
         );
 
     public formatter(x: NameLookupResult | string): string {

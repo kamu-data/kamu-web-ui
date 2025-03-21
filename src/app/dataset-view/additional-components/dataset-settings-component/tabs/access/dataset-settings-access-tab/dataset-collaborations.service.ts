@@ -13,7 +13,7 @@ import {
     AccountWithRoleConnection,
     DatasetAccessRole,
     DatasetListCollaboratorsQuery,
-    DatasetSearchCollaboratorQuery,
+    SearchCollaboratorQuery,
     LookupFilters,
     NameLookupResult,
     SetRoleCollaboratorMutation,
@@ -50,9 +50,7 @@ export class DatasetCollaborationsService {
     }): Observable<NameLookupResult[]> {
         return this.datasetCollaborationApi
             .searchCollaborator(params)
-            .pipe(
-                map((result: DatasetSearchCollaboratorQuery) => result.search.nameLookup.nodes as NameLookupResult[]),
-            );
+            .pipe(map((result: SearchCollaboratorQuery) => result.search.nameLookup.nodes as NameLookupResult[]));
     }
 
     public setRoleCollaborator(params: {

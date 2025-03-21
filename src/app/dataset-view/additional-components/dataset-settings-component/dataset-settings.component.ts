@@ -36,6 +36,7 @@ import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 export class DatasetSettingsComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public datasetPermissions: DatasetPermissionsFragment;
+
     public readonly settingsTabsEnum: typeof SettingsTabsEnum = SettingsTabsEnum;
     public readonly DatasetKind: typeof DatasetKind = DatasetKind;
     public activeTab: SettingsTabsEnum;

@@ -98,7 +98,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public get canRunFlows(): boolean {
-        return this.datasetPermissionsService.shouldRunFlows(this.datasetPermissions);
+        return this.datasetPermissions.permissions.flows.canRun;
     }
 
     public navigateToAddPollingSource(): void {

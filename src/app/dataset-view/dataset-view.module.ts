@@ -97,6 +97,7 @@ import { CommitNavigatorModule } from "./additional-components/metadata-componen
 import { DatasetSettingsTransformOptionsTabComponent } from "./additional-components/dataset-settings-component/tabs/transform-options/dataset-settings-transform-options-tab.component";
 import { DatasetSettingsAccessTabComponent } from "./additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-settings-access-tab.component";
 import { AddPeopleModalComponent } from "./additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/add-people-modal/add-people-modal.component";
+import { EditCollaboratorModalComponent } from './additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/edit-collaborator-modal/edit-collaborator-modal.component';
 @NgModule({
     imports: [
         DynamicTableModule,
@@ -214,6 +215,7 @@ import { AddPeopleModalComponent } from "./additional-components/dataset-setting
         SourceNameStepComponent,
         QueriesSectionComponent,
         AddPeopleModalComponent,
+        EditCollaboratorModalComponent,
     ],
 })
 export class DatasetViewModule {}

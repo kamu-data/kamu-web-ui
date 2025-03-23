@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { MaybeNull } from "src/app/interface/app.types";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import {
     AccountWithRole,
@@ -29,6 +28,8 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { filter, from } from "rxjs";
 import { NavigationEnd, Router } from "@angular/router";
 import AppValues from "src/app/common/values/app.values";
+import { EditCollaboratorModalComponent } from "./edit-collaborator-modal/edit-collaborator-modal.component";
+import { CollaboratorModalResultType } from "./add-people-modal/add-people-modal.model";
 
 @Component({
     selector: "app-dataset-settings-access-tab",
@@ -106,17 +107,48 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
         });
     }
 
-    public addEditPeople(collaborator: MaybeNull<AccountWithRole>): void {
+    public addPeople(): void {
         const modalRef = this.ngbModalService.open(AddPeopleModalComponent);
         const modalRefInstance = modalRef.componentInstance as AddPeopleModalComponent;
         modalRefInstance.datasetBasics = this.datasetBasics;
+        from(modalRef.result)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((result: CollaboratorModalResultType) => {
+                if (result) {
+                    this.datasetCollaborationsService
+                        .setRoleCollaborator({
+                            datasetId: this.datasetBasics.id,
+                            accountId: result.accountId,
+                            role: result.role,
+                        })
+                        .pipe(takeUntilDestroyed(this.destroyRef))
+                        .subscribe(() => {
+                            this.selection.clear();
+                            this.updateTable(this.currentPage);
+                        });
+                }
+            });
+    }
+
+    public editCollaborator(collaborator: AccountWithRole): void {
+        const modalRef = this.ngbModalService.open(EditCollaboratorModalComponent);
+        const modalRefInstance = modalRef.componentInstance as EditCollaboratorModalComponent;
         modalRefInstance.collaborator = collaborator;
         from(modalRef.result)
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((result: string) => {
-                if (result === "Success") {
-                    this.selection.clear();
-                    this.updateTable(this.currentPage);
+            .subscribe((result: CollaboratorModalResultType) => {
+                if (result) {
+                    this.datasetCollaborationsService
+                        .setRoleCollaborator({
+                            datasetId: this.datasetBasics.id,
+                            accountId: result.accountId,
+                            role: result.role,
+                        })
+                        .pipe(takeUntilDestroyed(this.destroyRef))
+                        .subscribe(() => {
+                            this.selection.clear();
+                            this.updateTable(this.currentPage);
+                        });
                 }
             });
     }

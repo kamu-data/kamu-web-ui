@@ -13,6 +13,11 @@ export interface SelectRoleType {
     hint: string;
 }
 
+export interface CollaboratorModalResultType {
+    role: DatasetAccessRole;
+    accountId: string;
+}
+
 export const ROLE_OPTIONS: SelectRoleType[] = [
     {
         label: "Reader",

@@ -1,0 +1,55 @@
+<div class="d-flex p-4">
+    <div class="flex-grow-1 ms-2">
+        <span class="fs-5 fw-bold"> Edit role</span>
+    </div>
+    <div>
+        <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            (keydown.esc)="activeModal.close()"
+            (click)="activeModal.close()"
+        ></button>
+    </div>
+</div>
+<div class="px-4">
+    <mat-divider />
+</div>
+<div class="body p-4">
+    <div class="d-flex flex-column">
+        <label for="" class="form-label d-block">Account name </label>
+        <input
+            type="text"
+            id="name"
+            class="w-100 form-control d-block"
+            [value]="collaborator.account.accountName"
+            disabled
+        />
+    </div>
+    <div class="mt-4"><label for="" class="form-label d-block">Choose a role </label></div>
+    <mat-divider class="mt-1 mb-2" />
+    <div class="mt-4 ps-2 d-flex flex-column gap-4">
+        <div *ngFor="let option of SELECT_ROLE_OPTIONS" class="d-flex align-items-start">
+            <div>
+                <input
+                    class="d-block mt-1 radio-item"
+                    [(ngModel)]="role"
+                    type="radio"
+                    [id]="option.label"
+                    name="role"
+                    [value]="option.value"
+                />
+            </div>
+            <label [for]="option.label" class="ps-3">
+                <div>{{ option.label }}</div>
+                <div class="fs-12 text-muted">{{ option.hint }}</div></label
+            >
+        </div>
+    </div>
+</div>
+<div class="p-4 d-flex justify-content-end">
+    <button type="button" (click)="activeModal.close()" class="btn btn-light me-2" data-test-id="save-member">
+        Cancel
+    </button>
+    <button type="button" class="btn btn-success" data-test-id="add-member" (click)="saveChanges()">Save Role</button>
+</div>

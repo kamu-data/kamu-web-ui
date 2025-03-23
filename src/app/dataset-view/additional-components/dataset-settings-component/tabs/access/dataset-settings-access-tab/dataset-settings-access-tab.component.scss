@@ -84,3 +84,10 @@ h2 {
     bottom: 19px;
     left: 2px;
 }
+
+.truncate-text {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 285px;
+}

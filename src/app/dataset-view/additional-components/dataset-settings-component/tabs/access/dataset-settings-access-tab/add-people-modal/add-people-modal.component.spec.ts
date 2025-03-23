@@ -22,7 +22,6 @@ import { DatasetCollaborationsService } from "../dataset-collaborations.service"
 import { of } from "rxjs";
 import { AccountWithRoleConnection, DatasetAccessRole, NameLookupResult } from "src/app/api/kamu.graphql.interface";
 import {
-    MOCK_ACCOUNT_WITH_ROLE,
     mockDatasetListCollaboratorsQuery,
     mockDatasetSearchCollaboratorQuery,
 } from "src/app/api/mock/dataset-collaborations.mock";
@@ -35,6 +34,7 @@ describe("AddPeopleModalComponent", () => {
     let fixture: ComponentFixture<AddPeopleModalComponent>;
     let datasetCollaborationsService: DatasetCollaborationsService;
     let loggedUserService: LoggedUserService;
+    let ngbActiveModal: NgbActiveModal;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -56,9 +56,9 @@ describe("AddPeopleModalComponent", () => {
         fixture = TestBed.createComponent(AddPeopleModalComponent);
         datasetCollaborationsService = TestBed.inject(DatasetCollaborationsService);
         loggedUserService = TestBed.inject(LoggedUserService);
+        ngbActiveModal = TestBed.inject(NgbActiveModal);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsRootFragment;
-        component.collaborator = null;
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
         fixture.detectChanges();
     });
@@ -76,12 +76,6 @@ describe("AddPeopleModalComponent", () => {
         );
         component.ngOnInit();
         expect(listCollaboratorsSpy).toHaveBeenCalledTimes(1);
-    });
-
-    it("should check init role of the collaborators", () => {
-        component.collaborator = MOCK_ACCOUNT_WITH_ROLE;
-        component.ngOnInit();
-        expect(component.role).toBeDefined();
     });
 
     it("should check clear selected collaborator", () => {
@@ -115,24 +109,15 @@ describe("AddPeopleModalComponent", () => {
         flush();
     }));
 
-    it("should check save changes without selected collaborator", () => {
-        component.role = DatasetAccessRole.Editor;
-        const setRoleCollaboratorrSpy = spyOn(datasetCollaborationsService, "setRoleCollaborator").and.returnValue(
-            of(),
-        );
-        component.saveChanges();
-        expect(setRoleCollaboratorrSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({ role: component.role }));
-    });
-
-    it("should check save changes with selected collaborator", () => {
+    it("should check save changes", () => {
         component.role = DatasetAccessRole.Editor;
         component.selectedCollaborator = mockDatasetSearchCollaboratorQuery.search.nameLookup
             .nodes[0] as NameLookupResult;
-        const setRoleCollaboratorrSpy = spyOn(datasetCollaborationsService, "setRoleCollaborator").and.returnValue(
-            of(),
-        );
+        const ngbActiveModalCloseSpy = spyOn(ngbActiveModal, "close");
         component.saveChanges();
-        expect(setRoleCollaboratorrSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({ role: component.role }));
+        expect(ngbActiveModalCloseSpy).toHaveBeenCalledOnceWith(
+            jasmine.objectContaining({ role: component.role, accountId: component.selectedCollaborator.id }),
+        );
     });
 
     it("should check save formatter", () => {

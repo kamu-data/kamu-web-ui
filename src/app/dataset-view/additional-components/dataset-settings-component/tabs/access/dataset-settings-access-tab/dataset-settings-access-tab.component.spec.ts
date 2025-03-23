@@ -31,6 +31,8 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
+import { AddPeopleModalComponent } from "./add-people-modal/add-people-modal.component";
+import { EditCollaboratorModalComponent } from "./edit-collaborator-modal/edit-collaborator-modal.component";
 
 describe("DatasetSettingsAccessTabComponent", () => {
     let component: DatasetSettingsAccessTabComponent;
@@ -129,7 +131,14 @@ describe("DatasetSettingsAccessTabComponent", () => {
         const ngbModalOpenSpy = spyOn(ngbModal, "open").and.callThrough();
         emitClickOnElementByDataTestId(fixture, "add-people-button");
 
-        expect(ngbModalOpenSpy).toHaveBeenCalledTimes(1);
+        expect(ngbModalOpenSpy).toHaveBeenCalledOnceWith(AddPeopleModalComponent);
+    });
+
+    it("should check click on 'Edit' button", () => {
+        const ngbModalOpenSpy = spyOn(ngbModal, "open").and.callThrough();
+        component.editCollaborator(MOCK_ACCOUNT_WITH_ROLE);
+
+        expect(ngbModalOpenSpy).toHaveBeenCalledOnceWith(EditCollaboratorModalComponent);
     });
 
     it("should check remove collaborator", () => {

@@ -14,8 +14,8 @@ import {
     DatasetAccessRole,
     DatasetListCollaboratorsDocument,
     DatasetListCollaboratorsQuery,
-    DatasetSearchCollaboratorDocument,
-    DatasetSearchCollaboratorQuery,
+    SearchCollaboratorDocument,
+    SearchCollaboratorQuery,
     SetRoleCollaboratorDocument,
     SetRoleCollaboratorMutation,
     UnsetRoleCollaboratorDocument,
@@ -81,14 +81,14 @@ describe("DatasetCollaborationApi", () => {
                 page,
                 perPage,
             })
-            .subscribe((result: DatasetSearchCollaboratorQuery) => {
+            .subscribe((result: SearchCollaboratorQuery) => {
                 expect(result.search.nameLookup.nodes.length).toEqual(1);
                 expect(result.search.nameLookup.nodes[0].accountName).toEqual(
                     mockDatasetSearchCollaboratorQuery.search.nameLookup.nodes[0].accountName,
                 );
             });
 
-        const op = controller.expectOne(DatasetSearchCollaboratorDocument);
+        const op = controller.expectOne(SearchCollaboratorDocument);
         expect(op.operation.variables.query).toEqual(query);
         expect(op.operation.variables.page).toEqual(page);
         expect(op.operation.variables.perPage).toEqual(perPage);

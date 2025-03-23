@@ -130,7 +130,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     });
 
     it("should check default state of properties", () => {
-        expect(component.isAllowedDeleteDataset).toEqual(true);
+        expect(component.isAllowedToDeleteDataset).toEqual(true);
         expect(component.renameDatasetForm.disabled).toEqual(false);
     });
 
@@ -138,7 +138,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         component.datasetPermissions.permissions.general.canDelete = false;
         fixture.detectChanges();
 
-        expect(component.isAllowedDeleteDataset).toEqual(false);
+        expect(component.isAllowedToDeleteDataset).toEqual(false);
         expect(component.renameDatasetForm.disabled).toEqual(false);
     });
 
@@ -147,7 +147,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         component.ngOnInit();
         fixture.detectChanges();
 
-        expect(component.isAllowedDeleteDataset).toEqual(true);
+        expect(component.isAllowedToDeleteDataset).toEqual(true);
         expect(component.renameDatasetForm.disabled).toEqual(true);
     });
 

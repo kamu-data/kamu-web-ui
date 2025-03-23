@@ -25,7 +25,7 @@ import { ModalService } from "src/app/common/components/modal/modal.service";
 import { SelectionModel } from "@angular/cdk/collections";
 import { DatasetCollaborationsService } from "./dataset-collaborations.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { filter, from } from "rxjs";
+import { filter, from, switchMap } from "rxjs";
 import { NavigationEnd, Router } from "@angular/router";
 import AppValues from "src/app/common/values/app.values";
 import { EditCollaboratorModalComponent } from "./edit-collaborator-modal/edit-collaborator-modal.component";
@@ -112,21 +112,19 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
         const modalRefInstance = modalRef.componentInstance as AddPeopleModalComponent;
         modalRefInstance.datasetBasics = this.datasetBasics;
         from(modalRef.result)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((result: CollaboratorModalResultType) => {
-                if (result) {
-                    this.datasetCollaborationsService
-                        .setRoleCollaborator({
-                            datasetId: this.datasetBasics.id,
-                            accountId: result.accountId,
-                            role: result.role,
-                        })
-                        .pipe(takeUntilDestroyed(this.destroyRef))
-                        .subscribe(() => {
-                            this.selection.clear();
-                            this.updateTable(this.currentPage);
-                        });
-                }
+            .pipe(
+                switchMap((result: CollaboratorModalResultType) =>
+                    this.datasetCollaborationsService.setRoleCollaborator({
+                        datasetId: this.datasetBasics.id,
+                        accountId: result.accountId,
+                        role: result.role,
+                    }),
+                ),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(() => {
+                this.selection.clear();
+                this.updateTable(this.currentPage);
             });
     }
 
@@ -135,21 +133,19 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
         const modalRefInstance = modalRef.componentInstance as EditCollaboratorModalComponent;
         modalRefInstance.collaborator = collaborator;
         from(modalRef.result)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((result: CollaboratorModalResultType) => {
-                if (result) {
-                    this.datasetCollaborationsService
-                        .setRoleCollaborator({
-                            datasetId: this.datasetBasics.id,
-                            accountId: result.accountId,
-                            role: result.role,
-                        })
-                        .pipe(takeUntilDestroyed(this.destroyRef))
-                        .subscribe(() => {
-                            this.selection.clear();
-                            this.updateTable(this.currentPage);
-                        });
-                }
+            .pipe(
+                switchMap((result: CollaboratorModalResultType) =>
+                    this.datasetCollaborationsService.setRoleCollaborator({
+                        datasetId: this.datasetBasics.id,
+                        accountId: result.accountId,
+                        role: result.role,
+                    }),
+                ),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(() => {
+                this.selection.clear();
+                this.updateTable(this.currentPage);
             });
     }
 

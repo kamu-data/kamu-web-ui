@@ -80,7 +80,12 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
     }
 
     public get showGeneralTab(): boolean {
-        return this.activeTab === SettingsTabsEnum.GENERAL && this.datasetPermissions.permissions.general.canRename;
+        return (
+            this.activeTab === SettingsTabsEnum.GENERAL &&
+            (this.datasetPermissions.permissions.general.canRename ||
+                this.datasetPermissions.permissions.general.canDelete ||
+                this.datasetPermissions.permissions.general.canSetVisibility)
+        );
     }
 
     public get showAccessTab(): boolean {

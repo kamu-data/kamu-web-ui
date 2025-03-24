@@ -100,6 +100,7 @@
                         </a>
                     </mat-button-toggle>
                     <mat-button-toggle
+                        *ngIf="showFlows(user)"
                         appFeatureFlag="profile.flows"
                         data-test-id="account-flows-tab"
                         [class.active-link]="activeTab === AccountTabs.FLOWS"
@@ -162,6 +163,7 @@
             <ng-container *ngIf="activeTab === AccountTabs.DATASETS">
                 <app-datasets-tab
                     [datasets]="accountDatasets.datasets"
+                    f
                     [accountName]="user.accountName"
                     [pageInfo]="accountDatasets.pageInfo"
                 ></app-datasets-tab>

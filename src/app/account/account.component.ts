@@ -57,6 +57,10 @@ export class AccountComponent implements OnInit {
         return this.loggedUserService.maybeCurrentlyLoggedInUser?.accountName === user.accountName;
     }
 
+    public showFlows(user: AccountFragment): boolean {
+        return this.isLoggedUser(user) || Boolean(this.loggedUserService.maybeCurrentlyLoggedInUser?.isAdmin);
+    }
+
     public onEditProfile(): void {
         promiseWithCatch(
             this.modalService.warning({

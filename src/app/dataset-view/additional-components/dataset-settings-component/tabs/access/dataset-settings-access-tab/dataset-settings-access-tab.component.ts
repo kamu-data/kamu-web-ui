@@ -25,11 +25,12 @@ import { ModalService } from "src/app/common/components/modal/modal.service";
 import { SelectionModel } from "@angular/cdk/collections";
 import { DatasetCollaborationsService } from "./dataset-collaborations.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { filter, from, switchMap } from "rxjs";
+import { filter, firstValueFrom, from, map, switchMap } from "rxjs";
 import { NavigationEnd, Router } from "@angular/router";
 import AppValues from "src/app/common/values/app.values";
 import { EditCollaboratorModalComponent } from "./edit-collaborator-modal/edit-collaborator-modal.component";
 import { CollaboratorModalResultType } from "./add-people-modal/add-people-modal.model";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 @Component({
     selector: "app-dataset-settings-access-tab",
@@ -58,6 +59,7 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
     private datasetCollaborationsService = inject(DatasetCollaborationsService);
     private cdr = inject(ChangeDetectorRef);
     private router = inject(Router);
+    private loggedUserService = inject(LoggedUserService);
 
     public get isPrivate(): boolean {
         return this.datasetBasics.visibility.__typename === "PrivateDatasetVisibility";
@@ -107,12 +109,25 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
         });
     }
 
-    public addPeople(): void {
+    public async addPeople(): Promise<void> {
+        const activeCollaboratorsIds$ = this.datasetCollaborationsService
+            .listCollaborators({ datasetId: this.datasetBasics.id })
+            .pipe(
+                map((result) => result.nodes.map((node) => node.account.id)),
+                takeUntilDestroyed(this.destroyRef),
+            );
+        const activeCollaboratorsIds = await firstValueFrom(activeCollaboratorsIds$);
+
         const modalRef = this.ngbModalService.open(AddPeopleModalComponent);
         const modalRefInstance = modalRef.componentInstance as AddPeopleModalComponent;
         modalRefInstance.datasetBasics = this.datasetBasics;
+        modalRefInstance.activeCollaboratorsIds = [
+            this.loggedUserService.currentlyLoggedInUser.id,
+            ...activeCollaboratorsIds,
+        ];
         from(modalRef.result)
             .pipe(
+                filter((data) => !!data),
                 switchMap((result: CollaboratorModalResultType) =>
                     this.datasetCollaborationsService.setRoleCollaborator({
                         datasetId: this.datasetBasics.id,
@@ -134,6 +149,7 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
         modalRefInstance.collaborator = collaborator;
         from(modalRef.result)
             .pipe(
+                filter((data) => !!data),
                 switchMap((result: CollaboratorModalResultType) =>
                     this.datasetCollaborationsService.setRoleCollaborator({
                         datasetId: this.datasetBasics.id,

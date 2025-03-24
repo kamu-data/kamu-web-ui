@@ -5,21 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from "@angular/core";
 import { NgbActiveModal, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { OperatorFunction, Observable, debounceTime, distinctUntilChanged, tap, finalize, switchMap } from "rxjs";
-import {
-    AccountWithRoleConnection,
-    DatasetAccessRole,
-    DatasetBasicsFragment,
-    NameLookupResult,
-} from "src/app/api/kamu.graphql.interface";
+import { DatasetAccessRole, DatasetBasicsFragment, NameLookupResult } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
 import AppValues from "src/app/common/values/app.values";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetCollaborationsService } from "../dataset-collaborations.service";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { CollaboratorModalResultType, ROLE_OPTIONS } from "./add-people-modal.model";
 
 @Component({
@@ -28,9 +21,9 @@ import { CollaboratorModalResultType, ROLE_OPTIONS } from "./add-people-modal.mo
     styleUrls: ["./add-people-modal.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddPeopleModalComponent extends BaseComponent implements OnInit {
+export class AddPeopleModalComponent extends BaseComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    public activeCollaboratorsIds: string[] = [];
+    @Input({ required: true }) public activeCollaboratorsIds: string[] = [];
     public role: MaybeNull<DatasetAccessRole> = null;
     public searchPerson: string = "";
     public selectedCollaborator: MaybeNull<NameLookupResult>;
@@ -44,19 +37,6 @@ export class AddPeopleModalComponent extends BaseComponent implements OnInit {
     public activeModal = inject(NgbActiveModal);
     private cdr = inject(ChangeDetectorRef);
     private datasetCollaborationsService = inject(DatasetCollaborationsService);
-    private loggedUserService = inject(LoggedUserService);
-
-    public ngOnInit(): void {
-        this.initState();
-    }
-    private initState(): void {
-        this.datasetCollaborationsService
-            .listCollaborators({ datasetId: this.datasetBasics.id })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((result: AccountWithRoleConnection) => {
-                this.activeCollaboratorsIds = result.nodes.map((node) => node.account.id);
-            });
-    }
 
     public search: OperatorFunction<string, readonly NameLookupResult[]> = (text$: Observable<string>) =>
         text$.pipe(
@@ -69,10 +49,7 @@ export class AddPeopleModalComponent extends BaseComponent implements OnInit {
                         query: term,
                         filters: {
                             byAccount: {
-                                excludeAccountsByIds: [
-                                    ...this.activeCollaboratorsIds,
-                                    this.loggedUserService.currentlyLoggedInUser.id,
-                                ],
+                                excludeAccountsByIds: this.activeCollaboratorsIds,
                             },
                         },
                         page: 0,

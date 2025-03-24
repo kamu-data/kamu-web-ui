@@ -10,6 +10,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, O
 import {
     DatasetBasicsFragment,
     DatasetKind,
+    DatasetMetadata,
     DatasetOverviewFragment,
     DatasetPermissionsFragment,
 } from "src/app/api/kamu.graphql.interface";
@@ -26,6 +27,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { filter } from "rxjs";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
+import { isSettingsTabAccessibleHelper } from "./dataset-settings.helpers";
 
 @Component({
     selector: "app-dataset-settings",
@@ -50,68 +52,37 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
     private cdr = inject(ChangeDetectorRef);
     private modalService = inject(ModalService);
 
-    public get isSchedulingAvailable(): boolean {
-        return (
-            this.appConfigService.featureFlags.enableScheduling &&
-            !this.isSetTransformEmpty &&
-            !this.isSetPollingSourceEmpty &&
-            this.isRootDataset
-        );
-    }
-
-    public get isRootDataset(): boolean {
-        return this.datasetBasics.kind === DatasetKind.Root;
-    }
-
-    public get isSetPollingSourceEmpty(): boolean {
-        return !this.overview?.metadata.currentPollingSource && this.datasetBasics.kind === DatasetKind.Root;
-    }
-
-    public get isSetTransformEmpty(): boolean {
-        return !this.overview?.metadata.currentTransform && this.datasetBasics.kind === DatasetKind.Derivative;
-    }
-
     public get showSchedulingTab(): boolean {
-        return (
-            this.isSchedulingAvailable &&
-            this.activeTab === SettingsTabsEnum.SCHEDULING &&
-            this.datasetPermissions.permissions.flows.canRun
-        );
+        return this.activeTab === SettingsTabsEnum.SCHEDULING && this.isSettingsTabAccessible;
     }
 
     public get showGeneralTab(): boolean {
-        return (
-            this.activeTab === SettingsTabsEnum.GENERAL &&
-            (this.datasetPermissions.permissions.general.canRename ||
-                this.datasetPermissions.permissions.general.canDelete ||
-                this.datasetPermissions.permissions.general.canSetVisibility)
-        );
+        return this.activeTab === SettingsTabsEnum.GENERAL && this.isSettingsTabAccessible;
     }
 
     public get showAccessTab(): boolean {
-        return this.activeTab === SettingsTabsEnum.ACCESS && this.datasetPermissions.permissions.collaboration.canView;
+        return this.activeTab === SettingsTabsEnum.ACCESS && this.isSettingsTabAccessible;
     }
 
     public get showCompactionTab(): boolean {
-        return (
-            this.datasetBasics.kind === DatasetKind.Root &&
-            this.activeTab === SettingsTabsEnum.COMPACTION &&
-            this.datasetPermissions.permissions.flows.canRun
-        );
+        return this.activeTab === SettingsTabsEnum.COMPACTION && this.isSettingsTabAccessible;
     }
 
     public get showTransformSettingsTab(): boolean {
-        return (
-            this.datasetBasics.kind === DatasetKind.Derivative &&
-            this.activeTab === SettingsTabsEnum.TRANSFORM_SETTINGS &&
-            this.datasetPermissions.permissions.flows.canRun
-        );
+        return this.activeTab === SettingsTabsEnum.TRANSFORM_SETTINGS && this.isSettingsTabAccessible;
     }
 
     public get showSecretsManagerTab(): boolean {
-        return (
-            this.appConfigService.featureFlags.enableDatasetEnvVarsManagement &&
-            this.activeTab === SettingsTabsEnum.VARIABLES_AND_SECRETS
+        return this.activeTab === SettingsTabsEnum.VARIABLES_AND_SECRETS && this.isSettingsTabAccessible;
+    }
+
+    public get isSettingsTabAccessible(): boolean {
+        return isSettingsTabAccessibleHelper(
+            this.activeTab,
+            this.appConfigService.featureFlags,
+            this.datasetBasics,
+            this.datasetPermissions,
+            this.overview?.metadata as DatasetMetadata,
         );
     }
 
@@ -171,30 +142,12 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
     }
 
     public visibilitySettingsMenuItem(item: DatasetSettingsSidePanelItem): boolean {
-        switch (item.activeTab) {
-            case SettingsTabsEnum.GENERAL:
-                return this.datasetPermissions.permissions.general.canRename;
-
-            case SettingsTabsEnum.SCHEDULING:
-                return this.isSchedulingAvailable && this.datasetPermissions.permissions.flows.canRun;
-            case SettingsTabsEnum.COMPACTION:
-                return this.datasetBasics.kind === DatasetKind.Root && this.datasetPermissions.permissions.flows.canRun;
-            case SettingsTabsEnum.TRANSFORM_SETTINGS:
-                return (
-                    this.datasetBasics.kind === DatasetKind.Derivative &&
-                    this.appConfigService.featureFlags.enableScheduling &&
-                    this.datasetPermissions.permissions.flows.canRun
-                );
-            case SettingsTabsEnum.VARIABLES_AND_SECRETS:
-                return (
-                    this.appConfigService.featureFlags.enableDatasetEnvVarsManagement &&
-                    this.datasetBasics.kind === DatasetKind.Root &&
-                    this.datasetPermissions.permissions.envVars.canView
-                );
-            case SettingsTabsEnum.ACCESS:
-                return this.datasetPermissions.permissions.collaboration.canView;
-            default:
-                return Boolean(item.visible);
-        }
+        return isSettingsTabAccessibleHelper(
+            item.activeTab,
+            this.appConfigService.featureFlags,
+            this.datasetBasics,
+            this.datasetPermissions,
+            this.overview?.metadata as DatasetMetadata,
+        );
     }
 }

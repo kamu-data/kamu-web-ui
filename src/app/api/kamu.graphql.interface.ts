@@ -65,7 +65,7 @@ export type Account = {
     /** Email address */
     email: Scalars["String"];
     /** Access to the flow configurations of this account */
-    flows?: Maybe<AccountFlows>;
+    flows: AccountFlows;
     /** Unique and stable identifier of this account */
     id: Scalars["AccountID"];
     /** Indicates the administrator status */
@@ -3237,10 +3237,10 @@ export type AccountDatasetFlowsPausedQuery = {
         __typename?: "Accounts";
         byName?: {
             __typename?: "Account";
-            flows?: {
+            flows: {
                 __typename?: "AccountFlows";
                 triggers: { __typename?: "AccountFlowTriggers"; allPaused: boolean };
-            } | null;
+            };
         } | null;
     };
 };
@@ -3255,13 +3255,13 @@ export type AccountListDatasetsWithFlowsQuery = {
         __typename?: "Accounts";
         byName?: {
             __typename?: "Account";
-            flows?: {
+            flows: {
                 __typename?: "AccountFlows";
                 runs: {
                     __typename?: "AccountFlowRuns";
                     listDatasetsWithFlow: { __typename?: "DatasetConnection" } & DatasetConnectionDataFragment;
                 };
-            } | null;
+            };
         } | null;
     };
 };
@@ -3280,14 +3280,14 @@ export type AccountListFlowsQuery = {
         __typename?: "Accounts";
         byName?: {
             __typename?: "Account";
-            flows?: {
+            flows: {
                 __typename?: "AccountFlows";
                 runs: {
                     __typename?: "AccountFlowRuns";
                     table: { __typename?: "FlowConnection" } & FlowConnectionDataFragment;
                     tiles: { __typename?: "FlowConnection" } & FlowConnectionWidgetDataFragment;
                 };
-            } | null;
+            };
         } | null;
     };
 };

@@ -42,6 +42,9 @@ export function apolloCache(): InMemoryCache {
             DatasetEnvVars: {
                 merge: true,
             },
+            Accounts: {
+                merge: true,
+            },
         },
     });
 }

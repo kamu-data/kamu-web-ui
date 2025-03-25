@@ -6,7 +6,7 @@
  */
 
 import ProjectLinks from "src/app/project-links";
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import { AccountTabs } from "./account.constants";
 import AppValues from "src/app/common/values/app.values";
@@ -27,7 +27,7 @@ import RoutingResolvers from "../common/resolvers/routing-resolvers";
     styleUrls: ["./account.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccountComponent implements OnInit {
+export class AccountComponent implements OnChanges {
     @Input(ProjectLinks.URL_PARAM_ACCOUNT_NAME) public accountName: string;
     @Input(ProjectLinks.URL_QUERY_PARAM_TAB) public set tab(value: MaybeUndefined<AccountTabs>) {
         this.activeTab = value && Object.values(AccountTabs).includes(value) ? value : AccountTabs.DATASETS;
@@ -45,8 +45,10 @@ export class AccountComponent implements OnInit {
     private accountService = inject(AccountService);
     private loggedUserService = inject(LoggedUserService);
 
-    public ngOnInit(): void {
-        this.user$ = this.pipelineAccountByName(this.accountName);
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (changes.accountName && changes.accountName.previousValue !== changes.accountName.currentValue) {
+            this.user$ = this.pipelineAccountByName(changes.accountName.currentValue as string);
+        }
     }
 
     public avatarLink(user: AccountFragment): string {

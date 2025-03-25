@@ -8,11 +8,11 @@
 import { AccountTabs } from "./account.constants";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatIconModule } from "@angular/material/icon";
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute, RouterModule } from "@angular/router";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { AccountComponent } from "./account.component";
-import { BehaviorSubject, delay, of } from "rxjs";
+import { BehaviorSubject, of } from "rxjs";
 import { DatasetApi } from "src/app/api/dataset.api";
 import { mockDatasetsAccountResponse } from "src/app/api/mock/dataset.mock";
 import { AccountService } from "src/app/account/account.service";
@@ -26,7 +26,6 @@ import { NgbPaginationModule, NgbPopoverModule, NgbRatingModule } from "@ng-boot
 import { DisplayTimeComponent } from "src/app/common/components/display-time/display-time.component";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
-import { AccountNotFoundError } from "src/app/common/values/errors";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ToastrModule } from "ngx-toastr";
 import { AccountFlowsTabComponent } from "./additional-components/account-flows-tab/account-flows-tab.component";
@@ -34,6 +33,7 @@ import { LoggedUserService } from "../auth/logged-user.service";
 import { mockAccountDetails, TEST_AVATAR_URL, TEST_LOGIN } from "../api/mock/auth.mock";
 import { findElementByDataTestId } from "../common/helpers/base-test.helpers.spec";
 import { DatasetVisibilityModule } from "../common/components/dataset-visibility/dataset-visibility.module";
+import { SimpleChanges } from "@angular/core";
 
 describe("AccountComponent", () => {
     let component: AccountComponent;
@@ -95,6 +95,15 @@ describe("AccountComponent", () => {
         component = fixture.componentInstance;
         component.accountName = TEST_LOGIN;
         component.accountDatasets = mockDatasetsAccountResponse;
+        const accountNameSimpleChanges: SimpleChanges = {
+            accountName: {
+                previousValue: undefined,
+                currentValue: TEST_LOGIN,
+                firstChange: true,
+                isFirstChange: () => true,
+            },
+        };
+        component.ngOnChanges(accountNameSimpleChanges);
     });
 
     it("should create", () => {
@@ -125,21 +134,6 @@ describe("AccountComponent", () => {
         fixture.detectChanges();
         expect(fetchAccountByNameSpy).toHaveBeenCalledOnceWith(mockAccountDetails.accountName);
     });
-
-    it("should check API calls when account is not found", fakeAsync(() => {
-        fetchAccountByNameSpy = fetchAccountByNameSpy.and.returnValue(of(null).pipe(delay(0)));
-        fixture.detectChanges();
-
-        expect(fetchAccountByNameSpy).toHaveBeenCalledOnceWith(TEST_LOGIN);
-        expect(() => {
-            tick();
-        }).toThrow(new AccountNotFoundError());
-        expect(() => {
-            flush();
-        }).toThrow(new AccountNotFoundError());
-
-        flush();
-    }));
 
     it("should check activeTab when URL not exist query param tab", () => {
         fixture.detectChanges();

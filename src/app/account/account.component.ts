@@ -49,6 +49,9 @@ export class AccountComponent implements OnChanges {
         if (changes.accountName && changes.accountName.previousValue !== changes.accountName.currentValue) {
             this.user$ = this.pipelineAccountByName(changes.accountName.currentValue as string);
         }
+        if (changes.accountDatasets && changes.accountDatasets.previousValue !== changes.accountDatasets.currentValue) {
+            this.accountDatasets = changes.accountDatasets.currentValue as DatasetsAccountResponse;
+        }
     }
 
     public avatarLink(user: AccountFragment): string {

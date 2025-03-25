@@ -16,7 +16,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { HttpClientModule } from "@angular/common/http";
 import { ActivatedRoute } from "@angular/router";
 import { MatIconModule } from "@angular/material/icon";
-import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
+import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { FormBuilder, FormsModule } from "@angular/forms";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetEvnironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-evnironment-variables.service";
@@ -90,6 +90,7 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
         modalService = TestBed.inject(ModalService);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsRootFragment;
+        component.datasetPermissions = mockFullPowerDatasetPermissionsFragment;
         fixture.detectChanges();
     });
 

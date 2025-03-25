@@ -11,10 +11,16 @@ import { DatasetPermissionsFragment } from "../api/kamu.graphql.interface";
 @Injectable({ providedIn: "root" })
 export class DatasetPermissionsService {
     public shouldAllowSettingsTab(datasetPermissions: DatasetPermissionsFragment): boolean {
-        return datasetPermissions.permissions.canDelete || datasetPermissions.permissions.canRename;
+        return (
+            datasetPermissions.permissions.envVars.canView ||
+            datasetPermissions.permissions.collaboration.canView ||
+            datasetPermissions.permissions.general.canDelete ||
+            datasetPermissions.permissions.general.canRename ||
+            datasetPermissions.permissions.general.canSetVisibility
+        );
     }
 
     public shouldAllowFlowsTab(datasetPermissions: DatasetPermissionsFragment): boolean {
-        return datasetPermissions.permissions.canSchedule;
+        return datasetPermissions.permissions.flows.canView;
     }
 }

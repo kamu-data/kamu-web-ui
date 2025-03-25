@@ -15,7 +15,7 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { DatasetViewComponent } from "./dataset-view.component";
 import { SearchAdditionalButtonsModule } from "../common/components/search-additional-buttons/search-additional-buttons.module";
-import { NgbModule, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModule, NgbNavModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { DynamicTableModule } from "../common/components/dynamic-table/dynamic-table.module";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
@@ -95,6 +95,9 @@ import { FeatureFlagModule } from "../common/directives/feature-flag.module";
 import { YamlEventViewerModule } from "../common/components/yaml-event-viewer/yaml-event-viewer.module";
 import { CommitNavigatorModule } from "./additional-components/metadata-component/components/commit-navigator/commit-navigator.module";
 import { DatasetSettingsTransformOptionsTabComponent } from "./additional-components/dataset-settings-component/tabs/transform-options/dataset-settings-transform-options-tab.component";
+import { DatasetSettingsAccessTabComponent } from "./additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-settings-access-tab.component";
+import { AddPeopleModalComponent } from "./additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/add-people-modal/add-people-modal.component";
+import { EditCollaboratorModalComponent } from "./additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/edit-collaborator-modal/edit-collaborator-modal.component";
 @NgModule({
     imports: [
         DynamicTableModule,
@@ -152,6 +155,7 @@ import { DatasetSettingsTransformOptionsTabComponent } from "./additional-compon
         IngestConfigurationModule,
         IngestTriggerModule,
         QuerySharedModule,
+        NgbTypeaheadModule,
         PaginationModule,
         PollingSourceFormComponentsModule,
         SearchAdditionalButtonsModule,
@@ -180,6 +184,7 @@ import { DatasetSettingsTransformOptionsTabComponent } from "./additional-compon
         BaseStepComponent,
         DataComponent,
         DatasetSettingsComponent,
+        DatasetSettingsAccessTabComponent,
         DatasetSettingsCompactingTabComponent,
         DatasetSettingsGeneralTabComponent,
         DatasetSettingsSchedulingTabComponent,
@@ -209,6 +214,8 @@ import { DatasetSettingsTransformOptionsTabComponent } from "./additional-compon
         SearchSectionComponent,
         SourceNameStepComponent,
         QueriesSectionComponent,
+        AddPeopleModalComponent,
+        EditCollaboratorModalComponent,
     ],
 })
 export class DatasetViewModule {}

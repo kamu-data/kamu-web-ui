@@ -10,6 +10,7 @@ import {
     DatasetKind,
     DataSchemaFormat,
     DatasetLineageBasicsFragment,
+    DatasetMetadata,
 } from "src/app/api/kamu.graphql.interface";
 import {
     DataUpdate,
@@ -1858,4 +1859,183 @@ export const mockOverviewWithSetLicense = {
     },
     createdAt: "2022-08-05T21:10:57.332924745+00:00",
     lastUpdatedAt: "2022-08-05T21:15:03.947245004+00:00",
+};
+
+export const datasetMetadataDerivativeDataset: DatasetMetadata = {
+    __typename: "DatasetMetadata",
+    currentPollingSource: null,
+    currentTransform: {
+        __typename: "SetTransform",
+        inputs: [],
+        transform: {
+            __typename: "TransformSql",
+            engine: "flink",
+            version: null,
+            queries: [
+                {
+                    __typename: "SqlQueryStep",
+                    alias: "token_transfers",
+                    query: "select\n  *,\n  case\n    when `to` = '0xeadb3840596cabf312f2bc88a4bb0b93a4e1ff5f' then value_fp\n    when `from` = '0xeadb3840596cabf312f2bc88a4bb0b93a4e1ff5f' then -value_fp\n    else 0\n  end as token_amount\nfrom (\n  select\n    *,\n    cast(`value` as float) / power(10.0, cast(token_decimal as int)) as value_fp\n  from `account.tokens.transfers`\n)\n",
+                },
+                {
+                    __typename: "SqlQueryStep",
+                    alias: "transactions",
+                    query: "select\n  *,\n  case\n    when `to` = '0xeadb3840596cabf312f2bc88a4bb0b93a4e1ff5f' then value_fp\n    when `from` = '0xeadb3840596cabf312f2bc88a4bb0b93a4e1ff5f' then -value_fp\n    else 0\n  end as eth_amount\nfrom (\n  select\n    *,\n    cast(`value` as float) / power(10.0, 18) as value_fp\n  from `account.transactions`\n)\n",
+                },
+                {
+                    __typename: "SqlQueryStep",
+                    alias: "token_transactions",
+                    query: "select\n  tr.block_time,\n  tr.block_number,\n  tr.transaction_hash,\n  tx.symbol as account_symbol,\n  tr.token_symbol,\n  tr.token_amount,\n  tx.eth_amount\nfrom token_transfers as tr\nleft join transactions as tx\non \n  tr.transaction_hash = tx.transaction_hash\n  and tr.block_time = tx.block_time\n",
+                },
+                {
+                    __typename: "SqlQueryStep",
+                    alias: null,
+                    query: "select\n  *,\n  sum(token_amount) over (partition by token_symbol order by block_time) as token_balance,\n  sum(-eth_amount) over (partition by token_symbol order by block_time) as token_book_value_eth\nfrom token_transactions\n",
+                },
+            ],
+            temporalTables: null,
+        },
+    },
+    currentPushSources: [],
+    currentInfo: {
+        __typename: "SetInfo",
+        description: null,
+        keywords: null,
+    },
+    currentLicense: null,
+    currentWatermark: "2025-02-13T03:47:11+00:00",
+    currentSchema: {
+        __typename: "DataSchema",
+        format: DataSchemaFormat.ParquetJson,
+        content:
+            '{"name": "arrow_schema", "type": "struct", "fields": [{"name": "offset", "repetition": "REQUIRED", "type": "INT64"}, {"name": "op", "repetition": "REQUIRED", "type": "INT32"}, {"name": "system_time", "repetition": "REQUIRED", "type": "INT64", "logicalType": "TIMESTAMP(MILLIS,true)"}, {"name": "block_time", "repetition": "OPTIONAL", "type": "INT64", "logicalType": "TIMESTAMP(MILLIS,true)"}, {"name": "block_number", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "transaction_hash", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "account_symbol", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "token_symbol", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "token_amount", "repetition": "OPTIONAL", "type": "FLOAT"}, {"name": "eth_amount", "repetition": "OPTIONAL", "type": "FLOAT"}, {"name": "token_balance", "repetition": "OPTIONAL", "type": "FLOAT"}, {"name": "token_book_value_eth", "repetition": "OPTIONAL", "type": "FLOAT"}]}',
+    },
+    currentVocab: {
+        __typename: "SetVocab",
+        offsetColumn: null,
+        operationTypeColumn: null,
+        systemTimeColumn: null,
+        eventTimeColumn: "block_time",
+    },
+    currentReadme: null,
+    currentUpstreamDependencies: [],
+    currentDownstreamDependencies: [],
+    chain: {
+        __typename: undefined,
+        blockByHash: undefined,
+        blockByHashEncoded: undefined,
+        blocks: {
+            __typename: undefined,
+            edges: [],
+            nodes: [],
+            pageInfo: {
+                __typename: undefined,
+                currentPage: 0,
+                hasNextPage: false,
+                hasPreviousPage: false,
+                totalPages: undefined,
+            },
+            totalCount: 0,
+        },
+        refs: [],
+    },
+    pushSyncStatuses: {
+        __typename: undefined,
+        statuses: [],
+    },
+};
+
+export const datasetMetadataRootDataset: DatasetMetadata = {
+    __typename: "DatasetMetadata",
+    currentPollingSource: {
+        __typename: "SetPollingSource",
+        fetch: {
+            __typename: "FetchStepUrl",
+            url: "https://api.etherscan.io/api?module=account&action=tokentx&address=0xeadb3840596cabf312f2bc88a4bb0b93a4e1ff5f&page=1&offset=1000&startblock=0&endblock=99999999&apikey=${{ env.ETHERSCAN_API_KEY }}",
+            eventTime: null,
+            headers: null,
+            cache: null,
+        },
+        read: {
+            __typename: "ReadStepJson",
+            subPath: "result",
+            schema: null,
+            dateFormat: null,
+            encoding: null,
+            timestampFormat: null,
+        },
+        merge: {
+            __typename: "MergeStrategyLedger",
+            primaryKey: ["transaction_hash"],
+        },
+        prepare: null,
+        preprocess: {
+            __typename: "TransformSql",
+            engine: "datafusion",
+            version: null,
+            queries: [
+                {
+                    __typename: "SqlQueryStep",
+                    query: 'SELECT\n  to_timestamp_seconds(cast(timeStamp as bigint)) as block_time,\n  cast(blockNumber as bigint) as block_number,\n  blockHash as block_hash,\n  hash as transaction_hash,\n  transactionIndex as transaction_index,\n  nonce,\n  "from",\n  to,\n  value,\n  contractAddress as contract_address,\n  tokenName as token_name,\n  tokenSymbol as token_symbol,\n  tokenDecimal as token_decimal,\n  gas,\n  gasPrice as gas_price,\n  gasUsed as gas_used,\n  cumulativeGasUsed as cumulative_gas_used,\n  confirmations\nFROM input\n',
+                    alias: null,
+                },
+            ],
+            temporalTables: null,
+        },
+    },
+    currentTransform: null,
+    currentPushSources: [],
+
+    currentInfo: {
+        __typename: "SetInfo",
+        description: null,
+        keywords: null,
+    },
+    currentLicense: {
+        __typename: "SetLicense",
+        shortName: "DDDD",
+        name: "SADSAD",
+        spdxId: null,
+        websiteUrl: "http://test.com",
+    },
+    currentWatermark: "2025-02-13T03:47:11+00:00",
+    currentSchema: {
+        __typename: "DataSchema",
+        format: DataSchemaFormat.ParquetJson,
+        content:
+            '{"name": "arrow_schema", "type": "struct", "fields": [{"name": "offset", "repetition": "REQUIRED", "type": "INT64"}, {"name": "op", "repetition": "REQUIRED", "type": "INT32"}, {"name": "system_time", "repetition": "REQUIRED", "type": "INT64", "logicalType": "TIMESTAMP(MILLIS,true)"}, {"name": "block_time", "repetition": "OPTIONAL", "type": "INT64", "logicalType": "TIMESTAMP(MILLIS,true)"}, {"name": "block_number", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "block_hash", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "transaction_hash", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "transaction_index", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "nonce", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "from", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "to", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "value", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "contract_address", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "token_name", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "token_symbol", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "token_decimal", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "gas", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "gas_price", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "gas_used", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "cumulative_gas_used", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}, {"name": "confirmations", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "STRING"}]}',
+    },
+    currentVocab: {
+        __typename: "SetVocab",
+        offsetColumn: null,
+        operationTypeColumn: null,
+        systemTimeColumn: null,
+        eventTimeColumn: "block_time",
+    },
+    currentReadme: null,
+    chain: {
+        __typename: undefined,
+        blockByHash: undefined,
+        blockByHashEncoded: undefined,
+        blocks: {
+            __typename: undefined,
+            edges: [],
+            nodes: [],
+            pageInfo: {
+                __typename: undefined,
+                currentPage: 0,
+                hasNextPage: false,
+                hasPreviousPage: false,
+                totalPages: undefined,
+            },
+            totalCount: 0,
+        },
+        refs: [],
+    },
+    currentDownstreamDependencies: [],
+    currentUpstreamDependencies: [],
+    pushSyncStatuses: {
+        __typename: undefined,
+        statuses: [],
+    },
 };

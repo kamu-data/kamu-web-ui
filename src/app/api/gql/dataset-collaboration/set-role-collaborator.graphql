@@ -1,0 +1,11 @@
+mutation setRoleCollaborator($datasetId: DatasetID!, $accountId: AccountID!, $role: DatasetAccessRole!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      collaboration {
+        setRole(accountId: $accountId, role: $role) {
+          message
+        }
+      }
+    }
+  }
+}

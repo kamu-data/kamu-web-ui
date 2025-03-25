@@ -31,6 +31,7 @@ import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { RouterTestingModule } from "@angular/router/testing";
 import { routes } from "src/app/app-routing.module";
 import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/tile-base-widget.component";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
 
 describe("AccountFlowsTabComponent", () => {
     let component: AccountFlowsTabComponent;
@@ -50,6 +51,7 @@ describe("AccountFlowsTabComponent", () => {
                 AngularMultiSelectModule,
                 HttpClientTestingModule,
                 RouterTestingModule.withRoutes(routes),
+                MatProgressBarModule,
             ],
             declarations: [AccountFlowsTabComponent, TileBaseWidgetComponent, FlowsTableComponent, PaginationComponent],
             providers: [

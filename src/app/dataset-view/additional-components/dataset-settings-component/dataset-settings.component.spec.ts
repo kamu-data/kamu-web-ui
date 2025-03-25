@@ -37,6 +37,8 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { BatchingTriggerModule } from "./tabs/scheduling/batching-trigger-form/batching-trigger.module";
 import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
 import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
+import { RouterTestingModule } from "@angular/router/testing";
+import { of } from "rxjs";
 
 describe("DatasetSettingsComponent", () => {
     let component: DatasetSettingsComponent;
@@ -57,6 +59,7 @@ describe("DatasetSettingsComponent", () => {
                 {
                     provide: ActivatedRoute,
                     useValue: {
+                        fragment: of(""),
                         snapshot: {
                             queryParamMap: {
                                 get: () => null,
@@ -91,6 +94,7 @@ describe("DatasetSettingsComponent", () => {
                 BatchingTriggerModule,
                 DatasetVisibilityModule,
                 FeatureFlagModule,
+                RouterTestingModule,
             ],
         })
             .overrideComponent(DatasetSettingsComponent, {
@@ -121,7 +125,7 @@ describe("DatasetSettingsComponent", () => {
 
     it("should check hide the scheduling tab", () => {
         component.activeTab = SettingsTabsEnum.SCHEDULING;
-        spyOnProperty(component, "isSchedulingAvailable", "get").and.returnValue(false);
+        spyOnProperty(component, "isSettingsTabAccessible", "get").and.returnValue(false);
         fixture.detectChanges();
         const schedulingTabElem = findElementByDataTestId(fixture, "settings-scheduling-tab");
         expect(schedulingTabElem).toBeUndefined();
@@ -129,16 +133,18 @@ describe("DatasetSettingsComponent", () => {
 
     it("should check navigate to action list item", () => {
         component.activeTab = SettingsTabsEnum.SCHEDULING;
-        spyOnProperty(component, "isSchedulingAvailable", "get").and.returnValue(true);
+        spyOnProperty(component, "isSettingsTabAccessible", "get").and.returnValue(true);
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        spyOn(component, "visibilitySettingsMenuItem").and.returnValue(true);
         fixture.detectChanges();
-
-        emitClickOnElementByDataTestId(fixture, `action-list-${SettingsTabsEnum.GENERAL}-tab`);
-        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(jasmine.objectContaining({ section: undefined }));
-
         emitClickOnElementByDataTestId(fixture, `action-list-${SettingsTabsEnum.SCHEDULING}-tab`);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({ section: SettingsTabsEnum.SCHEDULING }),
         );
+
+        component.activeTab = SettingsTabsEnum.GENERAL;
+        fixture.detectChanges();
+        emitClickOnElementByDataTestId(fixture, `action-list-${SettingsTabsEnum.GENERAL}-tab`);
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(jasmine.objectContaining({ section: undefined }));
     });
 });

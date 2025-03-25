@@ -18,7 +18,6 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { SharedTestModule } from "../../../../../common/modules/shared-test.module";
 import {
     mockDatasetBasicsDerivedFragment,
     mockFullPowerDatasetPermissionsFragment,
@@ -42,6 +41,7 @@ import { DatasetService } from "../../../../dataset.service";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
+import { ActivatedRoute } from "@angular/router";
 
 describe("DatasetSettingsGeneralTabComponent", () => {
     let component: DatasetSettingsGeneralTabComponent;
@@ -63,7 +63,6 @@ describe("DatasetSettingsGeneralTabComponent", () => {
                 MatIconModule,
                 ApolloModule,
                 ApolloTestingModule,
-                SharedTestModule,
                 ToastrModule.forRoot(),
                 MatRadioModule,
                 MatIconModule,
@@ -72,7 +71,30 @@ describe("DatasetSettingsGeneralTabComponent", () => {
                 FormsModule,
                 DatasetVisibilityModule,
             ],
-            providers: [FormBuilder],
+            providers: [
+                FormBuilder,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        fragment: of(""),
+                        snapshot: {
+                            queryParamMap: {
+                                get: () => null,
+                            },
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return mockDatasetBasicsDerivedFragment.owner.accountName;
+                                        case "datasetName":
+                                            return mockDatasetBasicsDerivedFragment.name;
+                                    }
+                                },
+                            },
+                        },
+                    },
+                },
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DatasetSettingsGeneralTabComponent);
@@ -108,24 +130,24 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     });
 
     it("should check default state of properties", () => {
-        expect(component.isDeleteDatasetDisabled).toEqual(false);
+        expect(component.isAllowedToDeleteDataset).toEqual(true);
         expect(component.renameDatasetForm.disabled).toEqual(false);
     });
 
     it("should check missing canDelete permission", () => {
-        component.datasetPermissions.permissions.canDelete = false;
+        component.datasetPermissions.permissions.general.canDelete = false;
         fixture.detectChanges();
 
-        expect(component.isDeleteDatasetDisabled).toEqual(true);
+        expect(component.isAllowedToDeleteDataset).toEqual(false);
         expect(component.renameDatasetForm.disabled).toEqual(false);
     });
 
     it("should check missing rename permission", () => {
-        component.datasetPermissions.permissions.canRename = false;
+        component.datasetPermissions.permissions.general.canRename = false;
         component.ngOnInit();
         fixture.detectChanges();
 
-        expect(component.isDeleteDatasetDisabled).toEqual(false);
+        expect(component.isAllowedToDeleteDataset).toEqual(true);
         expect(component.renameDatasetForm.disabled).toEqual(true);
     });
 

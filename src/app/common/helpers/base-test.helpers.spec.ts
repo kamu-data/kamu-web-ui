@@ -166,6 +166,7 @@ export function registerMatSvgIcons(): void {
         "compact",
         "access-token",
         "tree-structure",
+        "people",
     ];
     icons.forEach((icon: string) => {
         matIconRegistry.addSvgIcon(icon, domSanitizer.bypassSecurityTrustResourceUrl("/fake-path/fake-icon.svg"));

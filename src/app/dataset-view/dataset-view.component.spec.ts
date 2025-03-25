@@ -192,7 +192,6 @@ describe("DatasetViewComponent", () => {
         DatasetViewTypeEnum.Lineage,
         DatasetViewTypeEnum.Discussions,
         DatasetViewTypeEnum.Flows,
-        DatasetViewTypeEnum.Settings,
     ].forEach((tab: DatasetViewTypeEnum) => {
         it(`should check init ${tab} tab`, () => {
             spyOn(route.snapshot.queryParamMap, "get").and.returnValue(tab);

@@ -49,7 +49,7 @@
     <h2>Danger Zone</h2>
     <div
         appFeatureFlag="dataset.panel.settings.general.reset"
-        class="danger-zone__content justify-content-between align-items-center w-75 mt-4"
+        class="danger-zone__content justify-content-between align-items-center mt-4"
     >
         <div class="danger-zone__description">
             <p class="description">Reset this dataset</p>
@@ -91,9 +91,9 @@
 
     <div
         appFeatureFlag="dataset.panel.settings.general.changeVisibility"
-        class="danger-zone__content justify-content-between align-items-center w-75 mt-4"
+        class="danger-zone__content justify-content-between align-items-center mt-4"
     >
-        <div class="danger-zone__description">
+        <div class="danger-zone__description" id="visibility">
             <p class="description">
                 Change dataset visibility
                 <app-dataset-visibility class="ms-2" [datasetVisibility]="datasetVisibility"></app-dataset-visibility>
@@ -106,8 +106,9 @@
     </div>
 
     <div
+        *ngIf="isAllowedToDeleteDataset"
         appFeatureFlag="dataset.panel.settings.general.delete"
-        class="danger-zone__content d-flex justify-content-between align-items-center w-75 mt-4"
+        class="danger-zone__content d-flex justify-content-between align-items-center mt-4"
     >
         <div class="danger-zone__description">
             <p class="description">Delete this dataset</p>
@@ -116,12 +117,7 @@
                 still remain replicated or cached by other nodes in the network.
             </p>
         </div>
-        <button
-            type="button"
-            [disabled]="isDeleteDatasetDisabled"
-            (click)="deleteDataset()"
-            data-test-id="delete-dataset-button"
-        >
+        <button type="button" (click)="deleteDataset()" data-test-id="delete-dataset-button">
             Delete this dataset
         </button>
     </div>

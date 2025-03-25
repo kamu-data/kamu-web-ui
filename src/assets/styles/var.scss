@@ -55,7 +55,7 @@ $app-color-tooltip-border: #ced4da;
     background-color: $app-color-canvas-overlay !important;
 }
 
-.color-bg-subtle {
+.color-bg-subtitle {
     background-color: $app-color-canvas-subtle !important;
 }
 
@@ -278,11 +278,6 @@ $app-color-tooltip-border: #ced4da;
         vertical-align: top;
         background-color: $app-color-btn-counter-bg;
     }
-
-    &:hover,
-    &.hover {
-        @extend %hover-effect;
-    }
 }
 
 .clipboard-btn {
@@ -420,18 +415,6 @@ $app-color-tooltip-border: #ced4da;
     background-color: $app-color-neutral-muted;
     border: 1px solid $app-color-counter-border;
     border-radius: 2em;
-}
-
-%hover-effect {
-    background-color: $app-color-btn-hover-bg;
-    border-color: $app-color-btn-hover-border;
-    transition-duration: 0.1s;
-}
-
-[open] {
-    & > .btn {
-        @extend %hover-effect;
-    }
 }
 
 .mat-menu-content {

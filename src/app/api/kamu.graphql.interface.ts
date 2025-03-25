@@ -1,10 +1,3 @@
-/**
- * Copyright Kamu Data, Inc. and contributors. All rights reserved.
- *
- * Use of this software is governed by the Business Source License
- * included in the LICENSE file.
- */
-
 // THIS FILE IS GENERATED, DO NOT EDIT!
 import { gql } from "@apollo/client/core";
 import { Injectable } from "@angular/core";
@@ -72,7 +65,7 @@ export type Account = {
     /** Email address */
     email: Scalars["String"];
     /** Access to the flow configurations of this account */
-    flows?: Maybe<AccountFlows>;
+    flows: AccountFlows;
     /** Unique and stable identifier of this account */
     id: Scalars["AccountID"];
     /** Indicates the administrator status */
@@ -139,6 +132,10 @@ export type AccountFlowsMut = {
     triggers: AccountFlowTriggersMut;
 };
 
+export type AccountLookupFilter = {
+    excludeAccountsByIds?: InputMaybe<Array<Scalars["AccountID"]>>;
+};
+
 export type AccountMut = {
     __typename?: "AccountMut";
     /** Access to the mutable flow configurations of this account */
@@ -155,6 +152,28 @@ export enum AccountType {
     Organization = "ORGANIZATION",
     User = "USER",
 }
+
+export type AccountWithRole = {
+    __typename?: "AccountWithRole";
+    account: Account;
+    role: DatasetAccessRole;
+};
+
+export type AccountWithRoleConnection = {
+    __typename?: "AccountWithRoleConnection";
+    edges: Array<AccountWithRoleEdge>;
+    /** A shorthand for `edges { node { ... } }` */
+    nodes: Array<AccountWithRole>;
+    /** Page information */
+    pageInfo: PageBasedInfo;
+    /** Approximate number of total nodes */
+    totalCount: Scalars["Int"];
+};
+
+export type AccountWithRoleEdge = {
+    __typename?: "AccountWithRoleEdge";
+    node: AccountWithRole;
+};
 
 export type Accounts = {
     __typename?: "Accounts";
@@ -188,21 +207,63 @@ export type AccountsMutByNameArgs = {
     accountName: Scalars["AccountName"];
 };
 
+/**
+ * Indicates that data has been ingested into a root dataset.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#adddata-schema
+ */
 export type AddData = {
     __typename?: "AddData";
+    /**
+     * Describes checkpoint written during this transaction, if any. If an
+     * engine operation resulted in no updates to the checkpoint, but
+     * checkpoint is still relevant for subsequent runs - a hash of the
+     * previous checkpoint should be specified.
+     */
     newCheckpoint?: Maybe<Checkpoint>;
+    /** Describes output data written during this transaction, if any. */
     newData?: Maybe<DataSlice>;
+    /**
+     * The state of the source the data was added from to allow fast resuming.
+     * If the state did not change but is still relevant for subsequent runs it
+     * should be carried, i.e. only the last state per source is considered
+     * when resuming.
+     */
     newSourceState?: Maybe<SourceState>;
+    /**
+     * Last watermark of the output data stream, if any. Initial blocks may not
+     * have watermarks, but once watermark is set - all subsequent blocks
+     * should either carry the same watermark or specify a new (greater) one.
+     * Thus, watermarks are monotonically non-decreasing.
+     */
     newWatermark?: Maybe<Scalars["DateTime"]>;
+    /** Hash of the checkpoint file used to restore ingestion state, if any. */
     prevCheckpoint?: Maybe<Scalars["Multihash"]>;
+    /**
+     * Last offset of the previous data slice, if any. Must be equal to the
+     * last non-empty `newData.offsetInterval.end`.
+     */
     prevOffset?: Maybe<Scalars["Int"]>;
 };
 
+/**
+ * Describes how to ingest data into a root dataset from a certain logical
+ * source.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#addpushsource-schema
+ */
 export type AddPushSource = {
     __typename?: "AddPushSource";
+    /**
+     * Determines how newly-ingested data should be merged with existing
+     * history.
+     */
     merge: MergeStrategy;
+    /** Pre-processing query that shapes the data. */
     preprocess?: Maybe<Transform>;
+    /** Defines how data is read into structured format. */
     read: ReadStep;
+    /** Identifies the source within this dataset. */
     sourceName: Scalars["String"];
 };
 
@@ -211,16 +272,34 @@ export type Admin = {
     selfTest: Scalars["String"];
 };
 
+/**
+ * Embedded attachment item.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#attachmentembedded-schema
+ */
 export type AttachmentEmbedded = {
     __typename?: "AttachmentEmbedded";
+    /** Content of the attachment. */
     content: Scalars["String"];
+    /** Path to an attachment if it was materialized into a file. */
     path: Scalars["String"];
 };
 
+/**
+ * Defines the source of attachment files.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#attachments-schema
+ */
 export type Attachments = AttachmentsEmbedded;
 
+/**
+ * For attachments that are specified inline and are embedded in the metadata.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#attachmentsembedded-schema
+ */
 export type AttachmentsEmbedded = {
     __typename?: "AttachmentsEmbedded";
+    /** List of embedded items. */
     items: Array<AttachmentEmbedded>;
 };
 
@@ -283,9 +362,16 @@ export type CancelScheduledTasksSuccess = CancelScheduledTasksResult & {
     message: Scalars["String"];
 };
 
+/**
+ * Describes a checkpoint produced by an engine
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#checkpoint-schema
+ */
 export type Checkpoint = {
     __typename?: "Checkpoint";
+    /** Hash sum of the checkpoint file. */
     physicalHash: Scalars["Multihash"];
+    /** Size of checkpoint file in bytes. */
     size: Scalars["Int"];
 };
 
@@ -363,6 +449,11 @@ export enum CompareChainsStatus {
     Equal = "EQUAL",
 }
 
+/**
+ * Defines a compression algorithm.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#compressionformat-schema
+ */
 export enum CompressionFormat {
     Gzip = "GZIP",
     Zip = "ZIP",
@@ -508,11 +599,20 @@ export enum DataSchemaFormat {
     ParquetJson = "PARQUET_JSON",
 }
 
+/**
+ * Describes a slice of data added to a dataset or produced via transformation
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#dataslice-schema
+ */
 export type DataSlice = {
     __typename?: "DataSlice";
+    /** Logical hash sum of the data in this slice. */
     logicalHash: Scalars["Multihash"];
+    /** Data slice produced by the transaction. */
     offsetInterval: OffsetInterval;
+    /** Hash sum of the data part file. */
     physicalHash: Scalars["Multihash"];
+    /** Size of data file in bytes. */
     size: Scalars["Int"];
 };
 
@@ -520,6 +620,8 @@ export type Dataset = {
     __typename?: "Dataset";
     /** Returns dataset alias (user + name) */
     alias: Scalars["DatasetAlias"];
+    /** Access to the dataset collaboration data */
+    collaboration: DatasetCollaboration;
     /** Creation time of the first metadata block in the chain */
     createdAt: Scalars["DateTime"];
     /** Access to the data of the dataset */
@@ -550,6 +652,49 @@ export type Dataset = {
     permissions: DatasetPermissions;
     /** Returns the visibility of dataset */
     visibility: DatasetVisibilityOutput;
+};
+
+export enum DatasetAccessRole {
+    /** Role opening to modify dataset data */
+    Editor = "EDITOR",
+    /** Role to maintain the dataset */
+    Maintainer = "MAINTAINER",
+    /** Role opening the possibility for read-only access */
+    Reader = "READER",
+}
+
+export type DatasetCollaboration = {
+    __typename?: "DatasetCollaboration";
+    /** Accounts (and their roles) that have access to the dataset */
+    accountRoles: AccountWithRoleConnection;
+};
+
+export type DatasetCollaborationAccountRolesArgs = {
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+};
+
+export type DatasetCollaborationMut = {
+    __typename?: "DatasetCollaborationMut";
+    /** Grant account access as the specified role for the dataset */
+    setRole: SetRoleResult;
+    /** Revoking account accesses for the dataset */
+    unsetRoles: UnsetRoleResult;
+};
+
+export type DatasetCollaborationMutSetRoleArgs = {
+    accountId: Scalars["AccountID"];
+    role: DatasetAccessRole;
+};
+
+export type DatasetCollaborationMutUnsetRolesArgs = {
+    accountIds: Array<Scalars["AccountID"]>;
+};
+
+export type DatasetCollaborationPermissions = {
+    __typename?: "DatasetCollaborationPermissions";
+    canUpdate: Scalars["Boolean"];
+    canView: Scalars["Boolean"];
 };
 
 export type DatasetConnection = {
@@ -645,6 +790,12 @@ export type DatasetEnvVarsMutUpsertEnvVariableArgs = {
     isSecret: Scalars["Boolean"];
     key: Scalars["String"];
     value: Scalars["String"];
+};
+
+export type DatasetEnvVarsPermissions = {
+    __typename?: "DatasetEnvVarsPermissions";
+    canUpdate: Scalars["Boolean"];
+    canView: Scalars["Boolean"];
 };
 
 export type DatasetFlowConfigs = {
@@ -762,6 +913,24 @@ export type DatasetFlowsMut = {
     triggers: DatasetFlowTriggersMut;
 };
 
+export type DatasetFlowsPermissions = {
+    __typename?: "DatasetFlowsPermissions";
+    canRun: Scalars["Boolean"];
+    canView: Scalars["Boolean"];
+};
+
+export type DatasetGeneralPermissions = {
+    __typename?: "DatasetGeneralPermissions";
+    canDelete: Scalars["Boolean"];
+    canRename: Scalars["Boolean"];
+    canSetVisibility: Scalars["Boolean"];
+};
+
+/**
+ * Represents type of the dataset.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#datasetkind-schema
+ */
 export enum DatasetKind {
     Derivative = "DERIVATIVE",
     Root = "ROOT",
@@ -816,8 +985,15 @@ export type DatasetMetadataMutUpdateReadmeArgs = {
     content?: InputMaybe<Scalars["String"]>;
 };
 
+export type DatasetMetadataPermissions = {
+    __typename?: "DatasetMetadataPermissions";
+    canCommit: Scalars["Boolean"];
+};
+
 export type DatasetMut = {
     __typename?: "DatasetMut";
+    /** Access to collaboration management methods */
+    collaboration: DatasetCollaborationMut;
     /** Delete the dataset */
     delete: DeleteResult;
     /** Access to the mutable flow configurations of this dataset */
@@ -848,11 +1024,11 @@ export type DatasetMutSetWatermarkArgs = {
 
 export type DatasetPermissions = {
     __typename?: "DatasetPermissions";
-    canCommit: Scalars["Boolean"];
-    canDelete: Scalars["Boolean"];
-    canRename: Scalars["Boolean"];
-    canSchedule: Scalars["Boolean"];
-    canView: Scalars["Boolean"];
+    collaboration: DatasetCollaborationPermissions;
+    envVars: DatasetEnvVarsPermissions;
+    flows: DatasetFlowsPermissions;
+    general: DatasetGeneralPermissions;
+    metadata: DatasetMetadataPermissions;
 };
 
 export type DatasetPushStatus = {
@@ -998,13 +1174,24 @@ export type DependencyDatasetResultNotAccessible = DependencyDatasetResult & {
     message: Scalars["String"];
 };
 
+/**
+ * Disables the previously defined polling source.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#disablepollingsource-schema
+ */
 export type DisablePollingSource = {
     __typename?: "DisablePollingSource";
     dummy?: Maybe<Scalars["String"]>;
 };
 
+/**
+ * Disables the previously defined source.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#disablepushsource-schema
+ */
 export type DisablePushSource = {
     __typename?: "DisablePushSource";
+    /** Identifies the source to be disabled. */
     sourceName: Scalars["String"];
 };
 
@@ -1027,89 +1214,256 @@ export type EngineDesc = {
     name: Scalars["String"];
 };
 
+/**
+ * Defines an environment variable passed into some job.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#envvar-schema
+ */
 export type EnvVar = {
     __typename?: "EnvVar";
+    /** Name of the variable. */
     name: Scalars["String"];
+    /** Value of the variable. */
     value?: Maybe<Scalars["String"]>;
 };
 
+/**
+ * Defines the external source of data.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#eventtimesource-schema
+ */
 export type EventTimeSource = EventTimeSourceFromMetadata | EventTimeSourceFromPath | EventTimeSourceFromSystemTime;
 
+/**
+ * Extracts event time from the source's metadata.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#eventtimesourcefrommetadata-schema
+ */
 export type EventTimeSourceFromMetadata = {
     __typename?: "EventTimeSourceFromMetadata";
     dummy?: Maybe<Scalars["String"]>;
 };
 
+/**
+ * Extracts event time from the path component of the source.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#eventtimesourcefrompath-schema
+ */
 export type EventTimeSourceFromPath = {
     __typename?: "EventTimeSourceFromPath";
+    /** Regular expression where first group contains the timestamp string. */
     pattern: Scalars["String"];
+    /** Format of the expected timestamp in java.text.SimpleDateFormat form. */
     timestampFormat?: Maybe<Scalars["String"]>;
 };
 
+/**
+ * Assigns event time from the system time source.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#eventtimesourcefromsystemtime-schema
+ */
 export type EventTimeSourceFromSystemTime = {
     __typename?: "EventTimeSourceFromSystemTime";
     dummy?: Maybe<Scalars["String"]>;
 };
 
+/**
+ * Indicates that derivative transformation has been performed.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#executetransform-schema
+ */
 export type ExecuteTransform = {
     __typename?: "ExecuteTransform";
+    /**
+     * Describes checkpoint written during this transaction, if any. If an
+     * engine operation resulted in no updates to the checkpoint, but
+     * checkpoint is still relevant for subsequent runs - a hash of the
+     * previous checkpoint should be specified.
+     */
     newCheckpoint?: Maybe<Checkpoint>;
+    /** Describes output data written during this transaction, if any. */
     newData?: Maybe<DataSlice>;
+    /**
+     * Last watermark of the output data stream, if any. Initial blocks may not
+     * have watermarks, but once watermark is set - all subsequent blocks
+     * should either carry the same watermark or specify a new (greater) one.
+     * Thus, watermarks are monotonically non-decreasing.
+     */
     newWatermark?: Maybe<Scalars["DateTime"]>;
+    /**
+     * Hash of the checkpoint file used to restore transformation state, if
+     * any.
+     */
     prevCheckpoint?: Maybe<Scalars["Multihash"]>;
+    /**
+     * Last offset of the previous data slice, if any. Must be equal to the
+     * last non-empty `newData.offsetInterval.end`.
+     */
     prevOffset?: Maybe<Scalars["Int"]>;
+    /**
+     * Defines inputs used in this transaction. Slices corresponding to every
+     * input dataset must be present.
+     */
     queryInputs: Array<ExecuteTransformInput>;
 };
 
+/**
+ * Describes a slice of the input dataset used during a transformation
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#executetransforminput-schema
+ */
 export type ExecuteTransformInput = {
     __typename?: "ExecuteTransformInput";
+    /** Input dataset identifier. */
     datasetId: Scalars["DatasetID"];
+    /**
+     * Hash of the last block that will be incorporated into the derivative
+     * transformation. When present, defines a half-open `(prevBlockHash,
+     * newBlockHash]` interval of blocks that will be considered in this
+     * transaction.
+     */
     newBlockHash?: Maybe<Scalars["Multihash"]>;
+    /**
+     * Offset of the last data record that will be incorporated into the
+     * derivative transformation, if any. When present, defines a half-open
+     * `(prevOffset, newOffset]` interval of data records that will be
+     * considered in this transaction.
+     */
     newOffset?: Maybe<Scalars["Int"]>;
+    /**
+     * Last block of the input dataset that was previously incorporated into
+     * the derivative transformation, if any. Must be equal to the last
+     * non-empty `newBlockHash`. Together with `newBlockHash` defines a
+     * half-open `(prevBlockHash, newBlockHash]` interval of blocks that will
+     * be considered in this transaction.
+     */
     prevBlockHash?: Maybe<Scalars["Multihash"]>;
+    /**
+     * Last data record offset in the input dataset that was previously
+     * incorporated into the derivative transformation, if any. Must be equal
+     * to the last non-empty `newOffset`. Together with `newOffset` defines a
+     * half-open `(prevOffset, newOffset]` interval of data records that will
+     * be considered in this transaction.
+     */
     prevOffset?: Maybe<Scalars["Int"]>;
 };
 
+/**
+ * Defines the external source of data.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#fetchstep-schema
+ */
 export type FetchStep = FetchStepContainer | FetchStepEthereumLogs | FetchStepFilesGlob | FetchStepMqtt | FetchStepUrl;
 
+/**
+ * Runs the specified OCI container to fetch data from an arbitrary source.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#fetchstepcontainer-schema
+ */
 export type FetchStepContainer = {
     __typename?: "FetchStepContainer";
+    /**
+     * Arguments to the entrypoint. The OCI image's CMD is used if this is not
+     * provided.
+     */
     args?: Maybe<Array<Scalars["String"]>>;
+    /**
+     * Specifies the entrypoint. Not executed within a shell. The default OCI
+     * image's ENTRYPOINT is used if this is not provided.
+     */
     command?: Maybe<Array<Scalars["String"]>>;
+    /** Environment variables to propagate into or set in the container. */
     env?: Maybe<Array<EnvVar>>;
+    /** Image name and and an optional tag. */
     image: Scalars["String"];
 };
 
+/**
+ * Connects to an Ethereum node to stream transaction logs.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#fetchstepethereumlogs-schema
+ */
 export type FetchStepEthereumLogs = {
     __typename?: "FetchStepEthereumLogs";
+    /**
+     * Identifier of the chain to scan logs from. This parameter may be used
+     * for RPC endpoint lookup as well as asserting that provided `nodeUrl`
+     * corresponds to the expected chain.
+     */
     chainId?: Maybe<Scalars["Int"]>;
+    /**
+     * An SQL WHERE clause that can be used to pre-filter the logs before
+     * fetching them from the ETH node.
+     *
+     * Examples:
+     * - "block_number > 123 and address =
+     * X'5fbdb2315678afecb367f032d93f642f64180aa3' and topic1 =
+     * X'000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb92266'"
+     */
     filter?: Maybe<Scalars["String"]>;
+    /** Url of the node. */
     nodeUrl?: Maybe<Scalars["String"]>;
+    /**
+     * Solidity log event signature to use for decoding. Using this field adds
+     * `event` to the output containing decoded log as JSON.
+     */
     signature?: Maybe<Scalars["String"]>;
 };
 
+/**
+ * Uses glob operator to match files on the local file system.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#fetchstepfilesglob-schema
+ */
 export type FetchStepFilesGlob = {
     __typename?: "FetchStepFilesGlob";
+    /** Describes the caching settings used for this source. */
     cache?: Maybe<SourceCaching>;
+    /** Describes how event time is extracted from the source metadata. */
     eventTime?: Maybe<EventTimeSource>;
+    /**
+     * Specifies how input files should be ordered before ingestion.
+     * Order is important as every file will be processed individually
+     * and will advance the dataset's watermark.
+     */
     order?: Maybe<SourceOrdering>;
+    /** Path with a glob pattern. */
     path: Scalars["String"];
 };
 
+/**
+ * Connects to an MQTT broker to fetch events from the specified topic.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#fetchstepmqtt-schema
+ */
 export type FetchStepMqtt = {
     __typename?: "FetchStepMqtt";
+    /** Hostname of the MQTT broker. */
     host: Scalars["String"];
+    /** Password to use for auth with the broker (can be templated). */
     password?: Maybe<Scalars["String"]>;
+    /** Port of the MQTT broker. */
     port: Scalars["Int"];
+    /** List of topic subscription parameters. */
     topics: Array<MqttTopicSubscription>;
+    /** Username to use for auth with the broker. */
     username?: Maybe<Scalars["String"]>;
 };
 
+/**
+ * Pulls data from one of the supported sources by its URL.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#fetchstepurl-schema
+ */
 export type FetchStepUrl = {
     __typename?: "FetchStepUrl";
+    /** Describes the caching settings used for this source. */
     cache?: Maybe<SourceCaching>;
+    /** Describes how event time is extracted from the source metadata. */
     eventTime?: Maybe<EventTimeSource>;
+    /** Headers to pass during the request (e.g. HTTP Authorization) */
     headers?: Maybe<Array<RequestHeader>>;
+    /** URL of the data source */
     url: Scalars["String"];
 };
 
@@ -1191,7 +1545,7 @@ export type FlowConfigurationResetCustom = {
 };
 
 export type FlowConfigurationResetToSeedDummy = {
-    dummy: Scalars["String"];
+    dummy?: InputMaybe<Scalars["String"]>;
 };
 
 export type FlowConfigurationSnapshot =
@@ -1256,7 +1610,7 @@ export type FlowDescriptionDatasetReset = {
 
 export type FlowDescriptionHardCompactionNothingToDo = {
     __typename?: "FlowDescriptionHardCompactionNothingToDo";
-    dummy: Scalars["String"];
+    dummy?: Maybe<Scalars["String"]>;
     message: Scalars["String"];
 };
 
@@ -1560,21 +1914,92 @@ export type LoginResponse = {
     account: Account;
 };
 
+export type LookupFilters = {
+    byAccount?: InputMaybe<AccountLookupFilter>;
+};
+
+/**
+ * Merge strategy determines how newly ingested data should be combined with
+ * the data that already exists in the dataset.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#mergestrategy-schema
+ */
 export type MergeStrategy = MergeStrategyAppend | MergeStrategyLedger | MergeStrategySnapshot;
 
+/**
+ * Append merge strategy.
+ *
+ * Under this strategy new data will be appended to the dataset in its
+ * entirety, without any deduplication.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#mergestrategyappend-schema
+ */
 export type MergeStrategyAppend = {
     __typename?: "MergeStrategyAppend";
     dummy?: Maybe<Scalars["String"]>;
 };
 
+/**
+ * Ledger merge strategy.
+ *
+ * This strategy should be used for data sources containing ledgers of events.
+ * Currently this strategy will only perform deduplication of events using
+ * user-specified primary key columns. This means that the source data can
+ * contain partially overlapping set of records and only those records that
+ * were not previously seen will be appended.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#mergestrategyledger-schema
+ */
 export type MergeStrategyLedger = {
     __typename?: "MergeStrategyLedger";
+    /**
+     * Names of the columns that uniquely identify the record throughout its
+     * lifetime
+     */
     primaryKey: Array<Scalars["String"]>;
 };
 
+/**
+ * Snapshot merge strategy.
+ *
+ * This strategy can be used for data state snapshots that are taken
+ * periodically and contain only the latest state of the observed entity or
+ * system. Over time such snapshots can have new rows added, and old rows
+ * either removed or modified.
+ *
+ * This strategy transforms snapshot data into an append-only event stream
+ * where data already added is immutable. It does so by performing Change Data
+ * Capture - essentially diffing the current state of data against the
+ * reconstructed previous state and recording differences as retractions or
+ * corrections. The Operation Type "op" column will contain:
+ * - append (`+A`) when a row appears for the first time
+ * - retraction (`-D`) when row disappears
+ * - correction (`-C`, `+C`) when row data has changed, with `-C` event
+ * carrying the old value of the row and `+C` carrying the new value.
+ *
+ * To correctly associate rows between old and new snapshots this strategy
+ * relies on user-specified primary key columns.
+ *
+ * To identify whether a row has changed this strategy will compare all other
+ * columns one by one. If the data contains a column that is guaranteed to
+ * change whenever any of the data columns changes (for example a last
+ * modification timestamp, an incremental version, or a data hash), then it can
+ * be specified in `compareColumns` property to speed up the detection of
+ * modified rows.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#mergestrategysnapshot-schema
+ */
 export type MergeStrategySnapshot = {
     __typename?: "MergeStrategySnapshot";
+    /**
+     * Names of the columns to compared to determine if a row has changed
+     * between two snapshots.
+     */
     compareColumns?: Maybe<Array<Scalars["String"]>>;
+    /**
+     * Names of the columns that uniquely identify the record throughout its
+     * lifetime.
+     */
     primaryKey: Array<Scalars["String"]>;
 };
 
@@ -1644,6 +2069,11 @@ export type MetadataChainMutCommitEventArgs = {
     eventFormat: MetadataManifestFormat;
 };
 
+/**
+ * Represents a transaction that occurred on a dataset.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#metadataevent-schema
+ */
 export type MetadataEvent =
     | AddData
     | AddPushSource
@@ -1675,15 +2105,31 @@ export type MetadataManifestUnsupportedVersion = CommitResult &
         message: Scalars["String"];
     };
 
+/**
+ * MQTT quality of service class.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#mqttqos-schema
+ */
 export enum MqttQos {
     AtLeastOnce = "AT_LEAST_ONCE",
     AtMostOnce = "AT_MOST_ONCE",
     ExactlyOnce = "EXACTLY_ONCE",
 }
 
+/**
+ * MQTT topic subscription parameters.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#mqtttopicsubscription-schema
+ */
 export type MqttTopicSubscription = {
     __typename?: "MqttTopicSubscription";
+    /** Name of the topic (may include patterns). */
     path: Scalars["String"];
+    /**
+     * Quality of service class.
+     *
+     * Defaults to: "AtMostOnce"
+     */
     qos?: Maybe<MqttQos>;
 };
 
@@ -1707,6 +2153,24 @@ export type Mutation = {
     datasets: DatasetsMut;
 };
 
+export type NameLookupResult = Account;
+
+export type NameLookupResultConnection = {
+    __typename?: "NameLookupResultConnection";
+    edges: Array<NameLookupResultEdge>;
+    /** A shorthand for `edges { node { ... } }` */
+    nodes: Array<NameLookupResult>;
+    /** Page information */
+    pageInfo: PageBasedInfo;
+    /** Approximate number of total nodes */
+    totalCount: Scalars["Int"];
+};
+
+export type NameLookupResultEdge = {
+    __typename?: "NameLookupResultEdge";
+    node: NameLookupResult;
+};
+
 export type NoChanges = CommitResult &
     UpdateReadmeResult & {
         __typename?: "NoChanges";
@@ -1719,9 +2183,16 @@ export type OdataProtocolDesc = {
     serviceUrl: Scalars["String"];
 };
 
+/**
+ * Describes a range of data as a closed arithmetic interval of offsets
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#offsetinterval-schema
+ */
 export type OffsetInterval = {
     __typename?: "OffsetInterval";
+    /** End of the closed interval [start; end]. */
     end: Scalars["Int"];
+    /** Start of the closed interval [start; end]. */
     start: Scalars["Int"];
 };
 
@@ -1745,16 +2216,37 @@ export type PostgreSqlDesl = {
     url: Scalars["String"];
 };
 
+/**
+ * Defines the steps to prepare raw data for ingestion.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#prepstep-schema
+ */
 export type PrepStep = PrepStepDecompress | PrepStepPipe;
 
+/**
+ * Pulls data from one of the supported sources by its URL.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#prepstepdecompress-schema
+ */
 export type PrepStepDecompress = {
     __typename?: "PrepStepDecompress";
+    /** Name of a compression algorithm used on data. */
     format: CompressionFormat;
+    /**
+     * Path to a data file within a multi-file archive. Can contain glob
+     * patterns.
+     */
     subPath?: Maybe<Scalars["String"]>;
 };
 
+/**
+ * Executes external command to process the data using piped input/output.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#prepsteppipe-schema
+ */
 export type PrepStepPipe = {
     __typename?: "PrepStepPipe";
+    /** Command to execute and its arguments. */
     command: Array<Scalars["String"]>;
 };
 
@@ -1815,6 +2307,11 @@ export enum QueryDialect {
     SqlSpark = "SQL_SPARK",
 }
 
+/**
+ * Defines how raw data should be read into the structured form.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstep-schema
+ */
 export type ReadStep =
     | ReadStepCsv
     | ReadStepEsriShapefile
@@ -1824,55 +2321,225 @@ export type ReadStep =
     | ReadStepNdJson
     | ReadStepParquet;
 
+/**
+ * Reader for comma-separated files.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepcsv-schema
+ */
 export type ReadStepCsv = {
     __typename?: "ReadStepCsv";
+    /**
+     * Sets the string that indicates a date format. The `rfc3339` is the only
+     * required format, the other format strings are implementation-specific.
+     *
+     * Defaults to: "rfc3339"
+     */
     dateFormat?: Maybe<Scalars["String"]>;
+    /**
+     * Decodes the CSV files by the given encoding type.
+     *
+     * Defaults to: "utf8"
+     */
     encoding?: Maybe<Scalars["String"]>;
+    /**
+     * Sets a single character used for escaping quotes inside an already
+     * quoted value.
+     *
+     * Defaults to: "\\"
+     */
     escape?: Maybe<Scalars["String"]>;
+    /**
+     * Use the first line as names of columns.
+     *
+     * Defaults to: false
+     */
     header?: Maybe<Scalars["Boolean"]>;
+    /**
+     * Infers the input schema automatically from data. It requires one extra
+     * pass over the data.
+     *
+     * Defaults to: false
+     */
     inferSchema?: Maybe<Scalars["Boolean"]>;
+    /**
+     * Sets the string representation of a null value.
+     *
+     * Defaults to: ""
+     */
     nullValue?: Maybe<Scalars["String"]>;
+    /**
+     * Sets a single character used for escaping quoted values where the
+     * separator can be part of the value. Set an empty string to turn off
+     * quotations.
+     *
+     * Defaults to: "\""
+     */
     quote?: Maybe<Scalars["String"]>;
+    /**
+     * A DDL-formatted schema. Schema can be used to coerce values into more
+     * appropriate data types.
+     *
+     * Examples:
+     * - ["date TIMESTAMP","city STRING","population INT"]
+     */
     schema?: Maybe<Array<Scalars["String"]>>;
+    /**
+     * Sets a single character as a separator for each field and value.
+     *
+     * Defaults to: ","
+     */
     separator?: Maybe<Scalars["String"]>;
+    /**
+     * Sets the string that indicates a timestamp format. The `rfc3339` is the
+     * only required format, the other format strings are
+     * implementation-specific.
+     *
+     * Defaults to: "rfc3339"
+     */
     timestampFormat?: Maybe<Scalars["String"]>;
 };
 
+/**
+ * Reader for ESRI Shapefile format.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepesrishapefile-schema
+ */
 export type ReadStepEsriShapefile = {
     __typename?: "ReadStepEsriShapefile";
+    /**
+     * A DDL-formatted schema. Schema can be used to coerce values into more
+     * appropriate data types.
+     */
     schema?: Maybe<Array<Scalars["String"]>>;
+    /**
+     * If the ZIP archive contains multiple shapefiles use this field to
+     * specify a sub-path to the desired `.shp` file. Can contain glob patterns
+     * to act as a filter.
+     */
     subPath?: Maybe<Scalars["String"]>;
 };
 
+/**
+ * Reader for GeoJSON files. It expects one `FeatureCollection` object in the
+ * root and will create a record per each `Feature` inside it extracting the
+ * properties into individual columns and leaving the feature geometry in its
+ * own column.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepgeojson-schema
+ */
 export type ReadStepGeoJson = {
     __typename?: "ReadStepGeoJson";
+    /**
+     * A DDL-formatted schema. Schema can be used to coerce values into more
+     * appropriate data types.
+     */
     schema?: Maybe<Array<Scalars["String"]>>;
 };
 
+/**
+ * Reader for JSON files that contain an array of objects within them.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepjson-schema
+ */
 export type ReadStepJson = {
     __typename?: "ReadStepJson";
+    /**
+     * Sets the string that indicates a date format. The `rfc3339` is the only
+     * required format, the other format strings are implementation-specific.
+     *
+     * Defaults to: "rfc3339"
+     */
     dateFormat?: Maybe<Scalars["String"]>;
+    /**
+     * Allows to forcibly set one of standard basic or extended encodings.
+     *
+     * Defaults to: "utf8"
+     */
     encoding?: Maybe<Scalars["String"]>;
+    /**
+     * A DDL-formatted schema. Schema can be used to coerce values into more
+     * appropriate data types.
+     */
     schema?: Maybe<Array<Scalars["String"]>>;
+    /**
+     * Path in the form of `a.b.c` to a sub-element of the root JSON object
+     * that is an array or objects. If not specified it is assumed that the
+     * root element is an array.
+     */
     subPath?: Maybe<Scalars["String"]>;
+    /**
+     * Sets the string that indicates a timestamp format. The `rfc3339` is the
+     * only required format, the other format strings are
+     * implementation-specific.
+     *
+     * Defaults to: "rfc3339"
+     */
     timestampFormat?: Maybe<Scalars["String"]>;
 };
 
+/**
+ * Reader for Newline-delimited GeoJSON files. It is similar to `GeoJson`
+ * format but instead of `FeatureCollection` object in the root it expects
+ * every individual feature object to appear on its own line.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepndgeojson-schema
+ */
 export type ReadStepNdGeoJson = {
     __typename?: "ReadStepNdGeoJson";
+    /**
+     * A DDL-formatted schema. Schema can be used to coerce values into more
+     * appropriate data types.
+     */
     schema?: Maybe<Array<Scalars["String"]>>;
 };
 
+/**
+ * Reader for files containing multiple newline-delimited JSON objects with the
+ * same schema.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepndjson-schema
+ */
 export type ReadStepNdJson = {
     __typename?: "ReadStepNdJson";
+    /**
+     * Sets the string that indicates a date format. The `rfc3339` is the only
+     * required format, the other format strings are implementation-specific.
+     *
+     * Defaults to: "rfc3339"
+     */
     dateFormat?: Maybe<Scalars["String"]>;
+    /**
+     * Allows to forcibly set one of standard basic or extended encodings.
+     *
+     * Defaults to: "utf8"
+     */
     encoding?: Maybe<Scalars["String"]>;
+    /**
+     * A DDL-formatted schema. Schema can be used to coerce values into more
+     * appropriate data types.
+     */
     schema?: Maybe<Array<Scalars["String"]>>;
+    /**
+     * Sets the string that indicates a timestamp format. The `rfc3339` is the
+     * only required format, the other format strings are
+     * implementation-specific.
+     *
+     * Defaults to: "rfc3339"
+     */
     timestampFormat?: Maybe<Scalars["String"]>;
 };
 
+/**
+ * Reader for Apache Parquet format.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepparquet-schema
+ */
 export type ReadStepParquet = {
     __typename?: "ReadStepParquet";
+    /**
+     * A DDL-formatted schema. Schema can be used to coerce values into more
+     * appropriate data types.
+     */
     schema?: Maybe<Array<Scalars["String"]>>;
 };
 
@@ -1899,9 +2566,16 @@ export type RenameResultSuccess = RenameResult & {
     oldName: Scalars["DatasetName"];
 };
 
+/**
+ * Defines a header (e.g. HTTP) to be passed into some request.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#requestheader-schema
+ */
 export type RequestHeader = {
     __typename?: "RequestHeader";
+    /** Name of the header. */
     name: Scalars["String"];
+    /** Value of the header. */
     value: Scalars["String"];
 };
 
@@ -1941,8 +2615,20 @@ export type ScheduleInput =
 
 export type Search = {
     __typename?: "Search";
+    /**
+     * Perform lightweight search among resource names.
+     * Useful for autocomplete.
+     */
+    nameLookup: NameLookupResultConnection;
     /** Perform search across all resources */
     query: SearchResultConnection;
+};
+
+export type SearchNameLookupArgs = {
+    filters: LookupFilters;
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+    query: Scalars["String"];
 };
 
 export type SearchQueryArgs = {
@@ -1969,17 +2655,37 @@ export type SearchResultEdge = {
     node: SearchResult;
 };
 
+/**
+ * Establishes the identity of the dataset. Always the first metadata event in
+ * the chain.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#seed-schema
+ */
 export type Seed = {
     __typename?: "Seed";
+    /** Unique identity of the dataset. */
     datasetId: Scalars["DatasetID"];
+    /** Type of the dataset. */
     datasetKind: DatasetKind;
 };
 
+/**
+ * Associates a set of files with this dataset.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#setattachments-schema
+ */
 export type SetAttachments = {
     __typename?: "SetAttachments";
+    /** One of the supported attachment sources. */
     attachments: Attachments;
 };
 
+/**
+ * Specifies the complete schema of Data Slices added to the Dataset following
+ * this event.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#setdataschema-schema
+ */
 export type SetDataSchema = {
     __typename?: "SetDataSchema";
     schema: DataSchema;
@@ -1991,7 +2697,6 @@ export type SetDatasetVisibilityResult = {
 
 export type SetDatasetVisibilityResultSuccess = SetDatasetVisibilityResult & {
     __typename?: "SetDatasetVisibilityResultSuccess";
-    dummy?: Maybe<Scalars["String"]>;
     message: Scalars["String"];
 };
 
@@ -2015,40 +2720,95 @@ export type SetFlowTriggerSuccess = SetFlowTriggerResult & {
     trigger: FlowTrigger;
 };
 
+/**
+ * Provides basic human-readable information about a dataset.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#setinfo-schema
+ */
 export type SetInfo = {
     __typename?: "SetInfo";
+    /** Brief single-sentence summary of a dataset. */
     description?: Maybe<Scalars["String"]>;
+    /** Keywords, search terms, or tags used to describe the dataset. */
     keywords?: Maybe<Array<Scalars["String"]>>;
 };
 
+/**
+ * Defines a license that applies to this dataset.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#setlicense-schema
+ */
 export type SetLicense = {
     __typename?: "SetLicense";
+    /** Full name of the license. */
     name: Scalars["String"];
+    /** Abbreviated name of the license. */
     shortName: Scalars["String"];
+    /** License identifier from the SPDX License List. */
     spdxId?: Maybe<Scalars["String"]>;
+    /** URL where licensing terms can be found. */
     websiteUrl: Scalars["String"];
 };
 
+/**
+ * Contains information on how externally-hosted data can be ingested into the
+ * root dataset.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#setpollingsource-schema
+ */
 export type SetPollingSource = {
     __typename?: "SetPollingSource";
+    /** Determines where data is sourced from. */
     fetch: FetchStep;
+    /**
+     * Determines how newly-ingested data should be merged with existing
+     * history.
+     */
     merge: MergeStrategy;
+    /** Defines how raw data is prepared before reading. */
     prepare?: Maybe<Array<PrepStep>>;
+    /** Pre-processing query that shapes the data. */
     preprocess?: Maybe<Transform>;
+    /** Defines how data is read into structured format. */
     read: ReadStep;
 };
 
+export type SetRoleResult = {
+    message: Scalars["String"];
+};
+
+export type SetRoleResultSuccess = SetRoleResult & {
+    __typename?: "SetRoleResultSuccess";
+    message: Scalars["String"];
+};
+
+/**
+ * Defines a transformation that produces data in a derivative dataset.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#settransform-schema
+ */
 export type SetTransform = {
     __typename?: "SetTransform";
+    /** Datasets that will be used as sources. */
     inputs: Array<TransformInput>;
+    /** Transformation that will be applied to produce new data. */
     transform: Transform;
 };
 
+/**
+ * Lets you manipulate names of the system columns to avoid conflicts.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#setvocab-schema
+ */
 export type SetVocab = {
     __typename?: "SetVocab";
+    /** Name of the event time column. */
     eventTimeColumn?: Maybe<Scalars["String"]>;
+    /** Name of the offset column. */
     offsetColumn?: Maybe<Scalars["String"]>;
+    /** Name of the operation type column. */
     operationTypeColumn?: Maybe<Scalars["String"]>;
+    /** Name of the system time column. */
     systemTimeColumn?: Maybe<Scalars["String"]>;
 };
 
@@ -2063,7 +2823,6 @@ export type SetWatermarkResult = {
 
 export type SetWatermarkUpToDate = SetWatermarkResult & {
     __typename?: "SetWatermarkUpToDate";
-    dummy: Scalars["String"];
     message: Scalars["String"];
 };
 
@@ -2080,33 +2839,70 @@ export type SnapshotConfigurationResetCustom = {
 
 export type SnapshotConfigurationResetToSeedDummy = {
     __typename?: "SnapshotConfigurationResetToSeedDummy";
-    dummy: Scalars["String"];
+    dummy?: Maybe<Scalars["String"]>;
 };
 
 export type SnapshotPropagationMode = SnapshotConfigurationResetCustom | SnapshotConfigurationResetToSeedDummy;
 
+/**
+ * Defines how external data should be cached.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#sourcecaching-schema
+ */
 export type SourceCaching = SourceCachingForever;
 
+/**
+ * After source was processed once it will never be ingested again.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#sourcecachingforever-schema
+ */
 export type SourceCachingForever = {
     __typename?: "SourceCachingForever";
     dummy?: Maybe<Scalars["String"]>;
 };
 
+/**
+ * Specifies how input files should be ordered before ingestion.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#sourceordering-schema
+ */
 export enum SourceOrdering {
     ByEventTime = "BY_EVENT_TIME",
     ByName = "BY_NAME",
 }
 
+/**
+ * The state of the source the data was added from to allow fast resuming.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#sourcestate-schema
+ */
 export type SourceState = {
     __typename?: "SourceState";
+    /**
+     * Identifies the type of the state. Standard types include: `odf/etag`,
+     * `odf/last-modified`.
+     */
     kind: Scalars["String"];
+    /** Identifies the source that the state corresponds to. */
     sourceName: Scalars["String"];
+    /** Opaque value representing the state. */
     value: Scalars["String"];
 };
 
+/**
+ * Defines a query in a multi-step SQL transformation.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#sqlquerystep-schema
+ */
 export type SqlQueryStep = {
     __typename?: "SqlQueryStep";
+    /**
+     * Name of the temporary view that will be created from result of the
+     * query. Step without this alias will be treated as an output of the
+     * transformation.
+     */
     alias?: Maybe<Scalars["String"]>;
+    /** SQL query the result of which will be exposed under the alias. */
     query: Scalars["String"];
 };
 
@@ -2153,9 +2949,17 @@ export enum TaskStatus {
     Running = "RUNNING",
 }
 
+/**
+ * Temporary Flink-specific extension for creating temporal tables from
+ * streams.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#temporaltable-schema
+ */
 export type TemporalTable = {
     __typename?: "TemporalTable";
+    /** Name of the dataset to be converted into a temporal table. */
     name: Scalars["String"];
+    /** Column names used as the primary key for creating a table. */
     primaryKey: Array<Scalars["String"]>;
 };
 
@@ -2177,6 +2981,11 @@ export enum TimeUnit {
     Weeks = "WEEKS",
 }
 
+/**
+ * Engine-specific processing queries that shape the resulting data.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#transform-schema
+ */
 export type Transform = TransformSql;
 
 export type TransformInput = {
@@ -2186,6 +2995,11 @@ export type TransformInput = {
     inputDataset: TransformInputDataset;
 };
 
+/**
+ * Describes a derivative transformation input
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#transforminput-schema
+ */
 export type TransformInputDataset = {
     message: Scalars["String"];
 };
@@ -2202,6 +3016,11 @@ export type TransformInputDatasetNotAccessible = TransformInputDataset & {
     message: Scalars["String"];
 };
 
+/**
+ * Transform using one of the SQL dialects.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#transformsql-schema
+ */
 export type TransformSql = {
     __typename?: "TransformSql";
     engine: Scalars["String"];
@@ -2220,15 +3039,22 @@ export type TriggerFlowSuccess = TriggerFlowResult & {
     message: Scalars["String"];
 };
 
+export type UnsetRoleResult = {
+    message: Scalars["String"];
+};
+
+export type UnsetRoleResultSuccess = UnsetRoleResult & {
+    __typename?: "UnsetRoleResultSuccess";
+    message: Scalars["String"];
+};
+
 export type UpdateEmailInvalid = UpdateEmailResult & {
     __typename?: "UpdateEmailInvalid";
-    dummy: Scalars["Boolean"];
     message: Scalars["String"];
 };
 
 export type UpdateEmailNonUnique = UpdateEmailResult & {
     __typename?: "UpdateEmailNonUnique";
-    dummy: Scalars["Boolean"];
     message: Scalars["String"];
 };
 
@@ -2411,10 +3237,10 @@ export type AccountDatasetFlowsPausedQuery = {
         __typename?: "Accounts";
         byName?: {
             __typename?: "Account";
-            flows?: {
+            flows: {
                 __typename?: "AccountFlows";
                 triggers: { __typename?: "AccountFlowTriggers"; allPaused: boolean };
-            } | null;
+            };
         } | null;
     };
 };
@@ -2429,13 +3255,13 @@ export type AccountListDatasetsWithFlowsQuery = {
         __typename?: "Accounts";
         byName?: {
             __typename?: "Account";
-            flows?: {
+            flows: {
                 __typename?: "AccountFlows";
                 runs: {
                     __typename?: "AccountFlowRuns";
                     listDatasetsWithFlow: { __typename?: "DatasetConnection" } & DatasetConnectionDataFragment;
                 };
-            } | null;
+            };
         } | null;
     };
 };
@@ -2454,14 +3280,14 @@ export type AccountListFlowsQuery = {
         __typename?: "Accounts";
         byName?: {
             __typename?: "Account";
-            flows?: {
+            flows: {
                 __typename?: "AccountFlows";
                 runs: {
                     __typename?: "AccountFlowRuns";
                     table: { __typename?: "FlowConnection" } & FlowConnectionDataFragment;
                     tiles: { __typename?: "FlowConnection" } & FlowConnectionWidgetDataFragment;
                 };
-            } | null;
+            };
         } | null;
     };
 };
@@ -2727,7 +3553,7 @@ export type UpdateWatermarkMutation = {
             __typename?: "DatasetMut";
             setWatermark:
                 | { __typename?: "SetWatermarkIsDerivative"; message: string }
-                | { __typename?: "SetWatermarkUpToDate"; dummy: string; message: string }
+                | { __typename?: "SetWatermarkUpToDate"; message: string }
                 | { __typename?: "SetWatermarkUpdated"; newHead: string; message: string };
         } | null;
     };
@@ -2763,6 +3589,76 @@ export type DatasetByIdQueryVariables = Exact<{
 export type DatasetByIdQuery = {
     __typename?: "Query";
     datasets: { __typename?: "Datasets"; byId?: ({ __typename?: "Dataset" } & DatasetBasicsFragment) | null };
+};
+
+export type DatasetListCollaboratorsQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+}>;
+
+export type DatasetListCollaboratorsQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?:
+            | ({
+                  __typename?: "Dataset";
+                  collaboration: {
+                      __typename?: "DatasetCollaboration";
+                      accountRoles: {
+                          __typename?: "AccountWithRoleConnection";
+                          totalCount: number;
+                          nodes: Array<{
+                              __typename?: "AccountWithRole";
+                              role: DatasetAccessRole;
+                              account: { __typename?: "Account" } & AccountFragment;
+                          }>;
+                          pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
+                      };
+                  };
+              } & DatasetBasicsFragment)
+            | null;
+    };
+};
+
+export type SetRoleCollaboratorMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    accountId: Scalars["AccountID"];
+    role: DatasetAccessRole;
+}>;
+
+export type SetRoleCollaboratorMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            collaboration: {
+                __typename?: "DatasetCollaborationMut";
+                setRole: { __typename?: "SetRoleResultSuccess"; message: string };
+            };
+        } | null;
+    };
+};
+
+export type UnsetRoleCollaboratorMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    accountIds: Array<Scalars["AccountID"]> | Scalars["AccountID"];
+}>;
+
+export type UnsetRoleCollaboratorMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            collaboration: {
+                __typename?: "DatasetCollaborationMut";
+                unsetRoles: { __typename?: "UnsetRoleResultSuccess"; message: string };
+            };
+        } | null;
+    };
 };
 
 export type GetDatasetDataSqlRunQueryVariables = Exact<{
@@ -3381,7 +4277,7 @@ export type FlowSummaryDataFragment = {
               __typename?: "FlowDescriptionDatasetHardCompaction";
               datasetId: string;
               compactionResult?:
-                  | { __typename?: "FlowDescriptionHardCompactionNothingToDo"; message: string; dummy: string }
+                  | { __typename?: "FlowDescriptionHardCompactionNothingToDo"; message: string; dummy?: string | null }
                   | {
                         __typename?: "FlowDescriptionHardCompactionSuccess";
                         originalBlocksCount: number;
@@ -4211,11 +5107,16 @@ export type DatasetPermissionsFragment = {
     __typename?: "Dataset";
     permissions: {
         __typename?: "DatasetPermissions";
-        canView: boolean;
-        canDelete: boolean;
-        canRename: boolean;
-        canCommit: boolean;
-        canSchedule: boolean;
+        collaboration: { __typename?: "DatasetCollaborationPermissions"; canView: boolean; canUpdate: boolean };
+        envVars: { __typename?: "DatasetEnvVarsPermissions"; canView: boolean; canUpdate: boolean };
+        flows: { __typename?: "DatasetFlowsPermissions"; canView: boolean; canRun: boolean };
+        general: {
+            __typename?: "DatasetGeneralPermissions";
+            canRename: boolean;
+            canSetVisibility: boolean;
+            canDelete: boolean;
+        };
+        metadata: { __typename?: "DatasetMetadataPermissions"; canCommit: boolean };
     };
 };
 
@@ -4368,7 +5269,7 @@ export type GetDatasetFlowConfigsQuery = {
                                   recursive: boolean;
                                   mode:
                                       | { __typename?: "SnapshotConfigurationResetCustom" }
-                                      | { __typename?: "SnapshotConfigurationResetToSeedDummy"; dummy: string };
+                                      | { __typename?: "SnapshotConfigurationResetToSeedDummy"; dummy?: string | null };
                               } | null;
                               compaction?:
                                   | {
@@ -4489,6 +5390,24 @@ export type GetDatasetFlowTriggersQuery = {
 };
 
 export type TimeDeltaDataFragment = { __typename?: "TimeDelta"; every: number; unit: TimeUnit };
+
+export type SearchCollaboratorQueryVariables = Exact<{
+    query: Scalars["String"];
+    filters: LookupFilters;
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+}>;
+
+export type SearchCollaboratorQuery = {
+    __typename?: "Query";
+    search: {
+        __typename?: "Search";
+        nameLookup: {
+            __typename?: "NameLookupResultConnection";
+            nodes: Array<{ __typename?: "Account" } & AccountFragment>;
+        };
+    };
+};
 
 export type SearchDatasetsAutocompleteQueryVariables = Exact<{
     query: Scalars["String"];
@@ -5822,11 +6741,26 @@ export const DatasetOverviewFragmentDoc = gql`
 export const DatasetPermissionsFragmentDoc = gql`
     fragment DatasetPermissions on Dataset {
         permissions {
-            canView
-            canDelete
-            canRename
-            canCommit
-            canSchedule
+            collaboration {
+                canView
+                canUpdate
+            }
+            envVars {
+                canView
+                canUpdate
+            }
+            flows {
+                canView
+                canRun
+            }
+            general {
+                canRename
+                canSetVisibility
+                canDelete
+            }
+            metadata {
+                canCommit
+            }
         }
     }
 `;
@@ -6429,7 +7363,6 @@ export const UpdateWatermarkDocument = gql`
                         message
                     }
                     ... on SetWatermarkUpToDate {
-                        dummy
                         message
                     }
                     ... on SetWatermarkIsDerivative {
@@ -6517,6 +7450,100 @@ export const DatasetByIdDocument = gql`
 })
 export class DatasetByIdGQL extends Apollo.Query<DatasetByIdQuery, DatasetByIdQueryVariables> {
     document = DatasetByIdDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetListCollaboratorsDocument = gql`
+    query datasetListCollaborators($datasetId: DatasetID!, $page: Int, $perPage: Int) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                ...DatasetBasics
+                collaboration {
+                    accountRoles(page: $page, perPage: $perPage) {
+                        nodes {
+                            account {
+                                ...Account
+                            }
+                            role
+                        }
+                        totalCount
+                        pageInfo {
+                            ...DatasetPageInfo
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+    ${AccountFragmentDoc}
+    ${DatasetPageInfoFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetListCollaboratorsGQL extends Apollo.Query<
+    DatasetListCollaboratorsQuery,
+    DatasetListCollaboratorsQueryVariables
+> {
+    document = DatasetListCollaboratorsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const SetRoleCollaboratorDocument = gql`
+    mutation setRoleCollaborator($datasetId: DatasetID!, $accountId: AccountID!, $role: DatasetAccessRole!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                collaboration {
+                    setRole(accountId: $accountId, role: $role) {
+                        message
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class SetRoleCollaboratorGQL extends Apollo.Mutation<
+    SetRoleCollaboratorMutation,
+    SetRoleCollaboratorMutationVariables
+> {
+    document = SetRoleCollaboratorDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const UnsetRoleCollaboratorDocument = gql`
+    mutation unsetRoleCollaborator($datasetId: DatasetID!, $accountIds: [AccountID!]!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                collaboration {
+                    unsetRoles(accountIds: $accountIds) {
+                        message
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class UnsetRoleCollaboratorGQL extends Apollo.Mutation<
+    UnsetRoleCollaboratorMutation,
+    UnsetRoleCollaboratorMutationVariables
+> {
+    document = UnsetRoleCollaboratorDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);
@@ -7616,6 +8643,29 @@ export class GetDatasetFlowTriggersGQL extends Apollo.Query<
     GetDatasetFlowTriggersQueryVariables
 > {
     document = GetDatasetFlowTriggersDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const SearchCollaboratorDocument = gql`
+    query searchCollaborator($query: String!, $filters: LookupFilters!, $page: Int, $perPage: Int) {
+        search {
+            nameLookup(query: $query, filters: $filters, page: $page, perPage: $perPage) {
+                nodes {
+                    ...Account
+                }
+            }
+        }
+    }
+    ${AccountFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class SearchCollaboratorGQL extends Apollo.Query<SearchCollaboratorQuery, SearchCollaboratorQueryVariables> {
+    document = SearchCollaboratorDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

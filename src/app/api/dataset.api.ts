@@ -204,12 +204,14 @@ export class DatasetApi {
         page = 0,
         perPage = 10,
     ): Observable<DatasetsByAccountNameQuery> {
-        return this.datasetsByAccountNameGQL.watch({ accountName, perPage, page }).valueChanges.pipe(
-            first(),
-            map((result: ApolloQueryResult<DatasetsByAccountNameQuery>) => {
-                return result.data;
-            }),
-        );
+        return this.datasetsByAccountNameGQL
+            .watch({ accountName, perPage, page }, noCacheFetchPolicy)
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<DatasetsByAccountNameQuery>) => {
+                    return result.data;
+                }),
+            );
     }
 
     public getBlockByHash(params: {

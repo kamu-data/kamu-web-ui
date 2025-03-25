@@ -77,6 +77,7 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
 
     private getInputDatasetsInfo(): void {
         this.currentSetTransformEvent?.inputs.forEach((item: TransformInput) => {
+            /* istanbul ignore else */
             if (item.datasetRef) {
                 this.inputDatasets.add(JSON.stringify(item));
 

@@ -1,0 +1,93 @@
+@import "var";
+
+:host {
+    ::ng-deep {
+        .mdc-checkbox__ripple {
+            display: none;
+        }
+
+        .mdc-checkbox__background {
+            width: 16px;
+            height: 16px;
+        }
+    }
+}
+
+h2 {
+    margin: 0;
+}
+
+.fw-500 {
+    font-weight: 500;
+}
+
+.bg-subtitle {
+    background: $app-color-action-list-item-default-selected-bg;
+}
+
+.mt-6 {
+    margin-top: 2.5rem;
+}
+
+.manage-button {
+    background: #f0f0f0;
+    color: #25292e;
+    text-decoration: none;
+    display: inline-flex;
+    border: 1px solid rgb(27 31 36 / 25%);
+    border-radius: 5px;
+    padding: 0.3rem 0.95rem;
+
+    &:hover {
+        background: rgb(27 31 36 / 16%);
+    }
+}
+
+.delete-button,
+.edit-button {
+    padding: 2px 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        background: rgb(27 31 36 / 16%);
+    }
+
+    .pt-1px {
+        padding-top: 1px;
+    }
+}
+
+.avatar-user {
+    border-radius: 50%;
+}
+
+.account-info {
+    font-size: 12px;
+}
+
+.mb-100 {
+    margin-bottom: 100px;
+}
+
+.mt-60 {
+    margin-top: 60px;
+}
+
+.placeholder-padding-left {
+    padding: 6px 30px 6px 35px;
+}
+
+.search-icon {
+    position: absolute;
+    bottom: 19px;
+    left: 2px;
+}
+
+.truncate-text {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 285px;
+}

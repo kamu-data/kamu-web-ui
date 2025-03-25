@@ -79,7 +79,6 @@ export const routes: Routes = [
     },
     {
         path: `${ProjectLinks.URL_SETTINGS}`,
-        component: AccountSettingsComponent,
         children: [
             {
                 path: "",

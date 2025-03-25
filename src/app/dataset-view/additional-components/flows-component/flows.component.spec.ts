@@ -20,7 +20,7 @@ import {
 import { ToastrModule } from "ngx-toastr";
 import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { DatasetFlowsService } from "./services/dataset-flows.service";
-import { of } from "rxjs";
+import { delay, of } from "rxjs";
 import { MatMenuModule } from "@angular/material/menu";
 import { PaginationComponent } from "src/app/common/components/pagination-component/pagination.component";
 import { MatTableModule } from "@angular/material/table";
@@ -40,6 +40,8 @@ import { mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
 import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/tile-base-widget.component";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 
 describe("FlowsComponent", () => {
     let component: FlowsComponent;
@@ -98,6 +100,8 @@ describe("FlowsComponent", () => {
                 NgbTypeaheadModule,
                 NgbPaginationModule,
                 RouterModule,
+                MatProgressBarModule,
+                AngularMultiSelectModule,
             ],
         }).compileComponents();
 
@@ -213,4 +217,22 @@ describe("FlowsComponent", () => {
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
         expect(component.redirectSection).toEqual(SettingsTabsEnum.TRANSFORM_SETTINGS);
     });
+
+    it("should check init loading block", fakeAsync(() => {
+        fixture.detectChanges();
+        mockFlowsTableData.connectionDataForWidget.nodes = [];
+        spyOn(datasetFlowsService, "allFlowsPaused").and.returnValue(of(false));
+        spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData).pipe(delay(10)));
+        spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
+        tick(5);
+        fixture.detectChanges();
+        const progressBarBefore = findElementByDataTestId(fixture, "init-progress-bar");
+        expect(progressBarBefore).toBeDefined();
+
+        tick(10);
+        fixture.detectChanges();
+        const progressBarAfter = findElementByDataTestId(fixture, "init-progress-bar");
+        expect(progressBarAfter).toBeUndefined();
+        discardPeriodicTasks();
+    }));
 });

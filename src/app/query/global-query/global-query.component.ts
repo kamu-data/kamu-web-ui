@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, NgZone, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { finalize, map, Observable } from "rxjs";
 import { MaybeNull } from "src/app/interface/app.types";
@@ -35,6 +35,7 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
 
     private sqlQueryService = inject(SqlQueryService);
     private cdr = inject(ChangeDetectorRef);
+    private ngZone = inject(NgZone);
     private navigationService = inject(NavigationService);
 
     public ngOnInit(): void {
@@ -58,7 +59,9 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
                 takeUntilDestroyed(this.destroyRef),
                 finalize(() => {
                     this.sqlLoading = false;
-                    this.navigationService.navigateWithSqlQuery(params.query);
+                    this.ngZone.run(() => {
+                        this.navigationService.navigateWithSqlQuery(params.query);
+                    });
                 }),
             )
             .subscribe();

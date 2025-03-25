@@ -21,6 +21,7 @@ import { DatasetListModule } from "../common/components/dataset-list-component/d
 import { PaginationModule } from "../common/components/pagination-component/pagination.module";
 import { FlowsViewModule } from "../dataset-flow/flows-view.module";
 import { FeatureFlagModule } from "../common/directives/feature-flag.module";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
 
 @NgModule({
     declarations: [AccountComponent, AccountFlowsTabComponent, DatasetsTabComponent],
@@ -30,6 +31,7 @@ import { FeatureFlagModule } from "../common/directives/feature-flag.module";
         MatButtonToggleModule,
         MatIconModule,
         MatDividerModule,
+        MatProgressBarModule,
         MatTableModule,
         NgbModule,
         ReactiveFormsModule,

@@ -6,11 +6,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Flows table: added a hint to a long message
+- Account flows tab: added loading state
+
+## [0.42.1] - 2025-03-20
+### Fixed
+- Account settings: the "Email" option is now available
+
+## [0.42.0] - 2025-03-20
+### Added
 - Login page: added ability to switch buttons with tab
 - Added account resolver for account page
 ### Fixed
 - Flows tab: fixed redirection for derivative dataset when list flows is empty
-
+- Scheduled updates: remove disabled state for "Save" button
 
 ## [0.41.1] - 2025-03-07
 ### Fixed

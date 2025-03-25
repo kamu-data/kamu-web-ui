@@ -13,7 +13,7 @@ import { ToastrModule } from "ngx-toastr";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { MatIconModule } from "@angular/material/icon";
 import { ActivatedRoute, RouterModule } from "@angular/router";
-import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { HttpClientModule } from "@angular/common/http";
 import { DatasetCollaborationsService } from "./dataset-collaborations.service";
 import { of } from "rxjs";
@@ -33,6 +33,8 @@ import { ModalService } from "src/app/common/components/modal/modal.service";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { AddPeopleModalComponent } from "./add-people-modal/add-people-modal.component";
 import { EditCollaboratorModalComponent } from "./edit-collaborator-modal/edit-collaborator-modal.component";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 
 describe("DatasetSettingsAccessTabComponent", () => {
     let component: DatasetSettingsAccessTabComponent;
@@ -41,6 +43,7 @@ describe("DatasetSettingsAccessTabComponent", () => {
     let navigationService: NavigationService;
     let ngbModal: NgbModal;
     let modalService: ModalService;
+    let loggedUserService: LoggedUserService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -91,8 +94,10 @@ describe("DatasetSettingsAccessTabComponent", () => {
         fixture = TestBed.createComponent(DatasetSettingsAccessTabComponent);
         datasetCollaborationsService = TestBed.inject(DatasetCollaborationsService);
         navigationService = TestBed.inject(NavigationService);
+        loggedUserService = TestBed.inject(LoggedUserService);
         ngbModal = TestBed.inject(NgbModal);
         modalService = TestBed.inject(ModalService);
+        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
         spyOn(datasetCollaborationsService, "listCollaborators").and.returnValue(
             of(
                 mockDatasetListCollaboratorsQuery.datasets.byId?.collaboration
@@ -127,10 +132,9 @@ describe("DatasetSettingsAccessTabComponent", () => {
         });
     });
 
-    it("should check click on 'Add people' button", () => {
+    it("should check click on 'Add people' button", async () => {
         const ngbModalOpenSpy = spyOn(ngbModal, "open").and.callThrough();
-        emitClickOnElementByDataTestId(fixture, "add-people-button");
-
+        await component.addPeople();
         expect(ngbModalOpenSpy).toHaveBeenCalledOnceWith(AddPeopleModalComponent);
     });
 

@@ -150,6 +150,7 @@ describe("AccountComponent", () => {
     });
 
     it("should check routers link ", () => {
+        spyOn(component, "showFlows").and.returnValue(true);
         fixture.detectChanges();
         const datasetsTabLink = findElementByDataTestId(fixture, "link-account-datasets-tab") as HTMLLinkElement;
         expect(datasetsTabLink.href).toContain(`?tab=${AccountTabs.DATASETS}`);

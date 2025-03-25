@@ -6,6 +6,7 @@
  */
 
 import {
+    Account,
     AccountType,
     AccountWithRole,
     DatasetAccessRole,
@@ -25,8 +26,7 @@ export const MOCK_ACCOUNT_WITH_ROLE: AccountWithRole = {
         email: "test@gamil.com",
         avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
         isAdmin: true,
-        __typename: "Account",
-    },
+    } as Account,
     role: DatasetAccessRole.Maintainer,
 };
 

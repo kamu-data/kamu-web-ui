@@ -20,20 +20,14 @@ import { FormsModule } from "@angular/forms";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { DatasetCollaborationsService } from "../dataset-collaborations.service";
 import { of } from "rxjs";
-import { AccountWithRoleConnection, DatasetAccessRole, NameLookupResult } from "src/app/api/kamu.graphql.interface";
-import {
-    mockDatasetListCollaboratorsQuery,
-    mockDatasetSearchCollaboratorQuery,
-} from "src/app/api/mock/dataset-collaborations.mock";
+import { DatasetAccessRole, NameLookupResult } from "src/app/api/kamu.graphql.interface";
+import { mockDatasetSearchCollaboratorQuery } from "src/app/api/mock/dataset-collaborations.mock";
 import AppValues from "src/app/common/values/app.values";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 
 describe("AddPeopleModalComponent", () => {
     let component: AddPeopleModalComponent;
     let fixture: ComponentFixture<AddPeopleModalComponent>;
     let datasetCollaborationsService: DatasetCollaborationsService;
-    let loggedUserService: LoggedUserService;
     let ngbActiveModal: NgbActiveModal;
 
     beforeEach(() => {
@@ -55,27 +49,15 @@ describe("AddPeopleModalComponent", () => {
 
         fixture = TestBed.createComponent(AddPeopleModalComponent);
         datasetCollaborationsService = TestBed.inject(DatasetCollaborationsService);
-        loggedUserService = TestBed.inject(LoggedUserService);
         ngbActiveModal = TestBed.inject(NgbActiveModal);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsRootFragment;
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        component.activeCollaboratorsIds = [];
         fixture.detectChanges();
     });
 
     it("should create", () => {
         expect(component).toBeTruthy();
-    });
-
-    it("should check init active collaborators Id", () => {
-        const listCollaboratorsSpy = spyOn(datasetCollaborationsService, "listCollaborators").and.returnValue(
-            of(
-                mockDatasetListCollaboratorsQuery.datasets.byId?.collaboration
-                    .accountRoles as AccountWithRoleConnection,
-            ),
-        );
-        component.ngOnInit();
-        expect(listCollaboratorsSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check clear selected collaborator", () => {

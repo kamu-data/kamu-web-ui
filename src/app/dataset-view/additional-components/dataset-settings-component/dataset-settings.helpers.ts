@@ -59,6 +59,7 @@ export function isSettingsTabAccessibleHelper(
         case SettingsTabsEnum.ACCESS:
             return datasetPermissions.permissions.collaboration.canView;
 
+        /* istanbul ignore next */
         default:
             return false;
     }

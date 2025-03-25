@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Flows table: added a hint to a long message
 - Account flows tab: added loading state
+- Sharing dataset feature
 
 ## [0.42.1] - 2025-03-20
 ### Fixed

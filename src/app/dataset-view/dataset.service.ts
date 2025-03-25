@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { LocalStorageService } from "src/app/services/local-storage.service";
 import {
     BlockRef,
     CompareChainsResultStatus,
@@ -47,6 +46,7 @@ import { APOLLO_OPTIONS } from "apollo-angular";
 import { Router } from "@angular/router";
 import { resetCacheHelper } from "../common/helpers/apollo-cache.helper";
 import { parseDataRows } from "../common/helpers/data.helpers";
+import { SessionStorageService } from "../services/session-storage.service";
 
 @Injectable({ providedIn: "root" })
 export class DatasetService {
@@ -54,7 +54,7 @@ export class DatasetService {
     private datasetSubsService = inject(DatasetSubscriptionsService);
     private injector = inject(Injector);
     private router = inject(Router);
-    private localStorageService = inject(LocalStorageService);
+    private sessionStorageService = inject(SessionStorageService);
     private currentHeadBlockHash: string;
     private dataset$: Subject<DatasetBasicsFragment> = new Subject<DatasetBasicsFragment>();
 
@@ -91,7 +91,6 @@ export class DatasetService {
                         throw new SqlExecutionError(dataTail.errorMessage);
                     }
                 } else {
-                    this.localStorageService.setRedirectAfterLoginUrl(this.router.url);
                     const cache = this.injector.get(APOLLO_OPTIONS).cache;
                     cache.evict({
                         id: "ROOT_QUERY",

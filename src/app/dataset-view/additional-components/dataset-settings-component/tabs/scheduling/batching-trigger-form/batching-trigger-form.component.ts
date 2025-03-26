@@ -48,12 +48,12 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
         updatesState: new FormControl<boolean>(false, { nonNullable: true }),
         every: new FormControl<MaybeNull<number>>({ value: null, disabled: false }, [
             Validators.required,
-            Validators.min(1),
+            Validators.min(0),
         ]),
         unit: new FormControl<MaybeNull<TimeUnit>>({ value: null, disabled: false }, [Validators.required]),
         minRecordsToAwait: new FormControl<MaybeNull<number>>({ value: null, disabled: false }, [
             Validators.required,
-            Validators.min(1),
+            Validators.min(0),
         ]),
     });
 
@@ -80,6 +80,16 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
         this.saveTriggerEmit.emit(this.batchingForm);
     }
 
+    public saveDefaultBatchingTriggers(): void {
+        this.batchingForm.patchValue({
+            unit: TimeUnit.Minutes,
+            every: 0,
+            minRecordsToAwait: 0,
+            updatesState: true,
+        });
+        this.saveTriggerEmit.emit(this.batchingForm);
+    }
+
     private setBatchingEveryTimeValidator(): void {
         this.batchingUnitTime.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((data: TimeUnit) => {
             if (data) {
@@ -100,12 +110,16 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
             .subscribe((data: GetDatasetFlowTriggersQuery) => {
                 const flowTriggers = data.datasets.byId?.flows.triggers.byType;
                 const batching = flowTriggers?.batching;
-                if (batching) {
+
+                if (batching && batching.maxBatchingInterval.every) {
                     this.batchingForm.patchValue({
-                        ...batching.maxBatchingInterval,
+                        unit: batching.maxBatchingInterval.unit,
+                        every: batching.maxBatchingInterval.every,
                         minRecordsToAwait: batching.minRecordsToAwait,
                         updatesState: !flowTriggers.paused,
                     });
+                } else {
+                    this.batchingForm.reset();
                 }
                 this.isLoading = true;
                 this.cdr.detectChanges();

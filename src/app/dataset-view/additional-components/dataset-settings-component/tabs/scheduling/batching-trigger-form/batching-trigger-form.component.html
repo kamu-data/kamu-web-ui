@@ -18,10 +18,12 @@
                     >
                         <option [value]="timeUnit.Minutes">Minutes</option>
                         <option [value]="timeUnit.Hours">Hours</option>
+                        <option [value]="timeUnit.Days">Days</option>
+                        <option [value]="timeUnit.Weeks">Weeks</option>
                     </select>
                     <input
                         type="number"
-                        min="1"
+                        min="0"
                         formControlName="every"
                         class="form-control form-control-width"
                         data-test-id="batching-interval-every"
@@ -41,7 +43,7 @@
                     <span class="form-control-label">Min records to await:</span>
                     <input
                         type="number"
-                        min="1"
+                        min="0"
                         formControlName="minRecordsToAwait"
                         class="form-control form-control-width"
                         data-test-id="batching-min-records"
@@ -54,7 +56,7 @@
                         "
                     >
                         <div class="text-danger fs-12 ms-4 text-break" data-test-id="min-value-error">
-                            Minimum value 1
+                            Minimum value 0
                         </div>
                     </ng-container>
                 </div>
@@ -63,12 +65,21 @@
         <div class="mt-4 d-flex justify-content-end">
             <button
                 type="button"
+                class="btn btn-success me-4"
+                (click)="saveDefaultBatchingTriggers()"
+                data-test-id="save-batching-triggers"
+            >
+                Save default triggers
+            </button>
+
+            <button
+                type="button"
                 class="btn btn-success"
                 [disabled]="batchingForm.invalid"
                 (click)="saveBatchingTriggers()"
                 data-test-id="save-batching-triggers"
             >
-                Save
+                Save triggers
             </button>
         </div>
     </div>

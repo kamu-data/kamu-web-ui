@@ -19,6 +19,8 @@ fragment SetPollingSourceEvent on SetPollingSource {
     ...MergeStrategySnapshotData
     ...MergeStrategyLedgerData
     ...MergeStrategyAppendData
+    ...MergeStrategyChangelogStreamData
+    ...MergeStrategyUpsertStreamData
   }
   prepare {
     ...PrepStepDecompressData

@@ -133,7 +133,7 @@ export type AccountFlowsMut = {
 };
 
 export type AccountLookupFilter = {
-    excludeAccountsByIds?: InputMaybe<Array<Scalars["AccountID"]>>;
+    excludeAccountsByIds: Array<Scalars["AccountID"]>;
 };
 
 export type AccountMut = {
@@ -1631,13 +1631,21 @@ export type FlowDescriptionSystemGc = {
     dummy: Scalars["Boolean"];
 };
 
-export type FlowDescriptionUpdateResult = FlowDescriptionUpdateResultSuccess | FlowDescriptionUpdateResultUpToDate;
+export type FlowDescriptionUpdateResult =
+    | FlowDescriptionUpdateResultSuccess
+    | FlowDescriptionUpdateResultUnknown
+    | FlowDescriptionUpdateResultUpToDate;
 
 export type FlowDescriptionUpdateResultSuccess = {
     __typename?: "FlowDescriptionUpdateResultSuccess";
     numBlocks: Scalars["Int"];
     numRecords: Scalars["Int"];
     updatedWatermark?: Maybe<Scalars["DateTime"]>;
+};
+
+export type FlowDescriptionUpdateResultUnknown = {
+    __typename?: "FlowDescriptionUpdateResultUnknown";
+    message: Scalars["String"];
 };
 
 export type FlowDescriptionUpdateResultUpToDate = {
@@ -1924,7 +1932,12 @@ export type LookupFilters = {
  *
  * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#mergestrategy-schema
  */
-export type MergeStrategy = MergeStrategyAppend | MergeStrategyLedger | MergeStrategySnapshot;
+export type MergeStrategy =
+    | MergeStrategyAppend
+    | MergeStrategyChangelogStream
+    | MergeStrategyLedger
+    | MergeStrategySnapshot
+    | MergeStrategyUpsertStream;
 
 /**
  * Append merge strategy.
@@ -1937,6 +1950,25 @@ export type MergeStrategy = MergeStrategyAppend | MergeStrategyLedger | MergeStr
 export type MergeStrategyAppend = {
     __typename?: "MergeStrategyAppend";
     dummy?: Maybe<Scalars["String"]>;
+};
+
+/**
+ * Changelog stream merge strategy.
+ *
+ * This is the native stream format for ODF that accurately describes the
+ * evolution of all event records including appends, retractions, and
+ * corrections as per RFC-015. No pre-processing except for format validation
+ * is done.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#mergestrategychangelogstream-schema
+ */
+export type MergeStrategyChangelogStream = {
+    __typename?: "MergeStrategyChangelogStream";
+    /**
+     * Names of the columns that uniquely identify the record throughout its
+     * lifetime
+     */
+    primaryKey: Array<Scalars["String"]>;
 };
 
 /**
@@ -1999,6 +2031,26 @@ export type MergeStrategySnapshot = {
     /**
      * Names of the columns that uniquely identify the record throughout its
      * lifetime.
+     */
+    primaryKey: Array<Scalars["String"]>;
+};
+
+/**
+ * Upsert stream merge strategy.
+ *
+ * This strategy should be used for data sources containing ledgers of
+ * insert-or-update and delete events. Unlike ChangelogStream the
+ * insert-or-update events only carry the new values, so this strategy will use
+ * primary key to re-classify the events into an append or a correction from/to
+ * pair, looking up the previous values.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#mergestrategyupsertstream-schema
+ */
+export type MergeStrategyUpsertStream = {
+    __typename?: "MergeStrategyUpsertStream";
+    /**
+     * Names of the columns that uniquely identify the record throughout its
+     * lifetime
      */
     primaryKey: Array<Scalars["String"]>;
 };
@@ -2620,8 +2672,17 @@ export type Search = {
      * Useful for autocomplete.
      */
     nameLookup: NameLookupResultConnection;
-    /** Perform search across all resources */
+    /**
+     * This endpoint uses heuristics to infer whether the query string is a DSL
+     * or a natural language query and is suitable to present the most
+     * versatile interface to the user consisting of just one input field.
+     */
     query: SearchResultConnection;
+    /**
+     * Searches for datasets and other objects managed by the
+     * current node using a prompt in natural language
+     */
+    queryNaturalLanguage: SearchResultExConnection;
 };
 
 export type SearchNameLookupArgs = {
@@ -2635,6 +2696,11 @@ export type SearchQueryArgs = {
     page?: InputMaybe<Scalars["Int"]>;
     perPage?: InputMaybe<Scalars["Int"]>;
     query: Scalars["String"];
+};
+
+export type SearchQueryNaturalLanguageArgs = {
+    perPage?: InputMaybe<Scalars["Int"]>;
+    prompt: Scalars["String"];
 };
 
 export type SearchResult = Dataset;
@@ -2653,6 +2719,28 @@ export type SearchResultConnection = {
 export type SearchResultEdge = {
     __typename?: "SearchResultEdge";
     node: SearchResult;
+};
+
+export type SearchResultEx = {
+    __typename?: "SearchResultEx";
+    item: SearchResult;
+    score: Scalars["Float"];
+};
+
+export type SearchResultExConnection = {
+    __typename?: "SearchResultExConnection";
+    edges: Array<SearchResultExEdge>;
+    /** A shorthand for `edges { node { ... } }` */
+    nodes: Array<SearchResultEx>;
+    /** Page information */
+    pageInfo: PageBasedInfo;
+    /** Approximate number of total nodes */
+    totalCount: Scalars["Int"];
+};
+
+export type SearchResultExEdge = {
+    __typename?: "SearchResultExEdge";
+    node: SearchResultEx;
 };
 
 /**
@@ -4270,6 +4358,7 @@ export type FlowSummaryDataFragment = {
                         numRecords: number;
                         updatedWatermark?: string | null;
                     }
+                  | { __typename?: "FlowDescriptionUpdateResultUnknown" }
                   | { __typename?: "FlowDescriptionUpdateResultUpToDate"; uncacheable: boolean }
                   | null;
           }
@@ -4296,6 +4385,7 @@ export type FlowSummaryDataFragment = {
                         numRecords: number;
                         updatedWatermark?: string | null;
                     }
+                  | { __typename?: "FlowDescriptionUpdateResultUnknown" }
                   | { __typename?: "FlowDescriptionUpdateResultUpToDate"; uncacheable: boolean }
                   | null;
           }
@@ -4311,6 +4401,7 @@ export type FlowSummaryDataFragment = {
                         numRecords: number;
                         updatedWatermark?: string | null;
                     }
+                  | { __typename?: "FlowDescriptionUpdateResultUnknown" }
                   | { __typename?: "FlowDescriptionUpdateResultUpToDate"; uncacheable: boolean }
                   | null;
           }
@@ -4556,8 +4647,10 @@ export type AddPushSourceEventFragment = {
         | ({ __typename?: "ReadStepParquet" } & ReadStepParquetDataFragment);
     merge:
         | ({ __typename?: "MergeStrategyAppend" } & MergeStrategyAppendDataFragment)
+        | ({ __typename?: "MergeStrategyChangelogStream" } & MergeStrategyChangelogStreamDataFragment)
         | ({ __typename?: "MergeStrategyLedger" } & MergeStrategyLedgerDataFragment)
-        | ({ __typename?: "MergeStrategySnapshot" } & MergeStrategySnapshotDataFragment);
+        | ({ __typename?: "MergeStrategySnapshot" } & MergeStrategySnapshotDataFragment)
+        | ({ __typename?: "MergeStrategyUpsertStream" } & MergeStrategyUpsertStreamDataFragment);
     preprocess?: ({ __typename?: "TransformSql" } & PreprocessStepDataFragment) | null;
 };
 
@@ -4627,8 +4720,10 @@ export type SetPollingSourceEventFragment = {
         | ({ __typename?: "ReadStepParquet" } & ReadStepParquetDataFragment);
     merge:
         | ({ __typename?: "MergeStrategyAppend" } & MergeStrategyAppendDataFragment)
+        | ({ __typename?: "MergeStrategyChangelogStream" } & MergeStrategyChangelogStreamDataFragment)
         | ({ __typename?: "MergeStrategyLedger" } & MergeStrategyLedgerDataFragment)
-        | ({ __typename?: "MergeStrategySnapshot" } & MergeStrategySnapshotDataFragment);
+        | ({ __typename?: "MergeStrategySnapshot" } & MergeStrategySnapshotDataFragment)
+        | ({ __typename?: "MergeStrategyUpsertStream" } & MergeStrategyUpsertStreamDataFragment);
     prepare?: Array<
         | ({ __typename?: "PrepStepDecompress" } & PrepStepDecompressDataFragment)
         | ({ __typename?: "PrepStepPipe" } & PrepStepPipeDataFragment)
@@ -4695,12 +4790,22 @@ export type FetchStepUrlDataFragment = {
 
 export type MergeStrategyAppendDataFragment = { __typename: "MergeStrategyAppend" };
 
+export type MergeStrategyChangelogStreamDataFragment = {
+    __typename?: "MergeStrategyChangelogStream";
+    primaryKey: Array<string>;
+};
+
 export type MergeStrategyLedgerDataFragment = { __typename?: "MergeStrategyLedger"; primaryKey: Array<string> };
 
 export type MergeStrategySnapshotDataFragment = {
     __typename?: "MergeStrategySnapshot";
     primaryKey: Array<string>;
     compareColumns?: Array<string> | null;
+};
+
+export type MergeStrategyUpsertStreamDataFragment = {
+    __typename?: "MergeStrategyUpsertStream";
+    primaryKey: Array<string>;
 };
 
 export type PrepStepDecompressDataFragment = {
@@ -6321,6 +6426,16 @@ export const MergeStrategyAppendDataFragmentDoc = gql`
         __typename
     }
 `;
+export const MergeStrategyChangelogStreamDataFragmentDoc = gql`
+    fragment MergeStrategyChangelogStreamData on MergeStrategyChangelogStream {
+        primaryKey
+    }
+`;
+export const MergeStrategyUpsertStreamDataFragmentDoc = gql`
+    fragment MergeStrategyUpsertStreamData on MergeStrategyUpsertStream {
+        primaryKey
+    }
+`;
 export const PrepStepDecompressDataFragmentDoc = gql`
     fragment PrepStepDecompressData on PrepStepDecompress {
         format
@@ -6368,6 +6483,8 @@ export const SetPollingSourceEventFragmentDoc = gql`
             ...MergeStrategySnapshotData
             ...MergeStrategyLedgerData
             ...MergeStrategyAppendData
+            ...MergeStrategyChangelogStreamData
+            ...MergeStrategyUpsertStreamData
         }
         prepare {
             ...PrepStepDecompressData
@@ -6392,6 +6509,8 @@ export const SetPollingSourceEventFragmentDoc = gql`
     ${MergeStrategySnapshotDataFragmentDoc}
     ${MergeStrategyLedgerDataFragmentDoc}
     ${MergeStrategyAppendDataFragmentDoc}
+    ${MergeStrategyChangelogStreamDataFragmentDoc}
+    ${MergeStrategyUpsertStreamDataFragmentDoc}
     ${PrepStepDecompressDataFragmentDoc}
     ${PrepStepPipeDataFragmentDoc}
     ${PreprocessStepDataFragmentDoc}
@@ -6459,6 +6578,8 @@ export const AddPushSourceEventFragmentDoc = gql`
             ...MergeStrategySnapshotData
             ...MergeStrategyLedgerData
             ...MergeStrategyAppendData
+            ...MergeStrategyChangelogStreamData
+            ...MergeStrategyUpsertStreamData
         }
         preprocess {
             ...PreprocessStepData
@@ -6474,6 +6595,8 @@ export const AddPushSourceEventFragmentDoc = gql`
     ${MergeStrategySnapshotDataFragmentDoc}
     ${MergeStrategyLedgerDataFragmentDoc}
     ${MergeStrategyAppendDataFragmentDoc}
+    ${MergeStrategyChangelogStreamDataFragmentDoc}
+    ${MergeStrategyUpsertStreamDataFragmentDoc}
     ${PreprocessStepDataFragmentDoc}
 `;
 export const DatasetReadmeFragmentDoc = gql`

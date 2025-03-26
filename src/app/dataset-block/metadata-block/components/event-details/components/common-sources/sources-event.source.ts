@@ -129,6 +129,7 @@ export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
         separateRowForValue: false,
         dataTestId: "mergeStrategyLedger-primaryKey",
     },
+
     "ReadStepJson.__typename": {
         label: "Type:",
         tooltip: SourcesTooltipsTexts.READ_JSON,

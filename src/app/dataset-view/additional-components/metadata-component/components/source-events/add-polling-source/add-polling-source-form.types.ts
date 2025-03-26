@@ -96,6 +96,8 @@ export enum MergeKind {
     APPEND = "Append",
     LEDGER = "Ledger",
     SNAPSHOT = "Snapshot",
+    CHANGELOG_STREAM = "ChangelogStream",
+    UPSERT_STREAM = "UpsertStream",
 }
 
 export enum PrepareKind {

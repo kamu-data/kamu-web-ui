@@ -5,14 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { ControlType, JsonFormData } from "../../add-polling-source/add-polling-source-form.types";
+import { ControlType, JsonFormData, MergeKind } from "../../add-polling-source/add-polling-source-form.types";
 import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
 
 export const MERGE_FORM_DATA: JsonFormData = {
-    Append: {
+    [MergeKind.APPEND]: {
         controls: [],
     },
-    Ledger: {
+    [MergeKind.LEDGER]: {
         controls: [
             {
                 name: "primaryKey",
@@ -29,7 +29,7 @@ export const MERGE_FORM_DATA: JsonFormData = {
             },
         ],
     },
-    Snapshot: {
+    [MergeKind.SNAPSHOT]: {
         controls: [
             {
                 name: "primaryKey",
@@ -54,6 +54,41 @@ export const MERGE_FORM_DATA: JsonFormData = {
                 options: {
                     formArrayName: "compareColumns",
                     buttonText: "+ Add column name",
+                },
+                validators: {},
+            },
+        ],
+    },
+
+    [MergeKind.CHANGELOG_STREAM]: {
+        controls: [
+            {
+                name: "primaryKey",
+                label: "Primary keys",
+                placeholder: "Enter primary key...",
+                value: "",
+                tooltip: SourcesTooltipsTexts.PRIMARY_KEYS,
+                type: ControlType.ARRAY_KEY,
+                options: {
+                    formArrayName: "primaryKey",
+                    buttonText: "+ Add primary key",
+                },
+                validators: {},
+            },
+        ],
+    },
+    [MergeKind.UPSERT_STREAM]: {
+        controls: [
+            {
+                name: "primaryKey",
+                label: "Primary keys",
+                placeholder: "Enter primary key...",
+                value: "",
+                tooltip: SourcesTooltipsTexts.PRIMARY_KEYS,
+                type: ControlType.ARRAY_KEY,
+                options: {
+                    formArrayName: "primaryKey",
+                    buttonText: "+ Add primary key",
                 },
                 validators: {},
             },

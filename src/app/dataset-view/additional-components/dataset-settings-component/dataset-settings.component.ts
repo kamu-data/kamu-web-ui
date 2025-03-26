@@ -108,12 +108,16 @@ export class DatasetSettingsComponent extends BaseComponent implements OnInit {
         if (this.datasetPermissions.permissions.general.canSetVisibility) {
             this.activeTab = this.getSectionFromUrl() ?? SettingsTabsEnum.GENERAL;
         } else {
-            if (this.appConfigService.featureFlags.enableDatasetEnvVarsManagement) {
+            if (
+                this.appConfigService.featureFlags.enableDatasetEnvVarsManagement &&
+                this.datasetPermissions.permissions.envVars.canView &&
+                this.datasetBasics.kind === DatasetKind.Root
+            ) {
                 this.activeTab = SettingsTabsEnum.VARIABLES_AND_SECRETS;
             } else {
                 promiseWithCatch(
                     this.modalService.warning({
-                        message: "You don't have access to the variables and secrets manager",
+                        message: "You don't have access to the settings",
                         yesButtonText: "Ok",
                     }),
                 );

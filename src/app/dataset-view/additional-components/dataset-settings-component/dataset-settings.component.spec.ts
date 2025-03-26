@@ -10,7 +10,12 @@ import { DatasetSettingsComponent } from "./dataset-settings.component";
 import { ReactiveFormsModule } from "@angular/forms";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { Apollo } from "apollo-angular";
-import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+import {
+    mockDatasetBasicsDerivedFragment,
+    mockDatasetBasicsRootFragment,
+    mockFullPowerDatasetPermissionsFragment,
+    mockReadonlyDatasetPermissionsFragment,
+} from "src/app/search/mock.data";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
@@ -39,12 +44,15 @@ import { DatasetVisibilityModule } from "src/app/common/components/dataset-visib
 import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
 import { RouterTestingModule } from "@angular/router/testing";
 import { of } from "rxjs";
+import { AppConfigService } from "src/app/app-config.service";
+import AppValues from "src/app/common/values/app.values";
 
 describe("DatasetSettingsComponent", () => {
     let component: DatasetSettingsComponent;
     let fixture: ComponentFixture<DatasetSettingsComponent>;
     let navigationService: NavigationService;
     let datasetSubsService: DatasetSubscriptionsService;
+    let appConfigService: AppConfigService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -107,6 +115,7 @@ describe("DatasetSettingsComponent", () => {
         fixture = TestBed.createComponent(DatasetSettingsComponent);
         navigationService = TestBed.inject(NavigationService);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
+        appConfigService = TestBed.inject(AppConfigService);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
         component.datasetPermissions = mockFullPowerDatasetPermissionsFragment;
@@ -146,5 +155,13 @@ describe("DatasetSettingsComponent", () => {
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, `action-list-${SettingsTabsEnum.GENERAL}-tab`);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(jasmine.objectContaining({ section: undefined }));
+    });
+
+    it(`should check navigate to ${SettingsTabsEnum.VARIABLES_AND_SECRETS} tab`, () => {
+        component.datasetBasics = mockDatasetBasicsRootFragment;
+        component.datasetPermissions = mockReadonlyDatasetPermissionsFragment;
+        spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue(AppValues.DEFAULT_UI_FEATURE_FLAGS);
+        component.ngOnInit();
+        expect(component.activeTab).toEqual(SettingsTabsEnum.VARIABLES_AND_SECRETS);
     });
 });

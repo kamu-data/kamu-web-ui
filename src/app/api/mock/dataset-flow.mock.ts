@@ -198,6 +198,28 @@ export const mockGetDatasetFlowTriggersBatchingQuery: GetDatasetFlowTriggersQuer
     },
 };
 
+export const mockGetDatasetFlowTriggersDefaultBatchingQuery: GetDatasetFlowTriggersQuery = {
+    datasets: {
+        __typename: "Datasets",
+        byId: {
+            flows: {
+                triggers: {
+                    byType: {
+                        paused: true,
+                        batching: {
+                            minRecordsToAwait: 0,
+                            maxBatchingInterval: {
+                                every: 0,
+                                unit: TimeUnit.Hours,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+};
+
 export const mockSetDatasetFlowTriggerSuccess: SetDatasetFlowTriggersMutation = {
     datasets: {
         byId: {

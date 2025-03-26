@@ -12,7 +12,10 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { Apollo } from "apollo-angular";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { DatasetSchedulingService } from "../../../services/dataset-scheduling.service";
-import { mockGetDatasetFlowTriggersBatchingQuery } from "src/app/api/mock/dataset-flow.mock";
+import {
+    mockGetDatasetFlowTriggersBatchingQuery,
+    mockGetDatasetFlowTriggersDefaultBatchingQuery,
+} from "src/app/api/mock/dataset-flow.mock";
 import { of } from "rxjs";
 import { ToastrModule } from "ngx-toastr";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
@@ -25,6 +28,7 @@ describe("BatchingTriggerFormComponent", () => {
     let component: BatchingTriggerFormComponent;
     let fixture: ComponentFixture<BatchingTriggerFormComponent>;
     let datasetSchedulingService: DatasetSchedulingService;
+    let fetchDatasetFlowTriggersSpy: jasmine.Spy;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -44,10 +48,9 @@ describe("BatchingTriggerFormComponent", () => {
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
         datasetSchedulingService = TestBed.inject(DatasetSchedulingService);
-        spyOn(datasetSchedulingService, "fetchDatasetFlowTriggers").and.returnValue(
+        fetchDatasetFlowTriggersSpy = spyOn(datasetSchedulingService, "fetchDatasetFlowTriggers").and.returnValue(
             of(mockGetDatasetFlowTriggersBatchingQuery),
         );
-        fixture.detectChanges();
     });
 
     it("should create", () => {
@@ -69,5 +72,21 @@ describe("BatchingTriggerFormComponent", () => {
 
         const batchingInterval = findElementByDataTestId(fixture, "batching-interval-unit") as HTMLInputElement;
         expect(batchingInterval.value).toEqual(TimeUnit.Hours);
+    });
+
+    it("should check initial state for derivative dataset with default options", () => {
+        fetchDatasetFlowTriggersSpy = fetchDatasetFlowTriggersSpy.and.returnValue(
+            of(mockGetDatasetFlowTriggersDefaultBatchingQuery),
+        );
+        const resetFormSpy = spyOn(component.batchingForm, "reset");
+        fixture.detectChanges();
+
+        expect(resetFormSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check save default batching triggers", () => {
+        const saveTriggerEmitSpy = spyOn(component.saveTriggerEmit, "emit");
+        emitClickOnElementByDataTestId(fixture, "save-default-batching-triggers");
+        expect(saveTriggerEmitSpy).toHaveBeenCalledTimes(1);
     });
 });

@@ -71,11 +71,10 @@
             >
                 Save default triggers
             </button>
-
             <button
                 type="button"
                 class="btn btn-success"
-                [disabled]="batchingForm.invalid"
+                [disabled]="batchingForm.invalid || !batchingEveryTime.value"
                 (click)="saveBatchingTriggers()"
                 data-test-id="save-batching-triggers"
             >

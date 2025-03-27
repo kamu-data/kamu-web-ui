@@ -25,12 +25,14 @@ import { MaybeUndefined } from "src/app/interface/app.types";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { AppConfigService } from "src/app/app-config.service";
+import { SessionStorageService } from "src/app/services/session-storage.service";
 
 describe("LoginService", () => {
     let service: LoginService;
     let navigationService: NavigationService;
     let authApi: AuthApi;
     let localStorageService: LocalStorageService;
+    let sessionStorageService: SessionStorageService;
     let appConfigService: AppConfigService;
 
     beforeEach(() => {
@@ -41,6 +43,9 @@ describe("LoginService", () => {
 
         localStorageService = TestBed.inject(LocalStorageService);
         localStorageService.reset();
+
+        sessionStorageService = TestBed.inject(SessionStorageService);
+        sessionStorageService.reset();
 
         service = TestBed.inject(LoginService);
         navigationService = TestBed.inject(NavigationService);

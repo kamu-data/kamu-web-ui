@@ -127,7 +127,7 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
                 const batching = flowTriggers?.batching;
                 this.pausedFromServer = Boolean(flowTriggers?.paused);
 
-                if (batching && batching.maxBatchingInterval.every !== 0 && !flowTriggers.paused) {
+                if (batching && batching.maxBatchingInterval.every && !flowTriggers.paused) {
                     this.batchingForm.patchValue({
                         unit: batching.maxBatchingInterval.unit,
                         every: batching.maxBatchingInterval.every,

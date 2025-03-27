@@ -59,10 +59,15 @@ describe("BatchingTriggerFormComponent", () => {
 
     it("should check save batching triggers", () => {
         const saveTriggerEmitSpy = spyOn(component.saveTriggerEmit, "emit");
-        component.batchingForm.patchValue({ updatesState: true });
+        component.batchingForm.patchValue({
+            updatesState: true,
+            every: 10,
+            unit: TimeUnit.Minutes,
+            minRecordsToAwait: 1000,
+        });
         fixture.detectChanges();
 
-        emitClickOnElementByDataTestId(fixture, "save-batching-triggers");
+        component.saveBatchingTriggers();
 
         expect(saveTriggerEmitSpy).toHaveBeenCalledTimes(1);
     });

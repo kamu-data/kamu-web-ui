@@ -29,6 +29,10 @@ export class SourcesTooltipsTexts {
     public static readonly ENGINE = "Identifier of the engine used for this transformation.";
     public static readonly MERGE_STRATEGY_LEDGER =
         "Merge strategy determines how newly ingested data should be combined with the data that already exists in the dataset.";
+    public static readonly MERGE_STRATEGY_CHANGELOG_STREAM =
+        "This is the native stream format for ODF that accurately describes the evolution of all event records including appends, retractions, and corrections as per RFC-015. No pre-processing except for format validation is done.";
+    public static readonly MERGE_STRATEGY_UPSERT_STREAM =
+        "This strategy should be used for data sources containing ledgers of insert-or-update and delete events.";
     public static readonly PRIMARY_KEYS =
         "Names of the columns that uniquely identify the record throughout its lifetime";
     public static readonly READ_JSON = "Reader for JSON files that contain an array of objects within them.";

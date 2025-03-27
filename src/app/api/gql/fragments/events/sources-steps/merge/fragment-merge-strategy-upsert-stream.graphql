@@ -1,0 +1,3 @@
+fragment MergeStrategyUpsertStreamData on MergeStrategyUpsertStream {
+  primaryKey
+}

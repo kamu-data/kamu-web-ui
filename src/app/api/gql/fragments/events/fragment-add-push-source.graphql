@@ -13,6 +13,8 @@ fragment AddPushSourceEvent on AddPushSource {
     ...MergeStrategySnapshotData
     ...MergeStrategyLedgerData
     ...MergeStrategyAppendData
+    ...MergeStrategyChangelogStreamData
+    ...MergeStrategyUpsertStreamData
   }
   preprocess {
     ...PreprocessStepData

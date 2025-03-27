@@ -242,6 +242,22 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         "SetPollingSource.MergeStrategyLedger.primaryKey",
     ),
 
+    "SetPollingSource.MergeStrategyChangelogStream.__typename": getSourcesDescriptors(
+        "SetPollingSource.MergeStrategyAppend.__typename",
+    ),
+
+    "SetPollingSource.MergeStrategyChangelogStream.primaryKey": getSourcesDescriptors(
+        "SetPollingSource.MergeStrategyLedger.primaryKey",
+    ),
+
+    "SetPollingSource.MergeStrategyUpsertStream.__typename": getSourcesDescriptors(
+        "SetPollingSource.MergeStrategyAppend.__typename",
+    ),
+
+    "SetPollingSource.MergeStrategyUpsertStream.primaryKey": getSourcesDescriptors(
+        "SetPollingSource.MergeStrategyLedger.primaryKey",
+    ),
+
     "SetPollingSource.TransformSql.engine": getSourcesDescriptors("SetPollingSource.TransformSql.engine"),
 
     "SetPollingSource.TransformSql.queries": getSourcesDescriptors("SetPollingSource.TransformSql.queries"),

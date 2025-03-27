@@ -117,4 +117,18 @@ export const MERGE_STEP_RADIO_CONTROLS: RadioControlType[] = [
         label: "Snapshot strategy",
         tooltip: SourcesTooltipsTexts.SNAPSHOT_STRATEGY,
     },
+    {
+        id: "changelog-stream",
+        value: MergeKind.CHANGELOG_STREAM,
+        icon: "speaker_notes",
+        label: "Changelog stream strategy",
+        tooltip: SourcesTooltipsTexts.MERGE_STRATEGY_CHANGELOG_STREAM,
+    },
+    {
+        id: "upsert-stream",
+        value: MergeKind.UPSERT_STREAM,
+        icon: "assignment_add",
+        label: "Upsert stream strategy",
+        tooltip: SourcesTooltipsTexts.MERGE_STRATEGY_UPSERT_STREAM,
+    },
 ];

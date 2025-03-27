@@ -126,7 +126,7 @@ type AccountFlowsMut {
 scalar AccountID
 
 input AccountLookupFilter {
-  excludeAccountsByIds: [AccountID!]
+  excludeAccountsByIds: [AccountID!]!
 }
 
 type AccountMut {
@@ -1613,12 +1613,19 @@ type FlowDescriptionSystemGC {
   dummy: Boolean!
 }
 
-union FlowDescriptionUpdateResult = FlowDescriptionUpdateResultUpToDate | FlowDescriptionUpdateResultSuccess
+union FlowDescriptionUpdateResult =
+  | FlowDescriptionUpdateResultUpToDate
+  | FlowDescriptionUpdateResultSuccess
+  | FlowDescriptionUpdateResultUnknown
 
 type FlowDescriptionUpdateResultSuccess {
   numBlocks: Int!
   numRecords: Int!
   updatedWatermark: DateTime
+}
+
+type FlowDescriptionUpdateResultUnknown {
+  message: String!
 }
 
 type FlowDescriptionUpdateResultUpToDate {
@@ -1873,7 +1880,12 @@ the data that already exists in the dataset.
 
 See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#mergestrategy-schema
 """
-union MergeStrategy = MergeStrategyAppend | MergeStrategyLedger | MergeStrategySnapshot
+union MergeStrategy =
+  | MergeStrategyAppend
+  | MergeStrategyLedger
+  | MergeStrategySnapshot
+  | MergeStrategyChangelogStream
+  | MergeStrategyUpsertStream
 
 """
 Append merge strategy.
@@ -1885,6 +1897,24 @@ See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.
 """
 type MergeStrategyAppend {
   dummy: String
+}
+
+"""
+Changelog stream merge strategy.
+
+This is the native stream format for ODF that accurately describes the
+evolution of all event records including appends, retractions, and
+corrections as per RFC-015. No pre-processing except for format validation
+is done.
+
+See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#mergestrategychangelogstream-schema
+"""
+type MergeStrategyChangelogStream {
+  """
+  Names of the columns that uniquely identify the record throughout its
+  lifetime
+  """
+  primaryKey: [String!]!
 }
 
 """
@@ -1947,6 +1977,25 @@ type MergeStrategySnapshot {
   between two snapshots.
   """
   compareColumns: [String!]
+}
+
+"""
+Upsert stream merge strategy.
+
+This strategy should be used for data sources containing ledgers of
+insert-or-update and delete events. Unlike ChangelogStream the
+insert-or-update events only carry the new values, so this strategy will use
+primary key to re-classify the events into an append or a correction from/to
+pair, looking up the previous values.
+
+See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#mergestrategyupsertstream-schema
+"""
+type MergeStrategyUpsertStream {
+  """
+  Names of the columns that uniquely identify the record throughout its
+  lifetime
+  """
+  primaryKey: [String!]!
 }
 
 type MetadataBlockConnection {
@@ -2562,9 +2611,16 @@ input ScheduleInput @oneOf {
 
 type Search {
   """
-  Perform search across all resources
+  This endpoint uses heuristics to infer whether the query string is a DSL
+  or a natural language query and is suitable to present the most
+  versatile interface to the user consisting of just one input field.
   """
   query(query: String!, page: Int, perPage: Int): SearchResultConnection!
+  """
+  Searches for datasets and other objects managed by the
+  current node using a prompt in natural language
+  """
+  queryNaturalLanguage(prompt: String!, perPage: Int): SearchResultExConnection!
   """
   Perform lightweight search among resource names.
   Useful for autocomplete.
@@ -2592,6 +2648,31 @@ type SearchResultConnection {
 
 type SearchResultEdge {
   node: SearchResult!
+}
+
+type SearchResultEx {
+  item: SearchResult!
+  score: Float!
+}
+
+type SearchResultExConnection {
+  """
+  A shorthand for `edges { node { ... } }`
+  """
+  nodes: [SearchResultEx!]!
+  """
+  Approximate number of total nodes
+  """
+  totalCount: Int!
+  """
+  Page information
+  """
+  pageInfo: PageBasedInfo!
+  edges: [SearchResultExEdge!]!
+}
+
+type SearchResultExEdge {
+  node: SearchResultEx!
 }
 
 """

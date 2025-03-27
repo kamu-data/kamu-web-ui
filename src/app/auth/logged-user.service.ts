@@ -19,6 +19,7 @@ import { isNull, promiseWithCatch } from "../common/helpers/app.helpers";
 import { LoginService } from "./login/login.service";
 import { LocalStorageService } from "../services/local-storage.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { SessionStorageService } from "src/app/services/session-storage.service";
 
 @Injectable({
     providedIn: "root",
@@ -32,6 +33,7 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
         private navigationService: NavigationService,
         private appConfigService: AppConfigService,
         private localStorageService: LocalStorageService,
+        private sessionStorageService: SessionStorageService,
         private apollo: Apollo,
     ) {
         super();
@@ -89,6 +91,7 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
         this.changeUser(null);
         this.resetAccessToken();
         this.clearGraphQLCache();
+        this.resetRedirectUrl();
     }
 
     private attemptPreviousAuthenticationCompletes(): Observable<void> {
@@ -121,5 +124,9 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
 
     private saveAccessToken(token: string): void {
         this.localStorageService.setAccessToken(token);
+    }
+
+    private resetRedirectUrl(): void {
+        this.sessionStorageService.reset();
     }
 }

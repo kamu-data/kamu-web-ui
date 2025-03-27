@@ -21,6 +21,7 @@ import { LoginFormType } from "./login.component.model";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AppConfigService } from "src/app/app-config.service";
 import { NavigationService } from "src/app/services/navigation.service";
+import { SessionStorageService } from "src/app/services/session-storage.service";
 
 @Component({
     selector: "app-login",
@@ -33,6 +34,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
         "LoginComponent requires at least 1 login method in configuration";
 
     private localStorageService = inject(LocalStorageService);
+    private sessionStorageService = inject(SessionStorageService);
     private route = inject(ActivatedRoute);
     private fb = inject(FormBuilder);
     private loginService = inject(LoginService);
@@ -55,7 +57,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
         if (redirectUrl && this.localStorageService.accessToken) {
             this.navigationService.navigateToReplacedPath(redirectUrl);
         } else if (redirectUrl) {
-            this.localStorageService.setRedirectAfterLoginUrl(redirectUrl);
+            this.sessionStorageService.setRedirectAfterLoginUrl(redirectUrl);
             this.navigationService.navigateToReplacedPath(ProjectLinks.URL_LOGIN);
         } else {
             const loginMethods: LoginMethod[] = this.loginService.loginMethods;

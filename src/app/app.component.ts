@@ -28,6 +28,7 @@ import { LocalStorageService } from "./services/local-storage.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatIconRegistry } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
+import { SessionStorageService } from "./services/session-storage.service";
 
 export const ALL_URLS_WITHOUT_HEADER: string[] = [ProjectLinks.URL_LOGIN, ProjectLinks.URL_GITHUB_CALLBACK];
 
@@ -67,6 +68,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     private cdr = inject(ChangeDetectorRef);
     private loggedUserService = inject(LoggedUserService);
     private localStorageService = inject(LocalStorageService);
+    private sessionStorageService = inject(SessionStorageService);
     private matIconRegistry = inject(MatIconRegistry);
     private domSanitizer = inject(DomSanitizer);
 
@@ -195,9 +197,8 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onLogin(): void {
-        if (!this.localStorageService.redirectAfterLoginUrl) {
-            this.localStorageService.setRedirectAfterLoginUrl(this.router.url);
-        }
+        this.sessionStorageService.setRedirectAfterLoginUrl(this.router.url);
+
         this.navigationService.navigateToLogin();
     }
 

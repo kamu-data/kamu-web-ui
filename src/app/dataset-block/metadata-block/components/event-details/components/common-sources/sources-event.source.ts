@@ -129,6 +129,35 @@ export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
         separateRowForValue: false,
         dataTestId: "mergeStrategyLedger-primaryKey",
     },
+    "MergeStrategyChangelogStream.__typename": {
+        label: "Strategy:",
+        tooltip: SourcesTooltipsTexts.MERGE_STRATEGY_CHANGELOG_STREAM,
+        presentationComponent: MergeStrategyPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "mergeStrategyLedger-__typename",
+    },
+    "MergeStrategyChangelogStream.primaryKey": {
+        label: "Primary key:",
+        tooltip: SourcesTooltipsTexts.PRIMARY_KEYS,
+        presentationComponent: CardsPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "mergeStrategyChangelogStream-primaryKey",
+    },
+    "MergeStrategyUpsertStream.__typename": {
+        label: "Strategy:",
+        tooltip: SourcesTooltipsTexts.MERGE_STRATEGY_UPSERT_STREAM,
+        presentationComponent: MergeStrategyPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "mergeStrategyUpsertStream-__typename",
+    },
+    "MergeStrategyUpsertStream.primaryKey": {
+        label: "Primary key:",
+        tooltip: SourcesTooltipsTexts.PRIMARY_KEYS,
+        presentationComponent: CardsPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "mergeStrategyUpsertStream-primaryKey",
+    },
+
     "ReadStepJson.__typename": {
         label: "Type:",
         tooltip: SourcesTooltipsTexts.READ_JSON,

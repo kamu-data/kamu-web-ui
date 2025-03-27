@@ -89,6 +89,16 @@ export class DataHelpers {
                     name: "Snapshot strategy",
                     url_logo: "assets/images/snapshot.jpg",
                 };
+            case "MergeStrategyChangelogStream":
+                return {
+                    name: "Changelog stream strategy",
+                    url_logo: "assets/images/changelog_stream.png",
+                };
+            case "MergeStrategyUpsertStream":
+                return {
+                    name: "Upsert stream strategy",
+                    url_logo: "assets/images/upsert_stream.png",
+                };
             default:
                 return { name: "Unknown strategy" };
         }

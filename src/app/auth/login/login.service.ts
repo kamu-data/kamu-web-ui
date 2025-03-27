@@ -18,6 +18,8 @@ import { HttpClient } from "@angular/common/http";
 import { AppConfigService } from "src/app/app-config.service";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { LocalStorageService } from "src/app/services/local-storage.service";
+import { SessionStorageService } from "src/app/services/session-storage.service";
+import ProjectLinks from "src/app/project-links";
 
 @Injectable({
     providedIn: "root",
@@ -27,6 +29,7 @@ export class LoginService {
     private navigationService = inject(NavigationService);
     private appConfigService = inject(AppConfigService);
     private localStorageService = inject(LocalStorageService);
+    private sessionStorageService = inject(SessionStorageService);
     private httpClient = inject(HttpClient);
 
     private accessToken$: Subject<string> = new ReplaySubject<string>(1);
@@ -127,10 +130,10 @@ export class LoginService {
     private defaultLoginCallback(loginResponse: LoginResponseType): void {
         this.accessToken$.next(loginResponse.accessToken);
         this.account$.next(loginResponse.account);
-        const url = this.localStorageService.redirectAfterLoginUrl;
-        if (url) {
+        const url = this.sessionStorageService.redirectAfterLoginUrl;
+        this.sessionStorageService.setRedirectAfterLoginUrl(null);
+        if (url && url !== `/${ProjectLinks.URL_PAGE_NOT_FOUND}`) {
             this.navigationService.navigateToPath(url);
-            this.localStorageService.setRedirectAfterLoginUrl(null);
         } else {
             this.navigationService.navigateToHome();
         }

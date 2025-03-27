@@ -96,30 +96,36 @@ export class DatasetFlowTableHelpers {
                             case "FlowDescriptionDatasetPollingIngest":
                             case "FlowDescriptionDatasetPushIngest":
                                 return element.description.ingestResult?.__typename ===
-                                    "FlowDescriptionUpdateResultSuccess"
-                                    ? `Ingested ${element.description.ingestResult.numRecords} new ${
-                                          element.description.ingestResult.numRecords == 1 ? "record" : "records"
-                                      } in ${element.description.ingestResult.numBlocks} new ${
-                                          element.description.ingestResult.numBlocks == 1 ? "block" : "blocks"
-                                      }`
+                                    "FlowDescriptionUpdateResultUnknown"
+                                    ? `${element.description.ingestResult.message}`
                                     : element.description.ingestResult?.__typename ===
-                                            "FlowDescriptionUpdateResultUpToDate" &&
-                                        element.description.ingestResult.uncacheable &&
-                                        ((element.configSnapshot?.__typename === "FlowConfigurationIngest" &&
-                                            !element.configSnapshot.fetchUncacheable) ||
-                                            !element.configSnapshot)
-                                      ? `Source is uncacheable: to re-scan the data, use`
-                                      : "Dataset is up-to-date";
+                                        "FlowDescriptionUpdateResultSuccess"
+                                      ? `Ingested ${element.description.ingestResult.numRecords} new ${
+                                            element.description.ingestResult.numRecords == 1 ? "record" : "records"
+                                        } in ${element.description.ingestResult.numBlocks} new ${
+                                            element.description.ingestResult.numBlocks == 1 ? "block" : "blocks"
+                                        }`
+                                      : element.description.ingestResult?.__typename ===
+                                              "FlowDescriptionUpdateResultUpToDate" &&
+                                          element.description.ingestResult.uncacheable &&
+                                          ((element.configSnapshot?.__typename === "FlowConfigurationIngest" &&
+                                              !element.configSnapshot.fetchUncacheable) ||
+                                              !element.configSnapshot)
+                                        ? `Source is uncacheable: to re-scan the data, use`
+                                        : "Dataset is up-to-date";
 
                             case "FlowDescriptionDatasetExecuteTransform":
                                 return element.description.transformResult?.__typename ===
-                                    "FlowDescriptionUpdateResultSuccess"
-                                    ? `Transformed ${element.description.transformResult.numRecords} new ${
-                                          element.description.transformResult.numRecords == 1 ? "record" : "records"
-                                      } in ${element.description.transformResult.numBlocks} new ${
-                                          element.description.transformResult.numBlocks == 1 ? "block" : "blocks"
-                                      }`
-                                    : "Dataset is up-to-date";
+                                    "FlowDescriptionUpdateResultUnknown"
+                                    ? `${element.description.transformResult.message}`
+                                    : element.description.transformResult?.__typename ===
+                                        "FlowDescriptionUpdateResultSuccess"
+                                      ? `Transformed ${element.description.transformResult.numRecords} new ${
+                                            element.description.transformResult.numRecords == 1 ? "record" : "records"
+                                        } in ${element.description.transformResult.numBlocks} new ${
+                                            element.description.transformResult.numBlocks == 1 ? "block" : "blocks"
+                                        }`
+                                      : "Dataset is up-to-date";
 
                             case "FlowDescriptionDatasetHardCompaction":
                                 switch (element.description.compactionResult?.__typename) {

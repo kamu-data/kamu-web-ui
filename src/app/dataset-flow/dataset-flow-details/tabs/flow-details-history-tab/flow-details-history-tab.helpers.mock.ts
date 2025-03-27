@@ -329,4 +329,5 @@ export const flowEventSubMessageResults: string[] = [
     "Dataset is up-to-date",
     "Ingested 100 new records in 10 new blocks",
     "Transformed 10 new records in 2 new blocks",
+    "Failed to get increment. Block is missing: f1620bc8ac3dbfd913b83d35ee853dd1b11987874b4f5071f6f31d585c09d4579fc5b",
 ];

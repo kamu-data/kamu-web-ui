@@ -29,6 +29,7 @@ import { BatchingFormType } from "../dataset-settings-scheduling-tab.component.t
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { everyTimeMapperValidators } from "src/app/common/helpers/data.helpers";
 import { TriggersTooltipsTexts } from "src/app/common/tooltips/triggers.text";
+import { finalize } from "rxjs";
 
 @Component({
     selector: "app-batching-trigger-form",
@@ -43,7 +44,7 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
     public readonly UPDATES_TOOLTIP = TriggersTooltipsTexts.UPDATE_SELECTOR_TOOLTIP;
     private everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = everyTimeMapperValidators;
     public pausedFromServer: boolean;
-    public isLoading: boolean;
+    public isLoaded: boolean = false;
 
     public batchingForm = new FormGroup<BatchingFormType>({
         updatesState: new FormControl<boolean>(false, { nonNullable: true }),
@@ -121,7 +122,12 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
     public initBatchingForm(): void {
         this.datasetSchedulingService
             .fetchDatasetFlowTriggers(this.datasetBasics.id, DatasetFlowType.ExecuteTransform)
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(
+                finalize(() => {
+                    this.isLoaded = true;
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
             .subscribe((data: GetDatasetFlowTriggersQuery) => {
                 const flowTriggers = data.datasets.byId?.flows.triggers.byType;
                 const batching = flowTriggers?.batching;
@@ -144,7 +150,6 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
                         this.disableControls();
                     }
                 }
-                this.isLoading = true;
                 this.cdr.detectChanges();
             });
     }

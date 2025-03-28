@@ -47,6 +47,7 @@ describe("BatchingTriggerFormComponent", () => {
         fixture = TestBed.createComponent(BatchingTriggerFormComponent);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
+        component.isLoaded = true;
         datasetSchedulingService = TestBed.inject(DatasetSchedulingService);
         fetchDatasetFlowTriggersSpy = spyOn(datasetSchedulingService, "fetchDatasetFlowTriggers").and.returnValue(
             of(mockGetDatasetFlowTriggersBatchingQuery),

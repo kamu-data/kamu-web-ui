@@ -1,6 +1,6 @@
 <form [formGroup]="batchingForm">
     <div class="box p-4 mt-3">
-        <div class="position-relative border border-1 rounded-3 p-4" *ngIf="isLoading; else loadingBlock">
+        <div class="position-relative border border-1 rounded-3 p-4" *ngIf="isLoaded; else loadingBlock">
             <span class="position-absolute text-muted group-box-label text-uppercase">Triggers</span>
             <div class="d-flex flex-column gap-4 mt-4">
                 <div class="ms-1 px-2 gap-1 d-flex">

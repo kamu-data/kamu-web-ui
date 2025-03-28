@@ -31,6 +31,7 @@ import { cronExpressionValidator, everyTimeMapperValidators } from "src/app/comm
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetSchedulingService } from "../../../services/dataset-scheduling.service";
 import { TriggersTooltipsTexts } from "src/app/common/tooltips/triggers.text";
+import { finalize } from "rxjs";
 
 @Component({
     selector: "app-ingest-trigger-form",
@@ -43,7 +44,7 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
     @Output() public changeTriggerEmit = new EventEmitter<FormGroup<PollingGroupType>>();
     @Input({ required: true }) public updateStateToggleLabel: string;
 
-    public isLoading = false;
+    public isLoaded: boolean = false;
     public readonly timeUnit: typeof TimeUnit = TimeUnit;
     public readonly pollingGroupEnum: typeof PollingGroupEnum = PollingGroupEnum;
     public readonly UPDATES_TOOLTIP = TriggersTooltipsTexts.UPDATE_SELECTOR_TOOLTIP;
@@ -75,7 +76,12 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
     public initPollingForm(): void {
         this.datasetSchedulingService
             .fetchDatasetFlowTriggers(this.datasetBasics.id, DatasetFlowType.Ingest)
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(
+                finalize(() => {
+                    this.isLoaded = true;
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
             .subscribe((data: GetDatasetFlowTriggersQuery) => {
                 const flowTriggers = data.datasets.byId?.flows.triggers.byType;
                 const schedule = flowTriggers?.schedule;
@@ -97,7 +103,6 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
                     }
                 }
                 this.changeTriggerEmit.emit(this.pollingForm);
-                this.isLoading = true;
                 this.cdr.detectChanges();
             });
     }

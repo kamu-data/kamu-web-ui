@@ -56,7 +56,7 @@ describe("IngestTriggerFormComponent", () => {
         component = fixture.componentInstance;
         datasetSchedulingService = TestBed.inject(DatasetSchedulingService);
         component.datasetBasics = mockDatasetBasicsRootFragment;
-        component.isLoading = true;
+        component.isLoaded = true;
     });
 
     it("should create", () => {

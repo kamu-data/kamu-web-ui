@@ -4358,7 +4358,7 @@ export type FlowSummaryDataFragment = {
                         numRecords: number;
                         updatedWatermark?: string | null;
                     }
-                  | { __typename?: "FlowDescriptionUpdateResultUnknown" }
+                  | { __typename?: "FlowDescriptionUpdateResultUnknown"; message: string }
                   | { __typename?: "FlowDescriptionUpdateResultUpToDate"; uncacheable: boolean }
                   | null;
           }
@@ -4385,7 +4385,7 @@ export type FlowSummaryDataFragment = {
                         numRecords: number;
                         updatedWatermark?: string | null;
                     }
-                  | { __typename?: "FlowDescriptionUpdateResultUnknown" }
+                  | { __typename?: "FlowDescriptionUpdateResultUnknown"; message: string }
                   | { __typename?: "FlowDescriptionUpdateResultUpToDate"; uncacheable: boolean }
                   | null;
           }
@@ -4401,7 +4401,7 @@ export type FlowSummaryDataFragment = {
                         numRecords: number;
                         updatedWatermark?: string | null;
                     }
-                  | { __typename?: "FlowDescriptionUpdateResultUnknown" }
+                  | { __typename?: "FlowDescriptionUpdateResultUnknown"; message: string }
                   | { __typename?: "FlowDescriptionUpdateResultUpToDate"; uncacheable: boolean }
                   | null;
           }
@@ -5761,6 +5761,9 @@ export const FlowSummaryDataFragmentDoc = gql`
                         numRecords
                         updatedWatermark
                     }
+                    ... on FlowDescriptionUpdateResultUnknown {
+                        message
+                    }
                 }
             }
             ... on FlowDescriptionDatasetPushIngest {
@@ -5776,6 +5779,9 @@ export const FlowSummaryDataFragmentDoc = gql`
                         numRecords
                         updatedWatermark
                     }
+                    ... on FlowDescriptionUpdateResultUnknown {
+                        message
+                    }
                 }
             }
             ... on FlowDescriptionDatasetExecuteTransform {
@@ -5788,6 +5794,9 @@ export const FlowSummaryDataFragmentDoc = gql`
                         numBlocks
                         numRecords
                         updatedWatermark
+                    }
+                    ... on FlowDescriptionUpdateResultUnknown {
+                        message
                     }
                 }
             }

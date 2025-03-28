@@ -14,6 +14,7 @@ import {
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
 import { mockDatasetMainDataId, mockPublicDatasetVisibility } from "src/app/search/mock.data";
+import { flowEventSubMessageResults } from "../dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers.mock";
 
 export const expectationsDesriptionColumnOptions = [
     {
@@ -37,6 +38,56 @@ export const mockDatasetExecuteTransformFlowSummaryData: FlowSummaryDataFragment
             numRecords: 10,
         },
         __typename: "FlowDescriptionDatasetExecuteTransform",
+    },
+    flowId: "1000",
+    status: FlowStatus.Finished,
+    initiator: null,
+    outcome: {
+        __typename: "FlowSuccessResult",
+        message: "Succes",
+    },
+    timing: {
+        awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
+        runningSince: null,
+        finishedAt: null,
+        __typename: "FlowTimingRecords",
+    },
+    __typename: "Flow",
+};
+
+export const mockDatasetExecuteTransformFlowDescriptionUpdateResultUnknown: FlowSummaryDataFragment = {
+    description: {
+        datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+        transformResult: {
+            __typename: "FlowDescriptionUpdateResultUnknown",
+            message: flowEventSubMessageResults[15],
+        },
+        __typename: "FlowDescriptionDatasetExecuteTransform",
+    },
+    flowId: "1000",
+    status: FlowStatus.Finished,
+    initiator: null,
+    outcome: {
+        __typename: "FlowSuccessResult",
+        message: "Succes",
+    },
+    timing: {
+        awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
+        runningSince: null,
+        finishedAt: null,
+        __typename: "FlowTimingRecords",
+    },
+    __typename: "Flow",
+};
+
+export const mockDatasetPollingIngestFlowDescriptionUpdateResultUnknown: FlowSummaryDataFragment = {
+    description: {
+        datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+        ingestResult: {
+            __typename: "FlowDescriptionUpdateResultUnknown",
+            message: flowEventSubMessageResults[15],
+        },
+        __typename: "FlowDescriptionDatasetPollingIngest",
     },
     flowId: "1000",
     status: FlowStatus.Finished,

@@ -163,39 +163,45 @@ export class DatasetFlowDetailsHelpers {
                                     case "FlowDescriptionDatasetPollingIngest":
                                     case "FlowDescriptionDatasetPushIngest":
                                         return flowDetails.description.ingestResult?.__typename ===
-                                            "FlowDescriptionUpdateResultSuccess"
-                                            ? `Ingested ${flowDetails.description.ingestResult.numRecords} new ${
-                                                  flowDetails.description.ingestResult.numRecords == 1
-                                                      ? "record"
-                                                      : "records"
-                                              } in ${flowDetails.description.ingestResult.numBlocks} new ${
-                                                  flowDetails.description.ingestResult.numBlocks == 1
-                                                      ? "block"
-                                                      : "blocks"
-                                              }`
+                                            "FlowDescriptionUpdateResultUnknown"
+                                            ? `${flowDetails.description.ingestResult.message}`
                                             : flowDetails.description.ingestResult?.__typename ===
-                                                    "FlowDescriptionUpdateResultUpToDate" &&
-                                                flowDetails.description.ingestResult.uncacheable &&
-                                                ((flowDetails.configSnapshot?.__typename ===
-                                                    "FlowConfigurationIngest" &&
-                                                    !flowDetails.configSnapshot.fetchUncacheable) ||
-                                                    !flowDetails.configSnapshot)
-                                              ? "Source is uncacheable: to re-scan the data, use force update"
-                                              : "Dataset is up-to-date";
+                                                "FlowDescriptionUpdateResultSuccess"
+                                              ? `Ingested ${flowDetails.description.ingestResult.numRecords} new ${
+                                                    flowDetails.description.ingestResult.numRecords == 1
+                                                        ? "record"
+                                                        : "records"
+                                                } in ${flowDetails.description.ingestResult.numBlocks} new ${
+                                                    flowDetails.description.ingestResult.numBlocks == 1
+                                                        ? "block"
+                                                        : "blocks"
+                                                }`
+                                              : flowDetails.description.ingestResult?.__typename ===
+                                                      "FlowDescriptionUpdateResultUpToDate" &&
+                                                  flowDetails.description.ingestResult.uncacheable &&
+                                                  ((flowDetails.configSnapshot?.__typename ===
+                                                      "FlowConfigurationIngest" &&
+                                                      !flowDetails.configSnapshot.fetchUncacheable) ||
+                                                      !flowDetails.configSnapshot)
+                                                ? "Source is uncacheable: to re-scan the data, use force update"
+                                                : "Dataset is up-to-date";
 
                                     case "FlowDescriptionDatasetExecuteTransform":
                                         return flowDetails.description.transformResult?.__typename ===
-                                            "FlowDescriptionUpdateResultSuccess"
-                                            ? `Transformed ${flowDetails.description.transformResult.numRecords} new ${
-                                                  flowDetails.description.transformResult.numRecords == 1
-                                                      ? "record"
-                                                      : "records"
-                                              } in ${flowDetails.description.transformResult.numBlocks} new ${
-                                                  flowDetails.description.transformResult.numBlocks == 1
-                                                      ? "block"
-                                                      : "blocks"
-                                              }`
-                                            : "Dataset is up-to-date";
+                                            "FlowDescriptionUpdateResultUnknown"
+                                            ? `${flowDetails.description.transformResult.message}`
+                                            : flowDetails.description.transformResult?.__typename ===
+                                                "FlowDescriptionUpdateResultSuccess"
+                                              ? `Transformed ${flowDetails.description.transformResult.numRecords} new ${
+                                                    flowDetails.description.transformResult.numRecords == 1
+                                                        ? "record"
+                                                        : "records"
+                                                } in ${flowDetails.description.transformResult.numBlocks} new ${
+                                                    flowDetails.description.transformResult.numBlocks == 1
+                                                        ? "block"
+                                                        : "blocks"
+                                                }`
+                                              : "Dataset is up-to-date";
 
                                     case "FlowDescriptionDatasetHardCompaction":
                                         switch (flowDetails.description.compactionResult?.__typename) {

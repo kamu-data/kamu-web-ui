@@ -5,11 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-### Fixed
-- Wrong redirect after login
 ### Added
+- Transform settings: enable a transform without setting batching parameters
 - Implemented `MergeStrategySnapshot` and `MergeStrategyUpsertStream` merge strategies
 - Implemented unknown response for broken dataset flows
+### Fixed
+- Wrong redirect after login
 
 
 ## [0.43.0] - 2025-03-25

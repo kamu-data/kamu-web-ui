@@ -183,11 +183,33 @@ export const mockGetDatasetFlowTriggersBatchingQuery: GetDatasetFlowTriggersQuer
             flows: {
                 triggers: {
                     byType: {
-                        paused: true,
+                        paused: false,
                         batching: {
                             minRecordsToAwait: 100,
                             maxBatchingInterval: {
                                 every: 10,
+                                unit: TimeUnit.Hours,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+};
+
+export const mockGetDatasetFlowTriggersDefaultBatchingQuery: GetDatasetFlowTriggersQuery = {
+    datasets: {
+        __typename: "Datasets",
+        byId: {
+            flows: {
+                triggers: {
+                    byType: {
+                        paused: true,
+                        batching: {
+                            minRecordsToAwait: 0,
+                            maxBatchingInterval: {
+                                every: 0,
                                 unit: TimeUnit.Hours,
                             },
                         },

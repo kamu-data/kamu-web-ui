@@ -29,6 +29,7 @@ import { BatchingFormType } from "../dataset-settings-scheduling-tab.component.t
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { everyTimeMapperValidators } from "src/app/common/helpers/data.helpers";
 import { TriggersTooltipsTexts } from "src/app/common/tooltips/triggers.text";
+import { finalize } from "rxjs";
 
 @Component({
     selector: "app-batching-trigger-form",
@@ -42,18 +43,19 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
     public readonly timeUnit: typeof TimeUnit = TimeUnit;
     public readonly UPDATES_TOOLTIP = TriggersTooltipsTexts.UPDATE_SELECTOR_TOOLTIP;
     private everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = everyTimeMapperValidators;
-    public isLoading: boolean;
+    public pausedFromServer: boolean;
+    public isLoaded: boolean = false;
 
     public batchingForm = new FormGroup<BatchingFormType>({
         updatesState: new FormControl<boolean>(false, { nonNullable: true }),
         every: new FormControl<MaybeNull<number>>({ value: null, disabled: false }, [
             Validators.required,
-            Validators.min(1),
+            Validators.min(0),
         ]),
         unit: new FormControl<MaybeNull<TimeUnit>>({ value: null, disabled: false }, [Validators.required]),
         minRecordsToAwait: new FormControl<MaybeNull<number>>({ value: null, disabled: false }, [
             Validators.required,
-            Validators.min(1),
+            Validators.min(0),
         ]),
     });
 
@@ -72,11 +74,26 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
         return this.batchingForm.controls.unit;
     }
 
+    public get updatesState(): AbstractControl {
+        return this.batchingForm.controls.updatesState;
+    }
+
     public get batchingMinRecordsToAwait(): AbstractControl {
         return this.batchingForm.controls.minRecordsToAwait;
     }
 
     public saveBatchingTriggers(): void {
+        this.saveTriggerEmit.emit(this.batchingForm);
+    }
+
+    public saveDefaultBatchingTriggers(): void {
+        const updatesState = this.updatesState.value as boolean;
+        this.batchingForm.patchValue({
+            unit: TimeUnit.Minutes,
+            every: 0,
+            minRecordsToAwait: 0,
+            updatesState: this.pausedFromServer || updatesState ? true : false,
+        });
         this.saveTriggerEmit.emit(this.batchingForm);
     }
 
@@ -91,24 +108,61 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
     public ngOnInit(): void {
         this.setBatchingEveryTimeValidator();
         this.initBatchingForm();
+        this.batchingUpdatesState.valueChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((enableUpdates: boolean) => {
+                if (enableUpdates) {
+                    this.enableControls();
+                } else if (this.batchingForm.invalid) {
+                    this.disableControls();
+                }
+            });
     }
 
     public initBatchingForm(): void {
         this.datasetSchedulingService
             .fetchDatasetFlowTriggers(this.datasetBasics.id, DatasetFlowType.ExecuteTransform)
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(
+                finalize(() => {
+                    this.isLoaded = true;
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
             .subscribe((data: GetDatasetFlowTriggersQuery) => {
                 const flowTriggers = data.datasets.byId?.flows.triggers.byType;
                 const batching = flowTriggers?.batching;
-                if (batching) {
+                this.pausedFromServer = Boolean(flowTriggers?.paused);
+
+                if (batching && batching.maxBatchingInterval.every && !flowTriggers.paused) {
                     this.batchingForm.patchValue({
-                        ...batching.maxBatchingInterval,
+                        unit: batching.maxBatchingInterval.unit,
+                        every: batching.maxBatchingInterval.every,
                         minRecordsToAwait: batching.minRecordsToAwait,
                         updatesState: !flowTriggers.paused,
                     });
+                } else {
+                    this.batchingForm.reset();
+                    if (flowTriggers && !flowTriggers.paused) {
+                        this.batchingForm.patchValue({
+                            updatesState: !flowTriggers.paused,
+                        });
+                    } else if (batching && batching.maxBatchingInterval.every) {
+                        this.disableControls();
+                    }
                 }
-                this.isLoading = true;
                 this.cdr.detectChanges();
             });
+    }
+
+    private disableControls(): void {
+        this.batchingEveryTime.disable();
+        this.batchingUnitTime.disable();
+        this.batchingMinRecordsToAwait.disable();
+    }
+
+    private enableControls(): void {
+        this.batchingEveryTime.enable();
+        this.batchingUnitTime.enable();
+        this.batchingMinRecordsToAwait.enable();
     }
 }

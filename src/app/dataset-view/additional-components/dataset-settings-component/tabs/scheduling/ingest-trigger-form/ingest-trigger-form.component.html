@@ -1,4 +1,4 @@
-<div class="position-relative border border-1 rounded-3" *ngIf="isLoading; else loadingBlock">
+<div class="position-relative border border-1 rounded-3" *ngIf="isLoaded; else loadingBlock">
     <form [formGroup]="pollingForm">
         <div>
             <span class="position-absolute text-muted group-box-label text-uppercase">Triggers</span>

@@ -8,7 +8,7 @@
 import { NavigationService } from "./../../../../services/navigation.service";
 import { inject, Injectable } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
-import { Observable, map } from "rxjs";
+import { Observable, map, take } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
     DatasetFlowType,
@@ -60,7 +60,7 @@ export class DatasetSchedulingService {
         datasetId: string,
         datasetFlowType: DatasetFlowType,
     ): Observable<GetDatasetFlowTriggersQuery> {
-        return this.datasetFlowApi.getDatasetFlowTriggers({ datasetId, datasetFlowType });
+        return this.datasetFlowApi.getDatasetFlowTriggers({ datasetId, datasetFlowType }).pipe(take(1));
     }
 
     public setDatasetTriggers(params: {

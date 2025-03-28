@@ -79,6 +79,7 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
             .pipe(
                 finalize(() => {
                     this.isLoaded = true;
+                    this.cdr.detectChanges();
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
@@ -103,7 +104,6 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
                     }
                 }
                 this.changeTriggerEmit.emit(this.pollingForm);
-                this.cdr.detectChanges();
             });
     }
 

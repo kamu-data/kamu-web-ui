@@ -125,6 +125,7 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
             .pipe(
                 finalize(() => {
                     this.isLoaded = true;
+                    this.cdr.detectChanges();
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
@@ -150,7 +151,6 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
                         this.disableControls();
                     }
                 }
-                this.cdr.detectChanges();
             });
     }
 

@@ -14,7 +14,7 @@ import {
     mockFullPowerDatasetPermissionsFragment,
     mockDatasetLineageResponse,
 } from "../search/mock.data";
-import { TestBed } from "@angular/core/testing";
+import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
 import { DatasetApi } from "../api/dataset.api";
 import { ModalService } from "../common/components/modal/modal.service";
@@ -233,6 +233,20 @@ describe("AppDatasetService", () => {
 
         expect(subscription$.closed).toBeTrue();
     });
+
+    it("should check get lineage data from api with error", fakeAsync(() => {
+        const exception = new DatasetNotFoundError();
+        const copyResponse = structuredClone(mockDatasetLineageResponse);
+        copyResponse.datasets.byOwnerAndName = null;
+        spyOn(datasetApi, "getDatasetLineage").and.returnValue(of(copyResponse));
+
+        expect(() => {
+            service.requestDatasetLineage(mockDatasetInfo).subscribe();
+            tick();
+        }).toThrow(exception);
+
+        flush();
+    }));
 
     it("should check get history data from api when dataset not found", () => {
         const numRecords = 7;

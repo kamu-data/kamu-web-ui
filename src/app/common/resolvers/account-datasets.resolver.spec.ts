@@ -6,7 +6,7 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, Router } from "@angular/router";
+import { ActivatedRoute, ActivatedRouteSnapshot, convertToParamMap, ResolveFn, Router } from "@angular/router";
 import { accountDatasetsResolver } from "./account-datasets.resolver";
 import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
 import { Apollo } from "apollo-angular";
@@ -16,7 +16,6 @@ import { TEST_ACCOUNT_NAME } from "src/app/api/mock/dataset.mock";
 import { ToastrModule } from "ngx-toastr";
 
 describe("accountDatasetsResolver", () => {
-    let routeSnapshot: ActivatedRouteSnapshot;
     let router: Router;
     let accountService: AccountService;
 
@@ -47,9 +46,14 @@ describe("accountDatasetsResolver", () => {
     });
 
     it("should check default state for resolver", async () => {
-        routeSnapshot = new ActivatedRouteSnapshot();
-        routeSnapshot.params = { [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME };
-        routeSnapshot.queryParams = {};
+        const routeSnapshot = {
+            parent: {
+                parent: {
+                    paramMap: convertToParamMap({ [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME }),
+                },
+            },
+            queryParamMap: convertToParamMap({}),
+        } as ActivatedRouteSnapshot;
         const getDatasetsByAccountNameSpy = spyOn(accountService, "getDatasetsByAccountName");
         await executeResolver(routeSnapshot, router.routerState.snapshot);
         expect(getDatasetsByAccountNameSpy).toHaveBeenCalledOnceWith(TEST_ACCOUNT_NAME, 0);
@@ -57,9 +61,14 @@ describe("accountDatasetsResolver", () => {
 
     it("should check state for resolver with page", async () => {
         const pageNumber = 2;
-        routeSnapshot = new ActivatedRouteSnapshot();
-        routeSnapshot.params = { [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME };
-        routeSnapshot.queryParams = { [ProjectLinks.URL_QUERY_PARAM_PAGE]: pageNumber };
+        const routeSnapshot = {
+            parent: {
+                parent: {
+                    paramMap: convertToParamMap({ [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME }),
+                },
+            },
+            queryParamMap: convertToParamMap({ page: pageNumber }),
+        } as ActivatedRouteSnapshot;
         const getDatasetsByAccountNameSpy = spyOn(accountService, "getDatasetsByAccountName");
         await executeResolver(routeSnapshot, router.routerState.snapshot);
         expect(getDatasetsByAccountNameSpy).toHaveBeenCalledOnceWith(TEST_ACCOUNT_NAME, pageNumber - 1);

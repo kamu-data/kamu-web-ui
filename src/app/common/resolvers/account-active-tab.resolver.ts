@@ -12,6 +12,7 @@ export const accountActiveTabResolver: ResolveFn<AccountTabs> = (
     _: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
 ) => {
-    const lastSegments = state.url.split("/");
-    return lastSegments[lastSegments.length - 1] as AccountTabs;
+    const routeSegments = state.url.split(/[/?]+/);
+    const setSegments = new Set(routeSegments);
+    return Object.values(AccountTabs).filter((item) => setSegments.has(item))[0];
 };

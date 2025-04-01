@@ -84,8 +84,8 @@ describe("NavigationService", () => {
         const mockOwnerName = "Mock name";
         const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
         service.navigateToOwnerView(mockOwnerName, AccountTabs.OVERVIEW);
-        expect(routerSpy).toHaveBeenCalledWith([mockOwnerName], {
-            queryParams: {},
+        expect(routerSpy).toHaveBeenCalledWith([mockOwnerName, ProjectLinks.URL_ACCOUNT_SELECT, AccountTabs.OVERVIEW], {
+            queryParams: { page: undefined },
         });
     });
 
@@ -94,8 +94,8 @@ describe("NavigationService", () => {
         const testPage = 2;
         const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
         service.navigateToOwnerView(mockOwnerName, AccountTabs.DATASETS, testPage);
-        expect(routerSpy).toHaveBeenCalledWith([mockOwnerName], {
-            queryParams: { tab: AccountTabs.DATASETS, page: testPage },
+        expect(routerSpy).toHaveBeenCalledWith([mockOwnerName, ProjectLinks.URL_ACCOUNT_SELECT, AccountTabs.DATASETS], {
+            queryParams: { page: testPage },
         });
     });
 

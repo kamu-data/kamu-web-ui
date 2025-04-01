@@ -8,8 +8,8 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { DatasetApi } from "src/app/api/dataset.api";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
-import { mockDatasetListItem } from "src/app/api/mock/dataset.mock";
+import { TEST_LOGIN } from "src/app/api/mock/auth.mock";
+import { mockDatasetsAccountResponse, TEST_ACCOUNT_NAME } from "src/app/api/mock/dataset.mock";
 import { NavigationService } from "src/app/services/navigation.service";
 import { AccountTabs } from "../../account.constants";
 import { DatasetsTabComponent } from "./datasets-tab.component";
@@ -18,9 +18,11 @@ import { NgbPopoverModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
 import { DisplayTimeModule } from "src/app/common/components/display-time/display-time.module";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { RouterModule } from "@angular/router";
+import { ActivatedRoute, convertToParamMap, RouterModule } from "@angular/router";
 import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
+import { SimpleChanges } from "@angular/core";
+import { PaginationModule } from "src/app/common/components/pagination-component/pagination.module";
+import ProjectLinks from "src/app/project-links";
 
 describe("DatasetsTabComponent", () => {
     let component: DatasetsTabComponent;
@@ -36,19 +38,43 @@ describe("DatasetsTabComponent", () => {
                 MatChipsModule,
                 NgbPopoverModule,
                 MatDividerModule,
-                SharedTestModule,
                 RouterModule,
                 DatasetVisibilityModule,
+                PaginationModule,
             ],
-            providers: [DatasetApi],
+            providers: [
+                DatasetApi,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        parent: {
+                            parent: {
+                                snapshot: {
+                                    paramMap: convertToParamMap({
+                                        [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME,
+                                    }),
+                                },
+                            },
+                        },
+                    },
+                },
+            ],
             declarations: [DatasetsTabComponent, DatasetListItemComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DatasetsTabComponent);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
-        component.datasets = [mockDatasetListItem];
-        component.accountName = mockAccountDetails.accountName;
+        component.accountDatasets = mockDatasetsAccountResponse;
+        const accountNameSimpleChanges: SimpleChanges = {
+            accountName: {
+                previousValue: undefined,
+                currentValue: TEST_LOGIN,
+                firstChange: true,
+                isFirstChange: () => true,
+            },
+        };
+        component.ngOnChanges(accountNameSimpleChanges);
         fixture.detectChanges();
     });
 
@@ -61,16 +87,12 @@ describe("DatasetsTabComponent", () => {
         const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
         component.onPageChange(testPageNumber);
 
-        expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(
-            mockAccountDetails.accountName,
-            AccountTabs.DATASETS,
-            testPageNumber,
-        );
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(TEST_ACCOUNT_NAME, AccountTabs.DATASETS, testPageNumber);
     });
 
     it("should check page changed without current page", () => {
         const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
         component.onPageChange();
-        expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(mockAccountDetails.accountName, AccountTabs.DATASETS);
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(TEST_ACCOUNT_NAME, AccountTabs.DATASETS);
     });
 });

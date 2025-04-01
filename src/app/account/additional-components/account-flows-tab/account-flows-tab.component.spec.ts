@@ -32,6 +32,7 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { routes } from "src/app/app-routing.module";
 import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/tile-base-widget.component";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 describe("AccountFlowsTabComponent", () => {
     let component: AccountFlowsTabComponent;
@@ -39,6 +40,7 @@ describe("AccountFlowsTabComponent", () => {
     let accountService: AccountService;
     let navigationService: NavigationService;
     let datasetFlowsService: DatasetFlowsService;
+    let loggedUserService: LoggedUserService;
     const MOCK_FLOW_ID = "1";
 
     beforeEach(async () => {
@@ -77,8 +79,9 @@ describe("AccountFlowsTabComponent", () => {
         accountService = TestBed.inject(AccountService);
         navigationService = TestBed.inject(NavigationService);
         datasetFlowsService = TestBed.inject(DatasetFlowsService);
+        loggedUserService = TestBed.inject(LoggedUserService);
         component = fixture.componentInstance;
-        component.loggedUser = mockAccountDetails;
+        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
     });
 
     it("should create", () => {

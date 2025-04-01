@@ -16,6 +16,7 @@ import { MaybeNull } from "src/app/interface/app.types";
 import { EMPTY, Observable } from "rxjs";
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
 import { LoggedUserService } from "../../auth/logged-user.service";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 
 @Component({
     selector: "app-settings",
@@ -24,15 +25,11 @@ import { LoggedUserService } from "../../auth/logged-user.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountSettingsComponent extends BaseComponent implements OnInit {
-    @Input(ProjectLinks.URL_PARAM_CATEGORY) public set category(value: MaybeNull<AccountSettingsTabs>) {
-        this.activeTab =
-            value && Object.values(AccountSettingsTabs).includes(value) ? value : AccountSettingsTabs.ACCESS_TOKENS;
-    }
+    @Input(RoutingResolvers.ACCOUNT_SETTINGS_ACTIVE_TAB_KEY) public activeTab: AccountSettingsTabs;
     @Input(ProjectLinks.URL_QUERY_PARAM_PAGE) public set page(value: number) {
         this.currentPage = value ?? 1;
     }
 
-    public activeTab: AccountSettingsTabs;
     public currentPage: number;
 
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
@@ -61,9 +58,5 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
                 }
             }),
         );
-    }
-
-    public changeAccountEmail(): void {
-        this.fetchAccountInfo();
     }
 }

@@ -285,12 +285,13 @@
             </div>
         </div>
         <div class="content">
-            <ng-container *ngIf="activeTab === AccountSettingsTabs.ACCESS_TOKENS">
+            <router-outlet></router-outlet>
+            <!-- <ng-container *ngIf="activeTab === AccountSettingsTabs.ACCESS_TOKENS">
                 <app-access-tokens-tab [currentPage]="currentPage" [account]="user" />
             </ng-container>
             <ng-container *ngIf="activeTab === AccountSettingsTabs.EMAILS">
                 <app-emails-tab [account]="user" (accountEmailChange)="changeAccountEmail()" />
-            </ng-container>
+            </ng-container> -->
         </div>
     </div>
 </div>

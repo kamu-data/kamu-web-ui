@@ -13,4 +13,7 @@ export default class RoutingResolvers {
     public static readonly SEARCH_KEY = "searchData";
     public static readonly ACCOUNT_DATASETS_KEY = "accountDatasetsData";
     public static readonly ACCOUNT_ACTIVE_TAB_KEY = "accountActiveTabData";
+    public static readonly ACCOUNT_SETTINGS_ACTIVE_TAB_KEY = "accountSettingsActiveTabData";
+    public static readonly ACCOUNT_SETTINGS_EMAIL_KEY = "accountSettingsEmailData";
+    public static readonly ACCOUNT_SETTINGS_ACCESS_TOKENS_KEY = "accountSettingsAccessTokensData";
 }

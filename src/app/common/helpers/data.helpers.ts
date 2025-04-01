@@ -23,6 +23,7 @@ import { convertSecondsToHumanReadableFormat, removeAllLineBreaks } from "./app.
 import { SliceUnit } from "../../dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
 import { DataRow, DatasetSchema, OperationColumnClassEnum } from "../../interface/dataset.interface";
 import { differenceInSeconds } from "date-fns";
+import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
 export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";
@@ -432,3 +433,17 @@ export function setOperationColumnClass(value: number): OperationColumnClassEnum
             return OperationColumnClassEnum.PRIMARY_COLOR;
     }
 }
+
+export const activeTabResolver =
+    <T extends Record<string, string>>(tabsEnum: T): ResolveFn<string> =>
+    (_: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+        const routeSegments = state.url.split(/[/?]+/);
+        const setSegments = new Set(routeSegments);
+
+        const matchingTab = Object.values(tabsEnum).find((tab) => setSegments.has(tab));
+
+        if (!matchingTab) {
+            throw new Error(`No matching tab found in URL: ${state.url}`);
+        }
+        return matchingTab;
+    };

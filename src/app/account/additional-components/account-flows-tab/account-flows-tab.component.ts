@@ -35,7 +35,7 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
     public readonly DISPLAY_COLUMNS = ["description", "information", "creator", "dataset", "options"];
 
     private accountService = inject(AccountService);
-    private LoggedUserService = inject(LoggedUserService);
+    private loggedUserService = inject(LoggedUserService);
     private ngZone = inject(NgZone);
 
     public ngOnInit(): void {
@@ -75,7 +75,7 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
     }
 
     public get loggedUser(): AccountFragment {
-        return this.LoggedUserService.currentlyLoggedInUser;
+        return this.loggedUserService.currentlyLoggedInUser;
     }
 
     public onPageChange(page: number): void {

@@ -8,7 +8,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { DatasetApi } from "src/app/api/dataset.api";
-import { TEST_LOGIN } from "src/app/api/mock/auth.mock";
 import { mockDatasetsAccountResponse, TEST_ACCOUNT_NAME } from "src/app/api/mock/dataset.mock";
 import { NavigationService } from "src/app/services/navigation.service";
 import { AccountTabs } from "../../account.constants";
@@ -65,11 +64,14 @@ describe("DatasetsTabComponent", () => {
         fixture = TestBed.createComponent(DatasetsTabComponent);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
-        component.accountDatasets = mockDatasetsAccountResponse;
+        component.accountResolverResponse = {
+            response: mockDatasetsAccountResponse,
+            accountName: TEST_ACCOUNT_NAME,
+        };
         const accountNameSimpleChanges: SimpleChanges = {
             accountName: {
                 previousValue: undefined,
-                currentValue: TEST_LOGIN,
+                currentValue: TEST_ACCOUNT_NAME,
                 firstChange: true,
                 isFirstChange: () => true,
             },

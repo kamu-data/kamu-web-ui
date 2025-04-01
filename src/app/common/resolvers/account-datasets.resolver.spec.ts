@@ -8,18 +8,20 @@
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRoute, ActivatedRouteSnapshot, convertToParamMap, ResolveFn, Router } from "@angular/router";
 import { accountDatasetsResolver } from "./account-datasets.resolver";
-import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
+import { DatasetsAccountResolverResponse } from "src/app/interface/dataset.interface";
 import { Apollo } from "apollo-angular";
 import { AccountService } from "src/app/account/account.service";
 import ProjectLinks from "src/app/project-links";
 import { TEST_ACCOUNT_NAME } from "src/app/api/mock/dataset.mock";
 import { ToastrModule } from "ngx-toastr";
+import { of } from "rxjs";
 
 describe("accountDatasetsResolver", () => {
     let router: Router;
     let accountService: AccountService;
+    let getDatasetsByAccountNameSpy: jasmine.Spy;
 
-    const executeResolver: ResolveFn<DatasetsAccountResponse> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<DatasetsAccountResolverResponse> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => accountDatasetsResolver(...resolverParameters));
 
     beforeEach(() => {
@@ -39,6 +41,7 @@ describe("accountDatasetsResolver", () => {
 
         accountService = TestBed.inject(AccountService);
         router = TestBed.inject(Router);
+        getDatasetsByAccountNameSpy = spyOn(accountService, "getDatasetsByAccountName").and.returnValue(of().pipe());
     });
 
     it("should be created", () => {
@@ -54,7 +57,6 @@ describe("accountDatasetsResolver", () => {
             },
             queryParamMap: convertToParamMap({}),
         } as ActivatedRouteSnapshot;
-        const getDatasetsByAccountNameSpy = spyOn(accountService, "getDatasetsByAccountName");
         await executeResolver(routeSnapshot, router.routerState.snapshot);
         expect(getDatasetsByAccountNameSpy).toHaveBeenCalledOnceWith(TEST_ACCOUNT_NAME, 0);
     });
@@ -69,7 +71,6 @@ describe("accountDatasetsResolver", () => {
             },
             queryParamMap: convertToParamMap({ page: pageNumber }),
         } as ActivatedRouteSnapshot;
-        const getDatasetsByAccountNameSpy = spyOn(accountService, "getDatasetsByAccountName");
         await executeResolver(routeSnapshot, router.routerState.snapshot);
         expect(getDatasetsByAccountNameSpy).toHaveBeenCalledOnceWith(TEST_ACCOUNT_NAME, pageNumber - 1);
     });

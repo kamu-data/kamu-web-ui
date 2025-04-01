@@ -51,7 +51,7 @@ export interface DatasetsAccountResponse {
 }
 
 export interface DatasetsAccountResolverResponse {
-    response: DatasetsAccountResponse;
+    datasetsResponse: DatasetsAccountResponse;
     accountName: string;
 }
 

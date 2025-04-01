@@ -1,8 +1,8 @@
 <div class="container-content mt-4">
-    <div *ngIf="accountResolverResponse.response.datasets.length === 0" class="text-center">
+    <div *ngIf="accountResolverResponse.datasetsResponse.datasets.length === 0" class="text-center">
         <h5>Datasets list is empty</h5>
     </div>
-    <div *ngFor="let row of accountResolverResponse.response.datasets; let rowIndex = index">
+    <div *ngFor="let row of accountResolverResponse.datasetsResponse.datasets; let rowIndex = index">
         <app-dataset-list-item
             [row]="row"
             [rowIndex]="rowIndex"
@@ -10,11 +10,14 @@
         ></app-dataset-list-item>
     </div>
     <ng-template
-        [ngIf]="accountResolverResponse.response.datasets.length > 0 && accountResolverResponse.response.pageInfo"
+        [ngIf]="
+            accountResolverResponse.datasetsResponse.datasets.length > 0 &&
+            accountResolverResponse.datasetsResponse.pageInfo
+        "
     >
         <app-pagination
             [currentPage]="currentPage"
-            [pageInfo]="accountResolverResponse.response.pageInfo"
+            [pageInfo]="accountResolverResponse.datasetsResponse.pageInfo"
             (pageChangeEvent)="onPageChange($event)"
         ></app-pagination>
     </ng-template>

@@ -35,7 +35,7 @@ export class DatasetsTabComponent implements OnChanges {
     private navigationService = inject(NavigationService);
 
     public get currentPage(): number {
-        return this.accountResolverResponse.response.pageInfo.currentPage + 1;
+        return this.accountResolverResponse.datasetsResponse.pageInfo.currentPage + 1;
     }
 
     public get accountName(): string {

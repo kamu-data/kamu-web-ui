@@ -9,7 +9,7 @@ import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 import { map } from "rxjs";
 import { AccountService } from "src/app/account/account.service";
-import { DatasetsAccountResolverResponse } from "src/app/interface/dataset.interface";
+import { DatasetsAccountResolverResponse, DatasetsAccountResponse } from "src/app/interface/dataset.interface";
 import ProjectLinks from "src/app/project-links";
 
 export const accountDatasetsResolver: ResolveFn<DatasetsAccountResolverResponse> = (route: ActivatedRouteSnapshot) => {
@@ -17,9 +17,9 @@ export const accountDatasetsResolver: ResolveFn<DatasetsAccountResolverResponse>
     const accountName = route.parent?.parent?.paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME) as string;
     const page = route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE) ?? 1;
     return accountService.getDatasetsByAccountName(accountName, Number(page) - 1).pipe(
-        map((data) => {
+        map((data: DatasetsAccountResponse) => {
             return {
-                response: data,
+                datasetsResponse: data,
                 accountName,
             };
         }),

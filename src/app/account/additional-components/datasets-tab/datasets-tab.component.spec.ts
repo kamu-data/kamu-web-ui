@@ -65,7 +65,7 @@ describe("DatasetsTabComponent", () => {
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
         component.accountResolverResponse = {
-            response: mockDatasetsAccountResponse,
+            datasetsResponse: mockDatasetsAccountResponse,
             accountName: TEST_ACCOUNT_NAME,
         };
         const accountNameSimpleChanges: SimpleChanges = {

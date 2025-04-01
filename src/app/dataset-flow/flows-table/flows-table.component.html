@@ -55,9 +55,11 @@
         </th>
         <td mat-cell *matCellDef="let element" style="height: 62px">
             <div class="d-flex py-1 ps-3">
-                <mat-icon class="icon-status margin-top-5" [ngClass]="descriptionColumnOptions(element).class">{{
-                    descriptionColumnOptions(element).icon
-                }}</mat-icon>
+                <mat-icon
+                    class="icon-status margin-top-5 overflow-visible"
+                    [ngClass]="descriptionColumnOptions(element).class"
+                    >{{ descriptionColumnOptions(element).icon }}</mat-icon
+                >
                 <div class="ms-1 py-2 position-relative">
                     <img
                         *ngIf="element.status !== FlowStatus.Finished"

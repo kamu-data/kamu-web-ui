@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input, NgZone, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, NgZone, OnInit } from "@angular/core";
 import { combineLatest, map, of, switchMap, timer } from "rxjs";
 import { MaybeNull } from "src/app/interface/app.types";
 import {
@@ -20,6 +20,7 @@ import { AccountTabs } from "../../account.constants";
 import { environment } from "src/environments/environment";
 import { FlowsTableProcessingBaseComponent } from "src/app/dataset-flow/flows-table/flows-table-processing-base.component";
 import { FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 @Component({
     selector: "app-account-flows-tab",
@@ -28,13 +29,13 @@ import { FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent implements OnInit {
-    @Input({ required: true }) public loggedUser: AccountFragment;
     public nodes: FlowSummaryDataFragment[] = [];
     public searchByDataset: DatasetListFlowsDataFragment[] = [];
     public filters: MaybeNull<FlowsTableFiltersOptions>;
     public readonly DISPLAY_COLUMNS = ["description", "information", "creator", "dataset", "options"];
 
     private accountService = inject(AccountService);
+    private loggedUserService = inject(LoggedUserService);
     private ngZone = inject(NgZone);
 
     public ngOnInit(): void {
@@ -71,6 +72,10 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
                 return { flowsData, allFlowsPaused, flowInitiators };
             }),
         );
+    }
+
+    public get loggedUser(): AccountFragment {
+        return this.loggedUserService.currentlyLoggedInUser;
     }
 
     public onPageChange(page: number): void {

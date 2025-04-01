@@ -85,8 +85,7 @@
                         value="datasets"
                     >
                         <a
-                            [routerLink]="['/', user.accountName]"
-                            [queryParams]="{ tab: AccountTabs.DATASETS }"
+                            [routerLink]="['/', user.accountName, URL_ACCOUNT_SELECT, AccountTabs.DATASETS]"
                             data-test-id="link-account-datasets-tab"
                             class="menu-link"
                         >
@@ -94,7 +93,7 @@
                                 <mat-icon class="fs-4 d-block me-1">book</mat-icon>
                                 <span class="d-block me-2">Datasets</span>
                                 <span title="1" data-view-component="true" class="counter">{{
-                                    accountDatasets.datasetTotalCount
+                                    datasetTotalCount$ | async
                                 }}</span>
                             </div>
                         </a>
@@ -107,8 +106,7 @@
                         value="flows"
                     >
                         <a
-                            [routerLink]="['/', user.accountName]"
-                            [queryParams]="{ tab: AccountTabs.FLOWS }"
+                            [routerLink]="['/', user.accountName, URL_ACCOUNT_SELECT, AccountTabs.FLOWS]"
                             data-test-id="link-account-flows-tab"
                             class="menu-link"
                         >
@@ -157,28 +155,7 @@
                     </mat-button-toggle>
                 </mat-button-toggle-group>
             </div>
-            <ng-container *ngIf="activeTab === AccountTabs.OVERVIEW">
-                <div>Overview</div>
-            </ng-container>
-            <ng-container *ngIf="activeTab === AccountTabs.DATASETS">
-                <app-datasets-tab
-                    [datasets]="accountDatasets.datasets"
-                    [accountName]="user.accountName"
-                    [pageInfo]="accountDatasets.pageInfo"
-                ></app-datasets-tab>
-            </ng-container>
-            <ng-container *ngIf="activeTab === AccountTabs.FLOWS">
-                <app-account-flows-tab [loggedUser]="user"></app-account-flows-tab>
-            </ng-container>
-            <ng-container *ngIf="activeTab === AccountTabs.ORGANIZATIONS">
-                <div>Organizations</div>
-            </ng-container>
-            <ng-container *ngIf="activeTab === AccountTabs.INBOX">
-                <div>Inbox</div>
-            </ng-container>
-            <ng-container *ngIf="activeTab === AccountTabs.STARS">
-                <div>Stars</div>
-            </ng-container>
+            <router-outlet></router-outlet>
         </div>
     </div>
 </div>

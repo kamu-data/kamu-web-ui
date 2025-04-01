@@ -1,0 +1,7 @@
+query datasetsTotalCountByAccountName($accountName: AccountName!) {
+  datasets {
+    byAccountName(accountName: $accountName, perPage: 0, page: 0) {
+      totalCount
+    }
+  }
+}

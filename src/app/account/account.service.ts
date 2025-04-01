@@ -13,6 +13,7 @@ import {
     AccountResumeFlowsMutation,
     Dataset,
     DatasetListFlowsDataFragment,
+    DatasetsTotalCountByAccountNameQuery,
 } from "../api/kamu.graphql.interface";
 import { AccountFlowFilters, AccountFragment, FlowConnectionDataFragment } from "../api/kamu.graphql.interface";
 import { AccountApi } from "../api/account.api";
@@ -41,6 +42,14 @@ export class AccountService {
                 const pageInfo = data.datasets.byAccountName.pageInfo;
                 const datasetTotalCount = data.datasets.byAccountName.totalCount;
                 return { datasets, pageInfo, datasetTotalCount };
+            }),
+        );
+    }
+
+    public getDatasetsTotalCountByAccountName(name: string): Observable<number> {
+        return this.datasetApi.fetchDatasetsTotalCountByAccountName(name).pipe(
+            map((data: DatasetsTotalCountByAccountNameQuery) => {
+                return data.datasets.byAccountName.totalCount;
             }),
         );
     }

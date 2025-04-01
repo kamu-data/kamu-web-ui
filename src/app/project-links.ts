@@ -9,6 +9,7 @@ export default class ProjectLinks {
     public static readonly URL_GITHUB_CALLBACK: string = "github_callback";
     public static readonly URL_BLOCK: string = "block";
     public static readonly URL_FLOW_DETAILS: string = "flow-details";
+    public static readonly URL_ACCOUNT_SELECT: string = "~select";
 
     // initial routes
     public static readonly URL_HOME: string = "/";

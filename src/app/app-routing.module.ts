@@ -35,7 +35,12 @@ import { setTransformResolver } from "./common/resolvers/set-transform.resolver"
 import { addPushSourceResolver } from "./common/resolvers/add-push-source.resolver";
 import { AccountSettingsTabs } from "./account/settings/account-settings.constants";
 import RoutingResolvers from "./common/resolvers/routing-resolvers";
-import { accountResolver } from "./common/resolvers/account.resolver";
+import { accountDatasetsResolver } from "./common/resolvers/account-datasets.resolver";
+import { AccountTabs } from "./account/account.constants";
+import { DatasetsTabComponent } from "./account/additional-components/datasets-tab/datasets-tab.component";
+import { AccountFlowsTabComponent } from "./account/additional-components/account-flows-tab/account-flows-tab.component";
+import { accountActiveTabResolver } from "./common/resolvers/account-active-tab.resolver";
+import { accountGuard } from "./account/guards/account.guard";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -98,8 +103,31 @@ export const routes: Routes = [
             {
                 path: "",
                 component: AccountComponent,
-                resolve: { [RoutingResolvers.ACCOUNT_KEY]: accountResolver },
+                canActivate: [accountGuard],
                 runGuardsAndResolvers: "always",
+                resolve: { [RoutingResolvers.ACCOUNT_ACTIVE_TAB_KEY]: accountActiveTabResolver },
+                children: [
+                    {
+                        path: ProjectLinks.URL_ACCOUNT_SELECT,
+                        children: [
+                            {
+                                path: ``,
+                                redirectTo: AccountTabs.DATASETS,
+                                pathMatch: "full",
+                            },
+                            {
+                                path: AccountTabs.DATASETS,
+                                component: DatasetsTabComponent,
+                                resolve: { [RoutingResolvers.ACCOUNT_DATASETS_KEY]: accountDatasetsResolver },
+                                runGuardsAndResolvers: "always",
+                            },
+                            {
+                                path: AccountTabs.FLOWS,
+                                component: AccountFlowsTabComponent,
+                            },
+                        ],
+                    },
+                ],
             },
             {
                 path: `:${ProjectLinks.URL_PARAM_DATASET_NAME}`,

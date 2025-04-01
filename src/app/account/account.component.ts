@@ -6,16 +6,15 @@
  */
 
 import ProjectLinks from "src/app/project-links";
-import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, SimpleChanges } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import { AccountTabs } from "./account.constants";
 import AppValues from "src/app/common/values/app.values";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { AccountService } from "src/app/account/account.service";
-import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
 import { map, shareReplay } from "rxjs/operators";
 import { Observable } from "rxjs";
-import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { AccountNotFoundError } from "src/app/common/values/errors";
 import { ModalService } from "../common/components/modal/modal.service";
 import { LoggedUserService } from "../auth/logged-user.service";
@@ -27,17 +26,13 @@ import RoutingResolvers from "../common/resolvers/routing-resolvers";
     styleUrls: ["./account.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccountComponent implements OnChanges {
+export class AccountComponent implements OnChanges, OnInit {
     @Input(ProjectLinks.URL_PARAM_ACCOUNT_NAME) public accountName: string;
-    @Input(ProjectLinks.URL_QUERY_PARAM_TAB) public set tab(value: MaybeUndefined<AccountTabs>) {
-        this.activeTab = value && Object.values(AccountTabs).includes(value) ? value : AccountTabs.DATASETS;
-    }
-    @Input(RoutingResolvers.ACCOUNT_KEY) public accountDatasets: DatasetsAccountResponse;
-
-    public activeTab: AccountTabs;
-    public page: number;
+    @Input(RoutingResolvers.ACCOUNT_ACTIVE_TAB_KEY) public activeTab: AccountTabs;
+    public datasetTotalCount$: Observable<number>;
 
     public readonly AccountTabs = AccountTabs;
+    public readonly URL_ACCOUNT_SELECT = ProjectLinks.URL_ACCOUNT_SELECT;
     public isDropdownMenu = false;
     public user$: Observable<AccountFragment>;
 
@@ -45,12 +40,13 @@ export class AccountComponent implements OnChanges {
     private accountService = inject(AccountService);
     private loggedUserService = inject(LoggedUserService);
 
+    public ngOnInit(): void {
+        this.datasetTotalCount$ = this.accountService.getDatasetsTotalCountByAccountName(this.accountName);
+    }
+
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes.accountName && changes.accountName.previousValue !== changes.accountName.currentValue) {
             this.user$ = this.pipelineAccountByName(changes.accountName.currentValue as string);
-        }
-        if (changes.accountDatasets && changes.accountDatasets.previousValue !== changes.accountDatasets.currentValue) {
-            this.accountDatasets = changes.accountDatasets.currentValue as DatasetsAccountResponse;
         }
     }
 

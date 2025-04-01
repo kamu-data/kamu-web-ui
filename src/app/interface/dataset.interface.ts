@@ -50,6 +50,11 @@ export interface DatasetsAccountResponse {
     datasetTotalCount: number;
 }
 
+export interface DatasetsAccountResolverResponse {
+    datasetsResponse: DatasetsAccountResponse;
+    accountName: string;
+}
+
 export interface DatasetRequestBySql {
     query: string;
     limit?: number;

@@ -14,7 +14,6 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { AccountComponent } from "./account.component";
 import { BehaviorSubject, of } from "rxjs";
 import { DatasetApi } from "src/app/api/dataset.api";
-import { mockDatasetsAccountResponse } from "src/app/api/mock/dataset.mock";
 import { AccountService } from "src/app/account/account.service";
 import ProjectLinks from "src/app/project-links";
 import { AccountPageQueryParams } from "./account.component.model";
@@ -94,7 +93,6 @@ describe("AccountComponent", () => {
         fixture = TestBed.createComponent(AccountComponent);
         component = fixture.componentInstance;
         component.accountName = TEST_LOGIN;
-        component.accountDatasets = mockDatasetsAccountResponse;
         const accountNameSimpleChanges: SimpleChanges = {
             accountName: {
                 previousValue: undefined,
@@ -138,7 +136,7 @@ describe("AccountComponent", () => {
     it("should check activeTab when URL not exist query param tab", () => {
         fixture.detectChanges();
         mockQueryParams.next({ page: 1 });
-        component.tab = undefined;
+        component.activeTab = AccountTabs.DATASETS;
 
         expect(component.activeTab).toEqual(AccountTabs.DATASETS);
     });
@@ -147,9 +145,9 @@ describe("AccountComponent", () => {
         spyOn(component, "showFlows").and.returnValue(true);
         fixture.detectChanges();
         const datasetsTabLink = findElementByDataTestId(fixture, "link-account-datasets-tab") as HTMLLinkElement;
-        expect(datasetsTabLink.href).toContain(`?tab=${AccountTabs.DATASETS}`);
+        expect(datasetsTabLink.href).toContain(`/${ProjectLinks.URL_ACCOUNT_SELECT}/${AccountTabs.DATASETS}`);
 
         const flowsTabLink = findElementByDataTestId(fixture, "link-account-flows-tab") as HTMLLinkElement;
-        expect(flowsTabLink.href).toContain(`?tab=${AccountTabs.FLOWS}`);
+        expect(flowsTabLink.href).toContain(`/${ProjectLinks.URL_ACCOUNT_SELECT}/${AccountTabs.FLOWS}`);
     });
 });

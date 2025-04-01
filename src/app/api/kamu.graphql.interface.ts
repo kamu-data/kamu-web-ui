@@ -3973,6 +3973,15 @@ export type DatasetsByAccountNameQuery = {
     };
 };
 
+export type DatasetsTotalCountByAccountNameQueryVariables = Exact<{
+    accountName: Scalars["AccountName"];
+}>;
+
+export type DatasetsTotalCountByAccountNameQuery = {
+    __typename?: "Query";
+    datasets: { __typename?: "Datasets"; byAccountName: { __typename?: "DatasetConnection"; totalCount: number } };
+};
+
 export type DeleteDatasetMutationVariables = Exact<{
     datasetId: Scalars["DatasetID"];
 }>;
@@ -8016,6 +8025,29 @@ export class DatasetsByAccountNameGQL extends Apollo.Query<
     DatasetsByAccountNameQueryVariables
 > {
     document = DatasetsByAccountNameDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetsTotalCountByAccountNameDocument = gql`
+    query datasetsTotalCountByAccountName($accountName: AccountName!) {
+        datasets {
+            byAccountName(accountName: $accountName, perPage: 0, page: 0) {
+                totalCount
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetsTotalCountByAccountNameGQL extends Apollo.Query<
+    DatasetsTotalCountByAccountNameQuery,
+    DatasetsTotalCountByAccountNameQueryVariables
+> {
+    document = DatasetsTotalCountByAccountNameDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

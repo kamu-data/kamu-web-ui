@@ -112,8 +112,7 @@
                         data-ga-click="Header, click, Nav menu - item:dashboard:user"
                         data-test-id="userDatasetsHeader"
                         aria-label="Dashboard"
-                        [routerLink]="['/', loggedAccount.accountName]"
-                        [queryParams]="{ tab: AccountTabs.DATASETS }"
+                        [routerLink]="['/', loggedAccount.accountName, URL_ACCOUNT_SELECT, AccountTabs.DATASETS]"
                     >
                         <mat-icon class="fs-4">book</mat-icon>
                         <span>Your Datasets </span>
@@ -263,8 +262,7 @@
                         <a
                             mat-menu-item
                             data-test-id="openUserDatasets"
-                            [routerLink]="['/', loggedAccount.accountName]"
-                            [queryParams]="{ tab: AccountTabs.DATASETS }"
+                            [routerLink]="['/', loggedAccount.accountName, URL_ACCOUNT_SELECT, AccountTabs.DATASETS]"
                         >
                             Your datasets
                         </a>

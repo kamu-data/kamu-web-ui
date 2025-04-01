@@ -12,7 +12,6 @@ import { Router } from "@angular/router";
 import { DatasetNavigationParams, MetadataBlockNavigationParams } from "../interface/navigation.interface";
 import ProjectLinks from "../project-links";
 import { FlowDetailsTabs } from "../dataset-flow/dataset-flow-details/dataset-flow-details.types";
-import { AccountTabs } from "../account/account.constants";
 import { AccountSettingsTabs } from "../account/settings/account-settings.constants";
 
 @Injectable({ providedIn: "root" })
@@ -113,8 +112,8 @@ export class NavigationService {
 
     public navigateToOwnerView(ownerName: string, tab?: string, page?: number): void {
         promiseWithCatch(
-            this.router.navigate([ownerName], {
-                queryParams: tab !== AccountTabs.OVERVIEW ? { tab, page } : {},
+            this.router.navigate([ownerName, ProjectLinks.URL_ACCOUNT_SELECT, tab], {
+                queryParams: { page },
             }),
         );
     }

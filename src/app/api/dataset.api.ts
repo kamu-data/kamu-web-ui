@@ -12,6 +12,8 @@ import {
     DatasetSystemTimeBlockByHashGQL,
     DatasetSystemTimeBlockByHashQuery,
     UpdateWatermarkGQL,
+    DatasetsTotalCountByAccountNameGQL,
+    DatasetsTotalCountByAccountNameQuery,
 } from "./kamu.graphql.interface";
 import {
     CommitEventToDatasetGQL,
@@ -73,6 +75,7 @@ export class DatasetApi {
     private datasetDataSqlRunGQL = inject(GetDatasetDataSqlRunGQL);
     private datasetHistoryGQL = inject(GetDatasetHistoryGQL);
     private datasetsByAccountNameGQL = inject(DatasetsByAccountNameGQL);
+    private datasetsTotalCountByAccountNameGQL = inject(DatasetsTotalCountByAccountNameGQL);
     private metadataBlockGQL = inject(GetMetadataBlockGQL);
     private datasetByIdGQL = inject(DatasetByIdGQL);
     private datasetByAccountAndDatasetNameGQL = inject(DatasetByAccountAndDatasetNameGQL);
@@ -212,6 +215,15 @@ export class DatasetApi {
                     return result.data;
                 }),
             );
+    }
+
+    public fetchDatasetsTotalCountByAccountName(accountName: string): Observable<DatasetsTotalCountByAccountNameQuery> {
+        return this.datasetsTotalCountByAccountNameGQL.watch({ accountName }, noCacheFetchPolicy).valueChanges.pipe(
+            first(),
+            map((result: ApolloQueryResult<DatasetsTotalCountByAccountNameQuery>) => {
+                return result.data;
+            }),
+        );
     }
 
     public getBlockByHash(params: {

@@ -91,7 +91,7 @@ export const routes: Routes = [
         canActivate: [AuthenticatedGuard],
         component: AccountSettingsComponent,
         runGuardsAndResolvers: "always",
-        resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_ACTIVE_TAB_KEY]: activeTabResolver(AccountSettingsTabs) },
+        resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_ACTIVE_TAB_KEY]: activeTabResolver() },
         children: [
             {
                 path: "",
@@ -120,7 +120,7 @@ export const routes: Routes = [
                 component: AccountComponent,
                 canActivate: [accountGuard],
                 runGuardsAndResolvers: "always",
-                resolve: { [RoutingResolvers.ACCOUNT_ACTIVE_TAB_KEY]: activeTabResolver(AccountTabs) },
+                resolve: { [RoutingResolvers.ACCOUNT_ACTIVE_TAB_KEY]: activeTabResolver() },
                 children: [
                     {
                         path: ProjectLinks.URL_ACCOUNT_SELECT,

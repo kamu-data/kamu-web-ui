@@ -26,11 +26,6 @@ import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 })
 export class AccountSettingsComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.ACCOUNT_SETTINGS_ACTIVE_TAB_KEY) public activeTab: AccountSettingsTabs;
-    @Input(ProjectLinks.URL_QUERY_PARAM_PAGE) public set page(value: number) {
-        this.currentPage = value ?? 1;
-    }
-
-    public currentPage: number;
 
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public readonly AccountSettingsTabs: typeof AccountSettingsTabs = AccountSettingsTabs;

@@ -6,19 +6,45 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ResolveFn } from "@angular/router";
+import { ActivatedRouteSnapshot, ResolveFn, Router } from "@angular/router";
 import { accountSettingsEmailResolver } from "./account-settings-email.resolver";
 import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
+import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { Apollo } from "apollo-angular";
+import { ToastrModule } from "ngx-toastr";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("accountSettingsEmailResolver", () => {
+    let accountEmailService: AccountEmailService;
+    let loggedUserService: LoggedUserService;
+    let router: Router;
+
     const executeResolver: ResolveFn<AccountWithEmailFragment> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => accountSettingsEmailResolver(...resolverParameters));
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
+        TestBed.configureTestingModule({
+            providers: [Apollo],
+            imports: [ToastrModule.forRoot(), HttpClientTestingModule],
+        });
+
+        accountEmailService = TestBed.inject(AccountEmailService);
+        loggedUserService = TestBed.inject(LoggedUserService);
+        router = TestBed.inject(Router);
     });
 
     it("should be created", () => {
         expect(executeResolver).toBeTruthy();
+    });
+
+    it("should check resolver", async () => {
+        const routeSnapshot = {} as ActivatedRouteSnapshot;
+        const fetchAccountWithEmailSpy = spyOn(accountEmailService, "fetchAccountWithEmail");
+        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        await executeResolver(routeSnapshot, router.routerState.snapshot);
+
+        expect(fetchAccountWithEmailSpy).toHaveBeenCalledOnceWith(mockAccountDetails.accountName);
     });
 });

@@ -9,12 +9,13 @@ import { inject } from "@angular/core";
 import { CanActivateFn } from "@angular/router";
 import { NavigationService } from "src/app/services/navigation.service";
 import { AccountTabs } from "../account.constants";
+import { activeTabResolver } from "src/app/common/helpers/data.helpers";
 
-export const accountGuard: CanActivateFn = (_, state) => {
+export const accountGuard: CanActivateFn = async (_, state) => {
     const navigationService = inject(NavigationService);
-    const routeSegments = state.url.split(/[/?]+/);
-    const setSegments = new Set(routeSegments);
-    if (Object.values(AccountTabs).filter((item) => setSegments.has(item)).length) {
+    const resolver = activeTabResolver();
+    const result = await resolver(_, state);
+    if (Object.values(AccountTabs).includes(result as AccountTabs)) {
         return true;
     } else {
         navigationService.navigateToOwnerView(state.url, AccountTabs.DATASETS);

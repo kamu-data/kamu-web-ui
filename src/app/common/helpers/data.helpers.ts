@@ -434,16 +434,8 @@ export function setOperationColumnClass(value: number): OperationColumnClassEnum
     }
 }
 
-export const activeTabResolver =
-    <T extends Record<string, string>>(tabsEnum: T): ResolveFn<string> =>
-    (_: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-        const routeSegments = state.url.split(/[/?]+/);
-        const setSegments = new Set(routeSegments);
-
-        const matchingTab = Object.values(tabsEnum).find((tab) => setSegments.has(tab));
-
-        if (!matchingTab) {
-            throw new Error(`No matching tab found in URL: ${state.url}`);
-        }
-        return matchingTab;
-    };
+export const activeTabResolver = (): ResolveFn<string> => (_: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+    const pathWithoutQuery = state.url.split("?")[0];
+    const routeSegments = pathWithoutQuery.split("/").filter(Boolean);
+    return routeSegments[routeSegments.length - 1];
+};

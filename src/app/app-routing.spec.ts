@@ -20,6 +20,12 @@ import { LoginComponent } from "./auth/login/login.component";
 import { LoginService } from "./auth/login/login.service";
 import { LoginMethod } from "./app-config.model";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { accountSettingsAccessTokensResolver } from "./common/resolvers/account-settings-access-tokens.resolver";
+import { ToastrModule } from "ngx-toastr";
+import { mockAccountDetails } from "./api/mock/auth.mock";
+import { of } from "rxjs";
+import { AccessTokenConnection } from "./api/kamu.graphql.interface";
+import { mockListAccessTokensQuery } from "./api/mock/access-token.mock";
 
 describe("Router", () => {
     let router: Router;
@@ -30,9 +36,22 @@ describe("Router", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [RouterTestingModule.withRoutes(routes), ApolloTestingModule, HttpClientTestingModule],
+            imports: [
+                RouterTestingModule.withRoutes(routes),
+                ApolloTestingModule,
+                HttpClientTestingModule,
+                ToastrModule.forRoot(),
+            ],
             declarations: [PageNotFoundComponent, LoginComponent],
             schemas: [NO_ERRORS_SCHEMA],
+            providers: [
+                {
+                    provide: accountSettingsAccessTokensResolver,
+                    useValue: {
+                        resolve: () => of(mockListAccessTokensQuery.auth.listAccessTokens as AccessTokenConnection),
+                    },
+                },
+            ],
         }).compileComponents();
 
         router = TestBed.inject(Router);
@@ -79,10 +98,9 @@ describe("Router", () => {
 
         it(`Route to ${url} lands on the component with active login`, fakeAsync(() => {
             spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-
+            spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
             promiseWithCatch(router.navigate([url]));
             tick();
-
             if (url === ProjectLinks.URL_SETTINGS) {
                 expect(location.path()).toBe("/" + url + "/access-tokens");
             } else {
@@ -90,6 +108,16 @@ describe("Router", () => {
             }
             flush();
         }));
+
+        it("should navigate to QueryExplainer component", async () => {
+            await router.navigate([ProjectLinks.URL_QUERY_EXPLAINER]);
+            expect(router.url).toBe("/" + ProjectLinks.URL_QUERY_EXPLAINER);
+        });
+
+        it("should navigate to GlobalQuery component", async () => {
+            await router.navigate([ProjectLinks.URL_QUERY]);
+            expect(router.url).toBe("/" + ProjectLinks.URL_QUERY);
+        });
     });
 
     describe("#login routes", () => {

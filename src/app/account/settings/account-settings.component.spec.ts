@@ -17,7 +17,6 @@ import {
     getElementByDataTestId,
     registerMatSvgIcons,
 } from "src/app/common/helpers/base-test.helpers.spec";
-import { AccountSettingsTabs } from "./account-settings.constants";
 import { of } from "rxjs";
 import { LoginService } from "../../auth/login/login.service";
 import { MatIconModule } from "@angular/material/icon";
@@ -79,35 +78,5 @@ describe("AccountSettingsComponent", () => {
         fixture.detectChanges();
 
         expect(findElementByDataTestId(fixture, Elements.UserNameLink)).toBeFalsy();
-    });
-
-    it("should open profile tab by default", () => {
-        component.category = null;
-        fixture.detectChanges();
-        expect(component.activeTab).toEqual(AccountSettingsTabs.ACCESS_TOKENS);
-    });
-
-    [
-        AccountSettingsTabs.ACCESSIBILITY,
-        AccountSettingsTabs.ACCOUNT,
-        AccountSettingsTabs.APPEARANCE,
-        AccountSettingsTabs.BILLING,
-        AccountSettingsTabs.EMAILS,
-        AccountSettingsTabs.NOTIFICATIONS,
-        AccountSettingsTabs.ORGANIZATIONS,
-        AccountSettingsTabs.PROFILE,
-        AccountSettingsTabs.SECURITY,
-    ].forEach((tab: AccountSettingsTabs) => {
-        it(`should activate ${tab} tab`, () => {
-            component.category = tab;
-            fixture.detectChanges();
-            expect(component.activeTab).toEqual(tab);
-        });
-    });
-
-    it("should open access token tab for a wrong tab", () => {
-        component.category = "wrong-tab" as AccountSettingsTabs;
-        fixture.detectChanges();
-        expect(component.activeTab).toEqual(AccountSettingsTabs.ACCESS_TOKENS);
     });
 });

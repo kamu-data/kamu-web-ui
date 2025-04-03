@@ -6,13 +6,9 @@
  */
 
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { AccountTabs } from "src/app/account/account.constants";
 
-export const accountActiveTabResolver: ResolveFn<AccountTabs> = (
-    _: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot,
-) => {
-    const routeSegments = state.url.split(/[/?]+/);
-    const setSegments = new Set(routeSegments);
-    return Object.values(AccountTabs).filter((item) => setSegments.has(item))[0];
+export const accountActiveTabResolver: ResolveFn<string> = (_: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+    const pathWithoutQuery = state.url.split("?")[0];
+    const routeSegments = pathWithoutQuery.split("/").filter(Boolean);
+    return routeSegments[routeSegments.length - 1];
 };

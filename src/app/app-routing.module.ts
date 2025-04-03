@@ -39,7 +39,6 @@ import { accountDatasetsResolver } from "./common/resolvers/account-datasets.res
 import { AccountTabs } from "./account/account.constants";
 import { DatasetsTabComponent } from "./account/additional-components/datasets-tab/datasets-tab.component";
 import { AccountFlowsTabComponent } from "./account/additional-components/account-flows-tab/account-flows-tab.component";
-import { accountActiveTabResolver } from "./common/resolvers/account-active-tab.resolver";
 import { accountGuard } from "./account/guards/account.guard";
 import { FlowDetailsTabs } from "./dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { FlowDetailsLogsTabComponent } from "./dataset-flow/dataset-flow-details/tabs/flow-details-logs-tab/flow-details-logs-tab.component";
@@ -52,6 +51,11 @@ import { datasetInfoResolver } from "./common/resolvers/dataset-info.resolver";
 import { FlowDetailsSummaryTabComponent } from "./dataset-flow/dataset-flow-details/tabs/flow-details-summary-tab/flow-details-summary-tab.component";
 import { flowDetailsSummaryResolver } from "./common/resolvers/flow-details-summary.resolver";
 import { FlowDetailsHistoryTabComponent } from "./dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.component";
+import { AccessTokensTabComponent } from "./account/settings/tabs/access-tokens-tab/access-tokens-tab.component";
+import { EmailsTabComponent } from "./account/settings/tabs/emails-tab/emails-tab.component";
+import { accountSettingsEmailResolver } from "./common/resolvers/account-settings-email.resolver";
+import { accountSettingsAccessTokensResolver } from "./common/resolvers/account-settings-access-tokens.resolver";
+import { activeTabResolver } from "./common/helpers/data.helpers";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -95,16 +99,27 @@ export const routes: Routes = [
     },
     {
         path: `${ProjectLinks.URL_SETTINGS}`,
+        canActivate: [AuthenticatedGuard],
+        component: AccountSettingsComponent,
+        runGuardsAndResolvers: "always",
+        resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_ACTIVE_TAB_KEY]: activeTabResolver() },
         children: [
             {
                 path: "",
-                redirectTo: `/${ProjectLinks.URL_SETTINGS}/${AccountSettingsTabs.ACCESS_TOKENS}`,
+                redirectTo: AccountSettingsTabs.ACCESS_TOKENS,
                 pathMatch: "full",
             },
             {
-                path: `:${ProjectLinks.URL_PARAM_CATEGORY}`,
-                canActivate: [AuthenticatedGuard],
-                component: AccountSettingsComponent,
+                path: AccountSettingsTabs.ACCESS_TOKENS,
+                component: AccessTokensTabComponent,
+                runGuardsAndResolvers: "always",
+                resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_ACCESS_TOKENS_KEY]: accountSettingsAccessTokensResolver },
+            },
+            {
+                path: AccountSettingsTabs.EMAILS,
+                component: EmailsTabComponent,
+                runGuardsAndResolvers: "always",
+                resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_EMAIL_KEY]: accountSettingsEmailResolver },
             },
         ],
     },
@@ -116,7 +131,7 @@ export const routes: Routes = [
                 component: AccountComponent,
                 canActivate: [accountGuard],
                 runGuardsAndResolvers: "always",
-                resolve: { [RoutingResolvers.ACCOUNT_ACTIVE_TAB_KEY]: accountActiveTabResolver },
+                resolve: { [RoutingResolvers.ACCOUNT_ACTIVE_TAB_KEY]: activeTabResolver },
                 children: [
                     {
                         path: ProjectLinks.URL_ACCOUNT_SELECT,
@@ -160,7 +175,7 @@ export const routes: Routes = [
                 canActivate: [AuthenticatedGuard],
                 runGuardsAndResolvers: "always",
                 resolve: {
-                    [RoutingResolvers.FLOW_DETAILS_ACTIVE_TAB_KEY]: accountActiveTabResolver,
+                    [RoutingResolvers.FLOW_DETAILS_ACTIVE_TAB_KEY]: activeTabResolver,
                     [RoutingResolvers.FLOW_DETAILS_KEY]: flowDetailsResolver,
                     [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolver,
                 },

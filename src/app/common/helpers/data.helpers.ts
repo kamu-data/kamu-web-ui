@@ -23,6 +23,7 @@ import { convertSecondsToHumanReadableFormat, removeAllLineBreaks } from "./app.
 import { SliceUnit } from "../../dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
 import { DataRow, DatasetSchema, OperationColumnClassEnum } from "../../interface/dataset.interface";
 import { differenceInSeconds } from "date-fns";
+import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
 export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";
@@ -432,3 +433,9 @@ export function setOperationColumnClass(value: number): OperationColumnClassEnum
             return OperationColumnClassEnum.PRIMARY_COLOR;
     }
 }
+
+export const activeTabResolver = (): ResolveFn<string> => (_: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+    const pathWithoutQuery = state.url.split("?")[0];
+    const routeSegments = pathWithoutQuery.split("/").filter(Boolean);
+    return routeSegments[routeSegments.length - 1];
+};

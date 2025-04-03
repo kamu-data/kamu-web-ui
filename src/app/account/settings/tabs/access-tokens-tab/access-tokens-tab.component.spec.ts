@@ -11,7 +11,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AccessTokensTabComponent } from "./access-tokens-tab.component";
 import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { Apollo } from "apollo-angular";
-import { mockAccountDetailsWithEmail } from "src/app/api/mock/auth.mock";
 import { ToastrModule } from "ngx-toastr";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { MatIconModule } from "@angular/material/icon";
@@ -25,10 +24,14 @@ import { of } from "rxjs";
 import { AccessTokenConnection, CreateAccessTokenResultSuccess } from "src/app/api/kamu.graphql.interface";
 import { PaginationComponent } from "src/app/common/components/pagination-component/pagination.component";
 import { NgbPaginationModule } from "@ng-bootstrap/ng-bootstrap";
-import { TokenCreateStep } from "../../account-settings.constants";
+import { AccountSettingsTabs, TokenCreateStep } from "../../account-settings.constants";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
+import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { RouterTestingModule } from "@angular/router/testing";
+import { routes } from "src/app/app-routing.module";
 
 describe("AccessTokensTabComponent", () => {
     let component: AccessTokensTabComponent;
@@ -36,7 +39,9 @@ describe("AccessTokensTabComponent", () => {
     let navigationService: NavigationService;
     let accessTokenService: AccessTokenService;
     let modalService: ModalService;
+    let loggedUserService: LoggedUserService;
     const MOCK_PAGE = 3;
+    let navigateToSettingsSpy: jasmine.Spy;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -81,6 +86,7 @@ describe("AccessTokensTabComponent", () => {
                 HttpClientModule,
                 NgbPaginationModule,
                 MatSlideToggleModule,
+                RouterTestingModule.withRoutes(routes),
             ],
         }).compileComponents();
 
@@ -90,12 +96,11 @@ describe("AccessTokensTabComponent", () => {
         navigationService = TestBed.inject(NavigationService);
         accessTokenService = TestBed.inject(AccessTokenService);
         modalService = TestBed.inject(ModalService);
+        loggedUserService = TestBed.inject(LoggedUserService);
         component = fixture.componentInstance;
-        component.currentPage = 1;
-        spyOn(accessTokenService, "listAccessTokens").and.returnValue(
-            of(mockListAccessTokensQuery.auth.listAccessTokens as AccessTokenConnection),
-        );
-        component.account = mockAccountDetailsWithEmail;
+        navigateToSettingsSpy = spyOn(navigationService, "navigateToSettings");
+        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        component.tokenConnection = mockListAccessTokensQuery.auth.listAccessTokens as AccessTokenConnection;
     });
 
     it("should create", () => {
@@ -104,10 +109,8 @@ describe("AccessTokensTabComponent", () => {
     });
 
     it("should check change page", () => {
-        const navigateToSettingsSpy = spyOn(navigationService, "navigateToSettings");
         component.onPageChange(MOCK_PAGE);
-        expect(component.currentPage).toEqual(MOCK_PAGE);
-        expect(navigateToSettingsSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToSettingsSpy).toHaveBeenCalledOnceWith(AccountSettingsTabs.ACCESS_TOKENS, MOCK_PAGE);
     });
 
     it("should check add new token button", () => {
@@ -165,6 +168,7 @@ describe("AccessTokensTabComponent", () => {
     it("should check done button", () => {
         component.currentCreateStep = TokenCreateStep.GENERATE;
         component.onDone();
+
         expect(component.currentCreateStep).toEqual(TokenCreateStep.FINISH);
     });
 

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { EmailsTabComponent } from "./emails-tab.component";
 import { mockAccountDetailsWithEmail } from "src/app/api/mock/auth.mock";
 import { ApolloTestingModule } from "apollo-angular/testing";
@@ -14,22 +14,36 @@ import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
 import { of } from "rxjs";
+import { RouterTestingModule } from "@angular/router/testing";
+import { routes } from "src/app/app-routing.module";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("EmailsTabComponent", () => {
     let component: EmailsTabComponent;
     let fixture: ComponentFixture<EmailsTabComponent>;
     let accountEmailService: AccountEmailService;
+    let navigationService: NavigationService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [EmailsTabComponent],
             providers: [FormBuilder],
-            imports: [ApolloTestingModule, ToastrModule.forRoot(), ReactiveFormsModule, MatDividerModule],
+            imports: [
+                ApolloTestingModule,
+                ToastrModule.forRoot(),
+                RouterTestingModule.withRoutes(routes),
+                ReactiveFormsModule,
+                MatDividerModule,
+                HttpClientTestingModule,
+            ],
         });
         accountEmailService = TestBed.inject(AccountEmailService);
         fixture = TestBed.createComponent(EmailsTabComponent);
+        navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
         component.account = mockAccountDetailsWithEmail;
+        spyOn(navigationService, "navigateToSettings");
         fixture.detectChanges();
     });
 
@@ -43,11 +57,11 @@ describe("EmailsTabComponent", () => {
         expect(resetChangeEmailErrorSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should check accountEmailChange emit value", () => {
+    it("should check accountEmailChange emit value", fakeAsync(() => {
         const changeEmailAddressSpy = spyOn(accountEmailService, "changeEmailAddress").and.returnValue(of(true));
-        const accountEmailChangeSpy = spyOn(component.accountEmailChange, "emit");
         component.changeEmailAddress();
+        tick();
         expect(changeEmailAddressSpy).toHaveBeenCalledTimes(1);
-        expect(accountEmailChangeSpy).toHaveBeenCalledTimes(1);
-    });
+        flush();
+    }));
 });

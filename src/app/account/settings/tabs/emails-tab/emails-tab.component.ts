@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
+import { inject, Input, OnInit } from "@angular/core";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ChangeEmailFormType } from "./email-tabs.types";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
@@ -13,6 +13,9 @@ import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
 import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
 import { Observable } from "rxjs";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { NavigationService } from "src/app/services/navigation.service";
+import { AccountSettingsTabs } from "../../account-settings.constants";
 
 @Component({
     selector: "app-emails-tab",
@@ -21,13 +24,13 @@ import { Observable } from "rxjs";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmailsTabComponent implements OnInit {
-    @Input({ required: true }) public account: AccountWithEmailFragment;
-    @Output() public accountEmailChange = new EventEmitter();
+    @Input(RoutingResolvers.ACCOUNT_SETTINGS_EMAIL_KEY) public account: AccountWithEmailFragment;
 
     public changeEmailForm: FormGroup<ChangeEmailFormType>;
     public changeEmailError$: Observable<string>;
     private fb = inject(FormBuilder);
     private accountEmailService = inject(AccountEmailService);
+    private navigationService = inject(NavigationService);
 
     public get emailAddress(): FormControl<string> {
         return this.changeEmailForm.get("emailAddress") as FormControl<string>;
@@ -52,7 +55,7 @@ export class EmailsTabComponent implements OnInit {
             })
             .subscribe((result: boolean) => {
                 if (result) {
-                    this.accountEmailChange.emit();
+                    this.navigationService.navigateToSettings(AccountSettingsTabs.EMAILS);
                 }
             });
     }

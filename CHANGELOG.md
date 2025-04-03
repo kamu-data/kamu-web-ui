@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Separate routes for all tabs for Account component
+- Separate routes for all tabs for AccountSettings component
 
 
 ## [0.44.0] - 2025-03-31

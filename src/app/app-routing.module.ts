@@ -39,8 +39,12 @@ import { accountDatasetsResolver } from "./common/resolvers/account-datasets.res
 import { AccountTabs } from "./account/account.constants";
 import { DatasetsTabComponent } from "./account/additional-components/datasets-tab/datasets-tab.component";
 import { AccountFlowsTabComponent } from "./account/additional-components/account-flows-tab/account-flows-tab.component";
-import { accountActiveTabResolver } from "./common/resolvers/account-active-tab.resolver";
 import { accountGuard } from "./account/guards/account.guard";
+import { AccessTokensTabComponent } from "./account/settings/tabs/access-tokens-tab/access-tokens-tab.component";
+import { EmailsTabComponent } from "./account/settings/tabs/emails-tab/emails-tab.component";
+import { accountSettingsEmailResolver } from "./common/resolvers/account-settings-email.resolver";
+import { accountSettingsAccessTokensResolver } from "./common/resolvers/account-settings-access-tokens.resolver";
+import { activeTabResolver } from "./common/helpers/data.helpers";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -84,16 +88,27 @@ export const routes: Routes = [
     },
     {
         path: `${ProjectLinks.URL_SETTINGS}`,
+        canActivate: [AuthenticatedGuard],
+        component: AccountSettingsComponent,
+        runGuardsAndResolvers: "always",
+        resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_ACTIVE_TAB_KEY]: activeTabResolver() },
         children: [
             {
                 path: "",
-                redirectTo: `/${ProjectLinks.URL_SETTINGS}/${AccountSettingsTabs.ACCESS_TOKENS}`,
+                redirectTo: AccountSettingsTabs.ACCESS_TOKENS,
                 pathMatch: "full",
             },
             {
-                path: `:${ProjectLinks.URL_PARAM_CATEGORY}`,
-                canActivate: [AuthenticatedGuard],
-                component: AccountSettingsComponent,
+                path: AccountSettingsTabs.ACCESS_TOKENS,
+                component: AccessTokensTabComponent,
+                runGuardsAndResolvers: "always",
+                resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_ACCESS_TOKENS_KEY]: accountSettingsAccessTokensResolver },
+            },
+            {
+                path: AccountSettingsTabs.EMAILS,
+                component: EmailsTabComponent,
+                runGuardsAndResolvers: "always",
+                resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_EMAIL_KEY]: accountSettingsEmailResolver },
             },
         ],
     },
@@ -105,7 +120,7 @@ export const routes: Routes = [
                 component: AccountComponent,
                 canActivate: [accountGuard],
                 runGuardsAndResolvers: "always",
-                resolve: { [RoutingResolvers.ACCOUNT_ACTIVE_TAB_KEY]: accountActiveTabResolver },
+                resolve: { [RoutingResolvers.ACCOUNT_ACTIVE_TAB_KEY]: activeTabResolver() },
                 children: [
                     {
                         path: ProjectLinks.URL_ACCOUNT_SELECT,

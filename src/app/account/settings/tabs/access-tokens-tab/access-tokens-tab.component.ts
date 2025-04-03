@@ -9,12 +9,20 @@ import { NavigationService } from "../../../../services/navigation.service";
 import { MaybeNull } from "../../../../interface/app.types";
 import {
     AccessTokenConnection,
-    AccountWithEmailFragment,
     CreatedAccessToken,
     PageBasedInfo,
     ViewAccessToken,
 } from "src/app/api/kamu.graphql.interface";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit, ViewChild } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    inject,
+    Input,
+    OnChanges,
+    SimpleChanges,
+    ViewChild,
+} from "@angular/core";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { AccountSettingsTabs, TokenCreateStep } from "../../account-settings.constants";
@@ -27,6 +35,8 @@ import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-
 import { BaseComponent } from "src/app/common/components/base.component";
 import { CreateTokenFormType } from "./access-tokens-tab.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 
 @Component({
     selector: "app-access-tokens-tab",
@@ -34,16 +44,16 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
     styleUrls: ["./access-tokens-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccessTokensTabComponent extends BaseComponent implements OnInit {
+export class AccessTokensTabComponent extends BaseComponent implements OnChanges {
     private fb = inject(FormBuilder);
     private modalService = inject(ModalService);
     private clipboard = inject(Clipboard);
     private accessTokenService = inject(AccessTokenService);
     private navigationService = inject(NavigationService);
     private cdr = inject(ChangeDetectorRef);
+    private loggedUserService = inject(LoggedUserService);
 
-    @Input({ required: true }) public account: AccountWithEmailFragment;
-    @Input({ required: true }) public currentPage: number;
+    @Input(RoutingResolvers.ACCOUNT_SETTINGS_ACCESS_TOKENS_KEY) public tokenConnection: AccessTokenConnection;
 
     @ViewChild(MatSort) private sort: MatSort;
     public searchTokenName: string = "";
@@ -60,8 +70,18 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
     public readonly PER_PAGE = 15;
     public readonly DATE_FORMAT = AppValues.DISPLAY_FLOW_DATE_FORMAT;
 
-    public ngOnInit(): void {
-        this.updateTable(this.currentPage);
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (changes.tokenConnection && changes.tokenConnection.previousValue !== changes.tokenConnection.currentValue) {
+            this.tokenConnection = changes.tokenConnection.currentValue as AccessTokenConnection;
+            this.dataSource.data = this.tokenConnection.nodes;
+            this.toggleTokens();
+            this.dataSource.sort = this.sort;
+            this.pageBasedInfo = this.tokenConnection.pageInfo;
+        }
+    }
+
+    public get currentPage(): number {
+        return this.tokenConnection.pageInfo.currentPage + 1;
     }
 
     public get tokenNameControl(): AbstractControl {
@@ -119,7 +139,10 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
 
     public onGenerateToken(): void {
         this.accessTokenService
-            .createAccessTokens(this.account.id, this.createTokenForm.controls.name.value as string)
+            .createAccessTokens(
+                this.loggedUserService.currentlyLoggedInUser.id,
+                this.createTokenForm.controls.name.value as string,
+            )
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((newToken: MaybeNull<CreatedAccessToken>) => {
                 if (newToken) {
@@ -154,24 +177,12 @@ export class AccessTokensTabComponent extends BaseComponent implements OnInit {
     }
 
     private updateTable(page: number): void {
-        this.accessTokenService
-            .listAccessTokens({
-                accountId: this.account.id,
-                page: page - 1,
-                perPage: this.PER_PAGE,
-            })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((result: AccessTokenConnection) => {
-                this.dataSource.data = result.nodes;
-                this.toggleTokens();
-                this.dataSource.sort = this.sort;
-                this.pageBasedInfo = result.pageInfo;
-            });
+        page > 1
+            ? this.navigationService.navigateToSettings(AccountSettingsTabs.ACCESS_TOKENS, page)
+            : this.navigationService.navigateToSettings(AccountSettingsTabs.ACCESS_TOKENS);
     }
 
     public onPageChange(page: number): void {
-        this.currentPage = page;
-        this.navigationService.navigateToSettings(AccountSettingsTabs.ACCESS_TOKENS, this.currentPage);
-        this.updateTable(this.currentPage);
+        this.updateTable(page);
     }
 }

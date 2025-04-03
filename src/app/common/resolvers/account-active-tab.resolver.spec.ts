@@ -12,7 +12,7 @@ import { AccountTabs } from "src/app/account/account.constants";
 import ProjectLinks from "src/app/project-links";
 
 describe("accountActiveTabResolver", () => {
-    const executeResolver: ResolveFn<AccountTabs> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<string> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => accountActiveTabResolver(...resolverParameters));
 
     beforeEach(() => {

@@ -14,10 +14,7 @@ export const datasetInfoResolver: ResolveFn<DatasetInfo> = (route: ActivatedRout
     const accountName = params[ProjectLinks.URL_PARAM_ACCOUNT_NAME];
     const datasetName = params[ProjectLinks.URL_PARAM_DATASET_NAME];
 
-    return {
-        accountName,
-        datasetName,
-    };
+    return { accountName, datasetName };
 };
 
 function getAllRouteParams(route: ActivatedRouteSnapshot): Record<string, string> {

@@ -8,8 +8,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { DatasetFlowByIdResponse, FlowDetailsTabs, ViewMenuData } from "./dataset-flow-details.types";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { Observable, Subscription, combineLatest, map, shareReplay } from "rxjs";
-import { FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
+import { Observable, Subscription, combineLatest, filter, map, shareReplay, skip, tap, timer } from "rxjs";
+import { FlowStatus, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { MaybeUndefined } from "src/app/interface/app.types";
 import ProjectLinks from "src/app/project-links";
@@ -48,12 +48,26 @@ export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implem
             }),
             shareReplay(),
         );
+        this.startTimer();
     }
 
     public getRouteLink(tab: FlowDetailsTabs): string {
         return `/${this.getDatasetInfoFromUrl().accountName}/${this.getDatasetInfoFromUrl().datasetName}/${
             ProjectLinks.URL_FLOW_DETAILS
         }/${this.flowId}/${tab}`;
+    }
+
+    private startTimer(): void {
+        timer(0, 5000)
+            .pipe(
+                skip(1),
+                filter(() => Boolean(this.flowDetails.flow.status !== FlowStatus.Finished)),
+                tap(() => {
+                    this.refreshNow();
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe();
     }
 
     private loadDatasetBasicDataWithPermissions(): Subscription {

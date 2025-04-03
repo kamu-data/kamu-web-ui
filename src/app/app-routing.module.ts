@@ -171,7 +171,6 @@ export const routes: Routes = [
                         runGuardsAndResolvers: "always",
                         resolve: {
                             [RoutingResolvers.FLOW_DETAILS_HISTORY_KEY]: flowDetailsSummaryResolver,
-                            [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolver,
                         },
                     },
                     {
@@ -180,7 +179,6 @@ export const routes: Routes = [
                         runGuardsAndResolvers: "always",
                         resolve: {
                             [RoutingResolvers.FLOW_DETAILS_SUMMARY_KEY]: flowDetailsSummaryResolver,
-                            [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolver,
                         },
                     },
                     {
@@ -189,7 +187,6 @@ export const routes: Routes = [
                         runGuardsAndResolvers: "always",
                         resolve: {
                             [RoutingResolvers.FLOW_DETAILS_LOGS_KEY]: flowDetailsLogsResolver,
-                            [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolver,
                         },
                     },
                     {

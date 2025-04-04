@@ -19,8 +19,8 @@ import { FlowDetailsLogsTabComponent } from "./tabs/flow-details-logs-tab/flow-d
 import { DatasetViewMenuModule } from "src/app/dataset-view/dataset-view-menu/dataset-view-menu.module";
 import { SafeHtmlModule } from "src/app/common/pipes/safe-html.module";
 import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
-import { FlowDetailsUsageTabComponent } from './tabs/flow-details-usage-tab/flow-details-usage-tab.component';
-import { FlowDetailsAdminTabComponent } from './tabs/flow-details-admin-tab/flow-details-admin-tab.component';
+import { FlowDetailsUsageTabComponent } from "./tabs/flow-details-usage-tab/flow-details-usage-tab.component";
+import { FlowDetailsAdminTabComponent } from "./tabs/flow-details-admin-tab/flow-details-admin-tab.component";
 
 @NgModule({
     declarations: [

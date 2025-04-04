@@ -10,6 +10,7 @@ import { FlowDetailsSummaryTabComponent } from "./flow-details-summary-tab.compo
 import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import AppValues from "src/app/common/values/app.values";
 import { mockTableFlowSummaryDataFragments } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
+import { mockDatasetFlowByIdResponse } from "src/app/api/mock/dataset-flow.mock";
 
 describe("FlowDetailsSummaryTabComponent", () => {
     let component: FlowDetailsSummaryTabComponent;
@@ -22,7 +23,9 @@ describe("FlowDetailsSummaryTabComponent", () => {
 
         fixture = TestBed.createComponent(FlowDetailsSummaryTabComponent);
         component = fixture.componentInstance;
-        component.flowDetails = mockTableFlowSummaryDataFragments[5];
+        const mockResponse = structuredClone(mockDatasetFlowByIdResponse);
+        mockResponse.flow = mockTableFlowSummaryDataFragments[5];
+        component.response = mockResponse;
         fixture.detectChanges();
     });
 

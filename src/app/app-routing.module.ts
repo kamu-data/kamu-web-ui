@@ -40,11 +40,20 @@ import { AccountTabs } from "./account/account.constants";
 import { DatasetsTabComponent } from "./account/additional-components/datasets-tab/datasets-tab.component";
 import { AccountFlowsTabComponent } from "./account/additional-components/account-flows-tab/account-flows-tab.component";
 import { accountGuard } from "./account/guards/account.guard";
+import { FlowDetailsTabs } from "./dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { FlowDetailsLogsTabComponent } from "./dataset-flow/dataset-flow-details/tabs/flow-details-logs-tab/flow-details-logs-tab.component";
+import { FlowDetailsUsageTabComponent } from "./dataset-flow/dataset-flow-details/tabs/flow-details-usage-tab/flow-details-usage-tab.component";
+import { FlowDetailsAdminTabComponent } from "./dataset-flow/dataset-flow-details/tabs/flow-details-admin-tab/flow-details-admin-tab.component";
+import { flowDetailsResolver } from "./common/resolvers/flow-details.resolver";
+import { datasetInfoResolver } from "./common/resolvers/dataset-info.resolver";
+import { FlowDetailsSummaryTabComponent } from "./dataset-flow/dataset-flow-details/tabs/flow-details-summary-tab/flow-details-summary-tab.component";
+import { flowDetailsSummaryResolver } from "./common/resolvers/flow-details-summary.resolver";
+import { FlowDetailsHistoryTabComponent } from "./dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.component";
 import { AccessTokensTabComponent } from "./account/settings/tabs/access-tokens-tab/access-tokens-tab.component";
 import { EmailsTabComponent } from "./account/settings/tabs/emails-tab/emails-tab.component";
 import { accountSettingsEmailResolver } from "./common/resolvers/account-settings-email.resolver";
 import { accountSettingsAccessTokensResolver } from "./common/resolvers/account-settings-access-tokens.resolver";
-import { activeTabResolver } from "./common/helpers/data.helpers";
+import { activeTabResolver } from "./common/resolvers/active-tab.resolver";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -91,7 +100,7 @@ export const routes: Routes = [
         canActivate: [AuthenticatedGuard],
         component: AccountSettingsComponent,
         runGuardsAndResolvers: "always",
-        resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_ACTIVE_TAB_KEY]: activeTabResolver() },
+        resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_ACTIVE_TAB_KEY]: activeTabResolver },
         children: [
             {
                 path: "",
@@ -120,7 +129,7 @@ export const routes: Routes = [
                 component: AccountComponent,
                 canActivate: [accountGuard],
                 runGuardsAndResolvers: "always",
-                resolve: { [RoutingResolvers.ACCOUNT_ACTIVE_TAB_KEY]: activeTabResolver() },
+                resolve: { [RoutingResolvers.ACCOUNT_ACTIVE_TAB_KEY]: activeTabResolver },
                 children: [
                     {
                         path: ProjectLinks.URL_ACCOUNT_SELECT,
@@ -159,13 +168,51 @@ export const routes: Routes = [
                 resolve: { [RoutingResolvers.METADATA_BLOCK_KEY]: blockMetadataResolver },
             },
             {
+                path: `${ProjectLinks.URL_FLOW_DETAILS}/:${ProjectLinks.URL_PARAM_FLOW_ID}`,
+                component: DatasetFlowDetailsComponent,
+                canActivate: [AuthenticatedGuard],
+                runGuardsAndResolvers: "always",
+                resolve: {
+                    [RoutingResolvers.FLOW_DETAILS_ACTIVE_TAB_KEY]: activeTabResolver,
+                    [RoutingResolvers.FLOW_DETAILS_KEY]: flowDetailsResolver,
+                    [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolver,
+                },
+                children: [
+                    {
+                        path: FlowDetailsTabs.HISTORY,
+                        component: FlowDetailsHistoryTabComponent,
+                        runGuardsAndResolvers: "always",
+                        resolve: {
+                            [RoutingResolvers.FLOW_DETAILS_HISTORY_KEY]: flowDetailsSummaryResolver,
+                        },
+                    },
+                    {
+                        path: FlowDetailsTabs.SUMMARY,
+                        component: FlowDetailsSummaryTabComponent,
+                        runGuardsAndResolvers: "always",
+                        resolve: {
+                            [RoutingResolvers.FLOW_DETAILS_SUMMARY_KEY]: flowDetailsSummaryResolver,
+                        },
+                    },
+                    {
+                        path: FlowDetailsTabs.LOGS,
+                        component: FlowDetailsLogsTabComponent,
+                        runGuardsAndResolvers: "always",
+                        resolve: {
+                            [RoutingResolvers.FLOW_DETAILS_LOGS_KEY]: flowDetailsSummaryResolver,
+                        },
+                    },
+                    {
+                        path: FlowDetailsTabs.USAGE,
+                        component: FlowDetailsUsageTabComponent,
+                    },
+                    { path: FlowDetailsTabs.ADMIN, component: FlowDetailsAdminTabComponent },
+                ],
+            },
+            {
                 path: "",
                 canActivate: [AuthenticatedGuard],
                 children: [
-                    {
-                        path: `${ProjectLinks.URL_FLOW_DETAILS}/:${ProjectLinks.URL_PARAM_FLOW_ID}/:${ProjectLinks.URL_PARAM_CATEGORY}`,
-                        component: DatasetFlowDetailsComponent,
-                    },
                     {
                         path: `${ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE}`,
                         component: AddPollingSourceComponent,

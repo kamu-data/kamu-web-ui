@@ -37,8 +37,10 @@ describe("FlowDetailsHistoryTabComponent", () => {
 
         fixture = TestBed.createComponent(FlowDetailsHistoryTabComponent);
         component = fixture.componentInstance;
-        component.flowHistory = mockFlowHistoryDataFragment;
-        component.flowDetails = mockFlowSummaryDataFragments[2];
+        component.response = {
+            flow: mockFlowSummaryDataFragments[2],
+            flowHistory: mockFlowHistoryDataFragment,
+        };
         fixture.detectChanges();
     });
 

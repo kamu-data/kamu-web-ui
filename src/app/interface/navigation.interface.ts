@@ -5,6 +5,8 @@
  * included in the LICENSE file.
  */
 
+import { FlowDetailsTabs } from "../dataset-flow/dataset-flow-details/dataset-flow-details.types";
+
 export interface DatasetNavigationParams {
     accountName: string;
     datasetName: string;
@@ -29,4 +31,5 @@ export interface FlowDetailsNavigationParams {
     accountName: string;
     datasetName: string;
     flowId: string;
+    tab?: FlowDetailsTabs;
 }

@@ -6,7 +6,7 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ResolveFn } from "@angular/router";
+import { ActivatedRouteSnapshot, Params, ResolveFn, RouterStateSnapshot } from "@angular/router";
 import { datasetInfoResolver } from "./dataset-info.resolver";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 
@@ -20,5 +20,21 @@ describe("datasetInfoResolver", () => {
 
     it("should be created", () => {
         expect(executeResolver).toBeTruthy();
+    });
+
+    it("should check activeTabResolver", async () => {
+        const mockState = {} as RouterStateSnapshot;
+        const mockRoute = {
+            params: {
+                accountName: "mockAccountName",
+                datasetName: "mockDatasetName",
+            } as Params,
+        } as ActivatedRouteSnapshot;
+        const result = await executeResolver(mockRoute, mockState);
+
+        expect(result).toEqual({
+            accountName: "mockAccountName",
+            datasetName: "mockDatasetName",
+        });
     });
 });

@@ -44,9 +44,7 @@ import { FlowDetailsTabs } from "./dataset-flow/dataset-flow-details/dataset-flo
 import { FlowDetailsLogsTabComponent } from "./dataset-flow/dataset-flow-details/tabs/flow-details-logs-tab/flow-details-logs-tab.component";
 import { FlowDetailsUsageTabComponent } from "./dataset-flow/dataset-flow-details/tabs/flow-details-usage-tab/flow-details-usage-tab.component";
 import { FlowDetailsAdminTabComponent } from "./dataset-flow/dataset-flow-details/tabs/flow-details-admin-tab/flow-details-admin-tab.component";
-
 import { flowDetailsResolver } from "./common/resolvers/flow-details.resolver";
-import { flowDetailsLogsResolver } from "./common/resolvers/flow-details-logs.resolver";
 import { datasetInfoResolver } from "./common/resolvers/dataset-info.resolver";
 import { FlowDetailsSummaryTabComponent } from "./dataset-flow/dataset-flow-details/tabs/flow-details-summary-tab/flow-details-summary-tab.component";
 import { flowDetailsSummaryResolver } from "./common/resolvers/flow-details-summary.resolver";
@@ -55,7 +53,7 @@ import { AccessTokensTabComponent } from "./account/settings/tabs/access-tokens-
 import { EmailsTabComponent } from "./account/settings/tabs/emails-tab/emails-tab.component";
 import { accountSettingsEmailResolver } from "./common/resolvers/account-settings-email.resolver";
 import { accountSettingsAccessTokensResolver } from "./common/resolvers/account-settings-access-tokens.resolver";
-import { activeTabResolver } from "./common/helpers/data.helpers";
+import { activeTabResolver } from "./common/resolvers/active-tab.resolver";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -102,7 +100,7 @@ export const routes: Routes = [
         canActivate: [AuthenticatedGuard],
         component: AccountSettingsComponent,
         runGuardsAndResolvers: "always",
-        resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_ACTIVE_TAB_KEY]: activeTabResolver() },
+        resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_ACTIVE_TAB_KEY]: activeTabResolver },
         children: [
             {
                 path: "",
@@ -201,7 +199,7 @@ export const routes: Routes = [
                         component: FlowDetailsLogsTabComponent,
                         runGuardsAndResolvers: "always",
                         resolve: {
-                            [RoutingResolvers.FLOW_DETAILS_LOGS_KEY]: flowDetailsLogsResolver,
+                            [RoutingResolvers.FLOW_DETAILS_LOGS_KEY]: flowDetailsSummaryResolver,
                         },
                     },
                     {

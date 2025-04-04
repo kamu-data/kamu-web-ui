@@ -574,9 +574,7 @@ export type DataQueryResultError = {
 };
 
 export enum DataQueryResultErrorKind {
-    InternalError = "INTERNAL_ERROR",
     InvalidSql = "INVALID_SQL",
-    Unauthorized = "UNAUTHORIZED",
 }
 
 export type DataQueryResultSuccess = {
@@ -1116,11 +1114,11 @@ export type DatasetsMutByIdArgs = {
 export type DatasetsMutCreateEmptyArgs = {
     datasetAlias: Scalars["DatasetAlias"];
     datasetKind: DatasetKind;
-    datasetVisibility?: InputMaybe<DatasetVisibility>;
+    datasetVisibility: DatasetVisibility;
 };
 
 export type DatasetsMutCreateFromSnapshotArgs = {
-    datasetVisibility?: InputMaybe<DatasetVisibility>;
+    datasetVisibility: DatasetVisibility;
     snapshot: Scalars["String"];
     snapshotFormat: MetadataManifestFormat;
 };
@@ -1599,6 +1597,7 @@ export type FlowDescriptionDatasetPushIngest = {
     datasetId: Scalars["DatasetID"];
     ingestResult?: Maybe<FlowDescriptionUpdateResult>;
     inputRecordsCount: Scalars["Int"];
+    message: Scalars["String"];
     sourceName?: Maybe<Scalars["String"]>;
 };
 
@@ -3556,7 +3555,7 @@ export type CommitEventToDatasetMutation = {
 export type CreateEmptyDatasetMutationVariables = Exact<{
     datasetKind: DatasetKind;
     datasetAlias: Scalars["DatasetAlias"];
-    datasetVisibility?: InputMaybe<DatasetVisibility>;
+    datasetVisibility: DatasetVisibility;
 }>;
 
 export type CreateEmptyDatasetMutation = {
@@ -3580,7 +3579,7 @@ export type CreateEmptyDatasetMutation = {
 
 export type CreateDatasetFromSnapshotMutationVariables = Exact<{
     snapshot: Scalars["String"];
-    datasetVisibility?: InputMaybe<DatasetVisibility>;
+    datasetVisibility: DatasetVisibility;
 }>;
 
 export type CreateDatasetFromSnapshotMutation = {
@@ -5559,6 +5558,27 @@ export type SearchDatasetsOverviewQuery = {
     };
 };
 
+export type SemanticSearchDatasetsOverviewQueryVariables = Exact<{
+    prompt: Scalars["String"];
+    perPage?: InputMaybe<Scalars["Int"]>;
+}>;
+
+export type SemanticSearchDatasetsOverviewQuery = {
+    __typename?: "Query";
+    search: {
+        __typename?: "Search";
+        queryNaturalLanguage: {
+            __typename?: "SearchResultExConnection";
+            totalCount: number;
+            nodes: Array<{
+                __typename?: "SearchResultEx";
+                item: { __typename?: "Dataset" } & DatasetSearchOverviewFragment;
+            }>;
+            pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
+        };
+    };
+};
+
 export const AccountBasicsFragmentDoc = gql`
     fragment AccountBasics on Account {
         id
@@ -7382,7 +7402,7 @@ export const CreateEmptyDatasetDocument = gql`
     mutation createEmptyDataset(
         $datasetKind: DatasetKind!
         $datasetAlias: DatasetAlias!
-        $datasetVisibility: DatasetVisibility
+        $datasetVisibility: DatasetVisibility!
     ) {
         datasets {
             createEmpty(datasetKind: $datasetKind, datasetAlias: $datasetAlias, datasetVisibility: $datasetVisibility) {
@@ -7417,7 +7437,7 @@ export class CreateEmptyDatasetGQL extends Apollo.Mutation<
     }
 }
 export const CreateDatasetFromSnapshotDocument = gql`
-    mutation createDatasetFromSnapshot($snapshot: String!, $datasetVisibility: DatasetVisibility) {
+    mutation createDatasetFromSnapshot($snapshot: String!, $datasetVisibility: DatasetVisibility!) {
         datasets {
             createFromSnapshot(snapshot: $snapshot, snapshotFormat: YAML, datasetVisibility: $datasetVisibility) {
                 ... on CreateDatasetResultSuccess {
@@ -8889,6 +8909,41 @@ export class SearchDatasetsOverviewGQL extends Apollo.Query<
     SearchDatasetsOverviewQueryVariables
 > {
     document = SearchDatasetsOverviewDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const SemanticSearchDatasetsOverviewDocument = gql`
+    query semanticSearchDatasetsOverview($prompt: String!, $perPage: Int) {
+        search {
+            queryNaturalLanguage(prompt: $prompt, perPage: $perPage) {
+                nodes {
+                    item {
+                        ... on Dataset {
+                            ...DatasetSearchOverview
+                        }
+                    }
+                }
+                totalCount
+                pageInfo {
+                    ...DatasetPageInfo
+                }
+            }
+        }
+    }
+    ${DatasetSearchOverviewFragmentDoc}
+    ${DatasetPageInfoFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class SemanticSearchDatasetsOverviewGQL extends Apollo.Query<
+    SemanticSearchDatasetsOverviewQuery,
+    SemanticSearchDatasetsOverviewQueryVariables
+> {
+    document = SemanticSearchDatasetsOverviewDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

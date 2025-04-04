@@ -1,4 +1,4 @@
-mutation createDatasetFromSnapshot($snapshot: String!, $datasetVisibility: DatasetVisibility) {
+mutation createDatasetFromSnapshot($snapshot: String!, $datasetVisibility: DatasetVisibility!) {
   datasets {
     createFromSnapshot(snapshot: $snapshot, snapshotFormat: YAML, datasetVisibility: $datasetVisibility) {
       ... on CreateDatasetResultSuccess {

@@ -1,7 +1,7 @@
 mutation createEmptyDataset(
   $datasetKind: DatasetKind!
   $datasetAlias: DatasetAlias!
-  $datasetVisibility: DatasetVisibility
+  $datasetVisibility: DatasetVisibility!
 ) {
   datasets {
     createEmpty(datasetKind: $datasetKind, datasetAlias: $datasetAlias, datasetVisibility: $datasetVisibility) {

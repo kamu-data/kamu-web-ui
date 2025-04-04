@@ -49,7 +49,7 @@
                         </div>
                     </nav>
                 </div>
-                <div class="search-result-container__content w-100" *ngIf="tableData$ | async as data">
+                <div class="search-result-container__content w-100">
                     <app-dataset-list
                         [dataSource]="data.datasets"
                         [sortOptions]="tableData.sortOptions"

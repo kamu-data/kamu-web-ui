@@ -5,12 +5,11 @@
  * included in the LICENSE file.
  */
 
-import { SearchService } from "./search.service";
 import { DatasetSearchResult, SearchFilters } from "../interface/search.interface";
 import { ChangeDetectionStrategy, Component, inject, Input, numberAttribute, OnInit } from "@angular/core";
 import { NavigationService } from "../services/navigation.service";
 import ProjectLinks from "../project-links";
-import { Observable } from "rxjs";
+import RoutingResolvers from "../common/resolvers/routing-resolvers";
 
 @Component({
     selector: "app-search",
@@ -25,12 +24,12 @@ export class SearchComponent implements OnInit {
     @Input({ transform: numberAttribute, alias: ProjectLinks.URL_QUERY_PARAM_PAGE }) public set page(value: number) {
         this.currentPage = value ? value : 1;
     }
+    @Input(RoutingResolvers.SEARCH_KEY) public data: DatasetSearchResult;
+
     private navigationService = inject(NavigationService);
-    private searchService = inject(SearchService);
 
     public searchValue: string;
     public currentPage: number; // TODO: Should be zero-based and only offset for display
-    public tableData$: Observable<DatasetSearchResult> = this.searchService.searchOverviewChanges;
 
     private sortOptions: { value: string; label: string; active: boolean }[] = [
         { value: "best", label: "Best match", active: true },

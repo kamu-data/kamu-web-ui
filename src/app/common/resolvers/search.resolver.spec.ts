@@ -11,6 +11,8 @@ import { searchResolver } from "./search.resolver";
 import ProjectLinks from "src/app/project-links";
 import { SearchService } from "src/app/search/search.service";
 import { Apollo } from "apollo-angular";
+import { Observable } from "rxjs";
+import { DatasetSearchResult } from "src/app/interface/search.interface";
 
 describe("searchResolver", () => {
     let routeSnapshot: ActivatedRouteSnapshot;
@@ -19,7 +21,7 @@ describe("searchResolver", () => {
     const MOCK_PAGE = 2;
     const MOCK_QUERY = "mock-query";
 
-    const executeResolver: ResolveFn<void> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<Observable<DatasetSearchResult>> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => searchResolver(...resolverParameters));
 
     beforeEach(() => {

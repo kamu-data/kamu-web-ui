@@ -70,6 +70,10 @@ export class AppConfigService {
         return this.appUiConfig.ingestUploadFileLimitMb;
     }
 
+    public get semanticSearchScore(): number {
+        return this.appUiConfig.semanticSearchScore;
+    }
+
     public get featureFlags(): AppUIConfigFeatureFlags {
         return this.appUiConfig.featureFlags;
     }

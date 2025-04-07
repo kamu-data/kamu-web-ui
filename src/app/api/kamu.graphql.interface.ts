@@ -5572,6 +5572,7 @@ export type SemanticSearchDatasetsOverviewQuery = {
             totalCount: number;
             nodes: Array<{
                 __typename?: "SearchResultEx";
+                score: number;
                 item: { __typename?: "Dataset" } & DatasetSearchOverviewFragment;
             }>;
             pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
@@ -8924,6 +8925,7 @@ export const SemanticSearchDatasetsOverviewDocument = gql`
                             ...DatasetSearchOverview
                         }
                     }
+                    score
                 }
                 totalCount
                 pageInfo {

@@ -8,17 +8,21 @@
 import { inject, Injectable } from "@angular/core";
 import { Observable, Subject, map } from "rxjs";
 import { SearchApi } from "../api/search.api";
-import { DatasetAutocompleteItem, DatasetSearchResult } from "../interface/search.interface";
+import { DatasetAutocompleteItem, DatasetSearchResult, SearchMode } from "../interface/search.interface";
 import {
     DatasetSearchOverviewFragment,
     SearchDatasetsOverviewQuery,
     SemanticSearchDatasetsOverviewQuery,
 } from "../api/kamu.graphql.interface";
+import { AppConfigService } from "../app-config.service";
 
 @Injectable({ providedIn: "root" })
 export class SearchService {
-    private searchAutocomplete$: Subject<DatasetAutocompleteItem[]> = new Subject<DatasetAutocompleteItem[]>();
     private searchApi = inject(SearchApi);
+    private appConfigService = inject(AppConfigService);
+
+    private readonly DEFAULT_SCORE = this.appConfigService.semanticSearchScore;
+    private searchAutocomplete$: Subject<DatasetAutocompleteItem[]> = new Subject<DatasetAutocompleteItem[]>();
 
     private emitSearchAutocompleteChanged(autocompleteData: DatasetAutocompleteItem[]) {
         this.searchAutocomplete$.next(autocompleteData);
@@ -39,6 +43,7 @@ export class SearchService {
                     pageInfo,
                     totalCount,
                     currentPage: page + 1,
+                    searchMode: SearchMode.SEARCH,
                 };
             }),
         );
@@ -58,7 +63,10 @@ export class SearchService {
     public semanticSearchDatasets(promt: string): Observable<DatasetSearchResult> {
         return this.searchApi.overviewDatasetSemanticSearch(promt).pipe(
             map((data: SemanticSearchDatasetsOverviewQuery) => {
-                const datasets: DatasetSearchOverviewFragment[] = data.search.queryNaturalLanguage.nodes.map(
+                const filteredDatasets = data.search.queryNaturalLanguage.nodes.filter(
+                    (node) => node.score > Number(this.DEFAULT_SCORE),
+                );
+                const datasets: DatasetSearchOverviewFragment[] = filteredDatasets.map(
                     (node) => node.item as DatasetSearchOverviewFragment,
                 );
                 const pageInfo = data.search.queryNaturalLanguage.pageInfo;
@@ -69,6 +77,7 @@ export class SearchService {
                     pageInfo,
                     totalCount,
                     currentPage: page + 1,
+                    searchMode: SearchMode.SEMANTIC_SEARCH,
                 };
             }),
         );

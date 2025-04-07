@@ -69,6 +69,7 @@ const language = 'typescript';
 
     public static readonly DEFAULT_UI_CONFIGURATION: AppUIConfig = {
         ingestUploadFileLimitMb: 50,
+        semanticSearchScore: 0,
         featureFlags: AppValues.DEFAULT_UI_FEATURE_FLAGS,
     };
 }

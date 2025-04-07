@@ -8,6 +8,7 @@
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
+import { getAllRouteParams } from "../helpers/data.helpers";
 
 export const datasetInfoResolver: ResolveFn<DatasetInfo> = (route: ActivatedRouteSnapshot) => {
     const params = getAllRouteParams(route);
@@ -16,14 +17,3 @@ export const datasetInfoResolver: ResolveFn<DatasetInfo> = (route: ActivatedRout
 
     return { accountName, datasetName };
 };
-
-function getAllRouteParams(route: ActivatedRouteSnapshot): Record<string, string> {
-    let params: Record<string, string> = {};
-    let currentRoute: ActivatedRouteSnapshot | null = route;
-
-    while (currentRoute) {
-        params = { ...params, ...currentRoute.params };
-        currentRoute = currentRoute.parent;
-    }
-    return params;
-}

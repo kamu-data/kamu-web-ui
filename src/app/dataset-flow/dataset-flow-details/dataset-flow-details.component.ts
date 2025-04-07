@@ -8,7 +8,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { DatasetFlowByIdResponse, FlowDetailsTabs, ViewMenuData } from "./dataset-flow-details.types";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { Observable, Subscription, combineLatest, filter, map, shareReplay, skip, tap, timer } from "rxjs";
+import { Observable, Subscription, combineLatest, map, shareReplay, skip, takeWhile, tap, timer } from "rxjs";
 import { FlowStatus, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { MaybeUndefined } from "src/app/interface/app.types";
@@ -61,7 +61,7 @@ export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implem
         timer(0, 5000)
             .pipe(
                 skip(1),
-                filter(() => Boolean(this.flowDetails.flow.status !== FlowStatus.Finished)),
+                takeWhile(() => this.flowDetails.flow.status !== FlowStatus.Finished),
                 tap(() => {
                     this.refreshNow();
                 }),

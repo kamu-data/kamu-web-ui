@@ -54,7 +54,6 @@ describe("flowDetailsResolver", () => {
             }),
         } as ActivatedRouteSnapshot;
 
-        executeResolver;
         await executeResolver(mockRoute, mockState);
 
         expect(requestDatasetBasicDataWithPermissionsSpy).toHaveBeenCalledTimes(1);

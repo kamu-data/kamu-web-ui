@@ -23,6 +23,7 @@ import { convertSecondsToHumanReadableFormat, removeAllLineBreaks } from "./app.
 import { SliceUnit } from "../../dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
 import { DataRow, DatasetSchema, OperationColumnClassEnum } from "../../interface/dataset.interface";
 import { differenceInSeconds } from "date-fns";
+import { ActivatedRouteSnapshot } from "@angular/router";
 
 export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";
@@ -431,4 +432,15 @@ export function setOperationColumnClass(value: number): OperationColumnClassEnum
         default:
             return OperationColumnClassEnum.PRIMARY_COLOR;
     }
+}
+
+export function getAllRouteParams(route: ActivatedRouteSnapshot): Record<string, string> {
+    let params: Record<string, string> = {};
+    let currentRoute: ActivatedRouteSnapshot | null = route;
+
+    while (currentRoute) {
+        params = { ...params, ...currentRoute.params };
+        currentRoute = currentRoute.parent;
+    }
+    return params;
 }

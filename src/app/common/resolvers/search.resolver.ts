@@ -22,6 +22,7 @@ export const searchResolver: ResolveFn<Observable<DatasetSearchResult>> = (route
     const isSemanticSearchAvailable = appConfigService.semanticSearchScore;
     const page = route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE) ?? 1;
     const query = route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_QUERY) ?? "";
+
     return searchService.searchDatasets(query, Number(page) - 1).pipe(
         switchMap((result: DatasetSearchResult) => {
             return result.datasets.length ||

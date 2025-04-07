@@ -37,7 +37,7 @@ export interface FeaturesRuntimeConfig {
 
 export interface AppUIConfig {
     ingestUploadFileLimitMb: number;
-    semanticSearchScore: number;
+    semanticSearchScore?: number;
     featureFlags: AppUIConfigFeatureFlags;
 }
 

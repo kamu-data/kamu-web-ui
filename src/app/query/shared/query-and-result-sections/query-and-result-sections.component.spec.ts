@@ -71,6 +71,13 @@ describe("QueryAndResultSectionsComponent", () => {
         expect(component).toBeTruthy();
     });
 
+    it("should check run sql query", () => {
+        const runSQLRequestSpy = spyOn(component, "runSQLRequest");
+        component.runSql();
+
+        expect(runSQLRequestSpy).toHaveBeenCalledOnceWith({ query: "select * from 'mock-dataset'" }, true);
+    });
+
     it("should check 'Run' button is disabled", () => {
         component.sqlLoading = true;
         fixture.detectChanges();

@@ -70,7 +70,7 @@ export class AppConfigService {
         return this.appUiConfig.ingestUploadFileLimitMb;
     }
 
-    public get semanticSearchScore(): number {
+    public get semanticSearchScore(): MaybeUndefined<number> {
         return this.appUiConfig.semanticSearchScore;
     }
 

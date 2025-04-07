@@ -9,7 +9,7 @@ import { Apollo } from "apollo-angular";
 import { SearchApi } from "../api/search.api";
 import { TestBed } from "@angular/core/testing";
 import { SearchService } from "./search.service";
-import { DatasetAutocompleteItem, DatasetSearchResult } from "../interface/search.interface";
+import { DatasetAutocompleteItem, DatasetSearchResult, SearchMode } from "../interface/search.interface";
 import { mockAutocompleteItems, mockSearchDatasetOverviewQuery } from "./mock.data";
 import { of, throwError } from "rxjs";
 import { first } from "rxjs/operators";
@@ -17,6 +17,7 @@ import { first } from "rxjs/operators";
 describe("SearchService", () => {
     let service: SearchService;
     let searchApi: SearchApi;
+    const SEARCH_QUERY = "mockQuery";
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -30,12 +31,13 @@ describe("SearchService", () => {
         expect(service).toBeTruthy();
     });
 
-    it("should fire overviewSearchChanges$ on search request", () => {
+    it("should search datasets", () => {
         const searchApiOverviewDataSearchSpy = spyOn(searchApi, "overviewDatasetSearch").and.returnValue(
             of(mockSearchDatasetOverviewQuery),
         );
 
-        const subscription$ = service.searchOverviewChanges
+        const subscription$ = service
+            .searchDatasets(SEARCH_QUERY)
             .pipe(first())
             .subscribe((searchResult: DatasetSearchResult) => {
                 const expectedSearchData: DatasetSearchResult = {
@@ -43,6 +45,7 @@ describe("SearchService", () => {
                     totalCount: 1,
                     pageInfo: mockSearchDatasetOverviewQuery.search.query.pageInfo,
                     currentPage: 1,
+                    searchMode: SearchMode.SEARCH,
                 };
                 expect(searchResult).toEqual(expectedSearchData);
             });

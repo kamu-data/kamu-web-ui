@@ -5,20 +5,19 @@
  * included in the LICENSE file.
  */
 
-import { FlowStatus } from "./../../api/kamu.graphql.interface";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { DatasetFlowByIdResponse, FlowDetailsTabs, ViewMenuData } from "./dataset-flow-details.types";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { Observable, Subscription, combineLatest, map, shareReplay, switchMap, takeWhile, tap, timer } from "rxjs";
-import { FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
+import { Observable, Subscription, combineLatest, map, shareReplay, skip, takeWhile, tap, timer } from "rxjs";
+import { FlowStatus, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { MaybeUndefined } from "src/app/interface/app.types";
 import ProjectLinks from "src/app/project-links";
-import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { DataHelpers } from "src/app/common/helpers/data.helpers";
 import { BaseDatasetDataComponent } from "src/app/common/components/base-dataset-data.component";
 import { DatasetFlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 
 @Component({
     selector: "app-dataset-flow-details",
@@ -27,24 +26,20 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implements OnInit {
-    @Input(ProjectLinks.URL_PARAM_CATEGORY) public set category(value: MaybeUndefined<FlowDetailsTabs>) {
-        this.activeTab = value && Object.values(FlowDetailsTabs).includes(value) ? value : FlowDetailsTabs.SUMMARY;
-    }
-    @Input(ProjectLinks.URL_PARAM_FLOW_ID) public set id(value: string) {
-        this.flowId = value;
-    }
+    @Input(RoutingResolvers.FLOW_DETAILS_ACTIVE_TAB_KEY) public activeTab: FlowDetailsTabs;
+    @Input(ProjectLinks.URL_PARAM_FLOW_ID) public flowId: string;
+    @Input(RoutingResolvers.FLOW_DETAILS_KEY) public flowDetails: DatasetFlowByIdResponse;
+    @Input(RoutingResolvers.DATASET_INFO_KEY) public datasetInfo: DatasetInfo;
+
     public readonly FlowDetailsTabs: typeof FlowDetailsTabs = FlowDetailsTabs;
     public readonly FLOWS_TYPE = DatasetViewTypeEnum.Flows;
-    public activeTab: FlowDetailsTabs;
-    public flowId = "";
+
     public datasetViewMenuData$: Observable<ViewMenuData>;
     public datasetFlowDetails$: Observable<MaybeUndefined<DatasetFlowByIdResponse>>;
     public readonly TIMEOUT_REFRESH_FLOW = 800;
 
-    private datasetFlowsService = inject(DatasetFlowsService);
-    private cdr = inject(ChangeDetectorRef);
-
     public ngOnInit(): void {
+        this.loadDatasetBasicDataWithPermissions();
         this.datasetBasics$ = this.datasetService.datasetChanges.pipe(shareReplay());
         this.datasetPermissions$ = this.datasetSubsService.permissionsChanges;
         this.datasetViewMenuData$ = combineLatest([this.datasetBasics$, this.datasetPermissions$]).pipe(
@@ -53,24 +48,7 @@ export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implem
             }),
             shareReplay(),
         );
-
-        this.loadDatasetBasicDataWithPermissions();
-        this.datasetFlowDetails$ = timer(0, 5000).pipe(
-            switchMap(() => this.datasetViewMenuData$),
-            switchMap((data: ViewMenuData) => {
-                return this.datasetFlowsService.datasetFlowById({
-                    datasetId: data.datasetBasics.id,
-                    flowId: this.flowId,
-                });
-            }),
-            tap((response: MaybeUndefined<DatasetFlowByIdResponse>) => {
-                if (response?.flow.status === FlowStatus.Finished) {
-                    this.refreshNow();
-                    this.cdr.detectChanges();
-                }
-            }),
-            takeWhile((result: MaybeUndefined<DatasetFlowByIdResponse>) => result?.flow.status !== FlowStatus.Finished),
-        );
+        this.startTimer();
     }
 
     public getRouteLink(tab: FlowDetailsTabs): string {
@@ -79,13 +57,22 @@ export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implem
         }/${this.flowId}/${tab}`;
     }
 
-    public get datasetInfo(): DatasetInfo {
-        return this.getDatasetInfoFromUrl();
+    private startTimer(): void {
+        timer(0, 5000)
+            .pipe(
+                skip(1),
+                takeWhile(() => this.flowDetails.flow.status !== FlowStatus.Finished),
+                tap(() => {
+                    this.refreshNow();
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe();
     }
 
     private loadDatasetBasicDataWithPermissions(): Subscription {
         return this.datasetService
-            .requestDatasetBasicDataWithPermissions(this.getDatasetInfoFromUrl())
+            .requestDatasetBasicDataWithPermissions(this.datasetInfo)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe();
     }
@@ -103,13 +90,10 @@ export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implem
     }
 
     public refreshNow(): void {
-        this.datasetFlowDetails$ = this.datasetViewMenuData$.pipe(
-            switchMap((data: ViewMenuData) => {
-                return this.datasetFlowsService.datasetFlowById({
-                    datasetId: data.datasetBasics.id,
-                    flowId: this.flowId,
-                });
-            }),
-        );
+        this.navigationService.navigateToFlowDetails({
+            ...this.datasetInfo,
+            flowId: this.flowId,
+            tab: this.activeTab,
+        });
     }
 }

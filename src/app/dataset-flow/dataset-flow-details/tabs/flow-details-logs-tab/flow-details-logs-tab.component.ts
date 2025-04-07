@@ -7,10 +7,10 @@
 
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { BaseComponent } from "src/app/common/components/base.component";
 import { GrafanaLogsService } from "../../../../services/grafana-logs.service";
 import { DatasetFlowByIdResponse } from "../../dataset-flow-details.types";
 import { AppConfigService } from "src/app/app-config.service";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 
 @Component({
     selector: "app-flow-details-logs-tab",
@@ -18,8 +18,9 @@ import { AppConfigService } from "src/app/app-config.service";
     styleUrls: ["./flow-details-logs-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FlowDetailsLogsTabComponent extends BaseComponent {
-    @Input({ required: true }) public flowDetails: DatasetFlowByIdResponse;
+export class FlowDetailsLogsTabComponent {
+    @Input(RoutingResolvers.FLOW_DETAILS_LOGS_KEY) public flowDetails: DatasetFlowByIdResponse;
+
     private loggedUserService = inject(LoggedUserService);
     private grafanaLogsService = inject(GrafanaLogsService);
     private appConfigService = inject(AppConfigService);

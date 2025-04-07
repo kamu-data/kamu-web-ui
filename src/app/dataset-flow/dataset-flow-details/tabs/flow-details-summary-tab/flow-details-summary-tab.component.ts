@@ -10,6 +10,8 @@ import { FlowOutcomeDataFragment, FlowSummaryDataFragment } from "src/app/api/ka
 import AppValues from "src/app/common/values/app.values";
 import { DataHelpers } from "src/app/common/helpers/data.helpers";
 import { DatasetFlowDetailsHelpers } from "../flow-details-history-tab/flow-details-history-tab.helpers";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { DatasetFlowByIdResponse } from "../../dataset-flow-details.types";
 
 @Component({
     selector: "app-flow-details-summary-tab",
@@ -17,9 +19,14 @@ import { DatasetFlowDetailsHelpers } from "../flow-details-history-tab/flow-deta
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlowDetailsSummaryTabComponent {
-    @Input({ required: true }) public flowDetails: FlowSummaryDataFragment;
+    @Input(RoutingResolvers.FLOW_DETAILS_SUMMARY_KEY) public response: DatasetFlowByIdResponse;
+
     public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;
     public readonly DATE_FORMAT = AppValues.DISPLAY_FLOW_DATE_FORMAT;
+
+    public get flowDetails(): FlowSummaryDataFragment {
+        return this.response.flow;
+    }
 
     public outcomeClass(flowOutcome: FlowOutcomeDataFragment): string {
         return DatasetFlowDetailsHelpers.flowOutcomeOptions(flowOutcome).class;

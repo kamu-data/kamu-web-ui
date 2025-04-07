@@ -24,7 +24,7 @@
         </div>
     </div>
 
-    <div class="task-details-container mx-4 mb-4" *ngIf="datasetFlowDetails$ | async as flowDetails">
+    <div class="task-details-container mx-4 mb-4">
         <div class="d-flex justify-content-between px-4">
             <div class="d-flex py-1 align-items-start">
                 <mat-icon class="icon-status mt-2" [ngClass]="descriptionColumnOptions(flowDetails.flow).class">{{
@@ -123,21 +123,7 @@
             </div>
             <div class="content sidebar my-4">
                 <div class="my-3 pl-40">
-                    <ng-container *ngIf="activeTab === FlowDetailsTabs.SUMMARY">
-                        <app-flow-details-summary-tab [flowDetails]="flowDetails.flow" />
-                    </ng-container>
-                    <ng-container *ngIf="activeTab === FlowDetailsTabs.HISTORY">
-                        <app-flow-details-history-tab
-                            [flowDetails]="flowDetails.flow"
-                            [flowHistory]="flowDetails.flowHistory"
-                        />
-                    </ng-container>
-                    <ng-container *ngIf="activeTab === FlowDetailsTabs.LOGS">
-                        <app-flow-details-logs-tab [flowDetails]="flowDetails"></app-flow-details-logs-tab>
-                    </ng-container>
-
-                    <div *ngIf="activeTab === FlowDetailsTabs.USAGE">Usage tab coming soon</div>
-                    <div *ngIf="activeTab === FlowDetailsTabs.ADMIN">Admin tab coming soon</div>
+                    <router-outlet></router-outlet>
                 </div>
             </div>
         </div>

@@ -20,9 +20,12 @@ import { SearchAdditionalButtonsComponent } from "src/app/common/components/sear
 import { SearchAdditionalButtonsNavComponent } from "src/app/common/components/search-additional-buttons/search-additional-buttons-nav.component";
 import { MatMenuModule } from "@angular/material/menu";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+import {
+    mockDatasetBasicsRootFragment,
+    mockDatasetInfo,
+    mockFullPowerDatasetPermissionsFragment,
+} from "src/app/search/mock.data";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetViewMenuComponent } from "src/app/dataset-view/dataset-view-menu/dataset-view-menu.component";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
@@ -36,13 +39,15 @@ import { DataAccessPanelModule } from "src/app/data-access-panel/data-access-pan
 import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("DatasetFlowDetailsComponent", () => {
     let component: DatasetFlowDetailsComponent;
     let fixture: ComponentFixture<DatasetFlowDetailsComponent>;
-    let datasetFlowsService: DatasetFlowsService;
     let datasetSubsService: DatasetSubscriptionsService;
     let datasetService: DatasetService;
+    let navigationService: NavigationService;
+    let navigateToFlowDetailsSpy: jasmine.Spy;
     const MOCK_FLOW_ID = "3";
 
     beforeEach(async () => {
@@ -98,16 +103,19 @@ describe("DatasetFlowDetailsComponent", () => {
         registerMatSvgIcons();
 
         fixture = TestBed.createComponent(DatasetFlowDetailsComponent);
-        datasetFlowsService = TestBed.inject(DatasetFlowsService);
         datasetService = TestBed.inject(DatasetService);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
+        navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
-        component.id = MOCK_FLOW_ID;
-        component.category = FlowDetailsTabs.HISTORY;
+        component.flowId = MOCK_FLOW_ID;
+        component.activeTab = FlowDetailsTabs.HISTORY;
+        component.flowDetails = mockDatasetFlowByIdResponse;
+        component.datasetInfo = mockDatasetInfo;
         spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(
             of(mockFullPowerDatasetPermissionsFragment),
         );
         spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
+        navigateToFlowDetailsSpy = spyOn(navigationService, "navigateToFlowDetails");
         fixture.detectChanges();
     });
 
@@ -132,13 +140,8 @@ describe("DatasetFlowDetailsComponent", () => {
     });
 
     it(`should check refresh flow now`, () => {
-        const datasetFlowByIdSpy = spyOn(datasetFlowsService, "datasetFlowById").and.returnValue(
-            of(mockDatasetFlowByIdResponse),
-        );
         component.refreshNow();
-        component.datasetFlowDetails$.subscribe(() => {
-            expect(datasetFlowByIdSpy).toHaveBeenCalledTimes(1);
-        });
+        expect(navigateToFlowDetailsSpy).toHaveBeenCalledTimes(1);
     });
 
     it(`should check created router link`, () => {

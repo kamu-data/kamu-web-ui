@@ -9,16 +9,7 @@ import { DataSchemaFormat, DatasetKind, MetadataBlockFragment } from "../../api/
 import { SliceUnit } from "../../dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
 import { mockOwnerFields, mockPublicDatasetVisibility } from "../../search/mock.data";
 import { OperationColumnClassEnum } from "../../interface/dataset.interface";
-import {
-    DataHelpers,
-    sliceSizeMapperReverse,
-    operationColumnMapper,
-    setOperationColumnClass,
-    activeTabResolver,
-} from "./data.helpers";
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
-import { AccountSettingsTabs } from "src/app/account/settings/account-settings.constants";
-import ProjectLinks from "src/app/project-links";
+import { DataHelpers, sliceSizeMapperReverse, operationColumnMapper, setOperationColumnClass } from "./data.helpers";
 
 export const metadataBlockSetVocab: MetadataBlockFragment = {
     __typename: "MetadataBlockExtended",
@@ -449,24 +440,4 @@ it(`should propagate the name for unknown engines`, () => {
     it(`should check set operation column class with  ${item.case}`, () => {
         expect(setOperationColumnClass(item.case)).toEqual(item.expected);
     });
-});
-
-it("should check activeTabResolver with query params", () => {
-    const mockState = {
-        url: `/kamu/${ProjectLinks.URL_SETTINGS}/${AccountSettingsTabs.ACCESS_TOKENS}?page=2`,
-    } as RouterStateSnapshot;
-    const mockRoute = {} as ActivatedRouteSnapshot;
-    const resolver = activeTabResolver();
-
-    expect(resolver(mockRoute, mockState)).toEqual(AccountSettingsTabs.ACCESS_TOKENS);
-});
-
-it("should check activeTabResolver", () => {
-    const mockState = {
-        url: `/kamu/${ProjectLinks.URL_SETTINGS}/${AccountSettingsTabs.ACCESS_TOKENS}`,
-    } as RouterStateSnapshot;
-    const mockRoute = {} as ActivatedRouteSnapshot;
-    const resolver = activeTabResolver();
-
-    expect(resolver(mockRoute, mockState)).toEqual(AccountSettingsTabs.ACCESS_TOKENS);
 });

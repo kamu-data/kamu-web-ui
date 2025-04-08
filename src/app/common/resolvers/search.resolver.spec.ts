@@ -18,8 +18,7 @@ import { mockDatasetSearchResult } from "src/app/search/mock.data";
 import { ToastrModule } from "ngx-toastr";
 import { AppConfigService } from "src/app/app-config.service";
 
-// eslint-disable-next-line jasmine/no-disabled-tests
-xdescribe("searchResolver", () => {
+describe("searchResolver", () => {
     let routeSnapshot: ActivatedRouteSnapshot;
     let router: Router;
     let searchService: SearchService;
@@ -146,7 +145,7 @@ xdescribe("searchResolver", () => {
             [ProjectLinks.URL_QUERY_PARAM_QUERY]: "dd",
         };
 
-        spyOn(searchService, "searchDatasets").and.returnValue(of(mockDatasetSearchResultCopy));
+        spyOn(searchService, "searchDatasets").and.returnValue(of(mockDatasetSearchResultCopy).pipe());
         const semanticSearchDatasetsSpy = spyOn(searchService, "semanticSearchDatasets").and.returnValue(
             of(mockDatasetSearchResultCopy),
         );

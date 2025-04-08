@@ -648,12 +648,14 @@ export type Dataset = {
     owner: Account;
     /** Permissions of the current user */
     permissions: DatasetPermissions;
+    /** Current user's role in relation to the dataset */
+    role?: Maybe<DatasetAccessRole>;
     /** Returns the visibility of dataset */
     visibility: DatasetVisibilityOutput;
 };
 
 export enum DatasetAccessRole {
-    /** Role opening to modify dataset data */
+    /** Role allows modifying dataset data */
     Editor = "EDITOR",
     /** Role to maintain the dataset */
     Maintainer = "MAINTAINER",
@@ -3951,6 +3953,15 @@ export type DatasetSystemTimeBlockByHashQuery = {
               } & DatasetBasicsFragment)
             | null;
     };
+};
+
+export type DatasetUserRoleQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+}>;
+
+export type DatasetUserRoleQuery = {
+    __typename?: "Query";
+    datasets: { __typename?: "Datasets"; byId?: { __typename?: "Dataset"; role?: DatasetAccessRole | null } | null };
 };
 
 export type DatasetsByAccountNameQueryVariables = Exact<{
@@ -8014,6 +8025,26 @@ export class DatasetSystemTimeBlockByHashGQL extends Apollo.Query<
     DatasetSystemTimeBlockByHashQueryVariables
 > {
     document = DatasetSystemTimeBlockByHashDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetUserRoleDocument = gql`
+    query datasetUserRole($datasetId: DatasetID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                role
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetUserRoleGQL extends Apollo.Query<DatasetUserRoleQuery, DatasetUserRoleQueryVariables> {
+    document = DatasetUserRoleDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

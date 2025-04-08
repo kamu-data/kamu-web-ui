@@ -1,0 +1,7 @@
+query datasetUserRole($datasetId: DatasetID!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      role
+    }
+  }
+}

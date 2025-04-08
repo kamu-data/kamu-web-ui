@@ -18,7 +18,9 @@ import {
     NameLookupResult,
     SetRoleCollaboratorMutation,
     UnsetRoleCollaboratorMutation,
+    DatasetUserRoleQuery,
 } from "src/app/api/kamu.graphql.interface";
+import { MaybeNull } from "src/app/interface/app.types";
 
 @Injectable({
     providedIn: "root",
@@ -73,6 +75,14 @@ export class DatasetCollaborationsService {
                 if (result.datasets.byId?.collaboration.unsetRoles.__typename === "UnsetRoleResultSuccess") {
                     this.toastrService.success(result.datasets.byId.collaboration.unsetRoles.message);
                 }
+            }),
+        );
+    }
+
+    public getRoleByDatasetId(datasetId: string): Observable<MaybeNull<DatasetAccessRole>> {
+        return this.datasetCollaborationApi.getDatasetUserRole(datasetId).pipe(
+            map((result: DatasetUserRoleQuery) => {
+                return result.datasets.byId?.role as DatasetAccessRole;
             }),
         );
     }

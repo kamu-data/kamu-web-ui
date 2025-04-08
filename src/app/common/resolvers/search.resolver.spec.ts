@@ -95,7 +95,7 @@ describe("searchResolver", () => {
         routeSnapshot = new ActivatedRouteSnapshot();
         const mockDatasetSearchResultCopy = structuredClone(mockDatasetSearchResult);
         mockDatasetSearchResultCopy.datasets = [];
-        spyOnProperty(appConfigService, "semanticSearchTresholdScore", "get").and.returnValue(undefined);
+        spyOnProperty(appConfigService, "semanticSearchThresholdScore", "get").and.returnValue(undefined);
         routeSnapshot.queryParams = {
             [ProjectLinks.URL_QUERY_PARAM_PAGE]: 2,
             [ProjectLinks.URL_QUERY_PARAM_QUERY]: "dd",
@@ -116,7 +116,7 @@ describe("searchResolver", () => {
         routeSnapshot = new ActivatedRouteSnapshot();
         const mockDatasetSearchResultCopy = structuredClone(mockDatasetSearchResult);
         mockDatasetSearchResultCopy.datasets = [];
-        spyOnProperty(appConfigService, "semanticSearchTresholdScore", "get").and.returnValue(0.5);
+        spyOnProperty(appConfigService, "semanticSearchThresholdScore", "get").and.returnValue(0.5);
         routeSnapshot.queryParams = {
             [ProjectLinks.URL_QUERY_PARAM_PAGE]: 2,
             [ProjectLinks.URL_QUERY_PARAM_QUERY]: "dd",

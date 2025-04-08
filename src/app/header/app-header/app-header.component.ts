@@ -91,10 +91,9 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
             )
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((event: RouterEvent) => {
-                if (!event.url.includes(`?${ProjectLinks.URL_QUERY_PARAM_QUERY}=`)) {
-                    this.searchQuery = "";
-                    this.cdr.detectChanges();
-                }
+                const urlObj = new URL(event.url, window.location.origin);
+                this.searchQuery = (urlObj.searchParams.get(ProjectLinks.URL_QUERY_PARAM_QUERY) as string) ?? "";
+                this.cdr.detectChanges();
             });
         this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((param: Params) => {
             if (param.query) {

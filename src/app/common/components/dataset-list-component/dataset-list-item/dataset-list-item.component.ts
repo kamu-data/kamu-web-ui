@@ -18,7 +18,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 })
 export class DatasetListItemComponent {
     @Input({ required: true }) public row: DatasetSearchOverviewFragment;
-    @Input() public isClickableRow?: boolean = false;
+    @Input({ required: true }) public isClickableRow: boolean;
     @Input({ required: true }) public rowIndex: number;
 
     private modalService = inject(ModalService);

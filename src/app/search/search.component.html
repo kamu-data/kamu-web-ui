@@ -49,7 +49,7 @@
                         </div>
                     </nav>
                 </div>
-                <div class="search-result-container__content w-100" *ngIf="tableData$ | async as data">
+                <div class="search-result-container__content w-100">
                     <app-dataset-list
                         [dataSource]="data.datasets"
                         [sortOptions]="tableData.sortOptions"
@@ -57,6 +57,7 @@
                         [totalCount]="data.totalCount"
                         [hasResultQuantity]="tableData.hasResultQuantity"
                         [isClickableRow]="tableData.isClickableRow"
+                        [searchMode]="data.searchMode"
                         data-test-id="dataset-list"
                     />
 

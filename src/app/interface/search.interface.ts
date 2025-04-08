@@ -13,6 +13,12 @@ export interface DatasetSearchResult {
     totalCount: number;
     pageInfo: PageBasedInfo;
     currentPage: number;
+    searchMode: SearchMode;
+}
+
+export enum SearchMode {
+    TEXT_SEARCH = "textSearch",
+    SEMANTIC_SEARCH = "semanticSearch",
 }
 
 export interface DatasetAutocompleteItem {

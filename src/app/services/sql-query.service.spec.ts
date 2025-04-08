@@ -9,11 +9,7 @@ import { TestBed } from "@angular/core/testing";
 import { SqlQueryService } from "./sql-query.service";
 import { of, first, throwError } from "rxjs";
 import { DatasetApi } from "../api/dataset.api";
-import {
-    mockDatasetDataSqlRunInternalErrorResponse,
-    mockDatasetDataSqlRunInvalidSqlResponse,
-    mockDatasetDataSqlRunResponse,
-} from "../search/mock.data";
+import { mockDatasetDataSqlRunInvalidSqlResponse, mockDatasetDataSqlRunResponse } from "../search/mock.data";
 import { Apollo } from "apollo-angular";
 import { DataQueryResultError } from "../api/kamu.graphql.interface";
 import { DataSqlErrorUpdate } from "../dataset-view/dataset.subscriptions.interface";
@@ -73,20 +69,17 @@ describe("SqlQueryService", () => {
     it("should check get SQL query data from api when SQL execution fails softly", () => {
         const query = "select\n  *\nfrom testTable";
         const limit = 20;
-        spyOn(datasetApi, "getDatasetDataSqlRun").and.returnValue(of(mockDatasetDataSqlRunInternalErrorResponse));
-
-        service.sqlQueryResponseChanges.subscribe(() => fail("Unexpected data update"));
-        service.sqlErrorOccurrences.subscribe(() => fail("Unexpected SQL error update"));
+        spyOn(datasetApi, "getDatasetDataSqlRun").and.returnValue(of(mockDatasetDataSqlRunInvalidSqlResponse));
+        const emitSqlErrorOccurredSpy = spyOn(service, "emitSqlErrorOccurred");
 
         const subscription$ = service
             .requestDataSqlRun({ query, limit })
             .pipe(first())
-            .subscribe({
-                next: () => fail("Unexpected success"),
-                error: (e: Error) => {
-                    const errorResult = mockDatasetDataSqlRunInternalErrorResponse.data.query as DataQueryResultError;
-                    expect(e).toEqual(new SqlExecutionError(errorResult.errorMessage));
-                },
+            .subscribe(() => {
+                const errorResult = mockDatasetDataSqlRunInvalidSqlResponse.data.query as DataQueryResultError;
+                expect(emitSqlErrorOccurredSpy).toHaveBeenCalledOnceWith({
+                    error: errorResult.errorMessage,
+                });
             });
         expect(subscription$.closed).toBeTrue();
     });

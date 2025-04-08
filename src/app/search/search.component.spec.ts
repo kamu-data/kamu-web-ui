@@ -29,6 +29,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { PaginationComponent } from "../common/components/pagination-component/pagination.component";
 import { MatDividerModule } from "@angular/material/divider";
 import { DatasetVisibilityModule } from "../common/components/dataset-visibility/dataset-visibility.module";
+import { mockDatasetSearchResult } from "./mock.data";
 
 describe("SearchComponent", () => {
     let component: SearchComponent;
@@ -68,6 +69,7 @@ describe("SearchComponent", () => {
         searchService = TestBed.inject(SearchService);
         searchApi = TestBed.inject(SearchApi);
         component = fixture.componentInstance;
+        component.data = mockDatasetSearchResult;
         component.ngOnInit();
         fixture.detectChanges();
     });

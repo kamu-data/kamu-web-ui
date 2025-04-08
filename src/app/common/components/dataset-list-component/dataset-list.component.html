@@ -2,7 +2,9 @@
     class="d-flex flex-column flex-md-row flex-justify-between border-bottom pb-3 position-relative justify-content-between align-content-center align-items-baseline"
     *ngIf="hasResultQuantity"
 >
-    <h2 class="dataset-list-total-count">{{ totalCount }} {{ resultUnitText }}</h2>
+    <h2 class="dataset-list-total-count">
+        {{ isSemanticSearch ? dataSource.length : totalCount }} {{ resultUnitText }}
+    </h2>
     <div appFeatureFlag="search.sorting" class="select-block form-group">
         <div class="form-control input-group justify-content-left align-items-center">
             <p class="m-auto position-absolute">Sort:</p>

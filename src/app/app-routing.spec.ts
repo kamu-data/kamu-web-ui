@@ -26,6 +26,8 @@ import { mockAccountDetails } from "./api/mock/auth.mock";
 import { of } from "rxjs";
 import { AccessTokenConnection } from "./api/kamu.graphql.interface";
 import { mockListAccessTokensQuery } from "./api/mock/access-token.mock";
+import { searchResolver } from "./common/resolvers/search.resolver";
+import { mockDatasetSearchResult } from "./search/mock.data";
 
 describe("Router", () => {
     let router: Router;
@@ -49,6 +51,12 @@ describe("Router", () => {
                     provide: accountSettingsAccessTokensResolver,
                     useValue: {
                         resolve: () => of(mockListAccessTokensQuery.auth.listAccessTokens as AccessTokenConnection),
+                    },
+                },
+                {
+                    provide: searchResolver,
+                    useValue: {
+                        resolve: () => of(mockDatasetSearchResult),
                     },
                 },
             ],

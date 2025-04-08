@@ -159,7 +159,7 @@ describe("AppDatasetService", () => {
             sqlFailureResponse.datasets.byOwnerAndName.data.tail = {
                 __typename: "DataQueryResultError",
                 errorMessage: executionFailureMessage,
-                errorKind: DataQueryResultErrorKind.InternalError,
+                errorKind: DataQueryResultErrorKind.InvalidSql,
             };
         }
         spyOn(datasetApi, "getDatasetMainData").and.returnValue(of(sqlFailureResponse));

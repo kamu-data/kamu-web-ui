@@ -19,6 +19,8 @@ import {
     SearchDatasetsAutocompleteQuery,
     DatasetKind,
     DatasetBasicsFragment,
+    SemanticSearchDatasetsOverviewGQL,
+    SemanticSearchDatasetsOverviewQuery,
 } from "./kamu.graphql.interface";
 
 export const SEARCH_RESULTS_PER_PAGE = 10;
@@ -27,6 +29,7 @@ export const SEARCH_RESULTS_PER_PAGE = 10;
 export class SearchApi {
     private searchDatasetsAutocompleteGQL = inject(SearchDatasetsAutocompleteGQL);
     private searchDatasetsOverviewGQL = inject(SearchDatasetsOverviewGQL);
+    private semanticSearchDatasetsOverviewGQL = inject(SemanticSearchDatasetsOverviewGQL);
 
     // Search query that returns high-level dataset information for displaying the dataset badge
     public overviewDatasetSearch(
@@ -49,6 +52,29 @@ export class SearchApi {
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<SearchDatasetsOverviewQuery>) => {
+                    return result.data;
+                }),
+            );
+    }
+
+    public overviewDatasetSemanticSearch(
+        prompt: string,
+        perPage = SEARCH_RESULTS_PER_PAGE,
+    ): Observable<SemanticSearchDatasetsOverviewQuery> {
+        return this.semanticSearchDatasetsOverviewGQL
+            .watch(
+                {
+                    prompt,
+                    perPage,
+                },
+                {
+                    fetchPolicy: "network-only",
+                    errorPolicy: "all",
+                },
+            )
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<SemanticSearchDatasetsOverviewQuery>) => {
                     return result.data;
                 }),
             );

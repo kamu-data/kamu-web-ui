@@ -6,25 +6,23 @@
  */
 
 import { inject, Injectable } from "@angular/core";
-import { Observable, Subject } from "rxjs";
+import { Observable, Subject, map } from "rxjs";
 import { SearchApi } from "../api/search.api";
-import { DatasetAutocompleteItem, DatasetSearchResult } from "../interface/search.interface";
-import { DatasetSearchOverviewFragment, SearchDatasetsOverviewQuery } from "../api/kamu.graphql.interface";
+import { DatasetAutocompleteItem, DatasetSearchResult, SearchMode } from "../interface/search.interface";
+import {
+    DatasetSearchOverviewFragment,
+    SearchDatasetsOverviewQuery,
+    SemanticSearchDatasetsOverviewQuery,
+} from "../api/kamu.graphql.interface";
+import { AppConfigService } from "../app-config.service";
 
 @Injectable({ providedIn: "root" })
 export class SearchService {
-    private searchOverview$: Subject<DatasetSearchResult> = new Subject<DatasetSearchResult>();
-    private searchAutocomplete$: Subject<DatasetAutocompleteItem[]> = new Subject<DatasetAutocompleteItem[]>();
-
     private searchApi = inject(SearchApi);
+    private appConfigService = inject(AppConfigService);
 
-    private emitSearchOverviewChanged(searchData: DatasetSearchResult): void {
-        this.searchOverview$.next(searchData);
-    }
-
-    public get searchOverviewChanges(): Observable<DatasetSearchResult> {
-        return this.searchOverview$.asObservable();
-    }
+    private readonly DEFAULT_TRESHOLD_SCORE = this.appConfigService.semanticSearchTresholdScore;
+    private searchAutocomplete$: Subject<DatasetAutocompleteItem[]> = new Subject<DatasetAutocompleteItem[]>();
 
     private emitSearchAutocompleteChanged(autocompleteData: DatasetAutocompleteItem[]) {
         this.searchAutocomplete$.next(autocompleteData);
@@ -34,19 +32,21 @@ export class SearchService {
         return this.searchAutocomplete$.asObservable();
     }
 
-    public searchDatasets(searchQuery: string, page = 0): void {
-        this.searchApi.overviewDatasetSearch(searchQuery, page).subscribe((data: SearchDatasetsOverviewQuery) => {
-            const datasets: DatasetSearchOverviewFragment[] = data.search.query.nodes;
-            const pageInfo = data.search.query.pageInfo;
-            const totalCount: number = data.search.query.totalCount;
-
-            this.emitSearchOverviewChanged({
-                datasets,
-                pageInfo,
-                totalCount,
-                currentPage: page + 1,
-            });
-        });
+    public searchDatasets(searchQuery: string, page = 0): Observable<DatasetSearchResult> {
+        return this.searchApi.overviewDatasetSearch(searchQuery, page).pipe(
+            map((data: SearchDatasetsOverviewQuery) => {
+                const datasets: DatasetSearchOverviewFragment[] = data.search.query.nodes;
+                const pageInfo = data.search.query.pageInfo;
+                const totalCount: number = data.search.query.totalCount;
+                return {
+                    datasets,
+                    pageInfo,
+                    totalCount,
+                    currentPage: page + 1,
+                    searchMode: SearchMode.TEXT_SEARCH,
+                };
+            }),
+        );
     }
 
     public autocompleteDatasetSearch(searchQuery: string): void {
@@ -57,6 +57,29 @@ export class SearchService {
             () => {
                 this.emitSearchAutocompleteChanged([]);
             },
+        );
+    }
+
+    public semanticSearchDatasets(promt: string): Observable<DatasetSearchResult> {
+        return this.searchApi.overviewDatasetSemanticSearch(promt).pipe(
+            map((data: SemanticSearchDatasetsOverviewQuery) => {
+                const filteredDatasets = data.search.queryNaturalLanguage.nodes.filter(
+                    (node) => node.score > Number(this.DEFAULT_TRESHOLD_SCORE),
+                );
+                const datasets: DatasetSearchOverviewFragment[] = filteredDatasets.map(
+                    (node) => node.item as DatasetSearchOverviewFragment,
+                );
+                const pageInfo = data.search.queryNaturalLanguage.pageInfo;
+                const totalCount = data.search.queryNaturalLanguage.totalCount;
+                const page = data.search.queryNaturalLanguage.pageInfo.currentPage;
+                return {
+                    datasets,
+                    pageInfo,
+                    totalCount,
+                    currentPage: page + 1,
+                    searchMode: SearchMode.SEMANTIC_SEARCH,
+                };
+            }),
         );
     }
 }

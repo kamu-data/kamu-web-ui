@@ -538,8 +538,6 @@ type DataQueryResultError {
 
 enum DataQueryResultErrorKind {
   INVALID_SQL
-  UNAUTHORIZED
-  INTERNAL_ERROR
 }
 
 type DataQueryResultSuccess {
@@ -1054,7 +1052,7 @@ type DatasetsMut {
   createEmpty(
     datasetKind: DatasetKind!
     datasetAlias: DatasetAlias!
-    datasetVisibility: DatasetVisibility
+    datasetVisibility: DatasetVisibility!
   ): CreateDatasetResult!
   """
   Creates a new dataset from provided DatasetSnapshot manifest
@@ -1062,7 +1060,7 @@ type DatasetsMut {
   createFromSnapshot(
     snapshot: String!
     snapshotFormat: MetadataManifestFormat!
-    datasetVisibility: DatasetVisibility
+    datasetVisibility: DatasetVisibility!
   ): CreateDatasetFromSnapshotResult!
 }
 
@@ -1587,6 +1585,7 @@ type FlowDescriptionDatasetPushIngest {
   sourceName: String
   inputRecordsCount: Int!
   ingestResult: FlowDescriptionUpdateResult
+  message: String!
 }
 
 type FlowDescriptionDatasetReset {

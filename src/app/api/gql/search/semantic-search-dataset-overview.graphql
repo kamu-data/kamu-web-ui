@@ -1,0 +1,18 @@
+query semanticSearchDatasetsOverview($prompt: String!, $perPage: Int) {
+  search {
+    queryNaturalLanguage(prompt: $prompt, perPage: $perPage) {
+      nodes {
+        item {
+          ... on Dataset {
+            ...DatasetSearchOverview
+          }
+        }
+        score
+      }
+      totalCount
+      pageInfo {
+        ...DatasetPageInfo
+      }
+    }
+  }
+}

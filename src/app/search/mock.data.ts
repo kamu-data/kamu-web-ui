@@ -36,7 +36,7 @@ import {
 } from "../api/kamu.graphql.interface";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { DatasetInfo } from "../interface/navigation.interface";
-import { DatasetAutocompleteItem, DatasetSearchResult, TypeNames } from "../interface/search.interface";
+import { DatasetAutocompleteItem, DatasetSearchResult, SearchMode, TypeNames } from "../interface/search.interface";
 import {
     FetchKind,
     ReadKind,
@@ -172,6 +172,7 @@ export const mockDatasetSearchResult: DatasetSearchResult = {
         hasPreviousPage: false,
     },
     currentPage: 1,
+    searchMode: SearchMode.TEXT_SEARCH,
 };
 
 export const mockSearchDatasetOverviewQuery: SearchDatasetsOverviewQuery = {
@@ -1007,17 +1008,6 @@ export const mockDatasetDataSqlRunInvalidSqlResponse: GetDatasetDataSqlRunQuery 
             __typename: "DataQueryResultError",
             errorMessage: "invalid SQL query",
             errorKind: DataQueryResultErrorKind.InvalidSql,
-        },
-    },
-};
-
-export const mockDatasetDataSqlRunInternalErrorResponse: GetDatasetDataSqlRunQuery = {
-    data: {
-        __typename: "DataQueries",
-        query: {
-            __typename: "DataQueryResultError",
-            errorMessage: "internal server error",
-            errorKind: DataQueryResultErrorKind.InternalError,
         },
     },
 };

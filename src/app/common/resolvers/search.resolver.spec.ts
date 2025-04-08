@@ -54,7 +54,9 @@ describe("searchResolver", () => {
     it("should check default state for resolver", async () => {
         routeSnapshot = new ActivatedRouteSnapshot();
         routeSnapshot.queryParams = {};
-        const searchDatasetsSpy = spyOn(searchService, "searchDatasets").and.returnValue(of(mockDatasetSearchResult));
+        const searchDatasetsSpy = spyOn(searchService, "searchDatasets").and.returnValue(
+            of(mockDatasetSearchResult).pipe(),
+        );
         const result$ = (await executeResolver(
             routeSnapshot,
             router.routerState.snapshot,
@@ -75,7 +77,7 @@ describe("searchResolver", () => {
             [ProjectLinks.URL_QUERY_PARAM_QUERY]: "",
         };
         const searchDatasetsSpy = spyOn(searchService, "searchDatasets").and.returnValue(
-            of(mockDatasetSearchResultCopy),
+            of(mockDatasetSearchResultCopy).pipe(),
         );
         const result$ = (await executeResolver(
             routeSnapshot,

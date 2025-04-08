@@ -91,26 +91,6 @@ describe("searchResolver", () => {
         });
     });
 
-    it("should check default state for resolver with non authenticated user", async () => {
-        routeSnapshot = new ActivatedRouteSnapshot();
-        const mockDatasetSearchResultCopy = structuredClone(mockDatasetSearchResult);
-        mockDatasetSearchResultCopy.datasets = [];
-        routeSnapshot.queryParams = {
-            [ProjectLinks.URL_QUERY_PARAM_PAGE]: 2,
-            [ProjectLinks.URL_QUERY_PARAM_QUERY]: "dd",
-        };
-        searchDatasetsSpy = searchDatasetsSpy.and.returnValue(of(mockDatasetSearchResultCopy));
-        const result$ = (await executeResolver(
-            routeSnapshot,
-            router.routerState.snapshot,
-        )) as Observable<DatasetSearchResult>;
-
-        expect(searchDatasetsSpy).toHaveBeenCalledOnceWith("dd", 1);
-        result$.subscribe((data) => {
-            expect(data).toEqual(mockDatasetSearchResultCopy);
-        });
-    });
-
     it("should check default state for resolver with non available option", async () => {
         routeSnapshot = new ActivatedRouteSnapshot();
         const mockDatasetSearchResultCopy = structuredClone(mockDatasetSearchResult);

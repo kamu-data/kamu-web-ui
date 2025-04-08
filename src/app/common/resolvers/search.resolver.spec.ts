@@ -13,7 +13,6 @@ import { SearchService } from "src/app/search/search.service";
 import { Apollo } from "apollo-angular";
 import { Observable, of } from "rxjs";
 import { DatasetSearchResult } from "src/app/interface/search.interface";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { mockDatasetSearchResult } from "src/app/search/mock.data";
 import { ToastrModule } from "ngx-toastr";
@@ -23,8 +22,6 @@ describe("searchResolver", () => {
     let routeSnapshot: ActivatedRouteSnapshot;
     let router: Router;
     let searchService: SearchService;
-    let loggedUserService: LoggedUserService;
-    let isAuthenticatedSpy: jasmine.Spy;
     let appConfigService: AppConfigService;
     const MOCK_PAGE = 2;
     const MOCK_QUERY = "mock-query";
@@ -47,9 +44,7 @@ describe("searchResolver", () => {
         });
         searchService = TestBed.inject(SearchService);
         router = TestBed.inject(Router);
-        loggedUserService = TestBed.inject(LoggedUserService);
         appConfigService = TestBed.inject(AppConfigService);
-        isAuthenticatedSpy = spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
     });
 
     it("should be created", () => {
@@ -97,7 +92,6 @@ describe("searchResolver", () => {
         routeSnapshot = new ActivatedRouteSnapshot();
         const mockDatasetSearchResultCopy = structuredClone(mockDatasetSearchResult);
         mockDatasetSearchResultCopy.datasets = [];
-        isAuthenticatedSpy = isAuthenticatedSpy.and.returnValue(false);
         routeSnapshot.queryParams = {
             [ProjectLinks.URL_QUERY_PARAM_PAGE]: 2,
             [ProjectLinks.URL_QUERY_PARAM_QUERY]: "dd",
@@ -120,7 +114,7 @@ describe("searchResolver", () => {
         routeSnapshot = new ActivatedRouteSnapshot();
         const mockDatasetSearchResultCopy = structuredClone(mockDatasetSearchResult);
         mockDatasetSearchResultCopy.datasets = [];
-        spyOnProperty(appConfigService, "semanticSearchScore", "get").and.returnValue(undefined);
+        spyOnProperty(appConfigService, "semanticSearchTresholdScore", "get").and.returnValue(undefined);
         routeSnapshot.queryParams = {
             [ProjectLinks.URL_QUERY_PARAM_PAGE]: 2,
             [ProjectLinks.URL_QUERY_PARAM_QUERY]: "dd",
@@ -143,7 +137,7 @@ describe("searchResolver", () => {
         routeSnapshot = new ActivatedRouteSnapshot();
         const mockDatasetSearchResultCopy = structuredClone(mockDatasetSearchResult);
         mockDatasetSearchResultCopy.datasets = [];
-        spyOnProperty(appConfigService, "semanticSearchScore", "get").and.returnValue(0.5);
+        spyOnProperty(appConfigService, "semanticSearchTresholdScore", "get").and.returnValue(0.5);
         routeSnapshot.queryParams = {
             [ProjectLinks.URL_QUERY_PARAM_PAGE]: 2,
             [ProjectLinks.URL_QUERY_PARAM_QUERY]: "dd",

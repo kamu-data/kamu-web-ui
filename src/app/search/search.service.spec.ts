@@ -45,7 +45,7 @@ describe("SearchService", () => {
                     totalCount: 1,
                     pageInfo: mockSearchDatasetOverviewQuery.search.query.pageInfo,
                     currentPage: 1,
-                    searchMode: SearchMode.SEARCH,
+                    searchMode: SearchMode.TEXT_SEARCH,
                 };
                 expect(searchResult).toEqual(expectedSearchData);
             });

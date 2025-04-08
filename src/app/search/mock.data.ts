@@ -172,7 +172,7 @@ export const mockDatasetSearchResult: DatasetSearchResult = {
         hasPreviousPage: false,
     },
     currentPage: 1,
-    searchMode: SearchMode.SEARCH,
+    searchMode: SearchMode.TEXT_SEARCH,
 };
 
 export const mockSearchDatasetOverviewQuery: SearchDatasetsOverviewQuery = {

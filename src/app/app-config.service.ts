@@ -70,8 +70,8 @@ export class AppConfigService {
         return this.appUiConfig.ingestUploadFileLimitMb;
     }
 
-    public get semanticSearchScore(): MaybeUndefined<number> {
-        return this.appUiConfig.semanticSearchScore;
+    public get semanticSearchTresholdScore(): MaybeUndefined<number> {
+        return this.appUiConfig.semanticSearchTresholdScore;
     }
 
     public get featureFlags(): AppUIConfigFeatureFlags {

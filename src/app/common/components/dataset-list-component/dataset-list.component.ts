@@ -17,16 +17,16 @@ import { SearchMode } from "src/app/interface/search.interface";
 })
 export class DatasetListComponent {
     @Input({ required: true }) public dataSource: DatasetSearchOverviewFragment[];
-    @Input({ required: true }) public totalCount = 0;
+    @Input({ required: true }) public totalCount: number;
     @Input({ required: true }) public resultUnitText: string;
-    @Input({ required: true }) public hasResultQuantity?: boolean = false;
-    @Input({ required: true }) public isClickableRow?: boolean = false;
-    @Input({ required: true }) public searchMode: SearchMode = SearchMode.SEARCH;
+    @Input({ required: true }) public isClickableRow: boolean;
+    @Input({ required: true }) public searchMode: SearchMode;
     @Input({ required: true }) public sortOptions: {
         value: string;
         label: string;
         active: boolean;
     }[];
+    @Input() public hasResultQuantity?: boolean = false;
 
     public get isSemanticSearch(): boolean {
         return this.searchMode === SearchMode.SEMANTIC_SEARCH;

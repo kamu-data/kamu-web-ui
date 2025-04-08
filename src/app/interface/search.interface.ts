@@ -17,7 +17,7 @@ export interface DatasetSearchResult {
 }
 
 export enum SearchMode {
-    SEARCH = "search",
+    TEXT_SEARCH = "textSearch",
     SEMANTIC_SEARCH = "semanticSearch",
 }
 

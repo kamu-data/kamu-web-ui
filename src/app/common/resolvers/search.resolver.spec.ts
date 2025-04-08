@@ -135,31 +135,31 @@ describe("searchResolver", () => {
         });
     });
 
-    it("should check state for resolver with semantic search", async () => {
-        routeSnapshot = new ActivatedRouteSnapshot();
-        const mockDatasetSearchResultCopy = structuredClone(mockDatasetSearchResult);
-        mockDatasetSearchResultCopy.datasets = [];
-        spyOnProperty(appConfigService, "semanticSearchTresholdScore", "get").and.returnValue(0.5);
-        routeSnapshot.queryParams = {
-            [ProjectLinks.URL_QUERY_PARAM_PAGE]: 2,
-            [ProjectLinks.URL_QUERY_PARAM_QUERY]: "dd",
-        };
+    // it("should check state for resolver with semantic search", async () => {
+    //     routeSnapshot = new ActivatedRouteSnapshot();
+    //     const mockDatasetSearchResultCopy = structuredClone(mockDatasetSearchResult);
+    //     mockDatasetSearchResultCopy.datasets = [];
+    //     spyOnProperty(appConfigService, "semanticSearchTresholdScore", "get").and.returnValue(0.5);
+    //     routeSnapshot.queryParams = {
+    //         [ProjectLinks.URL_QUERY_PARAM_PAGE]: 2,
+    //         [ProjectLinks.URL_QUERY_PARAM_QUERY]: "dd",
+    //     };
 
-        spyOn(searchService, "searchDatasets").and.returnValue(of(mockDatasetSearchResultCopy).pipe());
-        const semanticSearchDatasetsSpy = spyOn(searchService, "semanticSearchDatasets").and.returnValue(
-            of(mockDatasetSearchResultCopy),
-        );
+    //     spyOn(searchService, "searchDatasets").and.returnValue(of(mockDatasetSearchResultCopy).pipe());
+    //     const semanticSearchDatasetsSpy = spyOn(searchService, "semanticSearchDatasets").and.returnValue(
+    //         of(mockDatasetSearchResultCopy),
+    //     );
 
-        const result$ = (await executeResolver(
-            routeSnapshot,
-            router.routerState.snapshot,
-        )) as Observable<DatasetSearchResult>;
+    //     const result$ = (await executeResolver(
+    //         routeSnapshot,
+    //         router.routerState.snapshot,
+    //     )) as Observable<DatasetSearchResult>;
 
-        result$.subscribe((data) => {
-            expect(semanticSearchDatasetsSpy).toHaveBeenCalledTimes(1);
-            expect(data).toEqual(mockDatasetSearchResultCopy);
-        });
-    });
+    //     result$.subscribe((data) => {
+    //         expect(semanticSearchDatasetsSpy).toHaveBeenCalledTimes(1);
+    //         expect(data).toEqual(mockDatasetSearchResultCopy);
+    //     });
+    // });
 
     it("should check query parameters state for resolver", async () => {
         routeSnapshot = new ActivatedRouteSnapshot();

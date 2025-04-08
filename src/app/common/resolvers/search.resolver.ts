@@ -17,7 +17,8 @@ export const searchResolver: ResolveFn<Observable<DatasetSearchResult>> = (route
     const searchService = inject(SearchService);
     const appConfigService = inject(AppConfigService);
     const isSemanticSearchAvailable =
-        appConfigService.semanticSearchTresholdScore !== undefined && appConfigService.semanticSearchTresholdScore >= 0;
+        appConfigService.semanticSearchThresholdScore !== undefined &&
+        appConfigService.semanticSearchThresholdScore >= 0;
 
     const page = route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE) ?? 1;
     const query = route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_QUERY) ?? "";

@@ -21,7 +21,7 @@ export class SearchService {
     private searchApi = inject(SearchApi);
     private appConfigService = inject(AppConfigService);
 
-    private readonly DEFAULT_TRESHOLD_SCORE = this.appConfigService.semanticSearchTresholdScore;
+    private readonly DEFAULT_THRESHOLD_SCORE = this.appConfigService.semanticSearchThresholdScore;
     private searchAutocomplete$: Subject<DatasetAutocompleteItem[]> = new Subject<DatasetAutocompleteItem[]>();
 
     private emitSearchAutocompleteChanged(autocompleteData: DatasetAutocompleteItem[]) {
@@ -64,7 +64,7 @@ export class SearchService {
         return this.searchApi.overviewDatasetSemanticSearch(promt).pipe(
             map((data: SemanticSearchDatasetsOverviewQuery) => {
                 const filteredDatasets = data.search.queryNaturalLanguage.nodes.filter(
-                    (node) => node.score > Number(this.DEFAULT_TRESHOLD_SCORE),
+                    (node) => node.score > Number(this.DEFAULT_THRESHOLD_SCORE),
                 );
                 const datasets: DatasetSearchOverviewFragment[] = filteredDatasets.map(
                     (node) => node.item as DatasetSearchOverviewFragment,

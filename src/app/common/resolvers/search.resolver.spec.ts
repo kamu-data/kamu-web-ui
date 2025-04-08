@@ -23,6 +23,8 @@ describe("searchResolver", () => {
     let router: Router;
     let searchService: SearchService;
     let appConfigService: AppConfigService;
+    let searchDatasetsSpy: jasmine.Spy;
+    let semanticSearchDatasetsSpy: jasmine.Spy;
     const MOCK_PAGE = 2;
     const MOCK_QUERY = "mock-query";
 
@@ -45,6 +47,10 @@ describe("searchResolver", () => {
         searchService = TestBed.inject(SearchService);
         router = TestBed.inject(Router);
         appConfigService = TestBed.inject(AppConfigService);
+        searchDatasetsSpy = spyOn(searchService, "searchDatasets").and.returnValue(of(mockDatasetSearchResult));
+        semanticSearchDatasetsSpy = spyOn(searchService, "semanticSearchDatasets").and.returnValue(
+            of(mockDatasetSearchResult),
+        );
     });
 
     it("should be created", () => {
@@ -54,9 +60,6 @@ describe("searchResolver", () => {
     it("should check default state for resolver", async () => {
         routeSnapshot = new ActivatedRouteSnapshot();
         routeSnapshot.queryParams = {};
-        const searchDatasetsSpy = spyOn(searchService, "searchDatasets").and.returnValue(
-            of(mockDatasetSearchResult).pipe(),
-        );
         const result$ = (await executeResolver(
             routeSnapshot,
             router.routerState.snapshot,
@@ -76,9 +79,7 @@ describe("searchResolver", () => {
             [ProjectLinks.URL_QUERY_PARAM_PAGE]: 1,
             [ProjectLinks.URL_QUERY_PARAM_QUERY]: "",
         };
-        const searchDatasetsSpy = spyOn(searchService, "searchDatasets").and.returnValue(
-            of(mockDatasetSearchResultCopy).pipe(),
-        );
+        searchDatasetsSpy = searchDatasetsSpy.and.returnValue(of(mockDatasetSearchResultCopy).pipe());
         const result$ = (await executeResolver(
             routeSnapshot,
             router.routerState.snapshot,
@@ -98,9 +99,7 @@ describe("searchResolver", () => {
             [ProjectLinks.URL_QUERY_PARAM_PAGE]: 2,
             [ProjectLinks.URL_QUERY_PARAM_QUERY]: "dd",
         };
-        const searchDatasetsSpy = spyOn(searchService, "searchDatasets").and.returnValue(
-            of(mockDatasetSearchResultCopy),
-        );
+        searchDatasetsSpy = searchDatasetsSpy.and.returnValue(of(mockDatasetSearchResultCopy));
         const result$ = (await executeResolver(
             routeSnapshot,
             router.routerState.snapshot,
@@ -121,9 +120,7 @@ describe("searchResolver", () => {
             [ProjectLinks.URL_QUERY_PARAM_PAGE]: 2,
             [ProjectLinks.URL_QUERY_PARAM_QUERY]: "dd",
         };
-        const searchDatasetsSpy = spyOn(searchService, "searchDatasets").and.returnValue(
-            of(mockDatasetSearchResultCopy),
-        );
+        searchDatasetsSpy = searchDatasetsSpy.and.returnValue(of(mockDatasetSearchResultCopy));
         const result$ = (await executeResolver(
             routeSnapshot,
             router.routerState.snapshot,
@@ -135,31 +132,29 @@ describe("searchResolver", () => {
         });
     });
 
-    // it("should check state for resolver with semantic search", async () => {
-    //     routeSnapshot = new ActivatedRouteSnapshot();
-    //     const mockDatasetSearchResultCopy = structuredClone(mockDatasetSearchResult);
-    //     mockDatasetSearchResultCopy.datasets = [];
-    //     spyOnProperty(appConfigService, "semanticSearchTresholdScore", "get").and.returnValue(0.5);
-    //     routeSnapshot.queryParams = {
-    //         [ProjectLinks.URL_QUERY_PARAM_PAGE]: 2,
-    //         [ProjectLinks.URL_QUERY_PARAM_QUERY]: "dd",
-    //     };
+    it("should check state for resolver with semantic search", async () => {
+        routeSnapshot = new ActivatedRouteSnapshot();
+        const mockDatasetSearchResultCopy = structuredClone(mockDatasetSearchResult);
+        mockDatasetSearchResultCopy.datasets = [];
+        spyOnProperty(appConfigService, "semanticSearchTresholdScore", "get").and.returnValue(0.5);
+        routeSnapshot.queryParams = {
+            [ProjectLinks.URL_QUERY_PARAM_PAGE]: 2,
+            [ProjectLinks.URL_QUERY_PARAM_QUERY]: "dd",
+        };
 
-    //     spyOn(searchService, "searchDatasets").and.returnValue(of(mockDatasetSearchResultCopy).pipe());
-    //     const semanticSearchDatasetsSpy = spyOn(searchService, "semanticSearchDatasets").and.returnValue(
-    //         of(mockDatasetSearchResultCopy),
-    //     );
+        searchDatasetsSpy = searchDatasetsSpy.and.returnValue(of(mockDatasetSearchResultCopy).pipe());
+        semanticSearchDatasetsSpy = semanticSearchDatasetsSpy.and.returnValue(of(mockDatasetSearchResultCopy));
 
-    //     const result$ = (await executeResolver(
-    //         routeSnapshot,
-    //         router.routerState.snapshot,
-    //     )) as Observable<DatasetSearchResult>;
+        const result$ = (await executeResolver(
+            routeSnapshot,
+            router.routerState.snapshot,
+        )) as Observable<DatasetSearchResult>;
 
-    //     result$.subscribe((data) => {
-    //         expect(semanticSearchDatasetsSpy).toHaveBeenCalledTimes(1);
-    //         expect(data).toEqual(mockDatasetSearchResultCopy);
-    //     });
-    // });
+        result$.subscribe((data) => {
+            expect(semanticSearchDatasetsSpy).toHaveBeenCalledTimes(1);
+            expect(data).toEqual(mockDatasetSearchResultCopy);
+        });
+    });
 
     it("should check query parameters state for resolver", async () => {
         routeSnapshot = new ActivatedRouteSnapshot();
@@ -167,9 +162,7 @@ describe("searchResolver", () => {
             [ProjectLinks.URL_QUERY_PARAM_PAGE]: MOCK_PAGE.toString(),
             [ProjectLinks.URL_QUERY_PARAM_QUERY]: MOCK_QUERY,
         };
-        const searchDatasetsSpy = spyOn(searchService, "searchDatasets").and.returnValue(
-            of(mockDatasetSearchResult).pipe(),
-        );
+
         await executeResolver(routeSnapshot, router.routerState.snapshot);
         expect(searchDatasetsSpy).toHaveBeenCalledOnceWith(MOCK_QUERY, MOCK_PAGE - 1);
     });

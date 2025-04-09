@@ -8,6 +8,7 @@
 import { EditLicenseModalComponent } from "./components/edit-license-modal/edit-license-modal.component";
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import {
+    DatasetAccessRole,
     DatasetCurrentInfoFragment,
     DatasetFlowType,
     DatasetKind,
@@ -40,7 +41,7 @@ import { FileUploadService } from "src/app/services/file-upload.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import ProjectLinks from "src/app/project-links";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { DatasetPermissionsService } from "../../dataset.permissions.service";
+import { DatasetCollaborationsService } from "../dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
 
 @Component({
     selector: "app-overview",
@@ -56,6 +57,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     public editingReadme = false;
     public droppedFile: File;
     public uploadFileLoading$: Observable<boolean>;
+    public role$: Observable<MaybeNull<DatasetAccessRole>>;
     public readonly UPLOAD_FILE_IMAGE = AppValues.UPLOAD_FILE_IMAGE;
     public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
     public readonly URL_PARAM_SET_TRANSFORM = ProjectLinks.URL_PARAM_SET_TRANSFORM;
@@ -76,9 +78,10 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     private configService = inject(AppConfigService);
     private modalService = inject(ModalService);
     private loggedUserService = inject(LoggedUserService);
-    private datasetPermissionsService = inject(DatasetPermissionsService);
+    private datasetCollaborationsService = inject(DatasetCollaborationsService);
 
     public ngOnInit(): void {
+        this.role$ = this.datasetCollaborationsService.getRoleByDatasetId(this.datasetBasics.id);
         this.uploadFileLoading$ = this.fileUploadService.isUploadFile;
         this.datasetSubsService.overviewChanges
             .pipe(takeUntilDestroyed(this.destroyRef))

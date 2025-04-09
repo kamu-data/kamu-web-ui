@@ -14,6 +14,8 @@ import {
     DatasetAccessRole,
     DatasetListCollaboratorsDocument,
     DatasetListCollaboratorsQuery,
+    DatasetUserRoleDocument,
+    DatasetUserRoleQuery,
     SearchCollaboratorDocument,
     SearchCollaboratorQuery,
     SetRoleCollaboratorDocument,
@@ -24,6 +26,7 @@ import {
 import {
     mockDatasetListCollaboratorsQuery,
     mockDatasetSearchCollaboratorQuery,
+    mockDatasetUserRoleQuery,
     mockSetRoleCollaboratorMutation,
     mockUnsetRoleCollaboratorMutation,
 } from "./mock/dataset-collaborations.mock";
@@ -140,6 +143,19 @@ describe("DatasetCollaborationApi", () => {
 
         op.flush({
             data: mockUnsetRoleCollaboratorMutation,
+        });
+    });
+
+    it("should check get role by dataset id", () => {
+        service.getDatasetUserRole(TEST_DATASET_ID).subscribe((result: DatasetUserRoleQuery) => {
+            expect(result.datasets.byId?.role).toEqual(mockDatasetUserRoleQuery.datasets.byId?.role);
+        });
+
+        const op = controller.expectOne(DatasetUserRoleDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+
+        op.flush({
+            data: mockDatasetUserRoleQuery,
         });
     });
 });

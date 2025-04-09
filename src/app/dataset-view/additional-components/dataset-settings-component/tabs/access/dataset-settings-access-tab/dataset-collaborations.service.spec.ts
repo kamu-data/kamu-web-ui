@@ -15,6 +15,7 @@ import { of } from "rxjs";
 import {
     mockDatasetListCollaboratorsQuery,
     mockDatasetSearchCollaboratorQuery,
+    mockDatasetUserRoleQuery,
     mockSetRoleCollaboratorMutation,
     mockUnsetRoleCollaboratorMutation,
 } from "src/app/api/mock/dataset-collaborations.mock";
@@ -128,6 +129,19 @@ describe("DatasetCollaborationsService", () => {
             });
 
         expect(unsetRoleCollaboratorSpy).toHaveBeenCalledTimes(1);
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should get role by dataset Id", () => {
+        const getDatasetUserRoleSpy = spyOn(datasetCollaborationApi, "getDatasetUserRole").and.returnValue(
+            of(mockDatasetUserRoleQuery),
+        );
+
+        const subscription$ = service.getRoleByDatasetId(TEST_DATASET_ID).subscribe((result) => {
+            expect(result).toEqual(mockDatasetUserRoleQuery.datasets.byId?.role as DatasetAccessRole);
+        });
+
+        expect(getDatasetUserRoleSpy).toHaveBeenCalledTimes(1);
         expect(subscription$.closed).toBeTrue();
     });
 });

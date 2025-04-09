@@ -248,6 +248,22 @@
                             <p class="dataset-info--text">{{ isPrivate ? "Private" : "Public" }}</p>
                         </div>
                     </div>
+
+                    <div class="dataset-info--block">
+                        <div class="dataset-info--sub-block d-flex align-items-center">
+                            <mat-icon class="fs-4 mr-2">person</mat-icon>
+                            <h2 class="dataset-info--subtitle">Role:</h2>
+                        </div>
+                        <div class="dataset-info--sub-block">
+                            <p *ngIf="role$ | async as role; else noRole" class="dataset-info--text">
+                                {{ role | titlecase }}
+                            </p>
+                            <ng-template #noRole>
+                                <p class="dataset-info--text">None</p>
+                            </ng-template>
+                        </div>
+                    </div>
+
                     <div
                         class="dataset-info--block"
                         *ngIf="currentState.overview.metadata.currentLicense"

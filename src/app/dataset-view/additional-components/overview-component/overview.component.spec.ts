@@ -52,6 +52,7 @@ import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import AppValues from "src/app/common/values/app.values";
 import { RouterModule } from "@angular/router";
+import { DatasetCollaborationsService } from "../dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
 
 describe("OverviewComponent", () => {
     let component: OverviewComponent;
@@ -61,6 +62,7 @@ describe("OverviewComponent", () => {
     let modalService: NgbModal;
     let datasetFlowsService: DatasetFlowsService;
     let loggedUserService: LoggedUserService;
+    let datasetCollaborationsService: DatasetCollaborationsService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -114,6 +116,7 @@ describe("OverviewComponent", () => {
         datasetFlowsService = TestBed.inject(DatasetFlowsService);
         modalService = TestBed.inject(NgbModal);
         loggedUserService = TestBed.inject(LoggedUserService);
+        datasetCollaborationsService = TestBed.inject(DatasetCollaborationsService);
 
         fixture = TestBed.createComponent(OverviewComponent);
         component = fixture.componentInstance;
@@ -129,6 +132,7 @@ describe("OverviewComponent", () => {
             },
             visibility: mockPublicDatasetVisibility,
         };
+        spyOn(datasetCollaborationsService, "getRoleByDatasetId").and.returnValue(of(null));
         component.datasetPermissions = structuredClone(mockFullPowerDatasetPermissionsFragment); // clone, as we modify this data in the tests
 
         fixture.detectChanges();

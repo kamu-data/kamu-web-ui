@@ -17,6 +17,8 @@ import {
     SetRoleCollaboratorMutation,
     UnsetRoleCollaboratorGQL,
     UnsetRoleCollaboratorMutation,
+    DatasetUserRoleGQL,
+    DatasetUserRoleQuery,
 } from "./kamu.graphql.interface";
 import { first, map, Observable } from "rxjs";
 import { ApolloQueryResult } from "@apollo/client";
@@ -30,6 +32,7 @@ export class DatasetCollaborationApi {
     private searchCollaboratorGQL = inject(SearchCollaboratorGQL);
     private setRoleCollaboratorGQL = inject(SetRoleCollaboratorGQL);
     private unsetRoleCollaboratorGQL = inject(UnsetRoleCollaboratorGQL);
+    private datasetUserRoleGQL = inject(DatasetUserRoleGQL);
 
     public listCollaborators(params: {
         datasetId: string;
@@ -92,5 +95,24 @@ export class DatasetCollaborationApi {
                 }
             }),
         );
+    }
+
+    public getDatasetUserRole(datasetId: string): Observable<DatasetUserRoleQuery> {
+        return this.datasetUserRoleGQL
+            .watch(
+                { datasetId },
+                {
+                    ...noCacheFetchPolicy,
+                    context: {
+                        skipLoading: true,
+                    },
+                },
+            )
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<DatasetUserRoleQuery>) => {
+                    return result.data;
+                }),
+            );
     }
 }

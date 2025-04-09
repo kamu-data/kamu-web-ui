@@ -12,6 +12,7 @@ import {
     DatasetAccessRole,
     DatasetKind,
     DatasetListCollaboratorsQuery,
+    DatasetUserRoleQuery,
     SearchCollaboratorQuery,
     SetRoleCollaboratorMutation,
     UnsetRoleCollaboratorMutation,
@@ -129,5 +130,15 @@ export const mockUnsetRoleCollaboratorMutation: UnsetRoleCollaboratorMutation = 
             __typename: "DatasetMut",
         },
         __typename: "DatasetsMut",
+    },
+};
+
+export const mockDatasetUserRoleQuery: DatasetUserRoleQuery = {
+    datasets: {
+        byId: {
+            role: null,
+            __typename: "Dataset",
+        },
+        __typename: "Datasets",
     },
 };

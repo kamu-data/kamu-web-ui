@@ -19,7 +19,7 @@ import {
     ViewChild,
 } from "@angular/core";
 import { Observable, OperatorFunction } from "rxjs";
-import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap } from "rxjs/operators";
+import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap, take, finalize } from "rxjs/operators";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
@@ -119,11 +119,15 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
             debounceTime(AppValues.SHORT_DELAY_MS),
             distinctUntilChanged(),
             tap(() => (this.searching = true)),
-            switchMap((term: string) => this.appSearchAPI.autocompleteDatasetSearch(term)),
-            tap(() => {
-                this.searching = false;
-                this.cdr.detectChanges();
-            }),
+            switchMap((term: string) =>
+                this.appSearchAPI.autocompleteDatasetSearch(term).pipe(
+                    take(1),
+                    finalize(() => {
+                        this.searching = false;
+                        this.cdr.detectChanges();
+                    }),
+                ),
+            ),
         );
     };
 

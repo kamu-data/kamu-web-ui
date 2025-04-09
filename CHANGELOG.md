@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Overview tab: added current role for user in Details section
+### Fixed
+- Fixed bug with infinity spinner for global search
 
 ## [0.45.1] - 2025-04-08
 ### Fixed

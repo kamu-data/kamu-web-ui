@@ -352,6 +352,8 @@ describe("AppHeaderComponent", () => {
         expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(SEARCH_QUERY);
         fixture.detectChanges();
 
+        expect(component.searching).toEqual(false);
+
         // Expect emitter event with hardcoded auto-complete item
         const emitterSubscription$ = component.onSelectedDataset
             .pipe(first())

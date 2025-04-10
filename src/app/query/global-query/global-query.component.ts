@@ -5,9 +5,9 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, NgZone, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { finalize, map, Observable } from "rxjs";
+import { filter, finalize, fromEvent, map, Observable, takeUntil } from "rxjs";
 import { MaybeNull } from "src/app/interface/app.types";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { DataSqlErrorUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
@@ -16,6 +16,7 @@ import ProjectLinks from "src/app/project-links";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 import { SqlQueryResponseState } from "./global-query.model";
 import { NavigationService } from "src/app/services/navigation.service";
+import { CancelRequestService } from "src/app/services/cancel-request.service";
 
 @Component({
     selector: "app-global-query",
@@ -32,11 +33,12 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
     public sqlErrorMarker$: Observable<string>;
     public sqlQueryResponse$: Observable<MaybeNull<SqlQueryResponseState>>;
     public readonly MONACO_PLACEHOLDER = "Please type your guery here or find the dataset in the search...";
+    private visibilityDocumentChange$ = fromEvent(document, "visibilitychange");
 
     private sqlQueryService = inject(SqlQueryService);
-    private cdr = inject(ChangeDetectorRef);
-    private ngZone = inject(NgZone);
     private navigationService = inject(NavigationService);
+    private cancelRequestService = inject(CancelRequestService);
+    private cdr = inject(ChangeDetectorRef);
 
     public ngOnInit(): void {
         this.sqlQueryService.resetSqlError();
@@ -56,15 +58,16 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
         this.sqlQueryService
             .requestDataSqlRun(params)
             .pipe(
-                takeUntilDestroyed(this.destroyRef),
                 finalize(() => {
                     this.sqlLoading = false;
-                    this.ngZone.run(() => {
-                        this.navigationService.navigateWithSqlQuery(params.query);
-                    });
+                    this.cdr.detectChanges();
                 }),
+                takeUntil(this.visibilityDocumentChange$.pipe(filter(() => document.visibilityState === "hidden"))),
+                takeUntil(this.cancelRequestService.cancelRequstObservable),
+                takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe();
-        this.cdr.detectChanges();
+            .subscribe(() => {
+                this.navigationService.navigateWithSqlQuery(params.query);
+            });
     }
 }

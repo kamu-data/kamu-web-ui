@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] 
+### Changed
+- Improved the performance of the query execution timer
+
+
 ## [0.45.2] - 2025-04-09
 ### Added
 - Overview tab: added current role for user in Details section
@@ -22,7 +27,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Separate routes for all tabs for AccountSettings component
 - Separate routes for all tabs for FlowDetails component
 
-
 ## [0.44.0] - 2025-03-31
 ### Added
 - Transform settings: enable a transform without setting batching parameters
@@ -30,7 +34,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Implemented unknown response for broken dataset flows
 ### Fixed
 - Wrong redirect after login
-
 
 ## [0.43.0] - 2025-03-25
 ### Added

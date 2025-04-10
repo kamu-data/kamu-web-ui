@@ -20,7 +20,7 @@ import { DatasetApi } from "../api/dataset.api";
 import { DatasetViewComponent } from "./dataset-view.component";
 import { NavigationService } from "../services/navigation.service";
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
-import { delay, of } from "rxjs";
+import { delay, of, Subject } from "rxjs";
 import { OverviewComponent } from "./additional-components/overview-component/overview.component";
 import { DatasetViewMenuComponent } from "./dataset-view-menu/dataset-view-menu.component";
 import { MatMenuModule } from "@angular/material/menu";
@@ -195,7 +195,7 @@ describe("DatasetViewComponent", () => {
     ].forEach((tab: DatasetViewTypeEnum) => {
         it(`should check init ${tab} tab`, () => {
             spyOn(route.snapshot.queryParamMap, "get").and.returnValue(tab);
-            fixture.detectChanges();
+            component.ngOnInit();
 
             expect(component.datasetViewType).toEqual(tab);
         });
@@ -342,11 +342,19 @@ describe("DatasetViewComponent", () => {
     );
 
     it(`should check Data tab has sql request in the URL`, fakeAsync(() => {
-        spyOn(sqlQueryService, "requestDataSqlRun").and.returnValue(of());
+        // 2. Мокируем сервис и подменяем subscribe
+        const mockObservable = new Subject<void>();
+        spyOn(mockObservable, "subscribe").and.callThrough();
+
+        spyOn(sqlQueryService, "requestDataSqlRun").and.returnValue(mockObservable);
+
         const params: DatasetRequestBySql = {
             query: "select *from 'kamu/account.tokens.portfolio'",
         };
         component.onRunSQLRequest(params);
+        mockObservable.next();
+        mockObservable.complete();
+
         tick();
         expect(router.url.includes("/?sqlQuery=select%20*from%20'kamu%2Faccount.tokens.portfolio'")).toEqual(true);
         flush();

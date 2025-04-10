@@ -1,5 +1,5 @@
 {
-  "apiServerGqlUrl": "https://api.europort.kamu.dev/graphql",
+  "apiServerGqlUrl": "http://localhost:8080/graphql",
   "apiServerHttpUrl": "http://localhost:8080",
   "githubClientId": "361a3b4fda86d0234d2f",
   "grafanaLogs": {

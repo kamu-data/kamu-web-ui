@@ -6,19 +6,11 @@
  */
 
 import { SessionStorageService } from "src/app/services/session-storage.service";
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    inject,
-    NgZone,
-    OnDestroy,
-    OnInit,
-} from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { NavigationEnd, Router } from "@angular/router";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
-import { filter, finalize, first, switchMap, tap } from "rxjs/operators";
+import { filter, finalize, first, switchMap, takeUntil, tap } from "rxjs/operators";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "../api/kamu.graphql.interface";
 import ProjectLinks from "../project-links";
 import { DatasetInfo } from "../interface/navigation.interface";
@@ -26,7 +18,7 @@ import { isNil, promiseWithCatch } from "../common/helpers/app.helpers";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { MaybeNull, MaybeUndefined } from "../interface/app.types";
 import { DatasetPermissionsService } from "./dataset.permissions.service";
-import { ReplaySubject, Subject, of } from "rxjs";
+import { ReplaySubject, Subject, fromEvent, of } from "rxjs";
 import { LineageGraphNodeData, LineageGraphNodeKind } from "./additional-components/lineage-component/lineage-model";
 import { BaseDatasetDataComponent } from "../common/components/base-dataset-data.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -34,6 +26,7 @@ import { SqlQueryService } from "../services/sql-query.service";
 import { AppConfigService } from "../app-config.service";
 import { ToastrService } from "ngx-toastr";
 import { Clipboard } from "@angular/cdk/clipboard";
+import { CancelRequestService } from "../services/cancel-request.service";
 
 @Component({
     selector: "app-dataset",
@@ -49,6 +42,7 @@ export class DatasetViewComponent extends BaseDatasetDataComponent implements On
     public currentHeadBlockHash: string = "";
 
     private mainDatasetQueryComplete$: Subject<DatasetInfo> = new ReplaySubject<DatasetInfo>(1 /* bufferSize */);
+    private visibilityDocumentChange$ = fromEvent(document, "visibilitychange");
 
     private datasetPermissionsServices = inject(DatasetPermissionsService);
     private router = inject(Router);
@@ -58,7 +52,7 @@ export class DatasetViewComponent extends BaseDatasetDataComponent implements On
     private sessionStorageService = inject(SessionStorageService);
     private clipboard = inject(Clipboard);
     private toastr = inject(ToastrService);
-    private ngZone = inject(NgZone);
+    private cancelRequestService = inject(CancelRequestService);
 
     public ngOnInit(): void {
         const urlDatasetInfo = this.getDatasetInfoFromUrl();
@@ -352,13 +346,14 @@ export class DatasetViewComponent extends BaseDatasetDataComponent implements On
             .pipe(
                 finalize(() => {
                     this.sqlLoading = false;
-                    this.ngZone.run(() => {
-                        this.navigationService.navigateWithSqlQuery(params.query);
-                    });
+                    this.cdr.detectChanges();
                 }),
+                takeUntil(this.visibilityDocumentChange$.pipe(filter(() => document.visibilityState === "hidden"))),
+                takeUntil(this.cancelRequestService.cancelRequestObservable),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe();
-        this.cdr.detectChanges();
+            .subscribe(() => {
+                this.navigationService.navigateWithSqlQuery(params.query);
+            });
     }
 }

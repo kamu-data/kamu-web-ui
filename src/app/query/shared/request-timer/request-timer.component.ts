@@ -13,20 +13,47 @@ import {
     Input,
     OnChanges,
     OnDestroy,
+    OnInit,
     SimpleChanges,
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { filter, fromEvent } from "rxjs";
+import { BaseComponent } from "src/app/common/components/base.component";
+import { CancelRequestService } from "src/app/services/cancel-request.service";
 
 @Component({
     selector: "app-request-timer",
     templateUrl: "./request-timer.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RequestTimerComponent implements OnChanges, OnDestroy {
-    private cdr = inject(ChangeDetectorRef);
+export class RequestTimerComponent extends BaseComponent implements OnChanges, OnDestroy, OnInit {
+    @Input({ required: true }) public class: string;
+    @Input({ required: true }) public sqlLoading: boolean = false;
+    private mm: number = 0;
+    private ss: number = 0;
+    private ms: number = 0;
+    private hh: number = 0;
+    private isRunning: boolean = false;
+    private timerId: NodeJS.Timer;
 
-    public ngOnDestroy(): void {
-        this.stopTimer();
+    private cdr = inject(ChangeDetectorRef);
+    private cancelRequestService = inject(CancelRequestService);
+    private visibilityDocumentChange$ = fromEvent(document, "visibilitychange");
+
+    public ngOnInit(): void {
+        this.visibilityDocumentChange$
+            .pipe(
+                filter(() => document.visibilityState === "hidden"),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(() => {
+                if (this.sqlLoading) {
+                    this.stopTimer();
+                    this.resetTimer();
+                }
+            });
     }
+
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes.sqlLoading.currentValue) {
             this.resetTimer();
@@ -35,15 +62,11 @@ export class RequestTimerComponent implements OnChanges, OnDestroy {
             this.stopTimer();
         }
     }
-    @Input({ required: true }) public class: string;
-    @Input({ required: true }) public sqlLoading: boolean = false;
 
-    private mm: number = 0;
-    private ss: number = 0;
-    private ms: number = 0;
-    private hh: number = 0;
-    private isRunning: boolean = false;
-    private timerId: NodeJS.Timer;
+    public ngOnDestroy(): void {
+        this.stopTimer();
+        this.cancelRequestService.cancelRequest();
+    }
 
     private runTimer() {
         if (!this.isRunning) {
@@ -62,7 +85,7 @@ export class RequestTimerComponent implements OnChanges, OnDestroy {
                     this.hh++;
                     this.mm = 0;
                 }
-                this.cdr.markForCheck();
+                this.cdr.detectChanges();
             }, 10);
         }
     }

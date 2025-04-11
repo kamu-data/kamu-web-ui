@@ -8,6 +8,7 @@
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { RequestTimerComponent } from "./request-timer.component";
 import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
 describe("RequestTimerComponent", () => {
     let component: RequestTimerComponent;
@@ -16,6 +17,7 @@ describe("RequestTimerComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [RequestTimerComponent],
+            imports: [SharedTestModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(RequestTimerComponent);

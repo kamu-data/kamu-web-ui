@@ -349,7 +349,7 @@ export class DatasetViewComponent extends BaseDatasetDataComponent implements On
                     this.cdr.detectChanges();
                 }),
                 takeUntil(this.visibilityDocumentChange$.pipe(filter(() => document.visibilityState === "hidden"))),
-                takeUntil(this.cancelRequestService.cancelRequstObservable),
+                takeUntil(this.cancelRequestService.cancelRequestObservable),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(() => {

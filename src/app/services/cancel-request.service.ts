@@ -19,7 +19,7 @@ export class CancelRequestService {
         this.cancel$.complete();
     }
 
-    public get cancelRequstObservable(): Observable<void> {
+    public get cancelRequestObservable(): Observable<void> {
         return this.cancel$.asObservable();
     }
 }

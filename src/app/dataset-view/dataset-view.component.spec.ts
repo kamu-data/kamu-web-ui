@@ -342,7 +342,6 @@ describe("DatasetViewComponent", () => {
     );
 
     it(`should check Data tab has sql request in the URL`, fakeAsync(() => {
-        // 2. Мокируем сервис и подменяем subscribe
         const mockObservable = new Subject<void>();
         spyOn(mockObservable, "subscribe").and.callThrough();
 

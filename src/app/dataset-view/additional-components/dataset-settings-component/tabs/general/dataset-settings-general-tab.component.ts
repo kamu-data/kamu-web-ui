@@ -61,7 +61,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
         this.renameError$ = this.datasetSettingsService.renameDatasetErrorOccurrences.pipe(shareReplay());
         this.renameDatasetForm = this.fb.nonNullable.group({
             datasetName: [
-                this.getDatasetInfoFromUrl().datasetName,
+                this.datasetBasics.name,
                 [Validators.required, Validators.pattern(/^([a-zA-Z0-9][a-zA-Z0-9-]*)+(\.[a-zA-Z0-9][a-zA-Z0-9-]*)*$/)],
             ],
         });

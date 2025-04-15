@@ -5,27 +5,27 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { Location } from "@angular/common";
-import { map, Observable } from "rxjs";
+import { filter, finalize, fromEvent, map, Observable, takeUntil } from "rxjs";
 import AppValues from "src/app/common/values/app.values";
 import { DatasetFlowType, DatasetKind, OffsetInterval } from "../../../api/kamu.graphql.interface";
 import { DataSqlErrorUpdate, OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetRequestBySql } from "../../../interface/dataset.interface";
-import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { BaseComponent } from "src/app/common/components/base.component";
-import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/interface/app.types";
 import ProjectLinks from "src/app/project-links";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { AddDataModalComponent } from "../overview-component/components/add-data-modal/add-data-modal.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { DatasetViewTypeEnum } from "../../dataset-view.interface";
+import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { SqlQueryResponseState } from "src/app/query/global-query/global-query.model";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 import { SessionStorageService } from "src/app/services/session-storage.service";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { CancelRequestService } from "src/app/services/cancel-request.service";
 
 @Component({
     selector: "app-data",
@@ -33,29 +33,27 @@ import { SessionStorageService } from "src/app/services/session-storage.service"
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataComponent extends BaseComponent implements OnInit {
-    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    @Input({ required: true }) public sqlLoading: boolean;
-    @Input() public resultTime: number;
-    @Output() public runSQLRequestEmit = new EventEmitter<DatasetRequestBySql>();
+    @Input(RoutingResolvers.DATASET_VIEW_DATA_KEY) public dataTabData: DatasetOverviewTabData;
 
+    public sqlLoading: boolean;
     public sqlRequestCode = `select\n  *\nfrom `;
-
     private offsetColumnName = AppValues.DEFAULT_OFFSET_COLUMN_NAME;
     public overviewUpdate$: Observable<OverviewUpdate>;
     public sqlErrorMarker$: Observable<string>;
     public sqlQueryResponse$: Observable<MaybeNull<SqlQueryResponseState>>;
     public readonly MONACO_PLACEHOLDER = "Please type your guery here...";
+    private visibilityDocumentChange$ = fromEvent(document, "visibilitychange");
 
-    private datasetSubsService = inject(DatasetSubscriptionsService);
     private location = inject(Location);
     private ngbModalService = inject(NgbModal);
     private datasetFlowsService = inject(DatasetFlowsService);
     private navigationService = inject(NavigationService);
     private sqlQueryService = inject(SqlQueryService);
     private sessionStorageService = inject(SessionStorageService);
+    private cdr = inject(ChangeDetectorRef);
+    private cancelRequestService = inject(CancelRequestService);
 
     public ngOnInit(): void {
-        this.overviewUpdate$ = this.datasetSubsService.overviewChanges;
         this.sqlErrorMarker$ = this.sqlQueryService.sqlErrorOccurrences.pipe(
             map((data: DataSqlErrorUpdate) => data.error),
         );
@@ -66,7 +64,7 @@ export class DataComponent extends BaseComponent implements OnInit {
 
     public runSQLRequest(params: DatasetRequestBySql): void {
         this.sessionStorageService.setDatasetSqlCode(params.query);
-        this.runSQLRequestEmit.emit(params);
+        this.onRunSQLRequest(params);
     }
 
     private buildSqlRequestCode(): void {
@@ -77,7 +75,7 @@ export class DataComponent extends BaseComponent implements OnInit {
             if (this.sessionStorageService.datasetSqlCode) {
                 this.sqlRequestCode = this.sessionStorageService.datasetSqlCode;
             } else {
-                this.sqlRequestCode += `'${this.datasetBasics.alias}'`;
+                this.sqlRequestCode += `'${this.dataTabData.datasetBasics.alias}'`;
                 const offset = this.location.getState() as MaybeNull<Partial<OffsetInterval>>;
                 if (offset && typeof offset.start !== "undefined" && typeof offset.end !== "undefined") {
                     this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;
@@ -86,19 +84,38 @@ export class DataComponent extends BaseComponent implements OnInit {
         }
     }
 
+    public onRunSQLRequest(params: DatasetRequestBySql): void {
+        this.sqlLoading = true;
+        this.sqlQueryService
+            // TODO: Propagate limit from UI and display when it was reached
+            .requestDataSqlRun(params)
+            .pipe(
+                finalize(() => {
+                    this.sqlLoading = false;
+                    this.cdr.detectChanges();
+                }),
+                takeUntil(this.visibilityDocumentChange$.pipe(filter(() => document.visibilityState === "hidden"))),
+                takeUntil(this.cancelRequestService.cancelRequestObservable),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(() => {
+                this.navigationService.navigateWithSqlQuery(params.query);
+            });
+    }
+
     public addData(overviewUpdate: OverviewUpdate): void {
         const metadata = overviewUpdate.overview.metadata;
         if (metadata.currentPollingSource || metadata.currentTransform) {
             this.updateNow();
-        } else if (this.datasetBasics.kind === DatasetKind.Derivative) {
+        } else if (this.dataTabData.datasetBasics.kind === DatasetKind.Derivative) {
             this.navigationService.navigateToSetTransform({
-                accountName: this.datasetBasics.owner.accountName,
-                datasetName: this.datasetBasics.name,
+                accountName: this.dataTabData.datasetBasics.owner.accountName,
+                datasetName: this.dataTabData.datasetBasics.name,
             });
         } else {
             const modalRef: NgbModalRef = this.ngbModalService.open(AddDataModalComponent);
             const modalRefInstance = modalRef.componentInstance as AddDataModalComponent;
-            modalRefInstance.datasetBasics = this.datasetBasics;
+            modalRefInstance.datasetBasics = this.dataTabData.datasetBasics;
             modalRefInstance.overview = overviewUpdate;
         }
     }
@@ -106,9 +123,9 @@ export class DataComponent extends BaseComponent implements OnInit {
     private updateNow(): void {
         this.datasetFlowsService
             .datasetTriggerFlow({
-                datasetId: this.datasetBasics.id,
+                datasetId: this.dataTabData.datasetBasics.id,
                 datasetFlowType:
-                    this.datasetBasics.kind === DatasetKind.Root
+                    this.dataTabData.datasetBasics.kind === DatasetKind.Root
                         ? DatasetFlowType.Ingest
                         : DatasetFlowType.ExecuteTransform,
             })
@@ -116,8 +133,8 @@ export class DataComponent extends BaseComponent implements OnInit {
             .subscribe((success: boolean) => {
                 if (success) {
                     this.navigationService.navigateToDatasetView({
-                        accountName: this.datasetBasics.owner.accountName,
-                        datasetName: this.datasetBasics.name,
+                        accountName: this.dataTabData.datasetBasics.owner.accountName,
+                        datasetName: this.dataTabData.datasetBasics.name,
                         tab: DatasetViewTypeEnum.Flows,
                     });
                 }

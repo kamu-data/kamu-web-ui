@@ -54,6 +54,20 @@ import { EmailsTabComponent } from "./account/settings/tabs/emails-tab/emails-ta
 import { accountSettingsEmailResolver } from "./common/resolvers/account-settings-email.resolver";
 import { accountSettingsAccessTokensResolver } from "./common/resolvers/account-settings-access-tokens.resolver";
 import { activeTabResolver } from "./common/resolvers/active-tab.resolver";
+import { DatasetViewTypeEnum } from "./dataset-view/dataset-view.interface";
+import { OverviewComponent } from "./dataset-view/additional-components/overview-component/overview.component";
+import { datasetOverviewTabResolver } from "./common/resolvers/dataset-view/dataset-overview-tab.resolver";
+import { datasetViewResolver } from "./common/resolvers/dataset-view/dataset-view.resolver";
+import { FlowsComponent } from "./dataset-view/additional-components/flows-component/flows.component";
+import { datasetFlowsTabResolver } from "./common/resolvers/dataset-view/dataset-flows-tab.resolver";
+import { DataComponent } from "./dataset-view/additional-components/data-component/data.component";
+import { MetadataComponent } from "./dataset-view/additional-components/metadata-component/metadata.component";
+import { HistoryComponent } from "./dataset-view/additional-components/history-component/history.component";
+import { datasetHistoryTabResolver } from "./common/resolvers/dataset-view/dataset-history-tab.resolver";
+import { LineageComponent } from "./dataset-view/additional-components/lineage-component/lineage.component";
+import { datasetLineageTabResolver } from "./common/resolvers/dataset-view/dataset-lineage-tab.resolver";
+import { datasetSettingsActiveSectionResolver } from "./common/resolvers/dataset-view/dataset-settings-active-section.resolver";
+import { DatasetSettingsComponent } from "./dataset-view/additional-components/dataset-settings-component/dataset-settings.component";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -156,6 +170,73 @@ export const routes: Routes = [
             {
                 path: `:${ProjectLinks.URL_PARAM_DATASET_NAME}`,
                 component: DatasetViewComponent,
+                runGuardsAndResolvers: "always",
+                resolve: {
+                    [RoutingResolvers.DATASET_VIEW_KEY]: datasetViewResolver,
+                    [RoutingResolvers.DATASET_VIEW_ACTIVE_TAB_KEY]: activeTabResolver,
+                    [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolver,
+                },
+                children: [
+                    {
+                        path: DatasetViewTypeEnum.Overview,
+                        redirectTo: "",
+                        pathMatch: "full",
+                    },
+                    {
+                        path: "",
+                        component: OverviewComponent,
+                        runGuardsAndResolvers: "always",
+                        resolve: { [RoutingResolvers.DATASET_VIEW_OVERVIEW_KEY]: datasetOverviewTabResolver },
+                    },
+                    {
+                        path: DatasetViewTypeEnum.Data,
+                        component: DataComponent,
+                        runGuardsAndResolvers: "always",
+                        resolve: { [RoutingResolvers.DATASET_VIEW_DATA_KEY]: datasetOverviewTabResolver },
+                    },
+                    {
+                        path: DatasetViewTypeEnum.Metadata,
+                        component: MetadataComponent,
+                        runGuardsAndResolvers: "always",
+                        resolve: { [RoutingResolvers.DATASET_VIEW_METADATA_KEY]: datasetOverviewTabResolver },
+                    },
+                    {
+                        path: DatasetViewTypeEnum.History,
+                        component: HistoryComponent,
+                        runGuardsAndResolvers: "always",
+                        resolve: {
+                            [RoutingResolvers.DATASET_VIEW_HISTORY_KEY]: datasetHistoryTabResolver,
+                            [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolver,
+                        },
+                    },
+                    {
+                        path: DatasetViewTypeEnum.Lineage,
+                        component: LineageComponent,
+                        runGuardsAndResolvers: "always",
+                        resolve: {
+                            [RoutingResolvers.DATASET_VIEW_LINEAGE_KEY]: datasetLineageTabResolver,
+                            [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolver,
+                        },
+                    },
+                    {
+                        path: DatasetViewTypeEnum.Flows,
+                        component: FlowsComponent,
+                        runGuardsAndResolvers: "always",
+                        resolve: { [RoutingResolvers.DATASET_VIEW_FLOWS_KEY]: datasetFlowsTabResolver },
+                        canActivate: [AuthenticatedGuard],
+                    },
+                    {
+                        path: DatasetViewTypeEnum.Settings,
+                        component: DatasetSettingsComponent,
+                        runGuardsAndResolvers: "always",
+                        canActivate: [AuthenticatedGuard],
+                        resolve: {
+                            [RoutingResolvers.DATASET_VIEW_SETTINGS_KEY]: datasetOverviewTabResolver,
+                            [RoutingResolvers.DATASET_VIEW_SETTINGS_ACTIVE_SECTION_KEY]:
+                                datasetSettingsActiveSectionResolver,
+                        },
+                    },
+                ],
             },
         ],
     },

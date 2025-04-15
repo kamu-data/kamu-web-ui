@@ -6,9 +6,14 @@
  */
 
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import ProjectLinks from "src/app/project-links";
 
-export const activeTabResolver: ResolveFn<string> = (_: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+export const activeTabResolver: ResolveFn<string> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
     const pathWithoutQuery = state.url.split("?")[0];
     const routeSegments = pathWithoutQuery.split("/").filter(Boolean);
-    return routeSegments[routeSegments.length - 1];
+    const hasAccountName = route.paramMap.has(ProjectLinks.URL_PARAM_ACCOUNT_NAME);
+    const hasDatasetName = route.paramMap.has(ProjectLinks.URL_PARAM_DATASET_NAME);
+    const isDefaultDatasetRoute = routeSegments.length === 2 && hasAccountName && hasDatasetName;
+    return isDefaultDatasetRoute ? DatasetViewTypeEnum.Overview : routeSegments[routeSegments.length - 1];
 };

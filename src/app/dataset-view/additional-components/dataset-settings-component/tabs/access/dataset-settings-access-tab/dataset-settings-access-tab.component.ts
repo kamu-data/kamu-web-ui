@@ -101,8 +101,8 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
     public onPageChange(page: number): void {
         this.currentPage = page;
         this.navigationService.navigateToDatasetView({
-            accountName: this.getDatasetInfoFromUrl().accountName,
-            datasetName: this.getDatasetInfoFromUrl().datasetName,
+            accountName: this.datasetBasics.owner.accountName,
+            datasetName: this.datasetBasics.name,
             tab: DatasetViewTypeEnum.Settings,
             section: SettingsTabsEnum.ACCESS,
             page: this.currentPage,

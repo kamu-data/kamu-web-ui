@@ -5,12 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { Observable } from "rxjs";
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetHistoryUpdate } from "../../dataset.subscriptions.interface";
-import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { MaybeNull } from "src/app/interface/app.types";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { NavigationService } from "src/app/services/navigation.service";
+import { DatasetViewTypeEnum } from "../../dataset-view.interface";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
 
 @Component({
     selector: "app-history",
@@ -18,13 +20,17 @@ import { MaybeNull } from "src/app/interface/app.types";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HistoryComponent extends BaseComponent {
-    private datasetSubsService = inject(DatasetSubscriptionsService);
+    @Input(RoutingResolvers.DATASET_VIEW_HISTORY_KEY) public datasetHistoryTabData: MaybeNull<DatasetHistoryUpdate>;
+    @Input(RoutingResolvers.DATASET_INFO_KEY) public datasetInfo: DatasetInfo;
 
-    @Input({ required: true }) public datasetName: string;
-    @Output() public onPageChangeEmit = new EventEmitter<number>();
-    public historyUpdate$: Observable<MaybeNull<DatasetHistoryUpdate>> = this.datasetSubsService.historyChanges;
+    private navigationService = inject(NavigationService);
 
-    public onPageChange(currentPage: number): void {
-        this.onPageChangeEmit.emit(currentPage);
+    public onPageChange(page: number): void {
+        this.navigationService.navigateToDatasetView({
+            accountName: this.datasetInfo.accountName,
+            datasetName: this.datasetInfo.datasetName,
+            tab: DatasetViewTypeEnum.History,
+            page,
+        });
     }
 }

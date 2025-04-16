@@ -5,7 +5,11 @@
  * included in the LICENSE file.
  */
 
-import { DatasetBasicsFragment, DatasetPermissionsFragment } from "../api/kamu.graphql.interface";
+import {
+    DatasetBasicsFragment,
+    DatasetPermissionsFragment,
+    ViewDatasetEnvVarConnection,
+} from "../api/kamu.graphql.interface";
 import { OverviewUpdate } from "./dataset.subscriptions.interface";
 
 export enum DatasetViewTypeEnum {
@@ -28,4 +32,10 @@ export interface DatasetOverviewTabData {
 export interface DatasetViewData {
     datasetBasics: DatasetBasicsFragment;
     datasetPermissions: DatasetPermissionsFragment;
+}
+
+export interface VariablesAndSecretsData {
+    datasetBasics: DatasetBasicsFragment;
+    datasetPermissions: DatasetPermissionsFragment;
+    connection: ViewDatasetEnvVarConnection;
 }

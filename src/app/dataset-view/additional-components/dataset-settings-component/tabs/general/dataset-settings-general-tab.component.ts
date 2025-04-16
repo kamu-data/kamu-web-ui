@@ -26,9 +26,10 @@ import { DatasetResetMode, RenameDatasetFormType, ResetDatasetFormType } from ".
 import { DatasetCompactionService } from "../../services/dataset-compaction.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import AppValues from "src/app/common/values/app.values";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DatasetService } from "../../../../dataset.service";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 
 @Component({
     selector: "app-dataset-settings-general-tab",
@@ -37,8 +38,7 @@ import { DatasetService } from "../../../../dataset.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetSettingsGeneralTabComponent extends BaseComponent implements OnInit {
-    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    @Input({ required: true }) public datasetPermissions: DatasetPermissionsFragment;
+    @Input(RoutingResolvers.DATASET_SETTINGS_GENERAL_KEY) public generalTabData: DatasetViewData;
 
     public renameError$: Observable<string>;
     public renameDatasetForm: FormGroup<RenameDatasetFormType>;
@@ -56,6 +56,14 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     private flowsService = inject(DatasetFlowsService);
     private navigationService = inject(NavigationService);
     private datasetService = inject(DatasetService);
+
+    public get datasetBasics(): DatasetBasicsFragment {
+        return this.generalTabData.datasetBasics;
+    }
+
+    public get datasetPermissions(): DatasetPermissionsFragment {
+        return this.generalTabData.datasetPermissions;
+    }
 
     public ngOnInit(): void {
         this.renameError$ = this.datasetSettingsService.renameDatasetErrorOccurrences.pipe(shareReplay());

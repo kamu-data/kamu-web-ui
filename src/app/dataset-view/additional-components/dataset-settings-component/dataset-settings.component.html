@@ -30,7 +30,8 @@
         </div>
     </div>
     <div class="content-container w-75">
-        <ng-container *ngIf="showGeneralTab">
+        <router-outlet></router-outlet>
+        <!-- <ng-container *ngIf="showGeneralTab">
             <app-dataset-settings-general-tab
                 appFeatureFlag="dataset.panel.settings.general"
                 [datasetBasics]="datasetBasics"
@@ -71,6 +72,6 @@
                 appFeatureFlag="dataset.panel.settings.access"
                 [datasetBasics]="datasetBasics"
             />
-        </ng-container>
+        </ng-container> -->
     </div>
 </div>

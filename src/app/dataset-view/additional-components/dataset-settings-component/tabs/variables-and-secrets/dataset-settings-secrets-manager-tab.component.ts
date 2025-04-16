@@ -5,29 +5,28 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, SimpleChanges, ViewChild } from "@angular/core";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { EditKeyValueModalComponent } from "./components/edit-key-value-modal/edit-key-value-modal.component";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ModalService } from "src/app/common/components/modal/modal.service";
-import { promiseWithCatch, requireValue } from "src/app/common/helpers/app.helpers";
+import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import {
     DatasetBasicsFragment,
     DatasetPermissionsFragment,
     PageBasedInfo,
     ViewDatasetEnvVar,
-    ViewDatasetEnvVarConnection,
 } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
-import ProjectLinks from "src/app/project-links";
 import { DatasetEvnironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-evnironment-variables.service";
 import { from } from "rxjs";
 import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetViewTypeEnum, VariablesAndSecretsData } from "src/app/dataset-view/dataset-view.interface";
 import { SettingsTabsEnum } from "../../dataset-settings.model";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { DatasetPermissionsService } from "src/app/dataset-view/dataset.permissions.service";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
 
 export interface EnvVariableElement {
     key: string;
@@ -41,37 +40,46 @@ export interface EnvVariableElement {
     styleUrls: ["./dataset-settings-secrets-manager-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent implements OnInit {
-    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    @Input({ required: true }) public datasetPermissions: DatasetPermissionsFragment;
+export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent implements OnChanges {
+    @Input(RoutingResolvers.DATASET_SETTINGS_VARIABLES_AND_SECRETS_KEY)
+    public variablesAndSecretsTabData: VariablesAndSecretsData;
+    @Input(RoutingResolvers.DATASET_INFO_KEY) public datasetInfo: DatasetInfo;
+
     public readonly DISPLAY_COLUMNS: string[] = ["key", "value", "actions"];
     public dataSource = new MatTableDataSource();
-    public currentPage = 1;
     @ViewChild(MatSort) private sort: MatSort;
     public pageBasedInfo: PageBasedInfo;
-    public readonly PER_PAGE = 15;
     public searchByKey = "";
 
     private ngbModalService = inject(NgbModal);
     private modalService = inject(ModalService);
     private evnironmentVariablesService = inject(DatasetEvnironmentVariablesService);
     private navigationService = inject(NavigationService);
-    private datasetPermissionsService = inject(DatasetPermissionsService);
 
-    public ngOnInit(): void {
-        this.getPageFromUrl();
-        this.updateTable(this.currentPage);
+    public get datasetBasics(): DatasetBasicsFragment {
+        return this.variablesAndSecretsTabData.datasetBasics;
+    }
+
+    public get datasetPermissions(): DatasetPermissionsFragment {
+        return this.variablesAndSecretsTabData.datasetPermissions;
+    }
+
+    public currentPage: number = 1;
+
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (
+            changes.variablesAndSecretsTabData &&
+            changes.variablesAndSecretsTabData.previousValue !== changes.variablesAndSecretsTabData.currentValue
+        ) {
+            const data = changes.variablesAndSecretsTabData.currentValue as VariablesAndSecretsData;
+            this.dataSource.data = data.connection.nodes;
+            this.dataSource.sort = this.sort;
+            this.pageBasedInfo = data.connection.pageInfo;
+        }
     }
 
     public get allowUpdateEnvVars(): boolean {
         return this.datasetPermissions.permissions.envVars.canUpdate;
-    }
-
-    public getPageFromUrl(): void {
-        const pageParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE);
-        if (pageParam) {
-            this.currentPage = +requireValue(pageParam);
-        }
     }
 
     public onAddOrEditRow(envVar?: ViewDatasetEnvVar): void {
@@ -118,38 +126,27 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
                                 datasetId: this.datasetBasics.id,
                                 datasetEnvVarId,
                             })
-                            .subscribe(() => this.updateTable(this.currentPage));
+                            .subscribe(() => {
+                                this.updateTable(1);
+                            });
                     }
                 },
             }),
         );
     }
 
-    private updateTable(page: number): void {
-        this.evnironmentVariablesService
-            .listEnvVariables({
-                accountName: this.datasetBasics.owner.accountName,
-                datasetName: this.datasetBasics.name,
-                page: page - 1,
-                perPage: this.PER_PAGE,
-            })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((result: ViewDatasetEnvVarConnection) => {
-                this.dataSource.data = result.nodes;
-                this.dataSource.sort = this.sort;
-                this.pageBasedInfo = result.pageInfo;
-            });
+    public onPageChange(page: number): void {
+        this.updateTable(page);
     }
 
-    public onPageChange(page: number): void {
+    private updateTable(page: number): void {
         this.currentPage = page;
         this.navigationService.navigateToDatasetView({
-            accountName: this.getDatasetInfoFromUrl().accountName,
-            datasetName: this.getDatasetInfoFromUrl().datasetName,
+            accountName: this.datasetInfo.accountName,
+            datasetName: this.datasetInfo.datasetName,
             tab: DatasetViewTypeEnum.Settings,
             section: SettingsTabsEnum.VARIABLES_AND_SECRETS,
             page: this.currentPage,
         });
-        this.updateTable(this.currentPage);
     }
 }

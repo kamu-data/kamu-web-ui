@@ -32,11 +32,9 @@
                                     '/',
                                     flowsData.datasetBasics.owner.accountName,
                                     flowsData.datasetBasics.name,
+                                    DatasetViewTypeEnum.Settings,
+                                    redirectSection,
                                 ]"
-                                [queryParams]="{
-                                    tab: DatasetViewTypeEnum.Settings,
-                                    section: SettingsTabsEnum.SCHEDULING,
-                                }"
                                 >Update settings</a
                             >
                             <mat-divider />
@@ -106,8 +104,8 @@
                             flowsData.datasetBasics.owner.accountName,
                             flowsData.datasetBasics.name,
                             DatasetViewTypeEnum.Settings,
+                            redirectSection,
                         ]"
-                        [queryParams]="{ section: redirectSection }"
                         >update configuration settings</a
                     >
                 </span>

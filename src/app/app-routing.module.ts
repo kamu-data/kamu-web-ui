@@ -68,6 +68,16 @@ import { LineageComponent } from "./dataset-view/additional-components/lineage-c
 import { datasetLineageTabResolver } from "./common/resolvers/dataset-view/dataset-lineage-tab.resolver";
 import { datasetSettingsActiveSectionResolver } from "./common/resolvers/dataset-view/dataset-settings-active-section.resolver";
 import { DatasetSettingsComponent } from "./dataset-view/additional-components/dataset-settings-component/dataset-settings.component";
+import { DatasetSettingsGeneralTabComponent } from "./dataset-view/additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.component";
+import { SettingsTabsEnum } from "./dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { datasetSettingsGeneralTabResolver } from "./common/resolvers/dataset-view/dataset-settings/dataset-settings-general-tab.resolver";
+import { DatasetSettingsTransformOptionsTabComponent } from "./dataset-view/additional-components/dataset-settings-component/tabs/transform-options/dataset-settings-transform-options-tab.component";
+import { datasetSettingsTransformTabResolver } from "./common/resolvers/dataset-view/dataset-settings/dataset-settings-transform-tab.resolver";
+import { DatasetSettingsAccessTabComponent } from "./dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-settings-access-tab.component";
+import { DatasetSettingsSchedulingTabComponent } from "./dataset-view/additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.component";
+import { DatasetSettingsCompactingTabComponent } from "./dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.component";
+import { DatasetSettingsSecretsManagerTabComponent } from "./dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-settings-secrets-manager-tab.component";
+import { datasetSettingsVarAndSecretsResolver } from "./common/resolvers/dataset-view/dataset-settings/dataset-settings-var-and-secrets.resolver";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -235,6 +245,66 @@ export const routes: Routes = [
                             [RoutingResolvers.DATASET_VIEW_SETTINGS_ACTIVE_SECTION_KEY]:
                                 datasetSettingsActiveSectionResolver,
                         },
+                        children: [
+                            {
+                                path: "",
+                                redirectTo: SettingsTabsEnum.GENERAL,
+                                pathMatch: "full",
+                            },
+                            {
+                                path: SettingsTabsEnum.GENERAL,
+                                component: DatasetSettingsGeneralTabComponent,
+                                runGuardsAndResolvers: "always",
+                                resolve: {
+                                    [RoutingResolvers.DATASET_SETTINGS_GENERAL_KEY]: datasetSettingsGeneralTabResolver,
+                                },
+                            },
+                            {
+                                path: SettingsTabsEnum.SCHEDULING,
+                                component: DatasetSettingsSchedulingTabComponent,
+                                runGuardsAndResolvers: "always",
+                                resolve: {
+                                    [RoutingResolvers.DATASET_SETTINGS_SCHEDULING_KEY]:
+                                        datasetSettingsGeneralTabResolver,
+                                },
+                            },
+                            {
+                                path: SettingsTabsEnum.TRANSFORM_SETTINGS,
+                                component: DatasetSettingsTransformOptionsTabComponent,
+                                runGuardsAndResolvers: "always",
+                                resolve: {
+                                    [RoutingResolvers.DATASET_SETTINGS_TRANSFORM_KEY]:
+                                        datasetSettingsTransformTabResolver,
+                                },
+                            },
+                            {
+                                path: SettingsTabsEnum.ACCESS,
+                                component: DatasetSettingsAccessTabComponent,
+                                runGuardsAndResolvers: "always",
+                                resolve: {
+                                    [RoutingResolvers.DATASET_SETTINGS_ACCESS_KEY]: datasetSettingsTransformTabResolver,
+                                },
+                            },
+                            {
+                                path: SettingsTabsEnum.COMPACTION,
+                                component: DatasetSettingsCompactingTabComponent,
+                                runGuardsAndResolvers: "always",
+                                resolve: {
+                                    [RoutingResolvers.DATASET_SETTINGS_COMPACTION_KEY]:
+                                        datasetSettingsTransformTabResolver,
+                                },
+                            },
+                            {
+                                path: SettingsTabsEnum.VARIABLES_AND_SECRETS,
+                                component: DatasetSettingsSecretsManagerTabComponent,
+                                runGuardsAndResolvers: "always",
+                                resolve: {
+                                    [RoutingResolvers.DATASET_SETTINGS_VARIABLES_AND_SECRETS_KEY]:
+                                        datasetSettingsVarAndSecretsResolver,
+                                    [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolver,
+                                },
+                            },
+                        ],
                     },
                 ],
             },

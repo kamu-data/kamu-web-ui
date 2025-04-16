@@ -31,6 +31,7 @@ import AppValues from "src/app/common/values/app.values";
 import { EditCollaboratorModalComponent } from "./edit-collaborator-modal/edit-collaborator-modal.component";
 import { CollaboratorModalResultType } from "./add-people-modal/add-people-modal.model";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 
 @Component({
     selector: "app-dataset-settings-access-tab",
@@ -39,7 +40,7 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetSettingsAccessTabComponent extends BaseComponent implements OnInit {
-    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
+    @Input(RoutingResolvers.DATASET_SETTINGS_ACCESS_KEY) public datasetBasics: DatasetBasicsFragment;
 
     public dataSource = new MatTableDataSource();
     public currentPage = 1;

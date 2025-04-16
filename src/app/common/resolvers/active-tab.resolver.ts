@@ -14,6 +14,16 @@ export const activeTabResolver: ResolveFn<string> = (route: ActivatedRouteSnapsh
     const routeSegments = pathWithoutQuery.split("/").filter(Boolean);
     const hasAccountName = route.paramMap.has(ProjectLinks.URL_PARAM_ACCOUNT_NAME);
     const hasDatasetName = route.paramMap.has(ProjectLinks.URL_PARAM_DATASET_NAME);
+    // route as example: /kamu/account.tokens.portfolio
     const isDefaultDatasetRoute = routeSegments.length === 2 && hasAccountName && hasDatasetName;
-    return isDefaultDatasetRoute ? DatasetViewTypeEnum.Overview : routeSegments[routeSegments.length - 1];
+    // route as example: /kamu/account.tokens.portfolio/settings/general
+    const positionFromEnd =
+        routeSegments.length === 4 &&
+        (routeSegments[routeSegments.length - 2] as DatasetViewTypeEnum) === DatasetViewTypeEnum.Settings
+            ? 1
+            : 0;
+
+    return isDefaultDatasetRoute
+        ? DatasetViewTypeEnum.Overview
+        : routeSegments[routeSegments.length - 1 - positionFromEnd];
 };

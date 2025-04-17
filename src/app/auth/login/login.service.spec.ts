@@ -115,7 +115,7 @@ describe("LoginService", () => {
         const credentials: PasswordLoginCredentials = { login: TEST_LOGIN, password: TEST_PASSWORD };
         service.passwordLogin(credentials);
 
-        expect(authApiSpy).toHaveBeenCalledOnceWith(credentials);
+        expect(authApiSpy).toHaveBeenCalledOnceWith(credentials, undefined);
 
         expect(navigateSpy).toHaveBeenCalledTimes(1);
 
@@ -141,7 +141,7 @@ describe("LoginService", () => {
         const credentials: PasswordLoginCredentials = { login: TEST_LOGIN, password: TEST_PASSWORD };
         service.passwordLogin(credentials);
 
-        expect(authApiSpy).toHaveBeenCalledOnceWith(credentials);
+        expect(authApiSpy).toHaveBeenCalledOnceWith(credentials, undefined);
         expect(errorSubscription$.closed).toBeTrue();
 
         expect(tokenSubscription$.closed).toBeFalse();
@@ -182,7 +182,7 @@ describe("LoginService", () => {
 
         expect(callbackLoginResponse).toEqual(mockPasswordLoginResponse.auth.login);
 
-        expect(authApiSpy).toHaveBeenCalledOnceWith(credentials);
+        expect(authApiSpy).toHaveBeenCalledOnceWith(credentials, undefined);
         expect(navigateSpy).not.toHaveBeenCalled();
 
         expect(tokenSubscription$.closed).toBeFalse();

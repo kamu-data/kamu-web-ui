@@ -50,7 +50,6 @@ export default class ProjectLinks {
     public static readonly URL_QUERY_PARAM_PAGE: string = "page";
     public static readonly URL_QUERY_PARAM_QUERY: string = "query";
     public static readonly URL_QUERY_PARAM_DEVICE_CODE: string = "deviceCode";
-    // public static readonly URL_QUERY_PARAM_CALLBACK_URL: string = "callbackUrl";
     public static readonly URL_QUERY_PARAM_PUSH_SOURCE_NAME: string = "name";
     public static readonly URL_QUERY_PARAM_SECTION: string = "section";
     public static readonly URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN: string = "commitmentUploadToken";

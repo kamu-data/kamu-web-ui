@@ -10,6 +10,7 @@ import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dat
 
 export const datasetSettingsActiveSectionResolver: ResolveFn<SettingsTabsEnum> = (_, state: RouterStateSnapshot) => {
     const pathWithoutQuery = state.url.split("?")[0];
-    const routeSegments = pathWithoutQuery.split("/").filter(Boolean);
+    const pathWithoutHash = pathWithoutQuery.split("#")[0];
+    const routeSegments = pathWithoutHash.split("/").filter(Boolean);
     return routeSegments[routeSegments.length - 1] as SettingsTabsEnum;
 };

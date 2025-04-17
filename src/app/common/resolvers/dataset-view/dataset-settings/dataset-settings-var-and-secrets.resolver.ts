@@ -16,8 +16,9 @@ import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscr
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 import { datasetSettingsActiveSectionResolver } from "../dataset-settings-active-section.resolver";
-import { combineLatest, map, of, switchMap } from "rxjs";
-import { ViewDatasetEnvVarConnection } from "src/app/api/kamu.graphql.interface";
+import { combineLatest, EMPTY, map, of, switchMap } from "rxjs";
+import { DatasetMetadata, ViewDatasetEnvVarConnection } from "src/app/api/kamu.graphql.interface";
+import { isSettingsTabAccessibleHelper } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.helpers";
 
 export const datasetSettingsVarAndSecretsResolver: ResolveFn<VariablesAndSecretsData> = (route, state) => {
     const evnironmentVariablesService = inject(DatasetEvnironmentVariablesService);
@@ -32,7 +33,7 @@ export const datasetSettingsVarAndSecretsResolver: ResolveFn<VariablesAndSecrets
     const page = route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE) ?? 1;
     const PER_PAGE = 15;
 
-    const tabData$ = evnironmentVariablesService
+    const listEnvVariables$ = evnironmentVariablesService
         .listEnvVariables({
             accountName,
             datasetName,
@@ -57,28 +58,27 @@ export const datasetSettingsVarAndSecretsResolver: ResolveFn<VariablesAndSecrets
             ),
         );
 
-    return tabData$;
-
-    // combineLatest([
-    //     datasetService.datasetChanges,
-    //     datasetSubService.permissionsChanges,
-    //     datasetSubService.overviewChanges,
-    // ]).pipe(
-    //     map(([datasetBasics, datasetPermissions, overviewUpdate]) => {
-    //         if (
-    //             isSettingsTabAccessibleHelper(
-    //                 activeTab,
-    //                 appConfigService.featureFlags,
-    //                 datasetBasics,
-    //                 datasetPermissions,
-    //                 overviewUpdate.overview.metadata as DatasetMetadata,
-    //             )
-    //         ) {
-    //             return tabData$;
-    //         } else {
-    //             navigationService.navigateToPageNotFound();
-    //             return EMPTY;
-    //         }
-    //     }),
-    // );
+    return combineLatest([
+        datasetService.datasetChanges,
+        datasetSubService.permissionsChanges,
+        datasetSubService.overviewChanges,
+    ]).pipe(
+        map(([datasetBasics, datasetPermissions, overviewUpdate]) =>
+            isSettingsTabAccessibleHelper(
+                activeTab,
+                appConfigService.featureFlags,
+                datasetBasics,
+                datasetPermissions,
+                overviewUpdate.overview.metadata as DatasetMetadata,
+            ),
+        ),
+        switchMap((isTabAvailable: boolean) => {
+            if (isTabAvailable) {
+                return listEnvVariables$;
+            } else {
+                navigationService.navigateToPageNotFound();
+                return EMPTY;
+            }
+        }),
+    );
 };

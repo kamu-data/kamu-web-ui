@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "@apollo/client/core";
+import { gql } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -30,6 +30,7 @@ export type Scalars = {
      * The input/output is a string in RFC3339 format.
      */
     DateTime: string;
+    DeviceCode: string;
     EventID: string;
     FlowID: string;
     Multihash: string;
@@ -333,6 +334,7 @@ export type AuthMutCreateAccessTokenArgs = {
 };
 
 export type AuthMutLoginArgs = {
+    deviceCode?: InputMaybe<Scalars["DeviceCode"]>;
     loginCredentialsJson: Scalars["String"];
     loginMethod: Scalars["String"];
 };
@@ -3483,6 +3485,7 @@ export type AccountFragment = {
 export type LoginMutationVariables = Exact<{
     login_method: Scalars["String"];
     login_credentials_json: Scalars["String"];
+    deviceCode?: InputMaybe<Scalars["DeviceCode"]>;
 }>;
 
 export type LoginMutation = {
@@ -7290,9 +7293,9 @@ export class AccountWithEmailGQL extends Apollo.Query<AccountWithEmailQuery, Acc
     }
 }
 export const LoginDocument = gql`
-    mutation Login($login_method: String!, $login_credentials_json: String!) {
+    mutation Login($login_method: String!, $login_credentials_json: String!, $deviceCode: DeviceCode) {
         auth {
-            login(loginMethod: $login_method, loginCredentialsJson: $login_credentials_json) {
+            login(loginMethod: $login_method, loginCredentialsJson: $login_credentials_json, deviceCode: $deviceCode) {
                 accessToken
                 account {
                     ...Account

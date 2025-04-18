@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { catchError, EMPTY, map, Observable, of, tap } from "rxjs";
 import { AppConfigService } from "src/app/app-config.service";
@@ -17,6 +17,8 @@ import {
     VerifyQueryResponse,
 } from "./query-explainer.types";
 import { ToastrService } from "ngx-toastr";
+import { LoggedUserService } from "../auth/logged-user.service";
+import { LocalStorageService } from "../services/local-storage.service";
 
 @Injectable({
     providedIn: "root",
@@ -25,6 +27,8 @@ export class QueryExplainerService {
     private appConfigService = inject(AppConfigService);
     private http = inject(HttpClient);
     private toastrService = inject(ToastrService);
+    private loggedUserService = inject(LoggedUserService);
+    private localStorageService = inject(LocalStorageService);
     private baseUrl: string;
 
     public constructor() {
@@ -37,7 +41,11 @@ export class QueryExplainerService {
             query,
             include: ["Proof"],
         };
-        return this.http.post<QueryExplainerProofResponse>(url.href, body).pipe(
+        let headers = new HttpHeaders();
+        if (this.loggedUserService.isAuthenticated) {
+            headers = headers.set("Authorization", `Bearer ${this.localStorageService.accessToken}`);
+        }
+        return this.http.post<QueryExplainerProofResponse>(url.href, body, { headers }).pipe(
             map((response: QueryExplainerResponse) => {
                 const cloneData = Object.assign({}, response);
                 if ("output" in cloneData) {
@@ -65,7 +73,11 @@ export class QueryExplainerService {
             query,
             include: ["Schema"],
         };
-        return this.http.post<QueryExplainerDataJsonAosResponse>(url.href, body).pipe(
+        let headers = new HttpHeaders();
+        if (this.loggedUserService.isAuthenticated) {
+            headers = headers.set("Authorization", `Bearer ${this.localStorageService.accessToken}`);
+        }
+        return this.http.post<QueryExplainerDataJsonAosResponse>(url.href, body, { headers }).pipe(
             catchError((e: HttpErrorResponse) => {
                 this.toastrService.error("", (e.error as { message: string }).message, {
                     disableTimeOut: "timeOut",

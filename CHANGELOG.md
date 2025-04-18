@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] 
 ### Changed
 - Improved the performance of the query execution timer
+### Fixed
+- Query explainer: fixed bug with the privacy issue
 
 
 ## [0.45.2] - 2025-04-09

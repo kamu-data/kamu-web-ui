@@ -10,7 +10,7 @@ import { LoginComponent } from "./login.component";
 import { ReactiveFormsModule } from "@angular/forms";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { AppConfigService } from "src/app/app-config.service";
 import { LoginMethod } from "src/app/app-config.model";
 import { SpinnerComponent } from "src/app/common/components/spinner/spinner/spinner.component";
@@ -23,15 +23,10 @@ import {
     registerMatSvgIcons,
     setFieldValue,
 } from "src/app/common/helpers/base-test.helpers.spec";
-import {
-    TEST_ACCESS_TOKEN_PASSWORD,
-    TEST_LOGIN,
-    TEST_PASSWORD,
-    mockPasswordLoginResponse,
-} from "src/app/api/mock/auth.mock";
+import { TEST_LOGIN, TEST_PASSWORD, mockPasswordLoginResponse } from "src/app/api/mock/auth.mock";
 import { PasswordLoginCredentials } from "src/app/api/auth.api.model";
 import { BehaviorSubject, of } from "rxjs";
-import { LoginCallbackResponse, LoginPageQueryParams } from "./login.component.model";
+import { LoginPageQueryParams } from "./login.component.model";
 import { ActivatedRoute } from "@angular/router";
 import { AuthApi } from "src/app/api/auth.api";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -47,7 +42,6 @@ describe("LoginComponent", () => {
     let navigationService: NavigationService;
     let localStorageService: LocalStorageService;
     let authApi: AuthApi;
-    let httpController: HttpTestingController;
 
     const MOCK_FEATURE_FLAGS = {
         enableLogout: true,
@@ -109,7 +103,6 @@ describe("LoginComponent", () => {
         navigationService = TestBed.inject(NavigationService);
 
         authApi = TestBed.inject(AuthApi);
-        httpController = TestBed.inject(HttpTestingController);
     });
 
     function createFixture() {
@@ -251,8 +244,10 @@ describe("LoginComponent", () => {
         });
 
         it("login callback setup in localStorage via query parameter", () => {
-            const SOME_CALLBACK_URL = "http://example.com/some-callback";
-            mockQueryParams.next({ callbackUrl: SOME_CALLBACK_URL } as LoginPageQueryParams);
+            const SOME_DEVICE_CODE = "23da-ewewr-fdgf-fghgfh";
+            mockQueryParams.next({
+                [ProjectLinks.URL_QUERY_PARAM_DEVICE_CODE]: SOME_DEVICE_CODE,
+            } as LoginPageQueryParams);
             fixture.detectChanges();
 
             const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromPasswordLogin").and.returnValue(
@@ -263,18 +258,7 @@ describe("LoginComponent", () => {
             const credentials: PasswordLoginCredentials = { login: TEST_LOGIN, password: TEST_PASSWORD };
             loginService.passwordLogin(credentials);
 
-            expect(authApiSpy).toHaveBeenCalledOnceWith(credentials);
-
-            const callbackUrlRequest = httpController.expectOne({
-                method: "POST",
-                url: SOME_CALLBACK_URL,
-            });
-            expect(callbackUrlRequest.request.body).toEqual({
-                accessToken: TEST_ACCESS_TOKEN_PASSWORD,
-                backendUrl: "http://localhost:8080",
-            } as LoginCallbackResponse);
-            callbackUrlRequest.flush({});
-
+            expect(authApiSpy).toHaveBeenCalledOnceWith(credentials, SOME_DEVICE_CODE);
             expect(navigationSpy).toHaveBeenCalledTimes(1);
         });
     });

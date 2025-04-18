@@ -40,23 +40,28 @@ export class AuthApi {
         );
     }
 
-    public fetchAccountAndTokenFromPasswordLogin(credentials: PasswordLoginCredentials): Observable<LoginResponseType> {
-        return this.fetchAccountAndTokenFromLoginMethod(LoginMethod.PASSWORD, JSON.stringify(credentials));
+    public fetchAccountAndTokenFromPasswordLogin(
+        credentials: PasswordLoginCredentials,
+        deviceCode?: string,
+    ): Observable<LoginResponseType> {
+        return this.fetchAccountAndTokenFromLoginMethod(LoginMethod.PASSWORD, JSON.stringify(credentials), deviceCode);
     }
 
     public fetchAccountAndTokenFromGithubCallbackCode(
         credentials: GithubLoginCredentials,
+        deviceCode?: string,
     ): Observable<LoginResponseType> {
-        return this.fetchAccountAndTokenFromLoginMethod(LoginMethod.GITHUB, JSON.stringify(credentials));
+        return this.fetchAccountAndTokenFromLoginMethod(LoginMethod.GITHUB, JSON.stringify(credentials), deviceCode);
     }
 
     public fetchAccountAndTokenFromLoginMethod(
         loginMethod: string,
         loginCredentialsJson: string,
+        deviceCode?: string,
     ): Observable<LoginResponseType> {
         return this.loginGQL
             .mutate(
-                { login_method: loginMethod, login_credentials_json: loginCredentialsJson },
+                { login_method: loginMethod, login_credentials_json: loginCredentialsJson, deviceCode },
                 {
                     update: (cache) => {
                         const cacheMap = cache.extract() as object[];

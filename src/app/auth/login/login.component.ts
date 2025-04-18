@@ -68,11 +68,10 @@ export class LoginComponent extends BaseComponent implements OnInit {
             }
 
             this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((queryParams: Params) => {
-                const callbackUrl: MaybeUndefined<string> = queryParams[
-                    ProjectLinks.URL_QUERY_PARAM_CALLBACK_URL
+                const deviceCode: MaybeUndefined<string> = queryParams[
+                    ProjectLinks.URL_QUERY_PARAM_DEVICE_CODE
                 ] as MaybeUndefined<string>;
-
-                this.localStorageService.setLoginCallbackUrl(callbackUrl ?? null);
+                this.localStorageService.setDeviceCode(deviceCode ?? null);
             });
         }
     }

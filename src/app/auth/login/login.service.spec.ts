@@ -69,7 +69,7 @@ describe("LoginService", () => {
         const credentials: GithubLoginCredentials = { code: TEST_GITHUB_CODE };
         service.githubLogin(credentials);
 
-        expect(authApiSpy).toHaveBeenCalledOnceWith(credentials);
+        expect(authApiSpy).toHaveBeenCalledOnceWith(credentials, undefined);
 
         expect(navigateSpy).toHaveBeenCalledTimes(1);
         expect(tokenSubscription$.closed).toBeTrue();
@@ -94,7 +94,7 @@ describe("LoginService", () => {
             tick();
         }).toThrow(exception);
 
-        expect(authApiSpy).toHaveBeenCalledOnceWith(credentials);
+        expect(authApiSpy).toHaveBeenCalledOnceWith(credentials, undefined);
         expect(navigateSpy).toHaveBeenCalledTimes(1);
 
         expect(tokenSubscription$.closed).toBeFalse();

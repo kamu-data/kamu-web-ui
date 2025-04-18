@@ -49,8 +49,9 @@ export class AuthApi {
 
     public fetchAccountAndTokenFromGithubCallbackCode(
         credentials: GithubLoginCredentials,
+        deviceCode?: string,
     ): Observable<LoginResponseType> {
-        return this.fetchAccountAndTokenFromLoginMethod(LoginMethod.GITHUB, JSON.stringify(credentials));
+        return this.fetchAccountAndTokenFromLoginMethod(LoginMethod.GITHUB, JSON.stringify(credentials), deviceCode);
     }
 
     public fetchAccountAndTokenFromLoginMethod(

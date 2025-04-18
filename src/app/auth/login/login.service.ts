@@ -84,7 +84,8 @@ export class LoginService {
     }
 
     public githubLogin(credentials: GithubLoginCredentials): void {
-        this.authApi.fetchAccountAndTokenFromGithubCallbackCode(credentials).subscribe({
+        const deviceCode: MaybeNull<string> = this.localStorageService.loginDeviceCode;
+        this.authApi.fetchAccountAndTokenFromGithubCallbackCode(credentials, deviceCode ?? undefined).subscribe({
             next: this.loginCallback,
             error: (e) => {
                 this.navigationService.navigateToHome();

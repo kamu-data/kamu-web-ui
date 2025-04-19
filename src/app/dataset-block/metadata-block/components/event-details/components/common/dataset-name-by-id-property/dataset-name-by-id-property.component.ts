@@ -46,7 +46,6 @@ export class DatasetNameByIdPropertyComponent extends BasePropertyComponent impl
             accountName: this.datasetInfo.accountName,
             datasetName: this.datasetInfo.datasetName,
             tab: DatasetViewTypeEnum.Overview,
-            page: 1,
         });
     }
 }

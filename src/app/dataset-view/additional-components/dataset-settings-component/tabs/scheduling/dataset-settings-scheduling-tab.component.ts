@@ -21,6 +21,8 @@ import { DatasetSchedulingService } from "../../services/dataset-scheduling.serv
 import { IngestConfigurationFormType, PollingGroupType } from "./dataset-settings-scheduling-tab.component.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { EMPTY, switchMap } from "rxjs";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 
 @Component({
     selector: "app-dataset-settings-scheduling-tab",
@@ -29,15 +31,21 @@ import { EMPTY, switchMap } from "rxjs";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
-    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    @Input({ required: true }) public datasetPermissions: DatasetPermissionsFragment;
-
+    @Input(RoutingResolvers.DATASET_SETTINGS_SCHEDULING_KEY) public schedulungTabData: DatasetViewData;
     public pollingForm: FormGroup<PollingGroupType>;
     public ingestConfigurationForm: FormGroup<IngestConfigurationFormType>;
     public readonly throttlingGroupEnum: typeof ThrottlingGroupEnum = ThrottlingGroupEnum;
     public readonly timeUnit: typeof TimeUnit = TimeUnit;
 
     private datasetSchedulingService = inject(DatasetSchedulingService);
+
+    public get datasetBasics(): DatasetBasicsFragment {
+        return this.schedulungTabData.datasetBasics;
+    }
+
+    public get datasetPermissions(): DatasetPermissionsFragment {
+        return this.schedulungTabData.datasetPermissions;
+    }
 
     public get isRootDataset(): boolean {
         return this.datasetBasics.kind === DatasetKind.Root;

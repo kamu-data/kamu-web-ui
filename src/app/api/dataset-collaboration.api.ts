@@ -98,21 +98,11 @@ export class DatasetCollaborationApi {
     }
 
     public getDatasetUserRole(datasetId: string): Observable<DatasetUserRoleQuery> {
-        return this.datasetUserRoleGQL
-            .watch(
-                { datasetId },
-                {
-                    ...noCacheFetchPolicy,
-                    context: {
-                        skipLoading: true,
-                    },
-                },
-            )
-            .valueChanges.pipe(
-                first(),
-                map((result: ApolloQueryResult<DatasetUserRoleQuery>) => {
-                    return result.data;
-                }),
-            );
+        return this.datasetUserRoleGQL.watch({ datasetId }, noCacheFetchPolicy).valueChanges.pipe(
+            first(),
+            map((result: ApolloQueryResult<DatasetUserRoleQuery>) => {
+                return result.data;
+            }),
+        );
     }
 }

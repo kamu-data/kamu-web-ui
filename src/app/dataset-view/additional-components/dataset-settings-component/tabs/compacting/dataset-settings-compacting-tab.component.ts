@@ -19,6 +19,7 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
 import AppValues from "src/app/common/values/app.values";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 
 @Component({
     selector: "app-dataset-settings-compacting-tab",
@@ -32,7 +33,7 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent {
     private datasetCompactionService = inject(DatasetCompactionService);
     private navigationService = inject(NavigationService);
 
-    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
+    @Input(RoutingResolvers.DATASET_SETTINGS_COMPACTION_KEY) public datasetBasics: DatasetBasicsFragment;
     public hardCompactionForm = this.fb.group({
         sliceUnit: [SliceUnit.MB, [Validators.required]],
         sliceSize: [300, [Validators.required, RxwebValidators.minNumber({ value: 1 })]],

@@ -1,5 +1,5 @@
 <div class="dataset-result-container container-main">
-    <div class="search-result-container__content" *ngIf="currentState">
+    <div class="search-result-container__content">
         <div>
             <div
                 *ngIf="hasDatasetInfo; else noDetails"
@@ -7,15 +7,23 @@
                 data-test-id="dataset-info-block"
             >
                 <div class="d-flex flex-column me-auto">
-                    <div *ngIf="currentState.overview.metadata.currentInfo?.description">
+                    <div *ngIf="datasetOverviewTabData.overviewUpdate.overview.metadata.currentInfo?.description">
                         <h2 class="box-title align-items-center pb-3">Description</h2>
 
-                        <p>{{ currentState.overview.metadata.currentInfo.description }}</p>
+                        <p>{{ datasetOverviewTabData.overviewUpdate.overview.metadata.currentInfo.description }}</p>
                     </div>
-                    <div class="app-mat-chip" *ngIf="currentState.overview.metadata.currentInfo?.keywords">
+                    <div
+                        class="app-mat-chip"
+                        *ngIf="datasetOverviewTabData.overviewUpdate.overview.metadata.currentInfo?.keywords"
+                    >
                         <h2 class="box-title align-items-center pt-3">Keywords</h2>
                         <mat-chip-set aria-label="Tags selection">
-                            <div *ngFor="let keyword of currentState.overview.metadata.currentInfo?.keywords">
+                            <div
+                                *ngFor="
+                                    let keyword of datasetOverviewTabData.overviewUpdate.overview.metadata.currentInfo
+                                        ?.keywords
+                                "
+                            >
                                 <mat-chip appFeatureFlag="dataset.panel.overview.keywords">{{ keyword }}</mat-chip>
                             </div>
                         </mat-chip-set>
@@ -60,8 +68,8 @@
                         class="text-decoration-none"
                         [routerLink]="[
                             '/',
-                            datasetBasics.owner.accountName,
-                            datasetBasics.name,
+                            datasetOverviewTabData.datasetBasics.owner.accountName,
+                            datasetOverviewTabData.datasetBasics.name,
                             URL_PARAM_ADD_POLLING_SOURCE,
                         ]"
                     >
@@ -69,7 +77,7 @@
                     >
                 </p>
             </div>
-            <!-- Changed to canAddPushSource -->
+
             <div class="my-4" *ngIf="canAddSetPollingSource" data-test-id="add-push-source-block">
                 <p appFeatureFlag="dataset.panel.overview.addPushSource">
                     You can
@@ -77,8 +85,8 @@
                         class="text-decoration-none"
                         [routerLink]="[
                             '/',
-                            datasetBasics.owner.accountName,
-                            datasetBasics.name,
+                            datasetOverviewTabData.datasetBasics.owner.accountName,
+                            datasetOverviewTabData.datasetBasics.name,
                             URL_PARAM_ADD_PUSH_SOURCE,
                         ]"
                     >
@@ -86,7 +94,7 @@
                     >
                 </p>
             </div>
-            <!-- end -->
+
             <div class="my-4" *ngIf="canAddSetTransform" data-test-id="add-set-transform-block">
                 <p appFeatureFlag="dataset.panel.overview.addTransform">
                     You can
@@ -94,8 +102,8 @@
                         class="text-decoration-none"
                         [routerLink]="[
                             '/',
-                            datasetBasics.owner.accountName,
-                            datasetBasics.name,
+                            datasetOverviewTabData.datasetBasics.owner.accountName,
+                            datasetOverviewTabData.datasetBasics.name,
                             URL_PARAM_SET_TRANSFORM,
                         ]"
                     >
@@ -131,8 +139,8 @@
             <app-overview-history-summary-header
                 data-test-id="overview-history-summary-header-block"
                 [metadataBlockFragment]="metadataFragmentBlock"
-                [numBlocksTotal]="currentState.overview.metadata.chain.blocks.totalCount || 0"
-                [datasetName]="datasetBasics.name"
+                [numBlocksTotal]="datasetOverviewTabData.overviewUpdate.overview.metadata.chain.blocks.totalCount || 0"
+                [datasetName]="datasetOverviewTabData.datasetBasics.name"
             />
 
             <div class="text-center upload-file-container my-4" *ngIf="uploadFileLoading$ | async; else noLoading">
@@ -140,11 +148,13 @@
             </div>
             <ng-template #noLoading>
                 <app-dynamic-table
-                    *ngIf="currentState && currentState.schema; else noData"
+                    *ngIf="datasetOverviewTabData && datasetOverviewTabData.overviewUpdate.schema; else noData"
                     data-test-id="data-tail-block"
                     [hasTableHeader]="true"
-                    [schemaFields]="currentState.schema.fields"
-                    [dataRows]="currentState ? currentState.data : []"
+                    [schemaFields]="datasetOverviewTabData.overviewUpdate.schema.fields"
+                    [dataRows]="
+                        datasetOverviewTabData.overviewUpdate ? datasetOverviewTabData.overviewUpdate.content : []
+                    "
                     [idTable]="'overview-data-table'"
                 />
                 <ng-template #noData>
@@ -188,8 +198,8 @@
             </div>
             <app-readme-section
                 data-test-id="readme-editor-block"
-                [datasetBasics]="datasetBasics"
-                [currentReadme]="currentState.overview.metadata.currentReadme"
+                [datasetBasics]="datasetOverviewTabData.datasetBasics"
+                [currentReadme]="datasetOverviewTabData.overviewUpdate.overview.metadata.currentReadme"
                 [editingInProgress]="editingReadme"
                 [editable]="canEditReadme"
                 (editViewShowEmitter)="editingReadme = $event"
@@ -214,7 +224,7 @@
                 </button>
             </div>
             <div class="card--row dataset-info">
-                <ng-template [ngIf]="datasetBasics && currentState">
+                <ng-template [ngIf]="datasetOverviewTabData.datasetBasics">
                     <div class="dataset-info--block">
                         <div class="dataset-info--sub-block d-flex align-items-center">
                             <mat-icon class="fs-4 mr-2">key_vertical</mat-icon>
@@ -223,7 +233,7 @@
 
                         <div class="dataset-info--sub-block">
                             <app-display-hash
-                                [value]="datasetBasics.id"
+                                [value]="datasetOverviewTabData.datasetBasics.id"
                                 [showCopyButton]="true"
                                 [class]="'text-decoration-none text-dark mr-4 hashBlock'"
                             />
@@ -236,7 +246,9 @@
                         </div>
 
                         <div class="dataset-info--sub-block">
-                            <p class="dataset-info--text">{{ datasetBasics.kind | titlecase }}</p>
+                            <p class="dataset-info--text">
+                                {{ datasetOverviewTabData.datasetBasics.kind | titlecase }}
+                            </p>
                         </div>
                     </div>
                     <div class="dataset-info--block">
@@ -266,7 +278,7 @@
 
                     <div
                         class="dataset-info--block"
-                        *ngIf="currentState.overview.metadata.currentLicense"
+                        *ngIf="datasetOverviewTabData.overviewUpdate.overview.metadata.currentLicense"
                         data-test-id="license-block"
                     >
                         <div class="dataset-info--sub-block d-flex align-items-center">
@@ -277,14 +289,24 @@
                             <div>
                                 <a
                                     class="link--primary text-break"
-                                    (click)="showWebsite(currentState.overview.metadata.currentLicense.websiteUrl)"
+                                    (click)="
+                                        showWebsite(
+                                            datasetOverviewTabData.overviewUpdate.overview.metadata.currentLicense
+                                                .websiteUrl
+                                        )
+                                    "
                                 >
                                     <span
                                         class="dataset-info--text"
                                         placement="bottom"
-                                        [ngbTooltip]="currentState.overview.metadata.currentLicense.name"
+                                        [ngbTooltip]="
+                                            datasetOverviewTabData.overviewUpdate.overview.metadata.currentLicense.name
+                                        "
                                     >
-                                        {{ currentState.overview.metadata.currentLicense.shortName }}
+                                        {{
+                                            datasetOverviewTabData.overviewUpdate.overview.metadata.currentLicense
+                                                .shortName
+                                        }}
                                     </span>
                                 </a>
                             </div>
@@ -309,8 +331,8 @@
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
                                 {{
-                                    currentState.size.estimatedSize
-                                        ? (currentState.size.estimatedSize | displaySize)
+                                    datasetOverviewTabData.overviewUpdate.size.estimatedSize
+                                        ? (datasetOverviewTabData.overviewUpdate.size.estimatedSize | displaySize)
                                         : "-"
                                 }}
                             </p>
@@ -323,11 +345,11 @@
                         </div>
                         <div class="dataset-info--sub-block">
                             <p class="dataset-info--text">
-                                {{ currentState.size.numRecordsTotal || 0 | number: "1.0-0" }}
+                                {{ datasetOverviewTabData.overviewUpdate.size.numRecordsTotal || 0 | number: "1.0-0" }}
                             </p>
                         </div>
                     </div>
-                    <div class="dataset-info--block" *ngIf="currentState">
+                    <div class="dataset-info--block" *ngIf="datasetOverviewTabData.overviewUpdate">
                         <div class="dataset-info--sub-block d-flex align-items-center">
                             <mat-icon class="fs-4 mr-3">more_time</mat-icon>
                             <h2 class="dataset-info--subtitle">Created At:</h2>
@@ -335,12 +357,12 @@
                         <div class="dataset-info--sub-block p-0">
                             <app-display-time
                                 class="dataset-info--text"
-                                [title]="currentState.overview.createdAt"
-                                [data]="currentState.overview.createdAt"
+                                [title]="datasetOverviewTabData.overviewUpdate.overview.createdAt"
+                                [data]="datasetOverviewTabData.overviewUpdate.overview.createdAt"
                             />
                         </div>
                     </div>
-                    <div class="dataset-info--block" *ngIf="currentState">
+                    <div class="dataset-info--block" *ngIf="datasetOverviewTabData.overviewUpdate">
                         <div class="dataset-info--sub-block d-flex align-items-center">
                             <mat-icon class="fs-4 mr-2">update</mat-icon>
                             <h2 class="dataset-info--subtitle">Last Updated At:</h2>
@@ -348,8 +370,8 @@
                         <div class="dataset-info--sub-block">
                             <app-display-time
                                 class="dataset-info--text"
-                                [title]="currentState.overview.lastUpdatedAt"
-                                [data]="currentState.overview.lastUpdatedAt"
+                                [title]="datasetOverviewTabData.overviewUpdate.overview.lastUpdatedAt"
+                                [data]="datasetOverviewTabData.overviewUpdate.overview.lastUpdatedAt"
                             />
                         </div>
                     </div>
@@ -360,12 +382,16 @@
                         </div>
                         <div
                             class="dataset-info--sub-block d-flex align-items-center ps-1"
-                            *ngIf="currentState && currentState.overview.metadata.currentWatermark; else noWatermark"
+                            *ngIf="
+                                datasetOverviewTabData.overviewUpdate &&
+                                    datasetOverviewTabData.overviewUpdate.overview.metadata.currentWatermark;
+                                else noWatermark
+                            "
                             data-test-id="watermark-block"
                         >
                             <app-display-time
-                                [title]="currentState.overview.metadata.currentWatermark"
-                                [data]="currentState.overview.metadata.currentWatermark"
+                                [title]="datasetOverviewTabData.overviewUpdate.overview.metadata.currentWatermark"
+                                [data]="datasetOverviewTabData.overviewUpdate.overview.metadata.currentWatermark"
                             />
                             <div *ngIf="canEditWatermark">
                                 <button

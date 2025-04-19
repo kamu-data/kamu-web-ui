@@ -1,7 +1,6 @@
 <a
     class="name"
     [attr.data-test-id]="dataTestId"
-    [routerLink]="['/', data.ownerAccountName, data.datasetName]"
-    [queryParams]="{ tab: DatasetViewTypeEnum.Overview }"
+    [routerLink]="['/', data.ownerAccountName, data.datasetName, DatasetViewTypeEnum.Overview]"
     >{{ data.datasetName }}</a
 >

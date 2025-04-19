@@ -22,4 +22,22 @@ export default class RoutingResolvers {
     public static readonly ACCOUNT_SETTINGS_ACTIVE_TAB_KEY = "accountSettingsActiveTabData";
     public static readonly ACCOUNT_SETTINGS_EMAIL_KEY = "accountSettingsEmailData";
     public static readonly ACCOUNT_SETTINGS_ACCESS_TOKENS_KEY = "accountSettingsAccessTokensData";
+
+    public static readonly DATASET_VIEW_ACTIVE_TAB_KEY = "datasetViewActiveTabData";
+    public static readonly DATASET_VIEW_KEY = "datasetViewData";
+    public static readonly DATASET_VIEW_OVERVIEW_KEY = "datasetViewOverviewData";
+    public static readonly DATASET_VIEW_DATA_KEY = "datasetViewDataData";
+    public static readonly DATASET_VIEW_METADATA_KEY = "datasetViewMetadataData";
+    public static readonly DATASET_VIEW_HISTORY_KEY = "datasetViewHistoryData";
+    public static readonly DATASET_VIEW_LINEAGE_KEY = "datasetViewLineageData";
+    public static readonly DATASET_VIEW_FLOWS_KEY = "datasetViewFlowsData";
+    public static readonly DATASET_VIEW_SETTINGS_KEY = "datasetViewSettingsData";
+    public static readonly DATASET_VIEW_SETTINGS_ACTIVE_SECTION_KEY = "datasetViewSettingsActiveSectionData";
+
+    public static readonly DATASET_SETTINGS_GENERAL_KEY = "datasetSettingsGeneralData";
+    public static readonly DATASET_SETTINGS_SCHEDULING_KEY = "datasetSettingsSchedulingData";
+    public static readonly DATASET_SETTINGS_TRANSFORM_KEY = "datasetSettingsTransformData";
+    public static readonly DATASET_SETTINGS_ACCESS_KEY = "datasetSettingsAccessData";
+    public static readonly DATASET_SETTINGS_COMPACTION_KEY = "datasetSettingsCompactionData";
+    public static readonly DATASET_SETTINGS_VARIABLES_AND_SECRETS_KEY = "datasetSettingsVariablesSecretsData";
 }

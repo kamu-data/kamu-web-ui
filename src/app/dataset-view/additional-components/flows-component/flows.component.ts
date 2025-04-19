@@ -5,28 +5,18 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import {
-    DatasetBasicsFragment,
-    DatasetFlowType,
-    DatasetKind,
-    DatasetOverviewFragment,
-    DatasetPermissionsFragment,
-    FlowStatus,
-    InitiatorFilterInput,
-} from "src/app/api/kamu.graphql.interface";
+import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { DatasetFlowType, DatasetKind, FlowStatus, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
 import { combineLatest, map, switchMap, timer } from "rxjs";
 import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetViewTypeEnum } from "../../dataset-view.interface";
+import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
-import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { environment } from "src/environments/environment";
 import { FlowsTableProcessingBaseComponent } from "src/app/dataset-flow/flows-table/flows-table-processing-base.component";
-import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
 import ProjectLinks from "src/app/project-links";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { DatasetPermissionsService } from "../../dataset.permissions.service";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 
 @Component({
     selector: "app-flows",
@@ -35,31 +25,22 @@ import { DatasetPermissionsService } from "../../dataset.permissions.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlowsComponent extends FlowsTableProcessingBaseComponent implements OnInit {
-    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    @Input({ required: true }) public datasetPermissions: DatasetPermissionsFragment;
+    @Input(RoutingResolvers.DATASET_VIEW_FLOWS_KEY) public flowsData: DatasetOverviewTabData;
+
     public searchFilter = "";
-    public overview: DatasetOverviewFragment;
     public readonly DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"]; //1
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
     public readonly SettingsTabsEnum: typeof SettingsTabsEnum = SettingsTabsEnum;
     public readonly URL_PARAM_SET_TRANSFORM = ProjectLinks.URL_PARAM_SET_TRANSFORM;
     public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
 
-    private datasetSubsService = inject(DatasetSubscriptionsService);
-    private datasetPermissionsService = inject(DatasetPermissionsService);
-
     public ngOnInit(): void {
         this.getPageFromUrl();
         this.fetchTableData(this.currentPage);
-        this.datasetSubsService.overviewChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((overviewUpdate: OverviewUpdate) => {
-                this.overview = overviewUpdate.overview;
-            });
     }
 
     public get redirectSection(): SettingsTabsEnum {
-        return this.datasetBasics.kind === DatasetKind.Root
+        return this.flowsData.datasetBasics.kind === DatasetKind.Root
             ? SettingsTabsEnum.SCHEDULING
             : SettingsTabsEnum.TRANSFORM_SETTINGS;
     }
@@ -73,14 +54,14 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             switchMap(() =>
                 combineLatest([
                     this.flowsService.datasetFlowsList({
-                        datasetId: this.datasetBasics.id,
+                        datasetId: this.flowsData.datasetBasics.id,
                         page: page - 1,
                         perPageTable: this.TABLE_FLOW_RUNS_PER_PAGE,
                         perPageTiles: this.WIDGET_FLOW_RUNS_PER_PAGE,
                         filters: { byStatus: filterByStatus, byInitiator: filterByInitiator },
                     }),
-                    this.flowsService.allFlowsPaused(this.datasetBasics.id),
-                    this.flowsService.flowsInitiators(this.datasetBasics.id),
+                    this.flowsService.allFlowsPaused(this.flowsData.datasetBasics.id),
+                    this.flowsService.flowsInitiators(this.flowsData.datasetBasics.id),
                 ]),
             ),
             map(([flowsData, allFlowsPaused, flowInitiators]) => {
@@ -90,42 +71,48 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public get isSetPollingSourceEmpty(): boolean {
-        return !this.overview.metadata.currentPollingSource && this.datasetBasics.kind === DatasetKind.Root;
+        return (
+            !this.flowsData.overviewUpdate.overview.metadata.currentPollingSource &&
+            this.flowsData.datasetBasics.kind === DatasetKind.Root
+        );
     }
 
     public get isSetTransformEmpty(): boolean {
-        return !this.overview.metadata.currentTransform && this.datasetBasics.kind === DatasetKind.Derivative;
+        return (
+            !this.flowsData.overviewUpdate.overview.metadata.currentTransform &&
+            this.flowsData.datasetBasics.kind === DatasetKind.Derivative
+        );
     }
 
     public get canRunFlows(): boolean {
-        return this.datasetPermissions.permissions.flows.canRun;
+        return this.flowsData.datasetPermissions.permissions.flows.canRun;
     }
 
     public navigateToAddPollingSource(): void {
         this.navigationService.navigateToAddPollingSource({
-            accountName: this.datasetBasics.owner.accountName,
-            datasetName: this.datasetBasics.name,
+            accountName: this.flowsData.datasetBasics.owner.accountName,
+            datasetName: this.flowsData.datasetBasics.name,
         });
     }
 
     public navigateToSetTransform(): void {
         this.navigationService.navigateToSetTransform({
-            accountName: this.datasetBasics.owner.accountName,
-            datasetName: this.datasetBasics.name,
+            accountName: this.flowsData.datasetBasics.owner.accountName,
+            datasetName: this.flowsData.datasetBasics.name,
         });
     }
 
     public onPageChange(page: number): void {
         if (page === 1) {
             this.navigationService.navigateToDatasetView({
-                accountName: this.datasetBasics.owner.accountName,
-                datasetName: this.datasetBasics.name,
+                accountName: this.flowsData.datasetBasics.owner.accountName,
+                datasetName: this.flowsData.datasetBasics.name,
                 tab: DatasetViewTypeEnum.Flows,
             });
         } else {
             this.navigationService.navigateToDatasetView({
-                accountName: this.datasetBasics.owner.accountName,
-                datasetName: this.datasetBasics.name,
+                accountName: this.flowsData.datasetBasics.owner.accountName,
+                datasetName: this.flowsData.datasetBasics.name,
                 tab: DatasetViewTypeEnum.Flows,
                 page,
             });
@@ -136,9 +123,9 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public updateNow(): void {
         this.flowsService
             .datasetTriggerFlow({
-                datasetId: this.datasetBasics.id,
+                datasetId: this.flowsData.datasetBasics.id,
                 datasetFlowType:
-                    this.datasetBasics.kind === DatasetKind.Root
+                    this.flowsData.datasetBasics.kind === DatasetKind.Root
                         ? DatasetFlowType.Ingest
                         : DatasetFlowType.ExecuteTransform,
             })
@@ -157,14 +144,14 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         if (!paused) {
             this.flowsService
                 .datasetPauseFlows({
-                    datasetId: this.datasetBasics.id,
+                    datasetId: this.flowsData.datasetBasics.id,
                 })
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe();
         } else {
             this.flowsService
                 .datasetResumeFlows({
-                    datasetId: this.datasetBasics.id,
+                    datasetId: this.flowsData.datasetBasics.id,
                 })
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe();

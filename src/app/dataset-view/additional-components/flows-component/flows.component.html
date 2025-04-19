@@ -28,11 +28,13 @@
                             <mat-divider />
                             <a
                                 mat-menu-item
-                                [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name]"
-                                [queryParams]="{
-                                    tab: DatasetViewTypeEnum.Settings,
-                                    section: SettingsTabsEnum.SCHEDULING,
-                                }"
+                                [routerLink]="[
+                                    '/',
+                                    flowsData.datasetBasics.owner.accountName,
+                                    flowsData.datasetBasics.name,
+                                    DatasetViewTypeEnum.Settings,
+                                    redirectSection,
+                                ]"
                                 >Update settings</a
                             >
                             <mat-divider />
@@ -97,8 +99,13 @@
                     You can
                     <a
                         class="text-decoration-none"
-                        [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name]"
-                        [queryParams]="{ tab: DatasetViewTypeEnum.Settings, section: redirectSection }"
+                        [routerLink]="[
+                            '/',
+                            flowsData.datasetBasics.owner.accountName,
+                            flowsData.datasetBasics.name,
+                            DatasetViewTypeEnum.Settings,
+                            redirectSection,
+                        ]"
                         >update configuration settings</a
                     >
                 </span>
@@ -109,8 +116,8 @@
                     class="text-decoration-none"
                     [routerLink]="[
                         '/',
-                        datasetBasics.owner.accountName,
-                        datasetBasics.name,
+                        flowsData.datasetBasics.owner.accountName,
+                        flowsData.datasetBasics.name,
                         URL_PARAM_ADD_POLLING_SOURCE,
                     ]"
                     >add data polling source
@@ -120,7 +127,12 @@
                 No flow runs.To set the configuration you first need to
                 <a
                     class="text-decoration-none"
-                    [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name, URL_PARAM_SET_TRANSFORM]"
+                    [routerLink]="[
+                        '/',
+                        flowsData.datasetBasics.owner.accountName,
+                        flowsData.datasetBasics.name,
+                        URL_PARAM_SET_TRANSFORM,
+                    ]"
                     >add transformation
                 </a>
             </ng-container>

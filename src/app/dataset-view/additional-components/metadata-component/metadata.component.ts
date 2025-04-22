@@ -25,7 +25,6 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import ProjectLinks from "src/app/project-links";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { DatasetPermissionsService } from "../../dataset.permissions.service";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetOverviewTabData } from "../../dataset-view.interface";
 
@@ -37,8 +36,6 @@ import { DatasetOverviewTabData } from "../../dataset-view.interface";
 })
 export class MetadataComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_VIEW_METADATA_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
-    // @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    // @Input({ required: true }) public datasetPermissions: DatasetPermissionsFragment;
     @Output() public pageChangeEmit = new EventEmitter<number>();
 
     public readonly ReadSectionMapping: Record<string, string> = {
@@ -62,7 +59,6 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     private datasetSubsService = inject(DatasetSubscriptionsService);
     private navigationService = inject(NavigationService);
     private modalService = inject(ModalService);
-    private datasetPermissionsService = inject(DatasetPermissionsService);
 
     public ngOnInit() {
         this.datasetSubsService.metadataSchemaChanges
@@ -198,6 +194,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
                 yesButtonText: "Ok",
             }),
         );
+        //TODO:
         // this.trackSubscription(
         //     this.datasetCommitService
         //         .commitEventToDataset(

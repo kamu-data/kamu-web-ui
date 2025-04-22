@@ -8,7 +8,6 @@
 import {
     AddPushSourceEventFragment,
     DatasetKind,
-    DatasetPermissionsFragment,
     DatasetTransformFragment,
     LicenseFragment,
     SetPollingSourceEventFragment,
@@ -19,11 +18,7 @@ import AppValues from "../../../common/values/app.values";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { MetadataSchemaUpdate } from "../../dataset.subscriptions.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
-import {
-    DatasetBasicsFragment,
-    DatasetMetadataSummaryFragment,
-    PageBasedInfo,
-} from "src/app/api/kamu.graphql.interface";
+import { DatasetMetadataSummaryFragment, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
 import { isNil, momentConvertDateToLocalWithFormat, promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "src/app/interface/app.types";
 import { NavigationService } from "src/app/services/navigation.service";

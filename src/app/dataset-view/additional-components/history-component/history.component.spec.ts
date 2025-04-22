@@ -6,8 +6,6 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { first } from "rxjs/operators";
-import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { mockHistoryUpdate } from "../data-tabs.mock";
 import { HistoryComponent } from "./history.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";

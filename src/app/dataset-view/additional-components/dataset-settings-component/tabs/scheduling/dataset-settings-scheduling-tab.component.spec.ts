@@ -67,17 +67,19 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         datasetSchedulingService = TestBed.inject(DatasetSchedulingService);
 
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsRootFragment;
+        component.schedulungTabData = {
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+        };
     });
 
     it("should create", () => {
-        component.datasetPermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
         fixture.detectChanges();
         expect(component).toBeTruthy();
     });
 
     it("should check initial state", () => {
-        component.datasetPermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
+        // component.datasetPermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
         spyOn(datasetSchedulingService, "fetchDatasetFlowConfigs").and.returnValue(
             of(mockIngestGetDatasetFlowConfigsSuccess),
         );
@@ -94,7 +96,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         const setDatasetFlowConfigsSpy = spyOn(datasetSchedulingService, "setDatasetFlowConfigs").and.returnValue(
             of(true),
         );
-        component.datasetPermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
+        //   component.datasetPermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
 
         const mockPollingTriggerForm = new FormGroup<PollingGroupType>({
             updatesState: new FormControl<boolean>(true, { nonNullable: true }),
@@ -135,7 +137,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         const setDatasetFlowConfigsSpy = spyOn(datasetSchedulingService, "setDatasetFlowConfigs").and.returnValue(
             of(true),
         );
-        component.datasetPermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
+        //  component.datasetPermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
 
         const mockPollingTriggerForm = new FormGroup<PollingGroupType>({
             updatesState: new FormControl<boolean>(true, { nonNullable: true }),

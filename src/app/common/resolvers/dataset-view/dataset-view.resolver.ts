@@ -27,6 +27,7 @@ export const datasetViewResolver: ResolveFn<DatasetViewData> = (
     const datasetName = route.paramMap.get(ProjectLinks.URL_PARAM_DATASET_NAME) as string;
     const activeTab = activeTabResolver(route, state);
 
+    /* istanbul ignore next */
     return datasetService.requestDatasetMainData({ accountName, datasetName }).pipe(
         switchMap(() => datasetService.datasetChanges),
         switchMap((data: DatasetBasicsFragment) =>

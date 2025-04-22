@@ -12,9 +12,9 @@ import {
     DatasetFlowType,
     DatasetKind,
 } from "../../../api/kamu.graphql.interface";
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { MetadataBlockFragment } from "../../../api/kamu.graphql.interface";
-import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { EditDetailsModalComponent } from "./components/edit-details-modal/edit-details-modal.component";
 import { EditWatermarkModalComponent } from "./components/edit-watermark-modal/edit-watermark-modal.component";
@@ -66,10 +66,8 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
         this.navigationService.navigateToWebsite(url);
     }
 
-    public get metadataFragmentBlock(): MaybeUndefined<MetadataBlockFragment> {
-        return this.datasetOverviewTabData.overviewUpdate.overview
-            ? this.datasetOverviewTabData.overviewUpdate.overview.metadata.chain.blocks.nodes[0]
-            : undefined;
+    public get metadataFragmentBlock(): MetadataBlockFragment {
+        return this.datasetOverviewTabData.overviewUpdate.overview.metadata.chain.blocks.nodes[0];
     }
 
     public get canEditDatasetInfo(): boolean {
@@ -86,10 +84,7 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
 
     public get canAddDatasetInfo(): boolean {
         if (!this.hasDatasetInfo) {
-            return (
-                this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit &&
-                !isNil(this.datasetOverviewTabData.overviewUpdate)
-            );
+            return this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit;
         } else {
             return false;
         }
@@ -109,10 +104,7 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
     }
 
     public get canAddSetPollingSource(): boolean {
-        if (
-            this.datasetOverviewTabData &&
-            this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit
-        ) {
+        if (this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit) {
             return (
                 !this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentPollingSource &&
                 this.datasetOverviewTabData.datasetBasics.kind === DatasetKind.Root &&
@@ -123,10 +115,7 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
         }
     }
     public get canAddPushSource(): boolean {
-        if (
-            this.datasetOverviewTabData &&
-            this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit
-        ) {
+        if (this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit) {
             return (
                 !this.datasetOverviewTabData.overviewUpdate.overview.metadata.chain.blocks.nodes.filter(
                     (item) => item.event.__typename === "AddPushSource",
@@ -138,10 +127,7 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
     }
 
     public get canAddSetTransform(): boolean {
-        if (
-            this.datasetOverviewTabData &&
-            this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit
-        ) {
+        if (this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit) {
             return (
                 !this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentTransform &&
                 this.datasetOverviewTabData.datasetBasics.kind === DatasetKind.Derivative
@@ -152,10 +138,7 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
     }
 
     public get canAddReadme(): boolean {
-        if (
-            this.datasetOverviewTabData &&
-            this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit
-        ) {
+        if (this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit) {
             return !this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentReadme && !this.editingReadme;
         } else {
             return false;
@@ -163,10 +146,7 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
     }
 
     public get canEditReadme(): boolean {
-        if (
-            this.datasetOverviewTabData &&
-            this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit
-        ) {
+        if (this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit) {
             return !isNil(this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentReadme);
         } else {
             return false;
@@ -174,10 +154,7 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
     }
 
     public get canAddLicense(): boolean {
-        if (
-            this.datasetOverviewTabData &&
-            this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit
-        ) {
+        if (this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit) {
             return isNil(this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentLicense);
         } else {
             return false;
@@ -185,10 +162,7 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
     }
 
     public get canEditLicense(): boolean {
-        if (
-            this.datasetOverviewTabData &&
-            this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit
-        ) {
+        if (this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit) {
             return !isNil(this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentLicense);
         } else {
             return false;
@@ -196,10 +170,7 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
     }
 
     public get canAddWatermark(): boolean {
-        if (
-            this.datasetOverviewTabData &&
-            this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit
-        ) {
+        if (this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit) {
             return !this.hasWatermark && this.datasetOverviewTabData.datasetBasics.kind === DatasetKind.Root;
         } else {
             return false;
@@ -207,10 +178,7 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
     }
 
     public get canEditWatermark(): boolean {
-        if (
-            this.datasetOverviewTabData &&
-            this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit
-        ) {
+        if (this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit) {
             return this.hasWatermark && this.datasetOverviewTabData.datasetBasics.kind === DatasetKind.Root;
         } else {
             return false;

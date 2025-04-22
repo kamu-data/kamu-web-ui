@@ -32,7 +32,7 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
     public sqlLoading = false;
     public sqlErrorMarker$: Observable<string>;
     public sqlQueryResponse$: Observable<MaybeNull<SqlQueryResponseState>>;
-    public readonly MONACO_PLACEHOLDER = "Please type your guery here or find the dataset in the search...";
+    public readonly MONACO_PLACEHOLDER = "Please type your query here or find the dataset in the search...";
     private visibilityDocumentChange$ = fromEvent(document, "visibilitychange");
 
     private sqlQueryService = inject(SqlQueryService);

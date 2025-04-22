@@ -99,8 +99,10 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
         fixture = TestBed.createComponent(DatasetSettingsGeneralTabComponent);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsDerivedFragment;
-        component.datasetPermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
+        component.generalTabData = {
+            datasetBasics: mockDatasetBasicsDerivedFragment,
+            datasetPermissions: structuredClone(mockFullPowerDatasetPermissionsFragment),
+        };
 
         datasetSettingsService = TestBed.inject(DatasetSettingsService);
         modalService = TestBed.inject(ModalService);

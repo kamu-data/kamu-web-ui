@@ -18,6 +18,7 @@ import {
     DatasetHistoryUpdate,
     LineageUpdate,
     MetadataSchemaUpdate,
+    OverviewUpdate,
 } from "../dataset.subscriptions.interface";
 import { mockDatasetBasicsDerivedFragment, mockPublicDatasetVisibility } from "src/app/search/mock.data";
 import { Node } from "@swimlane/ngx-graph";
@@ -2039,3 +2040,10 @@ export const datasetMetadataRootDataset: DatasetMetadata = {
         statuses: [],
     },
 };
+
+export const mockOverviewUpdate = {
+    schema: mockMetadataRootPushSourceUpdate.schema,
+    content: mockOverviewDataUpdate.content,
+    overview: structuredClone(mockOverviewDataUpdate.overview), // clone, as we modify this data in the tests
+    size: mockOverviewDataUpdate.size,
+} as OverviewUpdate;

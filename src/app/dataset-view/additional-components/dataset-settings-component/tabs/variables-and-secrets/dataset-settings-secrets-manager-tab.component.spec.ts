@@ -14,13 +14,11 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { PaginationComponent } from "src/app/common/components/pagination-component/pagination.component";
 import { MatDividerModule } from "@angular/material/divider";
 import { HttpClientModule } from "@angular/common/http";
-import { ActivatedRoute } from "@angular/router";
 import { MatIconModule } from "@angular/material/icon";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { FormBuilder, FormsModule } from "@angular/forms";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetEvnironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-evnironment-variables.service";
-import { of } from "rxjs";
 import { MOCK_ENV_VAR_ID, mockListEnvVariablesQuery } from "src/app/api/mock/environment-variables-and-secrets.mock";
 import { ViewDatasetEnvVarConnection } from "src/app/api/kamu.graphql.interface";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
@@ -28,6 +26,9 @@ import { ModalService } from "src/app/common/components/modal/modal.service";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
+import { MOCK_DATASET_INFO } from "../../../metadata-component/components/set-transform/mock.data";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { SimpleChanges } from "@angular/core";
 
 describe("DatasetSettingsSecretsManagerTabComponent", () => {
     let component: DatasetSettingsSecretsManagerTabComponent;
@@ -40,35 +41,7 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [DatasetSettingsSecretsManagerTabComponent, PaginationComponent],
-            providers: [
-                FormBuilder,
-                Apollo,
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            queryParamMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "page":
-                                            return 2;
-                                    }
-                                },
-                            },
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return "accountName";
-                                        case "datasetName":
-                                            return "datasetName";
-                                    }
-                                },
-                            },
-                        },
-                    },
-                },
-            ],
+            providers: [FormBuilder, Apollo],
             imports: [
                 ToastrModule.forRoot(),
                 ApolloTestingModule,
@@ -78,6 +51,7 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
                 MatIconModule,
                 FormsModule,
                 MatTooltipModule,
+                SharedTestModule,
             ],
         }).compileComponents();
 
@@ -88,9 +62,15 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
         evnironmentVariablesService = TestBed.inject(DatasetEvnironmentVariablesService);
         ngbModalService = TestBed.inject(NgbModal);
         modalService = TestBed.inject(ModalService);
+        navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsRootFragment;
-        component.datasetPermissions = mockFullPowerDatasetPermissionsFragment;
+        component.variablesAndSecretsTabData = {
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            connection: mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars
+                .listEnvVariables as ViewDatasetEnvVarConnection,
+        };
+        component.datasetInfo = MOCK_DATASET_INFO;
         fixture.detectChanges();
     });
 
@@ -99,19 +79,31 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
     });
 
     it("should check change page", () => {
-        expect(component.currentPage).toEqual(2);
+        expect(component.currentPage).toEqual(1);
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
-        const listEnvVariablesSpy = spyOn(evnironmentVariablesService, "listEnvVariables").and.returnValue(
-            of(
-                mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars
-                    .listEnvVariables as ViewDatasetEnvVarConnection,
-            ),
-        );
 
         component.onPageChange(3);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(jasmine.objectContaining({ page: 3 }));
         expect(component.currentPage).toEqual(3);
-        expect(listEnvVariablesSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check ngOnChanges", () => {
+        const connection = mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars
+            .listEnvVariables as ViewDatasetEnvVarConnection;
+        const varAndSecretsChanges: SimpleChanges = {
+            variablesAndSecretsTabData: {
+                previousValue: undefined,
+                currentValue: {
+                    datasetBasics: mockDatasetBasicsRootFragment,
+                    datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+                    connection,
+                },
+                firstChange: true,
+                isFirstChange: () => true,
+            },
+        };
+        component.ngOnChanges(varAndSecretsChanges);
+        expect(component.dataSource.data).toEqual(connection.nodes);
     });
 
     it("should check refresh search", () => {

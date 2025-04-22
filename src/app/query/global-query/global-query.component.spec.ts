@@ -26,11 +26,13 @@ import { SearchAndSchemasSectionComponent } from "./search-and-schemas-section/s
 import { SqlQueryService } from "src/app/services/sql-query.service";
 import { of } from "rxjs";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("GlobalQueryComponent", () => {
     let component: GlobalQueryComponent;
     let fixture: ComponentFixture<GlobalQueryComponent>;
     let sqlQueryService: SqlQueryService;
+    let navigationService: NavigationService;
     const SQL_QUERY = "select * from 'datasetName'";
 
     beforeEach(() => {
@@ -62,6 +64,8 @@ describe("GlobalQueryComponent", () => {
         component = fixture.componentInstance;
         component.sqlQuery = SQL_QUERY;
         sqlQueryService = TestBed.inject(SqlQueryService);
+        navigationService = TestBed.inject(NavigationService);
+        spyOn(navigationService, "navigateToDatasetView");
         fixture.detectChanges();
     });
 

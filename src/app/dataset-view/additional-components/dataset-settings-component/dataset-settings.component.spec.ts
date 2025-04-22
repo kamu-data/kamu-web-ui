@@ -19,16 +19,11 @@ import { ToastrModule } from "ngx-toastr";
 import { DatasetSettingsGeneralTabComponent } from "./tabs/general/dataset-settings-general-tab.component";
 import { DatasetSettingsSchedulingTabComponent } from "./tabs/scheduling/dataset-settings-scheduling-tab.component";
 import { SettingsTabsEnum } from "./dataset-settings.model";
-import {
-    emitClickOnElementByDataTestId,
-    findElementByDataTestId,
-    registerMatSvgIcons,
-} from "src/app/common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { ChangeDetectionStrategy } from "@angular/core";
 import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { mockMetadataRootUpdate, mockOverviewDataUpdate } from "../data-tabs.mock";
 import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
@@ -44,7 +39,6 @@ describe("DatasetSettingsComponent", () => {
     let component: DatasetSettingsComponent;
     let fixture: ComponentFixture<DatasetSettingsComponent>;
     let navigationService: NavigationService;
-    let datasetSubsService: DatasetSubscriptionsService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -106,16 +100,17 @@ describe("DatasetSettingsComponent", () => {
 
         fixture = TestBed.createComponent(DatasetSettingsComponent);
         navigationService = TestBed.inject(NavigationService);
-        datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsDerivedFragment;
-        component.datasetPermissions = mockFullPowerDatasetPermissionsFragment;
-        datasetSubsService.emitOverviewChanged({
-            schema: mockMetadataRootUpdate.schema,
-            content: mockOverviewDataUpdate.content,
-            overview: structuredClone(mockOverviewDataUpdate.overview), // clone, as we modify this data in the tests
-            size: mockOverviewDataUpdate.size,
-        } as OverviewUpdate);
+        component.datasetSettingsTabData = {
+            datasetBasics: mockDatasetBasicsDerivedFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            overviewUpdate: {
+                schema: mockMetadataRootUpdate.schema,
+                content: mockOverviewDataUpdate.content,
+                overview: structuredClone(mockOverviewDataUpdate.overview), // clone, as we modify this data in the tests
+                size: mockOverviewDataUpdate.size,
+            } as OverviewUpdate,
+        };
         fixture.detectChanges();
     });
 
@@ -123,17 +118,8 @@ describe("DatasetSettingsComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check hide the scheduling tab", () => {
-        component.activeTab = SettingsTabsEnum.SCHEDULING;
-        spyOnProperty(component, "isSettingsTabAccessible", "get").and.returnValue(false);
-        fixture.detectChanges();
-        const schedulingTabElem = findElementByDataTestId(fixture, "settings-scheduling-tab");
-        expect(schedulingTabElem).toBeUndefined();
-    });
-
     it("should check navigate to action list item", () => {
         component.activeTab = SettingsTabsEnum.SCHEDULING;
-        spyOnProperty(component, "isSettingsTabAccessible", "get").and.returnValue(true);
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         spyOn(component, "visibilitySettingsMenuItem").and.returnValue(true);
         fixture.detectChanges();

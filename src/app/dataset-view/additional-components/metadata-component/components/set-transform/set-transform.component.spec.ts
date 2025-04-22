@@ -35,6 +35,7 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { EditorModule } from "../../../../../editor/editor.module";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 
 describe("SetTransformComponent", () => {
     let component: SetTransformComponent;
@@ -115,9 +116,10 @@ describe("SetTransformComponent", () => {
 
     it("check dataset editability passes for derived dataset with full permissions", () => {
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.stub();
-
+        const clonePermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
+        clonePermissions.permissions.metadata.canCommit = true;
         datasetService.emitDatasetChanged(mockDatasetBasicsDerivedFragment);
-        datasetSubsService.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
+        datasetSubsService.emitPermissionsChanged(clonePermissions);
 
         expect(navigateToDatasetViewSpy).not.toHaveBeenCalled();
     });
@@ -140,6 +142,7 @@ describe("SetTransformComponent", () => {
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
             accountName: mockDatasetBasicsDerivedFragment.owner.accountName,
             datasetName: mockDatasetBasicsDerivedFragment.name,
+            tab: DatasetViewTypeEnum.Overview,
         } as DatasetNavigationParams);
     });
 
@@ -152,6 +155,7 @@ describe("SetTransformComponent", () => {
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
             accountName: mockDatasetBasicsRootFragment.owner.accountName,
             datasetName: mockDatasetBasicsRootFragment.name,
+            tab: DatasetViewTypeEnum.Overview,
         } as DatasetNavigationParams);
     });
 

@@ -27,7 +27,20 @@ import { of } from "rxjs";
 import { AccessTokenConnection } from "./api/kamu.graphql.interface";
 import { mockListAccessTokensQuery } from "./api/mock/access-token.mock";
 import { searchResolver } from "./common/resolvers/search.resolver";
-import { mockDatasetSearchResult } from "./search/mock.data";
+import {
+    mockDatasetBasicsDerivedFragment,
+    mockDatasetSearchResult,
+    mockFullPowerDatasetPermissionsFragment,
+} from "./search/mock.data";
+import { datasetViewResolver } from "./common/resolvers/dataset-view/dataset-view.resolver";
+import { datasetOverviewTabResolver } from "./common/resolvers/dataset-view/dataset-overview-tab.resolver";
+import {
+    mockMetadataDerivedUpdate,
+    mockOverviewDataUpdate,
+    mockOverviewDataUpdateNullable,
+} from "./dataset-view/additional-components/data-tabs.mock";
+import { OverviewUpdate } from "./dataset-view/dataset.subscriptions.interface";
+import { NgxGraphModule } from "@swimlane/ngx-graph";
 
 describe("Router", () => {
     let router: Router;
@@ -43,6 +56,7 @@ describe("Router", () => {
                 ApolloTestingModule,
                 HttpClientTestingModule,
                 ToastrModule.forRoot(),
+                NgxGraphModule,
             ],
             declarations: [PageNotFoundComponent, LoginComponent],
             schemas: [NO_ERRORS_SCHEMA],
@@ -57,6 +71,32 @@ describe("Router", () => {
                     provide: searchResolver,
                     useValue: {
                         resolve: () => of(mockDatasetSearchResult),
+                    },
+                },
+                {
+                    provide: datasetViewResolver,
+                    useValue: {
+                        resolve: () =>
+                            of({
+                                datasetBasics: mockDatasetBasicsDerivedFragment,
+                                datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+                            }),
+                    },
+                },
+                {
+                    provide: datasetOverviewTabResolver,
+                    useValue: {
+                        resolve: () =>
+                            of({
+                                datasetBasics: mockDatasetBasicsDerivedFragment,
+                                datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+                                overviewUpdate: {
+                                    schema: mockMetadataDerivedUpdate.schema,
+                                    content: mockOverviewDataUpdate.content,
+                                    overview: structuredClone(mockOverviewDataUpdateNullable.overview),
+                                    size: mockOverviewDataUpdate.size,
+                                } as OverviewUpdate,
+                            }),
                     },
                 },
             ],

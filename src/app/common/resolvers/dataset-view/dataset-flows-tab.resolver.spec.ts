@@ -6,20 +6,54 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ResolveFn } from "@angular/router";
+import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, RouterStateSnapshot } from "@angular/router";
 import { datasetFlowsTabResolver } from "./dataset-flows-tab.resolver";
 import { Observable } from "rxjs";
-import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { TEST_ACCOUNT_NAME } from "src/app/api/mock/dataset.mock";
+import ProjectLinks from "src/app/project-links";
+import { Apollo } from "apollo-angular";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 
 describe("datasetFlowsTabResolver", () => {
+    let datasetService: DatasetService;
+    let datasetSubsService: DatasetSubscriptionsService;
     const executeResolver: ResolveFn<Observable<DatasetOverviewTabData>> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => datasetFlowsTabResolver(...resolverParameters));
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
+        TestBed.configureTestingModule({
+            providers: [Apollo],
+        });
+        datasetService = TestBed.inject(DatasetService);
+        datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
     });
 
     it("should be created", () => {
         expect(executeResolver).toBeTruthy();
+    });
+
+    it("should check resolver", async () => {
+        datasetService.emitDatasetChanged(mockDatasetBasicsRootFragment);
+        datasetSubsService.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
+        datasetSubsService.emitOverviewChanged(mockOverviewUpdate);
+        const routeSnapshot = {
+            paramMap: convertToParamMap({ [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME }),
+            queryParamMap: convertToParamMap({}),
+        } as ActivatedRouteSnapshot;
+        const mockState = {
+            url: `/kamu/datasetName/${DatasetViewTypeEnum.Flows}`,
+        } as RouterStateSnapshot;
+        const result = (await executeResolver(routeSnapshot, mockState)) as Observable<DatasetOverviewTabData>;
+        result.subscribe((data) => {
+            expect(data).toEqual({
+                datasetBasics: mockDatasetBasicsRootFragment,
+                datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+                overviewUpdate: mockOverviewUpdate,
+            });
+        });
     });
 });

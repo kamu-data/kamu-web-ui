@@ -21,11 +21,14 @@ import { ToastrModule } from "ngx-toastr";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterTestingModule } from "@angular/router/testing";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { MOCK_DATASET_INFO } from "../metadata-component/components/set-transform/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
+import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 
 describe("HistoryComponent", () => {
     let component: HistoryComponent;
     let fixture: ComponentFixture<HistoryComponent>;
-    let datasetSubsService: DatasetSubscriptionsService;
+    let navigationService: NavigationService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -50,9 +53,11 @@ describe("HistoryComponent", () => {
         registerMatSvgIcons();
 
         fixture = TestBed.createComponent(HistoryComponent);
-        datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
+        navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
-        datasetSubsService.emitHistoryChanged(mockHistoryUpdate);
+        component.datasetInfo = MOCK_DATASET_INFO;
+        component.datasetHistoryTabData = mockHistoryUpdate;
+        // datasetSubsService.emitHistoryChanged(mockHistoryUpdate);
         fixture.detectChanges();
     });
 
@@ -61,13 +66,20 @@ describe("HistoryComponent", () => {
     });
 
     it("should check change page", () => {
-        const testChangeNotification = 1;
-
-        const emitterSubscription$ = component.onPageChangeEmit
-            .pipe(first())
-            .subscribe((notification) => expect(notification).toEqual(testChangeNotification));
-
-        component.onPageChange(testChangeNotification);
-        expect(emitterSubscription$.closed).toBeTrue();
+        const page = 2;
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        component.onPageChange(page);
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledOnceWith({
+            datasetName: MOCK_DATASET_INFO.datasetName,
+            accountName: MOCK_DATASET_INFO.accountName,
+            tab: DatasetViewTypeEnum.History,
+            page,
+        });
+        // const testChangeNotification = 1;
+        // const emitterSubscription$ = component.onPageChangeEmit
+        //     .pipe(first())
+        //     .subscribe((notification) => expect(notification).toEqual(testChangeNotification));
+        // component.onPageChange(testChangeNotification);
+        // expect(emitterSubscription$.closed).toBeTrue();
     });
 });

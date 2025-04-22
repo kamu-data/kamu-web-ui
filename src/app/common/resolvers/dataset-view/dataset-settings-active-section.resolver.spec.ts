@@ -6,9 +6,10 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ResolveFn } from "@angular/router";
+import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 import { datasetSettingsActiveSectionResolver } from "./dataset-settings-active-section.resolver";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import ProjectLinks from "src/app/project-links";
 
 describe("datasetSettingsActiveSectionResolver", () => {
     const executeResolver: ResolveFn<SettingsTabsEnum> = (...resolverParameters) =>
@@ -20,5 +21,15 @@ describe("datasetSettingsActiveSectionResolver", () => {
 
     it("should be created", () => {
         expect(executeResolver).toBeTruthy();
+    });
+
+    it("should check resolver", async () => {
+        const mockRoute = {} as ActivatedRouteSnapshot;
+        const mockState = {
+            url: `/kamu/datasetName/${ProjectLinks.URL_SETTINGS}/${SettingsTabsEnum.ACCESS}`,
+        } as RouterStateSnapshot;
+        const result = await executeResolver(mockRoute, mockState);
+
+        expect(result).toEqual(SettingsTabsEnum.ACCESS);
     });
 });

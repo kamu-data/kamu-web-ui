@@ -19,12 +19,14 @@ import { mockFile, mockUploadPrepareResponse } from "../api/mock/upload-file.moc
 import { SharedTestModule } from "../common/modules/shared-test.module";
 import { RouterTestingModule } from "@angular/router/testing";
 import { DatasetViewComponent } from "../dataset-view/dataset-view.component";
+import { NavigationService } from "./navigation.service";
 
 describe("FileUploadService", () => {
     let service: FileUploadService;
     let protocolsService: ProtocolsService;
     let appConfigService: AppConfigService;
     let httpTestingController: HttpTestingController;
+    let navigationService: NavigationService;
     const mockUrl = "https://my-test";
     const urlUpload = new URL(mockUrl);
 
@@ -41,6 +43,8 @@ describe("FileUploadService", () => {
         protocolsService = TestBed.inject(ProtocolsService);
         appConfigService = TestBed.inject(AppConfigService);
         httpTestingController = TestBed.inject(HttpTestingController);
+        navigationService = TestBed.inject(NavigationService);
+        spyOn(navigationService, "navigateToDatasetView");
         spyOnProperty(appConfigService, "apiServerHttpUrl", "get").and.returnValue(mockUrl);
         spyOn(protocolsService, "getProtocols").and.returnValue(of(mockDatasetEndPoints));
     });

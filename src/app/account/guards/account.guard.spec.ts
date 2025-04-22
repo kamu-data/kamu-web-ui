@@ -6,13 +6,21 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot } from "@angular/router";
+import { ActivatedRouteSnapshot, CanActivateFn, convertToParamMap, RouterStateSnapshot } from "@angular/router";
 import { accountGuard } from "./account.guard";
 import { AccountTabs } from "../account.constants";
 import { NavigationService } from "src/app/services/navigation.service";
+import ProjectLinks from "src/app/project-links";
+import { TEST_ACCOUNT_NAME } from "src/app/api/mock/dataset.mock";
 
 describe("accountGuard", () => {
     let navigationService: NavigationService;
+    const routeSnapshot = {
+        paramMap: convertToParamMap({
+            [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME,
+            [ProjectLinks.URL_PARAM_DATASET_NAME]: "",
+        }),
+    } as ActivatedRouteSnapshot;
 
     const executeGuard: CanActivateFn = (...guardParameters) =>
         TestBed.runInInjectionContext(() => accountGuard(...guardParameters));
@@ -28,7 +36,6 @@ describe("accountGuard", () => {
     });
 
     it("should check account guard with true", async () => {
-        const routeSnapshot = {} as ActivatedRouteSnapshot;
         const state = { url: `/kamu/${AccountTabs.FLOWS}` } as RouterStateSnapshot;
         const result = await executeGuard(routeSnapshot, state);
         expect(result).toEqual(true);
@@ -36,7 +43,6 @@ describe("accountGuard", () => {
 
     it("should check account guard with false", async () => {
         spyOn(navigationService, "navigateToOwnerView").and.returnValue();
-        const routeSnapshot = {} as ActivatedRouteSnapshot;
         const state = { url: `/kamu` } as RouterStateSnapshot;
         const result = await executeGuard(routeSnapshot, state);
         expect(result).toEqual(false);

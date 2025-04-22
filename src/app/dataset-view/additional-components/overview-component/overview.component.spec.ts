@@ -387,6 +387,7 @@ describe("OverviewComponent", () => {
 
         it("cannot add dataset info, if a keyword is defined, but can edit", () => {
             currentInfo().keywords = ["keyword"];
+            component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = true;
             fixture.detectChanges();
             expect(component.hasDatasetInfo).toBeTrue();
             expect(component.canAddDatasetInfo).toBeFalse();

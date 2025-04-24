@@ -8,8 +8,7 @@
 import { ResolveFn } from "@angular/router";
 import { datasetOverviewTabResolver } from "./dataset-overview-tab.resolver";
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
-import { Observable } from "rxjs";
 
-export const datasetFlowsTabResolver: ResolveFn<Observable<DatasetOverviewTabData>> = (route, state) => {
+export const datasetFlowsTabResolver: ResolveFn<DatasetOverviewTabData> = (route, state) => {
     return datasetOverviewTabResolver(route, state);
 };

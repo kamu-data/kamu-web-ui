@@ -1,4 +1,4 @@
-<div class="search-result-container__content" *ngIf="lineageGraphUpdate">
+<div class="search-result-container__content" *ngIf="lineageGraphUpdate$ | async as lineageGraphUpdate">
     <ng-container *ngIf="lineageGraphUpdate.graph.nodes.length">
         <app-lineage-graph
             [graph]="lineageGraphUpdate.graph"

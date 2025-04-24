@@ -5,12 +5,11 @@
  * included in the LICENSE file.
  */
 
-import { ResolveFn, RouterStateSnapshot } from "@angular/router";
+import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import ProjectLinks from "src/app/project-links";
 
-export const datasetSettingsActiveSectionResolver: ResolveFn<SettingsTabsEnum> = (_, state: RouterStateSnapshot) => {
-    const pathWithoutQuery = state.url.split("?")[0];
-    const pathWithoutHash = pathWithoutQuery.split("#")[0];
-    const routeSegments = pathWithoutHash.split("/").filter(Boolean);
-    return routeSegments[routeSegments.length - 1] as SettingsTabsEnum;
+export const datasetSettingsActiveSectionResolver: ResolveFn<SettingsTabsEnum> = (route: ActivatedRouteSnapshot) => {
+    const activeTab = route.children[0]?.data[ProjectLinks.URL_PARAM_TAB] as SettingsTabsEnum;
+    return activeTab;
 };

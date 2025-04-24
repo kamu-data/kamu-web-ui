@@ -5,10 +5,13 @@
  * included in the LICENSE file.
  */
 
-import { ResolveFn } from "@angular/router";
+import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 import { datasetSettingsGeneralTabResolver } from "./dataset-settings-general-tab.resolver";
 
-export const datasetSettingsVarAndSecretsResolver: ResolveFn<DatasetViewData | null> = (route, state) => {
+export const datasetSettingsSchedulingTabResolver: ResolveFn<DatasetViewData | null> = (
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+) => {
     return datasetSettingsGeneralTabResolver(route, state);
 };

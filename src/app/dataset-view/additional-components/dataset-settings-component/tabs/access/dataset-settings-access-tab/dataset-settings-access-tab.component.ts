@@ -12,7 +12,7 @@ import {
     DatasetBasicsFragment,
     PageBasedInfo,
 } from "src/app/api/kamu.graphql.interface";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { SettingsTabsEnum } from "../../../dataset-settings.model";
 import { MatTableDataSource } from "@angular/material/table";
 import { BaseComponent } from "src/app/common/components/base.component";
@@ -40,7 +40,7 @@ import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetSettingsAccessTabComponent extends BaseComponent implements OnInit {
-    @Input(RoutingResolvers.DATASET_SETTINGS_ACCESS_KEY) public datasetBasics: DatasetBasicsFragment;
+    @Input(RoutingResolvers.DATASET_SETTINGS_ACCESS_KEY) public accessViewData: DatasetViewData;
 
     public dataSource = new MatTableDataSource();
     public currentPage = 1;
@@ -61,6 +61,10 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
     private cdr = inject(ChangeDetectorRef);
     private router = inject(Router);
     private loggedUserService = inject(LoggedUserService);
+
+    public get datasetBasics(): DatasetBasicsFragment {
+        return this.accessViewData.datasetBasics;
+    }
 
     public get isPrivate(): boolean {
         return this.datasetBasics.visibility.__typename === "PrivateDatasetVisibility";

@@ -53,7 +53,7 @@ export class DatasetSettingsComponent extends BaseComponent {
             accountName: this.datasetBasics.owner.accountName,
             datasetName: this.datasetBasics.name,
             tab: DatasetViewTypeEnum.Settings,
-            section: section === SettingsTabsEnum.GENERAL ? undefined : section,
+            section,
         });
     }
 

@@ -16,7 +16,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatDividerModule } from "@angular/material/divider";
 import { findElementByDataTestId, setFieldValue } from "src/app/common/helpers/base-test.helpers.spec";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
-import { DatasetEvnironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-evnironment-variables.service";
+import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
 import { of } from "rxjs";
 import { mockListEnvVariablesQuery } from "src/app/api/mock/environment-variables-and-secrets.mock";
 import { ViewDatasetEnvVar } from "src/app/api/kamu.graphql.interface";
@@ -26,7 +26,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 describe("EditKeyValueModalComponent", () => {
     let component: EditKeyValueModalComponent;
     let fixture: ComponentFixture<EditKeyValueModalComponent>;
-    let evnironmentVariablesService: DatasetEvnironmentVariablesService;
+    let evnironmentVariablesService: DatasetEnvironmentVariablesService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -73,7 +73,7 @@ describe("EditKeyValueModalComponent", () => {
         }).compileComponents();
 
         fixture = TestBed.createComponent(EditKeyValueModalComponent);
-        evnironmentVariablesService = TestBed.inject(DatasetEvnironmentVariablesService);
+        evnironmentVariablesService = TestBed.inject(DatasetEnvironmentVariablesService);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsRootFragment;
     });

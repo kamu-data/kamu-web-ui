@@ -112,7 +112,7 @@ export class ReadmeSectionComponent extends BaseComponent implements OnChanges, 
             const sqlQueries = this.readmeState.match(/(?<=```sql\s+).*?(?=\s+```)/gs);
             addMarkdownRunButton(
                 sqlQueries,
-                `/${this.datasetBasics.owner.accountName}/${this.datasetBasics.name}?${ProjectLinks.URL_QUERY_PARAM_TAB}=${DatasetViewTypeEnum.Data}&${ProjectLinks.URL_QUERY_PARAM_SQL_QUERY}`,
+                `/${this.datasetBasics.owner.accountName}/${this.datasetBasics.name}/${DatasetViewTypeEnum.Data}?${ProjectLinks.URL_QUERY_PARAM_SQL_QUERY}`,
             );
         }
     }

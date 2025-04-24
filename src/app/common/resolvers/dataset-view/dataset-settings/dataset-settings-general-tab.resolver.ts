@@ -13,17 +13,17 @@ import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { NavigationService } from "src/app/services/navigation.service";
-import { datasetSettingsActiveSectionResolver } from "../dataset-settings-active-section.resolver";
 import { isSettingsTabAccessibleHelper } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.helpers";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { DatasetMetadata } from "src/app/api/kamu.graphql.interface";
+import ProjectLinks from "src/app/project-links";
 
-export const datasetSettingsGeneralTabResolver: ResolveFn<DatasetViewData | null> = (route, state) => {
+export const datasetSettingsGeneralTabResolver: ResolveFn<DatasetViewData | null> = (route) => {
     const datasetService = inject(DatasetService);
     const datasetSubService = inject(DatasetSubscriptionsService);
     const navigationService = inject(NavigationService);
     const appConfigService = inject(AppConfigService);
-    const activeTab = datasetSettingsActiveSectionResolver(route, state) as SettingsTabsEnum;
+    const activeTab = route.data[ProjectLinks.URL_PARAM_TAB] as SettingsTabsEnum;
 
     return combineLatest([
         datasetService.datasetChanges,

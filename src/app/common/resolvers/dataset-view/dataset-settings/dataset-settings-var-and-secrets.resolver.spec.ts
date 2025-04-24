@@ -10,7 +10,7 @@ import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, RouterStateSnapsh
 import { datasetSettingsVarAndSecretsResolver } from "./dataset-settings-var-and-secrets.resolver";
 import { VariablesAndSecretsData } from "src/app/dataset-view/dataset-view.interface";
 import { AppConfigService } from "src/app/app-config.service";
-import { DatasetEvnironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-evnironment-variables.service";
+import { DatasetEvnironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { NavigationService } from "src/app/services/navigation.service";

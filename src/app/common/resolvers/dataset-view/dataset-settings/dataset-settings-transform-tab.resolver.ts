@@ -5,45 +5,13 @@
  * included in the LICENSE file.
  */
 
-import { inject } from "@angular/core";
-import { ResolveFn } from "@angular/router";
-import { combineLatest, map } from "rxjs";
-import { AppConfigService } from "src/app/app-config.service";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { NavigationService } from "src/app/services/navigation.service";
-import { datasetSettingsActiveSectionResolver } from "../dataset-settings-active-section.resolver";
-import { isSettingsTabAccessibleHelper } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.helpers";
-import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
-import { DatasetBasicsFragment, DatasetMetadata } from "src/app/api/kamu.graphql.interface";
+import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
+import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
+import { datasetSettingsGeneralTabResolver } from "./dataset-settings-general-tab.resolver";
 
-export const datasetSettingsTransformTabResolver: ResolveFn<DatasetBasicsFragment | null> = (route, state) => {
-    const datasetService = inject(DatasetService);
-    const datasetSubService = inject(DatasetSubscriptionsService);
-    const navigationService = inject(NavigationService);
-    const appConfigService = inject(AppConfigService);
-    const activeTab = datasetSettingsActiveSectionResolver(route, state) as SettingsTabsEnum;
-
-    return combineLatest([
-        datasetService.datasetChanges,
-        datasetSubService.permissionsChanges,
-        datasetSubService.overviewChanges,
-    ]).pipe(
-        map(([datasetBasics, datasetPermissions, overviewUpdate]) => {
-            if (
-                isSettingsTabAccessibleHelper(
-                    activeTab,
-                    appConfigService.featureFlags,
-                    datasetBasics,
-                    datasetPermissions,
-                    overviewUpdate.overview.metadata as DatasetMetadata,
-                )
-            ) {
-                return datasetBasics;
-            } else {
-                navigationService.navigateToPageNotFound();
-                return null;
-            }
-        }),
-    );
+export const datasetSettingsTransformTabResolver: ResolveFn<DatasetViewData | null> = (
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+) => {
+    return datasetSettingsGeneralTabResolver(route, state);
 };

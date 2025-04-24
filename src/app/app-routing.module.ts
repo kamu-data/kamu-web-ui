@@ -63,9 +63,7 @@ import { datasetFlowsTabResolver } from "./common/resolvers/dataset-view/dataset
 import { DataComponent } from "./dataset-view/additional-components/data-component/data.component";
 import { MetadataComponent } from "./dataset-view/additional-components/metadata-component/metadata.component";
 import { HistoryComponent } from "./dataset-view/additional-components/history-component/history.component";
-import { datasetHistoryTabResolver } from "./common/resolvers/dataset-view/dataset-history-tab.resolver";
 import { LineageComponent } from "./dataset-view/additional-components/lineage-component/lineage.component";
-import { datasetLineageTabResolver } from "./common/resolvers/dataset-view/dataset-lineage-tab.resolver";
 import { datasetSettingsActiveSectionResolver } from "./common/resolvers/dataset-view/dataset-settings-active-section.resolver";
 import { DatasetSettingsComponent } from "./dataset-view/additional-components/dataset-settings-component/dataset-settings.component";
 import { DatasetSettingsGeneralTabComponent } from "./dataset-view/additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.component";
@@ -78,6 +76,9 @@ import { DatasetSettingsSchedulingTabComponent } from "./dataset-view/additional
 import { DatasetSettingsCompactingTabComponent } from "./dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.component";
 import { DatasetSettingsSecretsManagerTabComponent } from "./dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-settings-secrets-manager-tab.component";
 import { datasetSettingsVarAndSecretsResolver } from "./common/resolvers/dataset-view/dataset-settings/dataset-settings-var-and-secrets.resolver";
+import { datasetSettingsSchedulingTabResolver } from "./common/resolvers/dataset-view/dataset-settings/dataset-settings-scheduling-tab.resolver";
+import { datasetSettingsAccessTabResolver } from "./common/resolvers/dataset-view/dataset-settings/dataset-settings-access-tab.resolver";
+import { datasetSettingsCompactionTabResolver } from "./common/resolvers/dataset-view/dataset-settings/dataset-settings-compaction-tab.resolver";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -215,7 +216,6 @@ export const routes: Routes = [
                         component: HistoryComponent,
                         runGuardsAndResolvers: "always",
                         resolve: {
-                            [RoutingResolvers.DATASET_VIEW_HISTORY_KEY]: datasetHistoryTabResolver,
                             [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolver,
                         },
                     },
@@ -224,7 +224,6 @@ export const routes: Routes = [
                         component: LineageComponent,
                         runGuardsAndResolvers: "always",
                         resolve: {
-                            [RoutingResolvers.DATASET_VIEW_LINEAGE_KEY]: datasetLineageTabResolver,
                             [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolver,
                         },
                     },
@@ -255,6 +254,9 @@ export const routes: Routes = [
                                 path: SettingsTabsEnum.GENERAL,
                                 component: DatasetSettingsGeneralTabComponent,
                                 runGuardsAndResolvers: "always",
+                                data: {
+                                    [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.GENERAL,
+                                },
                                 resolve: {
                                     [RoutingResolvers.DATASET_SETTINGS_GENERAL_KEY]: datasetSettingsGeneralTabResolver,
                                 },
@@ -263,41 +265,57 @@ export const routes: Routes = [
                                 path: SettingsTabsEnum.SCHEDULING,
                                 component: DatasetSettingsSchedulingTabComponent,
                                 runGuardsAndResolvers: "always",
+                                data: {
+                                    [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.SCHEDULING,
+                                },
                                 resolve: {
                                     [RoutingResolvers.DATASET_SETTINGS_SCHEDULING_KEY]:
-                                        datasetSettingsGeneralTabResolver,
-                                },
-                            },
-                            {
-                                path: SettingsTabsEnum.TRANSFORM_SETTINGS,
-                                component: DatasetSettingsTransformOptionsTabComponent,
-                                runGuardsAndResolvers: "always",
-                                resolve: {
-                                    [RoutingResolvers.DATASET_SETTINGS_TRANSFORM_KEY]:
-                                        datasetSettingsTransformTabResolver,
+                                        datasetSettingsSchedulingTabResolver,
                                 },
                             },
                             {
                                 path: SettingsTabsEnum.ACCESS,
                                 component: DatasetSettingsAccessTabComponent,
                                 runGuardsAndResolvers: "always",
+                                data: {
+                                    [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.ACCESS,
+                                },
                                 resolve: {
-                                    [RoutingResolvers.DATASET_SETTINGS_ACCESS_KEY]: datasetSettingsTransformTabResolver,
+                                    [RoutingResolvers.DATASET_SETTINGS_ACCESS_KEY]: datasetSettingsAccessTabResolver,
                                 },
                             },
+                            {
+                                path: SettingsTabsEnum.TRANSFORM_SETTINGS,
+                                component: DatasetSettingsTransformOptionsTabComponent,
+                                runGuardsAndResolvers: "always",
+                                data: {
+                                    [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.TRANSFORM_SETTINGS,
+                                },
+                                resolve: {
+                                    [RoutingResolvers.DATASET_SETTINGS_TRANSFORM_KEY]:
+                                        datasetSettingsTransformTabResolver,
+                                },
+                            },
+
                             {
                                 path: SettingsTabsEnum.COMPACTION,
                                 component: DatasetSettingsCompactingTabComponent,
                                 runGuardsAndResolvers: "always",
+                                data: {
+                                    [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.COMPACTION,
+                                },
                                 resolve: {
                                     [RoutingResolvers.DATASET_SETTINGS_COMPACTION_KEY]:
-                                        datasetSettingsTransformTabResolver,
+                                        datasetSettingsCompactionTabResolver,
                                 },
                             },
                             {
                                 path: SettingsTabsEnum.VARIABLES_AND_SECRETS,
                                 component: DatasetSettingsSecretsManagerTabComponent,
                                 runGuardsAndResolvers: "always",
+                                data: {
+                                    [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.VARIABLES_AND_SECRETS,
+                                },
                                 resolve: {
                                     [RoutingResolvers.DATASET_SETTINGS_VARIABLES_AND_SECRETS_KEY]:
                                         datasetSettingsVarAndSecretsResolver,

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetHistoryUpdate } from "../../dataset.subscriptions.interface";
 import { MaybeNull } from "src/app/interface/app.types";
@@ -13,17 +13,53 @@ import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
+import ProjectLinks from "src/app/project-links";
+import { DatasetService } from "../../dataset.service";
+import { filter, Observable } from "rxjs";
+import { NavigationEnd, Router } from "@angular/router";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 
 @Component({
     selector: "app-history",
     templateUrl: "./history.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HistoryComponent extends BaseComponent {
-    @Input(RoutingResolvers.DATASET_VIEW_HISTORY_KEY) public datasetHistoryTabData: MaybeNull<DatasetHistoryUpdate>;
+export class HistoryComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_INFO_KEY) public datasetInfo: DatasetInfo;
 
+    public datasetHistoryTabData$: Observable<MaybeNull<DatasetHistoryUpdate>>;
     private navigationService = inject(NavigationService);
+    private datasetService = inject(DatasetService);
+    private router = inject(Router);
+    private datasetSubsService = inject(DatasetSubscriptionsService);
+
+    public ngOnInit(): void {
+        this.requestDatasetHistory();
+        this.router.events
+            .pipe(filter((event) => event instanceof NavigationEnd))
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.requestDatasetHistory();
+            });
+        this.datasetHistoryTabData$ = this.datasetSubsService.historyChanges;
+    }
+
+    private requestDatasetHistory(): void {
+        this.datasetService
+            .requestDatasetHistory(
+                { accountName: this.datasetInfo.accountName, datasetName: this.datasetInfo.datasetName },
+                10,
+                this.getPageFromRoute() - 1,
+            )
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe();
+    }
+
+    private getPageFromRoute(): number {
+        const currentPage = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE);
+        return currentPage ? Number(currentPage) : 1;
+    }
 
     public onPageChange(page: number): void {
         this.navigationService.navigateToDatasetView({

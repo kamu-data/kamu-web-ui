@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { catchError, EMPTY, Observable } from "rxjs";
+import { catchError, EMPTY } from "rxjs";
 /**
  * Copyright Kamu Data, Inc. and contributors. All rights reserved.
  *
@@ -21,7 +21,7 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { NavigationService } from "src/app/services/navigation.service";
 
-export const datasetOverviewTabResolver: ResolveFn<Observable<DatasetOverviewTabData>> = () => {
+export const datasetOverviewTabResolver: ResolveFn<DatasetOverviewTabData> = () => {
     const datasetService = inject(DatasetService);
     const datasetSubsService = inject(DatasetSubscriptionsService);
     const navigationService = inject(NavigationService);

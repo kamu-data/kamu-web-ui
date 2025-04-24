@@ -12,7 +12,7 @@ import { DatasetBasicsFragment, ViewDatasetEnvVar } from "src/app/api/kamu.graph
 import { MaybeNull } from "src/app/interface/app.types";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { noWhitespaceValidator } from "src/app/common/helpers/data.helpers";
-import { DatasetEvnironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-evnironment-variables.service";
+import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
 import { EnvAndSecretsFormType } from "./edit-key-value-modal.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
@@ -25,7 +25,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 export class EditKeyValueModalComponent extends BaseComponent implements OnInit {
     public activeModal = inject(NgbActiveModal);
     private fb = inject(FormBuilder);
-    private evnironmentVariablesService = inject(DatasetEvnironmentVariablesService);
+    private evnironmentVariablesService = inject(DatasetEnvironmentVariablesService);
 
     @Input({ required: true }) public row: MaybeNull<ViewDatasetEnvVar>;
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

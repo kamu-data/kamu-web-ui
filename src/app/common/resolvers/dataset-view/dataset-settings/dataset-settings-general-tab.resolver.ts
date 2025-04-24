@@ -18,7 +18,7 @@ import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dat
 import { DatasetMetadata } from "src/app/api/kamu.graphql.interface";
 import ProjectLinks from "src/app/project-links";
 
-export const datasetSettingsGeneralTabResolver: ResolveFn<DatasetViewData | null> = (route) => {
+export const datasetSettingsGeneralTabResolverFn: ResolveFn<DatasetViewData | null> = (route) => {
     const datasetService = inject(DatasetService);
     const datasetSubService = inject(DatasetSubscriptionsService);
     const navigationService = inject(NavigationService);

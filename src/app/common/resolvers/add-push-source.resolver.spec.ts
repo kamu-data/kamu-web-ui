@@ -7,7 +7,7 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, Router } from "@angular/router";
-import { addPushSourceResolver } from "./add-push-source.resolver";
+import { addPushSourceResolverFn } from "./add-push-source.resolver";
 import { EditAddPushSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/edit-add-push-source.service";
 import { Apollo } from "apollo-angular";
 import { of } from "rxjs";
@@ -15,13 +15,13 @@ import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "src/app/api/mock/dataset.m
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import ProjectLinks from "src/app/project-links";
 
-describe("addPushSourceResolver", () => {
+describe("addPushSourceResolverFn", () => {
     let editService: EditAddPushSourceService;
     let routeSnapshot: ActivatedRouteSnapshot;
     let router: Router;
 
     const executeResolver: ResolveFn<string> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => addPushSourceResolver(...resolverParameters));
+        TestBed.runInInjectionContext(() => addPushSourceResolverFn(...resolverParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({

@@ -7,7 +7,7 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { flowDetailsResolver } from "./flow-details.resolver";
+import { flowDetailsResolverFn } from "./flow-details.resolver";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { MaybeNull } from "src/app/interface/app.types";
 import { Apollo } from "apollo-angular";
@@ -19,11 +19,11 @@ import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "src/app/api/mock/dataset.m
 import { ToastrModule } from "ngx-toastr";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 
-describe("flowDetailsResolver", () => {
+describe("flowDetailsResolverFn", () => {
     let datasetService: DatasetService;
 
     const executeResolver: ResolveFn<MaybeNull<DatasetFlowByIdResponse>> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => flowDetailsResolver(...resolverParameters));
+        TestBed.runInInjectionContext(() => flowDetailsResolverFn(...resolverParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({

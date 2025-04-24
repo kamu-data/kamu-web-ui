@@ -20,20 +20,20 @@ import { LoginComponent } from "./auth/login/login.component";
 import { LoginService } from "./auth/login/login.service";
 import { LoginMethod } from "./app-config.model";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { accountSettingsAccessTokensResolver } from "./common/resolvers/account-settings-access-tokens.resolver";
+import { accountSettingsAccessTokensResolverFn } from "./common/resolvers/account-settings-access-tokens.resolver";
 import { ToastrModule } from "ngx-toastr";
 import { mockAccountDetails } from "./api/mock/auth.mock";
 import { of } from "rxjs";
 import { AccessTokenConnection } from "./api/kamu.graphql.interface";
 import { mockListAccessTokensQuery } from "./api/mock/access-token.mock";
-import { searchResolver } from "./common/resolvers/search.resolver";
+import { searchResolverFn } from "./common/resolvers/search.resolver";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetSearchResult,
     mockFullPowerDatasetPermissionsFragment,
 } from "./search/mock.data";
-import { datasetViewResolver } from "./common/resolvers/dataset-view/dataset-view.resolver";
-import { datasetOverviewTabResolver } from "./common/resolvers/dataset-view/dataset-overview-tab.resolver";
+import { datasetViewResolverFn } from "./common/resolvers/dataset-view/dataset-view.resolver";
+import { datasetOverviewTabResolverFn } from "./common/resolvers/dataset-view/dataset-overview-tab.resolver";
 import {
     mockMetadataDerivedUpdate,
     mockOverviewDataUpdate,
@@ -62,19 +62,19 @@ describe("Router", () => {
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
                 {
-                    provide: accountSettingsAccessTokensResolver,
+                    provide: accountSettingsAccessTokensResolverFn,
                     useValue: {
                         resolve: () => of(mockListAccessTokensQuery.auth.listAccessTokens as AccessTokenConnection),
                     },
                 },
                 {
-                    provide: searchResolver,
+                    provide: searchResolverFn,
                     useValue: {
                         resolve: () => of(mockDatasetSearchResult),
                     },
                 },
                 {
-                    provide: datasetViewResolver,
+                    provide: datasetViewResolverFn,
                     useValue: {
                         resolve: () =>
                             of({
@@ -84,7 +84,7 @@ describe("Router", () => {
                     },
                 },
                 {
-                    provide: datasetOverviewTabResolver,
+                    provide: datasetOverviewTabResolverFn,
                     useValue: {
                         resolve: () =>
                             of({

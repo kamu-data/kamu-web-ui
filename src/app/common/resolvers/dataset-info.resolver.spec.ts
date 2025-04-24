@@ -7,12 +7,12 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, Params, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { datasetInfoResolver } from "./dataset-info.resolver";
+import { datasetInfoResolverFn } from "./dataset-info.resolver";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 
-describe("datasetInfoResolver", () => {
+describe("datasetInfoResolverFn", () => {
     const executeResolver: ResolveFn<DatasetInfo> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => datasetInfoResolver(...resolverParameters));
+        TestBed.runInInjectionContext(() => datasetInfoResolverFn(...resolverParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({});

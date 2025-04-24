@@ -7,8 +7,7 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, Router } from "@angular/router";
-
-import { accountSettingsAccessTokensResolver } from "./account-settings-access-tokens.resolver";
+import { accountSettingsAccessTokensResolverFn } from "./account-settings-access-tokens.resolver";
 import { AccessTokenConnection } from "src/app/api/kamu.graphql.interface";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { Apollo } from "apollo-angular";
@@ -18,13 +17,13 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import ProjectLinks from "src/app/project-links";
 
-describe("accountSettingsAccessTokensResolver", () => {
+describe("accountSettingsAccessTokensResolverFn", () => {
     let router: Router;
     let accessTokenService: AccessTokenService;
     let loggedUserService: LoggedUserService;
 
     const executeResolver: ResolveFn<AccessTokenConnection> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => accountSettingsAccessTokensResolver(...resolverParameters));
+        TestBed.runInInjectionContext(() => accountSettingsAccessTokensResolverFn(...resolverParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({

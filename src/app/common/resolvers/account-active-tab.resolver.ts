@@ -9,7 +9,7 @@ import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 import { AccountTabs } from "src/app/account/account.constants";
 import ProjectLinks from "src/app/project-links";
 
-export const accountActiveTabResolver: ResolveFn<AccountTabs> = (route: ActivatedRouteSnapshot) => {
+export const accountActiveTabResolverFn: ResolveFn<AccountTabs> = (route: ActivatedRouteSnapshot) => {
     const activeTab = route.children[0].children[0].data[ProjectLinks.URL_PARAM_TAB] as AccountTabs;
     return activeTab;
 };

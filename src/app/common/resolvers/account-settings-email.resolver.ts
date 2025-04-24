@@ -11,7 +11,7 @@ import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/ac
 import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 
-export const accountSettingsEmailResolver: ResolveFn<AccountWithEmailFragment> = () => {
+export const accountSettingsEmailResolverFn: ResolveFn<AccountWithEmailFragment> = () => {
     const accountEmailService = inject(AccountEmailService);
     const loggedUserService = inject(LoggedUserService);
     return accountEmailService.fetchAccountWithEmail(loggedUserService.currentlyLoggedInUser.accountName);

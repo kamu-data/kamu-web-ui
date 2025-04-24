@@ -7,7 +7,7 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, Router } from "@angular/router";
-import { searchResolver } from "./search.resolver";
+import { searchResolverFn } from "./search.resolver";
 import ProjectLinks from "src/app/project-links";
 import { SearchService } from "src/app/search/search.service";
 import { Apollo } from "apollo-angular";
@@ -18,7 +18,7 @@ import { mockDatasetSearchResult } from "src/app/search/mock.data";
 import { ToastrModule } from "ngx-toastr";
 import { AppConfigService } from "src/app/app-config.service";
 
-describe("searchResolver", () => {
+describe("searchResolverFn", () => {
     let routeSnapshot: ActivatedRouteSnapshot;
     let router: Router;
     let searchService: SearchService;
@@ -29,7 +29,7 @@ describe("searchResolver", () => {
     const MOCK_QUERY = "mock-query";
 
     const executeResolver: ResolveFn<Observable<DatasetSearchResult>> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => searchResolver(...resolverParameters));
+        TestBed.runInInjectionContext(() => searchResolverFn(...resolverParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({

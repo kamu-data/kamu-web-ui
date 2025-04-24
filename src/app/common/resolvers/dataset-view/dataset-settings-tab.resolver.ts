@@ -7,8 +7,8 @@
 
 import { ResolveFn } from "@angular/router";
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
-import { datasetOverviewTabResolver } from "./dataset-overview-tab.resolver";
+import { datasetOverviewTabResolverFn } from "./dataset-overview-tab.resolver";
 
-export const datasetSettingsTabResolver: ResolveFn<DatasetOverviewTabData> = (route, state) => {
-    return datasetOverviewTabResolver(route, state);
+export const datasetSettingsTabResolverFn: ResolveFn<DatasetOverviewTabData> = (route, state) => {
+    return datasetOverviewTabResolverFn(route, state);
 };

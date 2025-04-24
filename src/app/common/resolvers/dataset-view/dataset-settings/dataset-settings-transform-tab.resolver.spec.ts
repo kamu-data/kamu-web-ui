@@ -7,10 +7,9 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { datasetSettingsTransformTabResolver } from "./dataset-settings-transform-tab.resolver";
-import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
+import { datasetSettingsTransformTabResolverFn } from "./dataset-settings-transform-tab.resolver";
 import { Apollo } from "apollo-angular";
-import { of, Observable } from "rxjs";
+import { of } from "rxjs";
 import { AppConfigService } from "src/app/app-config.service";
 import AppValues from "src/app/common/values/app.values";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
@@ -20,15 +19,16 @@ import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscr
 import ProjectLinks from "src/app/project-links";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
+import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 
-describe("datasetSettingsTransformTabResolver", () => {
+describe("datasetSettingsTransformTabResolverFn", () => {
     let datasetService: DatasetService;
     let datasetSubService: DatasetSubscriptionsService;
     let navigationService: NavigationService;
     let appConfigService: AppConfigService;
 
-    const executeResolver: ResolveFn<DatasetBasicsFragment | null> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => datasetSettingsTransformTabResolver(...resolverParameters));
+    const executeResolver: ResolveFn<DatasetViewData | null> = (...resolverParameters) =>
+        TestBed.runInInjectionContext(() => datasetSettingsTransformTabResolverFn(...resolverParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -61,9 +61,10 @@ describe("datasetSettingsTransformTabResolver", () => {
         const mockState = {
             url: `/kamu/datasetName/${ProjectLinks.URL_SETTINGS}/${SettingsTabsEnum.TRANSFORM_SETTINGS}`,
         } as RouterStateSnapshot;
-        const result = executeResolver(mockRoute, mockState) as Observable<DatasetBasicsFragment>;
-        result.subscribe((data) => {
-            expect(data).toEqual(mockDatasetBasicsDerivedFragment);
+        const result = executeResolver(mockRoute, mockState) as DatasetViewData;
+        expect(result).toEqual({
+            datasetBasics: mockDatasetBasicsDerivedFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
         });
     });
 
@@ -78,11 +79,7 @@ describe("datasetSettingsTransformTabResolver", () => {
         const mockState = {
             url: `/kamu/datasetName/${ProjectLinks.URL_SETTINGS}/wrongTab`,
         } as RouterStateSnapshot;
-        const result = executeResolver(mockRoute, mockState) as Observable<DatasetBasicsFragment>;
-        result.subscribe({
-            complete: () => {
-                expect(navigateToPageNotFoundSpy).toHaveBeenCalledTimes(1);
-            },
-        });
+        executeResolver(mockRoute, mockState) as DatasetViewData;
+        expect(navigateToPageNotFoundSpy).toHaveBeenCalledTimes(1);
     });
 });

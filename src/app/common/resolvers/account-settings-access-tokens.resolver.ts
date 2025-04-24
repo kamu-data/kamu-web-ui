@@ -12,7 +12,7 @@ import { AccessTokenConnection } from "src/app/api/kamu.graphql.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import ProjectLinks from "src/app/project-links";
 
-export const accountSettingsAccessTokensResolver: ResolveFn<AccessTokenConnection> = (
+export const accountSettingsAccessTokensResolverFn: ResolveFn<AccessTokenConnection> = (
     route: ActivatedRouteSnapshot,
 ) => {
     const accessTokenService = inject(AccessTokenService);

@@ -7,7 +7,7 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { datasetFlowsTabResolver } from "./dataset-flows-tab.resolver";
+import { datasetFlowsTabResolverFn } from "./dataset-flows-tab.resolver";
 import { Observable } from "rxjs";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { TEST_ACCOUNT_NAME } from "src/app/api/mock/dataset.mock";
@@ -18,11 +18,11 @@ import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscr
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 
-describe("datasetFlowsTabResolver", () => {
+describe("datasetFlowsTabResolverFn", () => {
     let datasetService: DatasetService;
     let datasetSubsService: DatasetSubscriptionsService;
-    const executeResolver: ResolveFn<Observable<DatasetOverviewTabData>> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => datasetFlowsTabResolver(...resolverParameters));
+    const executeResolver: ResolveFn<DatasetOverviewTabData> = (...resolverParameters) =>
+        TestBed.runInInjectionContext(() => datasetFlowsTabResolverFn(...resolverParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({

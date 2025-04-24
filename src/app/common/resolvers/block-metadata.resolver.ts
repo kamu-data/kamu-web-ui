@@ -14,7 +14,7 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 
-export const blockMetadataResolver: ResolveFn<MetadataBlockInfo> = (route: ActivatedRouteSnapshot) => {
+export const blockMetadataResolverFn: ResolveFn<MetadataBlockInfo> = (route: ActivatedRouteSnapshot) => {
     const blockService = inject(BlockService);
     const navigationService = inject(NavigationService);
     const blockHash = route.paramMap.get(ProjectLinks.URL_PARAM_BLOCK_HASH) as string;

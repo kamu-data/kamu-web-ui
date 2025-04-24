@@ -15,7 +15,7 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
 import { MaybeNull } from "src/app/interface/app.types";
 
-export const flowDetailsResolver: ResolveFn<MaybeNull<DatasetFlowByIdResponse>> = (route: ActivatedRouteSnapshot) => {
+export const flowDetailsResolverFn: ResolveFn<MaybeNull<DatasetFlowByIdResponse>> = (route: ActivatedRouteSnapshot) => {
     const datasetService = inject(DatasetService);
     const datasetFlowsService = inject(DatasetFlowsService);
 

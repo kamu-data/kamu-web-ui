@@ -13,7 +13,7 @@ import { EditAddPushSourceService } from "src/app/dataset-view/additional-compon
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
 
-export const addPushSourceResolver: ResolveFn<string> = (route: ActivatedRouteSnapshot) => {
+export const addPushSourceResolverFn: ResolveFn<string> = (route: ActivatedRouteSnapshot) => {
     const editService = inject(EditAddPushSourceService);
     const datasetInfo = {
         accountName: route.paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME),

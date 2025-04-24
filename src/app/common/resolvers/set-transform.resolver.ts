@@ -13,7 +13,7 @@ import { EditSetTransformService } from "src/app/dataset-view/additional-compone
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
 
-export const setTransformResolver: ResolveFn<string> = (route: ActivatedRouteSnapshot) => {
+export const setTransformResolverFn: ResolveFn<string> = (route: ActivatedRouteSnapshot) => {
     const editService = inject(EditSetTransformService);
     const datasetInfo = {
         accountName: route.paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME),

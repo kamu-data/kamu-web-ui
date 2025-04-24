@@ -7,7 +7,7 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRoute, ActivatedRouteSnapshot, convertToParamMap, ResolveFn, Router } from "@angular/router";
-import { accountDatasetsResolver } from "./account-datasets.resolver";
+import { accountDatasetsResolverFn } from "./account-datasets.resolver";
 import { DatasetsAccountResolverResponse } from "src/app/interface/dataset.interface";
 import { Apollo } from "apollo-angular";
 import { AccountService } from "src/app/account/account.service";
@@ -16,13 +16,13 @@ import { TEST_ACCOUNT_NAME } from "src/app/api/mock/dataset.mock";
 import { ToastrModule } from "ngx-toastr";
 import { of } from "rxjs";
 
-describe("accountDatasetsResolver", () => {
+describe("accountDatasetsResolverFn", () => {
     let router: Router;
     let accountService: AccountService;
     let getDatasetsByAccountNameSpy: jasmine.Spy;
 
     const executeResolver: ResolveFn<DatasetsAccountResolverResponse> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => accountDatasetsResolver(...resolverParameters));
+        TestBed.runInInjectionContext(() => accountDatasetsResolverFn(...resolverParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({

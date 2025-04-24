@@ -7,13 +7,12 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ResolveFn } from "@angular/router";
-
-import { datasetDataTabResolver } from "./dataset-data-tab.resolver";
+import { datasetDataTabResolverFn } from "./dataset-data-tab.resolver";
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 
-describe("datasetDataTabResolver", () => {
+describe("datasetDataTabResolverFn", () => {
     const executeResolver: ResolveFn<DatasetOverviewTabData> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => datasetDataTabResolver(...resolverParameters));
+        TestBed.runInInjectionContext(() => datasetDataTabResolverFn(...resolverParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({});

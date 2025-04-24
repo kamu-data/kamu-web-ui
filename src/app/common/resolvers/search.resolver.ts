@@ -13,7 +13,7 @@ import { Observable, of, switchMap } from "rxjs";
 import { DatasetSearchResult } from "src/app/interface/search.interface";
 import { AppConfigService } from "src/app/app-config.service";
 
-export const searchResolver: ResolveFn<Observable<DatasetSearchResult>> = (route: ActivatedRouteSnapshot) => {
+export const searchResolverFn: ResolveFn<Observable<DatasetSearchResult>> = (route: ActivatedRouteSnapshot) => {
     const searchService = inject(SearchService);
     const appConfigService = inject(AppConfigService);
     const isSemanticSearchAvailable =

@@ -7,7 +7,7 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, Router } from "@angular/router";
-import { accountSettingsEmailResolver } from "./account-settings-email.resolver";
+import { accountSettingsEmailResolverFn } from "./account-settings-email.resolver";
 import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -16,13 +16,13 @@ import { Apollo } from "apollo-angular";
 import { ToastrModule } from "ngx-toastr";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 
-describe("accountSettingsEmailResolver", () => {
+describe("accountSettingsEmailResolverFn", () => {
     let accountEmailService: AccountEmailService;
     let loggedUserService: LoggedUserService;
     let router: Router;
 
     const executeResolver: ResolveFn<AccountWithEmailFragment> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => accountSettingsEmailResolver(...resolverParameters));
+        TestBed.runInInjectionContext(() => accountSettingsEmailResolverFn(...resolverParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({

@@ -7,7 +7,7 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, Router } from "@angular/router";
-import { setTransformResolver } from "./set-transform.resolver";
+import { setTransformResolverFn } from "./set-transform.resolver";
 import { Apollo } from "apollo-angular";
 import { EditSetTransformService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/edit-set-transform..service";
 import { of } from "rxjs";
@@ -15,13 +15,13 @@ import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "src/app/api/mock/dataset.m
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import ProjectLinks from "src/app/project-links";
 
-describe("setTransformResolver", () => {
+describe("setTransformResolverFn", () => {
     let editService: EditSetTransformService;
     let routeSnapshot: ActivatedRouteSnapshot;
     let router: Router;
 
     const executeResolver: ResolveFn<string> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => setTransformResolver(...resolverParameters));
+        TestBed.runInInjectionContext(() => setTransformResolverFn(...resolverParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({

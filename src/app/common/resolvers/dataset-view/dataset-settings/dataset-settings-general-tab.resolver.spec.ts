@@ -7,7 +7,7 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { datasetSettingsGeneralTabResolver } from "./dataset-settings-general-tab.resolver";
+import { datasetSettingsGeneralTabResolverFn } from "./dataset-settings-general-tab.resolver";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 import { Apollo } from "apollo-angular";
 import { AppConfigService } from "src/app/app-config.service";
@@ -22,14 +22,14 @@ import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment 
 import { Observable } from "rxjs";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 
-describe("datasetSettingsGeneralTabResolver", () => {
+describe("datasetSettingsGeneralTabResolverFn", () => {
     let datasetService: DatasetService;
     let datasetSubService: DatasetSubscriptionsService;
     let navigationService: NavigationService;
     let appConfigService: AppConfigService;
 
     const executeResolver: ResolveFn<DatasetViewData | null> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => datasetSettingsGeneralTabResolver(...resolverParameters));
+        TestBed.runInInjectionContext(() => datasetSettingsGeneralTabResolverFn(...resolverParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({

@@ -14,7 +14,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 
-export const datasetViewResolver: ResolveFn<DatasetViewData> = (route: ActivatedRouteSnapshot) => {
+export const datasetViewResolverFn: ResolveFn<DatasetViewData> = (route: ActivatedRouteSnapshot) => {
     const datasetService = inject(DatasetService);
     const datasetSubService = inject(DatasetSubscriptionsService);
     const navigationService = inject(NavigationService);

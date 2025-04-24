@@ -13,7 +13,7 @@ import { EditPollingSourceService } from "src/app/dataset-view/additional-compon
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
 
-export const addPollingSourceResolver: ResolveFn<string> = (route: ActivatedRouteSnapshot) => {
+export const addPollingSourceResolverFn: ResolveFn<string> = (route: ActivatedRouteSnapshot) => {
     const editService = inject(EditPollingSourceService);
     const datasetInfo = {
         accountName: route.paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME),

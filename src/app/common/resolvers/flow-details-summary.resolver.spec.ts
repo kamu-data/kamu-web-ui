@@ -7,16 +7,16 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, Data, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { flowDetailsSummaryResolver } from "./flow-details-summary.resolver";
+import { flowDetailsSummaryResolverFn } from "./flow-details-summary.resolver";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { Apollo } from "apollo-angular";
 import { ToastrModule } from "ngx-toastr";
 import RoutingResolvers from "./routing-resolvers";
 import { mockDatasetFlowByIdResponse } from "src/app/api/mock/dataset-flow.mock";
 
-describe("flowDetailsSummaryResolver", () => {
+describe("flowDetailsSummaryResolverFn", () => {
     const executeResolver: ResolveFn<DatasetFlowByIdResponse> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => flowDetailsSummaryResolver(...resolverParameters));
+        TestBed.runInInjectionContext(() => flowDetailsSummaryResolverFn(...resolverParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({

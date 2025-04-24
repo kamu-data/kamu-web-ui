@@ -7,13 +7,13 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { datasetSettingsActiveSectionResolver } from "./dataset-settings-active-section.resolver";
+import { datasetSettingsActiveSectionResolverFn } from "./dataset-settings-active-section.resolver";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import ProjectLinks from "src/app/project-links";
 
-describe("datasetSettingsActiveSectionResolver", () => {
+describe("datasetSettingsActiveSectionResolverFn", () => {
     const executeResolver: ResolveFn<SettingsTabsEnum> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => datasetSettingsActiveSectionResolver(...resolverParameters));
+        TestBed.runInInjectionContext(() => datasetSettingsActiveSectionResolverFn(...resolverParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({});

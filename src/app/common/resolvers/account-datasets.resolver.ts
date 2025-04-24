@@ -12,7 +12,9 @@ import { AccountService } from "src/app/account/account.service";
 import { DatasetsAccountResolverResponse, DatasetsAccountResponse } from "src/app/interface/dataset.interface";
 import ProjectLinks from "src/app/project-links";
 
-export const accountDatasetsResolver: ResolveFn<DatasetsAccountResolverResponse> = (route: ActivatedRouteSnapshot) => {
+export const accountDatasetsResolverFn: ResolveFn<DatasetsAccountResolverResponse> = (
+    route: ActivatedRouteSnapshot,
+) => {
     const accountService = inject(AccountService);
     const accountName = route.parent?.parent?.paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME) as string;
     const page = route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE) ?? 1;

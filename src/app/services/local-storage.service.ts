@@ -14,8 +14,8 @@ export class LocalStorageService {
         return localStorage.getItem(AppValues.LOCAL_STORAGE_ACCESS_TOKEN);
     }
 
-    public get loginCallbackUrl(): string | null {
-        return localStorage.getItem(AppValues.LOCAL_STORAGE_LOGIN_CALLBACK_URL);
+    public get loginDeviceCode(): string | null {
+        return localStorage.getItem(AppValues.LOCAL_STORAGE_LOGIN_DEVICE_CODE);
     }
 
     public setAccessToken(token: string | null) {
@@ -26,11 +26,11 @@ export class LocalStorageService {
         }
     }
 
-    public setLoginCallbackUrl(loginCallbackUrl: string | null) {
-        if (loginCallbackUrl) {
-            localStorage.setItem(AppValues.LOCAL_STORAGE_LOGIN_CALLBACK_URL, loginCallbackUrl);
+    public setDeviceCode(code: string | null) {
+        if (code) {
+            localStorage.setItem(AppValues.LOCAL_STORAGE_LOGIN_DEVICE_CODE, code);
         } else {
-            localStorage.removeItem(AppValues.LOCAL_STORAGE_LOGIN_CALLBACK_URL);
+            localStorage.removeItem(AppValues.LOCAL_STORAGE_LOGIN_DEVICE_CODE);
         }
     }
 

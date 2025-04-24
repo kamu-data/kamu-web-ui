@@ -7,7 +7,7 @@
 
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
-import { datasetSettingsGeneralTabResolverFn } from "./dataset-settings-general-tab.resolver";
+import { datasetSettingsGeneralTabResolverFn } from "../../general/resolver/dataset-settings-general-tab.resolver";
 
 export const datasetSettingsCompactionTabResolverFn: ResolveFn<DatasetViewData | null> = (
     route: ActivatedRouteSnapshot,

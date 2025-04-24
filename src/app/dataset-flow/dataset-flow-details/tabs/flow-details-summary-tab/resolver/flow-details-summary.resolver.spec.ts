@@ -11,7 +11,7 @@ import { flowDetailsSummaryResolverFn } from "./flow-details-summary.resolver";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { Apollo } from "apollo-angular";
 import { ToastrModule } from "ngx-toastr";
-import RoutingResolvers from "./routing-resolvers";
+import RoutingResolvers from "../../../../../common/resolvers/routing-resolvers";
 import { mockDatasetFlowByIdResponse } from "src/app/api/mock/dataset-flow.mock";
 
 describe("flowDetailsSummaryResolverFn", () => {

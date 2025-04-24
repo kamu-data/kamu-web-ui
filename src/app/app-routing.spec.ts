@@ -20,20 +20,20 @@ import { LoginComponent } from "./auth/login/login.component";
 import { LoginService } from "./auth/login/login.service";
 import { LoginMethod } from "./app-config.model";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { accountSettingsAccessTokensResolverFn } from "./common/resolvers/account-settings-access-tokens.resolver";
+import { accountSettingsAccessTokensResolverFn } from "./account/settings/tabs/access-tokens-tab/resolver/account-settings-access-tokens.resolver";
 import { ToastrModule } from "ngx-toastr";
 import { mockAccountDetails } from "./api/mock/auth.mock";
 import { of } from "rxjs";
 import { AccessTokenConnection } from "./api/kamu.graphql.interface";
 import { mockListAccessTokensQuery } from "./api/mock/access-token.mock";
-import { searchResolverFn } from "./common/resolvers/search.resolver";
+import { searchResolverFn } from "./search/resolver/search.resolver";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetSearchResult,
     mockFullPowerDatasetPermissionsFragment,
 } from "./search/mock.data";
-import { datasetViewResolverFn } from "./common/resolvers/dataset-view/dataset-view.resolver";
-import { datasetOverviewTabResolverFn } from "./common/resolvers/dataset-view/dataset-overview-tab.resolver";
+import { datasetViewResolverFn } from "./dataset-view/resolvers/dataset-view.resolver";
+import { datasetOverviewTabResolverFn } from "./dataset-view/additional-components/overview-component/resolver/dataset-overview-tab.resolver";
 import {
     mockMetadataDerivedUpdate,
     mockOverviewDataUpdate,

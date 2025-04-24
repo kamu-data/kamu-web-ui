@@ -24,7 +24,7 @@ describe("datasetOverviewTabResolver", () => {
     let datasetSubsService: DatasetSubscriptionsService;
     let navigationService: NavigationService;
 
-    const executeResolver: ResolveFn<Observable<DatasetOverviewTabData>> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<DatasetOverviewTabData> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => datasetOverviewTabResolver(...resolverParameters));
 
     beforeEach(() => {

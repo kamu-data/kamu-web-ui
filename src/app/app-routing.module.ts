@@ -53,7 +53,6 @@ import { AccessTokensTabComponent } from "./account/settings/tabs/access-tokens-
 import { EmailsTabComponent } from "./account/settings/tabs/emails-tab/emails-tab.component";
 import { accountSettingsEmailResolver } from "./common/resolvers/account-settings-email.resolver";
 import { accountSettingsAccessTokensResolver } from "./common/resolvers/account-settings-access-tokens.resolver";
-import { activeTabResolver } from "./common/resolvers/active-tab.resolver";
 import { DatasetViewTypeEnum } from "./dataset-view/dataset-view.interface";
 import { OverviewComponent } from "./dataset-view/additional-components/overview-component/overview.component";
 import { datasetOverviewTabResolver } from "./common/resolvers/dataset-view/dataset-overview-tab.resolver";
@@ -79,6 +78,13 @@ import { datasetSettingsVarAndSecretsResolver } from "./common/resolvers/dataset
 import { datasetSettingsSchedulingTabResolver } from "./common/resolvers/dataset-view/dataset-settings/dataset-settings-scheduling-tab.resolver";
 import { datasetSettingsAccessTabResolver } from "./common/resolvers/dataset-view/dataset-settings/dataset-settings-access-tab.resolver";
 import { datasetSettingsCompactionTabResolver } from "./common/resolvers/dataset-view/dataset-settings/dataset-settings-compaction-tab.resolver";
+import { datasetDataTabResolver } from "./common/resolvers/dataset-view/dataset-data-tab.resolver";
+import { datasetMetadataTabResolver } from "./common/resolvers/dataset-view/dataset-metadata-tab.resolver";
+import { datasetSettingsTabResolver } from "./common/resolvers/dataset-view/dataset-settings-tab.resolver";
+import { accountSettingsActiveTabResolver } from "./common/resolvers/account-settings-active-tab.resolver";
+import { accountActiveTabResolver } from "./common/resolvers/account-active-tab.resolver";
+import { datasetViewActiveTabResolver } from "./common/resolvers/dataset-view/dataset-view-active-tab.resolver";
+import { flowDetailsActiveTabResolver } from "./common/resolvers/flow-details-active-tab.resolver";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -125,7 +131,7 @@ export const routes: Routes = [
         canActivate: [AuthenticatedGuard],
         component: AccountSettingsComponent,
         runGuardsAndResolvers: "always",
-        resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_ACTIVE_TAB_KEY]: activeTabResolver },
+        resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_ACTIVE_TAB_KEY]: accountSettingsActiveTabResolver },
         children: [
             {
                 path: "",
@@ -135,12 +141,18 @@ export const routes: Routes = [
             {
                 path: AccountSettingsTabs.ACCESS_TOKENS,
                 component: AccessTokensTabComponent,
+                data: {
+                    [ProjectLinks.URL_PARAM_TAB]: AccountSettingsTabs.ACCESS_TOKENS,
+                },
                 runGuardsAndResolvers: "always",
                 resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_ACCESS_TOKENS_KEY]: accountSettingsAccessTokensResolver },
             },
             {
                 path: AccountSettingsTabs.EMAILS,
                 component: EmailsTabComponent,
+                data: {
+                    [ProjectLinks.URL_PARAM_TAB]: AccountSettingsTabs.EMAILS,
+                },
                 runGuardsAndResolvers: "always",
                 resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_EMAIL_KEY]: accountSettingsEmailResolver },
             },
@@ -154,7 +166,7 @@ export const routes: Routes = [
                 component: AccountComponent,
                 canActivate: [accountGuard],
                 runGuardsAndResolvers: "always",
-                resolve: { [RoutingResolvers.ACCOUNT_ACTIVE_TAB_KEY]: activeTabResolver },
+                resolve: { [RoutingResolvers.ACCOUNT_ACTIVE_TAB_KEY]: accountActiveTabResolver },
                 children: [
                     {
                         path: ProjectLinks.URL_ACCOUNT_SELECT,
@@ -167,11 +179,17 @@ export const routes: Routes = [
                             {
                                 path: AccountTabs.DATASETS,
                                 component: DatasetsTabComponent,
+                                data: {
+                                    [ProjectLinks.URL_PARAM_TAB]: AccountTabs.DATASETS,
+                                },
                                 resolve: { [RoutingResolvers.ACCOUNT_DATASETS_KEY]: accountDatasetsResolver },
                                 runGuardsAndResolvers: "always",
                             },
                             {
                                 path: AccountTabs.FLOWS,
+                                data: {
+                                    [ProjectLinks.URL_PARAM_TAB]: AccountTabs.FLOWS,
+                                },
                                 component: AccountFlowsTabComponent,
                             },
                         ],
@@ -184,7 +202,7 @@ export const routes: Routes = [
                 runGuardsAndResolvers: "always",
                 resolve: {
                     [RoutingResolvers.DATASET_VIEW_KEY]: datasetViewResolver,
-                    [RoutingResolvers.DATASET_VIEW_ACTIVE_TAB_KEY]: activeTabResolver,
+                    [RoutingResolvers.DATASET_VIEW_ACTIVE_TAB_KEY]: datasetViewActiveTabResolver,
                     [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolver,
                 },
                 children: [
@@ -195,26 +213,39 @@ export const routes: Routes = [
                     },
                     {
                         path: "",
+
                         component: OverviewComponent,
                         runGuardsAndResolvers: "always",
+                        data: {
+                            [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Overview,
+                        },
                         resolve: { [RoutingResolvers.DATASET_VIEW_OVERVIEW_KEY]: datasetOverviewTabResolver },
                     },
                     {
                         path: DatasetViewTypeEnum.Data,
                         component: DataComponent,
                         runGuardsAndResolvers: "always",
-                        resolve: { [RoutingResolvers.DATASET_VIEW_DATA_KEY]: datasetOverviewTabResolver },
+                        data: {
+                            [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Data,
+                        },
+                        resolve: { [RoutingResolvers.DATASET_VIEW_DATA_KEY]: datasetDataTabResolver },
                     },
                     {
                         path: DatasetViewTypeEnum.Metadata,
                         component: MetadataComponent,
                         runGuardsAndResolvers: "always",
-                        resolve: { [RoutingResolvers.DATASET_VIEW_METADATA_KEY]: datasetOverviewTabResolver },
+                        data: {
+                            [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Metadata,
+                        },
+                        resolve: { [RoutingResolvers.DATASET_VIEW_METADATA_KEY]: datasetMetadataTabResolver },
                     },
                     {
                         path: DatasetViewTypeEnum.History,
                         component: HistoryComponent,
                         runGuardsAndResolvers: "always",
+                        data: {
+                            [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.History,
+                        },
                         resolve: {
                             [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolver,
                         },
@@ -223,6 +254,9 @@ export const routes: Routes = [
                         path: DatasetViewTypeEnum.Lineage,
                         component: LineageComponent,
                         runGuardsAndResolvers: "always",
+                        data: {
+                            [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Lineage,
+                        },
                         resolve: {
                             [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolver,
                         },
@@ -231,6 +265,9 @@ export const routes: Routes = [
                         path: DatasetViewTypeEnum.Flows,
                         component: FlowsComponent,
                         runGuardsAndResolvers: "always",
+                        data: {
+                            [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Flows,
+                        },
                         resolve: { [RoutingResolvers.DATASET_VIEW_FLOWS_KEY]: datasetFlowsTabResolver },
                         canActivate: [AuthenticatedGuard],
                     },
@@ -239,8 +276,11 @@ export const routes: Routes = [
                         component: DatasetSettingsComponent,
                         runGuardsAndResolvers: "always",
                         canActivate: [AuthenticatedGuard],
+                        data: {
+                            [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Settings,
+                        },
                         resolve: {
-                            [RoutingResolvers.DATASET_VIEW_SETTINGS_KEY]: datasetOverviewTabResolver,
+                            [RoutingResolvers.DATASET_VIEW_SETTINGS_KEY]: datasetSettingsTabResolver,
                             [RoutingResolvers.DATASET_VIEW_SETTINGS_ACTIVE_SECTION_KEY]:
                                 datasetSettingsActiveSectionResolver,
                         },
@@ -342,7 +382,7 @@ export const routes: Routes = [
                 canActivate: [AuthenticatedGuard],
                 runGuardsAndResolvers: "always",
                 resolve: {
-                    [RoutingResolvers.FLOW_DETAILS_ACTIVE_TAB_KEY]: activeTabResolver,
+                    [RoutingResolvers.FLOW_DETAILS_ACTIVE_TAB_KEY]: flowDetailsActiveTabResolver,
                     [RoutingResolvers.FLOW_DETAILS_KEY]: flowDetailsResolver,
                     [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolver,
                 },
@@ -351,6 +391,9 @@ export const routes: Routes = [
                         path: FlowDetailsTabs.HISTORY,
                         component: FlowDetailsHistoryTabComponent,
                         runGuardsAndResolvers: "always",
+                        data: {
+                            [ProjectLinks.URL_PARAM_TAB]: FlowDetailsTabs.HISTORY,
+                        },
                         resolve: {
                             [RoutingResolvers.FLOW_DETAILS_HISTORY_KEY]: flowDetailsSummaryResolver,
                         },
@@ -359,6 +402,9 @@ export const routes: Routes = [
                         path: FlowDetailsTabs.SUMMARY,
                         component: FlowDetailsSummaryTabComponent,
                         runGuardsAndResolvers: "always",
+                        data: {
+                            [ProjectLinks.URL_PARAM_TAB]: FlowDetailsTabs.SUMMARY,
+                        },
                         resolve: {
                             [RoutingResolvers.FLOW_DETAILS_SUMMARY_KEY]: flowDetailsSummaryResolver,
                         },
@@ -367,6 +413,9 @@ export const routes: Routes = [
                         path: FlowDetailsTabs.LOGS,
                         component: FlowDetailsLogsTabComponent,
                         runGuardsAndResolvers: "always",
+                        data: {
+                            [ProjectLinks.URL_PARAM_TAB]: FlowDetailsTabs.LOGS,
+                        },
                         resolve: {
                             [RoutingResolvers.FLOW_DETAILS_LOGS_KEY]: flowDetailsSummaryResolver,
                         },
@@ -374,8 +423,17 @@ export const routes: Routes = [
                     {
                         path: FlowDetailsTabs.USAGE,
                         component: FlowDetailsUsageTabComponent,
+                        data: {
+                            [ProjectLinks.URL_PARAM_TAB]: FlowDetailsTabs.USAGE,
+                        },
                     },
-                    { path: FlowDetailsTabs.ADMIN, component: FlowDetailsAdminTabComponent },
+                    {
+                        path: FlowDetailsTabs.ADMIN,
+                        component: FlowDetailsAdminTabComponent,
+                        data: {
+                            [ProjectLinks.URL_PARAM_TAB]: FlowDetailsTabs.ADMIN,
+                        },
+                    },
                 ],
             },
             {

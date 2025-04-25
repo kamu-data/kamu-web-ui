@@ -4,9 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] 
+## [0.46.0] - 2025-04-24 
+### Added
+- Device flow authentication
 ### Changed
 - Improved the performance of the query execution timer
+### Fixed
+- Query explainer: fixed bug with the privacy issue
 
 
 ## [0.45.2] - 2025-04-09

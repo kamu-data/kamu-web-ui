@@ -13,6 +13,7 @@ import { mockQueryExplainerResponse, mockVerifyQueryResponseSuccess } from "./qu
 import { QueryExplainerResponse } from "./query-explainer.types";
 import { AppConfigService } from "src/app/app-config.service";
 import { HttpErrorResponse } from "@angular/common/http";
+import { Apollo } from "apollo-angular";
 
 describe("QueryExplainerService", () => {
     let service: QueryExplainerService;
@@ -23,6 +24,7 @@ describe("QueryExplainerService", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule, ToastrModule.forRoot()],
+            providers: [Apollo],
         });
         httpTestingController = TestBed.inject(HttpTestingController);
         service = TestBed.inject(QueryExplainerService);

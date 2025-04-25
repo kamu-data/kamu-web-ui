@@ -13,8 +13,6 @@ import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import { LoginMethod } from "src/app/app-config.model";
 import { AuthenticationError } from "src/app/common/values/errors";
 import { NavigationService } from "src/app/services/navigation.service";
-import { LoginCallbackResponse } from "./login.component.model";
-import { HttpClient } from "@angular/common/http";
 import { AppConfigService } from "src/app/app-config.service";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { LocalStorageService } from "src/app/services/local-storage.service";
@@ -30,7 +28,6 @@ export class LoginService {
     private appConfigService = inject(AppConfigService);
     private localStorageService = inject(LocalStorageService);
     private sessionStorageService = inject(SessionStorageService);
-    private httpClient = inject(HttpClient);
 
     private accessToken$: Subject<string> = new ReplaySubject<string>(1);
     private account$: Subject<AccountFragment> = new ReplaySubject<AccountFragment>(1);
@@ -87,7 +84,8 @@ export class LoginService {
     }
 
     public githubLogin(credentials: GithubLoginCredentials): void {
-        this.authApi.fetchAccountAndTokenFromGithubCallbackCode(credentials).subscribe({
+        const deviceCode: MaybeNull<string> = this.localStorageService.loginDeviceCode;
+        this.authApi.fetchAccountAndTokenFromGithubCallbackCode(credentials, deviceCode ?? undefined).subscribe({
             next: this.loginCallback,
             error: (e) => {
                 this.navigationService.navigateToHome();
@@ -97,7 +95,8 @@ export class LoginService {
     }
 
     public passwordLogin(credentials: PasswordLoginCredentials): void {
-        this.authApi.fetchAccountAndTokenFromPasswordLogin(credentials).subscribe({
+        const deviceCode: MaybeNull<string> = this.localStorageService.loginDeviceCode;
+        this.authApi.fetchAccountAndTokenFromPasswordLogin(credentials, deviceCode ?? undefined).subscribe({
             next: this.loginCallback,
             error: (e) => {
                 if (e instanceof AuthenticationError) {
@@ -140,19 +139,10 @@ export class LoginService {
     }
 
     private redirectUrlLoginCallback(loginResponse: LoginResponseType): void {
-        const callbackUrl: MaybeNull<string> = this.localStorageService.loginCallbackUrl;
-        if (callbackUrl) {
-            this.localStorageService.setLoginCallbackUrl(null);
-
-            const response: LoginCallbackResponse = {
-                accessToken: loginResponse.accessToken,
-                backendUrl: this.appConfigService.apiServerUrl,
-            };
-            this.accessToken$.next(loginResponse.accessToken);
-            this.account$.next(loginResponse.account);
-            this.httpClient.post<LoginCallbackResponse>(callbackUrl, response).subscribe(() => {
-                this.navigationService.navigateToReturnToCli();
-            });
+        const deviceCode: MaybeNull<string> = this.localStorageService.loginDeviceCode;
+        if (deviceCode) {
+            this.localStorageService.setDeviceCode(null);
+            this.navigationService.navigateToReturnToCli();
         } else {
             this.defaultLoginCallback(loginResponse);
         }

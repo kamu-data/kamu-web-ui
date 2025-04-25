@@ -20,6 +20,7 @@ import ProjectLinks from "src/app/project-links";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
+import { Observable } from "rxjs";
 
 describe("datasetSettingsTransformTabResolverFn", () => {
     let datasetService: DatasetService;
@@ -57,14 +58,18 @@ describe("datasetSettingsTransformTabResolverFn", () => {
         spyOnProperty(datasetSubService, "permissionsChanges", "get").and.returnValue(
             of(mockFullPowerDatasetPermissionsFragment),
         );
-        const mockRoute = {} as ActivatedRouteSnapshot;
-        const mockState = {
-            url: `/kamu/datasetName/${ProjectLinks.URL_SETTINGS}/${SettingsTabsEnum.TRANSFORM_SETTINGS}`,
-        } as RouterStateSnapshot;
-        const result = executeResolver(mockRoute, mockState) as DatasetViewData;
-        expect(result).toEqual({
-            datasetBasics: mockDatasetBasicsDerivedFragment,
-            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+        const mockRoute = {
+            data: {
+                [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.TRANSFORM_SETTINGS,
+            },
+        } as ActivatedRouteSnapshot;
+        const mockState = {} as RouterStateSnapshot;
+        const result = executeResolver(mockRoute, mockState) as Observable<DatasetViewData>;
+        result.subscribe((data) => {
+            expect(data).toEqual({
+                datasetBasics: mockDatasetBasicsDerivedFragment,
+                datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            });
         });
     });
 
@@ -75,11 +80,17 @@ describe("datasetSettingsTransformTabResolverFn", () => {
         spyOnProperty(datasetSubService, "permissionsChanges", "get").and.returnValue(
             of(mockFullPowerDatasetPermissionsFragment),
         );
-        const mockRoute = {} as ActivatedRouteSnapshot;
-        const mockState = {
-            url: `/kamu/datasetName/${ProjectLinks.URL_SETTINGS}/wrongTab`,
-        } as RouterStateSnapshot;
-        executeResolver(mockRoute, mockState) as DatasetViewData;
-        expect(navigateToPageNotFoundSpy).toHaveBeenCalledTimes(1);
+        const mockRoute = {
+            data: {
+                [ProjectLinks.URL_PARAM_TAB]: "wrongTab",
+            },
+        } as ActivatedRouteSnapshot;
+        const mockState = {} as RouterStateSnapshot;
+        const result = executeResolver(mockRoute, mockState) as Observable<DatasetViewData>;
+        result.subscribe({
+            complete: () => {
+                expect(navigateToPageNotFoundSpy).toHaveBeenCalledTimes(1);
+            },
+        });
     });
 });

@@ -22,11 +22,19 @@ import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.sp
 import { MOCK_DATASET_INFO } from "../metadata-component/components/set-transform/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
+import { DatasetService } from "../../dataset.service";
+import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
+import { of } from "rxjs";
+import { Apollo } from "apollo-angular";
+import { ActivatedRoute } from "@angular/router";
+import ProjectLinks from "src/app/project-links";
 
 describe("HistoryComponent", () => {
     let component: HistoryComponent;
     let fixture: ComponentFixture<HistoryComponent>;
     let navigationService: NavigationService;
+    let datasetService: DatasetService;
+    let datasetSubsService: DatasetSubscriptionsService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -46,16 +54,48 @@ describe("HistoryComponent", () => {
                 SharedTestModule,
                 ToastrModule.forRoot(),
             ],
+            providers: [
+                Apollo,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return "accountName";
+                                        case "datasetName":
+                                            return "datasetName";
+                                    }
+                                },
+                            },
+                            queryParamMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case ProjectLinks.URL_QUERY_PARAM_PAGE:
+                                            return undefined;
+                                    }
+                                },
+                            },
+                        },
+                    },
+                },
+            ],
         }).compileComponents();
 
         registerMatSvgIcons();
 
         fixture = TestBed.createComponent(HistoryComponent);
         navigationService = TestBed.inject(NavigationService);
+        datasetService = TestBed.inject(DatasetService);
+        datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
+
         component = fixture.componentInstance;
         component.datasetInfo = MOCK_DATASET_INFO;
-        component.datasetHistoryTabData = mockHistoryUpdate;
-        // datasetSubsService.emitHistoryChanged(mockHistoryUpdate);
+
+        spyOn(datasetService, "requestDatasetHistory").and.returnValue(of());
+        datasetSubsService.emitHistoryChanged(mockHistoryUpdate);
         fixture.detectChanges();
     });
 
@@ -73,11 +113,5 @@ describe("HistoryComponent", () => {
             tab: DatasetViewTypeEnum.History,
             page,
         });
-        // const testChangeNotification = 1;
-        // const emitterSubscription$ = component.onPageChangeEmit
-        //     .pipe(first())
-        //     .subscribe((notification) => expect(notification).toEqual(testChangeNotification));
-        // component.onPageChange(testChangeNotification);
-        // expect(emitterSubscription$.closed).toBeTrue();
     });
 });

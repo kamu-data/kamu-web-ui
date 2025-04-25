@@ -24,10 +24,16 @@ describe("datasetSettingsActiveSectionResolverFn", () => {
     });
 
     it("should check resolver", async () => {
-        const mockRoute = {} as ActivatedRouteSnapshot;
-        const mockState = {
-            url: `/kamu/datasetName/${ProjectLinks.URL_SETTINGS}/${SettingsTabsEnum.ACCESS}`,
-        } as RouterStateSnapshot;
+        const mockRoute = {
+            children: [
+                {
+                    data: {
+                        [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.ACCESS,
+                    },
+                },
+            ],
+        } as ActivatedRouteSnapshot;
+        const mockState = {} as RouterStateSnapshot;
         const result = await executeResolver(mockRoute, mockState);
 
         expect(result).toEqual(SettingsTabsEnum.ACCESS);

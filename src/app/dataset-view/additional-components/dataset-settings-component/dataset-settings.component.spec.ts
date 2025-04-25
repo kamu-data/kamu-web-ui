@@ -131,6 +131,8 @@ describe("DatasetSettingsComponent", () => {
         component.activeTab = SettingsTabsEnum.GENERAL;
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, `action-list-${SettingsTabsEnum.GENERAL}-tab`);
-        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(jasmine.objectContaining({ section: undefined }));
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
+            jasmine.objectContaining({ section: SettingsTabsEnum.GENERAL }),
+        );
     });
 });

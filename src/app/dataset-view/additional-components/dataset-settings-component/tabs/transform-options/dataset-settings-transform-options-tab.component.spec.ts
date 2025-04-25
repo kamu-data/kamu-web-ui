@@ -11,7 +11,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetSettingsTransformOptionsTabComponent } from "./dataset-settings-transform-options-tab.component";
 import { MatDividerModule } from "@angular/material/divider";
 import { BatchingTriggerModule } from "../scheduling/batching-trigger-form/batching-trigger.module";
-import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
+import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/interface/app.types";
@@ -45,7 +45,10 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
         fixture = TestBed.createComponent(DatasetSettingsTransformOptionsTabComponent);
         datasetSchedulingService = TestBed.inject(DatasetSchedulingService);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsDerivedFragment;
+        component.transformViewData = {
+            datasetBasics: mockDatasetBasicsDerivedFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+        };
         fixture.detectChanges();
     });
 
@@ -55,7 +58,6 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
 
     it("should check 'Save triger' button works for DERIVATIVE dataset", () => {
         const setDatasetFlowBatchingSpy = spyOn(datasetSchedulingService, "setDatasetTriggers").and.callThrough();
-        component.datasetBasics = mockDatasetBasicsDerivedFragment;
         const mockBatchingTriggerForm = new FormGroup<BatchingFormType>({
             updatesState: new FormControl<boolean>(false, { nonNullable: true }),
             every: new FormControl<MaybeNull<number>>({ value: MOCK_PARAM_EVERY, disabled: false }, [

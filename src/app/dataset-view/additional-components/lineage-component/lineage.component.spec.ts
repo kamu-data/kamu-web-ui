@@ -14,9 +14,7 @@ import { ApolloModule } from "apollo-angular";
 import { AccountService } from "src/app/account/account.service";
 import { of } from "rxjs";
 import { ToastrModule, ToastrService } from "ngx-toastr";
-import { MOCK_LINKS, MOCK_NODES } from "src/app/api/mock/dataset.mock";
 import { MOCK_DATASET_INFO } from "../metadata-component/components/set-transform/mock.data";
-import { mockGraphNode } from "../data-tabs.mock";
 import { LineageGraphNodeData } from "./lineage-model";
 import { LineageGraphComponent } from "src/app/common/components/lineage-graph/lineage-graph.component";
 import { NgxGraphModule } from "@swimlane/ngx-graph";
@@ -26,6 +24,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
 import { MatIconModule } from "@angular/material/icon";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
+import { DatasetService } from "../../dataset.service";
 
 describe("LineageComponent", () => {
     let component: LineageComponent;
@@ -34,6 +33,7 @@ describe("LineageComponent", () => {
     let navigationService: NavigationService;
     let toastrService: ToastrService;
     let navigationServiceSpy: jasmine.Spy;
+    let datasetService: DatasetService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -53,16 +53,14 @@ describe("LineageComponent", () => {
         accountService = TestBed.inject(AccountService);
         navigationService = TestBed.inject(NavigationService);
         toastrService = TestBed.inject(ToastrService);
+        datasetService = TestBed.inject(DatasetService);
+        spyOn(datasetService, "requestDatasetLineage").and.returnValue(of());
         spyOn(accountService, "fetchMultipleAccountsByName").and.returnValue(of());
         navigationServiceSpy = spyOn(navigationService, "navigateToDatasetView");
 
         fixture = TestBed.createComponent(LineageComponent);
         component = fixture.componentInstance;
         component.datasetInfo = MOCK_DATASET_INFO;
-        component.lineageGraphUpdate = {
-            graph: { links: MOCK_LINKS, nodes: MOCK_NODES },
-            originDataset: mockGraphNode,
-        };
         fixture.detectChanges();
     });
 

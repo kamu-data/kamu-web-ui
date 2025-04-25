@@ -6,7 +6,7 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, RouterStateSnapshot } from "@angular/router";
+import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 import { datasetSettingsVarAndSecretsResolverFn } from "./dataset-settings-var-and-secrets.resolver";
 import { AppConfigService } from "src/app/app-config.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
@@ -14,9 +14,8 @@ import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscr
 import { NavigationService } from "src/app/services/navigation.service";
 import { Apollo } from "apollo-angular";
 import { ToastrModule } from "ngx-toastr";
-import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "src/app/api/mock/dataset.mock";
 import ProjectLinks from "src/app/project-links";
-import { of } from "rxjs";
+import { Observable, of } from "rxjs";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import AppValues from "src/app/common/values/app.values";
@@ -57,21 +56,18 @@ describe("datasetSettingsVarAndSecretsResolverFn", () => {
         spyOnProperty(datasetSubService, "permissionsChanges", "get").and.returnValue(
             of(mockFullPowerDatasetPermissionsFragment),
         );
-        const routeSnapshot = {
-            parent: {
-                paramMap: convertToParamMap({
-                    [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME,
-                    [ProjectLinks.URL_PARAM_DATASET_NAME]: TEST_DATASET_NAME,
-                }),
+        const mockRoute = {
+            data: {
+                [ProjectLinks.URL_PARAM_TAB]: "wrongTab",
             },
-            queryParamMap: convertToParamMap({}),
         } as ActivatedRouteSnapshot;
-        const mockState = {
-            url: `/kamu/datasetName/${ProjectLinks.URL_SETTINGS}/wrongTab`,
-        } as RouterStateSnapshot;
-
-        executeResolver(routeSnapshot, mockState) as DatasetViewData;
-        expect(navigateToPageNotFoundSpy).toHaveBeenCalledTimes(1);
+        const mockState = {} as RouterStateSnapshot;
+        const result = executeResolver(mockRoute, mockState) as Observable<DatasetViewData>;
+        result.subscribe({
+            complete: () => {
+                expect(navigateToPageNotFoundSpy).toHaveBeenCalledTimes(1);
+            },
+        });
     });
 
     it("should check resolver ", () => {
@@ -80,25 +76,18 @@ describe("datasetSettingsVarAndSecretsResolverFn", () => {
         spyOnProperty(datasetSubService, "permissionsChanges", "get").and.returnValue(
             of(mockFullPowerDatasetPermissionsFragment),
         );
-        const routeSnapshot = {
-            parent: {
-                parent: {
-                    paramMap: convertToParamMap({
-                        [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME,
-                        [ProjectLinks.URL_PARAM_DATASET_NAME]: TEST_DATASET_NAME,
-                    }),
-                },
+        const mockRoute = {
+            data: {
+                [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.VARIABLES_AND_SECRETS,
             },
-            queryParamMap: convertToParamMap({}),
         } as ActivatedRouteSnapshot;
-        const mockState = {
-            url: `/kamu/datasetName/${ProjectLinks.URL_SETTINGS}/${SettingsTabsEnum.VARIABLES_AND_SECRETS}`,
-        } as RouterStateSnapshot;
-
-        const result = executeResolver(routeSnapshot, mockState) as DatasetViewData;
-        expect(result).toEqual({
-            datasetBasics: mockDatasetBasicsRootFragment,
-            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+        const mockState = {} as RouterStateSnapshot;
+        const result = executeResolver(mockRoute, mockState) as Observable<DatasetViewData>;
+        result.subscribe((data) => {
+            expect(data).toEqual({
+                datasetBasics: mockDatasetBasicsRootFragment,
+                datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            });
         });
     });
 });

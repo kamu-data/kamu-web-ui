@@ -19,7 +19,6 @@ import { MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
 import { ActivatedRoute, convertToParamMap, RouterModule } from "@angular/router";
 import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
-import { SimpleChanges } from "@angular/core";
 import { PaginationModule } from "src/app/common/components/pagination-component/pagination.module";
 import ProjectLinks from "src/app/project-links";
 
@@ -68,15 +67,6 @@ describe("DatasetsTabComponent", () => {
             datasetsResponse: mockDatasetsAccountResponse,
             accountName: TEST_ACCOUNT_NAME,
         };
-        const accountNameSimpleChanges: SimpleChanges = {
-            accountName: {
-                previousValue: undefined,
-                currentValue: TEST_ACCOUNT_NAME,
-                firstChange: true,
-                isFirstChange: () => true,
-            },
-        };
-        component.ngOnChanges(accountNameSimpleChanges);
         fixture.detectChanges();
     });
 

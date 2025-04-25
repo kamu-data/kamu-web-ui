@@ -1,18 +1,18 @@
 <div
     class="search-result-container__content container-main"
     id="dataset-view-history"
-    *ngIf="historyUpdate$ | async as historyUpdate"
+    *ngIf="datasetHistoryTabData$ | async as datasetHistoryTabData"
 >
     <div id="history-block">
-        <ng-template [ngIf]="historyUpdate.history.length > 0">
+        <ng-template [ngIf]="datasetHistoryTabData.history.length > 0">
             <app-timeline
-                [datasetName]="datasetName"
-                [history]="historyUpdate.history"
-                [pageInfo]="historyUpdate.pageInfo"
+                [datasetName]="datasetInfo.datasetName"
+                [history]="datasetHistoryTabData.history"
+                [pageInfo]="datasetHistoryTabData.pageInfo"
             />
             <app-pagination
-                [currentPage]="historyUpdate.pageInfo.currentPage + 1"
-                [pageInfo]="historyUpdate.pageInfo"
+                [currentPage]="datasetHistoryTabData.pageInfo.currentPage + 1"
+                [pageInfo]="datasetHistoryTabData.pageInfo"
                 (pageChangeEvent)="onPageChange($event)"
             />
         </ng-template>

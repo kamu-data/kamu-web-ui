@@ -6,7 +6,7 @@
  */
 
 import ProjectLinks from "src/app/project-links";
-import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import { AccountTabs } from "./account.constants";
 import AppValues from "src/app/common/values/app.values";
@@ -26,8 +26,11 @@ import RoutingResolvers from "../common/resolvers/routing-resolvers";
     styleUrls: ["./account.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccountComponent implements OnChanges, OnInit {
-    @Input(ProjectLinks.URL_PARAM_ACCOUNT_NAME) public accountName: string;
+export class AccountComponent {
+    @Input(ProjectLinks.URL_PARAM_ACCOUNT_NAME) public set accountName(value: string) {
+        this.user$ = this.pipelineAccountByName(value);
+        this.datasetTotalCount$ = this.accountService.getDatasetsTotalCountByAccountName(value);
+    }
     @Input(RoutingResolvers.ACCOUNT_ACTIVE_TAB_KEY) public activeTab: AccountTabs;
     public datasetTotalCount$: Observable<number>;
 
@@ -39,16 +42,6 @@ export class AccountComponent implements OnChanges, OnInit {
     private modalService = inject(ModalService);
     private accountService = inject(AccountService);
     private loggedUserService = inject(LoggedUserService);
-
-    public ngOnInit(): void {
-        this.datasetTotalCount$ = this.accountService.getDatasetsTotalCountByAccountName(this.accountName);
-    }
-
-    public ngOnChanges(changes: SimpleChanges): void {
-        if (changes.accountName && changes.accountName.previousValue !== changes.accountName.currentValue) {
-            this.user$ = this.pipelineAccountByName(changes.accountName.currentValue as string);
-        }
-    }
 
     public avatarLink(user: AccountFragment): string {
         return user.avatarUrl ?? AppValues.DEFAULT_AVATAR_URL;

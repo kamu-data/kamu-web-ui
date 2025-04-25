@@ -32,9 +32,7 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { NgbPaginationModule, NgbPopoverModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
-import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
-import { OverviewUpdate } from "../../dataset.subscriptions.interface";
-import { mockMetadataDerivedUpdate, mockOverviewDataUpdate } from "../data-tabs.mock";
+import { mockOverviewUpdate } from "../data-tabs.mock";
 import { FlowsTableComponent } from "src/app/dataset-flow/flows-table/flows-table.component";
 import { mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
 import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/tile-base-widget.component";
@@ -48,7 +46,6 @@ describe("FlowsComponent", () => {
     let fixture: ComponentFixture<FlowsComponent>;
     let datasetFlowsService: DatasetFlowsService;
     let navigationService: NavigationService;
-    let datasetSubsService: DatasetSubscriptionsService;
     const MOCK_FLOW_ID = "2";
 
     beforeEach(async () => {
@@ -110,16 +107,12 @@ describe("FlowsComponent", () => {
         fixture = TestBed.createComponent(FlowsComponent);
         datasetFlowsService = TestBed.inject(DatasetFlowsService);
         navigationService = TestBed.inject(NavigationService);
-        datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsRootFragment;
-        component.datasetPermissions = mockFullPowerDatasetPermissionsFragment;
-        datasetSubsService.emitOverviewChanged({
-            schema: mockMetadataDerivedUpdate.schema,
-            content: mockOverviewDataUpdate.content,
-            overview: structuredClone(mockOverviewDataUpdate.overview), // clone, as we modify this data in the tests
-            size: mockOverviewDataUpdate.size,
-        } as OverviewUpdate);
+        component.flowsData = {
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            overviewUpdate: mockOverviewUpdate,
+        };
     });
 
     it("should create", () => {
@@ -193,8 +186,8 @@ describe("FlowsComponent", () => {
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         component.onPageChange(page);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledOnceWith({
-            accountName: component.datasetBasics.owner.accountName,
-            datasetName: component.datasetBasics.name,
+            accountName: component.flowsData.datasetBasics.owner.accountName,
+            datasetName: component.flowsData.datasetBasics.name,
             tab: DatasetViewTypeEnum.Flows,
         });
     });
@@ -204,8 +197,8 @@ describe("FlowsComponent", () => {
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         component.onPageChange(page);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledOnceWith({
-            accountName: component.datasetBasics.owner.accountName,
-            datasetName: component.datasetBasics.name,
+            accountName: component.flowsData.datasetBasics.owner.accountName,
+            datasetName: component.flowsData.datasetBasics.name,
             tab: DatasetViewTypeEnum.Flows,
             page,
         });
@@ -214,7 +207,7 @@ describe("FlowsComponent", () => {
     it("should check redirect section", () => {
         expect(component.redirectSection).toEqual(SettingsTabsEnum.SCHEDULING);
 
-        component.datasetBasics = mockDatasetBasicsDerivedFragment;
+        component.flowsData.datasetBasics = mockDatasetBasicsDerivedFragment;
         expect(component.redirectSection).toEqual(SettingsTabsEnum.TRANSFORM_SETTINGS);
     });
 

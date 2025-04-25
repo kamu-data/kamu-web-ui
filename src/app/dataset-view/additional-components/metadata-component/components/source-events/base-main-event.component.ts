@@ -20,6 +20,7 @@ import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscr
 import { combineLatest } from "rxjs";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 
 export abstract class BaseMainEventComponent extends BaseComponent {
     protected modalService = inject(NgbModal);
@@ -56,6 +57,7 @@ export abstract class BaseMainEventComponent extends BaseComponent {
                     this.navigationServices.navigateToDatasetView({
                         accountName: datasetBasics.owner.accountName,
                         datasetName: datasetBasics.name,
+                        tab: DatasetViewTypeEnum.Overview,
                     });
                 }
             });

@@ -13,10 +13,8 @@ import {
     EventEmitter,
     inject,
     Input,
-    OnChanges,
     OnInit,
     Output,
-    SimpleChanges,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { EngineDesc, EnginesQuery, TransformSql } from "src/app/api/kamu.graphql.interface";
@@ -30,9 +28,13 @@ import { EngineService } from "src/app/dataset-view/additional-components/metada
     styleUrls: ["./engine-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EngineSectionComponent extends BaseComponent implements OnInit, OnChanges {
+export class EngineSectionComponent extends BaseComponent implements OnInit {
     @Input() public knownEngines: MaybeNull<EngineDesc[]>;
-    @Input({ required: true }) public currentSetTransformEvent: MaybeNullOrUndefined<TransformSql>;
+    @Input({ required: true }) public set currentSetTransformEvent(value: MaybeNullOrUndefined<TransformSql>) {
+        if (value) {
+            this.onSelectType(value.engine);
+        }
+    }
     @Input() public selectedEngine: string;
     @Output() public onEmitSelectedEngine: EventEmitter<string> = new EventEmitter<string>();
     public selectedImage: string;
@@ -42,12 +44,6 @@ export class EngineSectionComponent extends BaseComponent implements OnInit, OnC
 
     public ngOnInit(): void {
         this.initEngineSection();
-    }
-
-    public ngOnChanges(changes: SimpleChanges): void {
-        if (changes.currentSetTransformEvent && changes.currentSetTransformEvent.currentValue) {
-            this.onSelectType((changes.currentSetTransformEvent.currentValue as TransformSql).engine);
-        }
     }
 
     public onSelectType(item: string): void {

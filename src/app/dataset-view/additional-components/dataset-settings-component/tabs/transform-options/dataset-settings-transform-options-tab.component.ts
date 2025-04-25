@@ -12,6 +12,8 @@ import { DatasetBasicsFragment, DatasetFlowType, FlowTriggerInput, TimeUnit } fr
 import { BatchingFormType } from "../scheduling/dataset-settings-scheduling-tab.component.types";
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
 import { BaseComponent } from "src/app/common/components/base.component";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 
 @Component({
     selector: "app-dataset-settings-transform-options-tab",
@@ -20,9 +22,13 @@ import { BaseComponent } from "src/app/common/components/base.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetSettingsTransformOptionsTabComponent extends BaseComponent {
-    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
+    @Input(RoutingResolvers.DATASET_SETTINGS_TRANSFORM_KEY) public transformViewData: DatasetViewData;
 
     private datasetSchedulingService = inject(DatasetSchedulingService);
+
+    public get datasetBasics(): DatasetBasicsFragment {
+        return this.transformViewData.datasetBasics;
+    }
 
     public saveBatchingTriggers(batchingTriggerForm: FormGroup<BatchingFormType>): void {
         this.datasetSchedulingService

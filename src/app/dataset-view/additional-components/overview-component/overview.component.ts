@@ -6,42 +6,32 @@
  */
 
 import { EditLicenseModalComponent } from "./components/edit-license-modal/edit-license-modal.component";
-import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import {
     DatasetAccessRole,
     DatasetCurrentInfoFragment,
     DatasetFlowType,
     DatasetKind,
-    DatasetPermissionsFragment,
 } from "../../../api/kamu.graphql.interface";
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { NavigationService } from "src/app/services/navigation.service";
-import {
-    DatasetBasicsFragment,
-    DatasetDataSizeFragment,
-    DatasetOverviewFragment,
-    MetadataBlockFragment,
-} from "../../../api/kamu.graphql.interface";
-import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
-import { DataRow, DatasetSchema } from "src/app/interface/dataset.interface";
-import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { MetadataBlockFragment } from "../../../api/kamu.graphql.interface";
+import { MaybeNull } from "src/app/interface/app.types";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { EditDetailsModalComponent } from "./components/edit-details-modal/edit-details-modal.component";
 import { EditWatermarkModalComponent } from "./components/edit-watermark-modal/edit-watermark-modal.component";
 import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
-import { DatasetViewTypeEnum } from "../../dataset-view.interface";
+import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { AddDataModalComponent } from "./components/add-data-modal/add-data-modal.component";
 import { Observable } from "rxjs";
 import { AppConfigService } from "src/app/app-config.service";
 import { isNil, promiseWithCatch } from "src/app/common/helpers/app.helpers";
-import { ModalService } from "src/app/common/components/modal/modal.service";
 import AppValues from "src/app/common/values/app.values";
 import { FileUploadService } from "src/app/services/file-upload.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import ProjectLinks from "src/app/project-links";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DatasetCollaborationsService } from "../dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
+import { BaseDatasetDataComponent } from "src/app/common/components/base-dataset-data.component";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 
 @Component({
     selector: "app-overview",
@@ -49,11 +39,8 @@ import { DatasetCollaborationsService } from "../dataset-settings-component/tabs
     styleUrls: ["./overview.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OverviewComponent extends BaseComponent implements OnInit {
-    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    @Input({ required: true }) public datasetPermissions: DatasetPermissionsFragment;
-    @Output() public toggleReadmeViewEmit = new EventEmitter<null>();
-    @Output() public selectTopicEmit = new EventEmitter<string>();
+export class OverviewComponent extends BaseDatasetDataComponent implements OnInit {
+    @Input(RoutingResolvers.DATASET_VIEW_OVERVIEW_KEY) public datasetOverviewTabData: DatasetOverviewTabData;
     public editingReadme = false;
     public droppedFile: File;
     public uploadFileLoading$: Observable<boolean>;
@@ -63,53 +50,29 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     public readonly URL_PARAM_SET_TRANSFORM = ProjectLinks.URL_PARAM_SET_TRANSFORM;
     public readonly URL_PARAM_ADD_PUSH_SOURCE = ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE;
 
-    public currentState?: {
-        schema: MaybeNull<DatasetSchema>;
-        data: DataRow[];
-        overview: DatasetOverviewFragment;
-        size: DatasetDataSizeFragment;
-    };
-
-    private datasetSubsService = inject(DatasetSubscriptionsService);
-    private navigationService = inject(NavigationService);
+    public datasetOverviewTabData$: Observable<DatasetOverviewTabData>;
     private ngbModalService = inject(NgbModal);
     private datasetFlowsService = inject(DatasetFlowsService);
     private fileUploadService = inject(FileUploadService);
     private configService = inject(AppConfigService);
-    private modalService = inject(ModalService);
     private loggedUserService = inject(LoggedUserService);
     private datasetCollaborationsService = inject(DatasetCollaborationsService);
 
     public ngOnInit(): void {
-        this.role$ = this.datasetCollaborationsService.getRoleByDatasetId(this.datasetBasics.id);
+        this.role$ = this.datasetCollaborationsService.getRoleByDatasetId(this.datasetOverviewTabData.datasetBasics.id);
         this.uploadFileLoading$ = this.fileUploadService.isUploadFile;
-        this.datasetSubsService.overviewChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((overviewUpdate: OverviewUpdate) => {
-                this.currentState = {
-                    schema: overviewUpdate.schema,
-                    data: overviewUpdate.content,
-                    size: overviewUpdate.size,
-                    overview: overviewUpdate.overview,
-                };
-            });
     }
-
     public showWebsite(url: string): void {
         this.navigationService.navigateToWebsite(url);
     }
 
-    public selectTopic(topicName: string): void {
-        this.selectTopicEmit.emit(topicName);
-    }
-
-    public get metadataFragmentBlock(): MaybeUndefined<MetadataBlockFragment> {
-        return this.currentState ? this.currentState.overview.metadata.chain.blocks.nodes[0] : undefined;
+    public get metadataFragmentBlock(): MetadataBlockFragment {
+        return this.datasetOverviewTabData.overviewUpdate.overview.metadata.chain.blocks.nodes[0];
     }
 
     public get canEditDatasetInfo(): boolean {
         if (this.hasDatasetInfo) {
-            return this.datasetPermissions.permissions.metadata.canCommit;
+            return this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit;
         } else {
             return false;
         }
@@ -121,15 +84,16 @@ export class OverviewComponent extends BaseComponent implements OnInit {
 
     public get canAddDatasetInfo(): boolean {
         if (!this.hasDatasetInfo) {
-            return this.datasetPermissions.permissions.metadata.canCommit && !isNil(this.currentState);
+            return this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit;
         } else {
             return false;
         }
     }
 
     public get hasDatasetInfo(): boolean {
-        if (this.currentState) {
-            const currentInfo: DatasetCurrentInfoFragment = this.currentState.overview.metadata.currentInfo;
+        if (this.datasetOverviewTabData.overviewUpdate) {
+            const currentInfo: DatasetCurrentInfoFragment =
+                this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentInfo;
             return (
                 !isNil(currentInfo.description) ||
                 (!isNil(currentInfo.keywords) && Boolean(currentInfo.keywords && currentInfo.keywords.length))
@@ -140,23 +104,22 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get canAddSetPollingSource(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
+        if (this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit) {
             return (
-                !this.currentState.overview.metadata.currentPollingSource &&
-                this.datasetBasics.kind === DatasetKind.Root &&
-                !this.currentState.overview.metadata.currentPushSources.length
+                !this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentPollingSource &&
+                this.datasetOverviewTabData.datasetBasics.kind === DatasetKind.Root &&
+                !this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentPushSources.length
             );
         } else {
             return false;
         }
     }
-
     public get canAddPushSource(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
+        if (this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit) {
             return (
-                !this.currentState.overview.metadata.chain.blocks.nodes.filter(
+                !this.datasetOverviewTabData.overviewUpdate.overview.metadata.chain.blocks.nodes.filter(
                     (item) => item.event.__typename === "AddPushSource",
-                ).length && this.datasetBasics.kind === DatasetKind.Root
+                ).length && this.datasetOverviewTabData.datasetBasics.kind === DatasetKind.Root
             );
         } else {
             return false;
@@ -164,10 +127,10 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get canAddSetTransform(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
+        if (this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit) {
             return (
-                !this.currentState.overview.metadata.currentTransform &&
-                this.datasetBasics.kind === DatasetKind.Derivative
+                !this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentTransform &&
+                this.datasetOverviewTabData.datasetBasics.kind === DatasetKind.Derivative
             );
         } else {
             return false;
@@ -175,55 +138,55 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get canAddReadme(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
-            return !this.currentState.overview.metadata.currentReadme && !this.editingReadme;
+        if (this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit) {
+            return !this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentReadme && !this.editingReadme;
         } else {
             return false;
         }
     }
 
     public get canEditReadme(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
-            return !isNil(this.currentState.overview.metadata.currentReadme);
+        if (this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit) {
+            return !isNil(this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentReadme);
         } else {
             return false;
         }
     }
 
     public get canAddLicense(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
-            return isNil(this.currentState.overview.metadata.currentLicense);
+        if (this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit) {
+            return isNil(this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentLicense);
         } else {
             return false;
         }
     }
 
     public get canEditLicense(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
-            return !isNil(this.currentState.overview.metadata.currentLicense);
+        if (this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit) {
+            return !isNil(this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentLicense);
         } else {
             return false;
         }
     }
 
     public get canAddWatermark(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
-            return !this.hasWatermark && this.datasetBasics.kind === DatasetKind.Root;
+        if (this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit) {
+            return !this.hasWatermark && this.datasetOverviewTabData.datasetBasics.kind === DatasetKind.Root;
         } else {
             return false;
         }
     }
 
     public get canEditWatermark(): boolean {
-        if (this.currentState && this.datasetPermissions.permissions.metadata.canCommit) {
-            return this.hasWatermark && this.datasetBasics.kind === DatasetKind.Root;
+        if (this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit) {
+            return this.hasWatermark && this.datasetOverviewTabData.datasetBasics.kind === DatasetKind.Root;
         } else {
             return false;
         }
     }
 
     public get canSchedule(): boolean {
-        return this.datasetPermissions.permissions.flows.canRun;
+        return this.datasetOverviewTabData.datasetPermissions.permissions.flows.canRun;
     }
 
     public get canRefresh(): boolean {
@@ -239,32 +202,32 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     }
 
     public get hasSetPollingSource(): boolean {
-        return !isNil(this.currentState?.overview.metadata.currentPollingSource);
+        return !isNil(this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentPollingSource);
     }
 
     public get showDragAndDropBlock(): boolean {
-        return !this.hasSetPollingSource && this.datasetBasics.kind === DatasetKind.Root;
+        return !this.hasSetPollingSource && this.datasetOverviewTabData.datasetBasics.kind === DatasetKind.Root;
     }
 
     public get hasCurrentTransform(): boolean {
-        return !isNil(this.currentState?.overview.metadata.currentTransform);
+        return !isNil(this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentTransform);
     }
 
     private get hasWatermark(): boolean {
-        return !isNil(this.currentState?.overview.metadata.currentWatermark);
+        return !isNil(this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentWatermark);
     }
 
     public get isPrivate(): boolean {
-        return this.datasetBasics.visibility.__typename === "PrivateDatasetVisibility";
+        return this.datasetOverviewTabData.datasetBasics.visibility.__typename === "PrivateDatasetVisibility";
     }
 
     public get showAddDataButton(): boolean {
-        if (Boolean(this.currentState?.data.length) && this.isUserLogged) {
+        if (Boolean(this.datasetOverviewTabData.overviewUpdate.content.length) && this.isUserLogged) {
             return (
-                (!this.currentState?.overview.metadata.currentPollingSource &&
-                    this.datasetBasics.kind === DatasetKind.Root) ||
-                (!this.currentState?.overview.metadata.currentTransform &&
-                    this.datasetBasics.kind === DatasetKind.Derivative)
+                (!this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentPollingSource &&
+                    this.datasetOverviewTabData.datasetBasics.kind === DatasetKind.Root) ||
+                (!this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentTransform &&
+                    this.datasetOverviewTabData.datasetBasics.kind === DatasetKind.Derivative)
             );
         } else {
             return false;
@@ -274,22 +237,33 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     public openInformationModal() {
         const modalRef: NgbModalRef = this.ngbModalService.open(EditDetailsModalComponent);
         const modalRefInstance = modalRef.componentInstance as EditDetailsModalComponent;
-        modalRefInstance.currentState = this.currentState;
-        modalRefInstance.datasetBasics = this.datasetBasics;
+        modalRefInstance.currentState = {
+            schema: this.datasetOverviewTabData.overviewUpdate.schema,
+            data: this.datasetOverviewTabData.overviewUpdate.content,
+            overview: this.datasetOverviewTabData.overviewUpdate.overview,
+            size: this.datasetOverviewTabData.overviewUpdate.size,
+        };
+        modalRefInstance.datasetBasics = this.datasetOverviewTabData.datasetBasics;
     }
 
     public openLicenseModal(): void {
         const modalRef: NgbModalRef = this.ngbModalService.open(EditLicenseModalComponent);
         const modalRefInstance = modalRef.componentInstance as EditLicenseModalComponent;
-        modalRefInstance.currentState = this.currentState;
-        modalRefInstance.datasetBasics = this.datasetBasics;
+        modalRefInstance.currentState = {
+            schema: this.datasetOverviewTabData.overviewUpdate.schema,
+            data: this.datasetOverviewTabData.overviewUpdate.content,
+            overview: this.datasetOverviewTabData.overviewUpdate.overview,
+            size: this.datasetOverviewTabData.overviewUpdate.size,
+        };
+        modalRefInstance.datasetBasics = this.datasetOverviewTabData.datasetBasics;
     }
 
     public openWatermarkModal(): void {
         const modalRef: NgbModalRef = this.ngbModalService.open(EditWatermarkModalComponent);
         const modalRefInstance = modalRef.componentInstance as EditWatermarkModalComponent;
-        modalRefInstance.currentWatermark = this.currentState?.overview.metadata.currentWatermark;
-        modalRefInstance.datasetBasics = this.datasetBasics;
+        modalRefInstance.currentWatermark =
+            this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentWatermark;
+        modalRefInstance.datasetBasics = this.datasetOverviewTabData.datasetBasics;
     }
 
     public onAddReadme(): void {
@@ -299,9 +273,9 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     public refreshNow(): void {
         this.datasetFlowsService
             .datasetTriggerFlow({
-                datasetId: this.datasetBasics.id,
+                datasetId: this.datasetOverviewTabData.datasetBasics.id,
                 datasetFlowType:
-                    this.datasetBasics.kind === DatasetKind.Root
+                    this.datasetOverviewTabData.datasetBasics.kind === DatasetKind.Root
                         ? DatasetFlowType.Ingest
                         : DatasetFlowType.ExecuteTransform,
                 flowRunConfiguration: {
@@ -315,8 +289,8 @@ export class OverviewComponent extends BaseComponent implements OnInit {
                 if (success) {
                     setTimeout(() => {
                         this.navigationService.navigateToDatasetView({
-                            accountName: this.datasetBasics.owner.accountName,
-                            datasetName: this.datasetBasics.name,
+                            accountName: this.datasetOverviewTabData.datasetBasics.owner.accountName,
+                            datasetName: this.datasetOverviewTabData.datasetBasics.name,
                             tab: DatasetViewTypeEnum.Flows,
                         });
                     }, AppValues.SIMULATION_START_CONDITION_DELAY_MS);
@@ -327,7 +301,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
     public addData(): void {
         const modalRef: NgbModalRef = this.ngbModalService.open(AddDataModalComponent);
         const modalRefInstance = modalRef.componentInstance as AddDataModalComponent;
-        modalRefInstance.datasetBasics = this.datasetBasics;
+        modalRefInstance.datasetBasics = this.datasetOverviewTabData.datasetBasics;
     }
 
     public onFileDropped(files: FileList): void {
@@ -335,7 +309,7 @@ export class OverviewComponent extends BaseComponent implements OnInit {
         const fileSizeMb = this.droppedFile.size * Math.pow(10, -6);
         if (fileSizeMb <= this.configService.ingestUploadFileLimitMb) {
             this.fileUploadService
-                .uploadFile(this.droppedFile, this.datasetBasics)
+                .uploadFile(this.droppedFile, this.datasetOverviewTabData.datasetBasics)
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe();
         } else {

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, inject, Input, OnChanges, SimpleChanges } from "@angular/core";
+import { ChangeDetectionStrategy, inject, Input } from "@angular/core";
 import { Component } from "@angular/core";
 import { AccountTabs } from "../../account.constants";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -18,19 +18,9 @@ import { DatasetsAccountResolverResponse } from "src/app/interface/dataset.inter
     templateUrl: "./datasets-tab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DatasetsTabComponent implements OnChanges {
+export class DatasetsTabComponent {
     @Input(RoutingResolvers.ACCOUNT_DATASETS_KEY) public accountResolverResponse: DatasetsAccountResolverResponse;
     public isClickableRow = true;
-
-    public ngOnChanges(changes: SimpleChanges): void {
-        if (
-            changes.accountResolverResponse &&
-            changes.accountResolverResponse.previousValue !== changes.accountResolverResponse.currentValue
-        ) {
-            this.accountResolverResponse = changes.accountResolverResponse
-                .currentValue as DatasetsAccountResolverResponse;
-        }
-    }
 
     private navigationService = inject(NavigationService);
 

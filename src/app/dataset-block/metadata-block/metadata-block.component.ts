@@ -6,7 +6,7 @@
  */
 
 import { DatasetHistoryUpdate } from "../../dataset-view/dataset.subscriptions.interface";
-import { Observable, Subscription } from "rxjs";
+import { Observable } from "rxjs";
 import { DatasetViewTypeEnum } from "../../dataset-view/dataset-view.interface";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
@@ -44,15 +44,15 @@ export class MetadataBlockComponent extends BaseDatasetDataComponent implements 
         this.loadHistory(currentPage - 1);
     }
 
-    private loadDatasetBasicDataWithPermissions(): Subscription {
-        return this.datasetService
+    private loadDatasetBasicDataWithPermissions(): void {
+        this.datasetService
             .requestDatasetBasicDataWithPermissions(this.getDatasetInfoFromUrl())
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe();
     }
 
-    private loadHistory(page = 0): Subscription {
-        return this.datasetService
+    private loadHistory(page = 0): void {
+        this.datasetService
             .requestDatasetHistory(this.getDatasetInfoFromUrl(), MetadataBlockComponent.BLOCKS_PER_PAGE, page)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe();

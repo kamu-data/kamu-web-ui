@@ -10,7 +10,7 @@ import { DatasetSettingsAccessTabComponent } from "./dataset-settings-access-tab
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ToastrModule } from "ngx-toastr";
-import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
+import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { MatIconModule } from "@angular/material/icon";
 import { ActivatedRoute, RouterModule } from "@angular/router";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
@@ -105,7 +105,10 @@ describe("DatasetSettingsAccessTabComponent", () => {
             ),
         );
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsRootFragment;
+        component.accessViewData = {
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+        };
         fixture.detectChanges();
     });
 

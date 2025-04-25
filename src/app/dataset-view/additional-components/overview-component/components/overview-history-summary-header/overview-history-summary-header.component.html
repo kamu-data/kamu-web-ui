@@ -76,8 +76,12 @@
                     <li class="ml-0 ml-md-3">
                         <a
                             data-pjax="#repo-content-pjax-container"
-                            [routerLink]="['/', metadataBlockFragment.author.accountName, this.datasetName]"
-                            [queryParams]="{ tab: DatasetViewTypeEnum.History }"
+                            [routerLink]="[
+                                '/',
+                                metadataBlockFragment.author.accountName,
+                                this.datasetName,
+                                DatasetViewTypeEnum.History,
+                            ]"
                             class="pl-3 d-flex align-items-center pr-3 py-3 p-md-0 mt-n3 mb-n3 mr-n3 m-md-0 link--primary text-decoration-none flex-nowrap"
                         >
                             <span class="mr-1 mt-1">

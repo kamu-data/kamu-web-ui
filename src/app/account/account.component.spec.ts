@@ -32,7 +32,6 @@ import { LoggedUserService } from "../auth/logged-user.service";
 import { mockAccountDetails, TEST_AVATAR_URL, TEST_LOGIN } from "../api/mock/auth.mock";
 import { findElementByDataTestId } from "../common/helpers/base-test.helpers.spec";
 import { DatasetVisibilityModule } from "../common/components/dataset-visibility/dataset-visibility.module";
-import { SimpleChanges } from "@angular/core";
 
 describe("AccountComponent", () => {
     let component: AccountComponent;
@@ -93,15 +92,6 @@ describe("AccountComponent", () => {
         fixture = TestBed.createComponent(AccountComponent);
         component = fixture.componentInstance;
         component.accountName = TEST_LOGIN;
-        const accountNameSimpleChanges: SimpleChanges = {
-            accountName: {
-                previousValue: undefined,
-                currentValue: TEST_LOGIN,
-                firstChange: true,
-                isFirstChange: () => true,
-            },
-        };
-        component.ngOnChanges(accountNameSimpleChanges);
     });
 
     it("should create", () => {

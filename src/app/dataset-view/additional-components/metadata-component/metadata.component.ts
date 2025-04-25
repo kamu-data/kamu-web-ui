@@ -8,7 +8,6 @@
 import {
     AddPushSourceEventFragment,
     DatasetKind,
-    DatasetPermissionsFragment,
     DatasetTransformFragment,
     LicenseFragment,
     SetPollingSourceEventFragment,
@@ -19,18 +18,15 @@ import AppValues from "../../../common/values/app.values";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { MetadataSchemaUpdate } from "../../dataset.subscriptions.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
-import {
-    DatasetBasicsFragment,
-    DatasetMetadataSummaryFragment,
-    PageBasedInfo,
-} from "src/app/api/kamu.graphql.interface";
+import { DatasetMetadataSummaryFragment, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
 import { isNil, momentConvertDateToLocalWithFormat, promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "src/app/interface/app.types";
 import { NavigationService } from "src/app/services/navigation.service";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import ProjectLinks from "src/app/project-links";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { DatasetPermissionsService } from "../../dataset.permissions.service";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { DatasetOverviewTabData } from "../../dataset-view.interface";
 
 @Component({
     selector: "app-metadata",
@@ -39,8 +35,7 @@ import { DatasetPermissionsService } from "../../dataset.permissions.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataComponent extends BaseComponent implements OnInit {
-    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    @Input({ required: true }) public datasetPermissions: DatasetPermissionsFragment;
+    @Input(RoutingResolvers.DATASET_VIEW_METADATA_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
     @Output() public pageChangeEmit = new EventEmitter<number>();
 
     public readonly ReadSectionMapping: Record<string, string> = {
@@ -64,7 +59,6 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     private datasetSubsService = inject(DatasetSubscriptionsService);
     private navigationService = inject(NavigationService);
     private modalService = inject(ModalService);
-    private datasetPermissionsService = inject(DatasetPermissionsService);
 
     public ngOnInit() {
         this.datasetSubsService.metadataSchemaChanges
@@ -129,9 +123,9 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     public get canEditSetPollingSource(): boolean {
         if (this.currentState) {
             return (
-                this.datasetBasics.kind === DatasetKind.Root &&
+                this.datasetMetadataTabData.datasetBasics.kind === DatasetKind.Root &&
                 !isNil(this.currentState.metadataSummary.metadata.currentPollingSource) &&
-                this.datasetPermissions.permissions.metadata.canCommit
+                this.datasetMetadataTabData.datasetPermissions.permissions.metadata.canCommit
             );
         } else {
             return false;
@@ -141,9 +135,9 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     public get canEditAddPushSource(): boolean {
         if (this.currentState) {
             return (
-                this.datasetBasics.kind === DatasetKind.Root &&
+                this.datasetMetadataTabData.datasetBasics.kind === DatasetKind.Root &&
                 this.currentState.metadataSummary.metadata.currentPushSources.length > 0 &&
-                this.datasetPermissions.permissions.metadata.canCommit
+                this.datasetMetadataTabData.datasetPermissions.permissions.metadata.canCommit
             );
         } else {
             return false;
@@ -153,9 +147,9 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     public get canEditSetTransform(): boolean {
         if (this.currentState) {
             return (
-                this.datasetBasics.kind === DatasetKind.Derivative &&
+                this.datasetMetadataTabData.datasetBasics.kind === DatasetKind.Derivative &&
                 !isNil(this.currentState.metadataSummary.metadata.currentTransform) &&
-                this.datasetPermissions.permissions.metadata.canCommit
+                this.datasetMetadataTabData.datasetPermissions.permissions.metadata.canCommit
             );
         } else {
             return false;
@@ -164,16 +158,16 @@ export class MetadataComponent extends BaseComponent implements OnInit {
 
     public navigateToEditPollingSource(): void {
         this.navigationService.navigateToAddPollingSource({
-            accountName: this.datasetBasics.owner.accountName,
-            datasetName: this.datasetBasics.name,
+            accountName: this.datasetMetadataTabData.datasetBasics.owner.accountName,
+            datasetName: this.datasetMetadataTabData.datasetBasics.name,
         });
     }
 
     public navigateToEditAddPushSource(sourceName: string): void {
         this.navigationService.navigateToAddPushSource(
             {
-                accountName: this.datasetBasics.owner.accountName,
-                datasetName: this.datasetBasics.name,
+                accountName: this.datasetMetadataTabData.datasetBasics.owner.accountName,
+                datasetName: this.datasetMetadataTabData.datasetBasics.name,
             },
             sourceName,
         );
@@ -181,15 +175,15 @@ export class MetadataComponent extends BaseComponent implements OnInit {
 
     public navigateToAddPushSource(): void {
         this.navigationService.navigateToAddPushSource({
-            accountName: this.datasetBasics.owner.accountName,
-            datasetName: this.datasetBasics.name,
+            accountName: this.datasetMetadataTabData.datasetBasics.owner.accountName,
+            datasetName: this.datasetMetadataTabData.datasetBasics.name,
         });
     }
 
     public navigateToEditSetTransform(): void {
         this.navigationService.navigateToSetTransform({
-            accountName: this.datasetBasics.owner.accountName,
-            datasetName: this.datasetBasics.name,
+            accountName: this.datasetMetadataTabData.datasetBasics.owner.accountName,
+            datasetName: this.datasetMetadataTabData.datasetBasics.name,
         });
     }
 
@@ -200,6 +194,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
                 yesButtonText: "Ok",
             }),
         );
+        //TODO:
         // this.trackSubscription(
         //     this.datasetCommitService
         //         .commitEventToDataset(

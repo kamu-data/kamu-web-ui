@@ -1,14 +1,13 @@
 <div class="app-main-container" role="main" data-test-id="dataset-view" id="dataset-view" *ngIf="datasetBasics">
     <div class="app-content mt-4">
         <app-dataset-view-header
-            *ngIf="datasetInfo"
             [datasetVisibility]="datasetBasics.visibility"
             [datasetInfo]="datasetInfo"
             (onClickSearchAdditionalButtonEmit)="onClickSearchAdditionalButton($event)"
         />
     </div>
 
-    <div class="app-content" *ngIf="datasetPermissions$ | async as datasetPermissions">
+    <div class="app-content">
         <div id="dataset-viewer">
             <app-dataset-view-menu
                 [datasetBasics]="datasetBasics"
@@ -16,50 +15,7 @@
                 [datasetViewType]="datasetViewType"
             />
 
-            <app-overview
-                *ngIf="datasetViewType === DatasetViewTypeEnum.Overview"
-                [datasetBasics]="datasetBasics"
-                [datasetPermissions]="datasetPermissions"
-                (selectTopicEmit)="selectTopic($event)"
-            />
-
-            <app-metadata
-                *ngIf="datasetViewType === DatasetViewTypeEnum.Metadata"
-                [datasetBasics]="datasetBasics"
-                [datasetPermissions]="datasetPermissions"
-                (pageChangeEmit)="onPageChange($event)"
-            />
-
-            <app-data
-                *ngIf="datasetViewType === DatasetViewTypeEnum.Data"
-                [datasetBasics]="datasetBasics"
-                [sqlLoading]="sqlLoading"
-                (runSQLRequestEmit)="onRunSQLRequest($event)"
-            />
-
-            <app-history
-                *ngIf="datasetViewType === DatasetViewTypeEnum.History"
-                [datasetName]="datasetBasics.name"
-                (onPageChangeEmit)="onPageChange($event)"
-            />
-
-            <app-lineage
-                *ngIf="datasetViewType === DatasetViewTypeEnum.Lineage"
-                (onClickNodeEmit)="onClickLineageNode($event)"
-                (onClickPrivateNodeEmit)="onClickPrivateLineageNode($event)"
-            />
-
-            <app-flows
-                *ngIf="datasetViewType === DatasetViewTypeEnum.Flows"
-                [datasetBasics]="datasetBasics"
-                [datasetPermissions]="datasetPermissions"
-            />
-
-            <app-dataset-settings
-                *ngIf="datasetViewType === DatasetViewTypeEnum.Settings"
-                [datasetBasics]="datasetBasics"
-                [datasetPermissions]="datasetPermissions"
-            />
+            <router-outlet></router-outlet>
         </div>
     </div>
 </div>

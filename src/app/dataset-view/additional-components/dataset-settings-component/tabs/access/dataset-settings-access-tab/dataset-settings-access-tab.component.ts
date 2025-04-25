@@ -12,7 +12,7 @@ import {
     DatasetBasicsFragment,
     PageBasedInfo,
 } from "src/app/api/kamu.graphql.interface";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { SettingsTabsEnum } from "../../../dataset-settings.model";
 import { MatTableDataSource } from "@angular/material/table";
 import { BaseComponent } from "src/app/common/components/base.component";
@@ -31,6 +31,7 @@ import AppValues from "src/app/common/values/app.values";
 import { EditCollaboratorModalComponent } from "./edit-collaborator-modal/edit-collaborator-modal.component";
 import { CollaboratorModalResultType } from "./add-people-modal/add-people-modal.model";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 
 @Component({
     selector: "app-dataset-settings-access-tab",
@@ -39,7 +40,7 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetSettingsAccessTabComponent extends BaseComponent implements OnInit {
-    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
+    @Input(RoutingResolvers.DATASET_SETTINGS_ACCESS_KEY) public accessViewData: DatasetViewData;
 
     public dataSource = new MatTableDataSource();
     public currentPage = 1;
@@ -60,6 +61,10 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
     private cdr = inject(ChangeDetectorRef);
     private router = inject(Router);
     private loggedUserService = inject(LoggedUserService);
+
+    public get datasetBasics(): DatasetBasicsFragment {
+        return this.accessViewData.datasetBasics;
+    }
 
     public get isPrivate(): boolean {
         return this.datasetBasics.visibility.__typename === "PrivateDatasetVisibility";
@@ -101,8 +106,8 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
     public onPageChange(page: number): void {
         this.currentPage = page;
         this.navigationService.navigateToDatasetView({
-            accountName: this.getDatasetInfoFromUrl().accountName,
-            datasetName: this.getDatasetInfoFromUrl().datasetName,
+            accountName: this.datasetBasics.owner.accountName,
+            datasetName: this.datasetBasics.name,
             tab: DatasetViewTypeEnum.Settings,
             section: SettingsTabsEnum.ACCESS,
             page: this.currentPage,

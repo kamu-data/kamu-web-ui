@@ -322,15 +322,20 @@
                 </ng-container>
             </div>
         </ng-container>
-        <ng-container *ngIf="hasAnySource() && datasetBasics.kind === 'ROOT'">
+        <ng-container *ngIf="hasAnySource() && datasetMetadataTabData.datasetBasics.kind === 'ROOT'">
             <h3 class="box-title text-center mt-4">There is no metadata.</h3>
         </ng-container>
-        <ng-container *ngIf="!currentTransform && datasetBasics.kind === 'DERIVATIVE'">
+        <ng-container *ngIf="!currentTransform && datasetMetadataTabData.datasetBasics.kind === 'DERIVATIVE'">
             <h3 class="box-title text-center">
                 There is no metadata. Need to add
                 <a
                     class="add-link"
-                    [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name, URL_PARAM_SET_TRANSFORM]"
+                    [routerLink]="[
+                        '/',
+                        datasetMetadataTabData.datasetBasics.owner.accountName,
+                        datasetMetadataTabData.datasetBasics.name,
+                        URL_PARAM_SET_TRANSFORM,
+                    ]"
                 >
                     SetTransform event</a
                 >

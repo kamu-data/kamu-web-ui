@@ -20,14 +20,27 @@ import { LoginComponent } from "./auth/login/login.component";
 import { LoginService } from "./auth/login/login.service";
 import { LoginMethod } from "./app-config.model";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { accountSettingsAccessTokensResolver } from "./common/resolvers/account-settings-access-tokens.resolver";
+import { accountSettingsAccessTokensResolverFn } from "./account/settings/tabs/access-tokens-tab/resolver/account-settings-access-tokens.resolver";
 import { ToastrModule } from "ngx-toastr";
 import { mockAccountDetails } from "./api/mock/auth.mock";
 import { of } from "rxjs";
 import { AccessTokenConnection } from "./api/kamu.graphql.interface";
 import { mockListAccessTokensQuery } from "./api/mock/access-token.mock";
-import { searchResolver } from "./common/resolvers/search.resolver";
-import { mockDatasetSearchResult } from "./search/mock.data";
+import { searchResolverFn } from "./search/resolver/search.resolver";
+import {
+    mockDatasetBasicsDerivedFragment,
+    mockDatasetSearchResult,
+    mockFullPowerDatasetPermissionsFragment,
+} from "./search/mock.data";
+import { datasetViewResolverFn } from "./dataset-view/resolvers/dataset-view.resolver";
+import { datasetOverviewTabResolverFn } from "./dataset-view/additional-components/overview-component/resolver/dataset-overview-tab.resolver";
+import {
+    mockMetadataDerivedUpdate,
+    mockOverviewDataUpdate,
+    mockOverviewDataUpdateNullable,
+} from "./dataset-view/additional-components/data-tabs.mock";
+import { OverviewUpdate } from "./dataset-view/dataset.subscriptions.interface";
+import { NgxGraphModule } from "@swimlane/ngx-graph";
 
 describe("Router", () => {
     let router: Router;
@@ -43,20 +56,47 @@ describe("Router", () => {
                 ApolloTestingModule,
                 HttpClientTestingModule,
                 ToastrModule.forRoot(),
+                NgxGraphModule,
             ],
             declarations: [PageNotFoundComponent, LoginComponent],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
                 {
-                    provide: accountSettingsAccessTokensResolver,
+                    provide: accountSettingsAccessTokensResolverFn,
                     useValue: {
                         resolve: () => of(mockListAccessTokensQuery.auth.listAccessTokens as AccessTokenConnection),
                     },
                 },
                 {
-                    provide: searchResolver,
+                    provide: searchResolverFn,
                     useValue: {
                         resolve: () => of(mockDatasetSearchResult),
+                    },
+                },
+                {
+                    provide: datasetViewResolverFn,
+                    useValue: {
+                        resolve: () =>
+                            of({
+                                datasetBasics: mockDatasetBasicsDerivedFragment,
+                                datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+                            }),
+                    },
+                },
+                {
+                    provide: datasetOverviewTabResolverFn,
+                    useValue: {
+                        resolve: () =>
+                            of({
+                                datasetBasics: mockDatasetBasicsDerivedFragment,
+                                datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+                                overviewUpdate: {
+                                    schema: mockMetadataDerivedUpdate.schema,
+                                    content: mockOverviewDataUpdate.content,
+                                    overview: structuredClone(mockOverviewDataUpdateNullable.overview),
+                                    size: mockOverviewDataUpdate.size,
+                                } as OverviewUpdate,
+                            }),
                     },
                 },
             ],

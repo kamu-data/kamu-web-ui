@@ -13,16 +13,7 @@ import {
     PageBasedInfo,
     ViewAccessToken,
 } from "src/app/api/kamu.graphql.interface";
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    inject,
-    Input,
-    OnChanges,
-    SimpleChanges,
-    ViewChild,
-} from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, ViewChild } from "@angular/core";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { AccountSettingsTabs, TokenCreateStep } from "../../account-settings.constants";
@@ -44,7 +35,7 @@ import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
     styleUrls: ["./access-tokens-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccessTokensTabComponent extends BaseComponent implements OnChanges {
+export class AccessTokensTabComponent extends BaseComponent {
     private fb = inject(FormBuilder);
     private modalService = inject(ModalService);
     private clipboard = inject(Clipboard);
@@ -53,8 +44,17 @@ export class AccessTokensTabComponent extends BaseComponent implements OnChanges
     private cdr = inject(ChangeDetectorRef);
     private loggedUserService = inject(LoggedUserService);
 
-    @Input(RoutingResolvers.ACCOUNT_SETTINGS_ACCESS_TOKENS_KEY) public tokenConnection: AccessTokenConnection;
+    @Input(RoutingResolvers.ACCOUNT_SETTINGS_ACCESS_TOKENS_KEY) public set tokenConnectionData(
+        value: AccessTokenConnection,
+    ) {
+        this.tokenConnection = value;
+        this.dataSource.data = value.nodes;
+        this.toggleTokens();
+        this.dataSource.sort = this.sort;
+        this.pageBasedInfo = value.pageInfo;
+    }
 
+    public tokenConnection: AccessTokenConnection;
     @ViewChild(MatSort) private sort: MatSort;
     public searchTokenName: string = "";
     public dataSource = new MatTableDataSource();
@@ -69,16 +69,6 @@ export class AccessTokensTabComponent extends BaseComponent implements OnChanges
     public readonly TokenCreateStep: typeof TokenCreateStep = TokenCreateStep;
     public readonly PER_PAGE = 15;
     public readonly DATE_FORMAT = AppValues.DISPLAY_FLOW_DATE_FORMAT;
-
-    public ngOnChanges(changes: SimpleChanges): void {
-        if (changes.tokenConnection && changes.tokenConnection.previousValue !== changes.tokenConnection.currentValue) {
-            this.tokenConnection = changes.tokenConnection.currentValue as AccessTokenConnection;
-            this.dataSource.data = this.tokenConnection.nodes;
-            this.toggleTokens();
-            this.dataSource.sort = this.sort;
-            this.pageBasedInfo = this.tokenConnection.pageInfo;
-        }
-    }
 
     public get currentPage(): number {
         return this.tokenConnection.pageInfo.currentPage + 1;

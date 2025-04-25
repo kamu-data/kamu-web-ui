@@ -10,7 +10,7 @@ export enum SettingsTabsEnum {
     SCHEDULING = "scheduling",
     VARIABLES_AND_SECRETS = "variables-and-secrets",
     COMPACTION = "compaction",
-    TRANSFORM_SETTINGS = "transform-settings",
+    TRANSFORM_SETTINGS = "transform",
     ACCESS = "access",
 }
 

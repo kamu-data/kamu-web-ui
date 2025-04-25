@@ -151,7 +151,7 @@ describe("ReadmeSectionComponent", () => {
         const runButtonElement = findNativeElement(fixture, `.markdown-run-button`) as HTMLLinkElement;
         expect(
             runButtonElement.href.includes(
-                "kamu/mockNameDerived?tab=data&sqlQuery=select%20*%20from%20%27account.tokens.portfolio.market-value%27",
+                "kamu/mockNameDerived/data?sqlQuery=select%20*%20from%20%27account.tokens.portfolio.market-value%27",
             ),
         ).toBeTrue();
     });
@@ -165,7 +165,7 @@ describe("ReadmeSectionComponent", () => {
         const runButtonElement = findNativeElement(fixture, `.markdown-run-button`) as HTMLLinkElement;
         expect(
             runButtonElement.href.includes(
-                "kamu/mockNameDerived?tab=data&sqlQuery=select%0A*%0Afrom%20%27account.tokens.portfolio.market-value%27",
+                "kamu/mockNameDerived/data?sqlQuery=select%0A*%0Afrom%20%27account.tokens.portfolio.market-value%27",
             ),
         ).toBeTrue();
     });

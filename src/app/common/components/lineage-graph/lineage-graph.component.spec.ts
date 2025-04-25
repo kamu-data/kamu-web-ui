@@ -44,6 +44,7 @@ describe("LineageGraphComponent", () => {
                 DisplayTimeModule,
                 SharedTestModule,
                 DisplayDatasetIdPipeModule,
+                NgxGraphModule,
             ],
         })
             .overrideComponent(LineageGraphComponent, {

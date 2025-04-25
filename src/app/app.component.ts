@@ -29,6 +29,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatIconRegistry } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
 import { SessionStorageService } from "./services/session-storage.service";
+import { DatasetViewTypeEnum } from "./dataset-view/dataset-view.interface";
 
 export const ALL_URLS_WITHOUT_HEADER: string[] = [ProjectLinks.URL_LOGIN, ProjectLinks.URL_GITHUB_CALLBACK];
 
@@ -186,6 +187,7 @@ export class AppComponent extends BaseComponent implements OnInit {
             this.navigationService.navigateToDatasetView({
                 accountName: item.dataset.owner.accountName,
                 datasetName: item.dataset.name,
+                tab: DatasetViewTypeEnum.Overview,
             });
         } else {
             this.navigationService.navigateToSearch(item.dataset.id);

@@ -45,6 +45,9 @@ export function apolloCache(): InMemoryCache {
             Accounts: {
                 merge: true,
             },
+            MetadataChain: {
+                merge: true,
+            },
         },
     });
 }

@@ -38,7 +38,7 @@ export class EnvironmentVariablesApi {
         page: number;
         perPage: number;
     }): Observable<ListEnvVariablesQuery> {
-        return this.listEnvVariablesGQL.watch({ ...params }).valueChanges.pipe(
+        return this.listEnvVariablesGQL.watch({ ...params }, noCacheFetchPolicy).valueChanges.pipe(
             first(),
             map((result: ApolloQueryResult<ListEnvVariablesQuery>) => {
                 return result.data;

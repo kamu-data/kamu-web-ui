@@ -46,6 +46,7 @@ import { OdfDefaultValues } from "src/app/common/values/app-odf-default.values";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { ActivatedRoute } from "@angular/router";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 
 describe("AddPollingSourceComponent", () => {
     let component: AddPollingSourceComponent;
@@ -173,9 +174,10 @@ describe("AddPollingSourceComponent", () => {
 
     it("check dataset editability passes for root dataset with full permissions", () => {
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.stub();
-
+        const clonePermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
+        clonePermissions.permissions.metadata.canCommit = true;
         datasetService.emitDatasetChanged(mockDatasetBasicsRootFragment);
-        datasetSubsService.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
+        datasetSubsService.emitPermissionsChanged(clonePermissions);
 
         expect(navigateToDatasetViewSpy).not.toHaveBeenCalled();
     });
@@ -198,6 +200,7 @@ describe("AddPollingSourceComponent", () => {
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
             accountName: mockDatasetBasicsRootFragment.owner.accountName,
             datasetName: mockDatasetBasicsRootFragment.name,
+            tab: DatasetViewTypeEnum.Overview,
         } as DatasetNavigationParams);
     });
 
@@ -210,6 +213,7 @@ describe("AddPollingSourceComponent", () => {
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
             accountName: mockDatasetBasicsDerivedFragment.owner.accountName,
             datasetName: mockDatasetBasicsDerivedFragment.name,
+            tab: DatasetViewTypeEnum.Overview,
         } as DatasetNavigationParams);
     });
 

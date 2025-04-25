@@ -24,7 +24,7 @@ import {
 } from "../api/kamu.graphql.interface";
 import { DatasetInfo } from "../interface/navigation.interface";
 import { inject, Injectable, Injector } from "@angular/core";
-import { combineLatest, Observable, of, Subject } from "rxjs";
+import { combineLatest, Observable, of, ReplaySubject, Subject } from "rxjs";
 import { DataRow, DatasetLineageNode, DatasetSchema } from "../interface/dataset.interface";
 import {
     DatasetBasicsFragment,
@@ -43,20 +43,16 @@ import { map } from "rxjs/operators";
 import { MaybeNull } from "../interface/app.types";
 import { parseCurrentSchema } from "../common/helpers/app.helpers";
 import { APOLLO_OPTIONS } from "apollo-angular";
-import { Router } from "@angular/router";
 import { resetCacheHelper } from "../common/helpers/apollo-cache.helper";
 import { parseDataRows } from "../common/helpers/data.helpers";
-import { SessionStorageService } from "../services/session-storage.service";
 
 @Injectable({ providedIn: "root" })
 export class DatasetService {
     private datasetApi = inject(DatasetApi);
     private datasetSubsService = inject(DatasetSubscriptionsService);
     private injector = inject(Injector);
-    private router = inject(Router);
-    private sessionStorageService = inject(SessionStorageService);
     private currentHeadBlockHash: string;
-    private dataset$: Subject<DatasetBasicsFragment> = new Subject<DatasetBasicsFragment>();
+    private dataset$: Subject<DatasetBasicsFragment> = new ReplaySubject<DatasetBasicsFragment>(1);
 
     public get datasetChanges(): Observable<DatasetBasicsFragment> {
         return this.dataset$.asObservable();
@@ -174,8 +170,6 @@ export class DatasetService {
         return this.datasetApi.getDatasetHistory({ ...info, numRecords, numPage }).pipe(
             map((data: GetDatasetHistoryQuery) => {
                 if (data.datasets.byOwnerAndName) {
-                    const dataset: DatasetBasicsFragment = data.datasets.byOwnerAndName;
-                    this.emitDatasetChanged(dataset);
                     const pageInfo: DatasetPageInfoFragment = Object.assign(
                         {},
                         data.datasets.byOwnerAndName.metadata.chain.blocks.pageInfo,
@@ -197,8 +191,6 @@ export class DatasetService {
         return this.datasetApi.getDatasetLineage({ ...info }).pipe(
             map((data: GetDatasetLineageQuery) => {
                 if (data.datasets.byOwnerAndName) {
-                    const dataset: DatasetBasicsFragment = data.datasets.byOwnerAndName;
-                    this.emitDatasetChanged(dataset);
                     this.lineageTabDataUpdate(data.datasets.byOwnerAndName, data.datasets.byOwnerAndName);
                 } else {
                     throw new DatasetNotFoundError();

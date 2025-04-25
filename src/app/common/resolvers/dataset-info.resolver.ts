@@ -10,7 +10,7 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
 import { getAllRouteParams } from "../helpers/data.helpers";
 
-export const datasetInfoResolver: ResolveFn<DatasetInfo> = (route: ActivatedRouteSnapshot) => {
+export const datasetInfoResolverFn: ResolveFn<DatasetInfo> = (route: ActivatedRouteSnapshot) => {
     const params = getAllRouteParams(route);
     const accountName = params[ProjectLinks.URL_PARAM_ACCOUNT_NAME];
     const datasetName = params[ProjectLinks.URL_PARAM_DATASET_NAME];

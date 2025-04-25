@@ -33,6 +33,7 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { NotificationIndicatorComponent } from "./header/notification-indicator/notification-indicator.component";
 import { MatIconModule } from "@angular/material/icon";
 import { AppHeaderComponent } from "./header/app-header/app-header.component";
+import { DatasetViewTypeEnum } from "./dataset-view/dataset-view.interface";
 
 describe("AppComponent", () => {
     let component: AppComponent;
@@ -121,6 +122,7 @@ describe("AppComponent", () => {
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
             accountName: mockAutocompleteItems[0].dataset.owner.accountName,
             datasetName: mockAutocompleteItems[0].dataset.name,
+            tab: DatasetViewTypeEnum.Overview,
         });
     });
 

@@ -144,6 +144,33 @@
                 </svg:text>
             </svg:g>
 
+            <svg:g class="node" *ngIf="node.data.kind === LineageGraphNodeKind.EthereumLogs">
+                <svg:rect
+                    [attr.width]="node.dimension.width"
+                    [attr.height]="50"
+                    [attr.rx]="5"
+                    [attr.fill]="'#FFF'"
+                    [attr.cursor]="'pointer'"
+                />
+                <image
+                    [attr.x]="-45"
+                    [attr.y]="node.dimension.height / 2 - 20"
+                    [attr.width]="50"
+                    [attr.height]="40"
+                    [attr.href]="'../assets/images/ethereum-logo.jpg'"
+                />
+
+                <svg:text
+                    alignment-baseline="central"
+                    [attr.x]="0"
+                    [attr.y]="node.dimension.height / 2"
+                    [attr.font-weight]="'normal'"
+                    [attr.cursor]="'pointer'"
+                >
+                    {{ node.label }}
+                </svg:text>
+            </svg:g>
+
             <svg:g class="node" *ngIf="node.data.kind === LineageGraphNodeKind.DatasetNotAccessable">
                 <svg:rect
                     [attr.width]="node.dimension.width + 12"

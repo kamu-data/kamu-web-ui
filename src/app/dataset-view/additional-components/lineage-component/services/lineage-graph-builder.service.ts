@@ -147,6 +147,7 @@ export class LineageGraphBuilderService {
 
         this.buildSourceNodesByType(uniqueDatasets, sourceNodesByLabel, source2DatasetLinks, "FetchStepUrl");
         this.buildSourceNodesByType(uniqueDatasets, sourceNodesByLabel, source2DatasetLinks, "FetchStepMqtt");
+        this.buildSourceNodesByType(uniqueDatasets, sourceNodesByLabel, source2DatasetLinks, "FetchStepEthereumLogs");
 
         return { nodes: [...sourceNodesByLabel.values()], links: source2DatasetLinks };
     }
@@ -201,6 +202,7 @@ export class LineageGraphBuilderService {
     private graphNodeKindMapper: Record<string, LineageGraphNodeKind> = {
         FetchStepUrl: LineageGraphNodeKind.Source,
         FetchStepMqtt: LineageGraphNodeKind.Mqtt,
+        FetchStepEthereumLogs: LineageGraphNodeKind.EthereumLogs,
     };
 
     private buildSourceNodeLabel(step: FetchStep): string {
@@ -209,6 +211,8 @@ export class LineageGraphBuilderService {
                 return this.getDomainFromUrl(step.url);
             case "FetchStepMqtt":
                 return `${step.host}:${step.port}`;
+            case "FetchStepEthereumLogs":
+                return step.nodeUrl ?? "Unknown";
             default:
                 throw new Error(`Unknown source label type ${step.__typename}`);
         }

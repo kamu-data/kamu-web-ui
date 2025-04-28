@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+### Added
+- Ethereum logs source: show blockchain logo and chain name in Lineage graph
 ### Changed
 - Separate routes for all tabs of the DatasetSettings component
 

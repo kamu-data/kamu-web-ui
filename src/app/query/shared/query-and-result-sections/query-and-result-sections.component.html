@@ -1,5 +1,12 @@
-<div class="sql-query-editor-header flex-column justify-content-between">
-    <h2 class="box-title align-items-center pb-3 m-0">Query:</h2>
+<div class="sql-query-editor-header d-flex flex-row justify-content-between">
+    <div class="box-title align-items-center pb-3 m-0 d-flex flex-row gap-3">
+        <span class="d-block">Engine:</span>
+        <app-engine-select
+            *ngIf="knownEngines$ | async as knownEngines"
+            [data]="knownEngines"
+            [engine]="selectedEngine"
+        ></app-engine-select>
+    </div>
     <div class="btn-group-parent">
         <div class="d-flex">
             <button

@@ -13,6 +13,7 @@ import {
     inject,
     Input,
     OnChanges,
+    OnInit,
     Output,
     SimpleChanges,
 } from "@angular/core";
@@ -33,6 +34,9 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { AppConfigService } from "src/app/app-config.service";
 import { SqlQueryResponseState } from "src/app/query/global-query/global-query.model";
+import { EngineDesc } from "src/app/api/kamu.graphql.interface";
+import { map, Observable } from "rxjs";
+import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 
 @Component({
     selector: "app-query-and-result-sections",
@@ -40,7 +44,7 @@ import { SqlQueryResponseState } from "src/app/query/global-query/global-query.m
     styleUrls: ["./query-and-result-sections.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class QueryAndResultSectionsComponent extends BaseComponent implements OnChanges {
+export class QueryAndResultSectionsComponent extends BaseComponent implements OnInit, OnChanges {
     @Input({ required: true }) public sqlLoading: boolean;
     @Input({ required: true }) public sqlError: MaybeNull<string>;
     @Input({ required: true }) public sqlRequestCode: string;
@@ -56,12 +60,19 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
     private toastService = inject(ToastrService);
     private appConfigService = inject(AppConfigService);
     private cdr = inject(ChangeDetectorRef);
+    private engineService = inject(EngineService);
 
     public skipRows: MaybeUndefined<number>;
     public rowsLimit: number = AppValues.SQL_QUERY_LIMIT;
     public editorLoaded = false;
     public currentData: DataRow[] = [];
     public isAllDataLoaded: boolean;
+    public selectedEngine = "datafusion";
+    public knownEngines$: Observable<EngineDesc[]>;
+
+    public ngOnInit(): void {
+        this.knownEngines$ = this.engineService.engines().pipe(map((result) => result.data.knownEngines));
+    }
 
     public ngOnChanges(changes: SimpleChanges): void {
         if (

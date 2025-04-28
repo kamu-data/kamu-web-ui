@@ -23,6 +23,7 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { DynamicTableModule } from "src/app/common/components/dynamic-table/dynamic-table.module";
 import { EditorModule } from "src/app/editor/editor.module";
+import { EngineSelectComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
 
 @NgModule({
     declarations: [
@@ -31,6 +32,7 @@ import { EditorModule } from "src/app/editor/editor.module";
         RequestTimerComponent,
         SearchAndSchemasSectionComponent,
         SavedQueriesSectionComponent,
+        EngineSelectComponent,
     ],
     imports: [
         CdkAccordionModule,
@@ -47,6 +49,11 @@ import { EditorModule } from "src/app/editor/editor.module";
 
         DynamicTableModule,
     ],
-    exports: [QueryAndResultSectionsComponent, SavedQueriesSectionComponent, SearchAndSchemasSectionComponent],
+    exports: [
+        QueryAndResultSectionsComponent,
+        SavedQueriesSectionComponent,
+        SearchAndSchemasSectionComponent,
+        EngineSelectComponent,
+    ],
 })
 export class QuerySharedModule {}

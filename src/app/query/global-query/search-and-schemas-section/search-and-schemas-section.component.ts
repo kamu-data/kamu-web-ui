@@ -51,6 +51,7 @@ export class SearchAndSchemasSectionComponent extends BaseComponent implements O
     public searchResult: GlobalQuerySearchItem[] = [];
     public inputDatasets = new Set<string>();
     public searchDataset = "";
+
     private readonly delayTime: number = AppValues.SHORT_DELAY_MS;
     private readonly SQL_DEFAULT_TEMPLATE = `select\n  *\nfrom`;
 

@@ -27,12 +27,16 @@ import { SqlQueryService } from "src/app/services/sql-query.service";
 import { of } from "rxjs";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { NavigationService } from "src/app/services/navigation.service";
+import { EngineSelectComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
+import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
+import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 
 describe("GlobalQueryComponent", () => {
     let component: GlobalQueryComponent;
     let fixture: ComponentFixture<GlobalQueryComponent>;
     let sqlQueryService: SqlQueryService;
     let navigationService: NavigationService;
+    let engineService: EngineService;
     const SQL_QUERY = "select * from 'datasetName'";
 
     beforeEach(() => {
@@ -43,6 +47,7 @@ describe("GlobalQueryComponent", () => {
                 RequestTimerComponent,
                 QueryAndResultSectionsComponent,
                 SearchAndSchemasSectionComponent,
+                EngineSelectComponent,
             ],
             imports: [
                 EditorModule,
@@ -65,6 +70,8 @@ describe("GlobalQueryComponent", () => {
         component.sqlQuery = SQL_QUERY;
         sqlQueryService = TestBed.inject(SqlQueryService);
         navigationService = TestBed.inject(NavigationService);
+        engineService = TestBed.inject(EngineService);
+        spyOn(engineService, "engines").and.returnValue(of(mockEngines));
         spyOn(navigationService, "navigateToDatasetView");
         fixture.detectChanges();
     });

@@ -13,10 +13,10 @@
     </div>
     <div class="option" #option *ngIf="showDropdown">
         <ng-container *ngFor="let item of data; let i = index">
-            <div (click)="clickShowDropdown(item)">
-                <img [src]="getLogo(item.name).url_logo" alt="" />
+            <button (click)="clickShowDropdown(item)" [disabled]="item.name !== 'DataFusion'">
+                <img [src]="getLogo(item.name).url_logo" alt="logo" />
                 {{ getLogo(item.name).label }}
-            </div>
+            </button>
         </ng-container>
     </div>
 </div>

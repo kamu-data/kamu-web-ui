@@ -48,6 +48,9 @@ import { of } from "rxjs";
 import AppValues from "src/app/common/values/app.values";
 import { ActivatedRoute } from "@angular/router";
 import ProjectLinks from "src/app/project-links";
+import { EngineService } from "../metadata-component/components/set-transform/components/engine-section/engine.service";
+import { mockEngines } from "../metadata-component/components/set-transform/mock.data";
+import { EngineSelectComponent } from "../metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
 
 describe("DataComponent", () => {
     let component: DataComponent;
@@ -58,6 +61,7 @@ describe("DataComponent", () => {
     let navigationService: NavigationService;
     let sqlQueryService: SqlQueryService;
     let requestDataSqlRunSpy: jasmine.Spy;
+    let engineService: EngineService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -111,6 +115,7 @@ describe("DataComponent", () => {
                 RequestTimerComponent,
                 SqlEditorComponent,
                 SearchAndSchemasSectionComponent,
+                EngineSelectComponent,
             ],
         }).compileComponents();
         fixture = TestBed.createComponent(DataComponent);
@@ -119,6 +124,8 @@ describe("DataComponent", () => {
         sessionStorageService = TestBed.inject(SessionStorageService);
         navigationService = TestBed.inject(NavigationService);
         sqlQueryService = TestBed.inject(SqlQueryService);
+        engineService = TestBed.inject(EngineService);
+        spyOn(engineService, "engines").and.returnValue(of(mockEngines));
         spyOn(navigationService, "navigateToDatasetView");
         spyOn(navigationService, "navigateWithSqlQuery");
 

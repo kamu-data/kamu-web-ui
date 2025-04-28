@@ -49,14 +49,20 @@
     .option {
         position: absolute;
         top: 37px;
-        width: 350px;
+        width: 100%;
         background: #fff;
         padding: 6px 10px;
         border-radius: 5px;
         overflow: hidden;
         border: 1px solid #ced4da;
+        z-index: 10;
 
-        div {
+        button {
+            height: 35px;
+            border: 0;
+            outline: 0;
+            width: 350px;
+            background: transparent;
             padding: 10px;
             cursor: pointer;
             display: flex;

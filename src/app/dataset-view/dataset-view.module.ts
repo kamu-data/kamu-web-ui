@@ -55,7 +55,6 @@ import { EngineSectionComponent } from "./additional-components/metadata-compone
 import { QueriesSectionComponent } from "./additional-components/metadata-component/components/set-transform/components/queries-section/queries-section.component";
 import { AddPollingSourceComponent } from "./additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source.component";
 import { MatStepperModule } from "@angular/material/stepper";
-import { EngineSelectComponent } from "./additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
 import { ReadmeSectionComponent } from "./additional-components/overview-component/components/readme-section/readme-section.component";
 import { DatasetSettingsComponent } from "./additional-components/dataset-settings-component/dataset-settings.component";
 import { MatInputModule } from "@angular/material/input";
@@ -197,7 +196,6 @@ import { EditCollaboratorModalComponent } from "./additional-components/dataset-
         EditLicenseModalComponent,
         EditWatermarkModalComponent,
         EngineSectionComponent,
-        EngineSelectComponent,
         FileFromUrlModalComponent,
         FinalYamlModalComponent,
         FlowsComponent,

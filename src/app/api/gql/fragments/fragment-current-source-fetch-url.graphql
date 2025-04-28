@@ -9,6 +9,10 @@ fragment CurrentSourceFetchUrl on DatasetMetadata {
         host
         port
       }
+
+      ... on FetchStepEthereumLogs {
+        nodeUrl
+      }
     }
   }
 }

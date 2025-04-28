@@ -32,6 +32,9 @@ import { mockQueryExplainerResponse } from "src/app/query-explainer/query-explai
 import { FileUploadService } from "src/app/services/file-upload.service";
 import { MatDividerModule } from "@angular/material/divider";
 import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
+import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
+import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import { EngineSelectComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
 
 describe("QueryAndResultSectionsComponent", () => {
     let component: QueryAndResultSectionsComponent;
@@ -40,10 +43,16 @@ describe("QueryAndResultSectionsComponent", () => {
     let toastrService: ToastrService;
     let queryExplainerService: QueryExplainerService;
     let fileUploadService: FileUploadService;
+    let engineService: EngineService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [QueryAndResultSectionsComponent, RequestTimerComponent, SqlEditorComponent],
+            declarations: [
+                QueryAndResultSectionsComponent,
+                RequestTimerComponent,
+                SqlEditorComponent,
+                EngineSelectComponent,
+            ],
             imports: [
                 CdkAccordionModule,
                 HttpClientTestingModule,
@@ -63,6 +72,9 @@ describe("QueryAndResultSectionsComponent", () => {
         toastrService = TestBed.inject(ToastrService);
         queryExplainerService = TestBed.inject(QueryExplainerService);
         fileUploadService = TestBed.inject(FileUploadService);
+        engineService = TestBed.inject(EngineService);
+        spyOn(engineService, "engines").and.returnValue(of(mockEngines));
+
         component.sqlLoading = false;
         component.sqlRequestCode = "select * from 'mock-dataset'";
     });

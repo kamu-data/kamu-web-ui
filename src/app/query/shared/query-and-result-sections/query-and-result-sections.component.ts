@@ -67,7 +67,7 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
     public editorLoaded = false;
     public currentData: DataRow[] = [];
     public isAllDataLoaded: boolean;
-    public selectedEngine = "datafusion";
+    public selectedEngine = AppValues.DEFAULT_ENGINE_NAME.toLowerCase();
     public knownEngines$: Observable<EngineDesc[]>;
 
     public ngOnInit(): void {

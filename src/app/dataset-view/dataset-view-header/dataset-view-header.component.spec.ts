@@ -7,7 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetViewHeaderComponent } from "./dataset-view-header.component";
-import { mockDatasetInfo, mockPublicDatasetVisibility } from "src/app/search/mock.data";
+import { mockDatasetBasicsRootFragment, mockDatasetInfo } from "src/app/search/mock.data";
 import { MatIconModule } from "@angular/material/icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatMenuModule } from "@angular/material/menu";
@@ -40,7 +40,7 @@ describe("DatasetViewHeaderComponent", () => {
         fixture = TestBed.createComponent(DatasetViewHeaderComponent);
         component = fixture.componentInstance;
         component.datasetInfo = mockDatasetInfo;
-        component.datasetVisibility = mockPublicDatasetVisibility;
+        component.datasetBasics = mockDatasetBasicsRootFragment;
         fixture.detectChanges();
     });
 

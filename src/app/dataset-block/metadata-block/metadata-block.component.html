@@ -8,7 +8,7 @@
     <div class="app-content mt-4">
         <ng-container *ngIf="datasetBasics$ | async as datasetBasics">
             <app-dataset-view-header
-                [datasetVisibility]="datasetBasics.visibility"
+                [datasetBasics]="datasetBasics"
                 [datasetInfo]="datasetInfo"
                 (showOwnerPageEmit)="showOwnerPage(datasetInfo.accountName)"
                 (onClickSearchAdditionalButtonEmit)="onClickSearchAdditionalButton($event)"

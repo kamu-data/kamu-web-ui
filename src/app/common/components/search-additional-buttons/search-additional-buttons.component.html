@@ -11,12 +11,14 @@
     </div>
     <mat-menu #menu="matMenu" class="search-additional-buttons-minimize-block">
         <app-search-additional-buttons-nav
+            [datasetBasics]="datasetBasics"
             [searchAdditionalButtonsData]="searchAdditionalButtonsData"
         ></app-search-additional-buttons-nav>
     </mat-menu>
 </ng-template>
 <ng-template [ngIf]="!shouldMinimizeSearchAdditionalButtons" id="bigSearchAdditionalButtons">
     <app-search-additional-buttons-nav
+        [datasetBasics]="datasetBasics"
         (searchAdditionalButtonsMethod)="onClick($event)"
         [searchAdditionalButtonsData]="searchAdditionalButtonsData"
     ></app-search-additional-buttons-nav>

@@ -1,7 +1,7 @@
 <div class="app-main-container" role="main" data-test-id="dataset-view" id="dataset-view" *ngIf="datasetBasics">
     <div class="app-content mt-4">
         <app-dataset-view-header
-            [datasetVisibility]="datasetBasics.visibility"
+            [datasetBasics]="datasetBasics"
             [datasetInfo]="datasetInfo"
             (onClickSearchAdditionalButtonEmit)="onClickSearchAdditionalButton($event)"
         />

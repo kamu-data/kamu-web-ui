@@ -15,6 +15,7 @@ import {
 } from "./dataset.subscriptions.interface";
 import { DatasetPermissionsFragment } from "../api/kamu.graphql.interface";
 import { MaybeNull } from "../interface/app.types";
+import { SearchAdditionalHeaderDatasetInputs } from "../common/components/search-additional-buttons/search-additional-buttons.interface";
 
 @Injectable({ providedIn: "root" })
 export class DatasetSubscriptionsService {
@@ -27,6 +28,17 @@ export class DatasetSubscriptionsService {
     private permissions$: Subject<DatasetPermissionsFragment> = new ReplaySubject<DatasetPermissionsFragment>(
         1 /*bufferSize*/,
     );
+
+    private currentTransformInputsCount$: Subject<SearchAdditionalHeaderDatasetInputs> =
+        new ReplaySubject<SearchAdditionalHeaderDatasetInputs>(1 /*bufferSize*/);
+
+    public emitCurrentTransformInputsCountChanged(count: number): void {
+        this.currentTransformInputsCount$.next({ count });
+    }
+
+    public get currentTransformInputsCountChanges(): Observable<SearchAdditionalHeaderDatasetInputs> {
+        return this.currentTransformInputsCount$.asObservable();
+    }
 
     public emitOverviewChanged(data: OverviewUpdate): void {
         this.overview$.next(data);

@@ -16,8 +16,9 @@ import {
     Output,
     ViewChild,
 } from "@angular/core";
-import { SearchAdditionalHeaderButtonInterface } from "./search-additional-buttons.interface";
+import { SearchAdditionalHeaderButtonOptions } from "./search-additional-buttons.interface";
 import { isMobileView } from "src/app/common/helpers/app.helpers";
+import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-search-additional-buttons",
@@ -27,8 +28,9 @@ import { isMobileView } from "src/app/common/helpers/app.helpers";
 })
 export class SearchAdditionalButtonsComponent implements OnInit {
     @Input({ required: true })
-    public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[];
+    public searchAdditionalButtonsData: SearchAdditionalHeaderButtonOptions;
     @Output() public searchAdditionalButtonsMethod = new EventEmitter<string>();
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     public shouldMinimizeSearchAdditionalButtons = false;
     @ViewChild("menuTrigger") public trigger: ElementRef;
 

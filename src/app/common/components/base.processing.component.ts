@@ -24,22 +24,15 @@ export abstract class BaseProcessingComponent extends BaseComponent {
         const mapperMethod: {
             [key in searchAdditionalButtonsEnum]: () => void;
         } = {
-            [searchAdditionalButtonsEnum.DeriveFrom]: () => this.onClickDeriveFrom(),
+            [searchAdditionalButtonsEnum.DeriveFrom]: () => null,
 
-            [searchAdditionalButtonsEnum.Starred]: () => null,
-            [searchAdditionalButtonsEnum.UnWatch]: () => null,
+            [searchAdditionalButtonsEnum.Starred]: () => this.onClickUnimplemetedButton(),
+            [searchAdditionalButtonsEnum.UnWatch]: () => this.onClickUnimplemetedButton(),
         };
         mapperMethod[method as searchAdditionalButtonsEnum]();
-
-        promiseWithCatch(
-            this.modalService.warning({
-                message: "Feature coming soon",
-                yesButtonText: "Ok",
-            }),
-        );
     }
 
-    private onClickDeriveFrom(): void {
+    private onClickUnimplemetedButton(): void {
         promiseWithCatch(
             this.modalService.warning({
                 message: "Feature coming soon",

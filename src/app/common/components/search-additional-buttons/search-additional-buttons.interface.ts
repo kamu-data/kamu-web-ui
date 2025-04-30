@@ -5,6 +5,13 @@
  * included in the LICENSE file.
  */
 
+import { searchAdditionalButtonsEnum } from "src/app/search/search.interface";
+
+export type SearchAdditionalHeaderButtonOptions = Record<
+    searchAdditionalButtonsEnum,
+    SearchAdditionalHeaderButtonInterface
+>;
+
 export interface SearchAdditionalHeaderButtonInterface {
     id: string;
     textButton: string;
@@ -13,7 +20,7 @@ export interface SearchAdditionalHeaderButtonInterface {
     iconSvgPath: string;
     svgClass: string;
     iconSvgPathClass: string;
-    counter: number;
+    counter?: number;
     additionalOptions?: {
         title?: string;
         options?: {
@@ -23,4 +30,8 @@ export interface SearchAdditionalHeaderButtonInterface {
             value?: string;
         }[];
     };
+}
+
+export interface SearchAdditionalHeaderDatasetInputs {
+    count: number;
 }

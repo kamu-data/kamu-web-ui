@@ -5346,6 +5346,10 @@ export type GetMetadataBlockQuery = {
                           blockByHashEncoded?: string | null;
                           blockByHash?: ({ __typename?: "MetadataBlockExtended" } & MetadataBlockFragment) | null;
                       };
+                      currentTransform?: {
+                          __typename?: "SetTransform";
+                          inputs: Array<{ __typename: "TransformInput" }>;
+                      } | null;
                   };
               } & DatasetBasicsFragment)
             | null;
@@ -8619,6 +8623,11 @@ export const GetMetadataBlockDocument = gql`
                         blockByHashEncoded(hash: $blockHash, format: YAML)
                         blockByHash(hash: $blockHash) {
                             ...MetadataBlock
+                        }
+                    }
+                    currentTransform {
+                        inputs {
+                            __typename
                         }
                     }
                 }

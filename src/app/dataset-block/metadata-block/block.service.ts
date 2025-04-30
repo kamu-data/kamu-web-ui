@@ -13,17 +13,21 @@ import { GetMetadataBlockQuery, MetadataBlockFragment } from "src/app/api/kamu.g
 import { MaybeUndefined } from "src/app/interface/app.types";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { MetadataBlockInfo } from "./metadata-block.types";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 
 @Injectable({
     providedIn: "root",
 })
 export class BlockService {
     private datasetApi = inject(DatasetApi);
+    private datasetSubsService = inject(DatasetSubscriptionsService);
 
     public requestMetadataBlock(info: DatasetInfo, blockHash: string): Observable<MaybeUndefined<MetadataBlockInfo>> {
         return this.datasetApi.getBlockByHash({ ...info, blockHash }).pipe(
             map((data: GetMetadataBlockQuery) => {
                 if (data.datasets.byOwnerAndName) {
+                    const inputsCount = data.datasets.byOwnerAndName.metadata.currentTransform?.inputs.length;
+                    this.datasetSubsService.emitCurrentTransformInputsCountChanged(inputsCount ?? 0);
                     const block = data.datasets.byOwnerAndName.metadata.chain.blockByHash as MetadataBlockFragment;
                     const blockAsYaml = data.datasets.byOwnerAndName.metadata.chain.blockByHashEncoded as string;
                     return { block, blockAsYaml };

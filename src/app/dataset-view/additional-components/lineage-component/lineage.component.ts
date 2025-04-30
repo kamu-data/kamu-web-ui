@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input, OnInit, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, inject } from "@angular/core";
 import { Node } from "@swimlane/ngx-graph";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { LineageGraphNodeData, LineageGraphNodeKind, LineageGraphUpdate } from "./lineage-model";
@@ -18,40 +18,30 @@ import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetService } from "../../dataset.service";
 import { LineageGraphBuilderService } from "./services/lineage-graph-builder.service";
-import { filter, Observable, switchMap } from "rxjs";
-import { NavigationEnd, Router } from "@angular/router";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { Observable, switchMap } from "rxjs";
 
 @Component({
     selector: "app-lineage",
     templateUrl: "./lineage.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LineageComponent extends BaseComponent implements OnInit {
-    @Input(RoutingResolvers.DATASET_INFO_KEY) public datasetInfo: DatasetInfo;
+export class LineageComponent extends BaseComponent {
+    @Input(RoutingResolvers.DATASET_INFO_KEY) public set datasetInfo(value: DatasetInfo) {
+        this.datasetInfoData = value;
+        this.buildGraph();
+    }
     public lineageGraphUpdate$: Observable<MaybeNull<LineageGraphUpdate>>;
 
+    public datasetInfoData: DatasetInfo;
     private clipboard = inject(Clipboard);
     private toastr = inject(ToastrService);
     private navigationService = inject(NavigationService);
     private lineageGraphBuilderService = inject(LineageGraphBuilderService);
     private datasetService = inject(DatasetService);
-    private router = inject(Router);
-
-    public ngOnInit(): void {
-        this.buildGraph();
-        this.router.events
-            .pipe(
-                filter((event) => event instanceof NavigationEnd),
-                switchMap(() => this.datasetService.requestDatasetLineage(this.datasetInfo)),
-            )
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe();
-    }
 
     private buildGraph(): void {
         this.lineageGraphUpdate$ = this.datasetService
-            .requestDatasetLineage(this.datasetInfo)
+            .requestDatasetLineage(this.datasetInfoData)
             .pipe(switchMap(() => this.lineageGraphBuilderService.buildGraph()));
     }
 
@@ -72,8 +62,8 @@ export class LineageComponent extends BaseComponent implements OnInit {
 
     public onSelectDataset(accountName?: string, datasetName?: string): void {
         this.navigationService.navigateToDatasetView({
-            accountName: accountName ?? this.datasetInfo.accountName,
-            datasetName: datasetName ?? this.datasetInfo.datasetName,
+            accountName: accountName ?? this.datasetInfoData.accountName,
+            datasetName: datasetName ?? this.datasetInfoData.datasetName,
             tab: DatasetViewTypeEnum.Lineage,
         });
     }

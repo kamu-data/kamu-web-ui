@@ -9,6 +9,11 @@ query getMetadataBlock($accountName: AccountName!, $datasetName: DatasetName!, $
             ...MetadataBlock
           }
         }
+        currentTransform {
+          inputs {
+            __typename
+          }
+        }
       }
     }
   }

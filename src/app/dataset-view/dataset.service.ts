@@ -263,7 +263,7 @@ export class DatasetService {
 
     private metadataTabDataUpdate(data: GetDatasetMainDataQuery, schema: MaybeNull<DatasetSchema>): void {
         if (data.datasets.byOwnerAndName) {
-            const metadata: DatasetMetadataSummaryFragment = data.datasets.byOwnerAndName;
+            const metadataSummary: DatasetMetadataSummaryFragment = data.datasets.byOwnerAndName;
 
             const pageInfo: DatasetPageInfoFragment = {
                 hasNextPage: false,
@@ -274,9 +274,13 @@ export class DatasetService {
             const metadataSchemaUpdate: MetadataSchemaUpdate = {
                 schema,
                 pageInfo,
-                metadataSummary: metadata,
+                metadataSummary,
             };
             this.datasetSubsService.emitMetadataSchemaChanged(metadataSchemaUpdate);
+
+            this.datasetSubsService.emitCurrentTransformInputsCountChanged(
+                metadataSummary.metadata?.currentTransform?.inputs.length ?? 0,
+            );
         }
     }
 

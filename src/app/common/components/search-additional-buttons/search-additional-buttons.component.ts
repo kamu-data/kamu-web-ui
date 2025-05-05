@@ -31,7 +31,7 @@ export class SearchAdditionalButtonsComponent implements OnInit {
     @Input({ required: true })
     public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[];
     @Input({ required: true }) public loadingListDownsreams: boolean;
-    @Output() public searchAdditionalButtonsMethod = new EventEmitter<string>();
+    @Output() public searchAdditionalButtonsMethod = new EventEmitter<SearchAdditionalButtonsEnum>();
     @Output() public searchAdditionalButtonsMenuOpen = new EventEmitter<SearchAdditionalButtonsEnum>();
     @Output() public searchAdditionalButtonsMenuClose = new EventEmitter<SearchAdditionalButtonsEnum>();
     @Output() public searchAdditionalButtonsMenuItemClick = new EventEmitter<MenuActionData>();
@@ -50,7 +50,7 @@ export class SearchAdditionalButtonsComponent implements OnInit {
         this.checkWindowSize();
     }
 
-    public onClick(method: string): void {
+    public onClick(method: SearchAdditionalButtonsEnum): void {
         this.searchAdditionalButtonsMethod.emit(method);
     }
 

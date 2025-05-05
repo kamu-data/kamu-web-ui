@@ -25,14 +25,14 @@ export class SearchAdditionalButtonsNavComponent extends BaseComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true })
     public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[];
-    @Output() public searchAdditionalButtonsMethod = new EventEmitter<string>();
+    @Output() public searchAdditionalButtonsMethod = new EventEmitter<SearchAdditionalButtonsEnum>();
     @Output() public searchAdditionalButtonsMenuOpen = new EventEmitter<SearchAdditionalButtonsEnum>();
     @Output() public searchAdditionalButtonsMenuClose = new EventEmitter<SearchAdditionalButtonsEnum>();
     @Output() public searchAdditionalButtonsMenuItemClick = new EventEmitter<MenuActionData>();
 
     @Input({ required: true }) public loadingListDownsreams: boolean;
 
-    public onClickButton(method: string): void {
+    public onClickButton(method: SearchAdditionalButtonsEnum): void {
         this.searchAdditionalButtonsMethod.emit(method);
     }
 

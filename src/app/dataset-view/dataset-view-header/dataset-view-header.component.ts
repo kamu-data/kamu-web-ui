@@ -59,7 +59,7 @@ export class DatasetViewHeaderComponent extends BaseComponent {
         );
     }
 
-    public onClickSearchAdditionalButton(method: string) {
+    public onClickSearchAdditionalButton(method: SearchAdditionalButtonsEnum) {
         const mapperMethod: {
             [key in SearchAdditionalButtonsEnum]: () => void;
         } = {
@@ -67,7 +67,7 @@ export class DatasetViewHeaderComponent extends BaseComponent {
             [SearchAdditionalButtonsEnum.Starred]: () => this.onClickUnimplemetedButton(),
             [SearchAdditionalButtonsEnum.UnWatch]: () => this.onClickUnimplemetedButton(),
         };
-        mapperMethod[method as SearchAdditionalButtonsEnum]();
+        mapperMethod[method]();
     }
 
     private onClickUnimplemetedButton(): void {

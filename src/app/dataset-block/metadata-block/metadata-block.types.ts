@@ -10,4 +10,5 @@ import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 export interface MetadataBlockInfo {
     block: MetadataBlockFragment;
     blockAsYaml: string;
+    downstreamsCount: number;
 }

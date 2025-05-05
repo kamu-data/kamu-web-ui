@@ -14,9 +14,18 @@ import { CommonModule } from "@angular/common";
 import { NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
 import { SearchAdditionalButtonsNavComponent } from "./search-additional-buttons-nav.component";
 import { FeatureFlagModule } from "../../directives/feature-flag.module";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 @NgModule({
-    imports: [CommonModule, MatMenuModule, MatIconModule, MatButtonModule, NgbPopoverModule, FeatureFlagModule],
+    imports: [
+        CommonModule,
+        MatMenuModule,
+        MatIconModule,
+        MatButtonModule,
+        NgbPopoverModule,
+        FeatureFlagModule,
+        MatProgressSpinnerModule,
+    ],
     exports: [SearchAdditionalButtonsComponent, SearchAdditionalButtonsNavComponent],
     declarations: [SearchAdditionalButtonsComponent, SearchAdditionalButtonsNavComponent],
 })

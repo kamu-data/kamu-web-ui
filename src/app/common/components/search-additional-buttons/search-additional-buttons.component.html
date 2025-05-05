@@ -13,6 +13,7 @@
         <app-search-additional-buttons-nav
             [datasetBasics]="datasetBasics"
             [searchAdditionalButtonsData]="searchAdditionalButtonsData"
+            [loadingListDownsreams]="loadingListDownsreams"
         ></app-search-additional-buttons-nav>
     </mat-menu>
 </ng-template>
@@ -20,6 +21,10 @@
     <app-search-additional-buttons-nav
         [datasetBasics]="datasetBasics"
         (searchAdditionalButtonsMethod)="onClick($event)"
+        (searchAdditionalButtonsMenuOpen)="onMenuOpen($event)"
+        (searchAdditionalButtonsMenuClose)="onMenuClose($event)"
+        (searchAdditionalButtonsMenuItemClick)="onClickMenuItem($event)"
         [searchAdditionalButtonsData]="searchAdditionalButtonsData"
+        [loadingListDownsreams]="loadingListDownsreams"
     ></app-search-additional-buttons-nav>
 </ng-template>

@@ -12,7 +12,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { FeatureFlagModule } from "../../directives/feature-flag.module";
-import { searchAdditionalButtonsDescriptors } from "src/app/dataset-view/dataset-view-header/dataset-view-header.model";
+import { SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS } from "src/app/dataset-view/dataset-view-header/dataset-view-header.model";
 
 describe("SearchAdditionalButtonsNavComponent", () => {
     let component: SearchAdditionalButtonsNavComponent;
@@ -32,7 +32,7 @@ describe("SearchAdditionalButtonsNavComponent", () => {
 
         fixture = TestBed.createComponent(SearchAdditionalButtonsNavComponent);
         component = fixture.componentInstance;
-        component.searchAdditionalButtonsData = searchAdditionalButtonsDescriptors;
+        component.searchAdditionalButtonsData = SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS;
 
         fixture.detectChanges();
     });

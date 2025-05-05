@@ -5,8 +5,8 @@
  * included in the LICENSE file.
  */
 
-export enum searchAdditionalButtonsEnum {
-    DeriveFrom = "Derive_from",
+export enum SearchAdditionalButtonsEnum {
+    DeriveFrom = "DeriveFrom",
     Starred = "Starred",
     UnWatch = "Unwatch",
 }

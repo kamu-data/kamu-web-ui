@@ -32,7 +32,11 @@
 
     <app-search-additional-buttons
         [datasetBasics]="datasetBasics"
-        [searchAdditionalButtonsData]="searchAdditionalButtonsData"
+        [searchAdditionalButtonsData]="(searchAdditionalButtonsData$ | async)!"
+        [loadingListDownsreams]="loadingListDownsreams"
         (searchAdditionalButtonsMethod)="onClickSearchAdditionalButton($event)"
+        (searchAdditionalButtonsMenuOpen)="onClickSearchAdditionalButtonsMenuOpen($event)"
+        (searchAdditionalButtonsMenuClose)="onCloseSearchAdditionalButtonsMenu($event)"
+        (searchAdditionalButtonsMenuItemClick)="onClickSearchAdditionalButtonsMenuItem($event)"
     />
 </div>

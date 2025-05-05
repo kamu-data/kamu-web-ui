@@ -1,0 +1,19 @@
+query datasetListDownstreams($datasetId: DatasetID!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      metadata {
+        currentDownstreamDependencies {
+          ... on DependencyDatasetResultAccessible {
+            dataset {
+              name
+              owner {
+                accountName
+                avatarUrl
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

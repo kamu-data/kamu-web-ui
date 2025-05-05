@@ -16,9 +16,10 @@ import {
     Output,
     ViewChild,
 } from "@angular/core";
-import { SearchAdditionalHeaderButtonOptions } from "./search-additional-buttons.interface";
+import { MenuActionData, SearchAdditionalHeaderButtonInterface } from "./search-additional-buttons.interface";
 import { isMobileView } from "src/app/common/helpers/app.helpers";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
+import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
 
 @Component({
     selector: "app-search-additional-buttons",
@@ -28,10 +29,16 @@ import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 })
 export class SearchAdditionalButtonsComponent implements OnInit {
     @Input({ required: true })
-    public searchAdditionalButtonsData: SearchAdditionalHeaderButtonOptions;
+    public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[];
+    @Input({ required: true }) public loadingListDownsreams: boolean;
     @Output() public searchAdditionalButtonsMethod = new EventEmitter<string>();
+    @Output() public searchAdditionalButtonsMenuOpen = new EventEmitter<SearchAdditionalButtonsEnum>();
+    @Output() public searchAdditionalButtonsMenuClose = new EventEmitter<SearchAdditionalButtonsEnum>();
+    @Output() public searchAdditionalButtonsMenuItemClick = new EventEmitter<MenuActionData>();
+
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     public shouldMinimizeSearchAdditionalButtons = false;
+
     @ViewChild("menuTrigger") public trigger: ElementRef;
 
     @HostListener("window:resize")
@@ -45,5 +52,17 @@ export class SearchAdditionalButtonsComponent implements OnInit {
 
     public onClick(method: string): void {
         this.searchAdditionalButtonsMethod.emit(method);
+    }
+
+    public onMenuOpen(value: SearchAdditionalButtonsEnum): void {
+        this.searchAdditionalButtonsMenuOpen.emit(value);
+    }
+
+    public onMenuClose(value: SearchAdditionalButtonsEnum): void {
+        this.searchAdditionalButtonsMenuClose.emit(value);
+    }
+
+    public onClickMenuItem(value: MenuActionData): void {
+        this.searchAdditionalButtonsMenuItemClick.emit(value);
     }
 }

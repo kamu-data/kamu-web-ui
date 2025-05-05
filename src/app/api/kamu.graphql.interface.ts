@@ -3835,6 +3835,34 @@ export type GetDatasetLineageQuery = {
     };
 };
 
+export type DatasetListDownstreamsQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+}>;
+
+export type DatasetListDownstreamsQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            metadata: {
+                __typename?: "DatasetMetadata";
+                currentDownstreamDependencies: Array<
+                    | {
+                          __typename?: "DependencyDatasetResultAccessible";
+                          dataset: {
+                              __typename?: "Dataset";
+                              name: string;
+                              owner: { __typename?: "Account"; accountName: string; avatarUrl?: string | null };
+                          };
+                      }
+                    | { __typename?: "DependencyDatasetResultNotAccessible" }
+                >;
+            };
+        } | null;
+    };
+};
+
 export type GetDatasetMainDataQueryVariables = Exact<{
     accountName: Scalars["AccountName"];
     datasetName: Scalars["DatasetName"];
@@ -5205,6 +5233,9 @@ export type DatasetMetadataSummaryFragment = {
         currentSchema?: { __typename?: "DataSchema"; format: DataSchemaFormat; content: string } | null;
         currentVocab?: ({ __typename?: "SetVocab" } & SetVocabEventFragment) | null;
         currentPushSources: Array<{ __typename?: "AddPushSource" } & AddPushSourceEventFragment>;
+        currentDownstreamDependencies: Array<
+            { __typename: "DependencyDatasetResultAccessible" } | { __typename: "DependencyDatasetResultNotAccessible" }
+        >;
     };
 } & DatasetReadmeFragment &
     DatasetLastUpdateFragment;
@@ -5346,10 +5377,10 @@ export type GetMetadataBlockQuery = {
                           blockByHashEncoded?: string | null;
                           blockByHash?: ({ __typename?: "MetadataBlockExtended" } & MetadataBlockFragment) | null;
                       };
-                      currentTransform?: {
-                          __typename?: "SetTransform";
-                          inputs: Array<{ __typename: "TransformInput" }>;
-                      } | null;
+                      currentDownstreamDependencies: Array<
+                          | { __typename: "DependencyDatasetResultAccessible" }
+                          | { __typename: "DependencyDatasetResultNotAccessible" }
+                      >;
                   };
               } & DatasetBasicsFragment)
             | null;
@@ -6854,6 +6885,14 @@ export const DatasetMetadataSummaryFragmentDoc = gql`
             currentPushSources {
                 ...AddPushSourceEvent
             }
+            currentDownstreamDependencies {
+                ... on DependencyDatasetResultNotAccessible {
+                    __typename
+                }
+                ... on DependencyDatasetResultAccessible {
+                    __typename
+                }
+            }
         }
         ...DatasetReadme
         ...DatasetLastUpdate
@@ -7860,6 +7899,41 @@ export class GetDatasetLineageGQL extends Apollo.Query<GetDatasetLineageQuery, G
         super(apollo);
     }
 }
+export const DatasetListDownstreamsDocument = gql`
+    query datasetListDownstreams($datasetId: DatasetID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                metadata {
+                    currentDownstreamDependencies {
+                        ... on DependencyDatasetResultAccessible {
+                            dataset {
+                                name
+                                owner {
+                                    accountName
+                                    avatarUrl
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetListDownstreamsGQL extends Apollo.Query<
+    DatasetListDownstreamsQuery,
+    DatasetListDownstreamsQueryVariables
+> {
+    document = DatasetListDownstreamsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
 export const GetDatasetMainDataDocument = gql`
     query getDatasetMainData($accountName: AccountName!, $datasetName: DatasetName!, $limit: Int) {
         datasets {
@@ -8625,8 +8699,11 @@ export const GetMetadataBlockDocument = gql`
                             ...MetadataBlock
                         }
                     }
-                    currentTransform {
-                        inputs {
+                    currentDownstreamDependencies {
+                        ... on DependencyDatasetResultNotAccessible {
+                            __typename
+                        }
+                        ... on DependencyDatasetResultAccessible {
                             __typename
                         }
                     }

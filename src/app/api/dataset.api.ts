@@ -14,6 +14,8 @@ import {
     UpdateWatermarkGQL,
     DatasetsTotalCountByAccountNameGQL,
     DatasetsTotalCountByAccountNameQuery,
+    DatasetListDownstreamsGQL,
+    DatasetListDownstreamsQuery,
 } from "./kamu.graphql.interface";
 import {
     CommitEventToDatasetGQL,
@@ -92,6 +94,7 @@ export class DatasetApi {
     private datasetHeadBlockHashGQL = inject(DatasetHeadBlockHashGQL);
     private datasetSystemTimeBlockByHashGQL = inject(DatasetSystemTimeBlockByHashGQL);
     private datasetPushSyncStatusesGQL = inject(DatasetPushSyncStatusesGQL);
+    private datasetListDownstreamsGQL = inject(DatasetListDownstreamsGQL);
 
     public getDatasetMainData(params: {
         accountName: string;
@@ -528,6 +531,26 @@ export class DatasetApi {
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<DatasetPushSyncStatusesQuery>) => {
+                    return result.data;
+                }),
+            );
+    }
+
+    public datasetListDownstreams(datasetId: string): Observable<DatasetListDownstreamsQuery> {
+        return this.datasetListDownstreamsGQL
+            .watch(
+                { datasetId },
+
+                {
+                    ...noCacheFetchPolicy,
+                    context: {
+                        skipLoading: true,
+                    },
+                },
+            )
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<DatasetListDownstreamsQuery>) => {
                     return result.data;
                 }),
             );

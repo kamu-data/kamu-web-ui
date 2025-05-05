@@ -5,16 +5,15 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import {
+    MenuActionData,
     SearchAdditionalHeaderButtonInterface,
-    SearchAdditionalHeaderButtonOptions,
-    SearchAdditionalHeaderDatasetInputs,
+    SearchAdditionalHeaderButtonMenuAction,
 } from "./search-additional-buttons.interface";
-import { DatasetBasicsFragment, DatasetKind } from "src/app/api/kamu.graphql.interface";
-import { searchAdditionalButtonsEnum } from "src/app/search/search.interface";
-import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { Observable, tap } from "rxjs";
+import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
+import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
+import { BaseComponent } from "../base.component";
 
 @Component({
     selector: "app-search-additional-buttons-nav",
@@ -22,41 +21,30 @@ import { Observable, tap } from "rxjs";
     styleUrls: ["./search-additional-buttons.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchAdditionalButtonsNavComponent implements OnInit {
+export class SearchAdditionalButtonsNavComponent extends BaseComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true })
-    public searchAdditionalButtonsData: SearchAdditionalHeaderButtonOptions;
+    public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[];
     @Output() public searchAdditionalButtonsMethod = new EventEmitter<string>();
+    @Output() public searchAdditionalButtonsMenuOpen = new EventEmitter<SearchAdditionalButtonsEnum>();
+    @Output() public searchAdditionalButtonsMenuClose = new EventEmitter<SearchAdditionalButtonsEnum>();
+    @Output() public searchAdditionalButtonsMenuItemClick = new EventEmitter<MenuActionData>();
 
-    private datasetSubsService = inject(DatasetSubscriptionsService);
-    public currentTransformInputs$: Observable<SearchAdditionalHeaderDatasetInputs>;
-
-    public ngOnInit(): void {
-        this.currentTransformInputs$ = this.datasetSubsService.currentTransformInputsCountChanges.pipe(
-            tap((data: SearchAdditionalHeaderDatasetInputs) => {
-                this.searchAdditionalButtonsData[searchAdditionalButtonsEnum.DeriveFrom].counter = data.count;
-            }),
-        );
-    }
+    @Input({ required: true }) public loadingListDownsreams: boolean;
 
     public onClickButton(method: string): void {
         this.searchAdditionalButtonsMethod.emit(method);
     }
 
-    public get getButtonArray(): { key: searchAdditionalButtonsEnum; data: SearchAdditionalHeaderButtonInterface }[] {
-        return Object.entries(this.searchAdditionalButtonsData).map(([key, data]) => ({
-            key: key as searchAdditionalButtonsEnum,
-            data,
-        }));
+    public onClickMenuItem(action: SearchAdditionalHeaderButtonMenuAction, value: string): void {
+        this.searchAdditionalButtonsMenuItemClick.emit({ action, value });
     }
 
-    public setVisibilityButtonHelper(key: searchAdditionalButtonsEnum, datasetBasics: DatasetBasicsFragment): boolean {
-        switch (key) {
-            case searchAdditionalButtonsEnum.DeriveFrom: {
-                return datasetBasics.kind === DatasetKind.Derivative;
-            }
-            default:
-                return true;
-        }
+    public menuOpened(value: SearchAdditionalButtonsEnum): void {
+        this.searchAdditionalButtonsMenuOpen.emit(value);
+    }
+
+    public menuClosed(value: SearchAdditionalButtonsEnum): void {
+        this.searchAdditionalButtonsMenuClose.emit(value);
     }
 }

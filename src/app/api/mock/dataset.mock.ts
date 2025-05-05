@@ -427,9 +427,6 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
                         },
                     },
                 },
-                currentTransform: {
-                    inputs: [],
-                },
             },
             id: "did:odf:z4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",
             name: "com.naturalearthdata.admin0.countries.50m",

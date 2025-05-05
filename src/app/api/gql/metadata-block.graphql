@@ -9,8 +9,13 @@ query getMetadataBlock($accountName: AccountName!, $datasetName: DatasetName!, $
             ...MetadataBlock
           }
         }
-        currentTransform {
-          inputs {
+
+        currentDownstreamDependencies {
+          ... on DependencyDatasetResultNotAccessible {
+            __typename
+          }
+
+          ... on DependencyDatasetResultAccessible {
             __typename
           }
         }

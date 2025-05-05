@@ -62,6 +62,16 @@ export class DatasetService {
         this.dataset$.next(datasetInfo);
     }
 
+    private downstreamsCount$: Subject<number> = new ReplaySubject(1 /*bufferSize*/);
+
+    public emitDownstreamsCountChanged(count: number): void {
+        this.downstreamsCount$.next(count);
+    }
+
+    public get downstreamsCountChanges(): Observable<number> {
+        return this.downstreamsCount$.asObservable();
+    }
+
     public requestDatasetMainData(info: DatasetInfo): Observable<void> {
         return this.datasetApi.getDatasetMainData(info).pipe(
             map((data: GetDatasetMainDataQuery) => {
@@ -83,6 +93,10 @@ export class DatasetService {
                         this.lineageDataReset();
                         this.historyDataReset();
                         this.setHeadBlockHash(data.datasets.byOwnerAndName.metadata.chain.refs as BlockRef[]);
+
+                        this.emitDownstreamsCountChanged(
+                            data.datasets.byOwnerAndName.metadata.currentDownstreamDependencies.length,
+                        );
                     } else {
                         throw new SqlExecutionError(dataTail.errorMessage);
                     }
@@ -236,6 +250,19 @@ export class DatasetService {
         );
     }
 
+    public requestListDownstreams(datasetId: string): Observable<string[]> {
+        return this.datasetApi.datasetListDownstreams(datasetId).pipe(
+            map((data) => {
+                const list = data.datasets.byId?.metadata.currentDownstreamDependencies.map((downstream) => {
+                    if (downstream.__typename === "DependencyDatasetResultAccessible") {
+                        return `${downstream.dataset.owner.accountName}/${downstream.dataset.name}`;
+                    }
+                });
+                return list as string[];
+            }),
+        );
+    }
+
     private datasetUpdate(data: DatasetBasicsFragment): void {
         this.emitDatasetChanged(data);
     }
@@ -277,10 +304,6 @@ export class DatasetService {
                 metadataSummary,
             };
             this.datasetSubsService.emitMetadataSchemaChanged(metadataSchemaUpdate);
-
-            this.datasetSubsService.emitCurrentTransformInputsCountChanged(
-                metadataSummary.metadata?.currentTransform?.inputs.length ?? 0,
-            );
         }
     }
 

@@ -7,7 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetViewHeaderComponent } from "./dataset-view-header.component";
-import { mockDatasetInfo, mockPublicDatasetVisibility } from "src/app/search/mock.data";
+import { mockDatasetBasicsRootFragment, mockDatasetInfo } from "src/app/search/mock.data";
 import { MatIconModule } from "@angular/material/icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatMenuModule } from "@angular/material/menu";
@@ -16,14 +16,23 @@ import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { SearchAdditionalButtonsModule } from "src/app/common/components/search-additional-buttons/search-additional-buttons.module";
+import { Apollo } from "apollo-angular";
+import { DatasetService } from "../dataset.service";
+import { of } from "rxjs";
+import { ModalService } from "src/app/common/components/modal/modal.service";
+import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
+import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 
 describe("DatasetViewHeaderComponent", () => {
     let component: DatasetViewHeaderComponent;
     let fixture: ComponentFixture<DatasetViewHeaderComponent>;
+    let datasetService: DatasetService;
+    let modalService: ModalService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [DatasetViewHeaderComponent],
+            providers: [Apollo],
             imports: [
                 MatIconModule,
                 MatMenuModule,
@@ -38,9 +47,12 @@ describe("DatasetViewHeaderComponent", () => {
         registerMatSvgIcons();
 
         fixture = TestBed.createComponent(DatasetViewHeaderComponent);
+        modalService = TestBed.inject(ModalService);
+        datasetService = TestBed.inject(DatasetService);
+        spyOnProperty(datasetService, "downstreamsCountChanges", "get").and.returnValue(of(1));
         component = fixture.componentInstance;
         component.datasetInfo = mockDatasetInfo;
-        component.datasetVisibility = mockPublicDatasetVisibility;
+        component.datasetBasics = mockDatasetBasicsRootFragment;
         fixture.detectChanges();
     });
 
@@ -48,10 +60,36 @@ describe("DatasetViewHeaderComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check onClickSearchAdditionalButtonEmit is emit", () => {
-        const methodName = "test name";
-        const onClickSearchAdditionalButtonEmitSpy = spyOn(component.onClickSearchAdditionalButtonEmit, "emit");
-        component.onClickSearchAdditionalButton(methodName);
-        expect(onClickSearchAdditionalButtonEmitSpy).toHaveBeenCalledWith(methodName);
+    [
+        { method: SearchAdditionalButtonsEnum.Starred, calledTimes: 1 },
+        { method: SearchAdditionalButtonsEnum.UnWatch, calledTimes: 1 },
+        { method: SearchAdditionalButtonsEnum.DeriveFrom, calledTimes: 0 },
+    ].forEach((item: { method: SearchAdditionalButtonsEnum; calledTimes: number }) => {
+        it(`should check onClickSearchAdditionalButton for method=${item.method}`, () => {
+            const modalWarningSpy = spyOn(modalService, "warning").and.callFake((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, true);
+                return Promise.resolve("");
+            });
+            component.onClickSearchAdditionalButton(item.method);
+            expect(modalWarningSpy).toHaveBeenCalledTimes(item.calledTimes);
+        });
+    });
+
+    [
+        SearchAdditionalButtonsEnum.Starred,
+        SearchAdditionalButtonsEnum.UnWatch,
+        SearchAdditionalButtonsEnum.DeriveFrom,
+    ].forEach((item: SearchAdditionalButtonsEnum) => {
+        it(`should check onClickSearchAdditionalButtonsMenuOpen for method=${item}`, () => {
+            const requestListDownstreamsSpy = spyOn(datasetService, "requestListDownstreams").and.returnValue(
+                of(["accountName/datasetName"]),
+            );
+            component.onClickSearchAdditionalButtonsMenuOpen(item);
+            if (item === SearchAdditionalButtonsEnum.DeriveFrom) {
+                expect(requestListDownstreamsSpy).toHaveBeenCalledTimes(1);
+            } else {
+                expect(requestListDownstreamsSpy).toHaveBeenCalledTimes(0);
+            }
+        });
     });
 });

@@ -119,6 +119,7 @@ describe("MetadataBlockComponent", () => {
         (component.metadata = {
             block: blockFragment,
             blockAsYaml: "test yaml",
+            downstreamsCount: 0,
         }),
             fixture.detectChanges();
     });

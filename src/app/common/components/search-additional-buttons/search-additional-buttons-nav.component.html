@@ -1,118 +1,80 @@
 <ul class="nav search-additional-buttons__nav">
-    <ng-template ngFor let-searchAdditionalData [ngForOf]="searchAdditionalButtonsData">
-        <!-- Set feature flag in a loop -->
+    <ng-container *ngFor="let searchAdditionalData of searchAdditionalButtonsData">
         <li class="nav-item mr-2 pt-2" [appFeatureFlag]="searchAdditionalData.id">
             <div class="btn-group-parent nav">
                 <button
-                    (click)="onClickButton(searchAdditionalData.textButton)"
+                    (click)="onClickButton(searchAdditionalData.value)"
                     [classList]="
                         searchAdditionalData.additionalOptions && searchAdditionalData.additionalOptions.options
                             ? 'starred rounded-left-2 border-right-0 additional-options-btn btn-sm btn btn-group-item d-flex justify-content-between align-items-center'
                             : 'starred rounded-2 btn-sm btn btn-group-item d-flex justify-content-between align-items-center'
                     "
                 >
-                    <svg
-                        aria-hidden="true"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        width="16"
-                        data-view-component="true"
-                        [classList]="searchAdditionalData.svgClass"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            [classList]="searchAdditionalData.iconSvgPathClass"
-                            [attr.d]="searchAdditionalData.iconSvgPath"
-                        />
-                    </svg>
-                    <span class="d-inline mr-2">{{ searchAdditionalData.textButton }}</span>
-                    <span
-                        id="repo-stars-counter-unstar"
-                        aria-label="2 users starred this repository"
-                        data-singular-suffix="user starred this repository"
-                        data-plural-suffix="users starred this repository"
-                        data-pjax-replace="true"
-                        title="2"
-                        data-view-component="true"
-                        class="counter"
-                        >{{ searchAdditionalData.counter }}</span
-                    >
-                </button>
-                <ng-template [ngIf]="searchAdditionalData.additionalOptions">
-                    <button
-                        style="height: inherit"
-                        class="additional-options-btn mat-menu-trigger starred rounded-right-2 border-1 border btn-sm btn btn-group-item d-flex justify-content-center align-items-center mat-button mat-icon-button mat-button-base"
-                        [matMenuTriggerFor]="menu2"
-                        [disabled]="true"
-                    >
-                        <mat-icon class="arrow-dropdown">arrow_drop_down</mat-icon>
-                    </button>
-                    <mat-menu #menu2="matMenu">
-                        <div class="select-menu-modal notifications-component-menu-modal">
-                            <header class="select-menu-header">
-                                <h3 class="select-menu-title">
-                                    {{ searchAdditionalData.additionalOptions.title }}
-                                </h3>
-                                <button
-                                    class="select-menu-close-btn"
-                                    type="button"
-                                    aria-label="Close menu"
-                                    data-action="click:notifications-list-subscription-form#closeMenu"
-                                >
-                                    <mat-icon class="fs-4"> close</mat-icon>
-                                </button>
-                            </header>
+                    <mat-icon class="mat-icon-svg-size" [svgIcon]="searchAdditionalData.icon"></mat-icon>
 
-                            <div class="select-menu-list">
-                                <form
-                                    data-target="notifications-list-subscription-form.form"
-                                    data-action="submit:notifications-list-subscription-form#submitForm"
-                                    action="/notifications/subscribe"
-                                    accept-charset="UTF-8"
-                                    method="post"
+                    <span class="d-inline mr-2">{{ searchAdditionalData.textButton }}</span>
+                    <span class="counter">{{ searchAdditionalData.counter }}</span>
+                </button>
+
+                <button
+                    class="additional-options-btn mat-menu-trigger starred rounded-right-2 border-1 border btn-sm btn btn-group-item d-flex justify-content-center align-items-center mat-button mat-icon-button mat-button-base"
+                    [matMenuTriggerFor]="menu2"
+                    [disabled]="searchAdditionalData.additionalOptions.disabled"
+                    (menuOpened)="menuOpened(searchAdditionalData.value)"
+                    (menuClosed)="menuClosed(searchAdditionalData.value)"
+                >
+                    <mat-icon class="arrow-dropdown">arrow_drop_down</mat-icon>
+                </button>
+                <mat-menu #menu2="matMenu">
+                    <div class="select-menu-modal notifications-component-menu-modal">
+                        <header class="select-menu-header">
+                            <h3 class="select-menu-title">
+                                {{ searchAdditionalData.additionalOptions.title }}
+                            </h3>
+                            <button class="select-menu-close-btn" type="button" aria-label="Close menu">
+                                <mat-icon class="fs-4"> close</mat-icon>
+                            </button>
+                        </header>
+
+                        <div class="select-menu-list" *ngIf="!loadingListDownsreams; else loadingAdditionalOptions">
+                            <ng-template ngFor let-option [ngForOf]="searchAdditionalData.additionalOptions.options">
+                                <button
+                                    class="select-menu-item flex-items-start"
+                                    (click)="onClickMenuItem(option.action, option.value)"
+                                    [attr.aria-checked]="option.isSelected"
                                 >
-                                    <ng-template
-                                        ngFor
-                                        let-option
-                                        [ngForOf]="searchAdditionalData.additionalOptions.options"
-                                    >
-                                        <button
-                                            type="submit"
-                                            name="do"
-                                            value="included"
-                                            class="select-menu-item flex-items-start"
-                                            role="menuitemradio"
-                                            [attr.aria-checked]="option.isSelected"
-                                            data-targets="notifications-list-subscription-form.subscriptionButtons"
-                                        >
-                                            <span class="f5 mr-1">
-                                                <mat-icon
-                                                    *ngIf="!option.isSelected"
-                                                    class="mat-icon-svg-size"
-                                                    svgIcon="notifications-checked"
-                                                />
-                                                <mat-icon
-                                                    *ngIf="option.isSelected"
-                                                    class="mat-icon-svg-size"
-                                                    svgIcon="notifications-checked"
-                                                />
-                                            </span>
-                                            <div>
-                                                <div class="f5 text-bold">
-                                                    {{ option.title }}
-                                                </div>
-                                                <div class="text-small color-fg-muted text-normal pb-1">
-                                                    {{ option.text }}
-                                                </div>
-                                            </div>
-                                        </button>
-                                    </ng-template>
-                                </form>
-                            </div>
+                                    <span class="f5 mr-1">
+                                        <mat-icon
+                                            *ngIf="!option.isSelected"
+                                            class="mat-icon-svg-size"
+                                            svgIcon="notifications-checked"
+                                        />
+                                        <mat-icon
+                                            *ngIf="option.isSelected"
+                                            class="mat-icon-svg-size"
+                                            svgIcon="notifications-checked"
+                                        />
+                                    </span>
+                                    <div>
+                                        <div class="fs-12 text-bold text-break">
+                                            {{ option.title }}
+                                        </div>
+                                        <div class="text-small color-fg-muted text-normal pb-1">
+                                            {{ option.text }}
+                                        </div>
+                                    </div>
+                                </button>
+                            </ng-template>
                         </div>
-                    </mat-menu>
-                </ng-template>
+
+                        <ng-template #loadingAdditionalOptions>
+                            <div>
+                                <mat-spinner [diameter]="25" class="mx-auto mt-2"></mat-spinner>
+                            </div>
+                        </ng-template>
+                    </div>
+                </mat-menu>
             </div>
         </li>
-    </ng-template>
+    </ng-container>
 </ul>

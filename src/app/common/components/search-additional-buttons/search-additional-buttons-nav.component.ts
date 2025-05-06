@@ -6,7 +6,14 @@
  */
 
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
-import { SearchAdditionalHeaderButtonInterface } from "./search-additional-buttons.interface";
+import {
+    MenuActionData,
+    SearchAdditionalHeaderButtonInterface,
+    SearchAdditionalHeaderButtonMenuAction,
+} from "./search-additional-buttons.interface";
+import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
+import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
+import { BaseComponent } from "../base.component";
 
 @Component({
     selector: "app-search-additional-buttons-nav",
@@ -14,12 +21,30 @@ import { SearchAdditionalHeaderButtonInterface } from "./search-additional-butto
     styleUrls: ["./search-additional-buttons.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchAdditionalButtonsNavComponent {
+export class SearchAdditionalButtonsNavComponent extends BaseComponent {
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true })
     public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[];
-    @Output() public searchAdditionalButtonsMethod = new EventEmitter<string>();
+    @Output() public searchAdditionalButtonsMethod = new EventEmitter<SearchAdditionalButtonsEnum>();
+    @Output() public searchAdditionalButtonsMenuOpen = new EventEmitter<SearchAdditionalButtonsEnum>();
+    @Output() public searchAdditionalButtonsMenuClose = new EventEmitter<SearchAdditionalButtonsEnum>();
+    @Output() public searchAdditionalButtonsMenuItemClick = new EventEmitter<MenuActionData>();
 
-    public onClickButton(method: string): void {
+    @Input({ required: true }) public loadingListDownsreams: boolean;
+
+    public onClickButton(method: SearchAdditionalButtonsEnum): void {
         this.searchAdditionalButtonsMethod.emit(method);
+    }
+
+    public onClickMenuItem(action: SearchAdditionalHeaderButtonMenuAction, value: string): void {
+        this.searchAdditionalButtonsMenuItemClick.emit({ action, value });
+    }
+
+    public menuOpened(value: SearchAdditionalButtonsEnum): void {
+        this.searchAdditionalButtonsMenuOpen.emit(value);
+    }
+
+    public menuClosed(value: SearchAdditionalButtonsEnum): void {
+        this.searchAdditionalButtonsMenuClose.emit(value);
     }
 }

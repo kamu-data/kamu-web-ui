@@ -11,6 +11,7 @@ import {
     DatasetByAccountAndDatasetNameQuery,
     DatasetByIdQuery,
     DatasetKind,
+    DatasetListDownstreamsQuery,
     DatasetPushSyncStatusesQuery,
     DatasetsByAccountNameQuery,
     DatasetSearchOverviewFragment,
@@ -56,6 +57,32 @@ export const mockDatasetDataSqlRunResponse: GetDatasetDataSqlRunQuery = {
             },
             limit: 50,
         },
+    },
+};
+
+export const mockDatasetListDownstreamsQuery: DatasetListDownstreamsQuery = {
+    datasets: {
+        byId: {
+            metadata: {
+                currentDownstreamDependencies: [
+                    {
+                        dataset: {
+                            name: "rhine-basin.netherlands",
+                            owner: {
+                                accountName: "deltares.nl",
+                                avatarUrl: "https://avatars.githubusercontent.com/u/6613768?s=200&v=4",
+                                __typename: "Account",
+                            },
+                            __typename: "Dataset",
+                        },
+                        __typename: "DependencyDatasetResultAccessible",
+                    },
+                ],
+                __typename: "DatasetMetadata",
+            },
+            __typename: "Dataset",
+        },
+        __typename: "Datasets",
     },
 };
 
@@ -427,6 +454,7 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
                         },
                     },
                 },
+                currentDownstreamDependencies: [],
             },
             id: "did:odf:z4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",
             name: "com.naturalearthdata.admin0.countries.50m",

@@ -30,6 +30,16 @@ fragment DatasetMetadataSummary on Dataset {
     currentPushSources {
       ...AddPushSourceEvent
     }
+
+    currentDownstreamDependencies {
+      ... on DependencyDatasetResultNotAccessible {
+        __typename
+      }
+
+      ... on DependencyDatasetResultAccessible {
+        __typename
+      }
+    }
   }
   ...DatasetReadme
   ...DatasetLastUpdate

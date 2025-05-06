@@ -368,6 +368,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                 },
                 currentTransform: null,
                 currentPushSources: [],
+                currentDownstreamDependencies: [],
                 currentInfo: {
                     __typename: "SetInfo",
                     description: "Confirmed positive cases of COVID-19 in Alberta.",

@@ -16,7 +16,7 @@
                     >{{ datasetInfo.datasetName }}</a
                 >
             </span>
-            <app-dataset-visibility [datasetVisibility]="datasetVisibility"></app-dataset-visibility>
+            <app-dataset-visibility [datasetVisibility]="datasetBasics.visibility"></app-dataset-visibility>
 
             <button
                 appFeatureFlag="dataset.badgeVerified"
@@ -31,7 +31,12 @@
     </div>
 
     <app-search-additional-buttons
-        [searchAdditionalButtonsData]="searchAdditionalButtonsData"
+        [datasetBasics]="datasetBasics"
+        [searchAdditionalButtonsData]="(searchAdditionalButtonsData$ | async)!"
+        [loadingListDownsreams]="loadingListDownsreams"
         (searchAdditionalButtonsMethod)="onClickSearchAdditionalButton($event)"
+        (searchAdditionalButtonsMenuOpen)="onClickSearchAdditionalButtonsMenuOpen($event)"
+        (searchAdditionalButtonsMenuClose)="onCloseSearchAdditionalButtonsMenu($event)"
+        (searchAdditionalButtonsMenuItemClick)="onClickSearchAdditionalButtonsMenuItem($event)"
     />
 </div>

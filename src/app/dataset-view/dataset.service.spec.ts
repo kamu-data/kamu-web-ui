@@ -35,6 +35,7 @@ import { DatasetHistoryUpdate, LineageUpdate, OverviewUpdate } from "./dataset.s
 import { first } from "rxjs/operators";
 import {
     mockDatasetBasicsWithPermissionQuery,
+    mockDatasetListDownstreamsQuery,
     mockDatasetPushSyncStatusesAllInSyncQuery,
     mockDatasetPushSyncStatusesNoRemotesQuery,
     mockDatasetPushSyncStatusesQuery,
@@ -341,6 +342,20 @@ describe("AppDatasetService", () => {
             .pipe(first())
             .subscribe((hasOutOfSyncRemotes: boolean) => {
                 expect(hasOutOfSyncRemotes).toBe(false);
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should return list downstreams", () => {
+        spyOn(datasetApi, "datasetListDownstreams").and.returnValue(of(mockDatasetListDownstreamsQuery));
+        const expectedResult = ["deltares.nl/rhine-basin.netherlands"];
+
+        const subscription$ = service
+            .requestListDownstreams(TEST_DATASET_ID)
+            .pipe(first())
+            .subscribe((list: string[]) => {
+                expect(list).toEqual(expectedResult);
             });
 
         expect(subscription$.closed).toBeTrue();

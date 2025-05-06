@@ -9,6 +9,16 @@ query getMetadataBlock($accountName: AccountName!, $datasetName: DatasetName!, $
             ...MetadataBlock
           }
         }
+
+        currentDownstreamDependencies {
+          ... on DependencyDatasetResultNotAccessible {
+            __typename
+          }
+
+          ... on DependencyDatasetResultAccessible {
+            __typename
+          }
+        }
       }
     }
   }

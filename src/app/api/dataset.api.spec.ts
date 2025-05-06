@@ -18,6 +18,7 @@ import {
     TEST_WATERMARK,
     TEST_ACCOUNT_NAME,
     mockDatasetPushSyncStatusesQuery,
+    mockDatasetListDownstreamsQuery,
 } from "./mock/dataset.mock";
 import {
     MOCK_NEW_DATASET_NAME,
@@ -53,6 +54,8 @@ import {
     DatasetHeadBlockHashDocument,
     DatasetHeadBlockHashQuery,
     DatasetKind,
+    DatasetListDownstreamsDocument,
+    DatasetListDownstreamsQuery,
     DatasetPushSyncStatusesDocument,
     DatasetPushSyncStatusesQuery,
     DatasetsByAccountNameDocument,
@@ -263,6 +266,27 @@ describe("DatasetApi", () => {
 
         op.flush({
             data: mockDatasetByIdQuery,
+        });
+
+        tick();
+
+        expect(subscription$.closed).toEqual(true);
+
+        flush();
+    }));
+
+    it("should fetch list downstreams", fakeAsync(() => {
+        const subscription$ = service
+            .datasetListDownstreams(TEST_DATASET_ID)
+            .subscribe((res: DatasetListDownstreamsQuery) => {
+                expect(res.datasets.byId?.metadata.currentDownstreamDependencies.length).toEqual(1);
+            });
+
+        const op = controller.expectOne(DatasetListDownstreamsDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+
+        op.flush({
+            data: mockDatasetListDownstreamsQuery,
         });
 
         tick();

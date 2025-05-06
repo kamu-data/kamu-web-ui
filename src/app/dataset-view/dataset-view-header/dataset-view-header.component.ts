@@ -5,11 +5,24 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
-import { SearchAdditionalHeaderButtonInterface } from "../../common/components/search-additional-buttons/search-additional-buttons.interface";
-import { searchAdditionalButtonsEnum } from "../../search/search.interface";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from "@angular/core";
+import {
+    MenuActionData,
+    SearchAdditionalHeaderButtonInterface,
+    SearchAdditionalHeaderButtonMenuAction,
+} from "../../common/components/search-additional-buttons/search-additional-buttons.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { DatasetVisibilityOutput } from "src/app/api/kamu.graphql.interface";
+import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
+import { SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS } from "./dataset-view-header.model";
+import { DatasetService } from "../dataset.service";
+import { finalize, map, Observable } from "rxjs";
+import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
+import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
+import { ModalService } from "src/app/common/components/modal/modal.service";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { BaseComponent } from "src/app/common/components/base.component";
+import { NavigationService } from "src/app/services/navigation.service";
+import { DatasetViewTypeEnum } from "../dataset-view.interface";
 
 @Component({
     selector: "app-dataset-view-header",
@@ -17,63 +30,127 @@ import { DatasetVisibilityOutput } from "src/app/api/kamu.graphql.interface";
     styleUrls: ["./dataset-view-header.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DatasetViewHeaderComponent {
+export class DatasetViewHeaderComponent extends BaseComponent {
     @Input({ required: true }) public datasetInfo: DatasetInfo;
-    @Input({ required: true }) public datasetVisibility: DatasetVisibilityOutput;
-    @Output() public onClickSearchAdditionalButtonEmit = new EventEmitter<string>();
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
+
+    private datasetService = inject(DatasetService);
+    private modalService = inject(ModalService);
+    private navigationService = inject(NavigationService);
+    private cdr = inject(ChangeDetectorRef);
+
+    public loadingListDownsreams = false;
 
     public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[] = [
-        {
-            id: "search.starred",
-            textButton: searchAdditionalButtonsEnum.Starred,
-            counter: 2,
-            iconSvgPath:
-                "M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z",
-            svgClass: "octicon octicon-star-fill starred-button-icon d-inline-block mr-2",
-            iconSvgPathClass: "starred-button-icon",
-        },
-        {
-            id: "search.unwatch",
-            textButton: searchAdditionalButtonsEnum.UnWatch,
-            counter: 1,
-            iconSvgPath:
-                "M1.679 7.932c.412-.621 1.242-1.75 2.366-2.717C5.175 4.242 6.527 3.5 8 3.5c1.473 0 2.824.742 3.955 1.715 1.124.967 1.954 2.096 2.366 2.717a.119.119 0 010 .136c-.412.621-1.242 1.75-2.366 2.717C10.825 11.758 9.473 12.5 8 12.5c-1.473 0-2.824-.742-3.955-1.715C2.92 9.818 2.09 8.69 1.679 8.068a.119.119 0 010-.136zM8 2c-1.981 0-3.67.992-4.933 2.078C1.797 5.169.88 6.423.43 7.1a1.619 1.619 0 000 1.798c.45.678 1.367 1.932 2.637 3.024C4.329 13.008 6.019 14 8 14c1.981 0 3.67-.992 4.933-2.078 1.27-1.091 2.187-2.345 2.637-3.023a1.619 1.619 0 000-1.798c-.45-.678-1.367-1.932-2.637-3.023C11.671 2.992 9.981 2 8 2zm0 8a2 2 0 100-4 2 2 0 000 4z",
-            svgClass: "octicon octicon-eye mr-2",
-            iconSvgPathClass: "",
-            additionalOptions: {
-                title: "Notifications",
-                options: [
-                    {
-                        title: "Participating and @mentions",
-                        text: "Only receive notifications from this repository when participating or @mentioned.",
-                        value: "participating",
-                    },
-                    {
-                        title: "All Activity",
-                        text: "Notified of all notifications on this repository.",
-                        value: "all",
-                        isSelected: true,
-                    },
-                    {
-                        title: "Ignore",
-                        text: "Never be notified.",
-                        value: "ignore",
-                    },
-                ],
-            },
-        },
-        {
-            id: "search.derive",
-            textButton: searchAdditionalButtonsEnum.DeriveFrom,
-            counter: 4,
-            iconSvgPath:
-                "M13,9v2h-2.488c-0.047-0.006-0.131-0.044-0.169-0.069L7.416,8l2.931-2.931C10.384,5.041,10.469,5.006,10.516,5H13v2l3-3 l-3-3v2h-2.5C9.962,3,9.319,3.266,8.941,3.647L6.584,6H0v4h6.584l2.353,2.353C9.319,12.734,9.959,13,10.497,13h2.5v2l3-3L13,9z",
-            svgClass: "octicon octicon-x mr-2",
-            iconSvgPathClass: "",
-        },
+        ...SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS,
     ];
 
-    public onClickSearchAdditionalButton(method: string): void {
-        this.onClickSearchAdditionalButtonEmit.emit(method);
+    public get searchAdditionalButtonsData$(): Observable<SearchAdditionalHeaderButtonInterface[]> {
+        return this.datasetService.downstreamsCountChanges.pipe(
+            map((counter) => {
+                const item = this.searchAdditionalButtonsData.find(
+                    (option) => option.value === SearchAdditionalButtonsEnum.DeriveFrom,
+                );
+                if (item) {
+                    item.counter = counter;
+                }
+                return this.searchAdditionalButtonsData;
+            }),
+        );
+    }
+
+    public onClickSearchAdditionalButton(method: SearchAdditionalButtonsEnum) {
+        const mapperMethod: {
+            [key in SearchAdditionalButtonsEnum]: () => void;
+        } = {
+            [SearchAdditionalButtonsEnum.DeriveFrom]: () => null,
+            [SearchAdditionalButtonsEnum.Starred]: () => this.onClickUnimplemetedButton(),
+            [SearchAdditionalButtonsEnum.UnWatch]: () => this.onClickUnimplemetedButton(),
+        };
+        mapperMethod[method]();
+    }
+
+    private onClickUnimplemetedButton(): void {
+        promiseWithCatch(
+            this.modalService.warning({
+                message: "Feature coming soon",
+                yesButtonText: "Ok",
+            }),
+        );
+    }
+
+    public onClickSearchAdditionalButtonsMenuOpen(value: SearchAdditionalButtonsEnum): void {
+        const mapperMethod: {
+            [key in SearchAdditionalButtonsEnum]: () => void;
+        } = {
+            [SearchAdditionalButtonsEnum.DeriveFrom]: () => this.openDeriveFromMenu(value),
+            [SearchAdditionalButtonsEnum.Starred]: () => null,
+            [SearchAdditionalButtonsEnum.UnWatch]: () => null,
+        };
+        mapperMethod[value]();
+    }
+
+    public onCloseSearchAdditionalButtonsMenu(value: SearchAdditionalButtonsEnum): void {
+        const mapperMethod: {
+            [key in SearchAdditionalButtonsEnum]: () => void;
+        } = {
+            [SearchAdditionalButtonsEnum.DeriveFrom]: () => this.closeDeriveFromMenu(value),
+            [SearchAdditionalButtonsEnum.Starred]: () => null,
+            [SearchAdditionalButtonsEnum.UnWatch]: () => null,
+        };
+        mapperMethod[value]();
+    }
+
+    public onClickSearchAdditionalButtonsMenuItem(data: MenuActionData): void {
+        const mapperAction: {
+            [key in SearchAdditionalHeaderButtonMenuAction]: () => void;
+        } = {
+            [SearchAdditionalHeaderButtonMenuAction.NavigateToDataset]: () => this.navigateToDataset(data.value),
+            [SearchAdditionalHeaderButtonMenuAction.CreateDataset]: () => this.onClickUnimplemetedButton(),
+            [SearchAdditionalHeaderButtonMenuAction.SetNotificationsMode]: () => null,
+        };
+        mapperAction[data.action]();
+    }
+
+    private navigateToDataset(alias: string): void {
+        const [accountName, datasetName] = alias.split("/");
+        this.navigationService.navigateToDatasetView({
+            accountName,
+            datasetName,
+            tab: DatasetViewTypeEnum.Overview,
+        });
+    }
+
+    private closeDeriveFromMenu(value: SearchAdditionalButtonsEnum): void {
+        const menuItem = this.searchAdditionalButtonsData.find((item) => item.value === value);
+        if (menuItem && menuItem.value === SearchAdditionalButtonsEnum.DeriveFrom) {
+            menuItem.additionalOptions.options.splice(0, menuItem.additionalOptions.options.length - 1);
+        }
+    }
+
+    private openDeriveFromMenu(value: SearchAdditionalButtonsEnum): void {
+        const menuItem = this.searchAdditionalButtonsData.find((item) => item.value === value);
+        if (menuItem) {
+            this.loadingListDownsreams = true;
+            this.datasetService
+                .requestListDownstreams(this.datasetBasics.id)
+                .pipe(
+                    finalize(() => {
+                        this.loadingListDownsreams = false;
+                        this.cdr.detectChanges();
+                    }),
+                    takeUntilDestroyed(this.destroyRef),
+                )
+                .subscribe((list: string[]) => {
+                    const options = list.map((item) => ({
+                        title: item,
+                        text: "",
+                        value: item,
+                        isSelected: false,
+                        action: SearchAdditionalHeaderButtonMenuAction.NavigateToDataset,
+                    }));
+                    menuItem.additionalOptions.options = [...options, ...menuItem.additionalOptions.options];
+                });
+        }
     }
 }

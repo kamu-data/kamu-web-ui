@@ -14,7 +14,9 @@ import { DatasetCreateService } from "./dataset-create.service";
 import { Observable } from "rxjs";
 import { LoggedUserService } from "../auth/logged-user.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { CreateDatasetFormType } from "./dataset-create.types";
+import { CreateDatasetFormType, SelectStorageItemType, STORAGE_LIST } from "./dataset-create.types";
+import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.interface";
+import { AfterViewChecked } from "@angular/core";
 
 @Component({
     selector: "app-dataset-create",
@@ -22,7 +24,7 @@ import { CreateDatasetFormType } from "./dataset-create.types";
     styleUrls: ["./dataset-create.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DatasetCreateComponent extends BaseComponent {
+export class DatasetCreateComponent extends BaseComponent implements AfterViewChecked {
     private cdr = inject(ChangeDetectorRef);
     private fb = inject(FormBuilder);
     private datasetCreateService = inject(DatasetCreateService);
@@ -44,6 +46,16 @@ export class DatasetCreateComponent extends BaseComponent {
         kind: [DatasetKind.Root, [Validators.required]],
         visibility: [DatasetVisibility.Private],
     });
+    public readonly DROPDOWN_LIST: SelectStorageItemType[] = STORAGE_LIST;
+    public readonly DROPDOWN_SETTINGS: DropdownSettings = {
+        singleSelection: true,
+        enableSearchFilter: false,
+        text: "",
+        position: "bottom",
+        labelKey: "storageName",
+        tagToBody: false,
+    };
+    public selectedStorage: SelectStorageItemType;
 
     public ngOnInit(): void {
         const currentUser = this.loggedUserService.maybeCurrentlyLoggedInUser;
@@ -52,6 +64,30 @@ export class DatasetCreateComponent extends BaseComponent {
             this.createDatasetForm.controls.owner.setValue(currentUser.accountName);
         }
         this.errorMessage$ = this.datasetCreateService.errorMessageChanges;
+    }
+
+    public ngAfterViewChecked(): void {
+        this.setOptionsStyle();
+    }
+
+    public setOptionsStyle(): void {
+        const items: NodeListOf<HTMLLIElement> = document.querySelectorAll(".dropdown-list ul li");
+        const dropdown = document.querySelector(".dropdown-list") as HTMLDivElement;
+        if (items.length && !dropdown.hasAttribute("hidden")) {
+            items.forEach((item) => {
+                const text = item.innerText.trim();
+                if (
+                    [
+                        "InterPlanetary File Sysytem (IPFS)",
+                        "Bring your own S3 Event (BYO)",
+                        "Kamu managed (EU)",
+                    ].includes(text)
+                ) {
+                    item.style.pointerEvents = "none";
+                    item.style.opacity = "0.5";
+                }
+            });
+        }
     }
 
     public get datasetName() {

@@ -53,6 +53,45 @@
     }
 }
 
+.margin-storage-control {
+    margin-top: 20px;
+    margin-bottom: 35px;
+}
+
+.select-storage-width {
+    width: calc(75% + 40px);
+}
+
+.kamu-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    position: relative;
+    bottom: 2px;
+}
+
+.byo-icon {
+    width: 20px;
+    height: 20px;
+    transform: scale(1.5);
+    margin-right: 11px;
+}
+
+.ipfs-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 11px;
+    position: relative;
+    bottom: 2px;
+}
+
+.container-item {
+    height: 0;
+    display: flex;
+    align-items: flex-end;
+    padding-left: 25px;
+}
+
 @media (width <= 768px) {
     .dataset-create-content {
         grid-template-columns: 1fr;

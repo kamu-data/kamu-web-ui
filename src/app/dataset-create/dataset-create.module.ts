@@ -18,8 +18,11 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 import { EditorModule } from "../editor/editor.module";
 
+import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
+
 @NgModule({
     imports: [
+        AngularMultiSelectModule,
         CommonModule,
         FormsModule,
         MatButtonModule,

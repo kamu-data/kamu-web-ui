@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ethereum logs source: show blockchain logo and chain name in Lineage graph
 - Add query dialect drop-down for "Data" and "Query" pages
 - Dataset header: implemented "Derive from" counter
+- Added fake storage selection for dataset creation
 ### Changed
 - Separate routes for all tabs of the DatasetSettings component
 

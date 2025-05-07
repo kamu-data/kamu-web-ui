@@ -84,14 +84,7 @@
         <mat-divider />
         <div class="margin-storage-control select-storage-width">
             <label for="select-storage" class="fs-12">Select storage </label><br />
-            <ng-select
-                [items]="DROPDOWN_LIST"
-                bindLabel="storageName"
-                bindValue="id"
-                [ngModelOptions]="{ standalone: true }"
-                ngDefaultControl
-                [(ngModel)]="selectedStorage"
-            >
+            <ng-select [items]="DROPDOWN_LIST" bindLabel="storageName" bindValue="id">
                 <ng-template ng-option-tmp let-item="item" let-index="index" let-disabled="disabled">
                     <img [class]="item.iconClass" class="ms-2" [src]="item.image" />
                     <label class="fs-14 inline-block"> {{ item.storageName }} </label>

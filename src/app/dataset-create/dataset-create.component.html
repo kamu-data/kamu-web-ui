@@ -84,20 +84,20 @@
         <mat-divider />
         <div class="margin-storage-control select-storage-width">
             <label for="select-storage" class="fs-12">Select storage </label><br />
-            <angular2-multiselect
-                [data]="DROPDOWN_LIST"
+            <ng-select
+                [items]="DROPDOWN_LIST"
+                bindLabel="storageName"
+                bindValue="id"
                 [ngModelOptions]="{ standalone: true }"
-                [(ngModel)]="selectedStorage"
-                [settings]="DROPDOWN_SETTINGS"
                 ngDefaultControl
+                [(ngModel)]="selectedStorage"
             >
-                <c-item>
-                    <ng-template let-item="item">
-                        <img [class]="item.iconClass" [src]="item.image" />
-                        <label class="fs-14 inline-block"> {{ item.storageName }}</label>
-                    </ng-template>
-                </c-item>
-            </angular2-multiselect>
+                <ng-template ng-option-tmp let-item="item" let-index="index" let-disabled="disabled">
+                    <img [class]="item.iconClass" class="ms-2" [src]="item.image" />
+                    <label class="fs-14 inline-block"> {{ item.storageName }} </label>
+                    <span *ngIf="item.disabled" class="badge-comming-soon">coming soon</span>
+                </ng-template>
+            </ng-select>
         </div>
         <mat-divider />
     </form>

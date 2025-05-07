@@ -20,16 +20,30 @@ export interface SelectStorageItemType {
     storageName: string;
     image: string;
     iconClass: string;
+    disabled: boolean;
 }
 
 export const STORAGE_LIST: SelectStorageItemType[] = [
-    { id: 1, storageName: "Kamu managed (US West)", image: AppValues.APP_LOGO, iconClass: "kamu-icon" },
-    { id: 2, storageName: "Kamu managed (EU)", image: AppValues.APP_LOGO, iconClass: "kamu-icon" },
+    {
+        id: 1,
+        storageName: "Kamu managed (US West)",
+        image: AppValues.APP_LOGO,
+        iconClass: "kamu-icon",
+        disabled: false,
+    },
+    { id: 2, storageName: "Kamu managed (EU)", image: AppValues.APP_LOGO, iconClass: "kamu-icon", disabled: true },
     {
         id: 3,
         storageName: "Bring your own S3 Event (BYO)",
         image: AppValues.AMAZON_S3_BYO_LOGO,
         iconClass: "byo-icon",
+        disabled: true,
     },
-    { id: 4, storageName: "InterPlanetary File Sysytem (IPFS)", image: AppValues.IPFS_LOGO, iconClass: "ipfs-icon" },
+    {
+        id: 4,
+        storageName: "InterPlanetary File Sysytem (IPFS)",
+        image: AppValues.IPFS_LOGO,
+        iconClass: "ipfs-icon",
+        disabled: true,
+    },
 ];

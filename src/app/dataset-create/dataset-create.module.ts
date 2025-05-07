@@ -17,8 +17,8 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 import { EditorModule } from "../editor/editor.module";
-
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
+import { NgSelectModule } from "@ng-select/ng-select";
 
 @NgModule({
     imports: [
@@ -31,6 +31,7 @@ import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
         MatIconModule,
         MatMenuModule,
         NgbModule,
+        NgSelectModule,
         ReactiveFormsModule,
 
         EditorModule,

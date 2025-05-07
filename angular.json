@@ -54,7 +54,8 @@
               "node_modules/katex/dist/katex.min.css",
               "node_modules/highlight.js/styles/atom-one-light.css",
               "node_modules/ngx-toastr/toastr.css",
-              "node_modules/angular2-multiselect-dropdown/themes/default.theme.css"
+              "node_modules/angular2-multiselect-dropdown/themes/default.theme.css",
+              "node_modules/@ng-select/ng-select/themes/default.theme.css"
             ],
             "scripts": [
               "node_modules/prismjs/prism.js",

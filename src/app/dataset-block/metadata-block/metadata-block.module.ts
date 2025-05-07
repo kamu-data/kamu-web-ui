@@ -37,14 +37,13 @@ import { AddPushSourceEventComponent } from "./components/event-details/componen
 import { SetDataSchemaEventComponent } from "./components/event-details/components/set-data-schema-event/set-data-schema-event.component";
 import { UnsupportedEventComponent } from "./components/event-details/components/unsupported-event/unsupported-event.component";
 import { EventDetailsPropertiesModule } from "./components/event-details/components/common/event-details-properties.module";
-import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 import { DatasetViewMenuModule } from "src/app/dataset-view/dataset-view-menu/dataset-view-menu.module";
 import { MatIconModule } from "@angular/material/icon";
 import { BlockRowDataModule } from "src/app/common/components/block-row-data/block-row-data.module";
 import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
 import { MarkdownModule } from "ngx-markdown";
 import { YamlEventViewerModule } from "src/app/common/components/yaml-event-viewer/yaml-event-viewer.module";
-
+import { NgSelectModule } from "@ng-select/ng-select";
 @NgModule({
     declarations: [
         AddDataEventComponent,
@@ -69,7 +68,7 @@ import { YamlEventViewerModule } from "src/app/common/components/yaml-event-view
         YamlViewSectionComponent,
     ],
     imports: [
-        AngularMultiSelectModule,
+        // AngularMultiSelectModule,
         CommonModule,
         FormsModule,
         HighlightModule,
@@ -77,6 +76,7 @@ import { YamlEventViewerModule } from "src/app/common/components/yaml-event-view
         MatDividerModule,
         MatIconModule,
         MatMenuModule,
+        NgSelectModule,
 
         BlockRowDataModule,
         DatasetViewMenuModule,

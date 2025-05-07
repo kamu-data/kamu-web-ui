@@ -22,7 +22,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { DisplayHashModule } from "src/app/common/components/display-hash/display-hash.module";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ToastrModule } from "ngx-toastr";
-import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
+import { NgSelectModule } from "@ng-select/ng-select";
 
 describe("BlockNavigationComponent", () => {
     let component: BlockNavigationComponent;
@@ -39,7 +39,7 @@ describe("BlockNavigationComponent", () => {
                 HttpClientTestingModule,
                 DisplayHashModule,
                 ToastrModule.forRoot(),
-                AngularMultiSelectModule,
+                NgSelectModule,
             ],
         }).compileComponents();
 

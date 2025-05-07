@@ -36,6 +36,7 @@
     "@danielmoncada/angular-datetime-picker": "^16.1.0",
     "@danielmoncada/angular-datetime-picker-moment-adapter": "^3.0.1",
     "@ng-bootstrap/ng-bootstrap": "15.1.2",
+    "@ng-select/ng-select": "^11.0.0",
     "@popperjs/core": "^2.11.8",
     "@rxweb/reactive-form-validators": "^13.0.1",
     "@schematics/angular": "^14.2.13",

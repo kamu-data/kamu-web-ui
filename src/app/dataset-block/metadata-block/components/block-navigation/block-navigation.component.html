@@ -20,16 +20,24 @@
     </div>
     <div class="mb-4 position-relative">
         <div class="mb-4">
-            <angular2-multiselect
-                [settings]="DROPDOWN_SETTINGS"
-                [data]="dropdownList"
+            <ng-select
+                [items]="dropdownList"
+                [multiple]="true"
+                bindLabel="value"
+                bindValue="id"
+                [closeOnSelect]="false"
+                [clearable]="true"
+                [placeholder]="'Select event type'"
                 [(ngModel)]="eventTypeFiltersSelected"
-            />
+            >
+            </ng-select>
         </div>
         <div class="d-flex flex-column gap-4" *ngIf="datasetHistory">
             <ng-container
                 *ngIf="
-                    datasetHistory.history | eventTypeFilter: eventTypeFilters | blockHashFilter: searchHash as result
+                    datasetHistory.history
+                        | eventTypeFilter: eventTypeFiltersSelected
+                        | blockHashFilter: searchHash as result
                 "
             >
                 <div *ngFor="let block of result" class="d-flex lh-lg align-items-center justify-content-between">

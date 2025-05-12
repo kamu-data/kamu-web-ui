@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dataset header: implemented "Derive from" counter
 ### Changed
 - Separate routes for all tabs of the DatasetSettings component
+- Metadata tab: improved the view of the pagination button
 
 ## [0.46.0] - 2025-04-24 
 ### Added

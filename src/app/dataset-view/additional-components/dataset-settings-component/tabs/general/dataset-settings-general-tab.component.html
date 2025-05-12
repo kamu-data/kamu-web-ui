@@ -10,11 +10,12 @@
                 formControlName="datasetName"
                 type="text"
                 name="new_name"
-                class="form-control"
+                class="form-control rename-dataset-name"
                 id="rename-field"
                 data-test-id="rename-dataset-input"
                 (keyup)="changeName()"
                 [class.error-border-color]="renameError$ | async"
+                [title]="datasetNameControl.value"
             />
         </dd>
     </dl>

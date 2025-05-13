@@ -17,6 +17,7 @@ import { SharedTestModule } from "../common/modules/shared-test.module";
 import { LoggedUserService } from "../auth/logged-user.service";
 import { mockAccountDetails } from "../api/mock/auth.mock";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { NgSelectModule } from "@ng-select/ng-select";
 
 describe("DatasetCreateComponent", () => {
     let component: DatasetCreateComponent;
@@ -27,7 +28,14 @@ describe("DatasetCreateComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [DatasetCreateComponent],
-            imports: [ReactiveFormsModule, ApolloModule, FormsModule, HttpClientTestingModule, SharedTestModule],
+            imports: [
+                ReactiveFormsModule,
+                ApolloModule,
+                FormsModule,
+                HttpClientTestingModule,
+                NgSelectModule,
+                SharedTestModule,
+            ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         })
             .overrideComponent(DatasetCreateComponent, {

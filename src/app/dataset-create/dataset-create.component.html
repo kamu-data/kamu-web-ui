@@ -2,7 +2,7 @@
     <h1 class="title">Create a new dataset</h1>
     <p class="text-muted fs-6">A dataset is a durable collection of data</p>
     <mat-divider />
-    <form [formGroup]="createDatasetForm" (ngSubmit)="onCreateDataset()">
+    <form [formGroup]="createDatasetForm">
         <div class="my-4 d-flex align-items-start">
             <div class="w-25">
                 <label for="owner" class="fs-12">Owner </label><span class="text-danger">*</span><br />
@@ -80,6 +80,17 @@
                     <span class="d-block fs-12 text-muted">Anyone on the internet can see this dataset.</span>
                 </div>
             </label>
+        </div>
+        <mat-divider />
+        <div class="margin-storage-control select-storage-width">
+            <label for="select-storage" class="fs-12">Select storage </label><br />
+            <ng-select [items]="DROPDOWN_LIST" bindLabel="storageName" bindValue="id">
+                <ng-template ng-option-tmp let-item="item" let-index="index" let-disabled="disabled">
+                    <img [class]="item.iconClass" class="ms-2" [src]="item.image" />
+                    <label class="fs-14 inline-block"> {{ item.storageName }} </label>
+                    <span *ngIf="item.disabled" class="badge-comming-soon">coming soon</span>
+                </ng-template>
+            </ng-select>
         </div>
         <mat-divider />
     </form>

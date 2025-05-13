@@ -14,7 +14,7 @@ import { DatasetCreateService } from "./dataset-create.service";
 import { Observable } from "rxjs";
 import { LoggedUserService } from "../auth/logged-user.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { CreateDatasetFormType } from "./dataset-create.types";
+import { CreateDatasetFormType, SelectStorageItemType, STORAGE_LIST } from "./dataset-create.types";
 
 @Component({
     selector: "app-dataset-create",
@@ -44,6 +44,8 @@ export class DatasetCreateComponent extends BaseComponent {
         kind: [DatasetKind.Root, [Validators.required]],
         visibility: [DatasetVisibility.Private],
     });
+    public readonly DROPDOWN_LIST: SelectStorageItemType[] = STORAGE_LIST;
+    public selectedStorage: number;
 
     public ngOnInit(): void {
         const currentUser = this.loggedUserService.maybeCurrentlyLoggedInUser;

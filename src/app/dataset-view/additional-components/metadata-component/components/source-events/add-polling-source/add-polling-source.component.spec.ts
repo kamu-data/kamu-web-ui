@@ -21,6 +21,7 @@ import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetBasicsRootFragment,
     mockDatasetHistoryResponse,
+    mockDatasetInfo,
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
 import { DatasetPageInfoFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
@@ -45,7 +46,7 @@ import {
 import { OdfDefaultValues } from "src/app/common/values/app-odf-default.values";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, RouterModule } from "@angular/router";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 
 describe("AddPollingSourceComponent", () => {
@@ -81,6 +82,7 @@ describe("AddPollingSourceComponent", () => {
                 ReactiveFormsModule,
                 HttpClientTestingModule,
                 EditorModule,
+                RouterModule,
             ],
             providers: [
                 FormBuilder,
@@ -122,6 +124,7 @@ describe("AddPollingSourceComponent", () => {
         component.showPreprocessStep = false;
         component.eventYamlByHash = MOCK_EVENT_YAML;
         component.currentStep = SetPollingSourceSection.FETCH;
+        component.datasetInfo = mockDatasetInfo;
         component.history = {
             history: mockDatasetHistoryResponse.datasets.byOwnerAndName?.metadata.chain.blocks
                 .nodes as MetadataBlockFragment[],

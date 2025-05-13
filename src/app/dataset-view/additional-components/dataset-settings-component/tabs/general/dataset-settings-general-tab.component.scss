@@ -94,3 +94,10 @@
 .margin-bottom {
     margin-bottom: 40px;
 }
+
+.rename-dataset-name {
+    width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

@@ -16,6 +16,8 @@ import { STEPPER_GLOBAL_OPTIONS } from "@angular/cdk/stepper";
 import { SourcesSection } from "./process-form.service.types";
 import { BaseSourceEventComponent } from "../../base-source-event.component";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 
 @Component({
     selector: "app-add-polling-source",
@@ -31,6 +33,7 @@ import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 })
 export class AddPollingSourceComponent extends BaseSourceEventComponent implements OnInit {
     @Input(RoutingResolvers.ADD_POLLING_SOURCE_KEY) public eventYamlByHash: string;
+    @Input(RoutingResolvers.DATASET_INFO_KEY) public datasetInfo: DatasetInfo;
 
     public currentStep: SetPollingSourceSection = SetPollingSourceSection.FETCH;
     public steps: typeof SetPollingSourceSection = SetPollingSourceSection;
@@ -38,6 +41,7 @@ export class AddPollingSourceComponent extends BaseSourceEventComponent implemen
     public readonly FETCH_STEP_RADIO_DATA = FETCH_STEP_RADIO_CONTROLS;
     public readonly FETCH_FORM_DATA = FETCH_FORM_DATA;
     public readonly FETCH_DEFAULT_KIND = FetchKind.URL;
+    public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 
     public pollingSourceForm: FormGroup = this.fb.group({
         fetch: this.fb.group({

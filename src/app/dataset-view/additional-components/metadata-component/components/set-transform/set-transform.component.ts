@@ -21,6 +21,8 @@ import { BaseMainEventComponent } from "../source-events/base-main-event.compone
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import AppValues from "src/app/common/values/app.values";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 
 @Component({
     selector: "app-set-transform",
@@ -30,6 +32,7 @@ import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 })
 export class SetTransformComponent extends BaseMainEventComponent implements OnInit {
     @Input(RoutingResolvers.SET_TRANSFORM_KEY) public eventYamlByHash: string;
+    @Input(RoutingResolvers.DATASET_INFO_KEY) public datasetInfo: DatasetInfo;
 
     public inputDatasets = new Set<string>();
     public selectedEngine: string;
@@ -37,6 +40,7 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
     public queries: Omit<SqlQueryStep, "__typename">[] = [];
     public dataSource = new MatTreeNestedDataSource<DatasetNode>();
     public TREE_DATA: DatasetNode[] = [];
+    public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
     private readonly UNAVAILABLE_INPUT_LABEL: string = AppValues.SET_TRANSFORM_UNAVAILABLE_INPUT_LABEL;
 
     private editService = inject(EditSetTransformService);

@@ -1,3 +1,11 @@
+<div class="d-flex justify-content-end pt-4 pe-4">
+    <a
+        role="button"
+        class="border-1 bg-light border rounded-2 btn back-link"
+        [routerLink]="['/', datasetInfo.accountName, datasetInfo.datasetName, DatasetViewTypeEnum.Metadata]"
+        >Back to metadata</a
+    >
+</div>
 <div class="layout" *ngIf="history">
     <div class="mt-4">
         <div class="border border-1 mt-4 px-2 py-4 rounded-3">

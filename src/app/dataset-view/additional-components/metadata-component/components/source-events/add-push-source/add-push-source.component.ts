@@ -17,6 +17,8 @@ import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions
 import { BaseSourceEventComponent } from "../../base-source-event.component";
 import { AddPushSourceSection } from "./add-push-source-form.types";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 
 @Component({
     selector: "app-add-push-source",
@@ -27,9 +29,11 @@ import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 export class AddPushSourceComponent extends BaseSourceEventComponent {
     @Input(ProjectLinks.URL_QUERY_PARAM_PUSH_SOURCE_NAME) public queryParamName: string;
     @Input(RoutingResolvers.ADD_PUSH_SOURCE_KEY) public eventYamlByHash: string;
+    @Input(RoutingResolvers.DATASET_INFO_KEY) public datasetInfo: DatasetInfo;
 
     public currentStep: AddPushSourceSection = AddPushSourceSection.READ;
     public steps: typeof AddPushSourceSection = AddPushSourceSection;
+    public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 
     private editService = inject(EditAddPushSourceService);
 

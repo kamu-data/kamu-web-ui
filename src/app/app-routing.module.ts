@@ -446,17 +446,26 @@ export const routes: Routes = [
                     {
                         path: `${ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE}`,
                         component: AddPollingSourceComponent,
-                        resolve: { [RoutingResolvers.ADD_POLLING_SOURCE_KEY]: addPollingSourceResolverFn },
+                        resolve: {
+                            [RoutingResolvers.ADD_POLLING_SOURCE_KEY]: addPollingSourceResolverFn,
+                            [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
+                        },
                     },
                     {
                         path: `${ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE}`,
                         component: AddPushSourceComponent,
-                        resolve: { [RoutingResolvers.ADD_PUSH_SOURCE_KEY]: addPushSourceResolverFn },
+                        resolve: {
+                            [RoutingResolvers.ADD_PUSH_SOURCE_KEY]: addPushSourceResolverFn,
+                            [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
+                        },
                     },
                     {
                         path: `${ProjectLinks.URL_PARAM_SET_TRANSFORM}`,
                         component: SetTransformComponent,
-                        resolve: { [RoutingResolvers.SET_TRANSFORM_KEY]: setTransformResolverFn },
+                        resolve: {
+                            [RoutingResolvers.SET_TRANSFORM_KEY]: setTransformResolverFn,
+                            [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
+                        },
                     },
                 ],
             },

@@ -121,11 +121,11 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         "AddPushSource.MergeStrategyChangelogStream.primaryKey",
     ),
 
-    "MergeStrategyUpsertStream.MergeStrategyChangelogStream.__typename": getSourcesDescriptors(
-        "AddPushSource.MergeStrategyChangelogStream.__typename",
+    "AddPushSource.MergeStrategyUpsertStream.__typename": getSourcesDescriptors(
+        "AddPushSource.MergeStrategyUpsertStream.__typename",
     ),
 
-    "MergeStrategyUpsertStream.MergeStrategyChangelogStream.primaryKey": getSourcesDescriptors(
-        "AddPushSource.MergeStrategyChangelogStream.primaryKey",
+    "AddPushSource.MergeStrategyUpsertStream.primaryKey": getSourcesDescriptors(
+        "AddPushSource.MergeStrategyUpsertStream.primaryKey",
     ),
 };

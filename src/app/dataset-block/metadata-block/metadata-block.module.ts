@@ -68,7 +68,6 @@ import { NgSelectModule } from "@ng-select/ng-select";
         YamlViewSectionComponent,
     ],
     imports: [
-        // AngularMultiSelectModule,
         CommonModule,
         FormsModule,
         HighlightModule,

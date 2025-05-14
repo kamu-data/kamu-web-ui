@@ -16,9 +16,16 @@ import {
     GetEnabledLoginMethodsQuery,
     LoginGQL,
     LoginMutation,
+    LoginWeb3WalletGQL,
+    LoginWeb3WalletMutation,
 } from "./kamu.graphql.interface";
 import { MutationResult } from "apollo-angular";
-import { GithubLoginCredentials, LoginResponseType, PasswordLoginCredentials } from "./auth.api.model";
+import {
+    GithubLoginCredentials,
+    LoginResponseType,
+    PasswordLoginCredentials,
+    Web3WalletCredentials,
+} from "./auth.api.model";
 import { LoginMethod } from "../app-config.model";
 import { ApolloQueryResult } from "@apollo/client";
 import { AuthenticationError } from "../common/values/errors";
@@ -30,6 +37,7 @@ export class AuthApi {
     private getEnabledLoginMethodsGQL = inject(GetEnabledLoginMethodsGQL);
     private loginGQL = inject(LoginGQL);
     private fetchAccountDetailsGQL = inject(FetchAccountDetailsGQL);
+    private loginWeb3WalletGQL = inject(LoginWeb3WalletGQL);
 
     public readEnabledLoginMethods(): Observable<LoginMethod[]> {
         return this.getEnabledLoginMethodsGQL.watch().valueChanges.pipe(
@@ -52,6 +60,10 @@ export class AuthApi {
         deviceCode?: string,
     ): Observable<LoginResponseType> {
         return this.fetchAccountAndTokenFromLoginMethod(LoginMethod.GITHUB, JSON.stringify(credentials), deviceCode);
+    }
+
+    public fetchAccountAndTokenFromWeb3Wallet(credentials: Web3WalletCredentials): Observable<LoginResponseType> {
+        return this.fetchAccountAndTokenFromLoginMethod(LoginMethod.WEB3_WALLET, JSON.stringify(credentials));
     }
 
     public fetchAccountAndTokenFromLoginMethod(
@@ -103,6 +115,14 @@ export class AuthApi {
                 }
             }),
             catchError((e: Error) => throwError(() => new AuthenticationError([e]))),
+        );
+    }
+
+    public fetchAuthNonceFromWeb3Wallet(walletAddress: string): Observable<string> {
+        return this.loginWeb3WalletGQL.mutate({ account: walletAddress }).pipe(
+            map((result: MutationResult<LoginWeb3WalletMutation>) => {
+                return result.data?.auth.web3.eip4361AuthNonce.value as string;
+            }),
         );
     }
 }

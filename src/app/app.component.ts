@@ -173,7 +173,8 @@ export class AppComponent extends BaseComponent implements OnInit {
             .addSvgIcon("people", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/people.svg"))
             .addSvgIcon("starred", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/starred.svg"))
             .addSvgIcon("watch", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/watch.svg"))
-            .addSvgIcon("derive", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/derive.svg"));
+            .addSvgIcon("derive", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/derive.svg"))
+            .addSvgIcon("metamask", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/metamask.svg"));
     }
 
     private shouldHeaderBeVisible(url: string): boolean {

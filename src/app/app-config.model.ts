@@ -6,6 +6,7 @@
  */
 
 import { FeatureShowMode } from "./interface/feature-flags.interface";
+import { MetaMaskInpageProvider } from "@metamask/providers";
 
 export interface AppRuntimeConfig {
     apiServerGqlUrl: string;
@@ -24,6 +25,7 @@ export interface AppLoginInstructions {
 export enum LoginMethod {
     PASSWORD = "password",
     GITHUB = "oauth_github",
+    WEB3_WALLET = "web3-wallet",
 }
 
 export interface GrafanaLogsConfiguration {
@@ -46,4 +48,10 @@ export interface AppUIConfigFeatureFlags {
     enableScheduling: boolean;
     enableDatasetEnvVarsManagement: boolean;
     enableTermsOfService: boolean;
+}
+
+declare global {
+    interface Window {
+        ethereum?: MetaMaskInpageProvider;
+    }
 }

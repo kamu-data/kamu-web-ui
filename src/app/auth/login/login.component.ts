@@ -95,6 +95,10 @@ export class LoginComponent extends BaseComponent implements OnInit {
         }
     }
 
+    public async onWeb3WalletLogin(): Promise<void> {
+        await this.loginService.web3WalletLogin();
+    }
+
     public onPasswordLogin(): void {
         this.loginService.passwordLogin(this.passwordLoginForm.value as PasswordLoginCredentials);
     }

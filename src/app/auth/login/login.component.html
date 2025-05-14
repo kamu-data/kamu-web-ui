@@ -1,4 +1,4 @@
-<ng-container *ngIf="!selectedLoginMethod">
+<ng-container *ngIf="!selectedLoginMethod || selectedLoginMethod === LoginMethod.WEB3_WALLET">
     <div class="d-flex flex-column align-items-center login-container__buttons" data-test-id="method-selection-block">
         <img [src]="APP_LOGO" class="logo" alt="Application logo" />
         <h1 class="text-center text-muted mt-4">Select your Login Method</h1>
@@ -14,6 +14,15 @@
                 <mat-icon class="github-logo" svgIcon="github-logo" />
             </button>
             <button
+                data-test-id="select-method-metamask"
+                (click)="onWeb3WalletLogin()"
+                class="login__btn"
+                md-raised-button="primary"
+            >
+                Login with Wallet
+                <mat-icon class="metamask-logo" svgIcon="metamask" />
+            </button>
+            <button
                 data-test-id="select-method-password"
                 (click)="onSelectedLoginMethod(LoginMethod.PASSWORD)"
                 class="login__btn"
@@ -21,6 +30,7 @@
             >
                 Login with Password
             </button>
+
             <ng-container *ngIf="enableTermsOfService">
                 <ng-container *ngTemplateOutlet="termsOfServiceFragment"></ng-container>
             </ng-container>

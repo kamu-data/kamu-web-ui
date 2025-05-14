@@ -8,7 +8,12 @@
 import { inject, Injectable } from "@angular/core";
 import { Observable, ReplaySubject, Subject, map } from "rxjs";
 import { AuthApi } from "src/app/api/auth.api";
-import { GithubLoginCredentials, LoginResponseType, PasswordLoginCredentials } from "src/app/api/auth.api.model";
+import {
+    GithubLoginCredentials,
+    LoginResponseType,
+    PasswordLoginCredentials,
+    Web3WalletCredentials,
+} from "src/app/api/auth.api.model";
 import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import { LoginMethod } from "src/app/app-config.model";
 import { AuthenticationError } from "src/app/common/values/errors";
@@ -18,6 +23,7 @@ import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { SessionStorageService } from "src/app/services/session-storage.service";
 import ProjectLinks from "src/app/project-links";
+import { MetamaskService } from "./metamask.service";
 
 @Injectable({
     providedIn: "root",
@@ -28,6 +34,7 @@ export class LoginService {
     private appConfigService = inject(AppConfigService);
     private localStorageService = inject(LocalStorageService);
     private sessionStorageService = inject(SessionStorageService);
+    private metamaskService = inject(MetamaskService);
 
     private accessToken$: Subject<string> = new ReplaySubject<string>(1);
     private account$: Subject<AccountFragment> = new ReplaySubject<AccountFragment>(1);
@@ -106,6 +113,22 @@ export class LoginService {
                 }
             },
         });
+    }
+
+    public async web3WalletLogin(): Promise<void> {
+        await this.metamaskService.connectWallet();
+        if (this.metamaskService.currentWalet) {
+            const credentials: MaybeNull<Web3WalletCredentials> = await this.metamaskService.signInWithEthereum();
+            if (credentials) {
+                this.authApi.fetchAccountAndTokenFromWeb3Wallet(credentials).subscribe({
+                    next: this.loginCallback,
+                    error: (e) => {
+                        this.navigationService.navigateToHome();
+                        throw e;
+                    },
+                });
+            }
+        }
     }
 
     public genericLogin(loginMethod: string, loginCredentialsJson: string): Observable<void> {

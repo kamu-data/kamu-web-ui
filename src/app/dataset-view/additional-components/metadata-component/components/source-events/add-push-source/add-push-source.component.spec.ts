@@ -16,9 +16,9 @@ import { from, of } from "rxjs";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { FinalYamlModalComponent } from "../../final-yaml-modal/final-yaml-modal.component";
 import { EditorModule } from "src/app/editor/editor.module";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, RouterModule } from "@angular/router";
 import { EditAddPushSourceService } from "./edit-add-push-source.service";
-import { mockDatasetHistoryResponse } from "src/app/search/mock.data";
+import { mockDatasetHistoryResponse, mockDatasetInfo } from "src/app/search/mock.data";
 import { DatasetPageInfoFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { StepperNavigationComponent } from "../../stepper-navigation/stepper-navigation.component";
 import { BaseStepComponent } from "../steps/base-step/base-step.component";
@@ -88,6 +88,7 @@ describe("AddPushSourceComponent with query parameter name", () => {
                 BrowserAnimationsModule,
                 MatStepperModule,
                 PollingSourceFormComponentsModule,
+                RouterModule,
             ],
         }).compileComponents();
 
@@ -101,6 +102,7 @@ describe("AddPushSourceComponent with query parameter name", () => {
         component = fixture.componentInstance;
         component.eventYamlByHash = mockAddPushSourceYaml;
         component.queryParamName = "mockSourceName";
+        component.datasetInfo = mockDatasetInfo;
         editService.history = {
             history: datasetHistoryResponse?.nodes as MetadataBlockFragment[],
             pageInfo: datasetHistoryResponse?.pageInfo as DatasetPageInfoFragment,
@@ -219,6 +221,7 @@ describe("AddPushSourceComponent without query parameter name", () => {
                 BrowserAnimationsModule,
                 MatStepperModule,
                 PollingSourceFormComponentsModule,
+                RouterModule,
             ],
         }).compileComponents();
 
@@ -227,6 +230,7 @@ describe("AddPushSourceComponent without query parameter name", () => {
         component = fixture.componentInstance;
         component.queryParamName = "";
         component.eventYamlByHash = mockAddPushSourceYaml;
+        component.datasetInfo = mockDatasetInfo;
         component.addPushSourceForm = new FormGroup({
             sourceName: new FormControl("mockName"),
             read: new FormGroup({

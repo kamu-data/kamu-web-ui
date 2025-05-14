@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add query dialect drop-down for "Data" and "Query" pages
 - Dataset header: implemented "Derive from" counter
 - Added fake storage selection for dataset creation
+- Added "Back to metadata" button for "Set transform","Add polling source","Add push source" pages
 ### Changed
 - Separate routes for all tabs of the DatasetSettings component
 - Metadata tab: improved the view of the pagination button

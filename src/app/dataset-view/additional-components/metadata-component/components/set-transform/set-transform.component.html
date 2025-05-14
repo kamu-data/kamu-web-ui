@@ -1,4 +1,12 @@
 <div class="mb-4" *ngIf="queries">
+    <div class="d-flex justify-content-end p-4">
+        <a
+            role="button"
+            class="border-1 bg-light border rounded-2 btn back-link"
+            [routerLink]="['/', datasetInfo.accountName, datasetInfo.datasetName, DatasetViewTypeEnum.Metadata]"
+            >Back to metadata</a
+        >
+    </div>
     <div class="text-center mt-4">
         <p class="fs-4">Set Transformation</p>
         <p class="text-muted">Defines a transformation that produces data in a derivative dataset.</p>

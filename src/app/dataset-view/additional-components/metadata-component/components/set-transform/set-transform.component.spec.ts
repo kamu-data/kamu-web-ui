@@ -30,6 +30,7 @@ import {
     mockDatasetBasicsRootFragment,
     mockFullPowerDatasetPermissionsFragment,
     mockDatasetBasicsDerivedFragment,
+    mockDatasetInfo,
 } from "src/app/search/mock.data";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { EditorModule } from "../../../../../editor/editor.module";
@@ -102,6 +103,7 @@ describe("SetTransformComponent", () => {
         component = fixture.componentInstance;
         component.selectedEngine = "Spark";
         component.eventYamlByHash = mockSetTransformEventYaml;
+        component.datasetInfo = mockDatasetInfo;
         component.dataSource = new MatTreeNestedDataSource<DatasetNode>();
         component.inputDatasets = new Set<string>([
             '{"id":"did:odf:z4k88e8ctFydBwcEhtvaB9AuBL6L2kfGnNvS1LjPGLA51owXkxX","name":"account.tokens.portfolio.usd"}',

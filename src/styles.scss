@@ -1625,3 +1625,13 @@ pre.language-sql {
         box-shadow: none !important;
     }
 }
+
+.back-link {
+    text-decoration: none;
+    background-image: linear-gradient(#f7f8fa, #e7e9ec);
+
+    &:hover {
+        text-decoration: none;
+        background-image: linear-gradient(#ebeef6, #c5c8cc);
+    }
+}

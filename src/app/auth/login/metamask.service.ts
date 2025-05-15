@@ -6,7 +6,6 @@
  */
 
 import { inject, Injectable, Injector } from "@angular/core";
-import { MetaMaskInpageProvider } from "@metamask/providers";
 import { ActionRejectedError, BrowserProvider } from "ethers";
 import { firstValueFrom, Observable } from "rxjs";
 import { SiweMessage } from "siwe";
@@ -19,13 +18,13 @@ import { Web3WalletCredentials } from "src/app/api/auth.api.model";
     providedIn: "root",
 })
 export class MetamaskService {
-    private provider = new BrowserProvider(window.ethereum as MetaMaskInpageProvider);
+    private provider: BrowserProvider;
     private account: string;
 
     private authApi = inject(AuthApi);
     private injector = inject(Injector);
 
-    // Need to get ToastrService from injector rather than constructor injection to avoid cyclic dependency error
+    //   Need to get ToastrService from injector rather than constructor injection to avoid cyclic dependency error
     private get toastrService(): ToastrService {
         return this.injector.get(ToastrService);
     }
@@ -35,10 +34,7 @@ export class MetamaskService {
     }
 
     public async connectWallet(): Promise<void> {
-        if (!this.provider) {
-            this.toastrService.error("No provider found. Please install MetaMask.", "", {
-                disableTimeOut: "timeOut",
-            });
+        if (!this.checkAvailableMetamaskProvider()) {
             return;
         }
         try {
@@ -52,6 +48,22 @@ export class MetamaskService {
             this.toastrService.error("Error connecting wallet: need create a new wallet", "", {
                 disableTimeOut: "timeOut",
             });
+        }
+    }
+
+    private checkAvailableMetamaskProvider(): boolean {
+        if (!window.ethereum) {
+            this.toastrService.error(
+                "To log in, please choose a crypto wallet. MetaMask is currently supported. Please install MetaMask extension.",
+                "",
+                {
+                    disableTimeOut: "timeOut",
+                },
+            );
+            return false;
+        } else {
+            this.provider = new BrowserProvider(window.ethereum);
+            return true;
         }
     }
 
@@ -93,7 +105,6 @@ export class MetamaskService {
             const err = error as ActionRejectedError;
             if (err.reason === "rejected") {
                 this.toastrService.info("User rejected the request");
-                return null;
             }
             return null;
         }

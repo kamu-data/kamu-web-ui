@@ -5,8 +5,8 @@
  * included in the LICENSE file.
  */
 
+import { Eip1193Provider } from "ethers";
 import { FeatureShowMode } from "./interface/feature-flags.interface";
-import { MetaMaskInpageProvider } from "@metamask/providers";
 
 export interface AppRuntimeConfig {
     apiServerGqlUrl: string;
@@ -52,6 +52,6 @@ export interface AppUIConfigFeatureFlags {
 
 declare global {
     interface Window {
-        ethereum?: MetaMaskInpageProvider;
+        ethereum?: Eip1193Provider;
     }
 }

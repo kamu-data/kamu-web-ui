@@ -6,7 +6,7 @@
  */
 
 import { inject, Injectable, Injector } from "@angular/core";
-import { ActionRejectedError, BrowserProvider } from "ethers";
+import { BrowserProvider } from "ethers";
 import { firstValueFrom, Observable } from "rxjs";
 import { SiweMessage } from "siwe";
 import { MaybeNull } from "src/app/interface/app.types";
@@ -54,7 +54,7 @@ export class MetamaskService {
     private checkAvailableMetamaskProvider(): boolean {
         if (!window.ethereum) {
             this.toastrService.error(
-                "To log in, please choose a crypto wallet. MetaMask is currently supported. Please install MetaMask extension.",
+                "To log in, please choose a crypto wallet. For example, please install MetaMask extension.",
                 "",
                 {
                     disableTimeOut: "timeOut",
@@ -102,10 +102,6 @@ export class MetamaskService {
             const signature = await signer.signMessage(message);
             return { message, signature };
         } catch (error) {
-            const err = error as ActionRejectedError;
-            if (err.reason === "rejected") {
-                this.toastrService.info("User rejected the request");
-            }
             return null;
         }
     }

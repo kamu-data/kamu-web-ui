@@ -22,6 +22,7 @@ import { PaginationModule } from "../common/components/pagination-component/pagi
 import { FlowsViewModule } from "../dataset-flow/flows-view.module";
 import { FeatureFlagModule } from "../common/directives/feature-flag.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { DisplayAccountNameModule } from "../common/pipes/display-account-name.module";
 
 @NgModule({
     declarations: [AccountComponent, AccountFlowsTabComponent, DatasetsTabComponent],
@@ -38,6 +39,7 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
         RouterModule,
 
         DatasetListModule,
+        DisplayAccountNameModule,
         FeatureFlagModule,
         FlowsViewModule,
         PaginationModule,

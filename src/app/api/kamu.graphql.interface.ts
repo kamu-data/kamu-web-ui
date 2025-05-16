@@ -18,6 +18,10 @@ export type Scalars = {
     AccountDisplayName: string;
     AccountID: string;
     AccountName: string;
+    /** Base64-encoded binary data (url-safe, no padding) */
+    Base64Usnp: string;
+    /** Collection entry paths are similar to HTTP path components. They are rooted (start with `/`), separated by forward slashes, with elements URL-encoded (e.g. `/foo%20bar/baz`) */
+    CollectionPath: string;
     DatasetAlias: string;
     DatasetEnvVarID: string;
     DatasetID: string;
@@ -32,7 +36,10 @@ export type Scalars = {
     DateTime: string;
     DeviceCode: string;
     EventID: string;
+    EvmWalletAddress: string;
     FlowID: string;
+    /** A scalar that can represent any JSON value. */
+    JSON: string;
     Multihash: string;
     TaskID: string;
 };
@@ -322,6 +329,8 @@ export type AuthMut = {
     createAccessToken: CreateTokenResult;
     login: LoginResponse;
     revokeAccessToken: RevokeResult;
+    /** Web3-related functionality group */
+    web3: AuthWeb3Mut;
 };
 
 export type AuthMutAccountDetailsArgs = {
@@ -343,6 +352,15 @@ export type AuthMutRevokeAccessTokenArgs = {
     tokenId: Scalars["AccessTokenID"];
 };
 
+export type AuthWeb3Mut = {
+    __typename?: "AuthWeb3Mut";
+    eip4361AuthNonce: Eip4361AuthNonceResponse;
+};
+
+export type AuthWeb3MutEip4361AuthNonceArgs = {
+    account: Scalars["EvmWalletAddress"];
+};
+
 export type BatchingInput = {
     maxBatchingInterval: TimeDeltaInput;
     minRecordsToAwait: Scalars["Int"];
@@ -352,6 +370,23 @@ export type BlockRef = {
     __typename?: "BlockRef";
     blockHash: Scalars["Multihash"];
     name: Scalars["String"];
+};
+
+export type BuildInfo = {
+    __typename?: "BuildInfo";
+    appVersion: Scalars["String"];
+    buildTimestamp?: Maybe<Scalars["String"]>;
+    cargoFeatures?: Maybe<Scalars["String"]>;
+    cargoOptLevel?: Maybe<Scalars["String"]>;
+    cargoTargetTriple?: Maybe<Scalars["String"]>;
+    gitBranch?: Maybe<Scalars["String"]>;
+    gitCommitDate?: Maybe<Scalars["String"]>;
+    gitDescribe?: Maybe<Scalars["String"]>;
+    gitSha?: Maybe<Scalars["String"]>;
+    rustcChannel?: Maybe<Scalars["String"]>;
+    rustcCommitSha?: Maybe<Scalars["String"]>;
+    rustcHostTriple?: Maybe<Scalars["String"]>;
+    rustcSemver?: Maybe<Scalars["String"]>;
 };
 
 export type CancelScheduledTasksResult = {
@@ -381,6 +416,199 @@ export type CliProtocolDesc = {
     __typename?: "CliProtocolDesc";
     pullCommand: Scalars["String"];
     pushCommand: Scalars["String"];
+};
+
+export type Collection = {
+    __typename?: "Collection";
+    /**
+     * State projection of the state of collection at the specified point in
+     * time
+     */
+    asOf: CollectionProjection;
+    /** Latest state projection of the state of collection */
+    latest: CollectionProjection;
+};
+
+export type CollectionAsOfArgs = {
+    blockHash: Scalars["Multihash"];
+};
+
+export type CollectionEntry = {
+    __typename?: "CollectionEntry";
+    /** Resolves the reference to linked dataset */
+    asDataset?: Maybe<Dataset>;
+    /** Time when this version was created */
+    eventTime: Scalars["DateTime"];
+    /** Extra data associated with this entry */
+    extraData: Scalars["JSON"];
+    /**
+     * File system-like path
+     * Rooted, separated by forward slashes, with elements URL-encoded
+     * (e.g. `/foo%20bar/baz`)
+     */
+    path: Scalars["CollectionPath"];
+    /** DID of the linked dataset */
+    ref: Scalars["DatasetID"];
+    /** Time when this version was created */
+    systemTime: Scalars["DateTime"];
+};
+
+export type CollectionEntryConnection = {
+    __typename?: "CollectionEntryConnection";
+    edges: Array<CollectionEntryEdge>;
+    /** A shorthand for `edges { node { ... } }` */
+    nodes: Array<CollectionEntry>;
+    /** Page information */
+    pageInfo: PageBasedInfo;
+    /** Approximate number of total nodes */
+    totalCount: Scalars["Int"];
+};
+
+export type CollectionEntryEdge = {
+    __typename?: "CollectionEntryEdge";
+    node: CollectionEntry;
+};
+
+export type CollectionEntryInput = {
+    /** Json object containing extra column values */
+    extraData?: InputMaybe<Scalars["JSON"]>;
+    /** Entry path */
+    path: Scalars["CollectionPath"];
+    /** DID of the linked dataset */
+    ref: Scalars["DatasetID"];
+};
+
+export type CollectionMut = {
+    __typename?: "CollectionMut";
+    /** Links new entry to this collection */
+    addEntry: CollectionUpdateResult;
+    /** Moves or renames an entry */
+    moveEntry: CollectionUpdateResult;
+    /** Remove an entry from this collection */
+    removeEntry: CollectionUpdateResult;
+    /** Execute multiple add / move / unlink operations as a single transaction */
+    updateEntries: CollectionUpdateResult;
+};
+
+export type CollectionMutAddEntryArgs = {
+    entry: CollectionEntryInput;
+    expectedHead?: InputMaybe<Scalars["Multihash"]>;
+};
+
+export type CollectionMutMoveEntryArgs = {
+    expectedHead?: InputMaybe<Scalars["Multihash"]>;
+    extraData?: InputMaybe<Scalars["JSON"]>;
+    pathFrom: Scalars["CollectionPath"];
+    pathTo: Scalars["CollectionPath"];
+};
+
+export type CollectionMutRemoveEntryArgs = {
+    expectedHead?: InputMaybe<Scalars["Multihash"]>;
+    path: Scalars["CollectionPath"];
+};
+
+export type CollectionMutUpdateEntriesArgs = {
+    expectedHead?: InputMaybe<Scalars["Multihash"]>;
+    operations: Array<CollectionUpdateInput>;
+};
+
+export type CollectionProjection = {
+    __typename?: "CollectionProjection";
+    /** Returns the state of entries as they existed at specified point in time */
+    entries: CollectionEntryConnection;
+    /** Find entries that link to specified DIDs */
+    entriesByRef: Array<CollectionEntry>;
+    /** Returns an entry at the specified path */
+    entry?: Maybe<CollectionEntry>;
+};
+
+export type CollectionProjectionEntriesArgs = {
+    maxDepth?: InputMaybe<Scalars["Int"]>;
+    page?: InputMaybe<Scalars["Int"]>;
+    pathPrefix?: InputMaybe<Scalars["CollectionPath"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+};
+
+export type CollectionProjectionEntriesByRefArgs = {
+    refs: Array<Scalars["DatasetID"]>;
+};
+
+export type CollectionProjectionEntryArgs = {
+    path: Scalars["CollectionPath"];
+};
+
+export type CollectionUpdateErrorCasFailed = CollectionUpdateResult & {
+    __typename?: "CollectionUpdateErrorCasFailed";
+    actualHead: Scalars["Multihash"];
+    expectedHead: Scalars["Multihash"];
+    isSuccess: Scalars["Boolean"];
+    message: Scalars["String"];
+};
+
+export type CollectionUpdateErrorNotFound = CollectionUpdateResult & {
+    __typename?: "CollectionUpdateErrorNotFound";
+    isSuccess: Scalars["Boolean"];
+    message: Scalars["String"];
+    path: Scalars["CollectionPath"];
+};
+
+export type CollectionUpdateInput = {
+    /**
+     * Inserts new entry under specified path. If an entry at the target path
+     * already exists it will be retracted.
+     */
+    add?: InputMaybe<CollectionUpdateInputAdd>;
+    /**
+     * Retracts and appends an entry under the new path. Returns error if from
+     * path does not exist. If an entry at the target path already exists it
+     * will be retracted. Use this to update extra data by specifying same
+     * source and target paths.
+     */
+    move?: InputMaybe<CollectionUpdateInputMove>;
+    /** Removes the collection entry. Does nothing if entry does not exist. */
+    remove?: InputMaybe<CollectionUpdateInputRemove>;
+};
+
+export type CollectionUpdateInputAdd = {
+    entry: CollectionEntryInput;
+};
+
+export type CollectionUpdateInputMove = {
+    /** Optionally update the extra data */
+    extraData?: InputMaybe<Scalars["JSON"]>;
+    pathFrom: Scalars["CollectionPath"];
+    pathTo: Scalars["CollectionPath"];
+};
+
+export type CollectionUpdateInputRemove = {
+    path: Scalars["CollectionPath"];
+};
+
+export type CollectionUpdateResult = {
+    isSuccess: Scalars["Boolean"];
+    message: Scalars["String"];
+};
+
+export type CollectionUpdateSuccess = CollectionUpdateResult & {
+    __typename?: "CollectionUpdateSuccess";
+    isSuccess: Scalars["Boolean"];
+    message: Scalars["String"];
+    newHead: Scalars["Multihash"];
+    oldHead: Scalars["Multihash"];
+};
+
+export type CollectionUpdateUpToDate = CollectionUpdateResult & {
+    __typename?: "CollectionUpdateUpToDate";
+    isSuccess: Scalars["Boolean"];
+    message: Scalars["String"];
+};
+
+/** Defines a dataset column */
+export type ColumnInput = {
+    /** Column name */
+    name: Scalars["String"];
+    /** Column data type */
+    type: DataTypeInput;
 };
 
 export type CommitResult = {
@@ -582,9 +810,9 @@ export enum DataQueryResultErrorKind {
 export type DataQueryResultSuccess = {
     __typename?: "DataQueryResultSuccess";
     data: DataBatch;
-    datasets?: Maybe<Array<DatasetState>>;
+    datasets: Array<DatasetState>;
     limit: Scalars["Int"];
-    schema?: Maybe<DataSchema>;
+    schema: DataSchema;
 };
 
 export type DataSchema = {
@@ -616,10 +844,19 @@ export type DataSlice = {
     size: Scalars["Int"];
 };
 
+export type DataTypeInput = {
+    /** Defines type using DDL syntax */
+    ddl: Scalars["String"];
+};
+
 export type Dataset = {
     __typename?: "Dataset";
     /** Returns dataset alias (user + name) */
     alias: Scalars["DatasetAlias"];
+    /** Downcast a dataset to a collection interface */
+    asCollection?: Maybe<Collection>;
+    /** Downcast a dataset to a versioned file interface */
+    asVersionedFile?: Maybe<VersionedFile>;
     /** Access to the dataset collaboration data */
     collaboration: DatasetCollaboration;
     /** Creation time of the first metadata block in the chain */
@@ -632,6 +869,8 @@ export type Dataset = {
     envVars: DatasetEnvVars;
     /** Access to the flow configurations of this dataset */
     flows: DatasetFlows;
+    /** Quck access to `head` block hash */
+    head: Scalars["Multihash"];
     /** Unique identifier of the dataset */
     id: Scalars["DatasetID"];
     /** Returns the kind of dataset (Root or Derivative) */
@@ -994,6 +1233,10 @@ export type DatasetMetadataPermissions = {
 
 export type DatasetMut = {
     __typename?: "DatasetMut";
+    /** Downcast a dataset to a collection interface */
+    asCollection?: Maybe<CollectionMut>;
+    /** Downcast a dataset to a versioned file interface */
+    asVersionedFile?: Maybe<VersionedFileMut>;
     /** Access to collaboration management methods */
     collaboration: DatasetCollaborationMut;
     /** Delete the dataset */
@@ -1105,14 +1348,34 @@ export type DatasetsMut = {
     __typename?: "DatasetsMut";
     /** Returns a mutable dataset by its ID */
     byId?: Maybe<DatasetMut>;
+    /**
+     * Creates a new collection dataset.
+     * Can include schema for extra columns, dataset metadata, and initial
+     * collection entries.
+     */
+    createCollection: CreateDatasetFromSnapshotResult;
     /** Creates a new empty dataset */
     createEmpty: CreateDatasetResult;
     /** Creates a new dataset from provided DatasetSnapshot manifest */
     createFromSnapshot: CreateDatasetFromSnapshotResult;
+    /**
+     * Creates new versioned file dataset.
+     * Can include schema for extra columns and dataset metadata events (e.g.
+     * adding description and readme).
+     */
+    createVersionedFile: CreateDatasetFromSnapshotResult;
 };
 
 export type DatasetsMutByIdArgs = {
     datasetId: Scalars["DatasetID"];
+};
+
+export type DatasetsMutCreateCollectionArgs = {
+    datasetAlias: Scalars["DatasetAlias"];
+    datasetVisibility: DatasetVisibility;
+    extraColumns?: InputMaybe<Array<ColumnInput>>;
+    extraEvents?: InputMaybe<Array<Scalars["String"]>>;
+    extraEventsFormat?: InputMaybe<MetadataManifestFormat>;
 };
 
 export type DatasetsMutCreateEmptyArgs = {
@@ -1125,6 +1388,14 @@ export type DatasetsMutCreateFromSnapshotArgs = {
     datasetVisibility: DatasetVisibility;
     snapshot: Scalars["String"];
     snapshotFormat: MetadataManifestFormat;
+};
+
+export type DatasetsMutCreateVersionedFileArgs = {
+    datasetAlias: Scalars["DatasetAlias"];
+    datasetVisibility: DatasetVisibility;
+    extraColumns?: InputMaybe<Array<ColumnInput>>;
+    extraEvents?: InputMaybe<Array<Scalars["String"]>>;
+    extraEventsFormat?: InputMaybe<MetadataManifestFormat>;
 };
 
 export type DeleteDatasetEnvVarResult = {
@@ -1195,6 +1466,11 @@ export type DisablePushSource = {
     __typename?: "DisablePushSource";
     /** Identifies the source to be disabled. */
     sourceName: Scalars["String"];
+};
+
+export type Eip4361AuthNonceResponse = {
+    __typename?: "Eip4361AuthNonceResponse";
+    value: Scalars["String"];
 };
 
 export type EngineDesc = {
@@ -1914,6 +2190,13 @@ export type KafkaProtocolDesc = {
     url: Scalars["String"];
 };
 
+/** Represents base64-encoded binary data using standard encoding */
+export type KeyValue = {
+    __typename?: "KeyValue";
+    key: Scalars["String"];
+    value: Scalars["String"];
+};
+
 export type LinkProtocolDesc = {
     __typename?: "LinkProtocolDesc";
     url: Scalars["String"];
@@ -2342,6 +2625,8 @@ export type Query = {
     apiVersion: Scalars["String"];
     /** Authentication and authorization-related functionality group */
     auth: Auth;
+    /** Returns server's version and build configuration information */
+    buildInfo: BuildInfo;
     /** Querying and data manipulations */
     data: DataQueries;
     /**
@@ -2997,6 +3282,30 @@ export type SqlQueryStep = {
     query: Scalars["String"];
 };
 
+export type StartUploadVersionErrorTooLarge = StartUploadVersionResult & {
+    __typename?: "StartUploadVersionErrorTooLarge";
+    isSuccess: Scalars["Boolean"];
+    message: Scalars["String"];
+    uploadLimit: Scalars["Int"];
+    uploadSize: Scalars["Int"];
+};
+
+export type StartUploadVersionResult = {
+    isSuccess: Scalars["Boolean"];
+    message: Scalars["String"];
+};
+
+export type StartUploadVersionSuccess = StartUploadVersionResult & {
+    __typename?: "StartUploadVersionSuccess";
+    headers: Array<KeyValue>;
+    isSuccess: Scalars["Boolean"];
+    message: Scalars["String"];
+    method: Scalars["String"];
+    uploadToken: Scalars["String"];
+    url: Scalars["String"];
+    useMultipart: Scalars["Boolean"];
+};
+
 export type Task = {
     __typename?: "Task";
     /** Whether the task was ordered to be cancelled */
@@ -3163,6 +3472,35 @@ export type UpdateReadmeResult = {
     message: Scalars["String"];
 };
 
+export type UpdateVersionErrorCasFailed = UpdateVersionResult & {
+    __typename?: "UpdateVersionErrorCasFailed";
+    actualHead: Scalars["Multihash"];
+    expectedHead: Scalars["Multihash"];
+    isSuccess: Scalars["Boolean"];
+    message: Scalars["String"];
+};
+
+export type UpdateVersionErrorInvalidExtraData = UpdateVersionResult & {
+    __typename?: "UpdateVersionErrorInvalidExtraData";
+    isSuccess: Scalars["Boolean"];
+    message: Scalars["String"];
+};
+
+export type UpdateVersionResult = {
+    isSuccess: Scalars["Boolean"];
+    message: Scalars["String"];
+};
+
+export type UpdateVersionSuccess = UpdateVersionResult & {
+    __typename?: "UpdateVersionSuccess";
+    contentHash: Scalars["Multihash"];
+    isSuccess: Scalars["Boolean"];
+    message: Scalars["String"];
+    newHead: Scalars["Multihash"];
+    newVersion: Scalars["Int"];
+    oldHead: Scalars["Multihash"];
+};
+
 export type UpsertDatasetEnvVarResult = {
     message: Scalars["String"];
 };
@@ -3182,6 +3520,123 @@ export type UpsertDatasetEnvVarResultUpdated = UpsertDatasetEnvVarResult & {
 export type UpsertDatasetEnvVarUpToDate = UpsertDatasetEnvVarResult & {
     __typename?: "UpsertDatasetEnvVarUpToDate";
     message: Scalars["String"];
+};
+
+export type VersionedFile = {
+    __typename?: "VersionedFile";
+    /** Returns the specified entry by block or version number */
+    asOf?: Maybe<VersionedFileEntry>;
+    /** Returns the latest version entry, if any */
+    latest?: Maybe<VersionedFileEntry>;
+    /** Returns list of versions in reverse chronological order */
+    versions: VersionedFileEntryConnection;
+};
+
+export type VersionedFileAsOfArgs = {
+    blockHash?: InputMaybe<Scalars["Multihash"]>;
+    version?: InputMaybe<Scalars["Int"]>;
+};
+
+export type VersionedFileVersionsArgs = {
+    maxVersion?: InputMaybe<Scalars["Int"]>;
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+};
+
+export type VersionedFileContentDownload = {
+    __typename?: "VersionedFileContentDownload";
+    /** Download URL expiration timestamp */
+    expiresAt?: Maybe<Scalars["DateTime"]>;
+    /** Headers to include in request */
+    headers: Array<KeyValue>;
+    /** Direct download URL */
+    url: Scalars["String"];
+};
+
+export type VersionedFileEntry = {
+    __typename?: "VersionedFileEntry";
+    /**
+     * Returns encoded content in-band. Should be used for small files only and
+     * will retrurn error if called on large data.
+     */
+    content: Scalars["Base64Usnp"];
+    /** Multihash of the file content */
+    contentHash: Scalars["Multihash"];
+    /** Media type of the file content */
+    contentType: Scalars["String"];
+    /** Returns a direct download URL */
+    contentUrl: VersionedFileContentDownload;
+    /** Time when this version was created */
+    eventTime: Scalars["DateTime"];
+    /** Extra data associated with this file version */
+    extraData: Scalars["JSON"];
+    /** Time when this version was created */
+    systemTime: Scalars["DateTime"];
+    /** File version */
+    version: Scalars["Int"];
+};
+
+export type VersionedFileEntryConnection = {
+    __typename?: "VersionedFileEntryConnection";
+    edges: Array<VersionedFileEntryEdge>;
+    /** A shorthand for `edges { node { ... } }` */
+    nodes: Array<VersionedFileEntry>;
+    /** Page information */
+    pageInfo: PageBasedInfo;
+    /** Approximate number of total nodes */
+    totalCount: Scalars["Int"];
+};
+
+export type VersionedFileEntryEdge = {
+    __typename?: "VersionedFileEntryEdge";
+    node: VersionedFileEntry;
+};
+
+export type VersionedFileMut = {
+    __typename?: "VersionedFileMut";
+    /**
+     * Finalizes the content upload by incoporating the content into the
+     * dataset as a new version
+     */
+    finishUploadNewVersion: UpdateVersionResult;
+    /**
+     * Returns a pre-signed URL and upload token for direct uploads of large
+     * files
+     */
+    startUploadNewVersion: StartUploadVersionResult;
+    /**
+     * Creating a new version with that has updated values of extra columns but
+     * with the file content unchanged
+     */
+    updateExtraData: UpdateVersionResult;
+    /**
+     * Uploads new version of content in-band. Can be used for very small files
+     * only.
+     */
+    uploadNewVersion: UpdateVersionResult;
+};
+
+export type VersionedFileMutFinishUploadNewVersionArgs = {
+    expectedHead?: InputMaybe<Scalars["Multihash"]>;
+    extraData?: InputMaybe<Scalars["JSON"]>;
+    uploadToken: Scalars["String"];
+};
+
+export type VersionedFileMutStartUploadNewVersionArgs = {
+    contentLength: Scalars["Int"];
+    contentType?: InputMaybe<Scalars["String"]>;
+};
+
+export type VersionedFileMutUpdateExtraDataArgs = {
+    expectedHead?: InputMaybe<Scalars["Multihash"]>;
+    extraData: Scalars["JSON"];
+};
+
+export type VersionedFileMutUploadNewVersionArgs = {
+    content: Scalars["Base64Usnp"];
+    contentType?: InputMaybe<Scalars["String"]>;
+    expectedHead?: InputMaybe<Scalars["Multihash"]>;
+    extraData?: InputMaybe<Scalars["JSON"]>;
 };
 
 export type ViewAccessToken = {
@@ -3480,6 +3935,21 @@ export type AccountFragment = {
     accountType: AccountType;
     avatarUrl?: string | null;
     isAdmin: boolean;
+};
+
+export type LoginWeb3WalletMutationVariables = Exact<{
+    account: Scalars["EvmWalletAddress"];
+}>;
+
+export type LoginWeb3WalletMutation = {
+    __typename?: "Mutation";
+    auth: {
+        __typename?: "AuthMut";
+        web3: {
+            __typename?: "AuthWeb3Mut";
+            eip4361AuthNonce: { __typename?: "Eip4361AuthNonceResponse"; value: string };
+        };
+    };
 };
 
 export type LoginMutationVariables = Exact<{
@@ -4941,9 +5411,9 @@ export type CurrentSourceFetchUrlFragment = {
 
 export type DataQueryResultSuccessViewFragment = {
     __typename?: "DataQueryResultSuccess";
-    schema?: { __typename?: "DataSchema"; format: DataSchemaFormat; content: string } | null;
+    schema: { __typename?: "DataSchema"; format: DataSchemaFormat; content: string };
     data: { __typename?: "DataBatch"; format: DataBatchFormat; content: string };
-    datasets?: Array<{ __typename?: "DatasetState"; id: string; alias: string; blockHash?: string | null }> | null;
+    datasets: Array<{ __typename?: "DatasetState"; id: string; alias: string; blockHash?: string | null }>;
 };
 
 export type DatasetBasicsFragment = {
@@ -7333,6 +7803,28 @@ export const AccountWithEmailDocument = gql`
 })
 export class AccountWithEmailGQL extends Apollo.Query<AccountWithEmailQuery, AccountWithEmailQueryVariables> {
     document = AccountWithEmailDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const LoginWeb3WalletDocument = gql`
+    mutation LoginWeb3Wallet($account: EvmWalletAddress!) {
+        auth {
+            web3 {
+                eip4361AuthNonce(account: $account) {
+                    value
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class LoginWeb3WalletGQL extends Apollo.Mutation<LoginWeb3WalletMutation, LoginWeb3WalletMutationVariables> {
+    document = LoginWeb3WalletDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

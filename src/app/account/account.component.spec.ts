@@ -32,6 +32,7 @@ import { LoggedUserService } from "../auth/logged-user.service";
 import { mockAccountDetails, TEST_AVATAR_URL, TEST_LOGIN } from "../api/mock/auth.mock";
 import { findElementByDataTestId } from "../common/helpers/base-test.helpers.spec";
 import { DatasetVisibilityModule } from "../common/components/dataset-visibility/dataset-visibility.module";
+import { DisplayAccountNameModule } from "../common/pipes/display-account-name.module";
 
 describe("AccountComponent", () => {
     let component: AccountComponent;
@@ -72,6 +73,7 @@ describe("AccountComponent", () => {
                 ToastrModule.forRoot(),
                 RouterModule,
                 DatasetVisibilityModule,
+                DisplayAccountNameModule,
             ],
             providers: [
                 DatasetApi,

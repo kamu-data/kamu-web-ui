@@ -23,10 +23,10 @@
                     </a>
                 </ng-template>
             </div>
-            <span class="vcard-fullname d-block p-2 overflow-hidden">
-                {{ user.displayName }}
+            <span class="vcard-fullname d-block p-2 overflow-hidden" [title]="user.displayName">
+                {{ user.displayName | displayAccountName }}
             </span>
-            <span class="vcard-username d-block px-2">
+            <span class="vcard-username d-block px-2 overflow-hidden">
                 {{ user.accountName }}
             </span>
 

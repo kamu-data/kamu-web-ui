@@ -16,6 +16,11 @@ export interface GithubLoginCredentials {
     code: string;
 }
 
+export interface Web3WalletOwnershipVerificationRequest {
+    message: string;
+    signature: string;
+}
+
 export interface LoginResponseType {
     accessToken: string;
     account: AccountFragment;

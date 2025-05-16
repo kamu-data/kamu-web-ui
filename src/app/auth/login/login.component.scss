@@ -45,8 +45,8 @@ p {
         justify-content: center;
         border: 1px solid $app-color-border-default;
         width: 280px;
-        padding: 5px 15px;
         border-radius: 6px;
+        height: 35px;
         background-color: #ebeef1;
 
         &:hover {
@@ -58,7 +58,8 @@ p {
         }
     }
 
-    .github-logo {
+    .github-logo,
+    .metamask-logo {
         margin-left: 10px;
     }
 }

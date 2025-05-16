@@ -17,6 +17,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormsModule } from "@angular/forms";
 import { FeatureFlagModule } from "../common/directives/feature-flag.module";
+import { DisplayAccountNameModule } from "../common/pipes/display-account-name.module";
 
 @NgModule({
     declarations: [AppHeaderComponent, NotificationIndicatorComponent],
@@ -31,6 +32,7 @@ import { FeatureFlagModule } from "../common/directives/feature-flag.module";
         MatProgressSpinnerModule,
         NgbTypeaheadModule,
         RouterModule,
+        DisplayAccountNameModule,
     ],
 })
 export class HeaderModule {}

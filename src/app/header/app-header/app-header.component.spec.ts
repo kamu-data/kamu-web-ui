@@ -39,6 +39,7 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { LoginMethod } from "src/app/app-config.model";
 import { MatIconModule } from "@angular/material/icon";
+import { DisplayAccountNameModule } from "src/app/common/pipes/display-account-name.module";
 
 describe("AppHeaderComponent", () => {
     let component: AppHeaderComponent;
@@ -63,6 +64,7 @@ describe("AppHeaderComponent", () => {
                 HttpClientTestingModule,
                 RouterModule,
                 MatIconModule,
+                DisplayAccountNameModule,
             ],
             declarations: [AppHeaderComponent, NotificationIndicatorComponent],
             providers: [

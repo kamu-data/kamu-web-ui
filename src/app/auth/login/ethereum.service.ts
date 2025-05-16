@@ -12,12 +12,12 @@ import { SiweMessage } from "siwe";
 import { MaybeNull } from "src/app/interface/app.types";
 import { AuthApi } from "src/app/api/auth.api";
 import { ToastrService } from "ngx-toastr";
-import { Web3WalletCredentials } from "src/app/api/auth.api.model";
+import { Web3WalletOwnershipVerificationRequest } from "src/app/api/auth.api.model";
 
 @Injectable({
     providedIn: "root",
 })
-export class MetamaskService {
+export class Eip1193EthereumService {
     private provider: BrowserProvider;
     private account: string;
 
@@ -92,7 +92,7 @@ export class MetamaskService {
         return message.prepareMessage();
     }
 
-    public async signInWithEthereum(): Promise<MaybeNull<Web3WalletCredentials>> {
+    public async signInWithEthereum(): Promise<MaybeNull<Web3WalletOwnershipVerificationRequest>> {
         try {
             const signer = await this.provider.getSigner();
             const message = await this.createSiweMessage(

@@ -16,7 +16,7 @@ export interface GithubLoginCredentials {
     code: string;
 }
 
-export interface Web3WalletCredentials {
+export interface Web3WalletOwnershipVerificationRequest {
     message: string;
     signature: string;
 }

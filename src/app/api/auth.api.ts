@@ -24,7 +24,7 @@ import {
     GithubLoginCredentials,
     LoginResponseType,
     PasswordLoginCredentials,
-    Web3WalletCredentials,
+    Web3WalletOwnershipVerificationRequest,
 } from "./auth.api.model";
 import { LoginMethod } from "../app-config.model";
 import { ApolloQueryResult } from "@apollo/client";
@@ -62,7 +62,9 @@ export class AuthApi {
         return this.fetchAccountAndTokenFromLoginMethod(LoginMethod.GITHUB, JSON.stringify(credentials), deviceCode);
     }
 
-    public fetchAccountAndTokenFromWeb3Wallet(credentials: Web3WalletCredentials): Observable<LoginResponseType> {
+    public fetchAccountAndTokenFromWeb3Wallet(
+        credentials: Web3WalletOwnershipVerificationRequest,
+    ): Observable<LoginResponseType> {
         return this.fetchAccountAndTokenFromLoginMethod(LoginMethod.WEB3_WALLET, JSON.stringify(credentials));
     }
 

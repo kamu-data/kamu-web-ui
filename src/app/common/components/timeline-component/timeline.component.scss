@@ -18,7 +18,7 @@
                 width: 2px;
                 top: 36px;
                 left: 15px;
-                height: 65px;
+                height: 60px;
                 content: "";
                 background-color: $app-color-border-muted;
             }
@@ -30,7 +30,7 @@
             width: 2px;
             top: 36px;
             left: 15px;
-            height: 93px;
+            height: 89px;
             content: "";
             background-color: $app-color-border-muted;
         }
@@ -40,10 +40,10 @@
             display: block;
             height: 1px;
             width: 21px;
-            top: 27px;
+            top: 27.5px;
             left: 28px;
             content: "";
-            background-color: #b7b7b8;
+            background-color: $app-color-border-muted;
         }
     }
 }
@@ -80,6 +80,6 @@ a {
 
 .commit-icon {
     position: absolute;
-    top: 18px;
+    top: 19px;
     left: 8px;
 }

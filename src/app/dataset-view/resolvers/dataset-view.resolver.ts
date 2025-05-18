@@ -25,12 +25,10 @@ export const datasetViewResolverFn: ResolveFn<DatasetViewData> = (
     const localStorageService = inject(LocalStorageService);
     const accountName = route.paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME) as string;
     const datasetName = route.paramMap.get(ProjectLinks.URL_PARAM_DATASET_NAME) as string;
-
     return datasetService.requestDatasetMainData({ accountName, datasetName }).pipe(
         switchMap(() => {
             return combineLatest([datasetService.datasetChanges, datasetSubService.permissionsChanges]).pipe(
                 map(([datasetBasics, datasetPermissions]) => {
-                    localStorageService.setRedirectAfterLoginUrl(null);
                     return {
                         datasetBasics,
                         datasetPermissions,

@@ -202,7 +202,8 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onLogin(): void {
-        this.sessionStorageService.setRedirectAfterLoginUrl(this.router.url);
+        if (this.router.url !== `/${ProjectLinks.URL_PAGE_NOT_FOUND}`)
+            this.localStorageService.setRedirectAfterLoginUrl(this.router.url);
 
         this.navigationService.navigateToLogin();
     }

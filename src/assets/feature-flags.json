@@ -434,7 +434,7 @@
       },
       {
         "id": "account",
-        "developmentState": "reserved"
+        "developmentState": "stable"
       },
       {
         "id": "appearance",

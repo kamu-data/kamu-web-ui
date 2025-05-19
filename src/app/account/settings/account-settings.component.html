@@ -32,253 +32,37 @@
                 <div data-catalyst="">
                     <nav>
                         <ul role="list" class="action-list">
-                            <li
-                                appFeatureFlag="settings.profile"
-                                data-view-component="true"
-                                [ngClass]="{
-                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.PROFILE,
-                                }"
-                                class="action-list-item"
-                            >
-                                <!-- TODO: Add when menu item becomes active-->
-                                <!-- [routerLink]="getRouteLink(AccountSettingsTabs.PROFILE)" -->
-                                <a
-                                    routerLinkActive="active"
-                                    aria-current="page"
-                                    data-view-component="true"
-                                    class="action-list-content disabled d-flex align-items-center"
+                            <ng-container *ngFor="let item of ACCOUNT_SETTINGS_MENU_DESCRIPTORS">
+                                <li
+                                    [appFeatureFlag]="item.featureFlag"
+                                    [ngClass]="{
+                                        'action-list-item--nav__active': activeTab === item.activeTab,
+                                    }"
+                                    class="action-list-item"
                                 >
-                                    <span
-                                        class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
+                                    <a
+                                        routerLinkActive="active"
+                                        [routerLink]="getRouteLink(item.activeTab)"
+                                        [class]="'action-list-content d-flex align-items-center ' + item.class"
                                     >
-                                        <mat-icon class="mat-icon-svg-size" svgIcon="public-profile" />
-                                    </span>
-                                    <span class="action-list-item-label"> Public profile </span>
-                                </a>
-                            </li>
-                            <li
-                                appFeatureFlag="settings.account"
-                                [ngClass]="{
-                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.ACCOUNT,
-                                }"
-                                class="action-list-item"
-                            >
-                                <!-- [routerLink]="getRouteLink(AccountSettingsTabs.ACCOUNT)" -->
-                                <a
-                                    routerLinkActive="active"
-                                    data-view-component="true"
-                                    class="action-list-content disabled d-flex align-items-center"
-                                >
-                                    <span
-                                        class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
-                                    >
-                                        <mat-icon class="mat-icon-svg-size" svgIcon="account" />
-                                    </span>
-                                    <span class="action-list-item-label"> Account </span>
-                                </a>
-                            </li>
-                            <li
-                                appFeatureFlag="settings.appearance"
-                                data-view-component="true"
-                                [ngClass]="{
-                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.APPEARANCE,
-                                }"
-                                class="action-list-item"
-                            >
-                                <!-- [routerLink]="getRouteLink(AccountSettingsTabs.APPEARANCE)" -->
-                                <a
-                                    routerLinkActive="active"
-                                    data-view-component="true"
-                                    class="action-list-content disabled"
-                                >
-                                    <span
-                                        class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
-                                    >
-                                        <mat-icon class="mat-icon-svg-size" svgIcon="appearance" />
-                                    </span>
-                                    <span class="action-list-item-label"> Appearance </span>
-                                </a>
-                            </li>
-                            <li
-                                appFeatureFlag="settings.accessibility"
-                                data-item-id=""
-                                data-view-component="true"
-                                [ngClass]="{
-                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.ACCESSIBILITY,
-                                }"
-                                class="action-list-item"
-                            >
-                                <!-- [routerLink]="getRouteLink(AccountSettingsTabs.ACCESSIBILITY)" -->
-                                <a
-                                    routerLinkActive="active"
-                                    data-view-component="true"
-                                    class="action-list-content disabled"
-                                >
-                                    <span
-                                        class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
-                                    >
-                                        <mat-icon class="mat-icon-svg-size" svgIcon="accessibility" />
-                                    </span>
-                                    <span class="action-list-item-label"> Accessibility </span>
-                                </a>
-                            </li>
-                            <li
-                                appFeatureFlag="settings.notifications"
-                                data-view-component="true"
-                                [ngClass]="{
-                                    'action-list-item--nav__active': activeTab === AccountSettingsTabs.NOTIFICATIONS,
-                                }"
-                                class="action-list-item"
-                            >
-                                <!-- [routerLink]="getRouteLink(AccountSettingsTabs.NOTIFICATIONS)" -->
-                                <a
-                                    routerLinkActive="active"
-                                    data-view-component="true"
-                                    class="action-list-content disabled"
-                                >
-                                    <span
-                                        class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
-                                    >
-                                        <mat-icon class="mat-icon-svg-size" svgIcon="notifications" />
-                                    </span>
-                                    <span class="action-list-item-label"> Notifications </span>
-                                </a>
-                            </li>
-                            <li
-                                role="separator"
-                                aria-hidden="true"
-                                data-view-component="true"
-                                class="action-list-section-divider"
-                            ></li>
-                            <li data-view-component="true" class="action-list-section-divider">
-                                <p
-                                    id="nav-list-section-2534b94a-735f-4cd6-bfff-c0f48caf7cab"
-                                    data-view-component="true"
-                                    class="action-list-section-divider-title"
-                                >
-                                    Access
-                                </p>
-                            </li>
-                            <li data-view-component="true" class="action-list-item action-list-item--hasSubItem">
-                                <ul
-                                    aria-labelledby="nav-list-section-2534b94a-735f-4cd6-bfff-c0f48caf7cab"
-                                    data-view-component="true"
-                                    class="action-list action-list--subGroup"
-                                >
-                                    <li
-                                        appFeatureFlag="settings.billing"
-                                        data-view-component="true"
-                                        class="action-list-item"
-                                        [ngClass]="{
-                                            'action-list-item--nav__active': activeTab === AccountSettingsTabs.BILLING,
-                                        }"
-                                    >
-                                        <!-- [routerLink]="getRouteLink(AccountSettingsTabs.BILLING)" -->
-                                        <a
-                                            routerLinkActive="active"
-                                            data-view-component="true"
-                                            class="action-list-content disabled"
+                                        <span
+                                            class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
                                         >
-                                            <span
-                                                class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
-                                            >
-                                                <mat-icon class="mat-icon-svg-size" svgIcon="billing" />
-                                            </span>
-                                            <span class="action-list-item-label"> Billing and plans </span>
-                                        </a>
-                                    </li>
-                                    <li
-                                        appFeatureFlag="settings.emails"
-                                        data-view-component="true"
-                                        class="action-list-item"
-                                        [ngClass]="{
-                                            'action-list-item--nav__active': activeTab === AccountSettingsTabs.EMAILS,
-                                        }"
-                                    >
-                                        <a
-                                            routerLinkActive="active"
-                                            data-view-component="true"
-                                            class="action-list-content"
-                                            [routerLink]="getRouteLink(AccountSettingsTabs.EMAILS)"
-                                        >
-                                            <span
-                                                class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
-                                            >
-                                                <mat-icon class="mat-icon-svg-size" svgIcon="emails" />
-                                            </span>
-                                            <span class="action-list-item-label"> Emails </span>
-                                        </a>
-                                    </li>
-                                    <li
-                                        appFeatureFlag="settings.password"
-                                        data-view-component="true"
-                                        class="action-list-item"
-                                        [ngClass]="{
-                                            'action-list-item--nav__active': activeTab === AccountSettingsTabs.SECURITY,
-                                        }"
-                                    >
-                                        <!-- [routerLink]="getRouteLink(AccountSettingsTabs.SECURITY)" -->
-                                        <a
-                                            routerLinkActive="active"
-                                            data-view-component="true"
-                                            class="action-list-content disabled"
-                                        >
-                                            <span
-                                                class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
-                                            >
-                                                <mat-icon class="mat-icon-svg-size" svgIcon="security" />
-                                            </span>
-                                            <span class="action-list-item-label"> Password and authentication </span>
-                                        </a>
-                                    </li>
-                                    <li
-                                        appFeatureFlag="settings.organizations"
-                                        data-view-component="true"
-                                        class="action-list-item"
-                                        [ngClass]="{
-                                            'action-list-item--nav__active':
-                                                activeTab === AccountSettingsTabs.ORGANIZATIONS,
-                                        }"
-                                    >
-                                        <!-- [routerLink]="getRouteLink(AccountSettingsTabs.ORGANIZATIONS)" -->
-                                        <a
-                                            routerLinkActive="active"
-                                            data-view-component="true"
-                                            class="action-list-content disabled"
-                                        >
-                                            <span
-                                                class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
-                                            >
-                                                <mat-icon class="mat-icon-svg-size" svgIcon="organizations" />
-                                            </span>
-                                            <span class="action-list-item-label"> Organizations </span>
-                                        </a>
-                                    </li>
-                                    <li
-                                        appFeatureFlag="settings.tokens"
-                                        data-view-component="true"
-                                        class="action-list-item"
-                                        [ngClass]="{
-                                            'action-list-item--nav__active':
-                                                activeTab === AccountSettingsTabs.ACCESS_TOKENS,
-                                        }"
-                                    >
-                                        <a
-                                            routerLinkActive="active"
-                                            [routerLink]="getRouteLink(AccountSettingsTabs.ACCESS_TOKENS)"
-                                            data-view-component="true"
-                                            class="action-list-content"
-                                        >
-                                            <span
-                                                class="action-list-item-visual action-list-item-visual--leading text-muted mr-2"
-                                            >
-                                                <mat-icon class="mat-icon-svg-size" svgIcon="access-token" />
-                                            </span>
-                                            <span class="action-list-item-label"> Access tokens </span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
+                                            <mat-icon class="mat-icon-svg-size" [svgIcon]="item.iconName" />
+                                        </span>
+                                        <span class="action-list-item-label"> {{ item.label }} </span>
+                                    </a>
+                                </li>
+                                <li
+                                    *ngIf="item.groupDivider"
+                                    role="separator"
+                                    aria-hidden="true"
+                                    class="action-list-section-divider"
+                                ></li>
+                                <li *ngIf="item.groupDivider" class="action-list-section-divider">
+                                    <p class="action-list-section-divider-title">{{ item.groupDivider.groupName }}</p>
+                                </li>
+                            </ng-container>
                         </ul>
                     </nav>
                 </div>

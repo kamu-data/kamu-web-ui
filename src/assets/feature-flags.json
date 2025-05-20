@@ -351,6 +351,10 @@
       {
         "id": "stars",
         "developmentState": "reserved"
+      },
+      {
+        "id": "settings",
+        "developmentState": "stable"
       }
     ]
   },

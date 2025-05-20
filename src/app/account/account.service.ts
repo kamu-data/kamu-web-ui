@@ -14,6 +14,7 @@ import {
     Dataset,
     DatasetListFlowsDataFragment,
     DatasetsTotalCountByAccountNameQuery,
+    DeleteAccountByNameMutation,
 } from "../api/kamu.graphql.interface";
 import { AccountFlowFilters, AccountFragment, FlowConnectionDataFragment } from "../api/kamu.graphql.interface";
 import { AccountApi } from "../api/account.api";
@@ -135,6 +136,17 @@ export class AccountService {
                 result
                     ? this.toastrService.success("Flows resumed")
                     : this.toastrService.error("Error, flows not resumed");
+            }),
+        );
+    }
+
+    public deleteAccountByName(accountName: string): Observable<boolean> {
+        return this.accountApi.deleteAccountByName(accountName).pipe(
+            map((data: DeleteAccountByNameMutation) => {
+                if (data.accounts.byName?.delete.__typename === "DeleteAccountSuccess") {
+                    return true;
+                }
+                return false;
             }),
         );
     }

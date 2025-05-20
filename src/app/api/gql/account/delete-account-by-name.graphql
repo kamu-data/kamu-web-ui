@@ -1,0 +1,11 @@
+mutation deleteAccountByName($accountName: AccountName!) {
+  accounts {
+    byName(accountName: $accountName) {
+      delete {
+        ... on DeleteAccountSuccess {
+          message
+        }
+      }
+    }
+  }
+}

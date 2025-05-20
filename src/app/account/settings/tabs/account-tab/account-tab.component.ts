@@ -8,6 +8,7 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Router } from "@angular/router";
+import { AccountService } from "src/app/account/account.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { ModalService } from "src/app/common/components/modal/modal.service";
@@ -24,6 +25,7 @@ export class AccountTabComponent extends BaseComponent {
     private modalService = inject(ModalService);
     private loggedUserService = inject(LoggedUserService);
     private router = inject(Router);
+    private accountService = inject(AccountService);
 
     public deleteAccount(): void {
         const message = "Do you want to delete a account";
@@ -35,7 +37,15 @@ export class AccountTabComponent extends BaseComponent {
                 noButtonText: "Cancel",
                 handler: (ok) => {
                     if (ok) {
-                        console.log("delete account");
+                        const accountName = this.isOwnerPage
+                            ? this.loggedUserService.currentlyLoggedInUser.accountName
+                            : "";
+                        console.log("==>", accountName);
+                        this.accountService.deleteAccountByName(accountName).subscribe((succes) => {
+                            if (succes) {
+                                this.loggedUserService.logout();
+                            }
+                        });
                     }
                 },
             }),

@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { Eip1193Provider } from "ethers";
 import { FeatureShowMode } from "./interface/feature-flags.interface";
 
 export interface AppRuntimeConfig {
@@ -24,6 +25,7 @@ export interface AppLoginInstructions {
 export enum LoginMethod {
     PASSWORD = "password",
     GITHUB = "oauth_github",
+    WEB3_WALLET = "web3-wallet",
 }
 
 export interface GrafanaLogsConfiguration {
@@ -46,4 +48,10 @@ export interface AppUIConfigFeatureFlags {
     enableScheduling: boolean;
     enableDatasetEnvVarsManagement: boolean;
     enableTermsOfService: boolean;
+}
+
+declare global {
+    interface Window {
+        ethereum?: Eip1193Provider;
+    }
 }

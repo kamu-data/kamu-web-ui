@@ -114,6 +114,10 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
         return this.loggedAccount.isAdmin;
     }
 
+    public get isWeb3Wallet(): boolean {
+        return this.loggedAccount.accountName.startsWith("0x");
+    }
+
     public search: OperatorFunction<string, readonly DatasetAutocompleteItem[]> = (text$: Observable<string>) => {
         return text$.pipe(
             debounceTime(AppValues.SHORT_DELAY_MS),

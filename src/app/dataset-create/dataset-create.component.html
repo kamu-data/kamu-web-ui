@@ -6,7 +6,7 @@
         <div class="my-4 d-flex align-items-start">
             <div class="w-25">
                 <label for="owner" class="fs-12">Owner </label><span class="text-danger">*</span><br />
-                <select class="form-select custom-form-control d-inline" formControlName="owner">
+                <select [title]="owner?.value" class="form-select custom-form-control d-inline" formControlName="owner">
                     <option [ngValue]="owner" *ngFor="let owner of owners">
                         {{ owner }}
                     </option>

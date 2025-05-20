@@ -128,8 +128,11 @@ hr {
     }
 
     .custom-form-control {
-        padding: 5px 12px;
         font-size: 14px;
+
+        option {
+            font-size: 14px;
+        }
     }
 
     .title {

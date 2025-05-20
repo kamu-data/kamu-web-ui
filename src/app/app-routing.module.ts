@@ -192,6 +192,7 @@ export const routes: Routes = [
                                 data: {
                                     [ProjectLinks.URL_PARAM_TAB]: AccountTabs.FLOWS,
                                 },
+                                canActivate: [AuthenticatedGuard],
                                 component: AccountFlowsTabComponent,
                             },
                         ],

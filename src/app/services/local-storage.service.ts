@@ -34,6 +34,18 @@ export class LocalStorageService {
         }
     }
 
+    public get redirectAfterLoginUrl(): string | null {
+        return localStorage.getItem(AppValues.LOCAL_STORAGE_LOGIN_REDIRECT_URL);
+    }
+
+    public setRedirectAfterLoginUrl(url: string | null) {
+        if (url) {
+            localStorage.setItem(AppValues.LOCAL_STORAGE_LOGIN_REDIRECT_URL, url);
+        } else {
+            localStorage.removeItem(AppValues.LOCAL_STORAGE_LOGIN_REDIRECT_URL);
+        }
+    }
+
     public reset() {
         localStorage.clear();
     }

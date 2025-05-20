@@ -18,6 +18,7 @@ import {
     AccountType,
     AccountWithEmailQuery,
     DatasetKind,
+    DeleteAccountByNameMutation,
     FlowStatus,
 } from "../kamu.graphql.interface";
 import { mockAccountDetails } from "./auth.mock";
@@ -410,5 +411,18 @@ export const mockAccountWithEmailQuery: AccountWithEmailQuery = {
             __typename: "Account",
         },
         __typename: "Accounts",
+    },
+};
+
+export const mockDeleteAccountByNameMutation: DeleteAccountByNameMutation = {
+    accounts: {
+        byName: {
+            delete: {
+                message: "Account deleted",
+                __typename: "DeleteAccountSuccess",
+            },
+            __typename: "AccountMut",
+        },
+        __typename: "AccountsMut",
     },
 };

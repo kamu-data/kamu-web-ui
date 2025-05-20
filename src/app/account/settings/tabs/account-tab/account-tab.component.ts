@@ -51,7 +51,7 @@ export class AccountTabComponent extends BaseComponent {
                             .pipe(takeUntilDestroyed(this.destroyRef))
                             .subscribe((success: boolean) => {
                                 if (success) {
-                                    this.toastrService.success("The account has been deleted.");
+                                    this.toastrService.success("Account deleted.");
                                     if (this.accountName) {
                                         this.navigationService.navigateToHome();
                                     } else {
@@ -63,10 +63,6 @@ export class AccountTabComponent extends BaseComponent {
                 },
             }),
         );
-    }
-
-    public get isAdmin(): boolean {
-        return this.loggedUserService.isAdmin;
     }
 
     public get isOwnerPage(): boolean {

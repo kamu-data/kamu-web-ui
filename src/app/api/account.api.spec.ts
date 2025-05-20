@@ -28,6 +28,8 @@ import {
     AccountResumeFlowsMutation,
     AccountWithEmailDocument,
     AccountWithEmailQuery,
+    DeleteAccountByNameDocument,
+    DeleteAccountByNameMutation,
     FlowConnectionDataFragment,
 } from "./kamu.graphql.interface";
 import { TEST_ACCOUNT_EMAIL, TEST_LOGIN, mockAccountDetails } from "./mock/auth.mock";
@@ -43,6 +45,7 @@ import {
     mockAccountPauseFlowsMutationSuccess,
     mockAccountResumeFlowsMutationSuccess,
     mockAccountWithEmailQuery,
+    mockDeleteAccountByNameMutation,
 } from "./mock/account.mock";
 
 describe("AccountApi", () => {
@@ -227,6 +230,20 @@ describe("AccountApi", () => {
 
         op.flush({
             data: mockAccountWithEmailQuery,
+        });
+    });
+
+    it("should check delete account by name", () => {
+        service.deleteAccountByName(ACCOUNT_NAME).subscribe((state: DeleteAccountByNameMutation) => {
+            expect(state.accounts.byName?.delete.message).toEqual(
+                mockDeleteAccountByNameMutation.accounts.byName?.delete.message,
+            );
+        });
+        const op = controller.expectOne(DeleteAccountByNameDocument);
+        expect(op.operation.variables.accountName).toEqual(ACCOUNT_NAME);
+
+        op.flush({
+            data: mockDeleteAccountByNameMutation,
         });
     });
 });

@@ -70,7 +70,7 @@
                         class="menu-link"
                         data-test-id="navigateToOverview"
                         [class.active-link]="activeTab === AccountTabs.OVERVIEW"
-                        value="overview"
+                        [value]="AccountTabs.OVERVIEW"
                         [disabled]="true"
                     >
                         <div class="d-flex align-items-center">
@@ -82,7 +82,7 @@
                         appFeatureFlag="profile.datasets"
                         data-test-id="account-datasets-tab"
                         [class.active-link]="activeTab === AccountTabs.DATASETS"
-                        value="datasets"
+                        [value]="AccountTabs.DATASETS"
                     >
                         <a
                             [routerLink]="['/', user.accountName, URL_ACCOUNT_SELECT, AccountTabs.DATASETS]"
@@ -103,7 +103,7 @@
                         appFeatureFlag="profile.flows"
                         data-test-id="account-flows-tab"
                         [class.active-link]="activeTab === AccountTabs.FLOWS"
-                        value="flows"
+                        [value]="AccountTabs.FLOWS"
                     >
                         <a
                             [routerLink]="['/', user.accountName, URL_ACCOUNT_SELECT, AccountTabs.FLOWS]"
@@ -120,7 +120,7 @@
                         appFeatureFlag="profile.organizations"
                         data-test-id="account-organizations-tab"
                         [class.active-link]="activeTab === AccountTabs.ORGANIZATIONS"
-                        value="organizations"
+                        [value]="AccountTabs.ORGANIZATIONS"
                         [disabled]="true"
                         class="menu-link"
                     >
@@ -133,7 +133,7 @@
                         appFeatureFlag="profile.inbox"
                         data-test-id="account-inbox-tab"
                         [class.active-link]="activeTab === AccountTabs.INBOX"
-                        value="inbox"
+                        [value]="AccountTabs.INBOX"
                         [disabled]="true"
                         class="menu-link"
                     >
@@ -145,13 +145,31 @@
                         appFeatureFlag="profile.stars"
                         data-test-id="account-stars-tab"
                         [class.active-link]="activeTab === AccountTabs.STARS"
-                        value="Stars"
+                        [value]="AccountTabs.STARS"
                         [disabled]="true"
                         class="menu-link"
                     >
                         <mat-icon class="text-muted fs-4">star_border</mat-icon>
                         <span class="mx-2">Stars</span>
                         <span title="1" data-view-component="true" class="counter">2</span>
+                    </mat-button-toggle>
+                    <mat-button-toggle
+                        *ngIf="showSettings(user)"
+                        appFeatureFlag="profile.settings"
+                        data-test-id="account-settings-tab"
+                        [class.active-link]="activeTab === AccountTabs.SETTINGS"
+                        [value]="AccountTabs.SETTINGS"
+                    >
+                        <a
+                            [routerLink]="['/', user.accountName, URL_ACCOUNT_SELECT, AccountTabs.SETTINGS]"
+                            data-test-id="link-account-datasets-tab"
+                            class="menu-link"
+                        >
+                            <div class="d-flex align-items-center">
+                                <mat-icon class="fs-4 d-block me-1">settings</mat-icon>
+                                <span class="d-block me-2">Settings</span>
+                            </div>
+                        </a>
                     </mat-button-toggle>
                 </mat-button-toggle-group>
             </div>

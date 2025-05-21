@@ -12,4 +12,5 @@ export enum AccountTabs {
     INBOX = "inbox",
     STARS = "stars",
     FLOWS = "flows",
+    SETTINGS = "settings",
 }

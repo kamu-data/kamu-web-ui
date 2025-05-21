@@ -25,6 +25,7 @@ import {
     mockAccountPauseFlowsMutationSuccess,
     mockAccountResumeFlowsMutationError,
     mockAccountResumeFlowsMutationSuccess,
+    mockDeleteAccountByNameMutation,
 } from "../api/mock/account.mock";
 import { FlowsTableData } from "../dataset-flow/flows-table/flows-table.types";
 
@@ -196,6 +197,16 @@ describe("AccountService", () => {
                 expect(data.connectionDataForTable.nodes.length).toEqual(1);
                 expect(data.involvedDatasets.length).toEqual(4);
             });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check delete account by name", () => {
+        spyOn(accountApi, "deleteAccountByName").and.returnValue(of(mockDeleteAccountByNameMutation));
+
+        const subscription$ = service.deleteAccountByName(TEST_LOGIN).subscribe((result: boolean) => {
+            expect(result).toEqual(true);
+        });
 
         expect(subscription$.closed).toBeTrue();
     });

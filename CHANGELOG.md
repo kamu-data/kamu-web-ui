@@ -8,7 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Redirect after login for private dataset for expired token
 
-## [Unrealesed]
+## [Unreleased]
+### Added
+- Added account deletion
 ### Fixed
 History tab: make equal indents for nodes and align the horizontal line for timeline item
 

@@ -7,7 +7,11 @@
 
 import ProjectLinks from "src/app/project-links";
 import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
-import { AccountSettingsTabs } from "./account-settings.constants";
+import {
+    AccountSettingsMenuItem,
+    ACCOUNT_SETTINGS_MENU_ITEMS,
+    AccountSettingsTabs,
+} from "./account-settings.constants";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { switchMap } from "rxjs/operators";
 import { BaseComponent } from "src/app/common/components/base.component";
@@ -29,7 +33,7 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
 
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public readonly AccountSettingsTabs: typeof AccountSettingsTabs = AccountSettingsTabs;
-
+    public readonly ACCOUNT_SETTINGS_MENU_DESCRIPTORS: AccountSettingsMenuItem[] = ACCOUNT_SETTINGS_MENU_ITEMS;
     public user$: Observable<MaybeNull<AccountWithEmailFragment>>;
 
     private accountEmailService = inject(AccountEmailService);

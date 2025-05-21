@@ -35,7 +35,7 @@ export interface AccountSettingsMenuItem {
     };
 }
 
-export const accountSettingsMenuItems: AccountSettingsMenuItem[] = [
+export const ACCOUNT_SETTINGS_MENU_ITEMS: AccountSettingsMenuItem[] = [
     {
         activeTab: AccountSettingsTabs.PROFILE,
         class: "disabled",

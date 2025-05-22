@@ -1,0 +1,15 @@
+<div>
+    <h2>Webhooks</h2>
+    <mat-divider class="mt-1" />
+    <p class="text-muted mt-2 mb-2">
+        Webhooks allow you to recieve real time notifications when dataset events occur. Create a webhook subscription
+        to start receiving updates
+    </p>
+</div>
+<div *ngIf="true">
+    <div class="box text-center p-5 mb-100 mt-4">
+        <mat-icon class="webhook-icon" [svgIcon]="'webhook'" />
+        <h3 class="my-3">No webhook subscrpitions configured yet</h3>
+        <button class="btn btn-success" type="button">Create subscription</button>
+    </div>
+</div>

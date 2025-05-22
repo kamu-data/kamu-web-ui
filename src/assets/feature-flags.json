@@ -265,6 +265,10 @@
               {
                 "id": "varsSecrets",
                 "developmentState": "stable"
+              },
+              {
+                "id": "webhooks",
+                "developmentState": "stable"
               }
             ]
           }

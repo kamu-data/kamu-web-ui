@@ -395,11 +395,11 @@ type CliProtocolDesc {
 
 type Collection {
   """
-  Latest state projection of the state of collection
+  Latest state projection of the state of a collection
   """
   latest: CollectionProjection!
   """
-  State projection of the state of collection at the specified point in
+  State projection of the state of a collection at the specified point in
   time
   """
   asOf(blockHash: Multihash!): CollectionProjection!
@@ -427,7 +427,7 @@ type CollectionEntry {
   """
   Extra data associated with this entry
   """
-  extraData: JSON!
+  extraData: ExtraData!
   """
   Resolves the reference to linked dataset
   """
@@ -466,7 +466,7 @@ input CollectionEntryInput {
   """
   Json object containing extra column values
   """
-  extraData: JSON
+  extraData: ExtraData
 }
 
 type CollectionMut {
@@ -480,7 +480,7 @@ type CollectionMut {
   moveEntry(
     pathFrom: CollectionPath!
     pathTo: CollectionPath!
-    extraData: JSON
+    extraData: ExtraData
     expectedHead: Multihash
   ): CollectionUpdateResult!
   """
@@ -504,7 +504,8 @@ type CollectionProjection {
   """
   entry(path: CollectionPath!): CollectionEntry
   """
-  Returns the state of entries as they existed at specified point in time
+  Returns the state of entries as they existed at a specified point in
+  time
   """
   entries(pathPrefix: CollectionPath, maxDepth: Int, page: Int, perPage: Int): CollectionEntryConnection!
   """
@@ -528,14 +529,14 @@ type CollectionUpdateErrorNotFound implements CollectionUpdateResult {
 
 input CollectionUpdateInput {
   """
-  Inserts new entry under specified path. If an entry at the target path
-  already exists it will be retracted.
+  Inserts a new entry under the specified path. If an entry at the target
+  path already exists, it will be retracted.
   """
   add: CollectionUpdateInputAdd
   """
   Retracts and appends an entry under the new path. Returns error if from
-  path does not exist. If an entry at the target path already exists it
-  will be retracted. Use this to update extra data by specifying same
+  path does not exist. If an entry at the target path already exists, it
+  will be retracted. Use this to update extra data by specifying the same
   source and target paths.
   """
   move: CollectionUpdateInputMove
@@ -555,7 +556,7 @@ input CollectionUpdateInputMove {
   """
   Optionally update the extra data
   """
-  extraData: JSON
+  extraData: ExtraData
 }
 
 input CollectionUpdateInputRemove {
@@ -682,35 +683,87 @@ type CreateAccountSuccess implements CreateAccountResult {
   message: String!
 }
 
+type CreateAnnouncementErrorInvalidAttachment implements CreateAnnouncementResult {
+  message: String!
+  isSuccess: Boolean!
+}
+
+interface CreateAnnouncementResult {
+  isSuccess: Boolean!
+  message: String!
+}
+
+type CreateAnnouncementSuccess implements CreateAnnouncementResult {
+  """
+  ID of the newly-created announcement
+  """
+  announcementId: String!
+  isSuccess: Boolean!
+  message: String!
+}
+
 interface CreateDatasetFromSnapshotResult {
+  isSuccess: Boolean!
   message: String!
 }
 
 interface CreateDatasetResult {
+  isSuccess: Boolean!
   message: String!
 }
 
 type CreateDatasetResultInvalidSnapshot implements CreateDatasetFromSnapshotResult {
   message: String!
+  isSuccess: Boolean!
 }
 
 type CreateDatasetResultMissingInputs implements CreateDatasetFromSnapshotResult {
   missingInputs: [String!]!
+  isSuccess: Boolean!
   message: String!
 }
 
 type CreateDatasetResultNameCollision implements CreateDatasetResult & CreateDatasetFromSnapshotResult {
   accountName: AccountName
   datasetName: DatasetName!
+  isSuccess: Boolean!
   message: String!
 }
 
 type CreateDatasetResultSuccess implements CreateDatasetResult & CreateDatasetFromSnapshotResult {
   dataset: Dataset!
+  isSuccess: Boolean!
+  message: String!
+}
+
+type CreateProjectErrorConflict implements CreateProjectResult {
+  project: MoleculeProject!
+  isSuccess: Boolean!
+  message: String!
+}
+
+interface CreateProjectResult {
+  isSuccess: Boolean!
+  message: String!
+}
+
+type CreateProjectSuccess implements CreateProjectResult {
+  project: MoleculeProject!
+  isSuccess: Boolean!
   message: String!
 }
 
 interface CreateTokenResult {
+  message: String!
+}
+
+interface CreateWebhookSubscriptionResult {
+  message: String!
+}
+
+type CreateWebhookSubscriptionResultSuccess implements CreateWebhookSubscriptionResult {
+  subscriptionId: String!
+  secret: String!
   message: String!
 }
 
@@ -905,6 +958,10 @@ type Dataset {
   Access to the dataset collaboration data
   """
   collaboration: DatasetCollaboration!
+  """
+  Access to the dataset's webhooks management functionality
+  """
+  webhooks: DatasetWebhooks!
   """
   Various endpoints for interacting with data
   """
@@ -1226,6 +1283,10 @@ type DatasetMut {
   """
   collaboration: DatasetCollaborationMut!
   """
+  Access to webhooks management methods
+  """
+  webhooks: DatasetWebhooksMut!
+  """
   Rename the dataset
   """
   rename(newName: DatasetName!): RenameResult!
@@ -1257,6 +1318,7 @@ type DatasetPermissions {
   collaboration: DatasetCollaborationPermissions!
   envVars: DatasetEnvVarsPermissions!
   flows: DatasetFlowsPermissions!
+  webhooks: DatasetWebhooksPermissions!
   general: DatasetGeneralPermissions!
   metadata: DatasetMetadataPermissions!
 }
@@ -1301,6 +1363,30 @@ input DatasetVisibilityInput @oneOf {
 }
 
 union DatasetVisibilityOutput = PrivateDatasetVisibility | PublicDatasetVisibility
+
+type DatasetWebhooks {
+  """
+  Lists all webhook subscriptions for the dataset
+  """
+  subscriptions: [WebhookSubscription!]!
+  """
+  Returns a webhook subscription by ID
+  """
+  subscription(id: WebhookSubscriptionID!): WebhookSubscription
+}
+
+type DatasetWebhooksMut {
+  createSubscription(input: WebhookSubscriptionInput!): CreateWebhookSubscriptionResult!
+  """
+  Returns a webhook subscription management API by ID
+  """
+  subscription(id: WebhookSubscriptionID!): WebhookSubscriptionMut
+}
+
+type DatasetWebhooksPermissions {
+  canView: Boolean!
+  canUpdate: Boolean!
+}
 
 type Datasets {
   """
@@ -1640,6 +1726,8 @@ type ExecuteTransformInput {
   """
   newOffset: Int
 }
+
+scalar ExtraData
 
 """
 Defines the external source of data.
@@ -2438,9 +2526,11 @@ enum MetadataManifestFormat {
 
 type MetadataManifestMalformed implements CommitResult & CreateDatasetFromSnapshotResult {
   message: String!
+  isSuccess: Boolean!
 }
 
 type MetadataManifestUnsupportedVersion implements CommitResult & CreateDatasetFromSnapshotResult {
+  isSuccess: Boolean!
   message: String!
 }
 
@@ -2450,6 +2540,173 @@ interface ModifyPasswordResult {
 
 type ModifyPasswordSuccess implements ModifyPasswordResult {
   message: String!
+}
+
+type Molecule {
+  """
+  Looks up the project
+  """
+  project(ipnftUid: String!): MoleculeProject
+  """
+  List the registered projects
+  """
+  projects(page: Int, perPage: Int): MoleculeProjectConnection!
+}
+
+type MoleculeMut {
+  createProject(
+    ipnftSymbol: String!
+    ipnftUid: String!
+    ipnftAddress: String!
+    ipnftTokenId: Int!
+  ): CreateProjectResult!
+  """
+  Looks up the project
+  """
+  project(ipnftUid: String!): MoleculeProjectMut
+}
+
+type MoleculeProject {
+  """
+  System time when this version was created/updated
+  """
+  systemTime: DateTime!
+  """
+  Event time when this version was created/updated
+  """
+  eventTime: DateTime!
+  """
+  Symbolic name of the project
+  """
+  ipnftSymbol: String!
+  """
+  Unique ID of the IPNFT as `{ipnftAddress}_{ipnftTokenId}`
+  """
+  ipnftUid: String!
+  """
+  Address of the IPNFT contract
+  """
+  ipnftAddress: String!
+  """
+  Token ID withing the IPNFT contract
+  """
+  ipnftTokenId: Int!
+  """
+  Project's organizational account
+  """
+  account: Account!
+  """
+  Project's data room dataset
+  """
+  dataRoom: Dataset!
+  """
+  Project's announcements dataset
+  """
+  announcements: Dataset!
+  """
+  Project's activity events in reverse chronological order
+  """
+  activity(page: Int, perPage: Int): MoleculeProjectEventConnection!
+}
+
+type MoleculeProjectConnection {
+  """
+  A shorthand for `edges { node { ... } }`
+  """
+  nodes: [MoleculeProject!]!
+  """
+  Approximate number of total nodes
+  """
+  totalCount: Int!
+  """
+  Page information
+  """
+  pageInfo: PageBasedInfo!
+  edges: [MoleculeProjectEdge!]!
+}
+
+type MoleculeProjectEdge {
+  node: MoleculeProject!
+}
+
+interface MoleculeProjectEvent {
+  systemTime: DateTime!
+}
+
+type MoleculeProjectEventAnnouncement implements MoleculeProjectEvent {
+  """
+  Announcement record
+  """
+  announcement: JSON!
+  systemTime: DateTime!
+}
+
+type MoleculeProjectEventConnection {
+  """
+  A shorthand for `edges { node { ... } }`
+  """
+  nodes: [MoleculeProjectEvent!]!
+  """
+  Page information
+  """
+  pageInfo: PageBasedInfo!
+  edges: [MoleculeProjectEventEdge!]!
+}
+
+type MoleculeProjectEventDataRoomEntryAdded implements MoleculeProjectEvent {
+  """
+  Collection entry
+  """
+  entry: CollectionEntry!
+  systemTime: DateTime!
+}
+
+type MoleculeProjectEventDataRoomEntryRemoved implements MoleculeProjectEvent {
+  """
+  Collection entry
+  """
+  entry: CollectionEntry!
+  systemTime: DateTime!
+}
+
+type MoleculeProjectEventDataRoomEntryUpdated implements MoleculeProjectEvent {
+  """
+  Collection entry
+  """
+  newEntry: CollectionEntry!
+  systemTime: DateTime!
+}
+
+type MoleculeProjectEventEdge {
+  node: MoleculeProjectEvent!
+}
+
+type MoleculeProjectEventFileUpdated implements MoleculeProjectEvent {
+  """
+  Versioned file dataset
+  """
+  dataset: Dataset!
+  """
+  New file version entry
+  """
+  newEntry: VersionedFileEntry!
+  systemTime: DateTime!
+}
+
+type MoleculeProjectMut {
+  """
+  Creates an announcement record for the project
+  """
+  createAnnouncement(
+    headline: String!
+    body: String!
+    """
+    List of dataset DIDs to link
+    """
+    attachments: [String!]
+    moleculeAccessLevel: String!
+    moleculeChangeBy: String!
+  ): CreateAnnouncementResult!
 }
 
 """
@@ -2502,6 +2759,10 @@ type Mutation {
   system. This groups deals with their identities and permissions.
   """
   accounts: AccountsMut!
+  """
+  Temporary: Molecule-specific functionality group
+  """
+  molecule: MoleculeMut!
 }
 
 union NameLookupResult = Account
@@ -2569,6 +2830,20 @@ type PageBasedInfo {
   stays the same
   """
   totalPages: Int
+}
+
+interface PauseWebhookSubscriptionResult {
+  message: String!
+}
+
+type PauseWebhookSubscriptionResultSuccess implements PauseWebhookSubscriptionResult {
+  paused: Boolean!
+  message: String!
+}
+
+type PauseWebhookSubscriptionResultUnexpected implements PauseWebhookSubscriptionResult {
+  status: WebhookSubscriptionStatus!
+  message: String!
 }
 
 type PostgreSqlDesl {
@@ -2660,6 +2935,13 @@ type Query {
   """
   accounts: Accounts!
   """
+  Webhook-related functionality group
+
+  Webhooks are used to send notifications about events happening in the
+  system. This groups deals with their management and subscriptions.
+  """
+  webhooks: Webhooks!
+  """
   Search-related functionality group
   """
   search: Search!
@@ -2671,6 +2953,10 @@ type Query {
   Admin-related functionality group
   """
   admin: Admin!
+  """
+  Temporary: Molecule-specific functionality group
+  """
+  molecule: Molecule!
 }
 
 enum QueryDialect {
@@ -2909,6 +3195,15 @@ type ReadStepParquet {
   schema: [String!]
 }
 
+interface RemoveWebhookSubscriptionResult {
+  message: String!
+}
+
+type RemoveWebhookSubscriptionResultSuccess implements RemoveWebhookSubscriptionResult {
+  removed: Boolean!
+  message: String!
+}
+
 interface RenameResult {
   message: String!
 }
@@ -2955,6 +3250,20 @@ type RestProtocolDesc {
   tailUrl: String!
   queryUrl: String!
   pushUrl: String!
+}
+
+interface ResumeWebhookSubscriptionResult {
+  message: String!
+}
+
+type ResumeWebhookSubscriptionResultSuccess implements ResumeWebhookSubscriptionResult {
+  resumed: Boolean!
+  message: String!
+}
+
+type ResumeWebhookSubscriptionResultUnexpected implements ResumeWebhookSubscriptionResult {
+  status: WebhookSubscriptionStatus!
+  message: String!
 }
 
 interface RevokeResult {
@@ -3503,6 +3812,8 @@ type TriggerFlowSuccess implements TriggerFlowResult {
   message: String!
 }
 
+scalar URL
+
 interface UnsetRoleResult {
   message: String!
 }
@@ -3554,6 +3865,20 @@ type UpdateVersionSuccess implements UpdateVersionResult {
   message: String!
 }
 
+interface UpdateWebhookSubscriptionResult {
+  message: String!
+}
+
+type UpdateWebhookSubscriptionResultSuccess implements UpdateWebhookSubscriptionResult {
+  updated: Boolean!
+  message: String!
+}
+
+type UpdateWebhookSubscriptionResultUnexpected implements UpdateWebhookSubscriptionResult {
+  status: WebhookSubscriptionStatus!
+  message: String!
+}
+
 interface UpsertDatasetEnvVarResult {
   message: String!
 }
@@ -3600,7 +3925,7 @@ type VersionedFileContentDownload {
   """
   url: String!
   """
-  Headers to include in request
+  Headers to include in the request
   """
   headers: [KeyValue!]!
   """
@@ -3611,11 +3936,11 @@ type VersionedFileContentDownload {
 
 type VersionedFileEntry {
   """
-  Time when this version was created
+  System time when this version was created/updated
   """
   systemTime: DateTime!
   """
-  Time when this version was created
+  Event time when this version was created/updated
   """
   eventTime: DateTime!
   """
@@ -3627,16 +3952,20 @@ type VersionedFileEntry {
   """
   contentType: String!
   """
+  Size of the content in bytes
+  """
+  contentLength: Int!
+  """
   Multihash of the file content
   """
   contentHash: Multihash!
   """
   Extra data associated with this file version
   """
-  extraData: JSON!
+  extraData: ExtraData!
   """
   Returns encoded content in-band. Should be used for small files only and
-  will retrurn error if called on large data.
+  will return an error if called on large data.
   """
   content: Base64Usnp!
   """
@@ -3667,8 +3996,8 @@ type VersionedFileEntryEdge {
 
 type VersionedFileMut {
   """
-  Uploads new version of content in-band. Can be used for very small files
-  only.
+  Uploads a new version of content in-band. Can be used for very small
+  files only.
   """
   uploadNewVersion(
     """
@@ -3682,7 +4011,7 @@ type VersionedFileMut {
     """
     Json object containing values of extra columns
     """
-    extraData: JSON
+    extraData: ExtraData
     """
     Expected head block hash to prevent concurrent updates
     """
@@ -3703,7 +4032,7 @@ type VersionedFileMut {
     contentType: String
   ): StartUploadVersionResult!
   """
-  Finalizes the content upload by incoporating the content into the
+  Finalizes the content upload by incorporating the content into the
   dataset as a new version
   """
   finishUploadNewVersion(
@@ -3714,7 +4043,7 @@ type VersionedFileMut {
     """
     Json object containing values of extra columns
     """
-    extraData: JSON
+    extraData: ExtraData
     """
     Expected head block hash to prevent concurrent updates
     """
@@ -3728,7 +4057,7 @@ type VersionedFileMut {
     """
     Json object containing values of extra columns
     """
-    extraData: JSON!
+    extraData: ExtraData!
     """
     Expected head block hash to prevent concurrent updates
     """
@@ -3801,6 +4130,81 @@ type ViewDatasetEnvVarEdge {
 
 type WebSocketProtocolDesc {
   url: String!
+}
+
+scalar WebhookEventType
+
+type WebhookSubscription {
+  """
+  Unique identifier of the webhook subscription
+  """
+  id: WebhookSubscriptionID!
+  """
+  Optional label for the subscription. Maybe an empty string.
+  """
+  label: String!
+  """
+  Associated dataset ID
+  Not present for system subscriptions
+  """
+  datasetId: DatasetID
+  """
+  Target URL for the webhook
+  """
+  targetUrl: String!
+  """
+  List of events that trigger the webhook
+  """
+  eventTypes: [String!]!
+  """
+  Status of the subscription
+  """
+  status: WebhookSubscriptionStatus!
+}
+
+type WebhookSubscriptionDuplicateLabel implements CreateWebhookSubscriptionResult & UpdateWebhookSubscriptionResult {
+  label: String!
+  message: String!
+}
+
+scalar WebhookSubscriptionID
+
+input WebhookSubscriptionInput {
+  targetUrl: URL!
+  eventTypes: [WebhookEventType!]!
+  label: String!
+}
+
+type WebhookSubscriptionInvalidTargetUrl implements CreateWebhookSubscriptionResult & UpdateWebhookSubscriptionResult {
+  innerMessage: String!
+  message: String!
+}
+
+type WebhookSubscriptionMut {
+  update(input: WebhookSubscriptionInput!): UpdateWebhookSubscriptionResult!
+  pause: PauseWebhookSubscriptionResult!
+  resume: ResumeWebhookSubscriptionResult!
+  remove: RemoveWebhookSubscriptionResult!
+}
+
+type WebhookSubscriptionNoEventTypesProvided implements CreateWebhookSubscriptionResult & UpdateWebhookSubscriptionResult {
+  numEventTypes: Int!
+  message: String!
+}
+
+enum WebhookSubscriptionStatus {
+  UNVERIFIED
+  ENABLED
+  PAUSED
+  UNREACHABLE
+  REMOVED
+}
+
+type Webhooks {
+  """
+  List of supported event types
+  """
+  eventTypes: [String!]!
 }
 
 directive @include(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT

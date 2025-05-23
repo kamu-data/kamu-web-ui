@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "@apollo/client/core";
+import { gql } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -6519,6 +6519,39 @@ export type SemanticSearchDatasetsOverviewQuery = {
     };
 };
 
+export type DatasetWebhookSubscriptionsQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+}>;
+
+export type DatasetWebhookSubscriptionsQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            webhooks: {
+                __typename?: "DatasetWebhooks";
+                subscriptions: Array<{
+                    __typename?: "WebhookSubscription";
+                    label: string;
+                    id: string;
+                    targetUrl: string;
+                    status: WebhookSubscriptionStatus;
+                    datasetId?: string | null;
+                    eventTypes: Array<string>;
+                }>;
+            };
+        } | null;
+    };
+};
+
+export type WebhookEventTypesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type WebhookEventTypesQuery = {
+    __typename?: "Query";
+    webhooks: { __typename?: "Webhooks"; eventTypes: Array<string> };
+};
+
 export const AccountBasicsFragmentDoc = gql`
     fragment AccountBasics on Account {
         id
@@ -9987,6 +10020,56 @@ export class SemanticSearchDatasetsOverviewGQL extends Apollo.Query<
     SemanticSearchDatasetsOverviewQueryVariables
 > {
     document = SemanticSearchDatasetsOverviewDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetWebhookSubscriptionsDocument = gql`
+    query datasetWebhookSubscriptions($datasetId: DatasetID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                webhooks {
+                    subscriptions {
+                        label
+                        id
+                        targetUrl
+                        status
+                        datasetId
+                        eventTypes
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetWebhookSubscriptionsGQL extends Apollo.Query<
+    DatasetWebhookSubscriptionsQuery,
+    DatasetWebhookSubscriptionsQueryVariables
+> {
+    document = DatasetWebhookSubscriptionsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const WebhookEventTypesDocument = gql`
+    query webhookEventTypes {
+        webhooks {
+            eventTypes
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class WebhookEventTypesGQL extends Apollo.Query<WebhookEventTypesQuery, WebhookEventTypesQueryVariables> {
+    document = WebhookEventTypesDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

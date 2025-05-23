@@ -1,3 +1,9 @@
+@import "var";
+
 .webhook-icon {
     transform: scale(2);
+}
+
+.table-header-background {
+    background-color: $app-color-table-header-bg;
 }

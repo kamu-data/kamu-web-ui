@@ -83,6 +83,7 @@ export const mockGetDatasetSchemaQuery: GetDatasetSchemaQuery = {
                 __typename: "Account",
                 id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
                 accountName: "kamu",
+                accountProvider: "password",
             },
             alias: "kamu/account.tokens.portfolio.usd",
             visibility: mockPublicDatasetVisibility,

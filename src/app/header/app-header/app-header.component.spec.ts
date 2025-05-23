@@ -92,6 +92,7 @@ describe("AppHeaderComponent", () => {
             displayName: AppValues.DEFAULT_USER_DISPLAY_NAME,
             accountType: AccountType.User,
             isAdmin: false,
+            accountProvider: "password",
         };
         component.featureFlags = {
             enableLogout: true,

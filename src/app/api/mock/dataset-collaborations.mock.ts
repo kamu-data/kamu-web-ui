@@ -41,6 +41,7 @@ export const mockDatasetListCollaboratorsQuery: DatasetListCollaboratorsQuery = 
                 id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
                 accountName: "kamu",
                 __typename: "Account",
+                accountProvider: "password",
             },
             alias: "kamu/account.tokens.transfers",
             visibility: {
@@ -59,6 +60,7 @@ export const mockDatasetListCollaboratorsQuery: DatasetListCollaboratorsQuery = 
                                 avatarUrl: "https://avatars.githubusercontent.com/u/51016717?v=4",
                                 isAdmin: false,
                                 __typename: "Account",
+                                accountProvider: "password",
                             },
                             role: DatasetAccessRole.Maintainer,
                             __typename: "AccountWithRole",
@@ -95,6 +97,7 @@ export const mockDatasetSearchCollaboratorQuery: SearchCollaboratorQuery = {
                     accountType: AccountType.User,
                     avatarUrl: "https://cdn-icons-png.flaticon.com/128/10197/10197245.png",
                     isAdmin: false,
+                    accountProvider: "password",
                 },
             ],
         },

@@ -45,6 +45,7 @@ export const mockAccountDetails: AccountFragment = {
     accountType: AccountType.User,
     avatarUrl: TEST_AVATAR_URL,
     isAdmin: false,
+    accountProvider: "password",
 };
 
 export const mockAccountDetailsWithEmail: AccountWithEmailFragment = {

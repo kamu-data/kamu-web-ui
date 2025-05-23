@@ -129,6 +129,7 @@ describe("OverviewComponent", () => {
                     __typename: "Account",
                     id: mockOverviewDataUpdate.overview.owner.id,
                     accountName: mockOverviewDataUpdate.overview.owner.accountName,
+                    accountProvider: "password",
                 },
                 visibility: mockPublicDatasetVisibility,
             },

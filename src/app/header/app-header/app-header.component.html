@@ -246,7 +246,7 @@
                         Signed in as
                         <strong data-test-id="userName" [title]="loggedAccount.displayName">{{
                             isUserLoggedIn()
-                                ? (loggedAccount.displayName | displayAccountName)
+                                ? (loggedAccount.displayName | displayAccountName: loggedAccount.accountProvider)
                                 : DEFAULT_USER_DISPLAY_NAME
                         }}</strong>
                     </p>

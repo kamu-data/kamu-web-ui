@@ -107,6 +107,7 @@ export class SearchApi {
                             owner: {
                                 id: "",
                                 accountName: "",
+                                accountProvider: "",
                             },
                             alias: "",
                             visibility: {

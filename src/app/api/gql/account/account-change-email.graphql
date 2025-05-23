@@ -1,4 +1,4 @@
-mutation accountChangeEmail($accountName: AccountName!, $newEmail: String!) {
+mutation accountChangeEmail($accountName: AccountName!, $newEmail: Email!) {
   accounts {
     byName(accountName: $accountName) {
       updateEmail(newEmail: $newEmail) {
@@ -8,10 +8,6 @@ mutation accountChangeEmail($accountName: AccountName!, $newEmail: String!) {
         }
 
         ... on UpdateEmailNonUnique {
-          message
-        }
-
-        ... on UpdateEmailInvalid {
           message
         }
       }

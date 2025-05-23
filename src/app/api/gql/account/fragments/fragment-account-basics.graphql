@@ -1,4 +1,5 @@
 fragment AccountBasics on Account {
   id
   accountName
+  accountProvider
 }

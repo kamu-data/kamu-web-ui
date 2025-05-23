@@ -45,6 +45,7 @@ export class AppComponent extends BaseComponent implements OnInit {
         displayName: AppValues.DEFAULT_USER_DISPLAY_NAME,
         accountType: AccountType.User,
         isAdmin: false,
+        accountProvider: "",
     };
 
     public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;

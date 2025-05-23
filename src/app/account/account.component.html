@@ -24,7 +24,7 @@
                 </ng-template>
             </div>
             <span class="vcard-fullname d-block p-2 overflow-hidden" [title]="user.displayName">
-                {{ user.displayName | displayAccountName }}
+                {{ user.displayName | displayAccountName: user.accountProvider }}
             </span>
             <span class="vcard-username d-block px-2 overflow-hidden">
                 {{ user.accountName }}

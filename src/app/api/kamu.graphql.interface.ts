@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "@apollo/client/core";
+import { gql } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -18,6 +18,7 @@ export type Scalars = {
     AccountDisplayName: string;
     AccountID: string;
     AccountName: string;
+    AccountPassword: string;
     /** Base64-encoded binary data (url-safe, no padding) */
     Base64Usnp: string;
     /** Collection entry paths are similar to HTTP path components. They are rooted (start with `/`), separated by forward slashes, with elements URL-encoded (e.g. `/foo%20bar/baz`) */
@@ -35,6 +36,7 @@ export type Scalars = {
      */
     DateTime: string;
     DeviceCode: string;
+    Email: string;
     EventID: string;
     EvmWalletAddress: string;
     FlowID: string;
@@ -64,6 +66,8 @@ export type Account = {
     __typename?: "Account";
     /** Symbolic account name */
     accountName: Scalars["AccountName"];
+    /** Account provider */
+    accountProvider: Scalars["String"];
     /** Account type */
     accountType: AccountType;
     /** Avatar URL */
@@ -94,6 +98,12 @@ export type AccountConnection = {
 export type AccountEdge = {
     __typename?: "AccountEdge";
     node: Account;
+};
+
+export type AccountFieldNonUnique = CreateAccountResult & {
+    __typename?: "AccountFieldNonUnique";
+    field: Scalars["String"];
+    message: Scalars["String"];
 };
 
 export type AccountFlowFilters = {
@@ -146,14 +156,22 @@ export type AccountLookupFilter = {
 
 export type AccountMut = {
     __typename?: "AccountMut";
+    /** Delete a selected account. Allowed only for admin users */
+    delete: DeleteAccountResult;
     /** Access to the mutable flow configurations of this account */
     flows: AccountFlowsMut;
+    /** Reset password for a selected account. Allowed only for admin users */
+    modifyPassword: ModifyPasswordResult;
     /** Update account email */
     updateEmail: UpdateEmailResult;
 };
 
+export type AccountMutModifyPasswordArgs = {
+    password: Scalars["AccountPassword"];
+};
+
 export type AccountMutUpdateEmailArgs = {
-    newEmail: Scalars["String"];
+    newEmail: Scalars["Email"];
 };
 
 export enum AccountType {
@@ -205,6 +223,8 @@ export type AccountsMut = {
     byId?: Maybe<AccountMut>;
     /** Returns a mutable account by its name */
     byName?: Maybe<AccountMut>;
+    /** Create a new account */
+    createAccount: CreateAccountResult;
 };
 
 export type AccountsMutByIdArgs = {
@@ -213,6 +233,11 @@ export type AccountsMutByIdArgs = {
 
 export type AccountsMutByNameArgs = {
     accountName: Scalars["AccountName"];
+};
+
+export type AccountsMutCreateAccountArgs = {
+    accountName: Scalars["AccountName"];
+    email?: InputMaybe<Scalars["Email"]>;
 };
 
 /**
@@ -699,6 +724,16 @@ export type CreateAccessTokenResultSuccess = CreateTokenResult & {
     __typename?: "CreateAccessTokenResultSuccess";
     message: Scalars["String"];
     token: CreatedAccessToken;
+};
+
+export type CreateAccountResult = {
+    message: Scalars["String"];
+};
+
+export type CreateAccountSuccess = CreateAccountResult & {
+    __typename?: "CreateAccountSuccess";
+    account: Account;
+    message: Scalars["String"];
 };
 
 export type CreateDatasetFromSnapshotResult = {
@@ -1396,6 +1431,15 @@ export type DatasetsMutCreateVersionedFileArgs = {
     extraColumns?: InputMaybe<Array<ColumnInput>>;
     extraEvents?: InputMaybe<Array<Scalars["String"]>>;
     extraEventsFormat?: InputMaybe<MetadataManifestFormat>;
+};
+
+export type DeleteAccountResult = {
+    message: Scalars["String"];
+};
+
+export type DeleteAccountSuccess = DeleteAccountResult & {
+    __typename?: "DeleteAccountSuccess";
+    message: Scalars["String"];
 };
 
 export type DeleteDatasetEnvVarResult = {
@@ -2443,6 +2487,15 @@ export type MetadataManifestUnsupportedVersion = CommitResult &
         message: Scalars["String"];
     };
 
+export type ModifyPasswordResult = {
+    message: Scalars["String"];
+};
+
+export type ModifyPasswordSuccess = ModifyPasswordResult & {
+    __typename?: "ModifyPasswordSuccess";
+    message: Scalars["String"];
+};
+
 /**
  * MQTT quality of service class.
  *
@@ -3448,11 +3501,6 @@ export type UnsetRoleResultSuccess = UnsetRoleResult & {
     message: Scalars["String"];
 };
 
-export type UpdateEmailInvalid = UpdateEmailResult & {
-    __typename?: "UpdateEmailInvalid";
-    message: Scalars["String"];
-};
-
 export type UpdateEmailNonUnique = UpdateEmailResult & {
     __typename?: "UpdateEmailNonUnique";
     message: Scalars["String"];
@@ -3756,7 +3804,7 @@ export type AccountByNameQuery = {
 
 export type AccountChangeEmailMutationVariables = Exact<{
     accountName: Scalars["AccountName"];
-    newEmail: Scalars["String"];
+    newEmail: Scalars["Email"];
 }>;
 
 export type AccountChangeEmailMutation = {
@@ -3766,7 +3814,6 @@ export type AccountChangeEmailMutation = {
         byName?: {
             __typename?: "AccountMut";
             updateEmail:
-                | { __typename?: "UpdateEmailInvalid"; message: string }
                 | { __typename?: "UpdateEmailNonUnique"; message: string }
                 | { __typename?: "UpdateEmailSuccess"; newEmail: string; message: string };
         } | null;
@@ -3883,7 +3930,12 @@ export type AccountWithEmailQuery = {
     accounts: { __typename?: "Accounts"; byName?: ({ __typename?: "Account" } & AccountWithEmailFragment) | null };
 };
 
-export type AccountBasicsFragment = { __typename?: "Account"; id: string; accountName: string };
+export type AccountBasicsFragment = {
+    __typename?: "Account";
+    id: string;
+    accountName: string;
+    accountProvider: string;
+};
 
 export type DatasetConnectionDataFragment = {
     __typename?: "DatasetConnection";
@@ -3935,6 +3987,7 @@ export type AccountFragment = {
     accountType: AccountType;
     avatarUrl?: string | null;
     isAdmin: boolean;
+    accountProvider: string;
 };
 
 export type LoginWeb3WalletMutationVariables = Exact<{
@@ -6103,6 +6156,7 @@ export const AccountBasicsFragmentDoc = gql`
     fragment AccountBasics on Account {
         id
         accountName
+        accountProvider
     }
 `;
 export const DatasetBasicsFragmentDoc = gql`
@@ -6264,6 +6318,7 @@ export const AccountFragmentDoc = gql`
         accountType
         avatarUrl
         isAdmin
+        accountProvider
     }
 `;
 export const FlowOutcomeDataFragmentDoc = gql`
@@ -7602,7 +7657,7 @@ export class AccountByNameGQL extends Apollo.Query<AccountByNameQuery, AccountBy
     }
 }
 export const AccountChangeEmailDocument = gql`
-    mutation accountChangeEmail($accountName: AccountName!, $newEmail: String!) {
+    mutation accountChangeEmail($accountName: AccountName!, $newEmail: Email!) {
         accounts {
             byName(accountName: $accountName) {
                 updateEmail(newEmail: $newEmail) {
@@ -7611,9 +7666,6 @@ export const AccountChangeEmailDocument = gql`
                         message
                     }
                     ... on UpdateEmailNonUnique {
-                        message
-                    }
-                    ... on UpdateEmailInvalid {
                         message
                     }
                 }

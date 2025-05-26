@@ -44,6 +44,7 @@ export default class AppValues {
     public static readonly DEFAULT_MONACO_EDITOR_PLACEHOLDER = "Please type your query here...";
     public static readonly DEFAULT_ENGINE_NAME = "DataFusion";
     public static readonly DEFAULT_ENGINE_IMAGE = "ghcr.io/kamu-data/engine-datafusion:0.8.1";
+    public static readonly ACCOUNT_WEB3_WALLET_PROVIDER = "web3-wallet";
 
     public static readonly MARKDOWN_CONTAIN = `## Markdown __rulez__!
 ---

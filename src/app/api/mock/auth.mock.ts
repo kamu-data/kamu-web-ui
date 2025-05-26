@@ -85,6 +85,8 @@ export const mockPasswordLoginResponse: LoginMutation = {
     },
 };
 
+export const mockWeb3WalletLoginResponse: LoginMutation = mockPasswordLoginResponse;
+
 export const mockLogin401Error: GraphQLError = new GraphQLError(
     "HTTP status client error (401 Unauthorized) for url (https://api.github.com/user)",
 );

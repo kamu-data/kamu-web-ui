@@ -57,6 +57,7 @@ describe("LoginComponent", () => {
 
         SELECT_METHOD_GITHUB = "select-method-github",
         SELECT_METHOD_PASSWORD = "select-method-password",
+        SELECT_METHOD_WEB3_WALLET = "select-method-web3-wallet",
 
         INPUT_LOGIN = "input-login",
         INPUT_PASSWORD = "input-password",
@@ -118,6 +119,7 @@ describe("LoginComponent", () => {
             spyOnProperty(loginService, "loginMethods", "get").and.returnValue([
                 LoginMethod.GITHUB,
                 LoginMethod.PASSWORD,
+                LoginMethod.WEB3_WALLET,
             ]);
 
             createFixture();
@@ -127,12 +129,13 @@ describe("LoginComponent", () => {
             expect(component).toBeTruthy();
         });
 
-        it("should not select any method with 2 login methods allowed", () => {
+        it("should not select any method with 3 login methods allowed", () => {
             expect(component.selectedLoginMethod).toBeUndefined();
 
             checkVisible(fixture, Elements.METHOD_SELECTION_BLOCK, true);
             checkVisible(fixture, Elements.GITHUB_SPINNER, false);
             checkVisible(fixture, Elements.PASSWORD_METHOD_BLOCK, false);
+            checkVisible(fixture, Elements.SELECT_METHOD_WEB3_WALLET, false);
         });
 
         it("select Github method should redirect to Github endpoint and show spinner", () => {
@@ -263,7 +266,7 @@ describe("LoginComponent", () => {
         });
     });
 
-    [LoginMethod.GITHUB, LoginMethod.PASSWORD].forEach((loginMethod: LoginMethod) => {
+    [LoginMethod.GITHUB, LoginMethod.PASSWORD, LoginMethod.WEB3_WALLET].forEach((loginMethod: LoginMethod) => {
         describe("One-method-config", () => {
             let spyGotoGithub: jasmine.Spy;
 
@@ -286,6 +289,7 @@ describe("LoginComponent", () => {
                         break;
 
                     case LoginMethod.PASSWORD:
+                    case LoginMethod.WEB3_WALLET:
                         expect(spyGotoGithub).not.toHaveBeenCalled();
                         break;
                 }

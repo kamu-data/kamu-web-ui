@@ -24,10 +24,15 @@ import {
     TEST_GITHUB_CODE,
     TEST_LOGIN,
     TEST_PASSWORD,
+    mockWeb3WalletLoginResponse,
 } from "./mock/auth.mock";
 import { AuthenticationError } from "../common/values/errors";
 import { first } from "rxjs/operators";
-import { GithubLoginCredentials, PasswordLoginCredentials } from "./auth.api.model";
+import {
+    GithubLoginCredentials,
+    PasswordLoginCredentials,
+    Web3WalletOwnershipVerificationRequest,
+} from "./auth.api.model";
 import { LoginMethod } from "../app-config.model";
 
 describe("AuthApi", () => {
@@ -76,7 +81,7 @@ describe("AuthApi", () => {
         flush();
     }));
 
-    it("should check full login password  success", () => {
+    it("should check full login password success", () => {
         service
             .fetchAccountAndTokenFromPasswordLogin({
                 login: TEST_LOGIN,
@@ -183,4 +188,21 @@ describe("AuthApi", () => {
         expect(subscription$.closed).toBeTrue();
         flush();
     }));
+
+    it("should check full login web3 wallet success", () => {
+        const expectedCredentials: Web3WalletOwnershipVerificationRequest = {
+            message: "test message",
+            signature: "signature",
+        };
+
+        service.fetchAccountAndTokenFromWeb3Wallet(expectedCredentials).subscribe();
+
+        const op = controller.expectOne(LoginDocument);
+        expect(op.operation.variables.login_method).toEqual(LoginMethod.WEB3_WALLET);
+        expect(op.operation.variables.login_credentials_json).toEqual(JSON.stringify(expectedCredentials));
+
+        op.flush({
+            data: mockWeb3WalletLoginResponse,
+        });
+    });
 });

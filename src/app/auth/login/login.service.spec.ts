@@ -26,6 +26,8 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { AppConfigService } from "src/app/app-config.service";
 import { SessionStorageService } from "src/app/services/session-storage.service";
+import { Eip1193EthereumService } from "./ethereum.service";
+import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 
 describe("LoginService", () => {
     let service: LoginService;
@@ -34,6 +36,7 @@ describe("LoginService", () => {
     let localStorageService: LocalStorageService;
     let sessionStorageService: SessionStorageService;
     let appConfigService: AppConfigService;
+    let ethereumService: Eip1193EthereumService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -51,6 +54,7 @@ describe("LoginService", () => {
         navigationService = TestBed.inject(NavigationService);
         authApi = TestBed.inject(AuthApi);
         appConfigService = TestBed.inject(AppConfigService);
+        ethereumService = TestBed.inject(Eip1193EthereumService);
     });
 
     it("should be created", () => {
@@ -199,4 +203,19 @@ describe("LoginService", () => {
                 .includes("https://github.com/login/oauth/authorize?scope=user:email&client_id=mockId"),
         ).toEqual(true);
     });
+
+    it("should check web3 wallet login", fakeAsync(() => {
+        const connectWalletSpy = spyOn(ethereumService, "connectWallet");
+        spyOnProperty(ethereumService, "currentWalet", "get").and.returnValue("test_wallet0xsawwwW");
+        const mockVerificationRequest = { message: "", signature: "" };
+        const mockPromise = Promise.resolve(mockVerificationRequest);
+        spyOn(ethereumService, "signInWithEthereum").and.returnValue(mockPromise);
+        const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromWeb3Wallet").and.returnValue(of());
+
+        promiseWithCatch(service.web3WalletLogin());
+        tick();
+
+        expect(connectWalletSpy).toHaveBeenCalledOnceWith();
+        expect(authApiSpy).toHaveBeenCalledTimes(1);
+    }));
 });

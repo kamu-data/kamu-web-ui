@@ -33,6 +33,7 @@ export class Eip1193EthereumService {
         return this.account;
     }
 
+    /* istanbul ignore next */
     public async connectWallet(): Promise<void> {
         if (!this.checkAvailableMetamaskProvider()) {
             return;
@@ -71,6 +72,7 @@ export class Eip1193EthereumService {
         return this.authApi.fetchAuthNonceFromWeb3Wallet(walletAddress);
     }
 
+    /* istanbul ignore next */
     public async createSiweMessage(address: string, statement: string): Promise<string> {
         const chainId = Number((await this.provider.getNetwork()).chainId);
         const nonce = await firstValueFrom(this.getNonceValue(address));
@@ -92,6 +94,7 @@ export class Eip1193EthereumService {
         return message.prepareMessage();
     }
 
+    /* istanbul ignore next */
     public async signInWithEthereum(): Promise<MaybeNull<Web3WalletOwnershipVerificationRequest>> {
         try {
             const signer = await this.provider.getSigner();

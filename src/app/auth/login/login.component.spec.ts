@@ -129,13 +129,12 @@ describe("LoginComponent", () => {
             expect(component).toBeTruthy();
         });
 
-        it("should not select any method with 3 login methods allowed", () => {
+        it("should not select any method with 2 login methods allowed", () => {
             expect(component.selectedLoginMethod).toBeUndefined();
 
             checkVisible(fixture, Elements.METHOD_SELECTION_BLOCK, true);
             checkVisible(fixture, Elements.GITHUB_SPINNER, false);
             checkVisible(fixture, Elements.PASSWORD_METHOD_BLOCK, false);
-            checkVisible(fixture, Elements.SELECT_METHOD_WEB3_WALLET, false);
         });
 
         it("select Github method should redirect to Github endpoint and show spinner", () => {

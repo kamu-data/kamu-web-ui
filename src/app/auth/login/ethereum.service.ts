@@ -53,11 +53,11 @@ export class Eip1193EthereumService {
 
     private checkAvailableMetamaskProvider(): boolean {
         if (!window.ethereum) {
-            this.toastrService.error(
+            this.toastrService.info(
                 "To log in, please choose a crypto wallet. For example, please install MetaMask extension.",
                 "",
                 {
-                    disableTimeOut: "timeOut",
+                    timeOut: 5000,
                 },
             );
             return false;
@@ -75,7 +75,7 @@ export class Eip1193EthereumService {
         const chainId = Number((await this.provider.getNetwork()).chainId);
         const nonce = await firstValueFrom(this.getNonceValue(address));
         const now = new Date();
-        const minutes_15_in_seconds = 15 * 60 * 1000;
+        const minutes_15_in_milliseconds = 15 * 60 * 1000;
 
         const siweMessage: Partial<SiweMessage> = {
             domain: window.location.host,
@@ -86,7 +86,7 @@ export class Eip1193EthereumService {
             chainId,
             nonce,
             issuedAt: now.toISOString(),
-            expirationTime: new Date(now.getTime() + minutes_15_in_seconds).toISOString(),
+            expirationTime: new Date(now.getTime() + minutes_15_in_milliseconds).toISOString(),
         };
         const message = new SiweMessage(siweMessage);
         return message.prepareMessage();

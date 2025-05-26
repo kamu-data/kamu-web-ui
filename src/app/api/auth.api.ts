@@ -98,6 +98,7 @@ export class AuthApi {
                         return result.data.auth.login;
                     } else {
                         // Normally, this code should not be reachable
+
                         throw new AuthenticationError(result.errors ?? []);
                     }
                 }),

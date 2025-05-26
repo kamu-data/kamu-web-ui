@@ -123,10 +123,6 @@ export class LoginService {
             if (verificationRequest) {
                 this.authApi.fetchAccountAndTokenFromWeb3Wallet(verificationRequest).subscribe({
                     next: this.loginCallback,
-                    error: (e) => {
-                        this.navigationService.navigateToHome();
-                        throw e;
-                    },
                 });
             }
         }

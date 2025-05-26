@@ -11,8 +11,10 @@ import { Pipe, PipeTransform } from "@angular/core";
     name: "displayAccountName",
 })
 export class DisplayAccountNamePipe implements PipeTransform {
+    private readonly WEB3_WALLET_PROVIDER = "web3-wallet";
+
     public transform(name: string, provider: string): string {
-        if (provider === "web3-wallet") {
+        if (provider === this.WEB3_WALLET_PROVIDER) {
             return name.slice(0, 6) + "..." + name.slice(-4);
         }
         return name;

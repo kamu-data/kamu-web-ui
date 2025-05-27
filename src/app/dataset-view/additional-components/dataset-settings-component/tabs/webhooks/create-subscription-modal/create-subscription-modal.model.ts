@@ -1,5 +1,3 @@
-import { Input } from "@angular/core";
-import { WebhookSubscriptionInput } from "src/app/api/kamu.graphql.interface";
 /**
  * Copyright Kamu Data, Inc. and contributors. All rights reserved.
  *
@@ -7,6 +5,7 @@ import { WebhookSubscriptionInput } from "src/app/api/kamu.graphql.interface";
  * included in the LICENSE file.
  */
 
+import { WebhookSubscriptionInput } from "src/app/api/kamu.graphql.interface";
 export interface SubscribedEventType {
     name: string;
     value: string;

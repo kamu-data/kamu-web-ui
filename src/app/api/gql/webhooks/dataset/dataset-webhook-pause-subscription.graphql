@@ -1,0 +1,21 @@
+mutation datasetWebhookPauseSubscription($datasetId: DatasetID!, $id: WebhookSubscriptionID!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      webhooks {
+        subscription(id: $id) {
+          pause {
+            ... on PauseWebhookSubscriptionResultSuccess {
+              paused
+              message
+            }
+
+            ... on PauseWebhookSubscriptionResultUnexpected {
+              status
+              message
+            }
+          }
+        }
+      }
+    }
+  }
+}

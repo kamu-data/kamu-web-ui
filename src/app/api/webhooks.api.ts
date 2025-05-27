@@ -9,6 +9,12 @@ import { inject, Injectable } from "@angular/core";
 import {
     DatasetWebhookCreateSubscriptionGQL,
     DatasetWebhookCreateSubscriptionMutation,
+    DatasetWebhookPauseSubscriptionGQL,
+    DatasetWebhookPauseSubscriptionMutation,
+    DatasetWebhookRemoveSubscriptionGQL,
+    DatasetWebhookRemoveSubscriptionMutation,
+    DatasetWebhookResumeSubscriptionGQL,
+    DatasetWebhookResumeSubscriptionMutation,
     DatasetWebhookSubscriptionsGQL,
     DatasetWebhookSubscriptionsQuery,
     WebhookEventTypesGQL,
@@ -26,6 +32,9 @@ export class WebhooksApi {
     private webhookEventTypesGQL = inject(WebhookEventTypesGQL);
     private datasetWebhookSubscriptionsGQL = inject(DatasetWebhookSubscriptionsGQL);
     private datasetWebhookCreateSubscriptionGQL = inject(DatasetWebhookCreateSubscriptionGQL);
+    private datasetWebhookRemoveSubscriptionGQL = inject(DatasetWebhookRemoveSubscriptionGQL);
+    private datasetWebhookPauseSubscriptionGQL = inject(DatasetWebhookPauseSubscriptionGQL);
+    private datasetWebhookResumeSubscriptionGQL = inject(DatasetWebhookResumeSubscriptionGQL);
 
     public webhookEventTypes(): Observable<WebhookEventTypesQuery> {
         return this.webhookEventTypesGQL.watch().valueChanges.pipe(
@@ -52,6 +61,57 @@ export class WebhooksApi {
         return this.datasetWebhookCreateSubscriptionGQL.mutate({ datasetId, input }).pipe(
             first(),
             map((result: MutationResult<DatasetWebhookCreateSubscriptionMutation>) => {
+                /* istanbul ignore else */
+                if (result.data) {
+                    return result.data;
+                } else {
+                    throw new DatasetOperationError(result.errors ?? []);
+                }
+            }),
+        );
+    }
+
+    public datasetWebhookRemoveSubscription(
+        datasetId: string,
+        id: string,
+    ): Observable<DatasetWebhookRemoveSubscriptionMutation> {
+        return this.datasetWebhookRemoveSubscriptionGQL.mutate({ datasetId, id }).pipe(
+            first(),
+            map((result: MutationResult<DatasetWebhookRemoveSubscriptionMutation>) => {
+                /* istanbul ignore else */
+                if (result.data) {
+                    return result.data;
+                } else {
+                    throw new DatasetOperationError(result.errors ?? []);
+                }
+            }),
+        );
+    }
+
+    public datasetWebhookPauseSubscription(
+        datasetId: string,
+        id: string,
+    ): Observable<DatasetWebhookPauseSubscriptionMutation> {
+        return this.datasetWebhookPauseSubscriptionGQL.mutate({ datasetId, id }).pipe(
+            first(),
+            map((result: MutationResult<DatasetWebhookPauseSubscriptionMutation>) => {
+                /* istanbul ignore else */
+                if (result.data) {
+                    return result.data;
+                } else {
+                    throw new DatasetOperationError(result.errors ?? []);
+                }
+            }),
+        );
+    }
+
+    public datasetWebhookResumeSubscription(
+        datasetId: string,
+        id: string,
+    ): Observable<DatasetWebhookResumeSubscriptionMutation> {
+        return this.datasetWebhookResumeSubscriptionGQL.mutate({ datasetId, id }).pipe(
+            first(),
+            map((result: MutationResult<DatasetWebhookResumeSubscriptionMutation>) => {
                 /* istanbul ignore else */
                 if (result.data) {
                     return result.data;

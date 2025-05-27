@@ -23,12 +23,20 @@ p {
     max-width: 400px;
 }
 
-.status-enabled {
+.status {
     padding: 2px 10px 2px 5px;
-    color: darkgreen;
-    background-color: #e2efe9;
     width: fit-content;
     border-radius: 6px;
+}
+
+.status-enabled {
+    color: darkgreen;
+    background-color: #e2efe9;
+}
+
+.status-paused {
+    color: #172195;
+    background-color: #d8d9f1;
 }
 
 .mat-icon-size {
@@ -37,4 +45,8 @@ p {
 
 .mat-icon-action-size {
     transform: scale(0.8);
+
+    &:hover {
+        cursor: pointer;
+    }
 }

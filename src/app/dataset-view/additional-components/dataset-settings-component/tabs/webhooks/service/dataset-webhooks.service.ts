@@ -9,8 +9,10 @@ import { inject, Injectable } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
 import { map, Observable } from "rxjs";
 import {
-    CreateWebhookSubscriptionResultSuccess,
     DatasetWebhookCreateSubscriptionMutation,
+    DatasetWebhookPauseSubscriptionMutation,
+    DatasetWebhookRemoveSubscriptionMutation,
+    DatasetWebhookResumeSubscriptionMutation,
     DatasetWebhookSubscriptionsQuery,
     WebhookSubscription,
     WebhookSubscriptionInput,
@@ -52,6 +54,53 @@ export class DatasetWebhooksService {
                 } else {
                     this.toastrService.error(data.datasets.byId?.webhooks.createSubscription.message);
                     return null;
+                }
+            }),
+        );
+    }
+
+    public datasetWebhookRemoveSubscription(datasetId: string, id: string): Observable<boolean> {
+        return this.webhooksApi.datasetWebhookRemoveSubscription(datasetId, id).pipe(
+            map((data: DatasetWebhookRemoveSubscriptionMutation) => {
+                if (data.datasets.byId?.webhooks.subscription?.remove.removed) {
+                    return true;
+                } else {
+                    this.toastrService.error("Webhook not deleted");
+                    return false;
+                }
+            }),
+        );
+    }
+
+    public datasetWebhookPauseSubscription(datasetId: string, id: string): Observable<boolean> {
+        return this.webhooksApi.datasetWebhookPauseSubscription(datasetId, id).pipe(
+            map((data: DatasetWebhookPauseSubscriptionMutation) => {
+                if (
+                    data.datasets.byId?.webhooks.subscription?.pause.__typename ===
+                    "PauseWebhookSubscriptionResultSuccess"
+                ) {
+                    this.toastrService.success(data.datasets.byId.webhooks.subscription.pause.message);
+                    return true;
+                } else {
+                    this.toastrService.error(data.datasets.byId?.webhooks.subscription?.pause.message);
+                    return false;
+                }
+            }),
+        );
+    }
+
+    public datasetWebhookResumeSubscription(datasetId: string, id: string): Observable<boolean> {
+        return this.webhooksApi.datasetWebhookResumeSubscription(datasetId, id).pipe(
+            map((data: DatasetWebhookResumeSubscriptionMutation) => {
+                if (
+                    data.datasets.byId?.webhooks.subscription?.resume.__typename ===
+                    "ResumeWebhookSubscriptionResultSuccess"
+                ) {
+                    this.toastrService.success(data.datasets.byId.webhooks.subscription.resume.message);
+                    return true;
+                } else {
+                    this.toastrService.error(data.datasets.byId?.webhooks.subscription?.resume.message);
+                    return false;
                 }
             }),
         );

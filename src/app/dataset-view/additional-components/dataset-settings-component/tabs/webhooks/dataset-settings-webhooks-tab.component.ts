@@ -22,8 +22,10 @@ import {
 import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetWebhooksService } from "./service/dataset-webhooks.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { filter, from, of, switchMap, tap } from "rxjs";
+import { filter, from, switchMap } from "rxjs";
 import { CreateWebhookSubscriptionSucces } from "./create-subscription-modal/create-subscription-modal.model";
+import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
+import { ModalService } from "src/app/common/components/modal/modal.service";
 
 @Component({
     selector: "app-dataset-settings-webhooks-tab",
@@ -45,6 +47,7 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
     private ngbModalService = inject(NgbModal);
     private datasetWebhooksService = inject(DatasetWebhooksService);
     private cdr = inject(ChangeDetectorRef);
+    private modalService = inject(ModalService);
 
     public ngOnInit(): void {
         this.updateTable();
@@ -85,5 +88,44 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
                     modalRefInstance.subscriptionData = data;
                 }
             });
+    }
+
+    public removeWebhook(subscriptionId: string): void {
+        this.datasetWebhooksService
+            .datasetWebhookRemoveSubscription(this.datasetBasics.id, subscriptionId)
+            .subscribe((result: boolean) => {
+                if (result) {
+                    this.updateTable();
+                }
+            });
+    }
+
+    public pauseWebhook(subscriptionId: string): void {
+        this.datasetWebhooksService
+            .datasetWebhookPauseSubscription(this.datasetBasics.id, subscriptionId)
+            .subscribe((result: boolean) => {
+                if (result) {
+                    this.updateTable();
+                }
+            });
+    }
+
+    public resumeWebhook(subscriptionId: string): void {
+        this.datasetWebhooksService
+            .datasetWebhookResumeSubscription(this.datasetBasics.id, subscriptionId)
+            .subscribe((result: boolean) => {
+                if (result) {
+                    this.updateTable();
+                }
+            });
+    }
+
+    public viewWebhook(): void {
+        promiseWithCatch(
+            this.modalService.warning({
+                message: "Feature coming soon",
+                yesButtonText: "Ok",
+            }),
+        );
     }
 }

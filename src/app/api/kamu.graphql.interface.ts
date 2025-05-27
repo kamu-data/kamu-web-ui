@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "apollo-angular";
+import { gql } from "@apollo/client/core";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -6519,6 +6519,34 @@ export type SemanticSearchDatasetsOverviewQuery = {
     };
 };
 
+export type DatasetWebhookCreateSubscriptionMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    input: WebhookSubscriptionInput;
+}>;
+
+export type DatasetWebhookCreateSubscriptionMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            webhooks: {
+                __typename?: "DatasetWebhooksMut";
+                createSubscription:
+                    | {
+                          __typename: "CreateWebhookSubscriptionResultSuccess";
+                          secret: string;
+                          subscriptionId: string;
+                          message: string;
+                      }
+                    | { __typename: "WebhookSubscriptionDuplicateLabel"; message: string; label: string }
+                    | { __typename: "WebhookSubscriptionInvalidTargetUrl"; innerMessage: string; message: string }
+                    | { __typename: "WebhookSubscriptionNoEventTypesProvided"; numEventTypes: number; message: string };
+            };
+        } | null;
+    };
+};
+
 export type DatasetWebhookSubscriptionsQueryVariables = Exact<{
     datasetId: Scalars["DatasetID"];
 }>;
@@ -10020,6 +10048,50 @@ export class SemanticSearchDatasetsOverviewGQL extends Apollo.Query<
     SemanticSearchDatasetsOverviewQueryVariables
 > {
     document = SemanticSearchDatasetsOverviewDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetWebhookCreateSubscriptionDocument = gql`
+    mutation datasetWebhookCreateSubscription($datasetId: DatasetID!, $input: WebhookSubscriptionInput!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                webhooks {
+                    createSubscription(input: $input) {
+                        __typename
+                        ... on CreateWebhookSubscriptionResultSuccess {
+                            secret
+                            subscriptionId
+                            message
+                        }
+                        ... on WebhookSubscriptionDuplicateLabel {
+                            message
+                            label
+                        }
+                        ... on WebhookSubscriptionInvalidTargetUrl {
+                            innerMessage
+                            message
+                        }
+                        ... on WebhookSubscriptionNoEventTypesProvided {
+                            numEventTypes
+                            message
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetWebhookCreateSubscriptionGQL extends Apollo.Mutation<
+    DatasetWebhookCreateSubscriptionMutation,
+    DatasetWebhookCreateSubscriptionMutationVariables
+> {
+    document = DatasetWebhookCreateSubscriptionDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

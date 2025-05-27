@@ -9,11 +9,11 @@ import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angu
 import { FormBuilder, Validators } from "@angular/forms";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import AppValues from "src/app/common/values/app.values";
-import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
+import { DatasetBasicsFragment, WebhookSubscriptionInput } from "src/app/api/kamu.graphql.interface";
 import { WebhooksService } from "src/app/services/webhooks.service";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { SubscribedEventType } from "./create-subscription-modal.model";
+import { CreateWebhookSubscriptionSucces, SubscribedEventType } from "./create-subscription-modal.model";
 
 @Component({
     selector: "app-create-subscription-modal",
@@ -23,6 +23,7 @@ import { SubscribedEventType } from "./create-subscription-modal.model";
 })
 export class CreateSubscriptionModalComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
+    @Input() public subscriptionData: CreateWebhookSubscriptionSucces;
 
     public DROPDOWN_LIST: SubscribedEventType[] = [];
 
@@ -35,17 +36,29 @@ export class CreateSubscriptionModalComponent extends BaseComponent implements O
             .eventTypes()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((eventTypes: string[]) => {
-                this.DROPDOWN_LIST = eventTypes.map((eventType, index) => {
-                    return { id: index, name: this.eventTypesMapper(eventType), value: eventType };
+                this.DROPDOWN_LIST = eventTypes.map((eventType) => {
+                    return { name: this.eventTypesMapper(eventType), value: eventType };
                 });
+                if (this.subscriptionData) {
+                    this.createSubscriptionForm.patchValue({
+                        targetUrl: this.subscriptionData.input.targetUrl,
+                        eventTypes: this.subscriptionData.input.eventTypes,
+                        label: this.subscriptionData.input.label,
+                    });
+                }
             });
     }
 
-    public createSubscriptionForm = this.fb.group({
+    public createSubscriptionForm = this.fb.nonNullable.group({
         targetUrl: this.fb.control("", [Validators.required, Validators.pattern(AppValues.URL_PATTERN_ONLY_HTTPS)]),
-        eventTypes: [[], Validators.required],
-        label: this.fb.control("", [Validators.required]),
+        eventTypes: [[] as string[], Validators.required],
+        label: this.fb.control("", []),
     });
+
+    public createWebhook(): void {
+        const result = this.createSubscriptionForm.value as WebhookSubscriptionInput;
+        this.activeModal.close(result);
+    }
 
     private eventTypesMapper(name: string): string {
         switch (name) {

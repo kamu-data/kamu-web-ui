@@ -1,6 +1,8 @@
 <div class="d-flex p-4">
     <div class="flex-grow-1 ms-2">
-        <span class="fs-5 fw-bold">{{ "Create subscription" }}</span>
+        <span class="fs-5 fw-bold">{{
+            subscriptionData ? "Webhook subscription details" : "Create subscription"
+        }}</span>
     </div>
     <div>
         <button
@@ -40,7 +42,7 @@
             </ng-select>
         </div>
         <div class="d-flex flex-column mt-4">
-            <label for="" class="form-label">Label <span class="text-danger">*</span></label>
+            <label for="" class="form-label">Label </label>
             <input type="text" data-test-id="target-url" formControlName="label" class="w-100 form-control" />
             <p class="text-muted pt-1 fs-12">Optinal unique label to identify this webhook subscription</p>
         </div>
@@ -53,10 +55,22 @@
     </button>
     <button
         type="button"
+        (click)="createWebhook()"
         [disabled]="createSubscriptionForm.invalid"
         class="btn btn-success"
         data-test-id="create-subscription"
+        *ngIf="!subscriptionData"
     >
         Create
+    </button>
+    <button
+        type="button"
+        (click)="createWebhook()"
+        [disabled]="createSubscriptionForm.invalid"
+        class="btn btn-success"
+        data-test-id="create-subscription"
+        *ngIf="subscriptionData"
+    >
+        Update
     </button>
 </div>

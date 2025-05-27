@@ -10,23 +10,28 @@
     <div class="box text-center p-5 mb-100 mt-4" *ngIf="!dataSource.data.length">
         <mat-icon class="webhook-icon" [svgIcon]="'webhook'" />
         <h3 class="my-3">No webhook subscrpitions configured yet</h3>
-        <button class="btn btn-success" (click)="createSubscription()" type="button">Create subscription</button>
+        <button class="btn btn-success" (click)="createWebhook()" type="button">Create webhook</button>
     </div>
     <div class="mb-100 mt-4" *ngIf="dataSource.data.length">
-        <div class="d-flex flex-wrap flex-justify-end flex-items-center">
-            <h2 class="flex-auto">Existing subscriptions</h2>
-            <div>
-                <button class="btn btn-success" (click)="createSubscription()" type="button">Add subscription</button>
-            </div>
+        <div class="d-flex flex-wrap justify-content-end mb-3">
+            <button class="btn btn-success" (click)="createWebhook()" type="button">Add webhook</button>
         </div>
         <div class="border">
             <table mat-table [dataSource]="dataSource" class="w-100">
                 <!-- Event Column -->
                 <ng-container matColumnDef="event">
                     <th mat-header-cell *matHeaderCellDef>Event</th>
-                    <td mat-cell *matCellDef="let element" style="width: 50%">
-                        <div class="d-flex align-items-center py-3">
-                            {{ element.label }}
+                    <td mat-cell *matCellDef="let element" style="width: 60%">
+                        <div class="d-flex flex-column justify-content-center py-3 table-cell-height">
+                            <p class="fw-semibold">{{ element.label }}</p>
+                            <a
+                                class="mt-1 truncate-target-url"
+                                [href]="element.targetUrl"
+                                [title]="element.targetUrl"
+                                target="_blank"
+                            >
+                                {{ element.targetUrl }}
+                            </a>
                         </div>
                     </td>
                 </ng-container>
@@ -35,8 +40,11 @@
                 <ng-container matColumnDef="status">
                     <th mat-header-cell class="table-header-background" *matHeaderCellDef>Status</th>
                     <td mat-cell *matCellDef="let element">
-                        <div class="d-flex align-items-center">
-                            {{ element.status }}
+                        <div class="d-flex align-items-center status-enabled">
+                            <mat-icon class="mat-icon-size">check_circle</mat-icon>
+                            <span>
+                                {{ element.status }}
+                            </span>
                         </div>
                     </td>
                 </ng-container>
@@ -45,7 +53,23 @@
                 <ng-container matColumnDef="actions">
                     <th mat-header-cell *matHeaderCellDef>Actions</th>
                     <td mat-cell *matCellDef="let element">
-                        <div class="d-flex justify-content-end py-3">actions</div>
+                        <div class="d-flex flex-row gap-2 py-3">
+                            <mat-icon class="mat-icon-action-size" [title]="'monitoring'">visibility</mat-icon>
+                            <mat-icon class="mat-icon-action-size" [title]="'edit'">edit</mat-icon>
+                            <mat-icon
+                                class="mat-icon-action-size"
+                                *ngIf="element.status === WebhookSubscriptionStatus.Paused"
+                                [title]="'resume'"
+                                >play_arrow</mat-icon
+                            >
+                            <mat-icon
+                                class="mat-icon-action-size"
+                                *ngIf="element.status !== WebhookSubscriptionStatus.Paused"
+                                [title]="'pause'"
+                                >pause</mat-icon
+                            >
+                            <mat-icon class="mat-icon-action-size" [title]="'delete'">delete</mat-icon>
+                        </div>
                     </td>
                 </ng-container>
                 <tr class="table-header-background" mat-header-row *matHeaderRowDef="DISPLAY_COLUMNS"></tr>

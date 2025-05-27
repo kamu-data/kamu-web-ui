@@ -12,10 +12,18 @@ import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 import { CreateSubscriptionModalComponent } from "./create-subscription-modal/create-subscription-modal.component";
 import { MatTableDataSource } from "@angular/material/table";
-import { DatasetBasicsFragment, PageBasedInfo, WebhookSubscription } from "src/app/api/kamu.graphql.interface";
+import {
+    DatasetBasicsFragment,
+    PageBasedInfo,
+    WebhookSubscription,
+    WebhookSubscriptionInput,
+    WebhookSubscriptionStatus,
+} from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetWebhooksService } from "./service/dataset-webhooks.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { filter, from, of, switchMap, tap } from "rxjs";
+import { CreateWebhookSubscriptionSucces } from "./create-subscription-modal/create-subscription-modal.model";
 
 @Component({
     selector: "app-dataset-settings-webhooks-tab",
@@ -31,6 +39,7 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
     public readonly PER_PAGE = 15;
 
     public readonly DISPLAY_COLUMNS: string[] = ["event", "status", "actions"];
+    public readonly WebhookSubscriptionStatus: typeof WebhookSubscriptionStatus = WebhookSubscriptionStatus;
 
     private navigationService = inject(NavigationService);
     private ngbModalService = inject(NgbModal);
@@ -38,6 +47,10 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
     private cdr = inject(ChangeDetectorRef);
 
     public ngOnInit(): void {
+        this.updateTable();
+    }
+
+    private updateTable(): void {
         this.datasetWebhooksService
             .datasetWebhookSubscriptions(this.datasetBasics.id)
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -51,9 +64,26 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
         return this.webhooksViewData.datasetBasics;
     }
 
-    public createSubscription(): void {
+    public createWebhook(): void {
         const modalRef = this.ngbModalService.open(CreateSubscriptionModalComponent);
         const modalRefInstance = modalRef.componentInstance as CreateSubscriptionModalComponent;
         modalRefInstance.datasetBasics = this.webhooksViewData.datasetBasics;
+
+        from(modalRef.result)
+            .pipe(
+                filter((data) => !!data),
+                switchMap((result: WebhookSubscriptionInput) =>
+                    this.datasetWebhooksService.datasetWebhookCreateSubscription(this.datasetBasics.id, result),
+                ),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe((data: CreateWebhookSubscriptionSucces | null) => {
+                if (data) {
+                    const modalRef = this.ngbModalService.open(CreateSubscriptionModalComponent);
+                    const modalRefInstance = modalRef.componentInstance as CreateSubscriptionModalComponent;
+                    modalRefInstance.datasetBasics = this.webhooksViewData.datasetBasics;
+                    modalRefInstance.subscriptionData = data;
+                }
+            });
     }
 }

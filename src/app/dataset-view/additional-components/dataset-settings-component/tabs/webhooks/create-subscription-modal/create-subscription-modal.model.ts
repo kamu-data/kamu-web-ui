@@ -1,3 +1,5 @@
+import { Input } from "@angular/core";
+import { WebhookSubscriptionInput } from "src/app/api/kamu.graphql.interface";
 /**
  * Copyright Kamu Data, Inc. and contributors. All rights reserved.
  *
@@ -6,7 +8,13 @@
  */
 
 export interface SubscribedEventType {
-    id: number;
     name: string;
     value: string;
+}
+
+export interface CreateWebhookSubscriptionSucces {
+    datasetId: string;
+    input: WebhookSubscriptionInput;
+    subscriptionId: string;
+    secret?: string;
 }

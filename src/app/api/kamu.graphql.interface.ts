@@ -40,8 +40,6 @@ export type Scalars = {
     EventID: string;
     ExtraData: string;
     FlowID: string;
-    /** A scalar that can represent any JSON value. */
-    JSON: string;
     Multihash: string;
     TaskID: string;
     URL: string;
@@ -729,25 +727,6 @@ export type CreateAccountSuccess = CreateAccountResult & {
     message: Scalars["String"];
 };
 
-export type CreateAnnouncementErrorInvalidAttachment = CreateAnnouncementResult & {
-    __typename?: "CreateAnnouncementErrorInvalidAttachment";
-    isSuccess: Scalars["Boolean"];
-    message: Scalars["String"];
-};
-
-export type CreateAnnouncementResult = {
-    isSuccess: Scalars["Boolean"];
-    message: Scalars["String"];
-};
-
-export type CreateAnnouncementSuccess = CreateAnnouncementResult & {
-    __typename?: "CreateAnnouncementSuccess";
-    /** ID of the newly-created announcement */
-    announcementId: Scalars["String"];
-    isSuccess: Scalars["Boolean"];
-    message: Scalars["String"];
-};
-
 export type CreateDatasetFromSnapshotResult = {
     isSuccess: Scalars["Boolean"];
     message: Scalars["String"];
@@ -787,25 +766,6 @@ export type CreateDatasetResultSuccess = CreateDatasetFromSnapshotResult &
         isSuccess: Scalars["Boolean"];
         message: Scalars["String"];
     };
-
-export type CreateProjectErrorConflict = CreateProjectResult & {
-    __typename?: "CreateProjectErrorConflict";
-    isSuccess: Scalars["Boolean"];
-    message: Scalars["String"];
-    project: MoleculeProject;
-};
-
-export type CreateProjectResult = {
-    isSuccess: Scalars["Boolean"];
-    message: Scalars["String"];
-};
-
-export type CreateProjectSuccess = CreateProjectResult & {
-    __typename?: "CreateProjectSuccess";
-    isSuccess: Scalars["Boolean"];
-    message: Scalars["String"];
-    project: MoleculeProject;
-};
 
 export type CreateTokenResult = {
     message: Scalars["String"];
@@ -2579,155 +2539,6 @@ export type ModifyPasswordSuccess = ModifyPasswordResult & {
     message: Scalars["String"];
 };
 
-export type Molecule = {
-    __typename?: "Molecule";
-    /** Looks up the project */
-    project?: Maybe<MoleculeProject>;
-    /** List the registered projects */
-    projects: MoleculeProjectConnection;
-};
-
-export type MoleculeProjectArgs = {
-    ipnftUid: Scalars["String"];
-};
-
-export type MoleculeProjectsArgs = {
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
-};
-
-export type MoleculeMut = {
-    __typename?: "MoleculeMut";
-    createProject: CreateProjectResult;
-    /** Looks up the project */
-    project?: Maybe<MoleculeProjectMut>;
-};
-
-export type MoleculeMutCreateProjectArgs = {
-    ipnftAddress: Scalars["String"];
-    ipnftSymbol: Scalars["String"];
-    ipnftTokenId: Scalars["Int"];
-    ipnftUid: Scalars["String"];
-};
-
-export type MoleculeMutProjectArgs = {
-    ipnftUid: Scalars["String"];
-};
-
-export type MoleculeProject = {
-    __typename?: "MoleculeProject";
-    /** Project's organizational account */
-    account: Account;
-    /** Project's activity events in reverse chronological order */
-    activity: MoleculeProjectEventConnection;
-    /** Project's announcements dataset */
-    announcements: Dataset;
-    /** Project's data room dataset */
-    dataRoom: Dataset;
-    /** Event time when this version was created/updated */
-    eventTime: Scalars["DateTime"];
-    /** Address of the IPNFT contract */
-    ipnftAddress: Scalars["String"];
-    /** Symbolic name of the project */
-    ipnftSymbol: Scalars["String"];
-    /** Token ID withing the IPNFT contract */
-    ipnftTokenId: Scalars["Int"];
-    /** Unique ID of the IPNFT as `{ipnftAddress}_{ipnftTokenId}` */
-    ipnftUid: Scalars["String"];
-    /** System time when this version was created/updated */
-    systemTime: Scalars["DateTime"];
-};
-
-export type MoleculeProjectActivityArgs = {
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
-};
-
-export type MoleculeProjectConnection = {
-    __typename?: "MoleculeProjectConnection";
-    edges: Array<MoleculeProjectEdge>;
-    /** A shorthand for `edges { node { ... } }` */
-    nodes: Array<MoleculeProject>;
-    /** Page information */
-    pageInfo: PageBasedInfo;
-    /** Approximate number of total nodes */
-    totalCount: Scalars["Int"];
-};
-
-export type MoleculeProjectEdge = {
-    __typename?: "MoleculeProjectEdge";
-    node: MoleculeProject;
-};
-
-export type MoleculeProjectEvent = {
-    systemTime: Scalars["DateTime"];
-};
-
-export type MoleculeProjectEventAnnouncement = MoleculeProjectEvent & {
-    __typename?: "MoleculeProjectEventAnnouncement";
-    /** Announcement record */
-    announcement: Scalars["JSON"];
-    systemTime: Scalars["DateTime"];
-};
-
-export type MoleculeProjectEventConnection = {
-    __typename?: "MoleculeProjectEventConnection";
-    edges: Array<MoleculeProjectEventEdge>;
-    /** A shorthand for `edges { node { ... } }` */
-    nodes: Array<MoleculeProjectEvent>;
-    /** Page information */
-    pageInfo: PageBasedInfo;
-};
-
-export type MoleculeProjectEventDataRoomEntryAdded = MoleculeProjectEvent & {
-    __typename?: "MoleculeProjectEventDataRoomEntryAdded";
-    /** Collection entry */
-    entry: CollectionEntry;
-    systemTime: Scalars["DateTime"];
-};
-
-export type MoleculeProjectEventDataRoomEntryRemoved = MoleculeProjectEvent & {
-    __typename?: "MoleculeProjectEventDataRoomEntryRemoved";
-    /** Collection entry */
-    entry: CollectionEntry;
-    systemTime: Scalars["DateTime"];
-};
-
-export type MoleculeProjectEventDataRoomEntryUpdated = MoleculeProjectEvent & {
-    __typename?: "MoleculeProjectEventDataRoomEntryUpdated";
-    /** Collection entry */
-    newEntry: CollectionEntry;
-    systemTime: Scalars["DateTime"];
-};
-
-export type MoleculeProjectEventEdge = {
-    __typename?: "MoleculeProjectEventEdge";
-    node: MoleculeProjectEvent;
-};
-
-export type MoleculeProjectEventFileUpdated = MoleculeProjectEvent & {
-    __typename?: "MoleculeProjectEventFileUpdated";
-    /** Versioned file dataset */
-    dataset: Dataset;
-    /** New file version entry */
-    newEntry: VersionedFileEntry;
-    systemTime: Scalars["DateTime"];
-};
-
-export type MoleculeProjectMut = {
-    __typename?: "MoleculeProjectMut";
-    /** Creates an announcement record for the project */
-    createAnnouncement: CreateAnnouncementResult;
-};
-
-export type MoleculeProjectMutCreateAnnouncementArgs = {
-    attachments?: InputMaybe<Array<Scalars["String"]>>;
-    body: Scalars["String"];
-    headline: Scalars["String"];
-    moleculeAccessLevel: Scalars["String"];
-    moleculeChangeBy: Scalars["String"];
-};
-
 /**
  * MQTT quality of service class.
  *
@@ -2774,8 +2585,6 @@ export type Mutation = {
      * schema.
      */
     datasets: DatasetsMut;
-    /** Temporary: Molecule-specific functionality group */
-    molecule: MoleculeMut;
 };
 
 export type NameLookupResult = Account;
@@ -2939,8 +2748,6 @@ export type Query = {
      * schema.
      */
     datasets: Datasets;
-    /** Temporary: Molecule-specific functionality group */
-    molecule: Molecule;
     /** Search-related functionality group */
     search: Search;
     /**

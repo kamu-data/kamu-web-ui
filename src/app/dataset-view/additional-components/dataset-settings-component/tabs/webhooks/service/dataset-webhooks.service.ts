@@ -14,6 +14,7 @@ import {
     DatasetWebhookRemoveSubscriptionMutation,
     DatasetWebhookResumeSubscriptionMutation,
     DatasetWebhookSubscriptionsQuery,
+    DatasetWebhookUpdateSubscriptionMutation,
     WebhookSubscription,
     WebhookSubscriptionInput,
 } from "src/app/api/kamu.graphql.interface";
@@ -63,6 +64,7 @@ export class DatasetWebhooksService {
         return this.webhooksApi.datasetWebhookRemoveSubscription(datasetId, id).pipe(
             map((data: DatasetWebhookRemoveSubscriptionMutation) => {
                 if (data.datasets.byId?.webhooks.subscription?.remove.removed) {
+                    this.toastrService.success(data.datasets.byId?.webhooks.subscription?.remove.message);
                     return true;
                 } else {
                     this.toastrService.error("Webhook not deleted");
@@ -100,6 +102,27 @@ export class DatasetWebhooksService {
                     return true;
                 } else {
                     this.toastrService.error(data.datasets.byId?.webhooks.subscription?.resume.message);
+                    return false;
+                }
+            }),
+        );
+    }
+
+    public datasetWebhookUpdateSubscription(params: {
+        datasetId: string;
+        id: string;
+        input: WebhookSubscriptionInput;
+    }): Observable<boolean> {
+        return this.webhooksApi.datasetWebhookUpdateSubscription(params).pipe(
+            map((data: DatasetWebhookUpdateSubscriptionMutation) => {
+                if (
+                    data.datasets.byId?.webhooks.subscription?.update.__typename ===
+                    "UpdateWebhookSubscriptionResultSuccess"
+                ) {
+                    this.toastrService.success(data.datasets.byId?.webhooks.subscription?.update.message);
+                    return true;
+                } else {
+                    this.toastrService.error(data.datasets.byId?.webhooks.subscription?.update.message);
                     return false;
                 }
             }),

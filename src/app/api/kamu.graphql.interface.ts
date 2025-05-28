@@ -6655,6 +6655,42 @@ export type DatasetWebhookSubscriptionsQuery = {
     };
 };
 
+export type DatasetWebhookUpdateSubscriptionMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    id: Scalars["WebhookSubscriptionID"];
+    input: WebhookSubscriptionInput;
+}>;
+
+export type DatasetWebhookUpdateSubscriptionMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            webhooks: {
+                __typename?: "DatasetWebhooksMut";
+                subscription?: {
+                    __typename?: "WebhookSubscriptionMut";
+                    update:
+                        | { __typename?: "UpdateWebhookSubscriptionResultSuccess"; updated: boolean; message: string }
+                        | {
+                              __typename?: "UpdateWebhookSubscriptionResultUnexpected";
+                              status: WebhookSubscriptionStatus;
+                              message: string;
+                          }
+                        | { __typename?: "WebhookSubscriptionDuplicateLabel"; label: string; message: string }
+                        | { __typename?: "WebhookSubscriptionInvalidTargetUrl"; innerMessage: string; message: string }
+                        | {
+                              __typename?: "WebhookSubscriptionNoEventTypesProvided";
+                              numEventTypes: number;
+                              message: string;
+                          };
+                } | null;
+            };
+        } | null;
+    };
+};
+
 export type WebhookEventTypesQueryVariables = Exact<{ [key: string]: never }>;
 
 export type WebhookEventTypesQuery = {
@@ -10310,6 +10346,58 @@ export class DatasetWebhookSubscriptionsGQL extends Apollo.Query<
     DatasetWebhookSubscriptionsQueryVariables
 > {
     document = DatasetWebhookSubscriptionsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetWebhookUpdateSubscriptionDocument = gql`
+    mutation datasetWebhookUpdateSubscription(
+        $datasetId: DatasetID!
+        $id: WebhookSubscriptionID!
+        $input: WebhookSubscriptionInput!
+    ) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                webhooks {
+                    subscription(id: $id) {
+                        update(input: $input) {
+                            ... on UpdateWebhookSubscriptionResultSuccess {
+                                updated
+                                message
+                            }
+                            ... on UpdateWebhookSubscriptionResultUnexpected {
+                                status
+                                message
+                            }
+                            ... on WebhookSubscriptionDuplicateLabel {
+                                label
+                                message
+                            }
+                            ... on WebhookSubscriptionInvalidTargetUrl {
+                                innerMessage
+                                message
+                            }
+                            ... on WebhookSubscriptionNoEventTypesProvided {
+                                numEventTypes
+                                message
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetWebhookUpdateSubscriptionGQL extends Apollo.Mutation<
+    DatasetWebhookUpdateSubscriptionMutation,
+    DatasetWebhookUpdateSubscriptionMutationVariables
+> {
+    document = DatasetWebhookUpdateSubscriptionDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

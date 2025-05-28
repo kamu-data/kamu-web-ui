@@ -6,19 +6,27 @@
  */
 
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { FormBuilder, Validators } from "@angular/forms";
+import { AbstractControl, FormBuilder, Validators } from "@angular/forms";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import AppValues from "src/app/common/values/app.values";
-import { DatasetBasicsFragment, WebhookSubscriptionInput } from "src/app/api/kamu.graphql.interface";
+import {
+    DatasetBasicsFragment,
+    WebhookSubscriptionInput,
+    WebhookSubscriptionStatus,
+} from "src/app/api/kamu.graphql.interface";
 import { WebhooksService } from "src/app/services/webhooks.service";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { CreateWebhookSubscriptionSucces, SubscribedEventType } from "./create-subscription-modal.model";
+import {
+    CreateWebhookSubscriptionSucces,
+    SubscribedEventType,
+    WebhookSubscriptionModalAction,
+} from "./create-subscription-modal.model";
+import { MaybeUndefined } from "src/app/interface/app.types";
 
 @Component({
     selector: "app-create-subscription-modal",
     templateUrl: "./create-subscription-modal.component.html",
-    styleUrls: ["./create-subscription-modal.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateSubscriptionModalComponent extends BaseComponent implements OnInit {
@@ -26,6 +34,10 @@ export class CreateSubscriptionModalComponent extends BaseComponent implements O
     @Input() public subscriptionData: CreateWebhookSubscriptionSucces;
 
     public DROPDOWN_LIST: SubscribedEventType[] = [];
+    public secret: MaybeUndefined<string>;
+    public readonly WebhookSubscriptionStatus: typeof WebhookSubscriptionStatus = WebhookSubscriptionStatus;
+    public readonly WebhookSubscriptionModalAction: typeof WebhookSubscriptionModalAction =
+        WebhookSubscriptionModalAction;
 
     public activeModal = inject(NgbActiveModal);
     private fb = inject(FormBuilder);
@@ -45,8 +57,17 @@ export class CreateSubscriptionModalComponent extends BaseComponent implements O
                         eventTypes: this.subscriptionData.input.eventTypes,
                         label: this.subscriptionData.input.label,
                     });
+                    this.secret = this.subscriptionData?.secret;
                 }
             });
+    }
+
+    public get targetUrlControl(): AbstractControl {
+        return this.createSubscriptionForm.controls.targetUrl;
+    }
+
+    public get eventTypesControl(): AbstractControl {
+        return this.createSubscriptionForm.controls.eventTypes;
     }
 
     public createSubscriptionForm = this.fb.nonNullable.group({
@@ -57,7 +78,16 @@ export class CreateSubscriptionModalComponent extends BaseComponent implements O
 
     public createWebhook(): void {
         const result = this.createSubscriptionForm.value as WebhookSubscriptionInput;
-        this.activeModal.close(result);
+        this.activeModal.close({ action: WebhookSubscriptionModalAction.CREATE, payload: result });
+    }
+
+    public updateWebhook(): void {
+        const result = this.createSubscriptionForm.value as WebhookSubscriptionInput;
+        this.activeModal.close({ action: WebhookSubscriptionModalAction.UPDATE, payload: result });
+    }
+
+    public verifyNow(): void {
+        this.activeModal.close({ action: WebhookSubscriptionModalAction.VERIFY });
     }
 
     private eventTypesMapper(name: string): string {

@@ -9,23 +9,25 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, O
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
-import { NavigationService } from "src/app/services/navigation.service";
 import { CreateSubscriptionModalComponent } from "./create-subscription-modal/create-subscription-modal.component";
 import { MatTableDataSource } from "@angular/material/table";
 import {
     DatasetBasicsFragment,
-    PageBasedInfo,
     WebhookSubscription,
-    WebhookSubscriptionInput,
     WebhookSubscriptionStatus,
 } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetWebhooksService } from "./service/dataset-webhooks.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { filter, from, switchMap } from "rxjs";
-import { CreateWebhookSubscriptionSucces } from "./create-subscription-modal/create-subscription-modal.model";
+import { finalize, from, of, switchMap } from "rxjs";
+import {
+    CreateWebhookSubscriptionSucces,
+    WebhookSubscriptionModalAction,
+    WebhookSubscriptionModalActionResult,
+} from "./create-subscription-modal/create-subscription-modal.model";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { ModalService } from "src/app/common/components/modal/modal.service";
+import { WebhooksHelpers } from "./webhooks.helpers";
 
 @Component({
     selector: "app-dataset-settings-webhooks-tab",
@@ -36,14 +38,11 @@ import { ModalService } from "src/app/common/components/modal/modal.service";
 export class DatasetSettingsWebhooksTabComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_SETTINGS_WEBHOOKS_KEY) public webhooksViewData: DatasetViewData;
     public dataSource = new MatTableDataSource();
-    public currentPage = 1;
-    public pageBasedInfo: PageBasedInfo;
-    public readonly PER_PAGE = 15;
 
+    public isLoaded: boolean = false;
     public readonly DISPLAY_COLUMNS: string[] = ["event", "status", "actions"];
     public readonly WebhookSubscriptionStatus: typeof WebhookSubscriptionStatus = WebhookSubscriptionStatus;
 
-    private navigationService = inject(NavigationService);
     private ngbModalService = inject(NgbModal);
     private datasetWebhooksService = inject(DatasetWebhooksService);
     private cdr = inject(ChangeDetectorRef);
@@ -56,7 +55,14 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
     private updateTable(): void {
         this.datasetWebhooksService
             .datasetWebhookSubscriptions(this.datasetBasics.id)
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(
+                finalize(() => {
+                    this.isLoaded = true;
+                    this.cdr.detectChanges();
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+
             .subscribe((data: WebhookSubscription[]) => {
                 this.dataSource.data = data;
                 this.cdr.detectChanges();
@@ -74,30 +80,61 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
 
         from(modalRef.result)
             .pipe(
-                filter((data) => !!data),
-                switchMap((result: WebhookSubscriptionInput) =>
-                    this.datasetWebhooksService.datasetWebhookCreateSubscription(this.datasetBasics.id, result),
+                switchMap((result: WebhookSubscriptionModalActionResult) =>
+                    result.payload
+                        ? this.datasetWebhooksService.datasetWebhookCreateSubscription(
+                              this.datasetBasics.id,
+                              result.payload,
+                          )
+                        : of(),
                 ),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe((data: CreateWebhookSubscriptionSucces | null) => {
                 if (data) {
-                    const modalRef = this.ngbModalService.open(CreateSubscriptionModalComponent);
+                    const modalRef = this.ngbModalService.open(CreateSubscriptionModalComponent, {
+                        backdrop: "static",
+                        keyboard: false,
+                    });
                     const modalRefInstance = modalRef.componentInstance as CreateSubscriptionModalComponent;
                     modalRefInstance.datasetBasics = this.webhooksViewData.datasetBasics;
                     modalRefInstance.subscriptionData = data;
+
+                    from(modalRef.result)
+                        .pipe(
+                            switchMap((result: WebhookSubscriptionModalActionResult) => {
+                                if (result.action === WebhookSubscriptionModalAction.CLOSE) {
+                                    this.updateTable();
+                                }
+                                return of();
+                            }),
+                            takeUntilDestroyed(this.destroyRef),
+                        )
+                        .subscribe();
                 }
             });
     }
 
     public removeWebhook(subscriptionId: string): void {
-        this.datasetWebhooksService
-            .datasetWebhookRemoveSubscription(this.datasetBasics.id, subscriptionId)
-            .subscribe((result: boolean) => {
-                if (result) {
-                    this.updateTable();
-                }
-            });
+        promiseWithCatch(
+            this.modalService.error({
+                title: "Remove webhook",
+                message: `Do you want to remove webhook?`,
+                yesButtonText: "Ok",
+                noButtonText: "Cancel",
+                handler: (ok) => {
+                    if (ok) {
+                        this.datasetWebhooksService
+                            .datasetWebhookRemoveSubscription(this.datasetBasics.id, subscriptionId)
+                            .subscribe((result: boolean) => {
+                                if (result) {
+                                    this.updateTable();
+                                }
+                            });
+                    }
+                },
+            }),
+        );
     }
 
     public pauseWebhook(subscriptionId: string): void {
@@ -127,5 +164,46 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
                 yesButtonText: "Ok",
             }),
         );
+    }
+
+    public editWebhook(subscription: WebhookSubscription): void {
+        const modalRef = this.ngbModalService.open(CreateSubscriptionModalComponent);
+        const modalRefInstance = modalRef.componentInstance as CreateSubscriptionModalComponent;
+        modalRefInstance.datasetBasics = this.webhooksViewData.datasetBasics;
+        modalRefInstance.subscriptionData = {
+            input: {
+                targetUrl: subscription.targetUrl,
+                label: subscription.label,
+                eventTypes: subscription.eventTypes,
+            },
+            subscriptionId: subscription.id,
+            status: subscription.status,
+        };
+
+        from(modalRef.result)
+            .pipe(
+                switchMap((result: WebhookSubscriptionModalActionResult) =>
+                    result.payload
+                        ? this.datasetWebhooksService.datasetWebhookUpdateSubscription({
+                              datasetId: this.datasetBasics.id,
+                              id: subscription.id,
+                              input: result.payload,
+                          })
+                        : of(false),
+                ),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe((result: boolean) => {
+                if (result) {
+                    this.updateTable();
+                }
+            });
+    }
+
+    public webhookStatusBadgeOptions(status: WebhookSubscriptionStatus): {
+        iconName: string;
+        className: string;
+    } {
+        return WebhooksHelpers.webhookStatusBadgeOptions(status);
     }
 }

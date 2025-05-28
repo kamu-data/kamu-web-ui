@@ -39,8 +39,21 @@ p {
     background-color: #d8d9f1;
 }
 
+.status-unverified {
+    color: #74758c;
+    background-color: #edeef0;
+}
+
+.status-unreachable {
+    color: #d80d20;
+    background-color: #ffeef3;
+}
+
 .mat-icon-size {
-    transform: scale(0.75);
+    font-size: 18px;
+    width: 100%;
+    height: 100%;
+    margin-right: 3px;
 }
 
 .mat-icon-action-size {
@@ -49,4 +62,8 @@ p {
     &:hover {
         cursor: pointer;
     }
+}
+
+.mb-100 {
+    margin-bottom: 100px;
 }

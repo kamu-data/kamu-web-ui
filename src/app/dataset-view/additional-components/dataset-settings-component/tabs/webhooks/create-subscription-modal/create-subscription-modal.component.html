@@ -10,7 +10,7 @@
             class="btn-close"
             aria-label="Close"
             (keydown.esc)="activeModal.close()"
-            (click)="activeModal.close()"
+            (click)="activeModal.close({ action: WebhookSubscriptionModalAction.CLOSE })"
         ></button>
     </div>
 </div>
@@ -23,7 +23,18 @@
         <div class="d-flex flex-column">
             <label for="" class="form-label">Target URL <span class="text-danger">*</span></label>
             <input type="text" data-test-id="target-url" formControlName="targetUrl" class="w-100 form-control" />
-            <p class="text-muted pt-1 fs-12">
+            <div *ngIf="targetUrlControl?.invalid && (targetUrlControl?.touched || targetUrlControl?.dirty)">
+                <div *ngIf="targetUrlControl?.errors?.required">
+                    <span class="text-danger fs-12" data-test-id="error-name-required"> Target URL is required</span>
+                </div>
+                <div *ngIf="targetUrlControl?.errors?.pattern">
+                    <span class="text-danger fs-12" data-test-id="error-name-pattern">
+                        The value must start with 'https' for security reasons</span
+                    >
+                </div>
+            </div>
+
+            <p class="text-muted fs-12">
                 Must be publicly reachable via HTTPS. Localhost and private Ips are not allowed
             </p>
         </div>
@@ -40,24 +51,46 @@
                     <label class="fs-14 inline-block"> {{ item.name }} </label>
                 </ng-template>
             </ng-select>
+            <div *ngIf="eventTypesControl?.invalid && (eventTypesControl?.touched || eventTypesControl?.dirty)">
+                <div *ngIf="eventTypesControl?.errors?.required">
+                    <span class="text-danger fs-12" data-test-id="error-name-pattern">
+                        Event selection is required</span
+                    >
+                </div>
+            </div>
         </div>
         <div class="d-flex flex-column mt-4">
             <label for="" class="form-label">Label </label>
             <input type="text" data-test-id="target-url" formControlName="label" class="w-100 form-control" />
-            <p class="text-muted pt-1 fs-12">Optinal unique label to identify this webhook subscription</p>
+            <p class="text-muted fs-12">Optinal unique label to identify this webhook subscription</p>
         </div>
     </form>
+    <div class="d-flex flex-column" *ngIf="subscriptionData?.secret">
+        <label for="" class="form-label">Secret </label>
+        <div class="d-flex gap-2">
+            <input
+                type="text"
+                data-test-id="subscription-secret"
+                [title]="secret"
+                [(ngModel)]="secret"
+                class="form-control w-75"
+            />
+            <button type="button" [disabled]="true" class="btn btn-primary" data-test-id="rotate-secret-btn">
+                Rotate secret
+            </button>
+        </div>
+    </div>
 </div>
 
-<div class="p-4 d-flex justify-content-end">
-    <button type="button" (click)="activeModal.close()" class="btn btn-light me-2" data-test-id="save-member">
+<div class="px-4 pt-4 pb-2 d-flex" *ngIf="!subscriptionData?.secret">
+    <button type="button" (click)="activeModal.close()" class="btn btn-light flex-fill me-2" data-test-id="save-member">
         Cancel
     </button>
     <button
         type="button"
         (click)="createWebhook()"
         [disabled]="createSubscriptionForm.invalid"
-        class="btn btn-success"
+        class="btn btn-success flex-fill"
         data-test-id="create-subscription"
         *ngIf="!subscriptionData"
     >
@@ -65,12 +98,27 @@
     </button>
     <button
         type="button"
-        (click)="createWebhook()"
+        (click)="updateWebhook()"
         [disabled]="createSubscriptionForm.invalid"
-        class="btn btn-success"
+        class="btn btn-success flex-fill"
         data-test-id="create-subscription"
         *ngIf="subscriptionData"
     >
         Update
+    </button>
+</div>
+<div class="d-flex px-4 pb-4">
+    <button
+        *ngIf="
+            subscriptionData?.secret ||
+            (subscriptionData && subscriptionData.status === WebhookSubscriptionStatus.Unverified)
+        "
+        [disabled]="true"
+        type="button"
+        (click)="verifyNow()"
+        class="btn btn-primary flex-fill"
+        data-test-id="subscription-verify-btn"
+    >
+        Verify now
     </button>
 </div>

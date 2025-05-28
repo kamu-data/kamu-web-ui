@@ -17,6 +17,8 @@ import {
     DatasetWebhookResumeSubscriptionMutation,
     DatasetWebhookSubscriptionsGQL,
     DatasetWebhookSubscriptionsQuery,
+    DatasetWebhookUpdateSubscriptionGQL,
+    DatasetWebhookUpdateSubscriptionMutation,
     WebhookEventTypesGQL,
     WebhookEventTypesQuery,
     WebhookSubscriptionInput,
@@ -35,6 +37,7 @@ export class WebhooksApi {
     private datasetWebhookRemoveSubscriptionGQL = inject(DatasetWebhookRemoveSubscriptionGQL);
     private datasetWebhookPauseSubscriptionGQL = inject(DatasetWebhookPauseSubscriptionGQL);
     private datasetWebhookResumeSubscriptionGQL = inject(DatasetWebhookResumeSubscriptionGQL);
+    private datasetWebhookUpdateSubscriptionGQL = inject(DatasetWebhookUpdateSubscriptionGQL);
 
     public webhookEventTypes(): Observable<WebhookEventTypesQuery> {
         return this.webhookEventTypesGQL.watch().valueChanges.pipe(
@@ -112,6 +115,24 @@ export class WebhooksApi {
         return this.datasetWebhookResumeSubscriptionGQL.mutate({ datasetId, id }).pipe(
             first(),
             map((result: MutationResult<DatasetWebhookResumeSubscriptionMutation>) => {
+                /* istanbul ignore else */
+                if (result.data) {
+                    return result.data;
+                } else {
+                    throw new DatasetOperationError(result.errors ?? []);
+                }
+            }),
+        );
+    }
+
+    public datasetWebhookUpdateSubscription(params: {
+        datasetId: string;
+        id: string;
+        input: WebhookSubscriptionInput;
+    }): Observable<DatasetWebhookUpdateSubscriptionMutation> {
+        return this.datasetWebhookUpdateSubscriptionGQL.mutate(params).pipe(
+            first(),
+            map((result: MutationResult<DatasetWebhookUpdateSubscriptionMutation>) => {
                 /* istanbul ignore else */
                 if (result.data) {
                     return result.data;

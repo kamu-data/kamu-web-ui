@@ -5,15 +5,27 @@
  * included in the LICENSE file.
  */
 
-import { WebhookSubscriptionInput } from "src/app/api/kamu.graphql.interface";
+import { WebhookSubscriptionInput, WebhookSubscriptionStatus } from "src/app/api/kamu.graphql.interface";
 export interface SubscribedEventType {
     name: string;
     value: string;
 }
 
 export interface CreateWebhookSubscriptionSucces {
-    datasetId: string;
     input: WebhookSubscriptionInput;
     subscriptionId: string;
+    status?: WebhookSubscriptionStatus;
     secret?: string;
+}
+
+export enum WebhookSubscriptionModalAction {
+    CREATE = "create",
+    UPDATE = "update",
+    VERIFY = "werify",
+    CLOSE = "close",
+}
+
+export interface WebhookSubscriptionModalActionResult {
+    action: WebhookSubscriptionModalAction;
+    payload?: WebhookSubscriptionInput;
 }

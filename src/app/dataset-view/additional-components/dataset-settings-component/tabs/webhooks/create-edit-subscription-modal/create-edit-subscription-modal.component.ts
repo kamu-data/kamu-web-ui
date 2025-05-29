@@ -37,7 +37,6 @@ export class CreateEditSubscriptionModalComponent extends BaseComponent implemen
 
     public dropdownList: SubscribedEventType[] = [];
     public secret: MaybeUndefined<string>;
-    public secretRotate: MaybeUndefined<string>;
     public readonly WebhookSubscriptionStatus: typeof WebhookSubscriptionStatus = WebhookSubscriptionStatus;
     public readonly WebhookSubscriptionModalAction: typeof WebhookSubscriptionModalAction =
         WebhookSubscriptionModalAction;

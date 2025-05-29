@@ -28,6 +28,7 @@ import {
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { WebhooksHelpers } from "./webhooks.helpers";
+import { RotateSecretSubscriptionModalComponent } from "./rotate-secret-subscription-modal/rotate-secret-subscription-modal.component";
 
 @Component({
     selector: "app-dataset-settings-webhooks-tab",
@@ -146,6 +147,10 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
                     this.updateTable();
                 }
             });
+    }
+
+    public openRotateSecretModal(): void {
+        this.ngbModalService.open(RotateSecretSubscriptionModalComponent);
     }
 
     public resumeWebhook(subscriptionId: string): void {

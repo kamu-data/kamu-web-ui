@@ -100,6 +100,7 @@ import { EditCollaboratorModalComponent } from "./additional-components/dataset-
 import { DatasetSettingsWebhooksTabComponent } from "./additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component";
 import { CreateEditSubscriptionModalComponent } from "./additional-components/dataset-settings-component/tabs/webhooks/create-edit-subscription-modal/create-edit-subscription-modal.component";
 import { NgSelectModule } from "@ng-select/ng-select";
+import { RotateSecretSubscriptionModalComponent } from './additional-components/dataset-settings-component/tabs/webhooks/rotate-secret-subscription-modal/rotate-secret-subscription-modal.component';
 @NgModule({
     imports: [
         DynamicTableModule,
@@ -220,6 +221,7 @@ import { NgSelectModule } from "@ng-select/ng-select";
         EditCollaboratorModalComponent,
         DatasetSettingsWebhooksTabComponent,
         CreateEditSubscriptionModalComponent,
+        RotateSecretSubscriptionModalComponent,
     ],
 })
 export class DatasetViewModule {}

@@ -86,6 +86,13 @@
                                 >pause</mat-icon
                             >
                             <mat-icon
+                                class="mat-icon-action-size"
+                                (click)="openRotateSecretModal()"
+                                *ngIf="element.status === WebhookSubscriptionStatus.Enabled"
+                                [title]="'rotate secret'"
+                                >key</mat-icon
+                            >
+                            <mat-icon
                                 (click)="removeWebhook(element.id)"
                                 class="mat-icon-action-size"
                                 [title]="'delete'"

@@ -120,8 +120,9 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
             this.modalService.error({
                 title: "Remove webhook subscription",
                 message: `Do you want to remove webhook subscription?`,
-                yesButtonText: "Ok",
+                bigTextBlock: "Ok",
                 noButtonText: "Cancel",
+                yesButtonText: "Ok",
                 handler: (ok) => {
                     if (ok) {
                         this.datasetWebhooksService

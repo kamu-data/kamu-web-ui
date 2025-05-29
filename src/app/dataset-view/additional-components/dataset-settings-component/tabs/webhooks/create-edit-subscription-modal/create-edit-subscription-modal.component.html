@@ -65,27 +65,73 @@
             <p class="text-muted fs-12">Optinal unique label to identify this webhook subscription</p>
         </div>
     </form>
-    <div class="d-flex flex-column" *ngIf="subscriptionData?.secret">
+
+    <ng-container *ngIf="subscriptionData">
         <label for="" class="form-label">Secret </label>
-        <div class="d-flex gap-2">
-            <input
-                type="text"
-                data-test-id="subscription-secret"
-                [title]="secret"
-                [(ngModel)]="secret"
-                class="form-control w-75"
-            />
+        <div class="d-flex flex-column gap-3" *ngIf="!subscriptionData.secret">
+            <div class="d-flex flex-row">
+                <input
+                    type="text"
+                    data-test-id="subscription-secret-rotate"
+                    [title]="secret"
+                    [(ngModel)]="secretRotate"
+                    class="form-control w-100"
+                    readonly
+                />
+                <button
+                    (click)="copyToClipboard($event, secretRotate!)"
+                    data-test-id="copyToClipboard-secret"
+                    aria-label="Copy to clipboard"
+                    class="copy-button-data-access ms-1"
+                    tabindex="0"
+                    role="button"
+                    [disabled]="!secretRotate"
+                >
+                    <div style="position: relative; display: inline-block">
+                        <mat-icon class="mat-icon-svg-size" svgIcon="copy" />
+                    </div>
+                    <div style="position: relative; display: none">
+                        <mat-icon class="mat-icon-svg-size" svgIcon="checked" />
+                    </div>
+                </button>
+            </div>
             <button
-                appFeatureFlag="dataset.panel.settings.webhooks.rotateSecret"
                 type="button"
                 [disabled]="true"
-                class="btn btn-primary"
+                class="btn btn-primary d-block flex-fill"
                 data-test-id="rotate-secret-btn"
+                appFeatureFlag="dataset.panel.settings.webhooks.rotateSecret"
             >
                 Rotate secret
             </button>
         </div>
-    </div>
+
+        <div class="d-flex gap-2" *ngIf="subscriptionData.secret">
+            <input
+                type="text"
+                data-test-id="subscription-secret-created"
+                [title]="secret"
+                [(ngModel)]="secret"
+                class="form-control w-100"
+                readonly
+            />
+            <button
+                (click)="copyToClipboard($event, subscriptionData.secret)"
+                data-test-id="copyToClipboard-secret"
+                aria-label="Copy to clipboard"
+                class="copy-button-data-access ms-1"
+                tabindex="0"
+                role="button"
+            >
+                <div style="position: relative; display: inline-block">
+                    <mat-icon class="mat-icon-svg-size" svgIcon="copy" />
+                </div>
+                <div style="position: relative; display: none">
+                    <mat-icon class="mat-icon-svg-size" svgIcon="checked" />
+                </div>
+            </button>
+        </div>
+    </ng-container>
 </div>
 
 <div class="px-4 pt-4 pb-2 d-flex" *ngIf="!subscriptionData?.secret">
@@ -98,7 +144,6 @@
         [disabled]="createSubscriptionForm.invalid"
         class="btn btn-success flex-fill"
         [attr.data-test-id]="subscriptionData ? 'update-subscription' : 'create-subscription'"
-        *ngIf="!subscriptionData"
     >
         {{ subscriptionData ? "Update" : "Create" }}
     </button>

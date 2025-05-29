@@ -23,6 +23,8 @@ import {
     WebhookSubscriptionModalAction,
 } from "./create-edit-subscription-modal.model";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
+import { Clipboard } from "@angular/cdk/clipboard";
+import { changeCopyIcon } from "src/app/common/helpers/app.helpers";
 
 @Component({
     selector: "app-create-edit-subscription-modal",
@@ -35,6 +37,7 @@ export class CreateEditSubscriptionModalComponent extends BaseComponent implemen
 
     public dropdownList: SubscribedEventType[] = [];
     public secret: MaybeUndefined<string>;
+    public secretRotate: MaybeUndefined<string>;
     public readonly WebhookSubscriptionStatus: typeof WebhookSubscriptionStatus = WebhookSubscriptionStatus;
     public readonly WebhookSubscriptionModalAction: typeof WebhookSubscriptionModalAction =
         WebhookSubscriptionModalAction;
@@ -42,6 +45,7 @@ export class CreateEditSubscriptionModalComponent extends BaseComponent implemen
     public activeModal = inject(NgbActiveModal);
     private fb = inject(FormBuilder);
     private webhooksService = inject(WebhooksService);
+    private clipboard = inject(Clipboard);
 
     public ngOnInit(): void {
         this.webhooksService
@@ -88,6 +92,11 @@ export class CreateEditSubscriptionModalComponent extends BaseComponent implemen
 
     public verifyNow(): void {
         this.activeModal.close({ action: WebhookSubscriptionModalAction.VERIFY });
+    }
+
+    public copyToClipboard(event: MouseEvent, text: string): void {
+        this.clipboard.copy(text);
+        changeCopyIcon(event);
     }
 
     private eventTypesMapper(name: string): string {

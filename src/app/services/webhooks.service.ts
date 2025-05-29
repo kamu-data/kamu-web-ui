@@ -7,7 +7,7 @@
 
 import { inject, Injectable } from "@angular/core";
 import { WebhooksApi } from "../api/webhooks.api";
-import { map, Observable } from "rxjs";
+import { map, Observable, shareReplay } from "rxjs";
 import { WebhookEventTypesQuery } from "../api/kamu.graphql.interface";
 
 @Injectable({
@@ -21,6 +21,7 @@ export class WebhooksService {
             map((result: WebhookEventTypesQuery) => {
                 return result.webhooks.eventTypes;
             }),
+            shareReplay(),
         );
     }
 }

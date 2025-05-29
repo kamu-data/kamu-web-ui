@@ -268,7 +268,21 @@
               },
               {
                 "id": "webhooks",
-                "developmentState": "stable"
+                "developmentState": "stable",
+                "subfeatures": [
+                  {
+                    "id": "viewDeliveryReport",
+                    "developmentState": "mockup"
+                  },
+                  {
+                    "id": "rotateSecret",
+                    "developmentState": "mockup"
+                  },
+                  {
+                    "id": "verifyNow",
+                    "developmentState": "mockup"
+                  }
+                ]
               }
             ]
           }

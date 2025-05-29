@@ -41,7 +41,7 @@
         <div class="d-flex flex-column">
             <label for="" class="form-label">Subscribed events <span class="text-danger">*</span></label>
             <ng-select
-                [items]="DROPDOWN_LIST"
+                [items]="dropdownList"
                 bindLabel="name"
                 bindValue="value"
                 formControlName="eventTypes"
@@ -75,7 +75,13 @@
                 [(ngModel)]="secret"
                 class="form-control w-75"
             />
-            <button type="button" [disabled]="true" class="btn btn-primary" data-test-id="rotate-secret-btn">
+            <button
+                appFeatureFlag="dataset.panel.settings.webhooks.rotateSecret"
+                type="button"
+                [disabled]="true"
+                class="btn btn-primary"
+                data-test-id="rotate-secret-btn"
+            >
                 Rotate secret
             </button>
         </div>
@@ -88,26 +94,16 @@
     </button>
     <button
         type="button"
-        (click)="createWebhook()"
+        (click)="subscriptionData ? updateWebhook() : createWebhook()"
         [disabled]="createSubscriptionForm.invalid"
         class="btn btn-success flex-fill"
-        data-test-id="create-subscription"
+        [attr.data-test-id]="subscriptionData ? 'update-subscription' : 'create-subscription'"
         *ngIf="!subscriptionData"
     >
-        Create
-    </button>
-    <button
-        type="button"
-        (click)="updateWebhook()"
-        [disabled]="createSubscriptionForm.invalid"
-        class="btn btn-success flex-fill"
-        data-test-id="create-subscription"
-        *ngIf="subscriptionData"
-    >
-        Update
+        {{ subscriptionData ? "Update" : "Create" }}
     </button>
 </div>
-<div class="d-flex px-4 pb-4">
+<div class="d-flex px-4 pb-4" appFeatureFlag="dataset.panel.settings.webhooks.verifyNow">
     <button
         *ngIf="
             subscriptionData?.secret ||

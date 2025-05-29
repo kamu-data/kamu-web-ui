@@ -18,22 +18,22 @@ import { WebhooksService } from "src/app/services/webhooks.service";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
-    CreateWebhookSubscriptionSucces,
+    CreateWebhookSubscriptionSuccess,
     SubscribedEventType,
     WebhookSubscriptionModalAction,
-} from "./create-subscription-modal.model";
-import { MaybeUndefined } from "src/app/interface/app.types";
+} from "./create-edit-subscription-modal.model";
+import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 
 @Component({
-    selector: "app-create-subscription-modal",
-    templateUrl: "./create-subscription-modal.component.html",
+    selector: "app-create-edit-subscription-modal",
+    templateUrl: "./create-edit-subscription-modal.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateSubscriptionModalComponent extends BaseComponent implements OnInit {
+export class CreateEditSubscriptionModalComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    @Input() public subscriptionData: CreateWebhookSubscriptionSucces;
+    @Input() public subscriptionData: MaybeNull<CreateWebhookSubscriptionSuccess>;
 
-    public DROPDOWN_LIST: SubscribedEventType[] = [];
+    public dropdownList: SubscribedEventType[] = [];
     public secret: MaybeUndefined<string>;
     public readonly WebhookSubscriptionStatus: typeof WebhookSubscriptionStatus = WebhookSubscriptionStatus;
     public readonly WebhookSubscriptionModalAction: typeof WebhookSubscriptionModalAction =
@@ -48,7 +48,7 @@ export class CreateSubscriptionModalComponent extends BaseComponent implements O
             .eventTypes()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((eventTypes: string[]) => {
-                this.DROPDOWN_LIST = eventTypes.map((eventType) => {
+                this.dropdownList = eventTypes.map((eventType) => {
                     return { name: this.eventTypesMapper(eventType), value: eventType };
                 });
                 if (this.subscriptionData) {
@@ -57,7 +57,7 @@ export class CreateSubscriptionModalComponent extends BaseComponent implements O
                         eventTypes: this.subscriptionData.input.eventTypes,
                         label: this.subscriptionData.input.label,
                     });
-                    this.secret = this.subscriptionData?.secret;
+                    this.secret = this.subscriptionData.secret;
                 }
             });
     }

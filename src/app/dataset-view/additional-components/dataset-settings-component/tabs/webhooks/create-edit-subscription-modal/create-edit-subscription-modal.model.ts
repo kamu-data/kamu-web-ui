@@ -11,7 +11,7 @@ export interface SubscribedEventType {
     value: string;
 }
 
-export interface CreateWebhookSubscriptionSucces {
+export interface CreateWebhookSubscriptionSuccess {
     input: WebhookSubscriptionInput;
     subscriptionId: string;
     status?: WebhookSubscriptionStatus;

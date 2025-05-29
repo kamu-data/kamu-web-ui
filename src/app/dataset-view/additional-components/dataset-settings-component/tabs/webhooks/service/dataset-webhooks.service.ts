@@ -19,7 +19,7 @@ import {
     WebhookSubscriptionInput,
 } from "src/app/api/kamu.graphql.interface";
 import { WebhooksApi } from "src/app/api/webhooks.api";
-import { CreateWebhookSubscriptionSucces } from "../create-subscription-modal/create-subscription-modal.model";
+import { CreateWebhookSubscriptionSuccess } from "../create-edit-subscription-modal/create-edit-subscription-modal.model";
 
 @Injectable({
     providedIn: "root",
@@ -39,7 +39,7 @@ export class DatasetWebhooksService {
     public datasetWebhookCreateSubscription(
         datasetId: string,
         input: WebhookSubscriptionInput,
-    ): Observable<CreateWebhookSubscriptionSucces | null> {
+    ): Observable<CreateWebhookSubscriptionSuccess | null> {
         return this.webhooksApi.datasetWebhookCreateSubscription(datasetId, input).pipe(
             map((data: DatasetWebhookCreateSubscriptionMutation) => {
                 if (
@@ -67,7 +67,7 @@ export class DatasetWebhooksService {
                     this.toastrService.success(data.datasets.byId?.webhooks.subscription?.remove.message);
                     return true;
                 } else {
-                    this.toastrService.error("Webhook not deleted");
+                    this.toastrService.error("Webhook subscription not deleted");
                     return false;
                 }
             }),

@@ -6,17 +6,17 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { CreateSubscriptionModalComponent } from "./create-subscription-modal.component";
+import { CreateEditSubscriptionModalComponent } from "./create-edit-subscription-modal.component";
 
-describe("CreateSubscriptionModalComponent", () => {
-    let component: CreateSubscriptionModalComponent;
-    let fixture: ComponentFixture<CreateSubscriptionModalComponent>;
+describe("CreateEditSubscriptionModalComponent", () => {
+    let component: CreateEditSubscriptionModalComponent;
+    let fixture: ComponentFixture<CreateEditSubscriptionModalComponent>;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [CreateSubscriptionModalComponent],
+            declarations: [CreateEditSubscriptionModalComponent],
         });
-        fixture = TestBed.createComponent(CreateSubscriptionModalComponent);
+        fixture = TestBed.createComponent(CreateEditSubscriptionModalComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

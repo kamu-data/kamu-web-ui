@@ -98,7 +98,7 @@ import { DatasetSettingsAccessTabComponent } from "./additional-components/datas
 import { AddPeopleModalComponent } from "./additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/add-people-modal/add-people-modal.component";
 import { EditCollaboratorModalComponent } from "./additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/edit-collaborator-modal/edit-collaborator-modal.component";
 import { DatasetSettingsWebhooksTabComponent } from "./additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component";
-import { CreateSubscriptionModalComponent } from "./additional-components/dataset-settings-component/tabs/webhooks/create-subscription-modal/create-subscription-modal.component";
+import { CreateEditSubscriptionModalComponent } from "./additional-components/dataset-settings-component/tabs/webhooks/create-edit-subscription-modal/create-edit-subscription-modal.component";
 import { NgSelectModule } from "@ng-select/ng-select";
 @NgModule({
     imports: [
@@ -219,7 +219,7 @@ import { NgSelectModule } from "@ng-select/ng-select";
         AddPeopleModalComponent,
         EditCollaboratorModalComponent,
         DatasetSettingsWebhooksTabComponent,
-        CreateSubscriptionModalComponent,
+        CreateEditSubscriptionModalComponent,
     ],
 })
 export class DatasetViewModule {}

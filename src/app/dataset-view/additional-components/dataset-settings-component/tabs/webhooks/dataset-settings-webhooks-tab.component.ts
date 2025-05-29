@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, O
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
-import { CreateSubscriptionModalComponent } from "./create-subscription-modal/create-subscription-modal.component";
+import { CreateEditSubscriptionModalComponent } from "./create-edit-subscription-modal/create-edit-subscription-modal.component";
 import { MatTableDataSource } from "@angular/material/table";
 import {
     DatasetBasicsFragment,
@@ -21,10 +21,10 @@ import { DatasetWebhooksService } from "./service/dataset-webhooks.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { finalize, from, of, switchMap } from "rxjs";
 import {
-    CreateWebhookSubscriptionSucces,
+    CreateWebhookSubscriptionSuccess,
     WebhookSubscriptionModalAction,
     WebhookSubscriptionModalActionResult,
-} from "./create-subscription-modal/create-subscription-modal.model";
+} from "./create-edit-subscription-modal/create-edit-subscription-modal.model";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { WebhooksHelpers } from "./webhooks.helpers";
@@ -74,8 +74,8 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
     }
 
     public createWebhook(): void {
-        const modalRef = this.ngbModalService.open(CreateSubscriptionModalComponent);
-        const modalRefInstance = modalRef.componentInstance as CreateSubscriptionModalComponent;
+        const modalRef = this.ngbModalService.open(CreateEditSubscriptionModalComponent);
+        const modalRefInstance = modalRef.componentInstance as CreateEditSubscriptionModalComponent;
         modalRefInstance.datasetBasics = this.webhooksViewData.datasetBasics;
 
         from(modalRef.result)
@@ -90,13 +90,13 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
                 ),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe((data: CreateWebhookSubscriptionSucces | null) => {
+            .subscribe((data: CreateWebhookSubscriptionSuccess | null) => {
                 if (data) {
-                    const modalRef = this.ngbModalService.open(CreateSubscriptionModalComponent, {
+                    const modalRef = this.ngbModalService.open(CreateEditSubscriptionModalComponent, {
                         backdrop: "static",
                         keyboard: false,
                     });
-                    const modalRefInstance = modalRef.componentInstance as CreateSubscriptionModalComponent;
+                    const modalRefInstance = modalRef.componentInstance as CreateEditSubscriptionModalComponent;
                     modalRefInstance.datasetBasics = this.webhooksViewData.datasetBasics;
                     modalRefInstance.subscriptionData = data;
 
@@ -118,8 +118,8 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
     public removeWebhook(subscriptionId: string): void {
         promiseWithCatch(
             this.modalService.error({
-                title: "Remove webhook",
-                message: `Do you want to remove webhook?`,
+                title: "Remove webhook subscription",
+                message: `Do you want to remove webhook subscription?`,
                 yesButtonText: "Ok",
                 noButtonText: "Cancel",
                 handler: (ok) => {
@@ -157,7 +157,7 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
             });
     }
 
-    public viewWebhook(): void {
+    public viewDeliveryReport(): void {
         promiseWithCatch(
             this.modalService.warning({
                 message: "Feature coming soon",
@@ -167,8 +167,8 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
     }
 
     public editWebhook(subscription: WebhookSubscription): void {
-        const modalRef = this.ngbModalService.open(CreateSubscriptionModalComponent);
-        const modalRefInstance = modalRef.componentInstance as CreateSubscriptionModalComponent;
+        const modalRef = this.ngbModalService.open(CreateEditSubscriptionModalComponent);
+        const modalRefInstance = modalRef.componentInstance as CreateEditSubscriptionModalComponent;
         modalRefInstance.datasetBasics = this.webhooksViewData.datasetBasics;
         modalRefInstance.subscriptionData = {
             input: {

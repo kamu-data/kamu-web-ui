@@ -99,7 +99,7 @@
         >
             Login
         </button>
-        <div *ngIf="passwordLoginError$ | async as passwordLoginError" class="mt-4">
+        <div *ngIf="passwordLoginError$ | async as passwordLoginError" class="mt-2">
             <div class="error-block" data-test-id="password-method-error">{{ passwordLoginError }}</div>
         </div>
         <div class="mt-30" *ngIf="enableTermsOfService">

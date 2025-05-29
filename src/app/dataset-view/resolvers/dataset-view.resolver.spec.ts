@@ -16,10 +16,12 @@ import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "src/app/api/mock/dataset.m
 import ProjectLinks from "src/app/project-links";
 import { Observable, of, Subject, throwError } from "rxjs";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
+import { LocalStorageService } from "src/app/services/local-storage.service";
 
 describe("datasetViewResolverFn", () => {
     let datasetService: DatasetService;
     let navigationService: NavigationService;
+    let localStorageService: LocalStorageService;
 
     const executeResolver: ResolveFn<DatasetViewData> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => datasetViewResolverFn(...resolverParameters));
@@ -30,6 +32,7 @@ describe("datasetViewResolverFn", () => {
         });
         datasetService = TestBed.inject(DatasetService);
         navigationService = TestBed.inject(NavigationService);
+        localStorageService = TestBed.inject(LocalStorageService);
         spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
     });
 
@@ -63,6 +66,7 @@ describe("datasetViewResolverFn", () => {
             throwError(() => new Error("failed")),
         );
         const navigateToPageNotFoundSpy = spyOn(navigationService, "navigateToPageNotFound");
+        const setRedirectAfterLoginUrlSpy = spyOn(localStorageService, "setRedirectAfterLoginUrl");
         const routeSnapshot = {
             paramMap: convertToParamMap({
                 [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME,
@@ -79,6 +83,7 @@ describe("datasetViewResolverFn", () => {
             complete: () => {
                 expect(requestDatasetMainDataSpy).toHaveBeenCalledTimes(1);
                 expect(navigateToPageNotFoundSpy).toHaveBeenCalledTimes(1);
+                expect(setRedirectAfterLoginUrlSpy).toHaveBeenCalledOnceWith(mockState.url);
             },
         });
     });

@@ -85,6 +85,8 @@ import { accountSettingsActiveTabResolverFn } from "./account/settings/resolver/
 import { accountActiveTabResolverFn } from "./account/resolver/account-active-tab.resolver";
 import { datasetViewActiveTabResolverFn } from "./dataset-view/resolvers/dataset-view-active-tab.resolver";
 import { flowDetailsActiveTabResolverFn } from "./dataset-flow/dataset-flow-details/resolvers/flow-details-active-tab.resolver";
+import { AccountTabComponent } from "./account/settings/tabs/account-tab/account-tab.component";
+import { SettingsTabComponent } from "./account/additional-components/settings-tab/settings-tab.component";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -158,6 +160,13 @@ export const routes: Routes = [
                 runGuardsAndResolvers: "always",
                 resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_EMAIL_KEY]: accountSettingsEmailResolverFn },
             },
+            {
+                path: AccountSettingsTabs.ACCOUNT,
+                component: AccountTabComponent,
+                data: {
+                    [ProjectLinks.URL_PARAM_TAB]: AccountSettingsTabs.ACCOUNT,
+                },
+            },
         ],
     },
     {
@@ -192,7 +201,16 @@ export const routes: Routes = [
                                 data: {
                                     [ProjectLinks.URL_PARAM_TAB]: AccountTabs.FLOWS,
                                 },
+                                canActivate: [AuthenticatedGuard],
                                 component: AccountFlowsTabComponent,
+                            },
+                            {
+                                path: AccountTabs.SETTINGS,
+                                data: {
+                                    [ProjectLinks.URL_PARAM_TAB]: AccountTabs.SETTINGS,
+                                },
+                                canActivate: [AuthenticatedGuard],
+                                component: SettingsTabComponent,
                             },
                         ],
                     },

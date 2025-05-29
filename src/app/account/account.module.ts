@@ -23,9 +23,11 @@ import { FlowsViewModule } from "../dataset-flow/flows-view.module";
 import { FeatureFlagModule } from "../common/directives/feature-flag.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { DisplayAccountNameModule } from "../common/pipes/display-account-name.module";
+import { SettingsTabComponent } from "./additional-components/settings-tab/settings-tab.component";
+import { AccountSettingsModule } from "./settings/account-settings.module";
 
 @NgModule({
-    declarations: [AccountComponent, AccountFlowsTabComponent, DatasetsTabComponent],
+    declarations: [AccountComponent, AccountFlowsTabComponent, DatasetsTabComponent, SettingsTabComponent],
     imports: [
         CommonModule,
         FormsModule,
@@ -38,6 +40,7 @@ import { DisplayAccountNameModule } from "../common/pipes/display-account-name.m
         ReactiveFormsModule,
         RouterModule,
 
+        AccountSettingsModule,
         DatasetListModule,
         DisplayAccountNameModule,
         FeatureFlagModule,

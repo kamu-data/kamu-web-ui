@@ -18,10 +18,11 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatTableModule } from "@angular/material/table";
 import { RouterModule } from "@angular/router";
 import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
+import { AccountTabComponent } from "./tabs/account-tab/account-tab.component";
 
 @NgModule({
-    declarations: [AccessTokensTabComponent, AccountSettingsComponent, EmailsTabComponent],
-    exports: [AccountSettingsComponent],
+    declarations: [AccessTokensTabComponent, AccountSettingsComponent, EmailsTabComponent, AccountTabComponent],
+    exports: [AccountSettingsComponent, AccountTabComponent],
     imports: [
         CommonModule,
         FormsModule,

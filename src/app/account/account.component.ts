@@ -55,6 +55,13 @@ export class AccountComponent {
         return this.isLoggedUser(user) || Boolean(this.loggedUserService.maybeCurrentlyLoggedInUser?.isAdmin);
     }
 
+    public showSettings(user: AccountFragment): boolean {
+        return (
+            this.loggedUserService.maybeCurrentlyLoggedInUser?.accountName !== user.accountName &&
+            Boolean(this.loggedUserService.maybeCurrentlyLoggedInUser?.isAdmin)
+        );
+    }
+
     public onEditProfile(): void {
         promiseWithCatch(
             this.modalService.warning({

@@ -22,7 +22,6 @@ import { AppConfigService } from "src/app/app-config.service";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { SessionStorageService } from "src/app/services/session-storage.service";
-import ProjectLinks from "src/app/project-links";
 import { Eip1193EthereumService } from "./ethereum.service";
 
 @Injectable({
@@ -149,9 +148,9 @@ export class LoginService {
     private defaultLoginCallback(loginResponse: LoginResponseType): void {
         this.accessToken$.next(loginResponse.accessToken);
         this.account$.next(loginResponse.account);
-        const url = this.sessionStorageService.redirectAfterLoginUrl;
-        this.sessionStorageService.setRedirectAfterLoginUrl(null);
-        if (url && url !== `/${ProjectLinks.URL_PAGE_NOT_FOUND}`) {
+        const url = this.localStorageService.redirectAfterLoginUrl;
+        this.localStorageService.setRedirectAfterLoginUrl(null);
+        if (url) {
             this.navigationService.navigateToPath(url);
         } else {
             this.navigationService.navigateToHome();

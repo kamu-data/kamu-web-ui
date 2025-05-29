@@ -26,6 +26,8 @@ import {
     AccountResumeFlowsMutation,
     AccountWithEmailGQL,
     AccountWithEmailQuery,
+    DeleteAccountByNameGQL,
+    DeleteAccountByNameMutation,
 } from "./kamu.graphql.interface";
 import { MaybeNull } from "../interface/app.types";
 import { ApolloQueryResult } from "@apollo/client";
@@ -43,6 +45,7 @@ export class AccountApi {
     private accountResumeFlowsGql = inject(AccountResumeFlowsGQL);
     private accountWithEmailGql = inject(AccountWithEmailGQL);
     private accountChangeEmailGQL = inject(AccountChangeEmailGQL);
+    private deleteAccountByNameGQL = inject(DeleteAccountByNameGQL);
 
     public changeAccountEmail(params: {
         accountName: string;
@@ -179,6 +182,19 @@ export class AccountApi {
                     } else {
                         throw new DatasetOperationError(result.errors ?? []);
                     }
+                }),
+            );
+    }
+
+    public deleteAccountByName(accountName: string): Observable<DeleteAccountByNameMutation> {
+        return this.deleteAccountByNameGQL
+            .mutate({
+                accountName,
+            })
+            .pipe(
+                first(),
+                map((result: MutationResult<DeleteAccountByNameMutation>) => {
+                    return result.data as DeleteAccountByNameMutation;
                 }),
             );
     }

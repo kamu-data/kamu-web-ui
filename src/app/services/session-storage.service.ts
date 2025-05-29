@@ -33,18 +33,6 @@ export class SessionStorageService {
         sessionStorage.removeItem(AppValues.SESSION_STORAGE_SQL_CODE);
     }
 
-    public get redirectAfterLoginUrl(): string | null {
-        return sessionStorage.getItem(AppValues.LOCAL_STORAGE_LOGIN_REDIRECT_URL);
-    }
-
-    public setRedirectAfterLoginUrl(url: string | null) {
-        if (url) {
-            sessionStorage.setItem(AppValues.LOCAL_STORAGE_LOGIN_REDIRECT_URL, url);
-        } else {
-            sessionStorage.removeItem(AppValues.LOCAL_STORAGE_LOGIN_REDIRECT_URL);
-        }
-    }
-
     public reset() {
         sessionStorage.clear();
     }

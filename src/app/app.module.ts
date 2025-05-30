@@ -53,6 +53,8 @@ import { AccountSettingsModule } from "./account/settings/account-settings.modul
 import { LoginModule } from "./auth/login/login.module";
 import { AdminViewModule } from "./admin-view/admin-view.module";
 import { HeaderModule } from "./header/header.module";
+import { PageNotFoundComponent } from "./common/components/page-not-found/page-not-found.component";
+import { CommonModule } from "@angular/common";
 
 const Services = [
     Apollo,
@@ -159,8 +161,9 @@ const Services = [
     },
 ];
 @NgModule({
-    declarations: [AppComponent],
+    declarations: [AppComponent, PageNotFoundComponent],
     imports: [
+        CommonModule,
         BrowserModule,
         BrowserAnimationsModule,
         ClipboardModule,

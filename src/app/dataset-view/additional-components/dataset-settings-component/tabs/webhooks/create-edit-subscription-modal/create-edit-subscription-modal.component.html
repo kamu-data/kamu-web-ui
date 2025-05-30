@@ -22,17 +22,20 @@
     <form [formGroup]="createSubscriptionForm">
         <div class="d-flex flex-column">
             <label for="" class="form-label">Target URL <span class="text-danger">*</span></label>
-            <input type="text" data-test-id="target-url" formControlName="targetUrl" class="w-100 form-control" />
-            <div *ngIf="targetUrlControl?.invalid && (targetUrlControl?.touched || targetUrlControl?.dirty)">
-                <div *ngIf="targetUrlControl?.errors?.required">
-                    <span class="text-danger fs-12" data-test-id="error-name-required"> Target URL is required</span>
-                </div>
-                <div *ngIf="targetUrlControl?.errors?.pattern">
-                    <span class="text-danger fs-12" data-test-id="error-name-pattern">
-                        The value must start with 'https' for security reasons</span
-                    >
-                </div>
-            </div>
+            <input
+                type="text"
+                data-test-id="target-url"
+                formControlName="targetUrl"
+                class="w-100 form-control"
+                #targetUrl
+            />
+            <div
+                class="text-danger fs-12"
+                [input]="targetUrl"
+                [fieldLabel]="'Target URL'"
+                [appFieldError]="ErrorSets.TargetUrl"
+                [group]="createSubscriptionForm"
+            ></div>
 
             <p class="text-muted fs-12">
                 Must be publicly reachable via HTTPS. Localhost and private Ips are not allowed
@@ -51,9 +54,10 @@
                     <label class="fs-14 inline-block"> {{ item.name }} </label>
                 </ng-template>
             </ng-select>
+
             <div *ngIf="eventTypesControl?.invalid && (eventTypesControl?.touched || eventTypesControl?.dirty)">
                 <div *ngIf="eventTypesControl?.errors?.required">
-                    <span class="text-danger fs-12" data-test-id="error-name-pattern">
+                    <span class="text-danger fs-12" data-test-id="error-event-selection">
                         Event selection is required</span
                     >
                 </div>

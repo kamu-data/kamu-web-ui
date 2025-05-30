@@ -25,6 +25,7 @@ import {
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { changeCopyIcon } from "src/app/common/helpers/app.helpers";
+import { ErrorSets } from "src/app/common/directives/form-validation-errors.types";
 
 @Component({
     selector: "app-create-edit-subscription-modal",
@@ -40,6 +41,7 @@ export class CreateEditSubscriptionModalComponent extends BaseComponent implemen
     public readonly WebhookSubscriptionStatus: typeof WebhookSubscriptionStatus = WebhookSubscriptionStatus;
     public readonly WebhookSubscriptionModalAction: typeof WebhookSubscriptionModalAction =
         WebhookSubscriptionModalAction;
+    public readonly ErrorSets: typeof ErrorSets = ErrorSets;
 
     public activeModal = inject(NgbActiveModal);
     private fb = inject(FormBuilder);

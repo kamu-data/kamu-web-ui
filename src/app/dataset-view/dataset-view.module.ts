@@ -100,7 +100,8 @@ import { EditCollaboratorModalComponent } from "./additional-components/dataset-
 import { DatasetSettingsWebhooksTabComponent } from "./additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component";
 import { CreateEditSubscriptionModalComponent } from "./additional-components/dataset-settings-component/tabs/webhooks/create-edit-subscription-modal/create-edit-subscription-modal.component";
 import { NgSelectModule } from "@ng-select/ng-select";
-import { RotateSecretSubscriptionModalComponent } from './additional-components/dataset-settings-component/tabs/webhooks/rotate-secret-subscription-modal/rotate-secret-subscription-modal.component';
+import { RotateSecretSubscriptionModalComponent } from "./additional-components/dataset-settings-component/tabs/webhooks/rotate-secret-subscription-modal/rotate-secret-subscription-modal.component";
+import { FormValidationErrorsModule } from "../common/directives/form-validation-errors.module";
 @NgModule({
     imports: [
         DynamicTableModule,
@@ -156,6 +157,7 @@ import { RotateSecretSubscriptionModalComponent } from './additional-components/
         EventDetailsPropertiesModule,
         FeatureFlagModule,
         FlowsViewModule,
+        FormValidationErrorsModule,
         IngestConfigurationModule,
         IngestTriggerModule,
         QuerySharedModule,

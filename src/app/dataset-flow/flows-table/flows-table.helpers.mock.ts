@@ -6,6 +6,7 @@
  */
 
 import {
+    AccountProvider,
     AccountType,
     DatasetKind,
     DatasetListFlowsDataFragment,
@@ -505,7 +506,7 @@ export const mockDatasets: DatasetListFlowsDataFragment[] = [
             id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
             accountName: "kamu",
             __typename: "Account",
-            accountProvider: "password",
+            accountProvider: AccountProvider.Password,
         },
         alias: "account.tokens.transfers",
         visibility: mockPublicDatasetVisibility,
@@ -533,7 +534,7 @@ export const mockDatasets: DatasetListFlowsDataFragment[] = [
             id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
             accountName: "kamu",
             __typename: "Account",
-            accountProvider: "password",
+            accountProvider: AccountProvider.Password,
         },
         alias: "account.tokens.transfers",
         visibility: mockPublicDatasetVisibility,
@@ -558,7 +559,7 @@ export const mockDatasets: DatasetListFlowsDataFragment[] = [
             id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
             accountName: "kamu",
             __typename: "Account",
-            accountProvider: "password",
+            accountProvider: AccountProvider.Password,
         },
         alias: "account.tokens.transfers",
         visibility: mockPublicDatasetVisibility,
@@ -584,7 +585,7 @@ export const mockDatasets: DatasetListFlowsDataFragment[] = [
             id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
             accountName: "kamu",
             __typename: "Account",
-            accountProvider: "password",
+            accountProvider: AccountProvider.Password,
         },
         alias: "account.tokens.transfers",
         visibility: mockPublicDatasetVisibility,
@@ -633,7 +634,7 @@ export const mockFlowSummaryDataFragmentShowForceLink: FlowSummaryDataFragment =
         avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
         isAdmin: true,
         __typename: "Account",
-        accountProvider: "password",
+        accountProvider: AccountProvider.Password,
     },
     outcome: {
         message: "SUCCESS",

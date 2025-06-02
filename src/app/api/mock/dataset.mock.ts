@@ -6,6 +6,7 @@
  */
 
 import {
+    AccountProvider,
     CompareChainsStatus,
     DataBatchFormat,
     DatasetByAccountAndDatasetNameQuery,
@@ -124,7 +125,7 @@ export const mockDatasetListItem: DatasetSearchOverviewFragment = {
                         id: "did:odf:fed011d18a62694a81fa4e3a0801f67721fa46c97c74617e6d07756eec09a6f6280d7",
                         accountName: "deltares.nl",
                         __typename: "Account",
-                        accountProvider: "password",
+                        accountProvider: AccountProvider.Password,
                     },
                     alias: "deltares.nl/rhine-basin.netherlands",
                     visibility: {
@@ -143,7 +144,7 @@ export const mockDatasetListItem: DatasetSearchOverviewFragment = {
         __typename: "Account",
         id: TEST_ACCOUNT_ID,
         accountName: "kamu",
-        accountProvider: "password",
+        accountProvider: AccountProvider.Password,
     },
     alias: "kamu/alberta.case-details",
     visibility: mockPublicDatasetVisibility,
@@ -173,7 +174,7 @@ export const mockDatasetByAccountAndDatasetNameQuery: DatasetByAccountAndDataset
                 __typename: "Account",
                 id: TEST_ACCOUNT_ID,
                 accountName: TEST_LOGIN,
-                accountProvider: "password",
+                accountProvider: AccountProvider.Password,
             },
             alias: TEST_LOGIN + "/" + TEST_DATASET_NAME,
             visibility: mockPublicDatasetVisibility,
@@ -193,7 +194,7 @@ export const mockDatasetByIdQuery: DatasetByIdQuery = {
                 __typename: "Account",
                 id: TEST_ACCOUNT_ID,
                 accountName: TEST_LOGIN,
-                accountProvider: "password",
+                accountProvider: AccountProvider.Password,
             },
             alias: TEST_LOGIN + "/" + TEST_DATASET_NAME,
             visibility: mockPublicDatasetVisibility,
@@ -314,7 +315,7 @@ export const mockDatasetBasicsWithPermissionQuery: GetDatasetBasicsWithPermissio
                 __typename: "Account",
                 id: TEST_ACCOUNT_ID,
                 accountName: TEST_LOGIN,
-                accountProvider: "password",
+                accountProvider: AccountProvider.Password,
             },
             alias: TEST_LOGIN + "/" + TEST_DATASET_NAME,
             permissions: {
@@ -368,7 +369,7 @@ export const mockDatasetsByAccountNameQuery: DatasetsByAccountNameQuery = {
                                         id: "did:odf:fed011d18a62694a81fa4e3a0801f67721fa46c97c74617e6d07756eec09a6f6280d7",
                                         accountName: "deltares.nl",
                                         __typename: "Account",
-                                        accountProvider: "password",
+                                        accountProvider: AccountProvider.Password,
                                     },
                                     alias: "deltares.nl/rhine-basin.netherlands",
                                     visibility: {
@@ -387,7 +388,7 @@ export const mockDatasetsByAccountNameQuery: DatasetsByAccountNameQuery = {
                         __typename: "Account",
                         id: TEST_ACCOUNT_ID,
                         accountName: "kamu",
-                        accountProvider: "password",
+                        accountProvider: AccountProvider.Password,
                     },
                     alias: "kamu/alberta.case-details",
                     visibility: mockPublicDatasetVisibility,
@@ -471,7 +472,7 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
             owner: {
                 id: TEST_ACCOUNT_ID,
                 accountName: "alias",
-                accountProvider: "password",
+                accountProvider: AccountProvider.Password,
             },
             visibility: mockPublicDatasetVisibility,
         },

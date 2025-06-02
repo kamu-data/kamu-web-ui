@@ -6,6 +6,7 @@
  */
 
 import {
+    AccountProvider,
     AccountType,
     CancelScheduledTasksMutation,
     DatasetAllFlowsPausedQuery,
@@ -45,7 +46,7 @@ export const mockIngestGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQuery 
                 id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
                 accountName: "kamu",
                 __typename: "Account",
-                accountProvider: "password",
+                accountProvider: AccountProvider.Password,
             },
             alias: "account.transactions",
             visibility: mockPublicDatasetVisibility,
@@ -431,7 +432,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                 id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
                 accountName: "kamu",
                 __typename: "Account",
-                accountProvider: "password",
+                accountProvider: AccountProvider.Password,
             },
             alias: "test-dataset",
             visibility: mockPublicDatasetVisibility,
@@ -476,7 +477,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
                                     isAdmin: true,
                                     __typename: "Account",
-                                    accountProvider: "password",
+                                    accountProvider: AccountProvider.Password,
                                 },
                                 outcome: {
                                     message: "SUCCESS",
@@ -558,7 +559,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                         avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
                                         isAdmin: true,
                                         __typename: "Account",
-                                        accountProvider: "password",
+                                        accountProvider: AccountProvider.Password,
                                     },
                                     outcome: {
                                         message: "SUCCESS",
@@ -709,7 +710,7 @@ export const mockDatasetTriggerFlowMutation: DatasetTriggerFlowMutation = {
                                 avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
                                 isAdmin: true,
                                 __typename: "Account",
-                                accountProvider: "password",
+                                accountProvider: AccountProvider.Password,
                             },
                             outcome: null,
                             timing: {
@@ -1016,7 +1017,7 @@ export const mockDatasetFlowsInitiatorsQuery: DatasetFlowsInitiatorsQuery = {
                                 avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
                                 isAdmin: true,
                                 __typename: "Account",
-                                accountProvider: "password",
+                                accountProvider: AccountProvider.Password,
                             },
                             {
                                 id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
@@ -1026,7 +1027,7 @@ export const mockDatasetFlowsInitiatorsQuery: DatasetFlowsInitiatorsQuery = {
                                 avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
                                 isAdmin: true,
                                 __typename: "Account",
-                                accountProvider: "password",
+                                accountProvider: AccountProvider.Password,
                             },
                             {
                                 id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
@@ -1036,7 +1037,7 @@ export const mockDatasetFlowsInitiatorsQuery: DatasetFlowsInitiatorsQuery = {
                                 avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
                                 isAdmin: true,
                                 __typename: "Account",
-                                accountProvider: "password",
+                                accountProvider: AccountProvider.Password,
                             },
                         ],
                         __typename: "AccountConnection",

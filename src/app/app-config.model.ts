@@ -7,6 +7,7 @@
 
 import { Eip1193Provider } from "ethers";
 import { FeatureShowMode } from "./interface/feature-flags.interface";
+import { AccountProvider } from "./api/kamu.graphql.interface";
 
 export interface AppRuntimeConfig {
     apiServerGqlUrl: string;
@@ -18,14 +19,8 @@ export interface AppRuntimeConfig {
 }
 
 export interface AppLoginInstructions {
-    loginMethod: string;
+    loginMethod: AccountProvider;
     loginCredentialsJson: string;
-}
-
-export enum LoginMethod {
-    PASSWORD = "password",
-    GITHUB = "oauth_github",
-    WEB3_WALLET = "web3-wallet",
 }
 
 export interface GrafanaLogsConfiguration {

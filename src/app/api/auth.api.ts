@@ -10,6 +10,7 @@ import { catchError, first, map } from "rxjs/operators";
 import { Observable, throwError } from "rxjs";
 import {
     AccountFragment,
+    AccountProvider,
     FetchAccountDetailsGQL,
     FetchAccountDetailsMutation,
     GetEnabledLoginMethodsGQL,
@@ -26,7 +27,6 @@ import {
     PasswordLoginCredentials,
     Web3WalletOwnershipVerificationRequest,
 } from "./auth.api.model";
-import { LoginMethod } from "../app-config.model";
 import { ApolloQueryResult } from "@apollo/client";
 import { AuthenticationError } from "../common/values/errors";
 
@@ -39,11 +39,11 @@ export class AuthApi {
     private fetchAccountDetailsGQL = inject(FetchAccountDetailsGQL);
     private loginWeb3WalletGQL = inject(LoginWeb3WalletGQL);
 
-    public readEnabledLoginMethods(): Observable<LoginMethod[]> {
+    public readEnabledLoginMethods(): Observable<AccountProvider[]> {
         return this.getEnabledLoginMethodsGQL.watch().valueChanges.pipe(
             first(),
             map((result: ApolloQueryResult<GetEnabledLoginMethodsQuery>) => {
-                return result.data.auth.enabledLoginMethods as LoginMethod[];
+                return result.data.auth.enabledProviders;
             }),
         );
     }
@@ -52,24 +52,32 @@ export class AuthApi {
         credentials: PasswordLoginCredentials,
         deviceCode?: string,
     ): Observable<LoginResponseType> {
-        return this.fetchAccountAndTokenFromLoginMethod(LoginMethod.PASSWORD, JSON.stringify(credentials), deviceCode);
+        return this.fetchAccountAndTokenFromLoginMethod(
+            AccountProvider.Password,
+            JSON.stringify(credentials),
+            deviceCode,
+        );
     }
 
     public fetchAccountAndTokenFromGithubCallbackCode(
         credentials: GithubLoginCredentials,
         deviceCode?: string,
     ): Observable<LoginResponseType> {
-        return this.fetchAccountAndTokenFromLoginMethod(LoginMethod.GITHUB, JSON.stringify(credentials), deviceCode);
+        return this.fetchAccountAndTokenFromLoginMethod(
+            AccountProvider.OauthGithub,
+            JSON.stringify(credentials),
+            deviceCode,
+        );
     }
 
     public fetchAccountAndTokenFromWeb3Wallet(
         credentials: Web3WalletOwnershipVerificationRequest,
     ): Observable<LoginResponseType> {
-        return this.fetchAccountAndTokenFromLoginMethod(LoginMethod.WEB3_WALLET, JSON.stringify(credentials));
+        return this.fetchAccountAndTokenFromLoginMethod(AccountProvider.Web3Wallet, JSON.stringify(credentials));
     }
 
     public fetchAccountAndTokenFromLoginMethod(
-        loginMethod: string,
+        loginMethod: AccountProvider,
         loginCredentialsJson: string,
         deviceCode?: string,
     ): Observable<LoginResponseType> {

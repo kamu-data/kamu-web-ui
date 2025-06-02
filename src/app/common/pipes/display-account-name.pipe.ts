@@ -6,16 +6,14 @@
  */
 
 import { Pipe, PipeTransform } from "@angular/core";
-import AppValues from "../values/app.values";
+import { AccountProvider } from "src/app/api/kamu.graphql.interface";
 
 @Pipe({
     name: "displayAccountName",
 })
 export class DisplayAccountNamePipe implements PipeTransform {
-    private readonly WEB3_WALLET_PROVIDER = AppValues.ACCOUNT_WEB3_WALLET_PROVIDER;
-
-    public transform(name: string, provider: string): string {
-        if (provider === this.WEB3_WALLET_PROVIDER) {
+    public transform(name: string, provider: AccountProvider): string {
+        if (provider === AccountProvider.Web3Wallet) {
             return name.slice(0, 6) + "..." + name.slice(-4);
         }
         return name;

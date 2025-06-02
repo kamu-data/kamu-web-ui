@@ -36,6 +36,7 @@ export type Scalars = {
      */
     DateTime: string;
     DeviceCode: string;
+    Eip4361AuthNonce: string;
     Email: string;
     EventID: string;
     EvmWalletAddress: string;
@@ -69,7 +70,7 @@ export type Account = {
     /** Symbolic account name */
     accountName: Scalars["AccountName"];
     /** Account provider */
-    accountProvider: Scalars["String"];
+    accountProvider: AccountProvider;
     /** Account type */
     accountType: AccountType;
     /** Avatar URL */
@@ -175,6 +176,12 @@ export type AccountMutModifyPasswordArgs = {
 export type AccountMutUpdateEmailArgs = {
     newEmail: Scalars["Email"];
 };
+
+export enum AccountProvider {
+    OauthGithub = "OAUTH_GITHUB",
+    Password = "PASSWORD",
+    Web3Wallet = "WEB3_WALLET",
+}
 
 export enum AccountType {
     Organization = "ORGANIZATION",
@@ -340,7 +347,7 @@ export type AttachmentsEmbedded = {
 
 export type Auth = {
     __typename?: "Auth";
-    enabledLoginMethods: Array<Scalars["String"]>;
+    enabledProviders: Array<AccountProvider>;
     listAccessTokens: AccessTokenConnection;
 };
 
@@ -372,7 +379,7 @@ export type AuthMutCreateAccessTokenArgs = {
 export type AuthMutLoginArgs = {
     deviceCode?: InputMaybe<Scalars["DeviceCode"]>;
     loginCredentialsJson: Scalars["String"];
-    loginMethod: Scalars["String"];
+    loginMethod: AccountProvider;
 };
 
 export type AuthMutRevokeAccessTokenArgs = {
@@ -1574,7 +1581,7 @@ export type DisablePushSource = {
 
 export type Eip4361AuthNonceResponse = {
     __typename?: "Eip4361AuthNonceResponse";
-    value: Scalars["String"];
+    value: Scalars["Eip4361AuthNonce"];
 };
 
 export type EngineDesc = {
@@ -4147,7 +4154,7 @@ export type AccountBasicsFragment = {
     __typename?: "Account";
     id: string;
     accountName: string;
-    accountProvider: string;
+    accountProvider: AccountProvider;
 };
 
 export type DatasetConnectionDataFragment = {
@@ -4200,7 +4207,7 @@ export type AccountFragment = {
     accountType: AccountType;
     avatarUrl?: string | null;
     isAdmin: boolean;
-    accountProvider: string;
+    accountProvider: AccountProvider;
 };
 
 export type LoginWeb3WalletMutationVariables = Exact<{
@@ -4219,7 +4226,7 @@ export type LoginWeb3WalletMutation = {
 };
 
 export type LoginMutationVariables = Exact<{
-    login_method: Scalars["String"];
+    login_method: AccountProvider;
     login_credentials_json: Scalars["String"];
     deviceCode?: InputMaybe<Scalars["DeviceCode"]>;
 }>;
@@ -4785,7 +4792,7 @@ export type GetEnabledLoginMethodsQueryVariables = Exact<{ [key: string]: never 
 
 export type GetEnabledLoginMethodsQuery = {
     __typename?: "Query";
-    auth: { __typename?: "Auth"; enabledLoginMethods: Array<string> };
+    auth: { __typename?: "Auth"; enabledProviders: Array<AccountProvider> };
 };
 
 export type EnginesQueryVariables = Exact<{ [key: string]: never }>;
@@ -8123,7 +8130,7 @@ export class LoginWeb3WalletGQL extends Apollo.Mutation<LoginWeb3WalletMutation,
     }
 }
 export const LoginDocument = gql`
-    mutation Login($login_method: String!, $login_credentials_json: String!, $deviceCode: DeviceCode) {
+    mutation Login($login_method: AccountProvider!, $login_credentials_json: String!, $deviceCode: DeviceCode) {
         auth {
             login(loginMethod: $login_method, loginCredentialsJson: $login_credentials_json, deviceCode: $deviceCode) {
                 accessToken
@@ -9006,7 +9013,7 @@ export class DeleteDatasetGQL extends Apollo.Mutation<DeleteDatasetMutation, Del
 export const GetEnabledLoginMethodsDocument = gql`
     query getEnabledLoginMethods {
         auth {
-            enabledLoginMethods
+            enabledProviders
         }
     }
 `;

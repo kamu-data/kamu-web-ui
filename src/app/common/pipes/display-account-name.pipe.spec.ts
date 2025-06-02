@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { AccountProvider } from "src/app/api/kamu.graphql.interface";
 import AppValues from "../values/app.values";
 import { DisplayAccountNamePipe } from "./display-account-name.pipe";
 
@@ -18,11 +19,11 @@ describe("DisplayAccountNamePipe", () => {
     });
 
     it("should check transform method with web3 provider", () => {
-        expect(pipe.transform(MOCK_WEB3_WALLET, AppValues.ACCOUNT_WEB3_WALLET_PROVIDER)).toEqual("0x00D7...6157");
+        expect(pipe.transform(MOCK_WEB3_WALLET, AccountProvider.Web3Wallet)).toEqual("0x00D7...6157");
     });
 
     it("should check transform method if account name isn't web3 wallet", () => {
-        expect(pipe.transform(AppValues.DEFAULT_ADMIN_ACCOUNT_NAME, "password")).toEqual(
+        expect(pipe.transform(AppValues.DEFAULT_ADMIN_ACCOUNT_NAME, AccountProvider.Password)).toEqual(
             AppValues.DEFAULT_ADMIN_ACCOUNT_NAME,
         );
     });

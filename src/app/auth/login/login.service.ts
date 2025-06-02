@@ -14,8 +14,7 @@ import {
     PasswordLoginCredentials,
     Web3WalletOwnershipVerificationRequest,
 } from "src/app/api/auth.api.model";
-import { AccountFragment } from "src/app/api/kamu.graphql.interface";
-import { LoginMethod } from "src/app/app-config.model";
+import { AccountFragment, AccountProvider } from "src/app/api/kamu.graphql.interface";
 import { AuthenticationError } from "src/app/common/values/errors";
 import { NavigationService } from "src/app/services/navigation.service";
 import { AppConfigService } from "src/app/app-config.service";
@@ -39,7 +38,7 @@ export class LoginService {
     private account$: Subject<AccountFragment> = new ReplaySubject<AccountFragment>(1);
     private passwordLoginError$: Subject<string> = new Subject<string>();
 
-    private enabledLoginMethods: LoginMethod[] = [];
+    private enabledLoginMethods: AccountProvider[] = [];
 
     private loginCallback: (loginResponse: LoginResponseType) => void = this.redirectUrlLoginCallback.bind(this);
 
@@ -75,13 +74,13 @@ export class LoginService {
 
     public initialize(): Observable<void> {
         return this.authApi.readEnabledLoginMethods().pipe(
-            map((enabledLoginMethods: LoginMethod[]): void => {
+            map((enabledLoginMethods: AccountProvider[]): void => {
                 this.enabledLoginMethods = enabledLoginMethods;
             }),
         );
     }
 
-    public get loginMethods(): LoginMethod[] {
+    public get loginMethods(): AccountProvider[] {
         return this.enabledLoginMethods;
     }
 
@@ -127,7 +126,7 @@ export class LoginService {
         }
     }
 
-    public genericLogin(loginMethod: string, loginCredentialsJson: string): Observable<void> {
+    public genericLogin(loginMethod: AccountProvider, loginCredentialsJson: string): Observable<void> {
         return this.authApi.fetchAccountAndTokenFromLoginMethod(loginMethod, loginCredentialsJson).pipe(
             map((loginResponse: LoginResponseType): void => {
                 this.loginCallback(loginResponse);

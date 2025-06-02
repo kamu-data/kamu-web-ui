@@ -8,7 +8,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject } from "@angular/core";
 import ProjectLinks from "src/app/project-links";
 import AppValues from "src/app/common/values/app.values";
-import { LoginMethod } from "src/app/app-config.model";
 import { LoginService } from "./login.service";
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { PasswordLoginCredentials } from "src/app/api/auth.api.model";
@@ -21,6 +20,7 @@ import { LoginFormType } from "./login.component.model";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AppConfigService } from "src/app/app-config.service";
 import { NavigationService } from "src/app/services/navigation.service";
+import { AccountProvider } from "./../../api/kamu.graphql.interface";
 @Component({
     selector: "app-login",
     templateUrl: "./login.component.html",
@@ -39,9 +39,9 @@ export class LoginComponent extends BaseComponent implements OnInit {
     private navigationService = inject(NavigationService);
 
     public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;
-    public readonly LoginMethod = LoginMethod;
+    public readonly AccountProvider = AccountProvider;
 
-    public selectedLoginMethod?: LoginMethod = undefined;
+    public selectedLoginMethod?: AccountProvider = undefined;
     public passwordLoginForm: FormGroup<LoginFormType> = this.fb.group({
         login: ["", [Validators.required]],
         password: ["", [Validators.required]],
@@ -57,7 +57,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
             this.localStorageService.setRedirectAfterLoginUrl(redirectUrl);
             this.navigationService.navigateToReplacedPath(ProjectLinks.URL_LOGIN);
         } else {
-            const loginMethods: LoginMethod[] = this.loginService.loginMethods;
+            const loginMethods: AccountProvider[] = this.loginService.loginMethods;
             if (loginMethods.length === 1) {
                 this.onSelectedLoginMethod(loginMethods[0]);
             } else if (loginMethods.length === 0) {
@@ -85,9 +85,9 @@ export class LoginComponent extends BaseComponent implements OnInit {
         return this.appConfigService.featureFlags.enableTermsOfService;
     }
 
-    public onSelectedLoginMethod(loginMethod: LoginMethod): void {
+    public onSelectedLoginMethod(loginMethod: AccountProvider): void {
         this.selectedLoginMethod = loginMethod;
-        if (loginMethod === LoginMethod.GITHUB) {
+        if (loginMethod === AccountProvider.OauthGithub) {
             this.loginService.gotoGithub();
         }
     }

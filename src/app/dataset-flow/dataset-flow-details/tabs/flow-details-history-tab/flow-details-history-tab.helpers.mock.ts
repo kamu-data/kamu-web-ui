@@ -6,6 +6,7 @@
  */
 
 import {
+    AccountProvider,
     AccountType,
     DatasetFlowType,
     FlowHistoryDataFragment,
@@ -93,7 +94,7 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
                 avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
                 isAdmin: true,
                 __typename: "Account",
-                accountProvider: "password",
+                accountProvider: AccountProvider.Password,
             },
         },
     },
@@ -262,7 +263,7 @@ export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[
                 avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
                 isAdmin: true,
                 __typename: "Account",
-                accountProvider: "password",
+                accountProvider: AccountProvider.Password,
             },
         },
     },

@@ -14,11 +14,11 @@ import { DatasetAutocompleteItem, TypeNames } from "./interface/search.interface
 import { ModalService } from "./common/components/modal/modal.service";
 import { BaseComponent } from "src/app/common/components/base.component";
 import ProjectLinks from "./project-links";
-import { AccountFragment, AccountType } from "./api/kamu.graphql.interface";
+import { AccountFragment, AccountProvider, AccountType } from "./api/kamu.graphql.interface";
 import { MaybeNull } from "./interface/app.types";
 import { isMobileView, promiseWithCatch } from "./common/helpers/app.helpers";
 import { AppConfigService } from "./app-config.service";
-import { AppUIConfigFeatureFlags, LoginMethod } from "./app-config.model";
+import { AppUIConfigFeatureFlags } from "./app-config.model";
 import { LoginService } from "./auth/login/login.service";
 import { loadErrorMessages } from "@apollo/client/dev";
 import { isDevMode } from "@angular/core";
@@ -45,7 +45,7 @@ export class AppComponent extends BaseComponent implements OnInit {
         displayName: AppValues.DEFAULT_USER_DISPLAY_NAME,
         accountType: AccountType.User,
         isAdmin: false,
-        accountProvider: "",
+        accountProvider: AccountProvider.Password,
     };
 
     public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;
@@ -55,7 +55,7 @@ export class AppComponent extends BaseComponent implements OnInit {
 
     public featureFlags: AppUIConfigFeatureFlags = AppValues.DEFAULT_UI_FEATURE_FLAGS;
     public loggedAccount: AccountFragment = AppComponent.ANONYMOUS_ACCOUNT_INFO;
-    public loginMethods: LoginMethod[] = [];
+    public loginMethods: AccountProvider[] = [];
 
     @HostListener("window:resize")
     public checkWindowSize(): void {

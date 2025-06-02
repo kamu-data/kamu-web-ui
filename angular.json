@@ -25,7 +25,8 @@
               "moment",
               "marked",
               "cron-parser",
-              "@tweenjs/tween.js"
+              "@tweenjs/tween.js",
+              "siwe"
             ],
             "outputPath": "dist/kamu-platform",
             "index": "src/index.html",

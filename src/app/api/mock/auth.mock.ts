@@ -8,12 +8,13 @@
 import { GraphQLError } from "graphql";
 import {
     AccountFragment,
+    AccountProvider,
     AccountType,
     AccountWithEmailFragment,
     FetchAccountDetailsMutation,
     LoginMutation,
 } from "../kamu.graphql.interface";
-import { AppLoginInstructions, LoginMethod } from "src/app/app-config.model";
+import { AppLoginInstructions } from "src/app/app-config.model";
 import { PasswordLoginCredentials } from "../auth.api.model";
 
 export const TEST_GITHUB_CODE = "12345";
@@ -31,7 +32,7 @@ const mockPasswordLoginCredentials: PasswordLoginCredentials = {
 };
 
 export const mockLoginInstructions: AppLoginInstructions = {
-    loginMethod: LoginMethod.PASSWORD,
+    loginMethod: AccountProvider.Password,
     loginCredentialsJson: JSON.stringify(mockPasswordLoginCredentials),
 };
 
@@ -45,6 +46,7 @@ export const mockAccountDetails: AccountFragment = {
     accountType: AccountType.User,
     avatarUrl: TEST_AVATAR_URL,
     isAdmin: false,
+    accountProvider: AccountProvider.Password,
 };
 
 export const mockAccountDetailsWithEmail: AccountWithEmailFragment = {
@@ -83,6 +85,8 @@ export const mockPasswordLoginResponse: LoginMutation = {
         },
     },
 };
+
+export const mockWeb3WalletLoginResponse: LoginMutation = mockPasswordLoginResponse;
 
 export const mockLogin401Error: GraphQLError = new GraphQLError(
     "HTTP status client error (401 Unauthorized) for url (https://api.github.com/user)",

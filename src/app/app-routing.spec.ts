@@ -18,13 +18,13 @@ import { LoggedUserService } from "./auth/logged-user.service";
 import { PageNotFoundComponent } from "./common/components/page-not-found/page-not-found.component";
 import { LoginComponent } from "./auth/login/login.component";
 import { LoginService } from "./auth/login/login.service";
-import { LoginMethod } from "./app-config.model";
+
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { accountSettingsAccessTokensResolverFn } from "./account/settings/tabs/access-tokens-tab/resolver/account-settings-access-tokens.resolver";
 import { ToastrModule } from "ngx-toastr";
 import { mockAccountDetails } from "./api/mock/auth.mock";
 import { of } from "rxjs";
-import { AccessTokenConnection } from "./api/kamu.graphql.interface";
+import { AccessTokenConnection, AccountProvider } from "./api/kamu.graphql.interface";
 import { mockListAccessTokensQuery } from "./api/mock/access-token.mock";
 import { searchResolverFn } from "./search/resolver/search.resolver";
 import {
@@ -190,7 +190,7 @@ describe("Router", () => {
         }));
 
         it("login opens Login component when allowed and not logged in", fakeAsync(() => {
-            spyOnProperty(loginService, "loginMethods", "get").and.returnValue([LoginMethod.PASSWORD]);
+            spyOnProperty(loginService, "loginMethods", "get").and.returnValue([AccountProvider.Password]);
             spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(false);
 
             promiseWithCatch(router.navigate([ProjectLinks.URL_LOGIN]));

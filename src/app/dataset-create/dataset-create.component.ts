@@ -60,6 +60,10 @@ export class DatasetCreateComponent extends BaseComponent {
         return this.createDatasetForm.get("datasetName");
     }
 
+    public get owner() {
+        return this.createDatasetForm.get("owner");
+    }
+
     public get visibiltyControl(): FormControl<DatasetVisibility> {
         return this.createDatasetForm.controls.visibility;
     }

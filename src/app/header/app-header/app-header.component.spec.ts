@@ -6,7 +6,7 @@
  */
 
 import { RouterTestingModule } from "@angular/router/testing";
-import { AccountFragment, AccountType } from "src/app/api/kamu.graphql.interface";
+import { AccountFragment, AccountProvider, AccountType } from "src/app/api/kamu.graphql.interface";
 import { FormsModule } from "@angular/forms";
 import { MatMenuModule } from "@angular/material/menu";
 import { ChangeDetectionStrategy } from "@angular/core";
@@ -37,8 +37,8 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { NotificationIndicatorComponent } from "../notification-indicator/notification-indicator.component";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { LoginMethod } from "src/app/app-config.model";
 import { MatIconModule } from "@angular/material/icon";
+import { DisplayAccountNameModule } from "src/app/common/pipes/display-account-name.module";
 
 describe("AppHeaderComponent", () => {
     let component: AppHeaderComponent;
@@ -63,6 +63,7 @@ describe("AppHeaderComponent", () => {
                 HttpClientTestingModule,
                 RouterModule,
                 MatIconModule,
+                DisplayAccountNameModule,
             ],
             declarations: [AppHeaderComponent, NotificationIndicatorComponent],
             providers: [
@@ -90,6 +91,7 @@ describe("AppHeaderComponent", () => {
             displayName: AppValues.DEFAULT_USER_DISPLAY_NAME,
             accountType: AccountType.User,
             isAdmin: false,
+            accountProvider: AccountProvider.Password,
         };
         component.featureFlags = {
             enableLogout: true,
@@ -97,7 +99,7 @@ describe("AppHeaderComponent", () => {
             enableDatasetEnvVarsManagement: true,
             enableTermsOfService: true,
         };
-        component.loginMethods = [LoginMethod.GITHUB, LoginMethod.PASSWORD];
+        component.loginMethods = [AccountProvider.OauthGithub, AccountProvider.Password];
         component.isVisible = true;
         component.isMobileView = false;
         fixture.detectChanges();

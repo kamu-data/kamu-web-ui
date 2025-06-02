@@ -170,6 +170,8 @@ export function registerMatSvgIcons(): void {
         "starred",
         "watch",
         "derive",
+        "metamask",
+        "ethereum-2",
     ];
     icons.forEach((icon: string) => {
         matIconRegistry.addSvgIcon(icon, domSanitizer.bypassSecurityTrustResourceUrl("/fake-path/fake-icon.svg"));

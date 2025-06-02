@@ -36,13 +36,17 @@ export type Scalars = {
      */
     DateTime: string;
     DeviceCode: string;
+    Eip4361AuthNonce: string;
     Email: string;
     EventID: string;
+    EvmWalletAddress: string;
+    ExtraData: string;
     FlowID: string;
-    /** A scalar that can represent any JSON value. */
-    JSON: string;
     Multihash: string;
     TaskID: string;
+    URL: string;
+    WebhookEventType: string;
+    WebhookSubscriptionID: string;
 };
 
 export type AccessTokenConnection = {
@@ -65,6 +69,8 @@ export type Account = {
     __typename?: "Account";
     /** Symbolic account name */
     accountName: Scalars["AccountName"];
+    /** Account provider */
+    accountProvider: AccountProvider;
     /** Account type */
     accountType: AccountType;
     /** Avatar URL */
@@ -170,6 +176,12 @@ export type AccountMutModifyPasswordArgs = {
 export type AccountMutUpdateEmailArgs = {
     newEmail: Scalars["Email"];
 };
+
+export enum AccountProvider {
+    OauthGithub = "OAUTH_GITHUB",
+    Password = "PASSWORD",
+    Web3Wallet = "WEB3_WALLET",
+}
 
 export enum AccountType {
     Organization = "ORGANIZATION",
@@ -335,7 +347,7 @@ export type AttachmentsEmbedded = {
 
 export type Auth = {
     __typename?: "Auth";
-    enabledLoginMethods: Array<Scalars["String"]>;
+    enabledProviders: Array<AccountProvider>;
     listAccessTokens: AccessTokenConnection;
 };
 
@@ -351,6 +363,8 @@ export type AuthMut = {
     createAccessToken: CreateTokenResult;
     login: LoginResponse;
     revokeAccessToken: RevokeResult;
+    /** Web3-related functionality group */
+    web3: AuthWeb3Mut;
 };
 
 export type AuthMutAccountDetailsArgs = {
@@ -365,11 +379,20 @@ export type AuthMutCreateAccessTokenArgs = {
 export type AuthMutLoginArgs = {
     deviceCode?: InputMaybe<Scalars["DeviceCode"]>;
     loginCredentialsJson: Scalars["String"];
-    loginMethod: Scalars["String"];
+    loginMethod: AccountProvider;
 };
 
 export type AuthMutRevokeAccessTokenArgs = {
     tokenId: Scalars["AccessTokenID"];
+};
+
+export type AuthWeb3Mut = {
+    __typename?: "AuthWeb3Mut";
+    eip4361AuthNonce: Eip4361AuthNonceResponse;
+};
+
+export type AuthWeb3MutEip4361AuthNonceArgs = {
+    account: Scalars["EvmWalletAddress"];
 };
 
 export type BatchingInput = {
@@ -432,11 +455,11 @@ export type CliProtocolDesc = {
 export type Collection = {
     __typename?: "Collection";
     /**
-     * State projection of the state of collection at the specified point in
+     * State projection of the state of a collection at the specified point in
      * time
      */
     asOf: CollectionProjection;
-    /** Latest state projection of the state of collection */
+    /** Latest state projection of the state of a collection */
     latest: CollectionProjection;
 };
 
@@ -451,7 +474,7 @@ export type CollectionEntry = {
     /** Time when this version was created */
     eventTime: Scalars["DateTime"];
     /** Extra data associated with this entry */
-    extraData: Scalars["JSON"];
+    extraData: Scalars["ExtraData"];
     /**
      * File system-like path
      * Rooted, separated by forward slashes, with elements URL-encoded
@@ -482,7 +505,7 @@ export type CollectionEntryEdge = {
 
 export type CollectionEntryInput = {
     /** Json object containing extra column values */
-    extraData?: InputMaybe<Scalars["JSON"]>;
+    extraData?: InputMaybe<Scalars["ExtraData"]>;
     /** Entry path */
     path: Scalars["CollectionPath"];
     /** DID of the linked dataset */
@@ -508,7 +531,7 @@ export type CollectionMutAddEntryArgs = {
 
 export type CollectionMutMoveEntryArgs = {
     expectedHead?: InputMaybe<Scalars["Multihash"]>;
-    extraData?: InputMaybe<Scalars["JSON"]>;
+    extraData?: InputMaybe<Scalars["ExtraData"]>;
     pathFrom: Scalars["CollectionPath"];
     pathTo: Scalars["CollectionPath"];
 };
@@ -525,7 +548,10 @@ export type CollectionMutUpdateEntriesArgs = {
 
 export type CollectionProjection = {
     __typename?: "CollectionProjection";
-    /** Returns the state of entries as they existed at specified point in time */
+    /**
+     * Returns the state of entries as they existed at a specified point in
+     * time
+     */
     entries: CollectionEntryConnection;
     /** Find entries that link to specified DIDs */
     entriesByRef: Array<CollectionEntry>;
@@ -565,14 +591,14 @@ export type CollectionUpdateErrorNotFound = CollectionUpdateResult & {
 
 export type CollectionUpdateInput = {
     /**
-     * Inserts new entry under specified path. If an entry at the target path
-     * already exists it will be retracted.
+     * Inserts a new entry under the specified path. If an entry at the target
+     * path already exists, it will be retracted.
      */
     add?: InputMaybe<CollectionUpdateInputAdd>;
     /**
      * Retracts and appends an entry under the new path. Returns error if from
-     * path does not exist. If an entry at the target path already exists it
-     * will be retracted. Use this to update extra data by specifying same
+     * path does not exist. If an entry at the target path already exists, it
+     * will be retracted. Use this to update extra data by specifying the same
      * source and target paths.
      */
     move?: InputMaybe<CollectionUpdateInputMove>;
@@ -586,7 +612,7 @@ export type CollectionUpdateInputAdd = {
 
 export type CollectionUpdateInputMove = {
     /** Optionally update the extra data */
-    extraData?: InputMaybe<Scalars["JSON"]>;
+    extraData?: InputMaybe<Scalars["ExtraData"]>;
     pathFrom: Scalars["CollectionPath"];
     pathTo: Scalars["CollectionPath"];
 };
@@ -723,20 +749,24 @@ export type CreateAccountSuccess = CreateAccountResult & {
 };
 
 export type CreateDatasetFromSnapshotResult = {
+    isSuccess: Scalars["Boolean"];
     message: Scalars["String"];
 };
 
 export type CreateDatasetResult = {
+    isSuccess: Scalars["Boolean"];
     message: Scalars["String"];
 };
 
 export type CreateDatasetResultInvalidSnapshot = CreateDatasetFromSnapshotResult & {
     __typename?: "CreateDatasetResultInvalidSnapshot";
+    isSuccess: Scalars["Boolean"];
     message: Scalars["String"];
 };
 
 export type CreateDatasetResultMissingInputs = CreateDatasetFromSnapshotResult & {
     __typename?: "CreateDatasetResultMissingInputs";
+    isSuccess: Scalars["Boolean"];
     message: Scalars["String"];
     missingInputs: Array<Scalars["String"]>;
 };
@@ -746,6 +776,7 @@ export type CreateDatasetResultNameCollision = CreateDatasetFromSnapshotResult &
         __typename?: "CreateDatasetResultNameCollision";
         accountName?: Maybe<Scalars["AccountName"]>;
         datasetName: Scalars["DatasetName"];
+        isSuccess: Scalars["Boolean"];
         message: Scalars["String"];
     };
 
@@ -753,11 +784,23 @@ export type CreateDatasetResultSuccess = CreateDatasetFromSnapshotResult &
     CreateDatasetResult & {
         __typename?: "CreateDatasetResultSuccess";
         dataset: Dataset;
+        isSuccess: Scalars["Boolean"];
         message: Scalars["String"];
     };
 
 export type CreateTokenResult = {
     message: Scalars["String"];
+};
+
+export type CreateWebhookSubscriptionResult = {
+    message: Scalars["String"];
+};
+
+export type CreateWebhookSubscriptionResultSuccess = CreateWebhookSubscriptionResult & {
+    __typename?: "CreateWebhookSubscriptionResultSuccess";
+    message: Scalars["String"];
+    secret: Scalars["String"];
+    subscriptionId: Scalars["String"];
 };
 
 export type CreatedAccessToken = {
@@ -914,6 +957,8 @@ export type Dataset = {
     role?: Maybe<DatasetAccessRole>;
     /** Returns the visibility of dataset */
     visibility: DatasetVisibilityOutput;
+    /** Access to the dataset's webhooks management functionality */
+    webhooks: DatasetWebhooks;
 };
 
 export enum DatasetAccessRole {
@@ -1274,6 +1319,8 @@ export type DatasetMut = {
     setVisibility: SetDatasetVisibilityResult;
     /** Manually advances the watermark of a root dataset */
     setWatermark: SetWatermarkResult;
+    /** Access to webhooks management methods */
+    webhooks: DatasetWebhooksMut;
 };
 
 export type DatasetMutRenameArgs = {
@@ -1295,6 +1342,7 @@ export type DatasetPermissions = {
     flows: DatasetFlowsPermissions;
     general: DatasetGeneralPermissions;
     metadata: DatasetMetadataPermissions;
+    webhooks: DatasetWebhooksPermissions;
 };
 
 export type DatasetPushStatus = {
@@ -1331,6 +1379,39 @@ export type DatasetVisibilityInput =
     | { private?: never; public: PublicDatasetVisibilityInput };
 
 export type DatasetVisibilityOutput = PrivateDatasetVisibility | PublicDatasetVisibility;
+
+export type DatasetWebhooks = {
+    __typename?: "DatasetWebhooks";
+    /** Returns a webhook subscription by ID */
+    subscription?: Maybe<WebhookSubscription>;
+    /** Lists all webhook subscriptions for the dataset */
+    subscriptions: Array<WebhookSubscription>;
+};
+
+export type DatasetWebhooksSubscriptionArgs = {
+    id: Scalars["WebhookSubscriptionID"];
+};
+
+export type DatasetWebhooksMut = {
+    __typename?: "DatasetWebhooksMut";
+    createSubscription: CreateWebhookSubscriptionResult;
+    /** Returns a webhook subscription management API by ID */
+    subscription?: Maybe<WebhookSubscriptionMut>;
+};
+
+export type DatasetWebhooksMutCreateSubscriptionArgs = {
+    input: WebhookSubscriptionInput;
+};
+
+export type DatasetWebhooksMutSubscriptionArgs = {
+    id: Scalars["WebhookSubscriptionID"];
+};
+
+export type DatasetWebhooksPermissions = {
+    __typename?: "DatasetWebhooksPermissions";
+    canUpdate: Scalars["Boolean"];
+    canView: Scalars["Boolean"];
+};
 
 export type Datasets = {
     __typename?: "Datasets";
@@ -1496,6 +1577,11 @@ export type DisablePushSource = {
     __typename?: "DisablePushSource";
     /** Identifies the source to be disabled. */
     sourceName: Scalars["String"];
+};
+
+export type Eip4361AuthNonceResponse = {
+    __typename?: "Eip4361AuthNonceResponse";
+    value: Scalars["Eip4361AuthNonce"];
 };
 
 export type EngineDesc = {
@@ -2459,12 +2545,14 @@ export enum MetadataManifestFormat {
 export type MetadataManifestMalformed = CommitResult &
     CreateDatasetFromSnapshotResult & {
         __typename?: "MetadataManifestMalformed";
+        isSuccess: Scalars["Boolean"];
         message: Scalars["String"];
     };
 
 export type MetadataManifestUnsupportedVersion = CommitResult &
     CreateDatasetFromSnapshotResult & {
         __typename?: "MetadataManifestUnsupportedVersion";
+        isSuccess: Scalars["Boolean"];
         message: Scalars["String"];
     };
 
@@ -2583,6 +2671,22 @@ export type PageBasedInfo = {
     totalPages?: Maybe<Scalars["Int"]>;
 };
 
+export type PauseWebhookSubscriptionResult = {
+    message: Scalars["String"];
+};
+
+export type PauseWebhookSubscriptionResultSuccess = PauseWebhookSubscriptionResult & {
+    __typename?: "PauseWebhookSubscriptionResultSuccess";
+    message: Scalars["String"];
+    paused: Scalars["Boolean"];
+};
+
+export type PauseWebhookSubscriptionResultUnexpected = PauseWebhookSubscriptionResult & {
+    __typename?: "PauseWebhookSubscriptionResultUnexpected";
+    message: Scalars["String"];
+    status: WebhookSubscriptionStatus;
+};
+
 export type PostgreSqlDesl = {
     __typename?: "PostgreSqlDesl";
     url: Scalars["String"];
@@ -2672,6 +2776,13 @@ export type Query = {
     datasets: Datasets;
     /** Search-related functionality group */
     search: Search;
+    /**
+     * Webhook-related functionality group
+     *
+     * Webhooks are used to send notifications about events happening in the
+     * system. This groups deals with their management and subscriptions.
+     */
+    webhooks: Webhooks;
 };
 
 export enum QueryDialect {
@@ -2917,6 +3028,16 @@ export type ReadStepParquet = {
     schema?: Maybe<Array<Scalars["String"]>>;
 };
 
+export type RemoveWebhookSubscriptionResult = {
+    message: Scalars["String"];
+};
+
+export type RemoveWebhookSubscriptionResultSuccess = RemoveWebhookSubscriptionResult & {
+    __typename?: "RemoveWebhookSubscriptionResultSuccess";
+    message: Scalars["String"];
+    removed: Scalars["Boolean"];
+};
+
 export type RenameResult = {
     message: Scalars["String"];
 };
@@ -2964,6 +3085,22 @@ export type RestProtocolDesc = {
     pushUrl: Scalars["String"];
     queryUrl: Scalars["String"];
     tailUrl: Scalars["String"];
+};
+
+export type ResumeWebhookSubscriptionResult = {
+    message: Scalars["String"];
+};
+
+export type ResumeWebhookSubscriptionResultSuccess = ResumeWebhookSubscriptionResult & {
+    __typename?: "ResumeWebhookSubscriptionResultSuccess";
+    message: Scalars["String"];
+    resumed: Scalars["Boolean"];
+};
+
+export type ResumeWebhookSubscriptionResultUnexpected = ResumeWebhookSubscriptionResult & {
+    __typename?: "ResumeWebhookSubscriptionResultUnexpected";
+    message: Scalars["String"];
+    status: WebhookSubscriptionStatus;
 };
 
 export type RevokeResult = {
@@ -3530,6 +3667,22 @@ export type UpdateVersionSuccess = UpdateVersionResult & {
     oldHead: Scalars["Multihash"];
 };
 
+export type UpdateWebhookSubscriptionResult = {
+    message: Scalars["String"];
+};
+
+export type UpdateWebhookSubscriptionResultSuccess = UpdateWebhookSubscriptionResult & {
+    __typename?: "UpdateWebhookSubscriptionResultSuccess";
+    message: Scalars["String"];
+    updated: Scalars["Boolean"];
+};
+
+export type UpdateWebhookSubscriptionResultUnexpected = UpdateWebhookSubscriptionResult & {
+    __typename?: "UpdateWebhookSubscriptionResultUnexpected";
+    message: Scalars["String"];
+    status: WebhookSubscriptionStatus;
+};
+
 export type UpsertDatasetEnvVarResult = {
     message: Scalars["String"];
 };
@@ -3576,7 +3729,7 @@ export type VersionedFileContentDownload = {
     __typename?: "VersionedFileContentDownload";
     /** Download URL expiration timestamp */
     expiresAt?: Maybe<Scalars["DateTime"]>;
-    /** Headers to include in request */
+    /** Headers to include in the request */
     headers: Array<KeyValue>;
     /** Direct download URL */
     url: Scalars["String"];
@@ -3586,20 +3739,22 @@ export type VersionedFileEntry = {
     __typename?: "VersionedFileEntry";
     /**
      * Returns encoded content in-band. Should be used for small files only and
-     * will retrurn error if called on large data.
+     * will return an error if called on large data.
      */
     content: Scalars["Base64Usnp"];
     /** Multihash of the file content */
     contentHash: Scalars["Multihash"];
+    /** Size of the content in bytes */
+    contentLength: Scalars["Int"];
     /** Media type of the file content */
     contentType: Scalars["String"];
     /** Returns a direct download URL */
     contentUrl: VersionedFileContentDownload;
-    /** Time when this version was created */
+    /** Event time when this version was created/updated */
     eventTime: Scalars["DateTime"];
     /** Extra data associated with this file version */
-    extraData: Scalars["JSON"];
-    /** Time when this version was created */
+    extraData: Scalars["ExtraData"];
+    /** System time when this version was created/updated */
     systemTime: Scalars["DateTime"];
     /** File version */
     version: Scalars["Int"];
@@ -3624,7 +3779,7 @@ export type VersionedFileEntryEdge = {
 export type VersionedFileMut = {
     __typename?: "VersionedFileMut";
     /**
-     * Finalizes the content upload by incoporating the content into the
+     * Finalizes the content upload by incorporating the content into the
      * dataset as a new version
      */
     finishUploadNewVersion: UpdateVersionResult;
@@ -3639,15 +3794,15 @@ export type VersionedFileMut = {
      */
     updateExtraData: UpdateVersionResult;
     /**
-     * Uploads new version of content in-band. Can be used for very small files
-     * only.
+     * Uploads a new version of content in-band. Can be used for very small
+     * files only.
      */
     uploadNewVersion: UpdateVersionResult;
 };
 
 export type VersionedFileMutFinishUploadNewVersionArgs = {
     expectedHead?: InputMaybe<Scalars["Multihash"]>;
-    extraData?: InputMaybe<Scalars["JSON"]>;
+    extraData?: InputMaybe<Scalars["ExtraData"]>;
     uploadToken: Scalars["String"];
 };
 
@@ -3658,14 +3813,14 @@ export type VersionedFileMutStartUploadNewVersionArgs = {
 
 export type VersionedFileMutUpdateExtraDataArgs = {
     expectedHead?: InputMaybe<Scalars["Multihash"]>;
-    extraData: Scalars["JSON"];
+    extraData: Scalars["ExtraData"];
 };
 
 export type VersionedFileMutUploadNewVersionArgs = {
     content: Scalars["Base64Usnp"];
     contentType?: InputMaybe<Scalars["String"]>;
     expectedHead?: InputMaybe<Scalars["Multihash"]>;
-    extraData?: InputMaybe<Scalars["JSON"]>;
+    extraData?: InputMaybe<Scalars["ExtraData"]>;
 };
 
 export type ViewAccessToken = {
@@ -3714,6 +3869,78 @@ export type ViewDatasetEnvVarEdge = {
 export type WebSocketProtocolDesc = {
     __typename?: "WebSocketProtocolDesc";
     url: Scalars["String"];
+};
+
+export type WebhookSubscription = {
+    __typename?: "WebhookSubscription";
+    /**
+     * Associated dataset ID
+     * Not present for system subscriptions
+     */
+    datasetId?: Maybe<Scalars["DatasetID"]>;
+    /** List of events that trigger the webhook */
+    eventTypes: Array<Scalars["String"]>;
+    /** Unique identifier of the webhook subscription */
+    id: Scalars["WebhookSubscriptionID"];
+    /** Optional label for the subscription. Maybe an empty string. */
+    label: Scalars["String"];
+    /** Status of the subscription */
+    status: WebhookSubscriptionStatus;
+    /** Target URL for the webhook */
+    targetUrl: Scalars["String"];
+};
+
+export type WebhookSubscriptionDuplicateLabel = CreateWebhookSubscriptionResult &
+    UpdateWebhookSubscriptionResult & {
+        __typename?: "WebhookSubscriptionDuplicateLabel";
+        label: Scalars["String"];
+        message: Scalars["String"];
+    };
+
+export type WebhookSubscriptionInput = {
+    eventTypes: Array<Scalars["WebhookEventType"]>;
+    label: Scalars["String"];
+    targetUrl: Scalars["URL"];
+};
+
+export type WebhookSubscriptionInvalidTargetUrl = CreateWebhookSubscriptionResult &
+    UpdateWebhookSubscriptionResult & {
+        __typename?: "WebhookSubscriptionInvalidTargetUrl";
+        innerMessage: Scalars["String"];
+        message: Scalars["String"];
+    };
+
+export type WebhookSubscriptionMut = {
+    __typename?: "WebhookSubscriptionMut";
+    pause: PauseWebhookSubscriptionResult;
+    remove: RemoveWebhookSubscriptionResult;
+    resume: ResumeWebhookSubscriptionResult;
+    update: UpdateWebhookSubscriptionResult;
+};
+
+export type WebhookSubscriptionMutUpdateArgs = {
+    input: WebhookSubscriptionInput;
+};
+
+export type WebhookSubscriptionNoEventTypesProvided = CreateWebhookSubscriptionResult &
+    UpdateWebhookSubscriptionResult & {
+        __typename?: "WebhookSubscriptionNoEventTypesProvided";
+        message: Scalars["String"];
+        numEventTypes: Scalars["Int"];
+    };
+
+export enum WebhookSubscriptionStatus {
+    Enabled = "ENABLED",
+    Paused = "PAUSED",
+    Removed = "REMOVED",
+    Unreachable = "UNREACHABLE",
+    Unverified = "UNVERIFIED",
+}
+
+export type Webhooks = {
+    __typename?: "Webhooks";
+    /** List of supported event types */
+    eventTypes: Array<Scalars["String"]>;
 };
 
 export type CreateAccessTokenMutationVariables = Exact<{
@@ -3923,7 +4150,12 @@ export type DeleteAccountByNameMutation = {
     };
 };
 
-export type AccountBasicsFragment = { __typename?: "Account"; id: string; accountName: string };
+export type AccountBasicsFragment = {
+    __typename?: "Account";
+    id: string;
+    accountName: string;
+    accountProvider: AccountProvider;
+};
 
 export type DatasetConnectionDataFragment = {
     __typename?: "DatasetConnection";
@@ -3975,10 +4207,26 @@ export type AccountFragment = {
     accountType: AccountType;
     avatarUrl?: string | null;
     isAdmin: boolean;
+    accountProvider: AccountProvider;
+};
+
+export type LoginWeb3WalletMutationVariables = Exact<{
+    account: Scalars["EvmWalletAddress"];
+}>;
+
+export type LoginWeb3WalletMutation = {
+    __typename?: "Mutation";
+    auth: {
+        __typename?: "AuthMut";
+        web3: {
+            __typename?: "AuthWeb3Mut";
+            eip4361AuthNonce: { __typename?: "Eip4361AuthNonceResponse"; value: string };
+        };
+    };
 };
 
 export type LoginMutationVariables = Exact<{
-    login_method: Scalars["String"];
+    login_method: AccountProvider;
     login_credentials_json: Scalars["String"];
     deviceCode?: InputMaybe<Scalars["DeviceCode"]>;
 }>;
@@ -4544,7 +4792,7 @@ export type GetEnabledLoginMethodsQueryVariables = Exact<{ [key: string]: never 
 
 export type GetEnabledLoginMethodsQuery = {
     __typename?: "Query";
-    auth: { __typename?: "Auth"; enabledLoginMethods: Array<string> };
+    auth: { __typename?: "Auth"; enabledProviders: Array<AccountProvider> };
 };
 
 export type EnginesQueryVariables = Exact<{ [key: string]: never }>;
@@ -6128,6 +6376,7 @@ export const AccountBasicsFragmentDoc = gql`
     fragment AccountBasics on Account {
         id
         accountName
+        accountProvider
     }
 `;
 export const DatasetBasicsFragmentDoc = gql`
@@ -6289,6 +6538,7 @@ export const AccountFragmentDoc = gql`
         accountType
         avatarUrl
         isAdmin
+        accountProvider
     }
 `;
 export const FlowOutcomeDataFragmentDoc = gql`
@@ -7857,8 +8107,30 @@ export class DeleteAccountByNameGQL extends Apollo.Mutation<
         super(apollo);
     }
 }
+export const LoginWeb3WalletDocument = gql`
+    mutation LoginWeb3Wallet($account: EvmWalletAddress!) {
+        auth {
+            web3 {
+                eip4361AuthNonce(account: $account) {
+                    value
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class LoginWeb3WalletGQL extends Apollo.Mutation<LoginWeb3WalletMutation, LoginWeb3WalletMutationVariables> {
+    document = LoginWeb3WalletDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
 export const LoginDocument = gql`
-    mutation Login($login_method: String!, $login_credentials_json: String!, $deviceCode: DeviceCode) {
+    mutation Login($login_method: AccountProvider!, $login_credentials_json: String!, $deviceCode: DeviceCode) {
         auth {
             login(loginMethod: $login_method, loginCredentialsJson: $login_credentials_json, deviceCode: $deviceCode) {
                 accessToken
@@ -8741,7 +9013,7 @@ export class DeleteDatasetGQL extends Apollo.Mutation<DeleteDatasetMutation, Del
 export const GetEnabledLoginMethodsDocument = gql`
     query getEnabledLoginMethods {
         auth {
-            enabledLoginMethods
+            enabledProviders
         }
     }
 `;

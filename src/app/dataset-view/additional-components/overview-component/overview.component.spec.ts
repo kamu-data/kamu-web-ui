@@ -18,7 +18,12 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { OverviewComponent } from "./overview.component";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
-import { DatasetCurrentInfoFragment, DatasetKind, DatasetOverviewFragment } from "src/app/api/kamu.graphql.interface";
+import {
+    AccountProvider,
+    DatasetCurrentInfoFragment,
+    DatasetKind,
+    DatasetOverviewFragment,
+} from "src/app/api/kamu.graphql.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 import { NgbModal, NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatChipsModule } from "@angular/material/chips";
@@ -129,6 +134,7 @@ describe("OverviewComponent", () => {
                     __typename: "Account",
                     id: mockOverviewDataUpdate.overview.owner.id,
                     accountName: mockOverviewDataUpdate.overview.owner.accountName,
+                    accountProvider: AccountProvider.Password,
                 },
                 visibility: mockPublicDatasetVisibility,
             },

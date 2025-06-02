@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Added wallet based authentication
+### Changed
+- Changed the title to `404 Requested Page Not Found` for page not found and added a button `Try signing in`
+
 
 ## [0.48.0] - 2025-05-22
 ### Added

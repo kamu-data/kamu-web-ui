@@ -10,19 +10,22 @@ import { FormGroup, AbstractControl, ValidationErrors } from "@angular/forms";
 import { Subscription, tap } from "rxjs";
 import AppValues from "../values/app.values";
 import { ValidationError, ValidationErrorTuple } from "./form-validation-errors.types";
+import { NgSelectComponent } from "@ng-select/ng-select";
 
 @Directive({
     selector: "[appFieldError]",
 })
 export class FormValidationErrorsDirective implements OnDestroy, OnChanges {
     @Input() public appFieldError: ValidationError | ValidationError[] | ValidationErrorTuple | ValidationErrorTuple[];
-    @Input() public input: HTMLInputElement | undefined;
+    @Input() public input: HTMLInputElement | NgSelectComponent | undefined;
     @Input() public group: FormGroup;
     @Input() public fieldControl: AbstractControl | null;
     @Input() public fieldLabel: string | undefined;
 
     private readonly nativeElement: HTMLElement;
     private controlSubscription: Subscription | undefined;
+    private ngSelectStatusSubscription: Subscription | undefined;
+    private ngSelectBlurSubscription: Subscription | undefined;
     private el = inject(ElementRef);
 
     public constructor() {
@@ -85,19 +88,34 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges {
 
     public unsubscribe(): void {
         this.controlSubscription?.unsubscribe();
+        this.ngSelectStatusSubscription?.unsubscribe();
+        this.ngSelectBlurSubscription?.unsubscribe();
     }
 
     public initFieldControl() {
-        if (this.input && this.group) {
-            const controlName = this.input.getAttribute("formControlName") ?? "";
-            this.fieldControl = this.fieldControl || this.group.get(controlName);
-            if (!this.fieldControl) {
-                throw new Error(`[appFieldError] couldn't bind to control ${controlName}`);
+        if (this.input && this.input instanceof HTMLInputElement && this.group) {
+            if (this.input instanceof HTMLInputElement) {
+                const controlName = this.input.getAttribute("formControlName") ?? "";
+                this.fieldControl = this.fieldControl || this.group.get(controlName);
+
+                if (!this.fieldControl) {
+                    throw new Error(`[appFieldError] couldn't bind to control ${controlName}`);
+                }
+                this.unsubscribe();
+
+                this.controlSubscription = this.fieldControl?.valueChanges
+                    .pipe(tap(() => this.updateErrorMessage()))
+                    .subscribe();
             }
-            this.unsubscribe();
-            this.controlSubscription = this.fieldControl?.valueChanges
-                .pipe(tap(() => this.updateErrorMessage()))
-                .subscribe();
+
+            if (this.input instanceof NgSelectComponent) {
+                this.ngSelectStatusSubscription = this.fieldControl?.statusChanges.subscribe(() => {
+                    this.updateErrorMessage();
+                });
+                this.ngSelectBlurSubscription = this.input.blurEvent.subscribe(() => {
+                    this.updateErrorMessage();
+                });
+            }
         }
     }
 
@@ -105,7 +123,7 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges {
         this.initFieldControl();
         if (changes.input && changes.input.firstChange) {
             if (this.input) {
-                this.input.onblur = () => this.updateErrorMessage();
+                (this.input as HTMLInputElement).onblur = () => this.updateErrorMessage();
             } else {
                 throw new Error(`appFieldError directive [input] parameter couldn't bind to any input element`);
             }

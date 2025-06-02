@@ -9,7 +9,7 @@
             type="button"
             class="btn-close"
             aria-label="Close"
-            (keydown.esc)="activeModal.close()"
+            (keydown.esc)="activeModal.close({ action: WebhookSubscriptionModalAction.CLOSE })"
             (click)="activeModal.close({ action: WebhookSubscriptionModalAction.CLOSE })"
         ></button>
     </div>
@@ -49,19 +49,20 @@
                 bindValue="value"
                 formControlName="eventTypes"
                 [multiple]="true"
+                #eventTypes
             >
                 <ng-template ng-option-tmp let-item="item" let-index="index">
                     <label class="fs-14 inline-block"> {{ item.name }} </label>
                 </ng-template>
             </ng-select>
-
-            <div *ngIf="eventTypesControl?.invalid && (eventTypesControl?.touched || eventTypesControl?.dirty)">
-                <div *ngIf="eventTypesControl?.errors?.required">
-                    <span class="text-danger fs-12" data-test-id="error-event-selection">
-                        Event selection is required</span
-                    >
-                </div>
-            </div>
+            <div
+                class="text-danger fs-12"
+                [input]="eventTypes"
+                [fieldLabel]="'Event selection'"
+                [appFieldError]="'required'"
+                [fieldControl]="createSubscriptionForm.get('eventTypes')"
+                [group]="createSubscriptionForm"
+            ></div>
         </div>
         <div class="d-flex flex-column mt-4">
             <label for="" class="form-label">Label </label>
@@ -109,7 +110,7 @@
 <div class="px-4 pt-4 pb-2 d-flex" *ngIf="!subscriptionData?.secret">
     <button
         type="button"
-        (click)="activeModal.close()"
+        (click)="activeModal.close({ action: WebhookSubscriptionModalAction.CLOSE })"
         class="btn btn-light flex-fill me-2"
         data-test-id="cancel-subscription"
     >

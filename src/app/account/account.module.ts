@@ -22,6 +22,7 @@ import { PaginationModule } from "../common/components/pagination-component/pagi
 import { FlowsViewModule } from "../dataset-flow/flows-view.module";
 import { FeatureFlagModule } from "../common/directives/feature-flag.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { DisplayAccountNameModule } from "../common/pipes/display-account-name.module";
 import { SettingsTabComponent } from "./additional-components/settings-tab/settings-tab.component";
 import { AccountSettingsModule } from "./settings/account-settings.module";
 
@@ -41,6 +42,7 @@ import { AccountSettingsModule } from "./settings/account-settings.module";
 
         AccountSettingsModule,
         DatasetListModule,
+        DisplayAccountNameModule,
         FeatureFlagModule,
         FlowsViewModule,
         PaginationModule,

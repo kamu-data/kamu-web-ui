@@ -1,0 +1,9 @@
+mutation LoginWeb3Wallet($account: EvmWalletAddress!) {
+  auth {
+    web3 {
+      eip4361AuthNonce(account: $account) {
+        value
+      }
+    }
+  }
+}

@@ -238,12 +238,16 @@
                         />
                     </button>
                     <mat-icon class="admin-icon" *ngIf="isAdmin"> admin_panel_settings</mat-icon>
+                    <mat-icon class="wallet-icon" *ngIf="isWeb3Wallet" svgIcon="ethereum-2" />
                 </div>
+
                 <mat-menu #menu="matMenu" class="app-header__user-menu">
                     <p id="matmenu-signed-in-name">
                         Signed in as
-                        <strong data-test-id="userName">{{
-                            isUserLoggedIn() ? loggedAccount.displayName : DEFAULT_USER_DISPLAY_NAME
+                        <strong data-test-id="userName" [title]="loggedAccount.displayName">{{
+                            isUserLoggedIn()
+                                ? (loggedAccount.displayName | displayAccountName: loggedAccount.accountProvider)
+                                : DEFAULT_USER_DISPLAY_NAME
                         }}</strong>
                     </p>
 

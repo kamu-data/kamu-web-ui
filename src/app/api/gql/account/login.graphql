@@ -1,4 +1,4 @@
-mutation Login($login_method: String!, $login_credentials_json: String!, $deviceCode: DeviceCode) {
+mutation Login($login_method: AccountProvider!, $login_credentials_json: String!, $deviceCode: DeviceCode) {
   auth {
     login(loginMethod: $login_method, loginCredentialsJson: $login_credentials_json, deviceCode: $deviceCode) {
       accessToken

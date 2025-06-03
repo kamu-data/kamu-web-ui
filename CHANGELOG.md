@@ -4,15 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-### Fixed
-- Redirect after login for private dataset for expired token
+## [0.49.0] - 2025-06-02
+### Added
+- Added wallet based authentication
+### Changed
+- Changed the title to `404 Requested Page Not Found` for page not found and added a button `Try signing in`
 
-## [Unreleased]
+
+## [0.48.0] - 2025-05-22
 ### Added
 - Added account deletion
 ### Fixed
-History tab: make equal indents for nodes and align the horizontal line for timeline item
+- History tab: make equal indents for nodes and align the horizontal line for timeline item
+- Redirect after login for private dataset for expired token
 
 ## [0.47.0] - 2025-05-14
 ### Added

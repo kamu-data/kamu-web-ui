@@ -8,15 +8,20 @@
 import { inject, Injectable } from "@angular/core";
 import { Observable, ReplaySubject, Subject, map } from "rxjs";
 import { AuthApi } from "src/app/api/auth.api";
-import { GithubLoginCredentials, LoginResponseType, PasswordLoginCredentials } from "src/app/api/auth.api.model";
-import { AccountFragment } from "src/app/api/kamu.graphql.interface";
-import { LoginMethod } from "src/app/app-config.model";
+import {
+    GithubLoginCredentials,
+    LoginResponseType,
+    PasswordLoginCredentials,
+    Web3WalletOwnershipVerificationRequest,
+} from "src/app/api/auth.api.model";
+import { AccountFragment, AccountProvider } from "src/app/api/kamu.graphql.interface";
 import { AuthenticationError } from "src/app/common/values/errors";
 import { NavigationService } from "src/app/services/navigation.service";
 import { AppConfigService } from "src/app/app-config.service";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { SessionStorageService } from "src/app/services/session-storage.service";
+import { Eip1193EthereumService } from "./ethereum.service";
 
 @Injectable({
     providedIn: "root",
@@ -27,12 +32,13 @@ export class LoginService {
     private appConfigService = inject(AppConfigService);
     private localStorageService = inject(LocalStorageService);
     private sessionStorageService = inject(SessionStorageService);
+    private ethereumService = inject(Eip1193EthereumService);
 
     private accessToken$: Subject<string> = new ReplaySubject<string>(1);
     private account$: Subject<AccountFragment> = new ReplaySubject<AccountFragment>(1);
     private passwordLoginError$: Subject<string> = new Subject<string>();
 
-    private enabledLoginMethods: LoginMethod[] = [];
+    private enabledLoginMethods: AccountProvider[] = [];
 
     private loginCallback: (loginResponse: LoginResponseType) => void = this.redirectUrlLoginCallback.bind(this);
 
@@ -68,13 +74,13 @@ export class LoginService {
 
     public initialize(): Observable<void> {
         return this.authApi.readEnabledLoginMethods().pipe(
-            map((enabledLoginMethods: LoginMethod[]): void => {
+            map((enabledLoginMethods: AccountProvider[]): void => {
                 this.enabledLoginMethods = enabledLoginMethods;
             }),
         );
     }
 
-    public get loginMethods(): LoginMethod[] {
+    public get loginMethods(): AccountProvider[] {
         return this.enabledLoginMethods;
     }
 
@@ -107,7 +113,20 @@ export class LoginService {
         });
     }
 
-    public genericLogin(loginMethod: string, loginCredentialsJson: string): Observable<void> {
+    public async web3WalletLogin(): Promise<void> {
+        await this.ethereumService.connectWallet();
+        if (this.ethereumService.currentWalet) {
+            const verificationRequest: MaybeNull<Web3WalletOwnershipVerificationRequest> =
+                await this.ethereumService.signInWithEthereum();
+            if (verificationRequest) {
+                this.authApi.fetchAccountAndTokenFromWeb3Wallet(verificationRequest).subscribe({
+                    next: this.loginCallback,
+                });
+            }
+        }
+    }
+
+    public genericLogin(loginMethod: AccountProvider, loginCredentialsJson: string): Observable<void> {
         return this.authApi.fetchAccountAndTokenFromLoginMethod(loginMethod, loginCredentialsJson).pipe(
             map((loginResponse: LoginResponseType): void => {
                 this.loginCallback(loginResponse);

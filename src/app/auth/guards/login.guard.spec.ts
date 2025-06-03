@@ -7,13 +7,12 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ApolloTestingModule } from "apollo-angular/testing";
-
 import { LoginGuard } from "./login.guard";
 import ProjectLinks from "src/app/project-links";
-import { LoginMethod } from "src/app/app-config.model";
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 import { LoginService } from "../login/login.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { AccountProvider } from "src/app/api/kamu.graphql.interface";
 
 describe("LoginGuard", () => {
     let guard: LoginGuard;
@@ -32,14 +31,14 @@ describe("LoginGuard", () => {
 
     interface TestCase {
         route: string;
-        loginMethods: LoginMethod[];
+        loginMethods: AccountProvider[];
         expectedResult: boolean;
     }
 
     [
         {
             route: ProjectLinks.URL_LOGIN,
-            loginMethods: [LoginMethod.PASSWORD],
+            loginMethods: [AccountProvider.Password],
             expectedResult: true,
         },
         {
@@ -49,7 +48,7 @@ describe("LoginGuard", () => {
         },
         {
             route: ProjectLinks.URL_SEARCH,
-            loginMethods: [LoginMethod.PASSWORD],
+            loginMethods: [AccountProvider.Password],
             expectedResult: true,
         },
         {

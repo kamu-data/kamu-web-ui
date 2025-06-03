@@ -21,11 +21,11 @@ import {
 import { Observable, OperatorFunction } from "rxjs";
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap, take, finalize } from "rxjs/operators";
 import { BaseComponent } from "src/app/common/components/base.component";
-import { AccountFragment } from "src/app/api/kamu.graphql.interface";
+import { AccountFragment, AccountProvider } from "src/app/api/kamu.graphql.interface";
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
-import { AppUIConfigFeatureFlags, LoginMethod } from "src/app/app-config.model";
+import { AppUIConfigFeatureFlags } from "src/app/app-config.model";
 import { AccountSettingsTabs } from "src/app/account/settings/account-settings.constants";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { SearchApi } from "src/app/api/search.api";
@@ -48,7 +48,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public isVisible: boolean;
     @Input({ required: true }) public loggedAccount: AccountFragment;
     @Input({ required: true }) public featureFlags: AppUIConfigFeatureFlags;
-    @Input({ required: true }) public loginMethods: LoginMethod[];
+    @Input({ required: true }) public loginMethods: AccountProvider[];
 
     @Output() public onSelectedDataset = new EventEmitter<DatasetAutocompleteItem>();
     @Output() public onClickedAddNew = new EventEmitter<null>();
@@ -112,6 +112,10 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
 
     public get isAdmin(): boolean {
         return this.loggedAccount.isAdmin;
+    }
+
+    public get isWeb3Wallet(): boolean {
+        return this.loggedAccount.accountName.startsWith("0x");
     }
 
     public search: OperatorFunction<string, readonly DatasetAutocompleteItem[]> = (text$: Observable<string>) => {

@@ -1,11 +1,11 @@
-<ng-container *ngIf="!selectedLoginMethod">
+<ng-container *ngIf="!selectedLoginMethod || selectedLoginMethod === AccountProvider.Web3Wallet">
     <div class="d-flex flex-column align-items-center login-container__buttons" data-test-id="method-selection-block">
         <img [src]="APP_LOGO" class="logo" alt="Application logo" />
         <h1 class="text-center text-muted mt-4">Select your Login Method</h1>
         <div class="inner-container">
             <button
                 data-test-id="select-method-github"
-                (click)="onSelectedLoginMethod(LoginMethod.GITHUB)"
+                (click)="onSelectedLoginMethod(AccountProvider.OauthGithub)"
                 class="login__btn"
                 md-raised-button="primary"
                 autofocus
@@ -14,24 +14,37 @@
                 <mat-icon class="github-logo" svgIcon="github-logo" />
             </button>
             <button
+                data-test-id="select-method-web3-wallet"
+                (click)="onWeb3WalletLogin()"
+                class="login__btn"
+                md-raised-button="primary"
+            >
+                Sign in with Ethereum Wallet
+                <mat-icon class="metamask-logo" svgIcon="metamask" />
+            </button>
+            <button
                 data-test-id="select-method-password"
-                (click)="onSelectedLoginMethod(LoginMethod.PASSWORD)"
+                (click)="onSelectedLoginMethod(AccountProvider.Password)"
                 class="login__btn"
                 md-raised-button="primary"
             >
                 Login with Password
             </button>
+
             <ng-container *ngIf="enableTermsOfService">
                 <ng-container *ngTemplateOutlet="termsOfServiceFragment"></ng-container>
             </ng-container>
         </div>
     </div>
 </ng-container>
-<div *ngIf="selectedLoginMethod == LoginMethod.GITHUB" class="d-flex justify-content-center align-items-center">
+<div
+    *ngIf="selectedLoginMethod == AccountProvider.OauthGithub"
+    class="d-flex justify-content-center align-items-center"
+>
     <app-spinner data-test-id="github-spinner" />
 </div>
 <div
-    *ngIf="selectedLoginMethod == LoginMethod.PASSWORD"
+    *ngIf="selectedLoginMethod == AccountProvider.Password"
     class="d-flex justify-content-center flex-column container-form"
     data-test-id="password-method-block"
 >

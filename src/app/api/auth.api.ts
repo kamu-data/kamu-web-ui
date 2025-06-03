@@ -10,16 +10,23 @@ import { catchError, first, map } from "rxjs/operators";
 import { Observable, throwError } from "rxjs";
 import {
     AccountFragment,
+    AccountProvider,
     FetchAccountDetailsGQL,
     FetchAccountDetailsMutation,
     GetEnabledLoginMethodsGQL,
     GetEnabledLoginMethodsQuery,
     LoginGQL,
     LoginMutation,
+    LoginWeb3WalletGQL,
+    LoginWeb3WalletMutation,
 } from "./kamu.graphql.interface";
 import { MutationResult } from "apollo-angular";
-import { GithubLoginCredentials, LoginResponseType, PasswordLoginCredentials } from "./auth.api.model";
-import { LoginMethod } from "../app-config.model";
+import {
+    GithubLoginCredentials,
+    LoginResponseType,
+    PasswordLoginCredentials,
+    Web3WalletOwnershipVerificationRequest,
+} from "./auth.api.model";
 import { ApolloQueryResult } from "@apollo/client";
 import { AuthenticationError } from "../common/values/errors";
 
@@ -30,12 +37,13 @@ export class AuthApi {
     private getEnabledLoginMethodsGQL = inject(GetEnabledLoginMethodsGQL);
     private loginGQL = inject(LoginGQL);
     private fetchAccountDetailsGQL = inject(FetchAccountDetailsGQL);
+    private loginWeb3WalletGQL = inject(LoginWeb3WalletGQL);
 
-    public readEnabledLoginMethods(): Observable<LoginMethod[]> {
+    public readEnabledLoginMethods(): Observable<AccountProvider[]> {
         return this.getEnabledLoginMethodsGQL.watch().valueChanges.pipe(
             first(),
             map((result: ApolloQueryResult<GetEnabledLoginMethodsQuery>) => {
-                return result.data.auth.enabledLoginMethods as LoginMethod[];
+                return result.data.auth.enabledProviders;
             }),
         );
     }
@@ -44,18 +52,32 @@ export class AuthApi {
         credentials: PasswordLoginCredentials,
         deviceCode?: string,
     ): Observable<LoginResponseType> {
-        return this.fetchAccountAndTokenFromLoginMethod(LoginMethod.PASSWORD, JSON.stringify(credentials), deviceCode);
+        return this.fetchAccountAndTokenFromLoginMethod(
+            AccountProvider.Password,
+            JSON.stringify(credentials),
+            deviceCode,
+        );
     }
 
     public fetchAccountAndTokenFromGithubCallbackCode(
         credentials: GithubLoginCredentials,
         deviceCode?: string,
     ): Observable<LoginResponseType> {
-        return this.fetchAccountAndTokenFromLoginMethod(LoginMethod.GITHUB, JSON.stringify(credentials), deviceCode);
+        return this.fetchAccountAndTokenFromLoginMethod(
+            AccountProvider.OauthGithub,
+            JSON.stringify(credentials),
+            deviceCode,
+        );
+    }
+
+    public fetchAccountAndTokenFromWeb3Wallet(
+        credentials: Web3WalletOwnershipVerificationRequest,
+    ): Observable<LoginResponseType> {
+        return this.fetchAccountAndTokenFromLoginMethod(AccountProvider.Web3Wallet, JSON.stringify(credentials));
     }
 
     public fetchAccountAndTokenFromLoginMethod(
-        loginMethod: string,
+        loginMethod: AccountProvider,
         loginCredentialsJson: string,
         deviceCode?: string,
     ): Observable<LoginResponseType> {
@@ -84,6 +106,7 @@ export class AuthApi {
                         return result.data.auth.login;
                     } else {
                         // Normally, this code should not be reachable
+
                         throw new AuthenticationError(result.errors ?? []);
                     }
                 }),
@@ -103,6 +126,14 @@ export class AuthApi {
                 }
             }),
             catchError((e: Error) => throwError(() => new AuthenticationError([e]))),
+        );
+    }
+
+    public fetchAuthNonceFromWeb3Wallet(walletAddress: string): Observable<string> {
+        return this.loginWeb3WalletGQL.mutate({ account: walletAddress }).pipe(
+            map((result: MutationResult<LoginWeb3WalletMutation>) => {
+                return result.data?.auth.web3.eip4361AuthNonce.value as string;
+            }),
         );
     }
 }

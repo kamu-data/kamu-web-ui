@@ -6,6 +6,7 @@
  */
 
 import {
+    AccountProvider,
     AccountType,
     CreateAccessTokenMutation,
     ListAccessTokensQuery,
@@ -33,6 +34,7 @@ export const mockCreateAccessTokenMutation: CreateAccessTokenMutation = {
                     avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
                     isAdmin: true,
                     __typename: "Account",
+                    accountProvider: AccountProvider.Password,
                 },
                 __typename: "CreatedAccessToken",
             },
@@ -70,6 +72,7 @@ export const mockListAccessTokensQuery: ListAccessTokensQuery = {
                         avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
                         isAdmin: true,
                         __typename: "Account",
+                        accountProvider: AccountProvider.Password,
                     },
                     __typename: "ViewAccessToken",
                 },
@@ -86,6 +89,7 @@ export const mockListAccessTokensQuery: ListAccessTokensQuery = {
                         avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
                         isAdmin: true,
                         __typename: "Account",
+                        accountProvider: AccountProvider.Password,
                     },
                     __typename: "ViewAccessToken",
                 },

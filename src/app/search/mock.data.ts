@@ -7,6 +7,7 @@
 
 import {
     AccountBasicsFragment,
+    AccountProvider,
     CommitEventToDatasetMutation,
     CreateDatasetFromSnapshotMutation,
     CreateEmptyDatasetMutation,
@@ -74,12 +75,14 @@ export const mockDatasetInfo: DatasetInfo = {
 export const mockOwnerFields: AccountBasicsFragment = {
     id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
     accountName: "kamu",
+    accountProvider: AccountProvider.Password,
 };
 
 export const mockOwnerFieldsWithAvatar: AccountBasicsFragment & { avatarUrl?: string } = {
     id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
     accountName: "kamu",
     avatarUrl: TEST_AVATAR_URL,
+    accountProvider: AccountProvider.Password,
 };
 
 export const mockPublicDatasetVisibility: PublicDatasetVisibility = {
@@ -324,6 +327,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                 __typename: "Account",
                 id: TEST_ACCOUNT_ID,
                 accountName: "kamu",
+                accountProvider: AccountProvider.Password,
             },
             alias: "kamu/alberta.case-details",
             visibility: mockPublicDatasetVisibility,
@@ -547,6 +551,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                 id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
                 accountName: "kamu",
                 avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                accountProvider: AccountProvider.Password,
             },
             alias: "kamu/covid19.canada.daily-cases",
             visibility: {
@@ -622,6 +627,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                 avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
                                                 id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
                                                 accountName: "kamu",
+                                                accountProvider: AccountProvider.Password,
                                             },
                                             id: "did:odf:fed0174642a09caa34103a8a625acf548c56768a04aabe00ba2629cb18ac193433b07",
                                             kind: DatasetKind.Derivative,
@@ -686,6 +692,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                                     "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
                                                                 id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
                                                                 accountName: "kamu",
+                                                                accountProvider: AccountProvider.Password,
                                                             },
                                                             id: "did:odf:fed0180891d1a8dd7744447baab2a269542a7185052bdfe9e60d2641449ba24f4ea22",
                                                             kind: DatasetKind.Derivative,
@@ -712,6 +719,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                 avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
                                                 id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
                                                 accountName: "kamu",
+                                                accountProvider: AccountProvider.Password,
                                             },
                                             id: "did:odf:fed01af38acc0c8391a79e3b596b2548782f74b2f7796d7b9a11e38e61231a472cb02",
                                             kind: DatasetKind.Derivative,
@@ -738,6 +746,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                 avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
                                 id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
                                 accountName: "kamu",
+                                accountProvider: AccountProvider.Password,
                             },
                             id: "did:odf:fed01c8788dc7825dc95dfaa6c67f989b758d3ebcb1efcb9f47ea914470bd1f7f2bbb",
                             kind: DatasetKind.Derivative,

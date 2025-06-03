@@ -6,9 +6,10 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ResolveFn } from "@angular/router";
+import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 import { accountActiveTabResolverFn } from "./account-active-tab.resolver";
 import { AccountTabs } from "src/app/account/account.constants";
+import ProjectLinks from "src/app/project-links";
 
 describe("accountActiveTabResolverFn", () => {
     const executeResolver: ResolveFn<AccountTabs> = (...resolverParameters) =>
@@ -20,5 +21,25 @@ describe("accountActiveTabResolverFn", () => {
 
     it("should be created", () => {
         expect(executeResolver).toBeTruthy();
+    });
+
+    it("should check resolver", async () => {
+        const mockState = {} as RouterStateSnapshot;
+        const mockRoute = {
+            children: [
+                {
+                    children: [
+                        {
+                            data: {
+                                [ProjectLinks.URL_PARAM_TAB]: AccountTabs.DATASETS,
+                            },
+                        },
+                    ],
+                },
+            ],
+        } as ActivatedRouteSnapshot;
+        const result = await executeResolver(mockRoute, mockState);
+
+        expect(result).toEqual(AccountTabs.DATASETS);
     });
 });

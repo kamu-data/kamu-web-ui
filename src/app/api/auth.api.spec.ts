@@ -9,6 +9,7 @@ import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { AuthApi } from "./auth.api";
 import {
+    AccountProvider,
     FetchAccountDetailsDocument,
     GetEnabledLoginMethodsDocument,
     GetEnabledLoginMethodsQuery,
@@ -24,11 +25,15 @@ import {
     TEST_GITHUB_CODE,
     TEST_LOGIN,
     TEST_PASSWORD,
+    mockWeb3WalletLoginResponse,
 } from "./mock/auth.mock";
 import { AuthenticationError } from "../common/values/errors";
 import { first } from "rxjs/operators";
-import { GithubLoginCredentials, PasswordLoginCredentials } from "./auth.api.model";
-import { LoginMethod } from "../app-config.model";
+import {
+    GithubLoginCredentials,
+    PasswordLoginCredentials,
+    Web3WalletOwnershipVerificationRequest,
+} from "./auth.api.model";
 
 describe("AuthApi", () => {
     let service: AuthApi;
@@ -52,11 +57,11 @@ describe("AuthApi", () => {
     });
 
     it("should check login methods access", fakeAsync(() => {
-        const mockEnabledLoginMethods: LoginMethod[] = [LoginMethod.GITHUB, LoginMethod.PASSWORD];
+        const mockEnabledLoginMethods: AccountProvider[] = [AccountProvider.OauthGithub, AccountProvider.Password];
         const subscription$ = service
             .readEnabledLoginMethods()
             .pipe(first())
-            .subscribe((enabledLoginMethods: LoginMethod[]) => {
+            .subscribe((enabledLoginMethods: AccountProvider[]) => {
                 expect(enabledLoginMethods).toEqual(mockEnabledLoginMethods);
             });
 
@@ -64,7 +69,7 @@ describe("AuthApi", () => {
         op.flush({
             data: {
                 auth: {
-                    enabledLoginMethods: mockEnabledLoginMethods,
+                    enabledProviders: mockEnabledLoginMethods,
                 },
             } as GetEnabledLoginMethodsQuery,
         });
@@ -76,7 +81,7 @@ describe("AuthApi", () => {
         flush();
     }));
 
-    it("should check full login password  success", () => {
+    it("should check full login password success", () => {
         service
             .fetchAccountAndTokenFromPasswordLogin({
                 login: TEST_LOGIN,
@@ -87,7 +92,7 @@ describe("AuthApi", () => {
         const expectedCredentials: PasswordLoginCredentials = { login: TEST_LOGIN, password: TEST_PASSWORD };
 
         const op = controller.expectOne(LoginDocument);
-        expect(op.operation.variables.login_method).toEqual(LoginMethod.PASSWORD);
+        expect(op.operation.variables.login_method).toEqual(AccountProvider.Password);
         expect(op.operation.variables.login_credentials_json).toEqual(JSON.stringify(expectedCredentials));
 
         op.flush({
@@ -125,7 +130,7 @@ describe("AuthApi", () => {
         const expectedCredentials: GithubLoginCredentials = { code: TEST_GITHUB_CODE };
 
         const op = controller.expectOne(LoginDocument);
-        expect(op.operation.variables.login_method).toEqual(LoginMethod.GITHUB);
+        expect(op.operation.variables.login_method).toEqual(AccountProvider.OauthGithub);
         expect(op.operation.variables.login_credentials_json).toEqual(JSON.stringify(expectedCredentials));
 
         op.flush({
@@ -183,4 +188,21 @@ describe("AuthApi", () => {
         expect(subscription$.closed).toBeTrue();
         flush();
     }));
+
+    it("should check full login web3 wallet success", () => {
+        const expectedCredentials: Web3WalletOwnershipVerificationRequest = {
+            message: "test message",
+            signature: "signature",
+        };
+
+        service.fetchAccountAndTokenFromWeb3Wallet(expectedCredentials).subscribe();
+
+        const op = controller.expectOne(LoginDocument);
+        expect(op.operation.variables.login_method).toEqual(AccountProvider.Web3Wallet);
+        expect(op.operation.variables.login_credentials_json).toEqual(JSON.stringify(expectedCredentials));
+
+        op.flush({
+            data: mockWeb3WalletLoginResponse,
+        });
+    });
 });

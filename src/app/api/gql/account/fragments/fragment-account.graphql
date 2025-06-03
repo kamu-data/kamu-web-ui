@@ -5,4 +5,5 @@ fragment Account on Account {
   accountType
   avatarUrl
   isAdmin
+  accountProvider
 }

@@ -12,7 +12,6 @@ import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { AppConfigService } from "src/app/app-config.service";
-import { LoginMethod } from "src/app/app-config.model";
 import { SpinnerComponent } from "src/app/common/components/spinner/spinner/spinner.component";
 import { LoginService } from "./login.service";
 import {
@@ -33,6 +32,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { MatIconModule } from "@angular/material/icon";
 import ProjectLinks from "src/app/project-links";
+import { AccountProvider } from "src/app/api/kamu.graphql.interface";
 
 describe("LoginComponent", () => {
     let component: LoginComponent;
@@ -57,6 +57,7 @@ describe("LoginComponent", () => {
 
         SELECT_METHOD_GITHUB = "select-method-github",
         SELECT_METHOD_PASSWORD = "select-method-password",
+        SELECT_METHOD_WEB3_WALLET = "select-method-web3-wallet",
 
         INPUT_LOGIN = "input-login",
         INPUT_PASSWORD = "input-password",
@@ -116,8 +117,9 @@ describe("LoginComponent", () => {
             appConfigService = TestBed.inject(AppConfigService);
             spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue(MOCK_FEATURE_FLAGS);
             spyOnProperty(loginService, "loginMethods", "get").and.returnValue([
-                LoginMethod.GITHUB,
-                LoginMethod.PASSWORD,
+                AccountProvider.OauthGithub,
+                AccountProvider.Password,
+                AccountProvider.Web3Wallet,
             ]);
 
             createFixture();
@@ -263,35 +265,38 @@ describe("LoginComponent", () => {
         });
     });
 
-    [LoginMethod.GITHUB, LoginMethod.PASSWORD].forEach((loginMethod: LoginMethod) => {
-        describe("One-method-config", () => {
-            let spyGotoGithub: jasmine.Spy;
+    [AccountProvider.OauthGithub, AccountProvider.Password, AccountProvider.Web3Wallet].forEach(
+        (loginMethod: AccountProvider) => {
+            describe("One-method-config", () => {
+                let spyGotoGithub: jasmine.Spy;
 
-            beforeEach(() => {
-                appConfigService = TestBed.inject(AppConfigService);
-                spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue(MOCK_FEATURE_FLAGS);
-                spyOnProperty(loginService, "loginMethods", "get").and.returnValue([loginMethod]);
+                beforeEach(() => {
+                    appConfigService = TestBed.inject(AppConfigService);
+                    spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue(MOCK_FEATURE_FLAGS);
+                    spyOnProperty(loginService, "loginMethods", "get").and.returnValue([loginMethod]);
 
-                spyGotoGithub = spyOn(loginService, "gotoGithub").and.stub();
+                    spyGotoGithub = spyOn(loginService, "gotoGithub").and.stub();
 
-                createFixture();
+                    createFixture();
+                });
+
+                it("should auto-select the only available method", () => {
+                    expect(component.selectedLoginMethod).toEqual(loginMethod);
+
+                    switch (loginMethod) {
+                        case AccountProvider.OauthGithub:
+                            expect(spyGotoGithub).toHaveBeenCalledTimes(1);
+                            break;
+
+                        case AccountProvider.Password:
+                        case AccountProvider.Web3Wallet:
+                            expect(spyGotoGithub).not.toHaveBeenCalled();
+                            break;
+                    }
+                });
             });
-
-            it("should auto-select the only available method", () => {
-                expect(component.selectedLoginMethod).toEqual(loginMethod);
-
-                switch (loginMethod) {
-                    case LoginMethod.GITHUB:
-                        expect(spyGotoGithub).toHaveBeenCalledTimes(1);
-                        break;
-
-                    case LoginMethod.PASSWORD:
-                        expect(spyGotoGithub).not.toHaveBeenCalled();
-                        break;
-                }
-            });
-        });
-    });
+        },
+    );
 
     describe("Zero-method-config", () => {
         beforeEach(() => {

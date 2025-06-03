@@ -21,6 +21,7 @@ import {
     DatasetBasicsFragment,
     SemanticSearchDatasetsOverviewGQL,
     SemanticSearchDatasetsOverviewQuery,
+    AccountProvider,
 } from "./kamu.graphql.interface";
 
 export const SEARCH_RESULTS_PER_PAGE = 10;
@@ -107,6 +108,7 @@ export class SearchApi {
                             owner: {
                                 id: "",
                                 accountName: "",
+                                accountProvider: AccountProvider.Password,
                             },
                             alias: "",
                             visibility: {

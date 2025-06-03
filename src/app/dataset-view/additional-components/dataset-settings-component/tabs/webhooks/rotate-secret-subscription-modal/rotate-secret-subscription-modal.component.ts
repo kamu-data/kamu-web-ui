@@ -14,7 +14,6 @@ import { Clipboard } from "@angular/cdk/clipboard";
 @Component({
     selector: "app-rotate-secret-subscription-modal",
     templateUrl: "./rotate-secret-subscription-modal.component.html",
-    styleUrls: ["./rotate-secret-subscription-modal.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RotateSecretSubscriptionModalComponent {

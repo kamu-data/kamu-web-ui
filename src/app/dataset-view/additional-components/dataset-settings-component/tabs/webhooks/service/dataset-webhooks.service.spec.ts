@@ -7,12 +7,18 @@
 
 import { TestBed } from "@angular/core/testing";
 import { DatasetWebhooksService } from "./dataset-webhooks.service";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { Apollo } from "apollo-angular";
+import { ToastrModule } from "ngx-toastr";
 
 describe("DatasetWebhooksService", () => {
     let service: DatasetWebhooksService;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
+        TestBed.configureTestingModule({
+            providers: [Apollo],
+            imports: [HttpClientTestingModule, ToastrModule.forRoot()],
+        });
         service = TestBed.inject(DatasetWebhooksService);
     });
 

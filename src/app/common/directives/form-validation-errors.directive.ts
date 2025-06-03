@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { Directive, ElementRef, inject, Input, OnChanges, OnDestroy, SimpleChanges } from "@angular/core";
+import { Directive, ElementRef, Input, OnChanges, OnDestroy, SimpleChanges } from "@angular/core";
 import { FormGroup, AbstractControl, ValidationErrors } from "@angular/forms";
 import { Subscription, tap } from "rxjs";
 import AppValues from "../values/app.values";
@@ -16,9 +16,13 @@ import { NgSelectComponent } from "@ng-select/ng-select";
     selector: "[appFieldError]",
 })
 export class FormValidationErrorsDirective implements OnDestroy, OnChanges {
-    @Input() public appFieldError: ValidationError | ValidationError[] | ValidationErrorTuple | ValidationErrorTuple[];
+    @Input({ required: true }) public appFieldError:
+        | ValidationError
+        | ValidationError[]
+        | ValidationErrorTuple
+        | ValidationErrorTuple[];
     @Input() public input: HTMLInputElement | NgSelectComponent | undefined;
-    @Input() public group: FormGroup;
+    @Input({ required: true }) public group: FormGroup;
     @Input() public fieldControl: AbstractControl | null;
     @Input() public fieldLabel: string | undefined;
 
@@ -26,9 +30,8 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges {
     private controlSubscription: Subscription | undefined;
     private ngSelectStatusSubscription: Subscription | undefined;
     private ngSelectBlurSubscription: Subscription | undefined;
-    private el = inject(ElementRef);
 
-    public constructor() {
+    public constructor(private el: ElementRef) {
         this.nativeElement = this.el.nativeElement as HTMLElement;
     }
 

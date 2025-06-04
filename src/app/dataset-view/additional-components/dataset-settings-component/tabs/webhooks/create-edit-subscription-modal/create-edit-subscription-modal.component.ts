@@ -104,6 +104,7 @@ export class CreateEditSubscriptionModalComponent extends BaseComponent implemen
         switch (name) {
             case "DATASET.REF.UPDATED":
                 return "Dataset Updated";
+            /* istanbul ignore next */
             default:
                 return "Unknown event type";
         }

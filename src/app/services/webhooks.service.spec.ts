@@ -9,9 +9,13 @@ import { TestBed } from "@angular/core/testing";
 import { WebhooksService } from "./webhooks.service";
 import { Apollo } from "apollo-angular";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { of } from "rxjs";
+import { mockWebhookEventTypesQuery } from "../api/mock/webhooks.mock";
+import { WebhooksApi } from "./../api/webhooks.api";
 
 describe("WebhooksService", () => {
     let service: WebhooksService;
+    let webhooksApi: WebhooksApi;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -19,9 +23,18 @@ describe("WebhooksService", () => {
             imports: [HttpClientTestingModule],
         });
         service = TestBed.inject(WebhooksService);
+        webhooksApi = TestBed.inject(WebhooksApi);
     });
 
     it("should be created", () => {
         expect(service).toBeTruthy();
+    });
+
+    it("should check return event types", () => {
+        spyOn(webhooksApi, "webhookEventTypes").and.returnValue(of(mockWebhookEventTypesQuery));
+
+        service.eventTypes().subscribe((result: string[]) => {
+            expect(result).toEqual(mockWebhookEventTypesQuery.webhooks.eventTypes);
+        });
     });
 });

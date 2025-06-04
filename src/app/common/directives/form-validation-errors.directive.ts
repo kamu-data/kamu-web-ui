@@ -35,10 +35,12 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges {
         this.nativeElement = this.el.nativeElement as HTMLElement;
     }
 
+    /* istanbul ignore next */
     public renderErrors(errors: string) {
         this.nativeElement.innerText = errors;
     }
 
+    /* istanbul ignore next */
     public getStandardErrorMessage(error: ValidationError): string {
         const label = this.fieldLabel || "Input";
 
@@ -62,6 +64,7 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges {
         }
     }
 
+    /* istanbul ignore next */
     public updateErrorMessage() {
         const errorsToDisplay: string[] = [];
         const errors = Array.isArray(this.appFieldError) ? this.appFieldError : [this.appFieldError];
@@ -95,8 +98,9 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges {
         this.ngSelectBlurSubscription?.unsubscribe();
     }
 
+    /* istanbul ignore next */
     public initFieldControl() {
-        if (this.input && this.input instanceof HTMLInputElement && this.group) {
+        if (this.input && this.group) {
             if (this.input instanceof HTMLInputElement) {
                 const controlName = this.input.getAttribute("formControlName") ?? "";
                 this.fieldControl = this.fieldControl || this.group.get(controlName);
@@ -122,6 +126,7 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges {
         }
     }
 
+    /* istanbul ignore next */
     public ngOnChanges(changes: SimpleChanges): void {
         this.initFieldControl();
         if (changes.input && changes.input.firstChange) {

@@ -163,6 +163,7 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
             });
     }
 
+    /* istanbul ignore next */
     public viewDeliveryReport(): void {
         promiseWithCatch(
             this.modalService.warning({

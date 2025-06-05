@@ -72,8 +72,13 @@ export class AuthApi {
 
     public fetchAccountAndTokenFromWeb3Wallet(
         credentials: Web3WalletOwnershipVerificationRequest,
+        deviceCode?: string,
     ): Observable<LoginResponseType> {
-        return this.fetchAccountAndTokenFromLoginMethod(AccountProvider.Web3Wallet, JSON.stringify(credentials));
+        return this.fetchAccountAndTokenFromLoginMethod(
+            AccountProvider.Web3Wallet,
+            JSON.stringify(credentials),
+            deviceCode,
+        );
     }
 
     public fetchAccountAndTokenFromLoginMethod(

@@ -102,6 +102,7 @@ import { CreateEditSubscriptionModalComponent } from "./additional-components/da
 import { NgSelectModule } from "@ng-select/ng-select";
 import { RotateSecretSubscriptionModalComponent } from "./additional-components/dataset-settings-component/tabs/webhooks/rotate-secret-subscription-modal/rotate-secret-subscription-modal.component";
 import { FormValidationErrorsModule } from "../common/directives/form-validation-errors.module";
+import { CopyToClipboardModule } from "../common/components/copy-to-clipboard/copy-to-clipboard.module";
 @NgModule({
     imports: [
         DynamicTableModule,
@@ -146,6 +147,7 @@ import { FormValidationErrorsModule } from "../common/directives/form-validation
         BatchingTriggerModule,
         BlockRowDataModule,
         CommitNavigatorModule,
+        CopyToClipboardModule,
         DatasetViewMenuModule,
         DataAccessPanelModule,
         DatasetVisibilityModule,

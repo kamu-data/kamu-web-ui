@@ -9,22 +9,10 @@
                     [class.error-color]="isInputHashError(commitmentData.sqlQueryVerify?.error)"
                     >{{ commitmentData.sqlQueryExplainerResponse.commitment.inputHash }}
                 </span>
-                <button
-                    (click)="copyToClipboard($event, commitmentData.sqlQueryExplainerResponse.commitment.inputHash)"
-                    data-test-id="copyToClipboard-query-explainer-input-hash"
-                    aria-label="Copy to clipboard"
-                    class="copy-button ms-2"
-                    data-copy-feedback="Copied!"
-                    tabindex="0"
-                    role="button"
-                >
-                    <div style="position: relative; display: inline-block">
-                        <mat-icon class="mat-icon-svg-size" svgIcon="copy" />
-                    </div>
-                    <div style="position: relative; display: none">
-                        <mat-icon class="mat-icon-svg-size" svgIcon="checked" />
-                    </div>
-                </button>
+                <app-copy-to-clipboard
+                    [text]="commitmentData.sqlQueryExplainerResponse.commitment.inputHash"
+                    [dataTestId]="'copyToClipboard-query-explainer-input-hash'"
+                />
             </div>
         </div>
         <div class="m-4">
@@ -36,22 +24,10 @@
                 >
                     {{ commitmentData.sqlQueryExplainerResponse.commitment.outputHash }}</span
                 >
-                <button
-                    (click)="copyToClipboard($event, commitmentData.sqlQueryExplainerResponse.commitment.outputHash)"
-                    data-test-id="copyToClipboard-query-explainer-output-hash"
-                    aria-label="Copy to clipboard"
-                    class="copy-button ms-2"
-                    data-copy-feedback="Copied!"
-                    tabindex="1"
-                    role="button"
-                >
-                    <div style="position: relative; display: inline-block">
-                        <mat-icon class="mat-icon-svg-size" svgIcon="copy" />
-                    </div>
-                    <div style="position: relative; display: none">
-                        <mat-icon class="mat-icon-svg-size" svgIcon="checked" />
-                    </div>
-                </button>
+                <app-copy-to-clipboard
+                    [text]="commitmentData.sqlQueryExplainerResponse.commitment.outputHash"
+                    [dataTestId]="'copyToClipboard-query-explainer-output-hash'"
+                />
             </div>
         </div>
         <div class="m-4">
@@ -62,25 +38,10 @@
                     [class.error-color]="isSubQueriesHashError(commitmentData.sqlQueryVerify?.error)"
                     >{{ commitmentData.sqlQueryExplainerResponse.commitment.subQueriesHash }}
                 </span>
-
-                <button
-                    (click)="
-                        copyToClipboard($event, commitmentData.sqlQueryExplainerResponse.commitment.subQueriesHash)
-                    "
-                    data-test-id="copyToClipboard-query-explainer-sub-queries-hash"
-                    aria-label="Copy to clipboard"
-                    class="copy-button ms-2"
-                    data-copy-feedback="Copied!"
-                    tabindex="2"
-                    role="button"
-                >
-                    <div style="position: relative; display: inline-block">
-                        <mat-icon class="mat-icon-svg-size" svgIcon="copy" />
-                    </div>
-                    <div style="position: relative; display: none">
-                        <mat-icon class="mat-icon-svg-size" svgIcon="checked" />
-                    </div>
-                </button>
+                <app-copy-to-clipboard
+                    [text]="commitmentData.sqlQueryExplainerResponse.commitment.subQueriesHash"
+                    [dataTestId]="'copyToClipboard-query-explainer-sub-queries-hash'"
+                />
             </div>
         </div>
     </div>

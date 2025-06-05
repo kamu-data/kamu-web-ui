@@ -90,22 +90,7 @@
                     class="form-control w-100"
                     readonly
                 />
-
-                <button
-                    (click)="copyToClipboard($event, subscriptionData.secret)"
-                    data-test-id="copyToClipboard-secret"
-                    aria-label="Copy to clipboard"
-                    class="ms-1"
-                    tabindex="0"
-                    role="button"
-                >
-                    <div style="position: relative; display: inline-block">
-                        <mat-icon class="mat-icon-svg-size" svgIcon="copy" />
-                    </div>
-                    <div style="position: relative; display: none">
-                        <mat-icon class="mat-icon-svg-size" svgIcon="checked" />
-                    </div>
-                </button>
+                <app-copy-to-clipboard [text]="subscriptionData.secret" [dataTestId]="'copyToClipboard-secret'" />
             </div>
             <p class="text-muted fs-12" role="alert">
                 Make sure to copy your secret now. You won’t be able to see it again!

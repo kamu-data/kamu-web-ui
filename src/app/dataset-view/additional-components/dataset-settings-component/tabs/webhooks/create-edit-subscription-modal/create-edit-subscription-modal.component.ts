@@ -25,7 +25,6 @@ import {
 } from "./create-edit-subscription-modal.model";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { Clipboard } from "@angular/cdk/clipboard";
-import { changeCopyIcon } from "src/app/common/helpers/app.helpers";
 import { ErrorSets } from "src/app/common/directives/form-validation-errors.types";
 import { FormGroup, NonNullableFormBuilder } from "@angular/forms";
 
@@ -93,10 +92,5 @@ export class CreateEditSubscriptionModalComponent extends BaseComponent implemen
 
     public verifyNow(): void {
         this.activeModal.close({ action: WebhookSubscriptionModalAction.VERIFY });
-    }
-
-    public copyToClipboard(event: MouseEvent, text: string): void {
-        this.clipboard.copy(text);
-        changeCopyIcon(event);
     }
 }

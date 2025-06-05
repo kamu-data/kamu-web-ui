@@ -18,8 +18,8 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetWebhooksService } from "./service/dataset-webhooks.service";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { finalize, from, of, switchMap } from "rxjs";
+
+import { finalize, first, from, of, switchMap } from "rxjs";
 import {
     CreateWebhookSubscriptionSuccess,
     WebhookSubscriptionModalAction,
@@ -57,11 +57,11 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
         this.datasetWebhooksService
             .datasetWebhookSubscriptions(this.datasetBasics.id)
             .pipe(
+                first(),
                 finalize(() => {
                     this.isLoaded = true;
                     this.cdr.detectChanges();
                 }),
-                takeUntilDestroyed(this.destroyRef),
             )
 
             .subscribe((data: WebhookSubscription[]) => {
@@ -89,7 +89,6 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
                           )
                         : of(),
                 ),
-                takeUntilDestroyed(this.destroyRef),
             )
             .subscribe((data: CreateWebhookSubscriptionSuccess | null) => {
                 if (data) {
@@ -110,7 +109,6 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
                                 }
                                 return of();
                             }),
-                            takeUntilDestroyed(this.destroyRef),
                         )
                         .subscribe();
                 }
@@ -199,7 +197,6 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
                           })
                         : of(false),
                 ),
-                takeUntilDestroyed(this.destroyRef),
             )
             .subscribe((result: boolean) => {
                 if (result) {

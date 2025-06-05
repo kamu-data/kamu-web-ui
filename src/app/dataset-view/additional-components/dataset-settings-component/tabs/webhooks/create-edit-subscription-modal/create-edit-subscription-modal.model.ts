@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { FormControl } from "@angular/forms";
 import { WebhookSubscriptionInput, WebhookSubscriptionStatus } from "src/app/api/kamu.graphql.interface";
 export interface SubscribedEventType {
     name: string;
@@ -29,3 +30,9 @@ export interface WebhookSubscriptionModalActionResult {
     action: WebhookSubscriptionModalAction;
     payload?: WebhookSubscriptionInput;
 }
+
+export type WebhookSubscriptionFormType = {
+    eventTypes: FormControl<string[]>;
+    label: FormControl<string>;
+    targetUrl: FormControl<string>;
+};

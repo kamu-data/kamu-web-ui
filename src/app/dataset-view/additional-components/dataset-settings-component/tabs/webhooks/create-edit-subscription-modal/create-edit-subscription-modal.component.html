@@ -19,7 +19,7 @@
 </div>
 
 <div class="body p-4">
-    <form [formGroup]="createSubscriptionForm">
+    <form [formGroup]="createOrEditSubscriptionForm">
         <div class="d-flex flex-column">
             <label for="" class="form-label">Target URL <span class="text-danger">*</span></label>
             <input
@@ -34,7 +34,7 @@
                 [input]="targetUrl"
                 [fieldLabel]="'Target URL'"
                 [appFieldError]="ErrorSets.TargetUrl"
-                [group]="createSubscriptionForm"
+                [group]="createOrEditSubscriptionForm"
             ></div>
 
             <p class="text-muted fs-12">
@@ -60,8 +60,8 @@
                 [input]="eventTypes"
                 [fieldLabel]="'Event selection'"
                 [appFieldError]="'required'"
-                [fieldControl]="createSubscriptionForm.get('eventTypes')"
-                [group]="createSubscriptionForm"
+                [fieldControl]="createOrEditSubscriptionForm.get('eventTypes')"
+                [group]="createOrEditSubscriptionForm"
             ></div>
         </div>
         <div class="d-flex flex-column mt-4">
@@ -72,7 +72,7 @@
                 [input]="label"
                 [fieldLabel]="'Label'"
                 [appFieldError]="'maxlength'"
-                [group]="createSubscriptionForm"
+                [group]="createOrEditSubscriptionForm"
             ></div>
             <p class="text-muted fs-12">Optinal unique label to identify this webhook subscription</p>
         </div>
@@ -95,7 +95,7 @@
                     (click)="copyToClipboard($event, subscriptionData.secret)"
                     data-test-id="copyToClipboard-secret"
                     aria-label="Copy to clipboard"
-                    class="copy-button-data-access ms-1"
+                    class="ms-1"
                     tabindex="0"
                     role="button"
                 >
@@ -126,7 +126,7 @@
     <button
         type="button"
         (click)="subscriptionData ? updateWebhook() : createWebhook()"
-        [disabled]="createSubscriptionForm.invalid"
+        [disabled]="createOrEditSubscriptionForm.invalid"
         class="btn btn-success flex-fill"
         [attr.data-test-id]="subscriptionData ? 'update-subscription' : 'create-subscription'"
     >

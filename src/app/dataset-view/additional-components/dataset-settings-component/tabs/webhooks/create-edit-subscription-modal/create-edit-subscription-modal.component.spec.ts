@@ -62,7 +62,9 @@ describe("CreateEditSubscriptionModalComponent", () => {
         webhooksService = TestBed.inject(WebhooksService);
         ngbActiveModal = TestBed.inject(NgbActiveModal);
 
-        spyOn(webhooksService, "eventTypes").and.returnValue(of(["DATASET.REF.UPDATED"]));
+        spyOn(webhooksService, "eventTypes").and.returnValue(
+            of([{ value: "DATASET.REF.UPDATED", name: "Dataset Updated" }]),
+        );
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsRootFragment;
         component.subscriptionData = null;
@@ -86,7 +88,7 @@ describe("CreateEditSubscriptionModalComponent", () => {
 
     it("should pass payload when create subscription", () => {
         const activeModalCloseSpy = spyOn(ngbActiveModal, "close");
-        const formValue = component.createSubscriptionForm.value as WebhookSubscriptionInput;
+        const formValue = component.createOrEditSubscriptionForm.value as WebhookSubscriptionInput;
         fixture.detectChanges();
         component.createWebhook();
         expect(activeModalCloseSpy).toHaveBeenCalledOnceWith({
@@ -97,7 +99,7 @@ describe("CreateEditSubscriptionModalComponent", () => {
 
     it("should pass payload when update subscription", () => {
         const activeModalCloseSpy = spyOn(ngbActiveModal, "close");
-        const formValue = component.createSubscriptionForm.value as WebhookSubscriptionInput;
+        const formValue = component.createOrEditSubscriptionForm.value as WebhookSubscriptionInput;
         fixture.detectChanges();
         component.updateWebhook();
         expect(activeModalCloseSpy).toHaveBeenCalledOnceWith({

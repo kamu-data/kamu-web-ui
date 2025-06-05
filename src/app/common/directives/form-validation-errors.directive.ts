@@ -30,6 +30,8 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges {
     private controlSubscription: Subscription | undefined;
     private ngSelectStatusSubscription: Subscription | undefined;
     private ngSelectBlurSubscription: Subscription | undefined;
+    private readonly MIN_REQUIRED_LENGTH = 2;
+    private readonly MAX_REQUIRED_LENGTH = 100;
 
     public constructor(private el: ElementRef) {
         this.nativeElement = this.el.nativeElement as HTMLElement;
@@ -49,9 +51,9 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges {
             case "required":
                 return `${label} is required`;
             case "minlength":
-                return `${label} must be at least ${errorDetails?.requiredLength ?? 2} characters`;
+                return `${label} must be at least ${errorDetails?.requiredLength ?? this.MIN_REQUIRED_LENGTH} characters`;
             case "maxlength":
-                return `${label} can't exceed ${errorDetails?.requiredLength ?? 50} characters`;
+                return `${label} can't exceed ${errorDetails?.requiredLength ?? this.MAX_REQUIRED_LENGTH} characters`;
             case "invalid":
                 return `A valid ${label} is required`;
             case "pattern": {

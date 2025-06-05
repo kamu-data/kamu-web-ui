@@ -78,7 +78,7 @@ export class CreateEditSubscriptionModalComponent extends BaseComponent implemen
     public createSubscriptionForm = this.fb.nonNullable.group({
         targetUrl: this.fb.control("", [Validators.required, Validators.pattern(AppValues.URL_PATTERN_ONLY_HTTPS)]),
         eventTypes: [[] as string[], Validators.required],
-        label: this.fb.control("", []),
+        label: this.fb.control("", [Validators.maxLength(100)]),
     });
 
     public createWebhook(): void {

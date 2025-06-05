@@ -16,7 +16,7 @@ p {
     margin: 0;
 }
 
-.truncate-target-url {
+.truncate {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -66,4 +66,27 @@ p {
 
 .mb-100 {
     margin-bottom: 100px;
+}
+
+.api-request {
+    font-family: monospace;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.method {
+    padding: 0 6px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 0.875rem;
+    color: white;
+}
+
+.method.post {
+    background-color: #8585c2;
+}
+
+.url {
+    color: #333;
 }

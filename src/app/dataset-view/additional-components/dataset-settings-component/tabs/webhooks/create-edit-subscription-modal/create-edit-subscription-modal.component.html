@@ -66,7 +66,14 @@
         </div>
         <div class="d-flex flex-column mt-4">
             <label for="" class="form-label">Label </label>
-            <input type="text" data-test-id="target-url" formControlName="label" class="w-100 form-control" />
+            <input #label type="text" data-test-id="target-url" formControlName="label" class="w-100 form-control" />
+            <div
+                class="text-danger fs-12"
+                [input]="label"
+                [fieldLabel]="'Label'"
+                [appFieldError]="'maxlength'"
+                [group]="createSubscriptionForm"
+            ></div>
             <p class="text-muted fs-12">Optinal unique label to identify this webhook subscription</p>
         </div>
     </form>
@@ -107,7 +114,7 @@
     </ng-container>
 </div>
 
-<div class="px-4 pt-4 pb-2 d-flex" *ngIf="!subscriptionData?.secret">
+<div class="p-4 d-flex" *ngIf="!subscriptionData?.secret">
     <button
         type="button"
         (click)="activeModal.close({ action: WebhookSubscriptionModalAction.CLOSE })"
@@ -126,12 +133,23 @@
         {{ subscriptionData ? "Update" : "Create" }}
     </button>
 </div>
-<div class="d-flex px-4 pb-4" appFeatureFlag="dataset.panel.settings.webhooks.verifyNow">
+<div
+    class="d-flex p-4"
+    *ngIf="
+        subscriptionData?.secret ||
+        (subscriptionData && subscriptionData.status === WebhookSubscriptionStatus.Unverified)
+    "
+    appFeatureFlag="dataset.panel.settings.webhooks.verifyNow"
+>
     <button
-        *ngIf="
-            subscriptionData?.secret ||
-            (subscriptionData && subscriptionData.status === WebhookSubscriptionStatus.Unverified)
-        "
+        type="button"
+        (click)="activeModal.close({ action: WebhookSubscriptionModalAction.CLOSE })"
+        class="btn btn-light flex-fill me-2"
+        data-test-id="cancel-subscription"
+    >
+        Cancel
+    </button>
+    <button
         [disabled]="true"
         type="button"
         (click)="verifyNow()"

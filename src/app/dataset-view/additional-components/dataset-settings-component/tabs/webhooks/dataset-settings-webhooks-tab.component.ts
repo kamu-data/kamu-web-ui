@@ -96,6 +96,7 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
                     const modalRef = this.ngbModalService.open(CreateEditSubscriptionModalComponent, {
                         backdrop: "static",
                         keyboard: false,
+                        windowClass: "custom-modal-width",
                     });
                     const modalRefInstance = modalRef.componentInstance as CreateEditSubscriptionModalComponent;
                     modalRefInstance.datasetBasics = this.webhooksViewData.datasetBasics;

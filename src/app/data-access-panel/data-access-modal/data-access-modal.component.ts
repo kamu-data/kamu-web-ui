@@ -11,7 +11,6 @@ import { DatasetBasicsFragment, DatasetEndpoints, DatasetKind } from "src/app/ap
 import { MaybeUndefined } from "src/app/interface/app.types";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { DataAccessMenuItem, dataAccessMenuOptions, DataAccessTabsEnum } from "./data-access-modal.model";
-import { changeCopyIcon } from "src/app/common/helpers/app.helpers";
 import { AppConfigService } from "src/app/app-config.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -53,11 +52,6 @@ export class DataAccessModalComponent implements OnInit {
             accountName: this.datasetBasics.owner.accountName,
             datasetName: this.datasetBasics.name,
         });
-    }
-
-    public copyToClipboard(event: MouseEvent, text: string): void {
-        this.clipboard.copy(text);
-        changeCopyIcon(event);
     }
 
     public get showApiTokensLink(): boolean {

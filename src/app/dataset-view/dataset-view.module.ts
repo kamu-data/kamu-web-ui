@@ -97,6 +97,12 @@ import { DatasetSettingsTransformOptionsTabComponent } from "./additional-compon
 import { DatasetSettingsAccessTabComponent } from "./additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-settings-access-tab.component";
 import { AddPeopleModalComponent } from "./additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/add-people-modal/add-people-modal.component";
 import { EditCollaboratorModalComponent } from "./additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/edit-collaborator-modal/edit-collaborator-modal.component";
+import { DatasetSettingsWebhooksTabComponent } from "./additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component";
+import { CreateEditSubscriptionModalComponent } from "./additional-components/dataset-settings-component/tabs/webhooks/create-edit-subscription-modal/create-edit-subscription-modal.component";
+import { NgSelectModule } from "@ng-select/ng-select";
+import { RotateSecretSubscriptionModalComponent } from "./additional-components/dataset-settings-component/tabs/webhooks/rotate-secret-subscription-modal/rotate-secret-subscription-modal.component";
+import { FormValidationErrorsModule } from "../common/directives/form-validation-errors.module";
+import { CopyToClipboardModule } from "../common/components/copy-to-clipboard/copy-to-clipboard.module";
 @NgModule({
     imports: [
         DynamicTableModule,
@@ -131,6 +137,7 @@ import { EditCollaboratorModalComponent } from "./additional-components/dataset-
         NgbModule,
         NgbNavModule,
         NgxGraphModule,
+        NgSelectModule,
         OwlDateTimeModule,
         OwlMomentDateTimeModule,
         OwlNativeDateTimeModule,
@@ -140,6 +147,7 @@ import { EditCollaboratorModalComponent } from "./additional-components/dataset-
         BatchingTriggerModule,
         BlockRowDataModule,
         CommitNavigatorModule,
+        CopyToClipboardModule,
         DatasetViewMenuModule,
         DataAccessPanelModule,
         DatasetVisibilityModule,
@@ -151,6 +159,7 @@ import { EditCollaboratorModalComponent } from "./additional-components/dataset-
         EventDetailsPropertiesModule,
         FeatureFlagModule,
         FlowsViewModule,
+        FormValidationErrorsModule,
         IngestConfigurationModule,
         IngestTriggerModule,
         QuerySharedModule,
@@ -214,6 +223,9 @@ import { EditCollaboratorModalComponent } from "./additional-components/dataset-
         QueriesSectionComponent,
         AddPeopleModalComponent,
         EditCollaboratorModalComponent,
+        DatasetSettingsWebhooksTabComponent,
+        CreateEditSubscriptionModalComponent,
+        RotateSecretSubscriptionModalComponent,
     ],
 })
 export class DatasetViewModule {}

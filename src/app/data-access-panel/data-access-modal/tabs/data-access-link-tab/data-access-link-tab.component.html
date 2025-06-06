@@ -14,22 +14,10 @@
                 readonly
             />
             <div class="input-group-button ms-1">
-                <button
-                    (click)="copyToClipboard($event, clipboardReference.value)"
-                    data-test-id="copyToClipboard-clipboardReference"
-                    aria-label="Copy to clipboard"
-                    class="copy-button-data-access ms-1"
-                    data-copy-feedback="Copied!"
-                    tabindex="0"
-                    role="button"
-                >
-                    <div style="position: relative; display: inline-block">
-                        <mat-icon class="mat-icon-svg-size" svgIcon="copy" />
-                    </div>
-                    <div style="position: relative; display: none">
-                        <mat-icon class="mat-icon-svg-size" svgIcon="checked" />
-                    </div>
-                </button>
+                <app-copy-to-clipboard
+                    [text]="clipboardReference.value"
+                    [dataTestId]="'copyToClipboard-clipboardReference'"
+                />
             </div>
         </div>
     </div>

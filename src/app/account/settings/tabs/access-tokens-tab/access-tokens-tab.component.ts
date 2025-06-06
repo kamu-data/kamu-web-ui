@@ -19,7 +19,7 @@ import { MatTableDataSource } from "@angular/material/table";
 import { AccountSettingsTabs, TokenCreateStep } from "../../account-settings.constants";
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ModalService } from "src/app/common/components/modal/modal.service";
-import { changeCopyIcon, promiseWithCatch } from "src/app/common/helpers/app.helpers";
+import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { Clipboard } from "@angular/cdk/clipboard";
 import AppValues from "src/app/common/values/app.values";
 import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
@@ -158,12 +158,6 @@ export class AccessTokensTabComponent extends BaseComponent {
             return (data as ViewAccessToken).name.toLowerCase().includes(filter.trim().toLowerCase());
         };
         this.dataSource.filter = searchToken.trim().toLowerCase();
-    }
-
-    /* istanbul ignore next */
-    public copyToClipboard(event: MouseEvent, text: string): void {
-        this.clipboard.copy(text);
-        changeCopyIcon(event);
     }
 
     private updateTable(page: number): void {

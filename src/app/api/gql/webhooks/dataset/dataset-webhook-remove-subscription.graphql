@@ -1,0 +1,16 @@
+mutation datasetWebhookRemoveSubscription($datasetId: DatasetID!, $id: WebhookSubscriptionID!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      webhooks {
+        subscription(id: $id) {
+          remove {
+            ... on RemoveWebhookSubscriptionResultSuccess {
+              removed
+              message
+            }
+          }
+        }
+      }
+    }
+  }
+}

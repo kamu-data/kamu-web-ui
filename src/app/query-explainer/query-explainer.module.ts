@@ -19,6 +19,7 @@ import { DisplayHashModule } from "src/app/common/components/display-hash/displa
 import { DynamicTableModule } from "../common/components/dynamic-table/dynamic-table.module";
 import { FormsModule } from "@angular/forms";
 import { MarkdownModule } from "ngx-markdown";
+import { CopyToClipboardModule } from "../common/components/copy-to-clipboard/copy-to-clipboard.module";
 
 @NgModule({
     declarations: [
@@ -36,6 +37,7 @@ import { MarkdownModule } from "ngx-markdown";
         MarkdownModule,
         RouterModule,
 
+        CopyToClipboardModule,
         DisplayHashModule,
         DynamicTableModule,
     ],

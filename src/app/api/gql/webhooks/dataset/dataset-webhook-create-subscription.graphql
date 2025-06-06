@@ -1,0 +1,31 @@
+mutation datasetWebhookCreateSubscription($datasetId: DatasetID!, $input: WebhookSubscriptionInput!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      webhooks {
+        createSubscription(input: $input) {
+          __typename
+          ... on CreateWebhookSubscriptionResultSuccess {
+            secret
+            subscriptionId
+            message
+          }
+
+          ... on WebhookSubscriptionDuplicateLabel {
+            message
+            label
+          }
+
+          ... on WebhookSubscriptionInvalidTargetUrl {
+            innerMessage
+            message
+          }
+
+          ... on WebhookSubscriptionNoEventTypesProvided {
+            numEventTypes
+            message
+          }
+        }
+      }
+    }
+  }
+}

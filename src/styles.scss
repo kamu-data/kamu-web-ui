@@ -1635,3 +1635,9 @@ pre.language-sql {
         background-image: linear-gradient(#ebeef6, #c5c8cc);
     }
 }
+
+.custom-modal-width {
+    .modal-content {
+        width: 600px;
+    }
+}

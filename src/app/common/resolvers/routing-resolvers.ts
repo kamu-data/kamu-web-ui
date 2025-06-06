@@ -40,4 +40,5 @@ export default class RoutingResolvers {
     public static readonly DATASET_SETTINGS_ACCESS_KEY = "datasetSettingsAccessData";
     public static readonly DATASET_SETTINGS_COMPACTION_KEY = "datasetSettingsCompactionData";
     public static readonly DATASET_SETTINGS_VARIABLES_AND_SECRETS_KEY = "datasetSettingsVariablesSecretsData";
+    public static readonly DATASET_SETTINGS_WEBHOOKS_KEY = "datasetSettingsWebhooksData";
 }

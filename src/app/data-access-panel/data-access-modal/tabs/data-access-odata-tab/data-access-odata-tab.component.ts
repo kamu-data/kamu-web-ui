@@ -6,7 +6,6 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { DataAccessBaseTabComponent } from "../../data-access-base-tab.component";
 import { OdataProtocolDesc } from "src/app/api/kamu.graphql.interface";
 
 @Component({
@@ -14,6 +13,6 @@ import { OdataProtocolDesc } from "src/app/api/kamu.graphql.interface";
     templateUrl: "./data-access-odata-tab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DataAccessOdataTabComponent extends DataAccessBaseTabComponent {
+export class DataAccessOdataTabComponent {
     @Input({ required: true }) public odata: OdataProtocolDesc;
 }

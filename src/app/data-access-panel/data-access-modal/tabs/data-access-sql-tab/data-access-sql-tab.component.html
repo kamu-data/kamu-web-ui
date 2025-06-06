@@ -15,22 +15,10 @@
                     readonly
                 />
                 <div class="input-group-button ms-1">
-                    <button
-                        (click)="copyToClipboard($event, clipboardFlightSQL.value)"
-                        data-test-id="copyToClipboard-clipboardFlightSQL"
-                        aria-label="Copy to clipboard"
-                        class="copy-button-data-access ms-1"
-                        data-copy-feedback="Copied!"
-                        tabindex="0"
-                        role="button"
-                    >
-                        <div style="position: relative; display: inline-block">
-                            <mat-icon class="mat-icon-svg-size" svgIcon="copy" />
-                        </div>
-                        <div style="position: relative; display: none">
-                            <mat-icon class="mat-icon-svg-size" svgIcon="checked" />
-                        </div>
-                    </button>
+                    <app-copy-to-clipboard
+                        [text]="clipboardFlightSQL.value"
+                        [dataTestId]="'copyToClipboard-clipboardFlightSQL'"
+                    />
                 </div>
             </div>
         </div>
@@ -62,22 +50,10 @@
                     readonly
                 />
                 <div class="input-group-button ms-1">
-                    <button
-                        (click)="copyToClipboard($event, clipboardJdbcURL.value)"
-                        data-test-id="copyToClipboard-clipboardJdbcURL"
-                        aria-label="Copy to clipboard"
-                        class="copy-button-data-access ms-1"
-                        data-copy-feedback="Copied!"
-                        tabindex="0"
-                        role="button"
-                    >
-                        <div style="position: relative; display: inline-block">
-                            <mat-icon class="mat-icon-svg-size" svgIcon="copy" />
-                        </div>
-                        <div style="position: relative; display: none">
-                            <mat-icon class="mat-icon-svg-size" svgIcon="checked" />
-                        </div>
-                    </button>
+                    <app-copy-to-clipboard
+                        [text]="clipboardJdbcURL.value"
+                        [dataTestId]="'copyToClipboard-clipboardJdbcURL'"
+                    />
                 </div>
             </div>
         </div>
@@ -109,22 +85,10 @@
                     readonly
                 />
                 <div class="input-group-button ms-1">
-                    <button
-                        (click)="copyToClipboard($event, clipboardPostgresURL.value)"
-                        data-test-id="copyToClipboard-clipboardPostgresURL"
-                        aria-label="Copy to clipboard"
-                        class="copy-button-data-access ms-1"
-                        data-copy-feedback="Copied!"
-                        tabindex="0"
-                        role="button"
-                    >
-                        <div style="position: relative; display: inline-block">
-                            <mat-icon class="mat-icon-svg-size" svgIcon="copy" />
-                        </div>
-                        <div style="position: relative; display: none">
-                            <mat-icon class="mat-icon-svg-size" svgIcon="checked" />
-                        </div>
-                    </button>
+                    <app-copy-to-clipboard
+                        [text]="clipboardPostgresURL.value"
+                        [dataTestId]="'copyToClipboard-clipboardPostgresURL'"
+                    />
                 </div>
             </div>
         </div>

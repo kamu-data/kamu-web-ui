@@ -59,22 +59,7 @@
                         [ngModelOptions]="{ standalone: true }"
                     />
                     <div class="input-group-button ms-1">
-                        <button
-                            (click)="copyToClipboard($event, clipboardToken.value)"
-                            data-test-id="copyToClipboard"
-                            aria-label="Copy to clipboard"
-                            class="copy-button ms-1"
-                            data-copy-feedback="Copied!"
-                            tabindex="0"
-                            role="button"
-                        >
-                            <div style="position: relative; display: inline-block">
-                                <mat-icon class="mat-icon-svg-size" svgIcon="copy" />
-                            </div>
-                            <div style="position: relative; display: none">
-                                <mat-icon class="mat-icon-svg-size" svgIcon="checked" />
-                            </div>
-                        </button>
+                        <app-copy-to-clipboard [text]="clipboardToken.value" />
                     </div>
                 </div>
                 <div>

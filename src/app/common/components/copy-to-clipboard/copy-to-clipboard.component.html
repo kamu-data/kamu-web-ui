@@ -1,0 +1,15 @@
+<button
+    (click)="copyToClipboard($event, text)"
+    attr.data-test-id="{{ dataTestId }}"
+    aria-label="Copy to clipboard"
+    class="copy-button-data-access ms-1"
+    tabindex="0"
+    role="button"
+>
+    <div style="position: relative; display: inline-block">
+        <mat-icon class="mat-icon-svg-size" svgIcon="copy" />
+    </div>
+    <div style="position: relative; display: none">
+        <mat-icon class="mat-icon-svg-size" svgIcon="checked" />
+    </div>
+</button>

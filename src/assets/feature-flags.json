@@ -265,6 +265,24 @@
               {
                 "id": "varsSecrets",
                 "developmentState": "stable"
+              },
+              {
+                "id": "webhooks",
+                "developmentState": "stable",
+                "subfeatures": [
+                  {
+                    "id": "viewDeliveryReport",
+                    "developmentState": "mockup"
+                  },
+                  {
+                    "id": "rotateSecret",
+                    "developmentState": "mockup"
+                  },
+                  {
+                    "id": "verifyNow",
+                    "developmentState": "mockup"
+                  }
+                ]
               }
             ]
           }

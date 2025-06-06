@@ -8,7 +8,6 @@
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { VerifyQueryError, VerifyQueryKindError } from "../../query-explainer.types";
 import { Clipboard } from "@angular/cdk/clipboard";
-import { changeCopyIcon } from "src/app/common/helpers/app.helpers";
 import { MaybeUndefined } from "src/app/interface/app.types";
 import { QueryExplainerComponentData } from "../../query-explainer.component";
 @Component({
@@ -20,12 +19,6 @@ import { QueryExplainerComponentData } from "../../query-explainer.component";
 export class CommitmentDataSectionComponent {
     private clipboard = inject(Clipboard);
     @Input({ required: true }) public commitmentData: QueryExplainerComponentData;
-
-    /* istanbul ignore next */
-    public copyToClipboard(event: MouseEvent, text: string): void {
-        this.clipboard.copy(text);
-        changeCopyIcon(event);
-    }
 
     public isInputHashError(error: MaybeUndefined<VerifyQueryError>): boolean {
         return error?.kind === VerifyQueryKindError.InputHash;

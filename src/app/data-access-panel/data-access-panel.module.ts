@@ -28,6 +28,7 @@ import { DataAccessOdataTabComponent } from "./data-access-modal/tabs/data-acces
 import { DataAccessExportTabComponent } from "./data-access-modal/tabs/data-access-export-tab/data-access-export-tab.component";
 import { RouterModule } from "@angular/router";
 import { FeatureFlagModule } from "../common/directives/feature-flag.module";
+import { CopyToClipboardModule } from "../common/components/copy-to-clipboard/copy-to-clipboard.module";
 
 @NgModule({
     declarations: [
@@ -56,6 +57,7 @@ import { FeatureFlagModule } from "../common/directives/feature-flag.module";
         ReactiveFormsModule,
         RouterModule,
 
+        CopyToClipboardModule,
         FeatureFlagModule,
     ],
     exports: [DataAccessPanelComponent],

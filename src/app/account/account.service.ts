@@ -11,6 +11,7 @@ import {
     AccountListDatasetsWithFlowsQuery,
     AccountPauseFlowsMutation,
     AccountResumeFlowsMutation,
+    ChangeAccountUsernameMutation,
     Dataset,
     DatasetListFlowsDataFragment,
     DatasetsTotalCountByAccountNameQuery,
@@ -27,6 +28,7 @@ import { map } from "rxjs/operators";
 import { MaybeNull } from "../interface/app.types";
 import { ToastrService } from "ngx-toastr";
 import { FlowsTableData } from "../dataset-flow/flows-table/flows-table.types";
+import { ChangeAccountUsernameResult } from "./settings/account-settings.constants";
 
 @Injectable({
     providedIn: "root",
@@ -147,6 +149,23 @@ export class AccountService {
                     return true;
                 }
                 return false;
+            }),
+        );
+    }
+
+    public changeAccountUsername(params: {
+        accountName: string;
+        newName: string;
+    }): Observable<ChangeAccountUsernameResult> {
+        return this.accountApi.changeAccountUsername(params).pipe(
+            map((data: ChangeAccountUsernameMutation) => {
+                if (data.accounts.byName?.rename.__typename === "RenameAccountSuccess") {
+                    this.toastrService.success(data.accounts.byName?.rename.message);
+                    return { changed: true, name: data.accounts.byName?.rename.newName };
+                } else if (data.accounts.byName?.rename.__typename === "RenameAccountNameNotUnique") {
+                    this.toastrService.error(data.accounts.byName?.rename.message);
+                }
+                return { changed: false, name: params.accountName };
             }),
         );
     }

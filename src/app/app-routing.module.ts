@@ -87,6 +87,7 @@ import { datasetViewActiveTabResolverFn } from "./dataset-view/resolvers/dataset
 import { flowDetailsActiveTabResolverFn } from "./dataset-flow/dataset-flow-details/resolvers/flow-details-active-tab.resolver";
 import { AccountTabComponent } from "./account/settings/tabs/account-tab/account-tab.component";
 import { SettingsTabComponent } from "./account/additional-components/settings-tab/settings-tab.component";
+import { accountSettingsAccountResolverFn } from "./account/settings/tabs/account-tab/resolver/account-settings-account.resolver";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -166,6 +167,8 @@ export const routes: Routes = [
                 data: {
                     [ProjectLinks.URL_PARAM_TAB]: AccountSettingsTabs.ACCOUNT,
                 },
+                runGuardsAndResolvers: "always",
+                resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_ACCOUNT_KEY]: accountSettingsAccountResolverFn },
             },
         ],
     },

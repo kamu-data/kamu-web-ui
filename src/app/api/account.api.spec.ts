@@ -28,6 +28,8 @@ import {
     AccountResumeFlowsMutation,
     AccountWithEmailDocument,
     AccountWithEmailQuery,
+    ChangeAccountUsernameDocument,
+    ChangeAccountUsernameMutation,
     DeleteAccountByNameDocument,
     DeleteAccountByNameMutation,
     FlowConnectionDataFragment,
@@ -45,6 +47,7 @@ import {
     mockAccountPauseFlowsMutationSuccess,
     mockAccountResumeFlowsMutationSuccess,
     mockAccountWithEmailQuery,
+    mockChangeAccountUsernameMutation,
     mockDeleteAccountByNameMutation,
 } from "./mock/account.mock";
 
@@ -244,6 +247,24 @@ describe("AccountApi", () => {
 
         op.flush({
             data: mockDeleteAccountByNameMutation,
+        });
+    });
+
+    it("should check rename account username", () => {
+        const NEW_NAME_ACCOUNT = "new-name-account";
+        service
+            .changeAccountUsername({ accountName: ACCOUNT_NAME, newName: NEW_NAME_ACCOUNT })
+            .subscribe((state: ChangeAccountUsernameMutation) => {
+                expect(state.accounts.byName?.rename.message).toEqual(
+                    mockChangeAccountUsernameMutation.accounts.byName?.rename.message,
+                );
+            });
+        const op = controller.expectOne(ChangeAccountUsernameDocument);
+        expect(op.operation.variables.accountName).toEqual(ACCOUNT_NAME);
+        expect(op.operation.variables.newName).toEqual(NEW_NAME_ACCOUNT);
+
+        op.flush({
+            data: mockChangeAccountUsernameMutation,
         });
     });
 });

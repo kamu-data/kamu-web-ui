@@ -109,7 +109,7 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
         }
     }
 
-    private changeUser(user: MaybeNull<AccountFragment>) {
+    public changeUser(user: MaybeNull<AccountFragment>) {
         this.loggedInUser = user;
         this.loggedInUser$.next(user);
     }

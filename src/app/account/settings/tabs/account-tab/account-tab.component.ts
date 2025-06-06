@@ -109,8 +109,11 @@ export class AccountTabComponent extends BaseComponent implements OnInit {
                             .pipe(takeUntilDestroyed(this.destroyRef))
                             .subscribe((result: ChangeAccountUsernameResult) => {
                                 if (result.changed) {
-                                    if (this.isOwnerPage) {
-                                        window.location.reload();
+                                    if (this.isOwnerPage && this.loggedUserService.currentlyLoggedInUser) {
+                                        this.loggedUserService.changeUser({
+                                            ...this.loggedUserService.currentlyLoggedInUser,
+                                            accountName: result.name,
+                                        });
                                     } else {
                                         this.navigationService.navigateToOwnerView(result.name, AccountTabs.SETTINGS);
                                     }

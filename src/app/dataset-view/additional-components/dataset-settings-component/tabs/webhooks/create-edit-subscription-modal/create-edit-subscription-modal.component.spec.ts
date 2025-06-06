@@ -29,6 +29,7 @@ import {
 } from "src/app/common/helpers/base-test.helpers.spec";
 import { WebhookSubscriptionModalAction } from "./create-edit-subscription-modal.model";
 import AppValues from "src/app/common/values/app.values";
+import { CopyToClipboardModule } from "src/app/common/components/copy-to-clipboard/copy-to-clipboard.module";
 
 describe("CreateEditSubscriptionModalComponent", () => {
     let component: CreateEditSubscriptionModalComponent;
@@ -52,6 +53,7 @@ describe("CreateEditSubscriptionModalComponent", () => {
                 NgSelectModule,
                 FormsModule,
                 FormValidationErrorsModule,
+                CopyToClipboardModule,
             ],
             providers: [Apollo, NgbActiveModal],
         });

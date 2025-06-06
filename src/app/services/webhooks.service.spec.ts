@@ -12,6 +12,7 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { of } from "rxjs";
 import { mockWebhookEventTypesQuery } from "../api/mock/webhooks.mock";
 import { WebhooksApi } from "./../api/webhooks.api";
+import { SubscribedEventType } from "../dataset-view/additional-components/dataset-settings-component/tabs/webhooks/create-edit-subscription-modal/create-edit-subscription-modal.model";
 
 describe("WebhooksService", () => {
     let service: WebhooksService;
@@ -33,8 +34,8 @@ describe("WebhooksService", () => {
     it("should check return event types", () => {
         spyOn(webhooksApi, "webhookEventTypes").and.returnValue(of(mockWebhookEventTypesQuery));
 
-        service.eventTypes().subscribe((result: string[]) => {
-            expect(result).toEqual(mockWebhookEventTypesQuery.webhooks.eventTypes);
+        service.eventTypes().subscribe((result: SubscribedEventType[]) => {
+            expect(result).toEqual([{ value: "DATASET.REF.UPDATED", name: "Dataset Updated" }]);
         });
     });
 });

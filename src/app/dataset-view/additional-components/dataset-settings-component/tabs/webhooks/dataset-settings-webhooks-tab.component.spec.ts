@@ -66,6 +66,7 @@ describe("DatasetSettingsWebhooksTabComponent", () => {
         component.webhooksViewData = {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            subscriptions: [],
         };
         spyOn(datasetWebhooksService, "datasetWebhookSubscriptions").and.returnValue(of([]));
         ngbModalMock.open.calls.reset();

@@ -20,6 +20,7 @@ import {
     emitClickOnElementByDataTestId,
     registerMatSvgIcons,
 } from "src/app/common/helpers/base-test.helpers.spec";
+import { CopyToClipboardModule } from "src/app/common/components/copy-to-clipboard/copy-to-clipboard.module";
 
 describe("DataAccessLinkTabComponent", () => {
     let component: DataAccessLinkTabComponent;
@@ -35,6 +36,7 @@ describe("DataAccessLinkTabComponent", () => {
                 MatTooltipModule,
                 HttpClientTestingModule,
                 MatCheckboxModule,
+                CopyToClipboardModule,
             ],
         });
 

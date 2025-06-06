@@ -13,6 +13,7 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatIconModule } from "@angular/material/icon";
 import { mockDatasetEndPoints } from "../../../data-access-panel-mock.data";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { CopyToClipboardModule } from "src/app/common/components/copy-to-clipboard/copy-to-clipboard.module";
 
 describe("DataAccessKamuCliTabComponent", () => {
     let component: DataAccessKamuCliTabComponent;
@@ -21,7 +22,7 @@ describe("DataAccessKamuCliTabComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [DataAccessKamuCliTabComponent],
-            imports: [FormsModule, MatDividerModule, MatIconModule, HttpClientTestingModule],
+            imports: [FormsModule, MatDividerModule, MatIconModule, HttpClientTestingModule, CopyToClipboardModule],
         });
 
         registerMatSvgIcons();

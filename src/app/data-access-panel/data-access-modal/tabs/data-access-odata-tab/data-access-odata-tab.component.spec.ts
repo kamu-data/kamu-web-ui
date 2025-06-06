@@ -14,6 +14,7 @@ import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { CopyToClipboardModule } from "src/app/common/components/copy-to-clipboard/copy-to-clipboard.module";
 
 describe("DataAccessOdataTabComponent", () => {
     let component: DataAccessOdataTabComponent;
@@ -22,7 +23,7 @@ describe("DataAccessOdataTabComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [DataAccessOdataTabComponent],
-            imports: [FormsModule, MatDividerModule, MatIconModule, HttpClientTestingModule],
+            imports: [FormsModule, MatDividerModule, MatIconModule, HttpClientTestingModule, CopyToClipboardModule],
         });
 
         registerMatSvgIcons();

@@ -5,12 +5,10 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 import { CreateEditSubscriptionModalComponent } from "./create-edit-subscription-modal/create-edit-subscription-modal.component";
-import { MatTableDataSource } from "@angular/material/table";
 import {
     DatasetBasicsFragment,
     WebhookSubscription,
@@ -19,9 +17,10 @@ import {
 import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetWebhooksService } from "./service/dataset-webhooks.service";
 
-import { finalize, first, from, of, switchMap } from "rxjs";
+import { BehaviorSubject, from, map, Observable, of, switchMap } from "rxjs";
 import {
     CreateWebhookSubscriptionSuccess,
+    UpdateWebhookSubscriptionType,
     WebhookSubscriptionModalAction,
     WebhookSubscriptionModalActionResult,
 } from "./create-edit-subscription-modal/create-edit-subscription-modal.model";
@@ -29,6 +28,7 @@ import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { WebhooksHelpers } from "./webhooks.helpers";
 import { RotateSecretSubscriptionModalComponent } from "./rotate-secret-subscription-modal/rotate-secret-subscription-modal.component";
+import { DatasetSettingsWebhookTabData } from "./dataset-settings-webhooks-tab.component.types";
 
 @Component({
     selector: "app-dataset-settings-webhooks-tab",
@@ -37,37 +37,25 @@ import { RotateSecretSubscriptionModalComponent } from "./rotate-secret-subscrip
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetSettingsWebhooksTabComponent extends BaseComponent implements OnInit {
-    @Input(RoutingResolvers.DATASET_SETTINGS_WEBHOOKS_KEY) public webhooksViewData: DatasetViewData;
-    public dataSource = new MatTableDataSource();
+    @Input(RoutingResolvers.DATASET_SETTINGS_WEBHOOKS_KEY) public webhooksViewData: DatasetSettingsWebhookTabData;
 
-    public isLoaded: boolean = false;
     public readonly DISPLAY_COLUMNS: string[] = ["event", "status", "actions"];
     public readonly WebhookSubscriptionStatus: typeof WebhookSubscriptionStatus = WebhookSubscriptionStatus;
 
+    private readonly _rowsSubject$ = new BehaviorSubject<WebhookSubscription[]>([]);
+    public readonly rows$ = this._rowsSubject$.asObservable();
+    public readonly dataSource$: Observable<WebhookSubscription[]> = this.rows$;
+
     private ngbModalService = inject(NgbModal);
     private datasetWebhooksService = inject(DatasetWebhooksService);
-    private cdr = inject(ChangeDetectorRef);
     private modalService = inject(ModalService);
 
     public ngOnInit(): void {
-        this.updateTable();
+        this.fetchTableData();
     }
 
-    private updateTable(): void {
-        this.datasetWebhooksService
-            .datasetWebhookSubscriptions(this.datasetBasics.id)
-            .pipe(
-                first(),
-                finalize(() => {
-                    this.isLoaded = true;
-                    this.cdr.detectChanges();
-                }),
-            )
-
-            .subscribe((data: WebhookSubscription[]) => {
-                this.dataSource.data = data;
-                this.cdr.detectChanges();
-            });
+    private fetchTableData(): void {
+        this._rowsSubject$.next(this.webhooksViewData.subscriptions);
     }
 
     public get datasetBasics(): DatasetBasicsFragment {
@@ -105,7 +93,19 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
                         .pipe(
                             switchMap((result: WebhookSubscriptionModalActionResult) => {
                                 if (result.action === WebhookSubscriptionModalAction.CLOSE) {
-                                    this.updateTable();
+                                    const currentRows: WebhookSubscription[] = this._rowsSubject$.getValue();
+                                    const updatedRows: WebhookSubscription[] = [
+                                        ...currentRows,
+                                        {
+                                            datasetId: this.datasetBasics.id,
+                                            eventTypes: data.input.eventTypes,
+                                            id: data.subscriptionId,
+                                            label: data.input.label,
+                                            status: data.status ?? WebhookSubscriptionStatus.Enabled,
+                                            targetUrl: data.input.targetUrl,
+                                        },
+                                    ];
+                                    this._rowsSubject$.next(updatedRows);
                                 }
                                 return of();
                             }),
@@ -129,7 +129,11 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
                             .datasetWebhookRemoveSubscription(this.datasetBasics.id, subscriptionId)
                             .subscribe((result: boolean) => {
                                 if (result) {
-                                    this.updateTable();
+                                    const currentRows: WebhookSubscription[] = this._rowsSubject$.getValue();
+                                    const updatedRows: WebhookSubscription[] = currentRows.filter(
+                                        (row) => row.id !== subscriptionId,
+                                    );
+                                    this._rowsSubject$.next(updatedRows);
                                 }
                             });
                     }
@@ -143,7 +147,16 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
             .datasetWebhookPauseSubscription(this.datasetBasics.id, subscriptionId)
             .subscribe((result: boolean) => {
                 if (result) {
-                    this.updateTable();
+                    const currentRows: WebhookSubscription[] = this._rowsSubject$.getValue();
+                    const updatedRows: WebhookSubscription[] = currentRows.map((row) => {
+                        return row.id === subscriptionId
+                            ? {
+                                  ...row,
+                                  status: result ? WebhookSubscriptionStatus.Paused : WebhookSubscriptionStatus.Enabled,
+                              }
+                            : row;
+                    });
+                    this._rowsSubject$.next(updatedRows);
                 }
             });
     }
@@ -157,7 +170,16 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
             .datasetWebhookResumeSubscription(this.datasetBasics.id, subscriptionId)
             .subscribe((result: boolean) => {
                 if (result) {
-                    this.updateTable();
+                    const currentRows: WebhookSubscription[] = this._rowsSubject$.getValue();
+                    const updatedRows: WebhookSubscription[] = currentRows.map((row) => {
+                        return row.id === subscriptionId
+                            ? {
+                                  ...row,
+                                  status: result ? WebhookSubscriptionStatus.Enabled : WebhookSubscriptionStatus.Paused,
+                              }
+                            : row;
+                    });
+                    this._rowsSubject$.next(updatedRows);
                 }
             });
     }
@@ -190,17 +212,30 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
             .pipe(
                 switchMap((result: WebhookSubscriptionModalActionResult) =>
                     result.payload
-                        ? this.datasetWebhooksService.datasetWebhookUpdateSubscription({
-                              datasetId: this.datasetBasics.id,
-                              id: subscription.id,
-                              input: result.payload,
-                          })
-                        : of(false),
+                        ? this.datasetWebhooksService
+                              .datasetWebhookUpdateSubscription({
+                                  datasetId: this.datasetBasics.id,
+                                  id: subscription.id,
+                                  input: result.payload,
+                              })
+                              .pipe(map(() => ({ result: true, payload: result.payload })))
+                        : of({ result: false, payload: undefined }),
                 ),
             )
-            .subscribe((result: boolean) => {
-                if (result) {
-                    this.updateTable();
+            .subscribe((data: UpdateWebhookSubscriptionType) => {
+                if (data.result) {
+                    const currentRows: WebhookSubscription[] = this._rowsSubject$.getValue();
+                    const updatedRows: WebhookSubscription[] = currentRows.map((row) => {
+                        return row.id === subscription.id
+                            ? {
+                                  ...row,
+                                  eventTypes: data.payload?.eventTypes as string[],
+                                  label: data.payload?.label as string,
+                                  targetUrl: data.payload?.targetUrl as string,
+                              }
+                            : row;
+                    });
+                    this._rowsSubject$.next(updatedRows);
                 }
             });
     }

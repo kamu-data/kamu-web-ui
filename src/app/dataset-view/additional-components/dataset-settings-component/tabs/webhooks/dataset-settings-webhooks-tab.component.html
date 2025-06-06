@@ -6,23 +6,26 @@
         to start receiving updates
     </p>
 </div>
-<div *ngIf="isLoaded; else loadingBlock">
-    <div class="box text-center p-5 mb-100 mt-4" *ngIf="!dataSource.data.length">
+<div>
+    <div class="box text-center p-5 mb-100 mt-4" *ngIf="!(dataSource$ | async)?.length">
         <mat-icon class="webhook-icon" [svgIcon]="'webhook'" />
         <h3 class="my-3">No webhook subscrpitions configured yet</h3>
         <button class="btn btn-success" (click)="createWebhook()" type="button">Create webhook</button>
     </div>
-    <div class="mb-100 mt-4" *ngIf="dataSource.data.length">
+    <div class="mb-100 mt-4" *ngIf="(dataSource$ | async)?.length">
         <div class="d-flex flex-wrap justify-content-end mb-3">
             <button class="btn btn-success" (click)="createWebhook()" type="button">Add webhook</button>
         </div>
         <div class="border">
-            <table mat-table [dataSource]="dataSource" class="w-100">
+            <table mat-table [dataSource]="(dataSource$ | async)!" class="w-100">
                 <!-- Event Column -->
                 <ng-container matColumnDef="event">
                     <th mat-header-cell *matHeaderCellDef>Event</th>
                     <td mat-cell *matCellDef="let element" style="width: 60%">
-                        <div class="d-flex flex-column justify-content-center py-3 gap-1 table-cell-height">
+                        <div
+                            class="d-flex flex-column justify-content-center py-3 table-cell-height"
+                            [ngClass]="{ 'gap-2': element.label }"
+                        >
                             <p class="fw-semibold truncate" [title]="element.label">{{ element.label }}</p>
                             <p class="api-request">
                                 <span class="method post">POST</span>
@@ -55,7 +58,7 @@
                 <!-- Actions Column -->
                 <ng-container matColumnDef="actions">
                     <th mat-header-cell *matHeaderCellDef>Actions</th>
-                    <td mat-cell *matCellDef="let element">
+                    <td mat-cell *matCellDef="let element; let index">
                         <div class="d-flex flex-row gap-2 py-3">
                             <mat-icon
                                 appFeatureFlag="dataset.panel.settings.webhooks.viewDeliveryReport"
@@ -104,11 +107,3 @@
         </div>
     </div>
 </div>
-
-<ng-template #loadingBlock>
-    <div class="mt-4 box p-4">
-        <div class="position-relative">
-            <mat-progress-bar data-test-id="webhooks-progress-bar" class="position-absolute" mode="indeterminate" />
-        </div>
-    </div>
-</ng-template>

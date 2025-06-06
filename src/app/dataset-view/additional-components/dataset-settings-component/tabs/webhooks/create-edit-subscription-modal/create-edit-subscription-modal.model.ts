@@ -36,3 +36,8 @@ export type WebhookSubscriptionFormType = {
     label: FormControl<string>;
     targetUrl: FormControl<string>;
 };
+
+export interface UpdateWebhookSubscriptionType {
+    result: boolean;
+    payload: WebhookSubscriptionInput | undefined;
+}

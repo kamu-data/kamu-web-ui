@@ -47,6 +47,7 @@ export type Scalars = {
     URL: string;
     WebhookEventType: string;
     WebhookSubscriptionID: string;
+    WebhookSubscriptionLabel: string;
 };
 
 export type AccessTokenConnection = {
@@ -165,12 +166,18 @@ export type AccountMut = {
     flows: AccountFlowsMut;
     /** Reset password for a selected account. Allowed only for admin users */
     modifyPassword: ModifyPasswordResult;
+    /** Update account name */
+    rename: RenameAccountResult;
     /** Update account email */
     updateEmail: UpdateEmailResult;
 };
 
 export type AccountMutModifyPasswordArgs = {
     password: Scalars["AccountPassword"];
+};
+
+export type AccountMutRenameArgs = {
+    newName: Scalars["AccountName"];
 };
 
 export type AccountMutUpdateEmailArgs = {
@@ -3038,6 +3045,21 @@ export type RemoveWebhookSubscriptionResultSuccess = RemoveWebhookSubscriptionRe
     removed: Scalars["Boolean"];
 };
 
+export type RenameAccountNameNotUnique = RenameAccountResult & {
+    __typename?: "RenameAccountNameNotUnique";
+    message: Scalars["String"];
+};
+
+export type RenameAccountResult = {
+    message: Scalars["String"];
+};
+
+export type RenameAccountSuccess = RenameAccountResult & {
+    __typename?: "RenameAccountSuccess";
+    message: Scalars["String"];
+    newName: Scalars["String"];
+};
+
 export type RenameResult = {
     message: Scalars["String"];
 };
@@ -3899,7 +3921,7 @@ export type WebhookSubscriptionDuplicateLabel = CreateWebhookSubscriptionResult 
 
 export type WebhookSubscriptionInput = {
     eventTypes: Array<Scalars["WebhookEventType"]>;
-    label: Scalars["String"];
+    label: Scalars["WebhookSubscriptionLabel"];
     targetUrl: Scalars["URL"];
 };
 
@@ -4136,6 +4158,24 @@ export type AccountWithEmailQueryVariables = Exact<{
 export type AccountWithEmailQuery = {
     __typename?: "Query";
     accounts: { __typename?: "Accounts"; byName?: ({ __typename?: "Account" } & AccountWithEmailFragment) | null };
+};
+
+export type ChangeAccountUsernameMutationVariables = Exact<{
+    accountName: Scalars["AccountName"];
+    newName: Scalars["AccountName"];
+}>;
+
+export type ChangeAccountUsernameMutation = {
+    __typename?: "Mutation";
+    accounts: {
+        __typename?: "AccountsMut";
+        byName?: {
+            __typename?: "AccountMut";
+            rename:
+                | { __typename?: "RenameAccountNameNotUnique"; message: string }
+                | { __typename?: "RenameAccountSuccess"; newName: string; message: string };
+        } | null;
+    };
 };
 
 export type DeleteAccountByNameMutationVariables = Exact<{
@@ -8075,6 +8115,37 @@ export const AccountWithEmailDocument = gql`
 })
 export class AccountWithEmailGQL extends Apollo.Query<AccountWithEmailQuery, AccountWithEmailQueryVariables> {
     document = AccountWithEmailDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const ChangeAccountUsernameDocument = gql`
+    mutation changeAccountUsername($accountName: AccountName!, $newName: AccountName!) {
+        accounts {
+            byName(accountName: $accountName) {
+                rename(newName: $newName) {
+                    ... on RenameAccountSuccess {
+                        newName
+                        message
+                    }
+                    ... on RenameAccountNameNotUnique {
+                        message
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class ChangeAccountUsernameGQL extends Apollo.Mutation<
+    ChangeAccountUsernameMutation,
+    ChangeAccountUsernameMutationVariables
+> {
+    document = ChangeAccountUsernameDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

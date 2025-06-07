@@ -26,6 +26,8 @@ import {
     AccountResumeFlowsMutation,
     AccountWithEmailGQL,
     AccountWithEmailQuery,
+    ChangeAccountUsernameGQL,
+    ChangeAccountUsernameMutation,
     DeleteAccountByNameGQL,
     DeleteAccountByNameMutation,
 } from "./kamu.graphql.interface";
@@ -46,6 +48,24 @@ export class AccountApi {
     private accountWithEmailGql = inject(AccountWithEmailGQL);
     private accountChangeEmailGQL = inject(AccountChangeEmailGQL);
     private deleteAccountByNameGQL = inject(DeleteAccountByNameGQL);
+    private changeAccountUsernameGQL = inject(ChangeAccountUsernameGQL);
+
+    public changeAccountUsername(params: {
+        accountName: string;
+        newName: string;
+    }): Observable<ChangeAccountUsernameMutation> {
+        return this.changeAccountUsernameGQL.mutate({ accountName: params.accountName, newName: params.newName }).pipe(
+            first(),
+            map((result: MutationResult<ChangeAccountUsernameMutation>) => {
+                /* istanbul ignore else */
+                if (result.data) {
+                    return result.data;
+                } else {
+                    throw new DatasetOperationError(result.errors ?? []);
+                }
+            }),
+        );
+    }
 
     public changeAccountEmail(params: {
         accountName: string;

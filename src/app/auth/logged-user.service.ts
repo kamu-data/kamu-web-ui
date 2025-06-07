@@ -43,7 +43,9 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
             .subscribe((token: string) => this.saveAccessToken(token)),
             this.loginService.accountChanges
                 .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe((user: AccountFragment) => this.changeUser(user));
+                .subscribe((user: AccountFragment) => {
+                    this.changeUser(user);
+                });
     }
 
     public initializeCompletes(): Observable<void> {
@@ -109,7 +111,7 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
         }
     }
 
-    private changeUser(user: MaybeNull<AccountFragment>) {
+    public changeUser(user: MaybeNull<AccountFragment>) {
         this.loggedInUser = user;
         this.loggedInUser$.next(user);
     }

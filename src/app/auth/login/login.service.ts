@@ -20,7 +20,6 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { AppConfigService } from "src/app/app-config.service";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { LocalStorageService } from "src/app/services/local-storage.service";
-import { SessionStorageService } from "src/app/services/session-storage.service";
 import { Eip1193EthereumService } from "./ethereum.service";
 
 @Injectable({
@@ -31,7 +30,6 @@ export class LoginService {
     private navigationService = inject(NavigationService);
     private appConfigService = inject(AppConfigService);
     private localStorageService = inject(LocalStorageService);
-    private sessionStorageService = inject(SessionStorageService);
     private ethereumService = inject(Eip1193EthereumService);
 
     private accessToken$: Subject<string> = new ReplaySubject<string>(1);
@@ -149,14 +147,15 @@ export class LoginService {
 
     private defaultLoginCallback(loginResponse: LoginResponseType): void {
         this.accessToken$.next(loginResponse.accessToken);
-        this.account$.next(loginResponse.account);
-        const url = this.localStorageService.redirectAfterLoginUrl;
-        this.localStorageService.setRedirectAfterLoginUrl(null);
-        if (url) {
-            this.navigationService.navigateToPath(url);
-        } else {
-            this.navigationService.navigateToHome();
-        }
+        this.fetchAccountFromAccessToken(loginResponse.accessToken).subscribe(() => {
+            const url = this.localStorageService.redirectAfterLoginUrl;
+            this.localStorageService.setRedirectAfterLoginUrl(null);
+            if (url) {
+                this.navigationService.navigateToPath(url);
+            } else {
+                this.navigationService.navigateToHome();
+            }
+        });
     }
 
     private redirectUrlLoginCallback(loginResponse: LoginResponseType): void {

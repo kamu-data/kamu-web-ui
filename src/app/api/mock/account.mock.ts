@@ -18,6 +18,7 @@ import {
     AccountResumeFlowsMutation,
     AccountType,
     AccountWithEmailQuery,
+    ChangeAccountUsernameMutation,
     DatasetKind,
     DeleteAccountByNameMutation,
     FlowStatus,
@@ -427,6 +428,33 @@ export const mockDeleteAccountByNameMutation: DeleteAccountByNameMutation = {
             delete: {
                 message: "Account deleted",
                 __typename: "DeleteAccountSuccess",
+            },
+            __typename: "AccountMut",
+        },
+        __typename: "AccountsMut",
+    },
+};
+
+export const mockChangeAccountUsernameMutation: ChangeAccountUsernameMutation = {
+    accounts: {
+        byName: {
+            rename: {
+                newName: "kamu",
+                message: "Account renamed",
+                __typename: "RenameAccountSuccess",
+            },
+            __typename: "AccountMut",
+        },
+        __typename: "AccountsMut",
+    },
+};
+
+export const mockChangeAccountUsernameMutationError: ChangeAccountUsernameMutation = {
+    accounts: {
+        byName: {
+            rename: {
+                message: "Failed",
+                __typename: "RenameAccountNameNotUnique",
             },
             __typename: "AccountMut",
         },

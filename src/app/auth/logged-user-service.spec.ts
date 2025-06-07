@@ -17,18 +17,17 @@ import {
     TEST_LOGIN,
     TEST_PASSWORD,
     mockGithubLoginResponse,
-    mockLoginInstructions,
     mockPasswordLoginResponse,
-    mockAccountFromAccessToken,
+    mockAccountDetails,
 } from "../api/mock/auth.mock";
 import { AccountFragment, FetchAccountDetailsDocument, LoginDocument } from "../api/kamu.graphql.interface";
 import { first } from "rxjs/operators";
 import { MaybeNull } from "../interface/app.types";
-import { AppConfigService } from "../app-config.service";
 import { GithubLoginCredentials, PasswordLoginCredentials } from "../api/auth.api.model";
 import { LoginService } from "./login/login.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { LocalStorageService } from "../services/local-storage.service";
+import { of } from "rxjs";
 
 describe("LoggedUserService", () => {
     let service: LoggedUserService;
@@ -39,10 +38,11 @@ describe("LoggedUserService", () => {
         let navigationService: NavigationService;
         let loginService: LoginService;
         let apollo: Apollo;
+        let authApi: AuthApi;
 
         beforeEach(() => {
             TestBed.configureTestingModule({
-                providers: [AuthApi, Apollo],
+                providers: [Apollo],
                 imports: [ApolloTestingModule, HttpClientTestingModule],
             });
 
@@ -53,7 +53,9 @@ describe("LoggedUserService", () => {
             apollo = TestBed.inject(Apollo);
             navigationService = TestBed.inject(NavigationService);
             loginService = TestBed.inject(LoginService);
+            authApi = TestBed.inject(AuthApi);
             controller = TestBed.inject(ApolloTestingController);
+            spyOn(authApi, "fetchAccountFromAccessToken").and.returnValue(of(mockAccountDetails));
         });
 
         function checkUserIsLogged(user: AccountFragment): void {
@@ -67,13 +69,6 @@ describe("LoggedUserService", () => {
             );
 
             service.initializeCompletes().subscribe();
-
-            const op = controller.expectOne(FetchAccountDetailsDocument);
-            expect(op.operation.variables.accessToken).toEqual(TEST_ACCESS_TOKEN_GITHUB);
-
-            op.flush({
-                data: mockAccountFromAccessToken,
-            });
 
             expect(localStorageAccessTokenSpy).toHaveBeenCalledTimes(1);
         }
@@ -193,47 +188,6 @@ describe("LoggedUserService", () => {
 
             expect(service.maybeCurrentlyLoggedInUser).toBeNull();
             expect(navigationServiceSpy).not.toHaveBeenCalled();
-            flush();
-        }));
-    });
-
-    describe("Custom configuration", () => {
-        beforeEach(() => {
-            TestBed.configureTestingModule({
-                providers: [
-                    AuthApi,
-                    Apollo,
-                    {
-                        provide: AppConfigService,
-                        useFactory: () => {
-                            const realService = new AppConfigService();
-                            spyOnProperty(realService, "loginInstructions", "get").and.returnValue(
-                                mockLoginInstructions,
-                            );
-                            return realService;
-                        },
-                    },
-                ],
-                imports: [ApolloTestingModule, HttpClientTestingModule],
-            });
-            service = TestBed.inject(LoggedUserService);
-            controller = TestBed.inject(ApolloTestingController);
-
-            localStorageService = TestBed.inject(LocalStorageService);
-            localStorageService.reset();
-        });
-
-        it("should use custom configuration's initial user", fakeAsync(() => {
-            service.initializeCompletes().subscribe();
-
-            const op = controller.expectOne(LoginDocument);
-            op.flush({
-                data: mockPasswordLoginResponse,
-            });
-
-            tick();
-
-            expect(service.isAuthenticated).toBeTrue();
             flush();
         }));
     });

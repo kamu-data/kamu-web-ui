@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { TestBed, fakeAsync, tick } from "@angular/core/testing";
+import { TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { AuthApi } from "src/app/api/auth.api";
 import { NavigationService } from "src/app/services/navigation.service";
 import { LoginService } from "./login.service";
@@ -16,6 +16,7 @@ import {
     TEST_GITHUB_CODE,
     TEST_LOGIN,
     TEST_PASSWORD,
+    mockAccountDetails,
     mockGithubLoginResponse,
     mockPasswordLoginResponse,
 } from "src/app/api/mock/auth.mock";
@@ -61,9 +62,12 @@ describe("LoginService", () => {
         expect(service).toBeTruthy();
     });
 
-    it("successful Github login navigates to home", () => {
+    it("successful Github login navigates to home", fakeAsync(() => {
         const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromGithubCallbackCode").and.returnValue(
             of(mockGithubLoginResponse.auth.login),
+        );
+        const fetchAccountFromAccessTokenSpy = spyOn(authApi, "fetchAccountFromAccessToken").and.returnValue(
+            of(mockAccountDetails),
         );
         const navigateSpy = spyOn(navigationService, "navigateToHome");
 
@@ -72,13 +76,16 @@ describe("LoginService", () => {
 
         const credentials: GithubLoginCredentials = { code: TEST_GITHUB_CODE };
         service.githubLogin(credentials);
+        tick();
 
         expect(authApiSpy).toHaveBeenCalledOnceWith(credentials, undefined);
 
         expect(navigateSpy).toHaveBeenCalledTimes(1);
+        expect(fetchAccountFromAccessTokenSpy).toHaveBeenCalledTimes(1);
         expect(tokenSubscription$.closed).toBeTrue();
         expect(accountSubscription$.closed).toBeTrue();
-    });
+        flush();
+    }));
 
     it("failed Github login navigates to home, but throws an error", fakeAsync(() => {
         const errorText = "Unsupported login method";
@@ -111,6 +118,9 @@ describe("LoginService", () => {
         const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromPasswordLogin").and.returnValue(
             of(mockPasswordLoginResponse.auth.login),
         );
+        const fetchAccountFromAccessTokenSpy = spyOn(authApi, "fetchAccountFromAccessToken").and.returnValue(
+            of(mockAccountDetails),
+        );
         const navigateSpy = spyOn(navigationService, "navigateToHome");
 
         const tokenSubscription$ = service.accessTokenChanges.pipe(first()).subscribe();
@@ -120,8 +130,8 @@ describe("LoginService", () => {
         service.passwordLogin(credentials);
 
         expect(authApiSpy).toHaveBeenCalledOnceWith(credentials, undefined);
-
         expect(navigateSpy).toHaveBeenCalledTimes(1);
+        expect(fetchAccountFromAccessTokenSpy).toHaveBeenCalledTimes(1);
 
         expect(tokenSubscription$.closed).toBeTrue();
         expect(accountSubscription$.closed).toBeTrue();

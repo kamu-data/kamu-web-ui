@@ -115,7 +115,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     }
 
     public get isWeb3Wallet(): boolean {
-        return this.loggedAccount.accountName.startsWith("0x");
+        return this.loggedAccount.accountProvider === AccountProvider.Web3Wallet;
     }
 
     public search: OperatorFunction<string, readonly DatasetAutocompleteItem[]> = (text$: Observable<string>) => {

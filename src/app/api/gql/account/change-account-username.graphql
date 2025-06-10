@@ -1,0 +1,16 @@
+mutation changeAccountUsername($accountName: AccountName!, $newName: AccountName!) {
+  accounts {
+    byName(accountName: $accountName) {
+      rename(newName: $newName) {
+        ... on RenameAccountSuccess {
+          newName
+          message
+        }
+
+        ... on RenameAccountNameNotUnique {
+          message
+        }
+      }
+    }
+  }
+}

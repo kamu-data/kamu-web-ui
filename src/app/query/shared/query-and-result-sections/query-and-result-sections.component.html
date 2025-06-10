@@ -5,6 +5,7 @@
             *ngIf="knownEngines$ | async as knownEngines"
             [data]="knownEngines"
             [engine]="selectedEngine"
+            [disabledOptionsMode]="true"
         ></app-engine-select>
     </div>
     <div class="btn-group-parent">

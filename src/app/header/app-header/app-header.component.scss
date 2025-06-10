@@ -45,6 +45,12 @@
     right: 7px;
 }
 
+.result-container {
+    overflow: hidden;
+    width: 420px;
+    text-overflow: ellipsis;
+}
+
 @media (width <=768px) {
     .admin-icon {
         display: none;

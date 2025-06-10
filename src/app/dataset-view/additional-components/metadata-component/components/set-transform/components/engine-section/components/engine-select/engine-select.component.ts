@@ -37,6 +37,7 @@ export class EngineSelectComponent implements OnInit {
     public showDropdown = false;
     @Input({ required: true }) public data: EngineDesc[];
     @Input({ required: true }) public engine: string;
+    @Input() public disabledOptionsMode: boolean = false;
     @Output() public selectedEngineEmitter = new EventEmitter<string>();
 
     private render = inject(Renderer2);

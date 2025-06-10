@@ -6,7 +6,7 @@
  */
 
 import { BaseComponent } from "src/app/common/components/base.component";
-import { DatasetKind, DatasetVisibility } from "src/app/api/kamu.graphql.interface";
+import { AccountProvider, DatasetKind, DatasetVisibility } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "../interface/app.types";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
@@ -15,6 +15,7 @@ import { Observable } from "rxjs";
 import { LoggedUserService } from "../auth/logged-user.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { CreateDatasetFormType, SelectStorageItemType, STORAGE_LIST } from "./dataset-create.types";
+import { LoginService } from "../auth/login/login.service";
 
 @Component({
     selector: "app-dataset-create",
@@ -27,6 +28,7 @@ export class DatasetCreateComponent extends BaseComponent {
     private fb = inject(FormBuilder);
     private datasetCreateService = inject(DatasetCreateService);
     private loggedUserService = inject(LoggedUserService);
+    private loginService = inject(LoginService);
 
     public readonly DatasetVisibility: typeof DatasetVisibility = DatasetVisibility;
     public readonly DatasetKind: typeof DatasetKind = DatasetKind;
@@ -45,7 +47,8 @@ export class DatasetCreateComponent extends BaseComponent {
         visibility: [DatasetVisibility.Private],
     });
     public readonly DROPDOWN_LIST: SelectStorageItemType[] = STORAGE_LIST;
-    public selectedStorage: number;
+
+    public selectedStorage: number = 1;
 
     public ngOnInit(): void {
         const currentUser = this.loggedUserService.maybeCurrentlyLoggedInUser;
@@ -136,5 +139,9 @@ export class DatasetCreateComponent extends BaseComponent {
             this.yamlTemplate = "";
             this.datasetCreateService.emitErrorMessageChanged("");
         }
+    }
+
+    public get isAccountProviderMultiMode(): boolean {
+        return this.loginService.loginMethods.includes(AccountProvider.OauthGithub);
     }
 }

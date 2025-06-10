@@ -93,7 +93,7 @@
             aria-label="Global"
         >
             <div class="d-flex flex-column flex-md-row flex-self-stretch flex-md-self-auto">
-                <ng-template [ngIf]="!isUserLoggedIn() && loginMethods.length > 0">
+                <ng-template [ngIf]="!isUserLoggedIn()">
                     <a
                         class="header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
                         data-test-id="loginHeader"

@@ -20,5 +20,10 @@ fragment DatasetPermissions on Dataset {
     metadata {
       canCommit
     }
+
+    webhooks {
+      canView
+      canUpdate
+    }
   }
 }

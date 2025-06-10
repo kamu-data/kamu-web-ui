@@ -59,6 +59,9 @@ export function isSettingsTabAccessibleHelper(
         case SettingsTabsEnum.ACCESS:
             return datasetPermissions.permissions.collaboration.canView;
 
+        case SettingsTabsEnum.WEBHOOKS:
+            return datasetPermissions.permissions.webhooks.canView;
+
         /* istanbul ignore next */
         default:
             return false;

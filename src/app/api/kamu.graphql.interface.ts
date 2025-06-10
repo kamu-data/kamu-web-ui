@@ -6058,6 +6058,7 @@ export type DatasetPermissionsFragment = {
             canDelete: boolean;
         };
         metadata: { __typename?: "DatasetMetadataPermissions"; canCommit: boolean };
+        webhooks: { __typename?: "DatasetWebhooksPermissions"; canView: boolean; canUpdate: boolean };
     };
 };
 
@@ -6410,6 +6411,185 @@ export type SemanticSearchDatasetsOverviewQuery = {
             pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
         };
     };
+};
+
+export type DatasetWebhookCreateSubscriptionMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    input: WebhookSubscriptionInput;
+}>;
+
+export type DatasetWebhookCreateSubscriptionMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            webhooks: {
+                __typename?: "DatasetWebhooksMut";
+                createSubscription:
+                    | {
+                          __typename: "CreateWebhookSubscriptionResultSuccess";
+                          secret: string;
+                          subscriptionId: string;
+                          message: string;
+                      }
+                    | { __typename: "WebhookSubscriptionDuplicateLabel"; message: string; label: string }
+                    | { __typename: "WebhookSubscriptionInvalidTargetUrl"; innerMessage: string; message: string }
+                    | { __typename: "WebhookSubscriptionNoEventTypesProvided"; numEventTypes: number; message: string };
+            };
+        } | null;
+    };
+};
+
+export type DatasetWebhookPauseSubscriptionMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    id: Scalars["WebhookSubscriptionID"];
+}>;
+
+export type DatasetWebhookPauseSubscriptionMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            webhooks: {
+                __typename?: "DatasetWebhooksMut";
+                subscription?: {
+                    __typename?: "WebhookSubscriptionMut";
+                    pause:
+                        | { __typename?: "PauseWebhookSubscriptionResultSuccess"; paused: boolean; message: string }
+                        | {
+                              __typename?: "PauseWebhookSubscriptionResultUnexpected";
+                              status: WebhookSubscriptionStatus;
+                              message: string;
+                          };
+                } | null;
+            };
+        } | null;
+    };
+};
+
+export type DatasetWebhookRemoveSubscriptionMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    id: Scalars["WebhookSubscriptionID"];
+}>;
+
+export type DatasetWebhookRemoveSubscriptionMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            webhooks: {
+                __typename?: "DatasetWebhooksMut";
+                subscription?: {
+                    __typename?: "WebhookSubscriptionMut";
+                    remove: {
+                        __typename?: "RemoveWebhookSubscriptionResultSuccess";
+                        removed: boolean;
+                        message: string;
+                    };
+                } | null;
+            };
+        } | null;
+    };
+};
+
+export type DatasetWebhookResumeSubscriptionMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    id: Scalars["WebhookSubscriptionID"];
+}>;
+
+export type DatasetWebhookResumeSubscriptionMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            webhooks: {
+                __typename?: "DatasetWebhooksMut";
+                subscription?: {
+                    __typename?: "WebhookSubscriptionMut";
+                    resume:
+                        | { __typename?: "ResumeWebhookSubscriptionResultSuccess"; resumed: boolean; message: string }
+                        | {
+                              __typename?: "ResumeWebhookSubscriptionResultUnexpected";
+                              status: WebhookSubscriptionStatus;
+                              message: string;
+                          };
+                } | null;
+            };
+        } | null;
+    };
+};
+
+export type DatasetWebhookSubscriptionsQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+}>;
+
+export type DatasetWebhookSubscriptionsQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            webhooks: {
+                __typename?: "DatasetWebhooks";
+                subscriptions: Array<{
+                    __typename?: "WebhookSubscription";
+                    label: string;
+                    id: string;
+                    targetUrl: string;
+                    status: WebhookSubscriptionStatus;
+                    datasetId?: string | null;
+                    eventTypes: Array<string>;
+                }>;
+            };
+        } | null;
+    };
+};
+
+export type DatasetWebhookUpdateSubscriptionMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    id: Scalars["WebhookSubscriptionID"];
+    input: WebhookSubscriptionInput;
+}>;
+
+export type DatasetWebhookUpdateSubscriptionMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            webhooks: {
+                __typename?: "DatasetWebhooksMut";
+                subscription?: {
+                    __typename?: "WebhookSubscriptionMut";
+                    update:
+                        | { __typename?: "UpdateWebhookSubscriptionResultSuccess"; updated: boolean; message: string }
+                        | {
+                              __typename?: "UpdateWebhookSubscriptionResultUnexpected";
+                              status: WebhookSubscriptionStatus;
+                              message: string;
+                          }
+                        | { __typename?: "WebhookSubscriptionDuplicateLabel"; label: string; message: string }
+                        | { __typename?: "WebhookSubscriptionInvalidTargetUrl"; innerMessage: string; message: string }
+                        | {
+                              __typename?: "WebhookSubscriptionNoEventTypesProvided";
+                              numEventTypes: number;
+                              message: string;
+                          };
+                } | null;
+            };
+        } | null;
+    };
+};
+
+export type WebhookEventTypesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type WebhookEventTypesQuery = {
+    __typename?: "Query";
+    webhooks: { __typename?: "Webhooks"; eventTypes: Array<string> };
 };
 
 export const AccountBasicsFragmentDoc = gql`
@@ -7767,6 +7947,10 @@ export const DatasetPermissionsFragmentDoc = gql`
             }
             metadata {
                 canCommit
+            }
+            webhooks {
+                canView
+                canUpdate
             }
         }
     }
@@ -9931,6 +10115,256 @@ export class SemanticSearchDatasetsOverviewGQL extends Apollo.Query<
     SemanticSearchDatasetsOverviewQueryVariables
 > {
     document = SemanticSearchDatasetsOverviewDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetWebhookCreateSubscriptionDocument = gql`
+    mutation datasetWebhookCreateSubscription($datasetId: DatasetID!, $input: WebhookSubscriptionInput!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                webhooks {
+                    createSubscription(input: $input) {
+                        __typename
+                        ... on CreateWebhookSubscriptionResultSuccess {
+                            secret
+                            subscriptionId
+                            message
+                        }
+                        ... on WebhookSubscriptionDuplicateLabel {
+                            message
+                            label
+                        }
+                        ... on WebhookSubscriptionInvalidTargetUrl {
+                            innerMessage
+                            message
+                        }
+                        ... on WebhookSubscriptionNoEventTypesProvided {
+                            numEventTypes
+                            message
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetWebhookCreateSubscriptionGQL extends Apollo.Mutation<
+    DatasetWebhookCreateSubscriptionMutation,
+    DatasetWebhookCreateSubscriptionMutationVariables
+> {
+    document = DatasetWebhookCreateSubscriptionDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetWebhookPauseSubscriptionDocument = gql`
+    mutation datasetWebhookPauseSubscription($datasetId: DatasetID!, $id: WebhookSubscriptionID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                webhooks {
+                    subscription(id: $id) {
+                        pause {
+                            ... on PauseWebhookSubscriptionResultSuccess {
+                                paused
+                                message
+                            }
+                            ... on PauseWebhookSubscriptionResultUnexpected {
+                                status
+                                message
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetWebhookPauseSubscriptionGQL extends Apollo.Mutation<
+    DatasetWebhookPauseSubscriptionMutation,
+    DatasetWebhookPauseSubscriptionMutationVariables
+> {
+    document = DatasetWebhookPauseSubscriptionDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetWebhookRemoveSubscriptionDocument = gql`
+    mutation datasetWebhookRemoveSubscription($datasetId: DatasetID!, $id: WebhookSubscriptionID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                webhooks {
+                    subscription(id: $id) {
+                        remove {
+                            ... on RemoveWebhookSubscriptionResultSuccess {
+                                removed
+                                message
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetWebhookRemoveSubscriptionGQL extends Apollo.Mutation<
+    DatasetWebhookRemoveSubscriptionMutation,
+    DatasetWebhookRemoveSubscriptionMutationVariables
+> {
+    document = DatasetWebhookRemoveSubscriptionDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetWebhookResumeSubscriptionDocument = gql`
+    mutation datasetWebhookResumeSubscription($datasetId: DatasetID!, $id: WebhookSubscriptionID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                webhooks {
+                    subscription(id: $id) {
+                        resume {
+                            ... on ResumeWebhookSubscriptionResultSuccess {
+                                resumed
+                                message
+                            }
+                            ... on ResumeWebhookSubscriptionResultUnexpected {
+                                status
+                                message
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetWebhookResumeSubscriptionGQL extends Apollo.Mutation<
+    DatasetWebhookResumeSubscriptionMutation,
+    DatasetWebhookResumeSubscriptionMutationVariables
+> {
+    document = DatasetWebhookResumeSubscriptionDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetWebhookSubscriptionsDocument = gql`
+    query datasetWebhookSubscriptions($datasetId: DatasetID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                webhooks {
+                    subscriptions {
+                        label
+                        id
+                        targetUrl
+                        status
+                        datasetId
+                        eventTypes
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetWebhookSubscriptionsGQL extends Apollo.Query<
+    DatasetWebhookSubscriptionsQuery,
+    DatasetWebhookSubscriptionsQueryVariables
+> {
+    document = DatasetWebhookSubscriptionsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetWebhookUpdateSubscriptionDocument = gql`
+    mutation datasetWebhookUpdateSubscription(
+        $datasetId: DatasetID!
+        $id: WebhookSubscriptionID!
+        $input: WebhookSubscriptionInput!
+    ) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                webhooks {
+                    subscription(id: $id) {
+                        update(input: $input) {
+                            ... on UpdateWebhookSubscriptionResultSuccess {
+                                updated
+                                message
+                            }
+                            ... on UpdateWebhookSubscriptionResultUnexpected {
+                                status
+                                message
+                            }
+                            ... on WebhookSubscriptionDuplicateLabel {
+                                label
+                                message
+                            }
+                            ... on WebhookSubscriptionInvalidTargetUrl {
+                                innerMessage
+                                message
+                            }
+                            ... on WebhookSubscriptionNoEventTypesProvided {
+                                numEventTypes
+                                message
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetWebhookUpdateSubscriptionGQL extends Apollo.Mutation<
+    DatasetWebhookUpdateSubscriptionMutation,
+    DatasetWebhookUpdateSubscriptionMutationVariables
+> {
+    document = DatasetWebhookUpdateSubscriptionDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const WebhookEventTypesDocument = gql`
+    query webhookEventTypes {
+        webhooks {
+            eventTypes
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class WebhookEventTypesGQL extends Apollo.Query<WebhookEventTypesQuery, WebhookEventTypesQueryVariables> {
+    document = WebhookEventTypesDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

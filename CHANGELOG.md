@@ -4,8 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
 ## [Unreleased]
 ### Added
+- Added webhook subscriptions feature
 - Support for account renaming
 
 ## [0.49.1] - 2025-06-05
@@ -17,7 +19,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added wallet based authentication
 ### Changed
 - Changed the title to `404 Requested Page Not Found` for page not found and added a button `Try signing in`
-
 
 ## [0.48.0] - 2025-05-22
 ### Added

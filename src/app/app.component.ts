@@ -175,6 +175,7 @@ export class AppComponent extends BaseComponent implements OnInit {
             .addSvgIcon("starred", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/starred.svg"))
             .addSvgIcon("watch", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/watch.svg"))
             .addSvgIcon("derive", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/derive.svg"))
+            .addSvgIcon("webhook", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/webhook.svg"))
             .addSvgIcon("ethereum-2", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/ethereum-2.svg"))
             .addSvgIcon("metamask", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/metamask.svg"));
     }

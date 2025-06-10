@@ -1,0 +1,16 @@
+query datasetWebhookSubscriptions($datasetId: DatasetID!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      webhooks {
+        subscriptions {
+          label
+          id
+          targetUrl
+          status
+          datasetId
+          eventTypes
+        }
+      }
+    }
+  }
+}

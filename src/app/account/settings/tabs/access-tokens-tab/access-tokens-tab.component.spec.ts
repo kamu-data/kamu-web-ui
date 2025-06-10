@@ -32,6 +32,7 @@ import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { RouterTestingModule } from "@angular/router/testing";
 import { routes } from "src/app/app-routing.module";
+import { CopyToClipboardModule } from "src/app/common/components/copy-to-clipboard/copy-to-clipboard.module";
 
 describe("AccessTokensTabComponent", () => {
     let component: AccessTokensTabComponent;
@@ -87,6 +88,7 @@ describe("AccessTokensTabComponent", () => {
                 NgbPaginationModule,
                 MatSlideToggleModule,
                 RouterTestingModule.withRoutes(routes),
+                CopyToClipboardModule,
             ],
         }).compileComponents();
 

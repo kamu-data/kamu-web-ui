@@ -1,0 +1,40 @@
+mutation datasetWebhookUpdateSubscription(
+  $datasetId: DatasetID!
+  $id: WebhookSubscriptionID!
+  $input: WebhookSubscriptionInput!
+) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      webhooks {
+        subscription(id: $id) {
+          update(input: $input) {
+            ... on UpdateWebhookSubscriptionResultSuccess {
+              updated
+              message
+            }
+
+            ... on UpdateWebhookSubscriptionResultUnexpected {
+              status
+              message
+            }
+
+            ... on WebhookSubscriptionDuplicateLabel {
+              label
+              message
+            }
+
+            ... on WebhookSubscriptionInvalidTargetUrl {
+              innerMessage
+              message
+            }
+
+            ... on WebhookSubscriptionNoEventTypesProvided {
+              numEventTypes
+              message
+            }
+          }
+        }
+      }
+    }
+  }
+}

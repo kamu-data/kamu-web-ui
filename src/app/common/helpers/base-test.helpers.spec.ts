@@ -170,6 +170,7 @@ export function registerMatSvgIcons(): void {
         "starred",
         "watch",
         "derive",
+        "webhook",
         "metamask",
         "ethereum-2",
     ];

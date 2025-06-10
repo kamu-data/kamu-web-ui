@@ -1,0 +1,21 @@
+mutation datasetWebhookResumeSubscription($datasetId: DatasetID!, $id: WebhookSubscriptionID!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      webhooks {
+        subscription(id: $id) {
+          resume {
+            ... on ResumeWebhookSubscriptionResultSuccess {
+              resumed
+              message
+            }
+
+            ... on ResumeWebhookSubscriptionResultUnexpected {
+              status
+              message
+            }
+          }
+        }
+      }
+    }
+  }
+}

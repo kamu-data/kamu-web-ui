@@ -87,6 +87,8 @@ import { datasetViewActiveTabResolverFn } from "./dataset-view/resolvers/dataset
 import { flowDetailsActiveTabResolverFn } from "./dataset-flow/dataset-flow-details/resolvers/flow-details-active-tab.resolver";
 import { AccountTabComponent } from "./account/settings/tabs/account-tab/account-tab.component";
 import { SettingsTabComponent } from "./account/additional-components/settings-tab/settings-tab.component";
+import { DatasetSettingsWebhooksTabComponent } from "./dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component";
+import { datasetSettingsWebhooksResolverFn } from "./dataset-view/additional-components/dataset-settings-component/tabs/webhooks/resolver/dataset-settings-webhooks.resolver";
 import { accountSettingsAccountResolverFn } from "./account/settings/tabs/account-tab/resolver/account-settings-account.resolver";
 
 export const routes: Routes = [
@@ -383,6 +385,19 @@ export const routes: Routes = [
                                 resolve: {
                                     [RoutingResolvers.DATASET_SETTINGS_VARIABLES_AND_SECRETS_KEY]:
                                         datasetSettingsVarAndSecretsResolverFn,
+                                    [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
+                                },
+                            },
+
+                            {
+                                path: SettingsTabsEnum.WEBHOOKS,
+                                component: DatasetSettingsWebhooksTabComponent,
+                                runGuardsAndResolvers: "always",
+                                data: {
+                                    [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.WEBHOOKS,
+                                },
+                                resolve: {
+                                    [RoutingResolvers.DATASET_SETTINGS_WEBHOOKS_KEY]: datasetSettingsWebhooksResolverFn,
                                     [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
                                 },
                             },

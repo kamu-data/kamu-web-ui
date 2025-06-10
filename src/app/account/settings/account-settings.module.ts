@@ -19,6 +19,7 @@ import { MatTableModule } from "@angular/material/table";
 import { RouterModule } from "@angular/router";
 import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
 import { AccountTabComponent } from "./tabs/account-tab/account-tab.component";
+import { CopyToClipboardModule } from "src/app/common/components/copy-to-clipboard/copy-to-clipboard.module";
 
 @NgModule({
     declarations: [AccessTokensTabComponent, AccountSettingsComponent, EmailsTabComponent, AccountTabComponent],
@@ -33,6 +34,7 @@ import { AccountTabComponent } from "./tabs/account-tab/account-tab.component";
         ReactiveFormsModule,
         RouterModule,
 
+        CopyToClipboardModule,
         FeatureFlagModule,
         PaginationModule,
     ],

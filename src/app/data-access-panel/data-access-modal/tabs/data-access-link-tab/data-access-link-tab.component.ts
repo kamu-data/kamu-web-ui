@@ -6,7 +6,6 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { DataAccessBaseTabComponent } from "../../data-access-base-tab.component";
 import { LinkProtocolDesc } from "src/app/api/kamu.graphql.interface";
 
 @Component({
@@ -15,6 +14,6 @@ import { LinkProtocolDesc } from "src/app/api/kamu.graphql.interface";
     styleUrls: ["./data-access-link-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DataAccessLinkTabComponent extends DataAccessBaseTabComponent {
+export class DataAccessLinkTabComponent {
     @Input({ required: true }) public webLink: LinkProtocolDesc;
 }

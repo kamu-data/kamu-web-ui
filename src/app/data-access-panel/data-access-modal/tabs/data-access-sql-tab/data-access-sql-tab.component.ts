@@ -6,7 +6,6 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { DataAccessBaseTabComponent } from "../../data-access-base-tab.component";
 import { FlightSqlDesc, JdbcDesc, PostgreSqlDesl } from "src/app/api/kamu.graphql.interface";
 
 @Component({
@@ -15,7 +14,7 @@ import { FlightSqlDesc, JdbcDesc, PostgreSqlDesl } from "src/app/api/kamu.graphq
     styleUrls: ["./data-access-sql-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DataAccessSqlTabComponent extends DataAccessBaseTabComponent {
+export class DataAccessSqlTabComponent {
     @Input({ required: true }) public flightSql: FlightSqlDesc;
     @Input({ required: true }) public jdbc: JdbcDesc;
     @Input({ required: true }) public postgreSql: PostgreSqlDesl;

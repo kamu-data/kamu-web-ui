@@ -1,0 +1,11 @@
+.copy-button-data-access {
+    border: 0;
+    outline: 0;
+    background: transparent;
+    height: 30px;
+
+    &:hover {
+        background: rgb(245 240 240);
+        border-radius: 5px;
+    }
+}

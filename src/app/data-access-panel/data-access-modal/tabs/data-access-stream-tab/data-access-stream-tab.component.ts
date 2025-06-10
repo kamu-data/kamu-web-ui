@@ -6,7 +6,6 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { DataAccessBaseTabComponent } from "../../data-access-base-tab.component";
 import { KafkaProtocolDesc, WebSocketProtocolDesc } from "src/app/api/kamu.graphql.interface";
 
 @Component({
@@ -15,7 +14,7 @@ import { KafkaProtocolDesc, WebSocketProtocolDesc } from "src/app/api/kamu.graph
     styleUrls: ["./data-access-stream-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DataAccessStreamTabComponent extends DataAccessBaseTabComponent {
+export class DataAccessStreamTabComponent {
     @Input({ required: true }) public kafka: KafkaProtocolDesc;
     @Input({ required: true }) public websocket: WebSocketProtocolDesc;
 }

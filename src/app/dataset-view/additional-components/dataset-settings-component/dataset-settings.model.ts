@@ -12,6 +12,7 @@ export enum SettingsTabsEnum {
     COMPACTION = "compaction",
     TRANSFORM_SETTINGS = "transform",
     ACCESS = "access",
+    WEBHOOKS = "webhooks",
 }
 
 export enum PollingGroupEnum {
@@ -84,5 +85,14 @@ export const datasetSettingsSidePanelData: DatasetSettingsSidePanelItem[] = [
         activeTab: SettingsTabsEnum.ACCESS,
         iconClassName: "ms-1 me-2 mb-1 access-icon",
         id: "access",
+    },
+    {
+        name: "Webhooks",
+        iconName: "webhook",
+        showDivider: false,
+        visible: true,
+        activeTab: SettingsTabsEnum.WEBHOOKS,
+        iconClassName: "ms-1 me-2 mb-1 access-icon",
+        id: "webhooks",
     },
 ];

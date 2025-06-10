@@ -240,6 +240,10 @@ export const mockFullPowerDatasetPermissionsFragment: DatasetPermissionsFragment
         metadata: {
             canCommit: true,
         },
+        webhooks: {
+            canUpdate: false,
+            canView: true,
+        },
     },
 };
 
@@ -265,6 +269,10 @@ export const mockNotScheduleDatasetPermissionsFragment: DatasetPermissionsFragme
         metadata: {
             canCommit: true,
         },
+        webhooks: {
+            canUpdate: false,
+            canView: true,
+        },
     },
 };
 
@@ -289,6 +297,10 @@ export const mockReadonlyDatasetPermissionsFragment: DatasetPermissionsFragment 
         },
         metadata: {
             canCommit: false,
+        },
+        webhooks: {
+            canUpdate: false,
+            canView: true,
         },
     },
 };
@@ -513,6 +525,10 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                 },
                 metadata: {
                     canCommit: true,
+                },
+                webhooks: {
+                    canUpdate: true,
+                    canView: true,
                 },
             },
 

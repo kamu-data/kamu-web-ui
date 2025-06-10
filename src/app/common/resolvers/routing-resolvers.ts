@@ -21,6 +21,7 @@ export default class RoutingResolvers {
     public static readonly FLOW_DETAILS_HISTORY_KEY = "flowDetailsHistoryData";
     public static readonly ACCOUNT_SETTINGS_ACTIVE_TAB_KEY = "accountSettingsActiveTabData";
     public static readonly ACCOUNT_SETTINGS_EMAIL_KEY = "accountSettingsEmailData";
+    public static readonly ACCOUNT_SETTINGS_ACCOUNT_KEY = "accountSettingsAccountData";
     public static readonly ACCOUNT_SETTINGS_ACCESS_TOKENS_KEY = "accountSettingsAccessTokensData";
 
     public static readonly DATASET_VIEW_ACTIVE_TAB_KEY = "datasetViewActiveTabData";

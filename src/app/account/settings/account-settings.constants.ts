@@ -110,3 +110,8 @@ export const ACCOUNT_SETTINGS_MENU_ITEMS: AccountSettingsMenuItem[] = [
         featureFlag: "settings.tokens",
     },
 ];
+
+export interface ChangeAccountUsernameResult {
+    changed: boolean;
+    name: string;
+}

@@ -19,6 +19,7 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { mockAccountDetails, TEST_LOGIN } from "src/app/api/mock/auth.mock";
 import { NavigationService } from "src/app/services/navigation.service";
+import { ReactiveFormsModule } from "@angular/forms";
 
 describe("AccountTabComponent", () => {
     let component: AccountTabComponent;
@@ -31,7 +32,13 @@ describe("AccountTabComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [AccountTabComponent],
-            imports: [SharedTestModule, HttpClientTestingModule, ToastrModule.forRoot(), MatDividerModule],
+            imports: [
+                SharedTestModule,
+                HttpClientTestingModule,
+                ReactiveFormsModule,
+                ToastrModule.forRoot(),
+                MatDividerModule,
+            ],
             providers: [Apollo],
         });
         fixture = TestBed.createComponent(AccountTabComponent);
@@ -76,5 +83,41 @@ describe("AccountTabComponent", () => {
         component.deleteAccount();
         expect(modalWindowSpy).toHaveBeenCalledTimes(1);
         expect(navigateToHomeSpy).toHaveBeenCalledOnceWith();
+    });
+
+    it("should check rename account username when the URL does not contain the account name", () => {
+        spyOnProperty(component, "accountName", "get").and.returnValue(undefined);
+        spyOnProperty(component, "isOwnerPage", "get").and.returnValue(true);
+        spyOn(accountService, "changeAccountUsername").and.returnValue(
+            of({ changed: true, name: "new-account-username" }),
+        );
+        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
+        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
+            options.handler?.call(undefined, true);
+            return Promise.resolve("");
+        });
+
+        component.changeUsername();
+        expect(modalWindowSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledTimes(0);
+    });
+
+    it("should check rename account username when the URL contain the account name", () => {
+        spyOnProperty(component, "accountName", "get").and.returnValue(TEST_LOGIN);
+        spyOnProperty(component, "isOwnerPage", "get").and.returnValue(false);
+        spyOn(accountService, "changeAccountUsername").and.returnValue(
+            of({ changed: true, name: "new-account-username" }),
+        );
+        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
+        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
+            options.handler?.call(undefined, true);
+            return Promise.resolve("");
+        });
+
+        component.changeUsername();
+        expect(modalWindowSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledTimes(1);
     });
 });

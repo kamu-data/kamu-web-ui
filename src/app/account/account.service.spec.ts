@@ -25,9 +25,12 @@ import {
     mockAccountPauseFlowsMutationSuccess,
     mockAccountResumeFlowsMutationError,
     mockAccountResumeFlowsMutationSuccess,
+    mockChangeAccountUsernameMutation,
+    mockChangeAccountUsernameMutationError,
     mockDeleteAccountByNameMutation,
 } from "../api/mock/account.mock";
 import { FlowsTableData } from "../dataset-flow/flows-table/flows-table.types";
+import { ChangeAccountUsernameResult } from "./settings/account-settings.constants";
 
 describe("AccountService", () => {
     let service: AccountService;
@@ -207,6 +210,30 @@ describe("AccountService", () => {
         const subscription$ = service.deleteAccountByName(TEST_LOGIN).subscribe((result: boolean) => {
             expect(result).toEqual(true);
         });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check change account username with success", () => {
+        spyOn(accountApi, "changeAccountUsername").and.returnValue(of(mockChangeAccountUsernameMutation));
+
+        const subscription$ = service
+            .changeAccountUsername({ accountName: TEST_LOGIN, newName: "new-account-name" })
+            .subscribe((result: ChangeAccountUsernameResult) => {
+                expect(result).toEqual({ changed: true, name: result.name });
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check change account username with error", () => {
+        spyOn(accountApi, "changeAccountUsername").and.returnValue(of(mockChangeAccountUsernameMutationError));
+
+        const subscription$ = service
+            .changeAccountUsername({ accountName: TEST_LOGIN, newName: "new-account-name" })
+            .subscribe((result: ChangeAccountUsernameResult) => {
+                expect(result).toEqual({ changed: false, name: TEST_LOGIN });
+            });
 
         expect(subscription$.closed).toBeTrue();
     });

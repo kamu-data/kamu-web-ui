@@ -89,6 +89,7 @@ import { AccountTabComponent } from "./account/settings/tabs/account-tab/account
 import { SettingsTabComponent } from "./account/additional-components/settings-tab/settings-tab.component";
 import { DatasetSettingsWebhooksTabComponent } from "./dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component";
 import { datasetSettingsWebhooksResolverFn } from "./dataset-view/additional-components/dataset-settings-component/tabs/webhooks/resolver/dataset-settings-webhooks.resolver";
+import { accountSettingsAccountResolverFn } from "./account/settings/tabs/account-tab/resolver/account-settings-account.resolver";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -168,6 +169,8 @@ export const routes: Routes = [
                 data: {
                     [ProjectLinks.URL_PARAM_TAB]: AccountSettingsTabs.ACCOUNT,
                 },
+                runGuardsAndResolvers: "always",
+                resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_ACCOUNT_KEY]: accountSettingsAccountResolverFn },
             },
         ],
     },

@@ -1,6 +1,41 @@
-<h2 class="danger-color">Delete account</h2>
+<h2>Change username</h2>
 <mat-divider />
-<p class="mt-3">Deleting this account will delete all datasets associated with the account.</p>
+<p class="mt-3">Changing your username change the paths to datasets.</p>
+<form [formGroup]="changeUsernameForm" class="pb-4">
+    <dl class="form-group d-inline-block mt-3 mb-0">
+        <dt class="input-label mb-2 fw-600">
+            <label for="username">Username</label>
+        </dt>
+        <dd>
+            <input
+                formControlName="username"
+                type="text"
+                name="username"
+                class="form-control username-control"
+                id="username"
+                data-test-id="username"
+                autocomplete="off"
+            />
+        </dd>
+    </dl>
+    <button
+        [disabled]="changeUsernameForm.invalid"
+        class="ms-4 change-username-button"
+        type="button"
+        data-test-id="change-username-button"
+        (click)="changeUsername()"
+    >
+        Change username
+    </button>
+    <div *ngIf="usernameControl?.invalid && (usernameControl?.touched || usernameControl?.dirty)">
+        <span *ngIf="usernameControl?.errors?.['required']" class="text-danger fs-12">Username is required</span>
+        <span *ngIf="usernameControl?.errors?.['pattern']" class="text-danger fs-12">Invalid username</span>
+    </div>
+</form>
+
+<h2 class="danger-color mt-4 pt-4">Delete account</h2>
+<mat-divider />
+<p class="my-3">Deleting this account will delete all datasets associated with the account.</p>
 <button type="button" class="delete-account-button" (click)="deleteAccount()" data-test-id="delete-account-button">
     Delete account
 </button>

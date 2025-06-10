@@ -114,14 +114,17 @@ export class LoginService {
     }
 
     public async web3WalletLogin(): Promise<void> {
+        const deviceCode: MaybeNull<string> = this.localStorageService.loginDeviceCode;
         await this.ethereumService.connectWallet();
         if (this.ethereumService.currentWalet) {
             const verificationRequest: MaybeNull<Web3WalletOwnershipVerificationRequest> =
                 await this.ethereumService.signInWithEthereum();
             if (verificationRequest) {
-                this.authApi.fetchAccountAndTokenFromWeb3Wallet(verificationRequest).subscribe({
-                    next: this.loginCallback,
-                });
+                this.authApi
+                    .fetchAccountAndTokenFromWeb3Wallet(verificationRequest, deviceCode ?? undefined)
+                    .subscribe({
+                        next: this.loginCallback,
+                    });
             }
         }
     }

@@ -4,9 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+<<<<<<< HEAD
 ## [Unreleased]
 ### Added
 - Added webhook sunscriptions feature
+=======
+## [0.49.1] - 2025-06-05
+### Added
+- Wallet based authentication: added deviceCode as a parameter when user logging in
+>>>>>>> 9c3bf6466f07e7d799819557c7e1802558c30e58
 
 ## [0.49.0] - 2025-06-02
 ### Added

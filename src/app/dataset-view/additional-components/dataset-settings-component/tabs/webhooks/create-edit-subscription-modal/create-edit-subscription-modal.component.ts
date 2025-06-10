@@ -24,7 +24,6 @@ import {
     WebhookSubscriptionModalAction,
 } from "./create-edit-subscription-modal.model";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
-import { Clipboard } from "@angular/cdk/clipboard";
 import { ErrorSets } from "src/app/common/directives/form-validation-errors.types";
 import { FormGroup, NonNullableFormBuilder } from "@angular/forms";
 
@@ -47,7 +46,6 @@ export class CreateEditSubscriptionModalComponent extends BaseComponent implemen
     public activeModal = inject(NgbActiveModal);
     private fb = inject(NonNullableFormBuilder);
     private webhooksService = inject(WebhooksService);
-    private clipboard = inject(Clipboard);
 
     public ngOnInit(): void {
         this.webhooksService

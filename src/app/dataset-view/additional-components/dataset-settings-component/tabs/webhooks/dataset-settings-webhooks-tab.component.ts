@@ -17,7 +17,7 @@ import {
 import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetWebhooksService } from "./service/dataset-webhooks.service";
 
-import { BehaviorSubject, from, map, Observable, of, switchMap } from "rxjs";
+import { BehaviorSubject, from, map, Observable, of, switchMap, take } from "rxjs";
 import {
     CreateWebhookSubscriptionSuccess,
     UpdateWebhookSubscriptionType,
@@ -77,42 +77,48 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
                           )
                         : of(),
                 ),
+                take(1),
             )
             .subscribe((data: CreateWebhookSubscriptionSuccess | null) => {
-                if (data) {
-                    const modalRef = this.ngbModalService.open(CreateEditSubscriptionModalComponent, {
-                        backdrop: "static",
-                        keyboard: false,
-                        windowClass: "custom-modal-width",
-                    });
-                    const modalRefInstance = modalRef.componentInstance as CreateEditSubscriptionModalComponent;
-                    modalRefInstance.datasetBasics = this.webhooksViewData.datasetBasics;
-                    modalRefInstance.subscriptionData = data;
-
-                    from(modalRef.result)
-                        .pipe(
-                            switchMap((result: WebhookSubscriptionModalActionResult) => {
-                                if (result.action === WebhookSubscriptionModalAction.CLOSE) {
-                                    const currentRows: WebhookSubscription[] = this._rowsSubject$.getValue();
-                                    const updatedRows: WebhookSubscription[] = [
-                                        ...currentRows,
-                                        {
-                                            datasetId: this.datasetBasics.id,
-                                            eventTypes: data.input.eventTypes,
-                                            id: data.subscriptionId,
-                                            label: data.input.label,
-                                            status: data.status ?? WebhookSubscriptionStatus.Enabled,
-                                            targetUrl: data.input.targetUrl,
-                                        },
-                                    ];
-                                    this._rowsSubject$.next(updatedRows);
-                                }
-                                return of();
-                            }),
-                        )
-                        .subscribe();
-                }
+                this.openModalWindowWithVerification(data);
             });
+    }
+
+    private openModalWindowWithVerification(data: CreateWebhookSubscriptionSuccess | null): void {
+        if (data) {
+            const modalRef = this.ngbModalService.open(CreateEditSubscriptionModalComponent, {
+                backdrop: "static",
+                keyboard: false,
+                windowClass: "custom-modal-width",
+            });
+            const modalRefInstance = modalRef.componentInstance as CreateEditSubscriptionModalComponent;
+            modalRefInstance.datasetBasics = this.webhooksViewData.datasetBasics;
+            modalRefInstance.subscriptionData = data;
+
+            from(modalRef.result)
+                .pipe(
+                    switchMap((result: WebhookSubscriptionModalActionResult) => {
+                        if (result.action === WebhookSubscriptionModalAction.CLOSE) {
+                            const currentRows: WebhookSubscription[] = this._rowsSubject$.getValue();
+                            const updatedRows: WebhookSubscription[] = [
+                                ...currentRows,
+                                {
+                                    datasetId: this.datasetBasics.id,
+                                    eventTypes: data.input.eventTypes,
+                                    id: data.subscriptionId,
+                                    label: data.input.label,
+                                    status: data.status ?? WebhookSubscriptionStatus.Enabled,
+                                    targetUrl: data.input.targetUrl,
+                                },
+                            ];
+                            this._rowsSubject$.next(updatedRows);
+                        }
+                        return of();
+                    }),
+                    take(1),
+                )
+                .subscribe();
+        }
     }
 
     public removeWebhook(subscriptionId: string): void {
@@ -127,6 +133,7 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
                     if (ok) {
                         this.datasetWebhooksService
                             .datasetWebhookRemoveSubscription(this.datasetBasics.id, subscriptionId)
+                            .pipe(take(1))
                             .subscribe((result: boolean) => {
                                 if (result) {
                                     const currentRows: WebhookSubscription[] = this._rowsSubject$.getValue();
@@ -145,6 +152,7 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
     public pauseWebhook(subscriptionId: string): void {
         this.datasetWebhooksService
             .datasetWebhookPauseSubscription(this.datasetBasics.id, subscriptionId)
+            .pipe(take(1))
             .subscribe((result: boolean) => {
                 if (result) {
                     const currentRows: WebhookSubscription[] = this._rowsSubject$.getValue();
@@ -168,6 +176,7 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
     public resumeWebhook(subscriptionId: string): void {
         this.datasetWebhooksService
             .datasetWebhookResumeSubscription(this.datasetBasics.id, subscriptionId)
+            .pipe(take(1))
             .subscribe((result: boolean) => {
                 if (result) {
                     const currentRows: WebhookSubscription[] = this._rowsSubject$.getValue();
@@ -221,6 +230,7 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
                               .pipe(map(() => ({ result: true, payload: result.payload })))
                         : of({ result: false, payload: undefined }),
                 ),
+                take(1),
             )
             .subscribe((data: UpdateWebhookSubscriptionType) => {
                 if (data.result) {

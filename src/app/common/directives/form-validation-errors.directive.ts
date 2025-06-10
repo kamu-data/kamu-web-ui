@@ -98,6 +98,9 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges {
         this.controlSubscription?.unsubscribe();
         this.ngSelectStatusSubscription?.unsubscribe();
         this.ngSelectBlurSubscription?.unsubscribe();
+        this.controlSubscription = undefined;
+        this.ngSelectStatusSubscription = undefined;
+        this.ngSelectBlurSubscription = undefined;
     }
 
     /* istanbul ignore next */

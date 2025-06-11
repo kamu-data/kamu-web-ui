@@ -27,7 +27,10 @@ import { GithubLoginCredentials, PasswordLoginCredentials } from "../api/auth.ap
 import { LoginService } from "./login/login.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { LocalStorageService } from "../services/local-storage.service";
-import { of } from "rxjs";
+import { of, throwError } from "rxjs";
+import { AuthenticationError } from "../common/values/errors";
+import { ToastrModule, ToastrService } from "ngx-toastr";
+import { ErrorHandlerService } from "../services/error-handler.service";
 
 describe("LoggedUserService", () => {
     let service: LoggedUserService;
@@ -39,17 +42,19 @@ describe("LoggedUserService", () => {
         let loginService: LoginService;
         let apollo: Apollo;
         let authApi: AuthApi;
+        let toastrService: ToastrService;
 
         beforeEach(() => {
             TestBed.configureTestingModule({
                 providers: [Apollo],
-                imports: [ApolloTestingModule, HttpClientTestingModule],
+                imports: [ApolloTestingModule, HttpClientTestingModule, ToastrModule.forRoot()],
             });
 
             localStorageService = TestBed.inject(LocalStorageService);
             localStorageService.reset();
 
             service = TestBed.inject(LoggedUserService);
+            toastrService = TestBed.inject(ToastrService);
             apollo = TestBed.inject(Apollo);
             navigationService = TestBed.inject(NavigationService);
             loginService = TestBed.inject(LoginService);
@@ -113,6 +118,24 @@ describe("LoggedUserService", () => {
             expect(service.isAuthenticated).toBeFalse();
             expect(localStorageAccessTokenSpy).toHaveBeenCalledTimes(1);
         });
+
+        it("should check show error message when access token is invalid", fakeAsync(() => {
+            const localStorageAccessTokenSpy = spyOnProperty(localStorageService, "accessToken", "get").and.returnValue(
+                "dwsdwd",
+            );
+            const toastrErrorSpy = spyOn(toastrService, "error");
+            spyOn(loginService, "fetchAccountFromAccessToken").and.returnValue(
+                throwError(() => new AuthenticationError([new Error("")])),
+            );
+
+            service.initializeCompletes().subscribe();
+            tick();
+
+            expect(service.isAuthenticated).toBeFalse();
+            expect(localStorageAccessTokenSpy).toHaveBeenCalledTimes(1);
+            expect(toastrErrorSpy).toHaveBeenCalledOnceWith(ErrorHandlerService.APOLLO_ERROR_INVALID_TOKEN);
+            flush();
+        }));
 
         it("should check user changes via login with alive access token", fakeAsync(() => {
             attemptSuccessfulLoginViaAccessToken();

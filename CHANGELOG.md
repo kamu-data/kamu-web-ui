@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Highlighting in quick search
 - Create a new dataset page: set default value for storage
 - Set transform page: enable all options for engine selection
+### Fixed
+- Behavior for an invalid token
 
 ## [0.49.1] - 2025-06-05
 ### Added

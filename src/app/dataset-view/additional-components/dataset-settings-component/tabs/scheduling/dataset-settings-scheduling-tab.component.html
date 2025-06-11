@@ -6,7 +6,7 @@
             <div class="w-100">
                 <app-ingest-trigger-form
                     [datasetBasics]="datasetBasics"
-                    [updateStateToggleLabel]="'Enable/Disable updates'"
+                    [updateStateToggleLabel]="'Enable automatic updates'"
                     (changeTriggerEmit)="changePollingTriggers($event)"
                 />
             </div>
@@ -25,7 +25,7 @@
                 type="button"
                 class="btn btn-success"
                 (click)="saveScheduledUpdates()"
-                [disabled]="invalidPollingForm"
+                [disabled]="disabledSaveButton"
                 data-test-id="save-polling-triggers"
             >
                 Save

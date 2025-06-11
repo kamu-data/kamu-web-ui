@@ -96,8 +96,13 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
         return this.pollingForm && this.pollingForm.controls.updatesState.value;
     }
 
-    public get invalidPollingForm(): boolean {
-        return this.pollingForm && this.pollingForm.invalid;
+    public get disabledSaveButton(): boolean {
+        return (
+            (this.pollingForm && this.pollingForm?.invalid) ||
+            (!this.pollingForm?.get("updatesState")?.value &&
+                !this.pollingForm?.get("every")?.value &&
+                this.pollingForm?.get("__typename")?.value === PollingGroupEnum.TIME_DELTA)
+        );
     }
 
     private setPollingTriggerInput(pollingForm: FormGroup<PollingGroupType>): FlowTriggerInput {

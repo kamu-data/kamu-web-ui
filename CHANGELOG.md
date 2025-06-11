@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added webhook subscriptions feature
 - Support for account renaming
+### Fixed
+- Behavior for an invalid token
 
 ## [0.49.1] - 2025-06-05
 ### Added

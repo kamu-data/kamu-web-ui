@@ -48,6 +48,7 @@ export class DatasetCreateComponent extends BaseComponent {
     });
     public readonly DROPDOWN_LIST: SelectStorageItemType[] = STORAGE_LIST;
 
+    // default id item from STORAGE_LIST
     public selectedStorage: number = 1;
 
     public ngOnInit(): void {

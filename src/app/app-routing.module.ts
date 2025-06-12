@@ -90,6 +90,8 @@ import { SettingsTabComponent } from "./account/additional-components/settings-t
 import { DatasetSettingsWebhooksTabComponent } from "./dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component";
 import { datasetSettingsWebhooksResolverFn } from "./dataset-view/additional-components/dataset-settings-component/tabs/webhooks/resolver/dataset-settings-webhooks.resolver";
 import { accountSettingsAccountResolverFn } from "./account/settings/tabs/account-tab/resolver/account-settings-account.resolver";
+import { DatasetSettingsIngestConfigurationTabComponent } from "./dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/dataset-settings-ingest-configuration-tab.component";
+import { datasetSettingsIngestConfigurationResolverFn } from "./dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/resolver/dataset-settings-ingest-configuration.resolver";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -337,6 +339,18 @@ export const routes: Routes = [
                                 resolve: {
                                     [RoutingResolvers.DATASET_SETTINGS_SCHEDULING_KEY]:
                                         datasetSettingsSchedulingTabResolverFn,
+                                },
+                            },
+                            {
+                                path: SettingsTabsEnum.INGEST_CONFIGURATION,
+                                component: DatasetSettingsIngestConfigurationTabComponent,
+                                runGuardsAndResolvers: "always",
+                                data: {
+                                    [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.INGEST_CONFIGURATION,
+                                },
+                                resolve: {
+                                    [RoutingResolvers.DATASET_SETTINGS_INGEST_CONFIGURATION_KEY]:
+                                        datasetSettingsIngestConfigurationResolverFn,
                                 },
                             },
                             {

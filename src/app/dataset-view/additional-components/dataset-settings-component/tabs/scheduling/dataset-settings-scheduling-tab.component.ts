@@ -18,9 +18,8 @@ import {
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
-import { IngestConfigurationFormType, PollingGroupType } from "./dataset-settings-scheduling-tab.component.types";
+import { PollingGroupType } from "./dataset-settings-scheduling-tab.component.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { EMPTY, switchMap } from "rxjs";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 
@@ -33,7 +32,6 @@ import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
     @Input(RoutingResolvers.DATASET_SETTINGS_SCHEDULING_KEY) public schedulungTabData: DatasetViewData;
     public pollingForm: FormGroup<PollingGroupType>;
-    public ingestConfigurationForm: FormGroup<IngestConfigurationFormType>;
     public readonly throttlingGroupEnum: typeof ThrottlingGroupEnum = ThrottlingGroupEnum;
     public readonly timeUnit: typeof TimeUnit = TimeUnit;
 
@@ -51,44 +49,24 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
         return this.datasetBasics.kind === DatasetKind.Root;
     }
 
-    public changeIngestConfiguration(ingestConfigurationForm: FormGroup<IngestConfigurationFormType>): void {
-        this.ingestConfigurationForm = ingestConfigurationForm;
-    }
-
     public changePollingTriggers(pollingForm: FormGroup<PollingGroupType>): void {
         this.pollingForm = pollingForm;
     }
 
     public saveScheduledUpdates(): void {
         this.datasetSchedulingService
-            .setDatasetFlowConfigs({
+            .setDatasetTriggers({
                 datasetId: this.datasetBasics.id,
                 datasetFlowType: DatasetFlowType.Ingest,
-                configInput: {
-                    ingest: {
-                        fetchUncacheable: this.ingestConfigurationForm.controls.fetchUncacheable.value,
-                    },
+                paused: !this.pollingForm.controls.updatesState.value,
+                triggerInput: this.setPollingTriggerInput(this.pollingForm),
+                datasetInfo: {
+                    accountName: this.datasetBasics.owner.accountName,
+                    datasetName: this.datasetBasics.name,
                 },
             })
-            .pipe(
-                switchMap((success) => {
-                    if (success) {
-                        return this.datasetSchedulingService.setDatasetTriggers({
-                            datasetId: this.datasetBasics.id,
-                            datasetFlowType: DatasetFlowType.Ingest,
-                            paused: !this.pollingForm.controls.updatesState.value,
-                            triggerInput: this.setPollingTriggerInput(this.pollingForm),
-                            datasetInfo: {
-                                accountName: this.datasetBasics.owner.accountName,
-                                datasetName: this.datasetBasics.name,
-                            },
-                        });
-                    } else {
-                        return EMPTY;
-                    }
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
+            .pipe(takeUntilDestroyed(this.destroyRef))
+
             .subscribe();
     }
 

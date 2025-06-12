@@ -255,6 +255,10 @@
                 "developmentState": "stable"
               },
               {
+                "id": "ingestConfiguration",
+                "developmentState": "stable"
+              },
+              {
                 "id": "transformOptions",
                 "developmentState": "stable"
               },

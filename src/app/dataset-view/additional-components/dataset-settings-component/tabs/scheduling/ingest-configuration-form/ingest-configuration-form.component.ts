@@ -5,17 +5,7 @@
  * included in the LICENSE file.
  */
 
-import {
-    ChangeDetectionStrategy,
-    Component,
-    EventEmitter,
-    inject,
-    Input,
-    OnChanges,
-    OnInit,
-    Output,
-    SimpleChanges,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { IngestConfigurationFormType } from "../dataset-settings-scheduling-tab.component.types";
 import { BaseComponent } from "src/app/common/components/base.component";
@@ -29,18 +19,8 @@ import { DatasetSchedulingService } from "../../../services/dataset-scheduling.s
     styleUrls: ["./ingest-configuration-form.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class IngestConfigurationFormComponent extends BaseComponent implements OnInit, OnChanges {
-    public ngOnChanges(changes: SimpleChanges): void {
-        if (changes.disabled && changes.disabled.previousValue !== changes.disabled.currentValue) {
-            if (changes.disabled.currentValue) {
-                this.ingestConfigurationForm.controls.fetchUncacheable.enable();
-            } else {
-                this.ingestConfigurationForm.controls.fetchUncacheable.disable();
-            }
-        }
-    }
+export class IngestConfigurationFormComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    @Input({ required: true }) public disabled: boolean;
     @Output() public changeConfigurationEmit = new EventEmitter<FormGroup<IngestConfigurationFormType>>();
 
     private datasetSchedulingService = inject(DatasetSchedulingService);

@@ -9,11 +9,11 @@ import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormGroup } from "@angular/forms";
 import { DatasetBasicsFragment, DatasetFlowType, FlowTriggerInput, TimeUnit } from "src/app/api/kamu.graphql.interface";
-import { BatchingFormType } from "../scheduling/dataset-settings-scheduling-tab.component.types";
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
 import { BaseComponent } from "src/app/common/components/base.component";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
+import { BatchingFormType } from "./dataset-settings-transform-options-tab.component.types";
 
 @Component({
     selector: "app-dataset-settings-transform-options-tab",

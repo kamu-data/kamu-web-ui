@@ -84,7 +84,6 @@ import { DatasetVisibilityModule } from "../common/components/dataset-visibility
 import { QuerySharedModule } from "../query/shared/query-shared.module";
 import { IngestConfigurationModule } from "./additional-components/dataset-settings-component/tabs/scheduling/ingest-configuration-form/ingest-configuration.module";
 import { IngestTriggerModule } from "./additional-components/dataset-settings-component/tabs/scheduling/ingest-trigger-form/ingest-trigger.module";
-import { BatchingTriggerModule } from "./additional-components/dataset-settings-component/tabs/scheduling/batching-trigger-form/batching-trigger.module";
 import { FlowsViewModule } from "../dataset-flow/flows-view.module";
 import { DatasetViewMenuModule } from "./dataset-view-menu/dataset-view-menu.module";
 import { DragAndDropModule } from "../common/directives/drag-and-drop.module";
@@ -103,6 +102,8 @@ import { NgSelectModule } from "@ng-select/ng-select";
 import { RotateSecretSubscriptionModalComponent } from "./additional-components/dataset-settings-component/tabs/webhooks/rotate-secret-subscription-modal/rotate-secret-subscription-modal.component";
 import { FormValidationErrorsModule } from "../common/directives/form-validation-errors.module";
 import { CopyToClipboardModule } from "../common/components/copy-to-clipboard/copy-to-clipboard.module";
+import { BatchingTriggerModule } from "./additional-components/dataset-settings-component/tabs/transform-options/batching-trigger-form/batching-trigger.module";
+import { DatasetSettingsIngestConfigurationTabComponent } from "./additional-components/dataset-settings-component/tabs/ingest-configuration/dataset-settings-ingest-configuration-tab.component";
 @NgModule({
     imports: [
         DynamicTableModule,
@@ -226,6 +227,7 @@ import { CopyToClipboardModule } from "../common/components/copy-to-clipboard/co
         DatasetSettingsWebhooksTabComponent,
         CreateEditSubscriptionModalComponent,
         RotateSecretSubscriptionModalComponent,
+        DatasetSettingsIngestConfigurationTabComponent,
     ],
 })
 export class DatasetViewModule {}

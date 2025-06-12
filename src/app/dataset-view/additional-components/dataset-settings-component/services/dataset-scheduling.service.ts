@@ -47,6 +47,7 @@ export class DatasetSchedulingService {
             map((data: SetDatasetFlowConfigMutation) => {
                 const setConfig = data.datasets.byId?.flows.configs.setConfig;
                 if (setConfig?.__typename === "SetFlowConfigSuccess") {
+                    this.toastrService.success(setConfig?.message);
                     return true;
                 } else {
                     this.toastrService.error(setConfig?.message);

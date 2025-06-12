@@ -10,15 +10,6 @@
                     (changeTriggerEmit)="changePollingTriggers($event)"
                 />
             </div>
-
-            <div class="w-100">
-                <app-ingest-configuration-form
-                    *ngIf="pollingForm"
-                    [datasetBasics]="datasetBasics"
-                    [disabled]="pollingForm.controls.updatesState.value"
-                    (changeConfigurationEmit)="changeIngestConfiguration($event)"
-                />
-            </div>
         </div>
         <div class="mt-4 d-flex justify-content-end">
             <button

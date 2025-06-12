@@ -7,7 +7,7 @@
 
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
-import { IngestConfigurationFormType } from "../dataset-settings-scheduling-tab.component.types";
+import { IngestConfigurationFormType } from "../../scheduling/dataset-settings-scheduling-tab.component.types";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DatasetBasicsFragment, DatasetFlowType, GetDatasetFlowConfigsQuery } from "src/app/api/kamu.graphql.interface";

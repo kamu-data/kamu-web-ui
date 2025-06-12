@@ -66,7 +66,6 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
                 },
             })
             .pipe(takeUntilDestroyed(this.destroyRef))
-
             .subscribe();
     }
 

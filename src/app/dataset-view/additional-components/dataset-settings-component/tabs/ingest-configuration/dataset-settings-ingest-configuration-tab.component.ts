@@ -18,7 +18,6 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 @Component({
     selector: "app-dataset-settings-ingest-configuration-tab",
     templateUrl: "./dataset-settings-ingest-configuration-tab.component.html",
-    styleUrls: ["./dataset-settings-ingest-configuration-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetSettingsIngestConfigurationTabComponent extends BaseComponent {

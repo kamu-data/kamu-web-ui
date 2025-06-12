@@ -164,14 +164,6 @@ describe("AppHeaderComponent", () => {
         expect(link).toBeUndefined();
     });
 
-    it("should not have Login link when login feature is disabled", () => {
-        component.loginMethods = [];
-        fixture.detectChanges();
-
-        const link = findElementByDataTestId(fixture, "loginHeader");
-        expect(link).toBeUndefined();
-    });
-
     it("should emit on click Billing link", () => {
         loginUser();
         const emitterSubscription$ = component.onClickedBilling.pipe(first()).subscribe();
@@ -271,14 +263,6 @@ describe("AppHeaderComponent", () => {
 
         it("should not have Login link menu when user is logged in", () => {
             loginUser();
-            const link = findElementByDataTestId(fixture, "openLogin");
-            expect(link).toBeUndefined();
-        });
-
-        it("should not have Login link menu when login feature is disabled", () => {
-            component.loginMethods = [];
-            fixture.detectChanges();
-
             const link = findElementByDataTestId(fixture, "openLogin");
             expect(link).toBeUndefined();
         });

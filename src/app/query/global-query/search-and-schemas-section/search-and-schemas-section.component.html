@@ -29,8 +29,12 @@
             <div class="d-flex flex-row justify-content-between" [style.width.px]="searchDatasets.clientWidth - 28">
                 <div class="search-result-item">
                     <i class="bi bi-journal-album mr-2"></i>
-                    <ng-container *ngIf="!r.dummy">{{ r.dataset.owner.accountName }}/</ng-container>
-                    <ngb-highlight [result]="r.dataset.name" [term]="t" />
+                    <ngb-highlight
+                        *ngIf="!r.dummy"
+                        [result]="r.dataset.owner.accountName + '/' + r.dataset.name"
+                        [term]="t"
+                    />
+                    <ngb-highlight *ngIf="r.dummy" [result]="r.dataset.name" [term]="t" />
                 </div>
                 <div
                     class="border rounded-1 flex-shrink-0 color-bg-tertiary px-1 f6 button-add color-text-tertiary ml-1"

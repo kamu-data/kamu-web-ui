@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { Injectable } from "@angular/core";
+import { Injectable, Injector } from "@angular/core";
 import { catchError, first } from "rxjs/operators";
 import { EMPTY, Observable, ReplaySubject, Subject } from "rxjs";
 import { NavigationService } from "../services/navigation.service";
@@ -20,6 +20,8 @@ import { LoginService } from "./login/login.service";
 import { LocalStorageService } from "../services/local-storage.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { SessionStorageService } from "src/app/services/session-storage.service";
+import { ToastrService } from "ngx-toastr";
+import { ErrorHandlerService } from "../services/error-handler.service";
 
 @Injectable({
     providedIn: "root",
@@ -34,6 +36,7 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
         private appConfigService: AppConfigService,
         private localStorageService: LocalStorageService,
         private sessionStorageService: SessionStorageService,
+        private injector: Injector,
         private apollo: Apollo,
     ) {
         super();
@@ -46,6 +49,10 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
                 .subscribe((user: AccountFragment) => {
                     this.changeUser(user);
                 });
+    }
+
+    private get toastrService(): ToastrService {
+        return this.injector.get(ToastrService);
     }
 
     public initializeCompletes(): Observable<void> {
@@ -103,6 +110,7 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
                 first(),
                 catchError(() => {
                     this.terminateSession();
+                    this.toastrService.error(ErrorHandlerService.APOLLO_ERROR_INVALID_TOKEN);
                     return EMPTY;
                 }),
             );

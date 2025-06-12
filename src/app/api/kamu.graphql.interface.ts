@@ -4160,6 +4160,22 @@ export type AccountWithEmailQuery = {
     accounts: { __typename?: "Accounts"; byName?: ({ __typename?: "Account" } & AccountWithEmailFragment) | null };
 };
 
+export type ChangeAccountPasswordMutationVariables = Exact<{
+    accountName: Scalars["AccountName"];
+    password: Scalars["AccountPassword"];
+}>;
+
+export type ChangeAccountPasswordMutation = {
+    __typename?: "Mutation";
+    accounts: {
+        __typename?: "AccountsMut";
+        byName?: {
+            __typename?: "AccountMut";
+            modifyPassword: { __typename?: "ModifyPasswordSuccess"; message: string };
+        } | null;
+    };
+};
+
 export type ChangeAccountUsernameMutationVariables = Exact<{
     accountName: Scalars["AccountName"];
     newName: Scalars["AccountName"];
@@ -8299,6 +8315,33 @@ export const AccountWithEmailDocument = gql`
 })
 export class AccountWithEmailGQL extends Apollo.Query<AccountWithEmailQuery, AccountWithEmailQueryVariables> {
     document = AccountWithEmailDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const ChangeAccountPasswordDocument = gql`
+    mutation changeAccountPassword($accountName: AccountName!, $password: AccountPassword!) {
+        accounts {
+            byName(accountName: $accountName) {
+                modifyPassword(password: $password) {
+                    ... on ModifyPasswordSuccess {
+                        message
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class ChangeAccountPasswordGQL extends Apollo.Mutation<
+    ChangeAccountPasswordMutation,
+    ChangeAccountPasswordMutationVariables
+> {
+    document = ChangeAccountPasswordDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

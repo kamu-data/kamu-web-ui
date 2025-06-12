@@ -6,7 +6,7 @@
  */
 
 import ProjectLinks from "src/app/project-links";
-import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
+import { AccountProvider, AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
 import {
     AccountSettingsMenuItem,
     ACCOUNT_SETTINGS_MENU_ITEMS,
@@ -45,6 +45,15 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
 
     public getRouteLink(tab: AccountSettingsTabs): string {
         return `/${ProjectLinks.URL_SETTINGS}/${tab}`;
+    }
+
+    public showItem(activeTab: AccountSettingsTabs): boolean {
+        switch (activeTab) {
+            case AccountSettingsTabs.SECURITY:
+                return this.loggedUserService.currentlyLoggedInUser.accountProvider === AccountProvider.Password;
+            default:
+                return true;
+        }
     }
 
     private fetchAccountInfo(): void {

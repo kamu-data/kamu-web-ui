@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-export type ValidationError = "required" | "minlength" | "maxlength" | "invalid" | "pattern";
+export type ValidationError = "required" | "minlength" | "maxlength" | "invalid" | "pattern" | "passwordsMismatch";
 
 export type ValidationErrorTuple = {
     error: ValidationError;
@@ -14,4 +14,5 @@ export type ValidationErrorTuple = {
 
 export const ErrorSets: { [key: string]: ValidationError[] } = {
     TargetUrl: ["required", "pattern"],
+    ConfirmPassword: ["required", "passwordsMismatch", "minlength"],
 };

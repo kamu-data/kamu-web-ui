@@ -90,7 +90,7 @@ export const ACCOUNT_SETTINGS_MENU_ITEMS: AccountSettingsMenuItem[] = [
     },
     {
         activeTab: AccountSettingsTabs.SECURITY,
-        class: "disabled",
+        class: "",
         iconName: "security",
         label: "Password and authentication",
         featureFlag: "settings.password",

@@ -90,6 +90,9 @@ import { SettingsTabComponent } from "./account/additional-components/settings-t
 import { DatasetSettingsWebhooksTabComponent } from "./dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component";
 import { datasetSettingsWebhooksResolverFn } from "./dataset-view/additional-components/dataset-settings-component/tabs/webhooks/resolver/dataset-settings-webhooks.resolver";
 import { accountSettingsAccountResolverFn } from "./account/settings/tabs/account-tab/resolver/account-settings-account.resolver";
+import { PasswordAndAuthenticationTabComponent } from "./account/settings/tabs/password-and-authentication-tab/password-and-authentication-tab.component";
+import { accountSettingsPasswordAndAuthenticationResolverFn } from "./account/settings/tabs/password-and-authentication-tab/resolver/account-settings-password-and-authentication.resolver";
+import { accountPasswordProviderGuard } from "./common/guards/account-password-provider.guard";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -171,6 +174,19 @@ export const routes: Routes = [
                 },
                 runGuardsAndResolvers: "always",
                 resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_ACCOUNT_KEY]: accountSettingsAccountResolverFn },
+            },
+            {
+                path: AccountSettingsTabs.SECURITY,
+                component: PasswordAndAuthenticationTabComponent,
+                data: {
+                    [ProjectLinks.URL_PARAM_TAB]: AccountSettingsTabs.SECURITY,
+                },
+                runGuardsAndResolvers: "always",
+                canActivate: [accountPasswordProviderGuard],
+                resolve: {
+                    [RoutingResolvers.ACCOUNT_SETTINGS_PASSWORD_AND_AUTHENTICATION_KEY]:
+                        accountSettingsPasswordAndAuthenticationResolverFn,
+                },
             },
         ],
     },

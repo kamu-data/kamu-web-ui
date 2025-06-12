@@ -11,6 +11,7 @@ import {
     AccountListDatasetsWithFlowsQuery,
     AccountPauseFlowsMutation,
     AccountResumeFlowsMutation,
+    ChangeAccountPasswordMutation,
     ChangeAccountUsernameMutation,
     Dataset,
     DatasetListFlowsDataFragment,
@@ -166,6 +167,19 @@ export class AccountService {
                     this.toastrService.error(data.accounts.byName?.rename.message);
                 }
                 return { changed: false, name: params.accountName };
+            }),
+        );
+    }
+
+    public changeAccountPassword(params: { accountName: string; password: string }): Observable<boolean> {
+        return this.accountApi.changeAccountPassword(params).pipe(
+            map((data: ChangeAccountPasswordMutation) => {
+                if (data.accounts.byName?.modifyPassword.__typename === "ModifyPasswordSuccess") {
+                    this.toastrService.success(data.accounts.byName?.modifyPassword.message);
+                    return true;
+                }
+                this.toastrService.error("Password not changed");
+                return false;
             }),
         );
     }

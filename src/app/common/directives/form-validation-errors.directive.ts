@@ -60,6 +60,8 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges {
                 const keyPattern = errorDetails?.requiredPattern as string;
                 return `${label} ${this.patternMessages[keyPattern]}`;
             }
+            case "passwordsMismatch":
+                return "Passwords mismatch";
 
             default:
                 return "Unknown validator";
@@ -68,25 +70,27 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges {
 
     /* istanbul ignore next */
     public updateErrorMessage() {
-        const errorsToDisplay: string[] = [];
-        const errors = Array.isArray(this.appFieldError) ? this.appFieldError : [this.appFieldError];
-        errors.forEach((error: ValidationError | { error: ValidationError; message: string }) => {
-            const errorCode = typeof error === "object" ? error.error : error;
-            const message =
-                typeof error === "object" ? () => error.message : () => this.getStandardErrorMessage(errorCode);
-            const errorChecker =
-                errorCode === "invalid"
-                    ? () => this.fieldControl?.invalid
-                    : () => this.fieldControl?.hasError(errorCode);
-            if (errorChecker()) {
-                errorsToDisplay.push(message());
-            }
-        });
+        if (this.fieldControl?.touched) {
+            const errorsToDisplay: string[] = [];
+            const errors = Array.isArray(this.appFieldError) ? this.appFieldError : [this.appFieldError];
+            errors.forEach((error: ValidationError | { error: ValidationError; message: string }) => {
+                const errorCode = typeof error === "object" ? error.error : error;
+                const message =
+                    typeof error === "object" ? () => error.message : () => this.getStandardErrorMessage(errorCode);
+                const errorChecker =
+                    errorCode === "invalid"
+                        ? () => this.fieldControl?.invalid
+                        : () => this.fieldControl?.hasError(errorCode);
+                if (errorChecker()) {
+                    errorsToDisplay.push(message());
+                }
+            });
 
-        if (errorsToDisplay.length) {
-            this.renderErrors(errorsToDisplay[0]);
-        } else {
-            this.renderErrors("");
+            if (errorsToDisplay.length) {
+                this.renderErrors(errorsToDisplay[0]);
+            } else {
+                this.renderErrors("");
+            }
         }
     }
 

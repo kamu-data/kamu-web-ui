@@ -20,9 +20,17 @@ import { RouterModule } from "@angular/router";
 import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
 import { AccountTabComponent } from "./tabs/account-tab/account-tab.component";
 import { CopyToClipboardModule } from "src/app/common/components/copy-to-clipboard/copy-to-clipboard.module";
+import { PasswordAndAuthenticationTabComponent } from "./tabs/password-and-authentication-tab/password-and-authentication-tab.component";
+import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
 
 @NgModule({
-    declarations: [AccessTokensTabComponent, AccountSettingsComponent, EmailsTabComponent, AccountTabComponent],
+    declarations: [
+        AccessTokensTabComponent,
+        AccountSettingsComponent,
+        EmailsTabComponent,
+        AccountTabComponent,
+        PasswordAndAuthenticationTabComponent,
+    ],
     exports: [AccountSettingsComponent, AccountTabComponent],
     imports: [
         CommonModule,
@@ -36,6 +44,7 @@ import { CopyToClipboardModule } from "src/app/common/components/copy-to-clipboa
 
         CopyToClipboardModule,
         FeatureFlagModule,
+        FormValidationErrorsModule,
         PaginationModule,
     ],
 })

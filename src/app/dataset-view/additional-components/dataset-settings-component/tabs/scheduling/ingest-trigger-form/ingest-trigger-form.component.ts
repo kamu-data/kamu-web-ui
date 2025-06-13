@@ -71,6 +71,16 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
         this.setPollingEveryTimeValidator();
         this.initPollingForm();
         this.pollingTypeChanges();
+
+        this.pollingUpdatesState.valueChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((updated: boolean) => {
+                if (updated) {
+                    this.enableAllControls();
+                } else {
+                    this.disableAllControls();
+                }
+            });
     }
 
     public initPollingForm(): void {
@@ -102,6 +112,11 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
                             cronExpression: schedule.cron5ComponentExpression,
                         });
                     }
+                    if (!this.pollingUpdatesState.value) {
+                        this.disableAllControls();
+                    }
+                } else {
+                    this.disableAllControls();
                 }
                 this.changeTriggerEmit.emit(this.pollingForm);
             });
@@ -149,14 +164,18 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
         this.pollingType.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((value: PollingGroupEnum) => {
             switch (value) {
                 case PollingGroupEnum.TIME_DELTA: {
-                    this.pollingEveryTime.enable();
-                    this.pollingUnitTime.enable();
+                    if (this.pollingUpdatesState.value) {
+                        this.pollingEveryTime.enable();
+                        this.pollingUnitTime.enable();
+                    }
                     this.disableAndClearControl(this.cronExpression);
 
                     break;
                 }
                 case PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION: {
-                    this.cronExpression.enable();
+                    if (this.pollingUpdatesState.value) {
+                        this.cronExpression.enable();
+                    }
                     this.disableAndClearControl(this.pollingEveryTime);
                     this.disableAndClearControl(this.pollingUnitTime);
 
@@ -168,5 +187,19 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
                 }
             }
         });
+    }
+
+    private disableAllControls(): void {
+        this.pollingEveryTime.disable();
+        this.pollingUnitTime.disable();
+        this.cronExpression.disable();
+        this.pollingType.disable();
+    }
+
+    private enableAllControls(): void {
+        this.pollingEveryTime.enable();
+        this.pollingUnitTime.enable();
+        this.cronExpression.enable();
+        this.pollingType.enable();
     }
 }

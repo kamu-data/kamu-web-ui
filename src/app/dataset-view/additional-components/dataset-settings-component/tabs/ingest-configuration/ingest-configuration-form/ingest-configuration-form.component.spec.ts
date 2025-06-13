@@ -33,7 +33,6 @@ describe("IngestConfigurationFormComponent", () => {
         component = fixture.componentInstance;
         datasetSchedulingService = TestBed.inject(DatasetSchedulingService);
         component.datasetBasics = mockDatasetBasicsRootFragment;
-        component.disabled = false;
         spyOn(datasetSchedulingService, "fetchDatasetFlowConfigs").and.returnValue(
             of(mockIngestGetDatasetFlowConfigsSuccess),
         );

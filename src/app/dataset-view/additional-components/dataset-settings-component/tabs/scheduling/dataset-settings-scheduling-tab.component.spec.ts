@@ -18,16 +18,10 @@ import { MatRadioModule } from "@angular/material/radio";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
-import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { TimeDelta, TimeUnit } from "src/app/api/kamu.graphql.interface";
-import { of } from "rxjs";
-import {
-    mockGetDatasetFlowTriggersQuery,
-    mockIngestGetDatasetFlowConfigsSuccess,
-} from "src/app/api/mock/dataset-flow.mock";
-import { IngestConfigurationModule } from "./ingest-configuration-form/ingest-configuration.module";
+import { IngestConfigurationModule } from "../ingest-configuration/ingest-configuration-form/ingest-configuration.module";
 import { IngestTriggerModule } from "./ingest-trigger-form/ingest-trigger.module";
-import { IngestConfigurationFormType, PollingGroupType } from "./dataset-settings-scheduling-tab.component.types";
+import { PollingGroupType } from "./dataset-settings-scheduling-tab.component.types";
 import { MaybeNull } from "src/app/interface/app.types";
 import { PollingGroupEnum } from "../../dataset-settings.model";
 import { cronExpressionValidator } from "src/app/common/helpers/data.helpers";
@@ -78,25 +72,8 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check initial state", () => {
-        // component.datasetPermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
-        spyOn(datasetSchedulingService, "fetchDatasetFlowConfigs").and.returnValue(
-            of(mockIngestGetDatasetFlowConfigsSuccess),
-        );
-        spyOn(datasetSchedulingService, "fetchDatasetFlowTriggers").and.returnValue(
-            of(mockGetDatasetFlowTriggersQuery),
-        );
-        fixture.detectChanges();
-        const fetchUncacheableCheckBox = findElementByDataTestId(fixture, "fetchUncacheable") as HTMLInputElement;
-        expect(fetchUncacheableCheckBox.checked).toBeFalsy();
-    });
-
     it("should check 'Save' button works for ROOT dataset with time delta", () => {
         const setDatasetFlowScheduleSpy = spyOn(datasetSchedulingService, "setDatasetTriggers").and.callThrough();
-        const setDatasetFlowConfigsSpy = spyOn(datasetSchedulingService, "setDatasetFlowConfigs").and.returnValue(
-            of(true),
-        );
-        //   component.datasetPermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
 
         const mockPollingTriggerForm = new FormGroup<PollingGroupType>({
             updatesState: new FormControl<boolean>(true, { nonNullable: true }),
@@ -114,13 +91,9 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
             ]),
         });
         component.pollingForm = mockPollingTriggerForm;
-        component.ingestConfigurationForm = new FormGroup<IngestConfigurationFormType>({
-            fetchUncacheable: new FormControl<boolean>(false, { nonNullable: true }),
-        });
 
         component.saveScheduledUpdates();
 
-        expect(setDatasetFlowConfigsSpy).toHaveBeenCalledTimes(1);
         expect(setDatasetFlowScheduleSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
                 triggerInput: {
@@ -134,10 +107,6 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
 
     it("should check 'Save' button works for ROOT dataset with cron expression", () => {
         const setDatasetFlowScheduleSpy = spyOn(datasetSchedulingService, "setDatasetTriggers").and.callThrough();
-        const setDatasetFlowConfigsSpy = spyOn(datasetSchedulingService, "setDatasetFlowConfigs").and.returnValue(
-            of(true),
-        );
-        //  component.datasetPermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
 
         const mockPollingTriggerForm = new FormGroup<PollingGroupType>({
             updatesState: new FormControl<boolean>(true, { nonNullable: true }),
@@ -153,13 +122,9 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
             ]),
         });
         component.pollingForm = mockPollingTriggerForm;
-        component.ingestConfigurationForm = new FormGroup<IngestConfigurationFormType>({
-            fetchUncacheable: new FormControl<boolean>(false, { nonNullable: true }),
-        });
 
         component.saveScheduledUpdates();
 
-        expect(setDatasetFlowConfigsSpy).toHaveBeenCalledTimes(1);
         expect(setDatasetFlowScheduleSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
                 triggerInput: {

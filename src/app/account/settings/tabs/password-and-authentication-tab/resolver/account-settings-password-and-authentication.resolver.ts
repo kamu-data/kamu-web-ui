@@ -6,12 +6,11 @@
  */
 
 import { ResolveFn } from "@angular/router";
-import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
-import { accountSettingsEmailResolverFn } from "../../emails-tab/resolver/account-settings-email.resolver";
+import { AccountFragment } from "src/app/api/kamu.graphql.interface";
+import { inject } from "@angular/core";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 
-export const accountSettingsPasswordAndAuthenticationResolverFn: ResolveFn<AccountWithEmailFragment> = (
-    state,
-    route,
-) => {
-    return accountSettingsEmailResolverFn(state, route);
+export const accountSettingsPasswordAndAuthenticationResolverFn: ResolveFn<AccountFragment> = () => {
+    const loggedUserService = inject(LoggedUserService);
+    return loggedUserService.currentlyLoggedInUser;
 };

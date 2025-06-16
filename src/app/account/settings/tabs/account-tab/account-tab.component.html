@@ -33,6 +33,12 @@
     </div>
 </form>
 
+<ng-container *ngIf="!isOwnerPage && accountName">
+    <h2 class="mt-4">Change password</h2>
+    <mat-divider />
+    <app-admin-change-password class="mb-4" [accountName]="accountName" />
+</ng-container>
+
 <h2 class="danger-color mt-4 pt-4">Delete account</h2>
 <mat-divider />
 <p class="my-3">Deleting this account will delete all datasets associated with the account.</p>

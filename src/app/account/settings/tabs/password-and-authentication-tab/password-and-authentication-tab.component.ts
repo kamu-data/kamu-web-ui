@@ -7,9 +7,9 @@
 
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
+import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { ChangeAccountPasswordFormType } from "./password-and-authentication-tab.component.types";
+import { ChangeUserAccountPasswordFormType } from "./password-and-authentication-tab.component.types";
 import { matchFieldsValidator } from "src/app/common/helpers/data.helpers";
 import { ErrorSets } from "src/app/common/directives/form-validation-errors.types";
 import { AccountService } from "src/app/account/account.service";
@@ -21,17 +21,18 @@ import { AccountService } from "src/app/account/account.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PasswordAndAuthenticationTabComponent implements OnInit {
-    @Input(RoutingResolvers.ACCOUNT_SETTINGS_PASSWORD_AND_AUTHENTICATION_KEY) public account: AccountWithEmailFragment;
+    @Input(RoutingResolvers.ACCOUNT_SETTINGS_PASSWORD_AND_AUTHENTICATION_KEY) public account: AccountFragment;
     private fb = inject(FormBuilder);
     private accountService = inject(AccountService);
 
     public showChangePasswordView = false;
-    public changeAccountPasswordForm: FormGroup<ChangeAccountPasswordFormType>;
+    public changeUserAccountPasswordForm: FormGroup<ChangeUserAccountPasswordFormType>;
     public readonly ErrorSets: typeof ErrorSets = ErrorSets;
 
     public ngOnInit(): void {
-        this.changeAccountPasswordForm = this.fb.nonNullable.group(
+        this.changeUserAccountPasswordForm = this.fb.nonNullable.group(
             {
+                oldPassword: ["", [Validators.required]],
                 newPassword: ["", [Validators.required, Validators.minLength(8)]],
                 confirmPassword: ["", [Validators.required, Validators.minLength(8)]],
             },
@@ -41,15 +42,20 @@ export class PasswordAndAuthenticationTabComponent implements OnInit {
         );
     }
 
-    public updatePassword(): void {
+    public get isAdmin(): boolean {
+        return this.account.isAdmin;
+    }
+
+    public updateUserPassword(): void {
         this.accountService
-            .changeAccountPassword({
+            .changeUserPassword({
                 accountName: this.account.accountName,
-                password: this.changeAccountPasswordForm.controls.newPassword.value,
+                oldPassword: this.changeUserAccountPasswordForm.controls.oldPassword.value,
+                newPassword: this.changeUserAccountPasswordForm.controls.newPassword.value,
             })
             .subscribe((success: boolean) => {
                 if (success) {
-                    this.changeAccountPasswordForm.reset();
+                    this.changeUserAccountPasswordForm.reset();
                 }
             });
     }

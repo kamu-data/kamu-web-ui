@@ -166,6 +166,8 @@ export type AccountMut = {
     flows: AccountFlowsMut;
     /** Reset password for a selected account. Allowed only for admin users */
     modifyPassword: ModifyPasswordResult;
+    /** Change password with confirmation */
+    modifyPasswordWithConfirmation: ModifyPasswordResult;
     /** Update account name */
     rename: RenameAccountResult;
     /** Update account email */
@@ -174,6 +176,11 @@ export type AccountMut = {
 
 export type AccountMutModifyPasswordArgs = {
     password: Scalars["AccountPassword"];
+};
+
+export type AccountMutModifyPasswordWithConfirmationArgs = {
+    newPassword: Scalars["AccountPassword"];
+    oldPassword: Scalars["AccountPassword"];
 };
 
 export type AccountMutRenameArgs = {
@@ -2572,6 +2579,11 @@ export type ModifyPasswordSuccess = ModifyPasswordResult & {
     message: Scalars["String"];
 };
 
+export type ModifyPasswordWrongOldPassword = ModifyPasswordResult & {
+    __typename?: "ModifyPasswordWrongOldPassword";
+    message: Scalars["String"];
+};
+
 /**
  * MQTT quality of service class.
  *
@@ -4160,22 +4172,6 @@ export type AccountWithEmailQuery = {
     accounts: { __typename?: "Accounts"; byName?: ({ __typename?: "Account" } & AccountWithEmailFragment) | null };
 };
 
-export type ChangeAccountPasswordMutationVariables = Exact<{
-    accountName: Scalars["AccountName"];
-    password: Scalars["AccountPassword"];
-}>;
-
-export type ChangeAccountPasswordMutation = {
-    __typename?: "Mutation";
-    accounts: {
-        __typename?: "AccountsMut";
-        byName?: {
-            __typename?: "AccountMut";
-            modifyPassword: { __typename?: "ModifyPasswordSuccess"; message: string };
-        } | null;
-    };
-};
-
 export type ChangeAccountUsernameMutationVariables = Exact<{
     accountName: Scalars["AccountName"];
     newName: Scalars["AccountName"];
@@ -4190,6 +4186,43 @@ export type ChangeAccountUsernameMutation = {
             rename:
                 | { __typename?: "RenameAccountNameNotUnique"; message: string }
                 | { __typename?: "RenameAccountSuccess"; newName: string; message: string };
+        } | null;
+    };
+};
+
+export type ChangeAdminPasswordMutationVariables = Exact<{
+    accountName: Scalars["AccountName"];
+    password: Scalars["AccountPassword"];
+}>;
+
+export type ChangeAdminPasswordMutation = {
+    __typename?: "Mutation";
+    accounts: {
+        __typename?: "AccountsMut";
+        byName?: {
+            __typename?: "AccountMut";
+            modifyPassword:
+                | { __typename?: "ModifyPasswordSuccess"; message: string }
+                | { __typename?: "ModifyPasswordWrongOldPassword" };
+        } | null;
+    };
+};
+
+export type ChangeUserPasswordMutationVariables = Exact<{
+    accountName: Scalars["AccountName"];
+    oldPassword: Scalars["AccountPassword"];
+    newPassword: Scalars["AccountPassword"];
+}>;
+
+export type ChangeUserPasswordMutation = {
+    __typename?: "Mutation";
+    accounts: {
+        __typename?: "AccountsMut";
+        byName?: {
+            __typename?: "AccountMut";
+            modifyPasswordWithConfirmation:
+                | { __typename?: "ModifyPasswordSuccess"; message: string }
+                | { __typename?: "ModifyPasswordWrongOldPassword"; message: string };
         } | null;
     };
 };
@@ -8320,33 +8353,6 @@ export class AccountWithEmailGQL extends Apollo.Query<AccountWithEmailQuery, Acc
         super(apollo);
     }
 }
-export const ChangeAccountPasswordDocument = gql`
-    mutation changeAccountPassword($accountName: AccountName!, $password: AccountPassword!) {
-        accounts {
-            byName(accountName: $accountName) {
-                modifyPassword(password: $password) {
-                    ... on ModifyPasswordSuccess {
-                        message
-                    }
-                }
-            }
-        }
-    }
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class ChangeAccountPasswordGQL extends Apollo.Mutation<
-    ChangeAccountPasswordMutation,
-    ChangeAccountPasswordMutationVariables
-> {
-    document = ChangeAccountPasswordDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
 export const ChangeAccountUsernameDocument = gql`
     mutation changeAccountUsername($accountName: AccountName!, $newName: AccountName!) {
         accounts {
@@ -8373,6 +8379,67 @@ export class ChangeAccountUsernameGQL extends Apollo.Mutation<
     ChangeAccountUsernameMutationVariables
 > {
     document = ChangeAccountUsernameDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const ChangeAdminPasswordDocument = gql`
+    mutation changeAdminPassword($accountName: AccountName!, $password: AccountPassword!) {
+        accounts {
+            byName(accountName: $accountName) {
+                modifyPassword(password: $password) {
+                    ... on ModifyPasswordSuccess {
+                        message
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class ChangeAdminPasswordGQL extends Apollo.Mutation<
+    ChangeAdminPasswordMutation,
+    ChangeAdminPasswordMutationVariables
+> {
+    document = ChangeAdminPasswordDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const ChangeUserPasswordDocument = gql`
+    mutation changeUserPassword(
+        $accountName: AccountName!
+        $oldPassword: AccountPassword!
+        $newPassword: AccountPassword!
+    ) {
+        accounts {
+            byName(accountName: $accountName) {
+                modifyPasswordWithConfirmation(oldPassword: $oldPassword, newPassword: $newPassword) {
+                    ... on ModifyPasswordSuccess {
+                        message
+                    }
+                    ... on ModifyPasswordWrongOldPassword {
+                        message
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class ChangeUserPasswordGQL extends Apollo.Mutation<
+    ChangeUserPasswordMutation,
+    ChangeUserPasswordMutationVariables
+> {
+    document = ChangeUserPasswordDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

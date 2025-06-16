@@ -8,10 +8,10 @@
 import { TestBed } from "@angular/core/testing";
 import { ResolveFn } from "@angular/router";
 import { accountSettingsPasswordAndAuthenticationResolverFn } from "./account-settings-password-and-authentication.resolver";
-import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
+import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 
 describe("accountSettingsPasswordAndAuthenticationResolver", () => {
-    const executeResolver: ResolveFn<AccountWithEmailFragment> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<AccountFragment> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => accountSettingsPasswordAndAuthenticationResolverFn(...resolverParameters));
 
     beforeEach(() => {

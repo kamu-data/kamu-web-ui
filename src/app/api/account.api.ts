@@ -26,12 +26,14 @@ import {
     AccountResumeFlowsMutation,
     AccountWithEmailGQL,
     AccountWithEmailQuery,
-    ChangeAccountPasswordGQL,
-    ChangeAccountPasswordMutation,
     ChangeAccountUsernameGQL,
     ChangeAccountUsernameMutation,
     DeleteAccountByNameGQL,
     DeleteAccountByNameMutation,
+    ChangeUserPasswordGQL,
+    ChangeAdminPasswordGQL,
+    ChangeUserPasswordMutation,
+    ChangeAdminPasswordMutation,
 } from "./kamu.graphql.interface";
 import { MaybeNull } from "../interface/app.types";
 import { ApolloError, ApolloQueryResult } from "@apollo/client";
@@ -51,7 +53,8 @@ export class AccountApi {
     private accountChangeEmailGQL = inject(AccountChangeEmailGQL);
     private deleteAccountByNameGQL = inject(DeleteAccountByNameGQL);
     private changeAccountUsernameGQL = inject(ChangeAccountUsernameGQL);
-    private changeAccountPasswordGQL = inject(ChangeAccountPasswordGQL);
+    private changeAdminPasswordGQL = inject(ChangeAdminPasswordGQL);
+    private changeUserPasswordGQL = inject(ChangeUserPasswordGQL);
 
     public changeAccountUsername(params: {
         accountName: string;
@@ -87,13 +90,34 @@ export class AccountApi {
         );
     }
 
-    public changeAccountPassword(params: {
+    public changeAdminPassword(params: {
         accountName: string;
         password: string;
-    }): Observable<ChangeAccountPasswordMutation> {
-        return this.changeAccountPasswordGQL.mutate(params).pipe(
+    }): Observable<ChangeAdminPasswordMutation> {
+        return this.changeAdminPasswordGQL.mutate(params).pipe(
             first(),
-            map((result: MutationResult<ChangeAccountPasswordMutation>) => {
+            map((result: MutationResult<ChangeAdminPasswordMutation>) => {
+                /* istanbul ignore else */
+                if (result.data) {
+                    return result.data;
+                } else {
+                    throw new DatasetOperationError(result.errors ?? []);
+                }
+            }),
+            catchError((e: ApolloError) => {
+                throw new DatasetOperationError(e.graphQLErrors);
+            }),
+        );
+    }
+
+    public changeUserPassword(params: {
+        accountName: string;
+        oldPassword: string;
+        newPassword: string;
+    }): Observable<ChangeUserPasswordMutation> {
+        return this.changeUserPasswordGQL.mutate(params).pipe(
+            first(),
+            map((result: MutationResult<ChangeUserPasswordMutation>) => {
                 /* istanbul ignore else */
                 if (result.data) {
                     return result.data;

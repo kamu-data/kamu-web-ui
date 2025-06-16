@@ -7,7 +7,13 @@
 
 import { FormControl } from "@angular/forms";
 
-export interface ChangeAccountPasswordFormType {
+export interface ChangeAdminAccountPasswordFormType {
+    newPassword: FormControl<string>;
+    confirmPassword: FormControl<string>;
+}
+
+export interface ChangeUserAccountPasswordFormType {
+    oldPassword: FormControl<string>;
     newPassword: FormControl<string>;
     confirmPassword: FormControl<string>;
 }

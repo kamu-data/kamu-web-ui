@@ -13,6 +13,7 @@ import { ChangeUserAccountPasswordFormType } from "./password-and-authentication
 import { matchFieldsValidator } from "src/app/common/helpers/data.helpers";
 import { ErrorSets } from "src/app/common/directives/form-validation-errors.types";
 import { AccountService } from "src/app/account/account.service";
+import { AppConfigService } from "src/app/app-config.service";
 
 @Component({
     selector: "app-password-and-authentication-tab",
@@ -24,6 +25,7 @@ export class PasswordAndAuthenticationTabComponent implements OnInit {
     @Input(RoutingResolvers.ACCOUNT_SETTINGS_PASSWORD_AND_AUTHENTICATION_KEY) public account: AccountFragment;
     private fb = inject(FormBuilder);
     private accountService = inject(AccountService);
+    private appConfigService = inject(AppConfigService);
 
     public showChangePasswordView = false;
     public changeUserAccountPasswordForm: FormGroup<ChangeUserAccountPasswordFormType>;
@@ -33,8 +35,14 @@ export class PasswordAndAuthenticationTabComponent implements OnInit {
         this.changeUserAccountPasswordForm = this.fb.nonNullable.group(
             {
                 oldPassword: ["", [Validators.required]],
-                newPassword: ["", [Validators.required, Validators.minLength(8)]],
-                confirmPassword: ["", [Validators.required, Validators.minLength(8)]],
+                newPassword: [
+                    "",
+                    [Validators.required, Validators.minLength(this.appConfigService.minNewPasswordLength)],
+                ],
+                confirmPassword: [
+                    "",
+                    [Validators.required, Validators.minLength(this.appConfigService.minNewPasswordLength)],
+                ],
             },
             {
                 validators: matchFieldsValidator("newPassword", "confirmPassword"),

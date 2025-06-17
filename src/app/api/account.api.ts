@@ -115,7 +115,6 @@ export class AccountApi {
         return this.changeUserPasswordGQL.mutate(params).pipe(
             first(),
             map((result: MutationResult<ChangeUserPasswordMutation>) => {
-                console.log("data", result);
                 /* istanbul ignore else */
                 if (result.data) {
                     return result.data;

@@ -11,6 +11,7 @@ import { ChangeAdminAccountPasswordFormType } from "../../password-and-authentic
 import { AccountService } from "src/app/account/account.service";
 import { matchFieldsValidator } from "src/app/common/helpers/data.helpers";
 import { ErrorSets } from "src/app/common/directives/form-validation-errors.types";
+import { AppConfigService } from "src/app/app-config.service";
 
 @Component({
     selector: "app-admin-change-password",
@@ -24,13 +25,20 @@ export class AdminChangePasswordComponent implements OnInit {
 
     private fb = inject(FormBuilder);
     private accountService = inject(AccountService);
+    private appConfigService = inject(AppConfigService);
     public readonly ErrorSets: typeof ErrorSets = ErrorSets;
 
     public ngOnInit(): void {
         this.changeAdminAccountPasswordForm = this.fb.nonNullable.group(
             {
-                newPassword: ["", [Validators.required, Validators.minLength(8)]],
-                confirmPassword: ["", [Validators.required, Validators.minLength(8)]],
+                newPassword: [
+                    "",
+                    [Validators.required, Validators.minLength(this.appConfigService.minNewPasswordLength)],
+                ],
+                confirmPassword: [
+                    "",
+                    [Validators.required, Validators.minLength(this.appConfigService.minNewPasswordLength)],
+                ],
             },
             {
                 validators: matchFieldsValidator("newPassword", "confirmPassword"),

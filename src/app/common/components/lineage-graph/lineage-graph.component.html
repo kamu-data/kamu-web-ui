@@ -201,6 +201,33 @@
                     />
                 </svg:g>
             </svg:g>
+
+            <svg:g class="node" *ngIf="node.data.kind === LineageGraphNodeKind.PushSource">
+                <svg:rect
+                    [attr.width]="node.dimension.width"
+                    [attr.height]="50"
+                    [attr.rx]="5"
+                    [attr.fill]="'#FFF'"
+                    [attr.cursor]="'pointer'"
+                />
+                <image
+                    [attr.x]="-45"
+                    [attr.y]="node.dimension.height / 2 - 20"
+                    [attr.width]="50"
+                    [attr.height]="40"
+                    [attr.href]="'../assets/images/add-push-source.png'"
+                />
+
+                <svg:text
+                    alignment-baseline="central"
+                    [attr.x]="5"
+                    [attr.y]="node.dimension.height / 2"
+                    [attr.font-weight]="'normal'"
+                    [attr.cursor]="'pointer'"
+                >
+                    {{ node.label }}
+                </svg:text>
+            </svg:g>
         </ng-template>
 
         <ng-template #linkTemplate let-link>

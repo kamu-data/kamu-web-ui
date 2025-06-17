@@ -149,7 +149,50 @@ export class LineageGraphBuilderService {
         this.buildSourceNodesByType(uniqueDatasets, sourceNodesByLabel, source2DatasetLinks, "FetchStepMqtt");
         this.buildSourceNodesByType(uniqueDatasets, sourceNodesByLabel, source2DatasetLinks, "FetchStepEthereumLogs");
 
+        this.buildPushSourceNodes(uniqueDatasets, sourceNodesByLabel, source2DatasetLinks, "AddPushSource");
+
         return { nodes: [...sourceNodesByLabel.values()], links: source2DatasetLinks };
+    }
+
+    private buildPushSourceNodes(
+        uniqueDatasets: DatasetLineageBasicsFragment[],
+        sourceNodesByLabel: Map<string, Node>,
+        source2DatasetLinks: Edge[],
+        kind: string,
+    ): void {
+        let sourceNodeLabel: string;
+        const qualifyingDatasetsPushSource = uniqueDatasets.filter(
+            (dataset: DatasetLineageBasicsFragment) =>
+                dataset.kind === DatasetKind.Root && dataset.metadata.currentPushSources.length,
+        );
+
+        if (qualifyingDatasetsPushSource.length) {
+            qualifyingDatasetsPushSource.forEach((dataset: DatasetLineageBasicsFragment) => {
+                dataset.metadata.currentPushSources.forEach((pushSource: { sourceName: string }) => {
+                    const datasetId = this.sanitizeID(dataset.id);
+                    sourceNodeLabel = pushSource.sourceName;
+
+                    let sourceNode: Node | undefined = sourceNodesByLabel.get(sourceNodeLabel);
+                    if (isNil(sourceNode)) {
+                        sourceNode = {
+                            id: `source-node-${sourceNodeLabel}`,
+                            label: sourceNodeLabel,
+                            data: {
+                                kind: this.graphNodeKindMapper[kind],
+                                dataObject: {},
+                            } as LineageGraphNodeData,
+                        } as Node;
+                        sourceNodesByLabel.set(sourceNodeLabel, sourceNode);
+                    }
+
+                    source2DatasetLinks.push({
+                        id: `${sourceNode?.id}__and__${sourceNodeLabel}`,
+                        source: sourceNode?.id,
+                        target: datasetId,
+                    } as Edge);
+                });
+            });
+        }
     }
 
     private buildSourceNodesByType(
@@ -203,6 +246,7 @@ export class LineageGraphBuilderService {
         FetchStepUrl: LineageGraphNodeKind.Source,
         FetchStepMqtt: LineageGraphNodeKind.Mqtt,
         FetchStepEthereumLogs: LineageGraphNodeKind.EthereumLogs,
+        AddPushSource: LineageGraphNodeKind.PushSource,
     };
 
     private buildSourceNodeLabel(step: FetchStep): string {

@@ -22,7 +22,7 @@ import { AccountTabComponent } from "./tabs/account-tab/account-tab.component";
 import { CopyToClipboardModule } from "src/app/common/components/copy-to-clipboard/copy-to-clipboard.module";
 import { PasswordAndAuthenticationTabComponent } from "./tabs/password-and-authentication-tab/password-and-authentication-tab.component";
 import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
-import { AdminChangePasswordComponent } from './tabs/password-and-authentication-tab/components/admin-change-password/admin-change-password.component';
+import { AdminChangePasswordComponent } from "./tabs/password-and-authentication-tab/components/admin-change-password/admin-change-password.component";
 
 @NgModule({
     declarations: [

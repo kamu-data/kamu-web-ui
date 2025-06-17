@@ -143,6 +143,7 @@ export const mockGraphNode: DatasetLineageBasicsFragment = {
     metadata: {
         ...mockCurrentSourceFetchUrlFragment,
         currentLicense: null,
+        currentPushSources: [],
         currentWatermark: "2023-09-05T02:14:17.365614388+00:00",
     },
 };
@@ -170,6 +171,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
         visibility: mockPublicDatasetVisibility,
         metadata: {
             __typename: "DatasetMetadata",
+            currentPushSources: [],
             currentPollingSource: {
                 __typename: "SetPollingSource",
                 fetch: {
@@ -213,6 +215,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
 
             metadata: {
                 __typename: "DatasetMetadata",
+                currentPushSources: [],
                 currentPollingSource: {
                     __typename: "SetPollingSource",
                     fetch: {
@@ -242,6 +245,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             metadata: {
                 __typename: "DatasetMetadata",
                 currentPollingSource: null,
+                currentPushSources: [],
                 currentLicense: {
                     __typename: "SetLicense",
                     shortName: "OGL-Canada-2.0",
@@ -275,6 +279,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             __typename: "Dataset",
             metadata: {
                 __typename: "DatasetMetadata",
+                currentPushSources: [],
                 currentPollingSource: null,
                 currentLicense: {
                     __typename: "SetLicense",
@@ -310,6 +315,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             metadata: {
                 __typename: "DatasetMetadata",
                 currentPollingSource: null,
+                currentPushSources: [],
                 currentLicense: {
                     __typename: "SetLicense",
                     shortName: "OGL-Ontario",
@@ -358,6 +364,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 visibility: mockPublicDatasetVisibility,
                 metadata: {
                     __typename: "DatasetMetadata",
+                    currentPushSources: [],
                     currentPollingSource: {
                         __typename: "SetPollingSource",
                         fetch: {
@@ -387,6 +394,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 metadata: {
                     __typename: "DatasetMetadata",
                     currentPollingSource: null,
+                    currentPushSources: [],
                     currentLicense: {
                         __typename: "SetLicense",
                         shortName: "OGL-Canada-2.0",
@@ -423,6 +431,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 metadata: {
                     __typename: "DatasetMetadata",
                     currentPollingSource: null,
+                    currentPushSources: [],
                     currentLicense: {
                         __typename: "SetLicense",
                         shortName: "OGL-Canada-2.0",
@@ -457,6 +466,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 metadata: {
                     __typename: "DatasetMetadata",
                     currentPollingSource: null,
+                    currentPushSources: [],
                     currentLicense: {
                         __typename: "SetLicense",
                         shortName: "OGL-Canada-2.0",
@@ -493,6 +503,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 metadata: {
                     __typename: "DatasetMetadata",
                     currentPollingSource: null,
+                    currentPushSources: [],
                     currentLicense: {
                         __typename: "SetLicense",
                         shortName: "OGL-Canada-2.0",
@@ -527,6 +538,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 metadata: {
                     __typename: "DatasetMetadata",
                     currentPollingSource: null,
+                    currentPushSources: [],
                     currentLicense: {
                         __typename: "SetLicense",
                         shortName: "OGL-Ontario",
@@ -586,6 +598,7 @@ export const mockLineageGraphUpdateWithMqttSource: LineageUpdate = {
                 },
             },
             currentLicense: null,
+            currentPushSources: [],
             currentWatermark: null,
         },
         createdAt: "2024-05-20T13:21:15.141982827+00:00",
@@ -622,6 +635,7 @@ export const mockLineageGraphUpdateWithMqttSource: LineageUpdate = {
                     },
                 },
                 currentLicense: null,
+                currentPushSources: [],
                 currentWatermark: null,
             },
             createdAt: "2024-05-20T13:21:15.141982827+00:00",

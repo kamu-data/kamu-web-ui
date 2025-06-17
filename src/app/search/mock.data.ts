@@ -568,6 +568,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                     websiteUrl: "https://www.ontario.ca/page/open-government-licence-ontario",
                 },
                 currentWatermark: "2021-06-02T12:00:00+00:00",
+                currentPushSources: [],
                 currentUpstreamDependencies: [
                     {
                         __typename: "DependencyDatasetResultAccessible",
@@ -583,6 +584,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                     websiteUrl: "https://open.canada.ca/en/open-government-licence-canada",
                                 },
                                 currentWatermark: "2021-06-02T12:00:00+00:00",
+                                currentPushSources: [],
                                 currentUpstreamDependencies: [
                                     {
                                         __typename: "DependencyDatasetResultNotAccessible",
@@ -607,6 +609,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                         "https://www.ontario.ca/page/open-government-licence-ontario",
                                                 },
                                                 currentWatermark: "2023-11-21T00:00:00+00:00",
+                                                currentPushSources: [],
                                                 currentUpstreamDependencies: [
                                                     {
                                                         __typename: "DependencyDatasetResultNotAccessible",
@@ -654,6 +657,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                         "https://open.canada.ca/en/open-government-licence-canada",
                                                 },
                                                 currentWatermark: "2021-06-02T12:00:00+00:00",
+                                                currentPushSources: [],
                                                 currentUpstreamDependencies: [
                                                     {
                                                         __typename: "DependencyDatasetResultAccessible",
@@ -671,6 +675,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                                 },
                                                                 currentWatermark: "2021-06-02T12:00:00+00:00",
                                                                 currentUpstreamDependencies: [],
+                                                                currentPushSources: [],
                                                                 currentPollingSource: {
                                                                     __typename: "SetPollingSource",
                                                                     fetch: {

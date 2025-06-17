@@ -30,9 +30,14 @@ import {
     AccountWithEmailQuery,
     ChangeAccountUsernameDocument,
     ChangeAccountUsernameMutation,
+    ChangeAdminPasswordDocument,
+    ChangeAdminPasswordMutation,
+    ChangeUserPasswordDocument,
+    ChangeUserPasswordMutation,
     DeleteAccountByNameDocument,
     DeleteAccountByNameMutation,
     FlowConnectionDataFragment,
+    ModifyPasswordSuccess,
 } from "./kamu.graphql.interface";
 import { TEST_ACCOUNT_EMAIL, TEST_LOGIN, mockAccountDetails } from "./mock/auth.mock";
 import { first } from "rxjs";
@@ -48,6 +53,8 @@ import {
     mockAccountResumeFlowsMutationSuccess,
     mockAccountWithEmailQuery,
     mockChangeAccountUsernameMutation,
+    mockChangeAdminPasswordMutation,
+    mockChangeUserPasswordMutation,
     mockDeleteAccountByNameMutation,
 } from "./mock/account.mock";
 
@@ -63,6 +70,8 @@ describe("AccountApi", () => {
         byInitiator: null,
         byStatus: null,
     };
+    const NEW_PASSWORD = "new-password";
+    const OLD_PASSWORD = "old-password";
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -265,6 +274,47 @@ describe("AccountApi", () => {
 
         op.flush({
             data: mockChangeAccountUsernameMutation,
+        });
+    });
+
+    it("should check change password for admin", () => {
+        service
+            .changeAdminPassword({ accountName: ACCOUNT_NAME, password: NEW_PASSWORD })
+            .subscribe((state: ChangeAdminPasswordMutation) => {
+                if (state.accounts.byName?.modifyPassword.__typename === "ModifyPasswordSuccess")
+                    expect(state.accounts.byName?.modifyPassword.message).toEqual(
+                        (mockChangeAdminPasswordMutation.accounts.byName?.modifyPassword as ModifyPasswordSuccess)
+                            .message,
+                    );
+            });
+        const op = controller.expectOne(ChangeAdminPasswordDocument);
+        expect(op.operation.variables.accountName).toEqual(ACCOUNT_NAME);
+        expect(op.operation.variables.password).toEqual(NEW_PASSWORD);
+
+        op.flush({
+            data: mockChangeAdminPasswordMutation,
+        });
+    });
+
+    it("should check change password for user", () => {
+        service
+            .changeUserPassword({ accountName: ACCOUNT_NAME, oldPassword: OLD_PASSWORD, newPassword: NEW_PASSWORD })
+            .subscribe((state: ChangeUserPasswordMutation) => {
+                if (state.accounts.byName?.modifyPasswordWithConfirmation.__typename === "ModifyPasswordSuccess")
+                    expect(state.accounts.byName?.modifyPasswordWithConfirmation.message).toEqual(
+                        (
+                            mockChangeUserPasswordMutation.accounts.byName
+                                ?.modifyPasswordWithConfirmation as ModifyPasswordSuccess
+                        ).message,
+                    );
+            });
+        const op = controller.expectOne(ChangeUserPasswordDocument);
+        expect(op.operation.variables.accountName).toEqual(ACCOUNT_NAME);
+        expect(op.operation.variables.newPassword).toEqual(NEW_PASSWORD);
+        expect(op.operation.variables.oldPassword).toEqual(OLD_PASSWORD);
+
+        op.flush({
+            data: mockChangeUserPasswordMutation,
         });
     });
 });

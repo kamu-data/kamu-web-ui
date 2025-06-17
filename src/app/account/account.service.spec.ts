@@ -27,6 +27,10 @@ import {
     mockAccountResumeFlowsMutationSuccess,
     mockChangeAccountUsernameMutation,
     mockChangeAccountUsernameMutationError,
+    mockChangeAdminPasswordMutation,
+    mockChangeAdminPasswordMutationError,
+    mockChangeUserPasswordMutation,
+    mockChangeUserPasswordMutationError,
     mockDeleteAccountByNameMutation,
 } from "../api/mock/account.mock";
 import { FlowsTableData } from "../dataset-flow/flows-table/flows-table.types";
@@ -37,6 +41,8 @@ describe("AccountService", () => {
     let accountApi: AccountApi;
     let datasetApi: DatasetApi;
     let toastService: ToastrService;
+    const NEW_PASSWORD = "new-password";
+    const OLD_PASSWORD = "old-password";
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -233,6 +239,54 @@ describe("AccountService", () => {
             .changeAccountUsername({ accountName: TEST_LOGIN, newName: "new-account-name" })
             .subscribe((result: ChangeAccountUsernameResult) => {
                 expect(result).toEqual({ changed: false, name: TEST_LOGIN });
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check change password for admin", () => {
+        spyOn(accountApi, "changeAdminPassword").and.returnValue(of(mockChangeAdminPasswordMutation));
+
+        const subscription$ = service
+            .changeAdminPassword({ accountName: TEST_LOGIN, password: NEW_PASSWORD })
+            .subscribe((result: boolean) => {
+                expect(result).toEqual(true);
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check change password for admin with error", () => {
+        spyOn(accountApi, "changeAdminPassword").and.returnValue(of(mockChangeAdminPasswordMutationError));
+
+        const subscription$ = service
+            .changeAdminPassword({ accountName: TEST_LOGIN, password: NEW_PASSWORD })
+            .subscribe((result: boolean) => {
+                expect(result).toEqual(false);
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check change password for user", () => {
+        spyOn(accountApi, "changeUserPassword").and.returnValue(of(mockChangeUserPasswordMutation));
+
+        const subscription$ = service
+            .changeUserPassword({ accountName: TEST_LOGIN, newPassword: NEW_PASSWORD, oldPassword: OLD_PASSWORD })
+            .subscribe((result: boolean) => {
+                expect(result).toEqual(true);
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check change password for user with error", () => {
+        spyOn(accountApi, "changeUserPassword").and.returnValue(of(mockChangeUserPasswordMutationError));
+
+        const subscription$ = service
+            .changeUserPassword({ accountName: TEST_LOGIN, newPassword: NEW_PASSWORD, oldPassword: OLD_PASSWORD })
+            .subscribe((result: boolean) => {
+                expect(result).toEqual(false);
             });
 
         expect(subscription$.closed).toBeTrue();

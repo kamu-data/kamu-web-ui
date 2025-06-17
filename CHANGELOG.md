@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added webhook subscriptions feature
 - Support for account renaming
+- Change password feature
 ### Changed
 - Highlighting in quick search
 - Create a new dataset page: set default value for storage

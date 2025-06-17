@@ -39,6 +39,7 @@ export default class RoutingResolvers {
 
     public static readonly DATASET_SETTINGS_GENERAL_KEY = "datasetSettingsGeneralData";
     public static readonly DATASET_SETTINGS_SCHEDULING_KEY = "datasetSettingsSchedulingData";
+    public static readonly DATASET_SETTINGS_INGEST_CONFIGURATION_KEY = "datasetSettingsIngestConfigurationData";
     public static readonly DATASET_SETTINGS_TRANSFORM_KEY = "datasetSettingsTransformData";
     public static readonly DATASET_SETTINGS_ACCESS_KEY = "datasetSettingsAccessData";
     public static readonly DATASET_SETTINGS_COMPACTION_KEY = "datasetSettingsCompactionData";

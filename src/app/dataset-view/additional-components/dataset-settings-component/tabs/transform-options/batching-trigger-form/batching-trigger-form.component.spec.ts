@@ -91,6 +91,7 @@ describe("BatchingTriggerFormComponent", () => {
     });
 
     it("should check save default batching triggers", () => {
+        fixture.detectChanges();
         const saveTriggerEmitSpy = spyOn(component.saveTriggerEmit, "emit");
         emitClickOnElementByDataTestId(fixture, "save-default-batching-triggers");
         expect(saveTriggerEmitSpy).toHaveBeenCalledTimes(1);

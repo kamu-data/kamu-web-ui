@@ -10,7 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added webhook subscriptions feature
 - Support for account renaming
 - Change password feature
+- Added "Ingest configuration" tab for dataset settings
 ### Changed
+- Сhanged the behavior of the switch "Enable automatic updates"
 - Highlighting in quick search
 - Create a new dataset page: set default value for storage
 - Set transform page: enable all options for engine selection

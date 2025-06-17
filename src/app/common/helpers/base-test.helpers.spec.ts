@@ -173,6 +173,7 @@ export function registerMatSvgIcons(): void {
         "webhook",
         "metamask",
         "ethereum-2",
+        "configuration",
     ];
     icons.forEach((icon: string) => {
         matIconRegistry.addSvgIcon(icon, domSanitizer.bypassSecurityTrustResourceUrl("/fake-path/fake-icon.svg"));

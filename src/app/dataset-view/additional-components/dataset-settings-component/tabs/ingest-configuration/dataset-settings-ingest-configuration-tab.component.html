@@ -1,0 +1,24 @@
+<h2>Ingest configuration</h2>
+<mat-divider class="mt-1 mb-2" />
+<p class="text-muted">
+    Always pulls data even if the source hasn't changed. Useful for uncacheable or real-time sources.
+</p>
+<div class="box mt-4 p-4">
+    <div class="w-100 mt-4">
+        <app-ingest-configuration-form
+            [datasetBasics]="datasetBasics"
+            (changeConfigurationEmit)="changeIngestConfiguration($event)"
+        />
+    </div>
+
+    <div class="mt-4 d-flex justify-content-end">
+        <button
+            type="button"
+            class="btn btn-success"
+            (click)="saveConfiguration()"
+            data-test-id="save-ingest-configuration"
+        >
+            Save
+        </button>
+    </div>
+</div>

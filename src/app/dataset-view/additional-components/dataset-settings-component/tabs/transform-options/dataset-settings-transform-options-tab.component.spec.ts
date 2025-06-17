@@ -7,19 +7,18 @@
 
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { DatasetSettingsTransformOptionsTabComponent } from "./dataset-settings-transform-options-tab.component";
 import { MatDividerModule } from "@angular/material/divider";
-import { BatchingTriggerModule } from "../scheduling/batching-trigger-form/batching-trigger.module";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/interface/app.types";
-import { BatchingFormType } from "../scheduling/dataset-settings-scheduling-tab.component.types";
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { ToastrModule } from "ngx-toastr";
+import { BatchingTriggerModule } from "./batching-trigger-form/batching-trigger.module";
+import { BatchingFormType } from "./dataset-settings-transform-options-tab.component.types";
 
 describe("DatasetSettingsTransformOptionsTabComponent", () => {
     let component: DatasetSettingsTransformOptionsTabComponent;

@@ -8,6 +8,7 @@
 export enum SettingsTabsEnum {
     GENERAL = "general",
     SCHEDULING = "scheduling",
+    INGEST_CONFIGURATION = "ingest-configuration",
     VARIABLES_AND_SECRETS = "variables-and-secrets",
     COMPACTION = "compaction",
     TRANSFORM_SETTINGS = "transform",
@@ -44,6 +45,14 @@ export const datasetSettingsSidePanelData: DatasetSettingsSidePanelItem[] = [
         visible: true,
         iconClassName: "ms-1 me-2",
         id: "general",
+    },
+    {
+        name: "Ingest configuration",
+        iconName: "configuration",
+        showDivider: false,
+        activeTab: SettingsTabsEnum.INGEST_CONFIGURATION,
+        iconClassName: "ms-1 me-2 mb-1 scheduled-icon",
+        id: "ingestConfiguration",
     },
     {
         name: "Scheduled updates",

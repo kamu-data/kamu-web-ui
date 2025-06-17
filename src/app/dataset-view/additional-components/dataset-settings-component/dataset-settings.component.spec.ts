@@ -29,11 +29,11 @@ import { mockMetadataRootUpdate, mockOverviewDataUpdate } from "../data-tabs.moc
 import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { BatchingTriggerModule } from "./tabs/scheduling/batching-trigger-form/batching-trigger.module";
 import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
 import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
 import { RouterTestingModule } from "@angular/router/testing";
 import { of } from "rxjs";
+import { BatchingTriggerModule } from "./tabs/transform-options/batching-trigger-form/batching-trigger.module";
 
 describe("DatasetSettingsComponent", () => {
     let component: DatasetSettingsComponent;

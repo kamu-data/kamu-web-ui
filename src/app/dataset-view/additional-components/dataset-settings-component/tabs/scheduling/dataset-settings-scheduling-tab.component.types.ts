@@ -22,13 +22,6 @@ export interface PollingGroupType {
     cronExpression: FormControl<MaybeNull<string>>;
 }
 
-export interface BatchingFormType {
-    updatesState: FormControl<boolean>;
-    every: FormControl<MaybeNull<number>>;
-    unit: FormControl<MaybeNull<TimeUnit>>;
-    minRecordsToAwait: FormControl<MaybeNull<number>>;
-}
-
 export interface IngestConfigurationFormType {
     fetchUncacheable: FormControl<boolean>;
 }

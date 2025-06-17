@@ -25,11 +25,11 @@ import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetSchedulingService } from "../../../services/dataset-scheduling.service";
 import { FormGroup, FormControl, Validators, AbstractControl, ValidatorFn } from "@angular/forms";
 import { MaybeNull } from "src/app/interface/app.types";
-import { BatchingFormType } from "../dataset-settings-scheduling-tab.component.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { everyTimeMapperValidators } from "src/app/common/helpers/data.helpers";
 import { TriggersTooltipsTexts } from "src/app/common/tooltips/triggers.text";
 import { finalize } from "rxjs";
+import { BatchingFormType } from "../dataset-settings-transform-options-tab.component.types";
 
 @Component({
     selector: "app-batching-trigger-form",

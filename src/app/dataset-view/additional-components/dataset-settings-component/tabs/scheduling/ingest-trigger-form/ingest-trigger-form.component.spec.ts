@@ -93,6 +93,8 @@ describe("IngestTriggerFormComponent", () => {
             of(mockGetDatasetFlowTriggersTimeDeltaQuery),
         );
         fixture.detectChanges();
+        component.pollingForm.patchValue({ updatesState: true });
+        fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "button-cron-expression");
         expect(component.pollingType.value).toEqual(PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION);
         emitClickOnElementByDataTestId(fixture, "button-time-delta");

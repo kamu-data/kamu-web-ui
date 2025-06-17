@@ -93,6 +93,8 @@ import { accountSettingsAccountResolverFn } from "./account/settings/tabs/accoun
 import { PasswordAndAuthenticationTabComponent } from "./account/settings/tabs/password-and-authentication-tab/password-and-authentication-tab.component";
 import { accountSettingsPasswordAndAuthenticationResolverFn } from "./account/settings/tabs/password-and-authentication-tab/resolver/account-settings-password-and-authentication.resolver";
 import { accountPasswordProviderGuard } from "./common/guards/account-password-provider.guard";
+import { DatasetSettingsIngestConfigurationTabComponent } from "./dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/dataset-settings-ingest-configuration-tab.component";
+import { datasetSettingsIngestConfigurationResolverFn } from "./dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/resolver/dataset-settings-ingest-configuration.resolver";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -353,6 +355,18 @@ export const routes: Routes = [
                                 resolve: {
                                     [RoutingResolvers.DATASET_SETTINGS_SCHEDULING_KEY]:
                                         datasetSettingsSchedulingTabResolverFn,
+                                },
+                            },
+                            {
+                                path: SettingsTabsEnum.INGEST_CONFIGURATION,
+                                component: DatasetSettingsIngestConfigurationTabComponent,
+                                runGuardsAndResolvers: "always",
+                                data: {
+                                    [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.INGEST_CONFIGURATION,
+                                },
+                                resolve: {
+                                    [RoutingResolvers.DATASET_SETTINGS_INGEST_CONFIGURATION_KEY]:
+                                        datasetSettingsIngestConfigurationResolverFn,
                                 },
                             },
                             {

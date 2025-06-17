@@ -31,6 +31,7 @@ export function isSettingsTabAccessibleHelper(
             );
 
         case SettingsTabsEnum.SCHEDULING:
+        case SettingsTabsEnum.INGEST_CONFIGURATION:
             return (
                 featureFlags.enableScheduling &&
                 datasetBasics.kind === DatasetKind.Root &&

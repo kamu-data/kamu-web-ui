@@ -451,7 +451,7 @@ export function matchFieldsValidator(controlName: string, matchingControlName: s
         const matchingControl = formGroup.get(matchingControlName);
 
         if (!control || !matchingControl) {
-            return null;
+            throw new Error(`[matchFieldsValidator]: One of the controls was not found.`);
         }
 
         if (control.value !== matchingControl.value) {

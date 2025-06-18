@@ -19,6 +19,7 @@ export enum LineageGraphNodeKind {
     Mqtt = "mqtt",
     DatasetNotAccessable = "datasetNotAccessable",
     EthereumLogs = "ethereumLogs",
+    PushSource = "pushSource",
 }
 
 export enum LineageNodeAccess {

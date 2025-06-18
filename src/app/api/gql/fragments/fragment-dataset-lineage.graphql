@@ -3,6 +3,9 @@ fragment DatasetLineage on Dataset {
   ...DatasetLineageBasics
   metadata {
     ...CurrentSourceFetchUrl
+    currentPushSources {
+      sourceName
+    }
     currentLicense {
       ...License
     }
@@ -16,6 +19,9 @@ fragment DatasetLineage on Dataset {
           ...DatasetStreamLineageBasics
           metadata {
             ...CurrentSourceFetchUrl
+            currentPushSources {
+              sourceName
+            }
             currentLicense {
               ...License
             }
@@ -30,6 +36,9 @@ fragment DatasetLineage on Dataset {
                   ...DatasetStreamLineageBasics
                   metadata {
                     ...CurrentSourceFetchUrl
+                    currentPushSources {
+                      sourceName
+                    }
                     currentLicense {
                       ...License
                     }
@@ -44,6 +53,9 @@ fragment DatasetLineage on Dataset {
                           ...DatasetStreamLineageBasics
                           metadata {
                             ...CurrentSourceFetchUrl
+                            currentPushSources {
+                              sourceName
+                            }
                             currentLicense {
                               ...License
                             }
@@ -58,6 +70,9 @@ fragment DatasetLineage on Dataset {
                                   ...DatasetStreamLineageBasics
                                   metadata {
                                     ...CurrentSourceFetchUrl
+                                    currentPushSources {
+                                      sourceName
+                                    }
                                     currentLicense {
                                       ...License
                                     }
@@ -72,6 +87,9 @@ fragment DatasetLineage on Dataset {
                                           ...DatasetStreamLineageBasics
                                           metadata {
                                             ...CurrentSourceFetchUrl
+                                            currentPushSources {
+                                              sourceName
+                                            }
                                             currentLicense {
                                               ...License
                                             }
@@ -86,6 +104,9 @@ fragment DatasetLineage on Dataset {
                                                   ...DatasetStreamLineageBasics
                                                   metadata {
                                                     ...CurrentSourceFetchUrl
+                                                    currentPushSources {
+                                                      sourceName
+                                                    }
                                                     currentLicense {
                                                       ...License
                                                     }
@@ -123,6 +144,9 @@ fragment DatasetLineage on Dataset {
         dataset {
           ...DatasetStreamLineageBasics
           metadata {
+            currentPushSources {
+              sourceName
+            }
             currentDownstreamDependencies {
               ... on DependencyDatasetResultNotAccessible {
                 id
@@ -132,6 +156,9 @@ fragment DatasetLineage on Dataset {
                 dataset {
                   ...DatasetStreamLineageBasics
                   metadata {
+                    currentPushSources {
+                      sourceName
+                    }
                     currentDownstreamDependencies {
                       ... on DependencyDatasetResultNotAccessible {
                         id
@@ -141,6 +168,9 @@ fragment DatasetLineage on Dataset {
                         dataset {
                           ...DatasetStreamLineageBasics
                           metadata {
+                            currentPushSources {
+                              sourceName
+                            }
                             currentDownstreamDependencies {
                               ... on DependencyDatasetResultNotAccessible {
                                 id
@@ -150,6 +180,9 @@ fragment DatasetLineage on Dataset {
                                 dataset {
                                   ...DatasetStreamLineageBasics
                                   metadata {
+                                    currentPushSources {
+                                      sourceName
+                                    }
                                     currentDownstreamDependencies {
                                       ... on DependencyDatasetResultNotAccessible {
                                         id
@@ -189,6 +222,9 @@ fragment DatasetLineageBasics on Dataset {
   }
   metadata {
     ...CurrentSourceFetchUrl
+    currentPushSources {
+      sourceName
+    }
     currentLicense {
       ...License
     }

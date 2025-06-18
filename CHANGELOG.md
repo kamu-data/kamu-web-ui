@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added webhook subscriptions feature
 - Support for account renaming
 - Added "Ingest configuration" tab for dataset settings
+- Visualization of push sources for root datasets on the graph
 ### Changed
 - Сhanged the behavior of the switch "Enable automatic updates"
 - Highlighting in quick search

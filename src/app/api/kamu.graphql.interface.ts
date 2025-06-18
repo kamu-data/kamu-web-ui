@@ -5801,6 +5801,7 @@ export type DatasetLineageFragment = {
     metadata: {
         __typename?: "DatasetMetadata";
         currentWatermark?: string | null;
+        currentPushSources: Array<{ __typename?: "AddPushSource"; sourceName: string }>;
         currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
         currentUpstreamDependencies: Array<
             | {
@@ -5810,6 +5811,7 @@ export type DatasetLineageFragment = {
                       metadata: {
                           __typename?: "DatasetMetadata";
                           currentWatermark?: string | null;
+                          currentPushSources: Array<{ __typename?: "AddPushSource"; sourceName: string }>;
                           currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
                           currentUpstreamDependencies: Array<
                               | {
@@ -5819,6 +5821,10 @@ export type DatasetLineageFragment = {
                                         metadata: {
                                             __typename?: "DatasetMetadata";
                                             currentWatermark?: string | null;
+                                            currentPushSources: Array<{
+                                                __typename?: "AddPushSource";
+                                                sourceName: string;
+                                            }>;
                                             currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
                                             currentUpstreamDependencies: Array<
                                                 | {
@@ -5828,6 +5834,10 @@ export type DatasetLineageFragment = {
                                                           metadata: {
                                                               __typename?: "DatasetMetadata";
                                                               currentWatermark?: string | null;
+                                                              currentPushSources: Array<{
+                                                                  __typename?: "AddPushSource";
+                                                                  sourceName: string;
+                                                              }>;
                                                               currentLicense?:
                                                                   | ({ __typename?: "SetLicense" } & LicenseFragment)
                                                                   | null;
@@ -5839,6 +5849,10 @@ export type DatasetLineageFragment = {
                                                                             metadata: {
                                                                                 __typename?: "DatasetMetadata";
                                                                                 currentWatermark?: string | null;
+                                                                                currentPushSources: Array<{
+                                                                                    __typename?: "AddPushSource";
+                                                                                    sourceName: string;
+                                                                                }>;
                                                                                 currentLicense?:
                                                                                     | ({
                                                                                           __typename?: "SetLicense";
@@ -5854,6 +5868,10 @@ export type DatasetLineageFragment = {
                                                                                                   currentWatermark?:
                                                                                                       | string
                                                                                                       | null;
+                                                                                                  currentPushSources: Array<{
+                                                                                                      __typename?: "AddPushSource";
+                                                                                                      sourceName: string;
+                                                                                                  }>;
                                                                                                   currentLicense?:
                                                                                                       | ({
                                                                                                             __typename?: "SetLicense";
@@ -5869,6 +5887,10 @@ export type DatasetLineageFragment = {
                                                                                                                     currentWatermark?:
                                                                                                                         | string
                                                                                                                         | null;
+                                                                                                                    currentPushSources: Array<{
+                                                                                                                        __typename?: "AddPushSource";
+                                                                                                                        sourceName: string;
+                                                                                                                    }>;
                                                                                                                     currentLicense?:
                                                                                                                         | ({
                                                                                                                               __typename?: "SetLicense";
@@ -5920,6 +5942,7 @@ export type DatasetLineageFragment = {
                       __typename?: "Dataset";
                       metadata: {
                           __typename?: "DatasetMetadata";
+                          currentPushSources: Array<{ __typename?: "AddPushSource"; sourceName: string }>;
                           currentDownstreamDependencies: Array<
                               | {
                                     __typename?: "DependencyDatasetResultAccessible";
@@ -5927,6 +5950,10 @@ export type DatasetLineageFragment = {
                                         __typename?: "Dataset";
                                         metadata: {
                                             __typename?: "DatasetMetadata";
+                                            currentPushSources: Array<{
+                                                __typename?: "AddPushSource";
+                                                sourceName: string;
+                                            }>;
                                             currentDownstreamDependencies: Array<
                                                 | {
                                                       __typename?: "DependencyDatasetResultAccessible";
@@ -5934,6 +5961,10 @@ export type DatasetLineageFragment = {
                                                           __typename?: "Dataset";
                                                           metadata: {
                                                               __typename?: "DatasetMetadata";
+                                                              currentPushSources: Array<{
+                                                                  __typename?: "AddPushSource";
+                                                                  sourceName: string;
+                                                              }>;
                                                               currentDownstreamDependencies: Array<
                                                                   | {
                                                                         __typename?: "DependencyDatasetResultAccessible";
@@ -5941,6 +5972,10 @@ export type DatasetLineageFragment = {
                                                                             __typename?: "Dataset";
                                                                             metadata: {
                                                                                 __typename?: "DatasetMetadata";
+                                                                                currentPushSources: Array<{
+                                                                                    __typename?: "AddPushSource";
+                                                                                    sourceName: string;
+                                                                                }>;
                                                                                 currentDownstreamDependencies: Array<
                                                                                     | {
                                                                                           __typename?: "DependencyDatasetResultAccessible";
@@ -5987,6 +6022,7 @@ export type DatasetLineageBasicsFragment = {
     metadata: {
         __typename?: "DatasetMetadata";
         currentWatermark?: string | null;
+        currentPushSources: Array<{ __typename?: "AddPushSource"; sourceName: string }>;
         currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
     } & CurrentSourceFetchUrlFragment;
     owner: { __typename?: "Account"; avatarUrl?: string | null };
@@ -7182,6 +7218,9 @@ export const DatasetLineageBasicsFragmentDoc = gql`
         }
         metadata {
             ...CurrentSourceFetchUrl
+            currentPushSources {
+                sourceName
+            }
             currentLicense {
                 ...License
             }
@@ -7217,6 +7256,9 @@ export const DatasetLineageFragmentDoc = gql`
         ...DatasetLineageBasics
         metadata {
             ...CurrentSourceFetchUrl
+            currentPushSources {
+                sourceName
+            }
             currentLicense {
                 ...License
             }
@@ -7230,6 +7272,9 @@ export const DatasetLineageFragmentDoc = gql`
                         ...DatasetStreamLineageBasics
                         metadata {
                             ...CurrentSourceFetchUrl
+                            currentPushSources {
+                                sourceName
+                            }
                             currentLicense {
                                 ...License
                             }
@@ -7243,6 +7288,9 @@ export const DatasetLineageFragmentDoc = gql`
                                         ...DatasetStreamLineageBasics
                                         metadata {
                                             ...CurrentSourceFetchUrl
+                                            currentPushSources {
+                                                sourceName
+                                            }
                                             currentLicense {
                                                 ...License
                                             }
@@ -7256,6 +7304,9 @@ export const DatasetLineageFragmentDoc = gql`
                                                         ...DatasetStreamLineageBasics
                                                         metadata {
                                                             ...CurrentSourceFetchUrl
+                                                            currentPushSources {
+                                                                sourceName
+                                                            }
                                                             currentLicense {
                                                                 ...License
                                                             }
@@ -7269,6 +7320,9 @@ export const DatasetLineageFragmentDoc = gql`
                                                                         ...DatasetStreamLineageBasics
                                                                         metadata {
                                                                             ...CurrentSourceFetchUrl
+                                                                            currentPushSources {
+                                                                                sourceName
+                                                                            }
                                                                             currentLicense {
                                                                                 ...License
                                                                             }
@@ -7282,6 +7336,9 @@ export const DatasetLineageFragmentDoc = gql`
                                                                                         ...DatasetStreamLineageBasics
                                                                                         metadata {
                                                                                             ...CurrentSourceFetchUrl
+                                                                                            currentPushSources {
+                                                                                                sourceName
+                                                                                            }
                                                                                             currentLicense {
                                                                                                 ...License
                                                                                             }
@@ -7295,6 +7352,9 @@ export const DatasetLineageFragmentDoc = gql`
                                                                                                         ...DatasetStreamLineageBasics
                                                                                                         metadata {
                                                                                                             ...CurrentSourceFetchUrl
+                                                                                                            currentPushSources {
+                                                                                                                sourceName
+                                                                                                            }
                                                                                                             currentLicense {
                                                                                                                 ...License
                                                                                                             }
@@ -7331,6 +7391,9 @@ export const DatasetLineageFragmentDoc = gql`
                     dataset {
                         ...DatasetStreamLineageBasics
                         metadata {
+                            currentPushSources {
+                                sourceName
+                            }
                             currentDownstreamDependencies {
                                 ... on DependencyDatasetResultNotAccessible {
                                     id
@@ -7339,6 +7402,9 @@ export const DatasetLineageFragmentDoc = gql`
                                     dataset {
                                         ...DatasetStreamLineageBasics
                                         metadata {
+                                            currentPushSources {
+                                                sourceName
+                                            }
                                             currentDownstreamDependencies {
                                                 ... on DependencyDatasetResultNotAccessible {
                                                     id
@@ -7347,6 +7413,9 @@ export const DatasetLineageFragmentDoc = gql`
                                                     dataset {
                                                         ...DatasetStreamLineageBasics
                                                         metadata {
+                                                            currentPushSources {
+                                                                sourceName
+                                                            }
                                                             currentDownstreamDependencies {
                                                                 ... on DependencyDatasetResultNotAccessible {
                                                                     id
@@ -7355,6 +7424,9 @@ export const DatasetLineageFragmentDoc = gql`
                                                                     dataset {
                                                                         ...DatasetStreamLineageBasics
                                                                         metadata {
+                                                                            currentPushSources {
+                                                                                sourceName
+                                                                            }
                                                                             currentDownstreamDependencies {
                                                                                 ... on DependencyDatasetResultNotAccessible {
                                                                                     id

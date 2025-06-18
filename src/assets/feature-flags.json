@@ -484,7 +484,7 @@
       },
       {
         "id": "password",
-        "developmentState": "reserved"
+        "developmentState": "stable"
       },
       {
         "id": "profile",

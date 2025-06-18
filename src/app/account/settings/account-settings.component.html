@@ -39,6 +39,7 @@
                                         'action-list-item--nav__active': activeTab === item.activeTab,
                                     }"
                                     class="action-list-item"
+                                    *ngIf="showItem(item.activeTab)"
                                 >
                                     <a
                                         routerLinkActive="active"

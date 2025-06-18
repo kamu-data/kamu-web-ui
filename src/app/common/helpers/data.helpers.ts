@@ -444,3 +444,22 @@ export function getAllRouteParams(route: ActivatedRouteSnapshot): Record<string,
     }
     return params;
 }
+
+export function matchFieldsValidator(controlName: string, matchingControlName: string): ValidatorFn {
+    return (formGroup: AbstractControl): ValidationErrors | null => {
+        const control = formGroup.get(controlName);
+        const matchingControl = formGroup.get(matchingControlName);
+
+        if (!control || !matchingControl) {
+            throw new Error(`[matchFieldsValidator]: One of the controls was not found.`);
+        }
+
+        if (control.value !== matchingControl.value) {
+            matchingControl.setErrors({ passwordsMismatch: true });
+        } else {
+            matchingControl.setErrors(null);
+        }
+
+        return null;
+    };
+}

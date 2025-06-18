@@ -12,6 +12,8 @@ import {
     AccountPauseFlowsMutation,
     AccountResumeFlowsMutation,
     ChangeAccountUsernameMutation,
+    ChangeAdminPasswordMutation,
+    ChangeUserPasswordMutation,
     Dataset,
     DatasetListFlowsDataFragment,
     DatasetsTotalCountByAccountNameQuery,
@@ -166,6 +168,36 @@ export class AccountService {
                     this.toastrService.error(data.accounts.byName?.rename.message);
                 }
                 return { changed: false, name: params.accountName };
+            }),
+        );
+    }
+
+    public changeAdminPassword(params: { accountName: string; password: string }): Observable<boolean> {
+        return this.accountApi.changeAdminPassword(params).pipe(
+            map((data: ChangeAdminPasswordMutation) => {
+                if (data.accounts.byName?.modifyPassword.__typename === "ModifyPasswordSuccess") {
+                    this.toastrService.success(data.accounts.byName?.modifyPassword.message);
+                    return true;
+                }
+                this.toastrService.error("Password not changed");
+                return false;
+            }),
+        );
+    }
+
+    public changeUserPassword(params: {
+        accountName: string;
+        oldPassword: string;
+        newPassword: string;
+    }): Observable<boolean> {
+        return this.accountApi.changeUserPassword(params).pipe(
+            map((data: ChangeUserPasswordMutation) => {
+                if (data.accounts.byName?.modifyPasswordWithConfirmation.__typename === "ModifyPasswordSuccess") {
+                    this.toastrService.success(data.accounts.byName?.modifyPasswordWithConfirmation.message);
+                    return true;
+                }
+                this.toastrService.error(data.accounts.byName?.modifyPasswordWithConfirmation.message);
+                return false;
             }),
         );
     }

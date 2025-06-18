@@ -34,6 +34,7 @@ export interface FeaturesRuntimeConfig {
 
 export interface AppUIConfig {
     ingestUploadFileLimitMb: number;
+    minNewPasswordLength: number;
     semanticSearchThresholdScore?: number;
     featureFlags: AppUIConfigFeatureFlags;
 }

@@ -70,6 +70,10 @@ export class AppConfigService {
         return this.appUiConfig.ingestUploadFileLimitMb;
     }
 
+    public get minNewPasswordLength(): number {
+        return this.appUiConfig.minNewPasswordLength;
+    }
+
     public get semanticSearchThresholdScore(): MaybeUndefined<number> {
         return this.appUiConfig.semanticSearchThresholdScore;
     }

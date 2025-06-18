@@ -19,6 +19,8 @@ import {
     AccountType,
     AccountWithEmailQuery,
     ChangeAccountUsernameMutation,
+    ChangeAdminPasswordMutation,
+    ChangeUserPasswordMutation,
     DatasetKind,
     DeleteAccountByNameMutation,
     FlowStatus,
@@ -455,6 +457,57 @@ export const mockChangeAccountUsernameMutationError: ChangeAccountUsernameMutati
             rename: {
                 message: "Failed",
                 __typename: "RenameAccountNameNotUnique",
+            },
+            __typename: "AccountMut",
+        },
+        __typename: "AccountsMut",
+    },
+};
+
+export const mockChangeAdminPasswordMutation: ChangeAdminPasswordMutation = {
+    accounts: {
+        byName: {
+            modifyPassword: {
+                message: "Password modified",
+                __typename: "ModifyPasswordSuccess",
+            },
+            __typename: "AccountMut",
+        },
+        __typename: "AccountsMut",
+    },
+};
+
+export const mockChangeAdminPasswordMutationError: ChangeAdminPasswordMutation = {
+    accounts: {
+        byName: {
+            modifyPassword: {
+                __typename: "ModifyPasswordWrongOldPassword",
+            },
+            __typename: "AccountMut",
+        },
+        __typename: "AccountsMut",
+    },
+};
+
+export const mockChangeUserPasswordMutation: ChangeUserPasswordMutation = {
+    accounts: {
+        byName: {
+            modifyPasswordWithConfirmation: {
+                __typename: "ModifyPasswordSuccess",
+                message: "Password changed",
+            },
+            __typename: "AccountMut",
+        },
+        __typename: "AccountsMut",
+    },
+};
+
+export const mockChangeUserPasswordMutationError: ChangeUserPasswordMutation = {
+    accounts: {
+        byName: {
+            modifyPasswordWithConfirmation: {
+                __typename: "ModifyPasswordWrongOldPassword",
+                message: "Password not changed",
             },
             __typename: "AccountMut",
         },

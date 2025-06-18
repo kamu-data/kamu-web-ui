@@ -36,22 +36,15 @@
                 formControlName="keyEnvVariable"
                 data-test-id="key"
                 [readonly]="row ? true : false"
+                #key
             />
-            <div *ngIf="keyControl?.invalid && (keyControl?.touched || keyControl?.dirty)">
-                <div *ngIf="keyControl?.errors?.maxlength" class="mt-1">
-                    <span class="text-danger fs-12" data-test-id="error-key-maxLength">
-                        Max length {{ KEY_MAX_LENGTH }} characters</span
-                    >
-                </div>
-                <div *ngIf="keyControl?.errors?.required" class="mt-1">
-                    <span class="text-danger fs-12" data-test-id="error-key-required"> The key is required</span>
-                </div>
-                <div *ngIf="keyControl?.errors?.whitespace" class="mt-1">
-                    <span class="text-danger fs-12" data-test-id="error-key-whitespace">
-                        The key cannot contain spaces</span
-                    >
-                </div>
-            </div>
+            <div
+                class="text-danger fs-12"
+                [input]="key"
+                [fieldLabel]="'Key'"
+                [appFieldError]="['required', 'maxlength', 'whitespace']"
+                [group]="keyValueForm"
+            ></div>
         </div>
         <div class="mt-4 form-group">
             <label for="" class="form-label">Value <span class="text-danger">*</span></label>
@@ -62,6 +55,7 @@
                     placeholder="Please enter value..."
                     formControlName="value"
                     data-test-id="value"
+                    #value
                 />
                 <div class="input-group-addon pt-2 px-2 eye-icon" *ngIf="row?.isSecret">
                     <a *ngIf="exposedValue; else visibilityOff" (click)="toggleExposedValue()">
@@ -75,11 +69,13 @@
                     </ng-template>
                 </div>
             </div>
-            <div *ngIf="valueControl?.invalid && (valueControl?.touched || valueControl?.dirty)">
-                <div *ngIf="valueControl?.errors?.required" class="mt-1">
-                    <span class="text-danger fs-12" data-test-id="error-value-required"> The value is required</span>
-                </div>
-            </div>
+            <div
+                class="text-danger fs-12"
+                [input]="value"
+                [fieldLabel]="'Value'"
+                [appFieldError]="['required']"
+                [group]="keyValueForm"
+            ></div>
         </div>
     </form>
 </div>

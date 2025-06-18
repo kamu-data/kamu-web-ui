@@ -13,10 +13,11 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { SpinnerModule } from "src/app/common/components/spinner/spinner.module";
 import { GithubCallbackComponent } from "./github-callback/github.callback";
 import { ReturnToCliComponent } from "./return-to-cli/return-to-cli.component";
+import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
 
 @NgModule({
     declarations: [GithubCallbackComponent, LoginComponent, ReturnToCliComponent],
     exports: [GithubCallbackComponent, LoginComponent, ReturnToCliComponent],
-    imports: [CommonModule, MatIconModule, ReactiveFormsModule, SpinnerModule],
+    imports: [CommonModule, MatIconModule, ReactiveFormsModule, FormValidationErrorsModule, SpinnerModule],
 })
 export class LoginModule {}

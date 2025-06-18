@@ -14,6 +14,7 @@
                 id="email-address"
                 data-test-id="email-address"
                 (keyup)="changeEmail()"
+                #emailAddress
             />
         </dd>
     </dl>
@@ -26,10 +27,13 @@
     >
         Change email
     </button>
-    <div *ngIf="(emailAddress?.invalid && emailAddress?.touched) || emailAddress?.dirty">
-        <small *ngIf="emailAddress?.errors?.required" class="text-danger"> Email address is required</small>
-        <small *ngIf="emailAddress?.errors?.email" class="text-danger">Please provide a valid email address</small>
-    </div>
+    <div
+        class="text-danger fs-12"
+        [input]="emailAddress"
+        [fieldLabel]="'Email address'"
+        [appFieldError]="['required', 'email']"
+        [group]="changeEmailForm"
+    ></div>
     <div *ngIf="changeEmailError$ | async as changeEmailError">
         <div class="error-block" data-test-id="change-email-error">{{ changeEmailError }}</div>
     </div>

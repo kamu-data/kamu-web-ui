@@ -47,6 +47,7 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges {
         const label = this.fieldLabel || "Input";
 
         const errorDetails = this.fieldControl?.getError(error) as ValidationErrors;
+
         switch (error) {
             case "required":
                 return `${label} is required`;
@@ -62,6 +63,12 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges {
             }
             case "passwordsMismatch":
                 return "Passwords mismatch";
+            case "email":
+                return "Please provide a valid email address";
+            case "min":
+                return `The minimum value must be ${errorDetails?.min}`;
+            case "whitespace":
+                return `${label} can't contain spaces`;
 
             default:
                 return "Unknown validator";
@@ -149,5 +156,7 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges {
 
     private patternMessages: { [pattern: string]: string } = {
         [String(AppValues.URL_PATTERN_ONLY_HTTPS)]: 'must start with "https://"',
+        [String(AppValues.DATASET_NAME_PATTERN)]: "format is wrong",
+        [String(AppValues.URL_PATTERN)]: "format is wrong",
     };
 }

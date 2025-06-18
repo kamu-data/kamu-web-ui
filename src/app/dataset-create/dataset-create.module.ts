@@ -19,6 +19,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { EditorModule } from "../editor/editor.module";
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 import { NgSelectModule } from "@ng-select/ng-select";
+import { FormValidationErrorsModule } from "../common/directives/form-validation-errors.module";
 
 @NgModule({
     imports: [
@@ -35,6 +36,7 @@ import { NgSelectModule } from "@ng-select/ng-select";
         ReactiveFormsModule,
 
         EditorModule,
+        FormValidationErrorsModule,
         SearchAdditionalButtonsModule,
     ],
     exports: [DatasetCreateComponent],

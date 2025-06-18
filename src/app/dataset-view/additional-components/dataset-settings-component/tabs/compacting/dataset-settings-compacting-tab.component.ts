@@ -8,7 +8,6 @@
 import { NavigationService } from "./../../../../../services/navigation.service";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { AbstractControl, FormBuilder, Validators } from "@angular/forms";
-import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { DatasetBasicsFragment, DatasetFlowType } from "src/app/api/kamu.graphql.interface";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { CompactionTooltipsTexts } from "src/app/common/tooltips/compacting.text";
@@ -36,15 +35,14 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent {
     @Input(RoutingResolvers.DATASET_SETTINGS_COMPACTION_KEY) public datasetBasics: DatasetBasicsFragment;
     public hardCompactionForm = this.fb.group({
         sliceUnit: [SliceUnit.MB, [Validators.required]],
-        sliceSize: [300, [Validators.required, RxwebValidators.minNumber({ value: 1 })]],
-        recordsCount: [10000, [Validators.required, RxwebValidators.minNumber({ value: 1 })]],
+        sliceSize: [300, [Validators.required, Validators.min(1)]],
+        recordsCount: [10000, [Validators.required, Validators.min(1)]],
         recursive: [true],
     });
     public readonly SliceUnit: typeof SliceUnit = SliceUnit;
     public readonly MAX_SLICE_SIZE_TOOLTIP = CompactionTooltipsTexts.MAX_SLICE_SIZE;
     public readonly MAX_SLICE_RECORDS_TOOLTIP = CompactionTooltipsTexts.MAX_SLICE_RECORDS;
     public readonly RECURSIVE_TOOLTIP = CompactionTooltipsTexts.HARD_COMPACTION_RECURSIVE;
-    public readonly MIN_VALUE_ERROR_TEXT = "The value must be positive";
 
     public get recursive(): AbstractControl {
         return this.hardCompactionForm.controls.recursive;

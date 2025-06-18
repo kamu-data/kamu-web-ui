@@ -24,7 +24,7 @@
         </div>
         <div *ngIf="form?.get(controlName)?.errors?.maxlength" class="mt-1">
             <span class="text-danger fs-12" attr.data-test-id="error-{{ controlName }}-maxLength">
-                Field can be max 1 character</span
+                Field can be max {{ form.get(controlName)?.errors?.maxlength.requiredLength }} character</span
             >
         </div>
     </div>

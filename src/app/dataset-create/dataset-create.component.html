@@ -22,11 +22,15 @@
                     formControlName="datasetName"
                     data-test-id="dataset-name"
                     required
+                    #datasetName
                 /><br />
-                <div *ngIf="datasetName?.invalid && (datasetName?.touched || datasetName?.dirty)">
-                    <span *ngIf="datasetName?.errors?.['required']" class="text-danger fs-12">Name is required</span>
-                    <span *ngIf="datasetName?.errors?.['pattern']" class="text-danger fs-12">Invalid dataset name</span>
-                </div>
+                <div
+                    class="text-danger fs-12"
+                    [input]="datasetName"
+                    [fieldLabel]="'Dataset name'"
+                    [appFieldError]="['required', 'pattern']"
+                    [group]="createDatasetForm"
+                ></div>
             </div>
         </div>
         <mat-divider />

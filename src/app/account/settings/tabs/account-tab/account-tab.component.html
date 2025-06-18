@@ -15,6 +15,7 @@
                 id="username"
                 data-test-id="username"
                 autocomplete="off"
+                #username
             />
         </dd>
     </dl>
@@ -27,10 +28,13 @@
     >
         Change username
     </button>
-    <div *ngIf="usernameControl?.invalid && (usernameControl?.touched || usernameControl?.dirty)">
-        <span *ngIf="usernameControl?.errors?.['required']" class="text-danger fs-12">Username is required</span>
-        <span *ngIf="usernameControl?.errors?.['pattern']" class="text-danger fs-12">Invalid username</span>
-    </div>
+    <div
+        class="text-danger fs-12"
+        [input]="username"
+        [fieldLabel]="'Username'"
+        [appFieldError]="['required', 'pattern']"
+        [group]="changeUsernameForm"
+    ></div>
 </form>
 
 <ng-container *ngIf="!isOwnerPage && accountName">

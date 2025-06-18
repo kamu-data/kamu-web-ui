@@ -16,6 +16,7 @@
                 (keyup)="changeName()"
                 [class.error-border-color]="renameError$ | async"
                 [title]="datasetNameControl.value"
+                #datasetName
             />
         </dd>
     </dl>
@@ -28,20 +29,13 @@
     >
         Rename
     </button>
-    <div *ngIf="datasetNameControl.invalid && (datasetNameControl.touched || datasetNameControl.dirty)">
-        <span
-            *ngIf="datasetNameControl.errors?.required"
-            class="text-danger fs-12"
-            data-test-id="rename-dataset-error-name-required"
-            >Name is required</span
-        >
-        <span
-            *ngIf="datasetNameControl.errors?.pattern"
-            class="text-danger fs-12"
-            data-test-id="rename-dataset-error-name-pattern"
-            >Invalid dataset name</span
-        >
-    </div>
+    <div
+        class="text-danger fs-12"
+        [input]="datasetName"
+        [fieldLabel]="'Dataset name'"
+        [appFieldError]="['required', 'pattern']"
+        [group]="renameDatasetForm"
+    ></div>
     <div *ngIf="renameError$ | async as renameError">
         <div class="error-block" data-test-id="rename-dataset-error-custom">{{ renameError }}</div>
     </div>

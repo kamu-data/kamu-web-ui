@@ -6,19 +6,38 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ResolveFn } from "@angular/router";
+import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 import { accountSettingsPasswordAndAuthenticationResolverFn } from "./account-settings-password-and-authentication.resolver";
 import { AccountFragment } from "src/app/api/kamu.graphql.interface";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { Apollo } from "apollo-angular";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 
 describe("accountSettingsPasswordAndAuthenticationResolver", () => {
+    let loggedUserService: LoggedUserService;
+
     const executeResolver: ResolveFn<AccountFragment> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => accountSettingsPasswordAndAuthenticationResolverFn(...resolverParameters));
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
+        TestBed.configureTestingModule({
+            providers: [Apollo],
+            imports: [HttpClientTestingModule],
+        });
+
+        loggedUserService = TestBed.inject(LoggedUserService);
     });
 
     it("should be created", () => {
         expect(executeResolver).toBeTruthy();
+    });
+
+    it("should check to return correct data", async () => {
+        const routeSnapshot = {} as ActivatedRouteSnapshot;
+        const state = {} as RouterStateSnapshot;
+        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        const result = await executeResolver(routeSnapshot, state);
+        expect(result).toEqual(mockAccountDetails);
     });
 });

@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Highlighting in quick search
 - Create a new dataset page: set default value for storage
 - Set transform page: enable all options for engine selection
+- Replaced all places with validation errors for forms with a directive 
 ### Fixed
 - Behavior for an invalid token
 

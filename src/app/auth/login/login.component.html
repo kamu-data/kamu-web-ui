@@ -63,15 +63,16 @@
                 (keyup)="onChangeInputField($event)"
                 autofocus
                 [class.error-border-color]="passwordLoginError$ | async"
+                #login
             />
-            <div *ngIf="loginControl?.invalid && (loginControl?.touched || loginControl?.dirty)">
-                <span
-                    *ngIf="loginControl?.errors?.['required']"
-                    class="text-danger fs-12"
-                    data-test-id="input-login-error-required"
-                    >Login is required</span
-                >
-            </div>
+            <div
+                class="text-danger fs-12"
+                [input]="login"
+                [fieldLabel]="'Login'"
+                [appFieldError]="['required']"
+                [group]="passwordLoginForm"
+                [dataTestId]="'input-login-error-required'"
+            ></div>
         </div>
         <div class="mt-4">
             <label for="password" class="fs-12" [class.error-color]="passwordLoginError$ | async">Password</label>
@@ -84,15 +85,16 @@
                 data-test-id="input-password"
                 (keyup)="onChangeInputField($event)"
                 [class.error-border-color]="passwordLoginError$ | async"
+                #password
             />
-            <div *ngIf="passwordControl?.invalid && (passwordControl?.touched || passwordControl?.dirty)">
-                <span
-                    *ngIf="passwordControl?.errors?.['required']"
-                    class="text-danger fs-12"
-                    data-test-id="input-password-error-required"
-                    >Password is required</span
-                >
-            </div>
+            <div
+                class="text-danger fs-12"
+                [input]="password"
+                [fieldLabel]="'Password'"
+                [appFieldError]="['required']"
+                [group]="passwordLoginForm"
+                [dataTestId]="'input-password-error-required'"
+            ></div>
         </div>
         <button
             [disabled]="passwordLoginForm.invalid"

@@ -16,6 +16,7 @@ import { LoggedUserService } from "../auth/logged-user.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { CreateDatasetFormType, SelectStorageItemType, STORAGE_LIST } from "./dataset-create.types";
 import { LoginService } from "../auth/login/login.service";
+import AppValues from "../common/values/app.values";
 
 @Component({
     selector: "app-dataset-create",
@@ -39,10 +40,7 @@ export class DatasetCreateComponent extends BaseComponent {
     public owners: string[] = [];
     public createDatasetForm: FormGroup<CreateDatasetFormType> = this.fb.nonNullable.group({
         owner: ["", [Validators.required]],
-        datasetName: [
-            "",
-            [Validators.required, Validators.pattern(/^([a-zA-Z0-9][a-zA-Z0-9-]*)+(\.[a-zA-Z0-9][a-zA-Z0-9-]*)*$/)],
-        ],
+        datasetName: ["", [Validators.required, Validators.pattern(AppValues.DATASET_NAME_PATTERN)]],
         kind: [DatasetKind.Root, [Validators.required]],
         visibility: [DatasetVisibility.Private],
     });

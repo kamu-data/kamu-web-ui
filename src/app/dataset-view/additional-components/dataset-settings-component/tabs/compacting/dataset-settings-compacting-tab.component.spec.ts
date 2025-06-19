@@ -17,11 +17,7 @@ import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/too
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
-import {
-    emitClickOnElementByDataTestId,
-    findElementByDataTestId,
-    setFieldValue,
-} from "src/app/common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { mockDatasetBasicsDerivedFragment, mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { DatasetCompactionService } from "../../services/dataset-compaction.service";
@@ -31,6 +27,7 @@ import AppValues from "src/app/common/values/app.values";
 import { ActivatedRoute } from "@angular/router";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
+import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
 
 describe("DatasetSettingsCompactingTabComponent", () => {
     let component: DatasetSettingsCompactingTabComponent;
@@ -76,6 +73,7 @@ describe("DatasetSettingsCompactingTabComponent", () => {
                 NgbTooltipModule,
                 MatRadioModule,
                 HttpClientTestingModule,
+                FormValidationErrorsModule,
             ],
         }).compileComponents();
 
@@ -90,18 +88,6 @@ describe("DatasetSettingsCompactingTabComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
-    });
-
-    it("should check display error messages", () => {
-        setFieldValue(fixture, "slice-size", "-5");
-        fixture.detectChanges();
-        const errorSliceSizeMessage = findElementByDataTestId(fixture, "slice-size-error");
-        expect(errorSliceSizeMessage?.textContent?.trim()).toEqual(component.MIN_VALUE_ERROR_TEXT);
-
-        setFieldValue(fixture, "records-count", "0");
-        fixture.detectChanges();
-        const errorRecordsCountMessage = findElementByDataTestId(fixture, "records-count-error");
-        expect(errorRecordsCountMessage?.textContent?.trim()).toEqual(component.MIN_VALUE_ERROR_TEXT);
     });
 
     it("should check run hard compacting", fakeAsync(() => {

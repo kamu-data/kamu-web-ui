@@ -23,6 +23,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { ChangeUsernameFormType } from "./account-tab.types";
 import { ChangeAccountUsernameResult } from "../../account-settings.constants";
 import { AccountTabs } from "src/app/account/account.constants";
+import AppValues from "src/app/common/values/app.values";
 
 @Component({
     selector: "app-account-tab",
@@ -49,7 +50,7 @@ export class AccountTabComponent extends BaseComponent implements OnInit {
                 this.isOwnerPage && !this.accountName
                     ? this.loggedUserService.currentlyLoggedInUser.accountName
                     : (this.accountName as string),
-                [Validators.required, Validators.pattern(/^([a-zA-Z0-9][a-zA-Z0-9-]*)+(\.[a-zA-Z0-9][a-zA-Z0-9-]*)*$/)],
+                [Validators.required, Validators.pattern(AppValues.DATASET_NAME_PATTERN)],
             ],
         });
     }

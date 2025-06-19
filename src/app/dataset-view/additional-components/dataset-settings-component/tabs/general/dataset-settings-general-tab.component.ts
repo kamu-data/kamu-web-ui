@@ -70,7 +70,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
         this.renameDatasetForm = this.fb.nonNullable.group({
             datasetName: [
                 this.datasetBasics.name,
-                [Validators.required, Validators.pattern(/^([a-zA-Z0-9][a-zA-Z0-9-]*)+(\.[a-zA-Z0-9][a-zA-Z0-9-]*)*$/)],
+                [Validators.required, Validators.pattern(AppValues.DATASET_NAME_PATTERN)],
             ],
         });
 

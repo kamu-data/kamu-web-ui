@@ -48,18 +48,15 @@
                             formControlName="minRecordsToAwait"
                             class="form-control form-control-width"
                             data-test-id="batching-min-records"
+                            #minRecordsToAwait
                         />
-                        <ng-container
-                            *ngIf="
-                                batchingForm?.get('minRecordsToAwait')?.errors?.min &&
-                                (batchingForm.get('minRecordsToAwait')?.touched ||
-                                    batchingForm.get('minRecordsToAwait')?.dirty)
-                            "
-                        >
-                            <div class="text-danger fs-12 ms-4 text-break" data-test-id="min-value-error">
-                                Minimum value 0
-                            </div>
-                        </ng-container>
+                        <div
+                            class="text-danger fs-12"
+                            [input]="minRecordsToAwait"
+                            [fieldLabel]="'Minimum records'"
+                            [appFieldError]="['required', 'min']"
+                            [group]="batchingForm"
+                        ></div>
                     </div>
                 </div>
             </div>

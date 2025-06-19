@@ -9,7 +9,6 @@ import { inject, Input, OnInit } from "@angular/core";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ChangeEmailFormType } from "./email-tabs.types";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
-import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
 import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
 import { Observable } from "rxjs";
@@ -38,7 +37,7 @@ export class EmailsTabComponent implements OnInit {
 
     public ngOnInit(): void {
         this.changeEmailForm = this.fb.nonNullable.group({
-            emailAddress: [this.account.email, [Validators.required, RxwebValidators.email()]],
+            emailAddress: [this.account.email, [Validators.required, Validators.email]],
         });
         this.changeEmailError$ = this.accountEmailService.renameAccountEmailErrorOccurrences;
     }

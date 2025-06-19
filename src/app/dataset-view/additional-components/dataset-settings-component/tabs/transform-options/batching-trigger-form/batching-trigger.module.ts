@@ -12,6 +12,7 @@ import { BatchingTriggerFormComponent } from "./batching-trigger-form.component"
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { TooltipIconModule } from "src/app/common/components/tooltip-icon/tooltip-icon.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
 
 @NgModule({
     declarations: [BatchingTriggerFormComponent],
@@ -19,6 +20,7 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
     imports: [
         CommonModule,
         FormsModule,
+        FormValidationErrorsModule,
         MatProgressBarModule,
         MatSlideToggleModule,
         ReactiveFormsModule,

@@ -21,20 +21,21 @@
                             class="form-control form-control-width me-4"
                             formControlName="sliceSize"
                             data-test-id="slice-size"
+                            #sliceTest
                         />
                         <select class="form-select form-control-width" formControlName="sliceUnit">
                             <option [value]="SliceUnit.KB">KB</option>
                             <option [value]="SliceUnit.MB">MB</option>
                             <option [value]="SliceUnit.GB">GB</option>
                         </select>
-                        <ng-container *ngIf="sliceSize.errors?.minNumber && (sliceSize.touched || sliceSize.dirty)">
-                            <span
-                                class="text-danger ms-4 fs-12 d-flex align-items-end text-break"
-                                data-test-id="slice-size-error"
-                            >
-                                {{ MIN_VALUE_ERROR_TEXT }}
-                            </span>
-                        </ng-container>
+
+                        <span
+                            class="text-danger ms-4 fs-12 d-flex align-items-end text-break"
+                            [input]="sliceTest"
+                            [fieldLabel]="'Slice size'"
+                            [appFieldError]="['min', 'required']"
+                            [group]="hardCompactionForm"
+                        ></span>
                     </div>
                 </div>
 
@@ -52,17 +53,15 @@
                             class="form-control form-control-width"
                             formControlName="recordsCount"
                             data-test-id="records-count"
+                            #recordsCount
                         />
-                        <ng-container
-                            *ngIf="recordsCount.errors?.minNumber && (recordsCount.touched || recordsCount.dirty)"
-                        >
-                            <span
-                                class="text-danger ms-4 fs-12 d-flex align-items-end text-break"
-                                data-test-id="records-count-error"
-                            >
-                                {{ MIN_VALUE_ERROR_TEXT }}
-                            </span>
-                        </ng-container>
+                        <span
+                            class="text-danger ms-4 fs-12 d-flex align-items-end text-break"
+                            [input]="recordsCount"
+                            [fieldLabel]="'Max slice records'"
+                            [appFieldError]="['min', 'required']"
+                            [group]="hardCompactionForm"
+                        ></span>
                     </div>
                 </div>
 

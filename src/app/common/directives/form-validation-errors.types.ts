@@ -5,7 +5,16 @@
  * included in the LICENSE file.
  */
 
-export type ValidationError = "required" | "minlength" | "maxlength" | "invalid" | "pattern" | "passwordsMismatch";
+export type ValidationError =
+    | "required"
+    | "minlength"
+    | "maxlength"
+    | "invalid"
+    | "pattern"
+    | "passwordsMismatch"
+    | "email"
+    | "min"
+    | "whitespace";
 
 export type ValidationErrorTuple = {
     error: ValidationError;

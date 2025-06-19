@@ -15,16 +15,15 @@
     <form class="mt-60" [formGroup]="createTokenForm" (ngSubmit)="onGenerateToken()">
         <label for="token-name" class="form-label">Name</label>
         <div class="d-flex align-items-center">
-            <input class="form-control w-300" id="token-name" formControlName="name" />
+            <input class="form-control w-300" id="token-name" formControlName="name" #tokenName />
         </div>
-        <div *ngIf="tokenNameControl?.invalid && (tokenNameControl?.touched || tokenNameControl?.dirty)">
-            <div *ngIf="tokenNameControl?.errors?.required" class="mt-1">
-                <span class="text-danger fs-12" data-test-id="error-name-required"> Name is required</span>
-            </div>
-            <div *ngIf="tokenNameControl?.errors?.maxlength" class="mt-1">
-                <span class="text-danger fs-12" data-test-id="error-name-maxLength"> Max length 100 characters</span>
-            </div>
-        </div>
+        <div
+            class="text-danger fs-12"
+            [input]="tokenName"
+            [fieldLabel]="'Name'"
+            [appFieldError]="['required', 'maxlength']"
+            [group]="createTokenForm"
+        ></div>
         <div class="mt-3">
             <button
                 (click)="onGenerateToken()"

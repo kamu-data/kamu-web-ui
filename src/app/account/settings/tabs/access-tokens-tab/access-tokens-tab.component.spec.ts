@@ -33,6 +33,7 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { RouterTestingModule } from "@angular/router/testing";
 import { routes } from "src/app/app-routing.module";
 import { CopyToClipboardModule } from "src/app/common/components/copy-to-clipboard/copy-to-clipboard.module";
+import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
 
 describe("AccessTokensTabComponent", () => {
     let component: AccessTokensTabComponent;
@@ -89,6 +90,7 @@ describe("AccessTokensTabComponent", () => {
                 MatSlideToggleModule,
                 RouterTestingModule.withRoutes(routes),
                 CopyToClipboardModule,
+                FormValidationErrorsModule,
             ],
         }).compileComponents();
 

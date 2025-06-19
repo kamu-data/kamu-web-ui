@@ -122,7 +122,6 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         RenameDatasetInput = "rename-dataset-input",
 
         RenameDatasetErrorName = "rename-dataset-error-name",
-        // RenameDatasetErrorPattern = "rename-dataset-error-name-pattern",
         RenameDatasetErrorCustom = "rename-dataset-error-custom",
 
         DeleteDatasetButton = "delete-dataset-button",

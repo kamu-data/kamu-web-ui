@@ -35,6 +35,7 @@
         [fieldLabel]="'Dataset name'"
         [appFieldError]="['required', 'pattern']"
         [group]="renameDatasetForm"
+        [dataTestId]="'rename-dataset-error'"
     ></div>
     <div *ngIf="renameError$ | async as renameError">
         <div class="error-block" data-test-id="rename-dataset-error-custom">{{ renameError }}</div>

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { Directive, ElementRef, Input, OnChanges, OnDestroy, SimpleChanges } from "@angular/core";
+import { Directive, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from "@angular/core";
 import { FormGroup, AbstractControl, ValidationErrors } from "@angular/forms";
 import { Subscription, tap } from "rxjs";
 import AppValues from "../values/app.values";
@@ -15,7 +15,7 @@ import { NgSelectComponent } from "@ng-select/ng-select";
 @Directive({
     selector: "[appFieldError]",
 })
-export class FormValidationErrorsDirective implements OnDestroy, OnChanges {
+export class FormValidationErrorsDirective implements OnDestroy, OnChanges, OnInit {
     @Input({ required: true }) public appFieldError:
         | ValidationError
         | ValidationError[]
@@ -25,6 +25,7 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges {
     @Input({ required: true }) public group: FormGroup;
     @Input() public fieldControl: AbstractControl | null;
     @Input() public fieldLabel: string | undefined;
+    @Input() public dataTestId: string = "";
 
     private readonly nativeElement: HTMLElement;
     private controlSubscription: Subscription | undefined;
@@ -35,6 +36,10 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges {
 
     public constructor(private el: ElementRef) {
         this.nativeElement = this.el.nativeElement as HTMLElement;
+    }
+
+    public ngOnInit(): void {
+        this.nativeElement.setAttribute("data-test-id", this.dataTestId);
     }
 
     /* istanbul ignore next */
@@ -77,27 +82,25 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges {
 
     /* istanbul ignore next */
     public updateErrorMessage() {
-        if (this.fieldControl?.touched) {
-            const errorsToDisplay: string[] = [];
-            const errors = Array.isArray(this.appFieldError) ? this.appFieldError : [this.appFieldError];
-            errors.forEach((error: ValidationError | { error: ValidationError; message: string }) => {
-                const errorCode = typeof error === "object" ? error.error : error;
-                const message =
-                    typeof error === "object" ? () => error.message : () => this.getStandardErrorMessage(errorCode);
-                const errorChecker =
-                    errorCode === "invalid"
-                        ? () => this.fieldControl?.invalid
-                        : () => this.fieldControl?.hasError(errorCode);
-                if (errorChecker()) {
-                    errorsToDisplay.push(message());
-                }
-            });
-
-            if (errorsToDisplay.length) {
-                this.renderErrors(errorsToDisplay[0]);
-            } else {
-                this.renderErrors("");
+        const errorsToDisplay: string[] = [];
+        const errors = Array.isArray(this.appFieldError) ? this.appFieldError : [this.appFieldError];
+        errors.forEach((error: ValidationError | { error: ValidationError; message: string }) => {
+            const errorCode = typeof error === "object" ? error.error : error;
+            const message =
+                typeof error === "object" ? () => error.message : () => this.getStandardErrorMessage(errorCode);
+            const errorChecker =
+                errorCode === "invalid"
+                    ? () => this.fieldControl?.invalid
+                    : () => this.fieldControl?.hasError(errorCode);
+            if (errorChecker()) {
+                errorsToDisplay.push(message());
             }
+        });
+
+        if (errorsToDisplay.length) {
+            this.renderErrors(errorsToDisplay[0]);
+        } else {
+            this.renderErrors("");
         }
     }
 

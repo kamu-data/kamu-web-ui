@@ -23,6 +23,7 @@ import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app
 import { TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { TooltipIconModule } from "src/app/common/components/tooltip-icon/tooltip-icon.module";
+import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
 
 describe("BatchingTriggerFormComponent", () => {
     let component: BatchingTriggerFormComponent;
@@ -42,6 +43,7 @@ describe("BatchingTriggerFormComponent", () => {
                 ToastrModule.forRoot(),
                 MatSlideToggleModule,
                 SharedTestModule,
+                FormValidationErrorsModule,
             ],
         });
         fixture = TestBed.createComponent(BatchingTriggerFormComponent);

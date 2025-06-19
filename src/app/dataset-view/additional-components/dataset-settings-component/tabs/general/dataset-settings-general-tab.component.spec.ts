@@ -27,6 +27,7 @@ import {
     checkVisible,
     dispatchInputEvent,
     emitClickOnElementByDataTestId,
+    findElementByDataTestId,
     getInputElementByDataTestId,
 } from "../../../../../common/helpers/base-test.helpers.spec";
 import { TEST_ACCOUNT_ID } from "src/app/api/mock/auth.mock";
@@ -42,6 +43,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { ActivatedRoute } from "@angular/router";
+import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
 
 describe("DatasetSettingsGeneralTabComponent", () => {
     let component: DatasetSettingsGeneralTabComponent;
@@ -70,6 +72,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
                 MatCheckboxModule,
                 FormsModule,
                 DatasetVisibilityModule,
+                FormValidationErrorsModule,
             ],
             providers: [
                 FormBuilder,
@@ -118,8 +121,8 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         RenameDatasetButton = "rename-dataset-button",
         RenameDatasetInput = "rename-dataset-input",
 
-        RenameDatasetErrorNameRequired = "rename-dataset-error-name-required",
-        RenameDatasetErrorPattern = "rename-dataset-error-name-pattern",
+        RenameDatasetErrorName = "rename-dataset-error-name",
+        // RenameDatasetErrorPattern = "rename-dataset-error-name-pattern",
         RenameDatasetErrorCustom = "rename-dataset-error-custom",
 
         DeleteDatasetButton = "delete-dataset-button",
@@ -165,9 +168,6 @@ describe("DatasetSettingsGeneralTabComponent", () => {
             datasetId: component.datasetBasics.id,
             newName: "someName",
         });
-        checkVisible(fixture, Elements.RenameDatasetErrorNameRequired, false);
-        checkVisible(fixture, Elements.RenameDatasetErrorPattern, false);
-        checkVisible(fixture, Elements.RenameDatasetErrorCustom, false);
     });
 
     it("should check init renameError", fakeAsync(() => {
@@ -180,8 +180,6 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         const elemInput = getInputElementByDataTestId(fixture, "rename-dataset-input");
         expect(elemInput).toHaveClass("error-border-color");
 
-        checkVisible(fixture, Elements.RenameDatasetErrorNameRequired, false);
-        checkVisible(fixture, Elements.RenameDatasetErrorPattern, false);
         checkVisible(fixture, Elements.RenameDatasetErrorCustom, true);
 
         flush();
@@ -193,11 +191,12 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         dispatchInputEvent(fixture, Elements.RenameDatasetInput, "");
         emitClickOnElementByDataTestId(fixture, Elements.RenameDatasetButton);
 
+        fixture.detectChanges();
+
         expect(renameDatasetSpy).not.toHaveBeenCalled();
 
-        checkVisible(fixture, Elements.RenameDatasetErrorNameRequired, true);
-        checkVisible(fixture, Elements.RenameDatasetErrorPattern, false);
-        checkVisible(fixture, Elements.RenameDatasetErrorCustom, false);
+        const errorElement = findElementByDataTestId(fixture, "rename-dataset-error");
+        expect(errorElement?.textContent?.trim()).toEqual("Dataset name is required");
     });
 
     it("should check rename validation pattern", () => {
@@ -206,11 +205,12 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         dispatchInputEvent(fixture, Elements.RenameDatasetInput, "#illegal#");
         emitClickOnElementByDataTestId(fixture, Elements.RenameDatasetButton);
 
+        fixture.detectChanges();
+
         expect(renameDatasetSpy).not.toHaveBeenCalled();
 
-        checkVisible(fixture, Elements.RenameDatasetErrorNameRequired, false);
-        checkVisible(fixture, Elements.RenameDatasetErrorPattern, true);
-        checkVisible(fixture, Elements.RenameDatasetErrorCustom, false);
+        const errorElement = findElementByDataTestId(fixture, "rename-dataset-error");
+        expect(errorElement?.textContent?.trim()).toEqual("Dataset name format is wrong");
     });
 
     it("should check renameError is empty after keyup", fakeAsync(() => {

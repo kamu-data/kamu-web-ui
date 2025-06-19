@@ -20,6 +20,7 @@ import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { mockAccountDetails, TEST_LOGIN } from "src/app/api/mock/auth.mock";
 import { NavigationService } from "src/app/services/navigation.service";
 import { ReactiveFormsModule } from "@angular/forms";
+import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
 
 describe("AccountTabComponent", () => {
     let component: AccountTabComponent;
@@ -38,6 +39,7 @@ describe("AccountTabComponent", () => {
                 ReactiveFormsModule,
                 ToastrModule.forRoot(),
                 MatDividerModule,
+                FormValidationErrorsModule,
             ],
             providers: [Apollo],
         });

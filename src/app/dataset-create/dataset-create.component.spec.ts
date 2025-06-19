@@ -18,6 +18,7 @@ import { LoggedUserService } from "../auth/logged-user.service";
 import { mockAccountDetails } from "../api/mock/auth.mock";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { NgSelectModule } from "@ng-select/ng-select";
+import { FormValidationErrorsModule } from "../common/directives/form-validation-errors.module";
 
 describe("DatasetCreateComponent", () => {
     let component: DatasetCreateComponent;
@@ -35,6 +36,7 @@ describe("DatasetCreateComponent", () => {
                 HttpClientTestingModule,
                 NgSelectModule,
                 SharedTestModule,
+                FormValidationErrorsModule,
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         })

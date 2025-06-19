@@ -18,6 +18,7 @@ import {
     checkInputDisabled,
     checkVisible,
     emitClickOnElementByDataTestId,
+    findElementByDataTestId,
     getElementByDataTestId,
     registerMatSvgIcons,
     setFieldValue,
@@ -33,6 +34,7 @@ import { LocalStorageService } from "src/app/services/local-storage.service";
 import { MatIconModule } from "@angular/material/icon";
 import ProjectLinks from "src/app/project-links";
 import { AccountProvider } from "src/app/api/kamu.graphql.interface";
+import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
 
 describe("LoginComponent", () => {
     let component: LoginComponent;
@@ -92,7 +94,13 @@ describe("LoginComponent", () => {
                     },
                 },
             ],
-            imports: [ApolloTestingModule, ReactiveFormsModule, HttpClientTestingModule, MatIconModule],
+            imports: [
+                ApolloTestingModule,
+                ReactiveFormsModule,
+                HttpClientTestingModule,
+                MatIconModule,
+                FormValidationErrorsModule,
+            ],
         }).compileComponents();
 
         registerMatSvgIcons();
@@ -205,12 +213,12 @@ describe("LoginComponent", () => {
                 [Elements.INPUT_PASSWORD, Elements.INPUT_PASSWORD_ERROR_REQUIRED],
             ].forEach(([inputElementName, inputErrorElementName]: Elements[]) => {
                 it(`Test touching element '${Elements.INPUT_LOGIN}' creates required error`, () => {
-                    checkVisible(fixture, inputErrorElementName, false);
+                    const element: HTMLElement | undefined = findElementByDataTestId(fixture, inputErrorElementName);
+                    expect(element?.textContent?.trim()).toEqual("");
 
                     setFieldValue(fixture, inputElementName, "");
                     fixture.detectChanges();
-
-                    checkVisible(fixture, inputErrorElementName, true);
+                    expect(element?.textContent?.trim()).toBeDefined();
                 });
             });
 

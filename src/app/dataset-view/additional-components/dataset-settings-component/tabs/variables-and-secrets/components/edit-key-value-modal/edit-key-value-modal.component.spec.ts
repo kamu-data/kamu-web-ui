@@ -22,6 +22,7 @@ import { mockListEnvVariablesQuery } from "src/app/api/mock/environment-variable
 import { ViewDatasetEnvVar } from "src/app/api/kamu.graphql.interface";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
 
 describe("EditKeyValueModalComponent", () => {
     let component: EditKeyValueModalComponent;
@@ -69,6 +70,7 @@ describe("EditKeyValueModalComponent", () => {
                 MatDividerModule,
                 MatIconModule,
                 MatTooltipModule,
+                FormValidationErrorsModule,
             ],
         }).compileComponents();
 
@@ -86,19 +88,20 @@ describe("EditKeyValueModalComponent", () => {
         component.row = null;
         fixture.detectChanges();
         setFieldValue(fixture, "key", "");
+
         fixture.detectChanges();
-        const errorKeyReduiredMessage = findElementByDataTestId(fixture, "error-key-required");
-        expect(errorKeyReduiredMessage?.textContent?.trim()).toEqual("The key is required");
+        const errorKeyReduiredMessage = findElementByDataTestId(fixture, "error-key");
+        expect(errorKeyReduiredMessage?.textContent?.trim()).toEqual("Key is required");
 
         setFieldValue(fixture, "key", "failed key");
         fixture.detectChanges();
-        const errorKeyWhitespaceMessage = findElementByDataTestId(fixture, "error-key-whitespace");
-        expect(errorKeyWhitespaceMessage?.textContent?.trim()).toEqual("The key cannot contain spaces");
+        const errorKeyWhitespaceMessage = findElementByDataTestId(fixture, "error-key");
+        expect(errorKeyWhitespaceMessage?.textContent?.trim()).toEqual("Key can't contain spaces");
 
         setFieldValue(fixture, "key", "t".repeat(201));
         fixture.detectChanges();
-        const errorKeyMaxLengthMessage = findElementByDataTestId(fixture, "error-key-maxLength");
-        expect(errorKeyMaxLengthMessage?.textContent?.trim()).toEqual("Max length 200 characters");
+        const errorKeyMaxLengthMessage = findElementByDataTestId(fixture, "error-key");
+        expect(errorKeyMaxLengthMessage?.textContent?.trim()).toEqual("Key can't exceed 200 characters");
     });
 
     it("should check toggle exposed value if exist", () => {

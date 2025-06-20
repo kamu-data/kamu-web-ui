@@ -11,7 +11,7 @@ import { SpinnerService } from "./common/components/spinner/spinner.service";
 import { SpinnerInterceptor } from "./common/components/spinner/spinner.interceptor";
 import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
 import { HttpLink } from "apollo-angular/http";
-import { APP_INITIALIZER, ErrorHandler, NgModule } from "@angular/core";
+import { APP_INITIALIZER, Injector, NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -35,13 +35,12 @@ import { NavigationService } from "./services/navigation.service";
 import { DatasetSubscriptionsService } from "./dataset-view/dataset.subscriptions.service";
 import { SpinnerModule } from "./common/components/spinner/spinner.module";
 import { DatasetApi } from "./api/dataset.api";
-import { ErrorHandlerService } from "./services/error-handler.service";
 import { DatasetListModule } from "./common/components/dataset-list-component/dataset-list.module";
 import { ClipboardModule } from "@angular/cdk/clipboard";
 import { HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 import { ToastrModule } from "ngx-toastr";
 import { LoggedUserService } from "./auth/logged-user.service";
-import { catchError, EMPTY, firstValueFrom } from "rxjs";
+import { firstValueFrom } from "rxjs";
 import { LoginService } from "./auth/login/login.service";
 import { logError } from "./common/helpers/app.helpers";
 import { DatasetPermissionsService } from "./dataset-view/dataset.permissions.service";
@@ -55,6 +54,9 @@ import { AdminViewModule } from "./admin-view/admin-view.module";
 import { HeaderModule } from "./header/header.module";
 import { PageNotFoundComponent } from "./common/components/page-not-found/page-not-found.component";
 import { CommonModule } from "@angular/common";
+import { onError } from "@apollo/client/link/error";
+import { ErrorTexts } from "./common/values/errors.text";
+import { ToastrService } from "ngx-toastr";
 
 const Services = [
     Apollo,
@@ -75,15 +77,33 @@ const Services = [
         multi: true,
         deps: [SpinnerService],
     },
-    {
-        provide: ErrorHandler,
-        useClass: ErrorHandlerService,
-    },
+    // {
+    //     provide: ErrorHandler,
+    //     useClass: ErrorHandlerService,
+    // },
     {
         provide: APOLLO_OPTIONS,
-        useFactory: (httpLink: HttpLink, appConfig: AppConfigService, localStorageService: LocalStorageService) => {
+        useFactory: (
+            httpLink: HttpLink,
+            appConfig: AppConfigService,
+            localStorageService: LocalStorageService,
+            injector: Injector,
+        ) => {
             const httpMainLink: ApolloLink = httpLink.create({
                 uri: appConfig.apiServerGqlUrl,
+            });
+
+            const errorMiddleware: ApolloLink = onError(({ graphQLErrors, networkError }) => {
+                const toastrService = injector.get(ToastrService);
+                if (graphQLErrors) {
+                    graphQLErrors.forEach(({ message }) => {
+                        toastrService.error(message);
+                    });
+                }
+
+                if (networkError) {
+                    toastrService.error(ErrorTexts.ERROR_NETWORK_DESCRIPTION, "", { disableTimeOut: true });
+                }
             });
 
             const authorizationMiddleware: ApolloLink = new ApolloLink((operation: Operation, forward: NextLink) => {
@@ -113,10 +133,10 @@ const Services = [
 
             return {
                 cache: apolloCache(),
-                link: ApolloLink.from([authorizationMiddleware, globalLoaderMiddleware, httpMainLink]),
+                link: ApolloLink.from([errorMiddleware, authorizationMiddleware, globalLoaderMiddleware, httpMainLink]),
             };
         },
-        deps: [HttpLink, AppConfigService, LocalStorageService],
+        deps: [HttpLink, AppConfigService, LocalStorageService, Injector],
     },
     {
         provide: HIGHLIGHT_OPTIONS,
@@ -132,12 +152,7 @@ const Services = [
         provide: APP_INITIALIZER,
         useFactory: (loggedUserService: LoggedUserService) => {
             return () => {
-                return loggedUserService.initializeCompletes().pipe(
-                    catchError((e) => {
-                        logError(e);
-                        return EMPTY;
-                    }),
-                );
+                return loggedUserService.initializeCompletes();
             };
         },
         deps: [LoggedUserService],
@@ -175,7 +190,7 @@ const Services = [
         ModalModule.forRoot(),
         NgxGraphModule,
         ToastrModule.forRoot({
-            timeOut: 2000,
+            timeOut: 5000,
             positionClass: "toast-bottom-right",
             newestOnTop: false,
             preventDuplicates: true,

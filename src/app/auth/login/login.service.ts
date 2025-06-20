@@ -15,7 +15,6 @@ import {
     Web3WalletOwnershipVerificationRequest,
 } from "src/app/api/auth.api.model";
 import { AccountFragment, AccountProvider } from "src/app/api/kamu.graphql.interface";
-import { AuthenticationError } from "src/app/common/values/errors";
 import { NavigationService } from "src/app/services/navigation.service";
 import { AppConfigService } from "src/app/app-config.service";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
@@ -101,13 +100,6 @@ export class LoginService {
         const deviceCode: MaybeNull<string> = this.localStorageService.loginDeviceCode;
         this.authApi.fetchAccountAndTokenFromPasswordLogin(credentials, deviceCode ?? undefined).subscribe({
             next: this.loginCallback,
-            error: (e) => {
-                if (e instanceof AuthenticationError) {
-                    this.emitPasswordLoginErrorOccurred(e.compactMessage);
-                } else {
-                    throw e;
-                }
-            },
         });
     }
 

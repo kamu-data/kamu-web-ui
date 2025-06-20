@@ -7,7 +7,7 @@
 
 import { inject, Injectable } from "@angular/core";
 import { catchError, first, map } from "rxjs/operators";
-import { Observable, throwError } from "rxjs";
+import { EMPTY, Observable } from "rxjs";
 import {
     AccountFragment,
     AccountProvider,
@@ -115,7 +115,9 @@ export class AuthApi {
                         throw new AuthenticationError(result.errors ?? []);
                     }
                 }),
-                catchError((e: Error) => throwError(() => new AuthenticationError([e]))),
+                catchError(() => {
+                    return EMPTY;
+                }),
             );
     }
 
@@ -130,7 +132,9 @@ export class AuthApi {
                     throw new AuthenticationError(result.errors ?? []);
                 }
             }),
-            catchError((e: Error) => throwError(() => new AuthenticationError([e]))),
+            catchError(() => {
+                return EMPTY;
+            }),
         );
     }
 

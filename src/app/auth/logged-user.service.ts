@@ -21,7 +21,6 @@ import { LocalStorageService } from "../services/local-storage.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { SessionStorageService } from "src/app/services/session-storage.service";
 import { ToastrService } from "ngx-toastr";
-import { ErrorHandlerService } from "../services/error-handler.service";
 
 @Injectable({
     providedIn: "root",
@@ -110,7 +109,6 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
                 first(),
                 catchError(() => {
                     this.terminateSession();
-                    this.toastrService.error(ErrorHandlerService.APOLLO_ERROR_INVALID_TOKEN);
                     return EMPTY;
                 }),
             );

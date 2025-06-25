@@ -27,7 +27,6 @@ import {
     TEST_PASSWORD,
     mockWeb3WalletLoginResponse,
 } from "./mock/auth.mock";
-import { AuthenticationError } from "../common/values/errors";
 import { first } from "rxjs/operators";
 import {
     GithubLoginCredentials,
@@ -36,7 +35,7 @@ import {
 } from "./auth.api.model";
 import { ApolloError } from "@apollo/client";
 
-fdescribe("AuthApi", () => {
+describe("AuthApi", () => {
     let service: AuthApi;
     let controller: ApolloTestingController;
 
@@ -102,7 +101,6 @@ fdescribe("AuthApi", () => {
     });
 
     it("should check full login password failure", fakeAsync(() => {
-        let receivedError: ApolloError | null = null;
         const subscription$ = service
             .fetchAccountAndTokenFromPasswordLogin({
                 login: TEST_LOGIN,
@@ -112,7 +110,7 @@ fdescribe("AuthApi", () => {
             .subscribe({
                 next: () => fail("Unexpected success"),
                 error: (e: ApolloError) => {
-                    receivedError = e;
+                    expect(e).toBeTruthy();
                 },
             });
 
@@ -120,7 +118,6 @@ fdescribe("AuthApi", () => {
         op.graphqlErrors([mockLogin401Error]);
         tick();
 
-        expect(receivedError).toBeTruthy();
         expect(subscription$.closed).toBeTrue();
         flush();
     }));
@@ -142,14 +139,13 @@ fdescribe("AuthApi", () => {
     });
 
     it("should check full login Github failure", fakeAsync(() => {
-        let receivedError: ApolloError | null = null;
         const subscription$ = service
             .fetchAccountAndTokenFromGithubCallbackCode({ code: TEST_GITHUB_CODE } as GithubLoginCredentials)
             .pipe(first())
             .subscribe({
                 next: () => fail("Unexpected success"),
                 error: (e: ApolloError) => {
-                    receivedError = e;
+                    expect(e).toBeTruthy();
                 },
             });
 
@@ -157,7 +153,6 @@ fdescribe("AuthApi", () => {
         op.graphqlErrors([mockLogin401Error]);
         tick();
 
-        expect(receivedError).toBeTruthy();
         expect(subscription$.closed).toBeTrue();
         flush();
     }));
@@ -174,14 +169,13 @@ fdescribe("AuthApi", () => {
     });
 
     it("should check login via access token error", fakeAsync(() => {
-        let receivedError: ApolloError | null = null;
         const subscription$ = service
             .fetchAccountFromAccessToken(TEST_ACCESS_TOKEN_GITHUB)
             .pipe(first())
             .subscribe({
                 next: () => fail("Unexpected success"),
                 error: (e: ApolloError) => {
-                    receivedError = e;
+                    expect(e).toBeTruthy();
                 },
             });
 
@@ -189,7 +183,6 @@ fdescribe("AuthApi", () => {
         op.graphqlErrors([mockLogin401Error]);
         tick();
 
-        expect(receivedError).toBeTruthy();
         expect(subscription$.closed).toBeTrue();
         flush();
     }));

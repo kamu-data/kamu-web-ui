@@ -6,7 +6,7 @@
  */
 
 import { inject, Injectable } from "@angular/core";
-import { Observable, first, map } from "rxjs";
+import { EMPTY, Observable, catchError, first, map } from "rxjs";
 import {
     CreateAccessTokenGQL,
     CreateAccessTokenMutation,
@@ -17,7 +17,6 @@ import {
 } from "./kamu.graphql.interface";
 import { ApolloQueryResult } from "@apollo/client";
 import { MutationResult } from "apollo-angular";
-import { DatasetOperationError } from "../common/values/errors";
 import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
 
 @Injectable({
@@ -52,12 +51,10 @@ export class AccessTokenApi {
         return this.createAccessTokenGQL.mutate({ accountId, tokenName }).pipe(
             first(),
             map((result: MutationResult<CreateAccessTokenMutation>) => {
-                /* istanbul ignore else */
-                if (result.data) {
-                    return result.data;
-                } else {
-                    throw new DatasetOperationError(result.errors ?? []);
-                }
+                return result.data as CreateAccessTokenMutation;
+            }),
+            catchError(() => {
+                return EMPTY;
             }),
         );
     }
@@ -66,12 +63,10 @@ export class AccessTokenApi {
         return this.revokeAccessTokenGQL.mutate({ tokenId }).pipe(
             first(),
             map((result: MutationResult<RevokeAccessTokenMutation>) => {
-                /* istanbul ignore else */
-                if (result.data) {
-                    return result.data;
-                } else {
-                    throw new DatasetOperationError(result.errors ?? []);
-                }
+                return result.data as RevokeAccessTokenMutation;
+            }),
+            catchError(() => {
+                return EMPTY;
             }),
         );
     }

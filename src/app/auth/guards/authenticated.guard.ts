@@ -18,6 +18,7 @@ export class AuthenticatedGuard {
 
     public canActivate(): boolean {
         if (!this.loggedUserService.isAuthenticated) {
+            console.log("=>1");
             this.navigationService.navigateToHome();
             return false;
         }

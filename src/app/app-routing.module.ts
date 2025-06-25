@@ -95,6 +95,7 @@ import { accountSettingsPasswordAndAuthenticationResolverFn } from "./account/se
 import { accountPasswordProviderGuard } from "./common/guards/account-password-provider.guard";
 import { DatasetSettingsIngestConfigurationTabComponent } from "./dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/dataset-settings-ingest-configuration-tab.component";
 import { datasetSettingsIngestConfigurationResolverFn } from "./dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/resolver/dataset-settings-ingest-configuration.resolver";
+import { allowAnonymousGuard } from "./common/guards/allow-anonymous.guard";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -116,318 +117,428 @@ export const routes: Routes = [
         component: ReturnToCliComponent,
     },
     {
-        path: ProjectLinks.URL_SEARCH,
-        component: SearchComponent,
-        resolve: { [RoutingResolvers.SEARCH_KEY]: searchResolverFn },
-        runGuardsAndResolvers: "always",
-    },
-    {
-        canActivate: [AuthenticatedGuard],
-        path: ProjectLinks.URL_DATASET_CREATE,
-        component: DatasetCreateComponent,
-    },
-    {
-        path: ProjectLinks.URL_QUERY_EXPLAINER,
-        component: QueryExplainerComponent,
-        loadChildren: () => import("./query-explainer/query-explainer.module").then((m) => m.QueryExplainerModule),
-    },
-    {
-        path: ProjectLinks.URL_QUERY,
-        component: GlobalQueryComponent,
-        loadChildren: () => import("./query/query.module").then((m) => m.QueryModule),
-    },
-    {
-        path: `${ProjectLinks.URL_SETTINGS}`,
-        canActivate: [AuthenticatedGuard],
-        component: AccountSettingsComponent,
-        runGuardsAndResolvers: "always",
-        resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_ACTIVE_TAB_KEY]: accountSettingsActiveTabResolverFn },
+        path: "",
+        canActivate: [allowAnonymousGuard],
         children: [
             {
-                path: "",
-                redirectTo: AccountSettingsTabs.ACCESS_TOKENS,
-                pathMatch: "full",
+                path: ProjectLinks.URL_SEARCH,
+                component: SearchComponent,
+                resolve: { [RoutingResolvers.SEARCH_KEY]: searchResolverFn },
+                runGuardsAndResolvers: "always",
             },
             {
-                path: AccountSettingsTabs.ACCESS_TOKENS,
-                component: AccessTokensTabComponent,
-                data: {
-                    [ProjectLinks.URL_PARAM_TAB]: AccountSettingsTabs.ACCESS_TOKENS,
-                },
-                runGuardsAndResolvers: "always",
-                resolve: {
-                    [RoutingResolvers.ACCOUNT_SETTINGS_ACCESS_TOKENS_KEY]: accountSettingsAccessTokensResolverFn,
-                },
+                canActivate: [AuthenticatedGuard],
+                path: ProjectLinks.URL_DATASET_CREATE,
+                component: DatasetCreateComponent,
             },
             {
-                path: AccountSettingsTabs.EMAILS,
-                component: EmailsTabComponent,
-                data: {
-                    [ProjectLinks.URL_PARAM_TAB]: AccountSettingsTabs.EMAILS,
-                },
-                runGuardsAndResolvers: "always",
-                resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_EMAIL_KEY]: accountSettingsEmailResolverFn },
+                path: ProjectLinks.URL_QUERY_EXPLAINER,
+                component: QueryExplainerComponent,
+                loadChildren: () =>
+                    import("./query-explainer/query-explainer.module").then((m) => m.QueryExplainerModule),
             },
             {
-                path: AccountSettingsTabs.ACCOUNT,
-                component: AccountTabComponent,
-                data: {
-                    [ProjectLinks.URL_PARAM_TAB]: AccountSettingsTabs.ACCOUNT,
-                },
-                runGuardsAndResolvers: "always",
-                resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_ACCOUNT_KEY]: accountSettingsAccountResolverFn },
+                path: ProjectLinks.URL_QUERY,
+                component: GlobalQueryComponent,
+                loadChildren: () => import("./query/query.module").then((m) => m.QueryModule),
             },
             {
-                path: AccountSettingsTabs.SECURITY,
-                component: PasswordAndAuthenticationTabComponent,
-                data: {
-                    [ProjectLinks.URL_PARAM_TAB]: AccountSettingsTabs.SECURITY,
-                },
+                path: `${ProjectLinks.URL_SETTINGS}`,
+                canActivate: [AuthenticatedGuard],
+                component: AccountSettingsComponent,
                 runGuardsAndResolvers: "always",
-                canActivate: [accountPasswordProviderGuard],
-                resolve: {
-                    [RoutingResolvers.ACCOUNT_SETTINGS_PASSWORD_AND_AUTHENTICATION_KEY]:
-                        accountSettingsPasswordAndAuthenticationResolverFn,
-                },
-            },
-        ],
-    },
-    {
-        path: `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}`,
-        children: [
-            {
-                path: "",
-                component: AccountComponent,
-                canActivate: [accountGuard],
-                runGuardsAndResolvers: "always",
-                resolve: { [RoutingResolvers.ACCOUNT_ACTIVE_TAB_KEY]: accountActiveTabResolverFn },
+                resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_ACTIVE_TAB_KEY]: accountSettingsActiveTabResolverFn },
                 children: [
                     {
-                        path: ProjectLinks.URL_ACCOUNT_SELECT,
-                        children: [
-                            {
-                                path: ``,
-                                redirectTo: AccountTabs.DATASETS,
-                                pathMatch: "full",
-                            },
-                            {
-                                path: AccountTabs.DATASETS,
-                                component: DatasetsTabComponent,
-                                data: {
-                                    [ProjectLinks.URL_PARAM_TAB]: AccountTabs.DATASETS,
-                                },
-                                resolve: { [RoutingResolvers.ACCOUNT_DATASETS_KEY]: accountDatasetsResolverFn },
-                                runGuardsAndResolvers: "always",
-                            },
-                            {
-                                path: AccountTabs.FLOWS,
-                                data: {
-                                    [ProjectLinks.URL_PARAM_TAB]: AccountTabs.FLOWS,
-                                },
-                                canActivate: [AuthenticatedGuard],
-                                component: AccountFlowsTabComponent,
-                            },
-                            {
-                                path: AccountTabs.SETTINGS,
-                                data: {
-                                    [ProjectLinks.URL_PARAM_TAB]: AccountTabs.SETTINGS,
-                                },
-                                canActivate: [AuthenticatedGuard],
-                                component: SettingsTabComponent,
-                            },
-                        ],
-                    },
-                ],
-            },
-            {
-                path: `:${ProjectLinks.URL_PARAM_DATASET_NAME}`,
-                component: DatasetViewComponent,
-                runGuardsAndResolvers: "always",
-                resolve: {
-                    [RoutingResolvers.DATASET_VIEW_KEY]: datasetViewResolverFn,
-                    [RoutingResolvers.DATASET_VIEW_ACTIVE_TAB_KEY]: datasetViewActiveTabResolverFn,
-                    [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
-                },
-                children: [
-                    {
-                        path: DatasetViewTypeEnum.Overview,
-                        redirectTo: "",
+                        path: "",
+                        redirectTo: AccountSettingsTabs.ACCESS_TOKENS,
                         pathMatch: "full",
                     },
                     {
+                        path: AccountSettingsTabs.ACCESS_TOKENS,
+                        component: AccessTokensTabComponent,
+                        data: {
+                            [ProjectLinks.URL_PARAM_TAB]: AccountSettingsTabs.ACCESS_TOKENS,
+                        },
+                        runGuardsAndResolvers: "always",
+                        resolve: {
+                            [RoutingResolvers.ACCOUNT_SETTINGS_ACCESS_TOKENS_KEY]:
+                                accountSettingsAccessTokensResolverFn,
+                        },
+                    },
+                    {
+                        path: AccountSettingsTabs.EMAILS,
+                        component: EmailsTabComponent,
+                        data: {
+                            [ProjectLinks.URL_PARAM_TAB]: AccountSettingsTabs.EMAILS,
+                        },
+                        runGuardsAndResolvers: "always",
+                        resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_EMAIL_KEY]: accountSettingsEmailResolverFn },
+                    },
+                    {
+                        path: AccountSettingsTabs.ACCOUNT,
+                        component: AccountTabComponent,
+                        data: {
+                            [ProjectLinks.URL_PARAM_TAB]: AccountSettingsTabs.ACCOUNT,
+                        },
+                        runGuardsAndResolvers: "always",
+                        resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_ACCOUNT_KEY]: accountSettingsAccountResolverFn },
+                    },
+                    {
+                        path: AccountSettingsTabs.SECURITY,
+                        component: PasswordAndAuthenticationTabComponent,
+                        data: {
+                            [ProjectLinks.URL_PARAM_TAB]: AccountSettingsTabs.SECURITY,
+                        },
+                        runGuardsAndResolvers: "always",
+                        canActivate: [accountPasswordProviderGuard],
+                        resolve: {
+                            [RoutingResolvers.ACCOUNT_SETTINGS_PASSWORD_AND_AUTHENTICATION_KEY]:
+                                accountSettingsPasswordAndAuthenticationResolverFn,
+                        },
+                    },
+                ],
+            },
+            {
+                path: `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}`,
+                children: [
+                    {
                         path: "",
-
-                        component: OverviewComponent,
+                        component: AccountComponent,
+                        canActivate: [accountGuard],
                         runGuardsAndResolvers: "always",
-                        data: {
-                            [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Overview,
-                        },
-                        resolve: { [RoutingResolvers.DATASET_VIEW_OVERVIEW_KEY]: datasetOverviewTabResolverFn },
+                        resolve: { [RoutingResolvers.ACCOUNT_ACTIVE_TAB_KEY]: accountActiveTabResolverFn },
+                        children: [
+                            {
+                                path: ProjectLinks.URL_ACCOUNT_SELECT,
+                                children: [
+                                    {
+                                        path: ``,
+                                        redirectTo: AccountTabs.DATASETS,
+                                        pathMatch: "full",
+                                    },
+                                    {
+                                        path: AccountTabs.DATASETS,
+                                        component: DatasetsTabComponent,
+                                        data: {
+                                            [ProjectLinks.URL_PARAM_TAB]: AccountTabs.DATASETS,
+                                        },
+                                        resolve: { [RoutingResolvers.ACCOUNT_DATASETS_KEY]: accountDatasetsResolverFn },
+                                        runGuardsAndResolvers: "always",
+                                    },
+                                    {
+                                        path: AccountTabs.FLOWS,
+                                        data: {
+                                            [ProjectLinks.URL_PARAM_TAB]: AccountTabs.FLOWS,
+                                        },
+                                        canActivate: [AuthenticatedGuard],
+                                        component: AccountFlowsTabComponent,
+                                    },
+                                    {
+                                        path: AccountTabs.SETTINGS,
+                                        data: {
+                                            [ProjectLinks.URL_PARAM_TAB]: AccountTabs.SETTINGS,
+                                        },
+                                        canActivate: [AuthenticatedGuard],
+                                        component: SettingsTabComponent,
+                                    },
+                                ],
+                            },
+                        ],
                     },
                     {
-                        path: DatasetViewTypeEnum.Data,
-                        component: DataComponent,
+                        path: `:${ProjectLinks.URL_PARAM_DATASET_NAME}`,
+                        component: DatasetViewComponent,
                         runGuardsAndResolvers: "always",
-                        data: {
-                            [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Data,
-                        },
-                        resolve: { [RoutingResolvers.DATASET_VIEW_DATA_KEY]: datasetDataTabResolverFn },
-                    },
-                    {
-                        path: DatasetViewTypeEnum.Metadata,
-                        component: MetadataComponent,
-                        runGuardsAndResolvers: "always",
-                        data: {
-                            [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Metadata,
-                        },
-                        resolve: { [RoutingResolvers.DATASET_VIEW_METADATA_KEY]: datasetMetadataTabResolverFn },
-                    },
-                    {
-                        path: DatasetViewTypeEnum.History,
-                        component: HistoryComponent,
-                        runGuardsAndResolvers: "always",
-                        data: {
-                            [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.History,
-                        },
                         resolve: {
+                            [RoutingResolvers.DATASET_VIEW_KEY]: datasetViewResolverFn,
+                            [RoutingResolvers.DATASET_VIEW_ACTIVE_TAB_KEY]: datasetViewActiveTabResolverFn,
                             [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
-                        },
-                    },
-                    {
-                        path: DatasetViewTypeEnum.Lineage,
-                        component: LineageComponent,
-                        runGuardsAndResolvers: "always",
-                        data: {
-                            [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Lineage,
-                        },
-                        resolve: {
-                            [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
-                        },
-                    },
-                    {
-                        path: DatasetViewTypeEnum.Flows,
-                        component: FlowsComponent,
-                        runGuardsAndResolvers: "always",
-                        data: {
-                            [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Flows,
-                        },
-                        resolve: { [RoutingResolvers.DATASET_VIEW_FLOWS_KEY]: datasetFlowsTabResolverFn },
-                        canActivate: [AuthenticatedGuard],
-                    },
-                    {
-                        path: DatasetViewTypeEnum.Settings,
-                        component: DatasetSettingsComponent,
-                        runGuardsAndResolvers: "always",
-                        canActivate: [AuthenticatedGuard],
-                        data: {
-                            [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Settings,
-                        },
-                        resolve: {
-                            [RoutingResolvers.DATASET_VIEW_SETTINGS_KEY]: datasetSettingsTabResolverFn,
-                            [RoutingResolvers.DATASET_VIEW_SETTINGS_ACTIVE_SECTION_KEY]:
-                                datasetSettingsActiveSectionResolverFn,
                         },
                         children: [
                             {
-                                path: "",
-                                redirectTo: SettingsTabsEnum.GENERAL,
+                                path: DatasetViewTypeEnum.Overview,
+                                redirectTo: "",
                                 pathMatch: "full",
                             },
                             {
-                                path: SettingsTabsEnum.GENERAL,
-                                component: DatasetSettingsGeneralTabComponent,
-                                runGuardsAndResolvers: "always",
-                                data: {
-                                    [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.GENERAL,
-                                },
-                                resolve: {
-                                    [RoutingResolvers.DATASET_SETTINGS_GENERAL_KEY]:
-                                        datasetSettingsGeneralTabResolverFn,
-                                },
-                            },
-                            {
-                                path: SettingsTabsEnum.SCHEDULING,
-                                component: DatasetSettingsSchedulingTabComponent,
-                                runGuardsAndResolvers: "always",
-                                data: {
-                                    [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.SCHEDULING,
-                                },
-                                resolve: {
-                                    [RoutingResolvers.DATASET_SETTINGS_SCHEDULING_KEY]:
-                                        datasetSettingsSchedulingTabResolverFn,
-                                },
-                            },
-                            {
-                                path: SettingsTabsEnum.INGEST_CONFIGURATION,
-                                component: DatasetSettingsIngestConfigurationTabComponent,
-                                runGuardsAndResolvers: "always",
-                                data: {
-                                    [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.INGEST_CONFIGURATION,
-                                },
-                                resolve: {
-                                    [RoutingResolvers.DATASET_SETTINGS_INGEST_CONFIGURATION_KEY]:
-                                        datasetSettingsIngestConfigurationResolverFn,
-                                },
-                            },
-                            {
-                                path: SettingsTabsEnum.ACCESS,
-                                component: DatasetSettingsAccessTabComponent,
-                                runGuardsAndResolvers: "always",
-                                data: {
-                                    [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.ACCESS,
-                                },
-                                resolve: {
-                                    [RoutingResolvers.DATASET_SETTINGS_ACCESS_KEY]: datasetSettingsAccessTabResolverFn,
-                                },
-                            },
-                            {
-                                path: SettingsTabsEnum.TRANSFORM_SETTINGS,
-                                component: DatasetSettingsTransformOptionsTabComponent,
-                                runGuardsAndResolvers: "always",
-                                data: {
-                                    [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.TRANSFORM_SETTINGS,
-                                },
-                                resolve: {
-                                    [RoutingResolvers.DATASET_SETTINGS_TRANSFORM_KEY]:
-                                        datasetSettingsTransformTabResolverFn,
-                                },
-                            },
+                                path: "",
 
-                            {
-                                path: SettingsTabsEnum.COMPACTION,
-                                component: DatasetSettingsCompactingTabComponent,
+                                component: OverviewComponent,
                                 runGuardsAndResolvers: "always",
                                 data: {
-                                    [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.COMPACTION,
+                                    [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Overview,
                                 },
-                                resolve: {
-                                    [RoutingResolvers.DATASET_SETTINGS_COMPACTION_KEY]:
-                                        datasetSettingsCompactionTabResolverFn,
-                                },
+                                resolve: { [RoutingResolvers.DATASET_VIEW_OVERVIEW_KEY]: datasetOverviewTabResolverFn },
                             },
                             {
-                                path: SettingsTabsEnum.VARIABLES_AND_SECRETS,
-                                component: DatasetSettingsSecretsManagerTabComponent,
+                                path: DatasetViewTypeEnum.Data,
+                                component: DataComponent,
                                 runGuardsAndResolvers: "always",
                                 data: {
-                                    [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.VARIABLES_AND_SECRETS,
+                                    [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Data,
+                                },
+                                resolve: { [RoutingResolvers.DATASET_VIEW_DATA_KEY]: datasetDataTabResolverFn },
+                            },
+                            {
+                                path: DatasetViewTypeEnum.Metadata,
+                                component: MetadataComponent,
+                                runGuardsAndResolvers: "always",
+                                data: {
+                                    [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Metadata,
+                                },
+                                resolve: { [RoutingResolvers.DATASET_VIEW_METADATA_KEY]: datasetMetadataTabResolverFn },
+                            },
+                            {
+                                path: DatasetViewTypeEnum.History,
+                                component: HistoryComponent,
+                                runGuardsAndResolvers: "always",
+                                data: {
+                                    [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.History,
                                 },
                                 resolve: {
-                                    [RoutingResolvers.DATASET_SETTINGS_VARIABLES_AND_SECRETS_KEY]:
-                                        datasetSettingsVarAndSecretsResolverFn,
                                     [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
                                 },
                             },
-
                             {
-                                path: SettingsTabsEnum.WEBHOOKS,
-                                component: DatasetSettingsWebhooksTabComponent,
+                                path: DatasetViewTypeEnum.Lineage,
+                                component: LineageComponent,
                                 runGuardsAndResolvers: "always",
                                 data: {
-                                    [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.WEBHOOKS,
+                                    [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Lineage,
                                 },
                                 resolve: {
-                                    [RoutingResolvers.DATASET_SETTINGS_WEBHOOKS_KEY]: datasetSettingsWebhooksResolverFn,
+                                    [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
+                                },
+                            },
+                            {
+                                path: DatasetViewTypeEnum.Flows,
+                                component: FlowsComponent,
+                                runGuardsAndResolvers: "always",
+                                data: {
+                                    [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Flows,
+                                },
+                                resolve: { [RoutingResolvers.DATASET_VIEW_FLOWS_KEY]: datasetFlowsTabResolverFn },
+                                canActivate: [AuthenticatedGuard],
+                            },
+                            {
+                                path: DatasetViewTypeEnum.Settings,
+                                component: DatasetSettingsComponent,
+                                runGuardsAndResolvers: "always",
+                                canActivate: [AuthenticatedGuard],
+                                data: {
+                                    [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Settings,
+                                },
+                                resolve: {
+                                    [RoutingResolvers.DATASET_VIEW_SETTINGS_KEY]: datasetSettingsTabResolverFn,
+                                    [RoutingResolvers.DATASET_VIEW_SETTINGS_ACTIVE_SECTION_KEY]:
+                                        datasetSettingsActiveSectionResolverFn,
+                                },
+                                children: [
+                                    {
+                                        path: "",
+                                        redirectTo: SettingsTabsEnum.GENERAL,
+                                        pathMatch: "full",
+                                    },
+                                    {
+                                        path: SettingsTabsEnum.GENERAL,
+                                        component: DatasetSettingsGeneralTabComponent,
+                                        runGuardsAndResolvers: "always",
+                                        data: {
+                                            [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.GENERAL,
+                                        },
+                                        resolve: {
+                                            [RoutingResolvers.DATASET_SETTINGS_GENERAL_KEY]:
+                                                datasetSettingsGeneralTabResolverFn,
+                                        },
+                                    },
+                                    {
+                                        path: SettingsTabsEnum.SCHEDULING,
+                                        component: DatasetSettingsSchedulingTabComponent,
+                                        runGuardsAndResolvers: "always",
+                                        data: {
+                                            [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.SCHEDULING,
+                                        },
+                                        resolve: {
+                                            [RoutingResolvers.DATASET_SETTINGS_SCHEDULING_KEY]:
+                                                datasetSettingsSchedulingTabResolverFn,
+                                        },
+                                    },
+                                    {
+                                        path: SettingsTabsEnum.INGEST_CONFIGURATION,
+                                        component: DatasetSettingsIngestConfigurationTabComponent,
+                                        runGuardsAndResolvers: "always",
+                                        data: {
+                                            [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.INGEST_CONFIGURATION,
+                                        },
+                                        resolve: {
+                                            [RoutingResolvers.DATASET_SETTINGS_INGEST_CONFIGURATION_KEY]:
+                                                datasetSettingsIngestConfigurationResolverFn,
+                                        },
+                                    },
+                                    {
+                                        path: SettingsTabsEnum.ACCESS,
+                                        component: DatasetSettingsAccessTabComponent,
+                                        runGuardsAndResolvers: "always",
+                                        data: {
+                                            [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.ACCESS,
+                                        },
+                                        resolve: {
+                                            [RoutingResolvers.DATASET_SETTINGS_ACCESS_KEY]:
+                                                datasetSettingsAccessTabResolverFn,
+                                        },
+                                    },
+                                    {
+                                        path: SettingsTabsEnum.TRANSFORM_SETTINGS,
+                                        component: DatasetSettingsTransformOptionsTabComponent,
+                                        runGuardsAndResolvers: "always",
+                                        data: {
+                                            [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.TRANSFORM_SETTINGS,
+                                        },
+                                        resolve: {
+                                            [RoutingResolvers.DATASET_SETTINGS_TRANSFORM_KEY]:
+                                                datasetSettingsTransformTabResolverFn,
+                                        },
+                                    },
+
+                                    {
+                                        path: SettingsTabsEnum.COMPACTION,
+                                        component: DatasetSettingsCompactingTabComponent,
+                                        runGuardsAndResolvers: "always",
+                                        data: {
+                                            [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.COMPACTION,
+                                        },
+                                        resolve: {
+                                            [RoutingResolvers.DATASET_SETTINGS_COMPACTION_KEY]:
+                                                datasetSettingsCompactionTabResolverFn,
+                                        },
+                                    },
+                                    {
+                                        path: SettingsTabsEnum.VARIABLES_AND_SECRETS,
+                                        component: DatasetSettingsSecretsManagerTabComponent,
+                                        runGuardsAndResolvers: "always",
+                                        data: {
+                                            [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.VARIABLES_AND_SECRETS,
+                                        },
+                                        resolve: {
+                                            [RoutingResolvers.DATASET_SETTINGS_VARIABLES_AND_SECRETS_KEY]:
+                                                datasetSettingsVarAndSecretsResolverFn,
+                                            [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
+                                        },
+                                    },
+
+                                    {
+                                        path: SettingsTabsEnum.WEBHOOKS,
+                                        component: DatasetSettingsWebhooksTabComponent,
+                                        runGuardsAndResolvers: "always",
+                                        data: {
+                                            [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.WEBHOOKS,
+                                        },
+                                        resolve: {
+                                            [RoutingResolvers.DATASET_SETTINGS_WEBHOOKS_KEY]:
+                                                datasetSettingsWebhooksResolverFn,
+                                            [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
+                                        },
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                path: `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}`,
+                children: [
+                    {
+                        path: `${ProjectLinks.URL_BLOCK}/:${ProjectLinks.URL_PARAM_BLOCK_HASH}`,
+                        component: MetadataBlockComponent,
+                        resolve: { [RoutingResolvers.METADATA_BLOCK_KEY]: blockMetadataResolverFn },
+                    },
+                    {
+                        path: `${ProjectLinks.URL_FLOW_DETAILS}/:${ProjectLinks.URL_PARAM_FLOW_ID}`,
+                        component: DatasetFlowDetailsComponent,
+                        canActivate: [AuthenticatedGuard],
+                        runGuardsAndResolvers: "always",
+                        resolve: {
+                            [RoutingResolvers.FLOW_DETAILS_ACTIVE_TAB_KEY]: flowDetailsActiveTabResolverFn,
+                            [RoutingResolvers.FLOW_DETAILS_KEY]: flowDetailsResolverFn,
+                            [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
+                        },
+                        children: [
+                            {
+                                path: FlowDetailsTabs.HISTORY,
+                                component: FlowDetailsHistoryTabComponent,
+                                runGuardsAndResolvers: "always",
+                                data: {
+                                    [ProjectLinks.URL_PARAM_TAB]: FlowDetailsTabs.HISTORY,
+                                },
+                                resolve: {
+                                    [RoutingResolvers.FLOW_DETAILS_HISTORY_KEY]: flowDetailsSummaryResolverFn,
+                                },
+                            },
+                            {
+                                path: FlowDetailsTabs.SUMMARY,
+                                component: FlowDetailsSummaryTabComponent,
+                                runGuardsAndResolvers: "always",
+                                data: {
+                                    [ProjectLinks.URL_PARAM_TAB]: FlowDetailsTabs.SUMMARY,
+                                },
+                                resolve: {
+                                    [RoutingResolvers.FLOW_DETAILS_SUMMARY_KEY]: flowDetailsSummaryResolverFn,
+                                },
+                            },
+                            {
+                                path: FlowDetailsTabs.LOGS,
+                                component: FlowDetailsLogsTabComponent,
+                                runGuardsAndResolvers: "always",
+                                data: {
+                                    [ProjectLinks.URL_PARAM_TAB]: FlowDetailsTabs.LOGS,
+                                },
+                                resolve: {
+                                    [RoutingResolvers.FLOW_DETAILS_LOGS_KEY]: flowDetailsSummaryResolverFn,
+                                },
+                            },
+                            {
+                                path: FlowDetailsTabs.USAGE,
+                                component: FlowDetailsUsageTabComponent,
+                                data: {
+                                    [ProjectLinks.URL_PARAM_TAB]: FlowDetailsTabs.USAGE,
+                                },
+                            },
+                            {
+                                path: FlowDetailsTabs.ADMIN,
+                                component: FlowDetailsAdminTabComponent,
+                                data: {
+                                    [ProjectLinks.URL_PARAM_TAB]: FlowDetailsTabs.ADMIN,
+                                },
+                            },
+                        ],
+                    },
+                    {
+                        path: "",
+                        canActivate: [AuthenticatedGuard],
+                        children: [
+                            {
+                                path: `${ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE}`,
+                                component: AddPollingSourceComponent,
+                                resolve: {
+                                    [RoutingResolvers.ADD_POLLING_SOURCE_KEY]: addPollingSourceResolverFn,
+                                    [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
+                                },
+                            },
+                            {
+                                path: `${ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE}`,
+                                component: AddPushSourceComponent,
+                                resolve: {
+                                    [RoutingResolvers.ADD_PUSH_SOURCE_KEY]: addPushSourceResolverFn,
+                                    [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
+                                },
+                            },
+                            {
+                                path: `${ProjectLinks.URL_PARAM_SET_TRANSFORM}`,
+                                component: SetTransformComponent,
+                                resolve: {
+                                    [RoutingResolvers.SET_TRANSFORM_KEY]: setTransformResolverFn,
                                     [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
                                 },
                             },
@@ -435,112 +546,12 @@ export const routes: Routes = [
                     },
                 ],
             },
-        ],
-    },
-    {
-        path: `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}`,
-        children: [
             {
-                path: `${ProjectLinks.URL_BLOCK}/:${ProjectLinks.URL_PARAM_BLOCK_HASH}`,
-                component: MetadataBlockComponent,
-                resolve: { [RoutingResolvers.METADATA_BLOCK_KEY]: blockMetadataResolverFn },
-            },
-            {
-                path: `${ProjectLinks.URL_FLOW_DETAILS}/:${ProjectLinks.URL_PARAM_FLOW_ID}`,
-                component: DatasetFlowDetailsComponent,
-                canActivate: [AuthenticatedGuard],
-                runGuardsAndResolvers: "always",
-                resolve: {
-                    [RoutingResolvers.FLOW_DETAILS_ACTIVE_TAB_KEY]: flowDetailsActiveTabResolverFn,
-                    [RoutingResolvers.FLOW_DETAILS_KEY]: flowDetailsResolverFn,
-                    [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
-                },
-                children: [
-                    {
-                        path: FlowDetailsTabs.HISTORY,
-                        component: FlowDetailsHistoryTabComponent,
-                        runGuardsAndResolvers: "always",
-                        data: {
-                            [ProjectLinks.URL_PARAM_TAB]: FlowDetailsTabs.HISTORY,
-                        },
-                        resolve: {
-                            [RoutingResolvers.FLOW_DETAILS_HISTORY_KEY]: flowDetailsSummaryResolverFn,
-                        },
-                    },
-                    {
-                        path: FlowDetailsTabs.SUMMARY,
-                        component: FlowDetailsSummaryTabComponent,
-                        runGuardsAndResolvers: "always",
-                        data: {
-                            [ProjectLinks.URL_PARAM_TAB]: FlowDetailsTabs.SUMMARY,
-                        },
-                        resolve: {
-                            [RoutingResolvers.FLOW_DETAILS_SUMMARY_KEY]: flowDetailsSummaryResolverFn,
-                        },
-                    },
-                    {
-                        path: FlowDetailsTabs.LOGS,
-                        component: FlowDetailsLogsTabComponent,
-                        runGuardsAndResolvers: "always",
-                        data: {
-                            [ProjectLinks.URL_PARAM_TAB]: FlowDetailsTabs.LOGS,
-                        },
-                        resolve: {
-                            [RoutingResolvers.FLOW_DETAILS_LOGS_KEY]: flowDetailsSummaryResolverFn,
-                        },
-                    },
-                    {
-                        path: FlowDetailsTabs.USAGE,
-                        component: FlowDetailsUsageTabComponent,
-                        data: {
-                            [ProjectLinks.URL_PARAM_TAB]: FlowDetailsTabs.USAGE,
-                        },
-                    },
-                    {
-                        path: FlowDetailsTabs.ADMIN,
-                        component: FlowDetailsAdminTabComponent,
-                        data: {
-                            [ProjectLinks.URL_PARAM_TAB]: FlowDetailsTabs.ADMIN,
-                        },
-                    },
-                ],
-            },
-            {
-                path: "",
-                canActivate: [AuthenticatedGuard],
-                children: [
-                    {
-                        path: `${ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE}`,
-                        component: AddPollingSourceComponent,
-                        resolve: {
-                            [RoutingResolvers.ADD_POLLING_SOURCE_KEY]: addPollingSourceResolverFn,
-                            [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
-                        },
-                    },
-                    {
-                        path: `${ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE}`,
-                        component: AddPushSourceComponent,
-                        resolve: {
-                            [RoutingResolvers.ADD_PUSH_SOURCE_KEY]: addPushSourceResolverFn,
-                            [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
-                        },
-                    },
-                    {
-                        path: `${ProjectLinks.URL_PARAM_SET_TRANSFORM}`,
-                        component: SetTransformComponent,
-                        resolve: {
-                            [RoutingResolvers.SET_TRANSFORM_KEY]: setTransformResolverFn,
-                            [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
-                        },
-                    },
-                ],
+                canActivate: [AdminGuard],
+                path: ProjectLinks.URL_ADMIN_DASHBOARD,
+                component: AdminDashboardComponent,
             },
         ],
-    },
-    {
-        canActivate: [AdminGuard],
-        path: ProjectLinks.URL_ADMIN_DASHBOARD,
-        component: AdminDashboardComponent,
     },
 
     {

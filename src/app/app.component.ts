@@ -18,7 +18,7 @@ import { AccountFragment, AccountProvider, AccountType } from "./api/kamu.graphq
 import { MaybeNull } from "./interface/app.types";
 import { isMobileView, promiseWithCatch } from "./common/helpers/app.helpers";
 import { AppConfigService } from "./app-config.service";
-import { AppUIConfigFeatureFlags } from "./app-config.model";
+import { AppUIConfigFeatureFlags, IS_ALLOWED_ANONYMOUS_USERS } from "./app-config.model";
 import { LoginService } from "./auth/login/login.service";
 import { loadErrorMessages } from "@apollo/client/dev";
 import { isDevMode } from "@angular/core";
@@ -28,7 +28,6 @@ import { LocalStorageService } from "./services/local-storage.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatIconRegistry } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
-import { SessionStorageService } from "./services/session-storage.service";
 import { DatasetViewTypeEnum } from "./dataset-view/dataset-view.interface";
 
 export const ALL_URLS_WITHOUT_HEADER: string[] = [ProjectLinks.URL_LOGIN, ProjectLinks.URL_GITHUB_CALLBACK];
@@ -70,7 +69,6 @@ export class AppComponent extends BaseComponent implements OnInit {
     private cdr = inject(ChangeDetectorRef);
     private loggedUserService = inject(LoggedUserService);
     private localStorageService = inject(LocalStorageService);
-    private sessionStorageService = inject(SessionStorageService);
     private matIconRegistry = inject(MatIconRegistry);
     private domSanitizer = inject(DomSanitizer);
 

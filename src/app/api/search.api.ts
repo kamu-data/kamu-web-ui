@@ -8,8 +8,8 @@
 import { ApolloQueryResult } from "@apollo/client/core";
 import { inject, Injectable } from "@angular/core";
 
-import { map, first } from "rxjs/operators";
-import { Observable, of } from "rxjs";
+import { map, first, catchError } from "rxjs/operators";
+import { EMPTY, Observable, of } from "rxjs";
 import { DatasetAutocompleteItem, TypeNames } from "../interface/search.interface";
 
 import {
@@ -55,6 +55,9 @@ export class SearchApi {
                 map((result: ApolloQueryResult<SearchDatasetsOverviewQuery>) => {
                     return result.data;
                 }),
+                catchError(() => {
+                    return EMPTY;
+                }),
             );
     }
 
@@ -77,6 +80,9 @@ export class SearchApi {
                 first(),
                 map((result: ApolloQueryResult<SemanticSearchDatasetsOverviewQuery>) => {
                     return result.data;
+                }),
+                catchError(() => {
+                    return EMPTY;
                 }),
             );
     }

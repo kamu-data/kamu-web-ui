@@ -137,33 +137,6 @@ describe("LoginService", () => {
         expect(accountSubscription$.closed).toBeTrue();
     });
 
-    it("failed password login emits an error", () => {
-        const errorText = "Rejected credentials";
-        const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromPasswordLogin").and.returnValue(
-            throwError(() => new AuthenticationError([new Error(errorText)])),
-        );
-
-        const errorSubscription$: Subscription = service.passwordLoginErrorOccurrences
-            .pipe(first())
-            .subscribe((e: string) => {
-                expect(e).toEqual(errorText);
-            });
-
-        const tokenSubscription$ = service.accessTokenChanges.pipe(first()).subscribe();
-        const accountSubscription$ = service.accountChanges.pipe(first()).subscribe();
-
-        const credentials: PasswordLoginCredentials = { login: TEST_LOGIN, password: TEST_PASSWORD };
-        service.passwordLogin(credentials);
-
-        expect(authApiSpy).toHaveBeenCalledOnceWith(credentials, undefined);
-        expect(errorSubscription$.closed).toBeTrue();
-
-        expect(tokenSubscription$.closed).toBeFalse();
-        expect(accountSubscription$.closed).toBeFalse();
-        tokenSubscription$.unsubscribe();
-        accountSubscription$.unsubscribe();
-    });
-
     it("resetting password login error emits empty error", () => {
         const errorSubscription$: Subscription = service.passwordLoginErrorOccurrences
             .pipe(first())

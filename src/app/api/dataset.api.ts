@@ -65,7 +65,6 @@ import { map, first } from "rxjs/operators";
 import { Observable } from "rxjs";
 import { MutationResult } from "apollo-angular";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
-import { DatasetOperationError } from "../common/values/errors";
 import { StoreObject } from "@apollo/client/cache";
 import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
 import { resetCacheHelper, updateCacheHelper } from "../common/helpers/apollo-cache.helper";
@@ -302,12 +301,7 @@ export class DatasetApi {
         return this.createDatasetFromSnapshotGQL.mutate({ ...params }).pipe(
             first(),
             map((result: MutationResult<CreateDatasetFromSnapshotMutation>) => {
-                /* istanbul ignore else */
-                if (result.data) {
-                    return result.data;
-                } else {
-                    throw new DatasetOperationError(result.errors ?? []);
-                }
+                return result.data as CreateDatasetFromSnapshotMutation;
             }),
         );
     }
@@ -324,12 +318,7 @@ export class DatasetApi {
             .pipe(
                 first(),
                 map((result: MutationResult<CreateEmptyDatasetMutation>) => {
-                    /* istanbul ignore else */
-                    if (result.data) {
-                        return result.data;
-                    } else {
-                        throw new DatasetOperationError(result.errors ?? []);
-                    }
+                    return result.data as CreateEmptyDatasetMutation;
                 }),
             );
     }
@@ -347,12 +336,7 @@ export class DatasetApi {
             .pipe(
                 first(),
                 map((result: MutationResult<CommitEventToDatasetMutation>) => {
-                    /* istanbul ignore else */
-                    if (result.data) {
-                        return result.data;
-                    } else {
-                        throw new DatasetOperationError(result.errors ?? []);
-                    }
+                    return result.data as CommitEventToDatasetMutation;
                 }),
             );
     }
@@ -370,12 +354,7 @@ export class DatasetApi {
             .pipe(
                 first(),
                 map((result: MutationResult<UpdateReadmeMutation>) => {
-                    /* istanbul ignore else */
-                    if (result.data) {
-                        return result.data;
-                    } else {
-                        throw new DatasetOperationError(result.errors ?? []);
-                    }
+                    return result.data as UpdateReadmeMutation;
                 }),
             );
     }
@@ -396,12 +375,7 @@ export class DatasetApi {
             .pipe(
                 first(),
                 map((result: MutationResult<DeleteDatasetMutation>) => {
-                    /* istanbul ignore else */
-                    if (result.data) {
-                        return result.data;
-                    } else {
-                        throw new DatasetOperationError(result.errors ?? []);
-                    }
+                    return result.data as DeleteDatasetMutation;
                 }),
             );
     }
@@ -430,12 +404,7 @@ export class DatasetApi {
             .pipe(
                 first(),
                 map((result: MutationResult<RenameDatasetMutation>) => {
-                    /* istanbul ignore else */
-                    if (result.data) {
-                        return result.data;
-                    } else {
-                        throw new DatasetOperationError(result.errors ?? []);
-                    }
+                    return result.data as RenameDatasetMutation;
                 }),
             );
     }
@@ -453,12 +422,7 @@ export class DatasetApi {
             .pipe(
                 first(),
                 map((result: MutationResult<UpdateWatermarkMutation>) => {
-                    /* istanbul ignore else */
-                    if (result.data) {
-                        return result.data;
-                    } else {
-                        throw new DatasetOperationError(result.errors ?? []);
-                    }
+                    return result.data as UpdateWatermarkMutation;
                 }),
             );
     }
@@ -487,12 +451,7 @@ export class DatasetApi {
             .pipe(
                 first(),
                 map((result: MutationResult<SetVisibilityDatasetMutation>) => {
-                    /* istanbul ignore else */
-                    if (result.data) {
-                        return result.data;
-                    } else {
-                        throw new DatasetOperationError(result.errors ?? []);
-                    }
+                    return result.data as SetVisibilityDatasetMutation;
                 }),
             );
     }

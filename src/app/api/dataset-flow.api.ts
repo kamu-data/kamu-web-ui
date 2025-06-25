@@ -40,7 +40,6 @@ import {
 } from "./kamu.graphql.interface";
 import { Observable, first, map } from "rxjs";
 import { ApolloQueryResult } from "@apollo/client";
-import { DatasetOperationError } from "../common/values/errors";
 import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
 
 @Injectable({ providedIn: "root" })
@@ -67,12 +66,7 @@ export class DatasetFlowApi {
         return this.datasetTriggerFlowGQL.mutate({ ...params }).pipe(
             first(),
             map((result: MutationResult<DatasetTriggerFlowMutation>) => {
-                /* istanbul ignore else */
-                if (result.data) {
-                    return result.data;
-                } else {
-                    throw new DatasetOperationError(result.errors ?? []);
-                }
+                return result.data as DatasetTriggerFlowMutation;
             }),
         );
     }
@@ -104,12 +98,7 @@ export class DatasetFlowApi {
             .pipe(
                 first(),
                 map((result: MutationResult<SetDatasetFlowConfigMutation>) => {
-                    /* istanbul ignore else */
-                    if (result.data) {
-                        return result.data;
-                    } else {
-                        throw new DatasetOperationError(result.errors ?? []);
-                    }
+                    return result.data as SetDatasetFlowConfigMutation;
                 }),
             );
     }
@@ -123,12 +112,7 @@ export class DatasetFlowApi {
         return this.setDatasetFlowTriggersGQL.mutate(params).pipe(
             first(),
             map((result: MutationResult<SetDatasetFlowTriggersMutation>) => {
-                /* istanbul ignore else */
-                if (result.data) {
-                    return result.data;
-                } else {
-                    throw new DatasetOperationError(result.errors ?? []);
-                }
+                return result.data as SetDatasetFlowTriggersMutation;
             }),
         );
     }
@@ -193,12 +177,7 @@ export class DatasetFlowApi {
             .pipe(
                 first(),
                 map((result: MutationResult<DatasetPauseFlowsMutation>) => {
-                    /* istanbul ignore else */
-                    if (result.data) {
-                        return result.data;
-                    } else {
-                        throw new DatasetOperationError(result.errors ?? []);
-                    }
+                    return result.data as DatasetPauseFlowsMutation;
                 }),
             );
     }
@@ -215,12 +194,7 @@ export class DatasetFlowApi {
             .pipe(
                 first(),
                 map((result: MutationResult<DatasetResumeFlowsMutation>) => {
-                    /* istanbul ignore else */
-                    if (result.data) {
-                        return result.data;
-                    } else {
-                        throw new DatasetOperationError(result.errors ?? []);
-                    }
+                    return result.data as DatasetResumeFlowsMutation;
                 }),
             );
     }
@@ -255,12 +229,7 @@ export class DatasetFlowApi {
             .pipe(
                 first(),
                 map((result: MutationResult<CancelScheduledTasksMutation>) => {
-                    /* istanbul ignore else */
-                    if (result.data) {
-                        return result.data;
-                    } else {
-                        throw new DatasetOperationError(result.errors ?? []);
-                    }
+                    return result.data as CancelScheduledTasksMutation;
                 }),
             );
     }

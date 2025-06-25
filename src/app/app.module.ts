@@ -11,7 +11,7 @@ import { SpinnerService } from "./common/components/spinner/spinner.service";
 import { SpinnerInterceptor } from "./common/components/spinner/spinner.interceptor";
 import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
 import { HttpLink } from "apollo-angular/http";
-import { APP_INITIALIZER, ErrorHandler, NgModule } from "@angular/core";
+import { APP_INITIALIZER, ErrorHandler, InjectionToken, NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -55,6 +55,7 @@ import { AdminViewModule } from "./admin-view/admin-view.module";
 import { HeaderModule } from "./header/header.module";
 import { PageNotFoundComponent } from "./common/components/page-not-found/page-not-found.component";
 import { CommonModule } from "@angular/common";
+import { IS_ALLOWED_ANONYMOUS_USERS } from "./app-config.model";
 
 const Services = [
     Apollo,
@@ -158,6 +159,17 @@ const Services = [
         useValue: {
             disabled: true,
         },
+    },
+
+    {
+        provide: IS_ALLOWED_ANONYMOUS_USERS,
+        useFactory: (appConfigService: AppConfigService) => {
+            return (): boolean => {
+                const allowAnonymousUsers = appConfigService.allowAnonymous;
+                return allowAnonymousUsers;
+            };
+        },
+        deps: [AppConfigService],
     },
 ];
 @NgModule({

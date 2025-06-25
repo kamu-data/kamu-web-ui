@@ -74,6 +74,10 @@ export class AppConfigService {
         return this.appUiConfig.minNewPasswordLength;
     }
 
+    public get allowAnonymous(): boolean {
+        return this.appUiConfig.allowAnonymous;
+    }
+
     public get semanticSearchThresholdScore(): MaybeUndefined<number> {
         return this.appUiConfig.semanticSearchThresholdScore;
     }
@@ -98,7 +102,8 @@ export class AppConfigService {
         request.open("GET", app_runtime_config.apiServerHttpUrl + "/ui-config", false);
         try {
             request.send(null);
-            const data: AppUIConfig = JSON.parse(request.responseText) as AppUIConfig;
+            //  const data: AppUIConfig = JSON.parse(request.responseText) as AppUIConfig;
+            const data: AppUIConfig = AppValues.DEFAULT_UI_CONFIGURATION;
             return data;
         } catch (error) {
             return AppValues.DEFAULT_UI_CONFIGURATION;

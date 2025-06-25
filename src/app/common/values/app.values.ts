@@ -76,5 +76,6 @@ const language = 'typescript';
         semanticSearchThresholdScore: 0,
         minNewPasswordLength: 8,
         featureFlags: AppValues.DEFAULT_UI_FEATURE_FLAGS,
+        allowAnonymous: false,
     };
 }

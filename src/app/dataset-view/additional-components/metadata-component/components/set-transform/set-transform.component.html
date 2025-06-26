@@ -14,7 +14,12 @@
     <div class="container mt-4">
         <div class="row pt-4">
             <div class="col-lg-4 left-section">
-                <app-search-section [inputDatasets]="inputDatasets" [TREE_DATA]="TREE_DATA" [dataSource]="dataSource" />
+                <app-search-section
+                    [inputDatasets]="inputDatasets"
+                    [TREE_DATA]="TREE_DATA"
+                    [dataSource]="dataSource"
+                    [datasetInfo]="datasetInfo"
+                />
                 <app-engine-section
                     [selectedEngine]="currentSetTransformEvent?.transform?.engine!"
                     [currentSetTransformEvent]="currentSetTransformEvent?.transform"

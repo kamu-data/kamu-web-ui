@@ -10,7 +10,7 @@ import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core
 import { MatTreeNestedDataSource } from "@angular/material/tree";
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { OperatorFunction, Observable } from "rxjs";
-import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
+import { debounceTime, distinctUntilChanged, map, switchMap } from "rxjs/operators";
 import { DatasetBasicsFragment, GetDatasetSchemaQuery } from "src/app/api/kamu.graphql.interface";
 import { SearchApi } from "src/app/api/search.api";
 import { MaybeNull } from "src/app/interface/app.types";
@@ -23,6 +23,7 @@ import { BaseComponent } from "src/app/common/components/base.component";
 import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
 
 @Component({
     selector: "app-search-section",
@@ -34,6 +35,7 @@ export class SearchSectionComponent extends BaseComponent {
     public searchDataset = "";
     private readonly delayTime: number = AppValues.SHORT_DELAY_MS;
     @Input({ required: true }) public inputDatasets: Set<string>;
+    @Input({ required: true }) public datasetInfo: DatasetInfo;
 
     public treeControl = new NestedTreeControl<DatasetNode>((node) => node.children);
     @Input({ required: true }) public dataSource: MatTreeNestedDataSource<DatasetNode>;
@@ -44,13 +46,28 @@ export class SearchSectionComponent extends BaseComponent {
     private datasetService = inject(DatasetService);
     private navigationService = inject(NavigationService);
 
-    public search: OperatorFunction<string, readonly DatasetAutocompleteItem[]> = (text$: Observable<string>) => {
+    public search: OperatorFunction<string, DatasetAutocompleteItem[]> = (text$: Observable<string>) => {
         return text$.pipe(
             debounceTime(this.delayTime),
             distinctUntilChanged(),
-            switchMap((term: string) => this.appSearchAPI.autocompleteDatasetSearch(term)),
+            switchMap((term: string) => {
+                return this.appSearchAPI.autocompleteDatasetSearch(term).pipe(
+                    map((autoCompleteItems: DatasetAutocompleteItem[]) => {
+                        return autoCompleteItems.filter(
+                            (autoCompleteItem: DatasetAutocompleteItem) =>
+                                !this.involvedDatasets.some((item) => item === `${autoCompleteItem.dataset.alias}`),
+                        );
+                    }),
+                );
+            }),
         );
     };
+
+    private get involvedDatasets(): string[] {
+        return this.dataSource.data
+            .map((item: DatasetNode) => `${item.owner}/${item.name}`)
+            .concat(`${this.datasetInfo.accountName}/${this.datasetInfo.datasetName}`);
+    }
 
     public formatter(x: DatasetAutocompleteItem | string): string {
         return typeof x !== "string" ? x.dataset.name : x;

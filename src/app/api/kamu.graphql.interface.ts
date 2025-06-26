@@ -1890,7 +1890,7 @@ export type Flow = {
     /** Outcome of the flow (Finished state only) */
     outcome?: Maybe<FlowOutcome>;
     /** Primary flow trigger */
-    primaryTrigger: FlowTriggerType;
+    primaryTrigger: FlowTriggerInstance;
     /** Start condition */
     startCondition?: Maybe<FlowStartCondition>;
     /** Status of the flow */
@@ -2078,7 +2078,7 @@ export type FlowEventInitiated = FlowEvent & {
     __typename?: "FlowEventInitiated";
     eventId: Scalars["EventID"];
     eventTime: Scalars["DateTime"];
-    trigger: FlowTriggerType;
+    trigger: FlowTriggerInstance;
 };
 
 export type FlowEventScheduledForActivation = FlowEvent & {
@@ -2108,7 +2108,7 @@ export type FlowEventTriggerAdded = FlowEvent & {
     __typename?: "FlowEventTriggerAdded";
     eventId: Scalars["EventID"];
     eventTime: Scalars["DateTime"];
-    trigger: FlowTriggerType;
+    trigger: FlowTriggerInstance;
 };
 
 export type FlowFailedError = {
@@ -2262,6 +2262,12 @@ export type FlowTriggerInputDatasetFlow = {
     flowType: DatasetFlowType;
 };
 
+export type FlowTriggerInstance =
+    | FlowTriggerAutoPolling
+    | FlowTriggerInputDatasetFlow
+    | FlowTriggerManual
+    | FlowTriggerPush;
+
 export type FlowTriggerManual = {
     __typename?: "FlowTriggerManual";
     initiator: Account;
@@ -2273,12 +2279,6 @@ export type FlowTriggerPush = {
 };
 
 export type FlowTriggerScheduleRule = Cron5ComponentExpression | TimeDelta;
-
-export type FlowTriggerType =
-    | FlowTriggerAutoPolling
-    | FlowTriggerInputDatasetFlow
-    | FlowTriggerManual
-    | FlowTriggerPush;
 
 export type FlowTypeIsNotSupported = SetFlowConfigResult &
     SetFlowTriggerResult & {

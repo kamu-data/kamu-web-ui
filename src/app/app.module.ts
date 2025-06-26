@@ -11,7 +11,7 @@ import { SpinnerService } from "./common/components/spinner/spinner.service";
 import { SpinnerInterceptor } from "./common/components/spinner/spinner.interceptor";
 import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
 import { HttpLink } from "apollo-angular/http";
-import { APP_INITIALIZER, Injector, NgModule } from "@angular/core";
+import { APP_INITIALIZER, ErrorHandler, Injector, NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -57,6 +57,7 @@ import { CommonModule } from "@angular/common";
 import { onError } from "@apollo/client/link/error";
 import { ErrorTexts } from "./common/values/errors.text";
 import { ToastrService } from "ngx-toastr";
+import { ErrorHandlerService } from "./services/error-handler.service";
 
 const Services = [
     Apollo,
@@ -77,10 +78,10 @@ const Services = [
         multi: true,
         deps: [SpinnerService],
     },
-    // {
-    //     provide: ErrorHandler,
-    //     useClass: ErrorHandlerService,
-    // },
+    {
+        provide: ErrorHandler,
+        useClass: ErrorHandlerService,
+    },
     {
         provide: APOLLO_OPTIONS,
         useFactory: (

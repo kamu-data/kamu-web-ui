@@ -21,14 +21,14 @@ import {
     mockDatasetPauseFlowsMutationSuccess,
     mockDatasetResumeFlowsMutationError,
     mockDatasetResumeFlowsMutationSuccess,
-    mockDatasetTriggerFlowMutation,
-    mockDatasetTriggerFlowMutationError,
+    mockDatasetTriggerIngestFlowMutation,
+    mockDatasetTriggerIngestFlowMutationError,
     mockGetDatasetListFlowsQuery,
     mockGetFlowByIdQueryError,
     mockGetFlowByIdQuerySuccess,
 } from "src/app/api/mock/dataset-flow.mock";
 import { MaybeUndefined } from "src/app/interface/app.types";
-import { AccountFragment, DatasetFlowType } from "src/app/api/kamu.graphql.interface";
+import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -43,7 +43,6 @@ describe("DatasetFlowsService", () => {
     const MOCK_PAGE = 1;
     const MOCK_PER_PAGE = 15;
     const MOCK_FILTERS = {};
-    const MOCK_DATASET_FLOW_TYPE = DatasetFlowType.Ingest;
     const MOCK_FLOW_ID = "10";
 
     beforeEach(() => {
@@ -127,11 +126,11 @@ describe("DatasetFlowsService", () => {
         expect(subscription$.closed).toBeTrue();
     });
 
-    it("should check trigger dataset flow", () => {
-        spyOn(datasetFlowApi, "datasetTriggerFlow").and.returnValue(of(mockDatasetTriggerFlowMutation));
+    it("should check trigger dataset ingest flow", () => {
+        spyOn(datasetFlowApi, "datasetTriggerIngestFlow").and.returnValue(of(mockDatasetTriggerIngestFlowMutation));
 
         const subscription$ = service
-            .datasetTriggerFlow({ datasetId: MOCK_DATASET_ID, datasetFlowType: MOCK_DATASET_FLOW_TYPE })
+            .datasetTriggerIngestFlow({ datasetId: MOCK_DATASET_ID })
             .subscribe((result: boolean) => {
                 expect(result).toBe(true);
             });
@@ -140,11 +139,11 @@ describe("DatasetFlowsService", () => {
     });
 
     it("should check trigger dataset flow with error", () => {
-        spyOn(datasetFlowApi, "datasetTriggerFlow").and.returnValue(of(mockDatasetTriggerFlowMutationError));
+        spyOn(datasetFlowApi, "datasetTriggerIngestFlow").and.returnValue(of(mockDatasetTriggerIngestFlowMutationError));
         const toastrServiceErrorSpy = spyOn(toastService, "error");
 
         const subscription$ = service
-            .datasetTriggerFlow({ datasetId: MOCK_DATASET_ID, datasetFlowType: MOCK_DATASET_FLOW_TYPE })
+            .datasetTriggerIngestFlow({ datasetId: MOCK_DATASET_ID })
             .subscribe(() => {
                 expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error");
             });

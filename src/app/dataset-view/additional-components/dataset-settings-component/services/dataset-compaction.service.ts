@@ -10,10 +10,9 @@ import { ToastrService } from "ngx-toastr";
 import { Observable, map } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
-    CompactionConditionInput,
-    DatasetFlowType,
-    DatasetTriggerFlowMutation,
-    FlowRunConfiguration,
+    DatasetTriggerResetFlowMutation,
+    FlowConfigCompactionInput,
+    FlowConfigResetInput,
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowsService } from "../../flows-component/services/dataset-flows.service";
 
@@ -27,30 +26,29 @@ export class DatasetCompactionService {
 
     public runHardCompaction(params: {
         datasetId: string;
-        datasetFlowType: DatasetFlowType;
-        compactionArgs: CompactionConditionInput;
+        compactionArgs: FlowConfigCompactionInput;
     }): Observable<boolean> {
-        return this.flowsService.datasetTriggerFlow({
+        return this.flowsService.datasetTriggerCompactionFlow({
             datasetId: params.datasetId,
-            datasetFlowType: params.datasetFlowType,
-            flowRunConfiguration: {
-                compaction: params.compactionArgs,
-            },
+            compactionConfigInput: params.compactionArgs,
         });
     }
 
     public resetToSeed(params: {
         accountId: string;
         datasetId: string;
-        datasetFlowType: DatasetFlowType;
-        flowRunConfiguration: FlowRunConfiguration;
+        resetArgs: FlowConfigResetInput;
     }): Observable<boolean> {
-        return this.datasetFlowApi.datasetTriggerFlow(params).pipe(
-            map((data: DatasetTriggerFlowMutation) => {
-                if (data.datasets.byId?.flows.runs.triggerFlow.__typename === "TriggerFlowSuccess") {
+        return this.datasetFlowApi.datasetTriggerResetFlow({
+            accountId: params.accountId,
+            datasetId: params.datasetId,
+            resetConfigInput: params.resetArgs,
+        }).pipe(
+            map((data: DatasetTriggerResetFlowMutation) => {
+                if (data.datasets.byId?.flows.runs.triggerResetFlow.__typename === "TriggerFlowSuccess") {
                     return true;
                 } else {
-                    this.toastrService.error(data.datasets.byId?.flows.runs.triggerFlow.message);
+                    this.toastrService.error(data.datasets.byId?.flows.runs.triggerResetFlow.message);
                     return false;
                 }
             }),

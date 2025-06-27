@@ -14,10 +14,9 @@ import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import { DatasetFlowsService } from "../../flows-component/services/dataset-flows.service";
 import { of } from "rxjs";
 import { TEST_DATASET_ID } from "src/app/api/mock/dataset.mock";
-import { DatasetFlowType } from "src/app/api/kamu.graphql.interface";
 import {
-    mockDatasetTriggerFlowMutation,
-    mockDatasetTriggerFlowMutationError,
+    mockDatasetTriggerResetFlowMutation,
+    mockDatasetTriggerResetFlowMutationError,
 } from "src/app/api/mock/dataset-flow.mock";
 import { TEST_ACCOUNT_ID } from "src/app/search/mock.data";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
@@ -46,12 +45,11 @@ describe("DatasetCompactionService", () => {
     });
 
     it("should check runHardCompaction with success", () => {
-        spyOn(flowsService, "datasetTriggerFlow").and.returnValue(of(true));
+        spyOn(flowsService, "datasetTriggerCompactionFlow").and.returnValue(of(true));
 
         const subscription$ = service
             .runHardCompaction({
                 datasetId: TEST_DATASET_ID,
-                datasetFlowType: DatasetFlowType.HardCompaction,
                 compactionArgs: {
                     full: {
                         maxSliceSize: MOCK_SLICE_SIZE,
@@ -68,22 +66,17 @@ describe("DatasetCompactionService", () => {
     });
 
     it("should check reset to Seed with success", () => {
-        spyOn(datasetFlowApi, "datasetTriggerFlow").and.returnValue(of(mockDatasetTriggerFlowMutation));
-        mockDatasetTriggerFlowMutation;
+        spyOn(datasetFlowApi, "datasetTriggerResetFlow").and.returnValue(of(mockDatasetTriggerResetFlowMutation));
+
         const subscription$ = service
             .resetToSeed({
                 accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
-                datasetFlowType: DatasetFlowType.Reset,
-                flowRunConfiguration: {
-                    reset: {
-                        mode: {
-                            toSeed: {
-                                dummy: "",
-                            },
-                        },
-                        recursive: true,
+                resetArgs: {
+                    mode: {
+                        toSeed: {},
                     },
+                    recursive: true,
                 },
             })
             .subscribe((result: boolean) => {
@@ -94,23 +87,18 @@ describe("DatasetCompactionService", () => {
     });
 
     it("should check reset to Seed with error", () => {
-        spyOn(datasetFlowApi, "datasetTriggerFlow").and.returnValue(of(mockDatasetTriggerFlowMutationError));
-        mockDatasetTriggerFlowMutation;
+        spyOn(datasetFlowApi, "datasetTriggerResetFlow").and.returnValue(of(mockDatasetTriggerResetFlowMutationError));
+
         const toastrServiceErrorSpy = spyOn(toastService, "error");
         const subscription$ = service
             .resetToSeed({
                 accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
-                datasetFlowType: DatasetFlowType.Reset,
-                flowRunConfiguration: {
-                    reset: {
-                        mode: {
-                            toSeed: {
-                                dummy: "",
-                            },
-                        },
-                        recursive: true,
+                resetArgs: {
+                    mode: {
+                        toSeed: {},
                     },
+                    recursive: true,
                 },
             })
             .subscribe((result: boolean) => {

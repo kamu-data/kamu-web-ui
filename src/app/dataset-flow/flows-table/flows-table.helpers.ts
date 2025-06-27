@@ -41,6 +41,9 @@ export class DatasetFlowTableHelpers {
             case FlowStatus.Running:
                 return { icon: "radio_button_checked", class: "running-status" };
 
+            case FlowStatus.Retrying:
+                return { icon: "restart_alt", class: "retrying-status" };
+
             case FlowStatus.Waiting:
                 return { icon: "radio_button_checked", class: "waiting-status" };
         }
@@ -68,8 +71,12 @@ export class DatasetFlowTableHelpers {
             case FlowStatus.Running:
                 return "running";
 
+            case FlowStatus.Retrying:
+                return "retrying";
+
             case FlowStatus.Waiting:
                 return "waiting";
+
             /* istanbul ignore next */
             default:
                 throw new Error(`Unsupported flow status`);
@@ -108,7 +115,7 @@ export class DatasetFlowTableHelpers {
                                       : element.description.ingestResult?.__typename ===
                                               "FlowDescriptionUpdateResultUpToDate" &&
                                           element.description.ingestResult.uncacheable &&
-                                          ((element.configSnapshot?.__typename === "FlowConfigurationIngest" &&
+                                          ((element.configSnapshot?.__typename === "FlowConfigRuleIngest" &&
                                               !element.configSnapshot.fetchUncacheable) ||
                                               !element.configSnapshot)
                                         ? `Source is uncacheable: to re-scan the data, use`
@@ -131,9 +138,9 @@ export class DatasetFlowTableHelpers {
                                 switch (element.description.compactionResult?.__typename) {
                                     case "FlowDescriptionHardCompactionSuccess":
                                         if (
-                                            element.configSnapshot?.__typename === "FlowConfigurationCompactionRule" &&
-                                            element.configSnapshot.compactionRule.__typename ===
-                                                "CompactionMetadataOnly"
+                                            element.configSnapshot?.__typename === "FlowConfigRuleCompaction" &&
+                                            element.configSnapshot.compactionMode.__typename ===
+                                                "FlowConfigCompactionModeMetadataOnly"
                                         ) {
                                             return "All data except metadata has been deleted";
                                         }
@@ -187,6 +194,7 @@ export class DatasetFlowTableHelpers {
 
             case FlowStatus.Waiting:
             case FlowStatus.Running:
+            case FlowStatus.Retrying:
                 switch (element.description.__typename) {
                     case "FlowDescriptionDatasetHardCompaction":
                         return "Running hard compaction";
@@ -240,6 +248,11 @@ export class DatasetFlowTableHelpers {
                 return (
                     "running for " +
                     excludeAgoWord(formatDistanceToNowStrict(node.timing.runningSince as string, { addSuffix: true }))
+                );
+            case FlowStatus.Retrying:
+                return (
+                    "retrying in " +
+                    excludeAgoWord(formatDistanceToNowStrict(node.timing.scheduledAt as string, { addSuffix: true }))
                 );
             case FlowStatus.Finished:
                 switch (node.outcome?.__typename) {
@@ -338,6 +351,12 @@ export class DatasetFlowTableHelpers {
                     node.timing.runningSince as string,
                     AppValues.CRON_EXPRESSION_DATE_FORMAT,
                 )}`;
+
+            case FlowStatus.Retrying:
+                return `Planned retry time: ${format(
+                    node.timing.scheduledAt as string,
+                    AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                )}`;                
             /* istanbul ignore next */
             default:
                 throw new Error("Unknown flow status");

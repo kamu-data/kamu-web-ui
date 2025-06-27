@@ -13,7 +13,6 @@ import { promiseWithCatch } from "../../../../../common/helpers/app.helpers";
 import { ModalService } from "../../../../../common/components/modal/modal.service";
 import {
     DatasetBasicsFragment,
-    DatasetFlowType,
     DatasetKind,
     DatasetPermissionsFragment,
     DatasetVisibilityInput,
@@ -184,16 +183,11 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                                     .resetToSeed({
                                         accountId: this.datasetBasics.owner.id,
                                         datasetId: this.datasetBasics.id,
-                                        datasetFlowType: DatasetFlowType.Reset,
-                                        flowRunConfiguration: {
-                                            reset: {
-                                                mode: {
-                                                    toSeed: {
-                                                        dummy: "",
-                                                    },
-                                                },
-                                                recursive: this.recursiveControl.value,
+                                        resetArgs: {
+                                            mode: {
+                                                toSeed: {},
                                             },
+                                            recursive: this.recursiveControl.value,
                                         },
                                     })
                                     .pipe(takeUntilDestroyed(this.destroyRef))
@@ -212,14 +206,11 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                             }
                             case DatasetResetMode.RESET_METADATA_ONLY: {
                                 this.flowsService
-                                    .datasetTriggerFlow({
+                                    .datasetTriggerCompactionFlow({
                                         datasetId: this.datasetBasics.id,
-                                        datasetFlowType: DatasetFlowType.HardCompaction,
-                                        flowRunConfiguration: {
-                                            compaction: {
-                                                metadataOnly: {
-                                                    recursive: this.recursiveControl.value,
-                                                },
+                                        compactionConfigInput: {
+                                            metadataOnly: {
+                                                recursive: this.recursiveControl.value,
                                             },
                                         },
                                     })

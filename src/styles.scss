@@ -1522,7 +1522,8 @@ input {
 }
 
 .waiting-status,
-.scheduled-status {
+.scheduled-status,
+.retrying-status {
     color: rgba(181 175 175);
 }
 

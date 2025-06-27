@@ -226,9 +226,9 @@ export class DataHelpers {
                 return `Execute transformation`;
             case "FlowDescriptionDatasetHardCompaction":
                 if (
-                    flow.configSnapshot?.__typename === "FlowConfigurationCompactionRule" &&
+                    flow.configSnapshot?.__typename === "FlowConfigRuleCompaction" &&
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                    flow.configSnapshot.compactionRule.__typename === "CompactionMetadataOnly"
+                    flow.configSnapshot.compactionMode.__typename === "FlowConfigCompactionModeMetadataOnly"
                 ) {
                     return "Reset";
                 }

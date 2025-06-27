@@ -34,10 +34,16 @@ export class IngestConfigurationFormComponent extends BaseComponent implements O
             .fetchDatasetFlowConfigs(this.datasetBasics.id, DatasetFlowType.Ingest)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((data: GetDatasetFlowConfigsQuery) => {
-                const flowConfiguration = data.datasets.byId?.flows.configs.byType?.ingest;
-                this.ingestConfigurationForm.patchValue({
-                    fetchUncacheable: flowConfiguration?.fetchUncacheable ?? false,
-                });
+                const flowConfigRule = data.datasets.byId?.flows.configs.byType?.rule;
+                if (flowConfigRule?.__typename === "FlowConfigRuleIngest") {
+                    this.ingestConfigurationForm.patchValue({
+                        fetchUncacheable: flowConfigRule?.fetchUncacheable ?? false,
+                    });
+                } else {
+                    throw new Error(
+                        `Unexpected flow config rule type: ${flowConfigRule?.__typename}. Expected FlowConfigRuleIngest.`,
+                    );
+                }
             });
         this.changeIngestConfiguration();
     }

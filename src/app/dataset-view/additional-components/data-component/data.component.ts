@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, O
 import { Location } from "@angular/common";
 import { filter, finalize, fromEvent, map, Observable, takeUntil } from "rxjs";
 import AppValues from "src/app/common/values/app.values";
-import { DatasetFlowType, DatasetKind, OffsetInterval } from "../../../api/kamu.graphql.interface";
+import {  DatasetKind, OffsetInterval } from "../../../api/kamu.graphql.interface";
 import { DataSqlErrorUpdate, OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetRequestBySql } from "../../../interface/dataset.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
@@ -121,14 +121,15 @@ export class DataComponent extends BaseComponent implements OnInit {
     }
 
     private updateNow(): void {
-        this.datasetFlowsService
-            .datasetTriggerFlow({
+        const datasetTrigger$: Observable<boolean> = this.dataTabData.datasetBasics.kind === DatasetKind.Root
+            ? this.datasetFlowsService.datasetTriggerIngestFlow({
                 datasetId: this.dataTabData.datasetBasics.id,
-                datasetFlowType:
-                    this.dataTabData.datasetBasics.kind === DatasetKind.Root
-                        ? DatasetFlowType.Ingest
-                        : DatasetFlowType.ExecuteTransform,
             })
+            : this.datasetFlowsService.datasetTriggerTransformFlow({
+                datasetId: this.dataTabData.datasetBasics.id,
+            });
+
+        datasetTrigger$
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((success: boolean) => {
                 if (success) {

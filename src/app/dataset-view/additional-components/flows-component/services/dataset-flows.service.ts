@@ -19,9 +19,14 @@ import {
     DatasetListFlowsDataFragment,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsMutation,
-    DatasetTriggerFlowMutation,
+    DatasetTriggerCompactionFlowMutation,
+    DatasetTriggerIngestFlowMutation,
+    DatasetTriggerResetFlowMutation,
+    DatasetTriggerTransformFlowMutation,
+    FlowConfigCompactionInput,
+    FlowConfigIngestInput,
+    FlowConfigResetInput,
     FlowConnectionDataFragment,
-    FlowRunConfiguration,
     GetDatasetListFlowsQuery,
     GetFlowByIdQuery,
 } from "src/app/api/kamu.graphql.interface";
@@ -38,28 +43,82 @@ export class DatasetFlowsService {
     private toastrService = inject(ToastrService);
     private loggedUserService = inject(LoggedUserService);
 
-    public datasetTriggerFlow(params: {
-        datasetId: string;
-        datasetFlowType: DatasetFlowType;
-        flowRunConfiguration?: FlowRunConfiguration;
+    public datasetTriggerIngestFlow(params: {
+        datasetId: string,
+        ingestConfigInput?: FlowConfigIngestInput
     }): Observable<boolean> {
-        return this.datasetFlowApi
-            .datasetTriggerFlow({
-                accountId: this.loggedUserService.currentlyLoggedInUser.id,
-                datasetId: params.datasetId,
-                datasetFlowType: params.datasetFlowType,
-                flowRunConfiguration: params.flowRunConfiguration,
+        return this.datasetFlowApi.datasetTriggerIngestFlow({
+            accountId: this.loggedUserService.currentlyLoggedInUser.id,
+            datasetId: params.datasetId,
+            ingestConfigInput: params.ingestConfigInput,
+        }).pipe(
+            map((data: DatasetTriggerIngestFlowMutation) => {
+                if (data.datasets.byId?.flows.runs.triggerIngestFlow.__typename === "TriggerFlowSuccess") {
+                    return true;
+                } else {
+                    this.toastrService.error(data.datasets.byId?.flows.runs.triggerIngestFlow.message);
+                    return false;
+                }
             })
-            .pipe(
-                map((data: DatasetTriggerFlowMutation) => {
-                    if (data.datasets.byId?.flows.runs.triggerFlow.__typename === "TriggerFlowSuccess") {
-                        return true;
-                    } else {
-                        this.toastrService.error(data.datasets.byId?.flows.runs.triggerFlow.message);
-                        return false;
-                    }
-                }),
-            );
+        );
+    }
+
+    public datasetTriggerTransformFlow(params: {
+        datasetId: string,
+    }): Observable<boolean> {
+        return this.datasetFlowApi.datasetTriggerTransformFlow({
+            accountId: this.loggedUserService.currentlyLoggedInUser.id,
+            datasetId: params.datasetId,
+        }).pipe(
+            map((data: DatasetTriggerTransformFlowMutation) => {
+                if (data.datasets.byId?.flows.runs.triggerTransformFlow.__typename === "TriggerFlowSuccess") {
+                    return true;
+                } else {
+                    this.toastrService.error(data.datasets.byId?.flows.runs.triggerTransformFlow.message);
+                    return false;
+                }
+            })
+        );
+    }    
+
+    public datasetTriggerCompactionFlow(params: {
+        datasetId: string,
+        compactionConfigInput: FlowConfigCompactionInput
+    }): Observable<boolean> {
+        return this.datasetFlowApi.datasetTriggerCompactionFlow({
+            accountId: this.loggedUserService.currentlyLoggedInUser.id,
+            datasetId: params.datasetId,
+            compactionConfigInput: params.compactionConfigInput,
+        }).pipe(
+            map((data: DatasetTriggerCompactionFlowMutation) => {
+                if (data.datasets.byId?.flows.runs.triggerCompactionFlow.__typename === "TriggerFlowSuccess") {
+                    return true;
+                } else {
+                    this.toastrService.error(data.datasets.byId?.flows.runs.triggerCompactionFlow.message);
+                    return false;
+                }
+            })
+        );
+    }
+
+    public datasetTriggerResetFlow(params: {
+        datasetId: string,
+        resetConfigInput: FlowConfigResetInput
+    }): Observable<boolean> {
+        return this.datasetFlowApi.datasetTriggerResetFlow({
+            accountId: this.loggedUserService.currentlyLoggedInUser.id,
+            datasetId: params.datasetId,
+            resetConfigInput: params.resetConfigInput,
+        }).pipe(
+            map((data: DatasetTriggerResetFlowMutation) => {
+                if (data.datasets.byId?.flows.runs.triggerResetFlow.__typename === "TriggerFlowSuccess") {
+                    return true;
+                } else {
+                    this.toastrService.error(data.datasets.byId?.flows.runs.triggerResetFlow.message);
+                    return false;
+                }
+            })
+        );
     }
 
     public cancelScheduledTasks(params: { datasetId: string; flowId: string }): Observable<boolean> {

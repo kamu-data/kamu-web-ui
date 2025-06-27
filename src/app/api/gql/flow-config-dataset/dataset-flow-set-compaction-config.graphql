@@ -1,18 +1,10 @@
-mutation setDatasetFlowConfig(
-  $datasetId: DatasetID!
-  $datasetFlowType: DatasetFlowType!
-  $configInput: FlowConfigurationInput!
-) {
+mutation setCompactionFlowConfig($datasetId: DatasetID!, $compactionConfigInput: FlowConfigCompactionInput!) {
   datasets {
     byId(datasetId: $datasetId) {
       flows {
         configs {
-          setConfig(datasetFlowType: $datasetFlowType, configInput: $configInput) {
+          setCompactionConfig(compactionConfigInput: $compactionConfigInput) {
             ... on SetFlowConfigSuccess {
-              message
-            }
-
-            ... on FlowTypeIsNotSupported {
               message
             }
 

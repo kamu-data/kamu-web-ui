@@ -6,8 +6,8 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { DatasetFlowType, DatasetKind, FlowStatus, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
-import { combineLatest, map, switchMap, timer } from "rxjs";
+import { DatasetKind, FlowStatus, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
+import { combineLatest, map, Observable, switchMap, timer } from "rxjs";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
@@ -121,14 +121,15 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public updateNow(): void {
-        this.flowsService
-            .datasetTriggerFlow({
+        const datasetTrigger$: Observable<boolean> = this.flowsData.datasetBasics.kind === DatasetKind.Root
+            ? this.flowsService.datasetTriggerIngestFlow({
                 datasetId: this.flowsData.datasetBasics.id,
-                datasetFlowType:
-                    this.flowsData.datasetBasics.kind === DatasetKind.Root
-                        ? DatasetFlowType.Ingest
-                        : DatasetFlowType.ExecuteTransform,
             })
+            : this.flowsService.datasetTriggerTransformFlow({
+                datasetId: this.flowsData.datasetBasics.id,
+            });
+
+        datasetTrigger$
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((success: boolean) => {
                 if (success) {

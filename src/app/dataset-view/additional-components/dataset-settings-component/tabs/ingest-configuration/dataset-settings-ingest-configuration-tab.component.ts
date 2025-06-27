@@ -10,7 +10,7 @@ import { IngestConfigurationFormType } from "../scheduling/dataset-settings-sche
 import { FormGroup } from "@angular/forms";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
-import { DatasetBasicsFragment, DatasetFlowType } from "src/app/api/kamu.graphql.interface";
+import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -37,13 +37,10 @@ export class DatasetSettingsIngestConfigurationTabComponent extends BaseComponen
 
     public saveConfiguration(): void {
         this.datasetSchedulingService
-            .setDatasetFlowConfigs({
+            .setDatasetIngestFlowConfigs({
                 datasetId: this.datasetBasics.id,
-                datasetFlowType: DatasetFlowType.Ingest,
-                configInput: {
-                    ingest: {
-                        fetchUncacheable: this.ingestConfigurationForm.controls.fetchUncacheable.value,
-                    },
+                ingestConfigInput: {
+                    fetchUncacheable: this.ingestConfigurationForm.controls.fetchUncacheable.value,
                 },
             })
             .pipe(takeUntilDestroyed(this.destroyRef))

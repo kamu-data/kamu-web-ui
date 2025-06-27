@@ -77,6 +77,7 @@ export const mockAccountListFlowsQuery: AccountListFlowsQuery = {
                                     __typename: "FlowSuccessResult",
                                 },
                                 timing: {
+                                    scheduledAt: "2024-06-10T07:00:31+00:00",
                                     awaitingExecutorSince: "2024-06-10T07:00:31+00:00",
                                     runningSince: "2024-06-10T07:00:31.306400327+00:00",
                                     finishedAt: "2024-06-10T07:00:31.337328+00:00",
@@ -120,6 +121,7 @@ export const mockAccountListFlowsQuery: AccountListFlowsQuery = {
                                         __typename: "FlowSuccessResult",
                                     },
                                     timing: {
+                                        scheduledAt: "2024-06-10T07:00:31+00:00",
                                         awaitingExecutorSince: "2024-06-10T07:00:31+00:00",
                                         runningSince: "2024-06-10T07:00:31.306400327+00:00",
                                         finishedAt: "2024-06-10T07:00:31.337328+00:00",
@@ -148,6 +150,7 @@ export const mockAccountListFlowsQuery: AccountListFlowsQuery = {
                                     __typename: "FlowSuccessResult",
                                 },
                                 timing: {
+                                    scheduledAt: "2024-06-10T07:00:31+00:00",
                                     awaitingExecutorSince: "2024-06-10T07:00:31+00:00",
                                     runningSince: "2024-06-10T07:00:31.306400327+00:00",
                                     finishedAt: "2024-06-10T07:00:31.337328+00:00",

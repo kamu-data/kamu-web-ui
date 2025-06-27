@@ -17,18 +17,19 @@ import { of } from "rxjs";
 import {
     mockGetDatasetFlowTriggersQuery,
     mockIngestGetDatasetFlowConfigsSuccess,
-    mockSetDatasetFlowConfigMutation,
-    mockSetDatasetFlowConfigMutationError,
+    mockSetCompactionFlowConfigMutation,
     mockSetDatasetFlowTriggersError,
     mockSetDatasetFlowTriggerSuccess,
+    mockSetCompactionFlowConfigMutationError,
 } from "src/app/api/mock/dataset-flow.mock";
 import {
-    CompactionConditionInput,
+    FlowConfigCompactionInput,
     DatasetFlowType,
     FlowTriggerInput,
     GetDatasetFlowConfigsQuery,
     GetDatasetFlowTriggersQuery,
     TimeUnit,
+    FlowConfigRuleIngest,
 } from "src/app/api/kamu.graphql.interface";
 import { mockDatasetInfo } from "src/app/search/mock.data";
 
@@ -41,7 +42,7 @@ describe("DatasetSchedulingService", () => {
     const MOCK_DATASET_ID = "did:odf:fed0100d72fc7a0d7ced1ff2d47e3bfeb844390f18a7fa7e24ced6563aa7357dfa2e8";
     const MOCK_DATASET_FLOW_TYPE = DatasetFlowType.Ingest;
     const MOCK_PAUSED = false;
-    const MOCK_COMPACTION_INPUT: CompactionConditionInput = {
+    const MOCK_COMPACTION_INPUT: FlowConfigCompactionInput = {
         full: {
             maxSliceRecords: 10,
             maxSliceSize: 1000,
@@ -73,15 +74,12 @@ describe("DatasetSchedulingService", () => {
         expect(service).toBeTruthy();
     });
 
-    it("should check setDatasetFlowConfigs with success", () => {
-        spyOn(datasetFlowApi, "setDatasetFlowConfigs").and.returnValue(of(mockSetDatasetFlowConfigMutation));
+    it("should check setCompactionFlowConfigs with success", () => {
+        spyOn(datasetFlowApi, "setDatasetFlowCompactionConfig").and.returnValue(of(mockSetCompactionFlowConfigMutation));
         const subscription$ = service
-            .setDatasetFlowConfigs({
+            .setDatasetCompactionFlowConfigs({
                 datasetId: MOCK_DATASET_ID,
-                datasetFlowType: MOCK_DATASET_FLOW_TYPE,
-                configInput: {
-                    compaction: MOCK_COMPACTION_INPUT,
-                },
+                compactionConfigInput: MOCK_COMPACTION_INPUT,
             })
             .subscribe((res: boolean) => {
                 expect(res).toEqual(true);
@@ -91,15 +89,12 @@ describe("DatasetSchedulingService", () => {
     });
 
     it("should check setDatasetFlowConfigs with error", () => {
-        spyOn(datasetFlowApi, "setDatasetFlowConfigs").and.returnValue(of(mockSetDatasetFlowConfigMutationError));
+        spyOn(datasetFlowApi, "setDatasetFlowCompactionConfig").and.returnValue(of(mockSetCompactionFlowConfigMutationError));
         const toastrServiceErrorSpy = spyOn(toastService, "error");
         const subscription$ = service
-            .setDatasetFlowConfigs({
+            .setDatasetCompactionFlowConfigs({
                 datasetId: MOCK_DATASET_ID,
-                datasetFlowType: MOCK_DATASET_FLOW_TYPE,
-                configInput: {
-                    compaction: MOCK_COMPACTION_INPUT,
-                },
+                compactionConfigInput: MOCK_COMPACTION_INPUT,
             })
             .subscribe((res: boolean) => {
                 expect(res).toEqual(false);
@@ -114,10 +109,14 @@ describe("DatasetSchedulingService", () => {
         const subscription$ = service
             .fetchDatasetFlowConfigs(MOCK_DATASET_ID, MOCK_DATASET_FLOW_TYPE)
             .subscribe((res: GetDatasetFlowConfigsQuery) => {
-                expect(res.datasets.byId?.flows.configs.byType?.ingest?.fetchUncacheable).toEqual(
-                    mockIngestGetDatasetFlowConfigsSuccess.datasets.byId?.flows.configs.byType?.ingest
-                        ?.fetchUncacheable,
+                expect(res.datasets.byId?.flows.configs.byType?.rule?.__typename).toEqual("FlowConfigRuleIngest");
+                expect(mockIngestGetDatasetFlowConfigsSuccess.datasets.byId?.flows.configs.byType?.rule?.__typename).toEqual(
+                    "FlowConfigRuleIngest",
                 );
+                
+                const actualIngestRule = res.datasets.byId?.flows.configs.byType?.rule as FlowConfigRuleIngest;
+                const expectedIngestRule = mockIngestGetDatasetFlowConfigsSuccess.datasets.byId?.flows.configs.byType?.rule as FlowConfigRuleIngest;
+                expect(actualIngestRule.fetchUncacheable).toEqual(expectedIngestRule.fetchUncacheable);
             });
 
         expect(subscription$.closed).toBeTrue();

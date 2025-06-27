@@ -12,12 +12,14 @@ import { Observable, map, take } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
     DatasetFlowType,
-    FlowConfigurationInput,
+    FlowConfigCompactionInput,
+    FlowConfigIngestInput,
     FlowTriggerInput,
     GetDatasetFlowConfigsQuery,
     GetDatasetFlowTriggersQuery,
-    SetDatasetFlowConfigMutation,
+    SetCompactionFlowConfigMutation,
     SetDatasetFlowTriggersMutation,
+    SetIngestFlowConfigMutation,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/values/app.values";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
@@ -38,24 +40,47 @@ export class DatasetSchedulingService {
         return this.datasetFlowApi.getDatasetFlowConfigs({ datasetId, datasetFlowType });
     }
 
-    public setDatasetFlowConfigs(params: {
-        datasetId: string;
-        datasetFlowType: DatasetFlowType;
-        configInput: FlowConfigurationInput;
+    public setDatasetIngestFlowConfigs(params: {
+        datasetId: string,
+        ingestConfigInput: FlowConfigIngestInput
     }): Observable<boolean> {
-        return this.datasetFlowApi.setDatasetFlowConfigs(params).pipe(
-            map((data: SetDatasetFlowConfigMutation) => {
-                const setConfig = data.datasets.byId?.flows.configs.setConfig;
-                if (setConfig?.__typename === "SetFlowConfigSuccess") {
-                    this.toastrService.success(setConfig?.message);
+        return this.datasetFlowApi.setDatasetFlowIngestConfig({
+            datasetId: params.datasetId,
+            ingestConfigInput: params.ingestConfigInput,
+        }).pipe(
+            map((data: SetIngestFlowConfigMutation) => {
+                const setIngestConfig = data.datasets.byId?.flows.configs.setIngestConfig;
+                if (setIngestConfig?.__typename === "SetFlowConfigSuccess") {
+                    this.toastrService.success(setIngestConfig?.message);
                     return true;
                 } else {
-                    this.toastrService.error(setConfig?.message);
+                    this.toastrService.error(setIngestConfig?.message);
                     return false;
                 }
             }),
         );
     }
+
+    public setDatasetCompactionFlowConfigs(params: {
+        datasetId: string,
+        compactionConfigInput: FlowConfigCompactionInput
+    }): Observable<boolean> {
+        return this.datasetFlowApi.setDatasetFlowCompactionConfig({
+            datasetId: params.datasetId,
+            compactionConfigInput: params.compactionConfigInput,
+        }).pipe(
+            map((data: SetCompactionFlowConfigMutation) => {
+                const setCompactionConfig = data.datasets.byId?.flows.configs.setCompactionConfig;
+                if (setCompactionConfig?.__typename === "SetFlowConfigSuccess") {
+                    this.toastrService.success(setCompactionConfig?.message);
+                    return true;
+                } else {
+                    this.toastrService.error(setCompactionConfig?.message);
+                    return false;
+                }
+            }),
+        );
+    }    
 
     public fetchDatasetFlowTriggers(
         datasetId: string,

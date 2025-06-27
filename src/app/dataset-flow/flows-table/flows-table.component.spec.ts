@@ -138,7 +138,7 @@ describe("FlowsTableComponent", () => {
     });
 
     it("should check trigger flow with force udate option", fakeAsync(() => {
-        const datasetTriggerFlowSpy = spyOn(datasetFlowsService, "datasetTriggerFlow").and.returnValue(of(true));
+        const datasetTriggerIngestFlowSpy = spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(true));
         const forceUpdateModalSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
             options.handler?.call(undefined, true);
             return Promise.resolve("");
@@ -151,7 +151,7 @@ describe("FlowsTableComponent", () => {
         tick();
 
         expect(forceUpdateModalSpy).toHaveBeenCalledTimes(1);
-        expect(datasetTriggerFlowSpy).toHaveBeenCalledTimes(1);
+        expect(datasetTriggerIngestFlowSpy).toHaveBeenCalledTimes(1);
         expect(toastrServiceSuccessSpy).toHaveBeenCalledWith("Force update started");
         flush();
     }));

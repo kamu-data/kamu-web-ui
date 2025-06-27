@@ -34,7 +34,6 @@ import { TEST_ACCOUNT_ID } from "src/app/api/mock/auth.mock";
 import { ToastrModule } from "ngx-toastr";
 import { MatRadioModule } from "@angular/material/radio";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
-import { DatasetFlowType } from "src/app/api/kamu.graphql.interface";
 import { DatasetResetMode } from "./dataset-settings-general-tab.types";
 import AppValues from "src/app/common/values/app.values";
 import { DatasetFlowsService } from "../../../flows-component/services/dataset-flows.service";
@@ -281,16 +280,11 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         expect(resetToSeedSpy).toHaveBeenCalledWith({
             accountId: component.datasetBasics.owner.id,
             datasetId: component.datasetBasics.id,
-            datasetFlowType: DatasetFlowType.Reset,
-            flowRunConfiguration: {
-                reset: {
-                    mode: {
-                        toSeed: {
-                            dummy: "",
-                        },
-                    },
-                    recursive: component.recursiveControl.value,
+            resetArgs: {
+                mode: {
+                    toSeed: {},
                 },
+                recursive: component.recursiveControl.value,
             },
         });
         flush();
@@ -303,21 +297,18 @@ describe("DatasetSettingsGeneralTabComponent", () => {
             return Promise.resolve("");
         });
         const navigationServiceSpy = spyOn(navigationService, "navigateToDatasetView");
-        const datasetTriggerFlowSpy = spyOn(flowsService, "datasetTriggerFlow").and.returnValue(of(true));
+        const datasetTriggerCompactionFlowSpy = spyOn(flowsService, "datasetTriggerCompactionFlow").and.returnValue(of(true));
 
         emitClickOnElementByDataTestId(fixture, Elements.ResetDatasetButton);
         tick(AppValues.SIMULATION_START_CONDITION_DELAY_MS);
 
         expect(navigationServiceSpy).toHaveBeenCalledTimes(1);
         expect(modalServiceSpy).toHaveBeenCalledTimes(1);
-        expect(datasetTriggerFlowSpy).toHaveBeenCalledWith({
+        expect(datasetTriggerCompactionFlowSpy).toHaveBeenCalledWith({
             datasetId: component.datasetBasics.id,
-            datasetFlowType: DatasetFlowType.HardCompaction,
-            flowRunConfiguration: {
-                compaction: {
-                    metadataOnly: {
-                        recursive: component.recursiveControl.value,
-                    },
+            compactionConfigInput: {
+                metadataOnly: {
+                    recursive: component.recursiveControl.value,
                 },
             },
         });

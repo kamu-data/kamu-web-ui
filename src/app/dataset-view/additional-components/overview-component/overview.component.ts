@@ -9,7 +9,6 @@ import { EditLicenseModalComponent } from "./components/edit-license-modal/edit-
 import {
     DatasetAccessRole,
     DatasetCurrentInfoFragment,
-    DatasetFlowType,
     DatasetKind,
 } from "../../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
@@ -271,19 +270,16 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
     }
 
     public refreshNow(): void {
-        this.datasetFlowsService
-            .datasetTriggerFlow({
-                datasetId: this.datasetOverviewTabData.datasetBasics.id,
-                datasetFlowType:
-                    this.datasetOverviewTabData.datasetBasics.kind === DatasetKind.Root
-                        ? DatasetFlowType.Ingest
-                        : DatasetFlowType.ExecuteTransform,
-                flowRunConfiguration: {
-                    ingest: {
-                        fetchUncacheable: true,
-                    },
-                },
-            })
+        const datasetTrigger$: Observable<boolean> =
+            this.datasetOverviewTabData.datasetBasics.kind === DatasetKind.Root
+                ? this.datasetFlowsService.datasetTriggerIngestFlow({
+                      datasetId: this.datasetOverviewTabData.datasetBasics.id,
+                  })
+                : this.datasetFlowsService.datasetTriggerTransformFlow({
+                      datasetId: this.datasetOverviewTabData.datasetBasics.id,
+                  });
+
+        datasetTrigger$
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((success: boolean) => {
                 if (success) {

@@ -48,6 +48,7 @@ export const mockDatasetExecuteTransformFlowSummaryData: FlowSummaryDataFragment
         message: "Succes",
     },
     timing: {
+        scheduledAt: "2024-02-12T18:22:30+00:00",
         awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
         runningSince: null,
         finishedAt: null,
@@ -73,6 +74,7 @@ export const mockDatasetExecuteTransformFlowDescriptionUpdateResultUnknown: Flow
         message: "Succes",
     },
     timing: {
+        scheduledAt: "2024-02-12T18:22:30+00:00",
         awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
         runningSince: null,
         finishedAt: null,
@@ -98,6 +100,7 @@ export const mockDatasetPollingIngestFlowDescriptionUpdateResultUnknown: FlowSum
         message: "Succes",
     },
     timing: {
+        scheduledAt: "2024-02-12T18:22:30+00:00",
         awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
         runningSince: null,
         finishedAt: null,
@@ -118,6 +121,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         initiator: null,
         outcome: null,
         timing: {
+            scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: null,
             finishedAt: null,
@@ -136,6 +140,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         initiator: null,
         outcome: null,
         timing: {
+            scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: null,
             finishedAt: null,
@@ -154,6 +159,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         initiator: null,
         outcome: null,
         timing: {
+            scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: null,
             finishedAt: null,
@@ -172,6 +178,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         initiator: null,
         outcome: null,
         timing: {
+            scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: null,
             finishedAt: null,
@@ -197,6 +204,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             message: "Succes",
         },
         timing: {
+            scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: null,
             finishedAt: null,
@@ -222,6 +230,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             message: "Succes",
         },
         timing: {
+            scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: "2024-02-12T18:22:31+00:00",
             finishedAt: "2024-02-12T18:22:32+00:00",
@@ -246,6 +255,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             message: "Aborted",
         },
         timing: {
+            scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: "2024-02-12T18:22:31+00:00",
             finishedAt: "2024-02-12T18:22:32+00:00",
@@ -273,6 +283,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             },
         },
         timing: {
+            scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: null,
             finishedAt: null,
@@ -294,6 +305,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         initiator: null,
         outcome: null,
         timing: {
+            scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-03-14T10:24:29+00:00",
             runningSince: null,
             finishedAt: null,
@@ -316,6 +328,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         initiator: null,
         outcome: null,
         timing: {
+            scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-03-14T10:24:29+00:00",
             runningSince: null,
             finishedAt: null,
@@ -338,6 +351,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         initiator: null,
         outcome: null,
         timing: {
+            scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-03-14T10:24:29+00:00",
             runningSince: null,
             finishedAt: null,
@@ -362,6 +376,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         initiator: null,
         outcome: null,
         timing: {
+            scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-03-14T10:24:29+00:00",
             runningSince: null,
             finishedAt: null,
@@ -393,6 +408,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         initiator: null,
         outcome: null,
         timing: {
+            scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-03-14T10:24:29+00:00",
             runningSince: "2024-03-14T10:34:29+00:00",
             finishedAt: null,
@@ -418,6 +434,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
             message: "Succes",
         },
         timing: {
+            scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-03-14T10:24:29+00:00",
             runningSince: "2024-03-14T10:34:29+00:00",
             finishedAt: "2024-03-14T12:24:29+00:00",
@@ -440,6 +457,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
             message: "Aborted",
         },
         timing: {
+            scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-03-14T09:22:29+00:00",
             runningSince: null,
             finishedAt: "2024-03-14T09:24:29+00:00",
@@ -465,6 +483,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
             },
         },
         timing: {
+            scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-03-14T09:22:29+00:00",
             runningSince: "2024-03-14T09:24:29+00:00",
             finishedAt: null,
@@ -641,6 +660,7 @@ export const mockFlowSummaryDataFragmentShowForceLink: FlowSummaryDataFragment =
         __typename: "FlowSuccessResult",
     },
     timing: {
+        scheduledAt: "2024-08-21T08:46:19.426925618+00:00",
         awaitingExecutorSince: "2024-08-21T08:46:19.426925618+00:00",
         runningSince: "2024-08-21T08:46:20.507478673+00:00",
         finishedAt: "2024-08-21T08:46:22.636437316+00:00",
@@ -649,7 +669,7 @@ export const mockFlowSummaryDataFragmentShowForceLink: FlowSummaryDataFragment =
     startCondition: null,
     configSnapshot: {
         fetchUncacheable: false,
-        __typename: "FlowConfigurationIngest",
+        __typename: "FlowConfigRuleIngest",
     },
     __typename: "Flow",
 };

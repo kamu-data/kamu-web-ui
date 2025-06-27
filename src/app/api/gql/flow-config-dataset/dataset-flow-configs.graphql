@@ -1,0 +1,49 @@
+query getDatasetFlowConfigs($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      #need for cache
+      ...DatasetBasics
+      #
+      flows {
+        configs {
+          __typename
+          byType(datasetFlowType: $datasetFlowType) {
+            __typename
+            rule {
+              ... on FlowConfigRuleIngest {
+                fetchUncacheable
+              }
+
+              ... on FlowConfigRuleReset {
+                oldHeadHash
+                recursive
+                mode {
+                  ... on FlowConfigResetPropagationModeToSeed {
+                    dummy
+                  }
+                }
+              }
+
+              ... on FlowConfigRuleCompaction {
+                compactionMode {
+                  ... on FlowConfigCompactionModeFull {
+                    maxSliceSize
+                    maxSliceRecords
+                    recursive
+                  }
+                }
+              }
+            }
+            retryPolicy {
+              maxAttempts
+              minDelay {
+                ...TimeDeltaData
+              }
+              backoffType
+            }
+          }
+        }
+      }
+    }
+  }
+}

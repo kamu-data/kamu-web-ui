@@ -124,11 +124,11 @@ export class DatasetFlowDetailsHelpers {
             case "FlowConfigSnapshotModified": {
                 const event = flowEvent as FlowConfigSnapshotModified;
                 switch (event.configSnapshot.__typename) {
-                    case "FlowConfigurationCompactionRule":
+                    case "FlowConfigRuleCompaction":
                         return "Modified by compaction rule";
-                    case "FlowConfigurationIngest":
+                    case "FlowConfigRuleIngest":
                         return "Modified by ingest rule";
-                    case "FlowConfigurationReset":
+                    case "FlowConfigRuleReset":
                         return "Modified by reset rule";
                     /* istanbul ignore next */
                     default:
@@ -180,7 +180,7 @@ export class DatasetFlowDetailsHelpers {
                                                       "FlowDescriptionUpdateResultUpToDate" &&
                                                   flowDetails.description.ingestResult.uncacheable &&
                                                   ((flowDetails.configSnapshot?.__typename ===
-                                                      "FlowConfigurationIngest" &&
+                                                      "FlowConfigRuleIngest" &&
                                                       !flowDetails.configSnapshot.fetchUncacheable) ||
                                                       !flowDetails.configSnapshot)
                                                 ? "Source is uncacheable: to re-scan the data, use force update"

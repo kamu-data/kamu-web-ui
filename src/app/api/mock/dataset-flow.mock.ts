@@ -13,7 +13,8 @@ import {
     DatasetFlowsInitiatorsQuery,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsMutation,
-    DatasetTriggerFlowMutation,
+    DatasetTriggerIngestFlowMutation,
+    DatasetTriggerResetFlowMutation,
     FlowConnectionDataFragment,
     FlowHistoryDataFragment,
     FlowOutcomeDataFragment,
@@ -22,8 +23,9 @@ import {
     GetDatasetFlowTriggersQuery,
     GetDatasetListFlowsQuery,
     GetFlowByIdQuery,
-    SetDatasetFlowConfigMutation,
+    SetCompactionFlowConfigMutation,
     SetDatasetFlowTriggersMutation,
+    SetIngestFlowConfigMutation,
     TaskStatus,
 } from "./../kamu.graphql.interface";
 import { GetDatasetFlowConfigsQuery, DatasetKind, TimeUnit, TimeDeltaInput } from "../kamu.graphql.interface";
@@ -55,10 +57,10 @@ export const mockIngestGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQuery 
                 configs: {
                     __typename: "DatasetFlowConfigs",
                     byType: {
-                        ingest: {
+                        rule: {
+                            __typename: "FlowConfigRuleIngest",
                             fetchUncacheable: false,
                         },
-
                         __typename: "FlowConfiguration",
                     },
                 },
@@ -69,12 +71,12 @@ export const mockIngestGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQuery 
     },
 };
 
-export const mockSetDatasetFlowConfigMutation: SetDatasetFlowConfigMutation = {
+export const mockSetIngestFlowConfigMutation: SetIngestFlowConfigMutation = {
     datasets: {
         byId: {
             flows: {
                 configs: {
-                    setConfig: {
+                    setIngestConfig: {
                         __typename: "SetFlowConfigSuccess",
                         message: "Success",
                     },
@@ -84,20 +86,54 @@ export const mockSetDatasetFlowConfigMutation: SetDatasetFlowConfigMutation = {
     },
 };
 
-export const mockSetDatasetFlowConfigMutationError: SetDatasetFlowConfigMutation = {
+export const mockSetIngestFlowConfigMutationError: SetIngestFlowConfigMutation = {
     datasets: {
         byId: {
             flows: {
                 configs: {
-                    setConfig: {
-                        __typename: "FlowTypeIsNotSupported",
-                        message: "Error flow type is not supported",
+                    setIngestConfig: {
+                        __typename: "FlowIncompatibleDatasetKind",
+                        message: "Bad dataset kind",
+                        actualDatasetKind: DatasetKind.Derivative,
+                        expectedDatasetKind: DatasetKind.Root,
                     },
                 },
             },
         },
     },
 };
+
+export const mockSetCompactionFlowConfigMutation: SetCompactionFlowConfigMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                configs: {
+                    setCompactionConfig: {
+                        __typename: "SetFlowConfigSuccess",
+                        message: "Success",
+                    },
+                },
+            },
+        },
+    },
+};
+
+export const mockSetCompactionFlowConfigMutationError: SetCompactionFlowConfigMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                configs: {
+                    setCompactionConfig: {
+                        __typename: "FlowPreconditionsNotMet",
+                        message: "Bad preconditions",
+                        preconditions: "Some failed preconditions",
+                    },
+                },
+            },
+        },
+    },
+};
+
 
 export const mockSetDatasetFlowTriggersSuccess: SetDatasetFlowTriggersMutation = {
     datasets: {
@@ -278,6 +314,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         },
         startCondition: null,
         timing: {
+            scheduledAt: "2024-02-16T09:25:00+00:00",
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
             runningSince: "2024-02-12T18:21:27.477789591+00:00",
             finishedAt: "2024-02-12T18:21:29.554197038+00:00",
@@ -296,6 +333,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         initiator: null,
         outcome: null,
         timing: {
+            scheduledAt: "2024-02-12T18:20:26+00:00",
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
             runningSince: "2024-02-12T18:21:27.477789591+00:00",
             finishedAt: "2024-02-12T18:21:29.554197038+00:00",
@@ -318,6 +356,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             wakeUpAt: "2024-03-05T19:35:46+00:00",
         },
         timing: {
+            scheduledAt: "2024-02-12T18:21:25+00:00",
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
             runningSince: "2024-02-12T18:21:27.477789591+00:00",
             finishedAt: "2024-02-12T18:21:29.554197038+00:00",
@@ -340,6 +379,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         },
         startCondition: null,
         timing: {
+            scheduledAt: "2024-02-12T18:21:25+00:00",
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
             runningSince: null,
             finishedAt: null,
@@ -365,6 +405,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         },
         startCondition: null,
         timing: {
+            scheduledAt: "2024-02-12T18:21:25+00:00",
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
             runningSince: null,
             finishedAt: null,
@@ -484,6 +525,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     __typename: "FlowSuccessResult",
                                 },
                                 timing: {
+                                    scheduledAt: "2024-08-21T08:46:19.426925618+00:00",
                                     awaitingExecutorSince: "2024-08-21T08:46:19.426925618+00:00",
                                     runningSince: "2024-08-21T08:46:20.507478673+00:00",
                                     finishedAt: "2024-08-21T08:46:22.636437316+00:00",
@@ -492,7 +534,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                 startCondition: null,
                                 configSnapshot: {
                                     fetchUncacheable: false,
-                                    __typename: "FlowConfigurationIngest",
+                                    __typename: "FlowConfigRuleIngest",
                                 },
                                 __typename: "Flow",
                             },
@@ -514,6 +556,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     __typename: "FlowFailedError",
                                 },
                                 timing: {
+                                    scheduledAt: "2024-08-21T08:45:17+00:00",
                                     awaitingExecutorSince: "2024-08-21T08:45:17+00:00",
                                     runningSince: "2024-08-21T08:45:18.722052534+00:00",
                                     finishedAt: null,
@@ -522,7 +565,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                 startCondition: null,
                                 configSnapshot: {
                                     fetchUncacheable: false,
-                                    __typename: "FlowConfigurationIngest",
+                                    __typename: "FlowConfigRuleIngest",
                                 },
                                 __typename: "Flow",
                             },
@@ -566,6 +609,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                         __typename: "FlowSuccessResult",
                                     },
                                     timing: {
+                                        scheduledAt: "2024-08-21T08:46:19.426925618+00:00",
                                         awaitingExecutorSince: "2024-08-21T08:46:19.426925618+00:00",
                                         runningSince: "2024-08-21T08:46:20.507478673+00:00",
                                         finishedAt: "2024-08-21T08:46:22.636437316+00:00",
@@ -574,7 +618,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     startCondition: null,
                                     configSnapshot: {
                                         fetchUncacheable: false,
-                                        __typename: "FlowConfigurationIngest",
+                                        __typename: "FlowConfigRuleIngest",
                                     },
                                     __typename: "Flow",
                                 },
@@ -599,6 +643,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                         __typename: "FlowFailedError",
                                     },
                                     timing: {
+                                        scheduledAt: "2024-08-21T08:45:17+00:00",
                                         awaitingExecutorSince: "2024-08-21T08:45:17+00:00",
                                         runningSince: "2024-08-21T08:45:18.722052534+00:00",
                                         finishedAt: null,
@@ -607,7 +652,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     startCondition: null,
                                     configSnapshot: {
                                         fetchUncacheable: false,
-                                        __typename: "FlowConfigurationIngest",
+                                        __typename: "FlowConfigRuleIngest",
                                     },
                                     __typename: "Flow",
                                 },
@@ -634,6 +679,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     __typename: "FlowSuccessResult",
                                 },
                                 timing: {
+                                    scheduledAt: "2024-08-21T08:46:19.426925618+00:00",
                                     awaitingExecutorSince: "2024-08-21T08:46:19.426925618+00:00",
                                     runningSince: "2024-08-21T08:46:20.507478673+00:00",
                                     finishedAt: "2024-08-21T08:46:22.636437316+00:00",
@@ -657,6 +703,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     __typename: "FlowFailedError",
                                 },
                                 timing: {
+                                    scheduledAt: "2024-08-21T08:45:17+00:00",
                                     awaitingExecutorSince: "2024-08-21T08:45:17+00:00",
                                     runningSince: "2024-08-21T08:45:18.722052534+00:00",
                                     finishedAt: null,
@@ -683,16 +730,16 @@ export const mockFlowsTableData: FlowsTableData = {
     involvedDatasets: [],
 };
 
-export const mockDatasetTriggerFlowMutation: DatasetTriggerFlowMutation = {
+export const mockDatasetTriggerIngestFlowMutation: DatasetTriggerIngestFlowMutation = {
     datasets: {
         byId: {
             flows: {
                 runs: {
-                    triggerFlow: {
+                    triggerIngestFlow: {
                         flow: {
                             configSnapshot: {
                                 fetchUncacheable: true,
-                                __typename: "FlowConfigurationIngest",
+                                __typename: "FlowConfigRuleIngest",
                             },
                             description: {
                                 datasetId:
@@ -714,6 +761,7 @@ export const mockDatasetTriggerFlowMutation: DatasetTriggerFlowMutation = {
                             },
                             outcome: null,
                             timing: {
+                                scheduledAt: "2024-02-16T09:26:00+00:00",
                                 awaitingExecutorSince: "2024-02-16T09:26:04+00:00",
                                 runningSince: null,
                                 finishedAt: null,
@@ -735,12 +783,12 @@ export const mockDatasetTriggerFlowMutation: DatasetTriggerFlowMutation = {
     },
 };
 
-export const mockDatasetTriggerFlowMutationError: DatasetTriggerFlowMutation = {
+export const mockDatasetTriggerIngestFlowMutationError: DatasetTriggerIngestFlowMutation = {
     datasets: {
         byId: {
             flows: {
                 runs: {
-                    triggerFlow: {
+                    triggerIngestFlow: {
                         __typename: "FlowIncompatibleDatasetKind",
                         message: "Error",
                         expectedDatasetKind: DatasetKind.Root,
@@ -756,6 +804,80 @@ export const mockDatasetTriggerFlowMutationError: DatasetTriggerFlowMutation = {
     },
 };
 
+
+export const mockDatasetTriggerResetFlowMutation: DatasetTriggerResetFlowMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                runs: {
+                    triggerResetFlow: {
+                        flow: {
+                            configSnapshot: {
+                                fetchUncacheable: true,
+                                __typename: "FlowConfigRuleIngest",
+                            },
+                            description: {
+                                datasetId:
+                                    "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+                                ingestResult: null,
+                                __typename: "FlowDescriptionDatasetPollingIngest",
+                            },
+                            flowId: "0",
+                            status: FlowStatus.Waiting,
+                            initiator: {
+                                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+                                accountName: "kamu",
+                                displayName: "kamu",
+                                accountType: AccountType.User,
+                                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                                isAdmin: true,
+                                __typename: "Account",
+                                accountProvider: AccountProvider.Password,
+                            },
+                            outcome: null,
+                            timing: {
+                                scheduledAt: "2024-02-16T09:26:00+00:00",
+                                awaitingExecutorSince: "2024-02-16T09:26:04+00:00",
+                                runningSince: null,
+                                finishedAt: null,
+                                __typename: "FlowTimingRecords",
+                            },
+                            startCondition: null,
+                            __typename: "Flow",
+                        },
+                        message: "Success",
+                        __typename: "TriggerFlowSuccess",
+                    },
+                    __typename: "DatasetFlowRunsMut",
+                },
+                __typename: "DatasetFlowsMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockDatasetTriggerResetFlowMutationError: DatasetTriggerResetFlowMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                runs: {
+                    triggerResetFlow: {
+                        __typename: "FlowPreconditionsNotMet",
+                        message: "Error",
+                    },
+                    __typename: "DatasetFlowRunsMut",
+                },
+                __typename: "DatasetFlowsMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+
 export const mockCancelScheduledTasksMutationSuccess: CancelScheduledTasksMutation = {
     datasets: {
         byId: {
@@ -766,7 +888,7 @@ export const mockCancelScheduledTasksMutationSuccess: CancelScheduledTasksMutati
                         flow: {
                             configSnapshot: {
                                 fetchUncacheable: true,
-                                __typename: "FlowConfigurationIngest",
+                                __typename: "FlowConfigRuleIngest",
                             },
                             description: {
                                 datasetId:
@@ -782,6 +904,7 @@ export const mockCancelScheduledTasksMutationSuccess: CancelScheduledTasksMutati
                                 message: "Aborted",
                             },
                             timing: {
+                                scheduledAt: null,
                                 awaitingExecutorSince: null,
                                 runningSince: null,
                                 finishedAt: "2024-03-06T15:21:32.117446697+00:00",
@@ -889,7 +1012,7 @@ export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
                         flow: {
                             configSnapshot: {
                                 fetchUncacheable: true,
-                                __typename: "FlowConfigurationIngest",
+                                __typename: "FlowConfigRuleIngest",
                             },
                             description: {
                                 datasetId:
@@ -905,6 +1028,7 @@ export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
                                 message: "Succes",
                             },
                             timing: {
+                                scheduledAt: "2024-03-15T19:43:37.844613373+00:00",
                                 awaitingExecutorSince: "2024-03-15T19:43:38+00:00",
                                 runningSince: "2024-03-15T19:43:39.414651763+00:00",
                                 finishedAt: "2024-03-15T19:43:39.538294176+00:00",

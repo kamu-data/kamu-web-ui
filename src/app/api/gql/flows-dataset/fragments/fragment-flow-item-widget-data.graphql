@@ -25,6 +25,7 @@ fragment FlowItemWidgetData on Flow {
     ...FlowOutcomeData
   }
   timing {
+    scheduledAt
     awaitingExecutorSince
     runningSince
     finishedAt

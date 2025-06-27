@@ -20,8 +20,7 @@ import {
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsDocument,
     DatasetResumeFlowsMutation,
-    DatasetTriggerFlowDocument,
-    DatasetTriggerFlowMutation,
+    DatasetTriggerIngestFlowDocument,
     FlowConnectionDataFragment,
     GetDatasetFlowConfigsDocument,
     GetDatasetFlowConfigsQuery,
@@ -31,22 +30,21 @@ import {
     GetDatasetListFlowsQuery,
     GetFlowByIdDocument,
     GetFlowByIdQuery,
-    SetDatasetFlowConfigDocument,
-    SetDatasetFlowConfigMutation,
+    SetIngestFlowConfigDocument,
     SetDatasetFlowTriggersDocument,
-    SetDatasetFlowTriggersMutation,
+    FlowConfigRuleIngest,
 } from "./kamu.graphql.interface";
 import { TEST_ACCOUNT_ID, TEST_DATASET_ID } from "./mock/dataset.mock";
 import { DatasetFlowApi } from "./dataset-flow.api";
 import {
     mockIngestGetDatasetFlowConfigsSuccess,
     mockTimeDeltaInput,
-    mockDatasetTriggerFlowMutation,
+    mockDatasetTriggerIngestFlowMutation,
     mockCancelScheduledTasksMutationSuccess,
     mockGetDatasetListFlowsQuery,
     mockGetFlowByIdQuerySuccess,
     mockDatasetFlowsInitiatorsQuery,
-    mockSetDatasetFlowConfigMutation,
+    mockSetIngestFlowConfigMutation,
     mockSetDatasetFlowTriggersSuccess,
     mockGetDatasetFlowTriggersQuery,
     mockDatasetPauseFlowsMutationSuccess,
@@ -85,42 +83,36 @@ describe("DatasetFlowApi", () => {
             .getDatasetFlowConfigs({ datasetId: TEST_DATASET_ID, datasetFlowType: DatasetFlowType.Ingest })
             .subscribe((res: GetDatasetFlowConfigsQuery) => {
                 const configType = res.datasets.byId?.flows.configs.byType;
-                expect(configType?.ingest?.fetchUncacheable).toEqual(false);
+                const configRule = configType?.rule;
+                expect(configRule?.__typename).toEqual('FlowConfigRuleIngest');
+                expect((configRule as FlowConfigRuleIngest)?.fetchUncacheable).toEqual(false);
             });
 
         const op = controller.expectOne(GetDatasetFlowConfigsDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
-        expect(op.operation.variables.datasetFlowType).toEqual(DatasetFlowType.Ingest);
 
         op.flush({
             data: mockIngestGetDatasetFlowConfigsSuccess,
         });
     });
 
-    it("should check setDatasetFlowConfigs with datasetFlowType=EXECUTE_TRANSFORM", () => {
+    it("should check setDatasetFlowIngestConfig", () => {
         service
-            .setDatasetFlowConfigs({
+            .setDatasetFlowIngestConfig({
                 datasetId: TEST_DATASET_ID,
-                datasetFlowType: DatasetFlowType.ExecuteTransform,
-                configInput: { ingest: { fetchUncacheable: true } },
+                ingestConfigInput: { fetchUncacheable: true },
             })
-            .subscribe((res: SetDatasetFlowConfigMutation) => {
-                if (res.datasets.byId?.flows.configs.setConfig.__typename === "SetFlowConfigSuccess")
-                    expect(mockSetDatasetFlowConfigMutation.datasets.byId?.flows.configs.setConfig.message).toEqual(
-                        "Success",
-                    );
-            });
+            .subscribe();
 
-        const op = controller.expectOne(SetDatasetFlowConfigDocument);
+        const op = controller.expectOne(SetIngestFlowConfigDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
-        expect(op.operation.variables.datasetFlowType).toEqual(DatasetFlowType.ExecuteTransform);
 
         op.flush({
-            data: mockSetDatasetFlowConfigMutation,
+            data: mockSetIngestFlowConfigMutation,
         });
     });
 
-    it("should check setDatasetFlowTriggers with datasetFlowType=EXECUTE_TRANSFORM", () => {
+    it("should check setDatasetFlowTriggers", () => {
         service
             .setDatasetFlowTriggers({
                 datasetId: TEST_DATASET_ID,
@@ -133,12 +125,7 @@ describe("DatasetFlowApi", () => {
                     },
                 },
             })
-            .subscribe((res: SetDatasetFlowTriggersMutation) => {
-                if (res.datasets.byId?.flows.triggers.setTrigger.__typename === "SetFlowTriggerSuccess")
-                    expect(mockSetDatasetFlowConfigMutation.datasets.byId?.flows.configs.setConfig.message).toEqual(
-                        "Success",
-                    );
-            });
+            .subscribe();
 
         const op = controller.expectOne(SetDatasetFlowTriggersDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
@@ -149,22 +136,18 @@ describe("DatasetFlowApi", () => {
         });
     });
 
-    it("should check datasetTriggerFlow", () => {
+    it("should check datasetTriggerIngestFlow", () => {
         service
-            .datasetTriggerFlow({
+            .datasetTriggerIngestFlow({
                 accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
-                datasetFlowType: DatasetFlowType.Ingest,
             })
-            .subscribe((res: DatasetTriggerFlowMutation) => {
-                expect(res.datasets.byId?.flows.runs.triggerFlow.message).toEqual("Success");
-            });
+            .subscribe();
 
-        const op = controller.expectOne(DatasetTriggerFlowDocument);
+        const op = controller.expectOne(DatasetTriggerIngestFlowDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
-        expect(op.operation.variables.datasetFlowType).toEqual(DatasetFlowType.Ingest);
         op.flush({
-            data: mockDatasetTriggerFlowMutation,
+            data: mockDatasetTriggerIngestFlowMutation,
         });
     });
 

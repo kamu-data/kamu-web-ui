@@ -95,6 +95,7 @@ fragment FlowSummaryData on Flow {
     ...FlowOutcomeData
   }
   timing {
+    scheduledAt
     awaitingExecutorSince
     runningSince
     finishedAt
@@ -129,12 +130,12 @@ fragment FlowSummaryData on Flow {
   }
 
   configSnapshot {
-    ... on FlowConfigurationIngest {
+    ... on FlowConfigRuleIngest {
       fetchUncacheable
     }
 
-    ... on FlowConfigurationCompactionRule {
-      compactionRule {
+    ... on FlowConfigRuleCompaction {
+      compactionMode {
         __typename
       }
     }

@@ -1,0 +1,35 @@
+mutation setIngestFlowConfig(
+  $datasetId: DatasetID!
+  $ingestConfigInput: FlowConfigIngestInput!
+  $retryPolicyInput: FlowRetryPolicyInput
+) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      flows {
+        configs {
+          setIngestConfig(ingestConfigInput: $ingestConfigInput, retryPolicyInput: $retryPolicyInput) {
+            ... on SetFlowConfigSuccess {
+              message
+            }
+
+            ... on FlowPreconditionsNotMet {
+              message
+              preconditions
+            }
+
+            ... on FlowInvalidConfigInputError {
+              message
+              reason
+            }
+
+            ... on FlowIncompatibleDatasetKind {
+              message
+              actualDatasetKind
+              expectedDatasetKind
+            }
+          }
+        }
+      }
+    }
+  }
+}

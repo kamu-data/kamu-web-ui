@@ -26,7 +26,6 @@ import {
     FlowStartCondition,
     Dataset,
     DatasetListFlowsDataFragment,
-    DatasetFlowType,
     AccountFragment,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/values/app.values";
@@ -201,7 +200,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
             node.description.__typename === "FlowDescriptionDatasetPollingIngest" &&
             node.description.ingestResult?.__typename === "FlowDescriptionUpdateResultUpToDate" &&
             node.description.ingestResult.uncacheable &&
-            ((node.configSnapshot?.__typename === "FlowConfigurationIngest" && !node.configSnapshot.fetchUncacheable) ||
+            ((node.configSnapshot?.__typename === "FlowConfigRuleIngest" && !node.configSnapshot.fetchUncacheable) ||
                 !node.configSnapshot)
         );
     }
@@ -217,13 +216,10 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
                     if (ok) {
                         if (node.description.__typename === "FlowDescriptionDatasetPollingIngest") {
                             this.datasetFlowsService
-                                .datasetTriggerFlow({
+                                .datasetTriggerIngestFlow({
                                     datasetId: node.description.datasetId,
-                                    datasetFlowType: DatasetFlowType.Ingest,
-                                    flowRunConfiguration: {
-                                        ingest: {
-                                            fetchUncacheable: true,
-                                        },
+                                    ingestConfigInput: {
+                                        fetchUncacheable: true,
                                     },
                                 })
                                 .pipe(takeUntilDestroyed(this.destroyRef))

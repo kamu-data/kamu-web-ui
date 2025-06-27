@@ -1,13 +1,9 @@
-mutation datasetTriggerFlow(
-  $datasetId: DatasetID!
-  $datasetFlowType: DatasetFlowType!
-  $flowRunConfiguration: FlowRunConfiguration
-) {
+mutation datasetTriggerCompactionFlow($datasetId: DatasetID!, $compactionConfigInput: FlowConfigCompactionInput) {
   datasets {
     byId(datasetId: $datasetId) {
       flows {
         runs {
-          triggerFlow(datasetFlowType: $datasetFlowType, flowRunConfiguration: $flowRunConfiguration) {
+          triggerCompactionFlow(compactionConfigInput: $compactionConfigInput) {
             ... on TriggerFlowSuccess {
               flow {
                 ...FlowSummaryData

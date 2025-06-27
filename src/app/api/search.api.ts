@@ -55,9 +55,7 @@ export class SearchApi {
                 map((result: ApolloQueryResult<SearchDatasetsOverviewQuery>) => {
                     return result.data;
                 }),
-                catchError(() => {
-                    return EMPTY;
-                }),
+                catchError(() => EMPTY),
             );
     }
 
@@ -81,9 +79,7 @@ export class SearchApi {
                 map((result: ApolloQueryResult<SemanticSearchDatasetsOverviewQuery>) => {
                     return result.data;
                 }),
-                catchError(() => {
-                    return EMPTY;
-                }),
+                catchError(() => EMPTY),
             );
     }
 

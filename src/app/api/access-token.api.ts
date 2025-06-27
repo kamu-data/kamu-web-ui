@@ -53,9 +53,7 @@ export class AccessTokenApi {
             map((result: MutationResult<CreateAccessTokenMutation>) => {
                 return result.data as CreateAccessTokenMutation;
             }),
-            catchError(() => {
-                return EMPTY;
-            }),
+            catchError(() => EMPTY),
         );
     }
 
@@ -65,9 +63,7 @@ export class AccessTokenApi {
             map((result: MutationResult<RevokeAccessTokenMutation>) => {
                 return result.data as RevokeAccessTokenMutation;
             }),
-            catchError(() => {
-                return EMPTY;
-            }),
+            catchError(() => EMPTY),
         );
     }
 }

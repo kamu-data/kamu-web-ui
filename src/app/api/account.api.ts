@@ -101,9 +101,7 @@ export class AccountApi {
             map((result: MutationResult<ChangeUserPasswordMutation>) => {
                 return result.data as ChangeUserPasswordMutation;
             }),
-            catchError(() => {
-                return EMPTY;
-            }),
+            catchError(() => EMPTY),
         );
     }
 

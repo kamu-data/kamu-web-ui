@@ -110,9 +110,7 @@ export class AuthApi {
                 map((result: MutationResult<LoginMutation>) => {
                     return result.data?.auth.login as LoginResponseType;
                 }),
-                catchError(() => {
-                    return EMPTY;
-                }),
+                catchError(() => EMPTY),
             );
     }
 
@@ -121,9 +119,7 @@ export class AuthApi {
             map((result: MutationResult<FetchAccountDetailsMutation>) => {
                 return result.data?.auth.accountDetails as AccountFragment;
             }),
-            catchError(() => {
-                return EMPTY;
-            }),
+            catchError(() => EMPTY),
         );
     }
 
@@ -132,9 +128,7 @@ export class AuthApi {
             map((result: MutationResult<LoginWeb3WalletMutation>) => {
                 return result.data?.auth.web3.eip4361AuthNonce.value as string;
             }),
-            catchError(() => {
-                return EMPTY;
-            }),
+            catchError(() => EMPTY),
         );
     }
 }

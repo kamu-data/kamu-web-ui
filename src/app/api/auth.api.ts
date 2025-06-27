@@ -7,7 +7,7 @@
 
 import { inject, Injectable } from "@angular/core";
 import { catchError, first, map } from "rxjs/operators";
-import { Observable, throwError } from "rxjs";
+import { EMPTY, Observable, of } from "rxjs";
 import {
     AccountFragment,
     AccountProvider,
@@ -28,7 +28,6 @@ import {
     Web3WalletOwnershipVerificationRequest,
 } from "./auth.api.model";
 import { ApolloQueryResult } from "@apollo/client";
-import { AuthenticationError } from "../common/values/errors";
 
 @Injectable({
     providedIn: "root",
@@ -44,6 +43,9 @@ export class AuthApi {
             first(),
             map((result: ApolloQueryResult<GetEnabledLoginMethodsQuery>) => {
                 return result.data.auth.enabledProviders;
+            }),
+            catchError(() => {
+                return of([]);
             }),
         );
     }
@@ -106,31 +108,18 @@ export class AuthApi {
             )
             .pipe(
                 map((result: MutationResult<LoginMutation>) => {
-                    /* istanbul ignore else */
-                    if (result.data) {
-                        return result.data.auth.login;
-                    } else {
-                        // Normally, this code should not be reachable
-
-                        throw new AuthenticationError(result.errors ?? []);
-                    }
+                    return result.data?.auth.login as LoginResponseType;
                 }),
-                catchError((e: Error) => throwError(() => new AuthenticationError([e]))),
+                catchError(() => EMPTY),
             );
     }
 
     public fetchAccountFromAccessToken(accessToken: string): Observable<AccountFragment> {
         return this.fetchAccountDetailsGQL.mutate({ accessToken }).pipe(
             map((result: MutationResult<FetchAccountDetailsMutation>) => {
-                /* istanbul ignore else */
-                if (result.data) {
-                    return result.data.auth.accountDetails;
-                } else {
-                    // Normally, this code should not be reachable
-                    throw new AuthenticationError(result.errors ?? []);
-                }
+                return result.data?.auth.accountDetails as AccountFragment;
             }),
-            catchError((e: Error) => throwError(() => new AuthenticationError([e]))),
+            catchError(() => EMPTY),
         );
     }
 
@@ -139,6 +128,7 @@ export class AuthApi {
             map((result: MutationResult<LoginWeb3WalletMutation>) => {
                 return result.data?.auth.web3.eip4361AuthNonce.value as string;
             }),
+            catchError(() => EMPTY),
         );
     }
 }

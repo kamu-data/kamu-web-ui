@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { Observable, catchError, first, map } from "rxjs";
+import { EMPTY, Observable, catchError, first, map } from "rxjs";
 import { inject, Injectable } from "@angular/core";
 import {
     AccountByNameGQL,
@@ -36,10 +36,9 @@ import {
     ChangeAdminPasswordMutation,
 } from "./kamu.graphql.interface";
 import { MaybeNull } from "../interface/app.types";
-import { ApolloError, ApolloQueryResult } from "@apollo/client";
+import { ApolloQueryResult } from "@apollo/client";
 import { MutationResult } from "apollo-angular";
 import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
-import { DatasetOperationError } from "../common/values/errors";
 
 @Injectable({ providedIn: "root" })
 export class AccountApi {
@@ -63,12 +62,7 @@ export class AccountApi {
         return this.changeAccountUsernameGQL.mutate({ accountName: params.accountName, newName: params.newName }).pipe(
             first(),
             map((result: MutationResult<ChangeAccountUsernameMutation>) => {
-                /* istanbul ignore else */
-                if (result.data) {
-                    return result.data;
-                } else {
-                    throw new DatasetOperationError(result.errors ?? []);
-                }
+                return result.data as ChangeAccountUsernameMutation;
             }),
         );
     }
@@ -80,12 +74,7 @@ export class AccountApi {
         return this.accountChangeEmailGQL.mutate(params).pipe(
             first(),
             map((result: MutationResult<AccountChangeEmailMutation>) => {
-                /* istanbul ignore else */
-                if (result.data) {
-                    return result.data;
-                } else {
-                    throw new DatasetOperationError(result.errors ?? []);
-                }
+                return result.data as AccountChangeEmailMutation;
             }),
         );
     }
@@ -97,12 +86,7 @@ export class AccountApi {
         return this.changeAdminPasswordGQL.mutate(params).pipe(
             first(),
             map((result: MutationResult<ChangeAdminPasswordMutation>) => {
-                /* istanbul ignore else */
-                if (result.data) {
-                    return result.data;
-                } else {
-                    throw new DatasetOperationError(result.errors ?? []);
-                }
+                return result.data as ChangeAdminPasswordMutation;
             }),
         );
     }
@@ -115,16 +99,9 @@ export class AccountApi {
         return this.changeUserPasswordGQL.mutate(params).pipe(
             first(),
             map((result: MutationResult<ChangeUserPasswordMutation>) => {
-                /* istanbul ignore else */
-                if (result.data) {
-                    return result.data;
-                } else {
-                    throw new DatasetOperationError(result.errors ?? []);
-                }
+                return result.data as ChangeUserPasswordMutation;
             }),
-            catchError((e: ApolloError) => {
-                throw new DatasetOperationError(e.graphQLErrors);
-            }),
+            catchError(() => EMPTY),
         );
     }
 
@@ -222,12 +199,7 @@ export class AccountApi {
             .pipe(
                 first(),
                 map((result: MutationResult<AccountPauseFlowsMutation>) => {
-                    /* istanbul ignore else */
-                    if (result.data) {
-                        return result.data;
-                    } else {
-                        throw new DatasetOperationError(result.errors ?? []);
-                    }
+                    return result.data as AccountPauseFlowsMutation;
                 }),
             );
     }
@@ -240,12 +212,7 @@ export class AccountApi {
             .pipe(
                 first(),
                 map((result: MutationResult<AccountResumeFlowsMutation>) => {
-                    /* istanbul ignore else */
-                    if (result.data) {
-                        return result.data;
-                    } else {
-                        throw new DatasetOperationError(result.errors ?? []);
-                    }
+                    return result.data as AccountResumeFlowsMutation;
                 }),
             );
     }

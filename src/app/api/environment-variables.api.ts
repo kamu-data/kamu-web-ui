@@ -19,7 +19,6 @@ import {
 import { inject, Injectable } from "@angular/core";
 import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
 import { ApolloQueryResult } from "@apollo/client";
-import { DatasetOperationError } from "../common/values/errors";
 import { MutationResult } from "apollo-angular";
 import { updateCacheHelper } from "../common/helpers/apollo-cache.helper";
 
@@ -69,12 +68,7 @@ export class EnvironmentVariablesApi {
             .pipe(
                 first(),
                 map((result: MutationResult<UpsertEnvVariableMutation>) => {
-                    /* istanbul ignore else */
-                    if (result.data) {
-                        return result.data;
-                    } else {
-                        throw new DatasetOperationError(result.errors ?? []);
-                    }
+                    return result.data as UpsertEnvVariableMutation;
                 }),
             );
     }
@@ -100,12 +94,7 @@ export class EnvironmentVariablesApi {
             .pipe(
                 first(),
                 map((result: MutationResult<DeleteEnvVariableMutation>) => {
-                    /* istanbul ignore else */
-                    if (result.data) {
-                        return result.data;
-                    } else {
-                        throw new DatasetOperationError(result.errors ?? []);
-                    }
+                    return result.data as DeleteEnvVariableMutation;
                 }),
             );
     }

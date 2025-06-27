@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Replaced all places with validation errors for forms with a directive
+- Adjustments for API changes in flow system
 - SetTransform event: improved search
 
 ## [0.50.0] - 2025-06-19

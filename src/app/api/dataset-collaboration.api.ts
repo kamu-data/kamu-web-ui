@@ -22,7 +22,6 @@ import {
 } from "./kamu.graphql.interface";
 import { first, map, Observable } from "rxjs";
 import { ApolloQueryResult } from "@apollo/client";
-import { DatasetOperationError } from "../common/values/errors";
 import { MutationResult } from "apollo-angular";
 import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
 
@@ -70,12 +69,7 @@ export class DatasetCollaborationApi {
         return this.setRoleCollaboratorGQL.mutate(params).pipe(
             first(),
             map((result: MutationResult<SetRoleCollaboratorMutation>) => {
-                /* istanbul ignore else */
-                if (result.data) {
-                    return result.data;
-                } else {
-                    throw new DatasetOperationError(result.errors ?? []);
-                }
+                return result.data as SetRoleCollaboratorMutation;
             }),
         );
     }
@@ -87,12 +81,7 @@ export class DatasetCollaborationApi {
         return this.unsetRoleCollaboratorGQL.mutate({ ...params }).pipe(
             first(),
             map((result: MutationResult<UnsetRoleCollaboratorMutation>) => {
-                /* istanbul ignore else */
-                if (result.data) {
-                    return result.data;
-                } else {
-                    throw new DatasetOperationError(result.errors ?? []);
-                }
+                return result.data as UnsetRoleCollaboratorMutation;
             }),
         );
     }

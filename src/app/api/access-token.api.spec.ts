@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { TestBed } from "@angular/core/testing";
+import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule, ApolloTestingController } from "apollo-angular/testing";
 import { AccessTokenApi } from "./access-token.api";
@@ -18,7 +18,7 @@ import {
     RevokeAccessTokenDocument,
     RevokeAccessTokenMutation,
 } from "./kamu.graphql.interface";
-import { TEST_ACCOUNT_ID } from "./mock/auth.mock";
+import { mockLogin401Error, TEST_ACCOUNT_ID } from "./mock/auth.mock";
 import {
     PAGE,
     PER_PAGE,
@@ -28,6 +28,8 @@ import {
     mockListAccessTokensQuery,
     mockRevokeAccessTokenMutation,
 } from "./mock/access-token.mock";
+import { first } from "rxjs";
+import { ApolloError } from "@apollo/client";
 
 describe("AccessTokenApi", () => {
     let service: AccessTokenApi;
@@ -87,6 +89,27 @@ describe("AccessTokenApi", () => {
         });
     });
 
+    it("should check create access token with error", fakeAsync(() => {
+        const subscription$ = service
+            .createAccessToken(TEST_ACCOUNT_ID, TOKEN_NAME)
+            .pipe(first())
+            .subscribe({
+                next: () => fail("Unexpected success"),
+                error: (e: ApolloError) => {
+                    expect(e).toBeTruthy();
+                },
+            });
+
+        const op = controller.expectOne(CreateAccessTokenDocument);
+        expect(op.operation.variables.accountId).toEqual(TEST_ACCOUNT_ID);
+        expect(op.operation.variables.tokenName).toEqual(TOKEN_NAME);
+        op.graphqlErrors([mockLogin401Error]);
+        tick();
+
+        expect(subscription$.closed).toBeTrue();
+        flush();
+    }));
+
     it("should check revoke access token", () => {
         service.revokeAccessToken(TOKEN_ID).subscribe((data: RevokeAccessTokenMutation) => {
             expect(data.auth.revokeAccessToken.message).toEqual(
@@ -101,4 +124,23 @@ describe("AccessTokenApi", () => {
             data: mockRevokeAccessTokenMutation,
         });
     });
+
+    it("should check revoke access token with error", fakeAsync(() => {
+        const subscription$ = service
+            .revokeAccessToken(TOKEN_ID)
+            .pipe(first())
+            .subscribe({
+                next: () => fail("Unexpected success"),
+                error: (e: ApolloError) => {
+                    expect(e).toBeTruthy();
+                },
+            });
+        const op = controller.expectOne(RevokeAccessTokenDocument);
+        expect(op.operation.variables.tokenId).toEqual(TOKEN_ID);
+        op.graphqlErrors([mockLogin401Error]);
+        tick();
+
+        expect(subscription$.closed).toBeTrue();
+        flush();
+    }));
 });

@@ -17,7 +17,7 @@ import { of } from "rxjs";
 import AppValues from "src/app/common/values/app.values";
 import { dispatchInputEvent, emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
-import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
+import { mockDatasetBasicsDerivedFragment, mockDatasetInfo } from "src/app/search/mock.data";
 import { SearchApi } from "src/app/api/search.api";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { mockGetDatasetSchemaQuery } from "../../mock.data";
@@ -52,6 +52,7 @@ describe("SearchSectionComponent", () => {
         component.inputDatasets = new Set<string>();
         component.TREE_DATA = [];
         component.dataSource = new MatTreeNestedDataSource<DatasetNode>();
+        component.datasetInfo = mockDatasetInfo;
         searchApi = TestBed.inject(SearchApi);
         datasetService = TestBed.inject(DatasetService);
         fixture.detectChanges();

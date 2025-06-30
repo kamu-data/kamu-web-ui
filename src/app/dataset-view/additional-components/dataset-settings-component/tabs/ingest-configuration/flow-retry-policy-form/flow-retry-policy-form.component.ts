@@ -101,4 +101,12 @@ export class FlowRetryPolicyFormComponent extends BaseComponent implements OnIni
 
         this.changeRetryPolicyEmit.emit(this.flowRetryPolicyForm);
     }
+
+    public readonly BACKOFF_EXPLANATIONS: Record<FlowRetryBackoffType, string> = {
+        [FlowRetryBackoffType.Fixed]: "Fixed: The delay between retries is always the same.",
+        [FlowRetryBackoffType.Linear]: "Linear: The delay increases linearly with each attempt.",
+        [FlowRetryBackoffType.Exponential]: "Exponential: The delay doubles with each attempt.",
+        [FlowRetryBackoffType.ExponentialWithJitter]:
+            "Exponential with jitter: Like exponential, but adds random component to avoid retry storms.",
+    };
 }

@@ -5,18 +5,8 @@
  * included in the LICENSE file.
  */
 
-import {
-    ChangeDetectionStrategy,
-    Component,
-    forwardRef,
-    Input,
-} from "@angular/core";
-import {
-    FormControl,
-    FormGroup,
-    NG_VALUE_ACCESSOR,
-    Validators,
-} from "@angular/forms";
+import { ChangeDetectionStrategy, Component, forwardRef, Input } from "@angular/core";
+import { FormControl, FormGroup, NG_VALUE_ACCESSOR, Validators } from "@angular/forms";
 import { BaseFormControlComponent } from "../base-form-control.component";
 import { cronExpressionValidator } from "src/app/common/helpers/data.helpers";
 import { cronExpressionNextTime } from "src/app/common/helpers/app.helpers";

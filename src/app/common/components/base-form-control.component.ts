@@ -13,21 +13,19 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 /**
  * Abstract base class for form components that implement ControlValueAccessor.
  * Provides common functionality for form management, value propagation, and disabled state handling.
- * 
+ *
  * @template TValue - The type of the form value object
  */
 @Directive()
-export abstract class BaseFormControlComponent<TValue> 
-    extends BaseComponent 
-    implements OnInit, ControlValueAccessor {
-
+export abstract class BaseFormControlComponent<TValue> extends BaseComponent implements OnInit, ControlValueAccessor {
     @Input() public disabled: boolean = false;
     @Output() public formChange = new EventEmitter<FormGroup>();
 
     protected abstract form: FormGroup;
-    
+
     private onChange = (_value: TValue) => {};
     private onTouched = () => {};
+    private isWriting = false;
 
     public ngOnInit(): void {
         this.initializeForm();
@@ -35,9 +33,11 @@ export abstract class BaseFormControlComponent<TValue>
     }
 
     public writeValue(value: TValue): void {
+        this.isWriting = true;
         if (value) {
             this.form.patchValue(value, { emitEvent: false });
         }
+        this.isWriting = false;
     }
 
     public registerOnChange(fn: (value: TValue) => void): void {
@@ -70,6 +70,10 @@ export abstract class BaseFormControlComponent<TValue>
      * Default implementation emits onChange and formChange events.
      */
     protected onFormValueChange(value: TValue): void {
+        if (this.isWriting) {
+            // Prevent recursive calls when writing value
+            return;
+        }
         this.onChange(value);
         this.formChange.emit(this.form);
     }
@@ -83,16 +87,12 @@ export abstract class BaseFormControlComponent<TValue>
     }
 
     private subscribeToFormChanges(): void {
-        this.form.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((value) => {
-                this.onFormValueChange(value as TValue);
-            });
+        this.form.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((value) => {
+            this.onFormValueChange(value as TValue);
+        });
 
-        this.form.statusChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.onFormStatusChange();
-            });
+        this.form.statusChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.onFormStatusChange();
+        });
     }
 }

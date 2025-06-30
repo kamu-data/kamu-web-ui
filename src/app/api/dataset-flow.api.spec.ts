@@ -85,7 +85,7 @@ describe("DatasetFlowApi", () => {
             .subscribe((res: GetDatasetFlowConfigsQuery) => {
                 const configType = res.datasets.byId?.flows.configs.byType;
                 const configRule = configType?.rule;
-                expect(configRule?.__typename).toEqual('FlowConfigRuleIngest');
+                expect(configRule?.__typename).toEqual("FlowConfigRuleIngest");
                 expect((configRule as FlowConfigRuleIngest)?.fetchUncacheable).toEqual(false);
             });
 
@@ -134,7 +134,6 @@ describe("DatasetFlowApi", () => {
             data: mockSetIngestFlowConfigMutation,
         });
     });
-
 
     it("should check setDatasetFlowTriggers", () => {
         service

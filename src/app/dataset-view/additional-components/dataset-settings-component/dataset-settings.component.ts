@@ -14,7 +14,11 @@ import {
     DatasetPermissionsFragment,
 } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
-import { DatasetSettingsSidePanelItem, SettingsTabsEnum, DATASET_SETTINGS_SIDE_PANEL_DATA } from "./dataset-settings.model";
+import {
+    DatasetSettingsSidePanelItem,
+    SettingsTabsEnum,
+    DATASET_SETTINGS_SIDE_PANEL_DATA,
+} from "./dataset-settings.model";
 import { AppConfigService } from "src/app/app-config.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";

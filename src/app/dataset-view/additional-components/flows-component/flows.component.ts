@@ -121,24 +121,23 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public updateNow(): void {
-        const datasetTrigger$: Observable<boolean> = this.flowsData.datasetBasics.kind === DatasetKind.Root
-            ? this.flowsService.datasetTriggerIngestFlow({
-                datasetId: this.flowsData.datasetBasics.id,
-            })
-            : this.flowsService.datasetTriggerTransformFlow({
-                datasetId: this.flowsData.datasetBasics.id,
-            });
+        const datasetTrigger$: Observable<boolean> =
+            this.flowsData.datasetBasics.kind === DatasetKind.Root
+                ? this.flowsService.datasetTriggerIngestFlow({
+                      datasetId: this.flowsData.datasetBasics.id,
+                  })
+                : this.flowsService.datasetTriggerTransformFlow({
+                      datasetId: this.flowsData.datasetBasics.id,
+                  });
 
-        datasetTrigger$
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((success: boolean) => {
-                if (success) {
-                    setTimeout(() => {
-                        this.refreshFlow();
-                        this.cdr.detectChanges();
-                    }, this.TIMEOUT_REFRESH_FLOW);
-                }
-            });
+        datasetTrigger$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((success: boolean) => {
+            if (success) {
+                setTimeout(() => {
+                    this.refreshFlow();
+                    this.cdr.detectChanges();
+                }, this.TIMEOUT_REFRESH_FLOW);
+            }
+        });
     }
 
     public toggleStateDatasetFlowConfigs(paused: boolean): void {

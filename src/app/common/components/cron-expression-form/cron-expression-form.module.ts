@@ -13,10 +13,6 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 @NgModule({
     declarations: [CronExpressionFormComponent],
     exports: [CronExpressionFormComponent],
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-    ],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule],
 })
 export class CronExpressionFormModule {}

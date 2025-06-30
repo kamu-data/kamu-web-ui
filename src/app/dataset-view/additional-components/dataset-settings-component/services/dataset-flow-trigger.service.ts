@@ -28,7 +28,6 @@ export class DatasetFlowTriggerService {
     private readonly toastrService = inject(ToastrService);
     private readonly navigationService = inject(NavigationService);
 
-
     public fetchDatasetFlowTriggers(
         datasetId: string,
         datasetFlowType: DatasetFlowType,

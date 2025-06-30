@@ -47,7 +47,6 @@ describe("DatasetFlowConfigService", () => {
         },
     };
 
-
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [Apollo],
@@ -92,10 +91,12 @@ describe("DatasetFlowConfigService", () => {
             });
 
         expect(subscription$.closed).toBeTrue();
-    });  
+    });
 
     it("should check setDatasetFlowCompactionConfig with success", () => {
-        spyOn(datasetFlowApi, "setDatasetFlowCompactionConfig").and.returnValue(of(mockSetCompactionFlowConfigMutation));
+        spyOn(datasetFlowApi, "setDatasetFlowCompactionConfig").and.returnValue(
+            of(mockSetCompactionFlowConfigMutation),
+        );
         const subscription$ = service
             .setDatasetCompactionFlowConfigs({
                 datasetId: MOCK_DATASET_ID,
@@ -109,7 +110,9 @@ describe("DatasetFlowConfigService", () => {
     });
 
     it("should check setCompactionFlowConfigs with error", () => {
-        spyOn(datasetFlowApi, "setDatasetFlowCompactionConfig").and.returnValue(of(mockSetCompactionFlowConfigMutationError));
+        spyOn(datasetFlowApi, "setDatasetFlowCompactionConfig").and.returnValue(
+            of(mockSetCompactionFlowConfigMutationError),
+        );
         const toastrServiceErrorSpy = spyOn(toastService, "error");
         const subscription$ = service
             .setDatasetCompactionFlowConfigs({
@@ -130,12 +133,13 @@ describe("DatasetFlowConfigService", () => {
             .fetchDatasetFlowConfigs(MOCK_DATASET_ID, DatasetFlowType.HardCompaction)
             .subscribe((res: GetDatasetFlowConfigsQuery) => {
                 expect(res.datasets.byId?.flows.configs.byType?.rule?.__typename).toEqual("FlowConfigRuleIngest");
-                expect(mockIngestGetDatasetFlowConfigsSuccess.datasets.byId?.flows.configs.byType?.rule?.__typename).toEqual(
-                    "FlowConfigRuleIngest",
-                );
-                
+                expect(
+                    mockIngestGetDatasetFlowConfigsSuccess.datasets.byId?.flows.configs.byType?.rule?.__typename,
+                ).toEqual("FlowConfigRuleIngest");
+
                 const actualIngestRule = res.datasets.byId?.flows.configs.byType?.rule as FlowConfigRuleIngest;
-                const expectedIngestRule = mockIngestGetDatasetFlowConfigsSuccess.datasets.byId?.flows.configs.byType?.rule as FlowConfigRuleIngest;
+                const expectedIngestRule = mockIngestGetDatasetFlowConfigsSuccess.datasets.byId?.flows.configs.byType
+                    ?.rule as FlowConfigRuleIngest;
                 expect(actualIngestRule.fetchUncacheable).toEqual(expectedIngestRule.fetchUncacheable);
             });
 

@@ -6,11 +6,7 @@
  */
 
 import { EditLicenseModalComponent } from "./components/edit-license-modal/edit-license-modal.component";
-import {
-    DatasetAccessRole,
-    DatasetCurrentInfoFragment,
-    DatasetKind,
-} from "../../../api/kamu.graphql.interface";
+import { DatasetAccessRole, DatasetCurrentInfoFragment, DatasetKind } from "../../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { MetadataBlockFragment } from "../../../api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/interface/app.types";
@@ -279,19 +275,17 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
                       datasetId: this.datasetOverviewTabData.datasetBasics.id,
                   });
 
-        datasetTrigger$
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((success: boolean) => {
-                if (success) {
-                    setTimeout(() => {
-                        this.navigationService.navigateToDatasetView({
-                            accountName: this.datasetOverviewTabData.datasetBasics.owner.accountName,
-                            datasetName: this.datasetOverviewTabData.datasetBasics.name,
-                            tab: DatasetViewTypeEnum.Flows,
-                        });
-                    }, AppValues.SIMULATION_START_CONDITION_DELAY_MS);
-                }
-            });
+        datasetTrigger$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((success: boolean) => {
+            if (success) {
+                setTimeout(() => {
+                    this.navigationService.navigateToDatasetView({
+                        accountName: this.datasetOverviewTabData.datasetBasics.owner.accountName,
+                        datasetName: this.datasetOverviewTabData.datasetBasics.name,
+                        tab: DatasetViewTypeEnum.Flows,
+                    });
+                }, AppValues.SIMULATION_START_CONDITION_DELAY_MS);
+            }
+        });
     }
 
     public addData(): void {

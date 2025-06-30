@@ -297,7 +297,9 @@ describe("DatasetSettingsGeneralTabComponent", () => {
             return Promise.resolve("");
         });
         const navigationServiceSpy = spyOn(navigationService, "navigateToDatasetView");
-        const datasetTriggerCompactionFlowSpy = spyOn(flowsService, "datasetTriggerCompactionFlow").and.returnValue(of(true));
+        const datasetTriggerCompactionFlowSpy = spyOn(flowsService, "datasetTriggerCompactionFlow").and.returnValue(
+            of(true),
+        );
 
         emitClickOnElementByDataTestId(fixture, Elements.ResetDatasetButton);
         tick(AppValues.SIMULATION_START_CONDITION_DELAY_MS);

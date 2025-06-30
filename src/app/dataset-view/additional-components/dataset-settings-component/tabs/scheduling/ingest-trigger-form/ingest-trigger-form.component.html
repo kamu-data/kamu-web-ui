@@ -1,7 +1,7 @@
 <div *ngIf="isLoaded; else loadingBlock">
     <form [formGroup]="pollingForm">
         <div class="mt-4 ms-1 px-2 pb-1 d-flex gap-1">
-            <mat-slide-toggle color="primary" class="mat-elevation-z0" formControlName="updatesState">
+            <mat-slide-toggle color="primary" class="mat-elevation-z0" formControlName="updatesEnabled">
                 <span class="ps-2"> {{ updateStateToggleLabel }}</span>
             </mat-slide-toggle>
             <app-tooltip-icon class="d-block" [tooltip]="UPDATES_TOOLTIP" />
@@ -19,19 +19,13 @@
                     >
                         <mat-radio-button disableRipple="true" [value]="PollingGroupEnum.TIME_DELTA">
                             <app-time-delta-form
-                                [disabled]="isTimeDeltaDisabled"
-                                [ngModel]="timeDeltaValue"
-                                (ngModelChange)="onTimeDeltaChange($event)"
-                                [ngModelOptions]="{standalone: true}"
+                                formControlName="timeDelta"
                                 data-test-id="time-delta-form"
                             ></app-time-delta-form>
                         </mat-radio-button>
                         <mat-radio-button [value]="PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION">
                             <app-cron-expression-form
-                                [disabled]="isCronExpressionDisabled"
-                                [ngModel]="cronExpressionValue"
-                                (ngModelChange)="onCronExpressionChange($event)"
-                                [ngModelOptions]="{standalone: true}"
+                                formControlName="cron"
                                 [showHelpText]="false"
                                 data-test-id="cron-expression-form"
                             ></app-cron-expression-form>

@@ -13,10 +13,6 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 @NgModule({
     declarations: [TimeDeltaFormComponent],
     exports: [TimeDeltaFormComponent],
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-    ],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule],
 })
 export class TimeDeltaFormModule {}

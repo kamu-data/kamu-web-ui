@@ -356,7 +356,7 @@ export class DatasetFlowTableHelpers {
                 return `Planned retry time: ${format(
                     node.timing.scheduledAt as string,
                     AppValues.CRON_EXPRESSION_DATE_FORMAT,
-                )}`;                
+                )}`;
             /* istanbul ignore next */
             default:
                 throw new Error("Unknown flow status");

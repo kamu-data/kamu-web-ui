@@ -21,10 +21,10 @@ import { DatasetFlowTriggerService } from "../../services/dataset-flow-trigger.s
 import { TimeDelta, TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { IngestConfigurationModule } from "../ingest-configuration/ingest-configuration-form/ingest-configuration.module";
 import { IngestTriggerModule } from "./ingest-trigger-form/ingest-trigger.module";
-import { PollingGroupFormValue } from "./dataset-settings-scheduling-tab.component.types";
+import { PollingGroupFormType } from "./dataset-settings-scheduling-tab.component.types";
 import { MaybeNull } from "src/app/interface/app.types";
 import { PollingGroupEnum } from "../../dataset-settings.model";
-import { cronExpressionValidator } from "src/app/common/helpers/data.helpers";
+import { CronExpressionFormValue } from "src/app/common/components/cron-expression-form/cron-expression-form.value";
 
 describe("DatasetSettingsSchedulingTabComponent", () => {
     let component: DatasetSettingsSchedulingTabComponent;
@@ -75,20 +75,16 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
     it("should check 'Save' button works for ROOT dataset with time delta", () => {
         const setDatasetFlowTriggersSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTriggers").and.callThrough();
 
-        const mockPollingTriggerForm = new FormGroup<PollingGroupFormValue>({
-            updatesState: new FormControl<boolean>(true, { nonNullable: true }),
+        const mockPollingTriggerForm = new FormGroup<PollingGroupFormType>({
+            updatesEnabled: new FormControl<boolean>(true, { nonNullable: true }),
             __typename: new FormControl(PollingGroupEnum.TIME_DELTA, [Validators.required]),
-            every: new FormControl<MaybeNull<number>>({ value: MOCK_PARAM_EVERY, disabled: false }, [
-                Validators.required,
-                Validators.min(1),
-            ]),
-            unit: new FormControl<MaybeNull<TimeUnit>>({ value: MOCK_PARAM_UNIT, disabled: false }, [
+            timeDelta: new FormControl<MaybeNull<TimeDelta>>({ value: MOCK_INPUT_TIME_DELTA, disabled: false }, [
                 Validators.required,
             ]),
-            cronExpression: new FormControl<MaybeNull<string>>({ value: "", disabled: true }, [
-                Validators.required,
-                cronExpressionValidator(),
-            ]),
+            cron: new FormControl<MaybeNull<CronExpressionFormValue>>(
+                { value: { cronExpression: "" }, disabled: true },
+                [Validators.required],
+            ),
         });
         component.pollingForm = mockPollingTriggerForm;
 
@@ -108,18 +104,14 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
     it("should check 'Save' button works for ROOT dataset with cron expression", () => {
         const setDatasetFlowTriggersSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTriggers").and.callThrough();
 
-        const mockPollingTriggerForm = new FormGroup<PollingGroupFormValue>({
-            updatesState: new FormControl<boolean>(true, { nonNullable: true }),
+        const mockPollingTriggerForm = new FormGroup<PollingGroupFormType>({
+            updatesEnabled: new FormControl<boolean>(true, { nonNullable: true }),
             __typename: new FormControl(PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION, [Validators.required]),
-            every: new FormControl<MaybeNull<number>>({ value: null, disabled: false }, [
-                Validators.required,
-                Validators.min(1),
-            ]),
-            unit: new FormControl<MaybeNull<TimeUnit>>({ value: null, disabled: false }, [Validators.required]),
-            cronExpression: new FormControl<MaybeNull<string>>({ value: MOCK_CRON_EXPRESSION, disabled: true }, [
-                Validators.required,
-                cronExpressionValidator(),
-            ]),
+            timeDelta: new FormControl<MaybeNull<TimeDelta>>({ value: null, disabled: true }, [Validators.required]),
+            cron: new FormControl<MaybeNull<CronExpressionFormValue>>(
+                { value: { cronExpression: MOCK_CRON_EXPRESSION }, disabled: true },
+                [Validators.required],
+            ),
         });
         component.pollingForm = mockPollingTriggerForm;
 

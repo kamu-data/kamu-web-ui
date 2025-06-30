@@ -59,7 +59,7 @@ describe("IngestTriggerFormComponent", () => {
         fixture = TestBed.createComponent(IngestTriggerFormComponent);
         component = fixture.componentInstance;
         datasetFlowTriggerService = TestBed.inject(DatasetFlowTriggerService);
-        
+
         component.datasetBasics = mockDatasetBasicsRootFragment;
         component.isLoaded = true;
     });
@@ -77,10 +77,7 @@ describe("IngestTriggerFormComponent", () => {
         tick(); // Wait for async operations
         fixture.detectChanges();
 
-        const cronExpessionControl = findElementByDataTestId(
-            fixture,
-            "cron-expression-input",
-        ) as HTMLInputElement;
+        const cronExpessionControl = findElementByDataTestId(fixture, "cron-expression-input") as HTMLInputElement;
         expect(cronExpessionControl.value.trim()).toEqual("* * * * ?");
     }));
 
@@ -103,7 +100,7 @@ describe("IngestTriggerFormComponent", () => {
             of(mockGetDatasetFlowTriggersTimeDeltaQuery),
         );
         fixture.detectChanges();
-        component.pollingForm.patchValue({ updatesState: true });
+        component.pollingForm.patchValue({ updatesEnabled: true });
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "cron-expression-form");
         expect(component.pollingType.value).toEqual(PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION);
@@ -116,7 +113,7 @@ describe("IngestTriggerFormComponent", () => {
             of(mockGetDatasetFlowTriggersTimeDeltaQuery),
         );
         fixture.detectChanges();
-        component.pollingForm.patchValue({ updatesState: true });
+        component.pollingForm.patchValue({ updatesEnabled: true });
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "cron-expression-form");
         expect(component.pollingType.value).toEqual(PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION);

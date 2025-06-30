@@ -64,9 +64,9 @@ describe("TimeDeltaFormComponent", () => {
 
     it("should emit formChange when form values change", () => {
         const emitSpy = spyOn(component.formChange, "emit");
-        
+
         component.form.patchValue({ every: 10, unit: TimeUnit.Minutes });
-        
+
         expect(emitSpy).toHaveBeenCalledWith(component.form);
     });
 });

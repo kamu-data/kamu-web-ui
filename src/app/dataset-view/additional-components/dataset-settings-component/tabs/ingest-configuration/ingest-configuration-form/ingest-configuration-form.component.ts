@@ -45,7 +45,7 @@ export class IngestConfigurationFormComponent extends BaseComponent implements O
                     );
                 }
             });
-            
+
         this.subscribeToFormValueChanges();
     }
 

@@ -14,7 +14,6 @@ export interface TimeDeltaFormValue {
     unit: TimeUnit | null;
 }
 
-
 export interface TimeDeltaFormType {
     every: FormControl<MaybeNull<number>>;
     unit: FormControl<MaybeNull<TimeUnit>>;

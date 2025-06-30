@@ -142,7 +142,6 @@ export const mockSetCompactionFlowConfigMutationError: SetCompactionFlowConfigMu
     },
 };
 
-
 export const mockSetDatasetFlowTriggersSuccess: SetDatasetFlowTriggersMutation = {
     datasets: {
         byId: {
@@ -812,7 +811,6 @@ export const mockDatasetTriggerIngestFlowMutationError: DatasetTriggerIngestFlow
     },
 };
 
-
 export const mockDatasetTriggerResetFlowMutation: DatasetTriggerResetFlowMutation = {
     datasets: {
         byId: {
@@ -884,7 +882,6 @@ export const mockDatasetTriggerResetFlowMutationError: DatasetTriggerResetFlowMu
         __typename: "DatasetsMut",
     },
 };
-
 
 export const mockCancelScheduledTasksMutationSuccess: CancelScheduledTasksMutation = {
     datasets: {

@@ -39,19 +39,21 @@ export class DatasetCompactionService {
         datasetId: string;
         resetArgs: FlowConfigResetInput;
     }): Observable<boolean> {
-        return this.datasetFlowApi.datasetTriggerResetFlow({
-            accountId: params.accountId,
-            datasetId: params.datasetId,
-            resetConfigInput: params.resetArgs,
-        }).pipe(
-            map((data: DatasetTriggerResetFlowMutation) => {
-                if (data.datasets.byId?.flows.runs.triggerResetFlow.__typename === "TriggerFlowSuccess") {
-                    return true;
-                } else {
-                    this.toastrService.error(data.datasets.byId?.flows.runs.triggerResetFlow.message);
-                    return false;
-                }
-            }),
-        );
+        return this.datasetFlowApi
+            .datasetTriggerResetFlow({
+                accountId: params.accountId,
+                datasetId: params.datasetId,
+                resetConfigInput: params.resetArgs,
+            })
+            .pipe(
+                map((data: DatasetTriggerResetFlowMutation) => {
+                    if (data.datasets.byId?.flows.runs.triggerResetFlow.__typename === "TriggerFlowSuccess") {
+                        return true;
+                    } else {
+                        this.toastrService.error(data.datasets.byId?.flows.runs.triggerResetFlow.message);
+                        return false;
+                    }
+                }),
+            );
     }
 }

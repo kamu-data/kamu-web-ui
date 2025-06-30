@@ -60,9 +60,10 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
     });
 
     it("should check save configuration", () => {
-        const setDatasetIngestFlowConfigsSpy = spyOn(datasetFlowConfigService, "setDatasetIngestFlowConfigs").and.returnValue(
-            of().pipe(),
-        );
+        const setDatasetIngestFlowConfigsSpy = spyOn(
+            datasetFlowConfigService,
+            "setDatasetIngestFlowConfigs",
+        ).and.returnValue(of().pipe());
         emitClickOnElementByDataTestId(fixture, "save-ingest-configuration");
         expect(setDatasetIngestFlowConfigsSpy).toHaveBeenCalledTimes(1);
     });

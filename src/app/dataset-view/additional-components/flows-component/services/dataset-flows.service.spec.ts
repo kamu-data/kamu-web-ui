@@ -139,14 +139,14 @@ describe("DatasetFlowsService", () => {
     });
 
     it("should check trigger dataset flow with error", () => {
-        spyOn(datasetFlowApi, "datasetTriggerIngestFlow").and.returnValue(of(mockDatasetTriggerIngestFlowMutationError));
+        spyOn(datasetFlowApi, "datasetTriggerIngestFlow").and.returnValue(
+            of(mockDatasetTriggerIngestFlowMutationError),
+        );
         const toastrServiceErrorSpy = spyOn(toastService, "error");
 
-        const subscription$ = service
-            .datasetTriggerIngestFlow({ datasetId: MOCK_DATASET_ID })
-            .subscribe(() => {
-                expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error");
-            });
+        const subscription$ = service.datasetTriggerIngestFlow({ datasetId: MOCK_DATASET_ID }).subscribe(() => {
+            expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error");
+        });
 
         expect(subscription$.closed).toBeTrue();
     });

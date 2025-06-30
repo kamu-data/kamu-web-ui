@@ -5,21 +5,24 @@
  * included in the LICENSE file.
  */
 
-import { FormControl, FormGroup } from "@angular/forms";
+import { FormControl } from "@angular/forms";
 import { PollingGroupEnum } from "../../dataset-settings.model";
-import { TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/interface/app.types";
+import { TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
+import { CronExpressionFormValue } from "src/app/common/components/cron-expression-form/cron-expression-form.value";
 
-export interface PollingFormType {
-    pollingGroup: FormGroup<PollingGroupFormValue>;
+export interface PollingGroupFormType {
+    updatesEnabled: FormControl<boolean>;
+    __typename: FormControl<MaybeNull<PollingGroupEnum>>;
+    timeDelta: FormControl<MaybeNull<TimeDeltaFormValue>>;
+    cron: FormControl<MaybeNull<CronExpressionFormValue>>;
 }
 
 export interface PollingGroupFormValue {
-    updatesState: FormControl<boolean>;
-    __typename: FormControl<MaybeNull<PollingGroupEnum>>;
-    every: FormControl<MaybeNull<number>>;
-    unit: FormControl<MaybeNull<TimeUnit>>;
-    cronExpression: FormControl<MaybeNull<string>>;
+    updatesEnabled: boolean;
+    __typename: PollingGroupEnum | null;
+    timeDelta: MaybeNull<TimeDeltaFormValue>;
+    cron: MaybeNull<CronExpressionFormValue>;
 }
 
 export interface IngestConfigurationFormType {

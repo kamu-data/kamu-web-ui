@@ -8,20 +8,20 @@
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { BaseComponent } from "src/app/common/components/base.component";
-import { PollingGroupEnum, ThrottlingGroupEnum } from "../../dataset-settings.model";
+import { PollingGroupEnum } from "../../dataset-settings.model";
 import {
     DatasetBasicsFragment,
     DatasetFlowType,
     DatasetKind,
     DatasetPermissionsFragment,
     FlowTriggerInput,
-    TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowTriggerService } from "../../services/dataset-flow-trigger.service";
-import { PollingGroupFormValue } from "./dataset-settings-scheduling-tab.component.types";
+import { PollingGroupFormType } from "./dataset-settings-scheduling-tab.component.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
+import { MaybeNull } from "src/app/interface/app.types";
 
 @Component({
     selector: "app-dataset-settings-scheduling-tab",
@@ -31,9 +31,8 @@ import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 })
 export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
     @Input(RoutingResolvers.DATASET_SETTINGS_SCHEDULING_KEY) public schedulungTabData: DatasetViewData;
-    public pollingForm: FormGroup<PollingGroupFormValue>;
-    public readonly throttlingGroupEnum: typeof ThrottlingGroupEnum = ThrottlingGroupEnum;
-    public readonly timeUnit: typeof TimeUnit = TimeUnit;
+
+    public pollingForm: MaybeNull<FormGroup<PollingGroupFormType>> = null;
 
     private readonly datasetFlowTriggerService = inject(DatasetFlowTriggerService);
 
@@ -49,17 +48,20 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
         return this.datasetBasics.kind === DatasetKind.Root;
     }
 
-    public changePollingTriggers(pollingForm: FormGroup<PollingGroupFormValue>): void {
+    public changePollingTriggers(pollingForm: FormGroup<PollingGroupFormType>): void {
         this.pollingForm = pollingForm;
     }
 
     public saveScheduledUpdates(): void {
+        if (!this.pollingForm) {
+            return;
+        }
         this.datasetFlowTriggerService
             .setDatasetFlowTriggers({
                 datasetId: this.datasetBasics.id,
                 datasetFlowType: DatasetFlowType.Ingest,
-                paused: !this.pollingForm.controls.updatesState.value,
-                triggerInput: this.setPollingTriggerInput(this.pollingForm),
+                paused: !this.pollingForm.controls.updatesEnabled.value,
+                triggerInput: this.buildPollingTriggerInput(this.pollingForm),
                 datasetInfo: {
                     accountName: this.datasetBasics.owner.accountName,
                     datasetName: this.datasetBasics.name,
@@ -69,34 +71,33 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
             .subscribe();
     }
 
-    public get enablePollingUpdates(): boolean {
-        return this.pollingForm && this.pollingForm.controls.updatesState.value;
-    }
-
     public get disabledSaveButton(): boolean {
-        return (
-            (this.pollingForm && this.pollingForm?.invalid) ||
-            (!this.pollingForm?.get("updatesState")?.value &&
-                !this.pollingForm?.get("every")?.value &&
-                this.pollingForm?.get("__typename")?.value === PollingGroupEnum.TIME_DELTA)
-        );
+        return !this.pollingForm || this.pollingForm.invalid;
     }
 
-    private setPollingTriggerInput(pollingForm: FormGroup<PollingGroupFormValue>): FlowTriggerInput {
+    private buildPollingTriggerInput(pollingForm: FormGroup<PollingGroupFormType>): FlowTriggerInput {
         if (pollingForm.controls.__typename.value === PollingGroupEnum.TIME_DELTA) {
+            const timeDeltaValue = pollingForm.controls.timeDelta.value;
+            if (!timeDeltaValue || !timeDeltaValue.every || !timeDeltaValue.unit) {
+                throw new Error("Time delta value is not valid");
+            }
             return {
                 schedule: {
                     timeDelta: {
-                        every: pollingForm.controls.every.value as number,
-                        unit: pollingForm.controls.unit.value as TimeUnit,
+                        every: timeDeltaValue.every,
+                        unit: timeDeltaValue.unit,
                     },
                 },
             };
         } else {
+            const cronValue = pollingForm.controls.cron.value;
+            if (!cronValue || !cronValue.cronExpression) {
+                throw new Error("Cron expression value is not valid");
+            }
             return {
                 schedule: {
                     // sync with server validator
-                    cron5ComponentExpression: pollingForm.controls.cronExpression.value as string,
+                    cron5ComponentExpression: cronValue.cronExpression,
                 },
             };
         }

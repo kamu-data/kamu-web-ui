@@ -60,10 +60,10 @@ export class DatasetFlowApi {
     private datasetPauseFlowsGQL = inject(DatasetPauseFlowsGQL);
     private datasetResumeFlowsGQL = inject(DatasetResumeFlowsGQL);
     private datasetAllFlowsPausedGQL = inject(DatasetAllFlowsPausedGQL);
-    
+
     private datasetTriggerIngestFlowGQL = inject(DatasetTriggerIngestFlowGQL);
     private datasetTriggetTransformFlowGQL = inject(DatasetTriggerTransformFlowGQL);
-    private datasetTriggerCompactionFlowGQL = inject(DatasetTriggerCompactionFlowGQL)
+    private datasetTriggerCompactionFlowGQL = inject(DatasetTriggerCompactionFlowGQL);
     private datasetTriggerResetFlowGQL = inject(DatasetTriggerResetFlowGQL);
 
     private datasetFlowByIdGQL = inject(GetFlowByIdGQL);
@@ -74,7 +74,6 @@ export class DatasetFlowApi {
 
     private setIngestFlowConfigGQL = inject(SetIngestFlowConfigGQL);
     private setCompactionFlowConfigGQL = inject(SetCompactionFlowConfigGQL);
-
 
     public datasetTriggerIngestFlow(params: {
         accountId: string;
@@ -126,8 +125,6 @@ export class DatasetFlowApi {
             }),
         );
     }
-
-
 
     public getDatasetFlowConfigs(params: {
         datasetId: string;

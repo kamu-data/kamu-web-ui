@@ -5,19 +5,8 @@
  * included in the LICENSE file.
  */
 
-import {
-    ChangeDetectionStrategy,
-    Component,
-    forwardRef,
-    Input,
-} from "@angular/core";
-import {
-    FormControl,
-    FormGroup,
-    NG_VALUE_ACCESSOR,
-    ValidatorFn,
-    Validators,
-} from "@angular/forms";
+import { ChangeDetectionStrategy, Component, forwardRef, Input } from "@angular/core";
+import { FormControl, FormGroup, NG_VALUE_ACCESSOR, ValidatorFn, Validators } from "@angular/forms";
 import { TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { BaseFormControlComponent } from "../base-form-control.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -42,7 +31,7 @@ export class TimeDeltaFormComponent extends BaseFormControlComponent<TimeDeltaFo
     @Input() public label: string = "Launch every:";
 
     public readonly TimeUnit: typeof TimeUnit = TimeUnit;
-    
+
     private everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = everyTimeMapperValidators;
 
     public form = new FormGroup<TimeDeltaFormType>({
@@ -66,11 +55,13 @@ export class TimeDeltaFormComponent extends BaseFormControlComponent<TimeDeltaFo
     }
 
     private setEveryTimeValidator(): void {
-        this.unitControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((data: MaybeNull<TimeUnit>) => {
-            if (data) {
-                this.everyControl.setValidators([this.everyTimeMapperValidators[data], Validators.required]);
-                this.everyControl.updateValueAndValidity();
-            }
-        });
+        this.unitControl.valueChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((data: MaybeNull<TimeUnit>) => {
+                if (data) {
+                    this.everyControl.setValidators([this.everyTimeMapperValidators[data], Validators.required]);
+                    this.everyControl.updateValueAndValidity();
+                }
+            });
     }
 }

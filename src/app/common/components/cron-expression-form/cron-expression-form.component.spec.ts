@@ -61,20 +61,20 @@ describe("CronExpressionFormComponent", () => {
 
     it("should emit formChange when form values change", () => {
         const emitSpy = spyOn(component.formChange, "emit");
-        
+
         component.form.patchValue({ cronExpression: "0 9 * * MON" });
-        
+
         expect(emitSpy).toHaveBeenCalledWith(component.form);
     });
 
     it("should validate cron expression", () => {
         const cronControl = component.form.get("cronExpression");
-        
+
         // Invalid cron expression
         cronControl?.setValue("invalid");
         cronControl?.markAsTouched();
         expect(cronControl?.hasError("invalidCronExpression")).toBe(true);
-        
+
         // Valid cron expression (basic format that should pass)
         cronControl?.setValue("* * * * *");
         expect(cronControl?.hasError("invalidCronExpression")).toBe(false);

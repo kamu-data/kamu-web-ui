@@ -58,7 +58,7 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
 
     it("should check 'Save triger' button works for DERIVATIVE dataset", () => {
         const setDatasetFlowTriggersSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTriggers").and.callThrough();
-        
+
         const mockBatchingTriggerForm = new FormGroup<BatchingFormType>({
             updatesState: new FormControl<boolean>(false, { nonNullable: true }),
             every: new FormControl<MaybeNull<number>>({ value: MOCK_PARAM_EVERY, disabled: false }, [

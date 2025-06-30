@@ -10,7 +10,6 @@ import { DatasetSettingsIngestConfigurationTabComponent } from "./dataset-settin
 import { FormGroup, FormControl } from "@angular/forms";
 import { IngestConfigurationFormType } from "../scheduling/dataset-settings-scheduling-tab.component.types";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
 import { ToastrModule } from "ngx-toastr";
 import { Apollo } from "apollo-angular";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
@@ -20,11 +19,12 @@ import { MatDividerModule } from "@angular/material/divider";
 import { IngestConfigurationModule } from "./ingest-configuration-form/ingest-configuration.module";
 import { of } from "rxjs";
 import { mockIngestGetDatasetFlowConfigsSuccess } from "src/app/api/mock/dataset-flow.mock";
+import { DatasetFlowConfigService } from "../../services/dataset-flow-config.service";
 
 describe("DatasetSettingsIngestConfigurationTabComponent", () => {
     let component: DatasetSettingsIngestConfigurationTabComponent;
     let fixture: ComponentFixture<DatasetSettingsIngestConfigurationTabComponent>;
-    let datasetSchedulingService: DatasetSchedulingService;
+    let datasetFlowConfigService: DatasetFlowConfigService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -33,7 +33,8 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
             providers: [Apollo, HttpClientTestingModule],
         });
         fixture = TestBed.createComponent(DatasetSettingsIngestConfigurationTabComponent);
-        datasetSchedulingService = TestBed.inject(DatasetSchedulingService);
+        datasetFlowConfigService = TestBed.inject(DatasetFlowConfigService);
+
         component = fixture.componentInstance;
         component.ingestConfigurationTabData = {
             datasetBasics: mockDatasetBasicsRootFragment,
@@ -42,7 +43,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
         component.ingestConfigurationForm = new FormGroup<IngestConfigurationFormType>({
             fetchUncacheable: new FormControl<boolean>(false, { nonNullable: true }),
         });
-        spyOn(datasetSchedulingService, "fetchDatasetFlowConfigs").and.returnValue(
+        spyOn(datasetFlowConfigService, "fetchDatasetFlowConfigs").and.returnValue(
             of(mockIngestGetDatasetFlowConfigsSuccess),
         );
         fixture.detectChanges();
@@ -59,7 +60,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
     });
 
     it("should check save configuration", () => {
-        const setDatasetIngestFlowConfigsSpy = spyOn(datasetSchedulingService, "setDatasetIngestFlowConfigs").and.returnValue(
+        const setDatasetIngestFlowConfigsSpy = spyOn(datasetFlowConfigService, "setDatasetIngestFlowConfigs").and.returnValue(
             of().pipe(),
         );
         emitClickOnElementByDataTestId(fixture, "save-ingest-configuration");

@@ -22,7 +22,7 @@ import {
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
-import { DatasetSchedulingService } from "../../../services/dataset-scheduling.service";
+import { DatasetFlowTriggerService } from "../../../services/dataset-flow-trigger.service";
 import { FormGroup, FormControl, Validators, AbstractControl, ValidatorFn } from "@angular/forms";
 import { MaybeNull } from "src/app/interface/app.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -59,8 +59,8 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
         ]),
     });
 
-    private datasetSchedulingService = inject(DatasetSchedulingService);
-    private cdr = inject(ChangeDetectorRef);
+    private readonly datasetFlowTriggerService = inject(DatasetFlowTriggerService);
+    private readonly cdr = inject(ChangeDetectorRef);
 
     public get batchingUpdatesState(): AbstractControl {
         return this.batchingForm.controls.updatesState;
@@ -120,7 +120,7 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
     }
 
     public initBatchingForm(): void {
-        this.datasetSchedulingService
+        this.datasetFlowTriggerService
             .fetchDatasetFlowTriggers(this.datasetBasics.id, DatasetFlowType.ExecuteTransform)
             .pipe(
                 finalize(() => {

@@ -11,7 +11,7 @@ import { IngestConfigurationFormType } from "../../scheduling/dataset-settings-s
 import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DatasetBasicsFragment, DatasetFlowType, GetDatasetFlowConfigsQuery } from "src/app/api/kamu.graphql.interface";
-import { DatasetSchedulingService } from "../../../services/dataset-scheduling.service";
+import { DatasetFlowConfigService } from "../../../services/dataset-flow-config.service";
 
 @Component({
     selector: "app-ingest-configuration-form",
@@ -23,14 +23,14 @@ export class IngestConfigurationFormComponent extends BaseComponent implements O
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Output() public changeConfigurationEmit = new EventEmitter<FormGroup<IngestConfigurationFormType>>();
 
-    private datasetSchedulingService = inject(DatasetSchedulingService);
+    private readonly datasetFlowConfigService = inject(DatasetFlowConfigService);
 
     public ingestConfigurationForm = new FormGroup<IngestConfigurationFormType>({
         fetchUncacheable: new FormControl<boolean>(false, { nonNullable: true }),
     });
 
     public ngOnInit(): void {
-        this.datasetSchedulingService
+        this.datasetFlowConfigService
             .fetchDatasetFlowConfigs(this.datasetBasics.id, DatasetFlowType.Ingest)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((data: GetDatasetFlowConfigsQuery) => {
@@ -45,10 +45,11 @@ export class IngestConfigurationFormComponent extends BaseComponent implements O
                     );
                 }
             });
-        this.changeIngestConfiguration();
+            
+        this.subscribeToFormValueChanges();
     }
 
-    public changeIngestConfiguration(): void {
+    private subscribeToFormValueChanges(): void {
         this.ingestConfigurationForm.valueChanges.subscribe(() => {
             this.changeConfigurationEmit.emit(this.ingestConfigurationForm);
         });

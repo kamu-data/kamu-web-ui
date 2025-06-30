@@ -29,7 +29,7 @@ import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { cronExpressionValidator, everyTimeMapperValidators } from "src/app/common/helpers/data.helpers";
 import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetSchedulingService } from "../../../services/dataset-scheduling.service";
+import { DatasetFlowTriggerService } from "../../../services/dataset-flow-trigger.service";
 import { TriggersTooltipsTexts } from "src/app/common/tooltips/triggers.text";
 import { finalize } from "rxjs";
 
@@ -50,8 +50,8 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
     public readonly UPDATES_TOOLTIP = TriggersTooltipsTexts.UPDATE_SELECTOR_TOOLTIP;
     private everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = everyTimeMapperValidators;
 
-    private datasetSchedulingService = inject(DatasetSchedulingService);
-    private cdr = inject(ChangeDetectorRef);
+    private readonly datasetFlowTriggerService = inject(DatasetFlowTriggerService);
+    private readonly cdr = inject(ChangeDetectorRef);
 
     public pollingForm = new FormGroup<PollingGroupType>({
         updatesState: new FormControl<boolean>(false, { nonNullable: true }),
@@ -84,7 +84,7 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
     }
 
     public initPollingForm(): void {
-        this.datasetSchedulingService
+        this.datasetFlowTriggerService
             .fetchDatasetFlowTriggers(this.datasetBasics.id, DatasetFlowType.Ingest)
             .pipe(
                 finalize(() => {

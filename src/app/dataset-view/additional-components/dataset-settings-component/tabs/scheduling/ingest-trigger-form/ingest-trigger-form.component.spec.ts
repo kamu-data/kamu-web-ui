@@ -14,7 +14,7 @@ import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { ToastrModule } from "ngx-toastr";
-import { DatasetSchedulingService } from "../../../services/dataset-scheduling.service";
+import { DatasetFlowTriggerService } from "../../../services/dataset-flow-trigger.service";
 import { of } from "rxjs";
 import {
     mockGetDatasetFlowTriggersQuery,
@@ -33,7 +33,7 @@ import { TooltipIconModule } from "src/app/common/components/tooltip-icon/toolti
 describe("IngestTriggerFormComponent", () => {
     let component: IngestTriggerFormComponent;
     let fixture: ComponentFixture<IngestTriggerFormComponent>;
-    let datasetSchedulingService: DatasetSchedulingService;
+    let datasetFlowTriggerService: DatasetFlowTriggerService;
 
     const MOCK_INVALID_CRON_EXPRESSION = "* *";
 
@@ -54,7 +54,8 @@ describe("IngestTriggerFormComponent", () => {
         });
         fixture = TestBed.createComponent(IngestTriggerFormComponent);
         component = fixture.componentInstance;
-        datasetSchedulingService = TestBed.inject(DatasetSchedulingService);
+        datasetFlowTriggerService = TestBed.inject(DatasetFlowTriggerService);
+        
         component.datasetBasics = mockDatasetBasicsRootFragment;
         component.isLoaded = true;
     });
@@ -64,7 +65,7 @@ describe("IngestTriggerFormComponent", () => {
     });
 
     it("should check init form with cron expression", () => {
-        spyOn(datasetSchedulingService, "fetchDatasetFlowTriggers").and.returnValue(
+        spyOn(datasetFlowTriggerService, "fetchDatasetFlowTriggers").and.returnValue(
             of(mockGetDatasetFlowTriggersQuery),
         );
         fixture.detectChanges();
@@ -77,7 +78,7 @@ describe("IngestTriggerFormComponent", () => {
     });
 
     it("should check init form with time delta", () => {
-        spyOn(datasetSchedulingService, "fetchDatasetFlowTriggers").and.returnValue(
+        spyOn(datasetFlowTriggerService, "fetchDatasetFlowTriggers").and.returnValue(
             of(mockGetDatasetFlowTriggersTimeDeltaQuery),
         );
         fixture.detectChanges();
@@ -89,7 +90,7 @@ describe("IngestTriggerFormComponent", () => {
     });
 
     it("should check switch polling options", () => {
-        spyOn(datasetSchedulingService, "fetchDatasetFlowTriggers").and.returnValue(
+        spyOn(datasetFlowTriggerService, "fetchDatasetFlowTriggers").and.returnValue(
             of(mockGetDatasetFlowTriggersTimeDeltaQuery),
         );
         fixture.detectChanges();
@@ -102,7 +103,7 @@ describe("IngestTriggerFormComponent", () => {
     });
 
     it("should check cron expression error", () => {
-        spyOn(datasetSchedulingService, "fetchDatasetFlowTriggers").and.returnValue(
+        spyOn(datasetFlowTriggerService, "fetchDatasetFlowTriggers").and.returnValue(
             of(mockGetDatasetFlowTriggersTimeDeltaQuery),
         );
         fixture.detectChanges();

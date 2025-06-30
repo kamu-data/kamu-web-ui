@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormGroup } from "@angular/forms";
 import { DatasetBasicsFragment, DatasetFlowType, FlowTriggerInput, TimeUnit } from "src/app/api/kamu.graphql.interface";
-import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
+import { DatasetFlowTriggerService } from "../../services/dataset-flow-trigger.service";
 import { BaseComponent } from "src/app/common/components/base.component";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
@@ -24,15 +24,15 @@ import { BatchingFormType } from "./dataset-settings-transform-options-tab.compo
 export class DatasetSettingsTransformOptionsTabComponent extends BaseComponent {
     @Input(RoutingResolvers.DATASET_SETTINGS_TRANSFORM_KEY) public transformViewData: DatasetViewData;
 
-    private datasetSchedulingService = inject(DatasetSchedulingService);
+    private readonly datasetFlowTriggerService = inject(DatasetFlowTriggerService);
 
     public get datasetBasics(): DatasetBasicsFragment {
         return this.transformViewData.datasetBasics;
     }
 
     public saveBatchingTriggers(batchingTriggerForm: FormGroup<BatchingFormType>): void {
-        this.datasetSchedulingService
-            .setDatasetTriggers({
+        this.datasetFlowTriggerService
+            .setDatasetFlowTriggers({
                 datasetId: this.datasetBasics.id,
                 datasetFlowType: DatasetFlowType.ExecuteTransform,
                 paused: !batchingTriggerForm.controls.updatesState.value,

@@ -11,7 +11,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { Apollo } from "apollo-angular";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { DatasetSchedulingService } from "../../../services/dataset-scheduling.service";
+import { DatasetFlowTriggerService } from "../../../services/dataset-flow-trigger.service";
 import {
     mockGetDatasetFlowTriggersBatchingQuery,
     mockGetDatasetFlowTriggersDefaultBatchingQuery,
@@ -28,7 +28,7 @@ import { FormValidationErrorsModule } from "src/app/common/directives/form-valid
 describe("BatchingTriggerFormComponent", () => {
     let component: BatchingTriggerFormComponent;
     let fixture: ComponentFixture<BatchingTriggerFormComponent>;
-    let datasetSchedulingService: DatasetSchedulingService;
+    let datasetSchedulingService: DatasetFlowTriggerService;
     let fetchDatasetFlowTriggersSpy: jasmine.Spy;
 
     beforeEach(() => {
@@ -50,7 +50,7 @@ describe("BatchingTriggerFormComponent", () => {
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
         component.isLoaded = true;
-        datasetSchedulingService = TestBed.inject(DatasetSchedulingService);
+        datasetSchedulingService = TestBed.inject(DatasetFlowTriggerService);
         fetchDatasetFlowTriggersSpy = spyOn(datasetSchedulingService, "fetchDatasetFlowTriggers").and.returnValue(
             of(mockGetDatasetFlowTriggersBatchingQuery),
         );

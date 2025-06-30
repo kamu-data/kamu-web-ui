@@ -4,7 +4,7 @@
             <div>
                 <nav>
                     <ul role="list" class="action-list d-flex flex-column gap-1">
-                        <ng-container *ngFor="let navItem of sidePanelData">
+                        <ng-container *ngFor="let navItem of DATASET_SETTINGS_SIDE_PANEL_DATA">
                             <li
                                 [appFeatureFlag]="'dataset.panel.settings.' + navItem.id"
                                 [class.action-list-item--nav-active]="activeTab === navItem.activeTab"

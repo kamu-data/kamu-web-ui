@@ -17,7 +17,7 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatRadioModule } from "@angular/material/radio";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
+import { DatasetFlowTriggerService } from "../../services/dataset-flow-trigger.service";
 import { TimeDelta, TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { IngestConfigurationModule } from "../ingest-configuration/ingest-configuration-form/ingest-configuration.module";
 import { IngestTriggerModule } from "./ingest-trigger-form/ingest-trigger.module";
@@ -29,7 +29,7 @@ import { cronExpressionValidator } from "src/app/common/helpers/data.helpers";
 describe("DatasetSettingsSchedulingTabComponent", () => {
     let component: DatasetSettingsSchedulingTabComponent;
     let fixture: ComponentFixture<DatasetSettingsSchedulingTabComponent>;
-    let datasetSchedulingService: DatasetSchedulingService;
+    let datasetFlowTriggerService: DatasetFlowTriggerService;
 
     const MOCK_PARAM_EVERY = 10;
     const MOCK_PARAM_UNIT = TimeUnit.Minutes;
@@ -58,7 +58,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         }).compileComponents();
 
         fixture = TestBed.createComponent(DatasetSettingsSchedulingTabComponent);
-        datasetSchedulingService = TestBed.inject(DatasetSchedulingService);
+        datasetFlowTriggerService = TestBed.inject(DatasetFlowTriggerService);
 
         component = fixture.componentInstance;
         component.schedulungTabData = {
@@ -73,7 +73,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
     });
 
     it("should check 'Save' button works for ROOT dataset with time delta", () => {
-        const setDatasetFlowScheduleSpy = spyOn(datasetSchedulingService, "setDatasetTriggers").and.callThrough();
+        const setDatasetFlowTriggersSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTriggers").and.callThrough();
 
         const mockPollingTriggerForm = new FormGroup<PollingGroupType>({
             updatesState: new FormControl<boolean>(true, { nonNullable: true }),
@@ -94,7 +94,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
 
         component.saveScheduledUpdates();
 
-        expect(setDatasetFlowScheduleSpy).toHaveBeenCalledWith(
+        expect(setDatasetFlowTriggersSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
                 triggerInput: {
                     schedule: {
@@ -106,7 +106,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
     });
 
     it("should check 'Save' button works for ROOT dataset with cron expression", () => {
-        const setDatasetFlowScheduleSpy = spyOn(datasetSchedulingService, "setDatasetTriggers").and.callThrough();
+        const setDatasetFlowTriggersSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTriggers").and.callThrough();
 
         const mockPollingTriggerForm = new FormGroup<PollingGroupType>({
             updatesState: new FormControl<boolean>(true, { nonNullable: true }),
@@ -125,7 +125,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
 
         component.saveScheduledUpdates();
 
-        expect(setDatasetFlowScheduleSpy).toHaveBeenCalledWith(
+        expect(setDatasetFlowTriggersSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
                 triggerInput: {
                     schedule: {

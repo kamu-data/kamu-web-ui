@@ -11,7 +11,7 @@ import { FormGroup } from "@angular/forms";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
-import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
+import { DatasetFlowConfigService } from "../../services/dataset-flow-config.service";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
@@ -23,20 +23,21 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 export class DatasetSettingsIngestConfigurationTabComponent extends BaseComponent {
     @Input(RoutingResolvers.DATASET_SETTINGS_INGEST_CONFIGURATION_KEY)
     public ingestConfigurationTabData: DatasetViewData;
+
     public ingestConfigurationForm: FormGroup<IngestConfigurationFormType>;
 
-    private datasetSchedulingService = inject(DatasetSchedulingService);
+    private readonly datasetFlowConfigService = inject(DatasetFlowConfigService);
 
     public get datasetBasics(): DatasetBasicsFragment {
         return this.ingestConfigurationTabData.datasetBasics;
     }
 
-    public changeIngestConfiguration(ingestConfigurationForm: FormGroup<IngestConfigurationFormType>): void {
+    protected changeIngestConfiguration(ingestConfigurationForm: FormGroup<IngestConfigurationFormType>): void {
         this.ingestConfigurationForm = ingestConfigurationForm;
     }
 
-    public saveConfiguration(): void {
-        this.datasetSchedulingService
+    protected saveConfiguration(): void {
+        this.datasetFlowConfigService
             .setDatasetIngestFlowConfigs({
                 datasetId: this.datasetBasics.id,
                 ingestConfigInput: {

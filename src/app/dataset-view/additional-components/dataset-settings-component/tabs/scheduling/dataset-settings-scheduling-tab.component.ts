@@ -17,7 +17,7 @@ import {
     FlowTriggerInput,
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
-import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
+import { DatasetFlowTriggerService } from "../../services/dataset-flow-trigger.service";
 import { PollingGroupType } from "./dataset-settings-scheduling-tab.component.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
@@ -35,7 +35,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
     public readonly throttlingGroupEnum: typeof ThrottlingGroupEnum = ThrottlingGroupEnum;
     public readonly timeUnit: typeof TimeUnit = TimeUnit;
 
-    private datasetSchedulingService = inject(DatasetSchedulingService);
+    private readonly datasetFlowTriggerService = inject(DatasetFlowTriggerService);
 
     public get datasetBasics(): DatasetBasicsFragment {
         return this.schedulungTabData.datasetBasics;
@@ -54,8 +54,8 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
     }
 
     public saveScheduledUpdates(): void {
-        this.datasetSchedulingService
-            .setDatasetTriggers({
+        this.datasetFlowTriggerService
+            .setDatasetFlowTriggers({
                 datasetId: this.datasetBasics.id,
                 datasetFlowType: DatasetFlowType.Ingest,
                 paused: !this.pollingForm.controls.updatesState.value,

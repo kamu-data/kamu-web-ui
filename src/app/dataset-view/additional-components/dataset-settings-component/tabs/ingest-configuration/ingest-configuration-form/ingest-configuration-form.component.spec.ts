@@ -11,17 +11,17 @@ import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { ToastrModule } from "ngx-toastr";
-import { DatasetSchedulingService } from "../../../services/dataset-scheduling.service";
 import { of } from "rxjs";
 import { mockIngestGetDatasetFlowConfigsSuccess } from "src/app/api/mock/dataset-flow.mock";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { DatasetFlowConfigService } from "../../../services/dataset-flow-config.service";
 
 describe("IngestConfigurationFormComponent", () => {
     let component: IngestConfigurationFormComponent;
     let fixture: ComponentFixture<IngestConfigurationFormComponent>;
-    let datasetSchedulingService: DatasetSchedulingService;
+    let datasetFlowConfigService: DatasetFlowConfigService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -31,9 +31,10 @@ describe("IngestConfigurationFormComponent", () => {
         });
         fixture = TestBed.createComponent(IngestConfigurationFormComponent);
         component = fixture.componentInstance;
-        datasetSchedulingService = TestBed.inject(DatasetSchedulingService);
+        datasetFlowConfigService = TestBed.inject(DatasetFlowConfigService);
+
         component.datasetBasics = mockDatasetBasicsRootFragment;
-        spyOn(datasetSchedulingService, "fetchDatasetFlowConfigs").and.returnValue(
+        spyOn(datasetFlowConfigService, "fetchDatasetFlowConfigs").and.returnValue(
             of(mockIngestGetDatasetFlowConfigsSuccess),
         );
         fixture.detectChanges();

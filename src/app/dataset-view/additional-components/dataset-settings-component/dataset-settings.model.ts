@@ -36,7 +36,7 @@ export interface DatasetSettingsSidePanelItem {
     iconClassName?: string;
 }
 
-export const datasetSettingsSidePanelData: DatasetSettingsSidePanelItem[] = [
+export const DATASET_SETTINGS_SIDE_PANEL_DATA: DatasetSettingsSidePanelItem[] = [
     {
         name: "General",
         iconName: "account",

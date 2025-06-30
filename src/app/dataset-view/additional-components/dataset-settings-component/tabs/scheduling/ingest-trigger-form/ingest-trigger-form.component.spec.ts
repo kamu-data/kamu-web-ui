@@ -28,7 +28,6 @@ import {
 import { TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { PollingGroupEnum } from "../../../dataset-settings.model";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { TooltipIconModule } from "src/app/common/components/tooltip-icon/tooltip-icon.module";
 
 describe("IngestTriggerFormComponent", () => {
     let component: IngestTriggerFormComponent;
@@ -39,19 +38,18 @@ describe("IngestTriggerFormComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    providers: [Apollo],
-    imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        ToastrModule.forRoot(),
-        MatRadioModule,
-        SharedTestModule,
-        MatSlideToggleModule,
-        MatProgressBarModule,
-        TooltipIconModule,
-        IngestTriggerFormComponent,
-    ],
-});
+            providers: [Apollo],
+            imports: [
+                FormsModule,
+                ReactiveFormsModule,
+                ToastrModule.forRoot(),
+                MatRadioModule,
+                SharedTestModule,
+                MatSlideToggleModule,
+                MatProgressBarModule,
+                IngestTriggerFormComponent,
+            ],
+        });
         fixture = TestBed.createComponent(IngestTriggerFormComponent);
         component = fixture.componentInstance;
         datasetSchedulingService = TestBed.inject(DatasetSchedulingService);

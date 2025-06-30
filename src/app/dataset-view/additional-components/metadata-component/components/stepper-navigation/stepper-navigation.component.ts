@@ -8,9 +8,9 @@
 import { MaybeNull } from "src/app/interface/app.types";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { SourcesSection } from "../source-events/add-polling-source/process-form.service.types";
-import { MatStepperModule } from "@angular/material/stepper";
 import { MatButtonModule } from "@angular/material/button";
 import { NgIf } from "@angular/common";
+import { CdkStepper } from "@angular/cdk/stepper";
 
 @Component({
     selector: "app-stepper-navigation",
@@ -18,13 +18,9 @@ import { NgIf } from "@angular/common";
     styleUrls: ["./stepper-navigation.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [
-        NgIf,
-        MatButtonModule,
-        MatStepperModule,
-    ],
+    imports: [NgIf, MatButtonModule],
 })
-export class StepperNavigationComponent {
+export class StepperNavigationComponent extends CdkStepper {
     @Input() public nextStep: MaybeNull<SourcesSection> = null;
     @Input() public prevStep: MaybeNull<SourcesSection> = null;
     @Input() public validStep?: boolean;

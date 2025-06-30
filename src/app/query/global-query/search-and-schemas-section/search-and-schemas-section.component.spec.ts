@@ -20,7 +20,6 @@ import { mockDatasetBasicsDerivedFragment, mockSqlQueryResponseState } from "src
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { of } from "rxjs";
 import { mockGetDatasetSchemaQuery } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
-import { DynamicTableModule } from "src/app/common/components/dynamic-table/dynamic-table.module";
 import AppValues from "src/app/common/values/app.values";
 import { dispatchInputEvent, emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
@@ -36,18 +35,18 @@ describe("SearchAndSchemasSectionComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [
-        CdkAccordionModule,
-        MatIconModule,
-        MatDividerModule,
-        SharedTestModule,
-        NgbTypeaheadModule,
-        DynamicTableModule,
-        FormsModule,
-        SearchAndSchemasSectionComponent, SavedQueriesSectionComponent,
-    ],
-    providers: [Apollo],
-});
+            imports: [
+                CdkAccordionModule,
+                MatIconModule,
+                MatDividerModule,
+                SharedTestModule,
+                NgbTypeaheadModule,
+                FormsModule,
+                SearchAndSchemasSectionComponent,
+                SavedQueriesSectionComponent,
+            ],
+            providers: [Apollo],
+        });
         fixture = TestBed.createComponent(SearchAndSchemasSectionComponent);
         component = fixture.componentInstance;
         sqlQueryService = TestBed.inject(SqlQueryService);

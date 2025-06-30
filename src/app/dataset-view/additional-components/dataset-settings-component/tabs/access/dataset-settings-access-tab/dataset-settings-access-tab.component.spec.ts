@@ -22,7 +22,6 @@ import {
     mockDatasetListCollaboratorsQuery,
 } from "src/app/api/mock/dataset-collaborations.mock";
 import { AccountWithRoleConnection, DatasetAccessRole } from "src/app/api/kamu.graphql.interface";
-import { PaginationModule } from "src/app/common/components/pagination-component/pagination.module";
 import { MatTableModule } from "@angular/material/table";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { FormsModule } from "@angular/forms";
@@ -47,48 +46,47 @@ describe("DatasetSettingsAccessTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    providers: [
-        Apollo,
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                snapshot: {
-                    queryParamMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "page":
-                                    return 2;
-                            }
-                        },
-                    },
-                    paramMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "accountName":
-                                    return "accountName";
-                                case "datasetName":
-                                    return "datasetName";
-                            }
+            providers: [
+                Apollo,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            queryParamMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "page":
+                                            return 2;
+                                    }
+                                },
+                            },
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return "accountName";
+                                        case "datasetName":
+                                            return "datasetName";
+                                    }
+                                },
+                            },
                         },
                     },
                 },
-            },
-        },
-    ],
-    imports: [
-        ApolloTestingModule,
-        ToastrModule.forRoot(),
-        RouterTestingModule,
-        RouterModule,
-        HttpClientModule,
-        MatIconModule,
-        PaginationModule,
-        MatTableModule,
-        MatCheckboxModule,
-        FormsModule,
-        DatasetSettingsAccessTabComponent,
-    ],
-});
+            ],
+            imports: [
+                ApolloTestingModule,
+                ToastrModule.forRoot(),
+                RouterTestingModule,
+                RouterModule,
+                HttpClientModule,
+                MatIconModule,
+                MatTableModule,
+                MatCheckboxModule,
+                FormsModule,
+                DatasetSettingsAccessTabComponent,
+            ],
+        });
         registerMatSvgIcons();
 
         fixture = TestBed.createComponent(DatasetSettingsAccessTabComponent);

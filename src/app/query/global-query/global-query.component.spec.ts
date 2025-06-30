@@ -6,7 +6,6 @@
  */
 
 import { SavedQueriesSectionComponent } from "../shared/saved-queries-section/saved-queries-section.component";
-import { DynamicTableModule } from "./../../common/components/dynamic-table/dynamic-table.module";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { GlobalQueryComponent } from "./global-query.component";
 import { EditorModule } from "src/app/editor/editor.module";
@@ -41,28 +40,27 @@ describe("GlobalQueryComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [
-        EditorModule,
-        HttpClientTestingModule,
-        ToastrModule.forRoot(),
-        MatMenuModule,
-        MatProgressBarModule,
-        CdkAccordionModule,
-        DynamicTableModule,
-        MatIconModule,
-        NgbTypeaheadModule,
-        MatDividerModule,
-        FormsModule,
-        SharedTestModule,
-        GlobalQueryComponent,
-        SavedQueriesSectionComponent,
-        RequestTimerComponent,
-        QueryAndResultSectionsComponent,
-        SearchAndSchemasSectionComponent,
-        EngineSelectComponent,
-    ],
-    providers: [Apollo],
-});
+            imports: [
+                EditorModule,
+                HttpClientTestingModule,
+                ToastrModule.forRoot(),
+                MatMenuModule,
+                MatProgressBarModule,
+                CdkAccordionModule,
+                MatIconModule,
+                NgbTypeaheadModule,
+                MatDividerModule,
+                FormsModule,
+                SharedTestModule,
+                GlobalQueryComponent,
+                SavedQueriesSectionComponent,
+                RequestTimerComponent,
+                QueryAndResultSectionsComponent,
+                SearchAndSchemasSectionComponent,
+                EngineSelectComponent,
+            ],
+            providers: [Apollo],
+        });
         fixture = TestBed.createComponent(GlobalQueryComponent);
         component = fixture.componentInstance;
         component.sqlQuery = SQL_QUERY;

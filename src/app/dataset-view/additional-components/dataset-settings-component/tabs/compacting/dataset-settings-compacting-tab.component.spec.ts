@@ -27,7 +27,6 @@ import AppValues from "src/app/common/values/app.values";
 import { ActivatedRoute } from "@angular/router";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
-import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
 
 describe("DatasetSettingsCompactingTabComponent", () => {
     let component: DatasetSettingsCompactingTabComponent;
@@ -38,43 +37,43 @@ describe("DatasetSettingsCompactingTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    providers: [
-        Apollo,
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                snapshot: {
-                    queryParamMap: {
-                        get: () => null,
-                    },
-                    paramMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "accountName":
-                                    return mockDatasetBasicsDerivedFragment.owner.accountName;
-                                case "datasetName":
-                                    return mockDatasetBasicsDerivedFragment.name;
-                            }
+            providers: [
+                Apollo,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            queryParamMap: {
+                                get: () => null,
+                            },
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return mockDatasetBasicsDerivedFragment.owner.accountName;
+                                        case "datasetName":
+                                            return mockDatasetBasicsDerivedFragment.name;
+                                    }
+                                },
+                            },
                         },
                     },
                 },
-            },
-        },
-    ],
-    imports: [
-        ApolloTestingModule,
-        MatDividerModule,
-        ReactiveFormsModule,
-        ToastrModule.forRoot(),
-        BrowserAnimationsModule,
-        MatIconModule,
-        NgbTooltipModule,
-        MatRadioModule,
-        HttpClientTestingModule,
-        FormValidationErrorsModule,
-        DatasetSettingsCompactingTabComponent, TooltipIconComponent,
-    ],
-}).compileComponents();
+            ],
+            imports: [
+                ApolloTestingModule,
+                MatDividerModule,
+                ReactiveFormsModule,
+                ToastrModule.forRoot(),
+                BrowserAnimationsModule,
+                MatIconModule,
+                NgbTooltipModule,
+                MatRadioModule,
+                HttpClientTestingModule,
+                DatasetSettingsCompactingTabComponent,
+                TooltipIconComponent,
+            ],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(DatasetSettingsCompactingTabComponent);
         component = fixture.componentInstance;

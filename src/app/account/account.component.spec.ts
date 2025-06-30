@@ -31,8 +31,6 @@ import { AccountFlowsTabComponent } from "./additional-components/account-flows-
 import { LoggedUserService } from "../auth/logged-user.service";
 import { mockAccountDetails, TEST_AVATAR_URL, TEST_LOGIN } from "../api/mock/auth.mock";
 import { findElementByDataTestId } from "../common/helpers/base-test.helpers.spec";
-import { DatasetVisibilityModule } from "../common/components/dataset-visibility/dataset-visibility.module";
-import { DisplayAccountNameModule } from "../common/pipes/display-account-name.module";
 
 describe("AccountComponent", () => {
     let component: AccountComponent;
@@ -52,37 +50,35 @@ describe("AccountComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [
-        ApolloTestingModule,
-        MatIconModule,
-        MatButtonToggleModule,
-        MatChipsModule,
-        MatDividerModule,
-        NgbPaginationModule,
-        NgbPopoverModule,
-        NgbRatingModule,
-        HttpClientTestingModule,
-        ToastrModule.forRoot(),
-        RouterModule,
-        DatasetVisibilityModule,
-        DisplayAccountNameModule,
-        AccountComponent,
-        DatasetsTabComponent,
-        DatasetListItemComponent,
-        PaginationComponent,
-        DisplayTimeComponent,
-        AccountFlowsTabComponent,
-    ],
-    providers: [
-        DatasetApi,
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                queryParams: mockQueryParams.asObservable(),
-            },
-        },
-    ],
-}).compileComponents();
+            imports: [
+                ApolloTestingModule,
+                MatIconModule,
+                MatButtonToggleModule,
+                MatChipsModule,
+                MatDividerModule,
+                NgbPaginationModule,
+                NgbPopoverModule,
+                NgbRatingModule,
+                HttpClientTestingModule,
+                ToastrModule.forRoot(),
+                RouterModule,
+                AccountComponent,
+                DatasetsTabComponent,
+                DatasetListItemComponent,
+                PaginationComponent,
+                DisplayTimeComponent,
+                AccountFlowsTabComponent,
+            ],
+            providers: [
+                DatasetApi,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        queryParams: mockQueryParams.asObservable(),
+                    },
+                },
+            ],
+        }).compileComponents();
 
         accountService = TestBed.inject(AccountService);
         loggedUserService = TestBed.inject(LoggedUserService);

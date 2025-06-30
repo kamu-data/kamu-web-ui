@@ -7,7 +7,6 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { SettingsTabComponent } from "./settings-tab.component";
-import { AccountSettingsModule } from "../../settings/account-settings.module";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
@@ -19,9 +18,9 @@ describe("SettingsTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [AccountSettingsModule, SharedTestModule, HttpClientTestingModule, ToastrModule.forRoot(), SettingsTabComponent],
-    providers: [Apollo],
-});
+            imports: [SharedTestModule, HttpClientTestingModule, ToastrModule.forRoot(), SettingsTabComponent],
+            providers: [Apollo],
+        });
         fixture = TestBed.createComponent(SettingsTabComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

@@ -35,10 +35,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FlowDetailsTabs } from "./dataset-flow-details.types";
 import { mockDatasetFlowByIdResponse, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import { DataAccessPanelComponent } from "src/app/data-access-panel/data-access-panel.component";
-import { DataAccessPanelModule } from "src/app/data-access-panel/data-access-panel.module";
-import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
 import { NavigationService } from "src/app/services/navigation.service";
 
 describe("DatasetFlowDetailsComponent", () => {
@@ -52,51 +49,48 @@ describe("DatasetFlowDetailsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    providers: [
-        Apollo,
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                snapshot: {
-                    paramMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "accountName":
-                                    return "accountName";
-                                case "datasetName":
-                                    return "datasetName";
-                            }
+            providers: [
+                Apollo,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return "accountName";
+                                        case "datasetName":
+                                            return "datasetName";
+                                    }
+                                },
+                            },
                         },
                     },
                 },
-            },
-        },
-    ],
-    imports: [
-        ApolloTestingModule,
-        ApolloModule,
-        MatDividerModule,
-        MatIconModule,
-        MatMenuModule,
-        MatButtonToggleModule,
-        ToastrModule.forRoot(),
-        HttpClientTestingModule,
-        MatTabsModule,
-        FormsModule,
-        BrowserAnimationsModule,
-        DataAccessPanelModule,
-        RouterModule,
-        DatasetVisibilityModule,
-        FeatureFlagModule,
-        DatasetFlowDetailsComponent,
-        DatasetViewHeaderComponent,
-        FlowDetailsHistoryTabComponent,
-        SearchAdditionalButtonsComponent,
-        SearchAdditionalButtonsNavComponent,
-        DatasetViewMenuComponent,
-        DataAccessPanelComponent,
-    ],
-}).compileComponents();
+            ],
+            imports: [
+                ApolloTestingModule,
+                ApolloModule,
+                MatDividerModule,
+                MatIconModule,
+                MatMenuModule,
+                MatButtonToggleModule,
+                ToastrModule.forRoot(),
+                HttpClientTestingModule,
+                MatTabsModule,
+                FormsModule,
+                BrowserAnimationsModule,
+                RouterModule,
+                DatasetFlowDetailsComponent,
+                DatasetViewHeaderComponent,
+                FlowDetailsHistoryTabComponent,
+                SearchAdditionalButtonsComponent,
+                SearchAdditionalButtonsNavComponent,
+                DatasetViewMenuComponent,
+                DataAccessPanelComponent,
+            ],
+        }).compileComponents();
 
         registerMatSvgIcons();
 

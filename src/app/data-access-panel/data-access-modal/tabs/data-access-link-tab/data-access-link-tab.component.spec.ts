@@ -20,7 +20,6 @@ import {
     emitClickOnElementByDataTestId,
     registerMatSvgIcons,
 } from "src/app/common/helpers/base-test.helpers.spec";
-import { CopyToClipboardModule } from "src/app/common/components/copy-to-clipboard/copy-to-clipboard.module";
 
 describe("DataAccessLinkTabComponent", () => {
     let component: DataAccessLinkTabComponent;
@@ -28,17 +27,16 @@ describe("DataAccessLinkTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [
-        FormsModule,
-        MatDividerModule,
-        MatIconModule,
-        MatTooltipModule,
-        HttpClientTestingModule,
-        MatCheckboxModule,
-        CopyToClipboardModule,
-        DataAccessLinkTabComponent,
-    ],
-});
+            imports: [
+                FormsModule,
+                MatDividerModule,
+                MatIconModule,
+                MatTooltipModule,
+                HttpClientTestingModule,
+                MatCheckboxModule,
+                DataAccessLinkTabComponent,
+            ],
+        });
 
         registerMatSvgIcons();
 

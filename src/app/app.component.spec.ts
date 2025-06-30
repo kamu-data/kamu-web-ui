@@ -34,7 +34,6 @@ import { NotificationIndicatorComponent } from "./header/notification-indicator/
 import { MatIconModule } from "@angular/material/icon";
 import { AppHeaderComponent } from "./header/app-header/app-header.component";
 import { DatasetViewTypeEnum } from "./dataset-view/dataset-view.interface";
-import { DisplayAccountNameModule } from "./common/pipes/display-account-name.module";
 
 describe("AppComponent", () => {
     let component: AppComponent;
@@ -47,36 +46,35 @@ describe("AppComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [
-        RouterTestingModule,
-        ApolloTestingModule,
-        MatMenuModule,
-        NgbTypeaheadModule,
-        FormsModule,
-        HttpClientTestingModule,
-        RouterModule,
-        MatIconModule,
-        DisplayAccountNameModule,
-        ModalComponent,
-        AppHeaderComponent,
-        SpinnerComponent,
-        NotificationIndicatorComponent,
-        AppComponent,
-    ],
-    providers: [
-        SearchService,
-        SearchApi,
-        AuthApi,
-        NavigationService,
-        ModalService,
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                queryParams: of({ query: DEFAULT_SEARCH_QUERY }),
-            },
-        },
-    ],
-}).compileComponents();
+            imports: [
+                RouterTestingModule,
+                ApolloTestingModule,
+                MatMenuModule,
+                NgbTypeaheadModule,
+                FormsModule,
+                HttpClientTestingModule,
+                RouterModule,
+                MatIconModule,
+                ModalComponent,
+                AppHeaderComponent,
+                SpinnerComponent,
+                NotificationIndicatorComponent,
+                AppComponent,
+            ],
+            providers: [
+                SearchService,
+                SearchApi,
+                AuthApi,
+                NavigationService,
+                ModalService,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        queryParams: of({ query: DEFAULT_SEARCH_QUERY }),
+                    },
+                },
+            ],
+        }).compileComponents();
 
         registerMatSvgIcons();
 

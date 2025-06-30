@@ -14,7 +14,6 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { mockFlowHistoryDataFragment, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { SafeHtmlModule } from "src/app/common/pipes/safe-html.module";
 
 describe("FlowDetailsHistoryTabComponent", () => {
     let component: FlowDetailsHistoryTabComponent;
@@ -22,18 +21,17 @@ describe("FlowDetailsHistoryTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [
-        MatDividerModule,
-        MatIconModule,
-        ApolloModule,
-        ApolloTestingModule,
-        SharedTestModule,
-        HttpClientTestingModule,
-        SafeHtmlModule,
-        FlowDetailsHistoryTabComponent,
-    ],
-    providers: [Apollo],
-}).compileComponents();
+            imports: [
+                MatDividerModule,
+                MatIconModule,
+                ApolloModule,
+                ApolloTestingModule,
+                SharedTestModule,
+                HttpClientTestingModule,
+                FlowDetailsHistoryTabComponent,
+            ],
+            providers: [Apollo],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(FlowDetailsHistoryTabComponent);
         component = fixture.componentInstance;

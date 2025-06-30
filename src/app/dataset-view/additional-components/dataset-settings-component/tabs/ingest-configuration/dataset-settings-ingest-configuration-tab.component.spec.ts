@@ -17,7 +17,6 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { MatDividerModule } from "@angular/material/divider";
-import { IngestConfigurationModule } from "./ingest-configuration-form/ingest-configuration.module";
 import { of } from "rxjs";
 import { mockIngestGetDatasetFlowConfigsSuccess } from "src/app/api/mock/dataset-flow.mock";
 
@@ -28,9 +27,14 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [SharedTestModule, ToastrModule.forRoot(), IngestConfigurationModule, MatDividerModule, DatasetSettingsIngestConfigurationTabComponent],
-    providers: [Apollo, HttpClientTestingModule],
-});
+            imports: [
+                SharedTestModule,
+                ToastrModule.forRoot(),
+                MatDividerModule,
+                DatasetSettingsIngestConfigurationTabComponent,
+            ],
+            providers: [Apollo, HttpClientTestingModule],
+        });
         fixture = TestBed.createComponent(DatasetSettingsIngestConfigurationTabComponent);
         datasetSchedulingService = TestBed.inject(DatasetSchedulingService);
         component = fixture.componentInstance;

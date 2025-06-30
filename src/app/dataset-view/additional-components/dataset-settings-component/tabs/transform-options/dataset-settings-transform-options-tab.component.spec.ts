@@ -17,7 +17,6 @@ import { DatasetSchedulingService } from "../../services/dataset-scheduling.serv
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { ToastrModule } from "ngx-toastr";
-import { BatchingTriggerModule } from "./batching-trigger-form/batching-trigger.module";
 import { BatchingFormType } from "./dataset-settings-transform-options-tab.component.types";
 
 describe("DatasetSettingsTransformOptionsTabComponent", () => {
@@ -31,16 +30,15 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    providers: [Apollo],
-    imports: [
-        ApolloTestingModule,
-        SharedTestModule,
-        MatDividerModule,
-        BatchingTriggerModule,
-        ToastrModule.forRoot(),
-        DatasetSettingsTransformOptionsTabComponent,
-    ],
-});
+            providers: [Apollo],
+            imports: [
+                ApolloTestingModule,
+                SharedTestModule,
+                MatDividerModule,
+                ToastrModule.forRoot(),
+                DatasetSettingsTransformOptionsTabComponent,
+            ],
+        });
         fixture = TestBed.createComponent(DatasetSettingsTransformOptionsTabComponent);
         datasetSchedulingService = TestBed.inject(DatasetSchedulingService);
         component = fixture.componentInstance;

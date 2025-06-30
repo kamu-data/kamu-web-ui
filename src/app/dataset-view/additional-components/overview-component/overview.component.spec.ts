@@ -30,7 +30,6 @@ import { MatChipsModule } from "@angular/material/chips";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { OverviewHistorySummaryHeaderComponent } from "src/app/dataset-view/additional-components/overview-component/components/overview-history-summary-header/overview-history-summary-header.component";
 import { ReadmeSectionComponent } from "./components/readme-section/readme-section.component";
-import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
 import { DisplayTimeComponent } from "src/app/common/components/display-time/display-time.component";
 import { DisplayHashComponent } from "src/app/common/components/display-hash/display-hash.component";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
@@ -69,35 +68,34 @@ describe("OverviewComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [
-        ApolloModule,
-        DisplaySizeModule,
-        HttpClientTestingModule,
-        MarkdownModule.forRoot({
-            loader: HttpClient,
-            sanitize: SecurityContext.NONE,
-        }),
-        MatChipsModule,
-        MatTableModule,
-        NgbTooltipModule,
-        OwlDateTimeModule,
-        OwlNativeDateTimeModule,
-        OwlMomentDateTimeModule,
-        ReactiveFormsModule,
-        RouterTestingModule,
-        SharedTestModule,
-        ToastrModule.forRoot(),
-        MatIconModule,
-        RouterModule,
-        OverviewComponent,
-        OverviewHistorySummaryHeaderComponent,
-        ReadmeSectionComponent,
-        DisplayTimeComponent,
-        DisplayHashComponent,
-        DynamicTableComponent,
-    ],
-    providers: [Apollo],
-})
+            imports: [
+                ApolloModule,
+                HttpClientTestingModule,
+                MarkdownModule.forRoot({
+                    loader: HttpClient,
+                    sanitize: SecurityContext.NONE,
+                }),
+                MatChipsModule,
+                MatTableModule,
+                NgbTooltipModule,
+                OwlDateTimeModule,
+                OwlNativeDateTimeModule,
+                OwlMomentDateTimeModule,
+                ReactiveFormsModule,
+                RouterTestingModule,
+                SharedTestModule,
+                ToastrModule.forRoot(),
+                MatIconModule,
+                RouterModule,
+                OverviewComponent,
+                OverviewHistorySummaryHeaderComponent,
+                ReadmeSectionComponent,
+                DisplayTimeComponent,
+                DisplayHashComponent,
+                DynamicTableComponent,
+            ],
+            providers: [Apollo],
+        })
             .overrideComponent(OverviewComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

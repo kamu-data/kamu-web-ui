@@ -10,7 +10,6 @@ import { mockExecuteTransform } from "../../mock.events";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ExecuteTransformEventComponent } from "./execute-transform-event.component";
-import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
 import { SizePropertyComponent } from "../common/size-property/size-property.component";
 import { OffsetIntervalPropertyComponent } from "../common/offset-interval-property/offset-interval-property.component";
 import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";
@@ -28,21 +27,20 @@ describe("ExecuteTransformEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [
-        ApolloTestingModule,
-        DisplaySizeModule,
-        MatIconModule,
-        NgbTooltipModule,
-        ToastrModule.forRoot(),
-        HttpClientTestingModule,
-        SharedTestModule,
-        ExecuteTransformEventComponent,
-        SizePropertyComponent,
-        OffsetIntervalPropertyComponent,
-        BlockRowDataComponent,
-        TooltipIconComponent,
-    ],
-}).compileComponents();
+            imports: [
+                ApolloTestingModule,
+                MatIconModule,
+                NgbTooltipModule,
+                ToastrModule.forRoot(),
+                HttpClientTestingModule,
+                SharedTestModule,
+                ExecuteTransformEventComponent,
+                SizePropertyComponent,
+                OffsetIntervalPropertyComponent,
+                BlockRowDataComponent,
+                TooltipIconComponent,
+            ],
+        }).compileComponents();
 
         registerMatSvgIcons();
 

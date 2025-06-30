@@ -20,7 +20,6 @@ import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { mockAccountDetails, TEST_LOGIN } from "src/app/api/mock/auth.mock";
 import { NavigationService } from "src/app/services/navigation.service";
 import { ReactiveFormsModule } from "@angular/forms";
-import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
 
 describe("AccountTabComponent", () => {
     let component: AccountTabComponent;
@@ -32,17 +31,16 @@ describe("AccountTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [
-        SharedTestModule,
-        HttpClientTestingModule,
-        ReactiveFormsModule,
-        ToastrModule.forRoot(),
-        MatDividerModule,
-        FormValidationErrorsModule,
-        AccountTabComponent,
-    ],
-    providers: [Apollo],
-});
+            imports: [
+                SharedTestModule,
+                HttpClientTestingModule,
+                ReactiveFormsModule,
+                ToastrModule.forRoot(),
+                MatDividerModule,
+                AccountTabComponent,
+            ],
+            providers: [Apollo],
+        });
         fixture = TestBed.createComponent(AccountTabComponent);
         modalService = TestBed.inject(ModalService);
         accountService = TestBed.inject(AccountService);

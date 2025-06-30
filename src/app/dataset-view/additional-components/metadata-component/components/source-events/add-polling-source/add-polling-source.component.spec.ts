@@ -15,7 +15,6 @@ import { NgbModal, NgbModalRef, NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { FinalYamlModalComponent } from "../../final-yaml-modal/final-yaml-modal.component";
 import { StepperNavigationComponent } from "../../stepper-navigation/stepper-navigation.component";
 import { BaseStepComponent } from "../steps/base-step/base-step.component";
-import { PollingSourceFormComponentsModule } from "../../form-components/polling-source-form-components.module";
 import { of, from } from "rxjs";
 import {
     mockDatasetBasicsDerivedFragment,
@@ -65,45 +64,44 @@ describe("AddPollingSourceComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [
-        ApolloTestingModule,
-        BrowserAnimationsModule,
-        FormsModule,
-        NgbModule,
-        MatStepperModule,
-        PollingSourceFormComponentsModule,
-        ReactiveFormsModule,
-        HttpClientTestingModule,
-        EditorModule,
-        RouterModule,
-        AddPollingSourceComponent,
-        StepperNavigationComponent,
-        BaseStepComponent,
-        PrepareStepComponent,
-        PreprocessStepComponent,
-    ],
-    providers: [
-        FormBuilder,
-        Apollo,
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                snapshot: {
-                    paramMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "accountName":
-                                    return "accountName";
-                                case "datasetName":
-                                    return "datasetName";
-                            }
+            imports: [
+                ApolloTestingModule,
+                BrowserAnimationsModule,
+                FormsModule,
+                NgbModule,
+                MatStepperModule,
+                ReactiveFormsModule,
+                HttpClientTestingModule,
+                EditorModule,
+                RouterModule,
+                AddPollingSourceComponent,
+                StepperNavigationComponent,
+                BaseStepComponent,
+                PrepareStepComponent,
+                PreprocessStepComponent,
+            ],
+            providers: [
+                FormBuilder,
+                Apollo,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return "accountName";
+                                        case "datasetName":
+                                            return "datasetName";
+                                    }
+                                },
+                            },
                         },
                     },
                 },
-            },
-        },
-    ],
-})
+            ],
+        })
             .overrideComponent(AddPollingSourceComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

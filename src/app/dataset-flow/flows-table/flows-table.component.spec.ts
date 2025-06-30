@@ -15,7 +15,6 @@ import { MatRadioModule } from "@angular/material/radio";
 import { MatIconModule } from "@angular/material/icon";
 import { FormsModule } from "@angular/forms";
 import { mockDatasetFlowsInitiatorsQuery, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
-import { DisplayTimeModule } from "src/app/common/components/display-time/display-time.module";
 import { Account } from "src/app/api/kamu.graphql.interface";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { HarnessLoader } from "@angular/cdk/testing";
@@ -34,7 +33,6 @@ import { of } from "rxjs";
 import { RouterModule } from "@angular/router";
 import { registerMatSvgIcons } from "../../common/helpers/base-test.helpers.spec";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
-import { SafeHtmlModule } from "src/app/common/pipes/safe-html.module";
 
 describe("FlowsTableComponent", () => {
     let component: FlowsTableComponent;
@@ -47,25 +45,23 @@ describe("FlowsTableComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    providers: [Apollo],
-    imports: [
-        MatTableModule,
-        MatMenuModule,
-        MatDividerModule,
-        MatRadioModule,
-        MatIconModule,
-        FormsModule,
-        DisplayTimeModule,
-        HttpClientTestingModule,
-        SharedTestModule,
-        NgbTypeaheadModule,
-        AngularMultiSelectModule,
-        ToastrModule.forRoot(),
-        RouterModule,
-        SafeHtmlModule,
-        FlowsTableComponent,
-    ],
-}).compileComponents();
+            providers: [Apollo],
+            imports: [
+                MatTableModule,
+                MatMenuModule,
+                MatDividerModule,
+                MatRadioModule,
+                MatIconModule,
+                FormsModule,
+                HttpClientTestingModule,
+                SharedTestModule,
+                NgbTypeaheadModule,
+                AngularMultiSelectModule,
+                ToastrModule.forRoot(),
+                RouterModule,
+                FlowsTableComponent,
+            ],
+        }).compileComponents();
 
         // Note: for some reason this icon is not loaded
         registerMatSvgIcons();

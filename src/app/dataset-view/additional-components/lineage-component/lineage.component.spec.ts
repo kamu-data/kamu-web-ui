@@ -21,7 +21,6 @@ import { NgxGraphModule } from "@swimlane/ngx-graph";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { DisplayDatasetIdPipe } from "src/app/common/pipes/display-dataset-id.pipe";
 import { NavigationService } from "src/app/services/navigation.service";
-import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
 import { MatIconModule } from "@angular/material/icon";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { DatasetService } from "../../dataset.service";
@@ -37,17 +36,18 @@ describe("LineageComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [
-        ApolloModule,
-        SharedTestModule,
-        DisplaySizeModule,
-        MatIconModule,
-        ToastrModule.forRoot(),
-        NgxGraphModule,
-        BrowserAnimationsModule,
-        LineageComponent, LineageGraphComponent, DisplayDatasetIdPipe,
-    ],
-}).compileComponents();
+            imports: [
+                ApolloModule,
+                SharedTestModule,
+                MatIconModule,
+                ToastrModule.forRoot(),
+                NgxGraphModule,
+                BrowserAnimationsModule,
+                LineageComponent,
+                LineageGraphComponent,
+                DisplayDatasetIdPipe,
+            ],
+        }).compileComponents();
 
         accountService = TestBed.inject(AccountService);
         navigationService = TestBed.inject(NavigationService);

@@ -27,7 +27,6 @@ import { Location } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 import { LoadMoreComponent } from "../../../query/shared/load-more/load-more.component";
-import { DynamicTableModule } from "../../../common/components/dynamic-table/dynamic-table.module";
 import { EditorModule } from "src/app/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
@@ -100,7 +99,6 @@ describe("DataComponent", () => {
                 RouterTestingModule.withRoutes(routes),
                 FormsModule,
                 MatDividerModule,
-                DynamicTableModule,
                 EditorModule,
                 MatProgressBarModule,
                 CdkAccordionModule,

@@ -8,7 +8,6 @@
 import { ToastrModule } from "ngx-toastr";
 import { ApolloModule } from "apollo-angular";
 import { SizePropertyComponent } from "../common/size-property/size-property.component";
-import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
 import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { mockAddData } from "../../mock.events";
@@ -37,21 +36,20 @@ describe("AddDataEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [
-        DisplaySizeModule,
-        ApolloModule,
-        MatIconModule,
-        NgbTooltipModule,
-        ToastrModule.forRoot(),
-        HttpClientTestingModule,
-        SharedTestModule,
-        AddDataEventComponent,
-        SizePropertyComponent,
-        OffsetIntervalPropertyComponent,
-        BlockRowDataComponent,
-        TooltipIconComponent,
-    ],
-})
+            imports: [
+                ApolloModule,
+                MatIconModule,
+                NgbTooltipModule,
+                ToastrModule.forRoot(),
+                HttpClientTestingModule,
+                SharedTestModule,
+                AddDataEventComponent,
+                SizePropertyComponent,
+                OffsetIntervalPropertyComponent,
+                BlockRowDataComponent,
+                TooltipIconComponent,
+            ],
+        })
             .overrideComponent(AddDataEventComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

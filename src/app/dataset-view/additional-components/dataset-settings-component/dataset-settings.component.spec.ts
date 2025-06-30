@@ -29,11 +29,8 @@ import { mockMetadataRootUpdate, mockOverviewDataUpdate } from "../data-tabs.moc
 import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
-import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
 import { RouterTestingModule } from "@angular/router/testing";
 import { of } from "rxjs";
-import { BatchingTriggerModule } from "./tabs/transform-options/batching-trigger-form/batching-trigger.module";
 
 describe("DatasetSettingsComponent", () => {
     let component: DatasetSettingsComponent;
@@ -42,53 +39,50 @@ describe("DatasetSettingsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    providers: [
-        Apollo,
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                fragment: of(""),
-                snapshot: {
-                    queryParamMap: {
-                        get: () => null,
-                    },
-                    paramMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "accountName":
-                                    return mockDatasetBasicsDerivedFragment.owner.accountName;
-                                case "datasetName":
-                                    return mockDatasetBasicsDerivedFragment.name;
-                            }
+            providers: [
+                Apollo,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        fragment: of(""),
+                        snapshot: {
+                            queryParamMap: {
+                                get: () => null,
+                            },
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return mockDatasetBasicsDerivedFragment.owner.accountName;
+                                        case "datasetName":
+                                            return mockDatasetBasicsDerivedFragment.name;
+                                    }
+                                },
+                            },
                         },
                     },
                 },
-            },
-        },
-    ],
-    imports: [
-        ReactiveFormsModule,
-        HttpClientTestingModule,
-        MatDividerModule,
-        MatIconModule,
-        ApolloTestingModule,
-        ToastrModule.forRoot(),
-        MatDividerModule,
-        MatSlideToggleModule,
-        MatRadioModule,
-        MatIconModule,
-        NgbTooltipModule,
-        MatCheckboxModule,
-        BatchingTriggerModule,
-        DatasetVisibilityModule,
-        FeatureFlagModule,
-        RouterTestingModule,
-        DatasetSettingsComponent,
-        DatasetSettingsGeneralTabComponent,
-        DatasetSettingsSchedulingTabComponent,
-        TooltipIconComponent,
-    ],
-})
+            ],
+            imports: [
+                ReactiveFormsModule,
+                HttpClientTestingModule,
+                MatDividerModule,
+                MatIconModule,
+                ApolloTestingModule,
+                ToastrModule.forRoot(),
+                MatDividerModule,
+                MatSlideToggleModule,
+                MatRadioModule,
+                MatIconModule,
+                NgbTooltipModule,
+                MatCheckboxModule,
+                RouterTestingModule,
+                DatasetSettingsComponent,
+                DatasetSettingsGeneralTabComponent,
+                DatasetSettingsSchedulingTabComponent,
+                TooltipIconComponent,
+            ],
+        })
             .overrideComponent(DatasetSettingsComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

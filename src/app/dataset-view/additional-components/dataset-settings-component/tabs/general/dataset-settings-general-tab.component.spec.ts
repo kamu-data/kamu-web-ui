@@ -40,10 +40,8 @@ import AppValues from "src/app/common/values/app.values";
 import { DatasetFlowsService } from "../../../flows-component/services/dataset-flows.service";
 import { DatasetService } from "../../../../dataset.service";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { ActivatedRoute } from "@angular/router";
-import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
 
 describe("DatasetSettingsGeneralTabComponent", () => {
     let component: DatasetSettingsGeneralTabComponent;
@@ -57,48 +55,47 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [
-        ReactiveFormsModule,
-        HttpClientTestingModule,
-        MatDividerModule,
-        MatIconModule,
-        ApolloModule,
-        ApolloTestingModule,
-        ToastrModule.forRoot(),
-        MatRadioModule,
-        MatIconModule,
-        NgbTooltipModule,
-        MatCheckboxModule,
-        FormsModule,
-        DatasetVisibilityModule,
-        FormValidationErrorsModule,
-        DatasetSettingsGeneralTabComponent, TooltipIconComponent,
-    ],
-    providers: [
-        FormBuilder,
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                fragment: of(""),
-                snapshot: {
-                    queryParamMap: {
-                        get: () => null,
-                    },
-                    paramMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "accountName":
-                                    return mockDatasetBasicsDerivedFragment.owner.accountName;
-                                case "datasetName":
-                                    return mockDatasetBasicsDerivedFragment.name;
-                            }
+            imports: [
+                ReactiveFormsModule,
+                HttpClientTestingModule,
+                MatDividerModule,
+                MatIconModule,
+                ApolloModule,
+                ApolloTestingModule,
+                ToastrModule.forRoot(),
+                MatRadioModule,
+                MatIconModule,
+                NgbTooltipModule,
+                MatCheckboxModule,
+                FormsModule,
+                DatasetSettingsGeneralTabComponent,
+                TooltipIconComponent,
+            ],
+            providers: [
+                FormBuilder,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        fragment: of(""),
+                        snapshot: {
+                            queryParamMap: {
+                                get: () => null,
+                            },
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return mockDatasetBasicsDerivedFragment.owner.accountName;
+                                        case "datasetName":
+                                            return mockDatasetBasicsDerivedFragment.name;
+                                    }
+                                },
+                            },
                         },
                     },
                 },
-            },
-        },
-    ],
-}).compileComponents();
+            ],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(DatasetSettingsGeneralTabComponent);
         component = fixture.componentInstance;

@@ -38,7 +38,6 @@ import { NotificationIndicatorComponent } from "../notification-indicator/notifi
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatIconModule } from "@angular/material/icon";
-import { DisplayAccountNameModule } from "src/app/common/pipes/display-account-name.module";
 
 describe("AppHeaderComponent", () => {
     let component: AppHeaderComponent;
@@ -52,30 +51,31 @@ describe("AppHeaderComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [
-        BrowserAnimationsModule,
-        MatMenuModule,
-        FormsModule,
-        BrowserModule,
-        NgbTypeaheadModule,
-        RouterTestingModule,
-        ApolloTestingModule,
-        HttpClientTestingModule,
-        RouterModule,
-        MatIconModule,
-        DisplayAccountNameModule,
-        AppHeaderComponent, NotificationIndicatorComponent,
-    ],
-    providers: [
-        Apollo,
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                queryParams: of({ query: DEFAULT_SEARCH_QUERY }),
-            },
-        },
-    ],
-})
+            imports: [
+                BrowserAnimationsModule,
+                MatMenuModule,
+                FormsModule,
+                BrowserModule,
+                NgbTypeaheadModule,
+                RouterTestingModule,
+                ApolloTestingModule,
+                HttpClientTestingModule,
+                RouterModule,
+                MatIconModule,
+
+                AppHeaderComponent,
+                NotificationIndicatorComponent,
+            ],
+            providers: [
+                Apollo,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        queryParams: of({ query: DEFAULT_SEARCH_QUERY }),
+                    },
+                },
+            ],
+        })
             .overrideComponent(AppHeaderComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

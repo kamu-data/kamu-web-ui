@@ -34,7 +34,6 @@ import { LocalStorageService } from "src/app/services/local-storage.service";
 import { MatIconModule } from "@angular/material/icon";
 import ProjectLinks from "src/app/project-links";
 import { AccountProvider } from "src/app/api/kamu.graphql.interface";
-import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
 
 describe("LoginComponent", () => {
     let component: LoginComponent;
@@ -74,34 +73,34 @@ describe("LoginComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    providers: [
-        Apollo,
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                queryParams: mockQueryParams.asObservable(),
-                snapshot: {
-                    queryParamMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL:
-                                    return "";
-                            }
+            providers: [
+                Apollo,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        queryParams: mockQueryParams.asObservable(),
+                        snapshot: {
+                            queryParamMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL:
+                                            return "";
+                                    }
+                                },
+                            },
                         },
                     },
                 },
-            },
-        },
-    ],
-    imports: [
-        ApolloTestingModule,
-        ReactiveFormsModule,
-        HttpClientTestingModule,
-        MatIconModule,
-        FormValidationErrorsModule,
-        LoginComponent, SpinnerComponent,
-    ],
-}).compileComponents();
+            ],
+            imports: [
+                ApolloTestingModule,
+                ReactiveFormsModule,
+                HttpClientTestingModule,
+                MatIconModule,
+                LoginComponent,
+                SpinnerComponent,
+            ],
+        }).compileComponents();
 
         registerMatSvgIcons();
 

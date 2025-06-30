@@ -176,6 +176,6 @@ export function registerMatSvgIcons(): void {
         "configuration",
     ];
     icons.forEach((icon: string) => {
-        matIconRegistry.addSvgIcon(icon, domSanitizer.bypassSecurityTrustResourceUrl("/fake-path/fake-icon.svg"));
+        matIconRegistry.addSvgIcon(icon, domSanitizer.bypassSecurityTrustResourceUrl(`/assets/svg/${icon}.svg`));
     });
 }

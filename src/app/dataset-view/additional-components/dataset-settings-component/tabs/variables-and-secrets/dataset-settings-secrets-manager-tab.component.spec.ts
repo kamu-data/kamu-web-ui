@@ -29,7 +29,7 @@ import { MOCK_DATASET_INFO } from "../../../metadata-component/components/set-tr
 import ProjectLinks from "src/app/project-links";
 import { ActivatedRoute } from "@angular/router";
 import { of } from "rxjs";
-import { PaginationModule } from "src/app/common/components/pagination-component/pagination.module";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 describe("DatasetSettingsSecretsManagerTabComponent", () => {
     let component: DatasetSettingsSecretsManagerTabComponent;
@@ -41,48 +41,48 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    providers: [
-        FormBuilder,
-        Apollo,
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                snapshot: {
-                    paramMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "accountName":
-                                    return "accountName";
-                                case "datasetName":
-                                    return "datasetName";
-                            }
-                        },
-                    },
-                    queryParamMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case ProjectLinks.URL_QUERY_PARAM_PAGE:
-                                    return undefined;
-                            }
+            providers: [
+                FormBuilder,
+                Apollo,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return "accountName";
+                                        case "datasetName":
+                                            return "datasetName";
+                                    }
+                                },
+                            },
+                            queryParamMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case ProjectLinks.URL_QUERY_PARAM_PAGE:
+                                            return undefined;
+                                    }
+                                },
+                            },
                         },
                     },
                 },
-            },
-        },
-    ],
-    imports: [
-        ToastrModule.forRoot(),
-        ApolloTestingModule,
-        MatDividerModule,
-        MatTableModule,
-        HttpClientModule,
-        MatIconModule,
-        FormsModule,
-        MatTooltipModule,
-        PaginationModule,
-        DatasetSettingsSecretsManagerTabComponent,
-    ],
-}).compileComponents();
+            ],
+            imports: [
+                ToastrModule.forRoot(),
+                ApolloTestingModule,
+                MatDividerModule,
+                MatTableModule,
+                HttpClientModule,
+                MatIconModule,
+                FormsModule,
+                MatTooltipModule,
+                DatasetSettingsSecretsManagerTabComponent,
+                BrowserAnimationsModule,
+            ],
+        }).compileComponents();
 
         registerMatSvgIcons();
 

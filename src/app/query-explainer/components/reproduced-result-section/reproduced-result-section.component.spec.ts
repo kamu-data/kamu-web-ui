@@ -7,7 +7,6 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ReproducedResultSectionComponent } from "./reproduced-result-section.component";
-import { DynamicTableModule } from "src/app/common/components/dynamic-table/dynamic-table.module";
 import { mockQueryExplainerEmptyOutput, mockQueryExplainerOutput } from "../../query-explainer.mocks";
 import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 
@@ -17,8 +16,8 @@ describe("ReproducedResultSectionComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [DynamicTableModule, ReproducedResultSectionComponent],
-});
+            imports: [ReproducedResultSectionComponent],
+        });
         fixture = TestBed.createComponent(ReproducedResultSectionComponent);
         component = fixture.componentInstance;
         component.dataJsonAoS = mockQueryExplainerOutput;

@@ -32,9 +32,7 @@ import { DataAccessTabsEnum } from "./data-access-modal.model";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { AppConfigService } from "src/app/app-config.service";
-import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
 import { ProtocolsService } from "src/app/services/protocols.service";
-import { CopyToClipboardModule } from "src/app/common/components/copy-to-clipboard/copy-to-clipboard.module";
 
 describe("DataAccessModalComponent", () => {
     let component: DataAccessModalComponent;
@@ -46,30 +44,28 @@ describe("DataAccessModalComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    providers: [Apollo, NgbActiveModal],
-    imports: [
-        FormsModule,
-        MatDividerModule,
-        MatCheckboxModule,
-        MatIconModule,
-        MatTooltipModule,
-        HttpClientTestingModule,
-        BrowserAnimationsModule,
-        ApolloModule,
-        ApolloTestingModule,
-        FeatureFlagModule,
-        CopyToClipboardModule,
-        DataAccessModalComponent,
-        DataAccessLinkTabComponent,
-        DataAccessKamuCliTabComponent,
-        DataAccessRestTabComponent,
-        DataAccessSqlTabComponent,
-        DataAccessStreamTabComponent,
-        DataAccessCodeTabComponent,
-        DataAccessOdataTabComponent,
-        DataAccessExportTabComponent,
-    ],
-});
+            providers: [Apollo, NgbActiveModal],
+            imports: [
+                FormsModule,
+                MatDividerModule,
+                MatCheckboxModule,
+                MatIconModule,
+                MatTooltipModule,
+                HttpClientTestingModule,
+                BrowserAnimationsModule,
+                ApolloModule,
+                ApolloTestingModule,
+                DataAccessModalComponent,
+                DataAccessLinkTabComponent,
+                DataAccessKamuCliTabComponent,
+                DataAccessRestTabComponent,
+                DataAccessSqlTabComponent,
+                DataAccessStreamTabComponent,
+                DataAccessCodeTabComponent,
+                DataAccessOdataTabComponent,
+                DataAccessExportTabComponent,
+            ],
+        });
 
         registerMatSvgIcons();
 

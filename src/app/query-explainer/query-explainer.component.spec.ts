@@ -24,8 +24,6 @@ import {
 } from "./query-explainer.mocks";
 import { HIGHLIGHT_OPTIONS, HighlightModule } from "ngx-highlightjs";
 import { ReproducedResultSectionComponent } from "./components/reproduced-result-section/reproduced-result-section.component";
-import { DisplayHashModule } from "../common/components/display-hash/display-hash.module";
-import { DynamicTableModule } from "../common/components/dynamic-table/dynamic-table.module";
 import { DatasetService } from "../dataset-view/dataset.service";
 import { mockDatasetByIdQuery } from "../api/mock/dataset.mock";
 import {
@@ -46,35 +44,33 @@ describe("QueryExplainerComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [
-        HttpClientTestingModule,
-        DynamicTableModule,
-        ToastrModule.forRoot(),
-        DisplayHashModule,
-        HighlightModule,
-        RouterModule,
-        FormsModule,
-        MatIconModule,
-        SharedTestModule,
-        QueryExplainerComponent,
-        VerifyResultSectionComponent,
-        ReproducedResultSectionComponent,
-        InputDataSectionComponent,
-        CommitmentDataSectionComponent,
-    ],
-    providers: [
-        Apollo,
-        {
-            provide: HIGHLIGHT_OPTIONS,
-            useValue: {
-                coreLibraryLoader: () => import("highlight.js/lib/core"),
-                languages: {
-                    sql: () => import("highlight.js/lib/languages/sql"),
+            imports: [
+                HttpClientTestingModule,
+                ToastrModule.forRoot(),
+                HighlightModule,
+                RouterModule,
+                FormsModule,
+                MatIconModule,
+                SharedTestModule,
+                QueryExplainerComponent,
+                VerifyResultSectionComponent,
+                ReproducedResultSectionComponent,
+                InputDataSectionComponent,
+                CommitmentDataSectionComponent,
+            ],
+            providers: [
+                Apollo,
+                {
+                    provide: HIGHLIGHT_OPTIONS,
+                    useValue: {
+                        coreLibraryLoader: () => import("highlight.js/lib/core"),
+                        languages: {
+                            sql: () => import("highlight.js/lib/languages/sql"),
+                        },
+                    },
                 },
-            },
-        },
-    ],
-});
+            ],
+        });
 
         registerMatSvgIcons();
 

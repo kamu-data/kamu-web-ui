@@ -13,7 +13,6 @@ import {
     mockQueryExplainerResponse,
     mockVerifyQueryResponseSuccess,
 } from "../../query-explainer.mocks";
-import { DisplayHashModule } from "src/app/common/components/display-hash/display-hash.module";
 import { HIGHLIGHT_OPTIONS, HighlightModule } from "ngx-highlightjs";
 import { ToastrModule } from "ngx-toastr";
 import { ActivatedRoute, RouterModule } from "@angular/router";
@@ -33,46 +32,45 @@ describe("InputDataSectionComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [
-        DisplayHashModule,
-        HighlightModule,
-        ToastrModule.forRoot(),
-        RouterModule,
-        MatIconModule,
-        HttpClientTestingModule,
-        MarkdownModule.forRoot({
-            loader: HttpClient,
-            sanitize: SecurityContext.NONE,
-        }),
-        InputDataSectionComponent,
-    ],
-    providers: [
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                snapshot: {
-                    queryParamMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN:
-                                    return "test-upload-token";
-                            }
+            imports: [
+                HighlightModule,
+                ToastrModule.forRoot(),
+                RouterModule,
+                MatIconModule,
+                HttpClientTestingModule,
+                MarkdownModule.forRoot({
+                    loader: HttpClient,
+                    sanitize: SecurityContext.NONE,
+                }),
+                InputDataSectionComponent,
+            ],
+            providers: [
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            queryParamMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN:
+                                            return "test-upload-token";
+                                    }
+                                },
+                            },
                         },
                     },
                 },
-            },
-        },
-        {
-            provide: HIGHLIGHT_OPTIONS,
-            useValue: {
-                coreLibraryLoader: () => import("highlight.js/lib/core"),
-                languages: {
-                    sql: () => import("highlight.js/lib/languages/sql"),
+                {
+                    provide: HIGHLIGHT_OPTIONS,
+                    useValue: {
+                        coreLibraryLoader: () => import("highlight.js/lib/core"),
+                        languages: {
+                            sql: () => import("highlight.js/lib/languages/sql"),
+                        },
+                    },
                 },
-            },
-        },
-    ],
-});
+            ],
+        });
 
         registerMatSvgIcons();
 

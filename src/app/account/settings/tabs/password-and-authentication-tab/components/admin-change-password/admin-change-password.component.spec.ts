@@ -11,7 +11,6 @@ import { Apollo } from "apollo-angular";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatDividerModule } from "@angular/material/divider";
 import { ToastrModule } from "ngx-toastr";
-import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
 import { ReactiveFormsModule } from "@angular/forms";
 import { AccountService } from "src/app/account/account.service";
 import { of } from "rxjs";
@@ -23,16 +22,15 @@ describe("AdminChangePasswordComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    providers: [Apollo],
-    imports: [
-        HttpClientTestingModule,
-        ToastrModule.forRoot(),
-        MatDividerModule,
-        FormValidationErrorsModule,
-        ReactiveFormsModule,
-        AdminChangePasswordComponent,
-    ],
-});
+            providers: [Apollo],
+            imports: [
+                HttpClientTestingModule,
+                ToastrModule.forRoot(),
+                MatDividerModule,
+                ReactiveFormsModule,
+                AdminChangePasswordComponent,
+            ],
+        });
         fixture = TestBed.createComponent(AdminChangePasswordComponent);
         accountService = TestBed.inject(AccountService);
         component = fixture.componentInstance;

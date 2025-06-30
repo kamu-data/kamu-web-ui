@@ -7,7 +7,6 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetListComponent } from "./dataset-list.component";
-import { DatasetVisibilityModule } from "../dataset-visibility/dataset-visibility.module";
 
 describe("DatasetListComponent", () => {
     let component: DatasetListComponent;
@@ -15,8 +14,8 @@ describe("DatasetListComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [DatasetVisibilityModule, DatasetListComponent],
-}).compileComponents();
+            imports: [DatasetListComponent],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(DatasetListComponent);
         component = fixture.componentInstance;

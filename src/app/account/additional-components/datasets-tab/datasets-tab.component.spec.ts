@@ -14,12 +14,9 @@ import { AccountTabs } from "../../account.constants";
 import { DatasetsTabComponent } from "./datasets-tab.component";
 import { DatasetListItemComponent } from "src/app/common/components/dataset-list-component/dataset-list-item/dataset-list-item.component";
 import { NgbPopoverModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
-import { DisplayTimeModule } from "src/app/common/components/display-time/display-time.module";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
 import { ActivatedRoute, convertToParamMap, RouterModule } from "@angular/router";
-import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
-import { PaginationModule } from "src/app/common/components/pagination-component/pagination.module";
 import ProjectLinks from "src/app/project-links";
 
 describe("DatasetsTabComponent", () => {
@@ -29,36 +26,34 @@ describe("DatasetsTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [
-        ApolloTestingModule,
-        NgbRatingModule,
-        DisplayTimeModule,
-        MatChipsModule,
-        NgbPopoverModule,
-        MatDividerModule,
-        RouterModule,
-        DatasetVisibilityModule,
-        PaginationModule,
-        DatasetsTabComponent, DatasetListItemComponent,
-    ],
-    providers: [
-        DatasetApi,
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                parent: {
-                    parent: {
-                        snapshot: {
-                            paramMap: convertToParamMap({
-                                [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME,
-                            }),
+            imports: [
+                ApolloTestingModule,
+                NgbRatingModule,
+                MatChipsModule,
+                NgbPopoverModule,
+                MatDividerModule,
+                RouterModule,
+                DatasetsTabComponent,
+                DatasetListItemComponent,
+            ],
+            providers: [
+                DatasetApi,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        parent: {
+                            parent: {
+                                snapshot: {
+                                    paramMap: convertToParamMap({
+                                        [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME,
+                                    }),
+                                },
+                            },
                         },
                     },
                 },
-            },
-        },
-    ],
-}).compileComponents();
+            ],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(DatasetsTabComponent);
         navigationService = TestBed.inject(NavigationService);

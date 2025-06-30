@@ -24,7 +24,7 @@ import { FormValidationErrorsDirective } from "./form-validation-errors.directiv
         </form>
     `,
     standalone: true,
-    imports: [ReactiveFormsModule],
+    imports: [ReactiveFormsModule, FormValidationErrorsDirective],
 })
 class TestHostComponent {
     public form = new FormGroup({
@@ -38,8 +38,8 @@ describe("FormValidationErrorsDirective", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [ReactiveFormsModule, FormValidationErrorsDirective, TestHostComponent],
-});
+            imports: [ReactiveFormsModule, FormValidationErrorsDirective, TestHostComponent],
+        });
 
         fixture = TestBed.createComponent(TestHostComponent);
         fixture.detectChanges();

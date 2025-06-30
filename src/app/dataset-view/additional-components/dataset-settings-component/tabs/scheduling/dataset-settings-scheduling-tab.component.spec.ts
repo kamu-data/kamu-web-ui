@@ -19,8 +19,6 @@ import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment 
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
 import { TimeDelta, TimeUnit } from "src/app/api/kamu.graphql.interface";
-import { IngestConfigurationModule } from "../ingest-configuration/ingest-configuration-form/ingest-configuration.module";
-import { IngestTriggerModule } from "./ingest-trigger-form/ingest-trigger.module";
 import { PollingGroupType } from "./dataset-settings-scheduling-tab.component.types";
 import { MaybeNull } from "src/app/interface/app.types";
 import { PollingGroupEnum } from "../../dataset-settings.model";
@@ -41,21 +39,19 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    providers: [Apollo],
-    imports: [
-        ApolloTestingModule,
-        ToastrModule.forRoot(),
-        BrowserAnimationsModule,
-        SharedTestModule,
-        MatDividerModule,
-        MatSlideToggleModule,
-        MatRadioModule,
-        ReactiveFormsModule,
-        IngestConfigurationModule,
-        IngestTriggerModule,
-        DatasetSettingsSchedulingTabComponent,
-    ],
-}).compileComponents();
+            providers: [Apollo],
+            imports: [
+                ApolloTestingModule,
+                ToastrModule.forRoot(),
+                BrowserAnimationsModule,
+                SharedTestModule,
+                MatDividerModule,
+                MatSlideToggleModule,
+                MatRadioModule,
+                ReactiveFormsModule,
+                DatasetSettingsSchedulingTabComponent,
+            ],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(DatasetSettingsSchedulingTabComponent);
         datasetSchedulingService = TestBed.inject(DatasetSchedulingService);

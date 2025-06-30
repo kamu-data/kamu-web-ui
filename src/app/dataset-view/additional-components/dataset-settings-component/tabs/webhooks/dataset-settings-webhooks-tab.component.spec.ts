@@ -21,7 +21,6 @@ import { of } from "rxjs";
 import { MatIconModule } from "@angular/material/icon";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { NgSelectModule } from "@ng-select/ng-select";
-import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
 import {
     WebhookSubscriptionModalAction,
     WebhookSubscriptionModalActionResult,
@@ -31,6 +30,7 @@ import { mockWebhookSubscriptionInput } from "src/app/api/mock/webhooks.mock";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { TEST_DATASET_ID } from "src/app/api/mock/dataset.mock";
+import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.directive";
 
 describe("DatasetSettingsWebhooksTabComponent", () => {
     let component: DatasetSettingsWebhooksTabComponent;
@@ -42,20 +42,20 @@ describe("DatasetSettingsWebhooksTabComponent", () => {
     const ngbModalMock = jasmine.createSpyObj<NgbModal>("NgbModal", ["open"]);
     beforeEach(() => {
         TestBed.configureTestingModule({
-    providers: [Apollo, { provide: NgbModal, useValue: ngbModalMock }],
-    imports: [
-        SharedTestModule,
-        HttpClientTestingModule,
-        MatProgressBarModule,
-        MatDividerModule,
-        MatTableModule,
-        MatIconModule,
-        ToastrModule.forRoot(),
-        NgSelectModule,
-        FormValidationErrorsModule,
-        DatasetSettingsWebhooksTabComponent,
-    ],
-});
+            providers: [Apollo, { provide: NgbModal, useValue: ngbModalMock }],
+            imports: [
+                SharedTestModule,
+                HttpClientTestingModule,
+                MatProgressBarModule,
+                MatDividerModule,
+                MatTableModule,
+                MatIconModule,
+                ToastrModule.forRoot(),
+                NgSelectModule,
+                FeatureFlagDirective,
+                DatasetSettingsWebhooksTabComponent,
+            ],
+        });
 
         registerMatSvgIcons();
 

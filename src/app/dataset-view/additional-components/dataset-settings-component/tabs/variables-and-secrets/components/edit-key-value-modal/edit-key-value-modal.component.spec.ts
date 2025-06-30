@@ -22,7 +22,6 @@ import { mockListEnvVariablesQuery } from "src/app/api/mock/environment-variable
 import { ViewDatasetEnvVar } from "src/app/api/kamu.graphql.interface";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
 
 describe("EditKeyValueModalComponent", () => {
     let component: EditKeyValueModalComponent;
@@ -31,48 +30,47 @@ describe("EditKeyValueModalComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    providers: [
-        NgbActiveModal,
-        FormBuilder,
-        Apollo,
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                snapshot: {
-                    queryParamMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "page":
-                                    return 2;
-                            }
-                        },
-                    },
-                    paramMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "accountName":
-                                    return "accountName";
-                                case "datasetName":
-                                    return "datasetName";
-                            }
+            providers: [
+                NgbActiveModal,
+                FormBuilder,
+                Apollo,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            queryParamMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "page":
+                                            return 2;
+                                    }
+                                },
+                            },
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return "accountName";
+                                        case "datasetName":
+                                            return "datasetName";
+                                    }
+                                },
+                            },
                         },
                     },
                 },
-            },
-        },
-    ],
-    imports: [
-        ToastrModule.forRoot(),
-        MatCheckboxModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatDividerModule,
-        MatIconModule,
-        MatTooltipModule,
-        FormValidationErrorsModule,
-        EditKeyValueModalComponent,
-    ],
-}).compileComponents();
+            ],
+            imports: [
+                ToastrModule.forRoot(),
+                MatCheckboxModule,
+                FormsModule,
+                ReactiveFormsModule,
+                MatDividerModule,
+                MatIconModule,
+                MatTooltipModule,
+                EditKeyValueModalComponent,
+            ],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(EditKeyValueModalComponent);
         evnironmentVariablesService = TestBed.inject(DatasetEnvironmentVariablesService);

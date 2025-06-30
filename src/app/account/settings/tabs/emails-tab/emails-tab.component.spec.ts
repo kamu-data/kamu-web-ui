@@ -18,7 +18,6 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { routes } from "src/app/app-routing";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { NavigationService } from "src/app/services/navigation.service";
-import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
 
 describe("EmailsTabComponent", () => {
     let component: EmailsTabComponent;
@@ -36,7 +35,6 @@ describe("EmailsTabComponent", () => {
                 ReactiveFormsModule,
                 MatDividerModule,
                 HttpClientTestingModule,
-                FormValidationErrorsModule,
                 EmailsTabComponent,
             ],
         });

@@ -6,7 +6,6 @@
  */
 
 import { MatRadioModule } from "@angular/material/radio";
-import { PaginationModule } from "../../../common/components/pagination-component/pagination.module";
 import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, tick } from "@angular/core/testing";
 import { FlowsComponent } from "./flows.component";
 import { Apollo } from "apollo-angular";
@@ -24,7 +23,6 @@ import { delay, of } from "rxjs";
 import { MatMenuModule } from "@angular/material/menu";
 import { PaginationComponent } from "src/app/common/components/pagination-component/pagination.component";
 import { MatTableModule } from "@angular/material/table";
-import { DisplayTimeModule } from "src/app/common/components/display-time/display-time.module";
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
@@ -50,57 +48,58 @@ describe("FlowsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    providers: [
-        Apollo,
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                snapshot: {
-                    queryParamMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "tab":
-                                    return "flows";
-                                case "page":
-                                    return 2;
-                            }
-                        },
-                    },
-                    paramMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "accountName":
-                                    return "accountName";
-                                case "datasetName":
-                                    return "datasetName";
-                            }
+            providers: [
+                Apollo,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            queryParamMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "tab":
+                                            return "flows";
+                                        case "page":
+                                            return 2;
+                                    }
+                                },
+                            },
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return "accountName";
+                                        case "datasetName":
+                                            return "datasetName";
+                                    }
+                                },
+                            },
                         },
                     },
                 },
-            },
-        },
-    ],
-    imports: [
-        ApolloTestingModule,
-        ToastrModule.forRoot(),
-        MatMenuModule,
-        PaginationModule,
-        MatTableModule,
-        DisplayTimeModule,
-        MatRadioModule,
-        FormsModule,
-        MatDividerModule,
-        MatIconModule,
-        HttpClientTestingModule,
-        NgbPopoverModule,
-        NgbTypeaheadModule,
-        NgbPaginationModule,
-        RouterModule,
-        MatProgressBarModule,
-        AngularMultiSelectModule,
-        FlowsComponent, FlowsTableComponent, PaginationComponent, TileBaseWidgetComponent,
-    ],
-}).compileComponents();
+            ],
+            imports: [
+                ApolloTestingModule,
+                ToastrModule.forRoot(),
+                MatMenuModule,
+                MatTableModule,
+                MatRadioModule,
+                FormsModule,
+                MatDividerModule,
+                MatIconModule,
+                HttpClientTestingModule,
+                NgbPopoverModule,
+                NgbTypeaheadModule,
+                NgbPaginationModule,
+                RouterModule,
+                MatProgressBarModule,
+                AngularMultiSelectModule,
+                FlowsComponent,
+                FlowsTableComponent,
+                PaginationComponent,
+                TileBaseWidgetComponent,
+            ],
+        }).compileComponents();
 
         registerMatSvgIcons();
 

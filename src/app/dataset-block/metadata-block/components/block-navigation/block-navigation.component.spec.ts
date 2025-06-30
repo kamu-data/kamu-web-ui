@@ -17,9 +17,7 @@ import {
     getElementByDataTestId,
     registerMatSvgIcons,
 } from "src/app/common/helpers/base-test.helpers.spec";
-import { PaginationModule } from "src/app/common/components/pagination-component/pagination.module";
 import { MatIconModule } from "@angular/material/icon";
-import { DisplayHashModule } from "src/app/common/components/display-hash/display-hash.module";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ToastrModule } from "ngx-toastr";
 import { NgSelectModule } from "@ng-select/ng-select";
@@ -30,18 +28,18 @@ describe("BlockNavigationComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [
-        FormsModule,
-        NgMultiSelectDropDownModule,
-        PaginationModule,
-        MatIconModule,
-        HttpClientTestingModule,
-        DisplayHashModule,
-        ToastrModule.forRoot(),
-        NgSelectModule,
-        BlockNavigationComponent, BlockHashFilterPipe, EventTypeFilterPipe,
-    ],
-}).compileComponents();
+            imports: [
+                FormsModule,
+                NgMultiSelectDropDownModule,
+                MatIconModule,
+                HttpClientTestingModule,
+                ToastrModule.forRoot(),
+                NgSelectModule,
+                BlockNavigationComponent,
+                BlockHashFilterPipe,
+                EventTypeFilterPipe,
+            ],
+        }).compileComponents();
 
         registerMatSvgIcons();
 

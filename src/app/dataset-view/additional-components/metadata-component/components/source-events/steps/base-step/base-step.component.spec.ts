@@ -38,16 +38,15 @@ describe("BaseStepComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [BaseStepComponent, TooltipIconComponent],
-            imports: [ReactiveFormsModule, NgbTooltipModule, PollingSourceFormComponentsModule, SharedTestModule],
-            providers: [
-                Apollo,
-                DatasetApi,
-                FormGroupDirective,
-                FormBuilder,
-                { provide: FormGroupDirective, useValue: formGroupDirective },
-            ],
-        }).compileComponents();
+    imports: [ReactiveFormsModule, NgbTooltipModule, PollingSourceFormComponentsModule, SharedTestModule, BaseStepComponent, TooltipIconComponent],
+    providers: [
+        Apollo,
+        DatasetApi,
+        FormGroupDirective,
+        FormBuilder,
+        { provide: FormGroupDirective, useValue: formGroupDirective },
+    ],
+}).compileComponents();
 
         fixture = TestBed.createComponent(BaseStepComponent);
         component = fixture.componentInstance;

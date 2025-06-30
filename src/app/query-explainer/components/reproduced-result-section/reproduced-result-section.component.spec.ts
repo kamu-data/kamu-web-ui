@@ -17,9 +17,8 @@ describe("ReproducedResultSectionComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [ReproducedResultSectionComponent],
-            imports: [DynamicTableModule],
-        });
+    imports: [DynamicTableModule, ReproducedResultSectionComponent],
+});
         fixture = TestBed.createComponent(ReproducedResultSectionComponent);
         component = fixture.componentInstance;
         component.dataJsonAoS = mockQueryExplainerOutput;

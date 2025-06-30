@@ -33,46 +33,46 @@ describe("InputDataSectionComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [InputDataSectionComponent],
-            imports: [
-                DisplayHashModule,
-                HighlightModule,
-                ToastrModule.forRoot(),
-                RouterModule,
-                MatIconModule,
-                HttpClientTestingModule,
-                MarkdownModule.forRoot({
-                    loader: HttpClient,
-                    sanitize: SecurityContext.NONE,
-                }),
-            ],
-            providers: [
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            queryParamMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN:
-                                            return "test-upload-token";
-                                    }
-                                },
-                            },
+    imports: [
+        DisplayHashModule,
+        HighlightModule,
+        ToastrModule.forRoot(),
+        RouterModule,
+        MatIconModule,
+        HttpClientTestingModule,
+        MarkdownModule.forRoot({
+            loader: HttpClient,
+            sanitize: SecurityContext.NONE,
+        }),
+        InputDataSectionComponent,
+    ],
+    providers: [
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    queryParamMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN:
+                                    return "test-upload-token";
+                            }
                         },
                     },
                 },
-                {
-                    provide: HIGHLIGHT_OPTIONS,
-                    useValue: {
-                        coreLibraryLoader: () => import("highlight.js/lib/core"),
-                        languages: {
-                            sql: () => import("highlight.js/lib/languages/sql"),
-                        },
-                    },
+            },
+        },
+        {
+            provide: HIGHLIGHT_OPTIONS,
+            useValue: {
+                coreLibraryLoader: () => import("highlight.js/lib/core"),
+                languages: {
+                    sql: () => import("highlight.js/lib/languages/sql"),
                 },
-            ],
-        });
+            },
+        },
+    ],
+});
 
         registerMatSvgIcons();
 

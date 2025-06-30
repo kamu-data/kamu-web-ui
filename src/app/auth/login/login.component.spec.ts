@@ -74,34 +74,34 @@ describe("LoginComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [LoginComponent, SpinnerComponent],
-            providers: [
-                Apollo,
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        queryParams: mockQueryParams.asObservable(),
-                        snapshot: {
-                            queryParamMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL:
-                                            return "";
-                                    }
-                                },
-                            },
+    providers: [
+        Apollo,
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                queryParams: mockQueryParams.asObservable(),
+                snapshot: {
+                    queryParamMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL:
+                                    return "";
+                            }
                         },
                     },
                 },
-            ],
-            imports: [
-                ApolloTestingModule,
-                ReactiveFormsModule,
-                HttpClientTestingModule,
-                MatIconModule,
-                FormValidationErrorsModule,
-            ],
-        }).compileComponents();
+            },
+        },
+    ],
+    imports: [
+        ApolloTestingModule,
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+        MatIconModule,
+        FormValidationErrorsModule,
+        LoginComponent, SpinnerComponent,
+    ],
+}).compileComponents();
 
         registerMatSvgIcons();
 

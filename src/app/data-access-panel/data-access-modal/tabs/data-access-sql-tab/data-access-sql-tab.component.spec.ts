@@ -22,9 +22,8 @@ describe("DataAccessSqlTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [DataAccessSqlTabComponent],
-            imports: [FormsModule, MatDividerModule, MatIconModule, HttpClientTestingModule, CopyToClipboardModule],
-        });
+    imports: [FormsModule, MatDividerModule, MatIconModule, HttpClientTestingModule, CopyToClipboardModule, DataAccessSqlTabComponent],
+});
 
         registerMatSvgIcons();
 

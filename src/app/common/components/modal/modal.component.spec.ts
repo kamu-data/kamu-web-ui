@@ -29,10 +29,9 @@ describe("ModalComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [ModalComponent],
-            providers: [],
-            imports: [SharedTestModule],
-        }).compileComponents();
+    providers: [],
+    imports: [SharedTestModule, ModalComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(ModalComponent);
         modalService = TestBed.inject(ModalService);

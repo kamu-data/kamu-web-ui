@@ -10,10 +10,23 @@ import { BaseField } from "../base-field";
 import { NgbTypeahead } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, OperatorFunction, Subject, merge } from "rxjs";
 import { debounceTime, distinctUntilChanged, map, filter } from "rxjs/operators";
+import { NgIf } from "@angular/common";
+import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
+import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 @Component({
     selector: "app-typeahead-field",
     templateUrl: "./typeahead-field.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        RxReactiveFormsModule,
+        TooltipIconComponent,
+        NgIf,
+        NgbTypeahead,
+    ],
 })
 export class TypeaheadFieldComponent extends BaseField {
     @Input({ required: true }) public data: string[];

@@ -15,8 +15,8 @@ describe("AdminDashboardComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [AdminDashboardComponent],
-        }).compileComponents();
+    imports: [AdminDashboardComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(AdminDashboardComponent);
         component = fixture.componentInstance;

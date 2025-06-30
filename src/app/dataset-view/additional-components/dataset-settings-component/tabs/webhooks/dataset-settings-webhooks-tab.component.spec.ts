@@ -42,20 +42,20 @@ describe("DatasetSettingsWebhooksTabComponent", () => {
     const ngbModalMock = jasmine.createSpyObj<NgbModal>("NgbModal", ["open"]);
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [DatasetSettingsWebhooksTabComponent],
-            providers: [Apollo, { provide: NgbModal, useValue: ngbModalMock }],
-            imports: [
-                SharedTestModule,
-                HttpClientTestingModule,
-                MatProgressBarModule,
-                MatDividerModule,
-                MatTableModule,
-                MatIconModule,
-                ToastrModule.forRoot(),
-                NgSelectModule,
-                FormValidationErrorsModule,
-            ],
-        });
+    providers: [Apollo, { provide: NgbModal, useValue: ngbModalMock }],
+    imports: [
+        SharedTestModule,
+        HttpClientTestingModule,
+        MatProgressBarModule,
+        MatDividerModule,
+        MatTableModule,
+        MatIconModule,
+        ToastrModule.forRoot(),
+        NgSelectModule,
+        FormValidationErrorsModule,
+        DatasetSettingsWebhooksTabComponent,
+    ],
+});
 
         registerMatSvgIcons();
 

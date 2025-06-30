@@ -70,27 +70,25 @@ describe("AddPushSourceComponent with query parameter name", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                AddPushSourceComponent,
-                SourceNameStepComponent,
-                StepperNavigationComponent,
-                BaseStepComponent,
-                PreprocessStepComponent,
-            ],
-            providers: providersSection(mockAddPushSourceYaml),
-            imports: [
-                ReactiveFormsModule,
-                ApolloModule,
-                ApolloTestingModule,
-                HttpClientTestingModule,
-                EditorModule,
-                FormsModule,
-                BrowserAnimationsModule,
-                MatStepperModule,
-                PollingSourceFormComponentsModule,
-                RouterModule,
-            ],
-        }).compileComponents();
+    providers: providersSection(mockAddPushSourceYaml),
+    imports: [
+        ReactiveFormsModule,
+        ApolloModule,
+        ApolloTestingModule,
+        HttpClientTestingModule,
+        EditorModule,
+        FormsModule,
+        BrowserAnimationsModule,
+        MatStepperModule,
+        PollingSourceFormComponentsModule,
+        RouterModule,
+        AddPushSourceComponent,
+        SourceNameStepComponent,
+        StepperNavigationComponent,
+        BaseStepComponent,
+        PreprocessStepComponent,
+    ],
+}).compileComponents();
 
         fixture = TestBed.createComponent(AddPushSourceComponent);
         modalService = TestBed.inject(NgbModal);
@@ -203,27 +201,25 @@ describe("AddPushSourceComponent without query parameter name", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                AddPushSourceComponent,
-                SourceNameStepComponent,
-                StepperNavigationComponent,
-                BaseStepComponent,
-                PreprocessStepComponent,
-            ],
-            providers: providersSection(""),
-            imports: [
-                ReactiveFormsModule,
-                ApolloModule,
-                ApolloTestingModule,
-                HttpClientTestingModule,
-                EditorModule,
-                FormsModule,
-                BrowserAnimationsModule,
-                MatStepperModule,
-                PollingSourceFormComponentsModule,
-                RouterModule,
-            ],
-        }).compileComponents();
+    providers: providersSection(""),
+    imports: [
+        ReactiveFormsModule,
+        ApolloModule,
+        ApolloTestingModule,
+        HttpClientTestingModule,
+        EditorModule,
+        FormsModule,
+        BrowserAnimationsModule,
+        MatStepperModule,
+        PollingSourceFormComponentsModule,
+        RouterModule,
+        AddPushSourceComponent,
+        SourceNameStepComponent,
+        StepperNavigationComponent,
+        BaseStepComponent,
+        PreprocessStepComponent,
+    ],
+}).compileComponents();
 
         fixture = TestBed.createComponent(AddPushSourceComponent);
         editService = TestBed.inject(EditAddPushSourceService);

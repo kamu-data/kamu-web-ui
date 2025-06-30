@@ -16,6 +16,7 @@ import { GithubLoginCredentials } from "src/app/api/auth.api.model";
     selector: "app-github-callback",
     template: "",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
 })
 export class GithubCallbackComponent extends BaseComponent implements OnInit {
     @Input(ProjectLinks.URL_QUERY_PARAM_CODE) public set code(value: string) {

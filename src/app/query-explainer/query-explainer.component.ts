@@ -23,6 +23,12 @@ import { BlockService } from "src/app/dataset-block/metadata-block/block.service
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DatasetByIdQuery } from "src/app/api/kamu.graphql.interface";
+import { FormsModule } from "@angular/forms";
+import { ReproducedResultSectionComponent } from "./components/reproduced-result-section/reproduced-result-section.component";
+import { CommitmentDataSectionComponent } from "./components/commitment-data-section/commitment-data-section.component";
+import { InputDataSectionComponent } from "./components/input-data-section/input-data-section.component";
+import { VerifyResultSectionComponent } from "./components/verify-result-section/verify-result-section.component";
+import { NgIf, AsyncPipe } from "@angular/common";
 
 export interface QueryExplainerComponentData {
     sqlQueryExplainerResponse: QueryExplainerResponse;
@@ -34,6 +40,16 @@ export interface QueryExplainerComponentData {
     templateUrl: "./query-explainer.component.html",
     styleUrls: ["./query-explainer.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        NgIf,
+        VerifyResultSectionComponent,
+        InputDataSectionComponent,
+        CommitmentDataSectionComponent,
+        ReproducedResultSectionComponent,
+        FormsModule,
+        AsyncPipe,
+    ],
 })
 export class QueryExplainerComponent extends BaseComponent implements OnInit {
     @Input(ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN) public set uploadToken(value: string) {

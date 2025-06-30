@@ -41,30 +41,28 @@ describe("GlobalQueryComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                GlobalQueryComponent,
-                SavedQueriesSectionComponent,
-                RequestTimerComponent,
-                QueryAndResultSectionsComponent,
-                SearchAndSchemasSectionComponent,
-                EngineSelectComponent,
-            ],
-            imports: [
-                EditorModule,
-                HttpClientTestingModule,
-                ToastrModule.forRoot(),
-                MatMenuModule,
-                MatProgressBarModule,
-                CdkAccordionModule,
-                DynamicTableModule,
-                MatIconModule,
-                NgbTypeaheadModule,
-                MatDividerModule,
-                FormsModule,
-                SharedTestModule,
-            ],
-            providers: [Apollo],
-        });
+    imports: [
+        EditorModule,
+        HttpClientTestingModule,
+        ToastrModule.forRoot(),
+        MatMenuModule,
+        MatProgressBarModule,
+        CdkAccordionModule,
+        DynamicTableModule,
+        MatIconModule,
+        NgbTypeaheadModule,
+        MatDividerModule,
+        FormsModule,
+        SharedTestModule,
+        GlobalQueryComponent,
+        SavedQueriesSectionComponent,
+        RequestTimerComponent,
+        QueryAndResultSectionsComponent,
+        SearchAndSchemasSectionComponent,
+        EngineSelectComponent,
+    ],
+    providers: [Apollo],
+});
         fixture = TestBed.createComponent(GlobalQueryComponent);
         component = fixture.componentInstance;
         component.sqlQuery = SQL_QUERY;

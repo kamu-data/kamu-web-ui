@@ -32,21 +32,21 @@ describe("LineageGraphComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [LineageGraphComponent],
-            providers: [Apollo],
-            imports: [
-                NgxGraphModule,
-                BrowserAnimationsModule,
-                ApolloModule,
-                ApolloTestingModule,
-                MatIconModule,
-                DisplaySizeModule,
-                DisplayTimeModule,
-                SharedTestModule,
-                DisplayDatasetIdPipeModule,
-                NgxGraphModule,
-            ],
-        })
+    providers: [Apollo],
+    imports: [
+        NgxGraphModule,
+        BrowserAnimationsModule,
+        ApolloModule,
+        ApolloTestingModule,
+        MatIconModule,
+        DisplaySizeModule,
+        DisplayTimeModule,
+        SharedTestModule,
+        DisplayDatasetIdPipeModule,
+        NgxGraphModule,
+        LineageGraphComponent,
+    ],
+})
             .overrideComponent(LineageGraphComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

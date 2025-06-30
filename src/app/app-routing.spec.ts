@@ -9,7 +9,7 @@ import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core
 import { Location } from "@angular/common";
 import { Router } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
-import { routes } from "./app-routing.module";
+import { routes } from "./app-routing";
 import ProjectLinks from "./project-links";
 import { promiseWithCatch } from "./common/helpers/app.helpers";
 import { ApolloTestingModule } from "apollo-angular/testing";
@@ -57,8 +57,9 @@ describe("Router", () => {
                 HttpClientTestingModule,
                 ToastrModule.forRoot(),
                 NgxGraphModule,
+                PageNotFoundComponent,
+                LoginComponent,
             ],
-            declarations: [PageNotFoundComponent, LoginComponent],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
                 {

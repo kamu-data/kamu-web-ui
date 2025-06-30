@@ -11,12 +11,15 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { DisplayHashComponent } from "../../../../../../../common/components/display-hash/display-hash.component";
 
 @Component({
     selector: "app-block-interval-property",
     templateUrl: "./block-interval-property.component.html",
     styleUrls: ["./block-interval-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [DisplayHashComponent],
 })
 export class BlockIntervalPropertyComponent extends BasePropertyComponent implements OnInit {
     @Input({ required: true }) public data: { prevBlockHash: string; newBlockHash: string; datasetId: string };

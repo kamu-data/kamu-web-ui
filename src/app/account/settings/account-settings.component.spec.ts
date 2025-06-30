@@ -33,16 +33,16 @@ describe("AccountSettingsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [AccountSettingsComponent],
-            imports: [
-                ApolloTestingModule,
-                ToastrModule.forRoot(),
-                RouterTestingModule,
-                HttpClientTestingModule,
-                MatIconModule,
-                AccountSettingsModule,
-            ],
-        }).compileComponents();
+    imports: [
+        ApolloTestingModule,
+        ToastrModule.forRoot(),
+        RouterTestingModule,
+        HttpClientTestingModule,
+        MatIconModule,
+        AccountSettingsModule,
+        AccountSettingsComponent,
+    ],
+}).compileComponents();
 
         registerMatSvgIcons();
 

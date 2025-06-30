@@ -65,47 +65,45 @@ describe("AddPollingSourceComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                AddPollingSourceComponent,
-                StepperNavigationComponent,
-                BaseStepComponent,
-                PrepareStepComponent,
-                PreprocessStepComponent,
-            ],
-            imports: [
-                ApolloTestingModule,
-                BrowserAnimationsModule,
-                FormsModule,
-                NgbModule,
-                MatStepperModule,
-                PollingSourceFormComponentsModule,
-                ReactiveFormsModule,
-                HttpClientTestingModule,
-                EditorModule,
-                RouterModule,
-            ],
-            providers: [
-                FormBuilder,
-                Apollo,
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return "accountName";
-                                        case "datasetName":
-                                            return "datasetName";
-                                    }
-                                },
-                            },
+    imports: [
+        ApolloTestingModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        NgbModule,
+        MatStepperModule,
+        PollingSourceFormComponentsModule,
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+        EditorModule,
+        RouterModule,
+        AddPollingSourceComponent,
+        StepperNavigationComponent,
+        BaseStepComponent,
+        PrepareStepComponent,
+        PreprocessStepComponent,
+    ],
+    providers: [
+        FormBuilder,
+        Apollo,
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    paramMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "accountName":
+                                    return "accountName";
+                                case "datasetName":
+                                    return "datasetName";
+                            }
                         },
                     },
                 },
-            ],
-        })
+            },
+        },
+    ],
+})
             .overrideComponent(AddPollingSourceComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

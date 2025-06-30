@@ -12,6 +12,7 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
     selector: "app-cache-property",
     templateUrl: "./cache-property.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
 })
 export class CachePropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;

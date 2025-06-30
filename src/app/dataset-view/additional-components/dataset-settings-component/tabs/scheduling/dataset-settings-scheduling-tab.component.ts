@@ -22,12 +22,21 @@ import { PollingGroupType } from "./dataset-settings-scheduling-tab.component.ty
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
+import { IngestTriggerFormComponent } from "./ingest-trigger-form/ingest-trigger-form.component";
+import { NgIf } from "@angular/common";
+import { MatDividerModule } from "@angular/material/divider";
 
 @Component({
     selector: "app-dataset-settings-scheduling-tab",
     templateUrl: "./dataset-settings-scheduling-tab.component.html",
     styleUrls: ["./dataset-settings-scheduling-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        MatDividerModule,
+        NgIf,
+        IngestTriggerFormComponent,
+    ],
 })
 export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
     @Input(RoutingResolvers.DATASET_SETTINGS_SCHEDULING_KEY) public schedulungTabData: DatasetViewData;

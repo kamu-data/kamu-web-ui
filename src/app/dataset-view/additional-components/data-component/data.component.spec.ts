@@ -42,7 +42,7 @@ import { QueryAndResultSectionsComponent } from "../../../query/shared/query-and
 import { SearchAndSchemasSectionComponent } from "src/app/query/global-query/search-and-schemas-section/search-and-schemas-section.component";
 import { SessionStorageService } from "src/app/services/session-storage.service";
 import { NavigationService } from "src/app/services/navigation.service";
-import { routes } from "src/app/app-routing.module";
+import { routes } from "src/app/app-routing";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 import { of } from "rxjs";
 import AppValues from "src/app/common/values/app.values";
@@ -106,8 +106,6 @@ describe("DataComponent", () => {
                 CdkAccordionModule,
                 HttpClientModule,
                 ToastrModule.forRoot(),
-            ],
-            declarations: [
                 DataComponent,
                 SavedQueriesSectionComponent,
                 QueryAndResultSectionsComponent,

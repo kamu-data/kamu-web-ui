@@ -23,12 +23,29 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "../dataset-view.interface";
+import { AsyncPipe } from "@angular/common";
+import { SearchAdditionalButtonsComponent } from "../../common/components/search-additional-buttons/search-additional-buttons.component";
+import { NgbPopover } from "@ng-bootstrap/ng-bootstrap";
+import { FeatureFlagDirective } from "../../common/directives/feature-flag.directive";
+import { DatasetVisibilityComponent } from "../../common/components/dataset-visibility/dataset-visibility.component";
+import { RouterLink } from "@angular/router";
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
     selector: "app-dataset-view-header",
     templateUrl: "./dataset-view-header.component.html",
     styleUrls: ["./dataset-view-header.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        MatIconModule,
+        RouterLink,
+        DatasetVisibilityComponent,
+        FeatureFlagDirective,
+        NgbPopover,
+        SearchAdditionalButtonsComponent,
+        AsyncPipe,
+    ],
 })
 export class DatasetViewHeaderComponent extends BaseComponent {
     @Input({ required: true }) public datasetInfo: DatasetInfo;

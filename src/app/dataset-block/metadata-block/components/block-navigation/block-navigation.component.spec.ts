@@ -30,18 +30,18 @@ describe("BlockNavigationComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [BlockNavigationComponent, BlockHashFilterPipe, EventTypeFilterPipe],
-            imports: [
-                FormsModule,
-                NgMultiSelectDropDownModule,
-                PaginationModule,
-                MatIconModule,
-                HttpClientTestingModule,
-                DisplayHashModule,
-                ToastrModule.forRoot(),
-                NgSelectModule,
-            ],
-        }).compileComponents();
+    imports: [
+        FormsModule,
+        NgMultiSelectDropDownModule,
+        PaginationModule,
+        MatIconModule,
+        HttpClientTestingModule,
+        DisplayHashModule,
+        ToastrModule.forRoot(),
+        NgSelectModule,
+        BlockNavigationComponent, BlockHashFilterPipe, EventTypeFilterPipe,
+    ],
+}).compileComponents();
 
         registerMatSvgIcons();
 

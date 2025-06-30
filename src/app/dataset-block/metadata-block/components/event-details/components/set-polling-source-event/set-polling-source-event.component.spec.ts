@@ -30,23 +30,20 @@ describe("SetPollingSourceEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                SetPollingSourceEventComponent,
-                SimplePropertyComponent,
-                SeparatorPropertyComponent,
-                LinkPropertyComponent,
-                EnginePropertyComponent,
-                SqlQueryViewerComponent,
-                SchemaPropertyComponent,
-                EnvVariablesPropertyComponent,
-                MergeStrategyPropertyComponent,
-                CardsPropertyComponent,
-                UnsupportedPropertyComponent,
-                YamlEventViewerComponent,
-            ],
-            imports: [SharedTestModule],
-            schemas: [NO_ERRORS_SCHEMA],
-        }).compileComponents();
+    imports: [SharedTestModule, SetPollingSourceEventComponent,
+        SimplePropertyComponent,
+        SeparatorPropertyComponent,
+        LinkPropertyComponent,
+        EnginePropertyComponent,
+        SqlQueryViewerComponent,
+        SchemaPropertyComponent,
+        EnvVariablesPropertyComponent,
+        MergeStrategyPropertyComponent,
+        CardsPropertyComponent,
+        UnsupportedPropertyComponent,
+        YamlEventViewerComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+}).compileComponents();
 
         fixture = TestBed.createComponent(SetPollingSourceEventComponent);
         component = fixture.componentInstance;

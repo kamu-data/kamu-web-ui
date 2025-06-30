@@ -20,12 +20,25 @@ import { MenuActionData, SearchAdditionalHeaderButtonInterface } from "./search-
 import { isMobileView } from "src/app/common/helpers/app.helpers";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
+import { SearchAdditionalButtonsNavComponent } from "./search-additional-buttons-nav.component";
+import { MatIconModule } from "@angular/material/icon";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatButtonModule } from "@angular/material/button";
+import { NgIf } from "@angular/common";
 
 @Component({
     selector: "app-search-additional-buttons",
     templateUrl: "./search-additional-buttons.component.html",
     styleUrls: ["./search-additional-buttons.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        NgIf,
+        MatButtonModule,
+        MatMenuModule,
+        MatIconModule,
+        SearchAdditionalButtonsNavComponent,
+    ],
 })
 export class SearchAdditionalButtonsComponent implements OnInit {
     @Input({ required: true })

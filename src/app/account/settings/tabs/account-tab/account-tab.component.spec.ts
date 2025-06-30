@@ -32,17 +32,17 @@ describe("AccountTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [AccountTabComponent],
-            imports: [
-                SharedTestModule,
-                HttpClientTestingModule,
-                ReactiveFormsModule,
-                ToastrModule.forRoot(),
-                MatDividerModule,
-                FormValidationErrorsModule,
-            ],
-            providers: [Apollo],
-        });
+    imports: [
+        SharedTestModule,
+        HttpClientTestingModule,
+        ReactiveFormsModule,
+        ToastrModule.forRoot(),
+        MatDividerModule,
+        FormValidationErrorsModule,
+        AccountTabComponent,
+    ],
+    providers: [Apollo],
+});
         fixture = TestBed.createComponent(AccountTabComponent);
         modalService = TestBed.inject(ModalService);
         accountService = TestBed.inject(AccountService);

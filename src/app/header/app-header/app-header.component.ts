@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ActivatedRoute, NavigationEnd, Params, Router, RouterEvent } from "@angular/router";
+import { ActivatedRoute, NavigationEnd, Params, Router, RouterEvent, RouterLink } from "@angular/router";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -22,7 +22,7 @@ import { Observable, OperatorFunction } from "rxjs";
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap, take, finalize } from "rxjs/operators";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { AccountFragment, AccountProvider } from "src/app/api/kamu.graphql.interface";
-import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
+import { NgbTypeaheadSelectItemEvent, NgbTypeahead, NgbHighlight } from "@ng-bootstrap/ng-bootstrap";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 import { AppUIConfigFeatureFlags } from "src/app/app-config.model";
@@ -33,12 +33,34 @@ import AppValues from "src/app/common/values/app.values";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 import { AccountTabs } from "src/app/account/account.constants";
 import { MaybeNull } from "src/app/interface/app.types";
+import { DisplayAccountNamePipe } from "../../common/pipes/display-account-name.pipe";
+import { MatMenuModule } from "@angular/material/menu";
+import { NotificationIndicatorComponent } from "../notification-indicator/notification-indicator.component";
+import { FeatureFlagDirective } from "../../common/directives/feature-flag.directive";
+import { MatIconModule } from "@angular/material/icon";
+import { FormsModule } from "@angular/forms";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { NgIf } from "@angular/common";
 
 @Component({
     selector: "app-header",
     templateUrl: "./app-header.component.html",
     styleUrls: ["./app-header.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        NgIf,
+        RouterLink,
+        MatProgressSpinnerModule,
+        NgbTypeahead,
+        FormsModule,
+        NgbHighlight,
+        MatIconModule,
+        FeatureFlagDirective,
+        NotificationIndicatorComponent,
+        MatMenuModule,
+        DisplayAccountNamePipe,
+    ],
 })
 export class AppHeaderComponent extends BaseComponent implements OnInit {
     public readonly APP_LOGO = AppValues.APP_LOGO;

@@ -31,18 +31,18 @@ describe("DatasetViewHeaderComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DatasetViewHeaderComponent],
-            providers: [Apollo],
-            imports: [
-                MatIconModule,
-                MatMenuModule,
-                HttpClientTestingModule,
-                RouterModule,
-                SharedTestModule,
-                DatasetVisibilityModule,
-                SearchAdditionalButtonsModule,
-            ],
-        }).compileComponents();
+    providers: [Apollo],
+    imports: [
+        MatIconModule,
+        MatMenuModule,
+        HttpClientTestingModule,
+        RouterModule,
+        SharedTestModule,
+        DatasetVisibilityModule,
+        SearchAdditionalButtonsModule,
+        DatasetViewHeaderComponent,
+    ],
+}).compileComponents();
 
         registerMatSvgIcons();
 

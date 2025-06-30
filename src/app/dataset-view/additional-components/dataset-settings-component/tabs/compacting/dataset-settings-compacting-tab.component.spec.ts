@@ -38,44 +38,43 @@ describe("DatasetSettingsCompactingTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DatasetSettingsCompactingTabComponent, TooltipIconComponent],
-            providers: [
-                Apollo,
-
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            queryParamMap: {
-                                get: () => null,
-                            },
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return mockDatasetBasicsDerivedFragment.owner.accountName;
-                                        case "datasetName":
-                                            return mockDatasetBasicsDerivedFragment.name;
-                                    }
-                                },
-                            },
+    providers: [
+        Apollo,
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    queryParamMap: {
+                        get: () => null,
+                    },
+                    paramMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "accountName":
+                                    return mockDatasetBasicsDerivedFragment.owner.accountName;
+                                case "datasetName":
+                                    return mockDatasetBasicsDerivedFragment.name;
+                            }
                         },
                     },
                 },
-            ],
-            imports: [
-                ApolloTestingModule,
-                MatDividerModule,
-                ReactiveFormsModule,
-                ToastrModule.forRoot(),
-                BrowserAnimationsModule,
-                MatIconModule,
-                NgbTooltipModule,
-                MatRadioModule,
-                HttpClientTestingModule,
-                FormValidationErrorsModule,
-            ],
-        }).compileComponents();
+            },
+        },
+    ],
+    imports: [
+        ApolloTestingModule,
+        MatDividerModule,
+        ReactiveFormsModule,
+        ToastrModule.forRoot(),
+        BrowserAnimationsModule,
+        MatIconModule,
+        NgbTooltipModule,
+        MatRadioModule,
+        HttpClientTestingModule,
+        FormValidationErrorsModule,
+        DatasetSettingsCompactingTabComponent, TooltipIconComponent,
+    ],
+}).compileComponents();
 
         fixture = TestBed.createComponent(DatasetSettingsCompactingTabComponent);
         component = fixture.componentInstance;

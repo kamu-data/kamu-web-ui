@@ -33,19 +33,19 @@ describe("SearchSectionComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SearchSectionComponent],
-            providers: [Apollo],
-            imports: [
-                ApolloModule,
-                ApolloTestingModule,
-                MatTreeModule,
-                NgbTypeaheadModule,
-                MatIconModule,
-                FormsModule,
-                SharedTestModule,
-                RouterModule,
-            ],
-        }).compileComponents();
+    providers: [Apollo],
+    imports: [
+        ApolloModule,
+        ApolloTestingModule,
+        MatTreeModule,
+        NgbTypeaheadModule,
+        MatIconModule,
+        FormsModule,
+        SharedTestModule,
+        RouterModule,
+        SearchSectionComponent,
+    ],
+}).compileComponents();
 
         fixture = TestBed.createComponent(SearchSectionComponent);
         component = fixture.componentInstance;

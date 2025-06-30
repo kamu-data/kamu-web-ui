@@ -50,57 +50,57 @@ describe("FlowsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [
-                Apollo,
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            queryParamMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "tab":
-                                            return "flows";
-                                        case "page":
-                                            return 2;
-                                    }
-                                },
-                            },
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return "accountName";
-                                        case "datasetName":
-                                            return "datasetName";
-                                    }
-                                },
-                            },
+    providers: [
+        Apollo,
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    queryParamMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "tab":
+                                    return "flows";
+                                case "page":
+                                    return 2;
+                            }
+                        },
+                    },
+                    paramMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "accountName":
+                                    return "accountName";
+                                case "datasetName":
+                                    return "datasetName";
+                            }
                         },
                     },
                 },
-            ],
-            declarations: [FlowsComponent, FlowsTableComponent, PaginationComponent, TileBaseWidgetComponent],
-            imports: [
-                ApolloTestingModule,
-                ToastrModule.forRoot(),
-                MatMenuModule,
-                PaginationModule,
-                MatTableModule,
-                DisplayTimeModule,
-                MatRadioModule,
-                FormsModule,
-                MatDividerModule,
-                MatIconModule,
-                HttpClientTestingModule,
-                NgbPopoverModule,
-                NgbTypeaheadModule,
-                NgbPaginationModule,
-                RouterModule,
-                MatProgressBarModule,
-                AngularMultiSelectModule,
-            ],
-        }).compileComponents();
+            },
+        },
+    ],
+    imports: [
+        ApolloTestingModule,
+        ToastrModule.forRoot(),
+        MatMenuModule,
+        PaginationModule,
+        MatTableModule,
+        DisplayTimeModule,
+        MatRadioModule,
+        FormsModule,
+        MatDividerModule,
+        MatIconModule,
+        HttpClientTestingModule,
+        NgbPopoverModule,
+        NgbTypeaheadModule,
+        NgbPaginationModule,
+        RouterModule,
+        MatProgressBarModule,
+        AngularMultiSelectModule,
+        FlowsComponent, FlowsTableComponent, PaginationComponent, TileBaseWidgetComponent,
+    ],
+}).compileComponents();
 
         registerMatSvgIcons();
 

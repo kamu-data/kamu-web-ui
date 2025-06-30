@@ -18,10 +18,9 @@ describe("TopicsFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [TopicsFieldComponent, TooltipIconComponent],
-            providers: [FormBuilder],
-            imports: [ReactiveFormsModule, NgbTooltipModule, SharedTestModule],
-        }).compileComponents();
+    providers: [FormBuilder],
+    imports: [ReactiveFormsModule, NgbTooltipModule, SharedTestModule, TopicsFieldComponent, TooltipIconComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(TopicsFieldComponent);
         component = fixture.componentInstance;

@@ -17,12 +17,41 @@ import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dat
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { ProtocolsService } from "src/app/services/protocols.service";
+import { DataAccessExportTabComponent } from "./tabs/data-access-export-tab/data-access-export-tab.component";
+import { DataAccessOdataTabComponent } from "./tabs/data-access-odata-tab/data-access-odata-tab.component";
+import { DataAccessCodeTabComponent } from "./tabs/data-access-code-tab/data-access-code-tab.component";
+import { DataAccessStreamTabComponent } from "./tabs/data-access-stream-tab/data-access-stream-tab.component";
+import { DataAccessSqlTabComponent } from "./tabs/data-access-sql-tab/data-access-sql-tab.component";
+import { DataAccessRestTabComponent } from "./tabs/data-access-rest-tab/data-access-rest-tab.component";
+import { DataAccessKamuCliTabComponent } from "./tabs/data-access-kamu-cli-tab/data-access-kamu-cli-tab.component";
+import { DataAccessLinkTabComponent } from "./tabs/data-access-link-tab/data-access-link-tab.component";
+import { MatIconModule } from "@angular/material/icon";
+import { FeatureFlagDirective } from "../../common/directives/feature-flag.directive";
+import { RouterLink } from "@angular/router";
+import { NgIf, NgFor, AsyncPipe } from "@angular/common";
 
 @Component({
     selector: "app-data-access-modal",
     templateUrl: "./data-access-modal.component.html",
     styleUrls: ["./data-access-modal.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        NgIf,
+        RouterLink,
+        NgFor,
+        FeatureFlagDirective,
+        MatIconModule,
+        DataAccessLinkTabComponent,
+        DataAccessKamuCliTabComponent,
+        DataAccessRestTabComponent,
+        DataAccessSqlTabComponent,
+        DataAccessStreamTabComponent,
+        DataAccessCodeTabComponent,
+        DataAccessOdataTabComponent,
+        DataAccessExportTabComponent,
+        AsyncPipe,
+    ],
 })
 export class DataAccessModalComponent implements OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

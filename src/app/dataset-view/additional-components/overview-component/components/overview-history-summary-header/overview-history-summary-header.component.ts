@@ -12,12 +12,25 @@ import AppValues from "src/app/common/values/app.values";
 import { DataHelpers } from "src/app/common/helpers/data.helpers";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import ProjectLinks from "src/app/project-links";
+import { MatIconModule } from "@angular/material/icon";
+import { DisplayTimeComponent } from "../../../../../common/components/display-time/display-time.component";
+import { DisplayHashComponent } from "../../../../../common/components/display-hash/display-hash.component";
+import { RouterLink } from "@angular/router";
+import { NgIf } from "@angular/common";
 
 @Component({
     selector: "app-overview-history-summary-header",
     templateUrl: "./overview-history-summary-header.component.html",
     styleUrls: ["./overview-history-summary-header.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        NgIf,
+        RouterLink,
+        DisplayHashComponent,
+        DisplayTimeComponent,
+        MatIconModule,
+    ],
 })
 export class OverviewHistorySummaryHeaderComponent {
     @Input({ required: true }) public metadataBlockFragment: MaybeUndefined<MetadataBlockFragment>;

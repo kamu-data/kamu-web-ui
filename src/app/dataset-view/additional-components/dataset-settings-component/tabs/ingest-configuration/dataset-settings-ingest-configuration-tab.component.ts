@@ -14,11 +14,15 @@ import { DatasetBasicsFragment, DatasetFlowType } from "src/app/api/kamu.graphql
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { IngestConfigurationFormComponent } from "./ingest-configuration-form/ingest-configuration-form.component";
+import { MatDividerModule } from "@angular/material/divider";
 
 @Component({
     selector: "app-dataset-settings-ingest-configuration-tab",
     templateUrl: "./dataset-settings-ingest-configuration-tab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [MatDividerModule, IngestConfigurationFormComponent],
 })
 export class DatasetSettingsIngestConfigurationTabComponent extends BaseComponent {
     @Input(RoutingResolvers.DATASET_SETTINGS_INGEST_CONFIGURATION_KEY)

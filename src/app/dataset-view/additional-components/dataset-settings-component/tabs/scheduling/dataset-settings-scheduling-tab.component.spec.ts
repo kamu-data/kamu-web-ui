@@ -41,21 +41,21 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DatasetSettingsSchedulingTabComponent],
-            providers: [Apollo],
-            imports: [
-                ApolloTestingModule,
-                ToastrModule.forRoot(),
-                BrowserAnimationsModule,
-                SharedTestModule,
-                MatDividerModule,
-                MatSlideToggleModule,
-                MatRadioModule,
-                ReactiveFormsModule,
-                IngestConfigurationModule,
-                IngestTriggerModule,
-            ],
-        }).compileComponents();
+    providers: [Apollo],
+    imports: [
+        ApolloTestingModule,
+        ToastrModule.forRoot(),
+        BrowserAnimationsModule,
+        SharedTestModule,
+        MatDividerModule,
+        MatSlideToggleModule,
+        MatRadioModule,
+        ReactiveFormsModule,
+        IngestConfigurationModule,
+        IngestTriggerModule,
+        DatasetSettingsSchedulingTabComponent,
+    ],
+}).compileComponents();
 
         fixture = TestBed.createComponent(DatasetSettingsSchedulingTabComponent);
         datasetSchedulingService = TestBed.inject(DatasetSchedulingService);

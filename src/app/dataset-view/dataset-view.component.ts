@@ -13,11 +13,22 @@ import { BaseDatasetDataComponent } from "../common/components/base-dataset-data
 import RoutingResolvers from "../common/resolvers/routing-resolvers";
 import { DatasetInfo } from "../interface/navigation.interface";
 import { map } from "rxjs";
+import { RouterOutlet } from "@angular/router";
+import { DatasetViewMenuComponent } from "./dataset-view-menu/dataset-view-menu.component";
+import { DatasetViewHeaderComponent } from "./dataset-view-header/dataset-view-header.component";
+import { NgIf } from "@angular/common";
 
 @Component({
     selector: "app-dataset",
     templateUrl: "./dataset-view.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        NgIf,
+        DatasetViewHeaderComponent,
+        DatasetViewMenuComponent,
+        RouterOutlet,
+    ],
 })
 export class DatasetViewComponent extends BaseDatasetDataComponent implements OnDestroy {
     @Input(RoutingResolvers.DATASET_VIEW_ACTIVE_TAB_KEY) public datasetViewType: DatasetViewTypeEnum;

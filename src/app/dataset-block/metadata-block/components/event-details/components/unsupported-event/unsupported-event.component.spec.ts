@@ -16,9 +16,8 @@ describe("UnsupportedEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [UnsupportedEventComponent],
-            imports: [MatIconModule, SharedTestModule],
-        }).compileComponents();
+    imports: [MatIconModule, SharedTestModule, UnsupportedEventComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(UnsupportedEventComponent);
         component = fixture.componentInstance;

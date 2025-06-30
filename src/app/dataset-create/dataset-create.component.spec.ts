@@ -28,18 +28,18 @@ describe("DatasetCreateComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DatasetCreateComponent],
-            imports: [
-                ReactiveFormsModule,
-                ApolloModule,
-                FormsModule,
-                HttpClientTestingModule,
-                NgSelectModule,
-                SharedTestModule,
-                FormValidationErrorsModule,
-            ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
-        })
+    imports: [
+        ReactiveFormsModule,
+        ApolloModule,
+        FormsModule,
+        HttpClientTestingModule,
+        NgSelectModule,
+        SharedTestModule,
+        FormValidationErrorsModule,
+        DatasetCreateComponent,
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
             .overrideComponent(DatasetCreateComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

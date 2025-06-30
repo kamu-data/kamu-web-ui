@@ -19,10 +19,9 @@ describe("SettingsTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [SettingsTabComponent],
-            imports: [AccountSettingsModule, SharedTestModule, HttpClientTestingModule, ToastrModule.forRoot()],
-            providers: [Apollo],
-        });
+    imports: [AccountSettingsModule, SharedTestModule, HttpClientTestingModule, ToastrModule.forRoot(), SettingsTabComponent],
+    providers: [Apollo],
+});
         fixture = TestBed.createComponent(SettingsTabComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

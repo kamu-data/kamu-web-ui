@@ -20,9 +20,8 @@ describe("SelectKindFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SelectKindFieldComponent],
-            imports: [ReactiveFormsModule, NgbTooltipModule, MatIconModule],
-        }).compileComponents();
+    imports: [ReactiveFormsModule, NgbTooltipModule, MatIconModule, SelectKindFieldComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(SelectKindFieldComponent);
         component = fixture.componentInstance;

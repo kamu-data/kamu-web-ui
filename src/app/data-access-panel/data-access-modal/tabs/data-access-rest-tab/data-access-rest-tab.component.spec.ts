@@ -21,9 +21,8 @@ describe("DataAccessRestTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [DataAccessRestTabComponent],
-            imports: [FormsModule, MatDividerModule, MatIconModule, HttpClientTestingModule, CopyToClipboardModule],
-        });
+    imports: [FormsModule, MatDividerModule, MatIconModule, HttpClientTestingModule, CopyToClipboardModule, DataAccessRestTabComponent],
+});
 
         registerMatSvgIcons();
 

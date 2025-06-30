@@ -30,9 +30,9 @@ import {
     AccountFragment,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/values/app.values";
-import { MatTableDataSource } from "@angular/material/table";
+import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { capitalizeString, promiseWithCatch } from "src/app/common/helpers/app.helpers";
-import { MatMenuTrigger } from "@angular/material/menu";
+import { MatMenuTrigger, MatMenuModule } from "@angular/material/menu";
 import { DatasetFlowTableHelpers } from "./flows-table.helpers";
 import {
     CancelFlowArgs,
@@ -53,12 +53,32 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ToastrService } from "ngx-toastr";
 import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import ProjectLinks from "src/app/project-links";
+import { SafeHtmlPipe } from "../../common/pipes/safe-html.pipe";
+import { MatDividerModule } from "@angular/material/divider";
+import { RouterLink } from "@angular/router";
+import { MatIconModule } from "@angular/material/icon";
+import { NgIf, NgClass } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 
 @Component({
     selector: "app-flows-table",
     templateUrl: "./flows-table.component.html",
     styleUrls: ["./flows-table.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        AngularMultiSelectModule,
+        FormsModule,
+        NgIf,
+        MatIconModule,
+        MatTableModule,
+        NgClass,
+        RouterLink,
+        MatMenuModule,
+        MatDividerModule,
+        SafeHtmlPipe,
+    ],
 })
 export class FlowsTableComponent extends BaseComponent implements OnInit, OnChanges {
     @Input({ required: true }) public nodes: FlowSummaryDataFragment[];

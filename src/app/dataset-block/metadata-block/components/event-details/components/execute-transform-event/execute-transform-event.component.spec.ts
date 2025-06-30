@@ -28,23 +28,21 @@ describe("ExecuteTransformEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                ExecuteTransformEventComponent,
-                SizePropertyComponent,
-                OffsetIntervalPropertyComponent,
-                BlockRowDataComponent,
-                TooltipIconComponent,
-            ],
-            imports: [
-                ApolloTestingModule,
-                DisplaySizeModule,
-                MatIconModule,
-                NgbTooltipModule,
-                ToastrModule.forRoot(),
-                HttpClientTestingModule,
-                SharedTestModule,
-            ],
-        }).compileComponents();
+    imports: [
+        ApolloTestingModule,
+        DisplaySizeModule,
+        MatIconModule,
+        NgbTooltipModule,
+        ToastrModule.forRoot(),
+        HttpClientTestingModule,
+        SharedTestModule,
+        ExecuteTransformEventComponent,
+        SizePropertyComponent,
+        OffsetIntervalPropertyComponent,
+        BlockRowDataComponent,
+        TooltipIconComponent,
+    ],
+}).compileComponents();
 
         registerMatSvgIcons();
 

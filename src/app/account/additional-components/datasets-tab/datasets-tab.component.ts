@@ -12,11 +12,21 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { isNil } from "src/app/common/helpers/app.helpers";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetsAccountResolverResponse } from "src/app/interface/dataset.interface";
+import { PaginationComponent } from "../../../common/components/pagination-component/pagination.component";
+import { DatasetListItemComponent } from "../../../common/components/dataset-list-component/dataset-list-item/dataset-list-item.component";
+import { NgIf, NgFor } from "@angular/common";
 
 @Component({
     selector: "app-datasets-tab",
     templateUrl: "./datasets-tab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        NgIf,
+        NgFor,
+        DatasetListItemComponent,
+        PaginationComponent,
+    ],
 })
 export class DatasetsTabComponent {
     @Input(RoutingResolvers.ACCOUNT_DATASETS_KEY) public accountResolverResponse: DatasetsAccountResolverResponse;

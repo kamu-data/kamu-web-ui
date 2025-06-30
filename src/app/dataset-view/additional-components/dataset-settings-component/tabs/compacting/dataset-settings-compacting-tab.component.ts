@@ -7,7 +7,7 @@
 
 import { NavigationService } from "./../../../../../services/navigation.service";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { AbstractControl, FormBuilder, Validators } from "@angular/forms";
+import { AbstractControl, FormBuilder, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { DatasetBasicsFragment, DatasetFlowType } from "src/app/api/kamu.graphql.interface";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { CompactionTooltipsTexts } from "src/app/common/tooltips/compacting.text";
@@ -19,12 +19,23 @@ import AppValues from "src/app/common/values/app.values";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { FormValidationErrorsDirective } from "../../../../../common/directives/form-validation-errors.directive";
+import { TooltipIconComponent } from "../../../../../common/components/tooltip-icon/tooltip-icon.component";
+import { MatDividerModule } from "@angular/material/divider";
 
 @Component({
     selector: "app-dataset-settings-compacting-tab",
     templateUrl: "./dataset-settings-compacting-tab.component.html",
     styleUrls: ["./dataset-settings-compacting-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        MatDividerModule,
+        FormsModule,
+        ReactiveFormsModule,
+        TooltipIconComponent,
+        FormValidationErrorsDirective,
+    ],
 })
 export class DatasetSettingsCompactingTabComponent extends BaseComponent {
     public modalService = inject(ModalService);

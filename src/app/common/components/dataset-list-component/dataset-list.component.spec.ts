@@ -15,9 +15,8 @@ describe("DatasetListComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DatasetListComponent],
-            imports: [DatasetVisibilityModule],
-        }).compileComponents();
+    imports: [DatasetVisibilityModule, DatasetListComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(DatasetListComponent);
         component = fixture.componentInstance;

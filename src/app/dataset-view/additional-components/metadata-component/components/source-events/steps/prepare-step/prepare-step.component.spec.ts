@@ -27,16 +27,15 @@ describe("PrepareStepComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [PrepareStepComponent],
-            providers: [
-                Apollo,
-                DatasetApi,
-                FormGroupDirective,
-                FormBuilder,
-                { provide: FormGroupDirective, useValue: formGroupDirective },
-            ],
-            imports: [SharedTestModule, ReactiveFormsModule, MatIconModule],
-        }).compileComponents();
+    providers: [
+        Apollo,
+        DatasetApi,
+        FormGroupDirective,
+        FormBuilder,
+        { provide: FormGroupDirective, useValue: formGroupDirective },
+    ],
+    imports: [SharedTestModule, ReactiveFormsModule, MatIconModule, PrepareStepComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(PrepareStepComponent);
         component = fixture.componentInstance;

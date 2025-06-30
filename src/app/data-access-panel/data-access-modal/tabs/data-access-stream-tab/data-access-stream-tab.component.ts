@@ -7,12 +7,16 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { KafkaProtocolDesc, WebSocketProtocolDesc } from "src/app/api/kamu.graphql.interface";
+import { MatIconModule } from "@angular/material/icon";
+import { CopyToClipboardComponent } from "../../../../common/components/copy-to-clipboard/copy-to-clipboard.component";
 
 @Component({
     selector: "app-data-access-stream-tab",
     templateUrl: "./data-access-stream-tab.component.html",
     styleUrls: ["./data-access-stream-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [CopyToClipboardComponent, MatIconModule],
 })
 export class DataAccessStreamTabComponent {
     @Input({ required: true }) public kafka: KafkaProtocolDesc;

@@ -22,9 +22,8 @@ describe("AddPushSourceEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [AddPushSourceEventComponent, BlockRowDataComponent, TooltipIconComponent],
-            imports: [SharedTestModule, MatIconModule, NgbTooltipModule],
-        }).compileComponents();
+    imports: [SharedTestModule, MatIconModule, NgbTooltipModule, AddPushSourceEventComponent, BlockRowDataComponent, TooltipIconComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(AddPushSourceEventComponent);
         component = fixture.componentInstance;

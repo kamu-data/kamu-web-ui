@@ -46,32 +46,30 @@ describe("DataAccessModalComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo, NgbActiveModal],
-            declarations: [
-                DataAccessModalComponent,
-                DataAccessLinkTabComponent,
-                DataAccessKamuCliTabComponent,
-                DataAccessRestTabComponent,
-                DataAccessSqlTabComponent,
-                DataAccessStreamTabComponent,
-                DataAccessCodeTabComponent,
-                DataAccessOdataTabComponent,
-                DataAccessExportTabComponent,
-            ],
-            imports: [
-                FormsModule,
-                MatDividerModule,
-                MatCheckboxModule,
-                MatIconModule,
-                MatTooltipModule,
-                HttpClientTestingModule,
-                BrowserAnimationsModule,
-                ApolloModule,
-                ApolloTestingModule,
-                FeatureFlagModule,
-                CopyToClipboardModule,
-            ],
-        });
+    providers: [Apollo, NgbActiveModal],
+    imports: [
+        FormsModule,
+        MatDividerModule,
+        MatCheckboxModule,
+        MatIconModule,
+        MatTooltipModule,
+        HttpClientTestingModule,
+        BrowserAnimationsModule,
+        ApolloModule,
+        ApolloTestingModule,
+        FeatureFlagModule,
+        CopyToClipboardModule,
+        DataAccessModalComponent,
+        DataAccessLinkTabComponent,
+        DataAccessKamuCliTabComponent,
+        DataAccessRestTabComponent,
+        DataAccessSqlTabComponent,
+        DataAccessStreamTabComponent,
+        DataAccessCodeTabComponent,
+        DataAccessOdataTabComponent,
+        DataAccessExportTabComponent,
+    ],
+});
 
         registerMatSvgIcons();
 

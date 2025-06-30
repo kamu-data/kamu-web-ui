@@ -29,36 +29,36 @@ describe("DatasetsTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                ApolloTestingModule,
-                NgbRatingModule,
-                DisplayTimeModule,
-                MatChipsModule,
-                NgbPopoverModule,
-                MatDividerModule,
-                RouterModule,
-                DatasetVisibilityModule,
-                PaginationModule,
-            ],
-            providers: [
-                DatasetApi,
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        parent: {
-                            parent: {
-                                snapshot: {
-                                    paramMap: convertToParamMap({
-                                        [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME,
-                                    }),
-                                },
-                            },
+    imports: [
+        ApolloTestingModule,
+        NgbRatingModule,
+        DisplayTimeModule,
+        MatChipsModule,
+        NgbPopoverModule,
+        MatDividerModule,
+        RouterModule,
+        DatasetVisibilityModule,
+        PaginationModule,
+        DatasetsTabComponent, DatasetListItemComponent,
+    ],
+    providers: [
+        DatasetApi,
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                parent: {
+                    parent: {
+                        snapshot: {
+                            paramMap: convertToParamMap({
+                                [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME,
+                            }),
                         },
                     },
                 },
-            ],
-            declarations: [DatasetsTabComponent, DatasetListItemComponent],
-        }).compileComponents();
+            },
+        },
+    ],
+}).compileComponents();
 
         fixture = TestBed.createComponent(DatasetsTabComponent);
         navigationService = TestBed.inject(NavigationService);

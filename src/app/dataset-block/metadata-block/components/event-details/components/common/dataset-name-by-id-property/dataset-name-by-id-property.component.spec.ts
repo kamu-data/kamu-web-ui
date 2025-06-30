@@ -27,9 +27,8 @@ describe("DatasetIdAndNamePropertyComponent", () => {
     };
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DatasetNameByIdPropertyComponent],
-            imports: [ApolloTestingModule, SharedTestModule],
-        }).compileComponents();
+    imports: [ApolloTestingModule, SharedTestModule, DatasetNameByIdPropertyComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(DatasetNameByIdPropertyComponent);
         datasetService = TestBed.inject(DatasetService);

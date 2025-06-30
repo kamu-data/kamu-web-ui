@@ -22,18 +22,18 @@ describe("FlowDetailsHistoryTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [FlowDetailsHistoryTabComponent],
-            imports: [
-                MatDividerModule,
-                MatIconModule,
-                ApolloModule,
-                ApolloTestingModule,
-                SharedTestModule,
-                HttpClientTestingModule,
-                SafeHtmlModule,
-            ],
-            providers: [Apollo],
-        }).compileComponents();
+    imports: [
+        MatDividerModule,
+        MatIconModule,
+        ApolloModule,
+        ApolloTestingModule,
+        SharedTestModule,
+        HttpClientTestingModule,
+        SafeHtmlModule,
+        FlowDetailsHistoryTabComponent,
+    ],
+    providers: [Apollo],
+}).compileComponents();
 
         fixture = TestBed.createComponent(FlowDetailsHistoryTabComponent);
         component = fixture.componentInstance;

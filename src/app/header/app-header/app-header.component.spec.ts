@@ -52,30 +52,30 @@ describe("AppHeaderComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                BrowserAnimationsModule,
-                MatMenuModule,
-                FormsModule,
-                BrowserModule,
-                NgbTypeaheadModule,
-                RouterTestingModule,
-                ApolloTestingModule,
-                HttpClientTestingModule,
-                RouterModule,
-                MatIconModule,
-                DisplayAccountNameModule,
-            ],
-            declarations: [AppHeaderComponent, NotificationIndicatorComponent],
-            providers: [
-                Apollo,
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        queryParams: of({ query: DEFAULT_SEARCH_QUERY }),
-                    },
-                },
-            ],
-        })
+    imports: [
+        BrowserAnimationsModule,
+        MatMenuModule,
+        FormsModule,
+        BrowserModule,
+        NgbTypeaheadModule,
+        RouterTestingModule,
+        ApolloTestingModule,
+        HttpClientTestingModule,
+        RouterModule,
+        MatIconModule,
+        DisplayAccountNameModule,
+        AppHeaderComponent, NotificationIndicatorComponent,
+    ],
+    providers: [
+        Apollo,
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                queryParams: of({ query: DEFAULT_SEARCH_QUERY }),
+            },
+        },
+    ],
+})
             .overrideComponent(AppHeaderComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

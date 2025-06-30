@@ -37,18 +37,17 @@ describe("LineageComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [LineageComponent, LineageGraphComponent, DisplayDatasetIdPipe],
-
-            imports: [
-                ApolloModule,
-                SharedTestModule,
-                DisplaySizeModule,
-                MatIconModule,
-                ToastrModule.forRoot(),
-                NgxGraphModule,
-                BrowserAnimationsModule,
-            ],
-        }).compileComponents();
+    imports: [
+        ApolloModule,
+        SharedTestModule,
+        DisplaySizeModule,
+        MatIconModule,
+        ToastrModule.forRoot(),
+        NgxGraphModule,
+        BrowserAnimationsModule,
+        LineageComponent, LineageGraphComponent, DisplayDatasetIdPipe,
+    ],
+}).compileComponents();
 
         accountService = TestBed.inject(AccountService);
         navigationService = TestBed.inject(NavigationService);

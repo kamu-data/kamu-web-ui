@@ -51,66 +51,64 @@ describe("MetadataBlockComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                MetadataBlockComponent,
-                BlockNavigationComponent,
-                EventDetailsComponent,
-                BlockHeaderComponent,
-                DatasetViewMenuComponent,
-                DatasetViewHeaderComponent,
-                SearchAdditionalButtonsComponent,
-                SearchAdditionalButtonsNavComponent,
-                YamlViewSectionComponent,
-            ],
-            imports: [
-                ApolloModule,
-                ApolloTestingModule,
-                RouterTestingModule,
-                MatIconModule,
-                NgMultiSelectDropDownModule,
-                FormsModule,
-                MatButtonToggleModule,
-                MatMenuModule,
-                HttpClientTestingModule,
-                MatTabsModule,
-                BrowserAnimationsModule,
-                DataAccessPanelModule,
-                RouterModule,
-                DatasetVisibilityModule,
-                FeatureFlagModule,
-                DisplayHashModule,
-                ToastrModule.forRoot(),
-                DisplayTimeModule,
-                BlockRowDataModule,
-                MatDividerModule,
-                HighlightModule,
-            ],
-            providers: [
-                DatasetApi,
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        params: of({
-                            accountName: "accountName",
-                            datasetName: "datasetName",
-                            blockHash: "ewrwe213123",
-                        }),
-                        snapshot: {
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return "accountName";
-                                        case "datasetName":
-                                            return "datasetName";
-                                    }
-                                },
-                            },
+    imports: [
+        ApolloModule,
+        ApolloTestingModule,
+        RouterTestingModule,
+        MatIconModule,
+        NgMultiSelectDropDownModule,
+        FormsModule,
+        MatButtonToggleModule,
+        MatMenuModule,
+        HttpClientTestingModule,
+        MatTabsModule,
+        BrowserAnimationsModule,
+        DataAccessPanelModule,
+        RouterModule,
+        DatasetVisibilityModule,
+        FeatureFlagModule,
+        DisplayHashModule,
+        ToastrModule.forRoot(),
+        DisplayTimeModule,
+        BlockRowDataModule,
+        MatDividerModule,
+        HighlightModule,
+        MetadataBlockComponent,
+        BlockNavigationComponent,
+        EventDetailsComponent,
+        BlockHeaderComponent,
+        DatasetViewMenuComponent,
+        DatasetViewHeaderComponent,
+        SearchAdditionalButtonsComponent,
+        SearchAdditionalButtonsNavComponent,
+        YamlViewSectionComponent,
+    ],
+    providers: [
+        DatasetApi,
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                params: of({
+                    accountName: "accountName",
+                    datasetName: "datasetName",
+                    blockHash: "ewrwe213123",
+                }),
+                snapshot: {
+                    paramMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "accountName":
+                                    return "accountName";
+                                case "datasetName":
+                                    return "datasetName";
+                            }
                         },
                     },
                 },
-            ],
-        }).compileComponents();
+            },
+        },
+    ],
+}).compileComponents();
 
         registerMatSvgIcons();
 

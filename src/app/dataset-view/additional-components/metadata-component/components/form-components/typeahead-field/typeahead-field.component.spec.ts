@@ -24,28 +24,27 @@ describe("TypeaheadFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [TypeaheadFieldComponent, TooltipIconComponent],
-            imports: [NgbTypeaheadModule, MatIconModule, FormsModule, ReactiveFormsModule, NgbTooltipModule],
-            providers: [
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return "accountName";
-                                        case "datasetName":
-                                            return "datasetName";
-                                    }
-                                },
-                            },
+    imports: [NgbTypeaheadModule, MatIconModule, FormsModule, ReactiveFormsModule, NgbTooltipModule, TypeaheadFieldComponent, TooltipIconComponent],
+    providers: [
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    paramMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "accountName":
+                                    return "accountName";
+                                case "datasetName":
+                                    return "datasetName";
+                            }
                         },
                     },
                 },
-            ],
-        }).compileComponents();
+            },
+        },
+    ],
+}).compileComponents();
 
         fixture = TestBed.createComponent(TypeaheadFieldComponent);
         component = fixture.componentInstance;

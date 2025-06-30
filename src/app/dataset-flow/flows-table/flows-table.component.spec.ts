@@ -47,25 +47,25 @@ describe("FlowsTableComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [Apollo],
-            declarations: [FlowsTableComponent],
-            imports: [
-                MatTableModule,
-                MatMenuModule,
-                MatDividerModule,
-                MatRadioModule,
-                MatIconModule,
-                FormsModule,
-                DisplayTimeModule,
-                HttpClientTestingModule,
-                SharedTestModule,
-                NgbTypeaheadModule,
-                AngularMultiSelectModule,
-                ToastrModule.forRoot(),
-                RouterModule,
-                SafeHtmlModule,
-            ],
-        }).compileComponents();
+    providers: [Apollo],
+    imports: [
+        MatTableModule,
+        MatMenuModule,
+        MatDividerModule,
+        MatRadioModule,
+        MatIconModule,
+        FormsModule,
+        DisplayTimeModule,
+        HttpClientTestingModule,
+        SharedTestModule,
+        NgbTypeaheadModule,
+        AngularMultiSelectModule,
+        ToastrModule.forRoot(),
+        RouterModule,
+        SafeHtmlModule,
+        FlowsTableComponent,
+    ],
+}).compileComponents();
 
         // Note: for some reason this icon is not loaded
         registerMatSvgIcons();

@@ -15,9 +15,8 @@ describe("SimplePropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SimplePropertyComponent],
-            imports: [SharedTestModule],
-        }).compileComponents();
+    imports: [SharedTestModule, SimplePropertyComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(SimplePropertyComponent);
         component = fixture.componentInstance;

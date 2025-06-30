@@ -15,9 +15,8 @@ describe("OrderPropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [OrderPropertyComponent],
-            imports: [SharedTestModule],
-        }).compileComponents();
+    imports: [SharedTestModule, OrderPropertyComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(OrderPropertyComponent);
         component = fixture.componentInstance;

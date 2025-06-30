@@ -18,9 +18,8 @@ describe("NumberFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [NumberFieldComponent, TooltipIconComponent],
-            imports: [SharedTestModule, ReactiveFormsModule, NgbTooltipModule],
-        }).compileComponents();
+    imports: [SharedTestModule, ReactiveFormsModule, NgbTooltipModule, NumberFieldComponent, TooltipIconComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(NumberFieldComponent);
         component = fixture.componentInstance;

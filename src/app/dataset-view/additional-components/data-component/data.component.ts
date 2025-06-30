@@ -6,7 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
-import { Location } from "@angular/common";
+import { Location, NgIf, AsyncPipe } from "@angular/common";
 import { filter, finalize, fromEvent, map, Observable, takeUntil } from "rxjs";
 import AppValues from "src/app/common/values/app.values";
 import { DatasetFlowType, DatasetKind, OffsetInterval } from "../../../api/kamu.graphql.interface";
@@ -26,11 +26,20 @@ import { SqlQueryService } from "src/app/services/sql-query.service";
 import { SessionStorageService } from "src/app/services/session-storage.service";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { CancelRequestService } from "src/app/services/cancel-request.service";
+import { QueryAndResultSectionsComponent } from "../../../query/shared/query-and-result-sections/query-and-result-sections.component";
+import { SearchAndSchemasSectionComponent } from "../../../query/global-query/search-and-schemas-section/search-and-schemas-section.component";
 
 @Component({
     selector: "app-data",
     templateUrl: "./data.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        SearchAndSchemasSectionComponent,
+        QueryAndResultSectionsComponent,
+        NgIf,
+        AsyncPipe,
+    ],
 })
 export class DataComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_VIEW_DATA_KEY) public dataTabData: DatasetOverviewTabData;

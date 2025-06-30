@@ -16,9 +16,8 @@ describe("TimePropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [TimePropertyComponent],
-            imports: [DisplayTimeModule, SharedTestModule],
-        }).compileComponents();
+    imports: [DisplayTimeModule, SharedTestModule, TimePropertyComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(TimePropertyComponent);
         component = fixture.componentInstance;

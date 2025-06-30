@@ -17,9 +17,8 @@ describe("SizePropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SizePropertyComponent],
-            imports: [DisplaySizeModule, SharedTestModule],
-        }).compileComponents();
+    imports: [DisplaySizeModule, SharedTestModule, SizePropertyComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(SizePropertyComponent);
         component = fixture.componentInstance;

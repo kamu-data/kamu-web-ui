@@ -29,23 +29,23 @@ describe("DataAccessPanelComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [Apollo],
-            declarations: [DataAccessPanelComponent],
-            imports: [
-                FormsModule,
-                MatDividerModule,
-                MatCheckboxModule,
-                MatIconModule,
-                MatTooltipModule,
-                HttpClientTestingModule,
-                MatMenuModule,
-                MatTabsModule,
-                BrowserAnimationsModule,
-                ApolloModule,
-                ApolloTestingModule,
-                SharedTestModule,
-            ],
-        }).compileComponents();
+    providers: [Apollo],
+    imports: [
+        FormsModule,
+        MatDividerModule,
+        MatCheckboxModule,
+        MatIconModule,
+        MatTooltipModule,
+        HttpClientTestingModule,
+        MatMenuModule,
+        MatTabsModule,
+        BrowserAnimationsModule,
+        ApolloModule,
+        ApolloTestingModule,
+        SharedTestModule,
+        DataAccessPanelComponent,
+    ],
+}).compileComponents();
 
         fixture = TestBed.createComponent(DataAccessPanelComponent);
         ngbModalService = TestBed.inject(NgbModal);

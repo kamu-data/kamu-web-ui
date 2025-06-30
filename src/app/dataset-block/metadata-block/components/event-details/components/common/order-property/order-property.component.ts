@@ -12,6 +12,7 @@ import { DataHelpers } from "src/app/common/helpers/data.helpers";
     selector: "app-order-property",
     templateUrl: "./order-property.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
 })
 export class OrderPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;

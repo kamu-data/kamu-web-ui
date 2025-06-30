@@ -22,9 +22,8 @@ describe("DataAccessOdataTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [DataAccessOdataTabComponent],
-            imports: [FormsModule, MatDividerModule, MatIconModule, HttpClientTestingModule, CopyToClipboardModule],
-        });
+    imports: [FormsModule, MatDividerModule, MatIconModule, HttpClientTestingModule, CopyToClipboardModule, DataAccessOdataTabComponent],
+});
 
         registerMatSvgIcons();
 

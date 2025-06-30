@@ -10,12 +10,32 @@ import { SupportedEvents } from "../event-details/supported.events";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { MaybeNull } from "src/app/interface/app.types";
+import { EventTypeFilterPipe } from "./pipes/event-type-filter.pipe";
+import { BlockHashFilterPipe } from "./pipes/block-hash-filter.pipe";
+import { PaginationComponent } from "../../../../common/components/pagination-component/pagination.component";
+import { DisplayHashComponent } from "../../../../common/components/display-hash/display-hash.component";
+import { NgSelectModule } from "@ng-select/ng-select";
+import { NgIf, NgFor } from "@angular/common";
+import { MatIconModule } from "@angular/material/icon";
+import { FormsModule } from "@angular/forms";
 
 @Component({
     selector: "app-block-navigation",
     templateUrl: "./block-navigation.component.html",
     styleUrls: ["./block-navigation.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        FormsModule,
+        MatIconModule,
+        NgIf,
+        NgSelectModule,
+        NgFor,
+        DisplayHashComponent,
+        PaginationComponent,
+        BlockHashFilterPipe,
+        EventTypeFilterPipe,
+    ],
 })
 export class BlockNavigationComponent {
     @Input({ required: true }) public datasetHistory: MaybeNull<DatasetHistoryUpdate>;

@@ -52,53 +52,51 @@ describe("DatasetFlowDetailsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                DatasetFlowDetailsComponent,
-                DatasetViewHeaderComponent,
-                FlowDetailsHistoryTabComponent,
-                SearchAdditionalButtonsComponent,
-                SearchAdditionalButtonsNavComponent,
-                DatasetViewMenuComponent,
-                DataAccessPanelComponent,
-            ],
-            providers: [
-                Apollo,
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return "accountName";
-                                        case "datasetName":
-                                            return "datasetName";
-                                    }
-                                },
-                            },
+    providers: [
+        Apollo,
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    paramMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "accountName":
+                                    return "accountName";
+                                case "datasetName":
+                                    return "datasetName";
+                            }
                         },
                     },
                 },
-            ],
-            imports: [
-                ApolloTestingModule,
-                ApolloModule,
-                MatDividerModule,
-                MatIconModule,
-                MatMenuModule,
-                MatButtonToggleModule,
-                ToastrModule.forRoot(),
-                HttpClientTestingModule,
-                MatTabsModule,
-                FormsModule,
-                BrowserAnimationsModule,
-                DataAccessPanelModule,
-                RouterModule,
-                DatasetVisibilityModule,
-                FeatureFlagModule,
-            ],
-        }).compileComponents();
+            },
+        },
+    ],
+    imports: [
+        ApolloTestingModule,
+        ApolloModule,
+        MatDividerModule,
+        MatIconModule,
+        MatMenuModule,
+        MatButtonToggleModule,
+        ToastrModule.forRoot(),
+        HttpClientTestingModule,
+        MatTabsModule,
+        FormsModule,
+        BrowserAnimationsModule,
+        DataAccessPanelModule,
+        RouterModule,
+        DatasetVisibilityModule,
+        FeatureFlagModule,
+        DatasetFlowDetailsComponent,
+        DatasetViewHeaderComponent,
+        FlowDetailsHistoryTabComponent,
+        SearchAdditionalButtonsComponent,
+        SearchAdditionalButtonsNavComponent,
+        DatasetViewMenuComponent,
+        DataAccessPanelComponent,
+    ],
+}).compileComponents();
 
         registerMatSvgIcons();
 

@@ -29,7 +29,7 @@ import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { RouterTestingModule } from "@angular/router/testing";
-import { routes } from "src/app/app-routing.module";
+import { routes } from "src/app/app-routing";
 import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/tile-base-widget.component";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -54,8 +54,11 @@ describe("AccountFlowsTabComponent", () => {
                 HttpClientTestingModule,
                 RouterTestingModule.withRoutes(routes),
                 MatProgressBarModule,
+                AccountFlowsTabComponent,
+                TileBaseWidgetComponent,
+                FlowsTableComponent,
+                PaginationComponent,
             ],
-            declarations: [AccountFlowsTabComponent, TileBaseWidgetComponent, FlowsTableComponent, PaginationComponent],
             providers: [
                 {
                     provide: ActivatedRoute,

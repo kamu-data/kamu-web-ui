@@ -31,16 +31,16 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [DatasetSettingsTransformOptionsTabComponent],
-            providers: [Apollo],
-            imports: [
-                ApolloTestingModule,
-                SharedTestModule,
-                MatDividerModule,
-                BatchingTriggerModule,
-                ToastrModule.forRoot(),
-            ],
-        });
+    providers: [Apollo],
+    imports: [
+        ApolloTestingModule,
+        SharedTestModule,
+        MatDividerModule,
+        BatchingTriggerModule,
+        ToastrModule.forRoot(),
+        DatasetSettingsTransformOptionsTabComponent,
+    ],
+});
         fixture = TestBed.createComponent(DatasetSettingsTransformOptionsTabComponent);
         datasetSchedulingService = TestBed.inject(DatasetSchedulingService);
         component = fixture.componentInstance;

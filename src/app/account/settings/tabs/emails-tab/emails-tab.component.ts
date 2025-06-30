@@ -8,19 +8,31 @@
 import { inject, Input, OnInit } from "@angular/core";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ChangeEmailFormType } from "./email-tabs.types";
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
 import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
 import { Observable } from "rxjs";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { NavigationService } from "src/app/services/navigation.service";
 import { AccountSettingsTabs } from "../../account-settings.constants";
+import { NgIf, AsyncPipe } from "@angular/common";
+import { FormValidationErrorsDirective } from "../../../../common/directives/form-validation-errors.directive";
+import { MatDividerModule } from "@angular/material/divider";
 
 @Component({
     selector: "app-emails-tab",
     templateUrl: "./emails-tab.component.html",
     styleUrls: ["./emails-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        MatDividerModule,
+        FormsModule,
+        ReactiveFormsModule,
+        FormValidationErrorsDirective,
+        NgIf,
+        AsyncPipe,
+    ],
 })
 export class EmailsTabComponent implements OnInit {
     @Input(RoutingResolvers.ACCOUNT_SETTINGS_EMAIL_KEY) public account: AccountWithEmailFragment;

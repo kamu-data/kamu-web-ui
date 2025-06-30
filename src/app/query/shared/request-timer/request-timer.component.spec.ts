@@ -16,9 +16,8 @@ describe("RequestTimerComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [RequestTimerComponent],
-            imports: [SharedTestModule],
-        }).compileComponents();
+    imports: [SharedTestModule, RequestTimerComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(RequestTimerComponent);
         component = fixture.componentInstance;

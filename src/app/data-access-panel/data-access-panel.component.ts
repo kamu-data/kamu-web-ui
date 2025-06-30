@@ -12,12 +12,16 @@ import { Observable } from "rxjs";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { DataAccessModalComponent } from "./data-access-modal/data-access-modal.component";
 import { BaseComponent } from "../common/components/base.component";
+import { MatIconModule } from "@angular/material/icon";
+import { FeatureFlagDirective } from "../common/directives/feature-flag.directive";
 
 @Component({
     selector: "app-data-access-panel",
     templateUrl: "./data-access-panel.component.html",
     styleUrls: ["./data-access-panel.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [FeatureFlagDirective, MatIconModule],
 })
 export class DataAccessPanelComponent extends BaseComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

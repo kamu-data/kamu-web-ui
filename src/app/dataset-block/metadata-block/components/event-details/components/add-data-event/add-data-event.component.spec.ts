@@ -37,23 +37,21 @@ describe("AddDataEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                AddDataEventComponent,
-                SizePropertyComponent,
-                OffsetIntervalPropertyComponent,
-                BlockRowDataComponent,
-                TooltipIconComponent,
-            ],
-            imports: [
-                DisplaySizeModule,
-                ApolloModule,
-                MatIconModule,
-                NgbTooltipModule,
-                ToastrModule.forRoot(),
-                HttpClientTestingModule,
-                SharedTestModule,
-            ],
-        })
+    imports: [
+        DisplaySizeModule,
+        ApolloModule,
+        MatIconModule,
+        NgbTooltipModule,
+        ToastrModule.forRoot(),
+        HttpClientTestingModule,
+        SharedTestModule,
+        AddDataEventComponent,
+        SizePropertyComponent,
+        OffsetIntervalPropertyComponent,
+        BlockRowDataComponent,
+        TooltipIconComponent,
+    ],
+})
             .overrideComponent(AddDataEventComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

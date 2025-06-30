@@ -7,7 +7,7 @@
 
 import { DatasetFlowsService } from "./../../../flows-component/services/dataset-flows.service";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { promiseWithCatch } from "../../../../../common/helpers/app.helpers";
 import { ModalService } from "../../../../../common/components/modal/modal.service";
@@ -30,12 +30,34 @@ import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/datas
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DatasetService } from "../../../../dataset.service";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { DatasetVisibilityComponent } from "../../../../../common/components/dataset-visibility/dataset-visibility.component";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { TooltipIconComponent } from "../../../../../common/components/tooltip-icon/tooltip-icon.component";
+import { MatRadioModule } from "@angular/material/radio";
+import { NgIf, AsyncPipe } from "@angular/common";
+import { FormValidationErrorsDirective } from "../../../../../common/directives/form-validation-errors.directive";
+import { FeatureFlagDirective } from "../../../../../common/directives/feature-flag.directive";
+import { MatDividerModule } from "@angular/material/divider";
 
 @Component({
     selector: "app-dataset-settings-general-tab",
     templateUrl: "./dataset-settings-general-tab.component.html",
     styleUrls: ["./dataset-settings-general-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        MatDividerModule,
+        FormsModule,
+        FeatureFlagDirective,
+        ReactiveFormsModule,
+        FormValidationErrorsDirective,
+        NgIf,
+        MatRadioModule,
+        TooltipIconComponent,
+        MatCheckboxModule,
+        DatasetVisibilityComponent,
+        AsyncPipe,
+    ],
 })
 export class DatasetSettingsGeneralTabComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_SETTINGS_GENERAL_KEY) public generalTabData: DatasetViewData;

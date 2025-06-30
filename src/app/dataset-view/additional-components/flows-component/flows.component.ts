@@ -17,12 +17,34 @@ import { FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows
 import ProjectLinks from "src/app/project-links";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { PaginationComponent } from "../../../common/components/pagination-component/pagination.component";
+import { FlowsTableComponent } from "../../../dataset-flow/flows-table/flows-table.component";
+import { TileBaseWidgetComponent } from "../../../dataset-flow/tile-base-widget/tile-base-widget.component";
+import { RouterLink } from "@angular/router";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
+import { MatMenuModule } from "@angular/material/menu";
+import { NgIf, AsyncPipe } from "@angular/common";
 
 @Component({
     selector: "app-flows",
     templateUrl: "./flows.component.html",
     styleUrls: ["./flows.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        NgIf,
+        MatMenuModule,
+        MatIconModule,
+        MatDividerModule,
+        RouterLink,
+        TileBaseWidgetComponent,
+        FlowsTableComponent,
+        PaginationComponent,
+        MatProgressBarModule,
+        AsyncPipe,
+    ],
 })
 export class FlowsComponent extends FlowsTableProcessingBaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_VIEW_FLOWS_KEY) public flowsData: DatasetOverviewTabData;

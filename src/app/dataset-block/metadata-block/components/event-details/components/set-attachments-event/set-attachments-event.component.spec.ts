@@ -23,17 +23,17 @@ describe("SetAttachmentsEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SetAttachmentsEventComponent, BlockRowDataComponent, TooltipIconComponent],
-            imports: [
-                SharedTestModule,
-                NgbTooltipModule,
-                HttpClientTestingModule,
-                MarkdownModule.forRoot({
-                    loader: HttpClient,
-                    sanitize: SecurityContext.NONE,
-                }),
-            ],
-        }).compileComponents();
+    imports: [
+        SharedTestModule,
+        NgbTooltipModule,
+        HttpClientTestingModule,
+        MarkdownModule.forRoot({
+            loader: HttpClient,
+            sanitize: SecurityContext.NONE,
+        }),
+        SetAttachmentsEventComponent, BlockRowDataComponent, TooltipIconComponent,
+    ],
+}).compileComponents();
 
         fixture = TestBed.createComponent(SetAttachmentsEventComponent);
         component = fixture.componentInstance;

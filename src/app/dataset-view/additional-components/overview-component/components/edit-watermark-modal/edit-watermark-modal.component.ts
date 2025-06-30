@@ -7,7 +7,7 @@
 
 import { MaybeNullOrUndefined } from "../../../../../interface/app.types";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { OWL_DATE_TIME_FORMATS } from "@danielmoncada/angular-datetime-picker";
+import { OWL_DATE_TIME_FORMATS, OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
@@ -18,6 +18,9 @@ import { finalize } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { format, isAfter } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
+import { FormsModule } from "@angular/forms";
+import { MatIconModule } from "@angular/material/icon";
+import { MatDividerModule } from "@angular/material/divider";
 
 @Component({
     selector: "app-edit-watermark-modal",
@@ -25,6 +28,13 @@ import { toZonedTime } from "date-fns-tz";
     styleUrls: ["./edit-watermark-modal.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: OWL_DATE_TIME_FORMATS, useValue: MY_MOMENT_FORMATS }],
+    standalone: true,
+    imports: [
+        MatDividerModule,
+        MatIconModule,
+        FormsModule,
+        OwlDateTimeModule,
+    ],
 })
 export class EditWatermarkModalComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public currentWatermark: MaybeNullOrUndefined<string>;

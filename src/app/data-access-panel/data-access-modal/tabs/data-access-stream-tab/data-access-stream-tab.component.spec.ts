@@ -21,9 +21,8 @@ describe("DataAccessStreamTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [DataAccessStreamTabComponent],
-            imports: [FormsModule, MatDividerModule, MatIconModule, HttpClientTestingModule, CopyToClipboardModule],
-        });
+    imports: [FormsModule, MatDividerModule, MatIconModule, HttpClientTestingModule, CopyToClipboardModule, DataAccessStreamTabComponent],
+});
 
         registerMatSvgIcons();
 

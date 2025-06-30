@@ -15,9 +15,8 @@ describe("CommandPropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [CommandPropertyComponent],
-            imports: [SharedTestModule],
-        }).compileComponents();
+    imports: [SharedTestModule, CommandPropertyComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(CommandPropertyComponent);
         component = fixture.componentInstance;

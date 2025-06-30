@@ -7,12 +7,16 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FlightSqlDesc, JdbcDesc, PostgreSqlDesl } from "src/app/api/kamu.graphql.interface";
+import { MatIconModule } from "@angular/material/icon";
+import { CopyToClipboardComponent } from "../../../../common/components/copy-to-clipboard/copy-to-clipboard.component";
 
 @Component({
     selector: "app-data-access-sql-tab",
     templateUrl: "./data-access-sql-tab.component.html",
     styleUrls: ["./data-access-sql-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [CopyToClipboardComponent, MatIconModule],
 })
 export class DataAccessSqlTabComponent {
     @Input({ required: true }) public flightSql: FlightSqlDesc;

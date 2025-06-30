@@ -28,10 +28,9 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [DatasetSettingsIngestConfigurationTabComponent],
-            imports: [SharedTestModule, ToastrModule.forRoot(), IngestConfigurationModule, MatDividerModule],
-            providers: [Apollo, HttpClientTestingModule],
-        });
+    imports: [SharedTestModule, ToastrModule.forRoot(), IngestConfigurationModule, MatDividerModule, DatasetSettingsIngestConfigurationTabComponent],
+    providers: [Apollo, HttpClientTestingModule],
+});
         fixture = TestBed.createComponent(DatasetSettingsIngestConfigurationTabComponent);
         datasetSchedulingService = TestBed.inject(DatasetSchedulingService);
         component = fixture.componentInstance;

@@ -47,38 +47,36 @@ describe("AppComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                RouterTestingModule,
-                ApolloTestingModule,
-                MatMenuModule,
-                NgbTypeaheadModule,
-                FormsModule,
-                HttpClientTestingModule,
-                RouterModule,
-                MatIconModule,
-                DisplayAccountNameModule,
-            ],
-            declarations: [
-                AppComponent,
-                ModalComponent,
-                AppHeaderComponent,
-                SpinnerComponent,
-                NotificationIndicatorComponent,
-            ],
-            providers: [
-                SearchService,
-                SearchApi,
-                AuthApi,
-                NavigationService,
-                ModalService,
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        queryParams: of({ query: DEFAULT_SEARCH_QUERY }),
-                    },
-                },
-            ],
-        }).compileComponents();
+    imports: [
+        RouterTestingModule,
+        ApolloTestingModule,
+        MatMenuModule,
+        NgbTypeaheadModule,
+        FormsModule,
+        HttpClientTestingModule,
+        RouterModule,
+        MatIconModule,
+        DisplayAccountNameModule,
+        ModalComponent,
+        AppHeaderComponent,
+        SpinnerComponent,
+        NotificationIndicatorComponent,
+        AppComponent,
+    ],
+    providers: [
+        SearchService,
+        SearchApi,
+        AuthApi,
+        NavigationService,
+        ModalService,
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                queryParams: of({ query: DEFAULT_SEARCH_QUERY }),
+            },
+        },
+    ],
+}).compileComponents();
 
         registerMatSvgIcons();
 

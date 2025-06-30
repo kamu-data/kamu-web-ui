@@ -28,17 +28,17 @@ describe("DataAccessLinkTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [DataAccessLinkTabComponent],
-            imports: [
-                FormsModule,
-                MatDividerModule,
-                MatIconModule,
-                MatTooltipModule,
-                HttpClientTestingModule,
-                MatCheckboxModule,
-                CopyToClipboardModule,
-            ],
-        });
+    imports: [
+        FormsModule,
+        MatDividerModule,
+        MatIconModule,
+        MatTooltipModule,
+        HttpClientTestingModule,
+        MatCheckboxModule,
+        CopyToClipboardModule,
+        DataAccessLinkTabComponent,
+    ],
+});
 
         registerMatSvgIcons();
 

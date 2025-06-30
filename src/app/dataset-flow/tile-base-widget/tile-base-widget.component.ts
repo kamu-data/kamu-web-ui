@@ -20,12 +20,23 @@ import { DataHelpers } from "src/app/common/helpers/data.helpers";
 import AppValues from "src/app/common/values/app.values";
 import ProjectLinks from "src/app/project-links";
 import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { NgbPopover } from "@ng-bootstrap/ng-bootstrap";
+import { NgFor, NgClass, NgIf, SlicePipe, DatePipe } from "@angular/common";
 
 @Component({
     selector: "app-tile-base-widget",
     templateUrl: "./tile-base-widget.component.html",
     styleUrls: ["./tile-base-widget.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        NgFor,
+        NgbPopover,
+        NgClass,
+        NgIf,
+        SlicePipe,
+        DatePipe,
+    ],
 })
 export class TileBaseWidgetComponent {
     @Input({ required: true }) public nodes: FlowItemWidgetDataFragment[];

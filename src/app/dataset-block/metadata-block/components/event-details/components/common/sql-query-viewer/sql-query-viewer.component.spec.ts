@@ -15,9 +15,8 @@ describe("SqlQueryViewerComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SqlQueryViewerComponent],
-            imports: [SharedTestModule],
-        }).compileComponents();
+    imports: [SharedTestModule, SqlQueryViewerComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(SqlQueryViewerComponent);
         component = fixture.componentInstance;

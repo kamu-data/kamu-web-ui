@@ -65,82 +65,79 @@ describe("DatasetViewComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                DatasetViewComponent,
-                OverviewComponent,
-                DataComponent,
-                MetadataComponent,
-                HistoryComponent,
-                LineageComponent,
-                DatasetSettingsComponent,
-                DatasetViewMenuComponent,
-                DatasetViewHeaderComponent,
-                SearchAdditionalButtonsComponent,
-                SearchAdditionalButtonsNavComponent,
-                DatasetSettingsGeneralTabComponent,
-                DatasetSettingsSchedulingTabComponent,
-                SqlEditorComponent,
-                RequestTimerComponent,
-                FlowsComponent,
-                QueryAndResultSectionsComponent,
-                SavedQueriesSectionComponent,
-                SearchAndSchemasSectionComponent,
-            ],
-            imports: [
-                ApolloModule,
-                ApolloTestingModule,
-                BrowserAnimationsModule,
-                HttpClientTestingModule,
-                MatDividerModule,
-                MatIconModule,
-                MatMenuModule,
-                MatTabsModule,
-                MatButtonToggleModule,
-                FormsModule,
-                ReactiveFormsModule,
-                RouterModule,
-                ToastrModule.forRoot(),
-                DataAccessPanelModule,
-                EditorModule,
-                MatProgressBarModule,
-                CdkAccordionModule,
-                DatasetVisibilityModule,
-                FeatureFlagModule,
-                RouterTestingModule.withRoutes([{ path: MOCK_DATASET_ROUTE, component: DatasetViewComponent }]),
-            ],
-            providers: [
-                DatasetApi,
-                Apollo,
-
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            queryParamMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "tab":
-                                            return null;
-                                        case "page":
-                                            return "2";
-                                    }
-                                },
-                            },
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return mockDatasetBasicsDerivedFragment.owner.accountName;
-                                        case "datasetName":
-                                            return mockDatasetBasicsDerivedFragment.name;
-                                    }
-                                },
-                            },
+    imports: [
+        ApolloModule,
+        ApolloTestingModule,
+        BrowserAnimationsModule,
+        HttpClientTestingModule,
+        MatDividerModule,
+        MatIconModule,
+        MatMenuModule,
+        MatTabsModule,
+        MatButtonToggleModule,
+        FormsModule,
+        ReactiveFormsModule,
+        RouterModule,
+        ToastrModule.forRoot(),
+        DataAccessPanelModule,
+        EditorModule,
+        MatProgressBarModule,
+        CdkAccordionModule,
+        DatasetVisibilityModule,
+        FeatureFlagModule,
+        RouterTestingModule.withRoutes([{ path: MOCK_DATASET_ROUTE, component: DatasetViewComponent }]),
+        DatasetViewComponent,
+        OverviewComponent,
+        DataComponent,
+        MetadataComponent,
+        HistoryComponent,
+        LineageComponent,
+        DatasetSettingsComponent,
+        DatasetViewMenuComponent,
+        DatasetViewHeaderComponent,
+        SearchAdditionalButtonsComponent,
+        SearchAdditionalButtonsNavComponent,
+        DatasetSettingsGeneralTabComponent,
+        DatasetSettingsSchedulingTabComponent,
+        SqlEditorComponent,
+        RequestTimerComponent,
+        FlowsComponent,
+        QueryAndResultSectionsComponent,
+        SavedQueriesSectionComponent,
+        SearchAndSchemasSectionComponent,
+    ],
+    providers: [
+        DatasetApi,
+        Apollo,
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    queryParamMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "tab":
+                                    return null;
+                                case "page":
+                                    return "2";
+                            }
+                        },
+                    },
+                    paramMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "accountName":
+                                    return mockDatasetBasicsDerivedFragment.owner.accountName;
+                                case "datasetName":
+                                    return mockDatasetBasicsDerivedFragment.name;
+                            }
                         },
                     },
                 },
-            ],
-        })
+            },
+        },
+    ],
+})
             .overrideComponent(DatasetViewComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

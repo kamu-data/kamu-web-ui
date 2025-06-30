@@ -19,10 +19,9 @@ describe("KeyValueFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [KeyValueFieldComponent, TooltipIconComponent],
-            providers: [FormBuilder],
-            imports: [ReactiveFormsModule, NgbTooltipModule, SharedTestModule],
-        }).compileComponents();
+    providers: [FormBuilder],
+    imports: [ReactiveFormsModule, NgbTooltipModule, SharedTestModule, KeyValueFieldComponent, TooltipIconComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(KeyValueFieldComponent);
         component = fixture.componentInstance;

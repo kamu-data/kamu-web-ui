@@ -23,16 +23,16 @@ describe("AdminChangePasswordComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [AdminChangePasswordComponent],
-            providers: [Apollo],
-            imports: [
-                HttpClientTestingModule,
-                ToastrModule.forRoot(),
-                MatDividerModule,
-                FormValidationErrorsModule,
-                ReactiveFormsModule,
-            ],
-        });
+    providers: [Apollo],
+    imports: [
+        HttpClientTestingModule,
+        ToastrModule.forRoot(),
+        MatDividerModule,
+        FormValidationErrorsModule,
+        ReactiveFormsModule,
+        AdminChangePasswordComponent,
+    ],
+});
         fixture = TestBed.createComponent(AdminChangePasswordComponent);
         accountService = TestBed.inject(AccountService);
         component = fixture.componentInstance;

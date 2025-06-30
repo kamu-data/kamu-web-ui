@@ -7,8 +7,8 @@
 
 import { NestedTreeControl } from "@angular/cdk/tree";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { MatTreeNestedDataSource } from "@angular/material/tree";
-import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
+import { MatTreeNestedDataSource, MatTreeModule } from "@angular/material/tree";
+import { NgbTypeaheadSelectItemEvent, NgbTypeahead, NgbHighlight } from "@ng-bootstrap/ng-bootstrap";
 import { OperatorFunction, Observable } from "rxjs";
 import { debounceTime, distinctUntilChanged, map, switchMap } from "rxjs/operators";
 import { DatasetBasicsFragment, GetDatasetSchemaQuery } from "src/app/api/kamu.graphql.interface";
@@ -24,12 +24,28 @@ import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
+import { RouterLink } from "@angular/router";
+import { MatButtonModule } from "@angular/material/button";
+import { NgIf } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
     selector: "app-search-section",
     templateUrl: "./search-section.component.html",
     styleUrls: ["./search-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        MatIconModule,
+        FormsModule,
+        NgbTypeahead,
+        NgIf,
+        NgbHighlight,
+        MatTreeModule,
+        MatButtonModule,
+        RouterLink,
+    ],
 })
 export class SearchSectionComponent extends BaseComponent {
     public searchDataset = "";

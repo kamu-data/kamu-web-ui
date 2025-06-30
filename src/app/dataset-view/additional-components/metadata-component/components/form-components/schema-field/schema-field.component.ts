@@ -8,14 +8,17 @@
 import { MaybeNull } from "../../../../../../interface/app.types";
 import { AfterViewInit, ChangeDetectionStrategy, Component, QueryList, ViewChild, ViewChildren } from "@angular/core";
 import { BaseField } from "../base-field";
-import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from "@angular/forms";
-import { MatTable } from "@angular/material/table";
+import { AbstractControl, FormArray, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatTable, MatTableModule } from "@angular/material/table";
 import { Observable, OperatorFunction, Subject, merge } from "rxjs";
 import { NgbTypeahead } from "@ng-bootstrap/ng-bootstrap";
 import { debounceTime, distinctUntilChanged, map } from "rxjs/operators";
-import { RxwebValidators } from "@rxweb/reactive-form-validators";
+import { RxwebValidators, RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import AppValues from "src/app/common/values/app.values";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { MatIconModule } from "@angular/material/icon";
+import { NgIf } from "@angular/common";
+import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
 
 export interface SchemaType {
     name: string;
@@ -27,6 +30,17 @@ export interface SchemaType {
     templateUrl: "./schema-field.component.html",
     styleUrls: ["./schema-field.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        RxReactiveFormsModule,
+        TooltipIconComponent,
+        MatTableModule,
+        NgIf,
+        NgbTypeahead,
+        MatIconModule,
+    ],
 })
 export class SchemaFieldComponent extends BaseField implements AfterViewInit {
     @ViewChild(MatTable) private table: MatTable<unknown>;

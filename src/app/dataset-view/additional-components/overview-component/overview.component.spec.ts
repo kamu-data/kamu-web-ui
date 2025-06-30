@@ -69,37 +69,35 @@ describe("OverviewComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                OverviewComponent,
-                OverviewHistorySummaryHeaderComponent,
-                ReadmeSectionComponent,
-                DisplayTimeComponent,
-                DisplayHashComponent,
-                DynamicTableComponent,
-            ],
-            imports: [
-                ApolloModule,
-                DisplaySizeModule,
-                HttpClientTestingModule,
-                MarkdownModule.forRoot({
-                    loader: HttpClient,
-                    sanitize: SecurityContext.NONE,
-                }),
-                MatChipsModule,
-                MatTableModule,
-                NgbTooltipModule,
-                OwlDateTimeModule,
-                OwlNativeDateTimeModule,
-                OwlMomentDateTimeModule,
-                ReactiveFormsModule,
-                RouterTestingModule,
-                SharedTestModule,
-                ToastrModule.forRoot(),
-                MatIconModule,
-                RouterModule,
-            ],
-            providers: [Apollo],
-        })
+    imports: [
+        ApolloModule,
+        DisplaySizeModule,
+        HttpClientTestingModule,
+        MarkdownModule.forRoot({
+            loader: HttpClient,
+            sanitize: SecurityContext.NONE,
+        }),
+        MatChipsModule,
+        MatTableModule,
+        NgbTooltipModule,
+        OwlDateTimeModule,
+        OwlNativeDateTimeModule,
+        OwlMomentDateTimeModule,
+        ReactiveFormsModule,
+        RouterTestingModule,
+        SharedTestModule,
+        ToastrModule.forRoot(),
+        MatIconModule,
+        RouterModule,
+        OverviewComponent,
+        OverviewHistorySummaryHeaderComponent,
+        ReadmeSectionComponent,
+        DisplayTimeComponent,
+        DisplayHashComponent,
+        DynamicTableComponent,
+    ],
+    providers: [Apollo],
+})
             .overrideComponent(OverviewComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

@@ -14,7 +14,10 @@ import {
 } from "src/app/interface/feature-flags.interface";
 import { FeatureFlagsService } from "src/app/services/feature-flags.service";
 
-@Directive({ selector: "[appFeatureFlag]" })
+@Directive({
+    selector: "[appFeatureFlag]",
+    standalone: true
+})
 export class FeatureFlagDirective {
     private el = inject(ElementRef);
     private renderer = inject(Renderer2);

@@ -42,21 +42,20 @@ describe("MetadataComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [MetadataComponent, BlockRowDataComponent, TooltipIconComponent],
-            imports: [NgbTooltipModule, MatIconModule, MetadataBlockModule, SharedTestModule, HttpClientTestingModule],
-            providers: [
-                {
-                    provide: HIGHLIGHT_OPTIONS,
-                    useValue: {
-                        coreLibraryLoader: () => import("highlight.js/lib/core"),
-                        languages: {
-                            sql: () => import("highlight.js/lib/languages/sql"),
-                            yaml: () => import("highlight.js/lib/languages/yaml"),
-                        },
-                    },
+    imports: [NgbTooltipModule, MatIconModule, MetadataBlockModule, SharedTestModule, HttpClientTestingModule, MetadataComponent, BlockRowDataComponent, TooltipIconComponent],
+    providers: [
+        {
+            provide: HIGHLIGHT_OPTIONS,
+            useValue: {
+                coreLibraryLoader: () => import("highlight.js/lib/core"),
+                languages: {
+                    sql: () => import("highlight.js/lib/languages/sql"),
+                    yaml: () => import("highlight.js/lib/languages/yaml"),
                 },
-            ],
-        })
+            },
+        },
+    ],
+})
             .overrideComponent(MetadataComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

@@ -21,10 +21,9 @@ describe("CacheFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [CacheFieldComponent, TooltipIconComponent],
-            providers: [FormBuilder],
-            imports: [ReactiveFormsModule, FormsModule, NgbTooltipModule, SharedTestModule],
-        }).compileComponents();
+    providers: [FormBuilder],
+    imports: [ReactiveFormsModule, FormsModule, NgbTooltipModule, SharedTestModule, CacheFieldComponent, TooltipIconComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(CacheFieldComponent);
         component = fixture.componentInstance;

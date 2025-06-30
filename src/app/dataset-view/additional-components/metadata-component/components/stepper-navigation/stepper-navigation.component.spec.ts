@@ -16,8 +16,8 @@ describe("StepperNavigationComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [StepperNavigationComponent],
-        }).compileComponents();
+    imports: [StepperNavigationComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(StepperNavigationComponent);
         component = fixture.componentInstance;

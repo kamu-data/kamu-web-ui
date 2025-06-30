@@ -28,31 +28,27 @@ describe("SetTransformEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                SetTransformEventComponent,
-                SimplePropertyComponent,
-                EnginePropertyComponent,
-                SqlQueryViewerComponent,
-                TemporalTablesPropertyComponent,
-                CardsPropertyComponent,
-                VisibilityPropertyComponent,
-                BlockRowDataComponent,
-                TooltipIconComponent,
-            ],
-            providers: [
-                {
-                    provide: HIGHLIGHT_OPTIONS,
-                    useValue: {
-                        coreLibraryLoader: () => import("highlight.js/lib/core"),
-                        languages: {
-                            sql: () => import("highlight.js/lib/languages/sql"),
-                        },
-                    },
+    providers: [
+        {
+            provide: HIGHLIGHT_OPTIONS,
+            useValue: {
+                coreLibraryLoader: () => import("highlight.js/lib/core"),
+                languages: {
+                    sql: () => import("highlight.js/lib/languages/sql"),
                 },
-            ],
-
-            imports: [ApolloTestingModule, SharedTestModule, HighlightModule, MatIconModule, NgbTooltipModule],
-        }).compileComponents();
+            },
+        },
+    ],
+    imports: [ApolloTestingModule, SharedTestModule, HighlightModule, MatIconModule, NgbTooltipModule, SetTransformEventComponent,
+        SimplePropertyComponent,
+        EnginePropertyComponent,
+        SqlQueryViewerComponent,
+        TemporalTablesPropertyComponent,
+        CardsPropertyComponent,
+        VisibilityPropertyComponent,
+        BlockRowDataComponent,
+        TooltipIconComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(SetTransformEventComponent);
         component = fixture.componentInstance;

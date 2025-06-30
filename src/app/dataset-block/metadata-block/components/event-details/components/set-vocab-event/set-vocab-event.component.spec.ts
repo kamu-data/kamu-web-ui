@@ -21,9 +21,8 @@ describe("SetVocabEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SetVocabEventComponent, CardsPropertyComponent, BlockRowDataComponent, TooltipIconComponent],
-            imports: [MatIconModule, NgbTooltipModule, SharedTestModule],
-        }).compileComponents();
+    imports: [MatIconModule, NgbTooltipModule, SharedTestModule, SetVocabEventComponent, CardsPropertyComponent, BlockRowDataComponent, TooltipIconComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(SetVocabEventComponent);
         component = fixture.componentInstance;

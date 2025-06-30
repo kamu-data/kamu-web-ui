@@ -15,12 +15,21 @@ import { ModalService } from "src/app/common/components/modal/modal.service";
 import { AppConfigService } from "src/app/app-config.service";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { MatIconModule } from "@angular/material/icon";
+import { FeatureFlagDirective } from "../../../../../common/directives/feature-flag.directive";
+import { MatDividerModule } from "@angular/material/divider";
 
 @Component({
     selector: "app-add-data-modal",
     templateUrl: "./add-data-modal.component.html",
     styleUrls: ["./add-data-modal.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        MatDividerModule,
+        FeatureFlagDirective,
+        MatIconModule,
+    ],
 })
 export class AddDataModalComponent extends BaseComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

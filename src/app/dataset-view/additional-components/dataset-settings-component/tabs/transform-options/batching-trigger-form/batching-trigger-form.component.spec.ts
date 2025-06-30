@@ -33,19 +33,19 @@ describe("BatchingTriggerFormComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [BatchingTriggerFormComponent],
-            providers: [Apollo],
-            imports: [
-                FormsModule,
-                ReactiveFormsModule,
-                MatProgressBarModule,
-                TooltipIconModule,
-                ToastrModule.forRoot(),
-                MatSlideToggleModule,
-                SharedTestModule,
-                FormValidationErrorsModule,
-            ],
-        });
+    providers: [Apollo],
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        MatProgressBarModule,
+        TooltipIconModule,
+        ToastrModule.forRoot(),
+        MatSlideToggleModule,
+        SharedTestModule,
+        FormValidationErrorsModule,
+        BatchingTriggerFormComponent,
+    ],
+});
         fixture = TestBed.createComponent(BatchingTriggerFormComponent);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;

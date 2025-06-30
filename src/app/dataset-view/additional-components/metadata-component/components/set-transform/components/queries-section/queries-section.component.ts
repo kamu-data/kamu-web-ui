@@ -7,13 +7,24 @@
 
 import { ChangeDetectionStrategy, Component, Input, inject } from "@angular/core";
 import { SqlQueryStep } from "src/app/api/kamu.graphql.interface";
-import { ViewportScroller } from "@angular/common";
+import { ViewportScroller, NgIf, NgFor } from "@angular/common";
+import { SqlEditorComponent } from "../../../../../../../editor/components/sql-editor/sql-editor.component";
+import { FormsModule } from "@angular/forms";
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
     selector: "app-queries-section",
     templateUrl: "./queries-section.component.html",
     styleUrls: ["./queries-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        NgIf,
+        MatIconModule,
+        NgFor,
+        FormsModule,
+        SqlEditorComponent,
+    ],
 })
 export class QueriesSectionComponent {
     @Input({ required: true }) public queries: Omit<SqlQueryStep, "__typename">[];

@@ -24,9 +24,8 @@ describe("LoadMoreComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [MatButtonToggleModule, FormsModule, MatIconModule],
-            declarations: [LoadMoreComponent],
-        }).compileComponents();
+    imports: [MatButtonToggleModule, FormsModule, MatIconModule, LoadMoreComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(LoadMoreComponent);
         component = fixture.componentInstance;

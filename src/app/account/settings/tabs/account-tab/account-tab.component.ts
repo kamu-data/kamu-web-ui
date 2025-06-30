@@ -7,7 +7,7 @@
 
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { AbstractControl, FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ParamMap, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { AccountService } from "src/app/account/account.service";
@@ -24,12 +24,25 @@ import { ChangeUsernameFormType } from "./account-tab.types";
 import { ChangeAccountUsernameResult } from "../../account-settings.constants";
 import { AccountTabs } from "src/app/account/account.constants";
 import AppValues from "src/app/common/values/app.values";
+import { AdminChangePasswordComponent } from "../password-and-authentication-tab/components/admin-change-password/admin-change-password.component";
+import { NgIf } from "@angular/common";
+import { FormValidationErrorsDirective } from "../../../../common/directives/form-validation-errors.directive";
+import { MatDividerModule } from "@angular/material/divider";
 
 @Component({
     selector: "app-account-tab",
     templateUrl: "./account-tab.component.html",
     styleUrls: ["./account-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        MatDividerModule,
+        FormsModule,
+        ReactiveFormsModule,
+        FormValidationErrorsDirective,
+        NgIf,
+        AdminChangePasswordComponent,
+    ],
 })
 export class AccountTabComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.ACCOUNT_SETTINGS_ACCOUNT_KEY) public account: AccountWithEmailFragment;

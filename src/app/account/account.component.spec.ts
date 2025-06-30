@@ -52,39 +52,37 @@ describe("AccountComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                AccountComponent,
-                DatasetsTabComponent,
-                DatasetListItemComponent,
-                PaginationComponent,
-                DisplayTimeComponent,
-                AccountFlowsTabComponent,
-            ],
-            imports: [
-                ApolloTestingModule,
-                MatIconModule,
-                MatButtonToggleModule,
-                MatChipsModule,
-                MatDividerModule,
-                NgbPaginationModule,
-                NgbPopoverModule,
-                NgbRatingModule,
-                HttpClientTestingModule,
-                ToastrModule.forRoot(),
-                RouterModule,
-                DatasetVisibilityModule,
-                DisplayAccountNameModule,
-            ],
-            providers: [
-                DatasetApi,
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        queryParams: mockQueryParams.asObservable(),
-                    },
-                },
-            ],
-        }).compileComponents();
+    imports: [
+        ApolloTestingModule,
+        MatIconModule,
+        MatButtonToggleModule,
+        MatChipsModule,
+        MatDividerModule,
+        NgbPaginationModule,
+        NgbPopoverModule,
+        NgbRatingModule,
+        HttpClientTestingModule,
+        ToastrModule.forRoot(),
+        RouterModule,
+        DatasetVisibilityModule,
+        DisplayAccountNameModule,
+        AccountComponent,
+        DatasetsTabComponent,
+        DatasetListItemComponent,
+        PaginationComponent,
+        DisplayTimeComponent,
+        AccountFlowsTabComponent,
+    ],
+    providers: [
+        DatasetApi,
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                queryParams: mockQueryParams.asObservable(),
+            },
+        },
+    ],
+}).compileComponents();
 
         accountService = TestBed.inject(AccountService);
         loggedUserService = TestBed.inject(LoggedUserService);

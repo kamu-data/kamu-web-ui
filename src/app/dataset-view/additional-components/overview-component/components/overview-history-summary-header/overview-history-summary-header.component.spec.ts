@@ -25,17 +25,17 @@ describe("OverviewHistorySummaryHeaderComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [OverviewHistorySummaryHeaderComponent],
-            imports: [
-                DisplayTimeModule,
-                DisplayHashModule,
-                HttpClientTestingModule,
-                ToastrModule.forRoot(),
-                RouterModule,
-                SharedTestModule,
-                MatIconModule,
-            ],
-        }).compileComponents();
+    imports: [
+        DisplayTimeModule,
+        DisplayHashModule,
+        HttpClientTestingModule,
+        ToastrModule.forRoot(),
+        RouterModule,
+        SharedTestModule,
+        MatIconModule,
+        OverviewHistorySummaryHeaderComponent,
+    ],
+}).compileComponents();
 
         registerMatSvgIcons();
 

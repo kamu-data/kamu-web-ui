@@ -27,20 +27,20 @@ describe("DatasetListItemComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DatasetListItemComponent],
-            imports: [
-                MatChipsModule,
-                NgbRatingModule,
-                MatDividerModule,
-                MatIconModule,
-                NgbModule,
-                DisplayTimeModule,
-                HttpClientTestingModule,
-                SharedTestModule,
-                RouterModule,
-                DatasetVisibilityModule,
-            ],
-        }).compileComponents();
+    imports: [
+        MatChipsModule,
+        NgbRatingModule,
+        MatDividerModule,
+        MatIconModule,
+        NgbModule,
+        DisplayTimeModule,
+        HttpClientTestingModule,
+        SharedTestModule,
+        RouterModule,
+        DatasetVisibilityModule,
+        DatasetListItemComponent,
+    ],
+}).compileComponents();
 
         registerMatSvgIcons();
 

@@ -21,12 +21,23 @@ import { EngineDesc, EnginesQuery, TransformSql } from "src/app/api/kamu.graphql
 import { MaybeNull, MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
+import { FormsModule } from "@angular/forms";
+import { EngineSelectComponent } from "./components/engine-select/engine-select.component";
+import { MatDividerModule } from "@angular/material/divider";
+import { NgIf } from "@angular/common";
 
 @Component({
     selector: "app-engine-section",
     templateUrl: "./engine-section.component.html",
     styleUrls: ["./engine-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        NgIf,
+        MatDividerModule,
+        EngineSelectComponent,
+        FormsModule,
+    ],
 })
 export class EngineSectionComponent extends BaseComponent implements OnInit {
     @Input() public knownEngines: MaybeNull<EngineDesc[]>;

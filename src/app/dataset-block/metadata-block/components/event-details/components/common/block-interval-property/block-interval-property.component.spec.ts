@@ -25,16 +25,16 @@ describe("BlockIntervalPropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [BlockIntervalPropertyComponent],
-            imports: [
-                ApolloTestingModule,
-                DisplayHashModule,
-                ToastrModule.forRoot(),
-                MatIconModule,
-                HttpClientTestingModule,
-                SharedTestModule,
-            ],
-        }).compileComponents();
+    imports: [
+        ApolloTestingModule,
+        DisplayHashModule,
+        ToastrModule.forRoot(),
+        MatIconModule,
+        HttpClientTestingModule,
+        SharedTestModule,
+        BlockIntervalPropertyComponent,
+    ],
+}).compileComponents();
 
         registerMatSvgIcons();
 

@@ -10,11 +10,20 @@ import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core
 import { Seed } from "src/app/api/kamu.graphql.interface";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { BaseComponent } from "src/app/common/components/base.component";
+import { TitleCasePipe } from "@angular/common";
+import { MatIconModule } from "@angular/material/icon";
+import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";
 
 @Component({
     selector: "app-seed-event",
     templateUrl: "./seed-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        BlockRowDataComponent,
+        MatIconModule,
+        TitleCasePipe,
+    ],
 })
 export class SeedEventComponent extends BaseComponent {
     @Input({ required: true }) public event: Seed;

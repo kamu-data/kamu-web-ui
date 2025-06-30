@@ -39,19 +39,19 @@ describe("IngestTriggerFormComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [IngestTriggerFormComponent],
-            providers: [Apollo],
-            imports: [
-                FormsModule,
-                ReactiveFormsModule,
-                ToastrModule.forRoot(),
-                MatRadioModule,
-                SharedTestModule,
-                MatSlideToggleModule,
-                MatProgressBarModule,
-                TooltipIconModule,
-            ],
-        });
+    providers: [Apollo],
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        ToastrModule.forRoot(),
+        MatRadioModule,
+        SharedTestModule,
+        MatSlideToggleModule,
+        MatProgressBarModule,
+        TooltipIconModule,
+        IngestTriggerFormComponent,
+    ],
+});
         fixture = TestBed.createComponent(IngestTriggerFormComponent);
         component = fixture.componentInstance;
         datasetSchedulingService = TestBed.inject(DatasetSchedulingService);

@@ -9,7 +9,7 @@ import { NavigationService } from "./services/navigation.service";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, inject, OnInit } from "@angular/core";
 import AppValues from "./common/values/app.values";
 import { filter, map } from "rxjs/operators";
-import { NavigationEnd, Router, RouterEvent } from "@angular/router";
+import { NavigationEnd, Router, RouterEvent, RouterOutlet } from "@angular/router";
 import { DatasetAutocompleteItem, TypeNames } from "./interface/search.interface";
 import { ModalService } from "./common/components/modal/modal.service";
 import { BaseComponent } from "src/app/common/components/base.component";
@@ -30,6 +30,9 @@ import { MatIconRegistry } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
 import { SessionStorageService } from "./services/session-storage.service";
 import { DatasetViewTypeEnum } from "./dataset-view/dataset-view.interface";
+import { ModalComponent } from "./common/components/modal/modal.component";
+import { SpinnerComponent } from "./common/components/spinner/spinner/spinner.component";
+import { AppHeaderComponent } from "./header/app-header/app-header.component";
 
 export const ALL_URLS_WITHOUT_HEADER: string[] = [ProjectLinks.URL_LOGIN, ProjectLinks.URL_GITHUB_CALLBACK];
 
@@ -37,6 +40,8 @@ export const ALL_URLS_WITHOUT_HEADER: string[] = [ProjectLinks.URL_LOGIN, Projec
     selector: "app-root",
     templateUrl: "./app.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [RouterOutlet, ModalComponent, SpinnerComponent, AppHeaderComponent],
 })
 export class AppComponent extends BaseComponent implements OnInit {
     public static readonly ANONYMOUS_ACCOUNT_INFO: AccountFragment = {

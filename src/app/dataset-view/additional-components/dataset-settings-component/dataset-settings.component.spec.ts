@@ -42,55 +42,53 @@ describe("DatasetSettingsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                DatasetSettingsComponent,
-                DatasetSettingsGeneralTabComponent,
-                DatasetSettingsSchedulingTabComponent,
-                TooltipIconComponent,
-            ],
-            providers: [
-                Apollo,
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        fragment: of(""),
-                        snapshot: {
-                            queryParamMap: {
-                                get: () => null,
-                            },
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return mockDatasetBasicsDerivedFragment.owner.accountName;
-                                        case "datasetName":
-                                            return mockDatasetBasicsDerivedFragment.name;
-                                    }
-                                },
-                            },
+    providers: [
+        Apollo,
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                fragment: of(""),
+                snapshot: {
+                    queryParamMap: {
+                        get: () => null,
+                    },
+                    paramMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "accountName":
+                                    return mockDatasetBasicsDerivedFragment.owner.accountName;
+                                case "datasetName":
+                                    return mockDatasetBasicsDerivedFragment.name;
+                            }
                         },
                     },
                 },
-            ],
-            imports: [
-                ReactiveFormsModule,
-                HttpClientTestingModule,
-                MatDividerModule,
-                MatIconModule,
-                ApolloTestingModule,
-                ToastrModule.forRoot(),
-                MatDividerModule,
-                MatSlideToggleModule,
-                MatRadioModule,
-                MatIconModule,
-                NgbTooltipModule,
-                MatCheckboxModule,
-                BatchingTriggerModule,
-                DatasetVisibilityModule,
-                FeatureFlagModule,
-                RouterTestingModule,
-            ],
-        })
+            },
+        },
+    ],
+    imports: [
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+        MatDividerModule,
+        MatIconModule,
+        ApolloTestingModule,
+        ToastrModule.forRoot(),
+        MatDividerModule,
+        MatSlideToggleModule,
+        MatRadioModule,
+        MatIconModule,
+        NgbTooltipModule,
+        MatCheckboxModule,
+        BatchingTriggerModule,
+        DatasetVisibilityModule,
+        FeatureFlagModule,
+        RouterTestingModule,
+        DatasetSettingsComponent,
+        DatasetSettingsGeneralTabComponent,
+        DatasetSettingsSchedulingTabComponent,
+        TooltipIconComponent,
+    ],
+})
             .overrideComponent(DatasetSettingsComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

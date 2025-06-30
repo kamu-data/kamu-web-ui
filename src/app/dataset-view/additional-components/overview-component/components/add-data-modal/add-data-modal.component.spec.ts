@@ -30,10 +30,9 @@ describe("AddDataModalComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [AddDataModalComponent],
-            providers: [Apollo, NgbActiveModal],
-            imports: [HttpClientModule, SharedTestModule, MatIconModule, MatDividerModule],
-        }).compileComponents();
+    providers: [Apollo, NgbActiveModal],
+    imports: [HttpClientModule, SharedTestModule, MatIconModule, MatDividerModule, AddDataModalComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(AddDataModalComponent);
         component = fixture.componentInstance;

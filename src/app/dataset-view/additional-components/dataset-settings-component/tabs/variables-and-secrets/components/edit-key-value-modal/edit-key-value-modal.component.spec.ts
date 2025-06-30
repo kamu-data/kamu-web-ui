@@ -31,48 +31,48 @@ describe("EditKeyValueModalComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [EditKeyValueModalComponent],
-            providers: [
-                NgbActiveModal,
-                FormBuilder,
-                Apollo,
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            queryParamMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "page":
-                                            return 2;
-                                    }
-                                },
-                            },
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return "accountName";
-                                        case "datasetName":
-                                            return "datasetName";
-                                    }
-                                },
-                            },
+    providers: [
+        NgbActiveModal,
+        FormBuilder,
+        Apollo,
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    queryParamMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "page":
+                                    return 2;
+                            }
+                        },
+                    },
+                    paramMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "accountName":
+                                    return "accountName";
+                                case "datasetName":
+                                    return "datasetName";
+                            }
                         },
                     },
                 },
-            ],
-            imports: [
-                ToastrModule.forRoot(),
-                MatCheckboxModule,
-                FormsModule,
-                ReactiveFormsModule,
-                MatDividerModule,
-                MatIconModule,
-                MatTooltipModule,
-                FormValidationErrorsModule,
-            ],
-        }).compileComponents();
+            },
+        },
+    ],
+    imports: [
+        ToastrModule.forRoot(),
+        MatCheckboxModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatDividerModule,
+        MatIconModule,
+        MatTooltipModule,
+        FormValidationErrorsModule,
+        EditKeyValueModalComponent,
+    ],
+}).compileComponents();
 
         fixture = TestBed.createComponent(EditKeyValueModalComponent);
         evnironmentVariablesService = TestBed.inject(DatasetEnvironmentVariablesService);

@@ -14,12 +14,26 @@ import {
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
 import { BaseComponent } from "../base.component";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatIconModule } from "@angular/material/icon";
+import { FeatureFlagDirective } from "../../directives/feature-flag.directive";
+import { NgFor, NgIf } from "@angular/common";
 
 @Component({
     selector: "app-search-additional-buttons-nav",
     templateUrl: "./search-additional-buttons-nav.component.html",
     styleUrls: ["./search-additional-buttons.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        NgFor,
+        FeatureFlagDirective,
+        MatIconModule,
+        MatMenuModule,
+        NgIf,
+        MatProgressSpinnerModule,
+    ],
 })
 export class SearchAdditionalButtonsNavComponent extends BaseComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

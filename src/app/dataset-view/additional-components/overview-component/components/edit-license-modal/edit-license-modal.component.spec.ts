@@ -29,17 +29,17 @@ describe("EditLicenseModalComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [EditLicenseModalComponent],
-            imports: [
-                ApolloTestingModule,
-                FormsModule,
-                ReactiveFormsModule,
-                MatDividerModule,
-                SharedTestModule,
-                HttpClientTestingModule,
-            ],
-            providers: [Apollo, NgbActiveModal],
-        }).compileComponents();
+    imports: [
+        ApolloTestingModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatDividerModule,
+        SharedTestModule,
+        HttpClientTestingModule,
+        EditLicenseModalComponent,
+    ],
+    providers: [Apollo, NgbActiveModal],
+}).compileComponents();
 
         fixture = TestBed.createComponent(EditLicenseModalComponent);
         component = fixture.componentInstance;

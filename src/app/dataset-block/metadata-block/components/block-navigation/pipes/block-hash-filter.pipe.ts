@@ -10,6 +10,7 @@ import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 
 @Pipe({
     name: "blockHashFilter",
+    standalone: true,
 })
 export class BlockHashFilterPipe implements PipeTransform {
     public transform(blocks: MetadataBlockFragment[], filter: string): MetadataBlockFragment[] {

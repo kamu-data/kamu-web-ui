@@ -41,48 +41,48 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DatasetSettingsSecretsManagerTabComponent],
-            providers: [
-                FormBuilder,
-                Apollo,
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return "accountName";
-                                        case "datasetName":
-                                            return "datasetName";
-                                    }
-                                },
-                            },
-                            queryParamMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case ProjectLinks.URL_QUERY_PARAM_PAGE:
-                                            return undefined;
-                                    }
-                                },
-                            },
+    providers: [
+        FormBuilder,
+        Apollo,
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    paramMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "accountName":
+                                    return "accountName";
+                                case "datasetName":
+                                    return "datasetName";
+                            }
+                        },
+                    },
+                    queryParamMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case ProjectLinks.URL_QUERY_PARAM_PAGE:
+                                    return undefined;
+                            }
                         },
                     },
                 },
-            ],
-            imports: [
-                ToastrModule.forRoot(),
-                ApolloTestingModule,
-                MatDividerModule,
-                MatTableModule,
-                HttpClientModule,
-                MatIconModule,
-                FormsModule,
-                MatTooltipModule,
-                PaginationModule,
-            ],
-        }).compileComponents();
+            },
+        },
+    ],
+    imports: [
+        ToastrModule.forRoot(),
+        ApolloTestingModule,
+        MatDividerModule,
+        MatTableModule,
+        HttpClientModule,
+        MatIconModule,
+        FormsModule,
+        MatTooltipModule,
+        PaginationModule,
+        DatasetSettingsSecretsManagerTabComponent,
+    ],
+}).compileComponents();
 
         registerMatSvgIcons();
 

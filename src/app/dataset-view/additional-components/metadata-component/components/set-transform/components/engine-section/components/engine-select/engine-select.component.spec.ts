@@ -17,8 +17,8 @@ describe("EngineSelectComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [EngineSelectComponent],
-        }).compileComponents();
+    imports: [EngineSelectComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(EngineSelectComponent);
         component = fixture.componentInstance;

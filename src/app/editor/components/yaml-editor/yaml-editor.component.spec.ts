@@ -21,10 +21,9 @@ describe("YamlEditorComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [EditorModule],
-            declarations: [YamlEditorComponent],
-            providers: [MonacoService],
-        }).compileComponents();
+    imports: [EditorModule, YamlEditorComponent],
+    providers: [MonacoService],
+}).compileComponents();
 
         fixture = TestBed.createComponent(YamlEditorComponent);
 

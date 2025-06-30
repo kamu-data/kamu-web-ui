@@ -27,18 +27,18 @@ describe("TimelineComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [TimelineComponent],
-            imports: [
-                DisplayHashModule,
-                ToastrModule.forRoot(),
-                DisplayTimeModule,
-                MatIconModule,
-                HttpClientTestingModule,
-                NgbPopoverModule,
-                RouterTestingModule,
-                RouterModule,
-            ],
-        }).compileComponents();
+    imports: [
+        DisplayHashModule,
+        ToastrModule.forRoot(),
+        DisplayTimeModule,
+        MatIconModule,
+        HttpClientTestingModule,
+        NgbPopoverModule,
+        RouterTestingModule,
+        RouterModule,
+        TimelineComponent,
+    ],
+}).compileComponents();
 
         registerMatSvgIcons();
 

@@ -21,10 +21,9 @@ describe("EventDetailsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [EventDetailsComponent, SetPollingSourceEventComponent],
-            imports: [SharedTestModule],
-            providers: [Apollo, DatasetApi],
-        }).compileComponents();
+    imports: [SharedTestModule, EventDetailsComponent, SetPollingSourceEventComponent],
+    providers: [Apollo, DatasetApi],
+}).compileComponents();
 
         registerMatSvgIcons();
 

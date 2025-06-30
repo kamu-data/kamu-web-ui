@@ -21,10 +21,9 @@ describe("RotateSecretSubscriptionModalComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [RotateSecretSubscriptionModalComponent],
-            imports: [FormsModule, MatIconModule, HttpClientTestingModule, MatDividerModule],
-            providers: [Apollo, NgbActiveModal],
-        });
+    imports: [FormsModule, MatIconModule, HttpClientTestingModule, MatDividerModule, RotateSecretSubscriptionModalComponent],
+    providers: [Apollo, NgbActiveModal],
+});
 
         registerMatSvgIcons();
 

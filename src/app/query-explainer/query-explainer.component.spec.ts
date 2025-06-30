@@ -46,37 +46,35 @@ describe("QueryExplainerComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                QueryExplainerComponent,
-                VerifyResultSectionComponent,
-                ReproducedResultSectionComponent,
-                InputDataSectionComponent,
-                CommitmentDataSectionComponent,
-            ],
-            imports: [
-                HttpClientTestingModule,
-                DynamicTableModule,
-                ToastrModule.forRoot(),
-                DisplayHashModule,
-                HighlightModule,
-                RouterModule,
-                FormsModule,
-                MatIconModule,
-                SharedTestModule,
-            ],
-            providers: [
-                Apollo,
-                {
-                    provide: HIGHLIGHT_OPTIONS,
-                    useValue: {
-                        coreLibraryLoader: () => import("highlight.js/lib/core"),
-                        languages: {
-                            sql: () => import("highlight.js/lib/languages/sql"),
-                        },
-                    },
+    imports: [
+        HttpClientTestingModule,
+        DynamicTableModule,
+        ToastrModule.forRoot(),
+        DisplayHashModule,
+        HighlightModule,
+        RouterModule,
+        FormsModule,
+        MatIconModule,
+        SharedTestModule,
+        QueryExplainerComponent,
+        VerifyResultSectionComponent,
+        ReproducedResultSectionComponent,
+        InputDataSectionComponent,
+        CommitmentDataSectionComponent,
+    ],
+    providers: [
+        Apollo,
+        {
+            provide: HIGHLIGHT_OPTIONS,
+            useValue: {
+                coreLibraryLoader: () => import("highlight.js/lib/core"),
+                languages: {
+                    sql: () => import("highlight.js/lib/languages/sql"),
                 },
-            ],
-        });
+            },
+        },
+    ],
+});
 
         registerMatSvgIcons();
 

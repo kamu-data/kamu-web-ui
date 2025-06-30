@@ -42,21 +42,21 @@ describe("CreateEditSubscriptionModalComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [CreateEditSubscriptionModalComponent],
-            imports: [
-                SharedTestModule,
-                ReactiveFormsModule,
-                ApolloTestingModule,
-                HttpClientTestingModule,
-                MatDividerModule,
-                MatIconModule,
-                NgSelectModule,
-                FormsModule,
-                FormValidationErrorsModule,
-                CopyToClipboardModule,
-            ],
-            providers: [Apollo, NgbActiveModal],
-        });
+    imports: [
+        SharedTestModule,
+        ReactiveFormsModule,
+        ApolloTestingModule,
+        HttpClientTestingModule,
+        MatDividerModule,
+        MatIconModule,
+        NgSelectModule,
+        FormsModule,
+        FormValidationErrorsModule,
+        CopyToClipboardModule,
+        CreateEditSubscriptionModalComponent,
+    ],
+    providers: [Apollo, NgbActiveModal],
+});
 
         registerMatSvgIcons();
 

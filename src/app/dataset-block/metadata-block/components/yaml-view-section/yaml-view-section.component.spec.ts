@@ -22,10 +22,9 @@ describe("YamlViewSectionComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [YamlViewSectionComponent, YamlEventViewerComponent],
-            imports: [ApolloTestingModule, SharedTestModule],
-            schemas: [NO_ERRORS_SCHEMA],
-        })
+    imports: [ApolloTestingModule, SharedTestModule, YamlViewSectionComponent, YamlEventViewerComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+})
             .overrideComponent(YamlViewSectionComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

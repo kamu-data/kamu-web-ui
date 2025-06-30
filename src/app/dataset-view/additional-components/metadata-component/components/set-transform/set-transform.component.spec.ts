@@ -51,46 +51,44 @@ describe("SetTransformComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                SetTransformComponent,
-                EngineSectionComponent,
-                QueriesSectionComponent,
-                SearchSectionComponent,
-                StepperNavigationComponent,
-            ],
-            imports: [
-                ApolloModule,
-                ApolloTestingModule,
-                MatTreeModule,
-                MatIconModule,
-                NgbTypeaheadModule,
-                FormsModule,
-                HttpClientTestingModule,
-                ReactiveFormsModule,
-                RouterModule,
-                EditorModule,
-            ],
-            providers: [
-                Apollo,
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return "accountName";
-                                        case "datasetName":
-                                            return "datasetName";
-                                    }
-                                },
-                            },
+    imports: [
+        ApolloModule,
+        ApolloTestingModule,
+        MatTreeModule,
+        MatIconModule,
+        NgbTypeaheadModule,
+        FormsModule,
+        HttpClientTestingModule,
+        ReactiveFormsModule,
+        RouterModule,
+        EditorModule,
+        SetTransformComponent,
+        EngineSectionComponent,
+        QueriesSectionComponent,
+        SearchSectionComponent,
+        StepperNavigationComponent,
+    ],
+    providers: [
+        Apollo,
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    paramMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "accountName":
+                                    return "accountName";
+                                case "datasetName":
+                                    return "datasetName";
+                            }
                         },
                     },
                 },
-            ],
-        }).compileComponents();
+            },
+        },
+    ],
+}).compileComponents();
 
         navigationService = TestBed.inject(NavigationService);
         datasetCommitService = TestBed.inject(DatasetCommitService);

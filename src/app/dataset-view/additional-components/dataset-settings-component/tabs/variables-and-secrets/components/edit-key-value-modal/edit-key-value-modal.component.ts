@@ -6,7 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { AbstractControl, FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetBasicsFragment, ViewDatasetEnvVar } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/interface/app.types";
@@ -15,12 +15,27 @@ import { noWhitespaceValidator } from "src/app/common/helpers/data.helpers";
 import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
 import { EnvAndSecretsFormType } from "./edit-key-value-modal.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { NgIf } from "@angular/common";
+import { FormValidationErrorsDirective } from "../../../../../../../common/directives/form-validation-errors.directive";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatIconModule } from "@angular/material/icon";
+import { MatDividerModule } from "@angular/material/divider";
 
 @Component({
     selector: "app-edit-key-value-modal",
     templateUrl: "./edit-key-value-modal.component.html",
     styleUrls: ["./edit-key-value-modal.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        MatDividerModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatIconModule,
+        MatTooltipModule,
+        FormValidationErrorsDirective,
+        NgIf,
+    ],
 })
 export class EditKeyValueModalComponent extends BaseComponent implements OnInit {
     public activeModal = inject(NgbActiveModal);

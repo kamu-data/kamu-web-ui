@@ -36,18 +36,18 @@ describe("SearchAndSchemasSectionComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [SearchAndSchemasSectionComponent, SavedQueriesSectionComponent],
-            imports: [
-                CdkAccordionModule,
-                MatIconModule,
-                MatDividerModule,
-                SharedTestModule,
-                NgbTypeaheadModule,
-                DynamicTableModule,
-                FormsModule,
-            ],
-            providers: [Apollo],
-        });
+    imports: [
+        CdkAccordionModule,
+        MatIconModule,
+        MatDividerModule,
+        SharedTestModule,
+        NgbTypeaheadModule,
+        DynamicTableModule,
+        FormsModule,
+        SearchAndSchemasSectionComponent, SavedQueriesSectionComponent,
+    ],
+    providers: [Apollo],
+});
         fixture = TestBed.createComponent(SearchAndSchemasSectionComponent);
         component = fixture.componentInstance;
         sqlQueryService = TestBed.inject(SqlQueryService);

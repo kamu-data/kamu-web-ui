@@ -9,12 +9,21 @@ import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angu
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { AccountWithRole, DatasetAccessRole } from "src/app/api/kamu.graphql.interface";
 import { CollaboratorModalResultType, ROLE_OPTIONS } from "../add-people-modal/add-people-modal.model";
+import { FormsModule } from "@angular/forms";
+import { NgFor } from "@angular/common";
+import { MatDividerModule } from "@angular/material/divider";
 
 @Component({
     selector: "app-edit-collaborator-modal",
     templateUrl: "./edit-collaborator-modal.component.html",
     styleUrls: ["./edit-collaborator-modal.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        MatDividerModule,
+        NgFor,
+        FormsModule,
+    ],
 })
 export class EditCollaboratorModalComponent implements OnInit {
     @Input({ required: true }) public collaborator: AccountWithRole;

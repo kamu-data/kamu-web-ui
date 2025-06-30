@@ -14,8 +14,8 @@ describe("FlowDetailsUsageTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [FlowDetailsUsageTabComponent],
-        });
+    imports: [FlowDetailsUsageTabComponent],
+});
         fixture = TestBed.createComponent(FlowDetailsUsageTabComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

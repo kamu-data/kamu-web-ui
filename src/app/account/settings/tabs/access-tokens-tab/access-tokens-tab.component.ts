@@ -15,9 +15,9 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, ViewChild } from "@angular/core";
 import { MatSort } from "@angular/material/sort";
-import { MatTableDataSource } from "@angular/material/table";
+import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { AccountSettingsTabs, TokenCreateStep } from "../../account-settings.constants";
-import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { AbstractControl, FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { Clipboard } from "@angular/cdk/clipboard";
@@ -28,12 +28,34 @@ import { CreateTokenFormType } from "./access-tokens-tab.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { PaginationComponent } from "../../../../common/components/pagination-component/pagination.component";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatIconModule } from "@angular/material/icon";
+import { CopyToClipboardComponent } from "../../../../common/components/copy-to-clipboard/copy-to-clipboard.component";
+import { FormValidationErrorsDirective } from "../../../../common/directives/form-validation-errors.directive";
+import { MatDividerModule } from "@angular/material/divider";
+import { NgIf, NgTemplateOutlet, DatePipe } from "@angular/common";
 
 @Component({
     selector: "app-access-tokens-tab",
     templateUrl: "./access-tokens-tab.component.html",
     styleUrls: ["./access-tokens-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        NgIf,
+        NgTemplateOutlet,
+        MatDividerModule,
+        FormsModule,
+        ReactiveFormsModule,
+        FormValidationErrorsDirective,
+        CopyToClipboardComponent,
+        MatIconModule,
+        MatSlideToggleModule,
+        MatTableModule,
+        PaginationComponent,
+        DatePipe,
+    ],
 })
 export class AccessTokensTabComponent extends BaseComponent {
     private fb = inject(FormBuilder);

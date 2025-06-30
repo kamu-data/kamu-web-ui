@@ -47,48 +47,48 @@ describe("DatasetSettingsAccessTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [DatasetSettingsAccessTabComponent],
-            providers: [
-                Apollo,
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            queryParamMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "page":
-                                            return 2;
-                                    }
-                                },
-                            },
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return "accountName";
-                                        case "datasetName":
-                                            return "datasetName";
-                                    }
-                                },
-                            },
+    providers: [
+        Apollo,
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    queryParamMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "page":
+                                    return 2;
+                            }
+                        },
+                    },
+                    paramMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "accountName":
+                                    return "accountName";
+                                case "datasetName":
+                                    return "datasetName";
+                            }
                         },
                     },
                 },
-            ],
-            imports: [
-                ApolloTestingModule,
-                ToastrModule.forRoot(),
-                RouterTestingModule,
-                RouterModule,
-                HttpClientModule,
-                MatIconModule,
-                PaginationModule,
-                MatTableModule,
-                MatCheckboxModule,
-                FormsModule,
-            ],
-        });
+            },
+        },
+    ],
+    imports: [
+        ApolloTestingModule,
+        ToastrModule.forRoot(),
+        RouterTestingModule,
+        RouterModule,
+        HttpClientModule,
+        MatIconModule,
+        PaginationModule,
+        MatTableModule,
+        MatCheckboxModule,
+        FormsModule,
+        DatasetSettingsAccessTabComponent,
+    ],
+});
         registerMatSvgIcons();
 
         fixture = TestBed.createComponent(DatasetSettingsAccessTabComponent);

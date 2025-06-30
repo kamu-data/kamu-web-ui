@@ -19,12 +19,31 @@ import { AccountNotFoundError } from "src/app/common/values/errors";
 import { ModalService } from "../common/components/modal/modal.service";
 import { LoggedUserService } from "../auth/logged-user.service";
 import RoutingResolvers from "../common/resolvers/routing-resolvers";
+import { DisplayAccountNamePipe } from "../common/pipes/display-account-name.pipe";
+import { RouterLink, RouterOutlet } from "@angular/router";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonToggleModule } from "@angular/material/button-toggle";
+import { MatDividerModule } from "@angular/material/divider";
+import { FeatureFlagDirective } from "../common/directives/feature-flag.directive";
+import { NgIf, AsyncPipe } from "@angular/common";
 
 @Component({
     selector: "app-account",
     templateUrl: "./account.component.html",
     styleUrls: ["./account.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        NgIf,
+        FeatureFlagDirective,
+        MatDividerModule,
+        MatButtonToggleModule,
+        MatIconModule,
+        RouterLink,
+        RouterOutlet,
+        AsyncPipe,
+        DisplayAccountNamePipe,
+    ],
 })
 export class AccountComponent {
     @Input(ProjectLinks.URL_PARAM_ACCOUNT_NAME) public set accountName(value: string) {

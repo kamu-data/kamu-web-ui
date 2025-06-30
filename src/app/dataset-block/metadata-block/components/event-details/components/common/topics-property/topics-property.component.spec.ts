@@ -18,9 +18,8 @@ describe("TopicsPropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [TopicsPropertyComponent, DynamicTableComponent],
-            imports: [MatTableModule, SharedTestModule],
-        }).compileComponents();
+    imports: [MatTableModule, SharedTestModule, TopicsPropertyComponent, DynamicTableComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(TopicsPropertyComponent);
         component = fixture.componentInstance;

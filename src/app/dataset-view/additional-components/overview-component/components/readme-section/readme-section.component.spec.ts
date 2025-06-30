@@ -38,21 +38,21 @@ describe("ReadmeSectionComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [Apollo],
-            declarations: [ReadmeSectionComponent],
-            imports: [
-                ApolloModule,
-                ApolloTestingModule,
-                SharedTestModule,
-                MarkdownModule.forRoot({
-                    loader: HttpClient,
-                    sanitize: SecurityContext.NONE,
-                }),
-                HttpClientTestingModule,
-                FormsModule,
-                MatIconModule,
-            ],
-        }).compileComponents();
+    providers: [Apollo],
+    imports: [
+        ApolloModule,
+        ApolloTestingModule,
+        SharedTestModule,
+        MarkdownModule.forRoot({
+            loader: HttpClient,
+            sanitize: SecurityContext.NONE,
+        }),
+        HttpClientTestingModule,
+        FormsModule,
+        MatIconModule,
+        ReadmeSectionComponent,
+    ],
+}).compileComponents();
 
         registerMatSvgIcons();
 

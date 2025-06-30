@@ -28,10 +28,9 @@ describe("EngineSectionComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [EngineSectionComponent, EngineSelectComponent],
-            providers: [Apollo],
-            imports: [ApolloModule, ApolloTestingModule, FormsModule, MatDividerModule, SharedTestModule],
-        }).compileComponents();
+    providers: [Apollo],
+    imports: [ApolloModule, ApolloTestingModule, FormsModule, MatDividerModule, SharedTestModule, EngineSectionComponent, EngineSelectComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(EngineSectionComponent);
         component = fixture.componentInstance;

@@ -15,8 +15,7 @@ import { ModalSpinnerComponent } from "./modal-spinner.component";
 import { MatDividerModule } from "@angular/material/divider";
 
 @NgModule({
-    imports: [CommonModule, MatDividerModule],
-    declarations: [ModalComponent, ModalDialogComponent, ModalImageComponent, ModalSpinnerComponent],
+    imports: [CommonModule, MatDividerModule, ModalComponent, ModalDialogComponent, ModalImageComponent, ModalSpinnerComponent],
     exports: [ModalComponent],
 })
 export class ModalModule {

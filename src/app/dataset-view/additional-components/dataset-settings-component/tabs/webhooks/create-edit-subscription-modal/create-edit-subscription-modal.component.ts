@@ -6,7 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { AbstractControl, Validators } from "@angular/forms";
+import { AbstractControl, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import AppValues from "src/app/common/values/app.values";
 import {
@@ -26,11 +26,28 @@ import {
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { ErrorSets } from "src/app/common/directives/form-validation-errors.types";
 import { FormGroup, NonNullableFormBuilder } from "@angular/forms";
+import { FeatureFlagDirective } from "../../../../../../common/directives/feature-flag.directive";
+import { CopyToClipboardComponent } from "../../../../../../common/components/copy-to-clipboard/copy-to-clipboard.component";
+import { NgIf } from "@angular/common";
+import { NgSelectModule } from "@ng-select/ng-select";
+import { FormValidationErrorsDirective } from "../../../../../../common/directives/form-validation-errors.directive";
+import { MatDividerModule } from "@angular/material/divider";
 
 @Component({
     selector: "app-create-edit-subscription-modal",
     templateUrl: "./create-edit-subscription-modal.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        MatDividerModule,
+        FormsModule,
+        ReactiveFormsModule,
+        FormValidationErrorsDirective,
+        NgSelectModule,
+        NgIf,
+        CopyToClipboardComponent,
+        FeatureFlagDirective,
+    ],
 })
 export class CreateEditSubscriptionModalComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

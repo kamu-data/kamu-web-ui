@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, OnInit, inject } from "@angular/cor
 import ProjectLinks from "src/app/project-links";
 import AppValues from "src/app/common/values/app.values";
 import { LoginService } from "./login.service";
-import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { AbstractControl, FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { PasswordLoginCredentials } from "src/app/api/auth.api.model";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { Observable, shareReplay } from "rxjs";
@@ -21,11 +21,26 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AppConfigService } from "src/app/app-config.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { AccountProvider } from "./../../api/kamu.graphql.interface";
+import { FormValidationErrorsDirective } from "../../common/directives/form-validation-errors.directive";
+import { SpinnerComponent } from "../../common/components/spinner/spinner/spinner.component";
+import { MatIconModule } from "@angular/material/icon";
+import { NgIf, NgTemplateOutlet, AsyncPipe } from "@angular/common";
 @Component({
     selector: "app-login",
     templateUrl: "./login.component.html",
     styleUrls: ["./login.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        NgIf,
+        MatIconModule,
+        NgTemplateOutlet,
+        SpinnerComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        FormValidationErrorsDirective,
+        AsyncPipe,
+    ],
 })
 export class LoginComponent extends BaseComponent implements OnInit {
     public static readonly ERROR_ZERO_METHODS_IN_CONFIG =

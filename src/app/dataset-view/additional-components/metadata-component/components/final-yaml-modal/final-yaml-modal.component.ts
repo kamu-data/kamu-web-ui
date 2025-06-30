@@ -13,11 +13,14 @@ import { DatasetCommitService } from "../../../overview-component/services/datas
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { finalize } from "rxjs";
+import { YamlEditorComponent } from "../../../../../editor/components/yaml-editor/yaml-editor.component";
 
 @Component({
     selector: "app-final-yaml-modal",
     templateUrl: "./final-yaml-modal.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [YamlEditorComponent],
 })
 export class FinalYamlModalComponent extends BaseComponent {
     @Input({ required: true }) public yamlTemplate: string;

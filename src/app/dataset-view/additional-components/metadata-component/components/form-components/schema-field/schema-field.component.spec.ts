@@ -23,18 +23,18 @@ describe("SchemaFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SchemaFieldComponent, TooltipIconComponent],
-            providers: [FormBuilder],
-            imports: [
-                ReactiveFormsModule,
-                MatIconModule,
-                MatTableModule,
-                NgbTypeaheadModule,
-                RxReactiveFormsModule,
-                NgbTooltipModule,
-                SharedTestModule,
-            ],
-        }).compileComponents();
+    providers: [FormBuilder],
+    imports: [
+        ReactiveFormsModule,
+        MatIconModule,
+        MatTableModule,
+        NgbTypeaheadModule,
+        RxReactiveFormsModule,
+        NgbTooltipModule,
+        SharedTestModule,
+        SchemaFieldComponent, TooltipIconComponent,
+    ],
+}).compileComponents();
 
         fixture = TestBed.createComponent(SchemaFieldComponent);
         component = fixture.componentInstance;

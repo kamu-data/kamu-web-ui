@@ -20,10 +20,9 @@ describe("SqlEditorComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [EditorModule],
-            declarations: [SqlEditorComponent],
-            providers: [MonacoService],
-        }).compileComponents();
+    imports: [EditorModule, SqlEditorComponent],
+    providers: [MonacoService],
+}).compileComponents();
 
         fixture = TestBed.createComponent(SqlEditorComponent);
         fixture.detectChanges();

@@ -18,9 +18,8 @@ describe("HashPropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [HashPropertyComponent],
-            imports: [DisplayHashModule, ToastrModule.forRoot(), SharedTestModule],
-        }).compileComponents();
+    imports: [DisplayHashModule, ToastrModule.forRoot(), SharedTestModule, HashPropertyComponent],
+}).compileComponents();
 
         registerMatSvgIcons();
 

@@ -43,24 +43,24 @@ describe("SearchComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SearchComponent, DatasetListComponent, DatasetListItemComponent, PaginationComponent],
-            imports: [
-                ApolloTestingModule,
-                RouterTestingModule,
-                MatCheckboxModule,
-                FormsModule,
-                NgbRatingModule,
-                DisplayTimeModule,
-                NgbPopoverModule,
-                MatIconModule,
-                MatChipsModule,
-                NgbPaginationModule,
-                MatDividerModule,
-                RouterModule,
-                DatasetVisibilityModule,
-            ],
-            providers: [NavigationService, SearchService, AuthApi, SearchApi, ModalService],
-        }).compileComponents();
+    imports: [
+        ApolloTestingModule,
+        RouterTestingModule,
+        MatCheckboxModule,
+        FormsModule,
+        NgbRatingModule,
+        DisplayTimeModule,
+        NgbPopoverModule,
+        MatIconModule,
+        MatChipsModule,
+        NgbPaginationModule,
+        MatDividerModule,
+        RouterModule,
+        DatasetVisibilityModule,
+        SearchComponent, DatasetListComponent, DatasetListItemComponent, PaginationComponent,
+    ],
+    providers: [NavigationService, SearchService, AuthApi, SearchApi, ModalService],
+}).compileComponents();
     });
 
     beforeEach(() => {

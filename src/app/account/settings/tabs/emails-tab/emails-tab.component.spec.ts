@@ -15,7 +15,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
 import { of } from "rxjs";
 import { RouterTestingModule } from "@angular/router/testing";
-import { routes } from "src/app/app-routing.module";
+import { routes } from "src/app/app-routing";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { NavigationService } from "src/app/services/navigation.service";
 import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
@@ -28,7 +28,6 @@ describe("EmailsTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [EmailsTabComponent],
             providers: [FormBuilder],
             imports: [
                 ApolloTestingModule,
@@ -38,6 +37,7 @@ describe("EmailsTabComponent", () => {
                 MatDividerModule,
                 HttpClientTestingModule,
                 FormValidationErrorsModule,
+                EmailsTabComponent,
             ],
         });
         accountEmailService = TestBed.inject(AccountEmailService);

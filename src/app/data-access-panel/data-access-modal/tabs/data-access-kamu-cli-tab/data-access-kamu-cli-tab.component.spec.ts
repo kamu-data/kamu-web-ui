@@ -21,9 +21,8 @@ describe("DataAccessKamuCliTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [DataAccessKamuCliTabComponent],
-            imports: [FormsModule, MatDividerModule, MatIconModule, HttpClientTestingModule, CopyToClipboardModule],
-        });
+    imports: [FormsModule, MatDividerModule, MatIconModule, HttpClientTestingModule, CopyToClipboardModule, DataAccessKamuCliTabComponent],
+});
 
         registerMatSvgIcons();
 

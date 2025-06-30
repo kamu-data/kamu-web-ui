@@ -6,18 +6,25 @@
  */
 
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { IngestConfigurationFormType } from "../../scheduling/dataset-settings-scheduling-tab.component.types";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DatasetBasicsFragment, DatasetFlowType, GetDatasetFlowConfigsQuery } from "src/app/api/kamu.graphql.interface";
 import { DatasetSchedulingService } from "../../../services/dataset-scheduling.service";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 
 @Component({
     selector: "app-ingest-configuration-form",
     templateUrl: "./ingest-configuration-form.component.html",
     styleUrls: ["./ingest-configuration-form.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        MatCheckboxModule,
+    ],
 })
 export class IngestConfigurationFormComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

@@ -19,9 +19,8 @@ describe("CommitmentDataSectionComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [CommitmentDataSectionComponent],
-            imports: [MatIconModule, HttpClientTestingModule, CopyToClipboardModule],
-        });
+    imports: [MatIconModule, HttpClientTestingModule, CopyToClipboardModule, CommitmentDataSectionComponent],
+});
 
         registerMatSvgIcons();
 

@@ -11,10 +11,10 @@ import { TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/interface/app.types";
 
 export interface PollingFormType {
-    pollingGroup: FormGroup<PollingGroupType>;
+    pollingGroup: FormGroup<PollingGroupFormValue>;
 }
 
-export interface PollingGroupType {
+export interface PollingGroupFormValue {
     updatesState: FormControl<boolean>;
     __typename: FormControl<MaybeNull<PollingGroupEnum>>;
     every: FormControl<MaybeNull<number>>;

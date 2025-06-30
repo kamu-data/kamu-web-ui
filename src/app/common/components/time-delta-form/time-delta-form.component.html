@@ -1,0 +1,30 @@
+<div class="d-flex align-items-center" data-test-id="time-delta-form">
+    <span class="form-control-label">{{ label }}</span>
+    <select
+        [formControl]="unitControl"
+        class="form-select form-control-width me-3"
+        data-test-id="time-delta-unit"
+    >
+        <option [value]="TimeUnit.Minutes">Minutes</option>
+        <option [value]="TimeUnit.Hours">Hours</option>
+        <option [value]="TimeUnit.Days">Days</option>
+        <option [value]="TimeUnit.Weeks">Weeks</option>
+    </select>
+    <input
+        type="number"
+        [formControl]="everyControl"
+        min="1"
+        class="form-control form-control-width"
+        data-test-id="time-delta-every"
+    />
+    <ng-container
+        *ngIf="
+            everyControl?.errors?.range &&
+            (everyControl?.touched || everyControl?.dirty)
+        "
+    >
+        <div class="text-danger fs-12 ms-4 text-break" data-test-id="range-error">
+            {{ everyControl.errors?.range.message }}
+        </div>
+    </ng-container>
+</div>

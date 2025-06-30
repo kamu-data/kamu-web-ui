@@ -15,23 +15,24 @@ import {
     OnInit,
     Output,
 } from "@angular/core";
-import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from "@angular/forms";
+import { AbstractControl, FormControl, FormGroup, Validators } from "@angular/forms";
 import {
     DatasetBasicsFragment,
     DatasetFlowType,
     GetDatasetFlowTriggersQuery,
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
-import { PollingGroupType } from "../dataset-settings-scheduling-tab.component.types";
+import { PollingGroupFormValue } from "../dataset-settings-scheduling-tab.component.types";
 import { PollingGroupEnum } from "../../../dataset-settings.model";
-import { cronExpressionNextTime, logError } from "src/app/common/helpers/app.helpers";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { cronExpressionValidator, everyTimeMapperValidators } from "src/app/common/helpers/data.helpers";
+import { cronExpressionValidator } from "src/app/common/helpers/data.helpers";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetFlowTriggerService } from "../../../services/dataset-flow-trigger.service";
 import { TriggersTooltipsTexts } from "src/app/common/tooltips/triggers.text";
 import { finalize } from "rxjs";
+import { TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
+import { CronExpressionFormValue } from "src/app/common/components/cron-expression-form/cron-expression-form.value";
 
 @Component({
     selector: "app-ingest-trigger-form",
@@ -41,19 +42,17 @@ import { finalize } from "rxjs";
 })
 export class IngestTriggerFormComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    @Output() public changeTriggerEmit = new EventEmitter<FormGroup<PollingGroupType>>();
     @Input({ required: true }) public updateStateToggleLabel: string;
+    @Output() public changeTriggerEmit = new EventEmitter<FormGroup<PollingGroupFormValue>>();
 
     public isLoaded: boolean = false;
-    public readonly timeUnit: typeof TimeUnit = TimeUnit;
-    public readonly pollingGroupEnum: typeof PollingGroupEnum = PollingGroupEnum;
+    public readonly PollingGroupEnum: typeof PollingGroupEnum = PollingGroupEnum;
     public readonly UPDATES_TOOLTIP = TriggersTooltipsTexts.UPDATE_SELECTOR_TOOLTIP;
-    private everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = everyTimeMapperValidators;
 
     private readonly datasetFlowTriggerService = inject(DatasetFlowTriggerService);
     private readonly cdr = inject(ChangeDetectorRef);
 
-    public pollingForm = new FormGroup<PollingGroupType>({
+    public pollingForm = new FormGroup<PollingGroupFormValue>({
         updatesState: new FormControl<boolean>(false, { nonNullable: true }),
         __typename: new FormControl(PollingGroupEnum.TIME_DELTA, [Validators.required]),
         every: new FormControl<MaybeNull<number>>({ value: null, disabled: false }, [
@@ -68,17 +67,15 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
     });
 
     public ngOnInit(): void {
-        this.setPollingEveryTimeValidator();
         this.initPollingForm();
-        this.pollingTypeChanges();
 
         this.pollingUpdatesState.valueChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((updated: boolean) => {
                 if (updated) {
-                    this.enableAllControls();
+                    this.pollingType.enable();
                 } else {
-                    this.disableAllControls();
+                    this.pollingType.disable();
                 }
             });
     }
@@ -113,17 +110,17 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
                         });
                     }
                     if (!this.pollingUpdatesState.value) {
-                        this.disableAllControls();
+                        this.pollingType.disable();
                     }
                 } else {
-                    this.disableAllControls();
+                    this.pollingType.disable();
                 }
                 this.changeTriggerEmit.emit(this.pollingForm);
             });
     }
 
-    public get nextTime(): string {
-        return cronExpressionNextTime(this.cronExpression.value as string);
+    public get pollingType(): AbstractControl {
+        return this.pollingForm.controls.__typename;
     }
 
     public get cronExpression(): AbstractControl {
@@ -142,64 +139,38 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
         return this.pollingForm.controls.updatesState;
     }
 
-    private disableAndClearControl(control: AbstractControl): void {
-        control.disable();
-        control.markAsUntouched();
-        control.markAsPristine();
-    }
-
-    private setPollingEveryTimeValidator(): void {
-        this.pollingUnitTime.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((data: TimeUnit) => {
-            if (data) {
-                this.pollingEveryTime.setValidators([this.everyTimeMapperValidators[data], Validators.required]);
-            }
+    public onTimeDeltaChange(value: TimeDeltaFormValue): void {
+        this.pollingForm.patchValue({
+            every: value.every,
+            unit: value.unit,
         });
     }
 
-    public get pollingType(): AbstractControl {
-        return this.pollingForm.controls.__typename;
-    }
-
-    private pollingTypeChanges(): void {
-        this.pollingType.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((value: PollingGroupEnum) => {
-            switch (value) {
-                case PollingGroupEnum.TIME_DELTA: {
-                    if (this.pollingUpdatesState.value) {
-                        this.pollingEveryTime.enable();
-                        this.pollingUnitTime.enable();
-                    }
-                    this.disableAndClearControl(this.cronExpression);
-
-                    break;
-                }
-                case PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION: {
-                    if (this.pollingUpdatesState.value) {
-                        this.cronExpression.enable();
-                    }
-                    this.disableAndClearControl(this.pollingEveryTime);
-                    this.disableAndClearControl(this.pollingUnitTime);
-
-                    break;
-                }
-                /* istanbul ignore next */
-                default: {
-                    logError("Unknown PollingGroupEnum key");
-                }
-            }
+    public onCronExpressionChange(value: CronExpressionFormValue): void {
+        this.pollingForm.patchValue({
+            cronExpression: value.cronExpression,
         });
     }
 
-    private disableAllControls(): void {
-        this.pollingEveryTime.disable();
-        this.pollingUnitTime.disable();
-        this.cronExpression.disable();
-        this.pollingType.disable();
+    public get timeDeltaValue(): TimeDeltaFormValue {
+        return {
+            every: this.pollingEveryTime.value as number | null,
+            unit: this.pollingUnitTime.value as TimeUnit | null,
+        };
     }
 
-    private enableAllControls(): void {
-        this.pollingEveryTime.enable();
-        this.pollingUnitTime.enable();
-        this.cronExpression.enable();
-        this.pollingType.enable();
+    public get cronExpressionValue(): CronExpressionFormValue {
+        return {
+            cronExpression: this.cronExpression.value as string | null,
+        };
     }
+    
+    public get isTimeDeltaDisabled(): boolean {
+        return !this.pollingUpdatesState.value || this.pollingType.value !== PollingGroupEnum.TIME_DELTA;
+    }
+
+    public get isCronExpressionDisabled(): boolean {
+        return !this.pollingUpdatesState.value || this.pollingType.value !== PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION;
+    }
+
 }

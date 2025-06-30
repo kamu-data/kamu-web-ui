@@ -18,7 +18,7 @@ import {
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowTriggerService } from "../../services/dataset-flow-trigger.service";
-import { PollingGroupType } from "./dataset-settings-scheduling-tab.component.types";
+import { PollingGroupFormValue } from "./dataset-settings-scheduling-tab.component.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
@@ -31,7 +31,7 @@ import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 })
 export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
     @Input(RoutingResolvers.DATASET_SETTINGS_SCHEDULING_KEY) public schedulungTabData: DatasetViewData;
-    public pollingForm: FormGroup<PollingGroupType>;
+    public pollingForm: FormGroup<PollingGroupFormValue>;
     public readonly throttlingGroupEnum: typeof ThrottlingGroupEnum = ThrottlingGroupEnum;
     public readonly timeUnit: typeof TimeUnit = TimeUnit;
 
@@ -49,7 +49,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
         return this.datasetBasics.kind === DatasetKind.Root;
     }
 
-    public changePollingTriggers(pollingForm: FormGroup<PollingGroupType>): void {
+    public changePollingTriggers(pollingForm: FormGroup<PollingGroupFormValue>): void {
         this.pollingForm = pollingForm;
     }
 
@@ -82,7 +82,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
         );
     }
 
-    private setPollingTriggerInput(pollingForm: FormGroup<PollingGroupType>): FlowTriggerInput {
+    private setPollingTriggerInput(pollingForm: FormGroup<PollingGroupFormValue>): FlowTriggerInput {
         if (pollingForm.controls.__typename.value === PollingGroupEnum.TIME_DELTA) {
             return {
                 schedule: {

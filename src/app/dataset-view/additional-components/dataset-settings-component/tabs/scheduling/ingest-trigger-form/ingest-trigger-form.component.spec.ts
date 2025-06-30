@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { IngestTriggerFormComponent } from "./ingest-trigger-form.component";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -29,6 +29,8 @@ import { TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { PollingGroupEnum } from "../../../dataset-settings.model";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { TooltipIconModule } from "src/app/common/components/tooltip-icon/tooltip-icon.module";
+import { TimeDeltaFormModule } from "src/app/common/components/time-delta-form/time-delta-form.module";
+import { CronExpressionFormModule } from "src/app/common/components/cron-expression-form/cron-expression-form.module";
 
 describe("IngestTriggerFormComponent", () => {
     let component: IngestTriggerFormComponent;
@@ -50,6 +52,8 @@ describe("IngestTriggerFormComponent", () => {
                 MatSlideToggleModule,
                 MatProgressBarModule,
                 TooltipIconModule,
+                TimeDeltaFormModule,
+                CronExpressionFormModule,
             ],
         });
         fixture = TestBed.createComponent(IngestTriggerFormComponent);
@@ -64,30 +68,35 @@ describe("IngestTriggerFormComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check init form with cron expression", () => {
+    it("should check init form with cron expression", fakeAsync(() => {
         spyOn(datasetFlowTriggerService, "fetchDatasetFlowTriggers").and.returnValue(
             of(mockGetDatasetFlowTriggersQuery),
         );
         fixture.detectChanges();
 
+        tick(); // Wait for async operations
+        fixture.detectChanges();
+
         const cronExpessionControl = findElementByDataTestId(
             fixture,
-            "polling-group-cron-expression",
+            "cron-expression-input",
         ) as HTMLInputElement;
         expect(cronExpessionControl.value.trim()).toEqual("* * * * ?");
-    });
+    }));
 
-    it("should check init form with time delta", () => {
+    it("should check init form with time delta", fakeAsync(() => {
         spyOn(datasetFlowTriggerService, "fetchDatasetFlowTriggers").and.returnValue(
             of(mockGetDatasetFlowTriggersTimeDeltaQuery),
         );
         fixture.detectChanges();
+        tick(); // Wait for async operations
+        fixture.detectChanges();
 
-        const everyControl = findElementByDataTestId(fixture, "polling-group-every") as HTMLInputElement;
+        const everyControl = findElementByDataTestId(fixture, "time-delta-every") as HTMLInputElement;
         expect(everyControl.value.trim()).toEqual("10");
-        const unitControl = findElementByDataTestId(fixture, "polling-group-unit") as HTMLInputElement;
+        const unitControl = findElementByDataTestId(fixture, "time-delta-unit") as HTMLInputElement;
         expect(unitControl.value.trim()).toEqual(TimeUnit.Minutes);
-    });
+    }));
 
     it("should check switch polling options", () => {
         spyOn(datasetFlowTriggerService, "fetchDatasetFlowTriggers").and.returnValue(
@@ -96,9 +105,9 @@ describe("IngestTriggerFormComponent", () => {
         fixture.detectChanges();
         component.pollingForm.patchValue({ updatesState: true });
         fixture.detectChanges();
-        emitClickOnElementByDataTestId(fixture, "button-cron-expression");
+        emitClickOnElementByDataTestId(fixture, "cron-expression-form");
         expect(component.pollingType.value).toEqual(PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION);
-        emitClickOnElementByDataTestId(fixture, "button-time-delta");
+        emitClickOnElementByDataTestId(fixture, "time-delta-form");
         expect(component.pollingType.value).toEqual(PollingGroupEnum.TIME_DELTA);
     });
 
@@ -109,14 +118,14 @@ describe("IngestTriggerFormComponent", () => {
         fixture.detectChanges();
         component.pollingForm.patchValue({ updatesState: true });
         fixture.detectChanges();
-        emitClickOnElementByDataTestId(fixture, "button-cron-expression");
+        emitClickOnElementByDataTestId(fixture, "cron-expression-form");
         expect(component.pollingType.value).toEqual(PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION);
         fixture.detectChanges();
-        emitClickOnElementByDataTestId(fixture, "button-cron-expression");
-        setFieldValue(fixture, "polling-group-cron-expression", MOCK_INVALID_CRON_EXPRESSION);
+        emitClickOnElementByDataTestId(fixture, "cron-expression-form");
+        setFieldValue(fixture, "cron-expression-input", MOCK_INVALID_CRON_EXPRESSION);
         fixture.detectChanges();
 
-        const errorMessageElem = findElementByDataTestId(fixture, "cronExpression-error");
+        const errorMessageElem = findElementByDataTestId(fixture, "cron-expression-error");
         expect(errorMessageElem?.textContent?.trim()).toEqual("Invalid expression");
     });
 });

@@ -61,7 +61,6 @@ describe("IngestTriggerFormComponent", () => {
         datasetFlowTriggerService = TestBed.inject(DatasetFlowTriggerService);
 
         component.datasetBasics = mockDatasetBasicsRootFragment;
-        component.isLoaded = true;
     });
 
     it("should create", () => {

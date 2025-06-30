@@ -7,7 +7,6 @@
 
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     EventEmitter,
     inject,
@@ -28,7 +27,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetFlowTriggerService } from "../../../services/dataset-flow-trigger.service";
 import { TriggersTooltipsTexts } from "src/app/common/tooltips/triggers.text";
-import { finalize } from "rxjs";
+import { Observable, map, catchError, of } from "rxjs";
 import { TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
 import { CronExpressionFormValue } from "src/app/common/components/cron-expression-form/cron-expression-form.value";
 
@@ -43,12 +42,10 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
     @Input({ required: true }) public updateStateToggleLabel: string;
     @Output() public changeTriggerEmit = new EventEmitter<FormGroup<PollingGroupFormType>>();
 
-    public isLoaded: boolean = false;
     public readonly PollingGroupEnum: typeof PollingGroupEnum = PollingGroupEnum;
     public readonly UPDATES_TOOLTIP = TriggersTooltipsTexts.UPDATE_SELECTOR_TOOLTIP;
 
     private readonly datasetFlowTriggerService = inject(DatasetFlowTriggerService);
-    private readonly cdr = inject(ChangeDetectorRef);
 
     public pollingForm = new FormGroup<PollingGroupFormType>({
         updatesEnabled: new FormControl<boolean>(false, { nonNullable: true }),
@@ -61,9 +58,18 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
         ]),
     });
 
-    public ngOnInit(): void {
-        this.initPollingForm();
+    // Reactive data stream for form initialization
+    public formData$: Observable<FormGroup<PollingGroupFormType>>;
 
+    public ngOnInit(): void {
+        // Set up form control relationships
+        this.setupFormControlRelationships();
+
+        // Initialize the reactive data stream
+        this.formData$ = this.initPollingForm();
+    }
+
+    private setupFormControlRelationships(): void {
         this.pollingUpdatesEnabled.valueChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((updated: boolean) => {
@@ -87,42 +93,44 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
             });
     }
 
-    public initPollingForm(): void {
-        this.datasetFlowTriggerService
+    private initPollingForm(): Observable<FormGroup<PollingGroupFormType>> {
+        return this.datasetFlowTriggerService
             .fetchDatasetFlowTriggers(this.datasetBasics.id, DatasetFlowType.Ingest)
             .pipe(
-                finalize(() => {
-                    this.isLoaded = true;
-                    this.cdr.detectChanges();
+                map((data: GetDatasetFlowTriggersQuery) => {
+                    const flowTriggers = data.datasets.byId?.flows.triggers.byType;
+                    const schedule = flowTriggers?.schedule;
+                    if (schedule) {
+                        if (schedule.__typename === PollingGroupEnum.TIME_DELTA) {
+                            this.pollingForm.patchValue({
+                                updatesEnabled: !flowTriggers.paused,
+                                __typename: schedule?.__typename as PollingGroupEnum,
+                                timeDelta: {
+                                    every: schedule.every,
+                                    unit: schedule.unit,
+                                } as TimeDeltaFormValue,
+                            });
+                        }
+                        if (schedule.__typename === PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION) {
+                            this.pollingForm.patchValue({
+                                updatesEnabled: !flowTriggers.paused,
+                                __typename: schedule.__typename as PollingGroupEnum,
+                                cron: {
+                                    cronExpression: schedule.cron5ComponentExpression,
+                                } as CronExpressionFormValue,
+                            });
+                        }
+                    }
+                    this.changeTriggerEmit.emit(this.pollingForm);
+                    return this.pollingForm;
+                }),
+                catchError((_error) => {
+                    // In case of error, still return the form so UI doesn't get stuck
+                    this.changeTriggerEmit.emit(this.pollingForm);
+                    return of(this.pollingForm);
                 }),
                 takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe((data: GetDatasetFlowTriggersQuery) => {
-                const flowTriggers = data.datasets.byId?.flows.triggers.byType;
-                const schedule = flowTriggers?.schedule;
-                if (schedule) {
-                    if (schedule.__typename === PollingGroupEnum.TIME_DELTA) {
-                        this.pollingForm.patchValue({
-                            updatesEnabled: !flowTriggers.paused,
-                            __typename: schedule?.__typename as PollingGroupEnum,
-                            timeDelta: {
-                                every: schedule.every,
-                                unit: schedule.unit,
-                            } as TimeDeltaFormValue,
-                        });
-                    }
-                    if (schedule.__typename === PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION) {
-                        this.pollingForm.patchValue({
-                            updatesEnabled: !flowTriggers.paused,
-                            __typename: schedule.__typename as PollingGroupEnum,
-                            cron: {
-                                cronExpression: schedule.cron5ComponentExpression,
-                            } as CronExpressionFormValue,
-                        });
-                    }
-                }
-                this.changeTriggerEmit.emit(this.pollingForm);
-            });
+            );
     }
 
     public get pollingType(): AbstractControl {

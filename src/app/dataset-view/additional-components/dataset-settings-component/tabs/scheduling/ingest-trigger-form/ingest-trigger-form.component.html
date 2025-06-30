@@ -1,4 +1,4 @@
-<div *ngIf="isLoaded; else loadingBlock">
+<div *ngIf="formData$ | async as formData; else loadingBlock">
     <form [formGroup]="pollingForm">
         <div class="mt-4 ms-1 px-2 pb-1 d-flex gap-1">
             <mat-slide-toggle color="primary" class="mat-elevation-z0" formControlName="updatesEnabled">

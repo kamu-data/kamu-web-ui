@@ -13,6 +13,7 @@ import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import { of } from "rxjs";
 import {
     mockIngestGetDatasetFlowConfigsSuccess,
+    mockRetryPolicyInput,
     mockSetCompactionFlowConfigMutation,
     mockSetCompactionFlowConfigMutationError,
     mockSetIngestFlowConfigMutation,
@@ -67,6 +68,7 @@ describe("DatasetFlowConfigService", () => {
             .setDatasetIngestFlowConfigs({
                 datasetId: MOCK_DATASET_ID,
                 ingestConfigInput: MOCK_INGEST_INPUT,
+                retryPolicyInput: mockRetryPolicyInput,
             })
             .subscribe((res: boolean) => {
                 expect(res).toEqual(true);
@@ -75,7 +77,6 @@ describe("DatasetFlowConfigService", () => {
         expect(subscription$.closed).toBeTrue();
     });
 
-
     it("should check setDatasetFlowIngestConfig with error", () => {
         spyOn(datasetFlowApi, "setDatasetFlowIngestConfig").and.returnValue(of(mockSetIngestFlowConfigMutationError));
         const toastrServiceErrorSpy = spyOn(toastService, "error");
@@ -83,6 +84,7 @@ describe("DatasetFlowConfigService", () => {
             .setDatasetIngestFlowConfigs({
                 datasetId: MOCK_DATASET_ID,
                 ingestConfigInput: MOCK_INGEST_INPUT,
+                retryPolicyInput: null,
             })
             .subscribe((res: boolean) => {
                 expect(res).toEqual(false);

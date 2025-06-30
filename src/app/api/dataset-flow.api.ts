@@ -31,6 +31,7 @@ import {
     FlowConfigCompactionInput,
     FlowConfigIngestInput,
     FlowConfigResetInput,
+    FlowRetryPolicyInput,
     FlowTriggerInput,
     GetDatasetFlowConfigsGQL,
     GetDatasetFlowConfigsQuery,
@@ -50,6 +51,7 @@ import {
 import { Observable, first, map } from "rxjs";
 import { ApolloQueryResult } from "@apollo/client";
 import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
+import { MaybeNull } from "../interface/app.types";
 
 @Injectable({ providedIn: "root" })
 export class DatasetFlowApi {
@@ -143,11 +145,13 @@ export class DatasetFlowApi {
     public setDatasetFlowIngestConfig(params: {
         datasetId: string;
         ingestConfigInput: FlowConfigIngestInput;
+        retryPolicyInput: MaybeNull<FlowRetryPolicyInput>;
     }): Observable<SetIngestFlowConfigMutation> {
         return this.setIngestFlowConfigGQL
             .mutate({
                 datasetId: params.datasetId,
                 ingestConfigInput: params.ingestConfigInput,
+                retryPolicyInput: params.retryPolicyInput,
             })
             .pipe(
                 first(),

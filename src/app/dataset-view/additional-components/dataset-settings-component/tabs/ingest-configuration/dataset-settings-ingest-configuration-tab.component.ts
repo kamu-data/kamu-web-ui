@@ -43,6 +43,7 @@ export class DatasetSettingsIngestConfigurationTabComponent extends BaseComponen
                 ingestConfigInput: {
                     fetchUncacheable: this.ingestConfigurationForm.controls.fetchUncacheable.value,
                 },
+                retryPolicyInput: null, // TODO:
             })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe();

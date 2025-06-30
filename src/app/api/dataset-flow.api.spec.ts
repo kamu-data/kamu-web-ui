@@ -50,6 +50,7 @@ import {
     mockDatasetPauseFlowsMutationSuccess,
     mockDatasetResumeFlowsMutationSuccess,
     mockDatasetAllFlowsPausedQuery,
+    mockRetryPolicyInput,
 } from "./mock/dataset-flow.mock";
 
 describe("DatasetFlowApi", () => {
@@ -101,16 +102,39 @@ describe("DatasetFlowApi", () => {
             .setDatasetFlowIngestConfig({
                 datasetId: TEST_DATASET_ID,
                 ingestConfigInput: { fetchUncacheable: true },
+                retryPolicyInput: null,
             })
             .subscribe();
 
         const op = controller.expectOne(SetIngestFlowConfigDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        expect(op.operation.variables.ingestConfigInput).toEqual({ fetchUncacheable: true });
+        expect(op.operation.variables.retryPolicyInput).toBeNull();
 
         op.flush({
             data: mockSetIngestFlowConfigMutation,
         });
     });
+
+    it("should check setDatasetFlowIngestConfig with retry input", () => {
+        service
+            .setDatasetFlowIngestConfig({
+                datasetId: TEST_DATASET_ID,
+                ingestConfigInput: { fetchUncacheable: true },
+                retryPolicyInput: mockRetryPolicyInput,
+            })
+            .subscribe();
+
+        const op = controller.expectOne(SetIngestFlowConfigDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        expect(op.operation.variables.ingestConfigInput).toEqual({ fetchUncacheable: true });
+        expect(op.operation.variables.retryPolicyInput).toEqual(mockRetryPolicyInput);
+
+        op.flush({
+            data: mockSetIngestFlowConfigMutation,
+        });
+    });
+
 
     it("should check setDatasetFlowTriggers", () => {
         service

@@ -18,6 +18,8 @@ import {
     FlowConnectionDataFragment,
     FlowHistoryDataFragment,
     FlowOutcomeDataFragment,
+    FlowRetryBackoffType,
+    FlowRetryPolicyInput,
     FlowStatus,
     FlowSummaryDataFragment,
     GetDatasetFlowTriggersQuery,
@@ -36,6 +38,12 @@ import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.typ
 export const mockTimeDeltaInput: TimeDeltaInput = {
     every: 10,
     unit: TimeUnit.Days,
+};
+
+export const mockRetryPolicyInput: FlowRetryPolicyInput = {
+    maxAttempts: 3,
+    minDelay: mockTimeDeltaInput,
+    backoffType: FlowRetryBackoffType.Fixed,
 };
 
 export const mockIngestGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQuery = {

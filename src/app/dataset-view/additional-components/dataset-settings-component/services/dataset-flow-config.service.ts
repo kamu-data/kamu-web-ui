@@ -13,10 +13,12 @@ import {
     DatasetFlowType,
     FlowConfigCompactionInput,
     FlowConfigIngestInput,
+    FlowRetryPolicyInput,
     GetDatasetFlowConfigsQuery,
     SetCompactionFlowConfigMutation,
     SetIngestFlowConfigMutation,
 } from "src/app/api/kamu.graphql.interface";
+import { MaybeNull } from "src/app/interface/app.types";
 
 @Injectable({
     providedIn: "root",
@@ -34,11 +36,13 @@ export class DatasetFlowConfigService {
 
     public setDatasetIngestFlowConfigs(params: {
         datasetId: string,
-        ingestConfigInput: FlowConfigIngestInput
+        ingestConfigInput: FlowConfigIngestInput,
+        retryPolicyInput: MaybeNull<FlowRetryPolicyInput>,
     }): Observable<boolean> {
         return this.datasetFlowApi.setDatasetFlowIngestConfig({
             datasetId: params.datasetId,
             ingestConfigInput: params.ingestConfigInput,
+            retryPolicyInput: params.retryPolicyInput,
         }).pipe(
             map((data: SetIngestFlowConfigMutation) => {
                 const setIngestConfig = data.datasets.byId?.flows.configs.setIngestConfig;

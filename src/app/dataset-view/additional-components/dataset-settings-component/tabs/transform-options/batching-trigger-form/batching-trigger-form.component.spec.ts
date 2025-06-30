@@ -28,7 +28,7 @@ import { FormValidationErrorsModule } from "src/app/common/directives/form-valid
 describe("BatchingTriggerFormComponent", () => {
     let component: BatchingTriggerFormComponent;
     let fixture: ComponentFixture<BatchingTriggerFormComponent>;
-    let datasetSchedulingService: DatasetFlowTriggerService;
+    let datasetFlowTriggerService: DatasetFlowTriggerService;
     let fetchDatasetFlowTriggersSpy: jasmine.Spy;
 
     beforeEach(() => {
@@ -50,8 +50,8 @@ describe("BatchingTriggerFormComponent", () => {
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
         component.isLoaded = true;
-        datasetSchedulingService = TestBed.inject(DatasetFlowTriggerService);
-        fetchDatasetFlowTriggersSpy = spyOn(datasetSchedulingService, "fetchDatasetFlowTriggers").and.returnValue(
+        datasetFlowTriggerService = TestBed.inject(DatasetFlowTriggerService);
+        fetchDatasetFlowTriggersSpy = spyOn(datasetFlowTriggerService, "fetchDatasetFlowTriggers").and.returnValue(
             of(mockGetDatasetFlowTriggersBatchingQuery),
         );
     });

@@ -8,21 +8,16 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    EventEmitter,
     forwardRef,
     Input,
-    OnInit,
-    Output,
 } from "@angular/core";
 import {
-    ControlValueAccessor,
     FormControl,
     FormGroup,
     NG_VALUE_ACCESSOR,
     Validators,
 } from "@angular/forms";
-import { BaseComponent } from "../base.component";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { BaseFormControlComponent } from "../base-form-control.component";
 import { cronExpressionValidator } from "src/app/common/helpers/data.helpers";
 import { cronExpressionNextTime } from "src/app/common/helpers/app.helpers";
 import { MaybeNull } from "src/app/interface/app.types";
@@ -41,66 +36,23 @@ import { CronExpressionFormType, CronExpressionFormValue } from "./cron-expressi
         },
     ],
 })
-export class CronExpressionFormComponent extends BaseComponent implements OnInit, ControlValueAccessor {
-    @Input() public disabled: boolean = false;
+export class CronExpressionFormComponent extends BaseFormControlComponent<CronExpressionFormValue> {
     @Input() public label: string = "Cron expression :";
     @Input() public placeholder: string = "Example: * * * * ?";
     @Input() public showHelpText: boolean = true;
-    @Output() public formChange = new EventEmitter<FormGroup<CronExpressionFormType>>();
 
-    public cronExpressionForm = new FormGroup<CronExpressionFormType>({
+    public form = new FormGroup<CronExpressionFormType>({
         cronExpression: new FormControl<MaybeNull<string>>({ value: "", disabled: this.disabled }, [
             Validators.required,
             cronExpressionValidator(),
         ]),
     });
 
-    private onChange = (_value: CronExpressionFormValue) => {};
-    private onTouched = () => {};
-
-    public ngOnInit(): void {
-        this.subscribeToFormChanges();
-    }
-
-    public writeValue(value: CronExpressionFormValue): void {
-        if (value) {
-            this.cronExpressionForm.patchValue(value, { emitEvent: false });
-        }
-    }
-
-    public registerOnChange(fn: (value: CronExpressionFormValue) => void): void {
-        this.onChange = fn;
-    }
-
-    public registerOnTouched(fn: () => void): void {
-        this.onTouched = fn;
-    }
-
-    public setDisabledState(isDisabled: boolean): void {
-        this.disabled = isDisabled;
-        if (isDisabled) {
-            this.cronExpressionForm.disable();
-        } else {
-            this.cronExpressionForm.enable();
-        }
-    }
-
     public get cronExpressionControl(): FormControl<MaybeNull<string>> {
-        return this.cronExpressionForm.controls.cronExpression;
+        return this.form.controls.cronExpression;
     }
 
     public get nextTime(): string {
         return cronExpressionNextTime(this.cronExpressionControl.value as string);
-    }
-
-    private subscribeToFormChanges(): void {
-        this.cronExpressionForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((value) => {
-            this.onChange(value as CronExpressionFormValue);
-            this.formChange.emit(this.cronExpressionForm);
-        });
-
-        this.cronExpressionForm.statusChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.onTouched();
-        });
     }
 }

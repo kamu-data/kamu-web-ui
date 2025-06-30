@@ -39,36 +39,36 @@ describe("CronExpressionFormComponent", () => {
     });
 
     it("should initialize with default values", () => {
-        expect(component.cronExpressionForm.get("cronExpression")?.value).toBe("");
+        expect(component.form.get("cronExpression")?.value).toBe("");
     });
 
     it("should update form value when writeValue is called", () => {
         const testValue = { cronExpression: "0 9 * * MON" };
         component.writeValue(testValue);
 
-        expect(component.cronExpressionForm.get("cronExpression")?.value).toBe("0 9 * * MON");
+        expect(component.form.get("cronExpression")?.value).toBe("0 9 * * MON");
     });
 
     it("should disable form when setDisabledState is called with true", () => {
         component.setDisabledState(true);
-        expect(component.cronExpressionForm.disabled).toBe(true);
+        expect(component.form.disabled).toBe(true);
     });
 
     it("should enable form when setDisabledState is called with false", () => {
         component.setDisabledState(false);
-        expect(component.cronExpressionForm.disabled).toBe(false);
+        expect(component.form.disabled).toBe(false);
     });
 
     it("should emit formChange when form values change", () => {
         const emitSpy = spyOn(component.formChange, "emit");
         
-        component.cronExpressionForm.patchValue({ cronExpression: "0 9 * * MON" });
+        component.form.patchValue({ cronExpression: "0 9 * * MON" });
         
-        expect(emitSpy).toHaveBeenCalledWith(component.cronExpressionForm);
+        expect(emitSpy).toHaveBeenCalledWith(component.form);
     });
 
     it("should validate cron expression", () => {
-        const cronControl = component.cronExpressionForm.get("cronExpression");
+        const cronControl = component.form.get("cronExpression");
         
         // Invalid cron expression
         cronControl?.setValue("invalid");

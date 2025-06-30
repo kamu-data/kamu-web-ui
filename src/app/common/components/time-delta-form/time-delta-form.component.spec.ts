@@ -40,33 +40,33 @@ describe("TimeDeltaFormComponent", () => {
     });
 
     it("should initialize with default values", () => {
-        expect(component.timeDeltaForm.get("every")?.value).toBeNull();
-        expect(component.timeDeltaForm.get("unit")?.value).toBeNull();
+        expect(component.form.get("every")?.value).toBeNull();
+        expect(component.form.get("unit")?.value).toBeNull();
     });
 
     it("should update form value when writeValue is called", () => {
         const testValue = { every: 5, unit: TimeUnit.Hours };
         component.writeValue(testValue);
 
-        expect(component.timeDeltaForm.get("every")?.value).toBe(5);
-        expect(component.timeDeltaForm.get("unit")?.value).toBe(TimeUnit.Hours);
+        expect(component.form.get("every")?.value).toBe(5);
+        expect(component.form.get("unit")?.value).toBe(TimeUnit.Hours);
     });
 
     it("should disable form when setDisabledState is called with true", () => {
         component.setDisabledState(true);
-        expect(component.timeDeltaForm.disabled).toBe(true);
+        expect(component.form.disabled).toBe(true);
     });
 
     it("should enable form when setDisabledState is called with false", () => {
         component.setDisabledState(false);
-        expect(component.timeDeltaForm.disabled).toBe(false);
+        expect(component.form.disabled).toBe(false);
     });
 
     it("should emit formChange when form values change", () => {
         const emitSpy = spyOn(component.formChange, "emit");
         
-        component.timeDeltaForm.patchValue({ every: 10, unit: TimeUnit.Minutes });
+        component.form.patchValue({ every: 10, unit: TimeUnit.Minutes });
         
-        expect(emitSpy).toHaveBeenCalledWith(component.timeDeltaForm);
+        expect(emitSpy).toHaveBeenCalledWith(component.form);
     });
 });

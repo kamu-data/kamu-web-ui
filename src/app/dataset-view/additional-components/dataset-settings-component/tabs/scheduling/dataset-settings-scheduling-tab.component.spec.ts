@@ -19,7 +19,7 @@ import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment 
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { DatasetFlowTriggerService } from "../../services/dataset-flow-trigger.service";
 import { TimeDelta, TimeUnit } from "src/app/api/kamu.graphql.interface";
-import { IngestConfigurationModule } from "../ingest-configuration/ingest-configuration-form/ingest-configuration.module";
+import { IngestConfigurationRuleModule } from "../ingest-configuration/ingest-configuration-rule-form/ingest-configuration.module";
 import { IngestTriggerModule } from "./ingest-trigger-form/ingest-trigger.module";
 import { PollingGroupFormType } from "./dataset-settings-scheduling-tab.component.types";
 import { MaybeNull } from "src/app/interface/app.types";
@@ -52,7 +52,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
                 MatSlideToggleModule,
                 MatRadioModule,
                 ReactiveFormsModule,
-                IngestConfigurationModule,
+                IngestConfigurationRuleModule,
                 IngestTriggerModule,
             ],
         }).compileComponents();

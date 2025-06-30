@@ -25,6 +25,6 @@ export interface PollingGroupFormValue {
     cron: MaybeNull<CronExpressionFormValue>;
 }
 
-export interface IngestConfigurationFormType {
+export interface IngestConfigurationRuleFormType {
     fetchUncacheable: FormControl<boolean>;
 }

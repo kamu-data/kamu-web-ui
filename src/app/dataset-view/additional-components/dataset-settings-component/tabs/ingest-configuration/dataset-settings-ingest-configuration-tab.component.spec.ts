@@ -7,8 +7,6 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetSettingsIngestConfigurationTabComponent } from "./dataset-settings-ingest-configuration-tab.component";
-import { FormGroup, FormControl } from "@angular/forms";
-import { IngestConfigurationFormType } from "../scheduling/dataset-settings-scheduling-tab.component.types";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { ToastrModule } from "ngx-toastr";
 import { Apollo } from "apollo-angular";
@@ -16,9 +14,8 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { MatDividerModule } from "@angular/material/divider";
-import { IngestConfigurationModule } from "./ingest-configuration-form/ingest-configuration.module";
+import { IngestConfigurationRuleModule } from "./ingest-configuration-rule-form/ingest-configuration.module";
 import { of } from "rxjs";
-import { mockIngestGetDatasetFlowConfigsSuccess } from "src/app/api/mock/dataset-flow.mock";
 import { DatasetFlowConfigService } from "../../services/dataset-flow-config.service";
 
 describe("DatasetSettingsIngestConfigurationTabComponent", () => {
@@ -29,7 +26,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [DatasetSettingsIngestConfigurationTabComponent],
-            imports: [SharedTestModule, ToastrModule.forRoot(), IngestConfigurationModule, MatDividerModule],
+            imports: [SharedTestModule, ToastrModule.forRoot(), IngestConfigurationRuleModule, MatDividerModule],
             providers: [Apollo, HttpClientTestingModule],
         });
         fixture = TestBed.createComponent(DatasetSettingsIngestConfigurationTabComponent);
@@ -39,13 +36,12 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
         component.ingestConfigurationTabData = {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            ingestionRule: {
+                __typename: "FlowConfigRuleIngest",
+                fetchUncacheable: false,
+            },
+            retryPolicy: null,
         };
-        component.ingestConfigurationForm = new FormGroup<IngestConfigurationFormType>({
-            fetchUncacheable: new FormControl<boolean>(false, { nonNullable: true }),
-        });
-        spyOn(datasetFlowConfigService, "fetchDatasetFlowConfigs").and.returnValue(
-            of(mockIngestGetDatasetFlowConfigsSuccess),
-        );
         fixture.detectChanges();
     });
 
@@ -63,7 +59,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
         const setDatasetIngestFlowConfigsSpy = spyOn(
             datasetFlowConfigService,
             "setDatasetIngestFlowConfigs",
-        ).and.returnValue(of().pipe());
+        ).and.returnValue(of());
         emitClickOnElementByDataTestId(fixture, "save-ingest-configuration");
         expect(setDatasetIngestFlowConfigsSpy).toHaveBeenCalledTimes(1);
     });

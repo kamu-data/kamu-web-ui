@@ -2,9 +2,9 @@
 <mat-divider class="mt-1 mb-2" />
 <div class="box mt-4 p-4">
     <div class="w-100 mt-4">
-        <app-ingest-configuration-form
-            [datasetBasics]="datasetBasics"
-            (changeConfigurationEmit)="changeIngestConfiguration($event)"
+        <app-ingest-configuration-rule-form
+            [ingestionRule]="ingestionRule"
+            (changeConfigurationRuleEmit)="changeIngestConfigurationRule($event)"
         />
     </div>
 

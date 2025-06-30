@@ -82,7 +82,7 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { MatChipsModule } from "@angular/material/chips";
 import { DatasetVisibilityModule } from "../common/components/dataset-visibility/dataset-visibility.module";
 import { QuerySharedModule } from "../query/shared/query-shared.module";
-import { IngestConfigurationModule } from "./additional-components/dataset-settings-component/tabs/ingest-configuration/ingest-configuration-form/ingest-configuration.module";
+import { IngestConfigurationRuleModule } from "./additional-components/dataset-settings-component/tabs/ingest-configuration/ingest-configuration-rule-form/ingest-configuration.module";
 import { IngestTriggerModule } from "./additional-components/dataset-settings-component/tabs/scheduling/ingest-trigger-form/ingest-trigger.module";
 import { FlowsViewModule } from "../dataset-flow/flows-view.module";
 import { DatasetViewMenuModule } from "./dataset-view-menu/dataset-view-menu.module";
@@ -161,7 +161,7 @@ import { DatasetSettingsIngestConfigurationTabComponent } from "./additional-com
         FeatureFlagModule,
         FlowsViewModule,
         FormValidationErrorsModule,
-        IngestConfigurationModule,
+        IngestConfigurationRuleModule,
         IngestTriggerModule,
         QuerySharedModule,
         NgbTypeaheadModule,

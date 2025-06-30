@@ -6,14 +6,14 @@
  */
 
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { IngestConfigurationFormType } from "../scheduling/dataset-settings-scheduling-tab.component.types";
+import { IngestConfigurationRuleFormType } from "../scheduling/dataset-settings-scheduling-tab.component.types";
 import { FormGroup } from "@angular/forms";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
-import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
+import { DatasetBasicsFragment, FlowConfigRuleIngest } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowConfigService } from "../../services/dataset-flow-config.service";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { DatasetSettingsIngestConfigurationTabData } from "./dataset-settings-ingest-configuration-tab.data";
 
 @Component({
     selector: "app-dataset-settings-ingest-configuration-tab",
@@ -22,9 +22,9 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 })
 export class DatasetSettingsIngestConfigurationTabComponent extends BaseComponent {
     @Input(RoutingResolvers.DATASET_SETTINGS_INGEST_CONFIGURATION_KEY)
-    public ingestConfigurationTabData: DatasetViewData;
+    public ingestConfigurationTabData: DatasetSettingsIngestConfigurationTabData;
 
-    public ingestConfigurationForm: FormGroup<IngestConfigurationFormType>;
+    public ingestConfigurationRuleForm: FormGroup<IngestConfigurationRuleFormType>;
 
     private readonly datasetFlowConfigService = inject(DatasetFlowConfigService);
 
@@ -32,8 +32,12 @@ export class DatasetSettingsIngestConfigurationTabComponent extends BaseComponen
         return this.ingestConfigurationTabData.datasetBasics;
     }
 
-    protected changeIngestConfiguration(ingestConfigurationForm: FormGroup<IngestConfigurationFormType>): void {
-        this.ingestConfigurationForm = ingestConfigurationForm;
+    public get ingestionRule(): FlowConfigRuleIngest {
+        return this.ingestConfigurationTabData.ingestionRule;
+    }
+
+    protected changeIngestConfigurationRule(ingestConfigurationForm: FormGroup<IngestConfigurationRuleFormType>): void {
+        this.ingestConfigurationRuleForm = ingestConfigurationForm;
     }
 
     protected saveConfiguration(): void {
@@ -41,7 +45,7 @@ export class DatasetSettingsIngestConfigurationTabComponent extends BaseComponen
             .setDatasetIngestFlowConfigs({
                 datasetId: this.datasetBasics.id,
                 ingestConfigInput: {
-                    fetchUncacheable: this.ingestConfigurationForm.controls.fetchUncacheable.value,
+                    fetchUncacheable: this.ingestConfigurationRuleForm.controls.fetchUncacheable.value,
                 },
                 retryPolicyInput: null, // TODO:
             })

@@ -29,7 +29,6 @@ import { CronExpressionFormType, CronExpressionFormValue } from "./cron-expressi
 export class CronExpressionFormComponent extends BaseFormControlComponent<CronExpressionFormValue> {
     @Input() public label: string = "Cron expression :";
     @Input() public placeholder: string = "Example: * * * * ?";
-    @Input() public showHelpText: boolean = true;
 
     public form = new FormGroup<CronExpressionFormType>({
         cronExpression: new FormControl<MaybeNull<string>>({ value: "", disabled: this.disabled }, [

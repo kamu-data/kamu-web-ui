@@ -12,7 +12,8 @@ import { DatasetSettingsIngestConfigurationTabData } from "../dataset-settings-i
 import { map, Observable, of, switchMap } from "rxjs";
 import { DatasetFlowConfigService } from "../../../services/dataset-flow-config.service";
 import { inject } from "@angular/core";
-import { DatasetFlowType, GetDatasetFlowConfigsQuery } from "src/app/api/kamu.graphql.interface";
+import { DatasetFlowType, FlowConfigRuleIngest, GetDatasetFlowConfigsQuery } from "src/app/api/kamu.graphql.interface";
+import { isNil } from "src/app/common/helpers/app.helpers";
 
 export const datasetSettingsIngestConfigurationResolverFn: ResolveFn<
     DatasetSettingsIngestConfigurationTabData | null
@@ -34,6 +35,12 @@ export const datasetSettingsIngestConfigurationResolverFn: ResolveFn<
                         return {
                             ...data,
                             ingestionRule: flowConfigRule,
+                            retryPolicy,
+                        } as DatasetSettingsIngestConfigurationTabData;
+                    } else if (isNil(flowConfigRule)) {
+                        return {
+                            ...data,
+                            ingestionRule: { fetchUncacheable: false } as FlowConfigRuleIngest,
                             retryPolicy,
                         } as DatasetSettingsIngestConfigurationTabData;
                     } else {

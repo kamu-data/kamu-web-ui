@@ -10,7 +10,7 @@ import { SimplePropertyComponent } from "../common/simple-property/simple-proper
 import { EnvVariablesPropertyComponent } from "../common/env-variables-property/env-variables-property.component";
 import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
-import { SetPollingSourceTooltipsTexts } from "src/app/common/tooltips/tooltips.text";
+import { SetPollingSourceTooltipsTexts } from "src/app/common/tooltips/set-polling-source-tooltips.text";
 import { EventTimePropertyComponent } from "../common/event-time-property/event-time-property.component";
 import { CachePropertyComponent } from "../common/cache-property/cache-property.component";
 import { OrderPropertyComponent } from "../common/order-property/order-property.component";

@@ -13,7 +13,7 @@ import { MatTableModule } from "@angular/material/table";
 import { NgbTooltipModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { EventTimeSourceKind } from "../../source-events/add-polling-source/add-polling-source-form.types";
-import { SetPollingSourceTooltipsTexts } from "src/app/common/tooltips/tooltips.text";
+import { SetPollingSourceTooltipsTexts } from "src/app/common/tooltips/set-polling-source-tooltips.text";
 import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 import { ActivatedRoute } from "@angular/router";
 

@@ -7,11 +7,14 @@
             (changeConfigurationRuleEmit)="changeIngestConfigurationRule($event)"
         />
     </div>
-
+    <div class="w-100 mt-4">
+        <app-flow-retry-policy-form [retryPolicy]="retryPolicy" (changeRetryPolicyEmit)="changeRetryPolicy($event)" />
+    </div>
     <div class="mt-4 d-flex justify-content-end">
         <button
             type="button"
             class="btn btn-success"
+            [disabled]="disabledSaveButton"
             (click)="saveConfiguration()"
             data-test-id="save-ingest-configuration"
         >

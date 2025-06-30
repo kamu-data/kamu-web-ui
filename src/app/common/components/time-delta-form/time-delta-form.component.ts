@@ -35,10 +35,7 @@ export class TimeDeltaFormComponent extends BaseFormControlComponent<TimeDeltaFo
     private everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = everyTimeMapperValidators;
 
     public form = new FormGroup<TimeDeltaFormType>({
-        every: new FormControl<MaybeNull<number>>({ value: null, disabled: this.disabled }, [
-            Validators.required,
-            Validators.min(1),
-        ]),
+        every: new FormControl<MaybeNull<number>>({ value: null, disabled: this.disabled }, [Validators.required]),
         unit: new FormControl<MaybeNull<TimeUnit>>({ value: null, disabled: this.disabled }, [Validators.required]),
     });
 

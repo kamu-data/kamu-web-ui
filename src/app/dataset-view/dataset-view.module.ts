@@ -104,6 +104,7 @@ import { FormValidationErrorsModule } from "../common/directives/form-validation
 import { CopyToClipboardModule } from "../common/components/copy-to-clipboard/copy-to-clipboard.module";
 import { BatchingTriggerModule } from "./additional-components/dataset-settings-component/tabs/transform-options/batching-trigger-form/batching-trigger.module";
 import { DatasetSettingsIngestConfigurationTabComponent } from "./additional-components/dataset-settings-component/tabs/ingest-configuration/dataset-settings-ingest-configuration-tab.component";
+import { FlowRetryPolicyFormModule } from "./additional-components/dataset-settings-component/tabs/ingest-configuration/flow-retry-policy-form/flow-retry-policy-form.module";
 @NgModule({
     imports: [
         DynamicTableModule,
@@ -162,6 +163,7 @@ import { DatasetSettingsIngestConfigurationTabComponent } from "./additional-com
         FlowsViewModule,
         FormValidationErrorsModule,
         IngestConfigurationRuleModule,
+        FlowRetryPolicyFormModule,
         IngestTriggerModule,
         QuerySharedModule,
         NgbTypeaheadModule,

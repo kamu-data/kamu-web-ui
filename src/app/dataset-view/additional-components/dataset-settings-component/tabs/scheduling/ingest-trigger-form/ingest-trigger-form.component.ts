@@ -18,7 +18,7 @@ import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetFlowTriggerService } from "../../../services/dataset-flow-trigger.service";
-import { TriggersTooltipsTexts } from "src/app/common/tooltips/triggers.text";
+import { FlowTooltipsTexts } from "src/app/common/tooltips/flow-tooltips.text";
 import { Observable, map, catchError, of } from "rxjs";
 import { TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
 import { CronExpressionFormValue } from "src/app/common/components/cron-expression-form/cron-expression-form.value";
@@ -35,7 +35,7 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
     @Output() public changeTriggerEmit = new EventEmitter<FormGroup<PollingGroupFormType>>();
 
     public readonly PollingGroupEnum: typeof PollingGroupEnum = PollingGroupEnum;
-    public readonly UPDATES_TOOLTIP = TriggersTooltipsTexts.UPDATE_SELECTOR_TOOLTIP;
+    public readonly UPDATES_TOOLTIP = FlowTooltipsTexts.UPDATE_SELECTOR_TOOLTIP;
 
     private readonly datasetFlowTriggerService = inject(DatasetFlowTriggerService);
 

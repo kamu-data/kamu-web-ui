@@ -72,6 +72,8 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges, OnIn
                 return "Please provide a valid email address";
             case "min":
                 return `The minimum value must be ${errorDetails?.min}`;
+            case "max":
+                return `The maximum value must be ${errorDetails?.max}`;
             case "whitespace":
                 return `${label} can't contain spaces`;
 

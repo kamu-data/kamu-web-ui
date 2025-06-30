@@ -27,7 +27,7 @@ import { FormGroup, FormControl, Validators, AbstractControl, ValidatorFn } from
 import { MaybeNull } from "src/app/interface/app.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { everyTimeMapperValidators } from "src/app/common/helpers/data.helpers";
-import { TriggersTooltipsTexts } from "src/app/common/tooltips/triggers.text";
+import { FlowTooltipsTexts } from "src/app/common/tooltips/flow-tooltips.text";
 import { finalize } from "rxjs";
 import { BatchingFormType } from "../dataset-settings-transform-options-tab.component.types";
 
@@ -41,7 +41,7 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Output() public saveTriggerEmit = new EventEmitter<FormGroup<BatchingFormType>>();
     public readonly timeUnit: typeof TimeUnit = TimeUnit;
-    public readonly UPDATES_TOOLTIP = TriggersTooltipsTexts.UPDATE_SELECTOR_TOOLTIP;
+    public readonly UPDATES_TOOLTIP = FlowTooltipsTexts.UPDATE_SELECTOR_TOOLTIP;
     private everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = everyTimeMapperValidators;
     public pausedFromServer: boolean;
     public isLoaded: boolean = false;

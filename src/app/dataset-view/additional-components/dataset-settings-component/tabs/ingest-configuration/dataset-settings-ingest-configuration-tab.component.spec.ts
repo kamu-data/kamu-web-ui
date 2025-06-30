@@ -17,6 +17,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { IngestConfigurationRuleModule } from "./ingest-configuration-rule-form/ingest-configuration.module";
 import { of } from "rxjs";
 import { DatasetFlowConfigService } from "../../services/dataset-flow-config.service";
+import { FlowRetryPolicyFormModule } from "./flow-retry-policy-form/flow-retry-policy-form.module";
 
 describe("DatasetSettingsIngestConfigurationTabComponent", () => {
     let component: DatasetSettingsIngestConfigurationTabComponent;
@@ -26,7 +27,13 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [DatasetSettingsIngestConfigurationTabComponent],
-            imports: [SharedTestModule, ToastrModule.forRoot(), IngestConfigurationRuleModule, MatDividerModule],
+            imports: [
+                SharedTestModule,
+                ToastrModule.forRoot(),
+                MatDividerModule,
+                IngestConfigurationRuleModule,
+                FlowRetryPolicyFormModule,
+            ],
             providers: [Apollo, HttpClientTestingModule],
         });
         fixture = TestBed.createComponent(DatasetSettingsIngestConfigurationTabComponent);

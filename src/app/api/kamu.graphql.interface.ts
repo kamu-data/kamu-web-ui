@@ -2282,7 +2282,7 @@ export type FlowTimingRecords = {
      * Recorded time of finish (successful or failed after retry) or abortion
      * (Finished state seen at least once)
      */
-    finishedAt?: Maybe<Scalars["DateTime"]>;
+    lastAttemptFinishedAt?: Maybe<Scalars["DateTime"]>;
     /** Recorded start of running (Running state seen at least once) */
     runningSince?: Maybe<Scalars["DateTime"]>;
     /** Planned scheduling time */
@@ -5485,7 +5485,7 @@ export type FlowSummaryDataFragment = {
         scheduledAt?: string | null;
         awaitingExecutorSince?: string | null;
         runningSince?: string | null;
-        finishedAt?: string | null;
+        lastAttemptFinishedAt?: string | null;
     };
     startCondition?:
         | {
@@ -5655,7 +5655,7 @@ export type FlowItemWidgetDataFragment = {
         scheduledAt?: string | null;
         awaitingExecutorSince?: string | null;
         runningSince?: string | null;
-        finishedAt?: string | null;
+        lastAttemptFinishedAt?: string | null;
     };
 };
 
@@ -7142,7 +7142,7 @@ export const FlowSummaryDataFragmentDoc = gql`
             scheduledAt
             awaitingExecutorSince
             runningSince
-            finishedAt
+            lastAttemptFinishedAt
         }
         startCondition {
             __typename
@@ -7341,7 +7341,7 @@ export const FlowItemWidgetDataFragmentDoc = gql`
             scheduledAt
             awaitingExecutorSince
             runningSince
-            finishedAt
+            lastAttemptFinishedAt
         }
     }
     ${FlowOutcomeDataFragmentDoc}

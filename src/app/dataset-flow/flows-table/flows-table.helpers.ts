@@ -72,7 +72,7 @@ export class DatasetFlowTableHelpers {
                 return "running";
 
             case FlowStatus.Retrying:
-                return "retrying";
+                return "awaiting retry";
 
             case FlowStatus.Waiting:
                 return "waiting";
@@ -170,7 +170,7 @@ export class DatasetFlowTableHelpers {
 
                     case "FlowAbortedResult":
                         return `Aborted at ${format(
-                            element.timing.finishedAt as string,
+                            element.timing.lastAttemptFinishedAt as string,
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
 
@@ -259,12 +259,12 @@ export class DatasetFlowTableHelpers {
                     case "FlowSuccessResult":
                         return (
                             "finished " +
-                            formatDistanceToNowStrict(node.timing.finishedAt as string, { addSuffix: true })
+                            formatDistanceToNowStrict(node.timing.lastAttemptFinishedAt as string, { addSuffix: true })
                         );
                     case "FlowAbortedResult":
                         return (
                             "aborted " +
-                            formatDistanceToNowStrict(node.timing.finishedAt as string, { addSuffix: true })
+                            formatDistanceToNowStrict(node.timing.lastAttemptFinishedAt as string, { addSuffix: true })
                         );
                     case "FlowFailedError":
                         return (
@@ -328,12 +328,12 @@ export class DatasetFlowTableHelpers {
                 switch (node.outcome?.__typename) {
                     case "FlowSuccessResult":
                         return `Completed time: ${format(
-                            node.timing.finishedAt as string,
+                            node.timing.lastAttemptFinishedAt as string,
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
                     case "FlowAbortedResult":
                         return `Aborted time: ${format(
-                            node.timing.finishedAt as string,
+                            node.timing.lastAttemptFinishedAt as string,
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
                     case "FlowFailedError":

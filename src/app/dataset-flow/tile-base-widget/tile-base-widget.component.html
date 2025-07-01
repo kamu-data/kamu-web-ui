@@ -20,7 +20,7 @@
 
                 <span class="fs-12 fw-bold">Duration:</span>
                 <span class="fs-12">
-                    {{ durationTask(node.timing.runningSince!, node.timing.finishedAt!) }}
+                    {{ durationTask(node.timing.runningSince!, node.timing.lastAttemptFinishedAt!) }}
                 </span>
                 <br />
 
@@ -31,8 +31,8 @@
                 <br />
 
                 <span class="fs-12 fw-bold">Completed time:</span>
-                <span class="fs-12 no-wrap" *ngIf="node.timing.finishedAt; else emptyBlock">
-                    {{ node.timing.finishedAt | date: "M/d/yy, h:mm:ss a" }}
+                <span class="fs-12 no-wrap" *ngIf="node.timing.lastAttemptFinishedAt; else emptyBlock">
+                    {{ node.timing.lastAttemptFinishedAt | date: "M/d/yy, h:mm:ss a" }}
                 </span>
                 <ng-template #emptyBlock>
                     <span class="fs-12"> - </span>

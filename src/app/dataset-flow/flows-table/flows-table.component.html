@@ -122,7 +122,7 @@
 
                     <span class="text-small pt-1">
                         <span class="text-small">completed in </span>
-                        {{ durationTask(element.timing.runningSince, element.timing.finishedAt) }}
+                        {{ durationTask(element.timing.runningSince, element.timing.lastAttemptFinishedAt) }}
                     </span>
                 </div>
                 <div class="d-flex align-items-center" *ngIf="waitingForBlockVisible(element)">

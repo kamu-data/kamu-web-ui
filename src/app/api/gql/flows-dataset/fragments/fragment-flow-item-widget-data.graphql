@@ -28,6 +28,6 @@ fragment FlowItemWidgetData on Flow {
     scheduledAt
     awaitingExecutorSince
     runningSince
-    finishedAt
+    lastAttemptFinishedAt
   }
 }

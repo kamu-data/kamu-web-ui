@@ -63,9 +63,16 @@
                         flowDetails.timing.runningSince | date: DATE_FORMAT
                     }}</span
                     >&nbsp;
-                    <span class="text-muted" *ngIf="flowDetails.timing.runningSince && flowDetails.timing.finishedAt"
+                    <span
+                        class="text-muted"
+                        *ngIf="flowDetails.timing.runningSince && flowDetails.timing.lastAttemptFinishedAt"
                         >(
-                        {{ durationFlowEvent(flowDetails.timing.runningSince, flowDetails.timing.finishedAt) }})</span
+                        {{
+                            durationFlowEvent(
+                                flowDetails.timing.runningSince,
+                                flowDetails.timing.lastAttemptFinishedAt
+                            )
+                        }})</span
                     >
                 </div>
             </div>
@@ -74,8 +81,10 @@
                     <span class="fw-bold">Finished time</span>
                 </div>
                 <div class="col-md-9">
-                    <span data-test-id="flow-finished-time" *ngIf="flowDetails.timing.finishedAt; else emptyBlock"
-                        >{{ flowDetails.timing.finishedAt | date: DATE_FORMAT }}
+                    <span
+                        data-test-id="flow-finished-time"
+                        *ngIf="flowDetails.timing.lastAttemptFinishedAt; else emptyBlock"
+                        >{{ flowDetails.timing.lastAttemptFinishedAt | date: DATE_FORMAT }}
                     </span>
                 </div>
             </div>

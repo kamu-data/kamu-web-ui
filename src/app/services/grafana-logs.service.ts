@@ -50,7 +50,9 @@ export class GrafanaLogsService {
                     .valueOf()
                     .toString(),
             });
-            const finishedTime = flowDetails.flow.timing.finishedAt;
+
+            // TODO: this logic looks wrong, we should take data from a task, not from a flow
+            const finishedTime = flowDetails.flow.timing.lastAttemptFinishedAt;
             this.availableFields.push({
                 key: "toTime",
                 value: finishedTime

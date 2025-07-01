@@ -338,6 +338,8 @@ export class DatasetFlowDetailsHelpers {
                 return "assets/images/gear.gif";
             case FlowStatus.Waiting:
                 return "assets/images/hourglass.gif";
+            case FlowStatus.Retrying:
+                return "assets/images/rotating-arrow.gif";
             default:
                 return "";
         }

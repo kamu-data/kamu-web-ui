@@ -42,7 +42,7 @@ export class DatasetFlowTableHelpers {
                 return { icon: "radio_button_checked", class: "running-status" };
 
             case FlowStatus.Retrying:
-                return { icon: "restart_alt", class: "retrying-status" };
+                return { icon: "radio_button_checked", class: "retrying-status" };
 
             case FlowStatus.Waiting:
                 return { icon: "radio_button_checked", class: "waiting-status" };
@@ -251,7 +251,7 @@ export class DatasetFlowTableHelpers {
                 );
             case FlowStatus.Retrying:
                 return (
-                    "retrying in " +
+                    "retrying " +
                     excludeAgoWord(formatDistanceToNowStrict(node.timing.scheduledAt as string, { addSuffix: true }))
                 );
             case FlowStatus.Finished:

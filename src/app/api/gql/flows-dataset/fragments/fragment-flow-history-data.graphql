@@ -29,6 +29,7 @@ fragment FlowHistoryData on FlowEvent {
       }
     }
   }
+
   ... on FlowEventStartConditionUpdated {
     startCondition {
       __typename
@@ -59,15 +60,18 @@ fragment FlowHistoryData on FlowEvent {
       }
     }
   }
+
   ... on FlowEventScheduledForActivation {
     __typename
     scheduledForActivationAt
   }
+
   ... on FlowEventTaskChanged {
     __typename
     taskId
     taskStatus
   }
+
   ... on FlowEventTriggerAdded {
     trigger {
       __typename

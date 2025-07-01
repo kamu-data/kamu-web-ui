@@ -19,6 +19,9 @@ export class TileBaseWidgetHelpers {
             case FlowStatus.Waiting: {
                 return "waiting-class";
             }
+            case FlowStatus.Retrying: {
+                return "retrying-class";
+            }
             /* istanbul ignore next */
             default:
                 throw new Error("Unknown flow status");

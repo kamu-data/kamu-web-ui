@@ -23,12 +23,7 @@ import { NgIf } from "@angular/common";
     templateUrl: "./dataset-view.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [
-        NgIf,
-        DatasetViewHeaderComponent,
-        DatasetViewMenuComponent,
-        RouterOutlet,
-    ],
+    imports: [NgIf, DatasetViewHeaderComponent, DatasetViewMenuComponent, RouterOutlet],
 })
 export class DatasetViewComponent extends BaseDatasetDataComponent implements OnDestroy {
     @Input(RoutingResolvers.DATASET_VIEW_ACTIVE_TAB_KEY) public datasetViewType: DatasetViewTypeEnum;

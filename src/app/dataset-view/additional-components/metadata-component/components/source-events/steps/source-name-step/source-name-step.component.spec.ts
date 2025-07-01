@@ -19,8 +19,15 @@ describe("SourceNameStepComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [ReactiveFormsModule, NgbTooltipModule, SharedTestModule, SourceNameStepComponent, InputFieldComponent, TooltipIconComponent],
-}).compileComponents();
+            imports: [
+                ReactiveFormsModule,
+                NgbTooltipModule,
+                SharedTestModule,
+                SourceNameStepComponent,
+                InputFieldComponent,
+                TooltipIconComponent,
+            ],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(SourceNameStepComponent);
         component = fixture.componentInstance;

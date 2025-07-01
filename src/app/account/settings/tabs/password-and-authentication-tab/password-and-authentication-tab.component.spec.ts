@@ -23,9 +23,15 @@ describe("PasswordAndAuthenticationTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    providers: [Apollo],
-    imports: [HttpClientTestingModule, ToastrModule.forRoot(), MatDividerModule, PasswordAndAuthenticationTabComponent, AdminChangePasswordComponent],
-});
+            providers: [Apollo],
+            imports: [
+                HttpClientTestingModule,
+                ToastrModule.forRoot(),
+                MatDividerModule,
+                PasswordAndAuthenticationTabComponent,
+                AdminChangePasswordComponent,
+            ],
+        });
         fixture = TestBed.createComponent(PasswordAndAuthenticationTabComponent);
         accountService = TestBed.inject(AccountService);
         component = fixture.componentInstance;

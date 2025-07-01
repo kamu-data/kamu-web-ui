@@ -27,19 +27,19 @@ describe("EditDetailsModalComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [
-        ApolloModule,
-        ApolloTestingModule,
-        FormsModule,
-        MatChipsModule,
-        MatDividerModule,
-        MatIconModule,
-        HttpClientTestingModule,
-        SharedTestModule,
-        EditDetailsModalComponent,
-    ],
-    providers: [Apollo, NgbActiveModal],
-}).compileComponents();
+            imports: [
+                ApolloModule,
+                ApolloTestingModule,
+                FormsModule,
+                MatChipsModule,
+                MatDividerModule,
+                MatIconModule,
+                HttpClientTestingModule,
+                SharedTestModule,
+                EditDetailsModalComponent,
+            ],
+            providers: [Apollo, NgbActiveModal],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(EditDetailsModalComponent);
         component = fixture.componentInstance;

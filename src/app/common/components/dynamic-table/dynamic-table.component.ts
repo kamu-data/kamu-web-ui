@@ -17,12 +17,7 @@ import { NgFor, NgClass, NgIf } from "@angular/common";
     styleUrls: ["./dynamic-table.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [
-        MatTableModule,
-        NgFor,
-        NgClass,
-        NgIf,
-    ],
+    imports: [MatTableModule, NgFor, NgClass, NgIf],
 })
 export class DynamicTableComponent implements OnInit, OnChanges, AfterContentInit {
     @Input({ required: true }) public hasTableHeader: boolean;

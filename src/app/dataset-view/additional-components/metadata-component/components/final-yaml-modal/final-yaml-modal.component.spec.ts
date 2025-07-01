@@ -34,9 +34,16 @@ describe("FinalYamlModalComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    providers: [NgbActiveModal],
-    imports: [ApolloModule, FormsModule, HttpClientTestingModule, SharedTestModule, EditorModule, FinalYamlModalComponent],
-}).compileComponents();
+            providers: [NgbActiveModal],
+            imports: [
+                ApolloModule,
+                FormsModule,
+                HttpClientTestingModule,
+                SharedTestModule,
+                EditorModule,
+                FinalYamlModalComponent,
+            ],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(FinalYamlModalComponent);
         datasetCommitService = TestBed.inject(DatasetCommitService);

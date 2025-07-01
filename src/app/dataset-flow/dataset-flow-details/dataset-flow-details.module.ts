@@ -16,26 +16,23 @@ import { DatasetFlowDetailsComponent } from "./dataset-flow-details.component";
 import { FlowDetailsHistoryTabComponent } from "./tabs/flow-details-history-tab/flow-details-history-tab.component";
 import { FlowDetailsSummaryTabComponent } from "./tabs/flow-details-summary-tab/flow-details-summary-tab.component";
 import { FlowDetailsLogsTabComponent } from "./tabs/flow-details-logs-tab/flow-details-logs-tab.component";
-
-
-
 import { FlowDetailsUsageTabComponent } from "./tabs/flow-details-usage-tab/flow-details-usage-tab.component";
 import { FlowDetailsAdminTabComponent } from "./tabs/flow-details-admin-tab/flow-details-admin-tab.component";
 
 @NgModule({
     imports: [
-    CommonModule,
-    MatDividerModule,
-    MatIconModule,
-    MatMenuModule,
-    RouterModule,
-    DatasetViewModule,
-    DatasetFlowDetailsComponent,
-    FlowDetailsHistoryTabComponent,
-    FlowDetailsLogsTabComponent,
-    FlowDetailsSummaryTabComponent,
-    FlowDetailsUsageTabComponent,
-    FlowDetailsAdminTabComponent,
-],
+        CommonModule,
+        MatDividerModule,
+        MatIconModule,
+        MatMenuModule,
+        RouterModule,
+        DatasetViewModule,
+        DatasetFlowDetailsComponent,
+        FlowDetailsHistoryTabComponent,
+        FlowDetailsLogsTabComponent,
+        FlowDetailsSummaryTabComponent,
+        FlowDetailsUsageTabComponent,
+        FlowDetailsAdminTabComponent,
+    ],
 })
 export class DatasetFlowDetailsModule {}

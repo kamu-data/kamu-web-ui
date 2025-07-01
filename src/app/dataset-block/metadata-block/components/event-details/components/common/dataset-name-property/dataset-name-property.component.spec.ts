@@ -16,8 +16,8 @@ describe("DatasetNamePropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [SharedTestModule, RouterModule, DatasetNamePropertyComponent],
-}).compileComponents();
+            imports: [SharedTestModule, RouterModule, DatasetNamePropertyComponent],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(DatasetNamePropertyComponent);
         component = fixture.componentInstance;

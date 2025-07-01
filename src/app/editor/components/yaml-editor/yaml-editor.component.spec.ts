@@ -6,11 +6,9 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { MonacoService } from "../../services/monaco.service";
 import { EditorModule } from "../../editor.module";
 import { YamlEditorComponent } from "./yaml-editor.component";
-
 import {
     BaseEditorComponentTestEnvironment,
     sharedBasedEditorComponentTest,
@@ -21,9 +19,9 @@ describe("YamlEditorComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [EditorModule, YamlEditorComponent],
-    providers: [MonacoService],
-}).compileComponents();
+            imports: [EditorModule, YamlEditorComponent],
+            providers: [MonacoService],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(YamlEditorComponent);
 

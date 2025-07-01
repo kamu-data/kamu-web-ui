@@ -17,11 +17,7 @@ import { NgFor } from "@angular/common";
     templateUrl: "./set-attachments-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [
-        NgFor,
-        BlockRowDataComponent,
-        MarkdownModule,
-    ],
+    imports: [NgFor, BlockRowDataComponent, MarkdownModule],
 })
 export class SetAttachmentsEventComponent extends BaseComponent {
     @Input({ required: true }) public event: SetAttachments;

@@ -19,11 +19,7 @@ import { BlockRowDataComponent } from "../../../../../../common/components/block
     templateUrl: "./seed-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [
-        BlockRowDataComponent,
-        MatIconModule,
-        TitleCasePipe,
-    ],
+    imports: [BlockRowDataComponent, MatIconModule, TitleCasePipe],
 })
 export class SeedEventComponent extends BaseComponent {
     @Input({ required: true }) public event: Seed;

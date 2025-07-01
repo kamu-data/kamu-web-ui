@@ -8,7 +8,15 @@
 import { MaybeNull } from "../../../../../../interface/app.types";
 import { AfterViewInit, ChangeDetectionStrategy, Component, QueryList, ViewChild, ViewChildren } from "@angular/core";
 import { BaseField } from "../base-field";
-import { AbstractControl, FormArray, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import {
+    AbstractControl,
+    FormArray,
+    FormControl,
+    FormGroup,
+    Validators,
+    FormsModule,
+    ReactiveFormsModule,
+} from "@angular/forms";
 import { MatTable, MatTableModule } from "@angular/material/table";
 import { Observable, OperatorFunction, Subject, merge } from "rxjs";
 import { NgbTypeahead } from "@ng-bootstrap/ng-bootstrap";

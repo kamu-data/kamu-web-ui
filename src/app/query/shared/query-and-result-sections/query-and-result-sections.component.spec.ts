@@ -47,23 +47,23 @@ describe("QueryAndResultSectionsComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [
-        CdkAccordionModule,
-        HttpClientTestingModule,
-        ToastrModule.forRoot(),
-        MatMenuModule,
-        MatProgressBarModule,
-        EditorModule,
-        MatIconModule,
-        SharedTestModule,
-        MatDividerModule,
-        QueryAndResultSectionsComponent,
-        RequestTimerComponent,
-        SqlEditorComponent,
-        EngineSelectComponent,
-    ],
-    providers: [Apollo],
-});
+            imports: [
+                CdkAccordionModule,
+                HttpClientTestingModule,
+                ToastrModule.forRoot(),
+                MatMenuModule,
+                MatProgressBarModule,
+                EditorModule,
+                MatIconModule,
+                SharedTestModule,
+                MatDividerModule,
+                QueryAndResultSectionsComponent,
+                RequestTimerComponent,
+                SqlEditorComponent,
+                EngineSelectComponent,
+            ],
+            providers: [Apollo],
+        });
         fixture = TestBed.createComponent(QueryAndResultSectionsComponent);
         component = fixture.componentInstance;
         clipboard = TestBed.inject(Clipboard);

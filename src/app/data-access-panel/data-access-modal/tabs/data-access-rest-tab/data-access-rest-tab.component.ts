@@ -16,11 +16,7 @@ import { CopyToClipboardComponent } from "../../../../common/components/copy-to-
     templateUrl: "./data-access-rest-tab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [
-        CopyToClipboardComponent,
-        MatDividerModule,
-        MatIconModule,
-    ],
+    imports: [CopyToClipboardComponent, MatDividerModule, MatIconModule],
 })
 export class DataAccessRestTabComponent {
     @Input({ required: true }) public rest: RestProtocolDesc;

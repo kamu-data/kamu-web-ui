@@ -15,8 +15,8 @@ describe("SeparatorPropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [SharedTestModule, SeparatorPropertyComponent],
-}).compileComponents();
+            imports: [SharedTestModule, SeparatorPropertyComponent],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(SeparatorPropertyComponent);
         component = fixture.componentInstance;

@@ -16,8 +16,8 @@ describe("DatasetVisibilityComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [DatasetVisibilityComponent],
-});
+            imports: [DatasetVisibilityComponent],
+        });
         fixture = TestBed.createComponent(DatasetVisibilityComponent);
         component = fixture.componentInstance;
     });

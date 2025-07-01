@@ -19,13 +19,7 @@ import { NgIf, NgFor } from "@angular/common";
     styleUrls: ["./dataset-list.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [
-        NgIf,
-        FeatureFlagDirective,
-        NgFor,
-        FormsModule,
-        DatasetListItemComponent,
-    ],
+    imports: [NgIf, FeatureFlagDirective, NgFor, FormsModule, DatasetListItemComponent],
 })
 export class DatasetListComponent {
     @Input({ required: true }) public dataSource: DatasetSearchOverviewFragment[];

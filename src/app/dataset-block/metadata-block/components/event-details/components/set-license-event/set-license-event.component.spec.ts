@@ -21,11 +21,16 @@ describe("SetLicenseEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [MatIconModule, NgbTooltipModule, SharedTestModule, SetLicenseEventComponent,
-        BlockRowDataComponent,
-        TooltipIconComponent,
-        LinkPropertyComponent],
-}).compileComponents();
+            imports: [
+                MatIconModule,
+                NgbTooltipModule,
+                SharedTestModule,
+                SetLicenseEventComponent,
+                BlockRowDataComponent,
+                TooltipIconComponent,
+                LinkPropertyComponent,
+            ],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(SetLicenseEventComponent);
         component = fixture.componentInstance;

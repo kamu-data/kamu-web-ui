@@ -15,8 +15,8 @@ describe("EnginePropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [SharedTestModule, EnginePropertyComponent],
-}).compileComponents();
+            imports: [SharedTestModule, EnginePropertyComponent],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(EnginePropertyComponent);
         component = fixture.componentInstance;

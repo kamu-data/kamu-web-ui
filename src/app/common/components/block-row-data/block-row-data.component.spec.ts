@@ -17,8 +17,8 @@ describe("BlockRowDataComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [MatIconModule, NgbTooltipModule, BlockRowDataComponent, TooltipIconComponent],
-}).compileComponents();
+            imports: [MatIconModule, NgbTooltipModule, BlockRowDataComponent, TooltipIconComponent],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(BlockRowDataComponent);
         component = fixture.componentInstance;

@@ -28,27 +28,34 @@ describe("SetTransformEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    providers: [
-        {
-            provide: HIGHLIGHT_OPTIONS,
-            useValue: {
-                coreLibraryLoader: () => import("highlight.js/lib/core"),
-                languages: {
-                    sql: () => import("highlight.js/lib/languages/sql"),
+            providers: [
+                {
+                    provide: HIGHLIGHT_OPTIONS,
+                    useValue: {
+                        coreLibraryLoader: () => import("highlight.js/lib/core"),
+                        languages: {
+                            sql: () => import("highlight.js/lib/languages/sql"),
+                        },
+                    },
                 },
-            },
-        },
-    ],
-    imports: [ApolloTestingModule, SharedTestModule, HighlightModule, MatIconModule, NgbTooltipModule, SetTransformEventComponent,
-        SimplePropertyComponent,
-        EnginePropertyComponent,
-        SqlQueryViewerComponent,
-        TemporalTablesPropertyComponent,
-        CardsPropertyComponent,
-        VisibilityPropertyComponent,
-        BlockRowDataComponent,
-        TooltipIconComponent],
-}).compileComponents();
+            ],
+            imports: [
+                ApolloTestingModule,
+                SharedTestModule,
+                HighlightModule,
+                MatIconModule,
+                NgbTooltipModule,
+                SetTransformEventComponent,
+                SimplePropertyComponent,
+                EnginePropertyComponent,
+                SqlQueryViewerComponent,
+                TemporalTablesPropertyComponent,
+                CardsPropertyComponent,
+                VisibilityPropertyComponent,
+                BlockRowDataComponent,
+                TooltipIconComponent,
+            ],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(SetTransformEventComponent);
         component = fixture.componentInstance;

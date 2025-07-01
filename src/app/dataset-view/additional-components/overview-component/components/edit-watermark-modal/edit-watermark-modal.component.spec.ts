@@ -33,19 +33,19 @@ describe("EditWatermarkModalComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    providers: [Apollo, NgbActiveModal],
-    imports: [
-        MatDividerModule,
-        MatIconModule,
-        OwlDateTimeModule,
-        OwlNativeDateTimeModule,
-        OwlMomentDateTimeModule,
-        FormsModule,
-        SharedTestModule,
-        HttpClientTestingModule,
-        EditWatermarkModalComponent,
-    ],
-}).compileComponents();
+            providers: [Apollo, NgbActiveModal],
+            imports: [
+                MatDividerModule,
+                MatIconModule,
+                OwlDateTimeModule,
+                OwlNativeDateTimeModule,
+                OwlMomentDateTimeModule,
+                FormsModule,
+                SharedTestModule,
+                HttpClientTestingModule,
+                EditWatermarkModalComponent,
+            ],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(EditWatermarkModalComponent);
         component = fixture.componentInstance;

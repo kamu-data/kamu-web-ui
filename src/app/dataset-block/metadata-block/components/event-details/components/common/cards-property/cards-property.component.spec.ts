@@ -16,27 +16,27 @@ describe("CardsPropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [CardsPropertyComponent],
-    providers: [
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                snapshot: {
-                    paramMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "accountName":
-                                    return "accountName";
-                                case "datasetName":
-                                    return "datasetName";
-                            }
+            imports: [CardsPropertyComponent],
+            providers: [
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return "accountName";
+                                        case "datasetName":
+                                            return "datasetName";
+                                    }
+                                },
+                            },
                         },
                     },
                 },
-            },
-        },
-    ],
-}).compileComponents();
+            ],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(CardsPropertyComponent);
         component = fixture.componentInstance;

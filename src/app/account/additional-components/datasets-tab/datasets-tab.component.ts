@@ -21,12 +21,7 @@ import { NgIf, NgFor } from "@angular/common";
     templateUrl: "./datasets-tab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [
-        NgIf,
-        NgFor,
-        DatasetListItemComponent,
-        PaginationComponent,
-    ],
+    imports: [NgIf, NgFor, DatasetListItemComponent, PaginationComponent],
 })
 export class DatasetsTabComponent {
     @Input(RoutingResolvers.ACCOUNT_DATASETS_KEY) public accountResolverResponse: DatasetsAccountResolverResponse;

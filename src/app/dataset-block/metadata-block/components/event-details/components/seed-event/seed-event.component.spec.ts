@@ -30,16 +30,18 @@ describe("SeedEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [
-        ToastrModule.forRoot(),
-        BrowserAnimationsModule,
-        NgbTooltipModule,
-        HttpClientTestingModule,
-        SharedTestModule,
-        MatIconModule,
-        SeedEventComponent, BlockRowDataComponent, TooltipIconComponent,
-    ],
-}).compileComponents();
+            imports: [
+                ToastrModule.forRoot(),
+                BrowserAnimationsModule,
+                NgbTooltipModule,
+                HttpClientTestingModule,
+                SharedTestModule,
+                MatIconModule,
+                SeedEventComponent,
+                BlockRowDataComponent,
+                TooltipIconComponent,
+            ],
+        }).compileComponents();
 
         registerMatSvgIcons();
 

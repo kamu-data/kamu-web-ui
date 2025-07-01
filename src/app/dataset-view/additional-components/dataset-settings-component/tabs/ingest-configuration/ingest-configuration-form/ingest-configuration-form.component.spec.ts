@@ -25,9 +25,16 @@ describe("IngestConfigurationFormComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    providers: [Apollo],
-    imports: [SharedTestModule, FormsModule, MatCheckboxModule, ReactiveFormsModule, ToastrModule.forRoot(), IngestConfigurationFormComponent],
-});
+            providers: [Apollo],
+            imports: [
+                SharedTestModule,
+                FormsModule,
+                MatCheckboxModule,
+                ReactiveFormsModule,
+                ToastrModule.forRoot(),
+                IngestConfigurationFormComponent,
+            ],
+        });
         fixture = TestBed.createComponent(IngestConfigurationFormComponent);
         component = fixture.componentInstance;
         datasetSchedulingService = TestBed.inject(DatasetSchedulingService);

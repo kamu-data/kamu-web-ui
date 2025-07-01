@@ -16,8 +16,8 @@ describe("PaginationComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [NgbPaginationModule, PaginationComponent],
-}).compileComponents();
+            imports: [NgbPaginationModule, PaginationComponent],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(PaginationComponent);
         component = fixture.componentInstance;

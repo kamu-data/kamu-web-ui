@@ -10,7 +10,6 @@ import { GlobalQueryComponent } from "./global-query/global-query.component";
 import { QuerySharedModule } from "./shared/query-shared.module";
 import { NgModule } from "@angular/core";
 
-
 @NgModule({
     imports: [QuerySharedModule, CommonModule, GlobalQueryComponent],
 })

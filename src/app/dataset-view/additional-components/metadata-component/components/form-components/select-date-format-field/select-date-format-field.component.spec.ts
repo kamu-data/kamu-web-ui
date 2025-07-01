@@ -23,36 +23,37 @@ describe("SelectDateFormatFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    providers: [
-        FormBuilder,
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                snapshot: {
-                    paramMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "accountName":
-                                    return "accountName";
-                                case "datasetName":
-                                    return "datasetName";
-                            }
+            providers: [
+                FormBuilder,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return "accountName";
+                                        case "datasetName":
+                                            return "datasetName";
+                                    }
+                                },
+                            },
                         },
                     },
                 },
-            },
-        },
-    ],
-    imports: [
-        ReactiveFormsModule,
-        MatIconModule,
-        MatTableModule,
-        NgbTypeaheadModule,
-        RxReactiveFormsModule,
-        NgbTooltipModule,
-        SelectDateFormatFieldComponent, TooltipIconComponent,
-    ],
-}).compileComponents();
+            ],
+            imports: [
+                ReactiveFormsModule,
+                MatIconModule,
+                MatTableModule,
+                NgbTypeaheadModule,
+                RxReactiveFormsModule,
+                NgbTooltipModule,
+                SelectDateFormatFieldComponent,
+                TooltipIconComponent,
+            ],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(SelectDateFormatFieldComponent);
         component = fixture.componentInstance;

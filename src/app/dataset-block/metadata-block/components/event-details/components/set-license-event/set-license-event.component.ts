@@ -17,11 +17,7 @@ import { NgIf } from "@angular/common";
     templateUrl: "./set-license-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [
-        NgIf,
-        BlockRowDataComponent,
-        LinkPropertyComponent,
-    ],
+    imports: [NgIf, BlockRowDataComponent, LinkPropertyComponent],
 })
 export class SetLicenseEventComponent extends BaseComponent {
     @Input({ required: true }) public event: SetLicense;

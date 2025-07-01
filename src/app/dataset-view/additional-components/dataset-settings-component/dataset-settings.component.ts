@@ -32,14 +32,7 @@ import { NgFor, NgIf } from "@angular/common";
     styleUrls: ["./dataset-settings.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [
-        NgFor,
-        NgIf,
-        FeatureFlagDirective,
-        MatIconModule,
-        MatDividerModule,
-        RouterOutlet,
-    ],
+    imports: [NgFor, NgIf, FeatureFlagDirective, MatIconModule, MatDividerModule, RouterOutlet],
 })
 export class DatasetSettingsComponent extends BaseComponent {
     @Input(RoutingResolvers.DATASET_VIEW_SETTINGS_KEY) public datasetSettingsTabData: DatasetOverviewTabData;

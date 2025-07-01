@@ -24,9 +24,9 @@ describe("FlowDetailsLogsTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [SharedTestModule, HttpClientTestingModule, MatIconModule, FlowDetailsLogsTabComponent],
-    providers: [Apollo],
-});
+            imports: [SharedTestModule, HttpClientTestingModule, MatIconModule, FlowDetailsLogsTabComponent],
+            providers: [Apollo],
+        });
         loggedUserService = TestBed.inject(LoggedUserService);
 
         fixture = TestBed.createComponent(FlowDetailsLogsTabComponent);

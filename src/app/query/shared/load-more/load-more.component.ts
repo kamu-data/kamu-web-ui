@@ -6,7 +6,6 @@
  */
 
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-
 import AppValues from "../../../common/values/app.values";
 import { FormsModule } from "@angular/forms";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
@@ -19,14 +18,7 @@ import { MatButtonModule } from "@angular/material/button";
     templateUrl: "./load-more.component.html",
     styleUrls: ["./load-more.component.scss"],
     standalone: true,
-    imports: [
-        MatButtonModule,
-        NgIf,
-        MatIconModule,
-        MatButtonToggleModule,
-        FormsModule,
-        NgFor,
-    ],
+    imports: [MatButtonModule, NgIf, MatIconModule, MatButtonToggleModule, FormsModule, NgFor],
 })
 export class LoadMoreComponent {
     public rowsNumber: number = AppValues.SQL_QUERY_LIMIT;

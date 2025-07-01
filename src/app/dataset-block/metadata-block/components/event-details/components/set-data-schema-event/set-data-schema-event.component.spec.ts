@@ -22,11 +22,17 @@ describe("SetDataSchemaEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [MatIconModule, NgbTooltipModule, MatTableModule, SharedTestModule, SetDataSchemaEventComponent,
-        DynamicTableComponent,
-        BlockRowDataComponent,
-        TooltipIconComponent],
-}).compileComponents();
+            imports: [
+                MatIconModule,
+                NgbTooltipModule,
+                MatTableModule,
+                SharedTestModule,
+                SetDataSchemaEventComponent,
+                DynamicTableComponent,
+                BlockRowDataComponent,
+                TooltipIconComponent,
+            ],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(SetDataSchemaEventComponent);
         component = fixture.componentInstance;

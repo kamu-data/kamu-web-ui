@@ -18,7 +18,6 @@ import {
     ViewChild,
 } from "@angular/core";
 import * as monaco from "monaco-editor";
-
 import { getMonacoNamespace } from "../../services/monaco.service";
 import { BaseEditorComponent } from "../base-editor/base-editor.component";
 import { getSqlError } from "../../helpers/editor-error-formatter";
@@ -51,12 +50,7 @@ const SQL_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
     styleUrls: ["./sql-editor.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [
-        MonacoEditorModule,
-        NgStyle,
-        FormsModule,
-        NgIf,
-    ],
+    imports: [MonacoEditorModule, NgStyle, FormsModule, NgIf],
 })
 export class SqlEditorComponent extends BaseEditorComponent implements OnInit, OnDestroy {
     public readonly EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = SQL_EDITOR_OPTIONS;

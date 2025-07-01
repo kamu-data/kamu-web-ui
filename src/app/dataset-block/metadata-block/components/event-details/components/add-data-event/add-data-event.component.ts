@@ -18,12 +18,7 @@ import { NgFor, NgIf } from "@angular/common";
     templateUrl: "../base-dynamic-event/base-dynamic-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [
-        NgFor,
-        NgIf,
-        BlockRowDataComponent,
-        MatIconModule,
-    ],
+    imports: [NgFor, NgIf, BlockRowDataComponent, MatIconModule],
 })
 export class AddDataEventComponent extends BaseDynamicEventComponent<AddData> implements OnChanges, OnInit {
     public ngOnChanges(changes: SimpleChanges): void {

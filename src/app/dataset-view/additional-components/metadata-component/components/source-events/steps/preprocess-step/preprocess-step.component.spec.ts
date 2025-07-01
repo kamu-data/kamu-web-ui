@@ -31,18 +31,20 @@ describe("PreprocessStepComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [
-        ReactiveFormsModule,
-        ApolloModule,
-        ApolloTestingModule,
-        FormsModule,
-        MatIconModule,
-        SharedTestModule,
-        EditorModule,
-        PreprocessStepComponent, QueriesSectionComponent, EngineSectionComponent,
-    ],
-    providers: [Apollo],
-})
+            imports: [
+                ReactiveFormsModule,
+                ApolloModule,
+                ApolloTestingModule,
+                FormsModule,
+                MatIconModule,
+                SharedTestModule,
+                EditorModule,
+                PreprocessStepComponent,
+                QueriesSectionComponent,
+                EngineSectionComponent,
+            ],
+            providers: [Apollo],
+        })
             .overrideComponent(PreprocessStepComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

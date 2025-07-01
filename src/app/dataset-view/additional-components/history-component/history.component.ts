@@ -28,12 +28,7 @@ import { NgIf, AsyncPipe } from "@angular/common";
     templateUrl: "./history.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [
-        NgIf,
-        TimelineComponent,
-        PaginationComponent,
-        AsyncPipe,
-    ],
+    imports: [NgIf, TimelineComponent, PaginationComponent, AsyncPipe],
 })
 export class HistoryComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_INFO_KEY) public datasetInfo: DatasetInfo;

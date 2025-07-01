@@ -21,8 +21,16 @@ describe("SetInfoEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [MatIconModule, NgbTooltipModule, SharedTestModule, SetInfoEventComponent, CardsPropertyComponent, BlockRowDataComponent, TooltipIconComponent],
-}).compileComponents();
+            imports: [
+                MatIconModule,
+                NgbTooltipModule,
+                SharedTestModule,
+                SetInfoEventComponent,
+                CardsPropertyComponent,
+                BlockRowDataComponent,
+                TooltipIconComponent,
+            ],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(SetInfoEventComponent);
         component = fixture.componentInstance;

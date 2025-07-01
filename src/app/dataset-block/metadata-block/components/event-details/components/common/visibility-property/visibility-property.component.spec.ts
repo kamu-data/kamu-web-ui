@@ -16,8 +16,8 @@ describe("VisibilityPropertyComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [SharedTestModule, VisibilityPropertyComponent],
-});
+            imports: [SharedTestModule, VisibilityPropertyComponent],
+        });
         fixture = TestBed.createComponent(VisibilityPropertyComponent);
         component = fixture.componentInstance;
         component.data = mockPublicDatasetVisibility;

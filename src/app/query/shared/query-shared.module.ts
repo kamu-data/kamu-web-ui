@@ -21,30 +21,29 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
-
 import { EditorModule } from "src/app/editor/editor.module";
 import { EngineSelectComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
 
 @NgModule({
     imports: [
-    CdkAccordionModule,
-    CommonModule,
-    FormsModule,
-    EditorModule,
-    MatButtonModule,
-    MatButtonToggleModule,
-    MatDividerModule,
-    MatMenuModule,
-    MatIconModule,
-    MatProgressBarModule,
-    NgbTypeaheadModule,
-    QueryAndResultSectionsComponent,
-    LoadMoreComponent,
-    RequestTimerComponent,
-    SearchAndSchemasSectionComponent,
-    SavedQueriesSectionComponent,
-    EngineSelectComponent,
-],
+        CdkAccordionModule,
+        CommonModule,
+        FormsModule,
+        EditorModule,
+        MatButtonModule,
+        MatButtonToggleModule,
+        MatDividerModule,
+        MatMenuModule,
+        MatIconModule,
+        MatProgressBarModule,
+        NgbTypeaheadModule,
+        QueryAndResultSectionsComponent,
+        LoadMoreComponent,
+        RequestTimerComponent,
+        SearchAndSchemasSectionComponent,
+        SavedQueriesSectionComponent,
+        EngineSelectComponent,
+    ],
     exports: [
         QueryAndResultSectionsComponent,
         SavedQueriesSectionComponent,

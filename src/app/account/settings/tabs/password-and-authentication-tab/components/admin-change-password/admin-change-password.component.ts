@@ -20,11 +20,7 @@ import { FormValidationErrorsDirective } from "../../../../../../common/directiv
     styleUrls: ["./admin-change-password.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        FormValidationErrorsDirective,
-    ],
+    imports: [FormsModule, ReactiveFormsModule, FormValidationErrorsDirective],
 })
 export class AdminChangePasswordComponent implements OnInit {
     @Input({ required: true }) public accountName: string;

@@ -22,9 +22,9 @@ describe("BlockHeaderComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [MatMenuModule, MatIconModule, MatDividerModule, SharedTestModule, BlockHeaderComponent],
-    providers: [Apollo, DatasetApi],
-}).compileComponents();
+            imports: [MatMenuModule, MatIconModule, MatDividerModule, SharedTestModule, BlockHeaderComponent],
+            providers: [Apollo, DatasetApi],
+        }).compileComponents();
 
         registerMatSvgIcons();
 

@@ -28,16 +28,16 @@ describe("DisplayHashComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [
-        ToastrModule.forRoot(),
-        BrowserAnimationsModule,
-        HttpClientTestingModule,
-        RouterModule,
-        SharedTestModule,
-        MatIconModule,
-        DisplayHashComponent,
-    ],
-}).compileComponents();
+            imports: [
+                ToastrModule.forRoot(),
+                BrowserAnimationsModule,
+                HttpClientTestingModule,
+                RouterModule,
+                SharedTestModule,
+                MatIconModule,
+                DisplayHashComponent,
+            ],
+        }).compileComponents();
 
         registerMatSvgIcons();
 

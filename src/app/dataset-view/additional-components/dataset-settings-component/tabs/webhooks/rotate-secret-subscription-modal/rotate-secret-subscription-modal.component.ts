@@ -19,13 +19,7 @@ import { MatDividerModule } from "@angular/material/divider";
     templateUrl: "./rotate-secret-subscription-modal.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [
-        MatDividerModule,
-        NgIf,
-        FormsModule,
-        CopyToClipboardComponent,
-        FeatureFlagDirective,
-    ],
+    imports: [MatDividerModule, NgIf, FormsModule, CopyToClipboardComponent, FeatureFlagDirective],
 })
 export class RotateSecretSubscriptionModalComponent {
     public secretRotate: MaybeUndefined<string>;

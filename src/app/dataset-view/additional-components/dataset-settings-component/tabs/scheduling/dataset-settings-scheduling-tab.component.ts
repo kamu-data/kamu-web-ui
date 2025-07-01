@@ -32,11 +32,7 @@ import { MatDividerModule } from "@angular/material/divider";
     styleUrls: ["./dataset-settings-scheduling-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [
-        MatDividerModule,
-        NgIf,
-        IngestTriggerFormComponent,
-    ],
+    imports: [MatDividerModule, NgIf, IngestTriggerFormComponent],
 })
 export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
     @Input(RoutingResolvers.DATASET_SETTINGS_SCHEDULING_KEY) public schedulungTabData: DatasetViewData;

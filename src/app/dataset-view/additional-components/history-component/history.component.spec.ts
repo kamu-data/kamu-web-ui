@@ -38,49 +38,49 @@ describe("HistoryComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [
-        HttpClientTestingModule,
-        NgbPaginationModule,
-        NgbPopoverModule,
-        MatIconModule,
-        RouterTestingModule,
-        SharedTestModule,
-        ToastrModule.forRoot(),
-        HistoryComponent,
-        PaginationComponent,
-        TimelineComponent,
-        DisplayTimeComponent,
-        DisplayHashComponent,
-    ],
-    providers: [
-        Apollo,
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                snapshot: {
-                    paramMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "accountName":
-                                    return "accountName";
-                                case "datasetName":
-                                    return "datasetName";
-                            }
-                        },
-                    },
-                    queryParamMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case ProjectLinks.URL_QUERY_PARAM_PAGE:
-                                    return undefined;
-                            }
+            imports: [
+                HttpClientTestingModule,
+                NgbPaginationModule,
+                NgbPopoverModule,
+                MatIconModule,
+                RouterTestingModule,
+                SharedTestModule,
+                ToastrModule.forRoot(),
+                HistoryComponent,
+                PaginationComponent,
+                TimelineComponent,
+                DisplayTimeComponent,
+                DisplayHashComponent,
+            ],
+            providers: [
+                Apollo,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return "accountName";
+                                        case "datasetName":
+                                            return "datasetName";
+                                    }
+                                },
+                            },
+                            queryParamMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case ProjectLinks.URL_QUERY_PARAM_PAGE:
+                                            return undefined;
+                                    }
+                                },
+                            },
                         },
                     },
                 },
-            },
-        },
-    ],
-}).compileComponents();
+            ],
+        }).compileComponents();
 
         registerMatSvgIcons();
 

@@ -16,12 +16,7 @@ import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
     templateUrl: "./cache-field.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        RxReactiveFormsModule,
-        TooltipIconComponent,
-    ],
+    imports: [FormsModule, ReactiveFormsModule, RxReactiveFormsModule, TooltipIconComponent],
 })
 export class CacheFieldComponent extends BaseField {
     private fb = inject(FormBuilder);

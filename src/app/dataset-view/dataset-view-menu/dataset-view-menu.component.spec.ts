@@ -32,25 +32,26 @@ describe("DatasetViewMenuComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    providers: [Apollo],
-    imports: [
-        MatMenuModule,
-        FormsModule,
-        BrowserAnimationsModule,
-        MatButtonToggleModule,
-        MatTabsModule,
-        MatIconModule,
-        HttpClientTestingModule,
-        MatDividerModule,
-        MatCheckboxModule,
-        MatTooltipModule,
-        ApolloModule,
-        ApolloTestingModule,
-        RouterModule,
-        SharedTestModule,
-        DatasetViewMenuComponent, DataAccessPanelComponent,
-    ],
-}).compileComponents();
+            providers: [Apollo],
+            imports: [
+                MatMenuModule,
+                FormsModule,
+                BrowserAnimationsModule,
+                MatButtonToggleModule,
+                MatTabsModule,
+                MatIconModule,
+                HttpClientTestingModule,
+                MatDividerModule,
+                MatCheckboxModule,
+                MatTooltipModule,
+                ApolloModule,
+                ApolloTestingModule,
+                RouterModule,
+                SharedTestModule,
+                DatasetViewMenuComponent,
+                DataAccessPanelComponent,
+            ],
+        }).compileComponents();
 
         registerMatSvgIcons();
 

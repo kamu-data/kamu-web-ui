@@ -16,8 +16,8 @@ describe("TooltipIconComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [MatIconModule, NgbTooltipModule, TooltipIconComponent],
-}).compileComponents();
+            imports: [MatIconModule, NgbTooltipModule, TooltipIconComponent],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(TooltipIconComponent);
         component = fixture.componentInstance;

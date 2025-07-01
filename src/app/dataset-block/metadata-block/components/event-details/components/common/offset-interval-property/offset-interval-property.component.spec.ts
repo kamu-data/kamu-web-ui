@@ -23,8 +23,8 @@ describe("OffsetIntervalPropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [ApolloTestingModule, SharedTestModule, OffsetIntervalPropertyComponent],
-}).compileComponents();
+            imports: [ApolloTestingModule, SharedTestModule, OffsetIntervalPropertyComponent],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(OffsetIntervalPropertyComponent);
         component = fixture.componentInstance;

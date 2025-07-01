@@ -20,9 +20,9 @@ describe("PageNotFoundComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [PageNotFoundComponent],
-    providers: [Apollo],
-}).compileComponents();
+            imports: [PageNotFoundComponent],
+            providers: [Apollo],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(PageNotFoundComponent);
         navigationService = TestBed.inject(NavigationService);

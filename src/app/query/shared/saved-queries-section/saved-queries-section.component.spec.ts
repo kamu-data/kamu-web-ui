@@ -16,8 +16,8 @@ describe("SavedQueriesSectionComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [CdkAccordionModule, MatIconModule, SavedQueriesSectionComponent],
-});
+            imports: [CdkAccordionModule, MatIconModule, SavedQueriesSectionComponent],
+        });
         fixture = TestBed.createComponent(SavedQueriesSectionComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

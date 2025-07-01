@@ -17,8 +17,8 @@ describe("EnvVariablesPropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [MatTableModule, SharedTestModule, EnvVariablesPropertyComponent, DynamicTableComponent],
-}).compileComponents();
+            imports: [MatTableModule, SharedTestModule, EnvVariablesPropertyComponent, DynamicTableComponent],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(EnvVariablesPropertyComponent);
         component = fixture.componentInstance;

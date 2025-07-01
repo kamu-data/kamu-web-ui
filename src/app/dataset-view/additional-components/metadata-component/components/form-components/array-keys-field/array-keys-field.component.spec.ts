@@ -19,9 +19,15 @@ describe("ArrayKeysFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    providers: [FormBuilder],
-    imports: [ReactiveFormsModule, NgbTooltipModule, SharedTestModule, ArrayKeysFieldComponent, TooltipIconComponent],
-}).compileComponents();
+            providers: [FormBuilder],
+            imports: [
+                ReactiveFormsModule,
+                NgbTooltipModule,
+                SharedTestModule,
+                ArrayKeysFieldComponent,
+                TooltipIconComponent,
+            ],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(ArrayKeysFieldComponent);
         component = fixture.componentInstance;

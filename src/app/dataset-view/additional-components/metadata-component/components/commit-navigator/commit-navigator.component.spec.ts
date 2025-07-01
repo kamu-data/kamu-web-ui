@@ -19,8 +19,8 @@ describe("CommitNavigatorComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [MatIconModule, CommitNavigatorComponent],
-}).compileComponents();
+            imports: [MatIconModule, CommitNavigatorComponent],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(CommitNavigatorComponent);
         component = fixture.componentInstance;

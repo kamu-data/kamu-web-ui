@@ -29,13 +29,7 @@ import { MatDividerModule } from "@angular/material/divider";
     styleUrls: ["./dataset-settings-compacting-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [
-        MatDividerModule,
-        FormsModule,
-        ReactiveFormsModule,
-        TooltipIconComponent,
-        FormValidationErrorsDirective,
-    ],
+    imports: [MatDividerModule, FormsModule, ReactiveFormsModule, TooltipIconComponent, FormValidationErrorsDirective],
 })
 export class DatasetSettingsCompactingTabComponent extends BaseComponent {
     public modalService = inject(ModalService);

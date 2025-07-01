@@ -17,8 +17,8 @@ describe("VerifyResultSectionComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [MatIconModule, VerifyResultSectionComponent],
-});
+            imports: [MatIconModule, VerifyResultSectionComponent],
+        });
         fixture = TestBed.createComponent(VerifyResultSectionComponent);
         component = fixture.componentInstance;
         component.verifyResponse = mockVerifyQueryResponseSuccess;

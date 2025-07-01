@@ -19,14 +19,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
     templateUrl: "./typeahead-field.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        RxReactiveFormsModule,
-        TooltipIconComponent,
-        NgIf,
-        NgbTypeahead,
-    ],
+    imports: [FormsModule, ReactiveFormsModule, RxReactiveFormsModule, TooltipIconComponent, NgIf, NgbTypeahead],
 })
 export class TypeaheadFieldComponent extends BaseField {
     @Input({ required: true }) public data: string[];

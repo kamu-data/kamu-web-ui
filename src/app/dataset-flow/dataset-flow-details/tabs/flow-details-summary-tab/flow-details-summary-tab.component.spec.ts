@@ -18,8 +18,8 @@ describe("FlowDetailsSummaryTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [FlowDetailsSummaryTabComponent],
-}).compileComponents();
+            imports: [FlowDetailsSummaryTabComponent],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(FlowDetailsSummaryTabComponent);
         component = fixture.componentInstance;

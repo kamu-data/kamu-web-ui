@@ -16,19 +16,19 @@ describe("YamlEventViewerComponent with SetTransform", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    providers: [
-        {
-            provide: HIGHLIGHT_OPTIONS,
-            useValue: {
-                coreLibraryLoader: () => import("highlight.js/lib/core"),
-                languages: {
-                    yaml: () => import("highlight.js/lib/languages/yaml"),
+            providers: [
+                {
+                    provide: HIGHLIGHT_OPTIONS,
+                    useValue: {
+                        coreLibraryLoader: () => import("highlight.js/lib/core"),
+                        languages: {
+                            yaml: () => import("highlight.js/lib/languages/yaml"),
+                        },
+                    },
                 },
-            },
-        },
-    ],
-    imports: [SharedTestModule, HighlightModule, YamlEventViewerComponent],
-}).compileComponents();
+            ],
+            imports: [SharedTestModule, HighlightModule, YamlEventViewerComponent],
+        }).compileComponents();
 
         fixture = TestBed.createComponent<YamlEventViewerComponent>(YamlEventViewerComponent);
         component = fixture.componentInstance;

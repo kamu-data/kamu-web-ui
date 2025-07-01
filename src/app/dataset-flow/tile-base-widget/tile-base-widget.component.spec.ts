@@ -19,8 +19,8 @@ describe("TileBaseWidgetComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [NgbPopoverModule, TileBaseWidgetComponent],
-}).compileComponents();
+            imports: [NgbPopoverModule, TileBaseWidgetComponent],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(TileBaseWidgetComponent);
         component = fixture.componentInstance;

@@ -15,8 +15,8 @@ describe("StepTypePropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [SharedTestModule, StepTypePropertyComponent],
-}).compileComponents();
+            imports: [SharedTestModule, StepTypePropertyComponent],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(StepTypePropertyComponent);
         component = fixture.componentInstance;

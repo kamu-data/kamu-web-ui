@@ -32,19 +32,19 @@ describe("AddPeopleModalComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [
-        SharedTestModule,
-        ApolloTestingModule,
-        HttpClientTestingModule,
-        ToastrModule.forRoot(),
-        MatDividerModule,
-        MatIconModule,
-        FormsModule,
-        NgbTypeaheadModule,
-        AddPeopleModalComponent,
-    ],
-    providers: [Apollo, NgbActiveModal],
-});
+            imports: [
+                SharedTestModule,
+                ApolloTestingModule,
+                HttpClientTestingModule,
+                ToastrModule.forRoot(),
+                MatDividerModule,
+                MatIconModule,
+                FormsModule,
+                NgbTypeaheadModule,
+                AddPeopleModalComponent,
+            ],
+            providers: [Apollo, NgbActiveModal],
+        });
         registerMatSvgIcons();
 
         fixture = TestBed.createComponent(AddPeopleModalComponent);

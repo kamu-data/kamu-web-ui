@@ -18,9 +18,9 @@ describe("FileFromUrlModalComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    providers: [NgbActiveModal],
-    imports: [ReactiveFormsModule, SharedTestModule, MatDividerModule, FileFromUrlModalComponent],
-}).compileComponents();
+            providers: [NgbActiveModal],
+            imports: [ReactiveFormsModule, SharedTestModule, MatDividerModule, FileFromUrlModalComponent],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(FileFromUrlModalComponent);
         component = fixture.componentInstance;

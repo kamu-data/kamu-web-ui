@@ -15,8 +15,8 @@ describe("DataAccessExportTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [MatIconModule, DataAccessExportTabComponent],
-});
+            imports: [MatIconModule, DataAccessExportTabComponent],
+        });
         fixture = TestBed.createComponent(DataAccessExportTabComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

@@ -332,7 +332,7 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    public static dynamicImgSrc(status: FlowStatus): string {
+    public static flowStatusAnimationSrc(status: FlowStatus): string {
         switch (status) {
             case FlowStatus.Running:
                 return "assets/images/gear.gif";

@@ -49,6 +49,8 @@ export const mockFlowSummaryDataFragmentIngestResult: FlowSummaryDataFragment = 
         lastAttemptFinishedAt: "2024-02-12T18:21:29.554197038+00:00",
         __typename: "FlowTimingRecords",
     },
+    retryPolicy: null,
+    tasks: [],
     __typename: "Flow",
 };
 

@@ -5513,6 +5513,8 @@ export type FlowSummaryDataFragment = {
         | { __typename?: "FlowConfigRuleIngest"; fetchUncacheable: boolean }
         | { __typename?: "FlowConfigRuleReset" }
         | null;
+    tasks: Array<{ __typename?: "Task"; taskId: string; status: TaskStatus }>;
+    retryPolicy?: { __typename?: "FlowRetryPolicy"; maxAttempts: number } | null;
 };
 
 export type DatasetListFlowsDataFragment = {
@@ -7178,6 +7180,13 @@ export const FlowSummaryDataFragmentDoc = gql`
                     __typename
                 }
             }
+        }
+        tasks {
+            taskId
+            status
+        }
+        retryPolicy {
+            maxAttempts
         }
     }
     ${AccountFragmentDoc}

@@ -140,4 +140,13 @@ fragment FlowSummaryData on Flow {
       }
     }
   }
+
+  tasks {
+    taskId
+    status
+  }
+
+  retryPolicy {
+    maxAttempts
+  }
 }

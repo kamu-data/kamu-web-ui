@@ -161,6 +161,25 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         return DatasetFlowTableHelpers.waitingBlockText(startCondition);
     }
 
+    public retriesBlockVisible(node: FlowSummaryDataFragment): boolean {
+        // We want to show the retries block if:
+        // 1. The flow is currently retrying.
+        // 2. The flow has failed, and there were multiple retry attempts.
+        return (
+            node.status === FlowStatus.Retrying ||
+            (node.status === FlowStatus.Finished &&
+                (node.retryPolicy?.maxAttempts || 0) > 0 &&
+                node.outcome?.__typename === "FlowFailedError")
+        );
+    }
+
+    public retriesBlockText(node: FlowSummaryDataFragment): string {
+        if (!node.retryPolicy) {
+            throw new Error("Retry policy is undefined, but expected");
+        }
+        return DatasetFlowTableHelpers.retriesBlockText(node.status, node.tasks.length, node.retryPolicy.maxAttempts);
+    }
+
     public datasetById(datasetId: string): Dataset {
         const dataset = (this.involvedDatasets as Dataset[]).find((dataset) => dataset.id === datasetId) as Dataset;
         return dataset;
@@ -182,8 +201,8 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         );
     }
 
-    public dynamicImgSrc(status: FlowStatus): string {
-        return DatasetFlowDetailsHelpers.dynamicImgSrc(status);
+    public flowStatusAnimationSrc(status: FlowStatus): string {
+        return DatasetFlowDetailsHelpers.flowStatusAnimationSrc(status);
     }
 
     public onResetFilters(): void {

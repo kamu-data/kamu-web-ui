@@ -141,6 +141,6 @@ describe("DatasetFlowDetailsHelpers", () => {
 
     it(`should check don't show dynamic image`, () => {
         const expectedResult = "";
-        expect(DatasetFlowDetailsHelpers.dynamicImgSrc(FlowStatus.Finished)).toEqual(expectedResult);
+        expect(DatasetFlowDetailsHelpers.flowStatusAnimationSrc(FlowStatus.Finished)).toEqual(expectedResult);
     });
 });

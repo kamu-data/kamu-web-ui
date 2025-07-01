@@ -300,6 +300,19 @@ export class DatasetFlowTableHelpers {
         }
     }
 
+    public static retriesBlockText(flowStatus: FlowStatus, tasksInFlow: number, maxRetryAttempts: number): string {
+        switch (flowStatus) {
+            case FlowStatus.Retrying:
+                return `retry attempt ${tasksInFlow} of ${maxRetryAttempts}`;
+
+            case FlowStatus.Finished: // failure is assumed, otherwise there is no retry block
+                return `failed after ${maxRetryAttempts} retry attempts`;
+
+            default:
+                throw new Error('Retries block is only applicable for "Retrying" or "Finished" flow statuses');
+        }
+    }
+
     public static tooltipText(node: FlowSummaryDataFragment): string {
         switch (node.status) {
             case FlowStatus.Waiting:

@@ -227,7 +227,6 @@ export class DataHelpers {
             case "FlowDescriptionDatasetHardCompaction":
                 if (
                     flow.configSnapshot?.__typename === "FlowConfigRuleCompaction" &&
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                     flow.configSnapshot.compactionMode.__typename === "FlowConfigCompactionModeMetadataOnly"
                 ) {
                     return "Reset";

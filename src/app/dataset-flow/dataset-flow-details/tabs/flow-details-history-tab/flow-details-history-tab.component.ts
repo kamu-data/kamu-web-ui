@@ -61,6 +61,6 @@ export class FlowDetailsHistoryTabComponent {
     }
 
     public dynamicImgSrc(status: FlowStatus): string {
-        return DatasetFlowDetailsHelpers.dynamicImgSrc(status);
+        return DatasetFlowDetailsHelpers.flowStatusAnimationSrc(status);
     }
 }

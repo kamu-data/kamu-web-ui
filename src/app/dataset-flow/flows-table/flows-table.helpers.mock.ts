@@ -54,6 +54,8 @@ export const mockDatasetExecuteTransformFlowSummaryData: FlowSummaryDataFragment
         lastAttemptFinishedAt: null,
         __typename: "FlowTimingRecords",
     },
+    retryPolicy: null,
+    tasks: [],
     __typename: "Flow",
 };
 
@@ -80,6 +82,8 @@ export const mockDatasetExecuteTransformFlowDescriptionUpdateResultUnknown: Flow
         lastAttemptFinishedAt: null,
         __typename: "FlowTimingRecords",
     },
+    retryPolicy: null,
+    tasks: [],
     __typename: "Flow",
 };
 
@@ -106,6 +110,8 @@ export const mockDatasetPollingIngestFlowDescriptionUpdateResultUnknown: FlowSum
         lastAttemptFinishedAt: null,
         __typename: "FlowTimingRecords",
     },
+    retryPolicy: null,
+    tasks: [],
     __typename: "Flow",
 };
 
@@ -127,6 +133,8 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             lastAttemptFinishedAt: null,
             __typename: "FlowTimingRecords",
         },
+        retryPolicy: null,
+        tasks: [],
         __typename: "Flow",
     },
     {
@@ -146,6 +154,8 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             lastAttemptFinishedAt: null,
             __typename: "FlowTimingRecords",
         },
+        retryPolicy: null,
+        tasks: [],
         __typename: "Flow",
     },
     {
@@ -165,6 +175,8 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             lastAttemptFinishedAt: null,
             __typename: "FlowTimingRecords",
         },
+        retryPolicy: null,
+        tasks: [],
         __typename: "Flow",
     },
     {
@@ -184,6 +196,8 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             lastAttemptFinishedAt: null,
             __typename: "FlowTimingRecords",
         },
+        retryPolicy: null,
+        tasks: [],
         __typename: "Flow",
     },
     {
@@ -210,6 +224,8 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             lastAttemptFinishedAt: null,
             __typename: "FlowTimingRecords",
         },
+        retryPolicy: null,
+        tasks: [],
         __typename: "Flow",
     },
     {
@@ -236,6 +252,8 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             lastAttemptFinishedAt: "2024-02-12T18:22:32+00:00",
             __typename: "FlowTimingRecords",
         },
+        retryPolicy: null,
+        tasks: [],
         __typename: "Flow",
     },
     {
@@ -261,6 +279,8 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             lastAttemptFinishedAt: "2024-02-12T18:22:32+00:00",
             __typename: "FlowTimingRecords",
         },
+        retryPolicy: null,
+        tasks: [],
         __typename: "Flow",
     },
     {
@@ -289,6 +309,8 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             lastAttemptFinishedAt: null,
             __typename: "FlowTimingRecords",
         },
+        retryPolicy: null,
+        tasks: [],
         __typename: "Flow",
     },
 ];
@@ -315,6 +337,8 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
             __typename: "FlowStartConditionExecutor",
             taskId: "10",
         },
+        retryPolicy: null,
+        tasks: [],
         __typename: "Flow",
     },
     {
@@ -338,6 +362,8 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
             __typename: "FlowStartConditionSchedule",
             wakeUpAt: "2024-03-14T12:24:29+00:00",
         },
+        retryPolicy: null,
+        tasks: [],
         __typename: "Flow",
     },
     {
@@ -363,6 +389,8 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
             wakeUpAt: "2024-03-14T13:24:29+00:00",
             shiftedFrom: "2024-03-14T12:24:29+00:00",
         },
+        retryPolicy: null,
+        tasks: [],
         __typename: "Flow",
     },
     {
@@ -395,6 +423,8 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
             accumulatedRecordsCount: 100,
             watermarkModified: true,
         },
+        retryPolicy: null,
+        tasks: [],
         __typename: "Flow",
     },
     {
@@ -415,6 +445,8 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
             __typename: "FlowTimingRecords",
         },
         startCondition: null,
+        retryPolicy: null,
+        tasks: [],
         __typename: "Flow",
     },
     {
@@ -441,6 +473,8 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
             __typename: "FlowTimingRecords",
         },
         startCondition: null,
+        retryPolicy: null,
+        tasks: [],
         __typename: "Flow",
     },
     {
@@ -464,6 +498,8 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
             __typename: "FlowTimingRecords",
         },
         startCondition: null,
+        retryPolicy: null,
+        tasks: [],
         __typename: "Flow",
     },
     {
@@ -490,6 +526,8 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
             __typename: "FlowTimingRecords",
         },
         startCondition: null,
+        retryPolicy: null,
+        tasks: [],
         __typename: "Flow",
     },
 ];
@@ -671,5 +709,7 @@ export const mockFlowSummaryDataFragmentShowForceLink: FlowSummaryDataFragment =
         fetchUncacheable: false,
         __typename: "FlowConfigRuleIngest",
     },
+    retryPolicy: null,
+    tasks: [],
     __typename: "Flow",
 };

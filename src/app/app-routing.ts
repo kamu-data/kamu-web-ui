@@ -546,14 +546,3 @@ export const routes: Routes = [
         component: PageNotFoundComponent,
     },
 ];
-
-// @NgModule({
-//     imports: [
-//         RouterModule.forRoot(routes, {
-//             onSameUrlNavigation: "reload",
-//             bindToComponentInputs: true,
-//         }),
-//     ],
-//     exports: [RouterModule],
-// })
-// export class AppRoutingModule {}

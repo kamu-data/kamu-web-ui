@@ -6,21 +6,11 @@ import {
     SecurityContext,
     importProvidersFrom,
 } from "@angular/core";
-
 import { environment } from "./environments/environment";
 import { AppComponent } from "./app/app.component";
-import { SearchModule } from "./app/search/search.module";
-import { MetadataBlockModule } from "./app/dataset-block/metadata-block/metadata-block.module";
-import { DatasetViewModule } from "./app/dataset-view/dataset-view.module";
-import { DatasetFlowDetailsModule } from "./app/dataset-flow/dataset-flow-details/dataset-flow-details.module";
-import { DatasetCreateModule } from "./app/dataset-create/dataset-create.module";
-
-import { ModalModule } from "./app/common/components/modal/modal.module";
 import { MarkdownModule } from "ngx-markdown";
-import { ClipboardModule } from "@angular/cdk/clipboard";
 import { provideAnimations } from "@angular/platform-browser/animations";
-import { BrowserModule, bootstrapApplication } from "@angular/platform-browser";
-import { CommonModule } from "@angular/common";
+import { bootstrapApplication } from "@angular/platform-browser";
 import { MAT_RIPPLE_GLOBAL_OPTIONS } from "@angular/material/core";
 import { logError } from "./app/common/helpers/app.helpers";
 import { firstValueFrom } from "rxjs";
@@ -42,37 +32,17 @@ import {
     provideHttpClient,
     HttpClient,
 } from "@angular/common/http";
-import { SearchService } from "./app/search/search.service";
-import { SearchApi } from "./app/api/search.api";
-import { NavigationService } from "./app/services/navigation.service";
 import { LoggedUserService } from "./app/auth/logged-user.service";
 import { LoginService } from "./app/auth/login/login.service";
 import { HttpLink } from "apollo-angular/http";
-import { DatasetSubscriptionsService } from "./app/dataset-view/dataset.subscriptions.service";
-import { DatasetService } from "./app/dataset-view/dataset.service";
-import { DatasetPermissionsService } from "./app/dataset-view/dataset.permissions.service";
-import { DatasetApi } from "./app/api/dataset.api";
-import { AuthApi } from "./app/api/auth.api";
 import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
 import AppValues from "./app/common/values/app.values";
 import { provideRouter, withComponentInputBinding, withRouterConfig } from "@angular/router";
 import { routes } from "./app/app-routing";
-import { NgxGraphModule } from "@swimlane/ngx-graph";
 import { provideToastr } from "ngx-toastr";
 
 const Services = [
     Apollo,
-    AuthApi,
-    DatasetApi,
-    DatasetPermissionsService,
-    DatasetService,
-    DatasetSubscriptionsService,
-    HttpLink,
-    LoginService,
-    LoggedUserService,
-    NavigationService,
-    SearchApi,
-    SearchService,
     {
         provide: HTTP_INTERCEPTORS,
         useClass: SpinnerInterceptor,
@@ -185,22 +155,11 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
     providers: [
         importProvidersFrom(
-            CommonModule,
-            BrowserModule,
-            ClipboardModule,
             MarkdownModule.forRoot({
                 loader: HttpClient,
                 sanitize: SecurityContext.NONE,
             }),
-            ModalModule.forRoot(),
-            NgxGraphModule,
-            DatasetCreateModule,
-            DatasetFlowDetailsModule,
-            DatasetViewModule,
-            MetadataBlockModule,
-            SearchModule,
         ),
-        ...Services,
         provideAnimations(),
         provideHttpClient(withInterceptorsFromDi()),
         provideRouter(
@@ -216,6 +175,7 @@ bootstrapApplication(AppComponent, {
             newestOnTop: false,
             preventDuplicates: true,
         }),
+        ...Services,
     ],
 })
     // eslint-disable-next-line no-console

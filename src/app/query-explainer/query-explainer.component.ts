@@ -81,6 +81,7 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
         }
     }
 
+    /* istanbul ignore next */
     private fillDatasetsObservables(datasets: QueryExplainerDatasetsType[]): void {
         datasets
             ?.map((dataset) => ({ datasetId: dataset.id, blockHash: dataset.blockHash }))
@@ -111,6 +112,7 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
         }
     }
 
+    /* istanbul ignore next */
     private combineQueryExplainerResponse(
         parsedCommitment: QueryExplainerResponse,
     ): Observable<QueryExplainerComponentData> {

@@ -1868,6 +1868,8 @@ export type Flow = {
     __typename?: "Flow";
     /** Flow config snapshot */
     configSnapshot?: Maybe<FlowConfigRule>;
+    /** Associated dataset ID, if any */
+    datasetId?: Maybe<Scalars["DatasetID"]>;
     /** Description of key flow parameters */
     description: FlowDescription;
     /** Unique identifier of the flow */
@@ -2015,14 +2017,12 @@ export type FlowDescription =
 
 export type FlowDescriptionDatasetExecuteTransform = {
     __typename?: "FlowDescriptionDatasetExecuteTransform";
-    datasetId: Scalars["DatasetID"];
     transformResult?: Maybe<FlowDescriptionUpdateResult>;
 };
 
 export type FlowDescriptionDatasetHardCompaction = {
     __typename?: "FlowDescriptionDatasetHardCompaction";
     compactionResult?: Maybe<FlowDescriptionDatasetHardCompactionResult>;
-    datasetId: Scalars["DatasetID"];
 };
 
 export type FlowDescriptionDatasetHardCompactionResult =
@@ -2031,13 +2031,11 @@ export type FlowDescriptionDatasetHardCompactionResult =
 
 export type FlowDescriptionDatasetPollingIngest = {
     __typename?: "FlowDescriptionDatasetPollingIngest";
-    datasetId: Scalars["DatasetID"];
     ingestResult?: Maybe<FlowDescriptionUpdateResult>;
 };
 
 export type FlowDescriptionDatasetPushIngest = {
     __typename?: "FlowDescriptionDatasetPushIngest";
-    datasetId: Scalars["DatasetID"];
     ingestResult?: Maybe<FlowDescriptionUpdateResult>;
     inputRecordsCount: Scalars["Int"];
     message: Scalars["String"];
@@ -2046,7 +2044,6 @@ export type FlowDescriptionDatasetPushIngest = {
 
 export type FlowDescriptionDatasetReset = {
     __typename?: "FlowDescriptionDatasetReset";
-    datasetId: Scalars["DatasetID"];
     resetResult?: Maybe<FlowDescriptionResetResult>;
 };
 
@@ -2278,6 +2275,8 @@ export type FlowTimingRecords = {
     __typename?: "FlowTimingRecords";
     /** Recorded time of last task scheduling */
     awaitingExecutorSince?: Maybe<Scalars["DateTime"]>;
+    /** Initiation time */
+    initiatedAt: Scalars["DateTime"];
     /**
      * Recorded time of finish (successful or failed after retry) or abortion
      * (Finished state seen at least once)
@@ -5406,117 +5405,6 @@ export type DatasetResumeFlowsMutation = {
     };
 };
 
-export type FlowSummaryDataFragment = {
-    __typename?: "Flow";
-    flowId: string;
-    status: FlowStatus;
-    description:
-        | {
-              __typename?: "FlowDescriptionDatasetExecuteTransform";
-              datasetId: string;
-              transformResult?:
-                  | {
-                        __typename?: "FlowDescriptionUpdateResultSuccess";
-                        numBlocks: number;
-                        numRecords: number;
-                        updatedWatermark?: string | null;
-                    }
-                  | { __typename?: "FlowDescriptionUpdateResultUnknown"; message: string }
-                  | { __typename?: "FlowDescriptionUpdateResultUpToDate"; uncacheable: boolean }
-                  | null;
-          }
-        | {
-              __typename?: "FlowDescriptionDatasetHardCompaction";
-              datasetId: string;
-              compactionResult?:
-                  | { __typename?: "FlowDescriptionHardCompactionNothingToDo"; message: string; dummy?: string | null }
-                  | {
-                        __typename?: "FlowDescriptionHardCompactionSuccess";
-                        originalBlocksCount: number;
-                        resultingBlocksCount: number;
-                        newHead: string;
-                    }
-                  | null;
-          }
-        | {
-              __typename?: "FlowDescriptionDatasetPollingIngest";
-              datasetId: string;
-              ingestResult?:
-                  | {
-                        __typename?: "FlowDescriptionUpdateResultSuccess";
-                        numBlocks: number;
-                        numRecords: number;
-                        updatedWatermark?: string | null;
-                    }
-                  | { __typename?: "FlowDescriptionUpdateResultUnknown"; message: string }
-                  | { __typename?: "FlowDescriptionUpdateResultUpToDate"; uncacheable: boolean }
-                  | null;
-          }
-        | {
-              __typename?: "FlowDescriptionDatasetPushIngest";
-              datasetId: string;
-              sourceName?: string | null;
-              inputRecordsCount: number;
-              ingestResult?:
-                  | {
-                        __typename?: "FlowDescriptionUpdateResultSuccess";
-                        numBlocks: number;
-                        numRecords: number;
-                        updatedWatermark?: string | null;
-                    }
-                  | { __typename?: "FlowDescriptionUpdateResultUnknown"; message: string }
-                  | { __typename?: "FlowDescriptionUpdateResultUpToDate"; uncacheable: boolean }
-                  | null;
-          }
-        | {
-              __typename?: "FlowDescriptionDatasetReset";
-              datasetId: string;
-              resetResult?: { __typename?: "FlowDescriptionResetResult"; newHead: string } | null;
-          }
-        | { __typename?: "FlowDescriptionSystemGC"; dummy: boolean };
-    initiator?: ({ __typename?: "Account" } & AccountFragment) | null;
-    outcome?:
-        | ({ __typename?: "FlowAbortedResult" } & FlowOutcomeData_FlowAbortedResult_Fragment)
-        | ({ __typename?: "FlowFailedError" } & FlowOutcomeData_FlowFailedError_Fragment)
-        | ({ __typename?: "FlowSuccessResult" } & FlowOutcomeData_FlowSuccessResult_Fragment)
-        | null;
-    timing: {
-        __typename?: "FlowTimingRecords";
-        scheduledAt?: string | null;
-        awaitingExecutorSince?: string | null;
-        runningSince?: string | null;
-        lastAttemptFinishedAt?: string | null;
-    };
-    startCondition?:
-        | {
-              __typename: "FlowStartConditionBatching";
-              batchingDeadline: string;
-              accumulatedRecordsCount: number;
-              watermarkModified: boolean;
-              activeBatchingRule: {
-                  __typename?: "FlowTriggerBatchingRule";
-                  minRecordsToAwait: number;
-                  maxBatchingInterval: { __typename?: "TimeDelta" } & TimeDeltaDataFragment;
-              };
-          }
-        | { __typename: "FlowStartConditionExecutor"; taskId: string }
-        | { __typename: "FlowStartConditionSchedule"; wakeUpAt: string }
-        | { __typename: "FlowStartConditionThrottling"; intervalSec: number; wakeUpAt: string; shiftedFrom: string }
-        | null;
-    configSnapshot?:
-        | {
-              __typename?: "FlowConfigRuleCompaction";
-              compactionMode:
-                  | { __typename: "FlowConfigCompactionModeFull" }
-                  | { __typename: "FlowConfigCompactionModeMetadataOnly" };
-          }
-        | { __typename?: "FlowConfigRuleIngest"; fetchUncacheable: boolean }
-        | { __typename?: "FlowConfigRuleReset" }
-        | null;
-    tasks: Array<{ __typename?: "Task"; taskId: string; status: TaskStatus }>;
-    retryPolicy?: { __typename?: "FlowRetryPolicy"; maxAttempts: number } | null;
-};
-
 export type DatasetListFlowsDataFragment = {
     __typename?: "Dataset";
     metadata: {
@@ -5638,14 +5526,8 @@ export type FlowHistoryDataFragment =
 export type FlowItemWidgetDataFragment = {
     __typename?: "Flow";
     flowId: string;
+    datasetId?: string | null;
     status: FlowStatus;
-    description:
-        | { __typename?: "FlowDescriptionDatasetExecuteTransform"; datasetId: string }
-        | { __typename?: "FlowDescriptionDatasetHardCompaction"; datasetId: string }
-        | { __typename?: "FlowDescriptionDatasetPollingIngest"; datasetId: string }
-        | { __typename?: "FlowDescriptionDatasetPushIngest"; datasetId: string }
-        | { __typename?: "FlowDescriptionDatasetReset"; datasetId: string }
-        | { __typename?: "FlowDescriptionSystemGC" };
     initiator?: { __typename?: "Account"; accountName: string } | null;
     outcome?:
         | ({ __typename?: "FlowAbortedResult" } & FlowOutcomeData_FlowAbortedResult_Fragment)
@@ -5654,6 +5536,7 @@ export type FlowItemWidgetDataFragment = {
         | null;
     timing: {
         __typename?: "FlowTimingRecords";
+        initiatedAt: string;
         scheduledAt?: string | null;
         awaitingExecutorSince?: string | null;
         runningSince?: string | null;
@@ -5680,6 +5563,113 @@ export type FlowOutcomeDataFragment =
     | FlowOutcomeData_FlowAbortedResult_Fragment
     | FlowOutcomeData_FlowFailedError_Fragment
     | FlowOutcomeData_FlowSuccessResult_Fragment;
+
+export type FlowSummaryDataFragment = {
+    __typename?: "Flow";
+    flowId: string;
+    datasetId?: string | null;
+    status: FlowStatus;
+    description:
+        | {
+              __typename?: "FlowDescriptionDatasetExecuteTransform";
+              transformResult?:
+                  | {
+                        __typename?: "FlowDescriptionUpdateResultSuccess";
+                        numBlocks: number;
+                        numRecords: number;
+                        updatedWatermark?: string | null;
+                    }
+                  | { __typename?: "FlowDescriptionUpdateResultUnknown"; message: string }
+                  | { __typename?: "FlowDescriptionUpdateResultUpToDate"; uncacheable: boolean }
+                  | null;
+          }
+        | {
+              __typename?: "FlowDescriptionDatasetHardCompaction";
+              compactionResult?:
+                  | { __typename?: "FlowDescriptionHardCompactionNothingToDo"; message: string; dummy?: string | null }
+                  | {
+                        __typename?: "FlowDescriptionHardCompactionSuccess";
+                        originalBlocksCount: number;
+                        resultingBlocksCount: number;
+                        newHead: string;
+                    }
+                  | null;
+          }
+        | {
+              __typename?: "FlowDescriptionDatasetPollingIngest";
+              ingestResult?:
+                  | {
+                        __typename?: "FlowDescriptionUpdateResultSuccess";
+                        numBlocks: number;
+                        numRecords: number;
+                        updatedWatermark?: string | null;
+                    }
+                  | { __typename?: "FlowDescriptionUpdateResultUnknown"; message: string }
+                  | { __typename?: "FlowDescriptionUpdateResultUpToDate"; uncacheable: boolean }
+                  | null;
+          }
+        | {
+              __typename?: "FlowDescriptionDatasetPushIngest";
+              sourceName?: string | null;
+              inputRecordsCount: number;
+              ingestResult?:
+                  | {
+                        __typename?: "FlowDescriptionUpdateResultSuccess";
+                        numBlocks: number;
+                        numRecords: number;
+                        updatedWatermark?: string | null;
+                    }
+                  | { __typename?: "FlowDescriptionUpdateResultUnknown"; message: string }
+                  | { __typename?: "FlowDescriptionUpdateResultUpToDate"; uncacheable: boolean }
+                  | null;
+          }
+        | {
+              __typename?: "FlowDescriptionDatasetReset";
+              resetResult?: { __typename?: "FlowDescriptionResetResult"; newHead: string } | null;
+          }
+        | { __typename?: "FlowDescriptionSystemGC"; dummy: boolean };
+    initiator?: ({ __typename?: "Account" } & AccountFragment) | null;
+    outcome?:
+        | ({ __typename?: "FlowAbortedResult" } & FlowOutcomeData_FlowAbortedResult_Fragment)
+        | ({ __typename?: "FlowFailedError" } & FlowOutcomeData_FlowFailedError_Fragment)
+        | ({ __typename?: "FlowSuccessResult" } & FlowOutcomeData_FlowSuccessResult_Fragment)
+        | null;
+    timing: {
+        __typename?: "FlowTimingRecords";
+        scheduledAt?: string | null;
+        awaitingExecutorSince?: string | null;
+        runningSince?: string | null;
+        lastAttemptFinishedAt?: string | null;
+    };
+    startCondition?:
+        | {
+              __typename: "FlowStartConditionBatching";
+              batchingDeadline: string;
+              accumulatedRecordsCount: number;
+              watermarkModified: boolean;
+              activeBatchingRule: {
+                  __typename?: "FlowTriggerBatchingRule";
+                  minRecordsToAwait: number;
+                  maxBatchingInterval: { __typename?: "TimeDelta" } & TimeDeltaDataFragment;
+              };
+          }
+        | { __typename: "FlowStartConditionExecutor"; taskId: string }
+        | { __typename: "FlowStartConditionSchedule"; wakeUpAt: string }
+        | { __typename: "FlowStartConditionThrottling"; intervalSec: number; wakeUpAt: string; shiftedFrom: string }
+        | null;
+    configSnapshot?:
+        | {
+              __typename?: "FlowConfigRuleCompaction";
+              compactionMode:
+                  | { __typename: "FlowConfigCompactionModeFull" }
+                  | { __typename: "FlowConfigCompactionModeMetadataOnly" };
+          }
+        | { __typename?: "FlowConfigRuleIngest"; fetchUncacheable: boolean }
+        | { __typename?: "FlowConfigRuleReset" }
+        | null;
+    tasks: Array<{ __typename?: "Task"; taskId: string }>;
+    retryPolicy?: { __typename?: "FlowRetryPolicy"; maxAttempts: number } | null;
+};
 
 export type FlowConnectionWidgetDataFragment = {
     __typename?: "FlowConnection";
@@ -7059,7 +7049,6 @@ export const FlowSummaryDataFragmentDoc = gql`
     fragment FlowSummaryData on Flow {
         description {
             ... on FlowDescriptionDatasetPollingIngest {
-                datasetId
                 ingestResult {
                     ... on FlowDescriptionUpdateResultUpToDate {
                         uncacheable
@@ -7075,7 +7064,6 @@ export const FlowSummaryDataFragmentDoc = gql`
                 }
             }
             ... on FlowDescriptionDatasetPushIngest {
-                datasetId
                 sourceName
                 inputRecordsCount
                 ingestResult {
@@ -7093,7 +7081,6 @@ export const FlowSummaryDataFragmentDoc = gql`
                 }
             }
             ... on FlowDescriptionDatasetExecuteTransform {
-                datasetId
                 transformResult {
                     ... on FlowDescriptionUpdateResultUpToDate {
                         uncacheable
@@ -7109,7 +7096,6 @@ export const FlowSummaryDataFragmentDoc = gql`
                 }
             }
             ... on FlowDescriptionDatasetHardCompaction {
-                datasetId
                 compactionResult {
                     ... on FlowDescriptionHardCompactionSuccess {
                         originalBlocksCount
@@ -7126,13 +7112,13 @@ export const FlowSummaryDataFragmentDoc = gql`
                 dummy
             }
             ... on FlowDescriptionDatasetReset {
-                datasetId
                 resetResult {
                     newHead
                 }
             }
         }
         flowId
+        datasetId
         status
         initiator {
             ...Account
@@ -7183,7 +7169,6 @@ export const FlowSummaryDataFragmentDoc = gql`
         }
         tasks {
             taskId
-            status
         }
         retryPolicy {
             maxAttempts
@@ -7322,24 +7307,8 @@ export const FlowHistoryDataFragmentDoc = gql`
 export const FlowItemWidgetDataFragmentDoc = gql`
     fragment FlowItemWidgetData on Flow {
         flowId
+        datasetId
         status
-        description {
-            ... on FlowDescriptionDatasetPollingIngest {
-                datasetId
-            }
-            ... on FlowDescriptionDatasetPushIngest {
-                datasetId
-            }
-            ... on FlowDescriptionDatasetExecuteTransform {
-                datasetId
-            }
-            ... on FlowDescriptionDatasetHardCompaction {
-                datasetId
-            }
-            ... on FlowDescriptionDatasetReset {
-                datasetId
-            }
-        }
         initiator {
             accountName
         }
@@ -7347,6 +7316,7 @@ export const FlowItemWidgetDataFragmentDoc = gql`
             ...FlowOutcomeData
         }
         timing {
+            initiatedAt
             scheduledAt
             awaitingExecutorSince
             runningSince

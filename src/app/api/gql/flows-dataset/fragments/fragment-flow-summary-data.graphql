@@ -1,7 +1,6 @@
 fragment FlowSummaryData on Flow {
   description {
     ... on FlowDescriptionDatasetPollingIngest {
-      datasetId
       ingestResult {
         ... on FlowDescriptionUpdateResultUpToDate {
           uncacheable
@@ -20,7 +19,6 @@ fragment FlowSummaryData on Flow {
     }
 
     ... on FlowDescriptionDatasetPushIngest {
-      datasetId
       sourceName
       inputRecordsCount
       ingestResult {
@@ -41,7 +39,6 @@ fragment FlowSummaryData on Flow {
     }
 
     ... on FlowDescriptionDatasetExecuteTransform {
-      datasetId
       transformResult {
         ... on FlowDescriptionUpdateResultUpToDate {
           uncacheable
@@ -60,7 +57,6 @@ fragment FlowSummaryData on Flow {
     }
 
     ... on FlowDescriptionDatasetHardCompaction {
-      datasetId
       compactionResult {
         ... on FlowDescriptionHardCompactionSuccess {
           originalBlocksCount
@@ -80,26 +76,31 @@ fragment FlowSummaryData on Flow {
     }
 
     ... on FlowDescriptionDatasetReset {
-      datasetId
       resetResult {
         newHead
       }
     }
   }
+
   flowId
+  datasetId
   status
+
   initiator {
     ...Account
   }
+
   outcome {
     ...FlowOutcomeData
   }
+
   timing {
     scheduledAt
     awaitingExecutorSince
     runningSince
     lastAttemptFinishedAt
   }
+
   startCondition {
     __typename
     ... on FlowStartConditionThrottling {
@@ -143,7 +144,6 @@ fragment FlowSummaryData on Flow {
 
   tasks {
     taskId
-    status
   }
 
   retryPolicy {

@@ -16,12 +16,13 @@ import {
     DatasetTriggerIngestFlowMutation,
     DatasetTriggerResetFlowMutation,
     FlowConnectionDataFragment,
+    FlowConnectionWidgetDataFragment,
     FlowHistoryDataFragment,
-    FlowOutcomeDataFragment,
     FlowRetryBackoffType,
     FlowRetryPolicyInput,
     FlowStatus,
     FlowSummaryDataFragment,
+    FlowItemWidgetDataFragment,
     GetDatasetFlowTriggersQuery,
     GetDatasetListFlowsQuery,
     GetFlowByIdQuery,
@@ -307,8 +308,8 @@ export const mockSetDatasetFlowTriggegError: SetDatasetFlowTriggersMutation = {
 
 export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
     {
+        datasetId: mockDatasetMainDataId,
         description: {
-            datasetId: mockDatasetMainDataId,
             ingestResult: null,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
@@ -332,8 +333,8 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         __typename: "Flow",
     },
     {
+        datasetId: mockDatasetMainDataId,
         description: {
-            datasetId: mockDatasetMainDataId,
             ingestResult: null,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
@@ -353,8 +354,8 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         __typename: "Flow",
     },
     {
+        datasetId: mockDatasetMainDataId,
         description: {
-            datasetId: mockDatasetMainDataId,
             ingestResult: null,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
@@ -378,8 +379,8 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         __typename: "Flow",
     },
     {
+        datasetId: mockDatasetMainDataId,
         description: {
-            datasetId: mockDatasetMainDataId,
             ingestResult: null,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
@@ -403,8 +404,8 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         __typename: "Flow",
     },
     {
+        datasetId: mockDatasetMainDataId,
         description: {
-            datasetId: mockDatasetMainDataId,
             ingestResult: null,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
@@ -428,6 +429,101 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         },
         retryPolicy: null,
         tasks: [],
+        __typename: "Flow",
+    },
+];
+
+export const mockFlowItemWidgetDataFragments: FlowItemWidgetDataFragment[] = [
+    {
+        datasetId: mockDatasetMainDataId,
+        flowId: "414",
+        status: FlowStatus.Finished,
+        initiator: null,
+        outcome: {
+            __typename: "FlowSuccessResult",
+            message: "Success",
+        },
+        timing: {
+            initiatedAt: "2024-02-16T09:24:00+00:00",
+            scheduledAt: "2024-02-16T09:25:00+00:00",
+            awaitingExecutorSince: "2024-02-16T09:25:01+00:00",
+            runningSince: "2024-02-16T09:25:02+00:00",
+            lastAttemptFinishedAt: "2024-02-16T09:25:04+00:00",
+            __typename: "FlowTimingRecords",
+        },
+        __typename: "Flow",
+    },
+    {
+        datasetId: mockDatasetMainDataId,
+        flowId: "414",
+        status: FlowStatus.Running,
+        initiator: null,
+        outcome: null,
+        timing: {
+            initiatedAt: "2024-02-12T18:20:25+00:00",
+            scheduledAt: "2024-02-12T18:20:26+00:00",
+            awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
+            runningSince: "2024-02-12T18:21:27.477789591+00:00",
+            lastAttemptFinishedAt: null,
+            __typename: "FlowTimingRecords",
+        },
+        __typename: "Flow",
+    },
+    {
+        datasetId: mockDatasetMainDataId,
+        flowId: "414",
+        status: FlowStatus.Waiting,
+        initiator: null,
+        outcome: null,
+        timing: {
+            initiatedAt: "2024-02-12T18:21:24+00:00",
+            scheduledAt: "2024-02-12T18:21:25+00:00",
+            awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
+            runningSince: "2024-02-12T18:21:27.477789591+00:00",
+            lastAttemptFinishedAt: "2024-02-12T18:21:29.554197038+00:00",
+            __typename: "FlowTimingRecords",
+        },
+        __typename: "Flow",
+    },
+    {
+        datasetId: mockDatasetMainDataId,
+        flowId: "414",
+        status: FlowStatus.Finished,
+        initiator: null,
+        outcome: {
+            __typename: "FlowAbortedResult",
+            message: "Aborted",
+        },
+        timing: {
+            initiatedAt: "2024-02-12T18:21:24+00:00",
+            scheduledAt: "2024-02-12T18:21:25+00:00",
+            awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
+            runningSince: null,
+            lastAttemptFinishedAt: null,
+            __typename: "FlowTimingRecords",
+        },
+        __typename: "Flow",
+    },
+    {
+        datasetId: mockDatasetMainDataId,
+        flowId: "414",
+        status: FlowStatus.Finished,
+        initiator: null,
+        outcome: {
+            __typename: "FlowFailedError",
+            reason: {
+                __typename: "FlowFailureReasonGeneral",
+                message: "Failed",
+            },
+        },
+        timing: {
+            initiatedAt: "2024-02-12T18:21:24+00:00",
+            scheduledAt: "2024-02-12T18:21:25+00:00",
+            awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
+            runningSince: "2024-02-12T18:21:27+00:00",
+            lastAttemptFinishedAt: "2024-02-12T18:21:28+00:00",
+            __typename: "FlowTimingRecords",
+        },
         __typename: "Flow",
     },
 ];
@@ -514,9 +610,9 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                     table: {
                         nodes: [
                             {
+                                datasetId:
+                                    "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
                                 description: {
-                                    datasetId:
-                                        "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
                                     ingestResult: {
                                         numBlocks: 2,
                                         numRecords: 203,
@@ -558,9 +654,9 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                 __typename: "Flow",
                             },
                             {
+                                datasetId:
+                                    "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
                                 description: {
-                                    datasetId:
-                                        "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
                                     ingestResult: null,
                                     __typename: "FlowDescriptionDatasetPollingIngest",
                                 },
@@ -602,9 +698,9 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                         edges: [
                             {
                                 node: {
+                                    datasetId:
+                                        "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
                                     description: {
-                                        datasetId:
-                                            "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
                                         ingestResult: {
                                             numBlocks: 2,
                                             numRecords: 203,
@@ -649,9 +745,9 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                             },
                             {
                                 node: {
+                                    datasetId:
+                                        "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
                                     description: {
-                                        datasetId:
-                                            "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
                                         ingestResult: null,
                                         __typename: "FlowDescriptionDatasetPollingIngest",
                                     },
@@ -690,10 +786,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                         nodes: [
                             {
                                 flowId: "0",
-                                description: {
-                                    __typename: "FlowDescriptionDatasetPollingIngest",
-                                    datasetId: mockDatasetMainDataId,
-                                },
+                                datasetId: mockDatasetMainDataId,
                                 status: FlowStatus.Finished,
                                 initiator: {
                                     accountName: "kamu",
@@ -704,6 +797,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     __typename: "FlowSuccessResult",
                                 },
                                 timing: {
+                                    initiatedAt: "2024-08-21T08:46:09.426925618+00:00",
                                     scheduledAt: "2024-08-21T08:46:19.426925618+00:00",
                                     awaitingExecutorSince: "2024-08-21T08:46:19.426925618+00:00",
                                     runningSince: "2024-08-21T08:46:20.507478673+00:00",
@@ -714,10 +808,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                             },
                             {
                                 flowId: "1",
-                                description: {
-                                    __typename: "FlowDescriptionDatasetPollingIngest",
-                                    datasetId: mockDatasetMainDataId,
-                                },
+                                datasetId: mockDatasetMainDataId,
                                 status: FlowStatus.Finished,
                                 initiator: null,
                                 outcome: {
@@ -728,6 +819,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     __typename: "FlowFailedError",
                                 },
                                 timing: {
+                                    initiatedAt: "2024-08-21T08:45:07+00:00",
                                     scheduledAt: "2024-08-21T08:45:17+00:00",
                                     awaitingExecutorSince: "2024-08-21T08:45:17+00:00",
                                     runningSince: "2024-08-21T08:45:18.722052534+00:00",
@@ -751,7 +843,8 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
 
 export const mockFlowsTableData: FlowsTableData = {
     connectionDataForTable: mockGetDatasetListFlowsQuery.datasets.byId?.flows.runs.table as FlowConnectionDataFragment,
-    connectionDataForWidget: mockGetDatasetListFlowsQuery.datasets.byId?.flows.runs.tiles as FlowConnectionDataFragment,
+    connectionDataForWidget: mockGetDatasetListFlowsQuery.datasets.byId?.flows.runs
+        .tiles as FlowConnectionWidgetDataFragment,
     involvedDatasets: [],
 };
 
@@ -766,9 +859,8 @@ export const mockDatasetTriggerIngestFlowMutation: DatasetTriggerIngestFlowMutat
                                 fetchUncacheable: true,
                                 __typename: "FlowConfigRuleIngest",
                             },
+                            datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
                             description: {
-                                datasetId:
-                                    "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
                                 ingestResult: null,
                                 __typename: "FlowDescriptionDatasetPollingIngest",
                             },
@@ -842,9 +934,8 @@ export const mockDatasetTriggerResetFlowMutation: DatasetTriggerResetFlowMutatio
                                 fetchUncacheable: true,
                                 __typename: "FlowConfigRuleIngest",
                             },
+                            datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
                             description: {
-                                datasetId:
-                                    "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
                                 ingestResult: null,
                                 __typename: "FlowDescriptionDatasetPollingIngest",
                             },
@@ -917,9 +1008,8 @@ export const mockCancelScheduledTasksMutationSuccess: CancelScheduledTasksMutati
                                 fetchUncacheable: true,
                                 __typename: "FlowConfigRuleIngest",
                             },
+                            datasetId: "did:odf:fed01162400e9e5fb02d78805f48580f25589e8c3c21738999e28845f7c9d6818bec7",
                             description: {
-                                datasetId:
-                                    "did:odf:fed01162400e9e5fb02d78805f48580f25589e8c3c21738999e28845f7c9d6818bec7",
                                 ingestResult: null,
                                 __typename: "FlowDescriptionDatasetPollingIngest",
                             },
@@ -1043,9 +1133,8 @@ export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
                                 fetchUncacheable: true,
                                 __typename: "FlowConfigRuleIngest",
                             },
+                            datasetId: "did:odf:fed016c0070664336545c0f49dc6a7a860c6862ab3336b630c2d7e779394a26da2e1e",
                             description: {
-                                datasetId:
-                                    "did:odf:fed016c0070664336545c0f49dc6a7a860c6862ab3336b630c2d7e779394a26da2e1e",
                                 transformResult: null,
                                 __typename: "FlowDescriptionDatasetExecuteTransform",
                             },
@@ -1206,18 +1295,3 @@ export const mockDatasetFlowsInitiatorsQuery: DatasetFlowsInitiatorsQuery = {
         __typename: "Datasets",
     },
 };
-
-export const mockFlowsOutcome: FlowOutcomeDataFragment[] = [
-    {
-        __typename: "FlowSuccessResult",
-        message: "success",
-    },
-    { __typename: "FlowAbortedResult", message: "Error" },
-    {
-        __typename: "FlowFailedError",
-        reason: {
-            __typename: "FlowFailureReasonGeneral",
-            message: "Error",
-        },
-    },
-];

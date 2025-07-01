@@ -26,8 +26,8 @@ export const mockHistoryFragmentWithFinishedStatus: FlowHistoryDataFragment = {
 };
 
 export const mockFlowSummaryDataFragmentIngestResult: FlowSummaryDataFragment = {
+    datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
     description: {
-        datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         ingestResult: {
             __typename: "FlowDescriptionUpdateResultSuccess",
             numBlocks: 10,

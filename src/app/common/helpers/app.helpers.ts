@@ -90,9 +90,9 @@ export function convertSecondsToHumanReadableFormat(seconds: number): string {
     const secondString = remainingSeconds >= 1 ? `${remainingSeconds} second${remainingSeconds > 1 ? "s" : ""}` : "";
 
     if (hours > 0) {
-        return `${hourString}   ${minuteString || "0 minute"} ${secondString && `  ${secondString}`}`;
+        return `${hourString} ${minuteString || "0 minute"}${secondString && ` ${secondString}`}`;
     } else if (!hours && minutes > 0) {
-        return `${minuteString} ${secondString && `  ${secondString}`}`;
+        return `${minuteString}${secondString && ` ${secondString}`}`;
     }
 
     return secondString;

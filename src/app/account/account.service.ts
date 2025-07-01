@@ -18,6 +18,7 @@ import {
     DatasetListFlowsDataFragment,
     DatasetsTotalCountByAccountNameQuery,
     DeleteAccountByNameMutation,
+    FlowConnectionWidgetDataFragment,
 } from "../api/kamu.graphql.interface";
 import { AccountFlowFilters, AccountFragment, FlowConnectionDataFragment } from "../api/kamu.graphql.interface";
 import { AccountApi } from "../api/account.api";
@@ -95,7 +96,8 @@ export class AccountService {
             map(([listFlows, datasetsWithFlows]) => {
                 return {
                     connectionDataForTable: listFlows.accounts.byName?.flows?.runs.table as FlowConnectionDataFragment,
-                    connectionDataForWidget: listFlows.accounts.byName?.flows?.runs.tiles as FlowConnectionDataFragment,
+                    connectionDataForWidget: listFlows.accounts.byName?.flows?.runs
+                        .tiles as FlowConnectionWidgetDataFragment,
                     involvedDatasets: datasetsWithFlows as DatasetListFlowsDataFragment[],
                 };
             }),

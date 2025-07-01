@@ -233,10 +233,10 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
                 noButtonText: "Cancel",
                 handler: (ok) => {
                     if (ok) {
-                        if (node.description.__typename === "FlowDescriptionDatasetPollingIngest") {
+                        if (node.description.__typename === "FlowDescriptionDatasetPollingIngest" && node.datasetId) {
                             this.datasetFlowsService
                                 .datasetTriggerIngestFlow({
-                                    datasetId: node.description.datasetId,
+                                    datasetId: node.datasetId,
                                     ingestConfigInput: {
                                         fetchUncacheable: true,
                                     },
@@ -248,7 +248,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
                                     }
                                 });
                         } else {
-                            throw new Error("Configuration snapshot is undefined");
+                            throw new Error("Configuration snapshot is undefined or datasetId is missing");
                         }
                     }
                 },

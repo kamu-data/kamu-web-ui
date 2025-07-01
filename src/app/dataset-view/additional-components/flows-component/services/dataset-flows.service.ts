@@ -27,6 +27,7 @@ import {
     FlowConfigIngestInput,
     FlowConfigResetInput,
     FlowConnectionDataFragment,
+    FlowConnectionWidgetDataFragment,
     GetDatasetListFlowsQuery,
     GetFlowByIdQuery,
 } from "src/app/api/kamu.graphql.interface";
@@ -151,7 +152,7 @@ export class DatasetFlowsService {
             map((data: GetDatasetListFlowsQuery) => {
                 return {
                     connectionDataForTable: data.datasets.byId?.flows.runs.table as FlowConnectionDataFragment,
-                    connectionDataForWidget: data.datasets.byId?.flows.runs.tiles as FlowConnectionDataFragment,
+                    connectionDataForWidget: data.datasets.byId?.flows.runs.tiles as FlowConnectionWidgetDataFragment,
                     involvedDatasets: [data.datasets.byId] as DatasetListFlowsDataFragment[],
                 };
             }),

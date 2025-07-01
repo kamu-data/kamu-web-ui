@@ -1,23 +1,7 @@
 fragment FlowItemWidgetData on Flow {
   flowId
+  datasetId
   status
-  description {
-    ... on FlowDescriptionDatasetPollingIngest {
-      datasetId
-    }
-    ... on FlowDescriptionDatasetPushIngest {
-      datasetId
-    }
-    ... on FlowDescriptionDatasetExecuteTransform {
-      datasetId
-    }
-    ... on FlowDescriptionDatasetHardCompaction {
-      datasetId
-    }
-    ... on FlowDescriptionDatasetReset {
-      datasetId
-    }
-  }
   initiator {
     accountName
   }
@@ -25,6 +9,7 @@ fragment FlowItemWidgetData on Flow {
     ...FlowOutcomeData
   }
   timing {
+    initiatedAt
     scheduledAt
     awaitingExecutorSince
     runningSince

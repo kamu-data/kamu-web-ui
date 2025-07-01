@@ -7,9 +7,9 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { TileBaseWidgetComponent } from "./tile-base-widget.component";
-import { mockFlowsOutcome, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
+import { mockFlowItemWidgetDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import { NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
-import { FlowOutcomeDataFragment } from "src/app/api/kamu.graphql.interface";
+import { FlowItemWidgetDataFragment } from "src/app/api/kamu.graphql.interface";
 import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { mockDatasets } from "../flows-table/flows-table.helpers.mock";
 
@@ -25,7 +25,7 @@ describe("TileBaseWidgetComponent", () => {
 
         fixture = TestBed.createComponent(TileBaseWidgetComponent);
         component = fixture.componentInstance;
-        component.nodes = mockFlowSummaryDataFragments;
+        component.nodes = mockFlowItemWidgetDataFragments;
         component.involvedDatasets = mockDatasets;
         fixture.detectChanges();
     });
@@ -34,29 +34,46 @@ describe("TileBaseWidgetComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check flow's duration is not null", () => {
-        const runningTime = mockFlowSummaryDataFragments[2].timing.runningSince;
-        const finishedTime = mockFlowSummaryDataFragments[2].timing.lastAttemptFinishedAt;
-        const result = component.durationTask(runningTime, finishedTime);
-        expect(result).toEqual("2 seconds");
+    it("should check flow's duration of finished flow", () => {
+        const result = component.flowDuration(mockFlowItemWidgetDataFragments[0]);
+        expect(result).toEqual("1 minute 4 seconds");
     });
 
-    it("should check flow's duration is null", () => {
-        const runningTime = mockFlowSummaryDataFragments[4].timing.runningSince;
-        const finishedTime = mockFlowSummaryDataFragments[4].timing.lastAttemptFinishedAt;
-        const result = component.durationTask(runningTime, finishedTime);
+    it("should check flow's duration of aborted flow", () => {
+        const result = component.flowDuration(mockFlowItemWidgetDataFragments[3]);
         expect(result).toEqual("-");
     });
 
+    it("should check flow's duration of failed flow", () => {
+        const result = component.flowDuration(mockFlowItemWidgetDataFragments[4]);
+        expect(result).toEqual("4 seconds");
+    });
+
+    it("should check flow's duration of running flow", () => {
+        const now = new Date();
+        const widgetData = {
+            ...mockFlowItemWidgetDataFragments[1],
+            timing: {
+                initiatedAt: new Date(now.getTime() - 100000).toISOString(), // 100 seconds ago
+                scheduledAt: new Date(now.getTime() - 80000).toISOString(), // 80 seconds ago
+                awaitingExecutorSince: new Date(now.getTime() - 80000).toISOString(), // 80 seconds ago
+                runningSince: new Date(now.getTime() - 40000).toISOString(), // 40 seconds ago
+                lastAttemptFinishedAt: null, // still running
+            },
+        };
+        const result = component.flowDuration(widgetData);
+        expect(result).toEqual("1 minute 40 seconds");
+    });
+
     interface TestCase {
-        case: FlowOutcomeDataFragment;
+        case: FlowItemWidgetDataFragment;
         expectedResult: string;
     }
 
     [
-        { case: mockFlowsOutcome[0], expectedResult: "success" },
-        { case: mockFlowsOutcome[1], expectedResult: "aborted" },
-        { case: mockFlowsOutcome[2], expectedResult: "failed" },
+        { case: mockFlowItemWidgetDataFragments[0], expectedResult: "success" },
+        { case: mockFlowItemWidgetDataFragments[3], expectedResult: "aborted" },
+        { case: mockFlowItemWidgetDataFragments[4], expectedResult: "failed" },
     ].forEach((testCase: TestCase) => {
         it(`should check outcome message equal ${testCase.expectedResult}`, () => {
             expect(component.tileOutcomeMessage(testCase.case)).toEqual(testCase.expectedResult);
@@ -64,7 +81,7 @@ describe("TileBaseWidgetComponent", () => {
     });
 
     it(`should check extract dataset alias`, () => {
-        expect(component.datasetAliasByDescription(mockFlowSummaryDataFragments[0])).toEqual(mockDatasets[0].alias);
+        expect(component.datasetAliasByDescription(mockFlowItemWidgetDataFragments[0])).toEqual(mockDatasets[0].alias);
     });
 
     it(`should check href for tile element`, () => {

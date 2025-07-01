@@ -5,14 +5,11 @@
  * included in the LICENSE file.
  */
 
-import { MaybeNull, MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import {
     Dataset,
     DatasetListFlowsDataFragment,
-    FlowDescription,
     FlowItemWidgetDataFragment,
-    FlowOutcomeDataFragment,
     FlowStatus,
 } from "src/app/api/kamu.graphql.interface";
 import { TileBaseWidgetHelpers } from "./tile-base-widget.helpers";
@@ -30,6 +27,7 @@ import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/datas
 export class TileBaseWidgetComponent {
     @Input({ required: true }) public nodes: FlowItemWidgetDataFragment[];
     @Input() public involvedDatasets: DatasetListFlowsDataFragment[] = [];
+    @Input() public displayAlias: boolean = true;
 
     public readonly LAST_RUNS_COUNT = 150;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
@@ -37,18 +35,28 @@ export class TileBaseWidgetComponent {
     public readonly URL_FLOW_DETAILS = ProjectLinks.URL_FLOW_DETAILS;
     public readonly DEFAULT_ADMIN_ACCOUNT_NAME = AppValues.DEFAULT_ADMIN_ACCOUNT_NAME;
 
-    public durationTask(d1: MaybeNullOrUndefined<string>, d2: MaybeNullOrUndefined<string>): string {
-        if (!d2 || !d1) return "-";
-        return DataHelpers.durationTask(d1, d2);
+    public flowDuration(flowNode: FlowItemWidgetDataFragment): string {
+        if (flowNode.outcome) {
+            if (flowNode.timing.lastAttemptFinishedAt) {
+                return DataHelpers.durationTask(flowNode.timing.initiatedAt, flowNode.timing.lastAttemptFinishedAt);
+            } else {
+                return "-";
+            }
+        } else {
+            const now_as_string = new Date().toISOString();
+            return DataHelpers.durationTask(flowNode.timing.initiatedAt, now_as_string);
+        }
     }
 
     public tileWidgetClass(node: FlowItemWidgetDataFragment): string {
         return TileBaseWidgetHelpers.tileWidgetClass(node);
     }
 
-    public tileOutcomeMessage(outcome: FlowOutcomeDataFragment): string {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        switch (outcome.__typename) {
+    public tileOutcomeMessage(node: FlowItemWidgetDataFragment): string {
+        if (!node.outcome) {
+            return "-";
+        }
+        switch (node.outcome.__typename) {
             case "FlowSuccessResult":
                 return "success";
             case "FlowFailedError":
@@ -62,38 +70,26 @@ export class TileBaseWidgetComponent {
     }
 
     public datasetAliasByDescription(node: FlowItemWidgetDataFragment): string {
-        const datasetId = this.extractDatasetId(node);
-        if (datasetId) {
-            const dataset = (this.involvedDatasets as Dataset[]).find((dataset) => dataset.id === datasetId) as Dataset;
+        if (node.datasetId) {
+            const dataset = (this.involvedDatasets as Dataset[]).find(
+                (dataset) => dataset.id === node.datasetId,
+            ) as Dataset;
             return dataset.alias;
         }
         return "";
     }
 
-    public prefixAccountName(node: FlowItemWidgetDataFragment): string {
-        if (this.datasetAliasByDescription(node).includes("/")) {
-            return this.datasetAliasByDescription(node);
+    private canonicalDatasetAlias(node: FlowItemWidgetDataFragment): string {
+        const alias = this.datasetAliasByDescription(node);
+        if (alias.includes("/")) {
+            return alias;
         }
-        return `${this.DEFAULT_ADMIN_ACCOUNT_NAME}/${this.datasetAliasByDescription(node)}`;
+        return `${this.DEFAULT_ADMIN_ACCOUNT_NAME}/${alias}`;
     }
 
-    public setTileItemLink(node: FlowItemWidgetDataFragment): string {
+    public getTileItemLink(node: FlowItemWidgetDataFragment): string {
         return encodeURI(
-            `${this.prefixAccountName(node)}/${this.URL_FLOW_DETAILS}/${node.flowId}/${FlowDetailsTabs.HISTORY}`,
+            `${this.canonicalDatasetAlias(node)}/${this.URL_FLOW_DETAILS}/${node.flowId}/${FlowDetailsTabs.HISTORY}`,
         );
-    }
-
-    private extractDatasetId(node: FlowItemWidgetDataFragment): MaybeNull<string> {
-        const description = node.description as FlowDescription;
-        switch (description.__typename) {
-            case "FlowDescriptionDatasetExecuteTransform":
-            case "FlowDescriptionDatasetHardCompaction":
-            case "FlowDescriptionDatasetPollingIngest":
-            case "FlowDescriptionDatasetPushIngest":
-            case "FlowDescriptionDatasetReset":
-                return description.datasetId;
-            default:
-                return null;
-        }
     }
 }

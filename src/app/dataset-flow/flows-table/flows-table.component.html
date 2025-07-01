@@ -69,8 +69,8 @@
                     <a
                         [routerLink]="[
                             '/',
-                            datasetById(element.description.datasetId).owner.accountName,
-                            datasetById(element.description.datasetId).name,
+                            datasetById(element.datasetId).owner.accountName,
+                            datasetById(element.datasetId).name,
                             URL_FLOW_DETAILS,
                             element.flowId,
                             FlowDetailsTabs.HISTORY,
@@ -82,11 +82,9 @@
                     </a>
                     <div class="d-flex flex-row truncate-sub-message pe-4">
                         <div
-                            [title]="descriptionDatasetFlowSubMessage(element, element.description.datasetId)"
+                            [title]="descriptionDatasetFlowSubMessage(element, element.datasetId)"
                             class="text-small d-block truncate-sub-message"
-                            [innerHTML]="
-                                descriptionDatasetFlowSubMessage(element, element.description.datasetId) | safeHtml
-                            "
+                            [innerHTML]="descriptionDatasetFlowSubMessage(element, element.datasetId) | safeHtml"
                         ></div>
                         &nbsp;
 
@@ -165,11 +163,11 @@
                 <a
                     [routerLink]="[
                         '/',
-                        datasetById(element.description.datasetId).owner.accountName,
-                        datasetById(element.description.datasetId).name,
+                        datasetById(element.datasetId).owner.accountName,
+                        datasetById(element.datasetId).name,
                     ]"
                     class="text-small"
-                    >{{ datasetById(element.description.datasetId).name }}</a
+                    >{{ datasetById(element.datasetId).name }}</a
                 >
             </div>
         </td>
@@ -188,8 +186,8 @@
                         mat-menu-item
                         [routerLink]="[
                             '/',
-                            datasetById(element.description.datasetId).owner.accountName,
-                            datasetById(element.description.datasetId).name,
+                            datasetById(element.datasetId).owner.accountName,
+                            datasetById(element.datasetId).name,
                             URL_FLOW_DETAILS,
                             element.flowId,
                             FlowDetailsTabs.HISTORY,
@@ -199,7 +197,7 @@
                     </a>
                     <mat-divider />
                     <button
-                        (click)="cancelFlow(element.flowId, element.description.datasetId)"
+                        (click)="cancelFlow(element.flowId, element.datasetId)"
                         mat-menu-item
                         [disabled]="element.status === FlowStatus.Finished"
                     >

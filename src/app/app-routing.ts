@@ -26,7 +26,6 @@ import { AdminGuard } from "./auth/guards/admin.guard";
 import { AdminDashboardComponent } from "./admin-view/admin-dashboard/admin-dashboard.component";
 import { DatasetFlowDetailsComponent } from "./dataset-flow/dataset-flow-details/dataset-flow-details.component";
 import { AccountComponent } from "./account/account.component";
-import { QueryExplainerComponent } from "./query-explainer/query-explainer.component";
 import { blockMetadataResolverFn } from "./dataset-block/metadata-block/resolver/block-metadata.resolver";
 import { searchResolverFn } from "./search/resolver/search.resolver";
 import { addPollingSourceResolverFn } from "./dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/resolver/add-polling-source.resolver";
@@ -127,7 +126,8 @@ export const routes: Routes = [
     },
     {
         path: ProjectLinks.URL_QUERY_EXPLAINER,
-        component: QueryExplainerComponent,
+        loadComponent: () =>
+            import("./query-explainer/query-explainer.component").then((m) => m.QueryExplainerComponent),
     },
     {
         path: ProjectLinks.URL_QUERY,

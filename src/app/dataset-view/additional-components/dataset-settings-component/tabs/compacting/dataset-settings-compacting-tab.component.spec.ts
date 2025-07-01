@@ -11,8 +11,8 @@ import { DatasetSettingsCompactingTabComponent } from "./dataset-settings-compac
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ReactiveFormsModule } from "@angular/forms";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { ToastrModule } from "ngx-toastr";
+import { provideAnimations } from "@angular/platform-browser/animations";
+import { provideToastr } from "ngx-toastr";
 import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
@@ -39,6 +39,8 @@ describe("DatasetSettingsCompactingTabComponent", () => {
         await TestBed.configureTestingModule({
             providers: [
                 Apollo,
+                provideAnimations(),
+                provideToastr(),
                 {
                     provide: ActivatedRoute,
                     useValue: {
@@ -64,8 +66,6 @@ describe("DatasetSettingsCompactingTabComponent", () => {
                 ApolloTestingModule,
                 MatDividerModule,
                 ReactiveFormsModule,
-                ToastrModule.forRoot(),
-                BrowserAnimationsModule,
                 MatIconModule,
                 NgbTooltipModule,
                 MatRadioModule,

@@ -19,8 +19,9 @@ import {
 } from "src/app/common/helpers/base-test.helpers.spec";
 import { MatIconModule } from "@angular/material/icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { NgSelectModule } from "@ng-select/ng-select";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("BlockNavigationComponent", () => {
     let component: BlockNavigationComponent;
@@ -28,12 +29,12 @@ describe("BlockNavigationComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
+            providers: [provideAnimations(), provideToastr()],
             imports: [
                 FormsModule,
                 NgMultiSelectDropDownModule,
                 MatIconModule,
                 HttpClientTestingModule,
-                ToastrModule.forRoot(),
                 NgSelectModule,
                 BlockNavigationComponent,
                 BlockHashFilterPipe,

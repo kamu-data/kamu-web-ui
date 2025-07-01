@@ -12,12 +12,13 @@ import { TEST_DATASET_NAME, mockGetMetadataBlockQuery } from "src/app/api/mock/d
 import { mockPageBasedInfo } from "src/app/search/mock.data";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { MatIconModule } from "@angular/material/icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { RouterTestingModule } from "@angular/router/testing";
 import AppValues from "src/app/common/values/app.values";
 import { RouterModule } from "@angular/router";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("TimelineComponent", () => {
     let component: TimelineComponent;
@@ -25,8 +26,8 @@ describe("TimelineComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
+            providers: [provideAnimations(), provideToastr()],
             imports: [
-                ToastrModule.forRoot(),
                 MatIconModule,
                 HttpClientTestingModule,
                 NgbPopoverModule,

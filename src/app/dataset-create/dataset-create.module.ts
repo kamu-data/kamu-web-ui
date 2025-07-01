@@ -21,9 +21,13 @@ import { NgSelectModule } from "@ng-select/ng-select";
 
 @NgModule({
     imports: [
-        AngularMultiSelectModule,
+        //-----//
         CommonModule,
         FormsModule,
+        ReactiveFormsModule,
+
+        //-----//
+        AngularMultiSelectModule,
         MatButtonModule,
         MatDividerModule,
         MatFormFieldModule,
@@ -31,7 +35,8 @@ import { NgSelectModule } from "@ng-select/ng-select";
         MatMenuModule,
         NgbModule,
         NgSelectModule,
-        ReactiveFormsModule,
+
+        //-----//
         EditorModule,
         DatasetCreateComponent,
     ],

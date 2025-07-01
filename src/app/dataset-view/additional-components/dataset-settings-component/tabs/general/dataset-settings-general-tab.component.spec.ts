@@ -31,7 +31,7 @@ import {
     getInputElementByDataTestId,
 } from "../../../../../common/helpers/base-test.helpers.spec";
 import { TEST_ACCOUNT_ID } from "src/app/api/mock/auth.mock";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { MatRadioModule } from "@angular/material/radio";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetFlowType } from "src/app/api/kamu.graphql.interface";
@@ -42,6 +42,7 @@ import { DatasetService } from "../../../../dataset.service";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { ActivatedRoute } from "@angular/router";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("DatasetSettingsGeneralTabComponent", () => {
     let component: DatasetSettingsGeneralTabComponent;
@@ -62,7 +63,6 @@ describe("DatasetSettingsGeneralTabComponent", () => {
                 MatIconModule,
                 ApolloModule,
                 ApolloTestingModule,
-                ToastrModule.forRoot(),
                 MatRadioModule,
                 MatIconModule,
                 NgbTooltipModule,
@@ -73,6 +73,8 @@ describe("DatasetSettingsGeneralTabComponent", () => {
             ],
             providers: [
                 FormBuilder,
+                provideAnimations(),
+                provideToastr(),
                 {
                     provide: ActivatedRoute,
                     useValue: {

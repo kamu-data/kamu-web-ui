@@ -11,11 +11,12 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { BlockIntervalPropertyComponent } from "./block-interval-property.component";
 import { of } from "rxjs";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { MatIconModule } from "@angular/material/icon";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("BlockIntervalPropertyComponent", () => {
     let component: BlockIntervalPropertyComponent;
@@ -24,9 +25,9 @@ describe("BlockIntervalPropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
+            providers: [provideAnimations(), provideToastr()],
             imports: [
                 ApolloTestingModule,
-                ToastrModule.forRoot(),
                 MatIconModule,
                 HttpClientTestingModule,
                 SharedTestModule,

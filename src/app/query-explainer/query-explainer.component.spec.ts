@@ -14,7 +14,7 @@ import { QueryExplainerComponent } from "./query-explainer.component";
 import { RouterModule } from "@angular/router";
 import { of } from "rxjs";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { ToastrModule, ToastrService } from "ngx-toastr";
+import { provideToastr, ToastrService } from "ngx-toastr";
 import { Apollo } from "apollo-angular";
 import { QueryExplainerService } from "./query-explainer.service";
 import {
@@ -34,6 +34,7 @@ import {
 } from "../common/helpers/base-test.helpers.spec";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("QueryExplainerComponent", () => {
     let component: QueryExplainerComponent;
@@ -46,7 +47,6 @@ describe("QueryExplainerComponent", () => {
         TestBed.configureTestingModule({
             imports: [
                 HttpClientTestingModule,
-                ToastrModule.forRoot(),
                 HighlightModule,
                 RouterModule,
                 FormsModule,
@@ -60,6 +60,8 @@ describe("QueryExplainerComponent", () => {
             ],
             providers: [
                 Apollo,
+                provideAnimations(),
+                provideToastr(),
                 {
                     provide: HIGHLIGHT_OPTIONS,
                     useValue: {

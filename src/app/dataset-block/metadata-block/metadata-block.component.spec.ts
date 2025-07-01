@@ -28,11 +28,11 @@ import { SearchAdditionalButtonsNavComponent } from "src/app/common/components/s
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatTabsModule } from "@angular/material/tabs";
 import { YamlViewSectionComponent } from "./components/yaml-view-section/yaml-view-section.component";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { BrowserAnimationsModule, provideAnimations } from "@angular/platform-browser/animations";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { MatDividerModule } from "@angular/material/divider";
 import { HighlightModule } from "ngx-highlightjs";
 
@@ -58,7 +58,6 @@ describe("MetadataBlockComponent", () => {
                 MatTabsModule,
                 BrowserAnimationsModule,
                 RouterModule,
-                ToastrModule.forRoot(),
                 MatDividerModule,
                 HighlightModule,
                 MetadataBlockComponent,
@@ -73,6 +72,8 @@ describe("MetadataBlockComponent", () => {
             ],
             providers: [
                 DatasetApi,
+                provideAnimations(),
+                provideToastr(),
                 {
                     provide: ActivatedRoute,
                     useValue: {

@@ -10,7 +10,7 @@ import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core
 import { DatasetFlowDetailsComponent } from "./dataset-flow-details.component";
 import { ActivatedRoute, RouterModule } from "@angular/router";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { of, shareReplay } from "rxjs";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
@@ -31,7 +31,7 @@ import { DatasetViewMenuComponent } from "src/app/dataset-view/dataset-view-menu
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { FormsModule } from "@angular/forms";
 import { MatTabsModule } from "@angular/material/tabs";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { BrowserAnimationsModule, provideAnimations } from "@angular/platform-browser/animations";
 import { FlowDetailsTabs } from "./dataset-flow-details.types";
 import { mockDatasetFlowByIdResponse, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import { DataAccessPanelComponent } from "src/app/data-access-panel/data-access-panel.component";
@@ -51,6 +51,8 @@ describe("DatasetFlowDetailsComponent", () => {
         await TestBed.configureTestingModule({
             providers: [
                 Apollo,
+                provideAnimations(),
+                provideToastr(),
                 {
                     provide: ActivatedRoute,
                     useValue: {
@@ -76,7 +78,6 @@ describe("DatasetFlowDetailsComponent", () => {
                 MatIconModule,
                 MatMenuModule,
                 MatButtonToggleModule,
-                ToastrModule.forRoot(),
                 HttpClientTestingModule,
                 MatTabsModule,
                 FormsModule,

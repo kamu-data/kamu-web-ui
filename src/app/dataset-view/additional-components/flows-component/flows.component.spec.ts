@@ -16,7 +16,7 @@ import {
     mockDatasetMainDataId,
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { DatasetFlowsService } from "./services/dataset-flows.service";
 import { delay, of } from "rxjs";
@@ -38,6 +38,7 @@ import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("FlowsComponent", () => {
     let component: FlowsComponent;
@@ -50,6 +51,8 @@ describe("FlowsComponent", () => {
         await TestBed.configureTestingModule({
             providers: [
                 Apollo,
+                provideAnimations(),
+                provideToastr(),
                 {
                     provide: ActivatedRoute,
                     useValue: {
@@ -80,7 +83,6 @@ describe("FlowsComponent", () => {
             ],
             imports: [
                 ApolloTestingModule,
-                ToastrModule.forRoot(),
                 MatMenuModule,
                 MatTableModule,
                 MatRadioModule,

@@ -10,13 +10,14 @@ import { IngestConfigurationFormComponent } from "./ingest-configuration-form.co
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { DatasetSchedulingService } from "../../../services/dataset-scheduling.service";
 import { of } from "rxjs";
 import { mockIngestGetDatasetFlowConfigsSuccess } from "src/app/api/mock/dataset-flow.mock";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("IngestConfigurationFormComponent", () => {
     let component: IngestConfigurationFormComponent;
@@ -25,13 +26,12 @@ describe("IngestConfigurationFormComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo],
+            providers: [Apollo, provideAnimations(), provideToastr()],
             imports: [
                 SharedTestModule,
                 FormsModule,
                 MatCheckboxModule,
                 ReactiveFormsModule,
-                ToastrModule.forRoot(),
                 IngestConfigurationFormComponent,
             ],
         });

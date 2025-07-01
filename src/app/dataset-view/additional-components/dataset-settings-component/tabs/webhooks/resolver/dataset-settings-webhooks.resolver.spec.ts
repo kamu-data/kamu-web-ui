@@ -21,7 +21,8 @@ import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment 
 import { SettingsTabsEnum } from "../../../dataset-settings.model";
 import { DatasetWebhooksService } from "../service/dataset-webhooks.service";
 import { DatasetSettingsWebhookTabData } from "../dataset-settings-webhooks-tab.component.types";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("datasetSettingsWebhooksResolver", () => {
     let datasetService: DatasetService;
@@ -35,8 +36,7 @@ describe("datasetSettingsWebhooksResolver", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo],
-            imports: [ToastrModule.forRoot()],
+            providers: [Apollo, provideAnimations(), provideToastr()],
         });
 
         datasetService = TestBed.inject(DatasetService);

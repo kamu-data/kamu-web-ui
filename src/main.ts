@@ -27,7 +27,7 @@ import { firstValueFrom } from "rxjs";
 import { HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 import { apolloCache } from "./app/common/helpers/apollo-cache.helper";
 import { ErrorTexts } from "./app/common/values/errors.text";
-import { ToastrService, ToastrModule } from "ngx-toastr";
+import { ToastrService } from "ngx-toastr";
 import { onError } from "@apollo/client/link/error";
 import { ApolloLink, Operation, NextLink } from "@apollo/client/core";
 import { LocalStorageService } from "./app/services/local-storage.service";
@@ -58,6 +58,7 @@ import AppValues from "./app/common/values/app.values";
 import { provideRouter, withComponentInputBinding, withRouterConfig } from "@angular/router";
 import { routes } from "./app/app-routing";
 import { NgxGraphModule } from "@swimlane/ngx-graph";
+import { provideToastr } from "ngx-toastr";
 
 const Services = [
     Apollo,
@@ -193,12 +194,6 @@ bootstrapApplication(AppComponent, {
             }),
             ModalModule.forRoot(),
             NgxGraphModule,
-            ToastrModule.forRoot({
-                timeOut: 5000,
-                positionClass: "toast-bottom-right",
-                newestOnTop: false,
-                preventDuplicates: true,
-            }),
             DatasetCreateModule,
             DatasetFlowDetailsModule,
             DatasetViewModule,
@@ -215,6 +210,12 @@ bootstrapApplication(AppComponent, {
             }),
             withComponentInputBinding(),
         ),
+        provideToastr({
+            timeOut: 5000,
+            positionClass: "toast-bottom-right",
+            newestOnTop: false,
+            preventDuplicates: true,
+        }),
     ],
 })
     // eslint-disable-next-line no-console

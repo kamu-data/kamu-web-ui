@@ -13,13 +13,14 @@ import { ExecuteTransformEventComponent } from "./execute-transform-event.compon
 import { SizePropertyComponent } from "../common/size-property/size-property.component";
 import { OffsetIntervalPropertyComponent } from "../common/offset-interval-property/offset-interval-property.component";
 import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
 import { MatIconModule } from "@angular/material/icon";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("ExecuteTransformEventComponent", () => {
     let component: ExecuteTransformEventComponent;
@@ -27,11 +28,11 @@ describe("ExecuteTransformEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
+            providers: [provideAnimations(), provideToastr()],
             imports: [
                 ApolloTestingModule,
                 MatIconModule,
                 NgbTooltipModule,
-                ToastrModule.forRoot(),
                 HttpClientTestingModule,
                 SharedTestModule,
                 ExecuteTransformEventComponent,

@@ -9,8 +9,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetSettingsSchedulingTabComponent } from "./dataset-settings-scheduling-tab.component";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { ToastrModule } from "ngx-toastr";
+import { provideAnimations } from "@angular/platform-browser/animations";
+import { provideToastr } from "ngx-toastr";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
@@ -39,11 +39,9 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [Apollo],
+            providers: [Apollo, provideAnimations(), provideToastr()],
             imports: [
                 ApolloTestingModule,
-                ToastrModule.forRoot(),
-                BrowserAnimationsModule,
                 SharedTestModule,
                 MatDividerModule,
                 MatSlideToggleModule,

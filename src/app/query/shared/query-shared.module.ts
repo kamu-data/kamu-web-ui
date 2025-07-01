@@ -26,10 +26,12 @@ import { EngineSelectComponent } from "src/app/dataset-view/additional-component
 
 @NgModule({
     imports: [
-        CdkAccordionModule,
+        //-----//
         CommonModule,
         FormsModule,
-        EditorModule,
+
+        //-----//
+        CdkAccordionModule,
         MatButtonModule,
         MatButtonToggleModule,
         MatDividerModule,
@@ -37,18 +39,21 @@ import { EngineSelectComponent } from "src/app/dataset-view/additional-component
         MatIconModule,
         MatProgressBarModule,
         NgbTypeaheadModule,
-        QueryAndResultSectionsComponent,
+
+        //-----//
+        EditorModule,
+        EngineSelectComponent,
         LoadMoreComponent,
+        QueryAndResultSectionsComponent,
         RequestTimerComponent,
         SearchAndSchemasSectionComponent,
         SavedQueriesSectionComponent,
-        EngineSelectComponent,
     ],
     exports: [
+        EngineSelectComponent,
         QueryAndResultSectionsComponent,
         SavedQueriesSectionComponent,
         SearchAndSchemasSectionComponent,
-        EngineSelectComponent,
     ],
 })
 export class QuerySharedModule {}

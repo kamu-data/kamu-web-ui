@@ -15,7 +15,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ActivatedRoute } from "@angular/router";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { DatasetSettingsGeneralTabComponent } from "./tabs/general/dataset-settings-general-tab.component";
 import { DatasetSettingsSchedulingTabComponent } from "./tabs/scheduling/dataset-settings-scheduling-tab.component";
 import { SettingsTabsEnum } from "./dataset-settings.model";
@@ -31,6 +31,7 @@ import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { RouterTestingModule } from "@angular/router/testing";
 import { of } from "rxjs";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("DatasetSettingsComponent", () => {
     let component: DatasetSettingsComponent;
@@ -41,6 +42,8 @@ describe("DatasetSettingsComponent", () => {
         await TestBed.configureTestingModule({
             providers: [
                 Apollo,
+                provideAnimations(),
+                provideToastr(),
                 {
                     provide: ActivatedRoute,
                     useValue: {
@@ -69,7 +72,6 @@ describe("DatasetSettingsComponent", () => {
                 MatDividerModule,
                 MatIconModule,
                 ApolloTestingModule,
-                ToastrModule.forRoot(),
                 MatDividerModule,
                 MatSlideToggleModule,
                 MatRadioModule,

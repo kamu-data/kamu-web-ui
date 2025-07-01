@@ -15,7 +15,7 @@ import { Apollo } from "apollo-angular";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { RequestTimerComponent } from "src/app/query/shared/request-timer/request-timer.component";
 import { MatIconModule } from "@angular/material/icon";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
@@ -29,6 +29,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { EngineSelectComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("GlobalQueryComponent", () => {
     let component: GlobalQueryComponent;
@@ -43,7 +44,6 @@ describe("GlobalQueryComponent", () => {
             imports: [
                 EditorModule,
                 HttpClientTestingModule,
-                ToastrModule.forRoot(),
                 MatMenuModule,
                 MatProgressBarModule,
                 CdkAccordionModule,
@@ -59,7 +59,7 @@ describe("GlobalQueryComponent", () => {
                 SearchAndSchemasSectionComponent,
                 EngineSelectComponent,
             ],
-            providers: [Apollo],
+            providers: [Apollo, provideAnimations(), provideToastr()],
         });
         fixture = TestBed.createComponent(GlobalQueryComponent);
         component = fixture.componentInstance;

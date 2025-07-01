@@ -11,6 +11,13 @@ import { QuerySharedModule } from "./shared/query-shared.module";
 import { NgModule } from "@angular/core";
 
 @NgModule({
-    imports: [QuerySharedModule, CommonModule, GlobalQueryComponent],
+    imports: [
+        //-----//
+        CommonModule,
+
+        //-----//
+        GlobalQueryComponent,
+        QuerySharedModule,
+    ],
 })
 export class QueryModule {}

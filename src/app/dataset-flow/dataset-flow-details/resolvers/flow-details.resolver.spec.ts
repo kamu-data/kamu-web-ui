@@ -16,8 +16,9 @@ import { of } from "rxjs";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import ProjectLinks from "src/app/project-links";
 import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "src/app/api/mock/dataset.mock";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("flowDetailsResolverFn", () => {
     let datasetService: DatasetService;
@@ -27,8 +28,8 @@ describe("flowDetailsResolverFn", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo],
-            imports: [ToastrModule.forRoot(), HttpClientTestingModule],
+            providers: [Apollo, provideAnimations(), provideToastr()],
+            imports: [HttpClientTestingModule],
         });
 
         datasetService = TestBed.inject(DatasetService);

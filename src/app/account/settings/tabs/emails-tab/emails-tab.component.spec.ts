@@ -9,7 +9,7 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core
 import { EmailsTabComponent } from "./emails-tab.component";
 import { mockAccountDetailsWithEmail } from "src/app/api/mock/auth.mock";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
@@ -18,6 +18,7 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { routes } from "src/app/app-routing";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { NavigationService } from "src/app/services/navigation.service";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("EmailsTabComponent", () => {
     let component: EmailsTabComponent;
@@ -27,10 +28,9 @@ describe("EmailsTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [FormBuilder],
+            providers: [FormBuilder, provideAnimations(), provideToastr()],
             imports: [
                 ApolloTestingModule,
-                ToastrModule.forRoot(),
                 RouterTestingModule.withRoutes(routes),
                 ReactiveFormsModule,
                 MatDividerModule,

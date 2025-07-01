@@ -13,12 +13,12 @@ import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { ApolloModule } from "apollo-angular";
 import { AccountService } from "src/app/account/account.service";
 import { of } from "rxjs";
-import { ToastrModule, ToastrService } from "ngx-toastr";
+import { provideToastr, ToastrService } from "ngx-toastr";
 import { MOCK_DATASET_INFO } from "../metadata-component/components/set-transform/mock.data";
 import { LineageGraphNodeData } from "./lineage-model";
 import { LineageGraphComponent } from "src/app/common/components/lineage-graph/lineage-graph.component";
 import { NgxGraphModule } from "@swimlane/ngx-graph";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { BrowserAnimationsModule, provideAnimations } from "@angular/platform-browser/animations";
 import { DisplayDatasetIdPipe } from "src/app/common/pipes/display-dataset-id.pipe";
 import { NavigationService } from "src/app/services/navigation.service";
 import { MatIconModule } from "@angular/material/icon";
@@ -36,11 +36,11 @@ describe("LineageComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
+            providers: [provideAnimations(), provideToastr()],
             imports: [
                 ApolloModule,
                 SharedTestModule,
                 MatIconModule,
-                ToastrModule.forRoot(),
                 NgxGraphModule,
                 BrowserAnimationsModule,
                 LineageComponent,

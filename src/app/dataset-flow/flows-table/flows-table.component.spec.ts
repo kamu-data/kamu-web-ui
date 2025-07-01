@@ -27,12 +27,13 @@ import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { mockDatasets, mockFlowSummaryDataFragmentShowForceLink } from "./flows-table.helpers.mock";
 import { mockDatasetMainDataId } from "src/app/search/mock.data";
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
-import { ToastrModule, ToastrService } from "ngx-toastr";
+import { provideToastr, ToastrService } from "ngx-toastr";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { of } from "rxjs";
 import { RouterModule } from "@angular/router";
 import { registerMatSvgIcons } from "../../common/helpers/base-test.helpers.spec";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("FlowsTableComponent", () => {
     let component: FlowsTableComponent;
@@ -45,7 +46,7 @@ describe("FlowsTableComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [Apollo],
+            providers: [Apollo, provideAnimations(), provideToastr()],
             imports: [
                 MatTableModule,
                 MatMenuModule,
@@ -57,7 +58,6 @@ describe("FlowsTableComponent", () => {
                 SharedTestModule,
                 NgbTypeaheadModule,
                 AngularMultiSelectModule,
-                ToastrModule.forRoot(),
                 RouterModule,
                 FlowsTableComponent,
             ],

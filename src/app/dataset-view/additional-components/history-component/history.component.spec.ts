@@ -15,7 +15,7 @@ import { NgbPaginationModule, NgbPopoverModule } from "@ng-bootstrap/ng-bootstra
 import { DisplayHashComponent } from "src/app/common/components/display-hash/display-hash.component";
 import { DisplayTimeComponent } from "src/app/common/components/display-time/display-time.component";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterTestingModule } from "@angular/router/testing";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
@@ -28,6 +28,7 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { ActivatedRoute } from "@angular/router";
 import ProjectLinks from "src/app/project-links";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("HistoryComponent", () => {
     let component: HistoryComponent;
@@ -45,7 +46,6 @@ describe("HistoryComponent", () => {
                 MatIconModule,
                 RouterTestingModule,
                 SharedTestModule,
-                ToastrModule.forRoot(),
                 HistoryComponent,
                 PaginationComponent,
                 TimelineComponent,
@@ -54,6 +54,8 @@ describe("HistoryComponent", () => {
             ],
             providers: [
                 Apollo,
+                provideAnimations(),
+                provideToastr(),
                 {
                     provide: ActivatedRoute,
                     useValue: {

@@ -6,7 +6,7 @@
  */
 
 import { MatTableModule } from "@angular/material/table";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetSettingsSecretsManagerTabComponent } from "./dataset-settings-secrets-manager-tab.component";
 import { Apollo } from "apollo-angular";
@@ -29,7 +29,7 @@ import { MOCK_DATASET_INFO } from "../../../metadata-component/components/set-tr
 import ProjectLinks from "src/app/project-links";
 import { ActivatedRoute } from "@angular/router";
 import { of } from "rxjs";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("DatasetSettingsSecretsManagerTabComponent", () => {
     let component: DatasetSettingsSecretsManagerTabComponent;
@@ -43,6 +43,8 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
         await TestBed.configureTestingModule({
             providers: [
                 FormBuilder,
+                provideAnimations(),
+                provideToastr(),
                 Apollo,
                 {
                     provide: ActivatedRoute,
@@ -71,7 +73,6 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
                 },
             ],
             imports: [
-                ToastrModule.forRoot(),
                 ApolloTestingModule,
                 MatDividerModule,
                 MatTableModule,
@@ -80,7 +81,6 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
                 FormsModule,
                 MatTooltipModule,
                 DatasetSettingsSecretsManagerTabComponent,
-                BrowserAnimationsModule,
             ],
         }).compileComponents();
 

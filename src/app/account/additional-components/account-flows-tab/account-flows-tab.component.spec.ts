@@ -10,7 +10,7 @@ import { AccountFlowsTabComponent } from "./account-flows-tab.component";
 import { PaginationComponent } from "src/app/common/components/pagination-component/pagination.component";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { ActivatedRoute } from "@angular/router";
 import { of } from "rxjs";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
@@ -33,6 +33,7 @@ import { routes } from "src/app/app-routing";
 import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/tile-base-widget.component";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("AccountFlowsTabComponent", () => {
     let component: AccountFlowsTabComponent;
@@ -48,7 +49,6 @@ describe("AccountFlowsTabComponent", () => {
             imports: [
                 ApolloTestingModule,
                 SharedTestModule,
-                ToastrModule.forRoot(),
                 NgbPaginationModule,
                 AngularMultiSelectModule,
                 HttpClientTestingModule,
@@ -60,6 +60,8 @@ describe("AccountFlowsTabComponent", () => {
                 PaginationComponent,
             ],
             providers: [
+                provideAnimations(),
+                provideToastr(),
                 {
                     provide: ActivatedRoute,
                     useValue: {

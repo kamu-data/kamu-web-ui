@@ -7,9 +7,10 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { HashPropertyComponent } from "./hash-property.component";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("HashPropertyComponent", () => {
     let component: HashPropertyComponent;
@@ -17,7 +18,8 @@ describe("HashPropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [ToastrModule.forRoot(), SharedTestModule, HashPropertyComponent],
+            providers: [provideAnimations(), provideToastr()],
+            imports: [SharedTestModule, HashPropertyComponent],
         }).compileComponents();
 
         registerMatSvgIcons();

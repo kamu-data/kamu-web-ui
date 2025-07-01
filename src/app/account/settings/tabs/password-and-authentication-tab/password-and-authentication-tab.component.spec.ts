@@ -9,12 +9,13 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { PasswordAndAuthenticationTabComponent } from "./password-and-authentication-tab.component";
 import { Apollo } from "apollo-angular";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { MatDividerModule } from "@angular/material/divider";
 import { AdminChangePasswordComponent } from "./components/admin-change-password/admin-change-password.component";
 import { AccountService } from "src/app/account/account.service";
 import { of } from "rxjs";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("PasswordAndAuthenticationTabComponent", () => {
     let component: PasswordAndAuthenticationTabComponent;
@@ -23,10 +24,9 @@ describe("PasswordAndAuthenticationTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo],
+            providers: [Apollo, provideAnimations(), provideToastr()],
             imports: [
                 HttpClientTestingModule,
-                ToastrModule.forRoot(),
                 MatDividerModule,
                 PasswordAndAuthenticationTabComponent,
                 AdminChangePasswordComponent,

@@ -11,7 +11,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AccessTokensTabComponent } from "./access-tokens-tab.component";
 import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { Apollo } from "apollo-angular";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { MatIconModule } from "@angular/material/icon";
 import { MatDividerModule } from "@angular/material/divider";
@@ -32,6 +32,7 @@ import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { RouterTestingModule } from "@angular/router/testing";
 import { routes } from "src/app/app-routing";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("AccessTokensTabComponent", () => {
     let component: AccessTokensTabComponent;
@@ -48,6 +49,8 @@ describe("AccessTokensTabComponent", () => {
             providers: [
                 FormBuilder,
                 Apollo,
+                provideAnimations(),
+                provideToastr(),
                 {
                     provide: ActivatedRoute,
                     useValue: {
@@ -75,7 +78,6 @@ describe("AccessTokensTabComponent", () => {
                 },
             ],
             imports: [
-                ToastrModule.forRoot(),
                 ApolloTestingModule,
                 MatTableModule,
                 MatIconModule,

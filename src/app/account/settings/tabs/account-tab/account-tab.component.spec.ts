@@ -8,7 +8,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AccountTabComponent } from "./account-tab.component";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { MatDividerModule } from "@angular/material/divider";
@@ -20,6 +20,7 @@ import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { mockAccountDetails, TEST_LOGIN } from "src/app/api/mock/auth.mock";
 import { NavigationService } from "src/app/services/navigation.service";
 import { ReactiveFormsModule } from "@angular/forms";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("AccountTabComponent", () => {
     let component: AccountTabComponent;
@@ -35,11 +36,10 @@ describe("AccountTabComponent", () => {
                 SharedTestModule,
                 HttpClientTestingModule,
                 ReactiveFormsModule,
-                ToastrModule.forRoot(),
                 MatDividerModule,
                 AccountTabComponent,
             ],
-            providers: [Apollo],
+            providers: [Apollo, provideAnimations(), provideToastr()],
         });
         fixture = TestBed.createComponent(AccountTabComponent);
         modalService = TestBed.inject(ModalService);

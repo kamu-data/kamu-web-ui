@@ -33,7 +33,7 @@ import { ReadmeSectionComponent } from "./components/readme-section/readme-secti
 import { DisplayTimeComponent } from "src/app/common/components/display-time/display-time.component";
 import { DisplayHashComponent } from "src/app/common/components/display-hash/display-hash.component";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { DynamicTableComponent } from "src/app/common/components/dynamic-table/dynamic-table.component";
 import { MatTableModule } from "@angular/material/table";
 import { RouterTestingModule } from "@angular/router/testing";
@@ -55,6 +55,7 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
 import AppValues from "src/app/common/values/app.values";
 import { RouterModule } from "@angular/router";
 import { DatasetCollaborationsService } from "../dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("OverviewComponent", () => {
     let component: OverviewComponent;
@@ -84,7 +85,6 @@ describe("OverviewComponent", () => {
                 ReactiveFormsModule,
                 RouterTestingModule,
                 SharedTestModule,
-                ToastrModule.forRoot(),
                 MatIconModule,
                 RouterModule,
                 OverviewComponent,
@@ -94,7 +94,7 @@ describe("OverviewComponent", () => {
                 DisplayHashComponent,
                 DynamicTableComponent,
             ],
-            providers: [Apollo],
+            providers: [Apollo, provideAnimations(), provideToastr()],
         })
             .overrideComponent(OverviewComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },

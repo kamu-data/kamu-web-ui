@@ -16,8 +16,9 @@ import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { BatchingFormType } from "./dataset-settings-transform-options-tab.component.types";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("DatasetSettingsTransformOptionsTabComponent", () => {
     let component: DatasetSettingsTransformOptionsTabComponent;
@@ -30,12 +31,11 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo],
+            providers: [Apollo, provideAnimations(), provideToastr()],
             imports: [
                 ApolloTestingModule,
                 SharedTestModule,
                 MatDividerModule,
-                ToastrModule.forRoot(),
                 DatasetSettingsTransformOptionsTabComponent,
             ],
         });

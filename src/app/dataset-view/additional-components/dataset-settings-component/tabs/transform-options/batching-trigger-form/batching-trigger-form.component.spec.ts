@@ -17,11 +17,12 @@ import {
     mockGetDatasetFlowTriggersDefaultBatchingQuery,
 } from "src/app/api/mock/dataset-flow.mock";
 import { of } from "rxjs";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("BatchingTriggerFormComponent", () => {
     let component: BatchingTriggerFormComponent;
@@ -31,12 +32,11 @@ describe("BatchingTriggerFormComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo],
+            providers: [Apollo, provideAnimations(), provideToastr()],
             imports: [
                 FormsModule,
                 ReactiveFormsModule,
                 MatProgressBarModule,
-                ToastrModule.forRoot(),
                 MatSlideToggleModule,
                 SharedTestModule,
                 BatchingTriggerFormComponent,

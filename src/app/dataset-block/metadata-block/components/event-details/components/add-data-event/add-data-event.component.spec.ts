@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { ApolloModule } from "apollo-angular";
 import { SizePropertyComponent } from "../common/size-property/size-property.component";
 import { ChangeDetectionStrategy } from "@angular/core";
@@ -20,6 +20,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("AddDataEventComponent", () => {
     let component: AddDataEventComponent;
@@ -36,11 +37,11 @@ describe("AddDataEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
+            providers: [provideAnimations(), provideToastr()],
             imports: [
                 ApolloModule,
                 MatIconModule,
                 NgbTooltipModule,
-                ToastrModule.forRoot(),
                 HttpClientTestingModule,
                 SharedTestModule,
                 AddDataEventComponent,

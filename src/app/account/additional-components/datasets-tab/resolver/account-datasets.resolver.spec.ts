@@ -13,8 +13,9 @@ import { Apollo } from "apollo-angular";
 import { AccountService } from "src/app/account/account.service";
 import ProjectLinks from "src/app/project-links";
 import { TEST_ACCOUNT_NAME } from "src/app/api/mock/dataset.mock";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { of } from "rxjs";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("accountDatasetsResolverFn", () => {
     let router: Router;
@@ -28,6 +29,8 @@ describe("accountDatasetsResolverFn", () => {
         TestBed.configureTestingModule({
             providers: [
                 Apollo,
+                provideAnimations(),
+                provideToastr(),
                 {
                     provide: ActivatedRoute,
                     useValue: {
@@ -36,7 +39,6 @@ describe("accountDatasetsResolverFn", () => {
                     },
                 },
             ],
-            imports: [ToastrModule.forRoot()],
         });
 
         accountService = TestBed.inject(AccountService);

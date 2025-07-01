@@ -15,8 +15,9 @@ import { Observable, of } from "rxjs";
 import { DatasetSearchResult } from "src/app/interface/search.interface";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { mockDatasetSearchResult } from "src/app/search/mock.data";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { AppConfigService } from "src/app/app-config.service";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("searchResolverFn", () => {
     let routeSnapshot: ActivatedRouteSnapshot;
@@ -34,6 +35,8 @@ describe("searchResolverFn", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
+                provideAnimations(),
+                provideToastr(),
                 Apollo,
                 {
                     provide: ActivatedRoute,
@@ -42,7 +45,7 @@ describe("searchResolverFn", () => {
                     },
                 },
             ],
-            imports: [ToastrModule.forRoot(), HttpClientTestingModule],
+            imports: [HttpClientTestingModule],
         });
         searchService = TestBed.inject(SearchService);
         router = TestBed.inject(Router);

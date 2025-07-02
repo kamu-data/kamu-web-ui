@@ -19,24 +19,27 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Directive()
 export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
-    protected tileWidgetData$: Observable<MaybeUndefined<FlowsTableData>>;
-    protected filterByStatus: MaybeNull<FlowStatus> = null;
-    public onlySystemFlows = false;
-    public searchByAccount: AccountFragment[] = [];
-    public currentPage = 1;
     protected readonly WIDGET_FLOW_RUNS_PER_PAGE: number = 150;
     protected readonly TABLE_FLOW_RUNS_PER_PAGE: number = 15;
     protected readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly TIMEOUT_REFRESH_FLOW = 800;
+
+    protected readonly flowsService = inject(DatasetFlowsService);
+    protected readonly navigationService = inject(NavigationService);
+    protected readonly cdr = inject(ChangeDetectorRef);
+
+    protected filterByStatus: MaybeNull<FlowStatus> = null;
+    public onlySystemFlows = false;
+    public searchByAccount: AccountFragment[] = [];
+    public currentPage = 1;
+
+    protected tileWidgetData$: Observable<MaybeUndefined<FlowsTableData>>;
+
     protected flowConnectionData$: Observable<{
         flowsData: FlowsTableData;
         allFlowsPaused: MaybeUndefined<boolean>;
         flowInitiators: AccountFragment[];
     }>;
-
-    protected flowsService = inject(DatasetFlowsService);
-    protected navigationService = inject(NavigationService);
-    protected cdr = inject(ChangeDetectorRef);
 
     protected abstract fetchTableData(
         page: number,

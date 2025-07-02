@@ -22,7 +22,7 @@ import {
     TaskStatus,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/values/app.values";
-import { DataHelpers } from "src/app/common/helpers/data.helpers";
+import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
 
 export class DatasetFlowDetailsHelpers {
     public static flowEventDescription(
@@ -37,7 +37,7 @@ export class DatasetFlowDetailsHelpers {
                 return "Flow was aborted";
             case "FlowEventTaskChanged": {
                 const event = flowEvent as FlowEventTaskChanged;
-                return `${DataHelpers.flowTypeDescription(
+                return `${FlowTableHelpers.flowTypeDescription(
                     flowDetails,
                 )} task ${DatasetFlowDetailsHelpers.descriptionEndOfMessage(event)}`;
             }

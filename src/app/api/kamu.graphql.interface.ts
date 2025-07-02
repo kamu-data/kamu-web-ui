@@ -5636,6 +5636,7 @@ export type FlowSummaryDataFragment = {
         | null;
     timing: {
         __typename?: "FlowTimingRecords";
+        initiatedAt: string;
         scheduledAt?: string | null;
         awaitingExecutorSince?: string | null;
         runningSince?: string | null;
@@ -7127,6 +7128,7 @@ export const FlowSummaryDataFragmentDoc = gql`
             ...FlowOutcomeData
         }
         timing {
+            initiatedAt
             scheduledAt
             awaitingExecutorSince
             runningSince

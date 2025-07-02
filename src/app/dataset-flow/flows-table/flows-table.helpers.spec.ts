@@ -12,7 +12,7 @@ import {
     FlowSummaryDataFragment,
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
-import { DatasetFlowTableHelpers } from "./flows-table.helpers";
+import { FlowTableHelpers } from "./flows-table.helpers";
 import { mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import {
     durationBlockTextResults,
@@ -28,7 +28,7 @@ import {
 import timekeeper from "timekeeper";
 import { mockDatasetMainDataId } from "src/app/search/mock.data";
 
-describe("DatasetFlowTableHelpers", () => {
+describe("FlowTableHelpers", () => {
     beforeAll(() => {
         timekeeper.freeze("2024-03-14T11:22:29+00:00");
     });
@@ -39,7 +39,7 @@ describe("DatasetFlowTableHelpers", () => {
 
     it("should check waiting block text with FlowStartConditionThrottling typename", () => {
         expect(
-            DatasetFlowTableHelpers.waitingBlockText({
+            FlowTableHelpers.waitingBlockText({
                 __typename: "FlowStartConditionThrottling",
                 intervalSec: 120,
                 wakeUpAt: "2024-03-14T18:22:29+00:00",
@@ -50,7 +50,7 @@ describe("DatasetFlowTableHelpers", () => {
 
     it("should check waiting block text with FlowStartConditionBatching typename", () => {
         expect(
-            DatasetFlowTableHelpers.waitingBlockText({
+            FlowTableHelpers.waitingBlockText({
                 __typename: "FlowStartConditionBatching",
                 activeBatchingRule: {
                     minRecordsToAwait: 500,
@@ -68,7 +68,7 @@ describe("DatasetFlowTableHelpers", () => {
 
     it("should check waiting block text with FlowStartConditionExecutor typename", () => {
         expect(
-            DatasetFlowTableHelpers.waitingBlockText({
+            FlowTableHelpers.waitingBlockText({
                 __typename: "FlowStartConditionExecutor",
                 taskId: "4",
             }),
@@ -77,7 +77,7 @@ describe("DatasetFlowTableHelpers", () => {
 
     it("should check waiting block text with FlowStartConditionSchedule typename", () => {
         expect(
-            DatasetFlowTableHelpers.waitingBlockText({
+            FlowTableHelpers.waitingBlockText({
                 __typename: "FlowStartConditionSchedule",
                 wakeUpAt: "2022-08-05T21:17:30.613911358+00:00",
             }),
@@ -86,7 +86,7 @@ describe("DatasetFlowTableHelpers", () => {
 
     mockFlowSummaryDataFragments.forEach((item: FlowSummaryDataFragment, index: number) => {
         it(`should check description column options with status=${item.status} and outcome=${item.outcome?.__typename}`, () => {
-            expect(DatasetFlowTableHelpers.descriptionColumnTableOptions(item)).toEqual(
+            expect(FlowTableHelpers.descriptionColumnTableOptions(item)).toEqual(
                 expectationsDesriptionColumnOptions[index],
             );
         });
@@ -94,27 +94,25 @@ describe("DatasetFlowTableHelpers", () => {
 
     mockFlowSummaryDataFragments.forEach((item: FlowSummaryDataFragment, index: number) => {
         it(`should check description end of message with status=${item.status} and outcome=${item.outcome?.__typename}`, () => {
-            expect(DatasetFlowTableHelpers.descriptionEndOfMessage(item)).toEqual(
-                expectationsDescriptionEndOfMessage[index],
-            );
+            expect(FlowTableHelpers.descriptionEndOfMessage(item)).toEqual(expectationsDescriptionEndOfMessage[index]);
         });
     });
 
     mockFlowSummaryDataFragmentTooltipAndDurationText.forEach((item: FlowSummaryDataFragment, index: number) => {
         it(`should check duration block text with status=${item.status} and outcome=${item.outcome?.__typename}`, () => {
-            expect(DatasetFlowTableHelpers.durationBlockText(item)).toEqual(durationBlockTextResults[index]);
+            expect(FlowTableHelpers.durationBlockText(item)).toEqual(durationBlockTextResults[index]);
         });
     });
 
     mockFlowSummaryDataFragmentTooltipAndDurationText.forEach((item: FlowSummaryDataFragment, index: number) => {
         it(`should check tooltip text with status=${item.status} and outcome=${item.outcome?.__typename}`, () => {
-            expect(DatasetFlowTableHelpers.tooltipText(item)).toEqual(tooltipTextResults[index]);
+            expect(FlowTableHelpers.tooltipText(item)).toEqual(tooltipTextResults[index]);
         });
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and FetchStepUrl`, () => {
         expect(
-            DatasetFlowTableHelpers.descriptionSubMessage(
+            FlowTableHelpers.descriptionSubMessage(
                 mockTableFlowSummaryDataFragments[0],
                 mockDatasets,
                 mockDatasets[0].id,
@@ -126,7 +124,7 @@ describe("DatasetFlowTableHelpers", () => {
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and FetchStepContainer`, () => {
         expect(
-            DatasetFlowTableHelpers.descriptionSubMessage(
+            FlowTableHelpers.descriptionSubMessage(
                 mockTableFlowSummaryDataFragments[0],
                 mockDatasets,
                 mockDatasets[1].id,
@@ -138,7 +136,7 @@ describe("DatasetFlowTableHelpers", () => {
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and FetchStepFilesGlob`, () => {
         expect(
-            DatasetFlowTableHelpers.descriptionSubMessage(
+            FlowTableHelpers.descriptionSubMessage(
                 mockTableFlowSummaryDataFragments[0],
                 mockDatasets,
                 mockDatasets[2].id,
@@ -150,7 +148,7 @@ describe("DatasetFlowTableHelpers", () => {
 
     it(`should check description end of message with description FlowDescriptionDatasetExecuteTransform typename `, () => {
         expect(
-            DatasetFlowTableHelpers.descriptionSubMessage(
+            FlowTableHelpers.descriptionSubMessage(
                 mockTableFlowSummaryDataFragments[4],
                 mockDatasets,
                 mockDatasets[3].id,
@@ -160,7 +158,7 @@ describe("DatasetFlowTableHelpers", () => {
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and waiting status `, () => {
         expect(
-            DatasetFlowTableHelpers.descriptionSubMessage(
+            FlowTableHelpers.descriptionSubMessage(
                 mockTableFlowSummaryDataFragments[3],
                 mockDatasets,
                 mockDatasets[2].id,
@@ -172,7 +170,7 @@ describe("DatasetFlowTableHelpers", () => {
 
     it(`should check description end of message with description FlowDescriptionDatasetExecuteTransform typename and success outcome `, () => {
         expect(
-            DatasetFlowTableHelpers.descriptionSubMessage(
+            FlowTableHelpers.descriptionSubMessage(
                 mockDatasetExecuteTransformFlowSummaryData,
                 mockDatasets,
                 mockDatasets[3].id,
@@ -182,7 +180,7 @@ describe("DatasetFlowTableHelpers", () => {
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and success outcome `, () => {
         expect(
-            DatasetFlowTableHelpers.descriptionSubMessage(
+            FlowTableHelpers.descriptionSubMessage(
                 mockTableFlowSummaryDataFragments[5],
                 mockDatasets,
                 mockDatasets[3].id,
@@ -192,7 +190,7 @@ describe("DatasetFlowTableHelpers", () => {
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and aborted outcome `, () => {
         expect(
-            DatasetFlowTableHelpers.descriptionSubMessage(
+            FlowTableHelpers.descriptionSubMessage(
                 mockTableFlowSummaryDataFragments[6],
                 mockDatasets,
                 mockDatasets[3].id,
@@ -202,7 +200,7 @@ describe("DatasetFlowTableHelpers", () => {
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and failed outcome `, () => {
         expect(
-            DatasetFlowTableHelpers.descriptionSubMessage(
+            FlowTableHelpers.descriptionSubMessage(
                 mockTableFlowSummaryDataFragments[7],
                 mockDatasets,
                 mockDatasetMainDataId,
@@ -212,7 +210,7 @@ describe("DatasetFlowTableHelpers", () => {
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and cacheable source`, () => {
         expect(
-            DatasetFlowTableHelpers.descriptionSubMessage(
+            FlowTableHelpers.descriptionSubMessage(
                 mockFlowSummaryDataFragmentShowForceLink,
                 mockDatasets,
                 mockDatasets[1].id,

@@ -13,10 +13,10 @@ import {
     FlowStatus,
 } from "src/app/api/kamu.graphql.interface";
 import { TileBaseWidgetHelpers } from "./tile-base-widget.helpers";
-import { DataHelpers } from "src/app/common/helpers/data.helpers";
 import AppValues from "src/app/common/values/app.values";
 import ProjectLinks from "src/app/project-links";
 import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { FlowTableHelpers } from "../flows-table/flows-table.helpers";
 
 @Component({
     selector: "app-tile-base-widget",
@@ -36,16 +36,7 @@ export class TileBaseWidgetComponent {
     public readonly DEFAULT_ADMIN_ACCOUNT_NAME = AppValues.DEFAULT_ADMIN_ACCOUNT_NAME;
 
     public flowDuration(flowNode: FlowItemWidgetDataFragment): string {
-        if (flowNode.outcome) {
-            if (flowNode.timing.lastAttemptFinishedAt) {
-                return DataHelpers.durationTask(flowNode.timing.initiatedAt, flowNode.timing.lastAttemptFinishedAt);
-            } else {
-                // Aborted?
-                return "-";
-            }
-        } else {
-            return DataHelpers.durationTask(flowNode.timing.initiatedAt, new Date().toISOString());
-        }
+        return FlowTableHelpers.durationTimingText(flowNode);
     }
 
     public tileWidgetClass(node: FlowItemWidgetDataFragment): string {

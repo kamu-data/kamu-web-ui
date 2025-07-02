@@ -12,6 +12,7 @@ import { DataHelpers } from "src/app/common/helpers/data.helpers";
 import { DatasetFlowDetailsHelpers } from "../flow-details-history-tab/flow-details-history-tab.helpers";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetFlowByIdResponse } from "../../dataset-flow-details.types";
+import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
 
 @Component({
     selector: "app-flow-details-summary-tab",
@@ -33,7 +34,7 @@ export class FlowDetailsSummaryTabComponent {
     }
 
     public flowTypeDescription(flow: FlowSummaryDataFragment): string {
-        return DataHelpers.flowTypeDescription(flow);
+        return FlowTableHelpers.flowTypeDescription(flow);
     }
 
     public durationFlowEvent(startEventTime: string, endEventTime: string): string {

@@ -13,9 +13,8 @@ import { FlowStatus, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.in
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { MaybeUndefined } from "src/app/interface/app.types";
 import ProjectLinks from "src/app/project-links";
-import { DataHelpers } from "src/app/common/helpers/data.helpers";
 import { BaseDatasetDataComponent } from "src/app/common/components/base-dataset-data.component";
-import { DatasetFlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
+import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 
@@ -33,10 +32,10 @@ export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implem
 
     public readonly FlowDetailsTabs: typeof FlowDetailsTabs = FlowDetailsTabs;
     public readonly FLOWS_TYPE = DatasetViewTypeEnum.Flows;
+    public readonly TIMEOUT_REFRESH_FLOW = 800;
 
     public datasetViewMenuData$: Observable<ViewMenuData>;
     public datasetFlowDetails$: Observable<MaybeUndefined<DatasetFlowByIdResponse>>;
-    public readonly TIMEOUT_REFRESH_FLOW = 800;
 
     public ngOnInit(): void {
         this.loadDatasetBasicDataWithPermissions();
@@ -78,15 +77,15 @@ export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implem
     }
 
     public flowTypeDescription(flow: FlowSummaryDataFragment): string {
-        return DataHelpers.flowTypeDescription(flow);
+        return FlowTableHelpers.flowTypeDescription(flow);
     }
 
     public descriptionDatasetFlowEndOfMessage(element: FlowSummaryDataFragment): string {
-        return DatasetFlowTableHelpers.descriptionEndOfMessage(element);
+        return FlowTableHelpers.descriptionEndOfMessage(element);
     }
 
     public descriptionColumnOptions(element: FlowSummaryDataFragment): { icon: string; class: string } {
-        return DatasetFlowTableHelpers.descriptionColumnTableOptions(element);
+        return FlowTableHelpers.descriptionColumnTableOptions(element);
     }
 
     public refreshNow(): void {

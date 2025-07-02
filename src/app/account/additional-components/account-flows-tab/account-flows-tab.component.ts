@@ -29,14 +29,15 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent implements OnInit {
+    public readonly DISPLAY_COLUMNS = ["description", "information", "creator", "dataset", "options"];
+
+    private readonly accountService = inject(AccountService);
+    private readonly loggedUserService = inject(LoggedUserService);
+    private readonly ngZone = inject(NgZone);
+
     public nodes: FlowSummaryDataFragment[] = [];
     public searchByDataset: DatasetListFlowsDataFragment[] = [];
     public filters: MaybeNull<FlowsTableFiltersOptions>;
-    public readonly DISPLAY_COLUMNS = ["description", "information", "creator", "dataset", "options"];
-
-    private accountService = inject(AccountService);
-    private loggedUserService = inject(LoggedUserService);
-    private ngZone = inject(NgZone);
 
     public ngOnInit(): void {
         this.getPageFromUrl();

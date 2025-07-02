@@ -10,6 +10,7 @@ import {
     FlowStartCondition,
     FlowStatus,
     FlowSummaryDataFragment,
+    FlowTimingRecords,
 } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/interface/app.types";
 import AppValues from "src/app/common/values/app.values";
@@ -18,7 +19,34 @@ import { excludeAgoWord, isNil } from "../../common/helpers/app.helpers";
 import { format } from "date-fns/format";
 import { formatDistanceToNowStrict } from "date-fns";
 
-export class DatasetFlowTableHelpers {
+export class FlowTableHelpers {
+    public static flowTypeDescription(flow: FlowSummaryDataFragment): string {
+        const decriptionFlow = flow.description;
+        switch (decriptionFlow.__typename) {
+            case "FlowDescriptionDatasetPollingIngest":
+                return `Polling ingest`;
+            case "FlowDescriptionDatasetPushIngest":
+                return `Push ingest`;
+            case "FlowDescriptionDatasetExecuteTransform":
+                return `Execute transformation`;
+            case "FlowDescriptionDatasetHardCompaction":
+                if (
+                    flow.configSnapshot?.__typename === "FlowConfigRuleCompaction" &&
+                    flow.configSnapshot.compactionMode.__typename === "FlowConfigCompactionModeMetadataOnly"
+                ) {
+                    return "Reset";
+                }
+                return `Hard compaction`;
+            case "FlowDescriptionSystemGC":
+                return `Garbage collector`;
+            case "FlowDescriptionDatasetReset":
+                return `Reset to seed`;
+            /* istanbul ignore next */
+            default:
+                return "Unsupported flow description";
+        }
+    }
+
     public static descriptionColumnTableOptions(element: FlowSummaryDataFragment): { icon: string; class: string } {
         switch (element.status) {
             case FlowStatus.Finished:
@@ -278,6 +306,19 @@ export class DatasetFlowTableHelpers {
             /* istanbul ignore next */
             default:
                 throw new Error("Unknown flow status");
+        }
+    }
+
+    public static durationTimingText(flowNode: { timing: FlowTimingRecords; outcome?: MaybeNull<object> }): string {
+        if (flowNode.outcome) {
+            if (flowNode.timing.lastAttemptFinishedAt) {
+                return DataHelpers.durationTask(flowNode.timing.initiatedAt, flowNode.timing.lastAttemptFinishedAt);
+            } else {
+                // Aborted?
+                return "-";
+            }
+        } else {
+            return DataHelpers.durationTask(flowNode.timing.initiatedAt, new Date().toISOString());
         }
     }
 

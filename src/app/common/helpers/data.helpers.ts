@@ -7,12 +7,7 @@
 
 import { MaybeNull } from "src/app/interface/app.types";
 import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
-import {
-    DataQueryResultSuccessViewFragment,
-    FlowSummaryDataFragment,
-    MetadataBlockFragment,
-    TimeUnit,
-} from "../../api/kamu.graphql.interface";
+import { DataQueryResultSuccessViewFragment, MetadataBlockFragment, TimeUnit } from "../../api/kamu.graphql.interface";
 import { EventPropertyLogo } from "../../dataset-block/metadata-block/components/event-details/supported.events";
 import { JsonFormValidators } from "../../dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { MaybeUndefined } from "../../interface/app.types";
@@ -212,33 +207,6 @@ export class DataHelpers {
             /* istanbul ignore next */
             default:
                 return "Unsupported event type";
-        }
-    }
-
-    public static flowTypeDescription(flow: FlowSummaryDataFragment): string {
-        const decriptionFlow = flow.description;
-        switch (decriptionFlow.__typename) {
-            case "FlowDescriptionDatasetPollingIngest":
-                return `Polling ingest`;
-            case "FlowDescriptionDatasetPushIngest":
-                return `Push ingest`;
-            case "FlowDescriptionDatasetExecuteTransform":
-                return `Execute transformation`;
-            case "FlowDescriptionDatasetHardCompaction":
-                if (
-                    flow.configSnapshot?.__typename === "FlowConfigRuleCompaction" &&
-                    flow.configSnapshot.compactionMode.__typename === "FlowConfigCompactionModeMetadataOnly"
-                ) {
-                    return "Reset";
-                }
-                return `Hard compaction`;
-            case "FlowDescriptionSystemGC":
-                return `Garbage collector`;
-            case "FlowDescriptionDatasetReset":
-                return `Reset to seed`;
-            /* istanbul ignore next */
-            default:
-                return "Unsupported flow description";
         }
     }
 

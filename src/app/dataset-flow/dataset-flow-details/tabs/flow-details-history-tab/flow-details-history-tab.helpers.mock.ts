@@ -44,6 +44,7 @@ export const mockFlowSummaryDataFragmentIngestResult: FlowSummaryDataFragment = 
     },
     startCondition: null,
     timing: {
+        initiatedAt: "2024-02-12T18:21:25+00:00",
         awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
         runningSince: "2024-02-12T18:21:27.477789591+00:00",
         lastAttemptFinishedAt: "2024-02-12T18:21:29.554197038+00:00",

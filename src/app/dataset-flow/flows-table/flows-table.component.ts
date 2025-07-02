@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { DataHelpers } from "src/app/common/helpers/data.helpers";
 import {
     ChangeDetectionStrategy,
     Component,
@@ -32,7 +31,7 @@ import AppValues from "src/app/common/values/app.values";
 import { MatTableDataSource } from "@angular/material/table";
 import { capitalizeString, promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { MatMenuTrigger } from "@angular/material/menu";
-import { DatasetFlowTableHelpers } from "./flows-table.helpers";
+import { FlowTableHelpers } from "./flows-table.helpers";
 import {
     CancelFlowArgs,
     DROPDOWN_ACCOUNT_SETTINGS,
@@ -66,23 +65,31 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     @Input({ required: true }) public searchByAccount: AccountFragment[] = [];
     @Input() public searchByDataset: DatasetListFlowsDataFragment[] = [];
     @Input({ required: true }) public tableOptions: FlowsTableOptions;
+    @Input({ required: true }) public accountFlowInitiators: AccountFragment[];
+    @Input({ required: true }) public involvedDatasets: DatasetListFlowsDataFragment[];
+
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
     @Output() public searchByFiltersChange = new EventEmitter<MaybeNull<FlowsTableFiltersOptions>>();
     @Output() public cancelFlowChange = new EventEmitter<CancelFlowArgs>();
+
+    @ViewChildren(MatMenuTrigger) private triggersMatMenu: QueryList<MatMenuTrigger>;
+
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly FlowDetailsTabs: typeof FlowDetailsTabs = FlowDetailsTabs;
     private readonly FILTERED_ITEMS_COUNT = 10;
 
-    public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>();
-    @ViewChildren(MatMenuTrigger) private triggersMatMenu: QueryList<MatMenuTrigger>;
-    @Input({ required: true }) public accountFlowInitiators: AccountFragment[];
-    @Input({ required: true }) public involvedDatasets: DatasetListFlowsDataFragment[];
-
     public readonly URL_FLOW_DETAILS = ProjectLinks.URL_FLOW_DETAILS;
     public readonly FILTER_DATASET_SETTINGS: DropdownSettings = DROPDOWN_DATASET_SETTINGS;
     public readonly FILTER_STATUS_SETTINGS: DropdownSettings = DROPDOWN_STATUS_SETTINGS;
+
+    private readonly modalService = inject(ModalService);
+    private readonly datasetFlowsService = inject(DatasetFlowsService);
+    private readonly toastrService = inject(ToastrService);
+
+    public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>();
+
     public filterAccountSettings: DropdownSettings = DROPDOWN_ACCOUNT_SETTINGS;
     public dropdownDatasetList: DatasetListFlowsDataFragment[] = [];
     public selectedDatasetItems: DatasetListFlowsDataFragment[] = [];
@@ -91,9 +98,10 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     public dropdownStatustList: FilterStatusType[] = [];
     public selectedStatusItems: FilterStatusType[] = [];
 
-    private modalService = inject(ModalService);
-    private datasetFlowsService = inject(DatasetFlowsService);
-    private toastrService = inject(ToastrService);
+    public ngOnInit(): void {
+        this.dataSource.data = this.nodes;
+        this.initializeFilters();
+    }
 
     public ngOnChanges(changes: SimpleChanges): void {
         const nodes: SimpleChange = changes.nodes;
@@ -102,29 +110,20 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         }
     }
 
-    public ngOnInit(): void {
-        this.dataSource.data = this.nodes;
-        this.initializeFilters();
-    }
-
-    public durationTask(d1: string, d2: string): string {
-        return DataHelpers.durationTask(d1, d2);
-    }
-
     public flowTypeDescription(flow: FlowSummaryDataFragment): string {
-        return DataHelpers.flowTypeDescription(flow);
+        return FlowTableHelpers.flowTypeDescription(flow);
     }
 
     public descriptionColumnOptions(element: FlowSummaryDataFragment): { icon: string; class: string } {
-        return DatasetFlowTableHelpers.descriptionColumnTableOptions(element);
+        return FlowTableHelpers.descriptionColumnTableOptions(element);
     }
 
     public descriptionDatasetFlowEndOfMessage(element: FlowSummaryDataFragment): string {
-        return DatasetFlowTableHelpers.descriptionEndOfMessage(element);
+        return FlowTableHelpers.descriptionEndOfMessage(element);
     }
 
     public descriptionDatasetFlowSubMessage(element: FlowSummaryDataFragment, datasetId: string): string {
-        return DatasetFlowTableHelpers.descriptionSubMessage(element, this.involvedDatasets ?? [], datasetId);
+        return FlowTableHelpers.descriptionSubMessage(element, this.involvedDatasets ?? [], datasetId);
     }
 
     public onSearch(): void {
@@ -142,15 +141,19 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     }
 
     public durationBlockVisible(node: FlowSummaryDataFragment): boolean {
-        return node.status === FlowStatus.Finished && node.outcome?.__typename === "FlowSuccessResult";
+        return node.status === FlowStatus.Finished;
     }
 
     public durationBlockText(node: FlowSummaryDataFragment): string {
-        return DatasetFlowTableHelpers.durationBlockText(node);
+        return FlowTableHelpers.durationBlockText(node);
+    }
+
+    public durationTimingText(node: FlowSummaryDataFragment): string {
+        return FlowTableHelpers.durationTimingText(node);
     }
 
     public tooltipText(node: FlowSummaryDataFragment): string {
-        return DatasetFlowTableHelpers.tooltipText(node);
+        return FlowTableHelpers.tooltipText(node);
     }
 
     public waitingForBlockVisible(node: FlowSummaryDataFragment): boolean {
@@ -158,7 +161,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     }
 
     public waitingBlockText(startCondition: MaybeNull<FlowStartCondition>): string {
-        return DatasetFlowTableHelpers.waitingBlockText(startCondition);
+        return FlowTableHelpers.waitingBlockText(startCondition);
     }
 
     public retriesBlockVisible(node: FlowSummaryDataFragment): boolean {
@@ -177,7 +180,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         if (!node.retryPolicy) {
             throw new Error("Retry policy is undefined, but expected");
         }
-        return DatasetFlowTableHelpers.retriesBlockText(node.status, node.tasks.length, node.retryPolicy.maxAttempts);
+        return FlowTableHelpers.retriesBlockText(node.status, node.tasks.length, node.retryPolicy.maxAttempts);
     }
 
     public datasetById(datasetId: string): Dataset {

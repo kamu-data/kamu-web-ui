@@ -28,8 +28,7 @@ describe("GithubCallbackComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, SharedTestModule],
-            declarations: [GithubCallbackComponent],
+            imports: [HttpClientTestingModule, SharedTestModule, GithubCallbackComponent],
             providers: [AuthApi, Apollo],
         }).compileComponents();
 

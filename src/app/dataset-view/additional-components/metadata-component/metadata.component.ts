@@ -27,12 +27,57 @@ import ProjectLinks from "src/app/project-links";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetOverviewTabData } from "../../dataset-view.interface";
+import { CardsPropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
+import { MergeStrategyPropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/merge-strategy-property/merge-strategy-property.component";
+import { SchemaPropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/schema-property/schema-property.component";
+import { RouterLink } from "@angular/router";
+import { SqlQueryViewerComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/sql-query-viewer/sql-query-viewer.component";
+import { EnginePropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/engine-property/engine-property.component";
+import { OwnerPropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/owner-property/owner-property.component";
+import { DatasetNamePropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/dataset-name-property/dataset-name-property.component";
+import { DisplayTimeComponent } from "../../../common/components/display-time/display-time.component";
+import { YamlEventViewerComponent } from "../../../common/components/yaml-event-viewer/yaml-event-viewer.component";
+import { LinkPropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/link-property/link-property.component";
+import { DynamicTableComponent } from "../../../common/components/dynamic-table/dynamic-table.component";
+import { BlockRowDataComponent } from "../../../common/components/block-row-data/block-row-data.component";
+import { MatIconModule } from "@angular/material/icon";
+import { CommitNavigatorComponent } from "./components/commit-navigator/commit-navigator.component";
+import { FeatureFlagDirective } from "../../../common/directives/feature-flag.directive";
+import { NgIf, NgFor, NgTemplateOutlet, TitleCasePipe } from "@angular/common";
 
 @Component({
     selector: "app-metadata",
     templateUrl: "./metadata.component.html",
     styleUrls: ["./metadata.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        NgIf,
+        NgFor,
+        NgTemplateOutlet,
+        RouterLink,
+        TitleCasePipe,
+
+        //-----//
+        MatIconModule,
+
+        //-----//
+        CommitNavigatorComponent,
+        FeatureFlagDirective,
+        BlockRowDataComponent,
+        DynamicTableComponent,
+        LinkPropertyComponent,
+        YamlEventViewerComponent,
+        DisplayTimeComponent,
+        DatasetNamePropertyComponent,
+        OwnerPropertyComponent,
+        EnginePropertyComponent,
+        SqlQueryViewerComponent,
+        SchemaPropertyComponent,
+        MergeStrategyPropertyComponent,
+        CardsPropertyComponent,
+    ],
 })
 export class MetadataComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_VIEW_METADATA_KEY) public datasetMetadataTabData: DatasetOverviewTabData;

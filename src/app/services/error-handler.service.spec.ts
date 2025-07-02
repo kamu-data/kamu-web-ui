@@ -6,7 +6,6 @@
  */
 
 import { ErrorTexts } from "../common/values/errors.text";
-import { ApolloError } from "@apollo/client/core";
 import {
     AccountNotFoundError,
     AuthenticationError,
@@ -20,9 +19,8 @@ import { TestBed } from "@angular/core/testing";
 import { ErrorHandlerService } from "./error-handler.service";
 import { NavigationService } from "./navigation.service";
 import { LoggedUserService } from "../auth/logged-user.service";
-import { ToastrModule, ToastrService } from "ngx-toastr";
-import { GraphQLError } from "graphql";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { provideToastr, ToastrService } from "ngx-toastr";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("ErrorHandlerService", () => {
     let service: ErrorHandlerService;
@@ -38,11 +36,12 @@ describe("ErrorHandlerService", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
+                provideAnimations(),
+                provideToastr(),
                 ModalService,
                 NavigationService,
                 { provide: LoggedUserService, useValue: loggedUserServiceMock },
             ],
-            imports: [ToastrModule.forRoot(), BrowserAnimationsModule],
         });
         service = TestBed.inject(ErrorHandlerService);
         toastrService = TestBed.inject(ToastrService);
@@ -100,23 +99,6 @@ describe("ErrorHandlerService", () => {
         expect(toastrServiceSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should show modal window when connection was lost", () => {
-        const mockErrorMessage = "Mock apollo error message";
-        const toastrServiceSpy: jasmine.Spy = spyOn(toastrService, "error").and.callThrough();
-        service.handleError(
-            new ApolloError({
-                errorMessage: mockErrorMessage,
-                networkError: new Error("Problem with internet"),
-            }),
-        );
-        service.handleError(
-            new ApolloError({
-                errorMessage: mockErrorMessage,
-            }),
-        );
-        expect(toastrServiceSpy).toHaveBeenCalledTimes(2);
-    });
-
     it("should log authentication errors, terminate session, and show Toastr", () => {
         const consoleErrorSpy: jasmine.Spy = spyOn(console, "error").and.stub();
         const authApiTerminateSessionSpy: jasmine.Spy = spyOn(loggedUserServiceMock, "terminateSession").and.stub();
@@ -140,28 +122,6 @@ describe("ErrorHandlerService", () => {
         expect(authApiTerminateSessionSpy).toHaveBeenCalledWith();
         expect(toastrServiceSpy).toHaveBeenCalledWith(ERROR_TEXT);
     });
-
-    [ErrorHandlerService.APOLLO_ERROR_EXPIRED_TOKEN, ErrorHandlerService.APOLLO_ERROR_INVALID_TOKEN].forEach(
-        (errorMessage: string) => {
-            it(`should convert Apollo error "${errorMessage}" into Authentication errors`, () => {
-                const consoleErrorSpy: jasmine.Spy = spyOn(console, "error").and.stub();
-                const authApiTerminateSessionSpy: jasmine.Spy = spyOn(
-                    loggedUserServiceMock,
-                    "terminateSession",
-                ).and.stub();
-                const toastrServiceSpy: jasmine.Spy = spyOn(toastrService, "error").and.stub();
-
-                const apolloError = new ApolloError({
-                    graphQLErrors: [new GraphQLError(errorMessage)],
-                });
-                service.handleError(apolloError);
-
-                expect(consoleErrorSpy).toHaveBeenCalledWith(apolloError.graphQLErrors[0]);
-                expect(authApiTerminateSessionSpy).toHaveBeenCalledWith();
-                expect(toastrServiceSpy).toHaveBeenCalledWith(errorMessage);
-            });
-        },
-    );
 
     it("should log unknown errors", () => {
         const toastrServiceSpy: jasmine.Spy = spyOn(toastrService, "error").and.callThrough();

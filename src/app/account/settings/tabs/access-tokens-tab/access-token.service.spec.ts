@@ -8,7 +8,7 @@
 import { TestBed } from "@angular/core/testing";
 import { AccessTokenService } from "./access-token.service";
 import { Apollo } from "apollo-angular";
-import { ToastrModule, ToastrService } from "ngx-toastr";
+import { provideToastr, ToastrService } from "ngx-toastr";
 import { AccessTokenApi } from "../../../../api/access-token.api";
 import {
     PAGE,
@@ -25,6 +25,7 @@ import { of } from "rxjs";
 import { AccessTokenConnection, CreatedAccessToken } from "../../../../api/kamu.graphql.interface";
 import { TEST_ACCOUNT_ID } from "../../../../search/mock.data";
 import { MaybeNull } from "../../../../interface/app.types";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("AccessTokenService", () => {
     let service: AccessTokenService;
@@ -33,8 +34,7 @@ describe("AccessTokenService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo],
-            imports: [ToastrModule.forRoot()],
+            providers: [Apollo, provideAnimations(), provideToastr()],
         });
         service = TestBed.inject(AccessTokenService);
         accessTokenApi = TestBed.inject(AccessTokenApi);

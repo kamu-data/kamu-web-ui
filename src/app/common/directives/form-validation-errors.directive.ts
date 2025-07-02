@@ -14,6 +14,7 @@ import { NgSelectComponent } from "@ng-select/ng-select";
 
 @Directive({
     selector: "[appFieldError]",
+    standalone: true,
 })
 export class FormValidationErrorsDirective implements OnDestroy, OnChanges, OnInit {
     @Input({ required: true }) public appFieldError:
@@ -100,6 +101,10 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges, OnIn
         if (errorsToDisplay.length) {
             this.renderErrors(errorsToDisplay[0]);
         } else {
+            this.renderErrors("");
+        }
+
+        if (!this.fieldControl?.touched && !this.fieldControl?.dirty) {
             this.renderErrors("");
         }
     }

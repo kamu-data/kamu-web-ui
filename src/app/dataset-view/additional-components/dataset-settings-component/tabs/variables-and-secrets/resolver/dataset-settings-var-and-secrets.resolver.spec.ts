@@ -13,7 +13,7 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { Apollo } from "apollo-angular";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import ProjectLinks from "src/app/project-links";
 import { Observable, of } from "rxjs";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
@@ -21,6 +21,7 @@ import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment 
 import AppValues from "src/app/common/values/app.values";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("datasetSettingsVarAndSecretsResolverFn", () => {
     let datasetService: DatasetService;
@@ -33,8 +34,7 @@ describe("datasetSettingsVarAndSecretsResolverFn", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo],
-            imports: [ToastrModule.forRoot()],
+            providers: [Apollo, provideAnimations(), provideToastr()],
         });
         datasetService = TestBed.inject(DatasetService);
         datasetSubService = TestBed.inject(DatasetSubscriptionsService);

@@ -26,7 +26,6 @@ import {
 import { first, map, Observable } from "rxjs";
 import { ApolloQueryResult } from "@apollo/client";
 import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
-import { DatasetOperationError } from "../common/values/errors";
 import { MutationResult } from "apollo-angular";
 
 @Injectable({ providedIn: "root" })
@@ -64,12 +63,7 @@ export class WebhooksApi {
         return this.datasetWebhookCreateSubscriptionGQL.mutate({ datasetId, input }).pipe(
             first(),
             map((result: MutationResult<DatasetWebhookCreateSubscriptionMutation>) => {
-                /* istanbul ignore else */
-                if (result.data) {
-                    return result.data;
-                } else {
-                    throw new DatasetOperationError(result.errors ?? []);
-                }
+                return result.data as DatasetWebhookCreateSubscriptionMutation;
             }),
         );
     }
@@ -81,12 +75,7 @@ export class WebhooksApi {
         return this.datasetWebhookRemoveSubscriptionGQL.mutate({ datasetId, id }).pipe(
             first(),
             map((result: MutationResult<DatasetWebhookRemoveSubscriptionMutation>) => {
-                /* istanbul ignore else */
-                if (result.data) {
-                    return result.data;
-                } else {
-                    throw new DatasetOperationError(result.errors ?? []);
-                }
+                return result.data as DatasetWebhookRemoveSubscriptionMutation;
             }),
         );
     }
@@ -98,12 +87,7 @@ export class WebhooksApi {
         return this.datasetWebhookPauseSubscriptionGQL.mutate({ datasetId, id }).pipe(
             first(),
             map((result: MutationResult<DatasetWebhookPauseSubscriptionMutation>) => {
-                /* istanbul ignore else */
-                if (result.data) {
-                    return result.data;
-                } else {
-                    throw new DatasetOperationError(result.errors ?? []);
-                }
+                return result.data as DatasetWebhookPauseSubscriptionMutation;
             }),
         );
     }
@@ -115,12 +99,7 @@ export class WebhooksApi {
         return this.datasetWebhookResumeSubscriptionGQL.mutate({ datasetId, id }).pipe(
             first(),
             map((result: MutationResult<DatasetWebhookResumeSubscriptionMutation>) => {
-                /* istanbul ignore else */
-                if (result.data) {
-                    return result.data;
-                } else {
-                    throw new DatasetOperationError(result.errors ?? []);
-                }
+                return result.data as DatasetWebhookResumeSubscriptionMutation;
             }),
         );
     }
@@ -133,12 +112,7 @@ export class WebhooksApi {
         return this.datasetWebhookUpdateSubscriptionGQL.mutate(params).pipe(
             first(),
             map((result: MutationResult<DatasetWebhookUpdateSubscriptionMutation>) => {
-                /* istanbul ignore else */
-                if (result.data) {
-                    return result.data;
-                } else {
-                    throw new DatasetOperationError(result.errors ?? []);
-                }
+                return result.data as DatasetWebhookUpdateSubscriptionMutation;
             }),
         );
     }

@@ -30,8 +30,7 @@ describe("DisplayTimeComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DisplayTimeComponent],
-            imports: [SharedTestModule],
+            imports: [SharedTestModule, DisplayTimeComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DisplayTimeComponent);

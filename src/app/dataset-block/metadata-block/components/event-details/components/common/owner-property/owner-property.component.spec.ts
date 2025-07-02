@@ -17,8 +17,7 @@ describe("OwnerPropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [OwnerPropertyComponent],
-            imports: [SharedTestModule, RouterModule],
+            imports: [SharedTestModule, RouterModule, OwnerPropertyComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(OwnerPropertyComponent);

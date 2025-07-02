@@ -14,8 +14,7 @@ import { YamlEditorComponent } from "./components/yaml-editor/yaml-editor.compon
 import { FormsModule } from "@angular/forms";
 
 @NgModule({
-    declarations: [SqlEditorComponent, YamlEditorComponent],
-    imports: [CommonModule, FormsModule, MonacoEditorModule.forRoot()],
+    imports: [CommonModule, FormsModule, MonacoEditorModule.forRoot(), SqlEditorComponent, YamlEditorComponent],
     exports: [SqlEditorComponent, YamlEditorComponent],
 })
 export class EditorModule {}

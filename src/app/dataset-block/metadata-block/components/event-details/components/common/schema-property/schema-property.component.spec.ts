@@ -17,8 +17,7 @@ describe("SchemaPropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SchemaPropertyComponent, DynamicTableComponent],
-            imports: [MatTableModule, SharedTestModule],
+            imports: [MatTableModule, SharedTestModule, SchemaPropertyComponent, DynamicTableComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SchemaPropertyComponent);

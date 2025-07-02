@@ -11,7 +11,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AccessTokensTabComponent } from "./access-tokens-tab.component";
 import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { Apollo } from "apollo-angular";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { MatIconModule } from "@angular/material/icon";
 import { MatDividerModule } from "@angular/material/divider";
@@ -31,9 +31,8 @@ import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { RouterTestingModule } from "@angular/router/testing";
-import { routes } from "src/app/app-routing.module";
-import { CopyToClipboardModule } from "src/app/common/components/copy-to-clipboard/copy-to-clipboard.module";
-import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
+import { routes } from "src/app/app-routing";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("AccessTokensTabComponent", () => {
     let component: AccessTokensTabComponent;
@@ -47,10 +46,11 @@ describe("AccessTokensTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [AccessTokensTabComponent, PaginationComponent],
             providers: [
                 FormBuilder,
                 Apollo,
+                provideAnimations(),
+                provideToastr(),
                 {
                     provide: ActivatedRoute,
                     useValue: {
@@ -78,7 +78,6 @@ describe("AccessTokensTabComponent", () => {
                 },
             ],
             imports: [
-                ToastrModule.forRoot(),
                 ApolloTestingModule,
                 MatTableModule,
                 MatIconModule,
@@ -89,8 +88,8 @@ describe("AccessTokensTabComponent", () => {
                 NgbPaginationModule,
                 MatSlideToggleModule,
                 RouterTestingModule.withRoutes(routes),
-                CopyToClipboardModule,
-                FormValidationErrorsModule,
+                AccessTokensTabComponent,
+                PaginationComponent,
             ],
         }).compileComponents();
 

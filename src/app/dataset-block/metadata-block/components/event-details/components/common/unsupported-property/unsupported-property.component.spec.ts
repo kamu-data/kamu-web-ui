@@ -15,8 +15,7 @@ describe("UnsupportedPropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [UnsupportedPropertyComponent],
-            imports: [SharedTestModule],
+            imports: [SharedTestModule, UnsupportedPropertyComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(UnsupportedPropertyComponent);

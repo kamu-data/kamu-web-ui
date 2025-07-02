@@ -27,12 +27,26 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import ProjectLinks from "src/app/project-links";
 import { addMarkdownRunButton } from "src/app/common/helpers/app.helpers";
+import { MarkdownModule } from "ngx-markdown";
+import { FormsModule } from "@angular/forms";
+import { MatIconModule } from "@angular/material/icon";
+import { NgIf } from "@angular/common";
 
 @Component({
     selector: "app-readme-section",
     templateUrl: "./readme-section.component.html",
     styleUrls: ["./readme-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        FormsModule,
+        NgIf,
+
+        //-----//
+        MatIconModule,
+        MarkdownModule,
+    ],
 })
 export class ReadmeSectionComponent extends BaseComponent implements OnChanges, AfterViewChecked {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

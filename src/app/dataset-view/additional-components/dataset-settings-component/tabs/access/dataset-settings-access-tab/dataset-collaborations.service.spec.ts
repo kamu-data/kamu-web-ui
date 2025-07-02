@@ -9,7 +9,7 @@ import { TestBed } from "@angular/core/testing";
 import { DatasetCollaborationsService } from "./dataset-collaborations.service";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { ToastrModule, ToastrService } from "ngx-toastr";
+import { provideToastr, ToastrService } from "ngx-toastr";
 import { DatasetCollaborationApi } from "src/app/api/dataset-collaboration.api";
 import { of } from "rxjs";
 import {
@@ -21,6 +21,7 @@ import {
 } from "src/app/api/mock/dataset-collaborations.mock";
 import { TEST_ACCOUNT_ID, TEST_DATASET_ID } from "src/app/api/mock/dataset.mock";
 import { AccountWithRoleConnection, DatasetAccessRole, NameLookupResult } from "src/app/api/kamu.graphql.interface";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("DatasetCollaborationsService", () => {
     let service: DatasetCollaborationsService;
@@ -29,8 +30,8 @@ describe("DatasetCollaborationsService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo],
-            imports: [ApolloTestingModule, ToastrModule.forRoot()],
+            providers: [Apollo, provideAnimations(), provideToastr()],
+            imports: [ApolloTestingModule],
         });
         toastrService = TestBed.inject(ToastrService);
         datasetCollaborationApi = TestBed.inject(DatasetCollaborationApi);

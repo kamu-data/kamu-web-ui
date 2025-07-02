@@ -15,7 +15,15 @@ import {
     OnInit,
     Output,
 } from "@angular/core";
-import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from "@angular/forms";
+import {
+    AbstractControl,
+    FormControl,
+    FormGroup,
+    ValidatorFn,
+    Validators,
+    FormsModule,
+    ReactiveFormsModule,
+} from "@angular/forms";
 import {
     DatasetBasicsFragment,
     DatasetFlowType,
@@ -32,12 +40,32 @@ import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetSchedulingService } from "../../../services/dataset-scheduling.service";
 import { TriggersTooltipsTexts } from "src/app/common/tooltips/triggers.text";
 import { finalize } from "rxjs";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { MatRadioModule } from "@angular/material/radio";
+import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { NgIf } from "@angular/common";
 
 @Component({
     selector: "app-ingest-trigger-form",
     templateUrl: "./ingest-trigger-form.component.html",
     styleUrls: ["./ingest-trigger-form.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        NgIf,
+        FormsModule,
+        ReactiveFormsModule,
+
+        //-----//
+        MatRadioModule,
+        MatProgressBarModule,
+        MatSlideToggleModule,
+
+        //-----//
+        TooltipIconComponent,
+    ],
 })
 export class IngestTriggerFormComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

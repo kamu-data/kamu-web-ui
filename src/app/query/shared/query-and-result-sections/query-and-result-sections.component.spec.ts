@@ -10,7 +10,7 @@ import { QueryAndResultSectionsComponent } from "./query-and-result-sections.com
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { Apollo } from "apollo-angular";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { ToastrModule, ToastrService } from "ngx-toastr";
+import { provideToastr, ToastrService } from "ngx-toastr";
 import { MatMenuModule } from "@angular/material/menu";
 import { RequestTimerComponent } from "../request-timer/request-timer.component";
 import { SqlEditorComponent } from "src/app/editor/components/sql-editor/sql-editor.component";
@@ -35,6 +35,7 @@ import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import { EngineSelectComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("QueryAndResultSectionsComponent", () => {
     let component: QueryAndResultSectionsComponent;
@@ -47,24 +48,21 @@ describe("QueryAndResultSectionsComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                QueryAndResultSectionsComponent,
-                RequestTimerComponent,
-                SqlEditorComponent,
-                EngineSelectComponent,
-            ],
             imports: [
                 CdkAccordionModule,
                 HttpClientTestingModule,
-                ToastrModule.forRoot(),
                 MatMenuModule,
                 MatProgressBarModule,
                 EditorModule,
                 MatIconModule,
                 SharedTestModule,
                 MatDividerModule,
+                QueryAndResultSectionsComponent,
+                RequestTimerComponent,
+                SqlEditorComponent,
+                EngineSelectComponent,
             ],
-            providers: [Apollo],
+            providers: [Apollo, provideAnimations(), provideToastr()],
         });
         fixture = TestBed.createComponent(QueryAndResultSectionsComponent);
         component = fixture.componentInstance;

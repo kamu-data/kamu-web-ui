@@ -15,7 +15,7 @@ import {
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { MetadataBlockFragment } from "../../../api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/interface/app.types";
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModal, NgbModalRef, NgbTooltip } from "@ng-bootstrap/ng-bootstrap";
 import { EditDetailsModalComponent } from "./components/edit-details-modal/edit-details-modal.component";
 import { EditWatermarkModalComponent } from "./components/edit-watermark-modal/edit-watermark-modal.component";
 import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
@@ -32,12 +32,49 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DatasetCollaborationsService } from "../dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
 import { BaseDatasetDataComponent } from "src/app/common/components/base-dataset-data.component";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { DisplaySizePipe } from "../../../common/pipes/display-size.pipe";
+import { DisplayTimeComponent } from "../../../common/components/display-time/display-time.component";
+import { DisplayHashComponent } from "../../../common/components/display-hash/display-hash.component";
+import { ReadmeSectionComponent } from "./components/readme-section/readme-section.component";
+import { DragAndDropDirective } from "../../../common/directives/drag-and-drop.directive";
+import { DynamicTableComponent } from "../../../common/components/dynamic-table/dynamic-table.component";
+import { OverviewHistorySummaryHeaderComponent } from "./components/overview-history-summary-header/overview-history-summary-header.component";
+import { RouterLink } from "@angular/router";
+import { MatIconModule } from "@angular/material/icon";
+import { FeatureFlagDirective } from "../../../common/directives/feature-flag.directive";
+import { MatChipsModule } from "@angular/material/chips";
+import { NgIf, NgFor, AsyncPipe, DecimalPipe, TitleCasePipe } from "@angular/common";
 
 @Component({
     selector: "app-overview",
     templateUrl: "overview.component.html",
     styleUrls: ["./overview.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        AsyncPipe,
+        DecimalPipe,
+        TitleCasePipe,
+        NgIf,
+        NgFor,
+        RouterLink,
+
+        //-----//
+        MatChipsModule,
+        MatIconModule,
+        NgbTooltip,
+
+        //-----//
+        FeatureFlagDirective,
+        OverviewHistorySummaryHeaderComponent,
+        DynamicTableComponent,
+        DragAndDropDirective,
+        ReadmeSectionComponent,
+        DisplayHashComponent,
+        DisplaySizePipe,
+        DisplayTimeComponent,
+    ],
 })
 export class OverviewComponent extends BaseDatasetDataComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_VIEW_OVERVIEW_KEY) public datasetOverviewTabData: DatasetOverviewTabData;

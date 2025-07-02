@@ -9,12 +9,15 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import AppValues from "src/app/common/values/app.values";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { NgIf } from "@angular/common";
 
 @Component({
     selector: "app-page-not-found",
     templateUrl: "./page-not-found.component.html",
     styleUrls: ["./page-not-found.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [NgIf],
 })
 export class PageNotFoundComponent {
     public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;

@@ -17,8 +17,7 @@ describe("CopyToClipboardComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [CopyToClipboardComponent],
-            imports: [MatIconModule, HttpClientTestingModule],
+            imports: [MatIconModule, HttpClientTestingModule, CopyToClipboardComponent],
         });
 
         registerMatSvgIcons();

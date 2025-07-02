@@ -6,12 +6,22 @@
  */
 
 import { Component, Input, Output, EventEmitter, OnChanges, ChangeDetectionStrategy } from "@angular/core";
+import { SlicePipe } from "@angular/common";
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
     selector: "app-custom-pagination",
     templateUrl: "commit-navigator.component.html",
     styleUrls: ["commit-navigator.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        SlicePipe,
+
+        //-----//
+        MatIconModule,
+    ],
 })
 export class CommitNavigatorComponent implements OnChanges {
     @Input({ required: true }) public date = "";

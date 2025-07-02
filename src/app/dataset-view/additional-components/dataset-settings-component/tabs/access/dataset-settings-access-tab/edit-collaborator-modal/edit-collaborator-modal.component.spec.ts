@@ -20,9 +20,8 @@ describe("EditCollaboratorModalComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [EditCollaboratorModalComponent],
             providers: [Apollo, NgbActiveModal],
-            imports: [FormsModule, MatDividerModule],
+            imports: [FormsModule, MatDividerModule, EditCollaboratorModalComponent],
         });
         fixture = TestBed.createComponent(EditCollaboratorModalComponent);
         ngbActiveModal = TestBed.inject(NgbActiveModal);

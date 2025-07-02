@@ -18,7 +18,7 @@ import {
     FlowStartCondition,
     FlowStatus,
     FlowSummaryDataFragment,
-    FlowTriggerType,
+    FlowTriggerInstance,
     TaskStatus,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/values/app.values";
@@ -261,7 +261,7 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    private static describeTrigger(trigger: FlowTriggerType): string {
+    private static describeTrigger(trigger: FlowTriggerInstance): string {
         switch (trigger.__typename) {
             case "FlowTriggerAutoPolling":
                 return "automatically";
@@ -277,7 +277,7 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    private static describeTriggerDetails(trigger: FlowTriggerType): string {
+    private static describeTriggerDetails(trigger: FlowTriggerInstance): string {
         switch (trigger.__typename) {
             case "FlowTriggerAutoPolling":
                 return "";

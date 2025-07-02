@@ -9,7 +9,7 @@ import { AddPushSource, MetadataBlockFragment } from "../../../../../../api/kamu
 import { SupportedEvents } from "../../../../../../dataset-block/metadata-block/components/event-details/supported.events";
 import ProjectLinks from "src/app/project-links";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { FormGroup } from "@angular/forms";
+import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { SourcesSection } from "../add-polling-source/process-form.service.types";
 import { EditAddPushSourceService } from "./edit-add-push-source.service";
@@ -19,12 +19,36 @@ import { AddPushSourceSection } from "./add-push-source-form.types";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { PreprocessStepComponent } from "../steps/preprocess-step/preprocess-step.component";
+import { BaseStepComponent } from "../steps/base-step/base-step.component";
+import { StepperNavigationComponent } from "../../stepper-navigation/stepper-navigation.component";
+import { SourceNameStepComponent } from "../steps/source-name-step/source-name-step.component";
+import { MatStepperModule } from "@angular/material/stepper";
+import { NgIf } from "@angular/common";
+import { RouterLink } from "@angular/router";
 
 @Component({
     selector: "app-add-push-source",
     templateUrl: "./add-push-source.component.html",
     styleUrls: ["./add-push-source.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        FormsModule,
+        NgIf,
+        ReactiveFormsModule,
+        RouterLink,
+
+        //-----//
+        MatStepperModule,
+
+        //-----//
+        BaseStepComponent,
+        PreprocessStepComponent,
+        SourceNameStepComponent,
+        StepperNavigationComponent,
+    ],
 })
 export class AddPushSourceComponent extends BaseSourceEventComponent {
     @Input(ProjectLinks.URL_QUERY_PARAM_PUSH_SOURCE_NAME) public queryParamName: string;

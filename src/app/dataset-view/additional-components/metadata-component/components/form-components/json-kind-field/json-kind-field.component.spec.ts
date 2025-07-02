@@ -23,8 +23,16 @@ describe("JsonKindFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [JsonKindFieldComponent, TooltipIconComponent, InputFieldComponent],
-            imports: [SharedTestModule, ReactiveFormsModule, MatIconModule, MatTableModule, NgbTooltipModule],
+            imports: [
+                SharedTestModule,
+                ReactiveFormsModule,
+                MatIconModule,
+                MatTableModule,
+                NgbTooltipModule,
+                JsonKindFieldComponent,
+                TooltipIconComponent,
+                InputFieldComponent,
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(JsonKindFieldComponent);

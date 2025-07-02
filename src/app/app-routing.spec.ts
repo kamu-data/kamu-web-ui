@@ -9,7 +9,7 @@ import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core
 import { Location } from "@angular/common";
 import { Router } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
-import { routes } from "./app-routing.module";
+import { routes } from "./app-routing";
 import ProjectLinks from "./project-links";
 import { promiseWithCatch } from "./common/helpers/app.helpers";
 import { ApolloTestingModule } from "apollo-angular/testing";
@@ -21,7 +21,7 @@ import { LoginService } from "./auth/login/login.service";
 
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { accountSettingsAccessTokensResolverFn } from "./account/settings/tabs/access-tokens-tab/resolver/account-settings-access-tokens.resolver";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { mockAccountDetails } from "./api/mock/auth.mock";
 import { of } from "rxjs";
 import { AccessTokenConnection, AccountProvider } from "./api/kamu.graphql.interface";
@@ -41,6 +41,7 @@ import {
 } from "./dataset-view/additional-components/data-tabs.mock";
 import { OverviewUpdate } from "./dataset-view/dataset.subscriptions.interface";
 import { NgxGraphModule } from "@swimlane/ngx-graph";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("Router", () => {
     let router: Router;
@@ -55,12 +56,14 @@ describe("Router", () => {
                 RouterTestingModule.withRoutes(routes),
                 ApolloTestingModule,
                 HttpClientTestingModule,
-                ToastrModule.forRoot(),
                 NgxGraphModule,
+                PageNotFoundComponent,
+                LoginComponent,
             ],
-            declarations: [PageNotFoundComponent, LoginComponent],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
+                provideAnimations(),
+                provideToastr(),
                 {
                     provide: accountSettingsAccessTokensResolverFn,
                     useValue: {

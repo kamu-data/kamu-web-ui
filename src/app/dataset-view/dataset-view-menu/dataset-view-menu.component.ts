@@ -24,12 +24,32 @@ import { isMobileView, promiseWithCatch } from "src/app/common/helpers/app.helpe
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
 import { DatasetPermissionsService } from "../dataset.permissions.service";
 import { AppConfigService } from "src/app/app-config.service";
+import { DataAccessPanelComponent } from "../../data-access-panel/data-access-panel.component";
+import { NgIf } from "@angular/common";
+import { MatIconModule } from "@angular/material/icon";
+import { RouterLink } from "@angular/router";
+import { FeatureFlagDirective } from "../../common/directives/feature-flag.directive";
+import { MatButtonToggleModule } from "@angular/material/button-toggle";
 
 @Component({
     selector: "app-dataset-view-menu",
     templateUrl: "./dataset-view-menu.component.html",
     styleUrls: ["./dataset-view-menu.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        NgIf,
+        RouterLink,
+
+        //-----//
+        MatButtonToggleModule,
+        MatIconModule,
+
+        //-----//
+        DataAccessPanelComponent,
+        FeatureFlagDirective,
+    ],
 })
 export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;

@@ -12,15 +12,16 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { AuthApi } from "src/app/api/auth.api";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("Eip1193EthereumService", () => {
     let service: Eip1193EthereumService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [AuthApi, Apollo],
-            imports: [ApolloTestingModule, HttpClientTestingModule, ToastrModule.forRoot()],
+            providers: [AuthApi, Apollo, provideAnimations(), provideToastr()],
+            imports: [ApolloTestingModule, HttpClientTestingModule],
         });
         service = TestBed.inject(Eip1193EthereumService);
     });

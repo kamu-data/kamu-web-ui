@@ -25,14 +25,13 @@ import { BlockRowDataComponent } from "src/app/common/components/block-row-data/
 import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatIconModule } from "@angular/material/icon";
-import { MetadataBlockModule } from "src/app/dataset-block/metadata-block/metadata-block.module";
-import { HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
+import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
 
 describe("MetadataComponent", () => {
     let component: MetadataComponent;
@@ -42,20 +41,16 @@ describe("MetadataComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [MetadataComponent, BlockRowDataComponent, TooltipIconComponent],
-            imports: [NgbTooltipModule, MatIconModule, MetadataBlockModule, SharedTestModule, HttpClientTestingModule],
-            providers: [
-                {
-                    provide: HIGHLIGHT_OPTIONS,
-                    useValue: {
-                        coreLibraryLoader: () => import("highlight.js/lib/core"),
-                        languages: {
-                            sql: () => import("highlight.js/lib/languages/sql"),
-                            yaml: () => import("highlight.js/lib/languages/yaml"),
-                        },
-                    },
-                },
+            imports: [
+                NgbTooltipModule,
+                MatIconModule,
+                SharedTestModule,
+                HttpClientTestingModule,
+                MetadataComponent,
+                BlockRowDataComponent,
+                TooltipIconComponent,
             ],
+            providers: [HIGHLIGHT_OPTIONS_PROVIDER],
         })
             .overrideComponent(MetadataComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },

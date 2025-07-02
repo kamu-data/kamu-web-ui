@@ -11,15 +11,15 @@ import { FormGroup, FormControl } from "@angular/forms";
 import { IngestConfigurationFormType } from "../scheduling/dataset-settings-scheduling-tab.component.types";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { Apollo } from "apollo-angular";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { MatDividerModule } from "@angular/material/divider";
-import { IngestConfigurationModule } from "./ingest-configuration-form/ingest-configuration.module";
 import { of } from "rxjs";
 import { mockIngestGetDatasetFlowConfigsSuccess } from "src/app/api/mock/dataset-flow.mock";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("DatasetSettingsIngestConfigurationTabComponent", () => {
     let component: DatasetSettingsIngestConfigurationTabComponent;
@@ -28,9 +28,8 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [DatasetSettingsIngestConfigurationTabComponent],
-            imports: [SharedTestModule, ToastrModule.forRoot(), IngestConfigurationModule, MatDividerModule],
-            providers: [Apollo, HttpClientTestingModule],
+            imports: [SharedTestModule, MatDividerModule, DatasetSettingsIngestConfigurationTabComponent],
+            providers: [Apollo, HttpClientTestingModule, provideAnimations(), provideToastr()],
         });
         fixture = TestBed.createComponent(DatasetSettingsIngestConfigurationTabComponent);
         datasetSchedulingService = TestBed.inject(DatasetSchedulingService);

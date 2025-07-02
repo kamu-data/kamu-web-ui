@@ -23,19 +23,47 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetSchedulingService } from "../../../services/dataset-scheduling.service";
-import { FormGroup, FormControl, Validators, AbstractControl, ValidatorFn } from "@angular/forms";
+import {
+    FormGroup,
+    FormControl,
+    Validators,
+    AbstractControl,
+    ValidatorFn,
+    FormsModule,
+    ReactiveFormsModule,
+} from "@angular/forms";
 import { MaybeNull } from "src/app/interface/app.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { everyTimeMapperValidators } from "src/app/common/helpers/data.helpers";
 import { TriggersTooltipsTexts } from "src/app/common/tooltips/triggers.text";
 import { finalize } from "rxjs";
 import { BatchingFormType } from "../dataset-settings-transform-options-tab.component.types";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { FormValidationErrorsDirective } from "../../../../../../common/directives/form-validation-errors.directive";
+import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { NgIf } from "@angular/common";
 
 @Component({
     selector: "app-batching-trigger-form",
     templateUrl: "./batching-trigger-form.component.html",
     styleUrls: ["./batching-trigger-form.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        NgIf,
+        FormsModule,
+        ReactiveFormsModule,
+
+        //-----//
+        MatProgressBarModule,
+        MatSlideToggleModule,
+
+        //-----//
+        FormValidationErrorsDirective,
+        TooltipIconComponent,
+    ],
 })
 export class BatchingTriggerFormComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

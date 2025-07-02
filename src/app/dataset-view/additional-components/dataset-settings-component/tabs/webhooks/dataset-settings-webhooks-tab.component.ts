@@ -29,12 +29,32 @@ import { ModalService } from "src/app/common/components/modal/modal.service";
 import { WebhooksHelpers } from "./webhooks.helpers";
 import { RotateSecretSubscriptionModalComponent } from "./rotate-secret-subscription-modal/rotate-secret-subscription-modal.component";
 import { DatasetSettingsWebhookTabData } from "./dataset-settings-webhooks-tab.component.types";
+import { FeatureFlagDirective } from "../../../../../common/directives/feature-flag.directive";
+import { MatTableModule } from "@angular/material/table";
+import { MatIconModule } from "@angular/material/icon";
+import { NgIf, NgClass, AsyncPipe } from "@angular/common";
+import { MatDividerModule } from "@angular/material/divider";
 
 @Component({
     selector: "app-dataset-settings-webhooks-tab",
     templateUrl: "./dataset-settings-webhooks-tab.component.html",
     styleUrls: ["./dataset-settings-webhooks-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        AsyncPipe,
+        NgClass,
+        NgIf,
+
+        //-----//
+        MatDividerModule,
+        MatIconModule,
+        MatTableModule,
+
+        //-----//
+        FeatureFlagDirective,
+    ],
 })
 export class DatasetSettingsWebhooksTabComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_SETTINGS_WEBHOOKS_KEY) public webhooksViewData: DatasetSettingsWebhookTabData;

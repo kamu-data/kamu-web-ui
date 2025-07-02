@@ -8,12 +8,27 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { DatasetSearchOverviewFragment } from "src/app/api/kamu.graphql.interface";
 import { SearchMode } from "src/app/interface/search.interface";
+import { DatasetListItemComponent } from "./dataset-list-item/dataset-list-item.component";
+import { FormsModule } from "@angular/forms";
+import { FeatureFlagDirective } from "../../directives/feature-flag.directive";
+import { NgIf, NgFor } from "@angular/common";
 
 @Component({
     selector: "app-dataset-list",
     templateUrl: "./dataset-list.component.html",
     styleUrls: ["./dataset-list.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        FormsModule,
+        NgFor,
+        NgIf,
+
+        //-----//
+        FeatureFlagDirective,
+        DatasetListItemComponent,
+    ],
 })
 export class DatasetListComponent {
     @Input({ required: true }) public dataSource: DatasetSearchOverviewFragment[];

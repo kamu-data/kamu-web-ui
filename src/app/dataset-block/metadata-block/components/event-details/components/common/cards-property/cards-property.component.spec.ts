@@ -16,7 +16,7 @@ describe("CardsPropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [CardsPropertyComponent],
+            imports: [CardsPropertyComponent],
             providers: [
                 {
                     provide: ActivatedRoute,

@@ -7,6 +7,8 @@
 
 import { Component } from "@angular/core";
 import { DynamicComponent } from "./dynamic.component";
+import { MatDividerModule } from "@angular/material/divider";
+import { NgClass, NgIf, NgFor } from "@angular/common";
 
 @Component({
     selector: "modal-dialog",
@@ -118,6 +120,16 @@ import { DynamicComponent } from "./dynamic.component";
             </div>
         </div>
     `,
+    standalone: true,
+    imports: [
+        //-----//
+        NgClass,
+        NgFor,
+        NgIf,
+
+        //-----//
+        MatDividerModule,
+    ],
 })
 export class ModalDialogComponent extends DynamicComponent {
     public onClick(action: boolean | string, locationBack?: boolean) {

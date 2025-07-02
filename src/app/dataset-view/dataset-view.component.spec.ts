@@ -24,7 +24,7 @@ import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { DatasetViewHeaderComponent } from "./dataset-view-header/dataset-view-header.component";
 import { SearchAdditionalButtonsComponent } from "../common/components/search-additional-buttons/search-additional-buttons.component";
 import { MatTabsModule } from "@angular/material/tabs";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { BrowserAnimationsModule, provideAnimations } from "@angular/platform-browser/animations";
 import { SearchAdditionalButtonsNavComponent } from "../common/components/search-additional-buttons/search-additional-buttons-nav.component";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatIconModule } from "@angular/material/icon";
@@ -38,21 +38,18 @@ import { HistoryComponent } from "./additional-components/history-component/hist
 import { LineageComponent } from "./additional-components/lineage-component/lineage.component";
 import { DatasetSettingsGeneralTabComponent } from "./additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.component";
 import { DatasetSettingsSchedulingTabComponent } from "./additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.component";
-import { ToastrModule } from "ngx-toastr";
-import { DataAccessPanelModule } from "../data-access-panel/data-access-panel.module";
+import { provideToastr } from "ngx-toastr";
 import { SqlEditorComponent } from "../editor/components/sql-editor/sql-editor.component";
 import { RequestTimerComponent } from "../query/shared/request-timer/request-timer.component";
 import { EditorModule } from "../editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { FlowsComponent } from "./additional-components/flows-component/flows.component";
-import { DatasetVisibilityModule } from "../common/components/dataset-visibility/dataset-visibility.module";
 import { RouterTestingModule } from "@angular/router/testing";
 import { QueryAndResultSectionsComponent } from "../query/shared/query-and-result-sections/query-and-result-sections.component";
 import { SavedQueriesSectionComponent } from "../query/shared/saved-queries-section/saved-queries-section.component";
 import { SearchAndSchemasSectionComponent } from "../query/global-query/search-and-schemas-section/search-and-schemas-section.component";
 import { registerMatSvgIcons } from "../common/helpers/base-test.helpers.spec";
-import { FeatureFlagModule } from "../common/directives/feature-flag.module";
 import { MOCK_DATASET_INFO } from "./additional-components/metadata-component/components/set-transform/mock.data";
 
 describe("DatasetViewComponent", () => {
@@ -65,7 +62,23 @@ describe("DatasetViewComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                ApolloModule,
+                ApolloTestingModule,
+                BrowserAnimationsModule,
+                HttpClientTestingModule,
+                MatDividerModule,
+                MatIconModule,
+                MatMenuModule,
+                MatTabsModule,
+                MatButtonToggleModule,
+                FormsModule,
+                ReactiveFormsModule,
+                RouterModule,
+                EditorModule,
+                MatProgressBarModule,
+                CdkAccordionModule,
+                RouterTestingModule.withRoutes([{ path: MOCK_DATASET_ROUTE, component: DatasetViewComponent }]),
                 DatasetViewComponent,
                 OverviewComponent,
                 DataComponent,
@@ -86,32 +99,11 @@ describe("DatasetViewComponent", () => {
                 SavedQueriesSectionComponent,
                 SearchAndSchemasSectionComponent,
             ],
-            imports: [
-                ApolloModule,
-                ApolloTestingModule,
-                BrowserAnimationsModule,
-                HttpClientTestingModule,
-                MatDividerModule,
-                MatIconModule,
-                MatMenuModule,
-                MatTabsModule,
-                MatButtonToggleModule,
-                FormsModule,
-                ReactiveFormsModule,
-                RouterModule,
-                ToastrModule.forRoot(),
-                DataAccessPanelModule,
-                EditorModule,
-                MatProgressBarModule,
-                CdkAccordionModule,
-                DatasetVisibilityModule,
-                FeatureFlagModule,
-                RouterTestingModule.withRoutes([{ path: MOCK_DATASET_ROUTE, component: DatasetViewComponent }]),
-            ],
             providers: [
                 DatasetApi,
                 Apollo,
-
+                provideAnimations(),
+                provideToastr(),
                 {
                     provide: ActivatedRoute,
                     useValue: {

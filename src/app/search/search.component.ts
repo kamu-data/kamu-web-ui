@@ -10,12 +10,33 @@ import { ChangeDetectionStrategy, Component, inject, Input, numberAttribute, OnI
 import { NavigationService } from "../services/navigation.service";
 import ProjectLinks from "../project-links";
 import RoutingResolvers from "../common/resolvers/routing-resolvers";
+import { PaginationComponent } from "../common/components/pagination-component/pagination.component";
+import { DatasetListComponent } from "../common/components/dataset-list-component/dataset-list.component";
+import { FormsModule } from "@angular/forms";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { NgFor, NgIf } from "@angular/common";
+import { FeatureFlagDirective } from "../common/directives/feature-flag.directive";
 
 @Component({
     selector: "app-search",
     templateUrl: "./search.component.html",
     styleUrls: ["./search.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        FormsModule,
+        NgFor,
+        NgIf,
+
+        //-----//
+        MatCheckboxModule,
+
+        //-----//
+        DatasetListComponent,
+        FeatureFlagDirective,
+        PaginationComponent,
+    ],
 })
 export class SearchComponent implements OnInit {
     @Input(ProjectLinks.URL_QUERY_PARAM_QUERY) public set search(value: string) {

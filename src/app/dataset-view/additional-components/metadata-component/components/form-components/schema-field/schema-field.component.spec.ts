@@ -23,7 +23,6 @@ describe("SchemaFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SchemaFieldComponent, TooltipIconComponent],
             providers: [FormBuilder],
             imports: [
                 ReactiveFormsModule,
@@ -33,6 +32,8 @@ describe("SchemaFieldComponent", () => {
                 RxReactiveFormsModule,
                 NgbTooltipModule,
                 SharedTestModule,
+                SchemaFieldComponent,
+                TooltipIconComponent,
             ],
         }).compileComponents();
 

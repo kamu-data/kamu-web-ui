@@ -11,11 +11,12 @@ import { accountSettingsAccessTokensResolverFn } from "./account-settings-access
 import { AccessTokenConnection } from "src/app/api/kamu.graphql.interface";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { Apollo } from "apollo-angular";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import ProjectLinks from "src/app/project-links";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("accountSettingsAccessTokensResolverFn", () => {
     let router: Router;
@@ -27,8 +28,8 @@ describe("accountSettingsAccessTokensResolverFn", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo],
-            imports: [ToastrModule.forRoot(), HttpClientTestingModule],
+            providers: [Apollo, provideAnimations(), provideToastr()],
+            imports: [HttpClientTestingModule],
         });
 
         router = TestBed.inject(Router);

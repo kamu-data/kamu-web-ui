@@ -28,17 +28,11 @@ import { SearchAdditionalButtonsNavComponent } from "src/app/common/components/s
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatTabsModule } from "@angular/material/tabs";
 import { YamlViewSectionComponent } from "./components/yaml-view-section/yaml-view-section.component";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { DataAccessPanelModule } from "src/app/data-access-panel/data-access-panel.module";
-import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
+import { BrowserAnimationsModule, provideAnimations } from "@angular/platform-browser/animations";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
-import { DisplayHashModule } from "src/app/common/components/display-hash/display-hash.module";
-import { ToastrModule } from "ngx-toastr";
-import { DisplayTimeModule } from "src/app/common/components/display-time/display-time.module";
-import { BlockRowDataModule } from "src/app/common/components/block-row-data/block-row-data.module";
+import { provideToastr } from "ngx-toastr";
 import { MatDividerModule } from "@angular/material/divider";
 import { HighlightModule } from "ngx-highlightjs";
 
@@ -51,17 +45,6 @@ describe("MetadataBlockComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                MetadataBlockComponent,
-                BlockNavigationComponent,
-                EventDetailsComponent,
-                BlockHeaderComponent,
-                DatasetViewMenuComponent,
-                DatasetViewHeaderComponent,
-                SearchAdditionalButtonsComponent,
-                SearchAdditionalButtonsNavComponent,
-                YamlViewSectionComponent,
-            ],
             imports: [
                 ApolloModule,
                 ApolloTestingModule,
@@ -74,19 +57,23 @@ describe("MetadataBlockComponent", () => {
                 HttpClientTestingModule,
                 MatTabsModule,
                 BrowserAnimationsModule,
-                DataAccessPanelModule,
                 RouterModule,
-                DatasetVisibilityModule,
-                FeatureFlagModule,
-                DisplayHashModule,
-                ToastrModule.forRoot(),
-                DisplayTimeModule,
-                BlockRowDataModule,
                 MatDividerModule,
                 HighlightModule,
+                MetadataBlockComponent,
+                BlockNavigationComponent,
+                EventDetailsComponent,
+                BlockHeaderComponent,
+                DatasetViewMenuComponent,
+                DatasetViewHeaderComponent,
+                SearchAdditionalButtonsComponent,
+                SearchAdditionalButtonsNavComponent,
+                YamlViewSectionComponent,
             ],
             providers: [
                 DatasetApi,
+                provideAnimations(),
+                provideToastr(),
                 {
                     provide: ActivatedRoute,
                     useValue: {

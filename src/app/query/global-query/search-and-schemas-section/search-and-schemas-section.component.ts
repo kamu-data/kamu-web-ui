@@ -30,7 +30,7 @@ import {
 } from "rxjs";
 import { DatasetBasicsFragment, GetDatasetSchemaQuery } from "src/app/api/kamu.graphql.interface";
 import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";
-import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
+import { NgbTypeaheadSelectItemEvent, NgbTypeahead, NgbHighlight } from "@ng-bootstrap/ng-bootstrap";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetSchema } from "src/app/interface/dataset.interface";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
@@ -38,12 +38,32 @@ import { SearchApi } from "src/app/api/search.api";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import AppValues from "src/app/common/values/app.values";
 import { SqlQueryService } from "src/app/services/sql-query.service";
+import { SavedQueriesSectionComponent } from "../../shared/saved-queries-section/saved-queries-section.component";
+import { DynamicTableComponent } from "../../../common/components/dynamic-table/dynamic-table.component";
+import { CdkAccordionModule } from "@angular/cdk/accordion";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
+import { FormsModule } from "@angular/forms";
+import { NgIf, NgFor } from "@angular/common";
 
 @Component({
     selector: "app-search-and-schemas-section",
     templateUrl: "./search-and-schemas-section.component.html",
     styleUrls: ["./search-and-schemas-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        NgIf,
+        FormsModule,
+        NgbTypeahead,
+        MatIconModule,
+        NgbHighlight,
+        MatDividerModule,
+        CdkAccordionModule,
+        NgFor,
+        DynamicTableComponent,
+        SavedQueriesSectionComponent,
+    ],
 })
 export class SearchAndSchemasSectionComponent extends BaseComponent implements OnInit {
     @Output() public sqlQueryEmit = new EventEmitter<string>();

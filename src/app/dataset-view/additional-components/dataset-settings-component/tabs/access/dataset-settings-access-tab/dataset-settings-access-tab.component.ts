@@ -14,7 +14,7 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { SettingsTabsEnum } from "../../../dataset-settings.model";
-import { MatTableDataSource } from "@angular/material/table";
+import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { promiseWithCatch, requireValue } from "src/app/common/helpers/app.helpers";
 import ProjectLinks from "src/app/project-links";
@@ -26,18 +26,39 @@ import { SelectionModel } from "@angular/cdk/collections";
 import { DatasetCollaborationsService } from "./dataset-collaborations.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { filter, firstValueFrom, from, map, switchMap, take } from "rxjs";
-import { NavigationEnd, Router } from "@angular/router";
+import { NavigationEnd, Router, RouterLink } from "@angular/router";
 import AppValues from "src/app/common/values/app.values";
 import { EditCollaboratorModalComponent } from "./edit-collaborator-modal/edit-collaborator-modal.component";
 import { CollaboratorModalResultType } from "./add-people-modal/add-people-modal.model";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { PaginationComponent } from "../../../../../../common/components/pagination-component/pagination.component";
+import { FormsModule } from "@angular/forms";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { NgIf, TitleCasePipe } from "@angular/common";
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
     selector: "app-dataset-settings-access-tab",
     templateUrl: "./dataset-settings-access-tab.component.html",
     styleUrls: ["./dataset-settings-access-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        FormsModule,
+        NgIf,
+        TitleCasePipe,
+        RouterLink,
+
+        //-----//
+        MatIconModule,
+        MatCheckboxModule,
+        MatTableModule,
+
+        //-----//
+        PaginationComponent,
+    ],
 })
 export class DatasetSettingsAccessTabComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_SETTINGS_ACCESS_KEY) public accessViewData: DatasetViewData;

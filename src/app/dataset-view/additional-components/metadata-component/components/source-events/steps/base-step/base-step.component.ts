@@ -13,7 +13,7 @@ import {
     JsonFormData,
 } from "../../add-polling-source/add-polling-source-form.types";
 import { RadioControlType } from "../../add-polling-source/form-control.source";
-import { FormBuilder } from "@angular/forms";
+import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ControlContainer, FormGroupDirective } from "@angular/forms";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { FormGroup } from "@angular/forms";
@@ -23,12 +23,50 @@ import { EditPollingSourceService } from "../../add-polling-source/edit-polling-
 import { MaybeNull } from "src/app/interface/app.types";
 import { SourcesSection } from "../../add-polling-source/process-form.service.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { TopicsFieldComponent } from "../../../form-components/topics-field/topics-field.component";
+import { NumberFieldComponent } from "../../../form-components/number-field/number-field.component";
+import { JsonKindFieldComponent } from "../../../form-components/json-kind-field/json-kind-field.component";
+import { TypeaheadFieldComponent } from "../../../form-components/typeahead-field/typeahead-field.component";
+import { OrderFieldComponent } from "../../../form-components/order-field/order-field.component";
+import { CacheFieldComponent } from "../../../form-components/cache-field/cache-field.component";
+import { SelectDateFormatFieldComponent } from "../../../form-components/select-date-format-field/select-date-format-field.component";
+import { SchemaFieldComponent } from "../../../form-components/schema-field/schema-field.component";
+import { CheckboxFieldComponent } from "../../../form-components/checkbox-field/checkbox-field.component";
+import { ArrayKeysFieldComponent } from "../../../form-components/array-keys-field/array-keys-field.component";
+import { KeyValueFieldComponent } from "../../../form-components/key-value-field/key-value-field.component";
+import { InputFieldComponent } from "../../../form-components/input-field/input-field.component";
+import { SelectKindFieldComponent } from "../../../form-components/select-kind-field/select-kind-field.component";
+import { NgIf, NgFor, TitleCasePipe } from "@angular/common";
 
 @Component({
     selector: "app-base-step",
     templateUrl: "./base-step.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
+    standalone: true,
+    imports: [
+        //-----//
+        NgIf,
+        NgFor,
+        FormsModule,
+        ReactiveFormsModule,
+        TitleCasePipe,
+
+        //-----//
+        ArrayKeysFieldComponent,
+        JsonKindFieldComponent,
+        InputFieldComponent,
+        SelectKindFieldComponent,
+        KeyValueFieldComponent,
+        CheckboxFieldComponent,
+        SchemaFieldComponent,
+        SelectDateFormatFieldComponent,
+        CacheFieldComponent,
+        OrderFieldComponent,
+        TypeaheadFieldComponent,
+        NumberFieldComponent,
+        TopicsFieldComponent,
+    ],
 })
 export class BaseStepComponent extends BaseComponent implements OnInit {
     public parentForm: FormGroup;

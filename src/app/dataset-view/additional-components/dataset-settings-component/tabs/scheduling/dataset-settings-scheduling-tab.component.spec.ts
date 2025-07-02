@@ -9,8 +9,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetSettingsSchedulingTabComponent } from "./dataset-settings-scheduling-tab.component";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { ToastrModule } from "ngx-toastr";
+import { provideAnimations } from "@angular/platform-browser/animations";
+import { provideToastr } from "ngx-toastr";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
@@ -19,8 +19,6 @@ import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment 
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
 import { TimeDelta, TimeUnit } from "src/app/api/kamu.graphql.interface";
-import { IngestConfigurationModule } from "../ingest-configuration/ingest-configuration-form/ingest-configuration.module";
-import { IngestTriggerModule } from "./ingest-trigger-form/ingest-trigger.module";
 import { PollingGroupType } from "./dataset-settings-scheduling-tab.component.types";
 import { MaybeNull } from "src/app/interface/app.types";
 import { PollingGroupEnum } from "../../dataset-settings.model";
@@ -41,19 +39,15 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DatasetSettingsSchedulingTabComponent],
-            providers: [Apollo],
+            providers: [Apollo, provideAnimations(), provideToastr()],
             imports: [
                 ApolloTestingModule,
-                ToastrModule.forRoot(),
-                BrowserAnimationsModule,
                 SharedTestModule,
                 MatDividerModule,
                 MatSlideToggleModule,
                 MatRadioModule,
                 ReactiveFormsModule,
-                IngestConfigurationModule,
-                IngestTriggerModule,
+                DatasetSettingsSchedulingTabComponent,
             ],
         }).compileComponents();
 

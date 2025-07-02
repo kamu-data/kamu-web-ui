@@ -20,12 +20,31 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { isSettingsTabAccessibleHelper } from "./dataset-settings.helpers";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { RouterOutlet } from "@angular/router";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
+import { FeatureFlagDirective } from "../../../common/directives/feature-flag.directive";
+import { NgFor, NgIf } from "@angular/common";
 
 @Component({
     selector: "app-dataset-settings",
     templateUrl: "./dataset-settings.component.html",
     styleUrls: ["./dataset-settings.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        NgFor,
+        NgIf,
+        RouterOutlet,
+
+        //-----//
+        MatIconModule,
+        MatDividerModule,
+
+        //-----//
+        FeatureFlagDirective,
+    ],
 })
 export class DatasetSettingsComponent extends BaseComponent {
     @Input(RoutingResolvers.DATASET_VIEW_SETTINGS_KEY) public datasetSettingsTabData: DatasetOverviewTabData;

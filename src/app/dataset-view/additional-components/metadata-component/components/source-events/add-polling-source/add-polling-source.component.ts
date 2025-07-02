@@ -7,7 +7,7 @@
 
 import { FetchKind, SetPollingSourceSection } from "./add-polling-source-form.types";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { FormArray, FormGroup } from "@angular/forms";
+import { FormArray, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { FETCH_STEP_RADIO_CONTROLS } from "./form-control.source";
 import { FETCH_FORM_DATA } from "../steps/data/fetch-form-data";
 import { EditPollingSourceService } from "./edit-polling-source.service";
@@ -18,6 +18,14 @@ import { BaseSourceEventComponent } from "../../base-source-event.component";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { PreprocessStepComponent } from "../steps/preprocess-step/preprocess-step.component";
+import { PrepareStepComponent } from "../steps/prepare-step/prepare-step.component";
+import { StepperNavigationComponent } from "../../stepper-navigation/stepper-navigation.component";
+import { BaseStepComponent } from "../steps/base-step/base-step.component";
+import { MatStepperModule } from "@angular/material/stepper";
+import { NgIf } from "@angular/common";
+import { RouterLink } from "@angular/router";
+import { EditorModule } from "src/app/editor/editor.module";
 
 @Component({
     selector: "app-add-polling-source",
@@ -29,6 +37,24 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
             provide: STEPPER_GLOBAL_OPTIONS,
             useValue: { showError: true },
         },
+    ],
+    standalone: true,
+    imports: [
+        //-----//
+        FormsModule,
+        NgIf,
+        ReactiveFormsModule,
+        RouterLink,
+
+        //-----//
+        MatStepperModule,
+        EditorModule,
+
+        //-----//
+        BaseStepComponent,
+        PrepareStepComponent,
+        PreprocessStepComponent,
+        StepperNavigationComponent,
     ],
 })
 export class AddPollingSourceComponent extends BaseSourceEventComponent implements OnInit {

@@ -10,7 +10,7 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { EditKeyValueModalComponent } from "./edit-key-value-modal.component";
 import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { Apollo } from "apollo-angular";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { ActivatedRoute } from "@angular/router";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatDividerModule } from "@angular/material/divider";
@@ -22,7 +22,7 @@ import { mockListEnvVariablesQuery } from "src/app/api/mock/environment-variable
 import { ViewDatasetEnvVar } from "src/app/api/kamu.graphql.interface";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("EditKeyValueModalComponent", () => {
     let component: EditKeyValueModalComponent;
@@ -31,8 +31,9 @@ describe("EditKeyValueModalComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [EditKeyValueModalComponent],
             providers: [
+                provideAnimations(),
+                provideToastr(),
                 NgbActiveModal,
                 FormBuilder,
                 Apollo,
@@ -63,14 +64,13 @@ describe("EditKeyValueModalComponent", () => {
                 },
             ],
             imports: [
-                ToastrModule.forRoot(),
                 MatCheckboxModule,
                 FormsModule,
                 ReactiveFormsModule,
                 MatDividerModule,
                 MatIconModule,
                 MatTooltipModule,
-                FormValidationErrorsModule,
+                EditKeyValueModalComponent,
             ],
         }).compileComponents();
 

@@ -27,7 +27,6 @@ describe("EditDetailsModalComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [EditDetailsModalComponent],
             imports: [
                 ApolloModule,
                 ApolloTestingModule,
@@ -37,6 +36,7 @@ describe("EditDetailsModalComponent", () => {
                 MatIconModule,
                 HttpClientTestingModule,
                 SharedTestModule,
+                EditDetailsModalComponent,
             ],
             providers: [Apollo, NgbActiveModal],
         }).compileComponents();

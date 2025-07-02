@@ -14,7 +14,7 @@ import { QueryExplainerComponent } from "./query-explainer.component";
 import { RouterModule } from "@angular/router";
 import { of } from "rxjs";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { ToastrModule, ToastrService } from "ngx-toastr";
+import { provideToastr, ToastrService } from "ngx-toastr";
 import { Apollo } from "apollo-angular";
 import { QueryExplainerService } from "./query-explainer.service";
 import {
@@ -22,10 +22,8 @@ import {
     mockTextareaCommitment,
     mockVerifyQueryResponseSuccess,
 } from "./query-explainer.mocks";
-import { HIGHLIGHT_OPTIONS, HighlightModule } from "ngx-highlightjs";
+import { HighlightModule } from "ngx-highlightjs";
 import { ReproducedResultSectionComponent } from "./components/reproduced-result-section/reproduced-result-section.component";
-import { DisplayHashModule } from "../common/components/display-hash/display-hash.module";
-import { DynamicTableModule } from "../common/components/dynamic-table/dynamic-table.module";
 import { DatasetService } from "../dataset-view/dataset.service";
 import { mockDatasetByIdQuery } from "../api/mock/dataset.mock";
 import {
@@ -36,6 +34,8 @@ import {
 } from "../common/helpers/base-test.helpers.spec";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
+import { provideAnimations } from "@angular/platform-browser/animations";
+import { HIGHLIGHT_OPTIONS_PROVIDER } from "../common/helpers/app.helpers";
 
 describe("QueryExplainerComponent", () => {
     let component: QueryExplainerComponent;
@@ -46,36 +46,20 @@ describe("QueryExplainerComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                HttpClientTestingModule,
+                HighlightModule,
+                RouterModule,
+                FormsModule,
+                MatIconModule,
+                SharedTestModule,
                 QueryExplainerComponent,
                 VerifyResultSectionComponent,
                 ReproducedResultSectionComponent,
                 InputDataSectionComponent,
                 CommitmentDataSectionComponent,
             ],
-            imports: [
-                HttpClientTestingModule,
-                DynamicTableModule,
-                ToastrModule.forRoot(),
-                DisplayHashModule,
-                HighlightModule,
-                RouterModule,
-                FormsModule,
-                MatIconModule,
-                SharedTestModule,
-            ],
-            providers: [
-                Apollo,
-                {
-                    provide: HIGHLIGHT_OPTIONS,
-                    useValue: {
-                        coreLibraryLoader: () => import("highlight.js/lib/core"),
-                        languages: {
-                            sql: () => import("highlight.js/lib/languages/sql"),
-                        },
-                    },
-                },
-            ],
+            providers: [Apollo, provideAnimations(), provideToastr(), HIGHLIGHT_OPTIONS_PROVIDER],
         });
 
         registerMatSvgIcons();

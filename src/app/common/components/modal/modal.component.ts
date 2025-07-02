@@ -22,7 +22,7 @@ import { ModalDialogComponent } from "./modal-dialog.component";
 import { ModalImageComponent } from "./modal-image.component";
 import { ModalService } from "./modal.service";
 import { ModalSpinnerComponent } from "./modal-spinner.component";
-import { Location } from "@angular/common";
+import { Location, NgClass } from "@angular/common";
 import { ModalMappingsComponent } from "../../../interface/modal.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { MaybeUndefined } from "src/app/interface/app.types";
@@ -33,6 +33,8 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
     template: `
         <div class="modal__container" #container tabindex="1" [ngClass]="{ modal__invisible: !isVisible }"></div>
     `,
+    standalone: true,
+    imports: [NgClass],
 })
 export class ModalComponent extends BaseComponent implements OnInit {
     @ViewChild("container", { read: ViewContainerRef })

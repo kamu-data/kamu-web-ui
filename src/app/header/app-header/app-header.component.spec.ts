@@ -38,7 +38,6 @@ import { NotificationIndicatorComponent } from "../notification-indicator/notifi
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatIconModule } from "@angular/material/icon";
-import { DisplayAccountNameModule } from "src/app/common/pipes/display-account-name.module";
 
 describe("AppHeaderComponent", () => {
     let component: AppHeaderComponent;
@@ -63,9 +62,10 @@ describe("AppHeaderComponent", () => {
                 HttpClientTestingModule,
                 RouterModule,
                 MatIconModule,
-                DisplayAccountNameModule,
+
+                AppHeaderComponent,
+                NotificationIndicatorComponent,
             ],
-            declarations: [AppHeaderComponent, NotificationIndicatorComponent],
             providers: [
                 Apollo,
                 {

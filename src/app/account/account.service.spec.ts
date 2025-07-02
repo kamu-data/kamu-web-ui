@@ -16,7 +16,7 @@ import { MaybeNull, MaybeUndefined } from "../interface/app.types";
 import { AccountFlowFilters, AccountFragment, Dataset } from "../api/kamu.graphql.interface";
 import { mockDatasetsByAccountNameQuery } from "../api/mock/dataset.mock";
 import { DatasetsAccountResponse } from "../interface/dataset.interface";
-import { ToastrModule, ToastrService } from "ngx-toastr";
+import { provideToastr, ToastrService } from "ngx-toastr";
 import {
     mockAccountDatasetFlowsPausedQuery,
     mockAccountListDatasetsWithFlowsQuery,
@@ -35,6 +35,7 @@ import {
 } from "../api/mock/account.mock";
 import { FlowsTableData } from "../dataset-flow/flows-table/flows-table.types";
 import { ChangeAccountUsernameResult } from "./settings/account-settings.constants";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("AccountService", () => {
     let service: AccountService;
@@ -46,7 +47,8 @@ describe("AccountService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [ApolloTestingModule, ToastrModule.forRoot()],
+            providers: [provideAnimations(), provideToastr()],
+            imports: [ApolloTestingModule],
         });
         service = TestBed.inject(AccountService);
         toastService = TestBed.inject(ToastrService);

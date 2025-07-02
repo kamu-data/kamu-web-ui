@@ -23,7 +23,7 @@ export class FlowDetailsSummaryTabComponent {
     @Input(RoutingResolvers.FLOW_DETAILS_SUMMARY_KEY) public response: DatasetFlowByIdResponse;
 
     public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;
-    public readonly DATE_FORMAT = AppValues.DISPLAY_FLOW_DATE_FORMAT;
+    public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
 
     public get flowDetails(): FlowSummaryDataFragment {
         return this.response.flow;
@@ -35,6 +35,10 @@ export class FlowDetailsSummaryTabComponent {
 
     public flowTypeDescription(flow: FlowSummaryDataFragment): string {
         return FlowTableHelpers.flowTypeDescription(flow);
+    }
+
+    public flowDuration(): string {
+        return FlowTableHelpers.durationTimingText(this.flowDetails);
     }
 
     public durationFlowEvent(startEventTime: string, endEventTime: string): string {

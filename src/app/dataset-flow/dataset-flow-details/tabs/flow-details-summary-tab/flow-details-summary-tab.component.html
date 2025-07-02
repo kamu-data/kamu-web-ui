@@ -30,61 +30,43 @@
                     >
                 </div>
             </div>
-            <div class="row mb-4">
+            <div *ngIf="flowDetails.retryPolicy" class="row mb-4">
                 <div class="col-md-3">
-                    <span class="fw-bold">Created time</span>
+                    <span class="fw-bold">Retry attempted</span>
                 </div>
                 <div class="col-md-9">
-                    <span
-                        data-test-id="flow-created-time"
-                        *ngIf="flowDetails.timing.awaitingExecutorSince; else emptyBlock"
-                    >
-                        {{ flowDetails.timing.awaitingExecutorSince | date: DATE_FORMAT }}</span
-                    >&nbsp;
-                    <span
-                        class="text-muted"
-                        *ngIf="flowDetails.timing.awaitingExecutorSince && flowDetails.timing.runningSince"
-                        >(
-                        {{
-                            durationFlowEvent(
-                                flowDetails.timing.awaitingExecutorSince,
-                                flowDetails.timing.runningSince
-                            )
-                        }})</span
+                    <span data-test-id="flow-retry-attempts"
+                        >{{ flowDetails.tasks.length - 1 }} of {{ flowDetails.retryPolicy.maxAttempts }} times</span
                     >
                 </div>
             </div>
             <div class="row mb-4">
                 <div class="col-md-3">
-                    <span class="fw-bold">Run time</span>
+                    <span class="fw-bold">Initiated at</span>
                 </div>
                 <div class="col-md-9">
-                    <span data-test-id="flow-running-time" *ngIf="flowDetails.timing.runningSince; else emptyBlock">{{
-                        flowDetails.timing.runningSince | date: DATE_FORMAT
-                    }}</span
+                    <span data-test-id="flow-initiated-time">
+                        {{ flowDetails.timing.initiatedAt | date: DISPLAY_TIME_FORMAT }}</span
                     >&nbsp;
-                    <span
-                        class="text-muted"
-                        *ngIf="flowDetails.timing.runningSince && flowDetails.timing.lastAttemptFinishedAt"
-                        >(
-                        {{
-                            durationFlowEvent(
-                                flowDetails.timing.runningSince,
-                                flowDetails.timing.lastAttemptFinishedAt
-                            )
-                        }})</span
-                    >
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <span class="fw-bold">Total run time</span>
+                </div>
+                <div class="col-md-9">
+                    <span data-test-id="flow-running-time">{{ flowDuration() }}</span>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-3">
-                    <span class="fw-bold">Finished time</span>
+                    <span class="fw-bold">Finished at</span>
                 </div>
                 <div class="col-md-9">
                     <span
                         data-test-id="flow-finished-time"
-                        *ngIf="flowDetails.timing.lastAttemptFinishedAt; else emptyBlock"
-                        >{{ flowDetails.timing.lastAttemptFinishedAt | date: DATE_FORMAT }}
+                        *ngIf="flowDetails.outcome && flowDetails.timing.lastAttemptFinishedAt; else emptyBlock"
+                        >{{ flowDetails.timing.lastAttemptFinishedAt | date: DISPLAY_TIME_FORMAT }}
                     </span>
                 </div>
             </div>

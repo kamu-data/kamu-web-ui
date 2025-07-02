@@ -30,7 +30,8 @@ export class InputDataSectionComponent implements AfterViewChecked {
     @Input({ required: true }) public blockHashObservables$: Observable<Date>[];
     @Input({ required: true }) public datasetInfoObservables$: Observable<DatasetInfo>[];
     @Input({ required: true }) public inputData: QueryExplainerComponentData;
-    public readonly DATE_FORMAT = AppValues.DISPLAY_FLOW_DATE_FORMAT;
+
+    public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
 
     public ngAfterViewChecked(): void {
         this.addDynamicRunButton();

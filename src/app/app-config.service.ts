@@ -102,6 +102,7 @@ export class AppConfigService {
         request.open("GET", app_runtime_config.apiServerHttpUrl + "/ui-config", false);
         try {
             request.send(null);
+            console.log("!!!!!");
             //  const data: AppUIConfig = JSON.parse(request.responseText) as AppUIConfig;
             const data: AppUIConfig = AppValues.DEFAULT_UI_CONFIGURATION;
             return data;

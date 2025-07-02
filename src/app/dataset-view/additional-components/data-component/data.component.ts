@@ -28,6 +28,7 @@ import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { CancelRequestService } from "src/app/services/cancel-request.service";
 import { QueryAndResultSectionsComponent } from "../../../query/shared/query-and-result-sections/query-and-result-sections.component";
 import { SearchAndSchemasSectionComponent } from "../../../query/global-query/search-and-schemas-section/search-and-schemas-section.component";
+import { EditorModule } from "src/app/editor/editor.module";
 
 @Component({
     selector: "app-data",
@@ -40,6 +41,7 @@ import { SearchAndSchemasSectionComponent } from "../../../query/global-query/se
         NgIf,
 
         //-----//
+        EditorModule,
         SearchAndSchemasSectionComponent,
         QueryAndResultSectionsComponent,
     ],

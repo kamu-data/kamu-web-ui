@@ -10,7 +10,6 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { SourcesSection } from "../source-events/add-polling-source/process-form.service.types";
 import { MatButtonModule } from "@angular/material/button";
 import { NgIf } from "@angular/common";
-import { CdkStepper } from "@angular/cdk/stepper";
 import { MatStepperModule } from "@angular/material/stepper";
 
 @Component({
@@ -28,7 +27,7 @@ import { MatStepperModule } from "@angular/material/stepper";
         MatStepperModule,
     ],
 })
-export class StepperNavigationComponent extends CdkStepper {
+export class StepperNavigationComponent {
     @Input() public nextStep: MaybeNull<SourcesSection> = null;
     @Input() public prevStep: MaybeNull<SourcesSection> = null;
     @Input() public validStep?: boolean;

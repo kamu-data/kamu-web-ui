@@ -6,13 +6,14 @@
  */
 
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { YamlViewSectionComponent } from "./yaml-view-section.component";
-import { ChangeDetectionStrategy, NO_ERRORS_SCHEMA } from "@angular/core";
+import { ChangeDetectionStrategy } from "@angular/core";
 import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { metadataBlockSetVocab } from "src/app/common/helpers/data.helpers.spec";
 import { YamlEventViewerComponent } from "../../../../common/components/yaml-event-viewer/yaml-event-viewer.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { HIGHLIGHT_OPTIONS, HighlightModule } from "ngx-highlightjs";
 
 describe("YamlViewSectionComponent", () => {
     let component: YamlViewSectionComponent;
@@ -22,8 +23,25 @@ describe("YamlViewSectionComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [ApolloTestingModule, SharedTestModule, YamlViewSectionComponent, YamlEventViewerComponent],
-            schemas: [NO_ERRORS_SCHEMA],
+            imports: [
+                ApolloTestingModule,
+                SharedTestModule,
+                HighlightModule,
+                YamlViewSectionComponent,
+                YamlEventViewerComponent,
+            ],
+            providers: [
+                {
+                    provide: HIGHLIGHT_OPTIONS,
+                    useValue: {
+                        coreLibraryLoader: () => import("highlight.js/lib/core"),
+                        languages: {
+                            sql: () => import("highlight.js/lib/languages/sql"),
+                            yaml: () => import("highlight.js/lib/languages/yaml"),
+                        },
+                    },
+                },
+            ],
         })
             .overrideComponent(YamlViewSectionComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
@@ -39,13 +57,12 @@ describe("YamlViewSectionComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check yaml event viewer  visible ", fakeAsync(() => {
+    it("should check yaml event viewer  visible ", () => {
         component.block = metadataBlockSetVocab;
         component.blockAsYaml = mockAddPushSourceYaml;
         fixture.detectChanges();
-        tick();
+
         const eventViewer = findElementByDataTestId(fixture, "yaml-event-viewer");
         expect(eventViewer).toBeDefined();
-        flush();
-    }));
+    });
 });

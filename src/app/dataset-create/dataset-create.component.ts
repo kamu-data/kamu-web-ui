@@ -23,6 +23,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { FormValidationErrorsDirective } from "../common/directives/form-validation-errors.directive";
 import { NgFor, NgIf, AsyncPipe } from "@angular/common";
 import { MatDividerModule } from "@angular/material/divider";
+import { EditorModule } from "../editor/editor.module";
 
 @Component({
     selector: "app-dataset-create",
@@ -46,6 +47,7 @@ import { MatDividerModule } from "@angular/material/divider";
         //-----//
         FormValidationErrorsDirective,
         YamlEditorComponent,
+        EditorModule,
     ],
 })
 export class DatasetCreateComponent extends BaseComponent {

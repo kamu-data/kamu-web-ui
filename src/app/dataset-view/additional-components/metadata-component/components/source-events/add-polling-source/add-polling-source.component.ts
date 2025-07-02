@@ -25,6 +25,7 @@ import { BaseStepComponent } from "../steps/base-step/base-step.component";
 import { MatStepperModule } from "@angular/material/stepper";
 import { NgIf } from "@angular/common";
 import { RouterLink } from "@angular/router";
+import { EditorModule } from "src/app/editor/editor.module";
 
 @Component({
     selector: "app-add-polling-source",
@@ -47,6 +48,7 @@ import { RouterLink } from "@angular/router";
 
         //-----//
         MatStepperModule,
+        EditorModule,
 
         //-----//
         BaseStepComponent,

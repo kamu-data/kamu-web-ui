@@ -29,6 +29,7 @@ import { EngineSectionComponent } from "./components/engine-section/engine-secti
 import { SearchSectionComponent } from "./components/search-section/search-section.component";
 import { RouterLink } from "@angular/router";
 import { NgIf } from "@angular/common";
+import { EditorModule } from "src/app/editor/editor.module";
 
 @Component({
     selector: "app-set-transform",
@@ -42,6 +43,7 @@ import { NgIf } from "@angular/common";
         RouterLink,
 
         //-----//
+        EditorModule,
         EngineSectionComponent,
         QueriesSectionComponent,
         SearchSectionComponent,

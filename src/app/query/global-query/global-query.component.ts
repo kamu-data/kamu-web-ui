@@ -20,6 +20,7 @@ import { CancelRequestService } from "src/app/services/cancel-request.service";
 import { AsyncPipe } from "@angular/common";
 import { QueryAndResultSectionsComponent } from "../shared/query-and-result-sections/query-and-result-sections.component";
 import { SearchAndSchemasSectionComponent } from "./search-and-schemas-section/search-and-schemas-section.component";
+import { EditorModule } from "src/app/editor/editor.module";
 
 @Component({
     selector: "app-global-query",
@@ -32,6 +33,7 @@ import { SearchAndSchemasSectionComponent } from "./search-and-schemas-section/s
         AsyncPipe,
 
         //-----//
+        EditorModule,
         QueryAndResultSectionsComponent,
         SearchAndSchemasSectionComponent,
     ],

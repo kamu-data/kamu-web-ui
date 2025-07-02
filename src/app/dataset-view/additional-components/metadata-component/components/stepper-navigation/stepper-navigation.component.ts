@@ -11,6 +11,7 @@ import { SourcesSection } from "../source-events/add-polling-source/process-form
 import { MatButtonModule } from "@angular/material/button";
 import { NgIf } from "@angular/common";
 import { CdkStepper } from "@angular/cdk/stepper";
+import { MatStepperModule } from "@angular/material/stepper";
 
 @Component({
     selector: "app-stepper-navigation",
@@ -24,6 +25,7 @@ import { CdkStepper } from "@angular/cdk/stepper";
 
         //-----//
         MatButtonModule,
+        MatStepperModule,
     ],
 })
 export class StepperNavigationComponent extends CdkStepper {

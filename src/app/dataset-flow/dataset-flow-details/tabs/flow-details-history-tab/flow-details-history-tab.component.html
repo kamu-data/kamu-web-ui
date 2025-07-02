@@ -13,16 +13,13 @@
                         <div class="history-item">
                             <img
                                 *ngIf="lastIndex && flowDetails.status !== FlowStatus.Finished"
-                                [src]="dynamicImgSrc(flowDetails.status)"
+                                [src]="flowStatusAnimationSrc(flowDetails.status)"
                                 style="width: 15px"
                                 class="dynamic-img"
                             />
 
-                            <mat-icon
-                                class="icon-status d-block"
-                                [ngClass]="flowEventIconOptions(flowEvent, flowDetails).class"
-                            >
-                                {{ flowEventIconOptions(flowEvent, flowDetails).icon }}
+                            <mat-icon class="icon-status d-block" [ngClass]="flowEventIconOptions(flowEvent).class">
+                                {{ flowEventIconOptions(flowEvent).icon }}
                             </mat-icon>
                         </div>
                         <div class="d-flex flex-column">
@@ -36,9 +33,12 @@
                     <div class="col-md-3">
                         <span class="fs-12">{{ flowEvent.eventTime | date: "y-MM-dd, h:mm:ss a" }}</span>
                     </div>
-                    <div class="col-md-3" *ngIf="!lastIndex">
-                        <span class="fs-12">
+                    <div class="col-md-3">
+                        <span class="fs-12" *ngIf="!lastIndex">
                             {{ durationFlowEvent(history[i].eventTime, history[i + 1].eventTime) }}
+                        </span>
+                        <span class="fs-12" *ngIf="lastIndex && flowDetails.status !== FlowStatus.Finished">
+                            {{ durationFlowEvent(history[i].eventTime, currentTime) }}
                         </span>
                     </div>
                 </div>

@@ -70,6 +70,10 @@ fragment FlowHistoryData on FlowEvent {
     __typename
     taskId
     taskStatus
+    task {
+      outcome
+    }
+    nextAttemptAt
   }
 
   ... on FlowEventTriggerAdded {

@@ -30,6 +30,7 @@ import {
     SetDatasetFlowTriggersMutation,
     SetIngestFlowConfigMutation,
     TaskStatus,
+    TaskOutcome,
 } from "./../kamu.graphql.interface";
 import { GetDatasetFlowConfigsQuery, DatasetKind, TimeUnit, TimeDeltaInput } from "../kamu.graphql.interface";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
@@ -1100,6 +1101,10 @@ export const mockFlowHistoryDataFragment: FlowHistoryDataFragment[] = [
         eventTime: "2024-03-13T13:54:32.269040795+00:00",
         taskId: "0",
         taskStatus: TaskStatus.Running,
+        task: {
+            outcome: null,
+        },
+        nextAttemptAt: null,
     },
 ];
 
@@ -1193,6 +1198,10 @@ export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
                                     eventTime: "2024-03-15T19:43:38+00:00",
                                     taskId: "594",
                                     taskStatus: TaskStatus.Queued,
+                                    task: {
+                                        outcome: null,
+                                    },
+                                    nextAttemptAt: null,
                                 },
                                 {
                                     __typename: "FlowEventTaskChanged",
@@ -1200,6 +1209,10 @@ export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
                                     eventTime: "2024-03-15T19:43:39.414651763+00:00",
                                     taskId: "594",
                                     taskStatus: TaskStatus.Running,
+                                    task: {
+                                        outcome: null,
+                                    },
+                                    nextAttemptAt: null,
                                 },
                                 {
                                     __typename: "FlowEventTaskChanged",
@@ -1207,6 +1220,10 @@ export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
                                     eventTime: "2024-03-15T19:43:39.538294176+00:00",
                                     taskId: "594",
                                     taskStatus: TaskStatus.Finished,
+                                    task: {
+                                        outcome: TaskOutcome.Success,
+                                    },
+                                    nextAttemptAt: null,
                                 },
                             ],
                         },

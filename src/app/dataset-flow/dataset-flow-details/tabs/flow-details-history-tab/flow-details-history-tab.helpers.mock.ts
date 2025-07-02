@@ -12,6 +12,7 @@ import {
     FlowHistoryDataFragment,
     FlowStatus,
     FlowSummaryDataFragment,
+    TaskOutcome,
     TaskStatus,
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
@@ -23,6 +24,10 @@ export const mockHistoryFragmentWithFinishedStatus: FlowHistoryDataFragment = {
     eventTime: "2024-03-13T13:54:30.656488373+00:00",
     taskId: "1",
     taskStatus: TaskStatus.Finished,
+    task: {
+        outcome: TaskOutcome.Success,
+    },
+    nextAttemptAt: null,
 };
 
 export const mockFlowSummaryDataFragmentIngestResult: FlowSummaryDataFragment = {
@@ -75,6 +80,10 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         taskId: "1",
         taskStatus: TaskStatus.Running,
+        task: {
+            outcome: null,
+        },
+        nextAttemptAt: null,
     },
     {
         __typename: "FlowEventTaskChanged",
@@ -82,6 +91,10 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         taskId: "2",
         taskStatus: TaskStatus.Finished,
+        task: {
+            outcome: TaskOutcome.Success,
+        },
+        nextAttemptAt: null,
     },
     {
         __typename: "FlowEventTriggerAdded",
@@ -179,7 +192,7 @@ export const eventFlowDescriptionsResultHistoryTab: string[] = [
     "Flow initiated automatically",
     "Flow was aborted",
     "Polling ingest task running",
-    "Polling ingest task finished",
+    "Polling ingest task finished successfully",
     "Additionally triggered manually",
     "Additionally triggered after input dataset event",
     "Additionally triggered after push event",
@@ -210,6 +223,10 @@ export const mockFlowHistoryDataFragmentForIconOptions: FlowHistoryDataFragment[
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         taskId: "1",
         taskStatus: TaskStatus.Running,
+        task: {
+            outcome: null,
+        },
+        nextAttemptAt: null,
     },
     {
         __typename: "FlowEventTriggerAdded",
@@ -331,7 +348,7 @@ export const flowEventSubMessageResults: string[] = [
     "Accumulated 100/500 records. Watermark modified. Deadline at Aug 6th 2022 12:17:30 AM GMT+03:00", //1
     "Task #5",
     "Wake up time at Mar 13th 2024 5:54:30 PM GMT+02:00",
-    "An error occurred, see logs for more details",
+    "Task failed, see logs for more details",
     "Dataset is up-to-date",
     "Ingested 100 new records in 10 new blocks",
     "Transformed 10 new records in 2 new blocks",

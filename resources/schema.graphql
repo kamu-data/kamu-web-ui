@@ -2097,6 +2097,7 @@ type FlowEventTaskChanged implements FlowEvent {
 	eventTime: DateTime!
 	taskId: TaskID!
 	taskStatus: TaskStatus!
+	nextAttemptAt: DateTime
 	task: Task!
 }
 

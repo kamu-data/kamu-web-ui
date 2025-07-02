@@ -19,8 +19,10 @@ import {
     FlowStatus,
     FlowSummaryDataFragment,
     FlowTriggerInstance,
+    TaskOutcome,
     TaskStatus,
 } from "src/app/api/kamu.graphql.interface";
+import { DataHelpers } from "src/app/common/helpers/data.helpers";
 import AppValues from "src/app/common/values/app.values";
 import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
 
@@ -39,7 +41,7 @@ export class DatasetFlowDetailsHelpers {
                 const event = flowEvent as FlowEventTaskChanged;
                 return `${FlowTableHelpers.flowTypeDescription(
                     flowDetails,
-                )} task ${DatasetFlowDetailsHelpers.descriptionEndOfMessage(event)}`;
+                )} task ${DatasetFlowDetailsHelpers.flowEventEndOfMessage(event)}`;
             }
             case "FlowEventTriggerAdded":
                 return `Additionally triggered ${this.describeTrigger((flowEvent as FlowEventTriggerAdded).trigger)}`;
@@ -57,10 +59,7 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    public static flowEventIconOptions(
-        flowEvent: FlowHistoryDataFragment,
-        flowDetails: FlowSummaryDataFragment,
-    ): { icon: string; class: string } {
+    public static flowEventIconOptions(flowEvent: FlowHistoryDataFragment): { icon: string; class: string } {
         const eventTypename = flowEvent.__typename;
         switch (eventTypename) {
             case "FlowEventInitiated":
@@ -79,9 +78,21 @@ export class DatasetFlowDetailsHelpers {
                 const event = flowEvent as FlowEventTaskChanged;
                 switch (event.taskStatus) {
                     case TaskStatus.Finished:
-                        return DatasetFlowDetailsHelpers.flowOutcomeOptions(
-                            flowDetails.outcome as FlowOutcomeDataFragment,
-                        );
+                        if (!event.task.outcome) {
+                            throw new Error("Task outcome is not defined");
+                        }
+                        switch (event.task.outcome) {
+                            case TaskOutcome.Success:
+                                return { icon: "check_circle", class: "completed-status" };
+                            case TaskOutcome.Failed:
+                                return { icon: "dangerous", class: "failed-status" };
+                            case TaskOutcome.Cancelled:
+                                return { icon: "cancel", class: "aborted-outcome" };
+                            /* istanbul ignore next */
+                            default:
+                                throw new Error("Unsupported task outcome");
+                        }
+
                     case TaskStatus.Queued:
                         return { icon: "radio_button_checked", class: "scheduled-status" };
                     case TaskStatus.Running:
@@ -98,7 +109,6 @@ export class DatasetFlowDetailsHelpers {
     }
 
     public static flowOutcomeOptions(outcome: FlowOutcomeDataFragment): { icon: string; class: string } {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         switch (outcome.__typename) {
             case "FlowSuccessResult":
                 return { icon: "check_circle", class: "completed-status" };
@@ -145,20 +155,41 @@ export class DatasetFlowDetailsHelpers {
                 const event = flowEvent as FlowEventTaskChanged;
                 switch (event.taskStatus) {
                     case TaskStatus.Running:
-                        return `Task #${flowEvent.taskId}`;
+                        return this.describeTaskIdentity(event.taskId, flowDetails);
                     case TaskStatus.Finished:
-                        switch (flowDetails.outcome?.__typename) {
-                            case "FlowFailedError":
-                                switch (flowDetails.outcome.reason.__typename) {
-                                    case "FlowFailureReasonGeneral":
-                                        return `An error occurred, see logs for more details`;
-                                    case "FlowFailureReasonInputDatasetCompacted":
-                                        return `Input dataset <span class="text-small text-danger">${flowDetails.outcome.reason.inputDataset.name}</span> was compacted`;
-                                    /* istanbul ignore next */
-                                    default:
-                                        return "Unknown flow failed error";
+                        if (!event.task.outcome) {
+                            throw new Error("Task outcome is not defined");
+                        }
+                        switch (event.task.outcome) {
+                            case TaskOutcome.Cancelled:
+                                return "Task was cancelled";
+                            case TaskOutcome.Failed: {
+                                //switch (flowDetails.outcome.reason.__typename) {
+                                //    case "FlowFailureReasonGeneral":
+                                //        return `An error occurred, see logs for more details`;
+                                //    case "FlowFailureReasonInputDatasetCompacted":
+                                //        return `Input dataset <span class="text-small text-danger">${flowDetails.outcome.reason.inputDataset.name}</span> was compacted`;
+                                //    /* istanbul ignore next */
+                                //    default:
+                                //        return "Unknown flow failed error";
+                                //}
+                                const mainMessage = "Task failed, see logs for more details";
+                                if (flowDetails.retryPolicy) {
+                                    if (event.nextAttemptAt) {
+                                        const nextRetryAttemptNo =
+                                            flowDetails.tasks.findIndex((task) => task.taskId === event.taskId) + 1;
+                                        return (
+                                            `${mainMessage}<br/>Retry attempt ${nextRetryAttemptNo} of ${flowDetails.retryPolicy.maxAttempts} ` +
+                                            `scheduled in ${DataHelpers.durationTask(event.eventTime, event.nextAttemptAt)}`
+                                        );
+                                    } else {
+                                        return `${mainMessage}<br/>No more retry attempts left`;
+                                    }
+                                } else {
+                                    return mainMessage;
                                 }
-                            case "FlowSuccessResult":
+                            }
+                            case TaskOutcome.Success:
                                 switch (flowDetails.description.__typename) {
                                     case "FlowDescriptionDatasetPollingIngest":
                                     case "FlowDescriptionDatasetPushIngest":
@@ -240,7 +271,7 @@ export class DatasetFlowDetailsHelpers {
             }
             case "FlowEventStartConditionUpdated": {
                 const startConditionEvent = flowEvent as FlowEventStartConditionUpdated;
-                return this.describeStartConditionDetails(startConditionEvent);
+                return this.describeStartConditionDetails(startConditionEvent, flowDetails);
             }
             /* istanbul ignore next */
             default:
@@ -248,10 +279,23 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    public static descriptionEndOfMessage(element: FlowEventTaskChanged): string {
+    public static flowEventEndOfMessage(element: FlowEventTaskChanged): string {
         switch (element.taskStatus) {
             case TaskStatus.Finished:
-                return "finished";
+                if (!element.task.outcome) {
+                    throw new Error("Task outcome is not defined");
+                }
+                switch (element.task.outcome) {
+                    case TaskOutcome.Success:
+                        return "finished successfully";
+                    case TaskOutcome.Failed:
+                        return "failed";
+                    case TaskOutcome.Cancelled:
+                        return "was cancelled";
+                    /* istanbul ignore next */
+                    default:
+                        throw new Error("Unsupported task outcome");
+                }
             case TaskStatus.Running:
                 return "running";
             /* istanbul ignore next */
@@ -308,7 +352,10 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    private static describeStartConditionDetails(startConditionEvent: FlowEventStartConditionUpdated): string {
+    private static describeStartConditionDetails(
+        startConditionEvent: FlowEventStartConditionUpdated,
+        flowDetails: FlowSummaryDataFragment,
+    ): string {
         const startCondition: FlowStartCondition = startConditionEvent.startCondition;
         switch (startCondition.__typename) {
             case "FlowStartConditionThrottling":
@@ -323,12 +370,22 @@ export class DatasetFlowDetailsHelpers {
                     startCondition.watermarkModified ? "modified" : "unchanged"
                 }. Deadline at ${format(startCondition.batchingDeadline, AppValues.CRON_EXPRESSION_DATE_FORMAT)}`;
             case "FlowStartConditionExecutor":
-                return `Task #${startCondition.taskId}`;
+                return this.describeTaskIdentity(startCondition.taskId, flowDetails);
             case "FlowStartConditionSchedule":
                 return `Wake up time at ${format(startCondition.wakeUpAt, AppValues.CRON_EXPRESSION_DATE_FORMAT)}`;
             /* istanbul ignore next */
             default:
                 throw new Error("Unknown start condition typename");
+        }
+    }
+
+    private static describeTaskIdentity(taskId: string, flowDetails: FlowSummaryDataFragment): string {
+        const taskDescription = `Task #${taskId}`;
+        if (flowDetails.retryPolicy && flowDetails.tasks[0].taskId !== taskId) {
+            const retryAttemptNo = flowDetails.tasks.findIndex((task) => task.taskId === taskId);
+            return `${taskDescription} (retry attempt ${retryAttemptNo} of ${flowDetails.retryPolicy.maxAttempts})`;
+        } else {
+            return taskDescription;
         }
     }
 

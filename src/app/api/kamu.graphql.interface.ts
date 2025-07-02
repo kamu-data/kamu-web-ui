@@ -2134,6 +2134,7 @@ export type FlowEventTaskChanged = FlowEvent & {
     __typename?: "FlowEventTaskChanged";
     eventId: Scalars["EventID"];
     eventTime: Scalars["DateTime"];
+    nextAttemptAt?: Maybe<Scalars["DateTime"]>;
     task: Task;
     taskId: Scalars["TaskID"];
     taskStatus: TaskStatus;
@@ -5494,8 +5495,10 @@ type FlowHistoryData_FlowEventTaskChanged_Fragment = {
     __typename: "FlowEventTaskChanged";
     taskId: string;
     taskStatus: TaskStatus;
+    nextAttemptAt?: string | null;
     eventId: string;
     eventTime: string;
+    task: { __typename?: "Task"; outcome?: TaskOutcome | null };
 };
 
 type FlowHistoryData_FlowEventTriggerAdded_Fragment = {
@@ -7272,6 +7275,10 @@ export const FlowHistoryDataFragmentDoc = gql`
             __typename
             taskId
             taskStatus
+            task {
+                outcome
+            }
+            nextAttemptAt
         }
         ... on FlowEventTriggerAdded {
             trigger {

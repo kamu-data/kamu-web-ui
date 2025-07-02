@@ -13,10 +13,10 @@ import {
     AccountFragment,
     CancelScheduledTasksMutation,
     DatasetAllFlowsPausedQuery,
+    DatasetBasicsFragment,
     DatasetFlowFilters,
     DatasetFlowType,
     DatasetFlowsInitiatorsQuery,
-    DatasetListFlowsDataFragment,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsMutation,
     DatasetTriggerCompactionFlowMutation,
@@ -153,7 +153,7 @@ export class DatasetFlowsService {
                 return {
                     connectionDataForTable: data.datasets.byId?.flows.runs.table as FlowConnectionDataFragment,
                     connectionDataForWidget: data.datasets.byId?.flows.runs.tiles as FlowConnectionWidgetDataFragment,
-                    involvedDatasets: [data.datasets.byId] as DatasetListFlowsDataFragment[],
+                    involvedDatasets: [data.datasets.byId] as DatasetBasicsFragment[],
                 };
             }),
         );

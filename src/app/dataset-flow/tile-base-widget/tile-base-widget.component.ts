@@ -8,7 +8,7 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import {
     Dataset,
-    DatasetListFlowsDataFragment,
+    DatasetBasicsFragment,
     FlowItemWidgetDataFragment,
     FlowStatus,
 } from "src/app/api/kamu.graphql.interface";
@@ -26,7 +26,7 @@ import { FlowTableHelpers } from "../flows-table/flows-table.helpers";
 })
 export class TileBaseWidgetComponent {
     @Input({ required: true }) public nodes: FlowItemWidgetDataFragment[];
-    @Input({ required: true }) public involvedDatasets: DatasetListFlowsDataFragment[];
+    @Input({ required: true }) public involvedDatasets: DatasetBasicsFragment[];
     @Input() public displayAlias: boolean = true;
 
     public readonly LAST_RUNS_COUNT = 150;

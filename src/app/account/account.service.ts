@@ -15,7 +15,7 @@ import {
     ChangeAdminPasswordMutation,
     ChangeUserPasswordMutation,
     Dataset,
-    DatasetListFlowsDataFragment,
+    DatasetBasicsFragment,
     DatasetsTotalCountByAccountNameQuery,
     DeleteAccountByNameMutation,
     FlowConnectionWidgetDataFragment,
@@ -98,7 +98,7 @@ export class AccountService {
                     connectionDataForTable: listFlows.accounts.byName?.flows?.runs.table as FlowConnectionDataFragment,
                     connectionDataForWidget: listFlows.accounts.byName?.flows?.runs
                         .tiles as FlowConnectionWidgetDataFragment,
-                    involvedDatasets: datasetsWithFlows as DatasetListFlowsDataFragment[],
+                    involvedDatasets: datasetsWithFlows as DatasetBasicsFragment[],
                 };
             }),
         );

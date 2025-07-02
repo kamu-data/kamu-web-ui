@@ -19,14 +19,15 @@ import {
     expectationsDescriptionEndOfMessage,
     expectationsDesriptionColumnOptions,
     mockDatasetExecuteTransformFlowSummaryData,
-    mockDatasets,
+    mockFlowPollingSourceFragmentFetchImage,
+    mockFlowPollingSourceFragmentFetchStepFilesGlob,
+    mockFlowPollingSourceFragmentFetchUrl,
     mockFlowSummaryDataFragmentShowForceLink,
     mockFlowSummaryDataFragmentTooltipAndDurationText,
     mockTableFlowSummaryDataFragments,
     tooltipTextResults,
 } from "./flows-table.helpers.mock";
 import timekeeper from "timekeeper";
-import { mockDatasetMainDataId } from "src/app/search/mock.data";
 
 describe("FlowTableHelpers", () => {
     beforeAll(() => {
@@ -111,110 +112,60 @@ describe("FlowTableHelpers", () => {
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and FetchStepUrl`, () => {
-        expect(
-            FlowTableHelpers.descriptionSubMessage(
-                mockTableFlowSummaryDataFragments[0],
-                mockDatasets,
-                mockDatasets[0].id,
-            ),
-        ).toEqual(
-            `Polling data from url: ${(mockDatasets[0].metadata.currentPollingSource?.fetch as FetchStepUrl).url}`,
+        expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[0])).toEqual(
+            `Polling data from url: ${(mockFlowPollingSourceFragmentFetchUrl.fetch as FetchStepUrl).url}`,
         );
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and FetchStepContainer`, () => {
-        expect(
-            FlowTableHelpers.descriptionSubMessage(
-                mockTableFlowSummaryDataFragments[0],
-                mockDatasets,
-                mockDatasets[1].id,
-            ),
-        ).toEqual(
-            `Polling data from image: ${(mockDatasets[1].metadata.currentPollingSource?.fetch as FetchStepContainer).image}`,
+        expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[8])).toEqual(
+            `Polling data from image: ${(mockFlowPollingSourceFragmentFetchImage.fetch as FetchStepContainer).image}`,
         );
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and FetchStepFilesGlob`, () => {
-        expect(
-            FlowTableHelpers.descriptionSubMessage(
-                mockTableFlowSummaryDataFragments[0],
-                mockDatasets,
-                mockDatasets[2].id,
-            ),
-        ).toEqual(
-            `Polling data from file: ${(mockDatasets[2].metadata.currentPollingSource?.fetch as FetchStepFilesGlob).path}`,
+        expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[3])).toEqual(
+            `Polling data from file: ${(mockFlowPollingSourceFragmentFetchStepFilesGlob.fetch as FetchStepFilesGlob).path}`,
         );
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetExecuteTransform typename `, () => {
-        expect(
-            FlowTableHelpers.descriptionSubMessage(
-                mockTableFlowSummaryDataFragments[4],
-                mockDatasets,
-                mockDatasets[3].id,
-            ),
-        ).toEqual(`Transforming 3 input datasets using "Apache Flink" engine`);
+        expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[4])).toEqual(
+            `Transforming 3 input datasets using "Apache Flink" engine`,
+        );
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and waiting status `, () => {
-        expect(
-            FlowTableHelpers.descriptionSubMessage(
-                mockTableFlowSummaryDataFragments[3],
-                mockDatasets,
-                mockDatasets[2].id,
-            ),
-        ).toEqual(
-            `Polling data from file: ${(mockDatasets[2].metadata.currentPollingSource?.fetch as FetchStepFilesGlob).path}`,
+        expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[3])).toEqual(
+            `Polling data from file: ${(mockFlowPollingSourceFragmentFetchStepFilesGlob.fetch as FetchStepFilesGlob).path}`,
         );
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetExecuteTransform typename and success outcome `, () => {
-        expect(
-            FlowTableHelpers.descriptionSubMessage(
-                mockDatasetExecuteTransformFlowSummaryData,
-                mockDatasets,
-                mockDatasets[3].id,
-            ),
-        ).toEqual(`Transformed 10 new records in 2 new blocks`);
+        expect(FlowTableHelpers.descriptionSubMessage(mockDatasetExecuteTransformFlowSummaryData)).toEqual(
+            `Transformed 10 new records in 2 new blocks`,
+        );
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and success outcome `, () => {
-        expect(
-            FlowTableHelpers.descriptionSubMessage(
-                mockTableFlowSummaryDataFragments[5],
-                mockDatasets,
-                mockDatasets[3].id,
-            ),
-        ).toEqual("Ingested 30 new records in 4 new blocks");
+        expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[5])).toEqual(
+            "Ingested 30 new records in 4 new blocks",
+        );
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and aborted outcome `, () => {
-        expect(
-            FlowTableHelpers.descriptionSubMessage(
-                mockTableFlowSummaryDataFragments[6],
-                mockDatasets,
-                mockDatasets[3].id,
-            ),
-        ).toContain("Aborted at");
+        expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[6])).toContain("Aborted at");
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and failed outcome `, () => {
-        expect(
-            FlowTableHelpers.descriptionSubMessage(
-                mockTableFlowSummaryDataFragments[7],
-                mockDatasets,
-                mockDatasetMainDataId,
-            ),
-        ).toEqual("An error occurred, see logs for more details");
+        expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[7])).toEqual(
+            "An error occurred, see logs for more details",
+        );
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and cacheable source`, () => {
-        expect(
-            FlowTableHelpers.descriptionSubMessage(
-                mockFlowSummaryDataFragmentShowForceLink,
-                mockDatasets,
-                mockDatasets[1].id,
-            ),
-        ).toEqual(`Source is uncacheable: to re-scan the data, use`);
+        expect(FlowTableHelpers.descriptionSubMessage(mockFlowSummaryDataFragmentShowForceLink)).toEqual(
+            `Source is uncacheable: to re-scan the data, use`,
+        );
     });
 });

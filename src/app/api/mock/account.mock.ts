@@ -26,6 +26,7 @@ import {
     FlowStatus,
 } from "../kamu.graphql.interface";
 import { mockAccountDetails } from "./auth.mock";
+import { mockFlowPollingSourceFragmentFetchUrl } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
 
 export const mockAccountByNameResponse: AccountByNameQuery = {
     __typename: "Query",
@@ -58,6 +59,7 @@ export const mockAccountListFlowsQuery: AccountListFlowsQuery = {
                                     "did:odf:fed014aee1c33d51f36c21fab6f13444bdce6fe3d5762cbb889adead63498f57f4168",
                                 description: {
                                     ingestResult: null,
+                                    pollingSource: mockFlowPollingSourceFragmentFetchUrl,
                                     __typename: "FlowDescriptionDatasetPollingIngest",
                                 },
                                 flowId: "0",
@@ -105,6 +107,7 @@ export const mockAccountListFlowsQuery: AccountListFlowsQuery = {
                                         "did:odf:fed014aee1c33d51f36c21fab6f13444bdce6fe3d5762cbb889adead63498f57f4168",
                                     description: {
                                         ingestResult: null,
+                                        pollingSource: mockFlowPollingSourceFragmentFetchUrl,
                                         __typename: "FlowDescriptionDatasetPollingIngest",
                                     },
                                     flowId: "0",

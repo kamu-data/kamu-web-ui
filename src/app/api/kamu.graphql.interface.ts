@@ -2017,6 +2017,7 @@ export type FlowDescription =
 
 export type FlowDescriptionDatasetExecuteTransform = {
     __typename?: "FlowDescriptionDatasetExecuteTransform";
+    transform: SetTransform;
     transformResult?: Maybe<FlowDescriptionUpdateResult>;
 };
 
@@ -2032,6 +2033,7 @@ export type FlowDescriptionDatasetHardCompactionResult =
 export type FlowDescriptionDatasetPollingIngest = {
     __typename?: "FlowDescriptionDatasetPollingIngest";
     ingestResult?: Maybe<FlowDescriptionUpdateResult>;
+    pollingSource: SetPollingSource;
 };
 
 export type FlowDescriptionDatasetPushIngest = {
@@ -5371,7 +5373,7 @@ export type GetDatasetListFlowsQuery = {
                           tiles: { __typename?: "FlowConnection" } & FlowConnectionWidgetDataFragment;
                       };
                   };
-              } & DatasetListFlowsDataFragment)
+              } & DatasetBasicsFragment)
             | null;
     };
 };
@@ -5413,27 +5415,6 @@ export type DatasetResumeFlowsMutation = {
         } | null;
     };
 };
-
-export type DatasetListFlowsDataFragment = {
-    __typename?: "Dataset";
-    metadata: {
-        __typename?: "DatasetMetadata";
-        currentPollingSource?: {
-            __typename?: "SetPollingSource";
-            fetch:
-                | ({ __typename?: "FetchStepContainer" } & FetchStepContainerDataFragment)
-                | { __typename?: "FetchStepEthereumLogs" }
-                | ({ __typename?: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment)
-                | { __typename?: "FetchStepMqtt" }
-                | ({ __typename?: "FetchStepUrl" } & FetchStepUrlDataFragment);
-        } | null;
-        currentTransform?: {
-            __typename?: "SetTransform";
-            inputs: Array<{ __typename: "TransformInput" }>;
-            transform: { __typename?: "TransformSql"; engine: string };
-        } | null;
-    };
-} & DatasetBasicsFragment;
 
 export type FlowConnectionDataFragment = {
     __typename?: "FlowConnection";
@@ -5599,6 +5580,11 @@ export type FlowSummaryDataFragment = {
     description:
         | {
               __typename?: "FlowDescriptionDatasetExecuteTransform";
+              transform: {
+                  __typename?: "SetTransform";
+                  inputs: Array<{ __typename: "TransformInput" }>;
+                  transform: { __typename?: "TransformSql"; engine: string };
+              };
               transformResult?:
                   | {
                         __typename?: "FlowDescriptionUpdateResultSuccess";
@@ -5624,6 +5610,15 @@ export type FlowSummaryDataFragment = {
           }
         | {
               __typename?: "FlowDescriptionDatasetPollingIngest";
+              pollingSource: {
+                  __typename?: "SetPollingSource";
+                  fetch:
+                      | ({ __typename?: "FetchStepContainer" } & FetchStepContainerDataFragment)
+                      | { __typename?: "FetchStepEthereumLogs" }
+                      | ({ __typename?: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment)
+                      | { __typename?: "FetchStepMqtt" }
+                      | ({ __typename?: "FetchStepUrl" } & FetchStepUrlDataFragment);
+              };
               ingestResult?:
                   | {
                         __typename?: "FlowDescriptionUpdateResultSuccess";
@@ -7004,34 +6999,6 @@ export const ViewDatasetEnvVarDataFragmentDoc = gql`
         isSecret
     }
 `;
-export const DatasetListFlowsDataFragmentDoc = gql`
-    fragment DatasetListFlowsData on Dataset {
-        ...DatasetBasics
-        metadata {
-            currentPollingSource {
-                fetch {
-                    ...FetchStepUrlData
-                    ...FetchStepFilesGlobData
-                    ...FetchStepContainerData
-                }
-            }
-            currentTransform {
-                inputs {
-                    __typename
-                }
-                transform {
-                    ... on TransformSql {
-                        engine
-                    }
-                }
-            }
-        }
-    }
-    ${DatasetBasicsFragmentDoc}
-    ${FetchStepUrlDataFragmentDoc}
-    ${FetchStepFilesGlobDataFragmentDoc}
-    ${FetchStepContainerDataFragmentDoc}
-`;
 export const AccountFragmentDoc = gql`
     fragment Account on Account {
         id
@@ -7077,6 +7044,13 @@ export const FlowSummaryDataFragmentDoc = gql`
     fragment FlowSummaryData on Flow {
         description {
             ... on FlowDescriptionDatasetPollingIngest {
+                pollingSource {
+                    fetch {
+                        ...FetchStepUrlData
+                        ...FetchStepFilesGlobData
+                        ...FetchStepContainerData
+                    }
+                }
                 ingestResult {
                     ... on FlowDescriptionUpdateResultUpToDate {
                         uncacheable
@@ -7109,6 +7083,16 @@ export const FlowSummaryDataFragmentDoc = gql`
                 }
             }
             ... on FlowDescriptionDatasetExecuteTransform {
+                transform {
+                    inputs {
+                        __typename
+                    }
+                    transform {
+                        ... on TransformSql {
+                            engine
+                        }
+                    }
+                }
                 transformResult {
                     ... on FlowDescriptionUpdateResultUpToDate {
                         uncacheable
@@ -7203,6 +7187,9 @@ export const FlowSummaryDataFragmentDoc = gql`
             maxAttempts
         }
     }
+    ${FetchStepUrlDataFragmentDoc}
+    ${FetchStepFilesGlobDataFragmentDoc}
+    ${FetchStepContainerDataFragmentDoc}
     ${AccountFragmentDoc}
     ${FlowOutcomeDataFragmentDoc}
     ${TimeDeltaDataFragmentDoc}
@@ -10234,7 +10221,7 @@ export const GetDatasetListFlowsDocument = gql`
     ) {
         datasets {
             byId(datasetId: $datasetId) {
-                ...DatasetListFlowsData
+                ...DatasetBasics
                 flows {
                     runs {
                         table: listFlows(page: $page, perPage: $perPageTable, filters: $filters) {
@@ -10252,7 +10239,7 @@ export const GetDatasetListFlowsDocument = gql`
             }
         }
     }
-    ${DatasetListFlowsDataFragmentDoc}
+    ${DatasetBasicsFragmentDoc}
     ${FlowConnectionDataFragmentDoc}
     ${FlowConnectionWidgetDataFragmentDoc}
 `;

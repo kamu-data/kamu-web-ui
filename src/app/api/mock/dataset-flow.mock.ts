@@ -35,6 +35,10 @@ import { GetDatasetFlowConfigsQuery, DatasetKind, TimeUnit, TimeDeltaInput } fro
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { mockDatasetMainDataId, mockPublicDatasetVisibility } from "src/app/search/mock.data";
 import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
+import {
+    mockFlowPollingSourceFragmentFetchUrl,
+    mockFlowSetTransformFragment,
+} from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
 
 export const mockTimeDeltaInput: TimeDeltaInput = {
     every: 10,
@@ -311,6 +315,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         datasetId: mockDatasetMainDataId,
         description: {
             ingestResult: null,
+            pollingSource: mockFlowPollingSourceFragmentFetchUrl,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "414",
@@ -337,6 +342,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         datasetId: mockDatasetMainDataId,
         description: {
             ingestResult: null,
+            pollingSource: mockFlowPollingSourceFragmentFetchUrl,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "414",
@@ -359,6 +365,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         datasetId: mockDatasetMainDataId,
         description: {
             ingestResult: null,
+            pollingSource: mockFlowPollingSourceFragmentFetchUrl,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "414",
@@ -385,6 +392,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         datasetId: mockDatasetMainDataId,
         description: {
             ingestResult: null,
+            pollingSource: mockFlowPollingSourceFragmentFetchUrl,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "414",
@@ -411,6 +419,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         datasetId: mockDatasetMainDataId,
         description: {
             ingestResult: null,
+            pollingSource: mockFlowPollingSourceFragmentFetchUrl,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "414",
@@ -596,20 +605,6 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
             alias: "test-dataset",
             visibility: mockPublicDatasetVisibility,
             __typename: "Dataset",
-            metadata: {
-                currentPollingSource: {
-                    fetch: {
-                        url: "https://api.etherscan.io/api?module=account&action=txlist&address=0xeadb3840596cabf312f2bc88a4bb0b93a4e1ff5f&page=1&offset=1000&startblock=0&endblock=99999999&apikey=${{ env.ETHERSCAN_API_KEY }}",
-                        eventTime: null,
-                        headers: null,
-                        cache: null,
-                        __typename: "FetchStepUrl",
-                    },
-                    __typename: "SetPollingSource",
-                },
-                currentTransform: null,
-                __typename: "DatasetMetadata",
-            },
             flows: {
                 runs: {
                     table: {
@@ -624,6 +619,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                         updatedWatermark: "2024-08-07T00:56:35+00:00",
                                         __typename: "FlowDescriptionUpdateResultSuccess",
                                     },
+                                    pollingSource: mockFlowPollingSourceFragmentFetchUrl,
                                     __typename: "FlowDescriptionDatasetPollingIngest",
                                 },
                                 flowId: "3",
@@ -664,6 +660,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
                                 description: {
                                     ingestResult: null,
+                                    pollingSource: mockFlowPollingSourceFragmentFetchUrl,
                                     __typename: "FlowDescriptionDatasetPollingIngest",
                                 },
                                 flowId: "2",
@@ -714,6 +711,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                             updatedWatermark: "2024-08-07T00:56:35+00:00",
                                             __typename: "FlowDescriptionUpdateResultSuccess",
                                         },
+                                        pollingSource: mockFlowPollingSourceFragmentFetchUrl,
                                         __typename: "FlowDescriptionDatasetPollingIngest",
                                     },
                                     flowId: "3",
@@ -757,6 +755,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                         "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
                                     description: {
                                         ingestResult: null,
+                                        pollingSource: mockFlowPollingSourceFragmentFetchUrl,
                                         __typename: "FlowDescriptionDatasetPollingIngest",
                                     },
                                     flowId: "2",
@@ -871,6 +870,7 @@ export const mockDatasetTriggerIngestFlowMutation: DatasetTriggerIngestFlowMutat
                             datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
                             description: {
                                 ingestResult: null,
+                                pollingSource: mockFlowPollingSourceFragmentFetchUrl,
                                 __typename: "FlowDescriptionDatasetPollingIngest",
                             },
                             flowId: "0",
@@ -947,6 +947,7 @@ export const mockDatasetTriggerResetFlowMutation: DatasetTriggerResetFlowMutatio
                             datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
                             description: {
                                 ingestResult: null,
+                                pollingSource: mockFlowPollingSourceFragmentFetchUrl,
                                 __typename: "FlowDescriptionDatasetPollingIngest",
                             },
                             flowId: "0",
@@ -1022,6 +1023,7 @@ export const mockCancelScheduledTasksMutationSuccess: CancelScheduledTasksMutati
                             datasetId: "did:odf:fed01162400e9e5fb02d78805f48580f25589e8c3c21738999e28845f7c9d6818bec7",
                             description: {
                                 ingestResult: null,
+                                pollingSource: mockFlowPollingSourceFragmentFetchUrl,
                                 __typename: "FlowDescriptionDatasetPollingIngest",
                             },
                             flowId: "17",
@@ -1152,6 +1154,7 @@ export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
                             datasetId: "did:odf:fed016c0070664336545c0f49dc6a7a860c6862ab3336b630c2d7e779394a26da2e1e",
                             description: {
                                 transformResult: null,
+                                transform: mockFlowSetTransformFragment,
                                 __typename: "FlowDescriptionDatasetExecuteTransform",
                             },
                             flowId: "595",

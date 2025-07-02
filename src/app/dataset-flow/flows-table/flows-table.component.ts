@@ -24,8 +24,8 @@ import {
     FlowStatus,
     FlowStartCondition,
     Dataset,
-    DatasetListFlowsDataFragment,
     AccountFragment,
+    DatasetBasicsFragment,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/values/app.values";
 import { MatTableDataSource } from "@angular/material/table";
@@ -63,10 +63,10 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     @Input({ required: true }) public filterByStatus: MaybeNull<FlowStatus>;
     @Input({ required: true }) public onlySystemFlows: boolean;
     @Input({ required: true }) public searchByAccount: AccountFragment[] = [];
-    @Input() public searchByDataset: DatasetListFlowsDataFragment[] = [];
+    @Input() public searchByDataset: DatasetBasicsFragment[] = [];
     @Input({ required: true }) public tableOptions: FlowsTableOptions;
     @Input({ required: true }) public accountFlowInitiators: AccountFragment[];
-    @Input({ required: true }) public involvedDatasets: DatasetListFlowsDataFragment[];
+    @Input({ required: true }) public involvedDatasets: DatasetBasicsFragment[];
 
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
     @Output() public searchByFiltersChange = new EventEmitter<MaybeNull<FlowsTableFiltersOptions>>();
@@ -91,8 +91,8 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>();
 
     public filterAccountSettings: DropdownSettings = DROPDOWN_ACCOUNT_SETTINGS;
-    public dropdownDatasetList: DatasetListFlowsDataFragment[] = [];
-    public selectedDatasetItems: DatasetListFlowsDataFragment[] = [];
+    public dropdownDatasetList: DatasetBasicsFragment[] = [];
+    public selectedDatasetItems: DatasetBasicsFragment[] = [];
     public dropdownAccountList: AccountFragment[] = [];
     public selectedAccountItems: AccountFragment[] = [];
     public dropdownStatustList: FilterStatusType[] = [];
@@ -122,8 +122,8 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         return FlowTableHelpers.descriptionEndOfMessage(element);
     }
 
-    public descriptionDatasetFlowSubMessage(element: FlowSummaryDataFragment, datasetId: string): string {
-        return FlowTableHelpers.descriptionSubMessage(element, this.involvedDatasets ?? [], datasetId);
+    public descriptionDatasetFlowSubMessage(element: FlowSummaryDataFragment): string {
+        return FlowTableHelpers.descriptionSubMessage(element);
     }
 
     public onSearch(): void {

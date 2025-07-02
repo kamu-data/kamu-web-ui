@@ -10,7 +10,7 @@ import { combineLatest, map, of, switchMap, timer } from "rxjs";
 import { MaybeNull } from "src/app/interface/app.types";
 import {
     AccountFragment,
-    DatasetListFlowsDataFragment,
+    DatasetBasicsFragment,
     FlowStatus,
     FlowSummaryDataFragment,
     InitiatorFilterInput,
@@ -36,7 +36,7 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
     private readonly ngZone = inject(NgZone);
 
     public nodes: FlowSummaryDataFragment[] = [];
-    public searchByDataset: DatasetListFlowsDataFragment[] = [];
+    public searchByDataset: DatasetBasicsFragment[] = [];
     public filters: MaybeNull<FlowsTableFiltersOptions>;
 
     public ngOnInit(): void {

@@ -39,6 +39,12 @@ export const mockFlowSummaryDataFragmentIngestResult: FlowSummaryDataFragment = 
             numBlocks: 10,
             numRecords: 100,
         },
+        pollingSource: {
+            fetch: {
+                __typename: "FetchStepUrl",
+                url: "https://example.com/data.csv",
+            },
+        },
         __typename: "FlowDescriptionDatasetPollingIngest",
     },
     flowId: "414",

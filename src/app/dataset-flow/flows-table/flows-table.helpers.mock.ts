@@ -8,8 +8,8 @@
 import {
     AccountProvider,
     AccountType,
+    DatasetBasicsFragment,
     DatasetKind,
-    DatasetListFlowsDataFragment,
     FlowStatus,
     FlowSummaryDataFragment,
     TimeUnit,
@@ -30,6 +30,52 @@ export const expectationsDesriptionColumnOptions = [
 
 export const expectationsDescriptionEndOfMessage = ["finished", "running", "waiting", "aborted", "failed"];
 
+export const mockFlowPollingSourceFragmentFetchUrl = {
+    __typename: "SetPollingSource" as const,
+    fetch: {
+        url: "https://api.etherscan.io/api?module=account&action=tokentx&address=0xeadb3840596cabf312f2bc88a4bb0b93a4e1ff5f&page=1&offset=1000&startblock=0&endblock=99999999&apikey=${{ env.ETHERSCAN_API_KEY }}",
+        eventTime: null,
+        headers: null,
+        cache: null,
+        __typename: "FetchStepUrl" as const,
+    },
+};
+
+export const mockFlowPollingSourceFragmentFetchImage = {
+    __typename: "SetPollingSource" as const,
+    fetch: {
+        image: "mockImage",
+        __typename: "FetchStepContainer" as const,
+    },
+};
+
+export const mockFlowPollingSourceFragmentFetchStepFilesGlob = {
+    __typename: "SetPollingSource" as const,
+    fetch: {
+        path: "c:/mock-path",
+        __typename: "FetchStepFilesGlob" as const,
+    },
+};
+
+export const mockFlowSetTransformFragment = {
+    __typename: "SetTransform" as const,
+    inputs: [
+        {
+            __typename: "TransformInput" as const,
+        },
+        {
+            __typename: "TransformInput" as const,
+        },
+        {
+            __typename: "TransformInput" as const,
+        },
+    ],
+    transform: {
+        engine: "flink",
+        __typename: "TransformSql" as const,
+    },
+};
+
 export const mockDatasetExecuteTransformFlowSummaryData: FlowSummaryDataFragment = {
     datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
     description: {
@@ -38,6 +84,7 @@ export const mockDatasetExecuteTransformFlowSummaryData: FlowSummaryDataFragment
             numBlocks: 2,
             numRecords: 10,
         },
+        transform: mockFlowSetTransformFragment,
         __typename: "FlowDescriptionDatasetExecuteTransform",
     },
     flowId: "1000",
@@ -67,6 +114,7 @@ export const mockDatasetExecuteTransformFlowDescriptionUpdateResultUnknown: Flow
             __typename: "FlowDescriptionUpdateResultUnknown",
             message: flowEventSubMessageResults[15],
         },
+        transform: mockFlowSetTransformFragment,
         __typename: "FlowDescriptionDatasetExecuteTransform",
     },
     flowId: "1000",
@@ -96,6 +144,7 @@ export const mockDatasetPollingIngestFlowDescriptionUpdateResultUnknown: FlowSum
             __typename: "FlowDescriptionUpdateResultUnknown",
             message: flowEventSubMessageResults[15],
         },
+        pollingSource: mockFlowPollingSourceFragmentFetchUrl,
         __typename: "FlowDescriptionDatasetPollingIngest",
     },
     flowId: "1000",
@@ -123,6 +172,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
             ingestResult: null,
+            pollingSource: mockFlowPollingSourceFragmentFetchUrl,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "415",
@@ -145,6 +195,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
             transformResult: null,
+            transform: mockFlowSetTransformFragment,
             __typename: "FlowDescriptionDatasetExecuteTransform",
         },
         flowId: "415",
@@ -167,6 +218,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
             transformResult: null,
+            transform: mockFlowSetTransformFragment,
             __typename: "FlowDescriptionDatasetExecuteTransform",
         },
         flowId: "415",
@@ -189,6 +241,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
             ingestResult: null,
+            pollingSource: mockFlowPollingSourceFragmentFetchStepFilesGlob,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "415",
@@ -215,6 +268,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
                 numBlocks: 2,
                 numRecords: 10,
             },
+            transform: mockFlowSetTransformFragment,
             __typename: "FlowDescriptionDatasetExecuteTransform",
         },
         flowId: "415",
@@ -244,6 +298,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
                 numRecords: 30,
                 __typename: "FlowDescriptionUpdateResultSuccess",
             },
+            pollingSource: mockFlowPollingSourceFragmentFetchUrl,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "415",
@@ -272,6 +327,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
                 numBlocks: 4,
                 numRecords: 30,
             },
+            pollingSource: mockFlowPollingSourceFragmentFetchUrl,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "415",
@@ -300,6 +356,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
                 numBlocks: 4,
                 numRecords: 30,
             },
+            pollingSource: mockFlowPollingSourceFragmentFetchUrl,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "415",
@@ -324,6 +381,29 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         tasks: [],
         __typename: "Flow",
     },
+    {
+        datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+        description: {
+            ingestResult: null,
+            pollingSource: mockFlowPollingSourceFragmentFetchImage,
+            __typename: "FlowDescriptionDatasetPollingIngest",
+        },
+        flowId: "415",
+        status: FlowStatus.Waiting,
+        initiator: null,
+        outcome: null,
+        timing: {
+            initiatedAt: "2024-02-12T18:22:29+00:00",
+            scheduledAt: "2024-02-12T18:22:30+00:00",
+            awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
+            runningSince: null,
+            lastAttemptFinishedAt: null,
+            __typename: "FlowTimingRecords",
+        },
+        retryPolicy: null,
+        tasks: [],
+        __typename: "Flow",
+    },
 ];
 
 export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataFragment[] = [
@@ -331,6 +411,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
             ingestResult: null,
+            pollingSource: mockFlowPollingSourceFragmentFetchUrl,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "415",
@@ -357,6 +438,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
             ingestResult: null,
+            pollingSource: mockFlowPollingSourceFragmentFetchUrl,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "416",
@@ -383,6 +465,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
             ingestResult: null,
+            pollingSource: mockFlowPollingSourceFragmentFetchUrl,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "417",
@@ -411,6 +494,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
             ingestResult: null,
+            pollingSource: mockFlowPollingSourceFragmentFetchUrl,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "418",
@@ -446,6 +530,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
             ingestResult: null,
+            pollingSource: mockFlowPollingSourceFragmentFetchUrl,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "419",
@@ -472,6 +557,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
                 numBlocks: 4,
                 numRecords: 30,
             },
+            pollingSource: mockFlowPollingSourceFragmentFetchUrl,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "420",
@@ -498,6 +584,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
             ingestResult: null,
+            pollingSource: mockFlowPollingSourceFragmentFetchUrl,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "421",
@@ -524,6 +611,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
             ingestResult: null,
+            pollingSource: mockFlowPollingSourceFragmentFetchUrl,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "422",
@@ -573,7 +661,7 @@ export const tooltipTextResults: string[] = [
     "Start running time: Mar 14th 2024 11:24:29 AM GMT+02:00",
 ];
 
-export const mockDatasets: DatasetListFlowsDataFragment[] = [
+export const mockDatasets: DatasetBasicsFragment[] = [
     {
         id: mockDatasetMainDataId,
         kind: DatasetKind.Root,
@@ -587,20 +675,6 @@ export const mockDatasets: DatasetListFlowsDataFragment[] = [
         alias: "account.tokens.transfers",
         visibility: mockPublicDatasetVisibility,
         __typename: "Dataset",
-        metadata: {
-            currentPollingSource: {
-                fetch: {
-                    url: "https://api.etherscan.io/api?module=account&action=tokentx&address=0xeadb3840596cabf312f2bc88a4bb0b93a4e1ff5f&page=1&offset=1000&startblock=0&endblock=99999999&apikey=${{ env.ETHERSCAN_API_KEY }}",
-                    eventTime: null,
-                    headers: null,
-                    cache: null,
-                    __typename: "FetchStepUrl",
-                },
-                __typename: "SetPollingSource",
-            },
-            currentTransform: null,
-            __typename: "DatasetMetadata",
-        },
     },
     {
         id: "did:odf:fed014aee1c33d51f36c21fab6f13444bdce6fe3d5762cbb889adead63498f57f4101",
@@ -615,17 +689,6 @@ export const mockDatasets: DatasetListFlowsDataFragment[] = [
         alias: "account.tokens.transfers",
         visibility: mockPublicDatasetVisibility,
         __typename: "Dataset",
-        metadata: {
-            currentPollingSource: {
-                fetch: {
-                    image: "mockImage",
-                    __typename: "FetchStepContainer",
-                },
-                __typename: "SetPollingSource",
-            },
-            currentTransform: null,
-            __typename: "DatasetMetadata",
-        },
     },
     {
         id: "did:odf:fed014aee1c33d51f36c21fab6f13444bdce6fe3d5762cbb889adead63498f57f4102",
@@ -640,17 +703,6 @@ export const mockDatasets: DatasetListFlowsDataFragment[] = [
         alias: "account.tokens.transfers",
         visibility: mockPublicDatasetVisibility,
         __typename: "Dataset",
-        metadata: {
-            currentPollingSource: {
-                fetch: {
-                    path: "c:/mock-path",
-                    __typename: "FetchStepFilesGlob",
-                },
-                __typename: "SetPollingSource",
-            },
-            currentTransform: null,
-            __typename: "DatasetMetadata",
-        },
     },
 
     {
@@ -666,28 +718,6 @@ export const mockDatasets: DatasetListFlowsDataFragment[] = [
         alias: "account.tokens.transfers",
         visibility: mockPublicDatasetVisibility,
         __typename: "Dataset",
-        metadata: {
-            currentPollingSource: null,
-            currentTransform: {
-                inputs: [
-                    {
-                        __typename: "TransformInput",
-                    },
-                    {
-                        __typename: "TransformInput",
-                    },
-                    {
-                        __typename: "TransformInput",
-                    },
-                ],
-                transform: {
-                    engine: "flink",
-                    __typename: "TransformSql",
-                },
-                __typename: "SetTransform",
-            },
-            __typename: "DatasetMetadata",
-        },
     },
 ];
 
@@ -698,6 +728,7 @@ export const mockFlowSummaryDataFragmentShowForceLink: FlowSummaryDataFragment =
             uncacheable: true,
             __typename: "FlowDescriptionUpdateResultUpToDate",
         },
+        pollingSource: mockFlowPollingSourceFragmentFetchUrl,
         __typename: "FlowDescriptionDatasetPollingIngest",
     },
     flowId: "3",

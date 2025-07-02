@@ -1999,6 +1999,7 @@ union FlowDescription = FlowDescriptionDatasetPollingIngest | FlowDescriptionDat
 
 type FlowDescriptionDatasetExecuteTransform {
 	transformResult: FlowDescriptionUpdateResult
+	transform: SetTransform!
 }
 
 type FlowDescriptionDatasetHardCompaction {
@@ -2009,6 +2010,7 @@ union FlowDescriptionDatasetHardCompactionResult = FlowDescriptionHardCompaction
 
 type FlowDescriptionDatasetPollingIngest {
 	ingestResult: FlowDescriptionUpdateResult
+	pollingSource: SetPollingSource!
 }
 
 type FlowDescriptionDatasetPushIngest {

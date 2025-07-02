@@ -7,7 +7,7 @@ query getDatasetListFlows(
 ) {
   datasets {
     byId(datasetId: $datasetId) {
-      ...DatasetListFlowsData
+      ...DatasetBasics
       flows {
         runs {
           table: listFlows(page: $page, perPage: $perPageTable, filters: $filters) {

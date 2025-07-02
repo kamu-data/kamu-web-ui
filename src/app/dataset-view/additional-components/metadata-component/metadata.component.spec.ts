@@ -25,7 +25,6 @@ import { BlockRowDataComponent } from "src/app/common/components/block-row-data/
 import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatIconModule } from "@angular/material/icon";
-import { MetadataBlockModule } from "src/app/dataset-block/metadata-block/metadata-block.module";
 import { HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -45,7 +44,6 @@ describe("MetadataComponent", () => {
             imports: [
                 NgbTooltipModule,
                 MatIconModule,
-                MetadataBlockModule,
                 SharedTestModule,
                 HttpClientTestingModule,
                 MetadataComponent,

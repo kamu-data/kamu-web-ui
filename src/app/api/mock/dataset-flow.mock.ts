@@ -30,7 +30,6 @@ import {
     SetDatasetFlowTriggersMutation,
     SetIngestFlowConfigMutation,
     TaskStatus,
-    TaskOutcome,
 } from "./../kamu.graphql.interface";
 import { GetDatasetFlowConfigsQuery, DatasetKind, TimeUnit, TimeDeltaInput } from "../kamu.graphql.interface";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
@@ -420,7 +419,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         outcome: {
             __typename: "FlowFailedError",
             reason: {
-                __typename: "FlowFailureReasonGeneral",
+                __typename: "TaskFailureReasonGeneral",
                 message: "Failed",
             },
         },
@@ -518,7 +517,7 @@ export const mockFlowItemWidgetDataFragments: FlowItemWidgetDataFragment[] = [
         outcome: {
             __typename: "FlowFailedError",
             reason: {
-                __typename: "FlowFailureReasonGeneral",
+                __typename: "TaskFailureReasonGeneral",
                 message: "Failed",
             },
         },
@@ -673,7 +672,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                 outcome: {
                                     reason: {
                                         message: "FAILED",
-                                        __typename: "FlowFailureReasonGeneral",
+                                        __typename: "TaskFailureReasonGeneral",
                                     },
                                     __typename: "FlowFailedError",
                                 },
@@ -766,7 +765,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     outcome: {
                                         reason: {
                                             message: "FAILED",
-                                            __typename: "FlowFailureReasonGeneral",
+                                            __typename: "TaskFailureReasonGeneral",
                                         },
                                         __typename: "FlowFailedError",
                                     },
@@ -824,7 +823,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                 outcome: {
                                     reason: {
                                         message: "FAILED",
-                                        __typename: "FlowFailureReasonGeneral",
+                                        __typename: "TaskFailureReasonGeneral",
                                     },
                                     __typename: "FlowFailedError",
                                 },
@@ -1221,7 +1220,9 @@ export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
                                     taskId: "594",
                                     taskStatus: TaskStatus.Finished,
                                     task: {
-                                        outcome: TaskOutcome.Success,
+                                        outcome: {
+                                            __typename: "TaskOutcomeSuccess",
+                                        },
                                     },
                                     nextAttemptAt: null,
                                 },

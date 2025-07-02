@@ -308,7 +308,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         outcome: {
             __typename: "FlowFailedError",
             reason: {
-                __typename: "FlowFailureReasonGeneral",
+                __typename: "TaskFailureReasonGeneral",
                 message: "Failed",
             },
         },
@@ -532,7 +532,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         outcome: {
             __typename: "FlowFailedError",
             reason: {
-                __typename: "FlowFailureReasonGeneral",
+                __typename: "TaskFailureReasonGeneral",
                 message: "Failed",
             },
         },

@@ -12,7 +12,6 @@ import {
     FlowHistoryDataFragment,
     FlowStatus,
     FlowSummaryDataFragment,
-    TaskOutcome,
     TaskStatus,
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
@@ -25,7 +24,9 @@ export const mockHistoryFragmentWithFinishedStatus: FlowHistoryDataFragment = {
     taskId: "1",
     taskStatus: TaskStatus.Finished,
     task: {
-        outcome: TaskOutcome.Success,
+        outcome: {
+            __typename: "TaskOutcomeSuccess",
+        },
     },
     nextAttemptAt: null,
 };
@@ -92,7 +93,9 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         taskId: "2",
         taskStatus: TaskStatus.Finished,
         task: {
-            outcome: TaskOutcome.Success,
+            outcome: {
+                __typename: "TaskOutcomeSuccess",
+            },
         },
         nextAttemptAt: null,
     },
@@ -348,7 +351,7 @@ export const flowEventSubMessageResults: string[] = [
     "Accumulated 100/500 records. Watermark modified. Deadline at Aug 6th 2022 12:17:30 AM GMT+03:00", //1
     "Task #5",
     "Wake up time at Mar 13th 2024 5:54:30 PM GMT+02:00",
-    "Task failed, see logs for more details",
+    "An error occurred, see logs for more details",
     "Dataset is up-to-date",
     "Ingested 100 new records in 10 new blocks",
     "Transformed 10 new records in 2 new blocks",

@@ -204,9 +204,9 @@ export class FlowTableHelpers {
 
                     case "FlowFailedError": {
                         switch (element.outcome.reason.__typename) {
-                            case "FlowFailureReasonGeneral":
+                            case "TaskFailureReasonGeneral":
                                 return `An error occurred, see logs for more details`;
-                            case "FlowFailureReasonInputDatasetCompacted": {
+                            case "TaskFailureReasonInputDatasetCompacted": {
                                 return `Input dataset <a class="text-small text-danger">${element.outcome.reason.inputDataset.name}</a> was hard compacted`;
                             }
                             /* istanbul ignore next */

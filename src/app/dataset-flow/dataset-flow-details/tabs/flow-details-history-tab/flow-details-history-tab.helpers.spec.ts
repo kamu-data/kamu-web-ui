@@ -17,7 +17,7 @@ import {
     mockFlowSummaryDataFragmentIngestResult,
     mockHistoryFragmentWithFinishedStatus,
 } from "./flow-details-history-tab.helpers.mock";
-import { FlowHistoryDataFragment, FlowStatus, TaskOutcome } from "src/app/api/kamu.graphql.interface";
+import { FlowHistoryDataFragment, FlowStatus } from "src/app/api/kamu.graphql.interface";
 import {
     mockDatasetExecuteTransformFlowDescriptionUpdateResultUnknown,
     mockDatasetExecuteTransformFlowSummaryData,
@@ -59,7 +59,13 @@ describe("DatasetFlowDetailsHelpers", () => {
             DatasetFlowDetailsHelpers.flowEventIconOptions({
                 ...mockHistoryFragmentWithFinishedStatus,
                 task: {
-                    outcome: TaskOutcome.Failed,
+                    outcome: {
+                        __typename: "TaskOutcomeFailed",
+                        reason: {
+                            __typename: "TaskFailureReasonGeneral",
+                            message: "Failed due to some reason",
+                        },
+                    },
                 },
             } as FlowHistoryDataFragment),
         ).toEqual(flowEventIconOptionsResults[7]);
@@ -70,7 +76,9 @@ describe("DatasetFlowDetailsHelpers", () => {
             DatasetFlowDetailsHelpers.flowEventIconOptions({
                 ...mockHistoryFragmentWithFinishedStatus,
                 task: {
-                    outcome: TaskOutcome.Cancelled,
+                    outcome: {
+                        __typename: "TaskOutcomeCancelled",
+                    },
                 },
             } as FlowHistoryDataFragment),
         ).toEqual(flowEventIconOptionsResults[8]);
@@ -90,7 +98,13 @@ describe("DatasetFlowDetailsHelpers", () => {
                 {
                     ...mockHistoryFragmentWithFinishedStatus,
                     task: {
-                        outcome: TaskOutcome.Failed,
+                        outcome: {
+                            __typename: "TaskOutcomeFailed",
+                            reason: {
+                                __typename: "TaskFailureReasonGeneral",
+                                message: "Failed due to some reason",
+                            },
+                        },
                     },
                 } as FlowHistoryDataFragment,
                 mockFlowSummaryDataFragments[4],

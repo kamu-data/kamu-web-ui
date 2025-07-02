@@ -19,7 +19,6 @@ import {
     FlowStatus,
     FlowSummaryDataFragment,
     FlowTriggerInstance,
-    TaskOutcome,
     TaskStatus,
 } from "src/app/api/kamu.graphql.interface";
 import { DataHelpers } from "src/app/common/helpers/data.helpers";
@@ -81,12 +80,12 @@ export class DatasetFlowDetailsHelpers {
                         if (!event.task.outcome) {
                             throw new Error("Task outcome is not defined");
                         }
-                        switch (event.task.outcome) {
-                            case TaskOutcome.Success:
+                        switch (event.task.outcome.__typename) {
+                            case "TaskOutcomeSuccess":
                                 return { icon: "check_circle", class: "completed-status" };
-                            case TaskOutcome.Failed:
+                            case "TaskOutcomeFailed":
                                 return { icon: "dangerous", class: "failed-status" };
-                            case TaskOutcome.Cancelled:
+                            case "TaskOutcomeCancelled":
                                 return { icon: "cancel", class: "aborted-outcome" };
                             /* istanbul ignore next */
                             default:
@@ -160,20 +159,23 @@ export class DatasetFlowDetailsHelpers {
                         if (!event.task.outcome) {
                             throw new Error("Task outcome is not defined");
                         }
-                        switch (event.task.outcome) {
-                            case TaskOutcome.Cancelled:
+                        switch (event.task.outcome.__typename) {
+                            case "TaskOutcomeCancelled":
                                 return "Task was cancelled";
-                            case TaskOutcome.Failed: {
-                                //switch (flowDetails.outcome.reason.__typename) {
-                                //    case "FlowFailureReasonGeneral":
-                                //        return `An error occurred, see logs for more details`;
-                                //    case "FlowFailureReasonInputDatasetCompacted":
-                                //        return `Input dataset <span class="text-small text-danger">${flowDetails.outcome.reason.inputDataset.name}</span> was compacted`;
-                                //    /* istanbul ignore next */
-                                //    default:
-                                //        return "Unknown flow failed error";
-                                //}
-                                const mainMessage = "Task failed, see logs for more details";
+                            case "TaskOutcomeFailed": {
+                                let mainMessage: string;
+                                switch (event.task.outcome.reason.__typename) {
+                                    case "TaskFailureReasonGeneral":
+                                        mainMessage = `An error occurred, see logs for more details`;
+                                        break;
+                                    case "TaskFailureReasonInputDatasetCompacted":
+                                        mainMessage = `Input dataset <span class="text-small text-danger">${event.task.outcome.reason.inputDataset.name}</span> was compacted`;
+                                        break;
+                                    /* istanbul ignore next */
+                                    default:
+                                        return "Unknown flow failed error";
+                                }
+
                                 if (flowDetails.retryPolicy) {
                                     if (event.nextAttemptAt) {
                                         const nextRetryAttemptNo =
@@ -189,7 +191,7 @@ export class DatasetFlowDetailsHelpers {
                                     return mainMessage;
                                 }
                             }
-                            case TaskOutcome.Success:
+                            case "TaskOutcomeSuccess": {
                                 switch (flowDetails.description.__typename) {
                                     case "FlowDescriptionDatasetPollingIngest":
                                     case "FlowDescriptionDatasetPushIngest":
@@ -260,6 +262,7 @@ export class DatasetFlowDetailsHelpers {
                                     default:
                                         return "Unknown description typename";
                                 }
+                            }
                             /* istanbul ignore next */
                             default:
                                 throw new Error("Unknown flow outcome");
@@ -285,12 +288,12 @@ export class DatasetFlowDetailsHelpers {
                 if (!element.task.outcome) {
                     throw new Error("Task outcome is not defined");
                 }
-                switch (element.task.outcome) {
-                    case TaskOutcome.Success:
+                switch (element.task.outcome.__typename) {
+                    case "TaskOutcomeSuccess":
                         return "finished successfully";
-                    case TaskOutcome.Failed:
+                    case "TaskOutcomeFailed":
                         return "failed";
-                    case TaskOutcome.Cancelled:
+                    case "TaskOutcomeCancelled":
                         return "was cancelled";
                     /* istanbul ignore next */
                     default:

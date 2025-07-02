@@ -2149,20 +2149,7 @@ export type FlowEventTriggerAdded = FlowEvent & {
 
 export type FlowFailedError = {
     __typename?: "FlowFailedError";
-    reason: FlowFailureReason;
-};
-
-export type FlowFailureReason = FlowFailureReasonGeneral | FlowFailureReasonInputDatasetCompacted;
-
-export type FlowFailureReasonGeneral = {
-    __typename?: "FlowFailureReasonGeneral";
-    message: Scalars["String"];
-};
-
-export type FlowFailureReasonInputDatasetCompacted = {
-    __typename?: "FlowFailureReasonInputDatasetCompacted";
-    inputDataset: Dataset;
-    message: Scalars["String"];
+    reason: TaskFailureReason;
 };
 
 export type FlowIncompatibleDatasetKind = SetFlowConfigResult &
@@ -3562,15 +3549,36 @@ export type Task = {
     taskId: Scalars["TaskID"];
 };
 
+export type TaskFailureReason = TaskFailureReasonGeneral | TaskFailureReasonInputDatasetCompacted;
+
+export type TaskFailureReasonGeneral = {
+    __typename?: "TaskFailureReasonGeneral";
+    message: Scalars["String"];
+};
+
+export type TaskFailureReasonInputDatasetCompacted = {
+    __typename?: "TaskFailureReasonInputDatasetCompacted";
+    inputDataset: Dataset;
+    message: Scalars["String"];
+};
+
 /** Describes a certain final outcome of the task */
-export enum TaskOutcome {
-    /** Task was cancelled by a user */
-    Cancelled = "CANCELLED",
-    /** Task failed to complete */
-    Failed = "FAILED",
-    /** Task succeeded */
-    Success = "SUCCESS",
-}
+export type TaskOutcome = TaskOutcomeCancelled | TaskOutcomeFailed | TaskOutcomeSuccess;
+
+export type TaskOutcomeCancelled = {
+    __typename?: "TaskOutcomeCancelled";
+    message: Scalars["String"];
+};
+
+export type TaskOutcomeFailed = {
+    __typename?: "TaskOutcomeFailed";
+    reason: TaskFailureReason;
+};
+
+export type TaskOutcomeSuccess = {
+    __typename?: "TaskOutcomeSuccess";
+    message: Scalars["String"];
+};
 
 /** Life-cycle status of a task */
 export enum TaskStatus {
@@ -5498,7 +5506,23 @@ type FlowHistoryData_FlowEventTaskChanged_Fragment = {
     nextAttemptAt?: string | null;
     eventId: string;
     eventTime: string;
-    task: { __typename?: "Task"; outcome?: TaskOutcome | null };
+    task: {
+        __typename?: "Task";
+        outcome?:
+            | { __typename: "TaskOutcomeCancelled" }
+            | {
+                  __typename: "TaskOutcomeFailed";
+                  reason:
+                      | { __typename: "TaskFailureReasonGeneral"; message: string }
+                      | {
+                            __typename: "TaskFailureReasonInputDatasetCompacted";
+                            message: string;
+                            inputDataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+                        };
+              }
+            | { __typename: "TaskOutcomeSuccess" }
+            | null;
+    };
 };
 
 type FlowHistoryData_FlowEventTriggerAdded_Fragment = {
@@ -5552,9 +5576,9 @@ type FlowOutcomeData_FlowAbortedResult_Fragment = { __typename?: "FlowAbortedRes
 type FlowOutcomeData_FlowFailedError_Fragment = {
     __typename?: "FlowFailedError";
     reason:
-        | { __typename?: "FlowFailureReasonGeneral"; message: string }
+        | { __typename?: "TaskFailureReasonGeneral"; message: string }
         | {
-              __typename?: "FlowFailureReasonInputDatasetCompacted";
+              __typename?: "TaskFailureReasonInputDatasetCompacted";
               message: string;
               inputDataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
           };
@@ -7026,10 +7050,10 @@ export const FlowOutcomeDataFragmentDoc = gql`
         }
         ... on FlowFailedError {
             reason {
-                ... on FlowFailureReasonGeneral {
+                ... on TaskFailureReasonGeneral {
                     message
                 }
-                ... on FlowFailureReasonInputDatasetCompacted {
+                ... on TaskFailureReasonInputDatasetCompacted {
                     message
                     inputDataset {
                         ...DatasetBasics
@@ -7276,7 +7300,23 @@ export const FlowHistoryDataFragmentDoc = gql`
             taskId
             taskStatus
             task {
-                outcome
+                outcome {
+                    __typename
+                    ... on TaskOutcomeFailed {
+                        reason {
+                            __typename
+                            ... on TaskFailureReasonGeneral {
+                                message
+                            }
+                            ... on TaskFailureReasonInputDatasetCompacted {
+                                message
+                                inputDataset {
+                                    ...DatasetBasics
+                                }
+                            }
+                        }
+                    }
+                }
             }
             nextAttemptAt
         }

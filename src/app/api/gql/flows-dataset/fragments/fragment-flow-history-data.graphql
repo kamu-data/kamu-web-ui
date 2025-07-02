@@ -71,7 +71,24 @@ fragment FlowHistoryData on FlowEvent {
     taskId
     taskStatus
     task {
-      outcome
+      outcome {
+        __typename
+        ... on TaskOutcomeFailed {
+          reason {
+            __typename
+            ... on TaskFailureReasonGeneral {
+              message
+            }
+
+            ... on TaskFailureReasonInputDatasetCompacted {
+              message
+              inputDataset {
+                ...DatasetBasics
+              }
+            }
+          }
+        }
+      }
     }
     nextAttemptAt
   }

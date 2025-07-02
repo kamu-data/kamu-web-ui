@@ -28,13 +28,18 @@ import { MatDividerModule } from "@angular/material/divider";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
-        MatDividerModule,
+        //-----//
+        NgIf,
         FormsModule,
         ReactiveFormsModule,
+
+        //-----//
+        MatDividerModule,
         MatIconModule,
         MatTooltipModule,
+
+        //-----//
         FormValidationErrorsDirective,
-        NgIf,
     ],
 })
 export class EditKeyValueModalComponent extends BaseComponent implements OnInit {

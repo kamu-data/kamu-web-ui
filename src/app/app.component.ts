@@ -41,7 +41,15 @@ export const ALL_URLS_WITHOUT_HEADER: string[] = [ProjectLinks.URL_LOGIN, Projec
     templateUrl: "./app.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [RouterOutlet, ModalComponent, SpinnerComponent, AppHeaderComponent],
+    imports: [
+        //-----//
+        RouterOutlet,
+
+        //-----//
+        AppHeaderComponent,
+        ModalComponent,
+        SpinnerComponent,
+    ],
 })
 export class AppComponent extends BaseComponent implements OnInit {
     public static readonly ANONYMOUS_ACCOUNT_INFO: AccountFragment = {

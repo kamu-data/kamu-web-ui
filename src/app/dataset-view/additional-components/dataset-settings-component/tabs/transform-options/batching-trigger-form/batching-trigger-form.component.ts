@@ -51,13 +51,18 @@ import { NgIf } from "@angular/common";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
+        //-----//
         NgIf,
         FormsModule,
         ReactiveFormsModule,
-        MatSlideToggleModule,
-        TooltipIconComponent,
-        FormValidationErrorsDirective,
+
+        //-----//
         MatProgressBarModule,
+        MatSlideToggleModule,
+
+        //-----//
+        FormValidationErrorsDirective,
+        TooltipIconComponent,
     ],
 })
 export class BatchingTriggerFormComponent extends BaseComponent implements OnInit {

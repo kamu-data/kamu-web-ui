@@ -40,14 +40,19 @@ export interface SchemaType {
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
+        //-----//
+        NgIf,
         FormsModule,
         ReactiveFormsModule,
-        RxReactiveFormsModule,
-        TooltipIconComponent,
+
+        //-----//
         MatTableModule,
-        NgIf,
         NgbTypeahead,
         MatIconModule,
+        RxReactiveFormsModule,
+
+        //-----//
+        TooltipIconComponent,
     ],
 })
 export class SchemaFieldComponent extends BaseField implements AfterViewInit {

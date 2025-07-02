@@ -36,11 +36,16 @@ import { MatDividerModule } from "@angular/material/divider";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
-        MatDividerModule,
+        //-----//
         FormsModule,
         ReactiveFormsModule,
-        FormValidationErrorsDirective,
         NgIf,
+
+        //-----//
+        MatDividerModule,
+
+        //-----//
+        FormValidationErrorsDirective,
         AdminChangePasswordComponent,
     ],
 })

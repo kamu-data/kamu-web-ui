@@ -30,14 +30,17 @@ import { NgIf, AsyncPipe } from "@angular/common";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
+        //-----//
+        AsyncPipe,
         NgIf,
+
+        //-----//
+        BlockHeaderComponent,
+        BlockNavigationComponent,
         DatasetViewHeaderComponent,
         DatasetViewMenuComponent,
-        BlockHeaderComponent,
         EventDetailsComponent,
-        BlockNavigationComponent,
         YamlViewSectionComponent,
-        AsyncPipe,
     ],
 })
 export class MetadataBlockComponent extends BaseDatasetDataComponent implements OnInit {

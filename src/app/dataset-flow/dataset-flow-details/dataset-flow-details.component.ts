@@ -32,16 +32,21 @@ import { NgIf, NgClass, AsyncPipe } from "@angular/common";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
+        //-----//
+        AsyncPipe,
         NgIf,
-        DatasetViewHeaderComponent,
-        DatasetViewMenuComponent,
-        MatIconModule,
         NgClass,
-        FeatureFlagDirective,
         RouterLinkActive,
         RouterLink,
         RouterOutlet,
-        AsyncPipe,
+
+        //-----//
+        MatIconModule,
+
+        //-----//
+        DatasetViewHeaderComponent,
+        DatasetViewMenuComponent,
+        FeatureFlagDirective,
     ],
 })
 export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implements OnInit {

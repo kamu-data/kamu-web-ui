@@ -25,14 +25,19 @@ import { NgIf } from "@angular/common";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
+        //-----//
         NgIf,
-        FeatureFlagDirective,
-        MatMenuModule,
+
+        //-----//
         MatIconModule,
         MatDividerModule,
+        MatMenuModule,
+
+        //-----//
         BlockRowDataComponent,
         DisplayTimeComponent,
         DisplayHashComponent,
+        FeatureFlagDirective,
     ],
 })
 export class BlockHeaderComponent extends BaseComponent {

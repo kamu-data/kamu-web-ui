@@ -30,7 +30,20 @@ import { MarkdownModule } from "ngx-markdown";
     styleUrls: ["./input-data-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [MarkdownModule, NgIf, NgFor, RouterLink, DisplayHashComponent, AsyncPipe, DatePipe],
+    imports: [
+        //-----//
+        AsyncPipe,
+        DatePipe,
+        NgIf,
+        NgFor,
+        RouterLink,
+
+        //-----//
+        MarkdownModule,
+
+        //-----//
+        DisplayHashComponent,
+    ],
 })
 export class InputDataSectionComponent implements AfterViewChecked {
     @Input({ required: true }) public blockHashObservables$: Observable<Date>[];

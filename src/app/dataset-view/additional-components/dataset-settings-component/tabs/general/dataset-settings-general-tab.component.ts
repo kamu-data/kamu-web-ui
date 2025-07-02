@@ -54,17 +54,22 @@ import { MatDividerModule } from "@angular/material/divider";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
-        MatDividerModule,
-        FormsModule,
-        FeatureFlagDirective,
-        ReactiveFormsModule,
-        FormValidationErrorsDirective,
-        NgIf,
-        MatRadioModule,
-        TooltipIconComponent,
-        MatCheckboxModule,
-        DatasetVisibilityComponent,
+        //-----//
         AsyncPipe,
+        FormsModule,
+        NgIf,
+        ReactiveFormsModule,
+
+        //-----//
+        MatCheckboxModule,
+        MatDividerModule,
+        MatRadioModule,
+
+        //-----//
+        FeatureFlagDirective,
+        FormValidationErrorsDirective,
+        TooltipIconComponent,
+        DatasetVisibilityComponent,
     ],
 })
 export class DatasetSettingsGeneralTabComponent extends BaseComponent implements OnInit {

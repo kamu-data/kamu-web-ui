@@ -20,7 +20,14 @@ import { BlockRowDataComponent } from "../../../../../../common/components/block
     templateUrl: "./set-data-schema-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [BlockRowDataComponent, NgIf, DynamicTableComponent],
+    imports: [
+        //-----//
+        NgIf,
+
+        //-----//
+        BlockRowDataComponent,
+        DynamicTableComponent,
+    ],
 })
 export class SetDataSchemaEventComponent extends BaseComponent {
     @Input({ required: true }) public event: SetDataSchema;

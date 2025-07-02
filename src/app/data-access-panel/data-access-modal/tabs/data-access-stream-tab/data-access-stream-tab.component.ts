@@ -16,7 +16,13 @@ import { CopyToClipboardComponent } from "../../../../common/components/copy-to-
     styleUrls: ["./data-access-stream-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [CopyToClipboardComponent, MatIconModule],
+    imports: [
+        //-----//
+        MatIconModule,
+
+        //-----//
+        CopyToClipboardComponent,
+    ],
 })
 export class DataAccessStreamTabComponent {
     @Input({ required: true }) public kafka: KafkaProtocolDesc;

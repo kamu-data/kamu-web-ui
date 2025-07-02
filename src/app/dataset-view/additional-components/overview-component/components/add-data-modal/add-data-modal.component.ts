@@ -25,7 +25,14 @@ import { MatDividerModule } from "@angular/material/divider";
     styleUrls: ["./add-data-modal.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [MatDividerModule, FeatureFlagDirective, MatIconModule],
+    imports: [
+        //-----//
+        MatIconModule,
+        MatDividerModule,
+
+        //-----//
+        FeatureFlagDirective,
+    ],
 })
 export class AddDataModalComponent extends BaseComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

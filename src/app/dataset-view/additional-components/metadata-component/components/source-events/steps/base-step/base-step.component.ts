@@ -45,24 +45,27 @@ import { NgIf, NgFor, TitleCasePipe } from "@angular/common";
     viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
     standalone: true,
     imports: [
+        //-----//
         NgIf,
+        NgFor,
         FormsModule,
         ReactiveFormsModule,
-        SelectKindFieldComponent,
-        NgFor,
-        InputFieldComponent,
-        KeyValueFieldComponent,
+        TitleCasePipe,
+
+        //-----//
         ArrayKeysFieldComponent,
+        JsonKindFieldComponent,
+        InputFieldComponent,
+        SelectKindFieldComponent,
+        KeyValueFieldComponent,
         CheckboxFieldComponent,
         SchemaFieldComponent,
         SelectDateFormatFieldComponent,
         CacheFieldComponent,
         OrderFieldComponent,
         TypeaheadFieldComponent,
-        JsonKindFieldComponent,
         NumberFieldComponent,
         TopicsFieldComponent,
-        TitleCasePipe,
     ],
 })
 export class BaseStepComponent extends BaseComponent implements OnInit {

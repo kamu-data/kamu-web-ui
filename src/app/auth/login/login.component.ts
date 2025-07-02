@@ -32,14 +32,19 @@ import { NgIf, NgTemplateOutlet, AsyncPipe } from "@angular/common";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
-        NgIf,
-        MatIconModule,
-        NgTemplateOutlet,
-        SpinnerComponent,
-        FormsModule,
-        ReactiveFormsModule,
-        FormValidationErrorsDirective,
+        //-----//
         AsyncPipe,
+        FormsModule,
+        NgIf,
+        NgTemplateOutlet,
+        ReactiveFormsModule,
+
+        //-----//
+        MatIconModule,
+
+        //-----//
+        FormValidationErrorsDirective,
+        SpinnerComponent,
     ],
 })
 export class LoginComponent extends BaseComponent implements OnInit {

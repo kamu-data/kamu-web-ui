@@ -15,7 +15,13 @@ import { InputFieldComponent } from "../../../form-components/input-field/input-
     templateUrl: "./source-name-step.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [InputFieldComponent, NgIf],
+    imports: [
+        //-----//
+        NgIf,
+
+        //-----//
+        InputFieldComponent,
+    ],
 })
 export class SourceNameStepComponent {
     @Input({ required: true }) public form: FormGroup;

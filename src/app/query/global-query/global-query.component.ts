@@ -27,7 +27,14 @@ import { SearchAndSchemasSectionComponent } from "./search-and-schemas-section/s
     styleUrls: ["./global-query.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [SearchAndSchemasSectionComponent, QueryAndResultSectionsComponent, AsyncPipe],
+    imports: [
+        //-----//
+        AsyncPipe,
+
+        //-----//
+        QueryAndResultSectionsComponent,
+        SearchAndSchemasSectionComponent,
+    ],
 })
 export class GlobalQueryComponent extends BaseComponent implements OnInit {
     @Input(ProjectLinks.URL_QUERY_PARAM_SQL_QUERY) public set sqlQuery(value: string) {

@@ -16,7 +16,14 @@ import { CopyToClipboardComponent } from "../../../../common/components/copy-to-
     templateUrl: "./data-access-odata-tab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [CopyToClipboardComponent, MatDividerModule, MatIconModule],
+    imports: [
+        //-----//
+        MatDividerModule,
+        MatIconModule,
+
+        //-----//
+        CopyToClipboardComponent,
+    ],
 })
 export class DataAccessOdataTabComponent {
     @Input({ required: true }) public odata: OdataProtocolDesc;

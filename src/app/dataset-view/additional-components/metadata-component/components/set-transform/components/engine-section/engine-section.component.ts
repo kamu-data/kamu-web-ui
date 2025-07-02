@@ -32,7 +32,17 @@ import { NgIf } from "@angular/common";
     styleUrls: ["./engine-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [NgIf, MatDividerModule, EngineSelectComponent, FormsModule],
+    imports: [
+        //-----//
+        FormsModule,
+        NgIf,
+
+        //-----//
+        MatDividerModule,
+
+        //-----//
+        EngineSelectComponent,
+    ],
 })
 export class EngineSectionComponent extends BaseComponent implements OnInit {
     @Input() public knownEngines: MaybeNull<EngineDesc[]>;

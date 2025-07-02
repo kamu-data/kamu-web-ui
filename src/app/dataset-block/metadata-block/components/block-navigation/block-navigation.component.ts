@@ -26,15 +26,20 @@ import { FormsModule } from "@angular/forms";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
+        //-----//
         FormsModule,
-        MatIconModule,
         NgIf,
-        NgSelectModule,
         NgFor,
-        DisplayHashComponent,
-        PaginationComponent,
+
+        //-----//
+        MatIconModule,
+        NgSelectModule,
+
+        //-----//
         BlockHashFilterPipe,
+        DisplayHashComponent,
         EventTypeFilterPipe,
+        PaginationComponent,
     ],
 })
 export class BlockNavigationComponent {

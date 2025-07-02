@@ -23,7 +23,13 @@ import { MatDividerModule } from "@angular/material/divider";
     styleUrls: ["./dataset-settings-transform-options-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [MatDividerModule, BatchingTriggerFormComponent],
+    imports: [
+        //-----//
+        MatDividerModule,
+
+        //-----//
+        BatchingTriggerFormComponent,
+    ],
 })
 export class DatasetSettingsTransformOptionsTabComponent extends BaseComponent {
     @Input(RoutingResolvers.DATASET_SETTINGS_TRANSFORM_KEY) public transformViewData: DatasetViewData;

@@ -38,13 +38,18 @@ import { MatIconModule } from "@angular/material/icon";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
-        MatIconModule,
+        //-----//
+        AsyncPipe,
         RouterLink,
+
+        //-----//
+        MatIconModule,
+        NgbPopover,
+
+        //-----//
         DatasetVisibilityComponent,
         FeatureFlagDirective,
-        NgbPopover,
         SearchAdditionalButtonsComponent,
-        AsyncPipe,
     ],
 })
 export class DatasetViewHeaderComponent extends BaseComponent {

@@ -25,13 +25,18 @@ import { NgFor } from "@angular/common";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
+        //-----//
         NgFor,
-        MatIconModule,
         RouterLink,
-        DisplayTimeComponent,
-        FeatureFlagDirective,
+
+        //-----//
+        MatIconModule,
         NgbPopover,
+
+        //-----//
+        DisplayTimeComponent,
         DisplayHashComponent,
+        FeatureFlagDirective,
     ],
 })
 export class TimelineComponent {

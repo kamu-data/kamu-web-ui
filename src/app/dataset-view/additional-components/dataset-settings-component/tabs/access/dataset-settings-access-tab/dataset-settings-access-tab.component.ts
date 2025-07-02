@@ -45,14 +45,19 @@ import { MatIconModule } from "@angular/material/icon";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
-        MatIconModule,
-        RouterLink,
-        NgIf,
-        MatCheckboxModule,
+        //-----//
         FormsModule,
-        MatTableModule,
-        PaginationComponent,
+        NgIf,
         TitleCasePipe,
+        RouterLink,
+
+        //-----//
+        MatIconModule,
+        MatCheckboxModule,
+        MatTableModule,
+
+        //-----//
+        PaginationComponent,
     ],
 })
 export class DatasetSettingsAccessTabComponent extends BaseComponent implements OnInit {

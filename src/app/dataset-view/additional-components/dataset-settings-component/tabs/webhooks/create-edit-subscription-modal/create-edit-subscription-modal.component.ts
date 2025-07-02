@@ -39,13 +39,18 @@ import { MatDividerModule } from "@angular/material/divider";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
-        MatDividerModule,
+        //-----//
+        NgIf,
         FormsModule,
         ReactiveFormsModule,
-        FormValidationErrorsDirective,
+
+        //-----//
+        MatDividerModule,
         NgSelectModule,
-        NgIf,
+
+        //-----//
         CopyToClipboardComponent,
+        FormValidationErrorsDirective,
         FeatureFlagDirective,
     ],
 })

@@ -121,7 +121,15 @@ import { NgClass, NgIf, NgFor } from "@angular/common";
         </div>
     `,
     standalone: true,
-    imports: [NgClass, NgIf, MatDividerModule, NgFor],
+    imports: [
+        //-----//
+        NgClass,
+        NgFor,
+        NgIf,
+
+        //-----//
+        MatDividerModule,
+    ],
 })
 export class ModalDialogComponent extends DynamicComponent {
     public onClick(action: boolean | string, locationBack?: boolean) {

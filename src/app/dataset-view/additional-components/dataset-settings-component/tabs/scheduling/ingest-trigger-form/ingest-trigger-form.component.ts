@@ -53,13 +53,18 @@ import { NgIf } from "@angular/common";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
+        //-----//
         NgIf,
         FormsModule,
         ReactiveFormsModule,
-        MatSlideToggleModule,
-        TooltipIconComponent,
+
+        //-----//
         MatRadioModule,
         MatProgressBarModule,
+        MatSlideToggleModule,
+
+        //-----//
+        TooltipIconComponent,
     ],
 })
 export class IngestTriggerFormComponent extends BaseComponent implements OnInit {

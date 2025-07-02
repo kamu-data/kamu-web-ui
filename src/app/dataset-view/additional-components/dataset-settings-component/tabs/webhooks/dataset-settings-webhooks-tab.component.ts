@@ -41,7 +41,20 @@ import { MatDividerModule } from "@angular/material/divider";
     styleUrls: ["./dataset-settings-webhooks-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [MatDividerModule, NgIf, MatIconModule, MatTableModule, NgClass, FeatureFlagDirective, AsyncPipe],
+    imports: [
+        //-----//
+        AsyncPipe,
+        NgClass,
+        NgIf,
+
+        //-----//
+        MatDividerModule,
+        MatIconModule,
+        MatTableModule,
+
+        //-----//
+        FeatureFlagDirective,
+    ],
 })
 export class DatasetSettingsWebhooksTabComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_SETTINGS_WEBHOOKS_KEY) public webhooksViewData: DatasetSettingsWebhookTabData;

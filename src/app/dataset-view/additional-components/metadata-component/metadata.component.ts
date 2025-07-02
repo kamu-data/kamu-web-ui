@@ -52,12 +52,19 @@ import { NgIf, NgFor, NgTemplateOutlet, TitleCasePipe } from "@angular/common";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
+        //-----//
         NgIf,
-        FeatureFlagDirective,
-        CommitNavigatorComponent,
-        MatIconModule,
         NgFor,
         NgTemplateOutlet,
+        RouterLink,
+        TitleCasePipe,
+
+        //-----//
+        MatIconModule,
+
+        //-----//
+        CommitNavigatorComponent,
+        FeatureFlagDirective,
         BlockRowDataComponent,
         DynamicTableComponent,
         LinkPropertyComponent,
@@ -67,11 +74,9 @@ import { NgIf, NgFor, NgTemplateOutlet, TitleCasePipe } from "@angular/common";
         OwnerPropertyComponent,
         EnginePropertyComponent,
         SqlQueryViewerComponent,
-        RouterLink,
         SchemaPropertyComponent,
         MergeStrategyPropertyComponent,
         CardsPropertyComponent,
-        TitleCasePipe,
     ],
 })
 export class MetadataComponent extends BaseComponent implements OnInit {

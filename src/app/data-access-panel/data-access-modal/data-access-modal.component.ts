@@ -37,11 +37,16 @@ import { NgIf, NgFor, AsyncPipe } from "@angular/common";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
+        //-----//
+        AsyncPipe,
         NgIf,
         RouterLink,
         NgFor,
-        FeatureFlagDirective,
+
+        //-----//
         MatIconModule,
+
+        //-----//
         DataAccessLinkTabComponent,
         DataAccessKamuCliTabComponent,
         DataAccessRestTabComponent,
@@ -50,7 +55,7 @@ import { NgIf, NgFor, AsyncPipe } from "@angular/common";
         DataAccessCodeTabComponent,
         DataAccessOdataTabComponent,
         DataAccessExportTabComponent,
-        AsyncPipe,
+        FeatureFlagDirective,
     ],
 })
 export class DataAccessModalComponent implements OnInit {

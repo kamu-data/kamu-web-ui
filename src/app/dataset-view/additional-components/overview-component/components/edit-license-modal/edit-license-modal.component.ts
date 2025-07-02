@@ -31,7 +31,15 @@ import { MatDividerModule } from "@angular/material/divider";
     selector: "app-edit-license-modal",
     templateUrl: "./edit-license-modal.component.html",
     standalone: true,
-    imports: [MatDividerModule, FormsModule, ReactiveFormsModule, NgIf],
+    imports: [
+        //-----//
+        FormsModule,
+        NgIf,
+        ReactiveFormsModule,
+
+        //-----//
+        MatDividerModule,
+    ],
 })
 export class EditLicenseModalComponent extends BaseComponent implements OnInit {
     public activeModal = inject(NgbActiveModal);

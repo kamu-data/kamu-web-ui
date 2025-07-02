@@ -35,7 +35,16 @@ import { NgFor, NgIf } from "@angular/common";
     changeDetection: ChangeDetectionStrategy.OnPush,
     viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, NgFor, NgIf, MatIconModule],
+    imports: [
+        //-----//
+        FormsModule,
+        NgFor,
+        NgIf,
+        ReactiveFormsModule,
+
+        //-----//
+        MatIconModule,
+    ],
 })
 export class PrepareStepComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public eventYamlByHash: MaybeNull<string> = null;

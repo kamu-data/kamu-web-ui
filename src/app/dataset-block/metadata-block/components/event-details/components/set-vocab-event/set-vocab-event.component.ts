@@ -17,7 +17,16 @@ import { NgIf, NgFor, KeyValuePipe } from "@angular/common";
     templateUrl: "./set-vocab-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [NgIf, NgFor, BlockRowDataComponent, CardsPropertyComponent, KeyValuePipe],
+    imports: [
+        //-----//
+        NgIf,
+        NgFor,
+        KeyValuePipe,
+
+        //-----//
+        BlockRowDataComponent,
+        CardsPropertyComponent,
+    ],
 })
 export class SetVocabEventComponent extends BaseComponent {
     @Input({ required: true }) public event: SetVocab;

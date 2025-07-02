@@ -18,7 +18,13 @@ import { CdkStepper } from "@angular/cdk/stepper";
     styleUrls: ["./stepper-navigation.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [NgIf, MatButtonModule],
+    imports: [
+        //-----//
+        NgIf,
+
+        //-----//
+        MatButtonModule,
+    ],
 })
 export class StepperNavigationComponent extends CdkStepper {
     @Input() public nextStep: MaybeNull<SourcesSection> = null;

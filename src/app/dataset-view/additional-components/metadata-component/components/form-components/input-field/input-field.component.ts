@@ -20,12 +20,17 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
+        //-----//
+        NgIf,
         FormsModule,
         ReactiveFormsModule,
-        RxReactiveFormsModule,
-        TooltipIconComponent,
-        NgIf,
+
+        //-----//
         NgxTrimDirectiveModule,
+        RxReactiveFormsModule,
+
+        //-----//
+        TooltipIconComponent,
     ],
 })
 export class InputFieldComponent extends BaseField {

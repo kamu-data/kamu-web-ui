@@ -20,7 +20,14 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
     styleUrls: ["./ingest-configuration-form.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatCheckboxModule],
+    imports: [
+        //-----//
+        FormsModule,
+        ReactiveFormsModule,
+
+        //-----//
+        MatCheckboxModule,
+    ],
 })
 export class IngestConfigurationFormComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

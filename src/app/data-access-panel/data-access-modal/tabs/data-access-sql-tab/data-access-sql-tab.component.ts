@@ -16,7 +16,13 @@ import { CopyToClipboardComponent } from "../../../../common/components/copy-to-
     styleUrls: ["./data-access-sql-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [CopyToClipboardComponent, MatIconModule],
+    imports: [
+        //-----//
+        MatIconModule,
+
+        //-----//
+        CopyToClipboardComponent,
+    ],
 })
 export class DataAccessSqlTabComponent {
     @Input({ required: true }) public flightSql: FlightSqlDesc;

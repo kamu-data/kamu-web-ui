@@ -22,13 +22,18 @@ import { TooltipIconComponent } from "../../../../../../common/components/toolti
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
+        //-----//
         FormsModule,
-        ReactiveFormsModule,
-        RxReactiveFormsModule,
-        TooltipIconComponent,
         NgIf,
         NgFor,
+        ReactiveFormsModule,
+
+        //-----//
         NgxTrimDirectiveModule,
+        RxReactiveFormsModule,
+
+        //-----//
+        TooltipIconComponent,
     ],
 })
 export class TopicsFieldComponent extends BaseField {

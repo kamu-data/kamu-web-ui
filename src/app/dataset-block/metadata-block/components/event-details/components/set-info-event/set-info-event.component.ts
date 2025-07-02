@@ -17,7 +17,14 @@ import { NgIf } from "@angular/common";
     templateUrl: "./set-info-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [NgIf, BlockRowDataComponent, CardsPropertyComponent],
+    imports: [
+        //-----//
+        NgIf,
+
+        //-----//
+        BlockRowDataComponent,
+        CardsPropertyComponent,
+    ],
 })
 export class SetInfoEventComponent extends BaseComponent {
     @Input({ required: true }) public event: SetInfo;

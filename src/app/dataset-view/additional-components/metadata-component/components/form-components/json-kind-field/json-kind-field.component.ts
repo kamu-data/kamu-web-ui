@@ -21,12 +21,17 @@ import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        RxReactiveFormsModule,
-        TooltipIconComponent,
+        //-----//
         NgFor,
         NgIf,
+        FormsModule,
+        ReactiveFormsModule,
+
+        //-----//
+        RxReactiveFormsModule,
+
+        //-----//
+        TooltipIconComponent,
         InputFieldComponent,
     ],
 })

@@ -22,12 +22,17 @@ import { TooltipIconComponent } from "../../../../../../common/components/toolti
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
+        //-----//
+        NgIf,
         FormsModule,
         ReactiveFormsModule,
+
+        //-----//
         RxReactiveFormsModule,
-        TooltipIconComponent,
-        NgIf,
+
+        //-----//
         InputFieldComponent,
+        TooltipIconComponent,
         TypeaheadFieldComponent,
     ],
 })

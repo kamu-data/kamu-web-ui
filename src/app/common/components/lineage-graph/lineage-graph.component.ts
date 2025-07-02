@@ -43,12 +43,17 @@ import { NgIf, DecimalPipe, TitleCasePipe } from "@angular/common";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
+        //-----//
+        DecimalPipe,
         NgIf,
+        TitleCasePipe,
+
+        //-----//
         GraphModule,
         MatIconModule,
+
+        //-----//
         DisplayTimeComponent,
-        DecimalPipe,
-        TitleCasePipe,
         DisplayDatasetIdPipe,
         DisplaySizePipe,
     ],

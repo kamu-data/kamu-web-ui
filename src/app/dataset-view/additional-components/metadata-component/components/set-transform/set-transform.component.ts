@@ -37,11 +37,14 @@ import { NgIf } from "@angular/common";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
+        //-----//
         NgIf,
         RouterLink,
-        SearchSectionComponent,
+
+        //-----//
         EngineSectionComponent,
         QueriesSectionComponent,
+        SearchSectionComponent,
         StepperNavigationComponent,
     ],
 })

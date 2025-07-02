@@ -16,7 +16,14 @@ import { NgFor, NgIf } from "@angular/common";
     templateUrl: "./sql-query-viewer.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [NgFor, NgIf, HighlightModule],
+    imports: [
+        //-----//
+        NgFor,
+        NgIf,
+
+        //-----//
+        HighlightModule,
+    ],
 })
 export class SqlQueryViewerComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: SqlQueryStep[];

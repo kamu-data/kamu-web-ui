@@ -16,7 +16,13 @@ import { NgFor } from "@angular/common";
     templateUrl: "./temporal-tables-property.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [NgFor, CardsPropertyComponent],
+    imports: [
+        //-----//
+        NgFor,
+
+        //-----//
+        CardsPropertyComponent,
+    ],
 })
 export class TemporalTablesPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: TemporalTable[];

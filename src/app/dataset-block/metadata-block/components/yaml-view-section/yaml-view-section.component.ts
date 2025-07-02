@@ -17,7 +17,13 @@ import { NgIf } from "@angular/common";
     templateUrl: "./yaml-view-section.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [NgIf, YamlEventViewerComponent],
+    imports: [
+        //-----//
+        NgIf,
+
+        //-----//
+        YamlEventViewerComponent,
+    ],
 })
 export class YamlViewSectionComponent {
     @Input({ required: true }) public blockAsYaml: string;

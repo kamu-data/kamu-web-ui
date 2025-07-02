@@ -34,7 +34,15 @@ import { SearchAndSchemasSectionComponent } from "../../../query/global-query/se
     templateUrl: "./data.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [SearchAndSchemasSectionComponent, QueryAndResultSectionsComponent, NgIf, AsyncPipe],
+    imports: [
+        //-----//
+        AsyncPipe,
+        NgIf,
+
+        //-----//
+        SearchAndSchemasSectionComponent,
+        QueryAndResultSectionsComponent,
+    ],
 })
 export class DataComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_VIEW_DATA_KEY) public dataTabData: DatasetOverviewTabData;

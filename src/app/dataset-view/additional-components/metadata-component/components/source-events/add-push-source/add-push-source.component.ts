@@ -34,15 +34,20 @@ import { RouterLink } from "@angular/router";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
-        RouterLink,
-        NgIf,
+        //-----//
         FormsModule,
+        NgIf,
         ReactiveFormsModule,
+        RouterLink,
+
+        //-----//
         MatStepperModule,
-        SourceNameStepComponent,
-        StepperNavigationComponent,
+
+        //-----//
         BaseStepComponent,
         PreprocessStepComponent,
+        SourceNameStepComponent,
+        StepperNavigationComponent,
     ],
 })
 export class AddPushSourceComponent extends BaseSourceEventComponent {

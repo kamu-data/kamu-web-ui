@@ -31,16 +31,21 @@ import { MatDividerModule } from "@angular/material/divider";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
-        MatDividerModule,
+        //-----//
+        AsyncPipe,
+        NgFor,
+        NgIf,
         FormsModule,
         ReactiveFormsModule,
-        NgFor,
-        FormValidationErrorsDirective,
+
+        //-----//
+        MatDividerModule,
         MatIconModule,
-        NgIf,
         NgSelectModule,
+
+        //-----//
+        FormValidationErrorsDirective,
         YamlEditorComponent,
-        AsyncPipe,
     ],
 })
 export class DatasetCreateComponent extends BaseComponent {

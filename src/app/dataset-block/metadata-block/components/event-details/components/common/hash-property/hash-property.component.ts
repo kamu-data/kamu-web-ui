@@ -15,7 +15,13 @@ import { NgIf } from "@angular/common";
     templateUrl: "./hash-property.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [NgIf, DisplayHashComponent],
+    imports: [
+        //-----//
+        NgIf,
+
+        //-----//
+        DisplayHashComponent,
+    ],
 })
 export class HashPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;

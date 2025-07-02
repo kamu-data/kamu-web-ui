@@ -68,15 +68,20 @@ import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
-        AngularMultiSelectModule,
-        FormsModule,
+        //-----//
         NgIf,
-        MatIconModule,
-        MatTableModule,
         NgClass,
         RouterLink,
+        FormsModule,
+
+        //-----//
+        AngularMultiSelectModule,
+        MatIconModule,
+        MatTableModule,
         MatMenuModule,
         MatDividerModule,
+
+        //-----//
         SafeHtmlPipe,
     ],
 })

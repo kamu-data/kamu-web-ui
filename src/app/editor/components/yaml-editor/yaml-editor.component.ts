@@ -27,7 +27,14 @@ const YAML_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = 
     templateUrl: "./yaml-editor.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [MonacoEditorModule, FormsModule, NgStyle],
+    imports: [
+        //-----//
+        FormsModule,
+        NgStyle,
+
+        //-----//
+        MonacoEditorModule,
+    ],
 })
 export class YamlEditorComponent extends BaseEditorComponent {
     public readonly YAML_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = YAML_EDITOR_OPTIONS;

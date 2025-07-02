@@ -22,7 +22,13 @@ import { MatDividerModule } from "@angular/material/divider";
     templateUrl: "./dataset-settings-ingest-configuration-tab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [MatDividerModule, IngestConfigurationFormComponent],
+    imports: [
+        //-----//
+        MatDividerModule,
+
+        //-----//
+        IngestConfigurationFormComponent,
+    ],
 })
 export class DatasetSettingsIngestConfigurationTabComponent extends BaseComponent {
     @Input(RoutingResolvers.DATASET_SETTINGS_INGEST_CONFIGURATION_KEY)

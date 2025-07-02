@@ -21,12 +21,15 @@ import { CopyToClipboardComponent } from "../../../../common/components/copy-to-
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
-        CopyToClipboardComponent,
-        FeatureFlagDirective,
+        //-----//
         MatCheckboxModule,
         MatIconModule,
         MatTooltipModule,
         MatDividerModule,
+
+        //-----//
+        CopyToClipboardComponent,
+        FeatureFlagDirective,
     ],
 })
 export class DataAccessLinkTabComponent {

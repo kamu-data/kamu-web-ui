@@ -20,7 +20,13 @@ import { NgIf } from "@angular/common";
     styleUrls: ["./flow-details-logs-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [NgIf, MatIconModule],
+    imports: [
+        //-----//
+        NgIf,
+
+        //-----//
+        MatIconModule,
+    ],
 })
 export class FlowDetailsLogsTabComponent {
     @Input(RoutingResolvers.FLOW_DETAILS_LOGS_KEY) public flowDetails: DatasetFlowByIdResponse;

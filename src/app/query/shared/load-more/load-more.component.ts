@@ -18,7 +18,17 @@ import { MatButtonModule } from "@angular/material/button";
     templateUrl: "./load-more.component.html",
     styleUrls: ["./load-more.component.scss"],
     standalone: true,
-    imports: [MatButtonModule, NgIf, MatIconModule, MatButtonToggleModule, FormsModule, NgFor],
+    imports: [
+        //-----//
+        FormsModule,
+        NgIf,
+        NgFor,
+
+        //-----//
+        MatButtonModule,
+        MatIconModule,
+        MatButtonToggleModule,
+    ],
 })
 export class LoadMoreComponent {
     public rowsNumber: number = AppValues.SQL_QUERY_LIMIT;

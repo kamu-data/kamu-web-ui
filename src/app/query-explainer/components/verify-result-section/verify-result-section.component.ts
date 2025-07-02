@@ -22,7 +22,13 @@ import { NgIf } from "@angular/common";
     styleUrls: ["./verify-result-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [NgIf, MatIconModule],
+    imports: [
+        //-----//
+        NgIf,
+
+        //-----//
+        MatIconModule,
+    ],
 })
 export class VerifyResultSectionComponent {
     @Input({ required: true }) public verifyResponse: MaybeNull<VerifyQueryResponse>;

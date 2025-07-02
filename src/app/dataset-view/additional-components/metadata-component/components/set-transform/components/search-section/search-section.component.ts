@@ -36,7 +36,19 @@ import { MatIconModule } from "@angular/material/icon";
     styleUrls: ["./search-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [MatIconModule, FormsModule, NgbTypeahead, NgIf, NgbHighlight, MatTreeModule, MatButtonModule, RouterLink],
+    imports: [
+        //-----//
+        FormsModule,
+        NgIf,
+        RouterLink,
+
+        //-----//
+        MatIconModule,
+        MatTreeModule,
+        MatButtonModule,
+        NgbTypeahead,
+        NgbHighlight,
+    ],
 })
 export class SearchSectionComponent extends BaseComponent {
     public searchDataset = "";

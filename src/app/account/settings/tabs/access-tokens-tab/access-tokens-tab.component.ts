@@ -43,18 +43,23 @@ import { NgIf, NgTemplateOutlet, DatePipe } from "@angular/common";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
+        //-----//
+        FormsModule,
         NgIf,
         NgTemplateOutlet,
-        MatDividerModule,
-        FormsModule,
         ReactiveFormsModule,
-        FormValidationErrorsDirective,
-        CopyToClipboardComponent,
+        DatePipe,
+
+        //-----//
+        MatDividerModule,
         MatIconModule,
         MatSlideToggleModule,
         MatTableModule,
+
+        //-----//
+        FormValidationErrorsDirective,
+        CopyToClipboardComponent,
         PaginationComponent,
-        DatePipe,
     ],
 })
 export class AccessTokensTabComponent extends BaseComponent {

@@ -31,7 +31,16 @@ import { MatDividerModule } from "@angular/material/divider";
     selector: "app-details-modal",
     templateUrl: "./edit-details-modal.component.html",
     standalone: true,
-    imports: [MatDividerModule, FormsModule, MatChipsModule, NgFor, MatIconModule],
+    imports: [
+        //-----//
+        FormsModule,
+        NgFor,
+
+        //-----//
+        MatDividerModule,
+        MatIconModule,
+        MatChipsModule,
+    ],
 })
 export class EditDetailsModalComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public currentState?: {

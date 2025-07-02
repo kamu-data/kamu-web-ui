@@ -33,15 +33,20 @@ import { NgIf, NgFor, NgClass, AsyncPipe } from "@angular/common";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
-        NgIf,
-        RouterLink,
-        NgFor,
-        FeatureFlagDirective,
-        NgClass,
-        RouterLinkActive,
-        MatIconModule,
-        RouterOutlet,
+        //-----//
         AsyncPipe,
+        NgClass,
+        NgIf,
+        NgFor,
+        RouterLink,
+        RouterLinkActive,
+        RouterOutlet,
+
+        //-----//
+        MatIconModule,
+
+        //-----//
+        FeatureFlagDirective,
     ],
 })
 export class AccountSettingsComponent extends BaseComponent implements OnInit {

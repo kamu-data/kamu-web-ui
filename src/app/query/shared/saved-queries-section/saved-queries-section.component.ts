@@ -18,7 +18,16 @@ import { CdkAccordionModule } from "@angular/cdk/accordion";
     styleUrls: ["./saved-queries-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [CdkAccordionModule, NgFor, MatIconModule, NgIf, MatButtonModule],
+    imports: [
+        //-----//
+        NgFor,
+        NgIf,
+
+        //-----//
+        CdkAccordionModule,
+        MatIconModule,
+        MatButtonModule,
+    ],
 })
 export class SavedQueriesSectionComponent {
     public savedQueries = DataTabValues.savedQueries;

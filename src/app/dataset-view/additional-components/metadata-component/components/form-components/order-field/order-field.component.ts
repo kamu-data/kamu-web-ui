@@ -19,7 +19,18 @@ import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
     templateUrl: "./order-field.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, RxReactiveFormsModule, TooltipIconComponent, NgFor],
+    imports: [
+        //-----//
+        NgFor,
+        FormsModule,
+        ReactiveFormsModule,
+
+        //-----//
+        RxReactiveFormsModule,
+
+        //-----//
+        TooltipIconComponent,
+    ],
 })
 export class OrderFieldComponent extends BaseField implements OnInit {
     public readonly ORDER_RADIO_CONTROL = ORDER_RADIO_CONTROL;

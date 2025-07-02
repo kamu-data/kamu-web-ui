@@ -15,7 +15,13 @@ import { MatIconModule } from "@angular/material/icon";
     styleUrls: ["commit-navigator.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [MatIconModule, SlicePipe],
+    imports: [
+        //-----//
+        SlicePipe,
+
+        //-----//
+        MatIconModule,
+    ],
 })
 export class CommitNavigatorComponent implements OnChanges {
     @Input({ required: true }) public date = "";

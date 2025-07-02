@@ -16,7 +16,17 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
     templateUrl: "./checkbox-field.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, RxReactiveFormsModule, TooltipIconComponent],
+    imports: [
+        //-----//
+        FormsModule,
+        ReactiveFormsModule,
+
+        //-----//
+        RxReactiveFormsModule,
+
+        //-----//
+        TooltipIconComponent,
+    ],
 })
 export class CheckboxFieldComponent extends BaseField {
     @Input({ required: true }) public checked: boolean;

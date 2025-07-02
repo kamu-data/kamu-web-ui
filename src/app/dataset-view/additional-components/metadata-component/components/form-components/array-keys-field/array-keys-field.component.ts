@@ -20,12 +20,17 @@ import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
+        //-----//
+        NgFor,
         FormsModule,
         ReactiveFormsModule,
-        RxReactiveFormsModule,
-        TooltipIconComponent,
-        NgFor,
+
+        //-----//
         NgxTrimDirectiveModule,
+        RxReactiveFormsModule,
+
+        //-----//
+        TooltipIconComponent,
     ],
 })
 export class ArrayKeysFieldComponent extends BaseField {

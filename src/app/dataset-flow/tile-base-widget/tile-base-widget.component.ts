@@ -29,7 +29,17 @@ import { NgFor, NgClass, NgIf, SlicePipe, DatePipe } from "@angular/common";
     styleUrls: ["./tile-base-widget.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [NgFor, NgbPopover, NgClass, NgIf, SlicePipe, DatePipe],
+    imports: [
+        //-----//
+        DatePipe,
+        NgFor,
+        NgClass,
+        NgIf,
+        SlicePipe,
+
+        //-----//
+        NgbPopover,
+    ],
 })
 export class TileBaseWidgetComponent {
     @Input({ required: true }) public nodes: FlowItemWidgetDataFragment[];

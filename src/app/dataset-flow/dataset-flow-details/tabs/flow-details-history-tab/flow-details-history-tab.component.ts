@@ -27,7 +27,20 @@ import { MatDividerModule } from "@angular/material/divider";
     styleUrls: ["./flow-details-history-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [MatDividerModule, NgFor, NgIf, MatIconModule, NgClass, DatePipe, SafeHtmlPipe],
+    imports: [
+        //-----//
+        NgFor,
+        NgIf,
+        NgClass,
+        DatePipe,
+
+        //-----//
+        MatDividerModule,
+        MatIconModule,
+
+        //-----//
+        SafeHtmlPipe,
+    ],
 })
 export class FlowDetailsHistoryTabComponent {
     @Input(RoutingResolvers.FLOW_DETAILS_HISTORY_KEY) public response: DatasetFlowByIdResponse;

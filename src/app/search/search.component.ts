@@ -24,12 +24,17 @@ import { FeatureFlagDirective } from "../common/directives/feature-flag.directiv
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
-        FeatureFlagDirective,
+        //-----//
+        FormsModule,
         NgFor,
         NgIf,
+
+        //-----//
         MatCheckboxModule,
-        FormsModule,
+
+        //-----//
         DatasetListComponent,
+        FeatureFlagDirective,
         PaginationComponent,
     ],
 })

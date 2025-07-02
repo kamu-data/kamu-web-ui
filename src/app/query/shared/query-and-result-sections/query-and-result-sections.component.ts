@@ -55,17 +55,22 @@ import { NgIf, AsyncPipe } from "@angular/common";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
+        //-----//
+        AsyncPipe,
         NgIf,
-        EngineSelectComponent,
+
+        //-----//
         MatIconModule,
         MatMenuModule,
         MatDividerModule,
         MatProgressBarModule,
+
+        //-----//
+        EngineSelectComponent,
         SqlEditorComponent,
         RequestTimerComponent,
         DynamicTableComponent,
         LoadMoreComponent,
-        AsyncPipe,
     ],
 })
 export class QueryAndResultSectionsComponent extends BaseComponent implements OnInit, OnChanges {

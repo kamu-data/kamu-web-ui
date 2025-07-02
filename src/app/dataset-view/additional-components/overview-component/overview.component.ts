@@ -52,23 +52,28 @@ import { NgIf, NgFor, AsyncPipe, DecimalPipe, TitleCasePipe } from "@angular/com
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
+        //-----//
+        AsyncPipe,
+        DecimalPipe,
+        TitleCasePipe,
         NgIf,
-        MatChipsModule,
         NgFor,
-        FeatureFlagDirective,
-        MatIconModule,
         RouterLink,
+
+        //-----//
+        MatChipsModule,
+        MatIconModule,
+        NgbTooltip,
+
+        //-----//
+        FeatureFlagDirective,
         OverviewHistorySummaryHeaderComponent,
         DynamicTableComponent,
         DragAndDropDirective,
         ReadmeSectionComponent,
         DisplayHashComponent,
-        NgbTooltip,
-        DisplayTimeComponent,
-        AsyncPipe,
-        DecimalPipe,
-        TitleCasePipe,
         DisplaySizePipe,
+        DisplayTimeComponent,
     ],
 })
 export class OverviewComponent extends BaseDatasetDataComponent implements OnInit {

@@ -42,13 +42,16 @@ export interface QueryExplainerComponentData {
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
+        //-----//
+        AsyncPipe,
+        FormsModule,
         NgIf,
+
+        //-----//
         VerifyResultSectionComponent,
         InputDataSectionComponent,
         CommitmentDataSectionComponent,
         ReproducedResultSectionComponent,
-        FormsModule,
-        AsyncPipe,
     ],
 })
 export class QueryExplainerComponent extends BaseComponent implements OnInit {

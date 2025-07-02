@@ -17,7 +17,9 @@ import { MatDividerModule } from "@angular/material/divider";
 @NgModule({
     imports: [
         CommonModule,
+
         MatDividerModule,
+
         ModalComponent,
         ModalDialogComponent,
         ModalImageComponent,

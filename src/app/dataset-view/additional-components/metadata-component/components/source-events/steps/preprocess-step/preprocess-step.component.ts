@@ -24,7 +24,15 @@ import { FormsModule } from "@angular/forms";
     styleUrls: ["./preprocess-step.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [FormsModule, NgIf, EngineSectionComponent, QueriesSectionComponent],
+    imports: [
+        //-----//
+        FormsModule,
+        NgIf,
+
+        //-----//
+        EngineSectionComponent,
+        QueriesSectionComponent,
+    ],
 })
 export class PreprocessStepComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public showPreprocessStep: boolean;

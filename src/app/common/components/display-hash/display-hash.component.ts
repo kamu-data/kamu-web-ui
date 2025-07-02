@@ -19,7 +19,15 @@ import { NgIf, SlicePipe } from "@angular/common";
     templateUrl: "./display-hash.component.html",
     styleUrls: ["./display-hash.component.scss"],
     standalone: true,
-    imports: [NgIf, RouterLink, MatIconModule, SlicePipe],
+    imports: [
+        //-----//
+        NgIf,
+        RouterLink,
+        SlicePipe,
+
+        //-----//
+        MatIconModule,
+    ],
 })
 export class DisplayHashComponent {
     @Input({ required: true }) public value: string;

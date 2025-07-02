@@ -18,7 +18,18 @@ import { MatIconModule } from "@angular/material/icon";
     styleUrls: ["./queries-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [NgIf, MatIconModule, NgFor, FormsModule, SqlEditorComponent],
+    imports: [
+        //-----//
+        FormsModule,
+        NgIf,
+        NgFor,
+
+        //-----//
+        MatIconModule,
+
+        //-----//
+        SqlEditorComponent,
+    ],
 })
 export class QueriesSectionComponent {
     @Input({ required: true }) public queries: Omit<SqlQueryStep, "__typename">[];

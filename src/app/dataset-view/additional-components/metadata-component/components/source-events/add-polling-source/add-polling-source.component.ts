@@ -39,15 +39,20 @@ import { RouterLink } from "@angular/router";
     ],
     standalone: true,
     imports: [
-        RouterLink,
-        NgIf,
+        //-----//
         FormsModule,
+        NgIf,
         ReactiveFormsModule,
+        RouterLink,
+
+        //-----//
         MatStepperModule,
+
+        //-----//
         BaseStepComponent,
-        StepperNavigationComponent,
         PrepareStepComponent,
         PreprocessStepComponent,
+        StepperNavigationComponent,
     ],
 })
 export class AddPollingSourceComponent extends BaseSourceEventComponent implements OnInit {

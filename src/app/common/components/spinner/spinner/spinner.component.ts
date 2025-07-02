@@ -16,7 +16,14 @@ import { NgIf, AsyncPipe } from "@angular/common";
     styleUrls: ["./spinner.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [NgIf, MatProgressBarModule, AsyncPipe],
+    imports: [
+        //-----//
+        AsyncPipe,
+        NgIf,
+
+        //-----//
+        MatProgressBarModule,
+    ],
 })
 export class SpinnerComponent {
     private spinnerService = inject(SpinnerService);

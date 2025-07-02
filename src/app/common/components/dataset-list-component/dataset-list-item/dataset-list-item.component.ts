@@ -26,17 +26,22 @@ import { NgIf, NgFor } from "@angular/common";
     styleUrls: ["./dataset-list-item.component.scss"],
     standalone: true,
     imports: [
-        NgIf,
-        MatIconModule,
-        RouterLink,
-        DatasetVisibilityComponent,
-        FeatureFlagDirective,
-        NgbPopover,
-        MatChipsModule,
+        //-----//
         NgFor,
-        DisplayTimeComponent,
-        NgbRating,
+        NgIf,
+        RouterLink,
+
+        //-----//
+        MatChipsModule,
+        MatIconModule,
         MatDividerModule,
+        NgbPopover,
+        NgbRating,
+
+        //-----//
+        DatasetVisibilityComponent,
+        DisplayTimeComponent,
+        FeatureFlagDirective,
     ],
 })
 export class DatasetListItemComponent {

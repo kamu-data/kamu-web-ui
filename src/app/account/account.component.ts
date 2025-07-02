@@ -34,15 +34,20 @@ import { NgIf, AsyncPipe } from "@angular/common";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
+        //-----//
+        AsyncPipe,
         NgIf,
-        FeatureFlagDirective,
-        MatDividerModule,
-        MatButtonToggleModule,
-        MatIconModule,
         RouterLink,
         RouterOutlet,
-        AsyncPipe,
+
+        //-----//
+        MatButtonToggleModule,
+        MatDividerModule,
+        MatIconModule,
+
+        //-----//
         DisplayAccountNamePipe,
+        FeatureFlagDirective,
     ],
 })
 export class AccountComponent {

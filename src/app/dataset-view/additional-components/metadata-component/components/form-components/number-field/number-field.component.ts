@@ -17,7 +17,19 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
     templateUrl: "./number-field.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, RxReactiveFormsModule, TooltipIconComponent, NgIf, JsonPipe],
+    imports: [
+        //-----//
+        NgIf,
+        JsonPipe,
+        FormsModule,
+        ReactiveFormsModule,
+
+        //-----//
+        RxReactiveFormsModule,
+
+        //-----//
+        TooltipIconComponent,
+    ],
 })
 export class NumberFieldComponent extends BaseField {
     @Input({ required: true }) public value: string;

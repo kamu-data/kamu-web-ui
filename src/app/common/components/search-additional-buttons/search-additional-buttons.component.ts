@@ -32,7 +32,18 @@ import { NgIf } from "@angular/common";
     styleUrls: ["./search-additional-buttons.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [NgIf, MatButtonModule, MatMenuModule, MatIconModule, SearchAdditionalButtonsNavComponent],
+    imports: [
+        //-----//
+        NgIf,
+
+        //-----//
+        MatButtonModule,
+        MatIconModule,
+        MatMenuModule,
+
+        //-----//
+        SearchAdditionalButtonsNavComponent,
+    ],
 })
 export class SearchAdditionalButtonsComponent implements OnInit {
     @Input({ required: true })

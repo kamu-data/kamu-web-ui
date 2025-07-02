@@ -29,7 +29,15 @@ import { MatDividerModule } from "@angular/material/divider";
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: OWL_DATE_TIME_FORMATS, useValue: MY_MOMENT_FORMATS }],
     standalone: true,
-    imports: [MatDividerModule, MatIconModule, FormsModule, OwlDateTimeModule],
+    imports: [
+        //-----//
+        FormsModule,
+
+        //-----//
+        MatDividerModule,
+        MatIconModule,
+        OwlDateTimeModule,
+    ],
 })
 export class EditWatermarkModalComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public currentWatermark: MaybeNullOrUndefined<string>;

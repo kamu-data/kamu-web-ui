@@ -35,13 +35,18 @@ import { NgIf, AsyncPipe } from "@angular/common";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
-        NgIf,
-        MatIconModule,
-        TileBaseWidgetComponent,
-        FlowsTableComponent,
-        PaginationComponent,
-        MatProgressBarModule,
+        //-----//
         AsyncPipe,
+        NgIf,
+
+        //-----//
+        MatIconModule,
+        MatProgressBarModule,
+
+        //-----//
+        FlowsTableComponent,
+        TileBaseWidgetComponent,
+        PaginationComponent,
     ],
 })
 export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent implements OnInit {

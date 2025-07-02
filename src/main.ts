@@ -12,9 +12,8 @@ import { MarkdownModule } from "ngx-markdown";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { bootstrapApplication } from "@angular/platform-browser";
 import { MAT_RIPPLE_GLOBAL_OPTIONS } from "@angular/material/core";
-import { logError } from "./app/common/helpers/app.helpers";
+import { HIGHLIGHT_OPTIONS_PROVIDER, logError } from "./app/common/helpers/app.helpers";
 import { firstValueFrom } from "rxjs";
-import { HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 import { apolloCache } from "./app/common/helpers/apollo-cache.helper";
 import { ErrorTexts } from "./app/common/values/errors.text";
 import { ToastrService } from "ngx-toastr";
@@ -110,16 +109,7 @@ const Services = [
         },
         deps: [HttpLink, AppConfigService, LocalStorageService, Injector],
     },
-    {
-        provide: HIGHLIGHT_OPTIONS,
-        useValue: {
-            coreLibraryLoader: () => import("highlight.js/lib/core"),
-            languages: {
-                sql: () => import("highlight.js/lib/languages/sql"),
-                yaml: () => import("highlight.js/lib/languages/yaml"),
-            },
-        },
-    },
+    HIGHLIGHT_OPTIONS_PROVIDER,
     {
         provide: APP_INITIALIZER,
         useFactory: (loggedUserService: LoggedUserService) => {

@@ -22,7 +22,8 @@ import { MergeStrategyPropertyComponent } from "../common/merge-strategy-propert
 import { UnsupportedPropertyComponent } from "../common/unsupported-property/unsupported-property.component";
 import { YamlEventViewerComponent } from "../../../../../../common/components/yaml-event-viewer/yaml-event-viewer.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { HIGHLIGHT_OPTIONS, HighlightModule } from "ngx-highlightjs";
+import { HighlightModule } from "ngx-highlightjs";
+import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
 
 describe("SetPollingSourceEventComponent", () => {
     let component: SetPollingSourceEventComponent;
@@ -46,18 +47,7 @@ describe("SetPollingSourceEventComponent", () => {
                 YamlEventViewerComponent,
                 HighlightModule,
             ],
-            providers: [
-                {
-                    provide: HIGHLIGHT_OPTIONS,
-                    useValue: {
-                        coreLibraryLoader: () => import("highlight.js/lib/core"),
-                        languages: {
-                            sql: () => import("highlight.js/lib/languages/sql"),
-                            yaml: () => import("highlight.js/lib/languages/yaml"),
-                        },
-                    },
-                },
-            ],
+            providers: [HIGHLIGHT_OPTIONS_PROVIDER],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SetPollingSourceEventComponent);

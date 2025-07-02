@@ -12,6 +12,7 @@ import { DataSchema } from "../../api/kamu.graphql.interface";
 import { DatasetSchema } from "../../interface/dataset.interface";
 import AppValues from "../values/app.values";
 import { format, isSameDay, subDays } from "date-fns";
+import { HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 
 export function requireValue<T>(input: MaybeNull<T>) {
     if (input === null) throw Error("value is required!");
@@ -204,3 +205,14 @@ export function isEqual(value: any, other: any) {
     }
     return true;
 }
+
+export const HIGHLIGHT_OPTIONS_PROVIDER = {
+    provide: HIGHLIGHT_OPTIONS,
+    useValue: {
+        coreLibraryLoader: () => import("highlight.js/lib/core"),
+        languages: {
+            sql: () => import("highlight.js/lib/languages/sql"),
+            yaml: () => import("highlight.js/lib/languages/yaml"),
+        },
+    },
+};

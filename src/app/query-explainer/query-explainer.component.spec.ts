@@ -22,7 +22,7 @@ import {
     mockTextareaCommitment,
     mockVerifyQueryResponseSuccess,
 } from "./query-explainer.mocks";
-import { HIGHLIGHT_OPTIONS, HighlightModule } from "ngx-highlightjs";
+import { HighlightModule } from "ngx-highlightjs";
 import { ReproducedResultSectionComponent } from "./components/reproduced-result-section/reproduced-result-section.component";
 import { DatasetService } from "../dataset-view/dataset.service";
 import { mockDatasetByIdQuery } from "../api/mock/dataset.mock";
@@ -35,6 +35,7 @@ import {
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { provideAnimations } from "@angular/platform-browser/animations";
+import { HIGHLIGHT_OPTIONS_PROVIDER } from "../common/helpers/app.helpers";
 
 describe("QueryExplainerComponent", () => {
     let component: QueryExplainerComponent;
@@ -58,20 +59,7 @@ describe("QueryExplainerComponent", () => {
                 InputDataSectionComponent,
                 CommitmentDataSectionComponent,
             ],
-            providers: [
-                Apollo,
-                provideAnimations(),
-                provideToastr(),
-                {
-                    provide: HIGHLIGHT_OPTIONS,
-                    useValue: {
-                        coreLibraryLoader: () => import("highlight.js/lib/core"),
-                        languages: {
-                            sql: () => import("highlight.js/lib/languages/sql"),
-                        },
-                    },
-                },
-            ],
+            providers: [Apollo, provideAnimations(), provideToastr(), HIGHLIGHT_OPTIONS_PROVIDER],
         });
 
         registerMatSvgIcons();

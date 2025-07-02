@@ -13,7 +13,8 @@ import { findElementByDataTestId } from "src/app/common/helpers/base-test.helper
 import { metadataBlockSetVocab } from "src/app/common/helpers/data.helpers.spec";
 import { YamlEventViewerComponent } from "../../../../common/components/yaml-event-viewer/yaml-event-viewer.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { HIGHLIGHT_OPTIONS, HighlightModule } from "ngx-highlightjs";
+import { HighlightModule } from "ngx-highlightjs";
+import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
 
 describe("YamlViewSectionComponent", () => {
     let component: YamlViewSectionComponent;
@@ -30,18 +31,7 @@ describe("YamlViewSectionComponent", () => {
                 YamlViewSectionComponent,
                 YamlEventViewerComponent,
             ],
-            providers: [
-                {
-                    provide: HIGHLIGHT_OPTIONS,
-                    useValue: {
-                        coreLibraryLoader: () => import("highlight.js/lib/core"),
-                        languages: {
-                            sql: () => import("highlight.js/lib/languages/sql"),
-                            yaml: () => import("highlight.js/lib/languages/yaml"),
-                        },
-                    },
-                },
-            ],
+            providers: [HIGHLIGHT_OPTIONS_PROVIDER],
         })
             .overrideComponent(YamlViewSectionComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },

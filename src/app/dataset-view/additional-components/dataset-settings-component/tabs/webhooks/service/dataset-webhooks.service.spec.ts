@@ -9,7 +9,7 @@ import { TestBed } from "@angular/core/testing";
 import { DatasetWebhooksService } from "./dataset-webhooks.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { Apollo } from "apollo-angular";
-import { ToastrModule, ToastrService } from "ngx-toastr";
+import { provideToastr, ToastrService } from "ngx-toastr";
 import { WebhooksApi } from "src/app/api/webhooks.api";
 import {
     mockDatasetWebhookCreateSubscriptionMutation,
@@ -29,6 +29,7 @@ import { of } from "rxjs";
 import { TEST_DATASET_ID } from "src/app/api/mock/dataset.mock";
 import { WebhookSubscription } from "src/app/api/kamu.graphql.interface";
 import { CreateWebhookSubscriptionSuccess } from "../create-edit-subscription-modal/create-edit-subscription-modal.model";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("DatasetWebhooksService", () => {
     let service: DatasetWebhooksService;
@@ -40,8 +41,8 @@ describe("DatasetWebhooksService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo],
-            imports: [HttpClientTestingModule, ToastrModule.forRoot()],
+            providers: [Apollo, provideAnimations(), provideToastr()],
+            imports: [HttpClientTestingModule],
         });
         service = TestBed.inject(DatasetWebhooksService);
         webhooksApi = TestBed.inject(WebhooksApi);

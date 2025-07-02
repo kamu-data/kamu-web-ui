@@ -11,12 +11,22 @@ import { GrafanaLogsService } from "../../../../services/grafana-logs.service";
 import { DatasetFlowByIdResponse } from "../../dataset-flow-details.types";
 import { AppConfigService } from "src/app/app-config.service";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { MatIconModule } from "@angular/material/icon";
+import { NgIf } from "@angular/common";
 
 @Component({
     selector: "app-flow-details-logs-tab",
     templateUrl: "./flow-details-logs-tab.component.html",
     styleUrls: ["./flow-details-logs-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        NgIf,
+
+        //-----//
+        MatIconModule,
+    ],
 })
 export class FlowDetailsLogsTabComponent {
     @Input(RoutingResolvers.FLOW_DETAILS_LOGS_KEY) public flowDetails: DatasetFlowByIdResponse;

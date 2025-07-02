@@ -6,7 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { ChangeUserAccountPasswordFormType } from "./password-and-authentication-tab.component.types";
@@ -14,12 +14,30 @@ import { matchFieldsValidator } from "src/app/common/helpers/data.helpers";
 import { ErrorSets } from "src/app/common/directives/form-validation-errors.types";
 import { AccountService } from "src/app/account/account.service";
 import { AppConfigService } from "src/app/app-config.service";
+import { FormValidationErrorsDirective } from "../../../../common/directives/form-validation-errors.directive";
+import { AdminChangePasswordComponent } from "./components/admin-change-password/admin-change-password.component";
+import { NgIf } from "@angular/common";
+import { MatDividerModule } from "@angular/material/divider";
 
 @Component({
     selector: "app-password-and-authentication-tab",
     templateUrl: "./password-and-authentication-tab.component.html",
     styleUrls: ["./password-and-authentication-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        NgIf,
+        FormsModule,
+        ReactiveFormsModule,
+
+        //-----//
+        MatDividerModule,
+
+        //-----//
+        AdminChangePasswordComponent,
+        FormValidationErrorsDirective,
+    ],
 })
 export class PasswordAndAuthenticationTabComponent implements OnInit {
     @Input(RoutingResolvers.ACCOUNT_SETTINGS_PASSWORD_AND_AUTHENTICATION_KEY) public account: AccountFragment;

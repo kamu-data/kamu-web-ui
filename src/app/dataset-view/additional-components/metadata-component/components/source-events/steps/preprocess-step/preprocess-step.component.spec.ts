@@ -31,7 +31,6 @@ describe("PreprocessStepComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [PreprocessStepComponent, QueriesSectionComponent, EngineSectionComponent],
             imports: [
                 ReactiveFormsModule,
                 ApolloModule,
@@ -40,6 +39,9 @@ describe("PreprocessStepComponent", () => {
                 MatIconModule,
                 SharedTestModule,
                 EditorModule,
+                PreprocessStepComponent,
+                QueriesSectionComponent,
+                EngineSectionComponent,
             ],
             providers: [Apollo],
         })

@@ -15,8 +15,7 @@ describe("CachePropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [CachePropertyComponent],
-            imports: [SharedTestModule],
+            imports: [SharedTestModule, CachePropertyComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(CachePropertyComponent);

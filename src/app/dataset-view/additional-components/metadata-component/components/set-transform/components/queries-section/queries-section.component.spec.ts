@@ -18,8 +18,7 @@ describe("QueriesSectionComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [QueriesSectionComponent],
-            imports: [FormsModule, MatIconModule, EditorModule],
+            imports: [FormsModule, MatIconModule, EditorModule, QueriesSectionComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(QueriesSectionComponent);

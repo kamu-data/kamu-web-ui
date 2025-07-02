@@ -29,7 +29,6 @@ describe("EditLicenseModalComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [EditLicenseModalComponent],
             imports: [
                 ApolloTestingModule,
                 FormsModule,
@@ -37,6 +36,7 @@ describe("EditLicenseModalComponent", () => {
                 MatDividerModule,
                 SharedTestModule,
                 HttpClientTestingModule,
+                EditLicenseModalComponent,
             ],
             providers: [Apollo, NgbActiveModal],
         }).compileComponents();

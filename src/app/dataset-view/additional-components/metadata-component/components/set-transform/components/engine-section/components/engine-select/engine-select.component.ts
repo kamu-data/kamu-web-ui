@@ -21,12 +21,15 @@ import {
 import { EngineDesc } from "src/app/api/kamu.graphql.interface";
 import { DataHelpers } from "src/app/common/helpers/data.helpers";
 import { EventPropertyLogo } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
+import { NgIf, NgFor } from "@angular/common";
 
 @Component({
     selector: "app-engine-select",
     templateUrl: "./engine-select.component.html",
     styleUrls: ["./engine-select.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [NgIf, NgFor],
 })
 export class EngineSelectComponent implements OnInit {
     @ViewChild("input", { static: true }) public input: ElementRef;

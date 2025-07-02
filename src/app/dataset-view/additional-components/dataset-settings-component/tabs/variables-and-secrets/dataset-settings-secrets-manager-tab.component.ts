@@ -6,8 +6,8 @@
  */
 
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit, ViewChild } from "@angular/core";
-import { MatSort } from "@angular/material/sort";
-import { MatTableDataSource } from "@angular/material/table";
+import { MatSort, MatSortModule } from "@angular/material/sort";
+import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { EditKeyValueModalComponent } from "./components/edit-key-value-modal/edit-key-value-modal.component";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ModalService } from "src/app/common/components/modal/modal.service";
@@ -29,6 +29,11 @@ import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DatasetEnvironmentVariablesService } from "./dataset-environment-variables.service";
 import ProjectLinks from "src/app/project-links";
+import { PaginationComponent } from "../../../../../common/components/pagination-component/pagination.component";
+import { NgIf } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { MatIconModule } from "@angular/material/icon";
+import { MatDividerModule } from "@angular/material/divider";
 
 export interface EnvVariableElement {
     key: string;
@@ -41,6 +46,21 @@ export interface EnvVariableElement {
     templateUrl: "./dataset-settings-secrets-manager-tab.component.html",
     styleUrls: ["./dataset-settings-secrets-manager-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        FormsModule,
+        NgIf,
+
+        //-----//
+        MatDividerModule,
+        MatIconModule,
+        MatTableModule,
+        MatSortModule,
+
+        //-----//
+        PaginationComponent,
+    ],
 })
 export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_SETTINGS_VARIABLES_AND_SECRETS_KEY)

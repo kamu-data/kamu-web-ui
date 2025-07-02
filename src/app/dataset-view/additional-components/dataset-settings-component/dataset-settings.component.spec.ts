@@ -15,7 +15,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ActivatedRoute } from "@angular/router";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { DatasetSettingsGeneralTabComponent } from "./tabs/general/dataset-settings-general-tab.component";
 import { DatasetSettingsSchedulingTabComponent } from "./tabs/scheduling/dataset-settings-scheduling-tab.component";
 import { SettingsTabsEnum } from "./dataset-settings.model";
@@ -29,11 +29,9 @@ import { mockMetadataRootUpdate, mockOverviewDataUpdate } from "../data-tabs.moc
 import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
-import { FeatureFlagModule } from "src/app/common/directives/feature-flag.module";
 import { RouterTestingModule } from "@angular/router/testing";
 import { of } from "rxjs";
-import { BatchingTriggerModule } from "./tabs/transform-options/batching-trigger-form/batching-trigger.module";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("DatasetSettingsComponent", () => {
     let component: DatasetSettingsComponent;
@@ -42,14 +40,10 @@ describe("DatasetSettingsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                DatasetSettingsComponent,
-                DatasetSettingsGeneralTabComponent,
-                DatasetSettingsSchedulingTabComponent,
-                TooltipIconComponent,
-            ],
             providers: [
                 Apollo,
+                provideAnimations(),
+                provideToastr(),
                 {
                     provide: ActivatedRoute,
                     useValue: {
@@ -78,17 +72,17 @@ describe("DatasetSettingsComponent", () => {
                 MatDividerModule,
                 MatIconModule,
                 ApolloTestingModule,
-                ToastrModule.forRoot(),
                 MatDividerModule,
                 MatSlideToggleModule,
                 MatRadioModule,
                 MatIconModule,
                 NgbTooltipModule,
                 MatCheckboxModule,
-                BatchingTriggerModule,
-                DatasetVisibilityModule,
-                FeatureFlagModule,
                 RouterTestingModule,
+                DatasetSettingsComponent,
+                DatasetSettingsGeneralTabComponent,
+                DatasetSettingsSchedulingTabComponent,
+                TooltipIconComponent,
             ],
         })
             .overrideComponent(DatasetSettingsComponent, {

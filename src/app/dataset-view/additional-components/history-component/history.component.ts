@@ -19,11 +19,24 @@ import { filter, Observable } from "rxjs";
 import { NavigationEnd, Router } from "@angular/router";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
+import { PaginationComponent } from "../../../common/components/pagination-component/pagination.component";
+import { TimelineComponent } from "../../../common/components/timeline-component/timeline.component";
+import { NgIf, AsyncPipe } from "@angular/common";
 
 @Component({
     selector: "app-history",
     templateUrl: "./history.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        AsyncPipe,
+        NgIf,
+
+        //-----//
+        TimelineComponent,
+        PaginationComponent,
+    ],
 })
 export class HistoryComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_INFO_KEY) public datasetInfo: DatasetInfo;

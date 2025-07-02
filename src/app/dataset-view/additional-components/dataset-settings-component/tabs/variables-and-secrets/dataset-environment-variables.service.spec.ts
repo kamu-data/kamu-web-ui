@@ -7,7 +7,7 @@
 
 import { TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
-import { ToastrModule, ToastrService } from "ngx-toastr";
+import { provideToastr, ToastrService } from "ngx-toastr";
 import { EnvironmentVariablesApi } from "../../../../../api/environment-variables.api";
 import {
     MOCK_ENV_VAR_ID,
@@ -31,6 +31,7 @@ import {
 } from "../../../../../api/mock/dataset.mock";
 import { ViewDatasetEnvVar, ViewDatasetEnvVarConnection } from "../../../../../api/kamu.graphql.interface";
 import { DatasetEnvironmentVariablesService } from "./dataset-environment-variables.service";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("EnvironmentVariablesService", () => {
     let service: DatasetEnvironmentVariablesService;
@@ -39,8 +40,7 @@ describe("EnvironmentVariablesService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo],
-            imports: [ToastrModule.forRoot()],
+            providers: [Apollo, provideAnimations(), provideToastr()],
         });
         service = TestBed.inject(DatasetEnvironmentVariablesService);
         environmentVariablesApi = TestBed.inject(EnvironmentVariablesApi);

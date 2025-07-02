@@ -7,10 +7,13 @@
 
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { BaseComponent } from "src/app/common/components/base.component";
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
     selector: "app-unsupported-event",
     templateUrl: "./unsupported-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [MatIconModule],
 })
 export class UnsupportedEventComponent extends BaseComponent {}

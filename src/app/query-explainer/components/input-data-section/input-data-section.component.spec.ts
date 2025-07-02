@@ -13,9 +13,8 @@ import {
     mockQueryExplainerResponse,
     mockVerifyQueryResponseSuccess,
 } from "../../query-explainer.mocks";
-import { DisplayHashModule } from "src/app/common/components/display-hash/display-hash.module";
-import { HIGHLIGHT_OPTIONS, HighlightModule } from "ngx-highlightjs";
-import { ToastrModule } from "ngx-toastr";
+import { HighlightModule } from "ngx-highlightjs";
+import { provideToastr } from "ngx-toastr";
 import { ActivatedRoute, RouterModule } from "@angular/router";
 import { of } from "rxjs";
 import { mockDatasetInfo } from "src/app/search/mock.data";
@@ -26,6 +25,8 @@ import { MarkdownModule } from "ngx-markdown";
 import { HttpClient } from "@angular/common/http";
 import { SecurityContext } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
+import { provideAnimations } from "@angular/platform-browser/animations";
+import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
 
 describe("InputDataSectionComponent", () => {
     let component: InputDataSectionComponent;
@@ -33,11 +34,8 @@ describe("InputDataSectionComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [InputDataSectionComponent],
             imports: [
-                DisplayHashModule,
                 HighlightModule,
-                ToastrModule.forRoot(),
                 RouterModule,
                 MatIconModule,
                 HttpClientTestingModule,
@@ -45,8 +43,11 @@ describe("InputDataSectionComponent", () => {
                     loader: HttpClient,
                     sanitize: SecurityContext.NONE,
                 }),
+                InputDataSectionComponent,
             ],
             providers: [
+                provideAnimations(),
+                provideToastr(),
                 {
                     provide: ActivatedRoute,
                     useValue: {
@@ -62,15 +63,7 @@ describe("InputDataSectionComponent", () => {
                         },
                     },
                 },
-                {
-                    provide: HIGHLIGHT_OPTIONS,
-                    useValue: {
-                        coreLibraryLoader: () => import("highlight.js/lib/core"),
-                        languages: {
-                            sql: () => import("highlight.js/lib/languages/sql"),
-                        },
-                    },
-                },
+                HIGHLIGHT_OPTIONS_PROVIDER,
             ],
         });
 

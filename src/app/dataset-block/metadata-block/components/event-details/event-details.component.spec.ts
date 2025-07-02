@@ -21,8 +21,7 @@ describe("EventDetailsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [EventDetailsComponent, SetPollingSourceEventComponent],
-            imports: [SharedTestModule],
+            imports: [SharedTestModule, EventDetailsComponent, SetPollingSourceEventComponent],
             providers: [Apollo, DatasetApi],
         }).compileComponents();
 

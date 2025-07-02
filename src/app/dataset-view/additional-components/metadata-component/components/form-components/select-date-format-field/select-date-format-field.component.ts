@@ -8,14 +8,33 @@
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { BaseField } from "../base-field";
 import { EventTimeSourceKind } from "../../source-events/add-polling-source/add-polling-source-form.types";
-import { FormBuilder, FormGroup } from "@angular/forms";
-import { RxwebValidators } from "@rxweb/reactive-form-validators";
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { RxwebValidators, RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { TypeaheadFieldComponent } from "../typeahead-field/typeahead-field.component";
+import { InputFieldComponent } from "../input-field/input-field.component";
+import { NgIf } from "@angular/common";
+import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
 
 @Component({
     selector: "app-select-date-format-field",
     templateUrl: "./select-date-format-field.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        NgIf,
+        FormsModule,
+        ReactiveFormsModule,
+
+        //-----//
+        RxReactiveFormsModule,
+
+        //-----//
+        InputFieldComponent,
+        TooltipIconComponent,
+        TypeaheadFieldComponent,
+    ],
 })
 export class SelectDateFormatFieldComponent extends BaseField implements OnInit {
     @Input({ required: true }) public innerTooltips: Record<string, string>;

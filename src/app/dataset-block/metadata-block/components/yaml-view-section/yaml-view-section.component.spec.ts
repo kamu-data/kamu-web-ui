@@ -6,13 +6,15 @@
  */
 
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { YamlViewSectionComponent } from "./yaml-view-section.component";
-import { ChangeDetectionStrategy, NO_ERRORS_SCHEMA } from "@angular/core";
+import { ChangeDetectionStrategy } from "@angular/core";
 import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { metadataBlockSetVocab } from "src/app/common/helpers/data.helpers.spec";
 import { YamlEventViewerComponent } from "../../../../common/components/yaml-event-viewer/yaml-event-viewer.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { HighlightModule } from "ngx-highlightjs";
+import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
 
 describe("YamlViewSectionComponent", () => {
     let component: YamlViewSectionComponent;
@@ -22,9 +24,14 @@ describe("YamlViewSectionComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [YamlViewSectionComponent, YamlEventViewerComponent],
-            imports: [ApolloTestingModule, SharedTestModule],
-            schemas: [NO_ERRORS_SCHEMA],
+            imports: [
+                ApolloTestingModule,
+                SharedTestModule,
+                HighlightModule,
+                YamlViewSectionComponent,
+                YamlEventViewerComponent,
+            ],
+            providers: [HIGHLIGHT_OPTIONS_PROVIDER],
         })
             .overrideComponent(YamlViewSectionComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
@@ -40,13 +47,12 @@ describe("YamlViewSectionComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check yaml event viewer  visible ", fakeAsync(() => {
+    it("should check yaml event viewer  visible ", () => {
         component.block = metadataBlockSetVocab;
         component.blockAsYaml = mockAddPushSourceYaml;
         fixture.detectChanges();
-        tick();
+
         const eventViewer = findElementByDataTestId(fixture, "yaml-event-viewer");
         expect(eventViewer).toBeDefined();
-        flush();
-    }));
+    });
 });

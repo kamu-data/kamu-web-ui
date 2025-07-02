@@ -6,7 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from "@angular/core";
-import { NgbActiveModal, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
+import { NgbActiveModal, NgbTypeaheadSelectItemEvent, NgbTypeahead } from "@ng-bootstrap/ng-bootstrap";
 import { OperatorFunction, Observable, debounceTime, distinctUntilChanged, tap, finalize, switchMap } from "rxjs";
 import { DatasetAccessRole, DatasetBasicsFragment, NameLookupResult } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
@@ -14,12 +14,30 @@ import AppValues from "src/app/common/values/app.values";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetCollaborationsService } from "../dataset-collaborations.service";
 import { CollaboratorModalResultType, ROLE_OPTIONS } from "./add-people-modal.model";
+import { MatIconModule } from "@angular/material/icon";
+import { FormsModule } from "@angular/forms";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { NgIf, NgFor } from "@angular/common";
+import { MatDividerModule } from "@angular/material/divider";
 
 @Component({
     selector: "app-add-people-modal",
     templateUrl: "./add-people-modal.component.html",
     styleUrls: ["./add-people-modal.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        FormsModule,
+        NgIf,
+        NgFor,
+
+        //-----//
+        MatDividerModule,
+        MatProgressSpinnerModule,
+        MatIconModule,
+        NgbTypeahead,
+    ],
 })
 export class AddPeopleModalComponent extends BaseComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

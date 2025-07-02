@@ -13,6 +13,7 @@ import AppValues from "src/app/common/values/app.values";
     templateUrl: "./return-to-cli.component.html",
     styleUrls: ["./return-to-cli.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
 })
 export class ReturnToCliComponent {
     public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;

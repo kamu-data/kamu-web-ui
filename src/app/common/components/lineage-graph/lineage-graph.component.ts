@@ -19,7 +19,7 @@ import {
     Output,
     ViewChild,
 } from "@angular/core";
-import { Node } from "@swimlane/ngx-graph";
+import { Node, GraphModule } from "@swimlane/ngx-graph";
 import { DatasetKind, DatasetLineageBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/values/app.values";
 import {
@@ -30,12 +30,33 @@ import {
 import { LineageGraphConfig, LINEAGE_CONFIG } from "./ligeage-graph.settings";
 import { SessionStorageService } from "src/app/services/session-storage.service";
 import { MaybeUndefined } from "src/app/interface/app.types";
+import { DisplaySizePipe } from "../../pipes/display-size.pipe";
+import { DisplayDatasetIdPipe } from "../../pipes/display-dataset-id.pipe";
+import { DisplayTimeComponent } from "../display-time/display-time.component";
+import { MatIconModule } from "@angular/material/icon";
+import { NgIf, DecimalPipe, TitleCasePipe } from "@angular/common";
 
 @Component({
     selector: "app-lineage-graph",
     templateUrl: "./lineage-graph.component.html",
     styleUrls: ["./lineage-graph.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        DecimalPipe,
+        NgIf,
+        TitleCasePipe,
+
+        //-----//
+        GraphModule,
+        MatIconModule,
+
+        //-----//
+        DisplayTimeComponent,
+        DisplayDatasetIdPipe,
+        DisplaySizePipe,
+    ],
 })
 export class LineageGraphComponent implements OnInit, OnChanges {
     @Input({ required: true }) public graph: LineageGraph;

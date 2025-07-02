@@ -17,7 +17,6 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { NgSelectModule } from "@ng-select/ng-select";
-import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
 import { WebhooksService } from "src/app/services/webhooks.service";
 import { of } from "rxjs";
 import { WebhookSubscriptionInput, WebhookSubscriptionStatus } from "src/app/api/kamu.graphql.interface";
@@ -29,7 +28,6 @@ import {
 } from "src/app/common/helpers/base-test.helpers.spec";
 import { WebhookSubscriptionModalAction } from "./create-edit-subscription-modal.model";
 import AppValues from "src/app/common/values/app.values";
-import { CopyToClipboardModule } from "src/app/common/components/copy-to-clipboard/copy-to-clipboard.module";
 
 describe("CreateEditSubscriptionModalComponent", () => {
     let component: CreateEditSubscriptionModalComponent;
@@ -42,7 +40,6 @@ describe("CreateEditSubscriptionModalComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [CreateEditSubscriptionModalComponent],
             imports: [
                 SharedTestModule,
                 ReactiveFormsModule,
@@ -52,8 +49,7 @@ describe("CreateEditSubscriptionModalComponent", () => {
                 MatIconModule,
                 NgSelectModule,
                 FormsModule,
-                FormValidationErrorsModule,
-                CopyToClipboardModule,
+                CreateEditSubscriptionModalComponent,
             ],
             providers: [Apollo, NgbActiveModal],
         });

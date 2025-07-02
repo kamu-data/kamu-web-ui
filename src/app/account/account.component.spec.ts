@@ -26,13 +26,12 @@ import { DisplayTimeComponent } from "src/app/common/components/display-time/dis
 import { MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { AccountFlowsTabComponent } from "./additional-components/account-flows-tab/account-flows-tab.component";
 import { LoggedUserService } from "../auth/logged-user.service";
 import { mockAccountDetails, TEST_AVATAR_URL, TEST_LOGIN } from "../api/mock/auth.mock";
 import { findElementByDataTestId } from "../common/helpers/base-test.helpers.spec";
-import { DatasetVisibilityModule } from "../common/components/dataset-visibility/dataset-visibility.module";
-import { DisplayAccountNameModule } from "../common/pipes/display-account-name.module";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("AccountComponent", () => {
     let component: AccountComponent;
@@ -52,14 +51,6 @@ describe("AccountComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                AccountComponent,
-                DatasetsTabComponent,
-                DatasetListItemComponent,
-                PaginationComponent,
-                DisplayTimeComponent,
-                AccountFlowsTabComponent,
-            ],
             imports: [
                 ApolloTestingModule,
                 MatIconModule,
@@ -70,13 +61,18 @@ describe("AccountComponent", () => {
                 NgbPopoverModule,
                 NgbRatingModule,
                 HttpClientTestingModule,
-                ToastrModule.forRoot(),
                 RouterModule,
-                DatasetVisibilityModule,
-                DisplayAccountNameModule,
+                AccountComponent,
+                DatasetsTabComponent,
+                DatasetListItemComponent,
+                PaginationComponent,
+                DisplayTimeComponent,
+                AccountFlowsTabComponent,
             ],
             providers: [
                 DatasetApi,
+                provideAnimations(),
+                provideToastr(),
                 {
                     provide: ActivatedRoute,
                     useValue: {

@@ -31,7 +31,7 @@ import {
     getInputElementByDataTestId,
 } from "../../../../../common/helpers/base-test.helpers.spec";
 import { TEST_ACCOUNT_ID } from "src/app/api/mock/auth.mock";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { MatRadioModule } from "@angular/material/radio";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetFlowType } from "src/app/api/kamu.graphql.interface";
@@ -40,10 +40,9 @@ import AppValues from "src/app/common/values/app.values";
 import { DatasetFlowsService } from "../../../flows-component/services/dataset-flows.service";
 import { DatasetService } from "../../../../dataset.service";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { DatasetVisibilityModule } from "src/app/common/components/dataset-visibility/dataset-visibility.module";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { ActivatedRoute } from "@angular/router";
-import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("DatasetSettingsGeneralTabComponent", () => {
     let component: DatasetSettingsGeneralTabComponent;
@@ -57,7 +56,6 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DatasetSettingsGeneralTabComponent, TooltipIconComponent],
             imports: [
                 ReactiveFormsModule,
                 HttpClientTestingModule,
@@ -65,17 +63,18 @@ describe("DatasetSettingsGeneralTabComponent", () => {
                 MatIconModule,
                 ApolloModule,
                 ApolloTestingModule,
-                ToastrModule.forRoot(),
                 MatRadioModule,
                 MatIconModule,
                 NgbTooltipModule,
                 MatCheckboxModule,
                 FormsModule,
-                DatasetVisibilityModule,
-                FormValidationErrorsModule,
+                DatasetSettingsGeneralTabComponent,
+                TooltipIconComponent,
             ],
             providers: [
                 FormBuilder,
+                provideAnimations(),
+                provideToastr(),
                 {
                     provide: ActivatedRoute,
                     useValue: {

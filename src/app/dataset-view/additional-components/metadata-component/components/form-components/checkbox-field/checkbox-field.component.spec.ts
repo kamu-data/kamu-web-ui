@@ -19,8 +19,13 @@ describe("CheckboxFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [CheckboxFieldComponent, TooltipIconComponent],
-            imports: [ReactiveFormsModule, NgbTooltipModule, SharedTestModule],
+            imports: [
+                ReactiveFormsModule,
+                NgbTooltipModule,
+                SharedTestModule,
+                CheckboxFieldComponent,
+                TooltipIconComponent,
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(CheckboxFieldComponent);

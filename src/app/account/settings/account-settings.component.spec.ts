@@ -20,9 +20,9 @@ import {
 import { of } from "rxjs";
 import { LoginService } from "../../auth/login/login.service";
 import { MatIconModule } from "@angular/material/icon";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
-import { AccountSettingsModule } from "./account-settings.module";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("AccountSettingsComponent", () => {
     let component: AccountSettingsComponent;
@@ -33,14 +33,13 @@ describe("AccountSettingsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [AccountSettingsComponent],
+            providers: [provideAnimations(), provideToastr()],
             imports: [
                 ApolloTestingModule,
-                ToastrModule.forRoot(),
                 RouterTestingModule,
                 HttpClientTestingModule,
                 MatIconModule,
-                AccountSettingsModule,
+                AccountSettingsComponent,
             ],
         }).compileComponents();
 

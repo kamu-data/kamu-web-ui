@@ -18,7 +18,7 @@ describe("FlowDetailsSummaryTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [FlowDetailsSummaryTabComponent],
+            imports: [FlowDetailsSummaryTabComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(FlowDetailsSummaryTabComponent);

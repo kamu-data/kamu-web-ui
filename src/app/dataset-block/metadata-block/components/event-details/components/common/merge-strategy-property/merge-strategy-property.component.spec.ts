@@ -15,8 +15,7 @@ describe("MergeStrategyPropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [MergeStrategyPropertyComponent],
-            imports: [SharedTestModule],
+            imports: [SharedTestModule, MergeStrategyPropertyComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(MergeStrategyPropertyComponent);

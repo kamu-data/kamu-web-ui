@@ -14,7 +14,7 @@ describe("FlowDetailsAdminTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [FlowDetailsAdminTabComponent],
+            imports: [FlowDetailsAdminTabComponent],
         });
         fixture = TestBed.createComponent(FlowDetailsAdminTabComponent);
         component = fixture.componentInstance;

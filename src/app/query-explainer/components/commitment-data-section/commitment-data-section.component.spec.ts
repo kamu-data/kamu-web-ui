@@ -11,7 +11,6 @@ import { mockQueryExplainerResponse, mockVerifyQueryResponseSuccess } from "../.
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { MatIconModule } from "@angular/material/icon";
-import { CopyToClipboardModule } from "src/app/common/components/copy-to-clipboard/copy-to-clipboard.module";
 
 describe("CommitmentDataSectionComponent", () => {
     let component: CommitmentDataSectionComponent;
@@ -19,8 +18,7 @@ describe("CommitmentDataSectionComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [CommitmentDataSectionComponent],
-            imports: [MatIconModule, HttpClientTestingModule, CopyToClipboardModule],
+            imports: [MatIconModule, HttpClientTestingModule, CommitmentDataSectionComponent],
         });
 
         registerMatSvgIcons();

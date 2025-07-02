@@ -15,7 +15,6 @@ import { MatRadioModule } from "@angular/material/radio";
 import { MatIconModule } from "@angular/material/icon";
 import { FormsModule } from "@angular/forms";
 import { mockDatasetFlowsInitiatorsQuery, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
-import { DisplayTimeModule } from "src/app/common/components/display-time/display-time.module";
 import { Account } from "src/app/api/kamu.graphql.interface";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { HarnessLoader } from "@angular/cdk/testing";
@@ -28,13 +27,13 @@ import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { mockDatasets, mockFlowSummaryDataFragmentShowForceLink } from "./flows-table.helpers.mock";
 import { mockDatasetMainDataId } from "src/app/search/mock.data";
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
-import { ToastrModule, ToastrService } from "ngx-toastr";
+import { provideToastr, ToastrService } from "ngx-toastr";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { of } from "rxjs";
 import { RouterModule } from "@angular/router";
 import { registerMatSvgIcons } from "../../common/helpers/base-test.helpers.spec";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
-import { SafeHtmlModule } from "src/app/common/pipes/safe-html.module";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("FlowsTableComponent", () => {
     let component: FlowsTableComponent;
@@ -47,8 +46,7 @@ describe("FlowsTableComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [Apollo],
-            declarations: [FlowsTableComponent],
+            providers: [Apollo, provideAnimations(), provideToastr()],
             imports: [
                 MatTableModule,
                 MatMenuModule,
@@ -56,14 +54,12 @@ describe("FlowsTableComponent", () => {
                 MatRadioModule,
                 MatIconModule,
                 FormsModule,
-                DisplayTimeModule,
                 HttpClientTestingModule,
                 SharedTestModule,
                 NgbTypeaheadModule,
                 AngularMultiSelectModule,
-                ToastrModule.forRoot(),
                 RouterModule,
-                SafeHtmlModule,
+                FlowsTableComponent,
             ],
         }).compileComponents();
 

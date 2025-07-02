@@ -7,14 +7,33 @@
 
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { BaseField } from "../base-field";
-import { FormControl } from "@angular/forms";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ReadFormatControlType, ReadKind } from "../../source-events/add-polling-source/add-polling-source-form.types";
 import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
+import { InputFieldComponent } from "../input-field/input-field.component";
+import { NgFor, NgIf } from "@angular/common";
+import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
+import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 
 @Component({
     selector: "app-json-kind-field",
     templateUrl: "./json-kind-field.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        NgFor,
+        NgIf,
+        FormsModule,
+        ReactiveFormsModule,
+
+        //-----//
+        RxReactiveFormsModule,
+
+        //-----//
+        TooltipIconComponent,
+        InputFieldComponent,
+    ],
 })
 export class JsonKindFieldComponent extends BaseField implements OnInit {
     @Input({ required: true }) public controlDescriptors: ReadFormatControlType[];

@@ -9,12 +9,15 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { DataHelpers } from "src/app/common/helpers/data.helpers";
 import { EventPropertyLogo } from "../../../supported.events";
 import { BasePropertyComponent } from "../base-property/base-property.component";
+import { NgIf } from "@angular/common";
 
 @Component({
     selector: "app-merge-strategy-property",
     templateUrl: "./merge-strategy-property.component.html",
     styleUrls: ["./merge-strategy-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [NgIf],
 })
 export class MergeStrategyPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;

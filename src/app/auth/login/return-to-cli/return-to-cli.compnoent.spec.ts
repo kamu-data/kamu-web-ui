@@ -14,7 +14,7 @@ describe("ReturnToCliComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [ReturnToCliComponent],
+            imports: [ReturnToCliComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(ReturnToCliComponent);

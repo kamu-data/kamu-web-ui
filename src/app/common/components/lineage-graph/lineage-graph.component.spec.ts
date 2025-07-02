@@ -16,13 +16,10 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import AppValues from "src/app/common/values/app.values";
 import { MatIconModule } from "@angular/material/icon";
-import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
-import { DisplayTimeModule } from "../display-time/display-time.module";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { mockGraphNode } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import timekeeper from "timekeeper";
 import { WidgetHeightService } from "src/app/common/components/lineage-graph/widget-height.service";
-import { DisplayDatasetIdPipeModule } from "src/app/common/pipes/display-dataset-id.pipe.module";
 
 describe("LineageGraphComponent", () => {
     let component: LineageGraphComponent;
@@ -32,7 +29,6 @@ describe("LineageGraphComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [LineageGraphComponent],
             providers: [Apollo],
             imports: [
                 NgxGraphModule,
@@ -40,11 +36,9 @@ describe("LineageGraphComponent", () => {
                 ApolloModule,
                 ApolloTestingModule,
                 MatIconModule,
-                DisplaySizeModule,
-                DisplayTimeModule,
                 SharedTestModule,
-                DisplayDatasetIdPipeModule,
                 NgxGraphModule,
+                LineageGraphComponent,
             ],
         })
             .overrideComponent(LineageGraphComponent, {

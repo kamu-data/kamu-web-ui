@@ -13,12 +13,26 @@ import {
 import { MaybeNull } from "src/app/interface/app.types";
 import { EditPollingSourceService } from "../../add-polling-source/edit-polling-source.service";
 import { BaseComponent } from "src/app/common/components/base.component";
+import { QueriesSectionComponent } from "../../../set-transform/components/queries-section/queries-section.component";
+import { EngineSectionComponent } from "../../../set-transform/components/engine-section/engine-section.component";
+import { NgIf } from "@angular/common";
+import { FormsModule } from "@angular/forms";
 
 @Component({
     selector: "app-preprocess-step",
     templateUrl: "./preprocess-step.component.html",
     styleUrls: ["./preprocess-step.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        FormsModule,
+        NgIf,
+
+        //-----//
+        EngineSectionComponent,
+        QueriesSectionComponent,
+    ],
 })
 export class PreprocessStepComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public showPreprocessStep: boolean;

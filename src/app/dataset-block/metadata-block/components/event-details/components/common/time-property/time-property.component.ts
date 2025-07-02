@@ -7,11 +7,14 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { BasePropertyComponent } from "../base-property/base-property.component";
+import { DisplayTimeComponent } from "../../../../../../../common/components/display-time/display-time.component";
 
 @Component({
     selector: "app-time-property",
     templateUrl: "./time-property.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [DisplayTimeComponent],
 })
 export class TimePropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;

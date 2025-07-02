@@ -14,12 +14,22 @@ import { BaseComponent } from "src/app/common/components/base.component";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 import { BatchingFormType } from "./dataset-settings-transform-options-tab.component.types";
+import { BatchingTriggerFormComponent } from "./batching-trigger-form/batching-trigger-form.component";
+import { MatDividerModule } from "@angular/material/divider";
 
 @Component({
     selector: "app-dataset-settings-transform-options-tab",
     templateUrl: "./dataset-settings-transform-options-tab.component.html",
     styleUrls: ["./dataset-settings-transform-options-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        MatDividerModule,
+
+        //-----//
+        BatchingTriggerFormComponent,
+    ],
 })
 export class DatasetSettingsTransformOptionsTabComponent extends BaseComponent {
     @Input(RoutingResolvers.DATASET_SETTINGS_TRANSFORM_KEY) public transformViewData: DatasetViewData;

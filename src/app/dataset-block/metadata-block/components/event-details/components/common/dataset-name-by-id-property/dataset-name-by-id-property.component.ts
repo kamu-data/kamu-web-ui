@@ -19,6 +19,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
     templateUrl: "./dataset-name-by-id-property.component.html",
     styleUrls: ["./dataset-name-by-id-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
 })
 export class DatasetNameByIdPropertyComponent extends BasePropertyComponent implements OnInit {
     @Input({ required: true }) public data: string;

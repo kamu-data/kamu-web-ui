@@ -21,8 +21,13 @@ describe("InputFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [InputFieldComponent, TooltipIconComponent],
-            imports: [ReactiveFormsModule, NgbTooltipModule, SharedTestModule],
+            imports: [
+                ReactiveFormsModule,
+                NgbTooltipModule,
+                SharedTestModule,
+                InputFieldComponent,
+                TooltipIconComponent,
+            ],
         })
             .overrideComponent(InputFieldComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },

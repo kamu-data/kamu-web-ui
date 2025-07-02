@@ -22,8 +22,7 @@ describe("BlockHeaderComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [BlockHeaderComponent],
-            imports: [MatMenuModule, MatIconModule, MatDividerModule, SharedTestModule],
+            imports: [MatMenuModule, MatIconModule, MatDividerModule, SharedTestModule, BlockHeaderComponent],
             providers: [Apollo, DatasetApi],
         }).compileComponents();
 

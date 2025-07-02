@@ -6,7 +6,7 @@
  */
 
 import { MatTableModule } from "@angular/material/table";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetSettingsSecretsManagerTabComponent } from "./dataset-settings-secrets-manager-tab.component";
 import { Apollo } from "apollo-angular";
@@ -29,7 +29,7 @@ import { MOCK_DATASET_INFO } from "../../../metadata-component/components/set-tr
 import ProjectLinks from "src/app/project-links";
 import { ActivatedRoute } from "@angular/router";
 import { of } from "rxjs";
-import { PaginationModule } from "src/app/common/components/pagination-component/pagination.module";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("DatasetSettingsSecretsManagerTabComponent", () => {
     let component: DatasetSettingsSecretsManagerTabComponent;
@@ -41,9 +41,10 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DatasetSettingsSecretsManagerTabComponent],
             providers: [
                 FormBuilder,
+                provideAnimations(),
+                provideToastr(),
                 Apollo,
                 {
                     provide: ActivatedRoute,
@@ -72,7 +73,6 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
                 },
             ],
             imports: [
-                ToastrModule.forRoot(),
                 ApolloTestingModule,
                 MatDividerModule,
                 MatTableModule,
@@ -80,7 +80,7 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
                 MatIconModule,
                 FormsModule,
                 MatTooltipModule,
-                PaginationModule,
+                DatasetSettingsSecretsManagerTabComponent,
             ],
         }).compileComponents();
 

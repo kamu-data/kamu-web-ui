@@ -10,6 +10,7 @@ import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 
 @Pipe({
     name: "eventTypeFilter",
+    standalone: true,
 })
 export class EventTypeFilterPipe implements PipeTransform {
     public transform(blocks: MetadataBlockFragment[], filters: string[]): MetadataBlockFragment[] {

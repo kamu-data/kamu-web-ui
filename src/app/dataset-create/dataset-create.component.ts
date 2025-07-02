@@ -9,7 +9,7 @@ import { BaseComponent } from "src/app/common/components/base.component";
 import { AccountProvider, DatasetKind, DatasetVisibility } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "../interface/app.types";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from "@angular/core";
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { DatasetCreateService } from "./dataset-create.service";
 import { Observable } from "rxjs";
 import { LoggedUserService } from "../auth/logged-user.service";
@@ -17,12 +17,38 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { CreateDatasetFormType, SelectStorageItemType, STORAGE_LIST } from "./dataset-create.types";
 import { LoginService } from "../auth/login/login.service";
 import AppValues from "../common/values/app.values";
+import { YamlEditorComponent } from "../editor/components/yaml-editor/yaml-editor.component";
+import { NgSelectModule } from "@ng-select/ng-select";
+import { MatIconModule } from "@angular/material/icon";
+import { FormValidationErrorsDirective } from "../common/directives/form-validation-errors.directive";
+import { NgFor, NgIf, AsyncPipe } from "@angular/common";
+import { MatDividerModule } from "@angular/material/divider";
+import { EditorModule } from "../editor/editor.module";
 
 @Component({
     selector: "app-dataset-create",
     templateUrl: "./dataset-create.component.html",
     styleUrls: ["./dataset-create.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        AsyncPipe,
+        NgFor,
+        NgIf,
+        FormsModule,
+        ReactiveFormsModule,
+
+        //-----//
+        MatDividerModule,
+        MatIconModule,
+        NgSelectModule,
+
+        //-----//
+        FormValidationErrorsDirective,
+        YamlEditorComponent,
+        EditorModule,
+    ],
 })
 export class DatasetCreateComponent extends BaseComponent {
     private cdr = inject(ChangeDetectorRef);

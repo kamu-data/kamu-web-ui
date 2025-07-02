@@ -7,7 +7,6 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { TimePropertyComponent } from "./time-property.component";
-import { DisplayTimeModule } from "src/app/common/components/display-time/display-time.module";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
 describe("TimePropertyComponent", () => {
@@ -16,8 +15,7 @@ describe("TimePropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [TimePropertyComponent],
-            imports: [DisplayTimeModule, SharedTestModule],
+            imports: [SharedTestModule, TimePropertyComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(TimePropertyComponent);

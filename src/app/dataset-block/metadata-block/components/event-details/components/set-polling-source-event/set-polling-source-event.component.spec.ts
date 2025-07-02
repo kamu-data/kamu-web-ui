@@ -8,7 +8,6 @@
 import { FetchStepMqtt, FetchStepUrl, PrepStepDecompress } from "../../../../../../api/kamu.graphql.interface";
 import { getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
-import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { mockSetPollingSourceEvent, mockSetPollingSourceEventWithFetchStepMqtt } from "../../mock.events";
 import { SetPollingSourceEventComponent } from "./set-polling-source-event.component";
@@ -23,6 +22,8 @@ import { MergeStrategyPropertyComponent } from "../common/merge-strategy-propert
 import { UnsupportedPropertyComponent } from "../common/unsupported-property/unsupported-property.component";
 import { YamlEventViewerComponent } from "../../../../../../common/components/yaml-event-viewer/yaml-event-viewer.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { HighlightModule } from "ngx-highlightjs";
+import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
 
 describe("SetPollingSourceEventComponent", () => {
     let component: SetPollingSourceEventComponent;
@@ -30,7 +31,8 @@ describe("SetPollingSourceEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
+            imports: [
+                SharedTestModule,
                 SetPollingSourceEventComponent,
                 SimplePropertyComponent,
                 SeparatorPropertyComponent,
@@ -43,9 +45,9 @@ describe("SetPollingSourceEventComponent", () => {
                 CardsPropertyComponent,
                 UnsupportedPropertyComponent,
                 YamlEventViewerComponent,
+                HighlightModule,
             ],
-            imports: [SharedTestModule],
-            schemas: [NO_ERRORS_SCHEMA],
+            providers: [HIGHLIGHT_OPTIONS_PROVIDER],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SetPollingSourceEventComponent);

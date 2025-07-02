@@ -17,10 +17,11 @@ import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-vi
 import { SetTransformEventComponent } from "./set-transform-event.component";
 import { TemporalTablesPropertyComponent } from "../common/temporal-tables-property/temporal-tables-property.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { HIGHLIGHT_OPTIONS, HighlightModule } from "ngx-highlightjs";
+import { HighlightModule } from "ngx-highlightjs";
 import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
 import { MatIconModule } from "@angular/material/icon";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
+import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
 
 describe("SetTransformEventComponent", () => {
     let component: SetTransformEventComponent;
@@ -28,7 +29,13 @@ describe("SetTransformEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
+            providers: [HIGHLIGHT_OPTIONS_PROVIDER],
+            imports: [
+                ApolloTestingModule,
+                SharedTestModule,
+                HighlightModule,
+                MatIconModule,
+                NgbTooltipModule,
                 SetTransformEventComponent,
                 SimplePropertyComponent,
                 EnginePropertyComponent,
@@ -39,19 +46,6 @@ describe("SetTransformEventComponent", () => {
                 BlockRowDataComponent,
                 TooltipIconComponent,
             ],
-            providers: [
-                {
-                    provide: HIGHLIGHT_OPTIONS,
-                    useValue: {
-                        coreLibraryLoader: () => import("highlight.js/lib/core"),
-                        languages: {
-                            sql: () => import("highlight.js/lib/languages/sql"),
-                        },
-                    },
-                },
-            ],
-
-            imports: [ApolloTestingModule, SharedTestModule, HighlightModule, MatIconModule, NgbTooltipModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SetTransformEventComponent);

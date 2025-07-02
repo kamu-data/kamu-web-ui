@@ -9,15 +9,14 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { OverviewHistorySummaryHeaderComponent } from "./overview-history-summary-header.component";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { TEST_DATASET_NAME, mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
-import { DisplayTimeModule } from "../../../../../common/components/display-time/display-time.module";
-import { DisplayHashModule } from "../../../../../common/components/display-hash/display-hash.module";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import AppValues from "src/app/common/values/app.values";
 import { RouterModule } from "@angular/router";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { MatIconModule } from "@angular/material/icon";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("OverviewHistorySummaryHeaderComponent", () => {
     let component: OverviewHistorySummaryHeaderComponent;
@@ -25,15 +24,13 @@ describe("OverviewHistorySummaryHeaderComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [OverviewHistorySummaryHeaderComponent],
+            providers: [provideAnimations(), provideToastr()],
             imports: [
-                DisplayTimeModule,
-                DisplayHashModule,
                 HttpClientTestingModule,
-                ToastrModule.forRoot(),
                 RouterModule,
                 SharedTestModule,
                 MatIconModule,
+                OverviewHistorySummaryHeaderComponent,
             ],
         }).compileComponents();
 

@@ -10,11 +10,14 @@ import { VerifyQueryError, VerifyQueryKindError } from "../../query-explainer.ty
 import { Clipboard } from "@angular/cdk/clipboard";
 import { MaybeUndefined } from "src/app/interface/app.types";
 import { QueryExplainerComponentData } from "../../query-explainer.component";
+import { CopyToClipboardComponent } from "../../../common/components/copy-to-clipboard/copy-to-clipboard.component";
 @Component({
     selector: "app-commitment-data-section",
     templateUrl: "./commitment-data-section.component.html",
     styleUrls: ["./commitment-data-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [CopyToClipboardComponent],
 })
 export class CommitmentDataSectionComponent {
     private clipboard = inject(Clipboard);

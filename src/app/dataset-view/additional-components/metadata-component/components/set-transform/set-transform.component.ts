@@ -23,12 +23,32 @@ import AppValues from "src/app/common/values/app.values";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { StepperNavigationComponent } from "../stepper-navigation/stepper-navigation.component";
+import { QueriesSectionComponent } from "./components/queries-section/queries-section.component";
+import { EngineSectionComponent } from "./components/engine-section/engine-section.component";
+import { SearchSectionComponent } from "./components/search-section/search-section.component";
+import { RouterLink } from "@angular/router";
+import { NgIf } from "@angular/common";
+import { EditorModule } from "src/app/editor/editor.module";
 
 @Component({
     selector: "app-set-transform",
     templateUrl: "./set-transform.component.html",
     styleUrls: ["./set-transform.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        NgIf,
+        RouterLink,
+
+        //-----//
+        EditorModule,
+        EngineSectionComponent,
+        QueriesSectionComponent,
+        SearchSectionComponent,
+        StepperNavigationComponent,
+    ],
 })
 export class SetTransformComponent extends BaseMainEventComponent implements OnInit {
     @Input(RoutingResolvers.SET_TRANSFORM_KEY) public eventYamlByHash: string;

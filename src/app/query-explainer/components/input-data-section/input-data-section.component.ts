@@ -19,12 +19,31 @@ import AppValues from "src/app/common/values/app.values";
 import { QueryExplainerComponentData } from "../../query-explainer.component";
 import ProjectLinks from "src/app/project-links";
 import { addMarkdownRunButton } from "src/app/common/helpers/app.helpers";
+import { DisplayHashComponent } from "../../../common/components/display-hash/display-hash.component";
+import { RouterLink } from "@angular/router";
+import { NgIf, NgFor, AsyncPipe, DatePipe } from "@angular/common";
+import { MarkdownModule } from "ngx-markdown";
 
 @Component({
     selector: "app-input-data-section",
     templateUrl: "./input-data-section.component.html",
     styleUrls: ["./input-data-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        AsyncPipe,
+        DatePipe,
+        NgIf,
+        NgFor,
+        RouterLink,
+
+        //-----//
+        MarkdownModule,
+
+        //-----//
+        DisplayHashComponent,
+    ],
 })
 export class InputDataSectionComponent implements AfterViewChecked {
     @Input({ required: true }) public blockHashObservables$: Observable<Date>[];

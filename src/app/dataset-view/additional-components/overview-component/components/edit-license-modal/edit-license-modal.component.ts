@@ -8,7 +8,7 @@
 import { BaseComponent } from "src/app/common/components/base.component";
 import AppValues from "src/app/common/values/app.values";
 import { Component, inject, Input, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import {
     DatasetBasicsFragment,
@@ -24,10 +24,22 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { finalize } from "rxjs";
 import { LicenseFormType } from "./edit-license-modal.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { NgIf } from "@angular/common";
+import { MatDividerModule } from "@angular/material/divider";
 
 @Component({
     selector: "app-edit-license-modal",
     templateUrl: "./edit-license-modal.component.html",
+    standalone: true,
+    imports: [
+        //-----//
+        FormsModule,
+        NgIf,
+        ReactiveFormsModule,
+
+        //-----//
+        MatDividerModule,
+    ],
 })
 export class EditLicenseModalComponent extends BaseComponent implements OnInit {
     public activeModal = inject(NgbActiveModal);

@@ -34,7 +34,6 @@ import { NotificationIndicatorComponent } from "./header/notification-indicator/
 import { MatIconModule } from "@angular/material/icon";
 import { AppHeaderComponent } from "./header/app-header/app-header.component";
 import { DatasetViewTypeEnum } from "./dataset-view/dataset-view.interface";
-import { DisplayAccountNameModule } from "./common/pipes/display-account-name.module";
 
 describe("AppComponent", () => {
     let component: AppComponent;
@@ -56,14 +55,11 @@ describe("AppComponent", () => {
                 HttpClientTestingModule,
                 RouterModule,
                 MatIconModule,
-                DisplayAccountNameModule,
-            ],
-            declarations: [
-                AppComponent,
                 ModalComponent,
                 AppHeaderComponent,
                 SpinnerComponent,
                 NotificationIndicatorComponent,
+                AppComponent,
             ],
             providers: [
                 SearchService,

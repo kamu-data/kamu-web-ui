@@ -13,7 +13,7 @@ import { MatRadioModule } from "@angular/material/radio";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { DatasetSchedulingService } from "../../../services/dataset-scheduling.service";
 import { of } from "rxjs";
 import {
@@ -28,7 +28,7 @@ import {
 import { TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { PollingGroupEnum } from "../../../dataset-settings.model";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { TooltipIconModule } from "src/app/common/components/tooltip-icon/tooltip-icon.module";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("IngestTriggerFormComponent", () => {
     let component: IngestTriggerFormComponent;
@@ -39,17 +39,15 @@ describe("IngestTriggerFormComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [IngestTriggerFormComponent],
-            providers: [Apollo],
+            providers: [Apollo, provideAnimations(), provideToastr()],
             imports: [
                 FormsModule,
                 ReactiveFormsModule,
-                ToastrModule.forRoot(),
                 MatRadioModule,
                 SharedTestModule,
                 MatSlideToggleModule,
                 MatProgressBarModule,
-                TooltipIconModule,
+                IngestTriggerFormComponent,
             ],
         });
         fixture = TestBed.createComponent(IngestTriggerFormComponent);

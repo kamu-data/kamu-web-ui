@@ -15,8 +15,7 @@ describe("EventTimePropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [EventTimePropertyComponent],
-            imports: [SharedTestModule],
+            imports: [SharedTestModule, EventTimePropertyComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(EventTimePropertyComponent);

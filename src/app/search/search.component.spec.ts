@@ -24,11 +24,9 @@ import { DatasetListComponent } from "../common/components/dataset-list-componen
 import { FormsModule } from "@angular/forms";
 import { DatasetListItemComponent } from "../common/components/dataset-list-component/dataset-list-item/dataset-list-item.component";
 import { NgbPaginationModule, NgbPopoverModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
-import { DisplayTimeModule } from "../common/components/display-time/display-time.module";
 import { MatIconModule } from "@angular/material/icon";
 import { PaginationComponent } from "../common/components/pagination-component/pagination.component";
 import { MatDividerModule } from "@angular/material/divider";
-import { DatasetVisibilityModule } from "../common/components/dataset-visibility/dataset-visibility.module";
 import { mockDatasetSearchResult } from "./mock.data";
 
 describe("SearchComponent", () => {
@@ -43,21 +41,22 @@ describe("SearchComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SearchComponent, DatasetListComponent, DatasetListItemComponent, PaginationComponent],
             imports: [
                 ApolloTestingModule,
                 RouterTestingModule,
                 MatCheckboxModule,
                 FormsModule,
                 NgbRatingModule,
-                DisplayTimeModule,
                 NgbPopoverModule,
                 MatIconModule,
                 MatChipsModule,
                 NgbPaginationModule,
                 MatDividerModule,
                 RouterModule,
-                DatasetVisibilityModule,
+                SearchComponent,
+                DatasetListComponent,
+                DatasetListItemComponent,
+                PaginationComponent,
             ],
             providers: [NavigationService, SearchService, AuthApi, SearchApi, ModalService],
         }).compileComponents();

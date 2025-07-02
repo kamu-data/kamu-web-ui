@@ -12,11 +12,14 @@ import { DataHelpers } from "src/app/common/helpers/data.helpers";
 import { DatasetFlowDetailsHelpers } from "../flow-details-history-tab/flow-details-history-tab.helpers";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetFlowByIdResponse } from "../../dataset-flow-details.types";
+import { NgIf, UpperCasePipe, TitleCasePipe, DatePipe } from "@angular/common";
 
 @Component({
     selector: "app-flow-details-summary-tab",
     templateUrl: "./flow-details-summary-tab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [NgIf, UpperCasePipe, TitleCasePipe, DatePipe],
 })
 export class FlowDetailsSummaryTabComponent {
     @Input(RoutingResolvers.FLOW_DETAILS_SUMMARY_KEY) public response: DatasetFlowByIdResponse;

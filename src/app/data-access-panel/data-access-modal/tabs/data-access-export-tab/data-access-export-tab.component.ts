@@ -6,11 +6,14 @@
  */
 
 import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
     selector: "app-data-access-export-tab",
     templateUrl: "./data-access-export-tab.component.html",
     styleUrls: ["./data-access-export-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [MatIconModule],
 })
 export class DataAccessExportTabComponent {}

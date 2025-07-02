@@ -8,12 +8,15 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { BasePropertyComponent } from "../base-property/base-property.component";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { RouterLink } from "@angular/router";
 
 @Component({
     selector: "app-dataset-name-property",
     templateUrl: "./dataset-name-property.component.html",
     styleUrls: ["./dataset-name-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [RouterLink],
 })
 export class DatasetNamePropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: { datasetName: string; ownerAccountName: string };

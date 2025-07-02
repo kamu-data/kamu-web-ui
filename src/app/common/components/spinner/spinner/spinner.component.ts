@@ -7,12 +7,23 @@
 
 import { SpinnerService } from "../spinner.service";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { NgIf, AsyncPipe } from "@angular/common";
 
 @Component({
     selector: "app-spinner",
     templateUrl: "./spinner.component.html",
     styleUrls: ["./spinner.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        AsyncPipe,
+        NgIf,
+
+        //-----//
+        MatProgressBarModule,
+    ],
 })
 export class SpinnerComponent {
     private spinnerService = inject(SpinnerService);

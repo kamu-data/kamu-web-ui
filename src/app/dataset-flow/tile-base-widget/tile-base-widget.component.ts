@@ -26,7 +26,7 @@ import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/datas
 })
 export class TileBaseWidgetComponent {
     @Input({ required: true }) public nodes: FlowItemWidgetDataFragment[];
-    @Input() public involvedDatasets: DatasetListFlowsDataFragment[] = [];
+    @Input({ required: true }) public involvedDatasets: DatasetListFlowsDataFragment[];
     @Input() public displayAlias: boolean = true;
 
     public readonly LAST_RUNS_COUNT = 150;
@@ -40,11 +40,11 @@ export class TileBaseWidgetComponent {
             if (flowNode.timing.lastAttemptFinishedAt) {
                 return DataHelpers.durationTask(flowNode.timing.initiatedAt, flowNode.timing.lastAttemptFinishedAt);
             } else {
+                // Aborted?
                 return "-";
             }
         } else {
-            const now_as_string = new Date().toISOString();
-            return DataHelpers.durationTask(flowNode.timing.initiatedAt, now_as_string);
+            return DataHelpers.durationTask(flowNode.timing.initiatedAt, new Date().toISOString());
         }
     }
 
@@ -74,7 +74,7 @@ export class TileBaseWidgetComponent {
             const dataset = (this.involvedDatasets as Dataset[]).find(
                 (dataset) => dataset.id === node.datasetId,
             ) as Dataset;
-            return dataset.alias;
+            return dataset?.alias || "";
         }
         return "";
     }

@@ -39,6 +39,7 @@ import AppValues from "./app/common/values/app.values";
 import { provideRouter, withComponentInputBinding, withRouterConfig } from "@angular/router";
 import { routes } from "./app/app-routing";
 import { provideToastr } from "ngx-toastr";
+import { IS_ALLOWED_ANONYMOUS_USERS } from "./app/app-config.model";
 
 const Services = [
     Apollo,
@@ -135,6 +136,16 @@ const Services = [
         useValue: {
             disabled: true,
         },
+    },
+    {
+        provide: IS_ALLOWED_ANONYMOUS_USERS,
+        useFactory: (appConfigService: AppConfigService) => {
+            return (): boolean => {
+                const allowAnonymousUsers = appConfigService.allowAnonymous;
+                return allowAnonymousUsers;
+            };
+        },
+        deps: [AppConfigService],
     },
 ];
 

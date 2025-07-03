@@ -6,7 +6,16 @@
  */
 
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { ControlContainer, FormArray, FormBuilder, FormGroup, FormGroupDirective, Validators } from "@angular/forms";
+import {
+    ControlContainer,
+    FormArray,
+    FormBuilder,
+    FormGroup,
+    FormGroupDirective,
+    Validators,
+    FormsModule,
+    ReactiveFormsModule,
+} from "@angular/forms";
 import { MaybeNull } from "src/app/interface/app.types";
 import { BaseComponent } from "src/app/common/components/base.component";
 import {
@@ -16,6 +25,8 @@ import {
     SetPollingSourceSection,
 } from "../../add-polling-source/add-polling-source-form.types";
 import { EditPollingSourceService } from "../../add-polling-source/edit-polling-source.service";
+import { MatIconModule } from "@angular/material/icon";
+import { NgFor, NgIf } from "@angular/common";
 
 @Component({
     selector: "app-prepare-step",
@@ -23,6 +34,17 @@ import { EditPollingSourceService } from "../../add-polling-source/edit-polling-
     styleUrls: ["./prepare-step.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
+    standalone: true,
+    imports: [
+        //-----//
+        FormsModule,
+        NgFor,
+        NgIf,
+        ReactiveFormsModule,
+
+        //-----//
+        MatIconModule,
+    ],
 })
 export class PrepareStepComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public eventYamlByHash: MaybeNull<string> = null;

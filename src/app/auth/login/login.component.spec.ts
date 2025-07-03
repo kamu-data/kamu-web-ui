@@ -34,7 +34,6 @@ import { LocalStorageService } from "src/app/services/local-storage.service";
 import { MatIconModule } from "@angular/material/icon";
 import ProjectLinks from "src/app/project-links";
 import { AccountProvider } from "src/app/api/kamu.graphql.interface";
-import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
 
 describe("LoginComponent", () => {
     let component: LoginComponent;
@@ -74,7 +73,6 @@ describe("LoginComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [LoginComponent, SpinnerComponent],
             providers: [
                 Apollo,
                 {
@@ -99,7 +97,8 @@ describe("LoginComponent", () => {
                 ReactiveFormsModule,
                 HttpClientTestingModule,
                 MatIconModule,
-                FormValidationErrorsModule,
+                LoginComponent,
+                SpinnerComponent,
             ],
         }).compileComponents();
 

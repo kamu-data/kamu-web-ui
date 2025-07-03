@@ -17,12 +17,26 @@ import { SqlQueryService } from "src/app/services/sql-query.service";
 import { SqlQueryResponseState } from "./global-query.model";
 import { NavigationService } from "src/app/services/navigation.service";
 import { CancelRequestService } from "src/app/services/cancel-request.service";
+import { AsyncPipe } from "@angular/common";
+import { QueryAndResultSectionsComponent } from "../shared/query-and-result-sections/query-and-result-sections.component";
+import { SearchAndSchemasSectionComponent } from "./search-and-schemas-section/search-and-schemas-section.component";
+import { EditorModule } from "src/app/editor/editor.module";
 
 @Component({
     selector: "app-global-query",
     templateUrl: "./global-query.component.html",
     styleUrls: ["./global-query.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        AsyncPipe,
+
+        //-----//
+        EditorModule,
+        QueryAndResultSectionsComponent,
+        SearchAndSchemasSectionComponent,
+    ],
 })
 export class GlobalQueryComponent extends BaseComponent implements OnInit {
     @Input(ProjectLinks.URL_QUERY_PARAM_SQL_QUERY) public set sqlQuery(value: string) {

@@ -23,7 +23,6 @@ describe("SelectDateFormatFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SelectDateFormatFieldComponent, TooltipIconComponent],
             providers: [
                 FormBuilder,
                 {
@@ -51,6 +50,8 @@ describe("SelectDateFormatFieldComponent", () => {
                 NgbTypeaheadModule,
                 RxReactiveFormsModule,
                 NgbTooltipModule,
+                SelectDateFormatFieldComponent,
+                TooltipIconComponent,
             ],
         }).compileComponents();
 

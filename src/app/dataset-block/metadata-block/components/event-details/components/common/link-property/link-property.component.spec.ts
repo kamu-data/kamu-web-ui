@@ -15,8 +15,7 @@ describe("LinkPropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [LinkPropertyComponent],
-            imports: [SharedTestModule],
+            imports: [SharedTestModule, LinkPropertyComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(LinkPropertyComponent);

@@ -16,12 +16,31 @@ import { DatasetFlowDetailsHelpers } from "./flow-details-history-tab.helpers";
 import { DataHelpers } from "src/app/common/helpers/data.helpers";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetFlowByIdResponse } from "../../dataset-flow-details.types";
+import { SafeHtmlPipe } from "../../../../common/pipes/safe-html.pipe";
+import { MatIconModule } from "@angular/material/icon";
+import { NgFor, NgIf, NgClass, DatePipe } from "@angular/common";
+import { MatDividerModule } from "@angular/material/divider";
 
 @Component({
     selector: "app-flow-details-history-tab",
     templateUrl: "./flow-details-history-tab.component.html",
     styleUrls: ["./flow-details-history-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        NgFor,
+        NgIf,
+        NgClass,
+        DatePipe,
+
+        //-----//
+        MatDividerModule,
+        MatIconModule,
+
+        //-----//
+        SafeHtmlPipe,
+    ],
 })
 export class FlowDetailsHistoryTabComponent {
     @Input(RoutingResolvers.FLOW_DETAILS_HISTORY_KEY) public response: DatasetFlowByIdResponse;

@@ -48,8 +48,9 @@ describe("DatasetViewMenuComponent", () => {
                 ApolloTestingModule,
                 RouterModule,
                 SharedTestModule,
+                DatasetViewMenuComponent,
+                DataAccessPanelComponent,
             ],
-            declarations: [DatasetViewMenuComponent, DataAccessPanelComponent],
         }).compileComponents();
 
         registerMatSvgIcons();

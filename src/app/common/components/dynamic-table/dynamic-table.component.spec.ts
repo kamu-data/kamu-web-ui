@@ -26,8 +26,7 @@ describe("DynamicTableComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DynamicTableComponent],
-            imports: [MatTableModule],
+            imports: [MatTableModule, DynamicTableComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DynamicTableComponent);

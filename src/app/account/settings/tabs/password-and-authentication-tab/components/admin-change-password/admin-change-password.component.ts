@@ -6,18 +6,21 @@
  */
 
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ChangeAdminAccountPasswordFormType } from "../../password-and-authentication-tab.component.types";
 import { AccountService } from "src/app/account/account.service";
 import { matchFieldsValidator } from "src/app/common/helpers/data.helpers";
 import { ErrorSets } from "src/app/common/directives/form-validation-errors.types";
 import { AppConfigService } from "src/app/app-config.service";
+import { FormValidationErrorsDirective } from "../../../../../../common/directives/form-validation-errors.directive";
 
 @Component({
     selector: "app-admin-change-password",
     templateUrl: "./admin-change-password.component.html",
     styleUrls: ["./admin-change-password.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, FormValidationErrorsDirective],
 })
 export class AdminChangePasswordComponent implements OnInit {
     @Input({ required: true }) public accountName: string;

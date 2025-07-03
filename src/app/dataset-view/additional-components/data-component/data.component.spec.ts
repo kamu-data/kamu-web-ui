@@ -27,7 +27,6 @@ import { Location } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 import { LoadMoreComponent } from "../../../query/shared/load-more/load-more.component";
-import { DynamicTableModule } from "../../../common/components/dynamic-table/dynamic-table.module";
 import { EditorModule } from "src/app/editor/editor.module";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
@@ -36,13 +35,13 @@ import { SqlEditorComponent } from "src/app/editor/components/sql-editor/sql-edi
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { HttpClientModule } from "@angular/common/http";
 import { Apollo } from "apollo-angular";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { SavedQueriesSectionComponent } from "../../../query/shared/saved-queries-section/saved-queries-section.component";
 import { QueryAndResultSectionsComponent } from "../../../query/shared/query-and-result-sections/query-and-result-sections.component";
 import { SearchAndSchemasSectionComponent } from "src/app/query/global-query/search-and-schemas-section/search-and-schemas-section.component";
 import { SessionStorageService } from "src/app/services/session-storage.service";
 import { NavigationService } from "src/app/services/navigation.service";
-import { routes } from "src/app/app-routing.module";
+import { routes } from "src/app/app-routing";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 import { of } from "rxjs";
 import AppValues from "src/app/common/values/app.values";
@@ -51,6 +50,7 @@ import ProjectLinks from "src/app/project-links";
 import { EngineService } from "../metadata-component/components/set-transform/components/engine-section/engine.service";
 import { mockEngines } from "../metadata-component/components/set-transform/mock.data";
 import { EngineSelectComponent } from "../metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("DataComponent", () => {
     let component: DataComponent;
@@ -67,6 +67,8 @@ describe("DataComponent", () => {
         await TestBed.configureTestingModule({
             providers: [
                 Apollo,
+                provideAnimations(),
+                provideToastr(),
                 {
                     provide: ActivatedRoute,
                     useValue: {
@@ -100,14 +102,10 @@ describe("DataComponent", () => {
                 RouterTestingModule.withRoutes(routes),
                 FormsModule,
                 MatDividerModule,
-                DynamicTableModule,
                 EditorModule,
                 MatProgressBarModule,
                 CdkAccordionModule,
                 HttpClientModule,
-                ToastrModule.forRoot(),
-            ],
-            declarations: [
                 DataComponent,
                 SavedQueriesSectionComponent,
                 QueryAndResultSectionsComponent,

@@ -10,9 +10,10 @@ import { ActivatedRouteSnapshot, Data, ResolveFn, RouterStateSnapshot } from "@a
 import { flowDetailsSummaryResolverFn } from "./flow-details-summary.resolver";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { Apollo } from "apollo-angular";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import RoutingResolvers from "../../../../../common/resolvers/routing-resolvers";
 import { mockDatasetFlowByIdResponse } from "src/app/api/mock/dataset-flow.mock";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("flowDetailsSummaryResolverFn", () => {
     const executeResolver: ResolveFn<DatasetFlowByIdResponse> = (...resolverParameters) =>
@@ -20,8 +21,7 @@ describe("flowDetailsSummaryResolverFn", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo],
-            imports: [ToastrModule.forRoot()],
+            providers: [Apollo, provideAnimations(), provideToastr()],
         });
     });
 

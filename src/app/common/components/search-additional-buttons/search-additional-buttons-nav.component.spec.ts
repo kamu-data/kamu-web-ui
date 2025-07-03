@@ -11,7 +11,6 @@ import { SearchAdditionalButtonsNavComponent } from "./search-additional-buttons
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { FeatureFlagModule } from "../../directives/feature-flag.module";
 import { SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS } from "src/app/dataset-view/dataset-view-header/dataset-view-header.model";
 import { SharedTestModule } from "../../modules/shared-test.module";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
@@ -22,8 +21,13 @@ describe("SearchAdditionalButtonsNavComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SearchAdditionalButtonsNavComponent],
-            imports: [MatIconModule, MatMenuModule, FeatureFlagModule, SharedTestModule, HttpClientTestingModule],
+            imports: [
+                MatIconModule,
+                MatMenuModule,
+                SharedTestModule,
+                HttpClientTestingModule,
+                SearchAdditionalButtonsNavComponent,
+            ],
         })
             .overrideComponent(SearchAdditionalButtonsNavComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },

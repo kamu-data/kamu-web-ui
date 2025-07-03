@@ -30,7 +30,6 @@ describe("DataAccessPanelComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [Apollo],
-            declarations: [DataAccessPanelComponent],
             imports: [
                 FormsModule,
                 MatDividerModule,
@@ -44,6 +43,7 @@ describe("DataAccessPanelComponent", () => {
                 ApolloModule,
                 ApolloTestingModule,
                 SharedTestModule,
+                DataAccessPanelComponent,
             ],
         }).compileComponents();
 

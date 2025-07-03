@@ -19,11 +19,22 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetService } from "../../dataset.service";
 import { LineageGraphBuilderService } from "./services/lineage-graph-builder.service";
 import { Observable, switchMap } from "rxjs";
+import { LineageGraphComponent } from "../../../common/components/lineage-graph/lineage-graph.component";
+import { NgIf, AsyncPipe } from "@angular/common";
 
 @Component({
     selector: "app-lineage",
     templateUrl: "./lineage.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        AsyncPipe,
+        NgIf,
+
+        //-----//
+        LineageGraphComponent,
+    ],
 })
 export class LineageComponent extends BaseComponent {
     @Input(RoutingResolvers.DATASET_INFO_KEY) public set datasetInfo(value: DatasetInfo) {

@@ -10,11 +10,39 @@ import { Component, inject, Input } from "@angular/core";
 import { DatasetSearchOverviewFragment } from "src/app/api/kamu.graphql.interface";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
+import { MatDividerModule } from "@angular/material/divider";
+import { DisplayTimeComponent } from "../../display-time/display-time.component";
+import { MatChipsModule } from "@angular/material/chips";
+import { NgbPopover, NgbRating } from "@ng-bootstrap/ng-bootstrap";
+import { FeatureFlagDirective } from "../../../directives/feature-flag.directive";
+import { DatasetVisibilityComponent } from "../../dataset-visibility/dataset-visibility.component";
+import { RouterLink } from "@angular/router";
+import { MatIconModule } from "@angular/material/icon";
+import { NgIf, NgFor } from "@angular/common";
 
 @Component({
     selector: "app-dataset-list-item",
     templateUrl: "./dataset-list-item.component.html",
     styleUrls: ["./dataset-list-item.component.scss"],
+    standalone: true,
+    imports: [
+        //-----//
+        NgFor,
+        NgIf,
+        RouterLink,
+
+        //-----//
+        MatChipsModule,
+        MatIconModule,
+        MatDividerModule,
+        NgbPopover,
+        NgbRating,
+
+        //-----//
+        DatasetVisibilityComponent,
+        DisplayTimeComponent,
+        FeatureFlagDirective,
+    ],
 })
 export class DatasetListItemComponent {
     @Input({ required: true }) public row: DatasetSearchOverviewFragment;

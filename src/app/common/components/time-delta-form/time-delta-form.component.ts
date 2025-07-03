@@ -6,19 +6,34 @@
  */
 
 import { ChangeDetectionStrategy, Component, forwardRef, Input } from "@angular/core";
-import { FormControl, FormGroup, NG_VALUE_ACCESSOR, ValidatorFn, Validators } from "@angular/forms";
+import {
+    FormControl,
+    FormGroup,
+    NG_VALUE_ACCESSOR,
+    ReactiveFormsModule,
+    ValidatorFn,
+    Validators,
+} from "@angular/forms";
 import { TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { BaseFormControlComponent } from "../base-form-control.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { everyTimeMapperValidators } from "src/app/common/helpers/data.helpers";
 import { MaybeNull } from "src/app/interface/app.types";
 import { TimeDeltaFormType, TimeDeltaFormValue } from "./time-delta-form.value";
+import { NgIf } from "@angular/common";
 
 @Component({
     selector: "app-time-delta-form",
     templateUrl: "./time-delta-form.component.html",
     styleUrls: ["./time-delta-form.component.scss"],
+    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        //-----//
+        NgIf,
+        ReactiveFormsModule,
+        //-----//
+    ],
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

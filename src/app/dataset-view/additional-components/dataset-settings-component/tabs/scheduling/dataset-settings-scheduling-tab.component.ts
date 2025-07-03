@@ -22,12 +22,26 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 import { MaybeNull } from "src/app/interface/app.types";
+import { IngestTriggerFormComponent } from "./ingest-trigger-form/ingest-trigger-form.component";
+import { NgIf } from "@angular/common";
+import { MatDividerModule } from "@angular/material/divider";
 
 @Component({
     selector: "app-dataset-settings-scheduling-tab",
     templateUrl: "./dataset-settings-scheduling-tab.component.html",
     styleUrls: ["./dataset-settings-scheduling-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        NgIf,
+
+        //-----//
+        MatDividerModule,
+
+        //-----//
+        IngestTriggerFormComponent,
+    ],
 })
 export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
     @Input(RoutingResolvers.DATASET_SETTINGS_SCHEDULING_KEY) public schedulungTabData: DatasetViewData;

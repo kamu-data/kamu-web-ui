@@ -9,7 +9,7 @@ import { TestBed } from "@angular/core/testing";
 import { DatasetCompactionService } from "./dataset-compaction.service";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { ToastrModule, ToastrService } from "ngx-toastr";
+import { provideToastr, ToastrService } from "ngx-toastr";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import { DatasetFlowsService } from "../../flows-component/services/dataset-flows.service";
 import { of } from "rxjs";
@@ -20,6 +20,7 @@ import {
 } from "src/app/api/mock/dataset-flow.mock";
 import { TEST_ACCOUNT_ID } from "src/app/search/mock.data";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("DatasetCompactionService", () => {
     let service: DatasetCompactionService;
@@ -31,8 +32,8 @@ describe("DatasetCompactionService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo],
-            imports: [ApolloTestingModule, ToastrModule.forRoot(), HttpClientTestingModule],
+            providers: [Apollo, provideAnimations(), provideToastr()],
+            imports: [ApolloTestingModule, HttpClientTestingModule],
         });
         service = TestBed.inject(DatasetCompactionService);
         datasetFlowApi = TestBed.inject(DatasetFlowApi);

@@ -7,12 +7,15 @@
 
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { PageBasedInfo } from "src/app/api/kamu.graphql.interface";
+import { NgbPagination, NgbPaginationPrevious, NgbPaginationNext } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
     selector: "app-pagination",
     templateUrl: "./pagination.component.html",
     styleUrls: ["./pagination.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [NgbPagination, NgbPaginationPrevious, NgbPaginationNext],
 })
 export class PaginationComponent {
     @Input({ required: true }) public currentPage: number;

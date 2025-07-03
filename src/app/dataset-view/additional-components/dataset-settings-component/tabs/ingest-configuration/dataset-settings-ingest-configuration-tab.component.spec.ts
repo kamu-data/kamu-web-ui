@@ -8,16 +8,12 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetSettingsIngestConfigurationTabComponent } from "./dataset-settings-ingest-configuration-tab.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { Apollo } from "apollo-angular";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-import { MatDividerModule } from "@angular/material/divider";
-import { IngestConfigurationRuleModule } from "./ingest-configuration-rule-form/ingest-configuration.module";
 import { of } from "rxjs";
 import { DatasetFlowConfigService } from "../../services/dataset-flow-config.service";
-import { FlowRetryPolicyFormModule } from "./flow-retry-policy-form/flow-retry-policy-form.module";
 
 describe("DatasetSettingsIngestConfigurationTabComponent", () => {
     let component: DatasetSettingsIngestConfigurationTabComponent;
@@ -26,15 +22,8 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [DatasetSettingsIngestConfigurationTabComponent],
-            imports: [
-                SharedTestModule,
-                ToastrModule.forRoot(),
-                MatDividerModule,
-                IngestConfigurationRuleModule,
-                FlowRetryPolicyFormModule,
-            ],
-            providers: [Apollo, HttpClientTestingModule],
+            imports: [SharedTestModule, DatasetSettingsIngestConfigurationTabComponent],
+            providers: [Apollo, provideToastr()],
         });
         fixture = TestBed.createComponent(DatasetSettingsIngestConfigurationTabComponent);
         datasetFlowConfigService = TestBed.inject(DatasetFlowConfigService);

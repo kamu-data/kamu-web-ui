@@ -8,12 +8,15 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { DataHelpers } from "src/app/common/helpers/data.helpers";
 import { BasePropertyComponent } from "../base-property/base-property.component";
+import { NgIf } from "@angular/common";
 
 @Component({
     selector: "app-engine-property",
     templateUrl: "./engine-property.component.html",
     styleUrls: ["./engine-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [NgIf],
 })
 export class EnginePropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;

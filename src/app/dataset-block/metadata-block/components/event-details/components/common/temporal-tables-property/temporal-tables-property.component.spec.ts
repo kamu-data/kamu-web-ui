@@ -15,8 +15,7 @@ describe("TemporalTablesPropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [TemporalTablesPropertyComponent],
-            imports: [SharedTestModule],
+            imports: [SharedTestModule, TemporalTablesPropertyComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(TemporalTablesPropertyComponent);

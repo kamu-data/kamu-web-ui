@@ -6,7 +6,6 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ReactiveFormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { CronExpressionFormComponent } from "./cron-expression-form.component";
 
@@ -16,8 +15,7 @@ describe("CronExpressionFormComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [CronExpressionFormComponent],
-            imports: [ReactiveFormsModule],
+            imports: [CronExpressionFormComponent],
             providers: [
                 {
                     provide: ActivatedRoute,

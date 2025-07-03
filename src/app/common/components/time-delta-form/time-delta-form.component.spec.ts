@@ -6,7 +6,6 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ReactiveFormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { TimeDeltaFormComponent } from "./time-delta-form.component";
 import { TimeUnit } from "src/app/api/kamu.graphql.interface";
@@ -17,8 +16,7 @@ describe("TimeDeltaFormComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [TimeDeltaFormComponent],
-            imports: [ReactiveFormsModule],
+            imports: [TimeDeltaFormComponent],
             providers: [
                 {
                     provide: ActivatedRoute,

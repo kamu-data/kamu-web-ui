@@ -9,11 +9,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { FlowRetryPolicyFormComponent } from "./flow-retry-policy-form.component";
 import { RouterTestingModule } from "@angular/router/testing";
-import { TimeDeltaFormModule } from "src/app/common/components/time-delta-form/time-delta-form.module";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { TooltipIconModule } from "src/app/common/components/tooltip-icon/tooltip-icon.module";
-import { MatSlideToggleModule } from "@angular/material/slide-toggle";
-import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
 
 describe("FlowRetryPolicyFormComponent", () => {
     let component: FlowRetryPolicyFormComponent;
@@ -21,15 +16,11 @@ describe("FlowRetryPolicyFormComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [FlowRetryPolicyFormComponent],
             imports: [
+                //-----//
                 RouterTestingModule,
-                FormsModule,
-                ReactiveFormsModule,
-                MatSlideToggleModule,
-                TimeDeltaFormModule,
-                TooltipIconModule,
-                FormValidationErrorsModule,
+                //-----//
+                FlowRetryPolicyFormComponent,
             ],
         });
         fixture = TestBed.createComponent(FlowRetryPolicyFormComponent);

@@ -17,7 +17,6 @@ import { FETCH_FORM_DATA } from "../data/fetch-form-data";
 import { FETCH_STEP_RADIO_CONTROLS } from "../../add-polling-source/form-control.source";
 import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
-import { PollingSourceFormComponentsModule } from "../../../form-components/polling-source-form-components.module";
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { Apollo } from "apollo-angular";
 import { DatasetApi } from "src/app/api/dataset.api";
@@ -38,8 +37,7 @@ describe("BaseStepComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [BaseStepComponent, TooltipIconComponent],
-            imports: [ReactiveFormsModule, NgbTooltipModule, PollingSourceFormComponentsModule, SharedTestModule],
+            imports: [ReactiveFormsModule, NgbTooltipModule, SharedTestModule, BaseStepComponent, TooltipIconComponent],
             providers: [
                 Apollo,
                 DatasetApi,

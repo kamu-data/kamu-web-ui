@@ -10,11 +10,21 @@ import { QueryExplainerOutputType } from "../../query-explainer.types";
 import { extractSchemaFieldsFromData } from "src/app/common/helpers/table.helper";
 import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
 import { parseDataFromJsonAoSFormat } from "src/app/common/helpers/data.helpers";
+import { DynamicTableComponent } from "../../../common/components/dynamic-table/dynamic-table.component";
+import { NgIf } from "@angular/common";
 
 @Component({
     selector: "app-reproduced-result-section",
     templateUrl: "./reproduced-result-section.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        NgIf,
+
+        //-----//
+        DynamicTableComponent,
+    ],
 })
 export class ReproducedResultSectionComponent {
     @Input({ required: true }) public dataJsonAoS: QueryExplainerOutputType;

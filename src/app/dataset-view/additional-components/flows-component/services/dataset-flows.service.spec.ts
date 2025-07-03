@@ -9,7 +9,7 @@ import { TestBed } from "@angular/core/testing";
 import { DatasetFlowsService } from "./dataset-flows.service";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { ToastrModule, ToastrService } from "ngx-toastr";
+import { provideToastr, ToastrService } from "ngx-toastr";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import { of } from "rxjs";
 import {
@@ -33,6 +33,7 @@ import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.typ
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("DatasetFlowsService", () => {
     let service: DatasetFlowsService;
@@ -47,8 +48,8 @@ describe("DatasetFlowsService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo],
-            imports: [ApolloTestingModule, ToastrModule.forRoot(), HttpClientTestingModule],
+            providers: [Apollo, provideAnimations(), provideToastr()],
+            imports: [ApolloTestingModule, HttpClientTestingModule],
         });
         service = TestBed.inject(DatasetFlowsService);
         datasetFlowApi = TestBed.inject(DatasetFlowApi);

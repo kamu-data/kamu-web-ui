@@ -8,11 +8,25 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { SetVocab } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
+import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
+import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";
+import { NgIf, NgFor, KeyValuePipe } from "@angular/common";
 
 @Component({
     selector: "app-set-vocab-event",
     templateUrl: "./set-vocab-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        NgIf,
+        NgFor,
+        KeyValuePipe,
+
+        //-----//
+        BlockRowDataComponent,
+        CardsPropertyComponent,
+    ],
 })
 export class SetVocabEventComponent extends BaseComponent {
     @Input({ required: true }) public event: SetVocab;

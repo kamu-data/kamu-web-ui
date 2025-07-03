@@ -21,24 +21,17 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
-import { DynamicTableModule } from "src/app/common/components/dynamic-table/dynamic-table.module";
 import { EditorModule } from "src/app/editor/editor.module";
 import { EngineSelectComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
 
 @NgModule({
-    declarations: [
-        QueryAndResultSectionsComponent,
-        LoadMoreComponent,
-        RequestTimerComponent,
-        SearchAndSchemasSectionComponent,
-        SavedQueriesSectionComponent,
-        EngineSelectComponent,
-    ],
     imports: [
-        CdkAccordionModule,
+        //-----//
         CommonModule,
         FormsModule,
-        EditorModule,
+
+        //-----//
+        CdkAccordionModule,
         MatButtonModule,
         MatButtonToggleModule,
         MatDividerModule,
@@ -47,13 +40,20 @@ import { EngineSelectComponent } from "src/app/dataset-view/additional-component
         MatProgressBarModule,
         NgbTypeaheadModule,
 
-        DynamicTableModule,
+        //-----//
+        EditorModule,
+        EngineSelectComponent,
+        LoadMoreComponent,
+        QueryAndResultSectionsComponent,
+        RequestTimerComponent,
+        SearchAndSchemasSectionComponent,
+        SavedQueriesSectionComponent,
     ],
     exports: [
+        EngineSelectComponent,
         QueryAndResultSectionsComponent,
         SavedQueriesSectionComponent,
         SearchAndSchemasSectionComponent,
-        EngineSelectComponent,
     ],
 })
 export class QuerySharedModule {}

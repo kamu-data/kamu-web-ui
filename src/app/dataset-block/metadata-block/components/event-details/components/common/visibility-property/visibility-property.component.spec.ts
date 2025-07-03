@@ -16,8 +16,7 @@ describe("VisibilityPropertyComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [VisibilityPropertyComponent],
-            imports: [SharedTestModule],
+            imports: [SharedTestModule, VisibilityPropertyComponent],
         });
         fixture = TestBed.createComponent(VisibilityPropertyComponent);
         component = fixture.componentInstance;

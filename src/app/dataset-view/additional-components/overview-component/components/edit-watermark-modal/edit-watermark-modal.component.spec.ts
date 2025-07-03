@@ -33,7 +33,6 @@ describe("EditWatermarkModalComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [EditWatermarkModalComponent],
             providers: [Apollo, NgbActiveModal],
             imports: [
                 MatDividerModule,
@@ -44,6 +43,7 @@ describe("EditWatermarkModalComponent", () => {
                 FormsModule,
                 SharedTestModule,
                 HttpClientTestingModule,
+                EditWatermarkModalComponent,
             ],
         }).compileComponents();
 

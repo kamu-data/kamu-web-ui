@@ -34,9 +34,15 @@ describe("FinalYamlModalComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [FinalYamlModalComponent],
             providers: [NgbActiveModal],
-            imports: [ApolloModule, FormsModule, HttpClientTestingModule, SharedTestModule, EditorModule],
+            imports: [
+                ApolloModule,
+                FormsModule,
+                HttpClientTestingModule,
+                SharedTestModule,
+                EditorModule,
+                FinalYamlModalComponent,
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(FinalYamlModalComponent);

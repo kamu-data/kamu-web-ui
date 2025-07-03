@@ -33,7 +33,6 @@ describe("SearchSectionComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SearchSectionComponent],
             providers: [Apollo],
             imports: [
                 ApolloModule,
@@ -44,6 +43,7 @@ describe("SearchSectionComponent", () => {
                 FormsModule,
                 SharedTestModule,
                 RouterModule,
+                SearchSectionComponent,
             ],
         }).compileComponents();
 

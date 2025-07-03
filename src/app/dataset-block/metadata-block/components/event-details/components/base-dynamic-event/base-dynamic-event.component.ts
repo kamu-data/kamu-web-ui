@@ -20,11 +20,26 @@ import {
 import { EventRow, EventSection } from "../../dynamic-events/dynamic-events.model";
 import { BasePropertyComponent } from "../common/base-property/base-property.component";
 import { BaseComponent } from "src/app/common/components/base.component";
+import { MatIconModule } from "@angular/material/icon";
+import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";
+import { NgFor, NgIf } from "@angular/common";
 
 @Component({
     selector: "app-dynamic-base-event",
     templateUrl: "./base-dynamic-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        NgFor,
+        NgIf,
+
+        //-----//
+        MatIconModule,
+
+        //-----//
+        BlockRowDataComponent,
+    ],
 })
 export class BaseDynamicEventComponent<TEvent extends object> extends BaseComponent implements AfterViewChecked {
     @Input({ required: true }) public event: TEvent;

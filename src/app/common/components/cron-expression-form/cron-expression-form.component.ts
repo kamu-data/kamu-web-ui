@@ -6,18 +6,27 @@
  */
 
 import { ChangeDetectionStrategy, Component, forwardRef, Input } from "@angular/core";
-import { FormControl, FormGroup, NG_VALUE_ACCESSOR, Validators } from "@angular/forms";
+import { FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validators } from "@angular/forms";
 import { BaseFormControlComponent } from "../base-form-control.component";
 import { cronExpressionValidator } from "src/app/common/helpers/data.helpers";
 import { cronExpressionNextTime } from "src/app/common/helpers/app.helpers";
 import { MaybeNull } from "src/app/interface/app.types";
 import { CronExpressionFormType, CronExpressionFormValue } from "./cron-expression-form.value";
+import { NgIf } from "@angular/common";
 
 @Component({
     selector: "app-cron-expression-form",
     templateUrl: "./cron-expression-form.component.html",
     styleUrls: ["./cron-expression-form.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        NgIf,
+        ReactiveFormsModule,
+
+        //-----//
+    ],
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

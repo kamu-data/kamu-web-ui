@@ -14,7 +14,7 @@ describe("DataAccessCodeTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [DataAccessCodeTabComponent],
+            imports: [DataAccessCodeTabComponent],
         });
         fixture = TestBed.createComponent(DataAccessCodeTabComponent);
         component = fixture.componentInstance;

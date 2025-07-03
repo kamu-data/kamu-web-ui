@@ -7,14 +7,11 @@
 
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { IngestTriggerFormComponent } from "./ingest-trigger-form.component";
-import { MatSlideToggleModule } from "@angular/material/slide-toggle";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatRadioModule } from "@angular/material/radio";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
-import { ToastrModule } from "ngx-toastr";
 import { DatasetFlowTriggerService } from "../../../services/dataset-flow-trigger.service";
+import { provideToastr } from "ngx-toastr";
 import { of } from "rxjs";
 import {
     mockGetDatasetFlowTriggersQuery,
@@ -27,10 +24,6 @@ import {
 } from "src/app/common/helpers/base-test.helpers.spec";
 import { TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { PollingGroupEnum } from "../../../dataset-settings.model";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { TooltipIconModule } from "src/app/common/components/tooltip-icon/tooltip-icon.module";
-import { TimeDeltaFormModule } from "src/app/common/components/time-delta-form/time-delta-form.module";
-import { CronExpressionFormModule } from "src/app/common/components/cron-expression-form/cron-expression-form.module";
 
 describe("IngestTriggerFormComponent", () => {
     let component: IngestTriggerFormComponent;
@@ -41,19 +34,11 @@ describe("IngestTriggerFormComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [IngestTriggerFormComponent],
-            providers: [Apollo],
+            providers: [Apollo, provideToastr()],
             imports: [
-                FormsModule,
-                ReactiveFormsModule,
-                ToastrModule.forRoot(),
-                MatRadioModule,
+                //-----//
                 SharedTestModule,
-                MatSlideToggleModule,
-                MatProgressBarModule,
-                TooltipIconModule,
-                TimeDeltaFormModule,
-                CronExpressionFormModule,
+                IngestTriggerFormComponent,
             ],
         });
         fixture = TestBed.createComponent(IngestTriggerFormComponent);

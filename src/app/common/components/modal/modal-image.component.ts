@@ -10,7 +10,6 @@ import { DynamicComponent } from "./dynamic.component";
 
 @Component({
     selector: "modal-image",
-
     template: `
         <div class="modal__content" data-test-id="modal_image_content">
             <div class="modal__img text-center">
@@ -24,5 +23,6 @@ import { DynamicComponent } from "./dynamic.component";
             </div>
         </div>
     `,
+    standalone: true,
 })
 export class ModalImageComponent extends DynamicComponent {}

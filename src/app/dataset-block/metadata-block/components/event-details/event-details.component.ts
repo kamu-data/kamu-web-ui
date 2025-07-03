@@ -38,6 +38,7 @@ import { SetLicenseEventComponent } from "./components/set-license-event/set-lic
     selector: "app-event-details",
     templateUrl: "./event-details.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
 })
 export class EventDetailsComponent implements AfterViewInit, OnChanges {
     @Input({ required: true }) public block: MetadataBlockFragment;

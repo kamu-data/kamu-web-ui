@@ -6,7 +6,6 @@
  */
 
 import { MatRadioModule } from "@angular/material/radio";
-import { PaginationModule } from "../../../common/components/pagination-component/pagination.module";
 import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, tick } from "@angular/core/testing";
 import { FlowsComponent } from "./flows.component";
 import { Apollo } from "apollo-angular";
@@ -17,14 +16,13 @@ import {
     mockDatasetMainDataId,
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { DatasetFlowsService } from "./services/dataset-flows.service";
 import { delay, of } from "rxjs";
 import { MatMenuModule } from "@angular/material/menu";
 import { PaginationComponent } from "src/app/common/components/pagination-component/pagination.component";
 import { MatTableModule } from "@angular/material/table";
-import { DisplayTimeModule } from "src/app/common/components/display-time/display-time.module";
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
@@ -40,6 +38,7 @@ import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("FlowsComponent", () => {
     let component: FlowsComponent;
@@ -52,6 +51,8 @@ describe("FlowsComponent", () => {
         await TestBed.configureTestingModule({
             providers: [
                 Apollo,
+                provideAnimations(),
+                provideToastr(),
                 {
                     provide: ActivatedRoute,
                     useValue: {
@@ -80,14 +81,10 @@ describe("FlowsComponent", () => {
                     },
                 },
             ],
-            declarations: [FlowsComponent, FlowsTableComponent, PaginationComponent, TileBaseWidgetComponent],
             imports: [
                 ApolloTestingModule,
-                ToastrModule.forRoot(),
                 MatMenuModule,
-                PaginationModule,
                 MatTableModule,
-                DisplayTimeModule,
                 MatRadioModule,
                 FormsModule,
                 MatDividerModule,
@@ -99,6 +96,10 @@ describe("FlowsComponent", () => {
                 RouterModule,
                 MatProgressBarModule,
                 AngularMultiSelectModule,
+                FlowsComponent,
+                FlowsTableComponent,
+                PaginationComponent,
+                TileBaseWidgetComponent,
             ],
         }).compileComponents();
 

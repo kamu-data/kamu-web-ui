@@ -10,12 +10,15 @@ import { MqttTopicSubscription } from "src/app/api/kamu.graphql.interface";
 import { BasePropertyComponent } from "../base-property/base-property.component";
 import { DataRow, DataSchemaField, OperationColumnClassEnum } from "src/app/interface/dataset.interface";
 import { extractSchemaFieldsFromData } from "src/app/common/helpers/table.helper";
+import { DynamicTableComponent } from "../../../../../../../common/components/dynamic-table/dynamic-table.component";
 
 @Component({
     selector: "app-topics-property",
     templateUrl: "./topics-property.component.html",
     styleUrls: ["./topics-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [DynamicTableComponent],
 })
 export class TopicsPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: MqttTopicSubscription[];

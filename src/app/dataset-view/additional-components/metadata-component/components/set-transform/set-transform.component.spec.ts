@@ -51,13 +51,6 @@ describe("SetTransformComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                SetTransformComponent,
-                EngineSectionComponent,
-                QueriesSectionComponent,
-                SearchSectionComponent,
-                StepperNavigationComponent,
-            ],
             imports: [
                 ApolloModule,
                 ApolloTestingModule,
@@ -69,6 +62,11 @@ describe("SetTransformComponent", () => {
                 ReactiveFormsModule,
                 RouterModule,
                 EditorModule,
+                SetTransformComponent,
+                EngineSectionComponent,
+                QueriesSectionComponent,
+                SearchSectionComponent,
+                StepperNavigationComponent,
             ],
             providers: [
                 Apollo,

@@ -30,11 +30,10 @@ import { MatChipsModule } from "@angular/material/chips";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { OverviewHistorySummaryHeaderComponent } from "src/app/dataset-view/additional-components/overview-component/components/overview-history-summary-header/overview-history-summary-header.component";
 import { ReadmeSectionComponent } from "./components/readme-section/readme-section.component";
-import { DisplaySizeModule } from "src/app/common/pipes/display-size.module";
 import { DisplayTimeComponent } from "src/app/common/components/display-time/display-time.component";
 import { DisplayHashComponent } from "src/app/common/components/display-hash/display-hash.component";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { DynamicTableComponent } from "src/app/common/components/dynamic-table/dynamic-table.component";
 import { MatTableModule } from "@angular/material/table";
 import { RouterTestingModule } from "@angular/router/testing";
@@ -56,6 +55,7 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
 import AppValues from "src/app/common/values/app.values";
 import { RouterModule } from "@angular/router";
 import { DatasetCollaborationsService } from "../dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("OverviewComponent", () => {
     let component: OverviewComponent;
@@ -69,17 +69,8 @@ describe("OverviewComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [
-                OverviewComponent,
-                OverviewHistorySummaryHeaderComponent,
-                ReadmeSectionComponent,
-                DisplayTimeComponent,
-                DisplayHashComponent,
-                DynamicTableComponent,
-            ],
             imports: [
                 ApolloModule,
-                DisplaySizeModule,
                 HttpClientTestingModule,
                 MarkdownModule.forRoot({
                     loader: HttpClient,
@@ -94,11 +85,16 @@ describe("OverviewComponent", () => {
                 ReactiveFormsModule,
                 RouterTestingModule,
                 SharedTestModule,
-                ToastrModule.forRoot(),
                 MatIconModule,
                 RouterModule,
+                OverviewComponent,
+                OverviewHistorySummaryHeaderComponent,
+                ReadmeSectionComponent,
+                DisplayTimeComponent,
+                DisplayHashComponent,
+                DynamicTableComponent,
             ],
-            providers: [Apollo],
+            providers: [Apollo, provideAnimations(), provideToastr()],
         })
             .overrideComponent(OverviewComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },

@@ -14,8 +14,8 @@ import {
 import { mockSeed } from "../../mock.events";
 
 import { SeedEventComponent } from "./seed-event.component";
-import { ToastrModule, ToastrService } from "ngx-toastr";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { provideToastr, ToastrService } from "ngx-toastr";
+import { provideAnimations } from "@angular/platform-browser/animations";
 import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";
 import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
 import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
@@ -30,14 +30,15 @@ describe("SeedEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SeedEventComponent, BlockRowDataComponent, TooltipIconComponent],
+            providers: [provideAnimations(), provideToastr()],
             imports: [
-                ToastrModule.forRoot(),
-                BrowserAnimationsModule,
                 NgbTooltipModule,
                 HttpClientTestingModule,
                 SharedTestModule,
                 MatIconModule,
+                SeedEventComponent,
+                BlockRowDataComponent,
+                TooltipIconComponent,
             ],
         }).compileComponents();
 

@@ -17,12 +17,36 @@ import { BaseDatasetDataComponent } from "src/app/common/components/base-dataset
 import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { RouterLinkActive, RouterLink, RouterOutlet } from "@angular/router";
+import { FeatureFlagDirective } from "../../common/directives/feature-flag.directive";
+import { MatIconModule } from "@angular/material/icon";
+import { DatasetViewMenuComponent } from "../../dataset-view/dataset-view-menu/dataset-view-menu.component";
+import { DatasetViewHeaderComponent } from "../../dataset-view/dataset-view-header/dataset-view-header.component";
+import { NgIf, NgClass, AsyncPipe } from "@angular/common";
 
 @Component({
     selector: "app-dataset-flow-details",
     templateUrl: "./dataset-flow-details.component.html",
     styleUrls: ["./dataset-flow-details.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        AsyncPipe,
+        NgIf,
+        NgClass,
+        RouterLinkActive,
+        RouterLink,
+        RouterOutlet,
+
+        //-----//
+        MatIconModule,
+
+        //-----//
+        DatasetViewHeaderComponent,
+        DatasetViewMenuComponent,
+        FeatureFlagDirective,
+    ],
 })
 export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implements OnInit {
     @Input(RoutingResolvers.FLOW_DETAILS_ACTIVE_TAB_KEY) public activeTab: FlowDetailsTabs;

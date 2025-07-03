@@ -8,10 +8,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { IngestConfigurationRuleFormComponent } from "./ingest-configuration-rule-form.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { Apollo } from "apollo-angular";
-import { ToastrModule } from "ngx-toastr";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatCheckboxModule } from "@angular/material/checkbox";
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 
 describe("IngestConfigurationRuleFormComponent", () => {
@@ -20,9 +16,11 @@ describe("IngestConfigurationRuleFormComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [IngestConfigurationRuleFormComponent],
-            providers: [Apollo],
-            imports: [SharedTestModule, FormsModule, MatCheckboxModule, ReactiveFormsModule, ToastrModule.forRoot()],
+            imports: [
+                //-----//
+                SharedTestModule,
+                IngestConfigurationRuleFormComponent,
+            ],
         });
         fixture = TestBed.createComponent(IngestConfigurationRuleFormComponent);
         component = fixture.componentInstance;

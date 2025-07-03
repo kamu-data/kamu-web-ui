@@ -37,12 +37,41 @@ import { SqlQueryResponseState } from "src/app/query/global-query/global-query.m
 import { EngineDesc } from "src/app/api/kamu.graphql.interface";
 import { map, Observable } from "rxjs";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
+import { LoadMoreComponent } from "../load-more/load-more.component";
+import { DynamicTableComponent } from "../../../common/components/dynamic-table/dynamic-table.component";
+import { RequestTimerComponent } from "../request-timer/request-timer.component";
+import { SqlEditorComponent } from "../../../editor/components/sql-editor/sql-editor.component";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatIconModule } from "@angular/material/icon";
+import { EngineSelectComponent } from "../../../dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
+import { NgIf, AsyncPipe } from "@angular/common";
 
 @Component({
     selector: "app-query-and-result-sections",
     templateUrl: "./query-and-result-sections.component.html",
     styleUrls: ["./query-and-result-sections.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        AsyncPipe,
+        NgIf,
+
+        //-----//
+        MatIconModule,
+        MatMenuModule,
+        MatDividerModule,
+        MatProgressBarModule,
+
+        //-----//
+        EngineSelectComponent,
+        SqlEditorComponent,
+        RequestTimerComponent,
+        DynamicTableComponent,
+        LoadMoreComponent,
+    ],
 })
 export class QueryAndResultSectionsComponent extends BaseComponent implements OnInit, OnChanges {
     @Input({ required: true }) public sqlLoading: boolean;

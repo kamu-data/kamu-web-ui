@@ -6,16 +6,24 @@
  */
 
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
+import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { IngestConfigurationRuleFormType } from "../../scheduling/dataset-settings-scheduling-tab.component.types";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { FlowConfigRuleIngest } from "src/app/api/kamu.graphql.interface";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 
 @Component({
     selector: "app-ingest-configuration-rule-form",
     templateUrl: "./ingest-configuration-rule-form.component.html",
     styleUrls: ["./ingest-configuration-rule-form.component.scss"],
+    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        //-----//
+        ReactiveFormsModule,
+        //-----//
+        MatCheckboxModule,
+    ],
 })
 export class IngestConfigurationRuleFormComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public ingestionRule: FlowConfigRuleIngest;

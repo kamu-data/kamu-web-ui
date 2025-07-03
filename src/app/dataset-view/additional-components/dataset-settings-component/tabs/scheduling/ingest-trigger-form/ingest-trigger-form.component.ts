@@ -6,7 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
-import { AbstractControl, FormControl, FormGroup, Validators } from "@angular/forms";
+import { AbstractControl, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {
     DatasetBasicsFragment,
     DatasetFlowType,
@@ -22,12 +22,37 @@ import { FlowTooltipsTexts } from "src/app/common/tooltips/flow-tooltips.text";
 import { Observable, map, catchError, of } from "rxjs";
 import { TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
 import { CronExpressionFormValue } from "src/app/common/components/cron-expression-form/cron-expression-form.value";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { MatRadioModule } from "@angular/material/radio";
+import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { AsyncPipe, NgIf } from "@angular/common";
+import { TimeDeltaFormComponent } from "src/app/common/components/time-delta-form/time-delta-form.component";
+import { CronExpressionFormComponent } from "src/app/common/components/cron-expression-form/cron-expression-form.component";
 
 @Component({
     selector: "app-ingest-trigger-form",
     templateUrl: "./ingest-trigger-form.component.html",
     styleUrls: ["./ingest-trigger-form.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        AsyncPipe,
+        NgIf,
+        FormsModule,
+        ReactiveFormsModule,
+
+        //-----//
+        MatRadioModule,
+        MatProgressBarModule,
+        MatSlideToggleModule,
+
+        //-----//
+        TooltipIconComponent,
+        TimeDeltaFormComponent,
+        CronExpressionFormComponent,
+    ],
 })
 export class IngestTriggerFormComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

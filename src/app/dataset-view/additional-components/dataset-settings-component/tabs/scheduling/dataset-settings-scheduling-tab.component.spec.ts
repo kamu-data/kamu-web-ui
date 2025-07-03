@@ -9,18 +9,12 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetSettingsSchedulingTabComponent } from "./dataset-settings-scheduling-tab.component";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatSlideToggleModule } from "@angular/material/slide-toggle";
-import { MatRadioModule } from "@angular/material/radio";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { DatasetFlowTriggerService } from "../../services/dataset-flow-trigger.service";
 import { TimeDelta, TimeUnit } from "src/app/api/kamu.graphql.interface";
-import { IngestConfigurationRuleModule } from "../ingest-configuration/ingest-configuration-rule-form/ingest-configuration.module";
-import { IngestTriggerModule } from "./ingest-trigger-form/ingest-trigger.module";
 import { PollingGroupFormType } from "./dataset-settings-scheduling-tab.component.types";
 import { MaybeNull } from "src/app/interface/app.types";
 import { PollingGroupEnum } from "../../dataset-settings.model";
@@ -41,20 +35,8 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DatasetSettingsSchedulingTabComponent],
-            providers: [Apollo],
-            imports: [
-                ApolloTestingModule,
-                ToastrModule.forRoot(),
-                BrowserAnimationsModule,
-                SharedTestModule,
-                MatDividerModule,
-                MatSlideToggleModule,
-                MatRadioModule,
-                ReactiveFormsModule,
-                IngestConfigurationRuleModule,
-                IngestTriggerModule,
-            ],
+            providers: [Apollo, provideToastr()],
+            imports: [ApolloTestingModule, SharedTestModule, DatasetSettingsSchedulingTabComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DatasetSettingsSchedulingTabComponent);

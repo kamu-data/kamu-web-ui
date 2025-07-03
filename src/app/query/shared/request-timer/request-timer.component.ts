@@ -25,6 +25,7 @@ import { CancelRequestService } from "src/app/services/cancel-request.service";
     selector: "app-request-timer",
     templateUrl: "./request-timer.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
 })
 export class RequestTimerComponent extends BaseComponent implements OnChanges, OnDestroy, OnInit {
     @Input({ required: true }) public class: string;

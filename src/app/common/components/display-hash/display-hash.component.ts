@@ -10,11 +10,24 @@ import { Component, inject, Input } from "@angular/core";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { ToastrService } from "ngx-toastr";
 import ProjectLinks from "src/app/project-links";
+import { MatIconModule } from "@angular/material/icon";
+import { RouterLink } from "@angular/router";
+import { NgIf, SlicePipe } from "@angular/common";
 
 @Component({
     selector: "app-display-hash",
     templateUrl: "./display-hash.component.html",
     styleUrls: ["./display-hash.component.scss"],
+    standalone: true,
+    imports: [
+        //-----//
+        NgIf,
+        RouterLink,
+        SlicePipe,
+
+        //-----//
+        MatIconModule,
+    ],
 })
 export class DisplayHashComponent {
     @Input({ required: true }) public value: string;

@@ -11,7 +11,7 @@ import { TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { DatasetFlowTriggerService } from "./dataset-flow-trigger.service";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { ToastrModule, ToastrService } from "ngx-toastr";
+import { provideToastr, ToastrService } from "ngx-toastr";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import { of } from "rxjs";
 import {
@@ -26,6 +26,7 @@ import {
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
 import { mockDatasetInfo } from "src/app/search/mock.data";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("DatasetFlowTriggerService", () => {
     let service: DatasetFlowTriggerService;
@@ -48,8 +49,8 @@ describe("DatasetFlowTriggerService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo],
-            imports: [ApolloTestingModule, ToastrModule.forRoot()],
+            providers: [Apollo, provideAnimations(), provideToastr()],
+            imports: [ApolloTestingModule],
         });
         service = TestBed.inject(DatasetFlowTriggerService);
         datasetFlowApi = TestBed.inject(DatasetFlowApi);

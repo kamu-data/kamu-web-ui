@@ -13,6 +13,7 @@ import { DataHelpers } from "src/app/common/helpers/data.helpers";
     selector: "app-step-type-property",
     templateUrl: "./step-type-property.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
 })
 export class StepTypePropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;

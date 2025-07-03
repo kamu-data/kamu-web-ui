@@ -9,11 +9,14 @@ import { Component, inject } from "@angular/core";
 import { ModalService } from "../../common/components/modal/modal.service";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import AppValues from "src/app/common/values/app.values";
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
     selector: "app-notification-indicator",
     templateUrl: "./notification-indicator.html",
     styleUrls: ["./notification-indicator.scss"],
+    standalone: true,
+    imports: [MatIconModule],
 })
 export class NotificationIndicatorComponent {
     private modalService = inject(ModalService);

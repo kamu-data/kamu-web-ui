@@ -10,12 +10,15 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { EnvVar } from "src/app/api/kamu.graphql.interface";
 import { DataRow, DataSchemaField, OperationColumnClassEnum } from "src/app/interface/dataset.interface";
 import { BasePropertyComponent } from "../base-property/base-property.component";
+import { DynamicTableComponent } from "../../../../../../../common/components/dynamic-table/dynamic-table.component";
 
 @Component({
     selector: "app-env-variables-property",
     templateUrl: "./env-variables-property.component.html",
     styleUrls: ["./env-variables-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [DynamicTableComponent],
 })
 export class EnvVariablesPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: EnvVar[];

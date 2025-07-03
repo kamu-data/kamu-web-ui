@@ -21,12 +21,33 @@ import { EMPTY, Observable } from "rxjs";
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
 import { LoggedUserService } from "../../auth/logged-user.service";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { MatIconModule } from "@angular/material/icon";
+import { FeatureFlagDirective } from "../../common/directives/feature-flag.directive";
+import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
+import { NgIf, NgFor, NgClass, AsyncPipe } from "@angular/common";
 
 @Component({
     selector: "app-settings",
     templateUrl: "./account-settings.component.html",
     styleUrls: ["./account-settings.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        AsyncPipe,
+        NgClass,
+        NgIf,
+        NgFor,
+        RouterLink,
+        RouterLinkActive,
+        RouterOutlet,
+
+        //-----//
+        MatIconModule,
+
+        //-----//
+        FeatureFlagDirective,
+    ],
 })
 export class AccountSettingsComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.ACCOUNT_SETTINGS_ACTIVE_TAB_KEY) public activeTab: AccountSettingsTabs;

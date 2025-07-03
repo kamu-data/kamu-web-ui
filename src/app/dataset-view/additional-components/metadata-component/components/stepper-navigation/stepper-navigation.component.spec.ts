@@ -9,6 +9,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { StepperNavigationComponent } from "./stepper-navigation.component";
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { SetPollingSourceSection } from "../source-events/add-polling-source/add-polling-source-form.types";
+import { CdkStepper } from "@angular/cdk/stepper";
 
 describe("StepperNavigationComponent", () => {
     let component: StepperNavigationComponent;
@@ -16,7 +17,8 @@ describe("StepperNavigationComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [StepperNavigationComponent],
+            imports: [StepperNavigationComponent],
+            providers: [{ provide: CdkStepper, useClass: CdkStepper }],
         }).compileComponents();
 
         fixture = TestBed.createComponent(StepperNavigationComponent);

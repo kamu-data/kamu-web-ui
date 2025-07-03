@@ -5,8 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { FlowRetryBackoffType, FlowRetryPolicy, TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { FlowRetryPolicyFormType } from "./flow-retry-policy-form.types";
 import { TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
@@ -14,11 +14,29 @@ import { MaybeNull } from "src/app/interface/app.types";
 import { FlowTooltipsTexts } from "src/app/common/tooltips/flow-tooltips.text";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { BaseComponent } from "src/app/common/components/base.component";
+import { NgIf } from "@angular/common";
+import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
+import { TimeDeltaFormComponent } from "src/app/common/components/time-delta-form/time-delta-form.component";
+import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 @Component({
     selector: "app-flow-retry-policy-form",
     templateUrl: "./flow-retry-policy-form.component.html",
     styleUrls: ["./flow-retry-policy-form.component.scss"],
+    standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        //-----//
+        NgIf,
+        ReactiveFormsModule,
+        //-----//
+        MatSlideToggleModule,
+        //-----//
+        FormValidationErrorsDirective,
+        TimeDeltaFormComponent,
+        TooltipIconComponent,
+    ],
 })
 export class FlowRetryPolicyFormComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public retryPolicy: FlowRetryPolicy | null = null;

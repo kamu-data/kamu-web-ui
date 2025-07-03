@@ -11,11 +11,23 @@ import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";
 import { MaybeNull } from "src/app/interface/app.types";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetSchema } from "src/app/interface/dataset.interface";
+import { DynamicTableComponent } from "../../../../../../common/components/dynamic-table/dynamic-table.component";
+import { NgIf } from "@angular/common";
+import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";
 
 @Component({
     selector: "app-set-data-schema-event",
     templateUrl: "./set-data-schema-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        NgIf,
+
+        //-----//
+        BlockRowDataComponent,
+        DynamicTableComponent,
+    ],
 })
 export class SetDataSchemaEventComponent extends BaseComponent {
     @Input({ required: true }) public event: SetDataSchema;

@@ -39,7 +39,6 @@ describe("ReadmeSectionComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [Apollo],
-            declarations: [ReadmeSectionComponent],
             imports: [
                 ApolloModule,
                 ApolloTestingModule,
@@ -51,6 +50,7 @@ describe("ReadmeSectionComponent", () => {
                 HttpClientTestingModule,
                 FormsModule,
                 MatIconModule,
+                ReadmeSectionComponent,
             ],
         }).compileComponents();
 

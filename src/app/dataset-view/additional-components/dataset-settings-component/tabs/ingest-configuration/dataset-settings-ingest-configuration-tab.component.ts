@@ -19,11 +19,23 @@ import {
     FlowRetryPolicyFormValue,
 } from "./flow-retry-policy-form/flow-retry-policy-form.types";
 import { MaybeNull } from "src/app/interface/app.types";
+import { MatDividerModule } from "@angular/material/divider";
+import { IngestConfigurationRuleFormComponent } from "./ingest-configuration-rule-form/ingest-configuration-rule-form.component";
+import { FlowRetryPolicyFormComponent } from "./flow-retry-policy-form/flow-retry-policy-form.component";
 
 @Component({
     selector: "app-dataset-settings-ingest-configuration-tab",
     templateUrl: "./dataset-settings-ingest-configuration-tab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        MatDividerModule,
+
+        //-----//
+        FlowRetryPolicyFormComponent,
+        IngestConfigurationRuleFormComponent,
+    ],
 })
 export class DatasetSettingsIngestConfigurationTabComponent extends BaseComponent {
     @Input(RoutingResolvers.DATASET_SETTINGS_INGEST_CONFIGURATION_KEY)

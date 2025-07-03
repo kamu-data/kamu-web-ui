@@ -15,12 +15,15 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { MaybeNull } from "src/app/interface/app.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { NgIf } from "@angular/common";
 
 @Component({
     selector: "app-interval-property",
     templateUrl: "./offset-interval-property.component.html",
     styleUrls: ["./offset-interval-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [NgIf],
 })
 export class OffsetIntervalPropertyComponent extends BasePropertyComponent implements OnInit {
     @Input({ required: true }) public data: {

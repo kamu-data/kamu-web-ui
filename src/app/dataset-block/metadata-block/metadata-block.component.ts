@@ -16,11 +16,32 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import ProjectLinks from "src/app/project-links";
 import { MetadataBlockInfo } from "./metadata-block.types";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { YamlViewSectionComponent } from "./components/yaml-view-section/yaml-view-section.component";
+import { BlockNavigationComponent } from "./components/block-navigation/block-navigation.component";
+import { EventDetailsComponent } from "./components/event-details/event-details.component";
+import { BlockHeaderComponent } from "./components/block-header/block-header.component";
+import { DatasetViewMenuComponent } from "../../dataset-view/dataset-view-menu/dataset-view-menu.component";
+import { DatasetViewHeaderComponent } from "../../dataset-view/dataset-view-header/dataset-view-header.component";
+import { NgIf, AsyncPipe } from "@angular/common";
 
 @Component({
     selector: "app-metadata-block",
     templateUrl: "./metadata-block.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        AsyncPipe,
+        NgIf,
+
+        //-----//
+        BlockHeaderComponent,
+        BlockNavigationComponent,
+        DatasetViewHeaderComponent,
+        DatasetViewMenuComponent,
+        EventDetailsComponent,
+        YamlViewSectionComponent,
+    ],
 })
 export class MetadataBlockComponent extends BaseDatasetDataComponent implements OnInit {
     @Input(ProjectLinks.URL_PARAM_BLOCK_HASH) public blockHash: string;

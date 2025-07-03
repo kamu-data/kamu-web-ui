@@ -6,7 +6,7 @@
  */
 
 import { of } from "rxjs";
-import { getInputElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { getInputElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
@@ -18,7 +18,7 @@ import { LoggedUserService } from "../auth/logged-user.service";
 import { mockAccountDetails } from "../api/mock/auth.mock";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { NgSelectModule } from "@ng-select/ng-select";
-import { FormValidationErrorsModule } from "../common/directives/form-validation-errors.module";
+import { EditorModule } from "../editor/editor.module";
 
 describe("DatasetCreateComponent", () => {
     let component: DatasetCreateComponent;
@@ -28,7 +28,6 @@ describe("DatasetCreateComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DatasetCreateComponent],
             imports: [
                 ReactiveFormsModule,
                 ApolloModule,
@@ -36,7 +35,8 @@ describe("DatasetCreateComponent", () => {
                 HttpClientTestingModule,
                 NgSelectModule,
                 SharedTestModule,
-                FormValidationErrorsModule,
+                DatasetCreateComponent,
+                EditorModule,
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         })
@@ -44,6 +44,8 @@ describe("DatasetCreateComponent", () => {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })
             .compileComponents();
+
+        registerMatSvgIcons();
 
         loggedUserService = TestBed.inject(LoggedUserService);
         spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);

@@ -6,7 +6,7 @@
  */
 
 import { Component, inject, Input, OnInit } from "@angular/core";
-import { MatChipInputEvent } from "@angular/material/chips";
+import { MatChipInputEvent, MatChipsModule } from "@angular/material/chips";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import {
     DatasetOverviewFragment,
@@ -22,10 +22,25 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { finalize } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { isEqual } from "src/app/common/helpers/app.helpers";
+import { MatIconModule } from "@angular/material/icon";
+import { NgFor } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { MatDividerModule } from "@angular/material/divider";
 
 @Component({
     selector: "app-details-modal",
     templateUrl: "./edit-details-modal.component.html",
+    standalone: true,
+    imports: [
+        //-----//
+        FormsModule,
+        NgFor,
+
+        //-----//
+        MatDividerModule,
+        MatIconModule,
+        MatChipsModule,
+    ],
 })
 export class EditDetailsModalComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public currentState?: {

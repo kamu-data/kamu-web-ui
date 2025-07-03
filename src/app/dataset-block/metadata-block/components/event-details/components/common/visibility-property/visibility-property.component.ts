@@ -13,6 +13,7 @@ import { DatasetVisibilityOutput } from "src/app/api/kamu.graphql.interface";
     selector: "app-visibility-property",
     templateUrl: "./visibility-property.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
 })
 export class VisibilityPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: DatasetVisibilityOutput;

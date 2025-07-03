@@ -11,8 +11,7 @@ import { MetadataBlockComponent } from "./dataset-block/metadata-block/metadata-
 import { AuthenticatedGuard } from "./auth/guards/authenticated.guard";
 import { AccountSettingsComponent } from "./account/settings/account-settings.component";
 import { PageNotFoundComponent } from "./common/components/page-not-found/page-not-found.component";
-import { NgModule } from "@angular/core";
-import { RouterModule, Routes } from "@angular/router";
+import { Routes } from "@angular/router";
 import { SearchComponent } from "./search/search.component";
 import { LoginComponent } from "./auth/login/login.component";
 import { DatasetViewComponent } from "./dataset-view/dataset-view.component";
@@ -27,7 +26,6 @@ import { AdminGuard } from "./auth/guards/admin.guard";
 import { AdminDashboardComponent } from "./admin-view/admin-dashboard/admin-dashboard.component";
 import { DatasetFlowDetailsComponent } from "./dataset-flow/dataset-flow-details/dataset-flow-details.component";
 import { AccountComponent } from "./account/account.component";
-import { QueryExplainerComponent } from "./query-explainer/query-explainer.component";
 import { blockMetadataResolverFn } from "./dataset-block/metadata-block/resolver/block-metadata.resolver";
 import { searchResolverFn } from "./search/resolver/search.resolver";
 import { addPollingSourceResolverFn } from "./dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/resolver/add-polling-source.resolver";
@@ -128,8 +126,8 @@ export const routes: Routes = [
     },
     {
         path: ProjectLinks.URL_QUERY_EXPLAINER,
-        component: QueryExplainerComponent,
-        loadChildren: () => import("./query-explainer/query-explainer.module").then((m) => m.QueryExplainerModule),
+        loadComponent: () =>
+            import("./query-explainer/query-explainer.component").then((m) => m.QueryExplainerComponent),
     },
     {
         path: ProjectLinks.URL_QUERY,
@@ -548,14 +546,3 @@ export const routes: Routes = [
         component: PageNotFoundComponent,
     },
 ];
-
-@NgModule({
-    imports: [
-        RouterModule.forRoot(routes, {
-            onSameUrlNavigation: "reload",
-            bindToComponentInputs: true,
-        }),
-    ],
-    exports: [RouterModule],
-})
-export class AppRoutingModule {}

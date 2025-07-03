@@ -17,13 +17,12 @@ import {
     mockGetDatasetFlowTriggersDefaultBatchingQuery,
 } from "src/app/api/mock/dataset-flow.mock";
 import { of } from "rxjs";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { TooltipIconModule } from "src/app/common/components/tooltip-icon/tooltip-icon.module";
-import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("BatchingTriggerFormComponent", () => {
     let component: BatchingTriggerFormComponent;
@@ -33,17 +32,14 @@ describe("BatchingTriggerFormComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [BatchingTriggerFormComponent],
-            providers: [Apollo],
+            providers: [Apollo, provideAnimations(), provideToastr()],
             imports: [
                 FormsModule,
                 ReactiveFormsModule,
                 MatProgressBarModule,
-                TooltipIconModule,
-                ToastrModule.forRoot(),
                 MatSlideToggleModule,
                 SharedTestModule,
-                FormValidationErrorsModule,
+                BatchingTriggerFormComponent,
             ],
         });
         fixture = TestBed.createComponent(BatchingTriggerFormComponent);

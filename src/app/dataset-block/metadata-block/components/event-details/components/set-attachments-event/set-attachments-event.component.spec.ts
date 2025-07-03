@@ -23,7 +23,6 @@ describe("SetAttachmentsEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SetAttachmentsEventComponent, BlockRowDataComponent, TooltipIconComponent],
             imports: [
                 SharedTestModule,
                 NgbTooltipModule,
@@ -32,6 +31,9 @@ describe("SetAttachmentsEventComponent", () => {
                     loader: HttpClient,
                     sanitize: SecurityContext.NONE,
                 }),
+                SetAttachmentsEventComponent,
+                BlockRowDataComponent,
+                TooltipIconComponent,
             ],
         }).compileComponents();
 

@@ -19,8 +19,8 @@ import { TestBed } from "@angular/core/testing";
 import { ErrorHandlerService } from "./error-handler.service";
 import { NavigationService } from "./navigation.service";
 import { LoggedUserService } from "../auth/logged-user.service";
-import { ToastrModule, ToastrService } from "ngx-toastr";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { provideToastr, ToastrService } from "ngx-toastr";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("ErrorHandlerService", () => {
     let service: ErrorHandlerService;
@@ -36,11 +36,12 @@ describe("ErrorHandlerService", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
+                provideAnimations(),
+                provideToastr(),
                 ModalService,
                 NavigationService,
                 { provide: LoggedUserService, useValue: loggedUserServiceMock },
             ],
-            imports: [ToastrModule.forRoot(), BrowserAnimationsModule],
         });
         service = TestBed.inject(ErrorHandlerService);
         toastrService = TestBed.inject(ToastrService);

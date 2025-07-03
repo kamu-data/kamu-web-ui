@@ -14,14 +14,13 @@ import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.sp
 import { MatDividerModule } from "@angular/material/divider";
 import { MatTableModule } from "@angular/material/table";
 import { Apollo } from "apollo-angular";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { DatasetWebhooksService } from "./service/dataset-webhooks.service";
 import { of } from "rxjs";
 import { MatIconModule } from "@angular/material/icon";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { NgSelectModule } from "@ng-select/ng-select";
-import { FormValidationErrorsModule } from "src/app/common/directives/form-validation-errors.module";
 import {
     WebhookSubscriptionModalAction,
     WebhookSubscriptionModalActionResult,
@@ -31,6 +30,8 @@ import { mockWebhookSubscriptionInput } from "src/app/api/mock/webhooks.mock";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { TEST_DATASET_ID } from "src/app/api/mock/dataset.mock";
+import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.directive";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("DatasetSettingsWebhooksTabComponent", () => {
     let component: DatasetSettingsWebhooksTabComponent;
@@ -42,8 +43,7 @@ describe("DatasetSettingsWebhooksTabComponent", () => {
     const ngbModalMock = jasmine.createSpyObj<NgbModal>("NgbModal", ["open"]);
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [DatasetSettingsWebhooksTabComponent],
-            providers: [Apollo, { provide: NgbModal, useValue: ngbModalMock }],
+            providers: [Apollo, provideAnimations(), provideToastr(), { provide: NgbModal, useValue: ngbModalMock }],
             imports: [
                 SharedTestModule,
                 HttpClientTestingModule,
@@ -51,9 +51,9 @@ describe("DatasetSettingsWebhooksTabComponent", () => {
                 MatDividerModule,
                 MatTableModule,
                 MatIconModule,
-                ToastrModule.forRoot(),
                 NgSelectModule,
-                FormValidationErrorsModule,
+                FeatureFlagDirective,
+                DatasetSettingsWebhooksTabComponent,
             ],
         });
 

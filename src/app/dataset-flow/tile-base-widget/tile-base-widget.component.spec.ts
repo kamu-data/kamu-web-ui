@@ -8,7 +8,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { TileBaseWidgetComponent } from "./tile-base-widget.component";
 import { mockFlowItemWidgetDataFragments } from "src/app/api/mock/dataset-flow.mock";
-import { NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
 import { FlowItemWidgetDataFragment } from "src/app/api/kamu.graphql.interface";
 import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { mockDatasets } from "../flows-table/flows-table.helpers.mock";
@@ -19,8 +18,7 @@ describe("TileBaseWidgetComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [TileBaseWidgetComponent],
-            imports: [NgbPopoverModule],
+            imports: [TileBaseWidgetComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(TileBaseWidgetComponent);

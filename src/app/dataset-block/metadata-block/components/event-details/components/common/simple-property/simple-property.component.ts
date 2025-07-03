@@ -12,6 +12,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
     selector: "app-simple-property",
     templateUrl: "./simple-property.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
 })
 export class SimplePropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;

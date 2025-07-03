@@ -24,8 +24,15 @@ describe("TypeaheadFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [TypeaheadFieldComponent, TooltipIconComponent],
-            imports: [NgbTypeaheadModule, MatIconModule, FormsModule, ReactiveFormsModule, NgbTooltipModule],
+            imports: [
+                NgbTypeaheadModule,
+                MatIconModule,
+                FormsModule,
+                ReactiveFormsModule,
+                NgbTooltipModule,
+                TypeaheadFieldComponent,
+                TooltipIconComponent,
+            ],
             providers: [
                 {
                     provide: ActivatedRoute,

@@ -12,14 +12,13 @@ import { TEST_DATASET_NAME, mockGetMetadataBlockQuery } from "src/app/api/mock/d
 import { mockPageBasedInfo } from "src/app/search/mock.data";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { DisplayHashModule } from "../display-hash/display-hash.module";
-import { ToastrModule } from "ngx-toastr";
-import { DisplayTimeModule } from "../display-time/display-time.module";
+import { provideToastr } from "ngx-toastr";
 import { MatIconModule } from "@angular/material/icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { RouterTestingModule } from "@angular/router/testing";
 import AppValues from "src/app/common/values/app.values";
 import { RouterModule } from "@angular/router";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("TimelineComponent", () => {
     let component: TimelineComponent;
@@ -27,16 +26,14 @@ describe("TimelineComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [TimelineComponent],
+            providers: [provideAnimations(), provideToastr()],
             imports: [
-                DisplayHashModule,
-                ToastrModule.forRoot(),
-                DisplayTimeModule,
                 MatIconModule,
                 HttpClientTestingModule,
                 NgbPopoverModule,
                 RouterTestingModule,
                 RouterModule,
+                TimelineComponent,
             ],
         }).compileComponents();
 

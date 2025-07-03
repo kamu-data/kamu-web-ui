@@ -21,12 +21,33 @@ import { environment } from "src/environments/environment";
 import { FlowsTableProcessingBaseComponent } from "src/app/dataset-flow/flows-table/flows-table-processing-base.component";
 import { FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { PaginationComponent } from "../../../common/components/pagination-component/pagination.component";
+import { FlowsTableComponent } from "../../../dataset-flow/flows-table/flows-table.component";
+import { TileBaseWidgetComponent } from "../../../dataset-flow/tile-base-widget/tile-base-widget.component";
+import { MatIconModule } from "@angular/material/icon";
+import { NgIf, AsyncPipe } from "@angular/common";
 
 @Component({
     selector: "app-account-flows-tab",
     templateUrl: "./account-flows-tab.component.html",
     styleUrls: ["./account-flows-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        //-----//
+        AsyncPipe,
+        NgIf,
+
+        //-----//
+        MatIconModule,
+        MatProgressBarModule,
+
+        //-----//
+        FlowsTableComponent,
+        TileBaseWidgetComponent,
+        PaginationComponent,
+    ],
 })
 export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent implements OnInit {
     public readonly DISPLAY_COLUMNS = ["description", "information", "creator", "dataset", "options"];

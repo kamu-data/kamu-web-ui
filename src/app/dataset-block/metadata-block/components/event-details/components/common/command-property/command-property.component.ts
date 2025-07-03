@@ -13,6 +13,7 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
     templateUrl: "./command-property.component.html",
     styleUrls: ["./command-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
 })
 export class CommandPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string[];

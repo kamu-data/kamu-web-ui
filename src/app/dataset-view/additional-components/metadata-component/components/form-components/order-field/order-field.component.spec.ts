@@ -20,8 +20,14 @@ describe("OrderFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [OrderFieldComponent, TooltipIconComponent],
-            imports: [NgbTooltipModule, ReactiveFormsModule, FormsModule, SharedTestModule],
+            imports: [
+                NgbTooltipModule,
+                ReactiveFormsModule,
+                FormsModule,
+                SharedTestModule,
+                OrderFieldComponent,
+                TooltipIconComponent,
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(OrderFieldComponent);

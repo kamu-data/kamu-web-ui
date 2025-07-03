@@ -5,19 +5,15 @@
  * included in the LICENSE file.
  */
 
-import { ApolloTestingModule } from "apollo-angular/testing";
 import { emitClickOnElementByDataTestId, getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { MatChipInputEvent, MatChipsModule } from "@angular/material/chips";
-import { FormsModule } from "@angular/forms";
+import { MatChipInputEvent } from "@angular/material/chips";
 import { mockDatasetBasicsDerivedFragment } from "../../../../../search/mock.data";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { Apollo, ApolloModule } from "apollo-angular";
+import { Apollo } from "apollo-angular";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { EditDetailsModalComponent } from "./edit-details-modal.component";
 import { mockMetadataDerivedUpdate, mockOverviewDataUpdate, mockOverviewWithSetInfo } from "../../../data-tabs.mock";
 import { DatasetDataSizeFragment, DatasetOverviewFragment } from "src/app/api/kamu.graphql.interface";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatIconModule } from "@angular/material/icon";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 
@@ -27,17 +23,7 @@ describe("EditDetailsModalComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                ApolloModule,
-                ApolloTestingModule,
-                FormsModule,
-                MatChipsModule,
-                MatDividerModule,
-                MatIconModule,
-                HttpClientTestingModule,
-                SharedTestModule,
-                EditDetailsModalComponent,
-            ],
+            imports: [HttpClientTestingModule, SharedTestModule, EditDetailsModalComponent],
             providers: [Apollo, NgbActiveModal],
         }).compileComponents();
 

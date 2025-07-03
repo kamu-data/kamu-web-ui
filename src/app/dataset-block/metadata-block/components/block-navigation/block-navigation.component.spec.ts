@@ -5,23 +5,16 @@
  * included in the LICENSE file.
  */
 
-import { EventTypeFilterPipe } from "./pipes/event-type-filter.pipe";
-import { BlockHashFilterPipe } from "./pipes/block-hash-filter.pipe";
 import { mockHistoryUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
-import { FormsModule } from "@angular/forms";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { BlockNavigationComponent } from "./block-navigation.component";
-import { NgMultiSelectDropDownModule } from "ng-multiselect-dropdown";
 import {
     dispatchInputEvent,
     getElementByDataTestId,
     registerMatSvgIcons,
 } from "src/app/common/helpers/base-test.helpers.spec";
-import { MatIconModule } from "@angular/material/icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { provideToastr } from "ngx-toastr";
-import { NgSelectModule } from "@ng-select/ng-select";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("BlockNavigationComponent", () => {
     let component: BlockNavigationComponent;
@@ -29,17 +22,8 @@ describe("BlockNavigationComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [provideAnimations(), provideToastr()],
-            imports: [
-                FormsModule,
-                NgMultiSelectDropDownModule,
-                MatIconModule,
-                HttpClientTestingModule,
-                NgSelectModule,
-                BlockNavigationComponent,
-                BlockHashFilterPipe,
-                EventTypeFilterPipe,
-            ],
+            providers: [provideToastr()],
+            imports: [HttpClientTestingModule, BlockNavigationComponent],
         }).compileComponents();
 
         registerMatSvgIcons();

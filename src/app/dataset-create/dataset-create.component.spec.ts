@@ -7,18 +7,15 @@
 
 import { of } from "rxjs";
 import { getInputElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
-import { ApolloModule } from "apollo-angular";
 import { DatasetCreateComponent } from "./dataset-create.component";
 import { DatasetCreateService } from "./dataset-create.service";
 import { SharedTestModule } from "../common/modules/shared-test.module";
 import { LoggedUserService } from "../auth/logged-user.service";
 import { mockAccountDetails } from "../api/mock/auth.mock";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { NgSelectModule } from "@ng-select/ng-select";
-import { EditorModule } from "../editor/editor.module";
+import { ApolloTestingModule } from "apollo-angular/testing";
 
 describe("DatasetCreateComponent", () => {
     let component: DatasetCreateComponent;
@@ -28,17 +25,7 @@ describe("DatasetCreateComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                ReactiveFormsModule,
-                ApolloModule,
-                FormsModule,
-                HttpClientTestingModule,
-                NgSelectModule,
-                SharedTestModule,
-                DatasetCreateComponent,
-                EditorModule,
-            ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            imports: [ApolloTestingModule, HttpClientTestingModule, SharedTestModule, DatasetCreateComponent],
         })
             .overrideComponent(DatasetCreateComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },

@@ -12,11 +12,8 @@ import { FinalYamlModalComponent } from "./final-yaml-modal.component";
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { of } from "rxjs";
-import { FormsModule } from "@angular/forms";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { EditorModule } from "src/app/editor/editor.module";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 
@@ -35,14 +32,7 @@ describe("FinalYamlModalComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [NgbActiveModal],
-            imports: [
-                ApolloModule,
-                FormsModule,
-                HttpClientTestingModule,
-                SharedTestModule,
-                EditorModule,
-                FinalYamlModalComponent,
-            ],
+            imports: [ApolloModule, SharedTestModule, FinalYamlModalComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(FinalYamlModalComponent);

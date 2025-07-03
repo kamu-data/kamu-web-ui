@@ -5,10 +5,9 @@
  * included in the LICENSE file.
  */
 
-import { ApolloTestingModule } from "apollo-angular/testing";
 import { TestBed } from "@angular/core/testing";
 import { EditSetTransformService } from "./edit-set-transform..service";
-import { Apollo, ApolloModule } from "apollo-angular";
+import { Apollo } from "apollo-angular";
 import { SqlQueryStep, TransformInput } from "src/app/api/kamu.graphql.interface";
 import { mockParseSetTransformYamlType, mockSetTransformEventYaml } from "./mock.data";
 import { Engine } from "./components/engine-section/engine-section.types";
@@ -19,7 +18,6 @@ describe("EditSetTransformService", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [Apollo],
-            imports: [ApolloModule, ApolloTestingModule],
         });
         service = TestBed.inject(EditSetTransformService);
     });

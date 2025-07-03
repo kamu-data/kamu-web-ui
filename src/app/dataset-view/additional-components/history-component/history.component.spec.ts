@@ -9,15 +9,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { mockHistoryUpdate } from "../data-tabs.mock";
 import { HistoryComponent } from "./history.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { PaginationComponent } from "src/app/common/components/pagination-component/pagination.component";
-import { TimelineComponent } from "src/app/common/components/timeline-component/timeline.component";
-import { NgbPaginationModule, NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
-import { DisplayHashComponent } from "src/app/common/components/display-hash/display-hash.component";
-import { DisplayTimeComponent } from "src/app/common/components/display-time/display-time.component";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { provideToastr } from "ngx-toastr";
-import { MatIconModule } from "@angular/material/icon";
-import { RouterTestingModule } from "@angular/router/testing";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { MOCK_DATASET_INFO } from "../metadata-component/components/set-transform/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -28,7 +21,6 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { ActivatedRoute } from "@angular/router";
 import ProjectLinks from "src/app/project-links";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("HistoryComponent", () => {
     let component: HistoryComponent;
@@ -39,22 +31,9 @@ describe("HistoryComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                HttpClientTestingModule,
-                NgbPaginationModule,
-                NgbPopoverModule,
-                MatIconModule,
-                RouterTestingModule,
-                SharedTestModule,
-                HistoryComponent,
-                PaginationComponent,
-                TimelineComponent,
-                DisplayTimeComponent,
-                DisplayHashComponent,
-            ],
+            imports: [HttpClientTestingModule, SharedTestModule, HistoryComponent],
             providers: [
                 Apollo,
-                provideAnimations(),
                 provideToastr(),
                 {
                     provide: ActivatedRoute,

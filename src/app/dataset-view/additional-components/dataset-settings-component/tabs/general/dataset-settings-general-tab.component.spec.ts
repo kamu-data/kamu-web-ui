@@ -7,17 +7,12 @@
 
 import { NavigationService } from "./../../../../../services/navigation.service";
 import { DatasetCompactionService } from "./../../services/dataset-compaction.service";
-import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { DatasetSettingsGeneralTabComponent } from "./dataset-settings-general-tab.component";
 import { DatasetSettingsService } from "../../services/dataset-settings.service";
 import { ModalService } from "../../../../../common/components/modal/modal.service";
-import { ApolloModule } from "apollo-angular";
-import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatIconModule } from "@angular/material/icon";
-import { ApolloTestingModule } from "apollo-angular/testing";
+import { Apollo } from "apollo-angular";
+
 import {
     mockDatasetBasicsDerivedFragment,
     mockFullPowerDatasetPermissionsFragment,
@@ -32,17 +27,13 @@ import {
 } from "../../../../../common/helpers/base-test.helpers.spec";
 import { TEST_ACCOUNT_ID } from "src/app/api/mock/auth.mock";
 import { provideToastr } from "ngx-toastr";
-import { MatRadioModule } from "@angular/material/radio";
-import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetFlowType } from "src/app/api/kamu.graphql.interface";
 import { DatasetResetMode } from "./dataset-settings-general-tab.types";
 import AppValues from "src/app/common/values/app.values";
 import { DatasetFlowsService } from "../../../flows-component/services/dataset-flows.service";
 import { DatasetService } from "../../../../dataset.service";
-import { MatCheckboxModule } from "@angular/material/checkbox";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { ActivatedRoute } from "@angular/router";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("DatasetSettingsGeneralTabComponent", () => {
     let component: DatasetSettingsGeneralTabComponent;
@@ -56,24 +47,9 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                ReactiveFormsModule,
-                HttpClientTestingModule,
-                MatDividerModule,
-                MatIconModule,
-                ApolloModule,
-                ApolloTestingModule,
-                MatRadioModule,
-                MatIconModule,
-                NgbTooltipModule,
-                MatCheckboxModule,
-                FormsModule,
-                DatasetSettingsGeneralTabComponent,
-                TooltipIconComponent,
-            ],
+            imports: [DatasetSettingsGeneralTabComponent],
             providers: [
-                FormBuilder,
-                provideAnimations(),
+                Apollo,
                 provideToastr(),
                 {
                     provide: ActivatedRoute,

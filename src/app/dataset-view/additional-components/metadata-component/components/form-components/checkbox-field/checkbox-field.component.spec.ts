@@ -6,10 +6,8 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { FormControl, FormGroup } from "@angular/forms";
 import { CheckboxFieldComponent } from "./checkbox-field.component";
-import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
-import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { getInputElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
@@ -19,13 +17,7 @@ describe("CheckboxFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                ReactiveFormsModule,
-                NgbTooltipModule,
-                SharedTestModule,
-                CheckboxFieldComponent,
-                TooltipIconComponent,
-            ],
+            imports: [SharedTestModule, CheckboxFieldComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(CheckboxFieldComponent);

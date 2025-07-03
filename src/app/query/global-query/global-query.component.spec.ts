@@ -5,31 +5,17 @@
  * included in the LICENSE file.
  */
 
-import { SavedQueriesSectionComponent } from "../shared/saved-queries-section/saved-queries-section.component";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { GlobalQueryComponent } from "./global-query.component";
-import { EditorModule } from "src/app/editor/editor.module";
-import { CdkAccordionModule } from "@angular/cdk/accordion";
-import { QueryAndResultSectionsComponent } from "src/app/query/shared/query-and-result-sections/query-and-result-sections.component";
 import { Apollo } from "apollo-angular";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { MatMenuModule } from "@angular/material/menu";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { provideToastr } from "ngx-toastr";
-import { RequestTimerComponent } from "src/app/query/shared/request-timer/request-timer.component";
-import { MatIconModule } from "@angular/material/icon";
-import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
-import { MatDividerModule } from "@angular/material/divider";
-import { FormsModule } from "@angular/forms";
-import { SearchAndSchemasSectionComponent } from "./search-and-schemas-section/search-and-schemas-section.component";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 import { of } from "rxjs";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { NavigationService } from "src/app/services/navigation.service";
-import { EngineSelectComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("GlobalQueryComponent", () => {
     let component: GlobalQueryComponent;
@@ -41,25 +27,8 @@ describe("GlobalQueryComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [
-                EditorModule,
-                HttpClientTestingModule,
-                MatMenuModule,
-                MatProgressBarModule,
-                CdkAccordionModule,
-                MatIconModule,
-                NgbTypeaheadModule,
-                MatDividerModule,
-                FormsModule,
-                SharedTestModule,
-                GlobalQueryComponent,
-                SavedQueriesSectionComponent,
-                RequestTimerComponent,
-                QueryAndResultSectionsComponent,
-                SearchAndSchemasSectionComponent,
-                EngineSelectComponent,
-            ],
-            providers: [Apollo, provideAnimations(), provideToastr()],
+            imports: [HttpClientTestingModule, SharedTestModule, GlobalQueryComponent],
+            providers: [Apollo, provideToastr()],
         });
         fixture = TestBed.createComponent(GlobalQueryComponent);
         component = fixture.componentInstance;

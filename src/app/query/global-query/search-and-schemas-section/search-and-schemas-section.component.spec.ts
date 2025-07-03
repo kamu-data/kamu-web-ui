@@ -5,16 +5,11 @@
  * included in the LICENSE file.
  */
 
-import { MatIconModule } from "@angular/material/icon";
-import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { SearchAndSchemasSectionComponent } from "./search-and-schemas-section.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
-import { NgbTypeaheadModule, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
-import { FormsModule } from "@angular/forms";
-import { SavedQueriesSectionComponent } from "src/app/query/shared/saved-queries-section/saved-queries-section.component";
-import { MatDividerModule } from "@angular/material/divider";
+import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 import { mockDatasetBasicsDerivedFragment, mockSqlQueryResponseState } from "src/app/search/mock.data";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
@@ -35,16 +30,7 @@ describe("SearchAndSchemasSectionComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [
-                CdkAccordionModule,
-                MatIconModule,
-                MatDividerModule,
-                SharedTestModule,
-                NgbTypeaheadModule,
-                FormsModule,
-                SearchAndSchemasSectionComponent,
-                SavedQueriesSectionComponent,
-            ],
+            imports: [SharedTestModule, SearchAndSchemasSectionComponent],
             providers: [Apollo],
         });
         fixture = TestBed.createComponent(SearchAndSchemasSectionComponent);

@@ -25,11 +25,9 @@ import { first } from "rxjs/operators";
 import { MaybeNull } from "../interface/app.types";
 import { GithubLoginCredentials, PasswordLoginCredentials } from "../api/auth.api.model";
 import { LoginService } from "./login/login.service";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { LocalStorageService } from "../services/local-storage.service";
 import { of } from "rxjs";
 import { provideToastr } from "ngx-toastr";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("LoggedUserService", () => {
     let service: LoggedUserService;
@@ -44,8 +42,8 @@ describe("LoggedUserService", () => {
 
         beforeEach(() => {
             TestBed.configureTestingModule({
-                providers: [Apollo, provideAnimations(), provideToastr()],
-                imports: [ApolloTestingModule, HttpClientTestingModule],
+                providers: [provideToastr()],
+                imports: [ApolloTestingModule],
             });
 
             localStorageService = TestBed.inject(LocalStorageService);

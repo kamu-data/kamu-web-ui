@@ -14,11 +14,8 @@ import {
 import { mockDatasetInfo } from "src/app/search/mock.data";
 import { DisplayHashComponent } from "./display-hash.component";
 import { provideToastr, ToastrService } from "ngx-toastr";
-import { provideAnimations } from "@angular/platform-browser/animations";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { RouterModule } from "@angular/router";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { MatIconModule } from "@angular/material/icon";
 import { TEST_BLOCK_HASH } from "src/app/api/mock/dataset.mock";
 
 describe("DisplayHashComponent", () => {
@@ -28,8 +25,8 @@ describe("DisplayHashComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [provideAnimations(), provideToastr()],
-            imports: [HttpClientTestingModule, RouterModule, SharedTestModule, MatIconModule, DisplayHashComponent],
+            providers: [provideToastr()],
+            imports: [HttpClientTestingModule, SharedTestModule, DisplayHashComponent],
         }).compileComponents();
 
         registerMatSvgIcons();

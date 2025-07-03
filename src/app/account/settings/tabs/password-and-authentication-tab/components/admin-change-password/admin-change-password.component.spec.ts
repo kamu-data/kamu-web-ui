@@ -8,13 +8,9 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AdminChangePasswordComponent } from "./admin-change-password.component";
 import { Apollo } from "apollo-angular";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { MatDividerModule } from "@angular/material/divider";
 import { provideToastr } from "ngx-toastr";
-import { ReactiveFormsModule } from "@angular/forms";
 import { AccountService } from "src/app/account/account.service";
 import { of } from "rxjs";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("AdminChangePasswordComponent", () => {
     let component: AdminChangePasswordComponent;
@@ -23,8 +19,8 @@ describe("AdminChangePasswordComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo, provideAnimations(), provideToastr()],
-            imports: [HttpClientTestingModule, MatDividerModule, ReactiveFormsModule, AdminChangePasswordComponent],
+            providers: [Apollo, provideToastr()],
+            imports: [AdminChangePasswordComponent],
         });
         fixture = TestBed.createComponent(AdminChangePasswordComponent);
         accountService = TestBed.inject(AccountService);

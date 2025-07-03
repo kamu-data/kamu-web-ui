@@ -5,9 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ApolloTestingModule } from "apollo-angular/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { DatasetOverviewFragment, DatasetDataSizeFragment } from "src/app/api/kamu.graphql.interface";
@@ -19,7 +17,6 @@ import {
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 import { mockMetadataDerivedUpdate, mockOverviewDataUpdate, mockOverviewWithSetLicense } from "../../../data-tabs.mock";
 import { EditLicenseModalComponent } from "./edit-license-modal.component";
-import { MatDividerModule } from "@angular/material/divider";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 
@@ -29,15 +26,7 @@ describe("EditLicenseModalComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                ApolloTestingModule,
-                FormsModule,
-                ReactiveFormsModule,
-                MatDividerModule,
-                SharedTestModule,
-                HttpClientTestingModule,
-                EditLicenseModalComponent,
-            ],
+            imports: [SharedTestModule, HttpClientTestingModule, EditLicenseModalComponent],
             providers: [Apollo, NgbActiveModal],
         }).compileComponents();
 

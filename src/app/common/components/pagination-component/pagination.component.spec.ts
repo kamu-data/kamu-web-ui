@@ -8,7 +8,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { PaginationComponent } from "./pagination.component";
 import { mockPageBasedInfo } from "src/app/search/mock.data";
-import { NgbPaginationModule } from "@ng-bootstrap/ng-bootstrap";
 
 describe("PaginationComponent", () => {
     let component: PaginationComponent;
@@ -16,7 +15,7 @@ describe("PaginationComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [NgbPaginationModule, PaginationComponent],
+            imports: [PaginationComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(PaginationComponent);

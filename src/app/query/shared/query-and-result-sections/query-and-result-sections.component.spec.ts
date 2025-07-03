@@ -7,16 +7,10 @@
 
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { QueryAndResultSectionsComponent } from "./query-and-result-sections.component";
-import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { Apollo } from "apollo-angular";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { provideToastr, ToastrService } from "ngx-toastr";
-import { MatMenuModule } from "@angular/material/menu";
-import { RequestTimerComponent } from "../request-timer/request-timer.component";
-import { SqlEditorComponent } from "src/app/editor/components/sql-editor/sql-editor.component";
 import { EditorModule } from "src/app/editor/editor.module";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { MatIconModule } from "@angular/material/icon";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import {
     emitClickOnElementByDataTestId,
@@ -30,12 +24,9 @@ import { of } from "rxjs";
 import { mockUploadPrepareResponse } from "src/app/api/mock/upload-file.mock";
 import { mockQueryExplainerResponse } from "src/app/query-explainer/query-explainer.mocks";
 import { FileUploadService } from "src/app/services/file-upload.service";
-import { MatDividerModule } from "@angular/material/divider";
 import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
-import { EngineSelectComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("QueryAndResultSectionsComponent", () => {
     let component: QueryAndResultSectionsComponent;
@@ -48,21 +39,8 @@ describe("QueryAndResultSectionsComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [
-                CdkAccordionModule,
-                HttpClientTestingModule,
-                MatMenuModule,
-                MatProgressBarModule,
-                EditorModule,
-                MatIconModule,
-                SharedTestModule,
-                MatDividerModule,
-                QueryAndResultSectionsComponent,
-                RequestTimerComponent,
-                SqlEditorComponent,
-                EngineSelectComponent,
-            ],
-            providers: [Apollo, provideAnimations(), provideToastr()],
+            imports: [HttpClientTestingModule, EditorModule, SharedTestModule, QueryAndResultSectionsComponent],
+            providers: [Apollo, provideToastr()],
         });
         fixture = TestBed.createComponent(QueryAndResultSectionsComponent);
         component = fixture.componentInstance;

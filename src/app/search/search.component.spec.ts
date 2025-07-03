@@ -5,29 +5,17 @@
  * included in the LICENSE file.
  */
 
-import { MatChipsModule } from "@angular/material/chips";
-import { AuthApi } from "../api/auth.api";
 import { SearchApi } from "../api/search.api";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { SearchComponent } from "./search.component";
 import { NavigationService } from "../services/navigation.service";
 import { SearchService } from "./search.service";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { ModalService } from "../common/components/modal/modal.service";
-import { RouterTestingModule } from "@angular/router/testing";
 import { mockSearchOverviewResponse } from "../api/mock/search.mock";
 import { of } from "rxjs";
-import { RouterModule } from "@angular/router";
 import { findElementByDataTestId } from "../common/helpers/base-test.helpers.spec";
-import { MatCheckboxModule } from "@angular/material/checkbox";
-import { DatasetListComponent } from "../common/components/dataset-list-component/dataset-list.component";
-import { FormsModule } from "@angular/forms";
-import { DatasetListItemComponent } from "../common/components/dataset-list-component/dataset-list-item/dataset-list-item.component";
-import { NgbPaginationModule, NgbPopoverModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
-import { MatIconModule } from "@angular/material/icon";
-import { PaginationComponent } from "../common/components/pagination-component/pagination.component";
-import { MatDividerModule } from "@angular/material/divider";
 import { mockDatasetSearchResult } from "./mock.data";
+import { SharedTestModule } from "../common/modules/shared-test.module";
 
 describe("SearchComponent", () => {
     let component: SearchComponent;
@@ -41,24 +29,7 @@ describe("SearchComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                ApolloTestingModule,
-                RouterTestingModule,
-                MatCheckboxModule,
-                FormsModule,
-                NgbRatingModule,
-                NgbPopoverModule,
-                MatIconModule,
-                MatChipsModule,
-                NgbPaginationModule,
-                MatDividerModule,
-                RouterModule,
-                SearchComponent,
-                DatasetListComponent,
-                DatasetListItemComponent,
-                PaginationComponent,
-            ],
-            providers: [NavigationService, SearchService, AuthApi, SearchApi, ModalService],
+            imports: [ApolloTestingModule, SharedTestModule, SearchComponent],
         }).compileComponents();
     });
 

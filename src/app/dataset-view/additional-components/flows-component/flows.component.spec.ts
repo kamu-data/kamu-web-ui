@@ -5,12 +5,10 @@
  * included in the LICENSE file.
  */
 
-import { MatRadioModule } from "@angular/material/radio";
 import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, tick } from "@angular/core/testing";
 import { FlowsComponent } from "./flows.component";
 import { Apollo } from "apollo-angular";
-import { ApolloTestingModule } from "apollo-angular/testing";
-import { ActivatedRoute, RouterModule } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import {
     mockDatasetBasicsRootFragment,
     mockDatasetMainDataId,
@@ -20,25 +18,13 @@ import { provideToastr } from "ngx-toastr";
 import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { DatasetFlowsService } from "./services/dataset-flows.service";
 import { delay, of } from "rxjs";
-import { MatMenuModule } from "@angular/material/menu";
-import { PaginationComponent } from "src/app/common/components/pagination-component/pagination.component";
-import { MatTableModule } from "@angular/material/table";
-import { FormsModule } from "@angular/forms";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatIconModule } from "@angular/material/icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { NgbPaginationModule, NgbPopoverModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { mockOverviewUpdate } from "../data-tabs.mock";
-import { FlowsTableComponent } from "src/app/dataset-flow/flows-table/flows-table.component";
 import { mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
-import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/tile-base-widget.component";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("FlowsComponent", () => {
     let component: FlowsComponent;
@@ -51,7 +37,6 @@ describe("FlowsComponent", () => {
         await TestBed.configureTestingModule({
             providers: [
                 Apollo,
-                provideAnimations(),
                 provideToastr(),
                 {
                     provide: ActivatedRoute,
@@ -81,26 +66,7 @@ describe("FlowsComponent", () => {
                     },
                 },
             ],
-            imports: [
-                ApolloTestingModule,
-                MatMenuModule,
-                MatTableModule,
-                MatRadioModule,
-                FormsModule,
-                MatDividerModule,
-                MatIconModule,
-                HttpClientTestingModule,
-                NgbPopoverModule,
-                NgbTypeaheadModule,
-                NgbPaginationModule,
-                RouterModule,
-                MatProgressBarModule,
-                AngularMultiSelectModule,
-                FlowsComponent,
-                FlowsTableComponent,
-                PaginationComponent,
-                TileBaseWidgetComponent,
-            ],
+            imports: [HttpClientTestingModule, FlowsComponent],
         }).compileComponents();
 
         registerMatSvgIcons();

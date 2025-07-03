@@ -16,12 +16,7 @@ import { of } from "rxjs";
 import { provideToastr, ToastrService } from "ngx-toastr";
 import { MOCK_DATASET_INFO } from "../metadata-component/components/set-transform/mock.data";
 import { LineageGraphNodeData } from "./lineage-model";
-import { LineageGraphComponent } from "src/app/common/components/lineage-graph/lineage-graph.component";
-import { NgxGraphModule } from "@swimlane/ngx-graph";
-import { BrowserAnimationsModule, provideAnimations } from "@angular/platform-browser/animations";
-import { DisplayDatasetIdPipe } from "src/app/common/pipes/display-dataset-id.pipe";
 import { NavigationService } from "src/app/services/navigation.service";
-import { MatIconModule } from "@angular/material/icon";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { DatasetService } from "../../dataset.service";
 
@@ -36,17 +31,8 @@ describe("LineageComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [provideAnimations(), provideToastr()],
-            imports: [
-                ApolloModule,
-                SharedTestModule,
-                MatIconModule,
-                NgxGraphModule,
-                BrowserAnimationsModule,
-                LineageComponent,
-                LineageGraphComponent,
-                DisplayDatasetIdPipe,
-            ],
+            providers: [provideToastr()],
+            imports: [ApolloModule, SharedTestModule, LineageComponent],
         }).compileComponents();
 
         accountService = TestBed.inject(AccountService);

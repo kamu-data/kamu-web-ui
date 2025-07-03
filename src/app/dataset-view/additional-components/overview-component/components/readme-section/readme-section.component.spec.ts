@@ -8,13 +8,10 @@
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { ReadmeSectionComponent } from "./readme-section.component";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
-import { Apollo, ApolloModule } from "apollo-angular";
-import { ApolloTestingModule } from "apollo-angular/testing";
+import { Apollo } from "apollo-angular";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
-import { SecurityContext, SimpleChanges } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { FormsModule } from "@angular/forms";
+import { SimpleChanges } from "@angular/core";
 import { MarkdownModule } from "ngx-markdown";
 import {
     emitClickOnElementByDataTestId,
@@ -25,7 +22,6 @@ import { EditMode } from "./readme-section.types";
 import { of } from "rxjs";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
-import { MatIconModule } from "@angular/material/icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("ReadmeSectionComponent", () => {
@@ -39,19 +35,7 @@ describe("ReadmeSectionComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [Apollo],
-            imports: [
-                ApolloModule,
-                ApolloTestingModule,
-                SharedTestModule,
-                MarkdownModule.forRoot({
-                    loader: HttpClient,
-                    sanitize: SecurityContext.NONE,
-                }),
-                HttpClientTestingModule,
-                FormsModule,
-                MatIconModule,
-                ReadmeSectionComponent,
-            ],
+            imports: [SharedTestModule, MarkdownModule.forRoot(), HttpClientTestingModule, ReadmeSectionComponent],
         }).compileComponents();
 
         registerMatSvgIcons();

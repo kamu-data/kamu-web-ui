@@ -5,15 +5,12 @@
  * included in the LICENSE file.
  */
 
-import { ApolloTestingModule } from "apollo-angular/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { YamlViewSectionComponent } from "./yaml-view-section.component";
 import { ChangeDetectionStrategy } from "@angular/core";
 import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { metadataBlockSetVocab } from "src/app/common/helpers/data.helpers.spec";
-import { YamlEventViewerComponent } from "../../../../common/components/yaml-event-viewer/yaml-event-viewer.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { HighlightModule } from "ngx-highlightjs";
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
 
 describe("YamlViewSectionComponent", () => {
@@ -24,13 +21,7 @@ describe("YamlViewSectionComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                ApolloTestingModule,
-                SharedTestModule,
-                HighlightModule,
-                YamlViewSectionComponent,
-                YamlEventViewerComponent,
-            ],
+            imports: [SharedTestModule, YamlViewSectionComponent],
             providers: [HIGHLIGHT_OPTIONS_PROVIDER],
         })
             .overrideComponent(YamlViewSectionComponent, {

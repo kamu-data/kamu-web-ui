@@ -6,15 +6,10 @@
  */
 
 import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { MatTableModule } from "@angular/material/table";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AccessTokensTabComponent } from "./access-tokens-tab.component";
-import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { ApolloTestingModule } from "apollo-angular/testing";
-import { MatIconModule } from "@angular/material/icon";
-import { MatDividerModule } from "@angular/material/divider";
 import { HttpClientModule } from "@angular/common/http";
 import { ActivatedRoute } from "@angular/router";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -22,17 +17,11 @@ import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-
 import { TOKEN_ID, mockCreateAccessTokenMutation, mockListAccessTokensQuery } from "src/app/api/mock/access-token.mock";
 import { of } from "rxjs";
 import { AccessTokenConnection, CreateAccessTokenResultSuccess } from "src/app/api/kamu.graphql.interface";
-import { PaginationComponent } from "src/app/common/components/pagination-component/pagination.component";
-import { NgbPaginationModule } from "@ng-bootstrap/ng-bootstrap";
 import { AccountSettingsTabs, TokenCreateStep } from "../../account-settings.constants";
 import { ModalService } from "src/app/common/components/modal/modal.service";
-import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { RouterTestingModule } from "@angular/router/testing";
-import { routes } from "src/app/app-routing";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("AccessTokensTabComponent", () => {
     let component: AccessTokensTabComponent;
@@ -47,9 +36,7 @@ describe("AccessTokensTabComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [
-                FormBuilder,
                 Apollo,
-                provideAnimations(),
                 provideToastr(),
                 {
                     provide: ActivatedRoute,
@@ -77,20 +64,7 @@ describe("AccessTokensTabComponent", () => {
                     },
                 },
             ],
-            imports: [
-                ApolloTestingModule,
-                MatTableModule,
-                MatIconModule,
-                FormsModule,
-                ReactiveFormsModule,
-                MatDividerModule,
-                HttpClientModule,
-                NgbPaginationModule,
-                MatSlideToggleModule,
-                RouterTestingModule.withRoutes(routes),
-                AccessTokensTabComponent,
-                PaginationComponent,
-            ],
+            imports: [HttpClientModule, AccessTokensTabComponent],
         }).compileComponents();
 
         registerMatSvgIcons();

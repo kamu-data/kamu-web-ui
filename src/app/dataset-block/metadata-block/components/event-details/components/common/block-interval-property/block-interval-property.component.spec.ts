@@ -14,9 +14,7 @@ import { of } from "rxjs";
 import { provideToastr } from "ngx-toastr";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { MatIconModule } from "@angular/material/icon";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("BlockIntervalPropertyComponent", () => {
     let component: BlockIntervalPropertyComponent;
@@ -25,14 +23,8 @@ describe("BlockIntervalPropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [provideAnimations(), provideToastr()],
-            imports: [
-                ApolloTestingModule,
-                MatIconModule,
-                HttpClientTestingModule,
-                SharedTestModule,
-                BlockIntervalPropertyComponent,
-            ],
+            providers: [provideToastr()],
+            imports: [HttpClientTestingModule, ApolloTestingModule, SharedTestModule, BlockIntervalPropertyComponent],
         }).compileComponents();
 
         registerMatSvgIcons();

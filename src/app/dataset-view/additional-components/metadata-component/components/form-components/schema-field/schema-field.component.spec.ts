@@ -6,14 +6,9 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { SchemaFieldComponent, SchemaType } from "./schema-field.component";
-import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { MatIconModule } from "@angular/material/icon";
-import { MatTableModule } from "@angular/material/table";
-import { NgbTooltipModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
-import { RxReactiveFormsModule, RxwebValidators } from "@rxweb/reactive-form-validators";
-import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
+import { FormArray, FormControl, FormGroup } from "@angular/forms";
+import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { dispatchInputEvent, emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
@@ -23,18 +18,7 @@ describe("SchemaFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [FormBuilder],
-            imports: [
-                ReactiveFormsModule,
-                MatIconModule,
-                MatTableModule,
-                NgbTypeaheadModule,
-                RxReactiveFormsModule,
-                NgbTooltipModule,
-                SharedTestModule,
-                SchemaFieldComponent,
-                TooltipIconComponent,
-            ],
+            imports: [SharedTestModule, SchemaFieldComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SchemaFieldComponent);

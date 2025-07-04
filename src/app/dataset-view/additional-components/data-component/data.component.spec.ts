@@ -10,10 +10,7 @@ import {
     mockDatasetBasicsRootFragment,
     mockFullPowerDatasetPermissionsFragment,
 } from "../../../search/mock.data";
-import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
-import { MatIconModule } from "@angular/material/icon";
-import { MatMenuModule } from "@angular/material/menu";
 import { DataComponent } from "./data.component";
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import {
@@ -22,26 +19,14 @@ import {
     mockOverviewDataUpdate,
     mockOverviewDataUpdateNullable,
 } from "../data-tabs.mock";
-import { RouterTestingModule } from "@angular/router/testing";
 import { Location } from "@angular/common";
-import { FormsModule } from "@angular/forms";
-import { MatDividerModule } from "@angular/material/divider";
-import { LoadMoreComponent } from "../../../query/shared/load-more/load-more.component";
-import { EditorModule } from "src/app/editor/editor.module";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
-import { RequestTimerComponent } from "../../../query/shared/request-timer/request-timer.component";
-import { SqlEditorComponent } from "src/app/editor/components/sql-editor/sql-editor.component";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { HttpClientModule } from "@angular/common/http";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { SavedQueriesSectionComponent } from "../../../query/shared/saved-queries-section/saved-queries-section.component";
-import { QueryAndResultSectionsComponent } from "../../../query/shared/query-and-result-sections/query-and-result-sections.component";
-import { SearchAndSchemasSectionComponent } from "src/app/query/global-query/search-and-schemas-section/search-and-schemas-section.component";
 import { SessionStorageService } from "src/app/services/session-storage.service";
 import { NavigationService } from "src/app/services/navigation.service";
-import { routes } from "src/app/app-routing";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 import { of } from "rxjs";
 import AppValues from "src/app/common/values/app.values";
@@ -49,8 +34,6 @@ import { ActivatedRoute } from "@angular/router";
 import ProjectLinks from "src/app/project-links";
 import { EngineService } from "../metadata-component/components/set-transform/components/engine-section/engine.service";
 import { mockEngines } from "../metadata-component/components/set-transform/mock.data";
-import { EngineSelectComponent } from "../metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("DataComponent", () => {
     let component: DataComponent;
@@ -67,7 +50,6 @@ describe("DataComponent", () => {
         await TestBed.configureTestingModule({
             providers: [
                 Apollo,
-                provideAnimations(),
                 provideToastr(),
                 {
                     provide: ActivatedRoute,
@@ -95,26 +77,7 @@ describe("DataComponent", () => {
                     },
                 },
             ],
-            imports: [
-                CdkAccordionModule,
-                MatIconModule,
-                MatMenuModule,
-                RouterTestingModule.withRoutes(routes),
-                FormsModule,
-                MatDividerModule,
-                EditorModule,
-                MatProgressBarModule,
-                CdkAccordionModule,
-                HttpClientModule,
-                DataComponent,
-                SavedQueriesSectionComponent,
-                QueryAndResultSectionsComponent,
-                LoadMoreComponent,
-                RequestTimerComponent,
-                SqlEditorComponent,
-                SearchAndSchemasSectionComponent,
-                EngineSelectComponent,
-            ],
+            imports: [HttpClientModule, DataComponent],
         }).compileComponents();
         fixture = TestBed.createComponent(DataComponent);
         location = TestBed.inject(Location);

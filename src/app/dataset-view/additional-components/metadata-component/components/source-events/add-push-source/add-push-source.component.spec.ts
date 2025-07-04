@@ -7,24 +7,16 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AddPushSourceComponent } from "./add-push-source.component";
-import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { ApolloModule } from "apollo-angular";
+import { FormArray, FormControl, FormGroup } from "@angular/forms";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { DatasetCommitService } from "../../../../overview-component/services/dataset-commit.service";
 import { from, of } from "rxjs";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { FinalYamlModalComponent } from "../../final-yaml-modal/final-yaml-modal.component";
-import { EditorModule } from "src/app/editor/editor.module";
-import { ActivatedRoute, RouterModule } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { EditAddPushSourceService } from "./edit-add-push-source.service";
 import { mockDatasetHistoryResponse, mockDatasetInfo } from "src/app/search/mock.data";
 import { DatasetPageInfoFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
-import { StepperNavigationComponent } from "../../stepper-navigation/stepper-navigation.component";
-import { BaseStepComponent } from "../steps/base-step/base-step.component";
-import { MatStepperModule } from "@angular/material/stepper";
-import { SourceNameStepComponent } from "../steps/source-name-step/source-name-step.component";
-import { PreprocessStepComponent } from "../steps/preprocess-step/preprocess-step.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NavigationService } from "src/app/services/navigation.service";
 import { MergeKind, ReadKind } from "../add-polling-source/add-polling-source-form.types";
@@ -70,22 +62,7 @@ describe("AddPushSourceComponent with query parameter name", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: providersSection(mockAddPushSourceYaml),
-            imports: [
-                ReactiveFormsModule,
-                ApolloModule,
-                ApolloTestingModule,
-                HttpClientTestingModule,
-                EditorModule,
-                FormsModule,
-                BrowserAnimationsModule,
-                MatStepperModule,
-                RouterModule,
-                AddPushSourceComponent,
-                SourceNameStepComponent,
-                StepperNavigationComponent,
-                BaseStepComponent,
-                PreprocessStepComponent,
-            ],
+            imports: [ApolloTestingModule, BrowserAnimationsModule, AddPushSourceComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(AddPushSourceComponent);
@@ -200,22 +177,7 @@ describe("AddPushSourceComponent without query parameter name", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: providersSection(""),
-            imports: [
-                ReactiveFormsModule,
-                ApolloModule,
-                ApolloTestingModule,
-                HttpClientTestingModule,
-                EditorModule,
-                FormsModule,
-                BrowserAnimationsModule,
-                MatStepperModule,
-                RouterModule,
-                AddPushSourceComponent,
-                SourceNameStepComponent,
-                StepperNavigationComponent,
-                BaseStepComponent,
-                PreprocessStepComponent,
-            ],
+            imports: [ApolloTestingModule, BrowserAnimationsModule, AddPushSourceComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(AddPushSourceComponent);

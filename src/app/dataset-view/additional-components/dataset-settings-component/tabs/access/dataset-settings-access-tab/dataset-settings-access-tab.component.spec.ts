@@ -8,11 +8,9 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetSettingsAccessTabComponent } from "./dataset-settings-access-tab.component";
 import { Apollo } from "apollo-angular";
-import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-import { MatIconModule } from "@angular/material/icon";
-import { ActivatedRoute, RouterModule } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { HttpClientModule } from "@angular/common/http";
 import { DatasetCollaborationsService } from "./dataset-collaborations.service";
@@ -22,10 +20,6 @@ import {
     mockDatasetListCollaboratorsQuery,
 } from "src/app/api/mock/dataset-collaborations.mock";
 import { AccountWithRoleConnection, DatasetAccessRole } from "src/app/api/kamu.graphql.interface";
-import { MatTableModule } from "@angular/material/table";
-import { MatCheckboxModule } from "@angular/material/checkbox";
-import { FormsModule } from "@angular/forms";
-import { RouterTestingModule } from "@angular/router/testing";
 import { NavigationService } from "src/app/services/navigation.service";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ModalService } from "src/app/common/components/modal/modal.service";
@@ -34,7 +28,6 @@ import { AddPeopleModalComponent } from "./add-people-modal/add-people-modal.com
 import { EditCollaboratorModalComponent } from "./edit-collaborator-modal/edit-collaborator-modal.component";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("DatasetSettingsAccessTabComponent", () => {
     let component: DatasetSettingsAccessTabComponent;
@@ -49,7 +42,6 @@ describe("DatasetSettingsAccessTabComponent", () => {
         TestBed.configureTestingModule({
             providers: [
                 Apollo,
-                provideAnimations(),
                 provideToastr(),
                 {
                     provide: ActivatedRoute,
@@ -77,17 +69,7 @@ describe("DatasetSettingsAccessTabComponent", () => {
                     },
                 },
             ],
-            imports: [
-                ApolloTestingModule,
-                RouterTestingModule,
-                RouterModule,
-                HttpClientModule,
-                MatIconModule,
-                MatTableModule,
-                MatCheckboxModule,
-                FormsModule,
-                DatasetSettingsAccessTabComponent,
-            ],
+            imports: [HttpClientModule, DatasetSettingsAccessTabComponent],
         });
         registerMatSvgIcons();
 

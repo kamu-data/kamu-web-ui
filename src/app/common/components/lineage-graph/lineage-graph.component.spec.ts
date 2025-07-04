@@ -7,15 +7,11 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { LineageGraphComponent } from "./lineage-graph.component";
-import { NgxGraphModule } from "@swimlane/ngx-graph";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MOCK_LINKS, MOCK_NODES } from "src/app/api/mock/dataset.mock";
 import { ChangeDetectionStrategy } from "@angular/core";
-import { Apollo, ApolloModule } from "apollo-angular";
-import { ApolloTestingModule } from "apollo-angular/testing";
 import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import AppValues from "src/app/common/values/app.values";
-import { MatIconModule } from "@angular/material/icon";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { mockGraphNode } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import timekeeper from "timekeeper";
@@ -29,17 +25,7 @@ describe("LineageGraphComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [Apollo],
-            imports: [
-                NgxGraphModule,
-                BrowserAnimationsModule,
-                ApolloModule,
-                ApolloTestingModule,
-                MatIconModule,
-                SharedTestModule,
-                NgxGraphModule,
-                LineageGraphComponent,
-            ],
+            imports: [BrowserAnimationsModule, SharedTestModule, LineageGraphComponent],
         })
             .overrideComponent(LineageGraphComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },

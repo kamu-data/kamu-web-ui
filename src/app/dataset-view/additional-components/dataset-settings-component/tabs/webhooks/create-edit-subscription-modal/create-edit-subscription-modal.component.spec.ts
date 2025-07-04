@@ -8,15 +8,10 @@
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { CreateEditSubscriptionModalComponent } from "./create-edit-subscription-modal.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatIconModule } from "@angular/material/icon";
-import { ApolloTestingModule } from "apollo-angular/testing";
-import { NgSelectModule } from "@ng-select/ng-select";
 import { WebhooksService } from "src/app/services/webhooks.service";
 import { of } from "rxjs";
 import { WebhookSubscriptionInput, WebhookSubscriptionStatus } from "src/app/api/kamu.graphql.interface";
@@ -40,17 +35,7 @@ describe("CreateEditSubscriptionModalComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [
-                SharedTestModule,
-                ReactiveFormsModule,
-                ApolloTestingModule,
-                HttpClientTestingModule,
-                MatDividerModule,
-                MatIconModule,
-                NgSelectModule,
-                FormsModule,
-                CreateEditSubscriptionModalComponent,
-            ],
+            imports: [SharedTestModule, HttpClientTestingModule, CreateEditSubscriptionModalComponent],
             providers: [Apollo, NgbActiveModal],
         });
 

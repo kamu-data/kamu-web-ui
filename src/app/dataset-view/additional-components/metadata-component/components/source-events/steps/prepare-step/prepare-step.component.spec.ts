@@ -7,12 +7,10 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { PrepareStepComponent } from "./prepare-step.component";
-import { FormBuilder, FormGroupDirective, ReactiveFormsModule } from "@angular/forms";
+import { FormGroupDirective } from "@angular/forms";
 import { Apollo } from "apollo-angular";
-import { DatasetApi } from "src/app/api/dataset.api";
 import { formGroupDirective } from "../base-step/base-step.component.spec";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { MatIconModule } from "@angular/material/icon";
 import { mockSetPollingSourceEventYaml } from "../../../set-transform/mock.data";
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import {
@@ -27,14 +25,8 @@ describe("PrepareStepComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [
-                Apollo,
-                DatasetApi,
-                FormGroupDirective,
-                FormBuilder,
-                { provide: FormGroupDirective, useValue: formGroupDirective },
-            ],
-            imports: [SharedTestModule, ReactiveFormsModule, MatIconModule, PrepareStepComponent],
+            providers: [Apollo, { provide: FormGroupDirective, useValue: formGroupDirective }],
+            imports: [SharedTestModule, PrepareStepComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(PrepareStepComponent);

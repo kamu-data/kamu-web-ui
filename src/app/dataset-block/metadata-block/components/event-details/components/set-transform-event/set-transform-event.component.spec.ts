@@ -5,22 +5,11 @@
  * included in the LICENSE file.
  */
 
-import { BlockRowDataComponent } from "src/app/common/components/block-row-data/block-row-data.component";
-import { VisibilityPropertyComponent } from "./../common/visibility-property/visibility-property.component";
-import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { mockSetTransform } from "../../mock.events";
-import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
-import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
-import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-viewer.component";
 import { SetTransformEventComponent } from "./set-transform-event.component";
-import { TemporalTablesPropertyComponent } from "../common/temporal-tables-property/temporal-tables-property.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { HighlightModule } from "ngx-highlightjs";
-import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
-import { MatIconModule } from "@angular/material/icon";
-import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
 
 describe("SetTransformEventComponent", () => {
@@ -30,22 +19,7 @@ describe("SetTransformEventComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [HIGHLIGHT_OPTIONS_PROVIDER],
-            imports: [
-                ApolloTestingModule,
-                SharedTestModule,
-                HighlightModule,
-                MatIconModule,
-                NgbTooltipModule,
-                SetTransformEventComponent,
-                SimplePropertyComponent,
-                EnginePropertyComponent,
-                SqlQueryViewerComponent,
-                TemporalTablesPropertyComponent,
-                CardsPropertyComponent,
-                VisibilityPropertyComponent,
-                BlockRowDataComponent,
-                TooltipIconComponent,
-            ],
+            imports: [ApolloTestingModule, SharedTestModule, SetTransformEventComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SetTransformEventComponent);

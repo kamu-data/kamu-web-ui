@@ -7,22 +7,10 @@
 
 import { FetchStepMqtt, FetchStepUrl, PrepStepDecompress } from "../../../../../../api/kamu.graphql.interface";
 import { getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { mockSetPollingSourceEvent, mockSetPollingSourceEventWithFetchStepMqtt } from "../../mock.events";
 import { SetPollingSourceEventComponent } from "./set-polling-source-event.component";
-import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-viewer.component";
-import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
-import { EnvVariablesPropertyComponent } from "../common/env-variables-property/env-variables-property.component";
-import { LinkPropertyComponent } from "../common/link-property/link-property.component";
-import { SchemaPropertyComponent } from "../common/schema-property/schema-property.component";
-import { SeparatorPropertyComponent } from "../common/separator-property/separator-property.component";
-import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
-import { MergeStrategyPropertyComponent } from "../common/merge-strategy-property/merge-strategy-property.component";
-import { UnsupportedPropertyComponent } from "../common/unsupported-property/unsupported-property.component";
-import { YamlEventViewerComponent } from "../../../../../../common/components/yaml-event-viewer/yaml-event-viewer.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { HighlightModule } from "ngx-highlightjs";
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
 
 describe("SetPollingSourceEventComponent", () => {
@@ -31,22 +19,7 @@ describe("SetPollingSourceEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                SharedTestModule,
-                SetPollingSourceEventComponent,
-                SimplePropertyComponent,
-                SeparatorPropertyComponent,
-                LinkPropertyComponent,
-                EnginePropertyComponent,
-                SqlQueryViewerComponent,
-                SchemaPropertyComponent,
-                EnvVariablesPropertyComponent,
-                MergeStrategyPropertyComponent,
-                CardsPropertyComponent,
-                UnsupportedPropertyComponent,
-                YamlEventViewerComponent,
-                HighlightModule,
-            ],
+            imports: [SharedTestModule, SetPollingSourceEventComponent],
             providers: [HIGHLIGHT_OPTIONS_PROVIDER],
         }).compileComponents();
 

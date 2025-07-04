@@ -7,9 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { OrderFieldComponent } from "./order-field.component";
-import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
-import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
-import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormGroup } from "@angular/forms";
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { SourceOrder } from "../../source-events/add-polling-source/process-form.service.types";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
@@ -20,14 +18,7 @@ describe("OrderFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                NgbTooltipModule,
-                ReactiveFormsModule,
-                FormsModule,
-                SharedTestModule,
-                OrderFieldComponent,
-                TooltipIconComponent,
-            ],
+            imports: [SharedTestModule, OrderFieldComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(OrderFieldComponent);

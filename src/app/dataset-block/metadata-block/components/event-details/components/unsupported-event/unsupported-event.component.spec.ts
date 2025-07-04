@@ -7,7 +7,6 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { UnsupportedEventComponent } from "./unsupported-event.component";
-import { MatIconModule } from "@angular/material/icon";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
 describe("UnsupportedEventComponent", () => {
@@ -16,7 +15,7 @@ describe("UnsupportedEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [MatIconModule, SharedTestModule, UnsupportedEventComponent],
+            imports: [SharedTestModule, UnsupportedEventComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(UnsupportedEventComponent);

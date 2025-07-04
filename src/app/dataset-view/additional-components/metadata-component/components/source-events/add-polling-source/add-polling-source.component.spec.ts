@@ -6,15 +6,12 @@
  */
 
 import { ChangeDetectionStrategy } from "@angular/core";
-import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormArray, FormControl, FormGroup } from "@angular/forms";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AddPollingSourceComponent } from "./add-polling-source.component";
-import { NgbModal, NgbModalRef, NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { FinalYamlModalComponent } from "../../final-yaml-modal/final-yaml-modal.component";
-import { StepperNavigationComponent } from "../../stepper-navigation/stepper-navigation.component";
-import { BaseStepComponent } from "../steps/base-step/base-step.component";
 import { of, from } from "rxjs";
 import {
     mockDatasetBasicsDerivedFragment,
@@ -25,16 +22,10 @@ import {
 } from "src/app/search/mock.data";
 import { DatasetPageInfoFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { DatasetCommitService } from "../../../../overview-component/services/dataset-commit.service";
-import { PrepareStepComponent } from "../steps/prepare-step/prepare-step.component";
-import { MatStepperModule } from "@angular/material/stepper";
-import { PreprocessStepComponent } from "../steps/preprocess-step/preprocess-step.component";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetNavigationParams } from "src/app/interface/navigation.interface";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { EditorModule } from "src/app/editor/editor.module";
 import {
     EventTimeSourceKind,
     FetchKind,
@@ -45,7 +36,7 @@ import {
 import { OdfDefaultValues } from "src/app/common/values/app-odf-default.values";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
-import { ActivatedRoute, RouterModule } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 
 describe("AddPollingSourceComponent", () => {
@@ -64,25 +55,8 @@ describe("AddPollingSourceComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                ApolloTestingModule,
-                BrowserAnimationsModule,
-                FormsModule,
-                NgbModule,
-                MatStepperModule,
-                ReactiveFormsModule,
-                HttpClientTestingModule,
-                EditorModule,
-                RouterModule,
-                AddPollingSourceComponent,
-                StepperNavigationComponent,
-                BaseStepComponent,
-                PrepareStepComponent,
-                PreprocessStepComponent,
-            ],
+            imports: [ApolloTestingModule, AddPollingSourceComponent],
             providers: [
-                FormBuilder,
-                Apollo,
                 {
                     provide: ActivatedRoute,
                     useValue: {

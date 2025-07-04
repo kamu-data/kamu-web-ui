@@ -8,8 +8,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { QueriesSectionComponent } from "./queries-section.component";
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { FormsModule } from "@angular/forms";
-import { MatIconModule } from "@angular/material/icon";
 import { EditorModule } from "src/app/editor/editor.module";
 
 describe("QueriesSectionComponent", () => {
@@ -18,7 +16,7 @@ describe("QueriesSectionComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [FormsModule, MatIconModule, EditorModule, QueriesSectionComponent],
+            imports: [QueriesSectionComponent, EditorModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(QueriesSectionComponent);

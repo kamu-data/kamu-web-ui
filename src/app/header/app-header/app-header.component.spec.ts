@@ -5,10 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { RouterTestingModule } from "@angular/router/testing";
 import { AccountFragment, AccountProvider, AccountType } from "src/app/api/kamu.graphql.interface";
-import { FormsModule } from "@angular/forms";
-import { MatMenuModule } from "@angular/material/menu";
 import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
@@ -22,22 +19,17 @@ import {
     registerMatSvgIcons,
 } from "src/app/common/helpers/base-test.helpers.spec";
 import { AppHeaderComponent } from "./app-header.component";
-import { BrowserModule } from "@angular/platform-browser";
-import { NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { SearchApi } from "src/app/api/search.api";
 import { of } from "rxjs";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 import { first } from "rxjs/operators";
 import AppValues from "src/app/common/values/app.values";
-import { ActivatedRoute, NavigationEnd, RouterModule } from "@angular/router";
+import { ActivatedRoute, NavigationEnd } from "@angular/router";
 import ProjectLinks from "src/app/project-links";
-import { ApolloTestingModule } from "apollo-angular/testing";
 import { NavigationService } from "src/app/services/navigation.service";
-import { NotificationIndicatorComponent } from "../notification-indicator/notification-indicator.component";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { MatIconModule } from "@angular/material/icon";
 
 describe("AppHeaderComponent", () => {
     let component: AppHeaderComponent;
@@ -51,21 +43,7 @@ describe("AppHeaderComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                BrowserAnimationsModule,
-                MatMenuModule,
-                FormsModule,
-                BrowserModule,
-                NgbTypeaheadModule,
-                RouterTestingModule,
-                ApolloTestingModule,
-                HttpClientTestingModule,
-                RouterModule,
-                MatIconModule,
-
-                AppHeaderComponent,
-                NotificationIndicatorComponent,
-            ],
+            imports: [BrowserAnimationsModule, HttpClientTestingModule, AppHeaderComponent],
             providers: [
                 Apollo,
                 {

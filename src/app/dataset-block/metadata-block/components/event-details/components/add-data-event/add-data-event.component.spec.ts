@@ -6,21 +6,14 @@
  */
 
 import { provideToastr } from "ngx-toastr";
-import { ApolloModule } from "apollo-angular";
-import { SizePropertyComponent } from "../common/size-property/size-property.component";
 import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { mockAddData } from "../../mock.events";
 import { AddDataEventComponent } from "./add-data-event.component";
-import { OffsetIntervalPropertyComponent } from "../common/offset-interval-property/offset-interval-property.component";
-import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
-import { MatIconModule } from "@angular/material/icon";
-import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { provideAnimations } from "@angular/platform-browser/animations";
+import { Apollo } from "apollo-angular";
 
 describe("AddDataEventComponent", () => {
     let component: AddDataEventComponent;
@@ -37,19 +30,8 @@ describe("AddDataEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [provideAnimations(), provideToastr()],
-            imports: [
-                ApolloModule,
-                MatIconModule,
-                NgbTooltipModule,
-                HttpClientTestingModule,
-                SharedTestModule,
-                AddDataEventComponent,
-                SizePropertyComponent,
-                OffsetIntervalPropertyComponent,
-                BlockRowDataComponent,
-                TooltipIconComponent,
-            ],
+            providers: [Apollo, provideToastr()],
+            imports: [HttpClientTestingModule, SharedTestModule, AddDataEventComponent],
         })
             .overrideComponent(AddDataEventComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },

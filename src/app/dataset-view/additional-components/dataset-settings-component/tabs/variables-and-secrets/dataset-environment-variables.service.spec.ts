@@ -31,7 +31,6 @@ import {
 } from "../../../../../api/mock/dataset.mock";
 import { ViewDatasetEnvVar, ViewDatasetEnvVarConnection } from "../../../../../api/kamu.graphql.interface";
 import { DatasetEnvironmentVariablesService } from "./dataset-environment-variables.service";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("EnvironmentVariablesService", () => {
     let service: DatasetEnvironmentVariablesService;
@@ -40,7 +39,7 @@ describe("EnvironmentVariablesService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo, provideAnimations(), provideToastr()],
+            providers: [Apollo, provideToastr()],
         });
         service = TestBed.inject(DatasetEnvironmentVariablesService);
         environmentVariablesApi = TestBed.inject(EnvironmentVariablesApi);

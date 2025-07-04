@@ -10,8 +10,6 @@ import { EditCollaboratorModalComponent } from "./edit-collaborator-modal.compon
 import { MOCK_ACCOUNT_WITH_ROLE } from "src/app/api/mock/dataset-collaborations.mock";
 import { Apollo } from "apollo-angular";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import { FormsModule } from "@angular/forms";
-import { MatDividerModule } from "@angular/material/divider";
 
 describe("EditCollaboratorModalComponent", () => {
     let component: EditCollaboratorModalComponent;
@@ -21,7 +19,7 @@ describe("EditCollaboratorModalComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [Apollo, NgbActiveModal],
-            imports: [FormsModule, MatDividerModule, EditCollaboratorModalComponent],
+            imports: [EditCollaboratorModalComponent],
         });
         fixture = TestBed.createComponent(EditCollaboratorModalComponent);
         ngbActiveModal = TestBed.inject(NgbActiveModal);

@@ -7,11 +7,9 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AccountTabComponent } from "./account-tab.component";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { provideToastr } from "ngx-toastr";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
-import { MatDividerModule } from "@angular/material/divider";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { AccountService } from "src/app/account/account.service";
 import { of } from "rxjs";
@@ -19,8 +17,6 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { mockAccountDetails, TEST_LOGIN } from "src/app/api/mock/auth.mock";
 import { NavigationService } from "src/app/services/navigation.service";
-import { ReactiveFormsModule } from "@angular/forms";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("AccountTabComponent", () => {
     let component: AccountTabComponent;
@@ -32,14 +28,8 @@ describe("AccountTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [
-                SharedTestModule,
-                HttpClientTestingModule,
-                ReactiveFormsModule,
-                MatDividerModule,
-                AccountTabComponent,
-            ],
-            providers: [Apollo, provideAnimations(), provideToastr()],
+            imports: [SharedTestModule, AccountTabComponent],
+            providers: [Apollo, provideToastr()],
         });
         fixture = TestBed.createComponent(AccountTabComponent);
         modalService = TestBed.inject(ModalService);

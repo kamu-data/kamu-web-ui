@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { MatIconModule } from "@angular/material/icon";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DataAccessExportTabComponent } from "./data-access-export-tab.component";
 
@@ -15,7 +14,7 @@ describe("DataAccessExportTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [MatIconModule, DataAccessExportTabComponent],
+            imports: [DataAccessExportTabComponent],
         });
         fixture = TestBed.createComponent(DataAccessExportTabComponent);
         component = fixture.componentInstance;

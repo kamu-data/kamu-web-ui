@@ -6,11 +6,8 @@
  */
 
 import { ComponentFixture, fakeAsync, TestBed } from "@angular/core/testing";
-import { MatIconModule } from "@angular/material/icon";
-import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { LoadMoreComponent } from "./load-more.component";
 import AppValues from "../../../common/values/app.values";
-import { FormsModule } from "@angular/forms";
 import {
     dispatchInputEvent,
     emitClickOnElement,
@@ -23,7 +20,7 @@ describe("LoadMoreComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [MatButtonToggleModule, FormsModule, MatIconModule, LoadMoreComponent],
+            imports: [LoadMoreComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(LoadMoreComponent);

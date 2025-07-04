@@ -13,19 +13,14 @@ import {
     mockQueryExplainerResponse,
     mockVerifyQueryResponseSuccess,
 } from "../../query-explainer.mocks";
-import { HighlightModule } from "ngx-highlightjs";
 import { provideToastr } from "ngx-toastr";
-import { ActivatedRoute, RouterModule } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { of } from "rxjs";
 import { mockDatasetInfo } from "src/app/search/mock.data";
 import ProjectLinks from "src/app/project-links";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { MarkdownModule } from "ngx-markdown";
-import { HttpClient } from "@angular/common/http";
-import { SecurityContext } from "@angular/core";
-import { MatIconModule } from "@angular/material/icon";
-import { provideAnimations } from "@angular/platform-browser/animations";
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
 
 describe("InputDataSectionComponent", () => {
@@ -34,19 +29,8 @@ describe("InputDataSectionComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [
-                HighlightModule,
-                RouterModule,
-                MatIconModule,
-                HttpClientTestingModule,
-                MarkdownModule.forRoot({
-                    loader: HttpClient,
-                    sanitize: SecurityContext.NONE,
-                }),
-                InputDataSectionComponent,
-            ],
+            imports: [HttpClientTestingModule, MarkdownModule.forRoot(), InputDataSectionComponent],
             providers: [
-                provideAnimations(),
                 provideToastr(),
                 {
                     provide: ActivatedRoute,

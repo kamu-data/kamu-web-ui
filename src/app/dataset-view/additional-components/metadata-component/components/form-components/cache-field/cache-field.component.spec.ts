@@ -8,9 +8,7 @@
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 
 import { CacheFieldComponent } from "./cache-field.component";
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
-import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
+import { FormControl, FormGroup } from "@angular/forms";
 import { findElement } from "src/app/common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
@@ -21,15 +19,7 @@ describe("CacheFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [FormBuilder],
-            imports: [
-                ReactiveFormsModule,
-                FormsModule,
-                NgbTooltipModule,
-                SharedTestModule,
-                CacheFieldComponent,
-                TooltipIconComponent,
-            ],
+            imports: [SharedTestModule, CacheFieldComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(CacheFieldComponent);

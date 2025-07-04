@@ -5,10 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { SetPollingSourceEventComponent } from "./components/set-polling-source-event/set-polling-source-event.component";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
-import { DatasetApi } from "src/app/api/dataset.api";
 import { EventDetailsComponent } from "./event-details.component";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
@@ -21,8 +19,8 @@ describe("EventDetailsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [SharedTestModule, EventDetailsComponent, SetPollingSourceEventComponent],
-            providers: [Apollo, DatasetApi],
+            imports: [SharedTestModule, EventDetailsComponent],
+            providers: [Apollo],
         }).compileComponents();
 
         registerMatSvgIcons();

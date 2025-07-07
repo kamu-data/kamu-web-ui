@@ -8,17 +8,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DataAccessPanelComponent } from "./data-access-panel.component";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
-import { FormsModule } from "@angular/forms";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatCheckboxModule } from "@angular/material/checkbox";
-import { MatIconModule } from "@angular/material/icon";
-import { MatTooltipModule } from "@angular/material/tooltip";
-import { MatMenuModule } from "@angular/material/menu";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { MatTabsModule } from "@angular/material/tabs";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { Apollo, ApolloModule } from "apollo-angular";
-import { ApolloTestingModule } from "apollo-angular/testing";
+import { Apollo } from "apollo-angular";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { SharedTestModule } from "../common/modules/shared-test.module";
 
@@ -30,21 +20,7 @@ describe("DataAccessPanelComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [Apollo],
-            imports: [
-                FormsModule,
-                MatDividerModule,
-                MatCheckboxModule,
-                MatIconModule,
-                MatTooltipModule,
-                HttpClientTestingModule,
-                MatMenuModule,
-                MatTabsModule,
-                BrowserAnimationsModule,
-                ApolloModule,
-                ApolloTestingModule,
-                SharedTestModule,
-                DataAccessPanelComponent,
-            ],
+            imports: [SharedTestModule, DataAccessPanelComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DataAccessPanelComponent);

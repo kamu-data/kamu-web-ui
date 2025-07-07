@@ -8,7 +8,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { VerifyResultSectionComponent } from "./verify-result-section.component";
 import { mockVerifyQueryOutputMismatchError, mockVerifyQueryResponseSuccess } from "../../query-explainer.mocks";
-import { MatIconModule } from "@angular/material/icon";
 import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 
 describe("VerifyResultSectionComponent", () => {
@@ -17,7 +16,7 @@ describe("VerifyResultSectionComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [MatIconModule, VerifyResultSectionComponent],
+            imports: [VerifyResultSectionComponent],
         });
         fixture = TestBed.createComponent(VerifyResultSectionComponent);
         component = fixture.componentInstance;

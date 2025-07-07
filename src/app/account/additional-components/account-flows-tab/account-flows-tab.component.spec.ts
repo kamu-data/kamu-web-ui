@@ -7,9 +7,6 @@
 
 import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, tick } from "@angular/core/testing";
 import { AccountFlowsTabComponent } from "./account-flows-tab.component";
-import { PaginationComponent } from "src/app/common/components/pagination-component/pagination.component";
-import { ApolloTestingModule } from "apollo-angular/testing";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { provideToastr } from "ngx-toastr";
 import { ActivatedRoute } from "@angular/router";
 import { of } from "rxjs";
@@ -20,20 +17,12 @@ import { AccountService } from "src/app/account/account.service";
 import { mockDatasetMainDataId } from "src/app/search/mock.data";
 import { mockDatasetFlowsInitiatorsQuery, mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
 import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { FlowsTableComponent } from "src/app/dataset-flow/flows-table/flows-table.component";
 import { Account, AccountFragment, FlowStatus } from "src/app/api/kamu.graphql.interface";
 import { mockDatasets } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
 import { FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
-import { NgbPaginationModule } from "@ng-bootstrap/ng-bootstrap";
-import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
-import { RouterTestingModule } from "@angular/router/testing";
-import { routes } from "src/app/app-routing";
-import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/tile-base-widget.component";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { provideAnimations } from "@angular/platform-browser/animations";
+import { Apollo } from "apollo-angular";
 
 describe("AccountFlowsTabComponent", () => {
     let component: AccountFlowsTabComponent;
@@ -46,21 +35,9 @@ describe("AccountFlowsTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                ApolloTestingModule,
-                SharedTestModule,
-                NgbPaginationModule,
-                AngularMultiSelectModule,
-                HttpClientTestingModule,
-                RouterTestingModule.withRoutes(routes),
-                MatProgressBarModule,
-                AccountFlowsTabComponent,
-                TileBaseWidgetComponent,
-                FlowsTableComponent,
-                PaginationComponent,
-            ],
+            imports: [AccountFlowsTabComponent],
             providers: [
-                provideAnimations(),
+                Apollo,
                 provideToastr(),
                 {
                     provide: ActivatedRoute,

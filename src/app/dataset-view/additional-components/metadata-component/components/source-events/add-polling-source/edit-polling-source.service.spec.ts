@@ -8,8 +8,7 @@
 import { TestBed } from "@angular/core/testing";
 import { EditPollingSourceService } from "./edit-polling-source.service";
 import { Apollo } from "apollo-angular";
-import { DatasetApi } from "src/app/api/dataset.api";
-import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import { FormArray, FormControl, FormGroup } from "@angular/forms";
 import {
     AddPollingSourceEditFormType,
     FetchKind,
@@ -34,7 +33,7 @@ describe("EditPollingSourceService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo, DatasetApi, FormBuilder],
+            providers: [Apollo],
         });
         service = TestBed.inject(EditPollingSourceService);
         datasetService = TestBed.inject(DatasetService);

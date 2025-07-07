@@ -12,16 +12,10 @@ import {
     registerMatSvgIcons,
 } from "src/app/common/helpers/base-test.helpers.spec";
 import { mockSeed } from "../../mock.events";
-
 import { SeedEventComponent } from "./seed-event.component";
 import { provideToastr, ToastrService } from "ngx-toastr";
-import { provideAnimations } from "@angular/platform-browser/animations";
-import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";
-import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
-import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { MatIconModule } from "@angular/material/icon";
 
 describe("SeedEventComponent", () => {
     let component: SeedEventComponent;
@@ -30,16 +24,8 @@ describe("SeedEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [provideAnimations(), provideToastr()],
-            imports: [
-                NgbTooltipModule,
-                HttpClientTestingModule,
-                SharedTestModule,
-                MatIconModule,
-                SeedEventComponent,
-                BlockRowDataComponent,
-                TooltipIconComponent,
-            ],
+            providers: [provideToastr()],
+            imports: [HttpClientTestingModule, SharedTestModule, SeedEventComponent],
         }).compileComponents();
 
         registerMatSvgIcons();

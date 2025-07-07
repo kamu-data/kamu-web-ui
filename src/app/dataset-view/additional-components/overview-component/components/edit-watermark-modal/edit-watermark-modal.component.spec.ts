@@ -9,11 +9,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { EditWatermarkModalComponent } from "./edit-watermark-modal.component";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatIconModule } from "@angular/material/icon";
-import { OwlDateTimeModule, OwlNativeDateTimeModule } from "@danielmoncada/angular-datetime-picker";
-import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
-import { FormsModule } from "@angular/forms";
 import timekeeper from "timekeeper";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
@@ -23,6 +18,8 @@ import { DatasetCommitService } from "../../services/dataset-commit.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from "@danielmoncada/angular-datetime-picker";
+import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 
 describe("EditWatermarkModalComponent", () => {
     let component: EditWatermarkModalComponent;
@@ -35,12 +32,9 @@ describe("EditWatermarkModalComponent", () => {
         await TestBed.configureTestingModule({
             providers: [Apollo, NgbActiveModal],
             imports: [
-                MatDividerModule,
-                MatIconModule,
                 OwlDateTimeModule,
                 OwlNativeDateTimeModule,
                 OwlMomentDateTimeModule,
-                FormsModule,
                 SharedTestModule,
                 HttpClientTestingModule,
                 EditWatermarkModalComponent,

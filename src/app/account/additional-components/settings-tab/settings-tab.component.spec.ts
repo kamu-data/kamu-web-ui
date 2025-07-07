@@ -9,9 +9,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { SettingsTabComponent } from "./settings-tab.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { provideToastr } from "ngx-toastr";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("SettingsTabComponent", () => {
     let component: SettingsTabComponent;
@@ -19,8 +17,8 @@ describe("SettingsTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [SharedTestModule, HttpClientTestingModule, SettingsTabComponent],
-            providers: [Apollo, provideAnimations(), provideToastr()],
+            imports: [SharedTestModule, SettingsTabComponent],
+            providers: [Apollo, provideToastr()],
         });
         fixture = TestBed.createComponent(SettingsTabComponent);
         component = fixture.componentInstance;

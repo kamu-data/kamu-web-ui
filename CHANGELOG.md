@@ -5,10 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Added compression of file sizes when the server responds to a request
 ### Changed
 - Replaced all places with validation errors for forms with a directive
 - Adjustments for API changes in flow system
 - SetTransform event: improved search
+- Migrated to standalone components
 
 ## [0.50.0] - 2025-06-19
 ### Added

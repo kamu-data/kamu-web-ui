@@ -6,7 +6,7 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormArray, FormBuilder, FormControl, FormGroupDirective, ReactiveFormsModule } from "@angular/forms";
+import { FormArray, FormBuilder, FormControl, FormGroupDirective } from "@angular/forms";
 import { BaseStepComponent } from "./base-step.component";
 import {
     EventTimeSourceKind,
@@ -15,11 +15,8 @@ import {
 } from "../../add-polling-source/add-polling-source-form.types";
 import { FETCH_FORM_DATA } from "../data/fetch-form-data";
 import { FETCH_STEP_RADIO_CONTROLS } from "../../add-polling-source/form-control.source";
-import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
-import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { Apollo } from "apollo-angular";
-import { DatasetApi } from "src/app/api/dataset.api";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
 const fb = new FormBuilder();
@@ -37,14 +34,8 @@ describe("BaseStepComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [ReactiveFormsModule, NgbTooltipModule, SharedTestModule, BaseStepComponent, TooltipIconComponent],
-            providers: [
-                Apollo,
-                DatasetApi,
-                FormGroupDirective,
-                FormBuilder,
-                { provide: FormGroupDirective, useValue: formGroupDirective },
-            ],
+            imports: [SharedTestModule, BaseStepComponent],
+            providers: [Apollo, { provide: FormGroupDirective, useValue: formGroupDirective }],
         }).compileComponents();
 
         fixture = TestBed.createComponent(BaseStepComponent);

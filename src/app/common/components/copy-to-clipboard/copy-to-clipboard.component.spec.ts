@@ -7,7 +7,6 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { CopyToClipboardComponent } from "./copy-to-clipboard.component";
-import { MatIconModule } from "@angular/material/icon";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 
@@ -17,7 +16,7 @@ describe("CopyToClipboardComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [MatIconModule, HttpClientTestingModule, CopyToClipboardComponent],
+            imports: [HttpClientTestingModule, CopyToClipboardComponent],
         });
 
         registerMatSvgIcons();

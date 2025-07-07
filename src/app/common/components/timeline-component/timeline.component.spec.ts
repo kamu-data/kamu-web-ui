@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { TimelineComponent } from "./timeline.component";
 import { TEST_DATASET_NAME, mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
@@ -13,12 +12,9 @@ import { mockPageBasedInfo } from "src/app/search/mock.data";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { provideToastr } from "ngx-toastr";
-import { MatIconModule } from "@angular/material/icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { RouterTestingModule } from "@angular/router/testing";
 import AppValues from "src/app/common/values/app.values";
-import { RouterModule } from "@angular/router";
-import { provideAnimations } from "@angular/platform-browser/animations";
+import { SharedTestModule } from "../../modules/shared-test.module";
 
 describe("TimelineComponent", () => {
     let component: TimelineComponent;
@@ -26,15 +22,8 @@ describe("TimelineComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [provideAnimations(), provideToastr()],
-            imports: [
-                MatIconModule,
-                HttpClientTestingModule,
-                NgbPopoverModule,
-                RouterTestingModule,
-                RouterModule,
-                TimelineComponent,
-            ],
+            providers: [provideToastr()],
+            imports: [HttpClientTestingModule, SharedTestModule, TimelineComponent],
         }).compileComponents();
 
         registerMatSvgIcons();

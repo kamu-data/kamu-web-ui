@@ -12,11 +12,8 @@ import { TEST_DATASET_NAME, mockGetMetadataBlockQuery } from "src/app/api/mock/d
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { provideToastr } from "ngx-toastr";
 import AppValues from "src/app/common/values/app.values";
-import { RouterModule } from "@angular/router";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { MatIconModule } from "@angular/material/icon";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("OverviewHistorySummaryHeaderComponent", () => {
     let component: OverviewHistorySummaryHeaderComponent;
@@ -24,14 +21,8 @@ describe("OverviewHistorySummaryHeaderComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [provideAnimations(), provideToastr()],
-            imports: [
-                HttpClientTestingModule,
-                RouterModule,
-                SharedTestModule,
-                MatIconModule,
-                OverviewHistorySummaryHeaderComponent,
-            ],
+            providers: [provideToastr()],
+            imports: [HttpClientTestingModule, SharedTestModule, OverviewHistorySummaryHeaderComponent],
         }).compileComponents();
 
         registerMatSvgIcons();

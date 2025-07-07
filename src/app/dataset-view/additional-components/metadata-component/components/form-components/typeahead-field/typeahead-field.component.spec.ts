@@ -5,13 +5,9 @@
  * included in the LICENSE file.
  */
 
-import { NgbTooltipModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
-
 import { TypeaheadFieldComponent } from "./typeahead-field.component";
-import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
-import { MatIconModule } from "@angular/material/icon";
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormControl, FormGroup } from "@angular/forms";
 import { getInputElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { interval } from "rxjs";
 import { map, take } from "rxjs/operators";
@@ -24,15 +20,7 @@ describe("TypeaheadFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                NgbTypeaheadModule,
-                MatIconModule,
-                FormsModule,
-                ReactiveFormsModule,
-                NgbTooltipModule,
-                TypeaheadFieldComponent,
-                TooltipIconComponent,
-            ],
+            imports: [TypeaheadFieldComponent],
             providers: [
                 {
                     provide: ActivatedRoute,

@@ -6,12 +6,8 @@
  */
 
 import { SharedTestModule } from "./../common/modules/shared-test.module";
-import { CommitmentDataSectionComponent } from "./components/commitment-data-section/commitment-data-section.component";
-import { InputDataSectionComponent } from "./components/input-data-section/input-data-section.component";
-import { VerifyResultSectionComponent } from "./components/verify-result-section/verify-result-section.component";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { QueryExplainerComponent } from "./query-explainer.component";
-import { RouterModule } from "@angular/router";
 import { of } from "rxjs";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { provideToastr, ToastrService } from "ngx-toastr";
@@ -22,8 +18,6 @@ import {
     mockTextareaCommitment,
     mockVerifyQueryResponseSuccess,
 } from "./query-explainer.mocks";
-import { HighlightModule } from "ngx-highlightjs";
-import { ReproducedResultSectionComponent } from "./components/reproduced-result-section/reproduced-result-section.component";
 import { DatasetService } from "../dataset-view/dataset.service";
 import { mockDatasetByIdQuery } from "../api/mock/dataset.mock";
 import {
@@ -32,9 +26,6 @@ import {
     registerMatSvgIcons,
     setFieldValue,
 } from "../common/helpers/base-test.helpers.spec";
-import { FormsModule } from "@angular/forms";
-import { MatIconModule } from "@angular/material/icon";
-import { provideAnimations } from "@angular/platform-browser/animations";
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "../common/helpers/app.helpers";
 
 describe("QueryExplainerComponent", () => {
@@ -46,20 +37,8 @@ describe("QueryExplainerComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [
-                HttpClientTestingModule,
-                HighlightModule,
-                RouterModule,
-                FormsModule,
-                MatIconModule,
-                SharedTestModule,
-                QueryExplainerComponent,
-                VerifyResultSectionComponent,
-                ReproducedResultSectionComponent,
-                InputDataSectionComponent,
-                CommitmentDataSectionComponent,
-            ],
-            providers: [Apollo, provideAnimations(), provideToastr(), HIGHLIGHT_OPTIONS_PROVIDER],
+            imports: [HttpClientTestingModule, SharedTestModule, QueryExplainerComponent],
+            providers: [Apollo, provideToastr(), HIGHLIGHT_OPTIONS_PROVIDER],
         });
 
         registerMatSvgIcons();

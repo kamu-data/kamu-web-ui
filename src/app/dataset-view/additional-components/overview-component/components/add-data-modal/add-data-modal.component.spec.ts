@@ -11,8 +11,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AddDataModalComponent } from "./add-data-modal.component";
 import { NgbActiveModal, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { HttpClientModule } from "@angular/common/http";
-import { MatIconModule } from "@angular/material/icon";
-import { MatDividerModule } from "@angular/material/divider";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { FileFromUrlModalComponent } from "../file-from-url-modal/file-from-url-modal.component";
 import { FileUploadService } from "src/app/services/file-upload.service";
@@ -31,7 +29,7 @@ describe("AddDataModalComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [Apollo, NgbActiveModal],
-            imports: [HttpClientModule, SharedTestModule, MatIconModule, MatDividerModule, AddDataModalComponent],
+            imports: [HttpClientModule, SharedTestModule, AddDataModalComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(AddDataModalComponent);

@@ -6,17 +6,11 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ApolloTestingModule } from "apollo-angular/testing";
-import { DatasetApi } from "src/app/api/dataset.api";
 import { mockDatasetsAccountResponse, TEST_ACCOUNT_NAME } from "src/app/api/mock/dataset.mock";
 import { NavigationService } from "src/app/services/navigation.service";
 import { AccountTabs } from "../../account.constants";
 import { DatasetsTabComponent } from "./datasets-tab.component";
-import { DatasetListItemComponent } from "src/app/common/components/dataset-list-component/dataset-list-item/dataset-list-item.component";
-import { NgbPopoverModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
-import { MatChipsModule } from "@angular/material/chips";
-import { MatDividerModule } from "@angular/material/divider";
-import { ActivatedRoute, convertToParamMap, RouterModule } from "@angular/router";
+import { ActivatedRoute, convertToParamMap } from "@angular/router";
 import ProjectLinks from "src/app/project-links";
 
 describe("DatasetsTabComponent", () => {
@@ -26,18 +20,8 @@ describe("DatasetsTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                ApolloTestingModule,
-                NgbRatingModule,
-                MatChipsModule,
-                NgbPopoverModule,
-                MatDividerModule,
-                RouterModule,
-                DatasetsTabComponent,
-                DatasetListItemComponent,
-            ],
+            imports: [DatasetsTabComponent],
             providers: [
-                DatasetApi,
                 {
                     provide: ActivatedRoute,
                     useValue: {

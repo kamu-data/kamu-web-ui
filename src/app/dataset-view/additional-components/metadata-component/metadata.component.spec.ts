@@ -21,10 +21,6 @@ import {
     mockDatasetBasicsRootFragment,
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
-import { BlockRowDataComponent } from "src/app/common/components/block-row-data/block-row-data.component";
-import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
-import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
-import { MatIconModule } from "@angular/material/icon";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetKind } from "src/app/api/kamu.graphql.interface";
@@ -41,15 +37,7 @@ describe("MetadataComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                NgbTooltipModule,
-                MatIconModule,
-                SharedTestModule,
-                HttpClientTestingModule,
-                MetadataComponent,
-                BlockRowDataComponent,
-                TooltipIconComponent,
-            ],
+            imports: [SharedTestModule, HttpClientTestingModule, MetadataComponent],
             providers: [HIGHLIGHT_OPTIONS_PROVIDER],
         })
             .overrideComponent(MetadataComponent, {

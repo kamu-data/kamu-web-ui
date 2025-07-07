@@ -7,7 +7,6 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { CommitNavigatorComponent } from "./commit-navigator.component";
-import { MatIconModule } from "@angular/material/icon";
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 
 describe("CommitNavigatorComponent", () => {
@@ -19,7 +18,7 @@ describe("CommitNavigatorComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [MatIconModule, CommitNavigatorComponent],
+            imports: [CommitNavigatorComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(CommitNavigatorComponent);

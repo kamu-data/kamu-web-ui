@@ -5,10 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { MatIconModule } from "@angular/material/icon";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { TooltipIconComponent } from "./tooltip-icon.component";
-import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 
 describe("TooltipIconComponent", () => {
     let component: TooltipIconComponent;
@@ -16,7 +14,7 @@ describe("TooltipIconComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [MatIconModule, NgbTooltipModule, TooltipIconComponent],
+            imports: [TooltipIconComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(TooltipIconComponent);

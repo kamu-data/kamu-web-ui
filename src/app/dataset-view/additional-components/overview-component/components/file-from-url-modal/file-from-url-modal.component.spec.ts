@@ -8,9 +8,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FileFromUrlModalComponent } from "./file-from-url-modal.component";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import { ReactiveFormsModule } from "@angular/forms";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { MatDividerModule } from "@angular/material/divider";
 
 describe("FileFromUrlModalComponent", () => {
     let component: FileFromUrlModalComponent;
@@ -19,7 +17,7 @@ describe("FileFromUrlModalComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [NgbActiveModal],
-            imports: [ReactiveFormsModule, SharedTestModule, MatDividerModule, FileFromUrlModalComponent],
+            imports: [SharedTestModule, FileFromUrlModalComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(FileFromUrlModalComponent);

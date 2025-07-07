@@ -7,9 +7,7 @@
 
 import { TestBed } from "@angular/core/testing";
 import { AdminGuard } from "./admin.guard";
-import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { LoggedUserService } from "../logged-user.service";
 
 describe("AdminGuard", () => {
@@ -18,8 +16,7 @@ describe("AdminGuard", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo],
-            imports: [ApolloModule, ApolloTestingModule, HttpClientTestingModule],
+            imports: [ApolloTestingModule],
         });
         guard = TestBed.inject(AdminGuard);
         loggedUserService = TestBed.inject(LoggedUserService);

@@ -6,7 +6,6 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MatTableModule } from "@angular/material/table";
 import { findElementByDataTestId, getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { DynamicTableComponent } from "./dynamic-table.component";
 import { MOCK_DATA_ROWS, MOCK_SCHEMA_FIELDS } from "./dynamic-table.mock";
@@ -26,7 +25,7 @@ describe("DynamicTableComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [MatTableModule, DynamicTableComponent],
+            imports: [DynamicTableComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DynamicTableComponent);

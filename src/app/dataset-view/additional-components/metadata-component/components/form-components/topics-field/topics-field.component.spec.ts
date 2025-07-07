@@ -7,9 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { TopicsFieldComponent } from "./topics-field.component";
-import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
+import { FormArray, FormGroup } from "@angular/forms";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
 describe("TopicsFieldComponent", () => {
@@ -18,14 +16,7 @@ describe("TopicsFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [FormBuilder],
-            imports: [
-                ReactiveFormsModule,
-                NgbTooltipModule,
-                SharedTestModule,
-                TopicsFieldComponent,
-                TooltipIconComponent,
-            ],
+            imports: [SharedTestModule, TopicsFieldComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(TopicsFieldComponent);

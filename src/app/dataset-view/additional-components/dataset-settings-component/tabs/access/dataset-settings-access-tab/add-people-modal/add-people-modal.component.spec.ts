@@ -9,21 +9,16 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core
 import { AddPeopleModalComponent } from "./add-people-modal.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
-import { NgbActiveModal, NgbTypeaheadModule, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
+import { NgbActiveModal, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatIconModule } from "@angular/material/icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { ApolloTestingModule } from "apollo-angular/testing";
-import { FormsModule } from "@angular/forms";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { DatasetCollaborationsService } from "../dataset-collaborations.service";
 import { of } from "rxjs";
 import { DatasetAccessRole, NameLookupResult } from "src/app/api/kamu.graphql.interface";
 import { mockDatasetSearchCollaboratorQuery } from "src/app/api/mock/dataset-collaborations.mock";
 import AppValues from "src/app/common/values/app.values";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("AddPeopleModalComponent", () => {
     let component: AddPeopleModalComponent;
@@ -33,17 +28,8 @@ describe("AddPeopleModalComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [
-                SharedTestModule,
-                ApolloTestingModule,
-                HttpClientTestingModule,
-                MatDividerModule,
-                MatIconModule,
-                FormsModule,
-                NgbTypeaheadModule,
-                AddPeopleModalComponent,
-            ],
-            providers: [Apollo, NgbActiveModal, provideAnimations(), provideToastr()],
+            imports: [SharedTestModule, HttpClientTestingModule, AddPeopleModalComponent],
+            providers: [Apollo, NgbActiveModal, provideToastr()],
         });
         registerMatSvgIcons();
 

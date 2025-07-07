@@ -38,7 +38,7 @@ describe("FormValidationErrorsDirective", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [ReactiveFormsModule, FormValidationErrorsDirective, TestHostComponent],
+            imports: [FormValidationErrorsDirective, TestHostComponent],
         });
 
         fixture = TestBed.createComponent(TestHostComponent);

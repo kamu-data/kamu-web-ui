@@ -9,7 +9,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { OwnerPropertyComponent } from "./owner-property.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { AccountBasicsFragment } from "src/app/api/kamu.graphql.interface";
-import { RouterModule } from "@angular/router";
 
 describe("OwnerPropertyComponent", () => {
     let component: OwnerPropertyComponent;
@@ -17,7 +16,7 @@ describe("OwnerPropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [SharedTestModule, RouterModule, OwnerPropertyComponent],
+            imports: [SharedTestModule, OwnerPropertyComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(OwnerPropertyComponent);

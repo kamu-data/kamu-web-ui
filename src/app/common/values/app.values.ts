@@ -69,6 +69,7 @@ const language = 'typescript';
         enableScheduling: true,
         enableDatasetEnvVarsManagement: true,
         enableTermsOfService: true,
+        allowAnonymous: true,
     };
 
     public static readonly DEFAULT_UI_CONFIGURATION: AppUIConfig = {
@@ -76,6 +77,5 @@ const language = 'typescript';
         semanticSearchThresholdScore: 0,
         minNewPasswordLength: 8,
         featureFlags: AppValues.DEFAULT_UI_FEATURE_FLAGS,
-        allowAnonymous: false,
     };
 }

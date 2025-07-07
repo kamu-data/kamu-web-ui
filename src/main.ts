@@ -40,6 +40,8 @@ import { provideRouter, withComponentInputBinding, withRouterConfig } from "@ang
 import { routes } from "./app/app-routing";
 import { provideToastr } from "ngx-toastr";
 import { IS_ALLOWED_ANONYMOUS_USERS } from "./app/app-config.model";
+import { NavigationService } from "./app/services/navigation.service";
+import ProjectLinks from "./app/project-links";
 
 const Services = [
     Apollo,
@@ -60,6 +62,7 @@ const Services = [
             appConfig: AppConfigService,
             localStorageService: LocalStorageService,
             injector: Injector,
+            navigationService: NavigationService,
         ) => {
             const httpMainLink: ApolloLink = httpLink.create({
                 uri: appConfig.apiServerGqlUrl,
@@ -68,9 +71,13 @@ const Services = [
             const errorMiddleware: ApolloLink = onError(({ graphQLErrors, networkError }) => {
                 const toastrService = injector.get(ToastrService);
                 if (graphQLErrors) {
-                    graphQLErrors.forEach(({ message }) => {
-                        toastrService.error(message);
-                    });
+                    if (graphQLErrors[0].message === ErrorTexts.ERROR_ACCOUNT_IS_NOT_WHITELISTED) {
+                        navigationService.navigateToPath(ProjectLinks.URL_ACCOUNT_WHITELIST_PAGE_NOT_FOUND);
+                    } else {
+                        graphQLErrors.forEach(({ message }) => {
+                            toastrService.error(message);
+                        });
+                    }
                 }
 
                 if (networkError) {
@@ -108,7 +115,7 @@ const Services = [
                 link: ApolloLink.from([errorMiddleware, authorizationMiddleware, globalLoaderMiddleware, httpMainLink]),
             };
         },
-        deps: [HttpLink, AppConfigService, LocalStorageService, Injector],
+        deps: [HttpLink, AppConfigService, LocalStorageService, Injector, NavigationService],
     },
     HIGHLIGHT_OPTIONS_PROVIDER,
     {

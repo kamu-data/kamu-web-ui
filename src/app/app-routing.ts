@@ -94,12 +94,17 @@ import { accountPasswordProviderGuard } from "./common/guards/account-password-p
 import { DatasetSettingsIngestConfigurationTabComponent } from "./dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/dataset-settings-ingest-configuration-tab.component";
 import { datasetSettingsIngestConfigurationResolverFn } from "./dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/resolver/dataset-settings-ingest-configuration.resolver";
 import { allowAnonymousGuard } from "./common/guards/allow-anonymous.guard";
+import { AccountWhitelistNotFoundComponent } from "./common/components/account-whitelist-not-found/account-whitelist-not-found.component";
 
 export const routes: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
     {
         path: ProjectLinks.URL_PAGE_NOT_FOUND,
         component: PageNotFoundComponent,
+    },
+    {
+        path: ProjectLinks.URL_ACCOUNT_WHITELIST_PAGE_NOT_FOUND,
+        component: AccountWhitelistNotFoundComponent,
     },
     {
         path: ProjectLinks.URL_LOGIN,

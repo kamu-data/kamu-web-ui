@@ -17,6 +17,7 @@ export default class ProjectLinks {
     public static readonly URL_SEARCH: string = "v/search";
     public static readonly URL_DATASET_CREATE: string = "v/new-dataset";
     public static readonly URL_PAGE_NOT_FOUND: string = "v/page-not-found";
+    public static readonly URL_ACCOUNT_WHITELIST_PAGE_NOT_FOUND: string = "v/account-whitelist-not-found";
     public static readonly URL_RETURN_TO_CLI: string = "v/return-to-cli";
     public static readonly URL_SETTINGS: string = "v/settings";
     public static readonly URL_ADMIN_DASHBOARD: string = "v/admin-dashboard";

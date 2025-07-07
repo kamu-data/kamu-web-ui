@@ -75,7 +75,7 @@ export class AppConfigService {
     }
 
     public get allowAnonymous(): boolean {
-        return this.appUiConfig.allowAnonymous;
+        return this.appUiConfig.featureFlags.allowAnonymous;
     }
 
     public get semanticSearchThresholdScore(): MaybeUndefined<number> {
@@ -102,9 +102,7 @@ export class AppConfigService {
         request.open("GET", app_runtime_config.apiServerHttpUrl + "/ui-config", false);
         try {
             request.send(null);
-            console.log("!!!!!");
-            //  const data: AppUIConfig = JSON.parse(request.responseText) as AppUIConfig;
-            const data: AppUIConfig = AppValues.DEFAULT_UI_CONFIGURATION;
+            const data: AppUIConfig = JSON.parse(request.responseText) as AppUIConfig;
             return data;
         } catch (error) {
             return AppValues.DEFAULT_UI_CONFIGURATION;

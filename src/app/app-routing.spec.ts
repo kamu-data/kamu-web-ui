@@ -42,6 +42,7 @@ import {
 import { OverviewUpdate } from "./dataset-view/dataset.subscriptions.interface";
 import { NgxGraphModule } from "@swimlane/ngx-graph";
 import { provideAnimations } from "@angular/platform-browser/animations";
+import { IS_ALLOWED_ANONYMOUS_USERS } from "./app-config.model";
 
 describe("Router", () => {
     let router: Router;
@@ -101,6 +102,10 @@ describe("Router", () => {
                                 } as OverviewUpdate,
                             }),
                     },
+                },
+                {
+                    provide: IS_ALLOWED_ANONYMOUS_USERS,
+                    useValue: () => true,
                 },
             ],
         }).compileComponents();

@@ -76,6 +76,7 @@ describe("AppHeaderComponent", () => {
             enableScheduling: true,
             enableDatasetEnvVarsManagement: true,
             enableTermsOfService: true,
+            allowAnonymous: true,
         };
         component.loginMethods = [AccountProvider.OauthGithub, AccountProvider.Password];
         component.isVisible = true;

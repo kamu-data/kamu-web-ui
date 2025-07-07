@@ -509,7 +509,14 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             __typename: "FlowRetryPolicy",
             maxAttempts: 3,
         },
-        tasks: [],
+        tasks: [
+            {
+                taskId: "0",
+            },
+            {
+                taskId: "1",
+            },
+        ],
         __typename: "Flow",
     },
 ];

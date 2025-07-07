@@ -21,6 +21,7 @@ import {
     FlowTriggerInstance,
     TaskStatus,
 } from "src/app/api/kamu.graphql.interface";
+import { pluralize } from "src/app/common/helpers/app.helpers";
 import { DataHelpers } from "src/app/common/helpers/data.helpers";
 import AppValues from "src/app/common/values/app.values";
 import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
@@ -77,10 +78,7 @@ export class DatasetFlowDetailsHelpers {
                 const event = flowEvent as FlowEventTaskChanged;
                 switch (event.taskStatus) {
                     case TaskStatus.Finished:
-                        if (!event.task.outcome) {
-                            throw new Error("Task outcome is not defined");
-                        }
-                        switch (event.task.outcome.__typename) {
+                        switch (event.task.outcome?.__typename) {
                             case "TaskOutcomeSuccess":
                                 return { icon: "check_circle", class: "completed-status" };
                             case "TaskOutcomeFailed":
@@ -93,7 +91,7 @@ export class DatasetFlowDetailsHelpers {
                         }
 
                     case TaskStatus.Queued:
-                        return { icon: "radio_button_checked", class: "scheduled-status" };
+                        return { icon: "radio_button_checked", class: "queued-status" };
                     case TaskStatus.Running:
                         return { icon: "radio_button_checked", class: "running-status" };
                     /* istanbul ignore next */
@@ -156,10 +154,7 @@ export class DatasetFlowDetailsHelpers {
                     case TaskStatus.Running:
                         return this.describeTaskIdentity(event.taskId, flowDetails);
                     case TaskStatus.Finished:
-                        if (!event.task.outcome) {
-                            throw new Error("Task outcome is not defined");
-                        }
-                        switch (event.task.outcome.__typename) {
+                        switch (event.task.outcome?.__typename) {
                             case "TaskOutcomeCancelled":
                                 return "Task was cancelled";
                             case "TaskOutcomeFailed": {
@@ -200,15 +195,13 @@ export class DatasetFlowDetailsHelpers {
                                             ? `${flowDetails.description.ingestResult.message}`
                                             : flowDetails.description.ingestResult?.__typename ===
                                                 "FlowDescriptionUpdateResultSuccess"
-                                              ? `Ingested ${flowDetails.description.ingestResult.numRecords} new ${
-                                                    flowDetails.description.ingestResult.numRecords == 1
-                                                        ? "record"
-                                                        : "records"
-                                                } in ${flowDetails.description.ingestResult.numBlocks} new ${
-                                                    flowDetails.description.ingestResult.numBlocks == 1
-                                                        ? "block"
-                                                        : "blocks"
-                                                }`
+                                              ? `Ingested ${flowDetails.description.ingestResult.numRecords} new ${pluralize(
+                                                    "record",
+                                                    flowDetails.description.ingestResult.numRecords,
+                                                )} in ${flowDetails.description.ingestResult.numBlocks} new ${pluralize(
+                                                    "block",
+                                                    flowDetails.description.ingestResult.numBlocks,
+                                                )}`
                                               : flowDetails.description.ingestResult?.__typename ===
                                                       "FlowDescriptionUpdateResultUpToDate" &&
                                                   flowDetails.description.ingestResult.uncacheable &&
@@ -224,15 +217,13 @@ export class DatasetFlowDetailsHelpers {
                                             ? `${flowDetails.description.transformResult.message}`
                                             : flowDetails.description.transformResult?.__typename ===
                                                 "FlowDescriptionUpdateResultSuccess"
-                                              ? `Transformed ${flowDetails.description.transformResult.numRecords} new ${
-                                                    flowDetails.description.transformResult.numRecords == 1
-                                                        ? "record"
-                                                        : "records"
-                                                } in ${flowDetails.description.transformResult.numBlocks} new ${
-                                                    flowDetails.description.transformResult.numBlocks == 1
-                                                        ? "block"
-                                                        : "blocks"
-                                                }`
+                                              ? `Transformed ${flowDetails.description.transformResult.numRecords} new ${pluralize(
+                                                    "record",
+                                                    flowDetails.description.transformResult.numRecords,
+                                                )} in ${flowDetails.description.transformResult.numBlocks} new ${pluralize(
+                                                    "block",
+                                                    flowDetails.description.transformResult.numBlocks,
+                                                )}`
                                               : "Dataset is up-to-date";
 
                                     case "FlowDescriptionDatasetHardCompaction":
@@ -285,10 +276,7 @@ export class DatasetFlowDetailsHelpers {
     public static flowEventEndOfMessage(element: FlowEventTaskChanged): string {
         switch (element.taskStatus) {
             case TaskStatus.Finished:
-                if (!element.task.outcome) {
-                    throw new Error("Task outcome is not defined");
-                }
-                switch (element.task.outcome.__typename) {
+                switch (element.task.outcome?.__typename) {
                     case "TaskOutcomeSuccess":
                         return "finished successfully";
                     case "TaskOutcomeFailed":

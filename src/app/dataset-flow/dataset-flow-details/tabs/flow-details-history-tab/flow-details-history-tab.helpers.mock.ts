@@ -10,6 +10,7 @@ import {
     AccountType,
     DatasetFlowType,
     FlowHistoryDataFragment,
+    FlowOutcomeDataFragment,
     FlowStatus,
     FlowSummaryDataFragment,
     TaskStatus,
@@ -27,6 +28,18 @@ export const mockHistoryFragmentWithFinishedStatus: FlowHistoryDataFragment = {
         outcome: {
             __typename: "TaskOutcomeSuccess",
         },
+    },
+    nextAttemptAt: null,
+};
+
+export const mockHistoryFragmentWithQueuedStatus: FlowHistoryDataFragment = {
+    __typename: "FlowEventTaskChanged",
+    eventId: "2",
+    eventTime: "2024-03-13T13:54:30.656488373+00:00",
+    taskId: "1",
+    taskStatus: TaskStatus.Queued,
+    task: {
+        outcome: null,
     },
     nextAttemptAt: null,
 };
@@ -180,7 +193,7 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
     },
     {
         __typename: "FlowEventStartConditionUpdated",
-        eventId: "8",
+        eventId: "10",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         startCondition: {
             __typename: "FlowStartConditionThrottling",
@@ -191,9 +204,17 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
     },
     {
         __typename: "FlowEventScheduledForActivation",
-        eventId: "8",
+        eventId: "11",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         scheduledForActivationAt: "2024-03-13T14:54:30.656488373+00:00",
+    },
+    {
+        __typename: "FlowConfigSnapshotModified",
+        eventId: "12",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        configSnapshot: {
+            __typename: "FlowConfigRuleIngest",
+        },
     },
 ];
 
@@ -210,6 +231,7 @@ export const eventFlowDescriptionsResultHistoryTab: string[] = [
     "Waiting for batching condition",
     "Waiting for throttling condition",
     "Flow scheduled for activation",
+    "Flow configuration was modified",
 ];
 
 export const mockFlowHistoryDataFragmentForIconOptions: FlowHistoryDataFragment[] = [
@@ -262,6 +284,14 @@ export const mockFlowHistoryDataFragmentForIconOptions: FlowHistoryDataFragment[
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         scheduledForActivationAt: "2024-03-13T14:54:30.656488373+00:00",
     },
+    {
+        __typename: "FlowConfigSnapshotModified",
+        eventId: "6",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        configSnapshot: {
+            __typename: "FlowConfigRuleIngest",
+        },
+    },
 ];
 
 export const flowEventIconOptionsResults: { icon: string; class: string }[] = [
@@ -271,9 +301,11 @@ export const flowEventIconOptionsResults: { icon: string; class: string }[] = [
     { icon: "add_circle", class: "text-muted" },
     { icon: "downloading", class: "text-muted" },
     { icon: "timer", class: "text-muted" },
+    { icon: "outbound", class: "text-muted" },
     { icon: "check_circle", class: "completed-status" },
     { icon: "dangerous", class: "failed-status" },
     { icon: "cancel", class: "aborted-outcome" },
+    { icon: "radio_button_checked", class: "queued-status" },
 ];
 
 export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[] = [
@@ -352,6 +384,7 @@ export const flowEventSubMessageResults: string[] = [
     "",
     "Wake up time at Feb 12th 2024 8:22:30 PM GMT+02:00, shifted from 8:22:29 PM",
     "Activating at Mar 13th 2024 4:54:30 PM GMT+02:00",
+    "Modified by ingest rule",
     "Triggered by kamu",
     "Input dataset: kamu/alberta.case-details",
     "Accumulated 100/500 records. Watermark modified. Deadline at Aug 6th 2022 12:17:30 AM GMT+03:00", //1
@@ -362,4 +395,29 @@ export const flowEventSubMessageResults: string[] = [
     "Ingested 100 new records in 10 new blocks",
     "Transformed 10 new records in 2 new blocks",
     "Failed to get increment. Block is missing: f1620bc8ac3dbfd913b83d35ee853dd1b11987874b4f5071f6f31d585c09d4579fc5b",
+    "Task #1 (retry attempt 1 of 3)",
+];
+
+export const mockFlowHistoryDataOutcomeOptions: FlowOutcomeDataFragment[] = [
+    {
+        __typename: "FlowSuccessResult",
+        message: "Success",
+    },
+    {
+        __typename: "FlowFailedError",
+        reason: {
+            __typename: "TaskFailureReasonGeneral",
+            message: "Failed due to some reason",
+        },
+    },
+    {
+        __typename: "FlowAbortedResult",
+        message: "Aborted by user",
+    },
+];
+
+export const flowOutcomeOptionsResults: { icon: string; class: string }[] = [
+    { icon: "check_circle", class: "completed-status" },
+    { icon: "dangerous", class: "failed-status" },
+    { icon: "cancel", class: "aborted-outcome" },
 ];

@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Added compression of file sizes when the server responds to a request
+- Feature: login required platform
 ### Changed
 - Replaced all places with validation errors for forms with a directive
 - Adjustments for API changes in flow system

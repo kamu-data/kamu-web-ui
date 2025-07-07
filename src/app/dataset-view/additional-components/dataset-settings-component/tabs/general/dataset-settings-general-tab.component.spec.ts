@@ -253,7 +253,6 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         expect(navigationServiceSpy).toHaveBeenCalledTimes(1);
         expect(modalServiceSpy).toHaveBeenCalledTimes(1);
         expect(resetToSeedSpy).toHaveBeenCalledWith({
-            accountId: component.datasetBasics.owner.id,
             datasetId: component.datasetBasics.id,
             resetArgs: {
                 mode: {

@@ -33,8 +33,13 @@ import {
     SetIngestFlowConfigDocument,
     SetDatasetFlowTriggersDocument,
     FlowConfigRuleIngest,
+    FlowConfigRuleCompaction,
+    SetCompactionFlowConfigDocument,
+    DatasetTriggerTransformFlowDocument,
+    DatasetTriggerCompactionFlowDocument,
+    DatasetTriggerResetFlowDocument,
 } from "./kamu.graphql.interface";
-import { TEST_ACCOUNT_ID, TEST_DATASET_ID } from "./mock/dataset.mock";
+import { TEST_DATASET_ID } from "./mock/dataset.mock";
 import { DatasetFlowApi } from "./dataset-flow.api";
 import {
     mockIngestGetDatasetFlowConfigsSuccess,
@@ -51,6 +56,12 @@ import {
     mockDatasetResumeFlowsMutationSuccess,
     mockDatasetAllFlowsPausedQuery,
     mockRetryPolicyInput,
+    mockCompactingGetDatasetFlowConfigsSuccess,
+    mockSetCompactionFlowConfigMutation,
+    mockSetCompactionFlowConfigMutationError,
+    mockDatasetTriggerTransformFlowMutation,
+    mockDatasetTriggerCompactionFlowMutation,
+    mockDatasetTriggerResetFlowMutation,
 } from "./mock/dataset-flow.mock";
 
 describe("DatasetFlowApi", () => {
@@ -97,6 +108,33 @@ describe("DatasetFlowApi", () => {
         });
     });
 
+    it("should check getDatasetFlowConfigs with datasetFlowType=HARC_COMPACTION", () => {
+        service
+            .getDatasetFlowConfigs({ datasetId: TEST_DATASET_ID, datasetFlowType: DatasetFlowType.HardCompaction })
+            .subscribe((res: GetDatasetFlowConfigsQuery) => {
+                const configType = res.datasets.byId?.flows.configs.byType;
+                const configRule = configType?.rule;
+                expect(configRule?.__typename).toEqual("FlowConfigRuleCompaction");
+
+                const compactionConfig = configRule as FlowConfigRuleCompaction;
+
+                expect(compactionConfig).toBeDefined();
+                expect(compactionConfig.compactionMode).toEqual({
+                    __typename: "FlowConfigCompactionModeFull",
+                    maxSliceSize: 1000000,
+                    maxSliceRecords: 50000,
+                    recursive: false,
+                });
+            });
+
+        const op = controller.expectOne(GetDatasetFlowConfigsDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+
+        op.flush({
+            data: mockCompactingGetDatasetFlowConfigsSuccess,
+        });
+    });
+
     it("should check setDatasetFlowIngestConfig", () => {
         service
             .setDatasetFlowIngestConfig({
@@ -135,6 +173,63 @@ describe("DatasetFlowApi", () => {
         });
     });
 
+    it("should check setDatasetCompactionFlowConfigs", () => {
+        service
+            .setDatasetFlowCompactionConfig({
+                datasetId: TEST_DATASET_ID,
+                compactionConfigInput: {
+                    full: {
+                        maxSliceSize: 1000000,
+                        maxSliceRecords: 50000,
+                        recursive: false,
+                    },
+                },
+            })
+            .subscribe();
+
+        const op = controller.expectOne(SetCompactionFlowConfigDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        expect(op.operation.variables.compactionConfigInput).toEqual({
+            full: {
+                maxSliceSize: 1000000,
+                maxSliceRecords: 50000,
+                recursive: false,
+            },
+        });
+
+        op.flush({
+            data: mockSetCompactionFlowConfigMutation,
+        });
+    });
+
+    it("should check setDatasetCompactionFlowConfigs with retry input", () => {
+        service
+            .setDatasetFlowCompactionConfig({
+                datasetId: TEST_DATASET_ID,
+                compactionConfigInput: {
+                    full: {
+                        maxSliceSize: 1000000,
+                        maxSliceRecords: 50000,
+                        recursive: false,
+                    },
+                },
+            })
+            .subscribe();
+
+        const op = controller.expectOne(SetCompactionFlowConfigDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        expect(op.operation.variables.compactionConfigInput).toEqual({
+            full: {
+                maxSliceSize: 1000000,
+                maxSliceRecords: 50000,
+                recursive: false,
+            },
+        });
+        op.flush({
+            data: mockSetCompactionFlowConfigMutationError,
+        });
+    });
+
     it("should check setDatasetFlowTriggers", () => {
         service
             .setDatasetFlowTriggers({
@@ -162,7 +257,6 @@ describe("DatasetFlowApi", () => {
     it("should check datasetTriggerIngestFlow", () => {
         service
             .datasetTriggerIngestFlow({
-                accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
             })
             .subscribe();
@@ -171,6 +265,63 @@ describe("DatasetFlowApi", () => {
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
         op.flush({
             data: mockDatasetTriggerIngestFlowMutation,
+        });
+    });
+
+    it("should check datasetTriggerTransformFlow", () => {
+        service
+            .datasetTriggerTransformFlow({
+                datasetId: TEST_DATASET_ID,
+            })
+            .subscribe();
+
+        const op = controller.expectOne(DatasetTriggerTransformFlowDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        op.flush({
+            data: mockDatasetTriggerTransformFlowMutation,
+        });
+    });
+
+    it("should check datasetTriggerCompactionlow", () => {
+        service
+            .datasetTriggerCompactionFlow({
+                datasetId: TEST_DATASET_ID,
+            })
+            .subscribe();
+
+        const op = controller.expectOne(DatasetTriggerCompactionFlowDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        expect(op.operation.variables.compactionConfigInput).toBeUndefined();
+
+        op.flush({
+            data: mockDatasetTriggerCompactionFlowMutation,
+        });
+    });
+
+    it("should check datasetTriggerResetFlow", () => {
+        service
+            .datasetTriggerResetFlow({
+                datasetId: TEST_DATASET_ID,
+                resetConfigInput: {
+                    mode: {
+                        toSeed: {},
+                    },
+                    recursive: false,
+                },
+            })
+            .subscribe();
+
+        const op = controller.expectOne(DatasetTriggerResetFlowDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        expect(op.operation.variables.resetConfigInput).toEqual({
+            mode: {
+                toSeed: {},
+            },
+            recursive: false,
+        });
+
+        op.flush({
+            data: mockDatasetTriggerResetFlowMutation,
         });
     });
 

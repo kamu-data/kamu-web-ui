@@ -76,7 +76,6 @@ export class DatasetFlowApi {
     private setCompactionFlowConfigGQL = inject(SetCompactionFlowConfigGQL);
 
     public datasetTriggerIngestFlow(params: {
-        accountId: string;
         datasetId: string;
         ingestConfigInput?: FlowConfigIngestInput;
     }): Observable<DatasetTriggerIngestFlowMutation> {
@@ -88,10 +87,7 @@ export class DatasetFlowApi {
         );
     }
 
-    public datasetTriggerTransformFlow(params: {
-        accountId: string;
-        datasetId: string;
-    }): Observable<DatasetTriggerTransformFlowMutation> {
+    public datasetTriggerTransformFlow(params: { datasetId: string }): Observable<DatasetTriggerTransformFlowMutation> {
         return this.datasetTriggetTransformFlowGQL.mutate({ ...params }).pipe(
             first(),
             map((result: MutationResult<DatasetTriggerTransformFlowMutation>) => {
@@ -101,7 +97,6 @@ export class DatasetFlowApi {
     }
 
     public datasetTriggerCompactionFlow(params: {
-        accountId: string;
         datasetId: string;
         compactionConfigInput?: FlowConfigCompactionInput;
     }): Observable<DatasetTriggerCompactionFlowMutation> {
@@ -114,7 +109,6 @@ export class DatasetFlowApi {
     }
 
     public datasetTriggerResetFlow(params: {
-        accountId: string;
         datasetId: string;
         resetConfigInput: FlowConfigResetInput;
     }): Observable<DatasetTriggerResetFlowMutation> {

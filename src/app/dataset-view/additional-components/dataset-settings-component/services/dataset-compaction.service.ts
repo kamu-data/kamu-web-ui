@@ -34,14 +34,9 @@ export class DatasetCompactionService {
         });
     }
 
-    public resetToSeed(params: {
-        accountId: string;
-        datasetId: string;
-        resetArgs: FlowConfigResetInput;
-    }): Observable<boolean> {
+    public resetToSeed(params: { datasetId: string; resetArgs: FlowConfigResetInput }): Observable<boolean> {
         return this.datasetFlowApi
             .datasetTriggerResetFlow({
-                accountId: params.accountId,
                 datasetId: params.datasetId,
                 resetConfigInput: params.resetArgs,
             })

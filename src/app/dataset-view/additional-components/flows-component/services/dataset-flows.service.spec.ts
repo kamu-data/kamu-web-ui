@@ -31,15 +31,13 @@ import { MaybeUndefined } from "src/app/interface/app.types";
 import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("DatasetFlowsService", () => {
     let service: DatasetFlowsService;
     let datasetFlowApi: DatasetFlowApi;
     let toastService: ToastrService;
-    let loggedUserService: LoggedUserService;
+
     const MOCK_DATASET_ID = "did:odf:fed0100d72fc7a0d7ced1ff2d47e3bfeb844390f18a7fa7e24ced6563aa7357dfa2e8";
     const MOCK_PAGE = 1;
     const MOCK_PER_PAGE = 15;
@@ -54,9 +52,6 @@ describe("DatasetFlowsService", () => {
         service = TestBed.inject(DatasetFlowsService);
         datasetFlowApi = TestBed.inject(DatasetFlowApi);
         toastService = TestBed.inject(ToastrService);
-        loggedUserService = TestBed.inject(LoggedUserService);
-
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
     });
 
     it("should be created", () => {

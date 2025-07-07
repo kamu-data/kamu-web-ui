@@ -30,6 +30,8 @@ import {
     SetDatasetFlowTriggersMutation,
     SetIngestFlowConfigMutation,
     TaskStatus,
+    DatasetTriggerTransformFlowMutation,
+    DatasetTriggerCompactionFlowMutation,
 } from "./../kamu.graphql.interface";
 import { GetDatasetFlowConfigsQuery, DatasetKind, TimeUnit, TimeDeltaInput } from "../kamu.graphql.interface";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
@@ -73,6 +75,44 @@ export const mockIngestGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQuery 
                         rule: {
                             __typename: "FlowConfigRuleIngest",
                             fetchUncacheable: false,
+                        },
+                        __typename: "FlowConfiguration",
+                    },
+                },
+                __typename: "DatasetFlows",
+            },
+        },
+        __typename: "Datasets",
+    },
+};
+
+export const mockCompactingGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQuery = {
+    datasets: {
+        byId: {
+            id: "did:odf:fed01231688285e95d02c6e2d3eaf82d3a21ba15693a1375769dd04c040193ca31718",
+            kind: DatasetKind.Root,
+            name: "account.transactions",
+            owner: {
+                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+                accountName: "kamu",
+                __typename: "Account",
+                accountProvider: AccountProvider.Password,
+            },
+            alias: "account.transactions",
+            visibility: mockPublicDatasetVisibility,
+            __typename: "Dataset",
+            flows: {
+                configs: {
+                    __typename: "DatasetFlowConfigs",
+                    byType: {
+                        rule: {
+                            __typename: "FlowConfigRuleCompaction",
+                            compactionMode: {
+                                __typename: "FlowConfigCompactionModeFull",
+                                maxSliceSize: 1000000,
+                                maxSliceRecords: 50000,
+                                recursive: false,
+                            },
                         },
                         __typename: "FlowConfiguration",
                     },
@@ -922,6 +962,122 @@ export const mockDatasetTriggerIngestFlowMutationError: DatasetTriggerIngestFlow
                         message: "Error",
                         expectedDatasetKind: DatasetKind.Root,
                         actualDatasetKind: DatasetKind.Derivative,
+                    },
+                    __typename: "DatasetFlowRunsMut",
+                },
+                __typename: "DatasetFlowsMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockDatasetTriggerTransformFlowMutation: DatasetTriggerTransformFlowMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                runs: {
+                    triggerTransformFlow: {
+                        flow: {
+                            configSnapshot: null,
+                            datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+                            description: {
+                                transform: {
+                                    inputs: [],
+                                    transform: {
+                                        engine: "flink",
+                                    },
+                                },
+                                transformResult: null,
+                                __typename: "FlowDescriptionDatasetExecuteTransform",
+                            },
+                            flowId: "0",
+                            status: FlowStatus.Waiting,
+                            initiator: {
+                                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+                                accountName: "kamu",
+                                displayName: "kamu",
+                                accountType: AccountType.User,
+                                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                                isAdmin: true,
+                                __typename: "Account",
+                                accountProvider: AccountProvider.Password,
+                            },
+                            outcome: null,
+                            timing: {
+                                scheduledAt: "2024-02-16T09:26:00+00:00",
+                                awaitingExecutorSince: "2024-02-16T09:26:04+00:00",
+                                runningSince: null,
+                                lastAttemptFinishedAt: null,
+                                initiatedAt: "2024-02-16T09:25:59+00:00",
+                                __typename: "FlowTimingRecords",
+                            },
+                            startCondition: null,
+                            retryPolicy: null,
+                            tasks: [],
+                            __typename: "Flow",
+                        },
+                        message: "Success",
+                        __typename: "TriggerFlowSuccess",
+                    },
+                    __typename: "DatasetFlowRunsMut",
+                },
+                __typename: "DatasetFlowsMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockDatasetTriggerCompactionFlowMutation: DatasetTriggerCompactionFlowMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                runs: {
+                    triggerCompactionFlow: {
+                        flow: {
+                            configSnapshot: {
+                                __typename: "FlowConfigRuleCompaction",
+                                compactionMode: {
+                                    __typename: "FlowConfigCompactionModeFull",
+                                },
+                            },
+                            datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+                            description: {
+                                ingestResult: null,
+                                pollingSource: mockFlowPollingSourceFragmentFetchUrl,
+                                __typename: "FlowDescriptionDatasetPollingIngest",
+                            },
+                            flowId: "0",
+                            status: FlowStatus.Waiting,
+                            initiator: {
+                                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+                                accountName: "kamu",
+                                displayName: "kamu",
+                                accountType: AccountType.User,
+                                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                                isAdmin: true,
+                                __typename: "Account",
+                                accountProvider: AccountProvider.Password,
+                            },
+                            outcome: null,
+                            timing: {
+                                scheduledAt: "2024-02-16T09:26:00+00:00",
+                                awaitingExecutorSince: "2024-02-16T09:26:04+00:00",
+                                runningSince: null,
+                                lastAttemptFinishedAt: null,
+                                initiatedAt: "2024-02-16T09:25:59+00:00",
+                                __typename: "FlowTimingRecords",
+                            },
+                            startCondition: null,
+                            retryPolicy: null,
+                            tasks: [],
+                            __typename: "Flow",
+                        },
+                        message: "Success",
+                        __typename: "TriggerFlowSuccess",
                     },
                     __typename: "DatasetFlowRunsMut",
                 },

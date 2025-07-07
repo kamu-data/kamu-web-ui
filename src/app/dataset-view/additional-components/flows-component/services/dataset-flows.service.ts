@@ -31,7 +31,6 @@ import {
     GetDatasetListFlowsQuery,
     GetFlowByIdQuery,
 } from "src/app/api/kamu.graphql.interface";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { MaybeUndefined } from "src/app/interface/app.types";
 import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
@@ -42,7 +41,6 @@ import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-detai
 export class DatasetFlowsService {
     private datasetFlowApi = inject(DatasetFlowApi);
     private toastrService = inject(ToastrService);
-    private loggedUserService = inject(LoggedUserService);
 
     public datasetTriggerIngestFlow(params: {
         datasetId: string;
@@ -50,7 +48,6 @@ export class DatasetFlowsService {
     }): Observable<boolean> {
         return this.datasetFlowApi
             .datasetTriggerIngestFlow({
-                accountId: this.loggedUserService.currentlyLoggedInUser.id,
                 datasetId: params.datasetId,
                 ingestConfigInput: params.ingestConfigInput,
             })
@@ -69,7 +66,6 @@ export class DatasetFlowsService {
     public datasetTriggerTransformFlow(params: { datasetId: string }): Observable<boolean> {
         return this.datasetFlowApi
             .datasetTriggerTransformFlow({
-                accountId: this.loggedUserService.currentlyLoggedInUser.id,
                 datasetId: params.datasetId,
             })
             .pipe(
@@ -90,7 +86,6 @@ export class DatasetFlowsService {
     }): Observable<boolean> {
         return this.datasetFlowApi
             .datasetTriggerCompactionFlow({
-                accountId: this.loggedUserService.currentlyLoggedInUser.id,
                 datasetId: params.datasetId,
                 compactionConfigInput: params.compactionConfigInput,
             })
@@ -112,7 +107,6 @@ export class DatasetFlowsService {
     }): Observable<boolean> {
         return this.datasetFlowApi
             .datasetTriggerResetFlow({
-                accountId: this.loggedUserService.currentlyLoggedInUser.id,
                 datasetId: params.datasetId,
                 resetConfigInput: params.resetConfigInput,
             })

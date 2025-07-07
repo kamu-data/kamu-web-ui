@@ -18,7 +18,6 @@ import {
     mockDatasetTriggerResetFlowMutation,
     mockDatasetTriggerResetFlowMutationError,
 } from "src/app/api/mock/dataset-flow.mock";
-import { TEST_ACCOUNT_ID } from "src/app/search/mock.data";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { provideAnimations } from "@angular/platform-browser/animations";
 
@@ -71,7 +70,6 @@ describe("DatasetCompactionService", () => {
 
         const subscription$ = service
             .resetToSeed({
-                accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
                 resetArgs: {
                     mode: {
@@ -93,7 +91,6 @@ describe("DatasetCompactionService", () => {
         const toastrServiceErrorSpy = spyOn(toastService, "error");
         const subscription$ = service
             .resetToSeed({
-                accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
                 resetArgs: {
                     mode: {

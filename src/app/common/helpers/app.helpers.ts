@@ -103,6 +103,10 @@ export function capitalizeString(value: string): string {
     return value[0].toUpperCase() + value.slice(1).toLowerCase();
 }
 
+export function pluralize(word: string, count: number): string {
+    return count === 1 ? word : word + "s";
+}
+
 // After the set time in the timeout, the class("clipboard-btn--success") is removed.
 // The result will be a change in the icon. The function looks like a swap
 export function changeCopyIcon(event: MouseEvent): void {

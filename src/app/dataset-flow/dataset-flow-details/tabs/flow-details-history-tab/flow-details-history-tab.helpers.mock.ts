@@ -52,7 +52,7 @@ export const mockFlowSummaryDataFragmentIngestResult: FlowSummaryDataFragment = 
     initiator: null,
     outcome: {
         __typename: "FlowSuccessResult",
-        message: "Succes",
+        message: "Success",
     },
     startCondition: null,
     timing: {
@@ -200,8 +200,8 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
 export const eventFlowDescriptionsResultHistoryTab: string[] = [
     "Flow initiated automatically",
     "Flow was aborted",
-    "Polling ingest task running",
-    "Polling ingest task finished successfully",
+    "Reset to seed task running",
+    "Reset to seed task finished successfully",
     "Additionally triggered manually",
     "Additionally triggered after input dataset event",
     "Additionally triggered after push event",

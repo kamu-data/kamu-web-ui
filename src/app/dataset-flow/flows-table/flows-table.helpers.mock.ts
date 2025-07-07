@@ -26,9 +26,26 @@ export const expectationsDesriptionColumnOptions = [
     { icon: "radio_button_checked", class: "waiting-status" },
     { icon: "cancel", class: "aborted-outcome" },
     { icon: "dangerous", class: "failed-status" },
+    { icon: "radio_button_checked", class: "retrying-status" },
 ];
 
-export const expectationsDescriptionEndOfMessage = ["finished", "running", "waiting", "aborted", "failed"];
+export const expectationsFlowTypeDescriptions = [
+    "Polling ingest",
+    "Execute transformation",
+    "Reset to seed",
+    "Hard compaction",
+    "Reset",
+    "Polling ingest",
+];
+
+export const expectationsDescriptionEndOfMessage = [
+    "finished",
+    "running",
+    "waiting",
+    "aborted",
+    "failed",
+    "awaiting retry",
+];
 
 export const mockFlowPollingSourceFragmentFetchUrl = {
     __typename: "SetPollingSource" as const,
@@ -92,7 +109,7 @@ export const mockDatasetExecuteTransformFlowSummaryData: FlowSummaryDataFragment
     initiator: null,
     outcome: {
         __typename: "FlowSuccessResult",
-        message: "Succes",
+        message: "Success",
     },
     timing: {
         initiatedAt: "2024-02-12T18:22:29+00:00",
@@ -122,7 +139,7 @@ export const mockDatasetExecuteTransformFlowDescriptionUpdateResultUnknown: Flow
     initiator: null,
     outcome: {
         __typename: "FlowSuccessResult",
-        message: "Succes",
+        message: "Success",
     },
     timing: {
         initiatedAt: "2024-02-12T18:22:29+00:00",
@@ -152,7 +169,7 @@ export const mockDatasetPollingIngestFlowDescriptionUpdateResultUnknown: FlowSum
     initiator: null,
     outcome: {
         __typename: "FlowSuccessResult",
-        message: "Succes",
+        message: "Success",
     },
     timing: {
         initiatedAt: "2024-02-12T18:22:29+00:00",
@@ -276,7 +293,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         initiator: null,
         outcome: {
             __typename: "FlowSuccessResult",
-            message: "Succes",
+            message: "Success",
         },
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
@@ -306,7 +323,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         initiator: null,
         outcome: {
             __typename: "FlowSuccessResult",
-            message: "Succes",
+            message: "Success",
         },
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
@@ -398,6 +415,191 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: null,
             lastAttemptFinishedAt: null,
+            __typename: "FlowTimingRecords",
+        },
+        retryPolicy: null,
+        tasks: [],
+        __typename: "Flow",
+    },
+    {
+        datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+        description: {
+            __typename: "FlowDescriptionDatasetReset",
+        },
+        flowId: "415",
+        status: FlowStatus.Finished,
+        initiator: null,
+        outcome: {
+            __typename: "FlowSuccessResult",
+            message: "Success",
+        },
+        timing: {
+            initiatedAt: "2024-02-12T18:22:29+00:00",
+            scheduledAt: "2024-02-12T18:22:30+00:00",
+            awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
+            runningSince: null,
+            lastAttemptFinishedAt: null,
+            __typename: "FlowTimingRecords",
+        },
+        retryPolicy: null,
+        tasks: [],
+        __typename: "Flow",
+    },
+    {
+        datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+        description: {
+            __typename: "FlowDescriptionDatasetHardCompaction",
+            compactionResult: {
+                __typename: "FlowDescriptionHardCompactionNothingToDo",
+                message: "Nothing to do",
+            },
+        },
+        flowId: "415",
+        status: FlowStatus.Finished,
+        initiator: null,
+        outcome: {
+            __typename: "FlowSuccessResult",
+            message: "Success",
+        },
+        timing: {
+            initiatedAt: "2024-02-12T18:22:29+00:00",
+            scheduledAt: "2024-02-12T18:22:30+00:00",
+            awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
+            runningSince: null,
+            lastAttemptFinishedAt: null,
+            __typename: "FlowTimingRecords",
+        },
+        retryPolicy: null,
+        tasks: [],
+        __typename: "Flow",
+    },
+    {
+        datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+        description: {
+            __typename: "FlowDescriptionDatasetHardCompaction",
+            compactionResult: {
+                __typename: "FlowDescriptionHardCompactionSuccess",
+                originalBlocksCount: 125,
+                resultingBlocksCount: 13,
+                newHead: "zW1gUpztxhibmmBcpeNgXN5wrJHjkPWzWfEK5DMuSZLzs2u",
+            },
+        },
+        flowId: "415",
+        status: FlowStatus.Finished,
+        initiator: null,
+        outcome: {
+            __typename: "FlowSuccessResult",
+            message: "Success",
+        },
+        timing: {
+            initiatedAt: "2024-02-12T18:22:29+00:00",
+            scheduledAt: "2024-02-12T18:22:30+00:00",
+            awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
+            runningSince: null,
+            lastAttemptFinishedAt: null,
+            __typename: "FlowTimingRecords",
+        },
+        retryPolicy: null,
+        tasks: [],
+        __typename: "Flow",
+    },
+    {
+        datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+        description: {
+            __typename: "FlowDescriptionDatasetHardCompaction",
+            compactionResult: {
+                __typename: "FlowDescriptionHardCompactionSuccess",
+                originalBlocksCount: 125,
+                resultingBlocksCount: 13,
+                newHead: "zW1gUpztxhibmmBcpeNgXN5wrJHjkPWzWfEK5DMuSZLzs2u",
+            },
+        },
+        configSnapshot: {
+            __typename: "FlowConfigRuleCompaction",
+            compactionMode: {
+                __typename: "FlowConfigCompactionModeMetadataOnly",
+            },
+        },
+        flowId: "415",
+        status: FlowStatus.Finished,
+        initiator: null,
+        outcome: {
+            __typename: "FlowSuccessResult",
+            message: "Success",
+        },
+        timing: {
+            initiatedAt: "2024-02-12T18:22:29+00:00",
+            scheduledAt: "2024-02-12T18:22:30+00:00",
+            awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
+            runningSince: null,
+            lastAttemptFinishedAt: null,
+            __typename: "FlowTimingRecords",
+        },
+        retryPolicy: null,
+        tasks: [],
+        __typename: "Flow",
+    },
+    {
+        datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+        description: {
+            __typename: "FlowDescriptionDatasetHardCompaction",
+            compactionResult: null,
+        },
+        flowId: "415",
+        status: FlowStatus.Running,
+        initiator: null,
+        outcome: null,
+        timing: {
+            initiatedAt: "2024-02-12T18:22:29+00:00",
+            scheduledAt: "2024-02-12T18:22:30+00:00",
+            awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
+            runningSince: "2024-02-12T18:22:31+00:00",
+            lastAttemptFinishedAt: null,
+            __typename: "FlowTimingRecords",
+        },
+        retryPolicy: null,
+        tasks: [],
+        __typename: "Flow",
+    },
+    {
+        datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+        description: {
+            transformResult: null,
+            transform: mockFlowSetTransformFragment,
+            __typename: "FlowDescriptionDatasetExecuteTransform",
+        },
+        flowId: "415",
+        status: FlowStatus.Finished,
+        initiator: null,
+        outcome: {
+            __typename: "FlowFailedError",
+            reason: {
+                __typename: "TaskFailureReasonInputDatasetCompacted",
+                message: "Input dataset was compacted",
+                inputDataset: {
+                    __typename: "Dataset",
+                    id: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424752",
+                    kind: DatasetKind.Root,
+                    name: "my-dataset-input",
+                    alias: "owner/my-dataset-input",
+                    owner: {
+                        id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+                        accountName: "kamu",
+                        __typename: "Account",
+                        accountProvider: AccountProvider.Password,
+                    },
+                    visibility: {
+                        __typename: "PrivateDatasetVisibility",
+                    },
+                },
+            },
+        },
+        timing: {
+            initiatedAt: "2024-02-12T18:22:29+00:00",
+            scheduledAt: "2024-02-12T18:22:30+00:00",
+            awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
+            runningSince: "2024-02-12T18:22:31+00:00",
+            lastAttemptFinishedAt: "2024-02-12T18:22:33+00:00",
             __typename: "FlowTimingRecords",
         },
         retryPolicy: null,
@@ -534,6 +736,33 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
         flowId: "419",
+        status: FlowStatus.Retrying,
+        initiator: null,
+        outcome: null,
+        timing: {
+            initiatedAt: "2024-02-12T18:22:29+00:00",
+            scheduledAt: "2024-03-14T11:44:29+00:00",
+            awaitingExecutorSince: "2024-03-14T10:24:29+00:00",
+            runningSince: "2024-03-14T10:34:29+00:00",
+            lastAttemptFinishedAt: null,
+            __typename: "FlowTimingRecords",
+        },
+        startCondition: null,
+        retryPolicy: {
+            __typename: "FlowRetryPolicy",
+            maxAttempts: 3,
+        },
+        tasks: [],
+        __typename: "Flow",
+    },
+    {
+        datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+        description: {
+            ingestResult: null,
+            pollingSource: mockFlowPollingSourceFragmentFetchUrl,
+            __typename: "FlowDescriptionDatasetPollingIngest",
+        },
+        flowId: "420",
         status: FlowStatus.Running,
         initiator: null,
         outcome: null,
@@ -560,12 +789,12 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
             pollingSource: mockFlowPollingSourceFragmentFetchUrl,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
-        flowId: "420",
+        flowId: "421",
         status: FlowStatus.Finished,
         initiator: null,
         outcome: {
             __typename: "FlowSuccessResult",
-            message: "Succes",
+            message: "Success",
         },
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
@@ -587,7 +816,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
             pollingSource: mockFlowPollingSourceFragmentFetchUrl,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
-        flowId: "421",
+        flowId: "422",
         status: FlowStatus.Finished,
         initiator: null,
         outcome: {
@@ -614,7 +843,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
             pollingSource: mockFlowPollingSourceFragmentFetchUrl,
             __typename: "FlowDescriptionDatasetPollingIngest",
         },
-        flowId: "422",
+        flowId: "423",
         status: FlowStatus.Finished,
         initiator: null,
         outcome: {
@@ -644,6 +873,7 @@ export const durationBlockTextResults: string[] = [
     "wake up time: in 1 hour",
     "wake up time: in 2 hours",
     "deadline time: in 1 hour",
+    "retrying in 22 minutes",
     "running for 48 minutes ",
     "finished in 1 hour",
     "aborted 2 hours ago",
@@ -655,6 +885,7 @@ export const tooltipTextResults: string[] = [
     "Wake up time: Mar 14th 2024 2:24:29 PM GMT+02:00",
     "Wake up time: Mar 14th 2024 3:24:29 PM GMT+02:00",
     "Deadline time: Mar 14th 2024 2:24:29 PM GMT+02:00",
+    "Planned retry time: Mar 14th 2024 1:44:29 PM GMT+02:00",
     "Start running time: Mar 14th 2024 12:34:29 PM GMT+02:00",
     "Completed time: Mar 14th 2024 2:24:29 PM GMT+02:00",
     "Aborted time: Mar 14th 2024 11:24:29 AM GMT+02:00",

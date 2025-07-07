@@ -14,7 +14,7 @@ import {
 import { MaybeNull } from "src/app/interface/app.types";
 import AppValues from "src/app/common/values/app.values";
 import { DataHelpers } from "src/app/common/helpers/data.helpers";
-import { excludeAgoWord, isNil } from "../../common/helpers/app.helpers";
+import { excludeAgoWord, isNil, pluralize } from "../../common/helpers/app.helpers";
 import { format } from "date-fns/format";
 import { formatDistanceToNowStrict } from "date-fns";
 
@@ -127,11 +127,13 @@ export class FlowTableHelpers {
                                     ? `${element.description.ingestResult.message}`
                                     : element.description.ingestResult?.__typename ===
                                         "FlowDescriptionUpdateResultSuccess"
-                                      ? `Ingested ${element.description.ingestResult.numRecords} new ${
-                                            element.description.ingestResult.numRecords == 1 ? "record" : "records"
-                                        } in ${element.description.ingestResult.numBlocks} new ${
-                                            element.description.ingestResult.numBlocks == 1 ? "block" : "blocks"
-                                        }`
+                                      ? `Ingested ${element.description.ingestResult.numRecords} new ${pluralize(
+                                            "record",
+                                            element.description.ingestResult.numRecords,
+                                        )} in ${element.description.ingestResult.numBlocks} new ${pluralize(
+                                            "block",
+                                            element.description.ingestResult.numBlocks,
+                                        )}`
                                       : element.description.ingestResult?.__typename ===
                                               "FlowDescriptionUpdateResultUpToDate" &&
                                           element.description.ingestResult.uncacheable &&
@@ -147,11 +149,13 @@ export class FlowTableHelpers {
                                     ? `${element.description.transformResult.message}`
                                     : element.description.transformResult?.__typename ===
                                         "FlowDescriptionUpdateResultSuccess"
-                                      ? `Transformed ${element.description.transformResult.numRecords} new ${
-                                            element.description.transformResult.numRecords == 1 ? "record" : "records"
-                                        } in ${element.description.transformResult.numBlocks} new ${
-                                            element.description.transformResult.numBlocks == 1 ? "block" : "blocks"
-                                        }`
+                                      ? `Transformed ${element.description.transformResult.numRecords} new ${pluralize(
+                                            "record",
+                                            element.description.transformResult.numRecords,
+                                        )} in ${element.description.transformResult.numBlocks} new ${pluralize(
+                                            "block",
+                                            element.description.transformResult.numBlocks,
+                                        )}`
                                       : "Dataset is up-to-date";
 
                             case "FlowDescriptionDatasetHardCompaction":
@@ -335,6 +339,7 @@ export class FlowTableHelpers {
 
     public static retriesBlockText(flowStatus: FlowStatus, tasksInFlow: number, maxRetryAttempts: number): string {
         switch (flowStatus) {
+            case FlowStatus.Running:
             case FlowStatus.Retrying:
                 return `retry attempt ${tasksInFlow} of ${maxRetryAttempts}`;
 

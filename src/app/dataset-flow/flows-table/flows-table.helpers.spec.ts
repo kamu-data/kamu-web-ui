@@ -9,6 +9,7 @@ import {
     FetchStepContainer,
     FetchStepFilesGlob,
     FetchStepUrl,
+    FlowStatus,
     FlowSummaryDataFragment,
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
@@ -18,6 +19,7 @@ import {
     durationBlockTextResults,
     expectationsDescriptionEndOfMessage,
     expectationsDesriptionColumnOptions,
+    expectationsFlowTypeDescriptions,
     mockDatasetExecuteTransformFlowSummaryData,
     mockFlowPollingSourceFragmentFetchImage,
     mockFlowPollingSourceFragmentFetchStepFilesGlob,
@@ -85,11 +87,33 @@ describe("FlowTableHelpers", () => {
         ).toEqual("waiting for scheduled execution");
     });
 
+    it("should check retry block text in Retrying status", () => {
+        expect(FlowTableHelpers.retriesBlockText(FlowStatus.Retrying, 2, 3)).toEqual("retry attempt 2 of 3");
+    });
+
+    it("should check retry block text in Running status", () => {
+        expect(FlowTableHelpers.retriesBlockText(FlowStatus.Running, 2, 3)).toEqual("retry attempt 2 of 3");
+    });
+
+    it("should check retry block text in Failed status", () => {
+        expect(FlowTableHelpers.retriesBlockText(FlowStatus.Finished, 3, 3)).toEqual("failed after 3 retry attempts");
+    });
+
+    it("should check retry block text throws an error in Waiting status", () => {
+        expect(() => FlowTableHelpers.retriesBlockText(FlowStatus.Waiting, 0, 3)).toThrow();
+    });
+
     mockFlowSummaryDataFragments.forEach((item: FlowSummaryDataFragment, index: number) => {
         it(`should check description column options with status=${item.status} and outcome=${item.outcome?.__typename}`, () => {
             expect(FlowTableHelpers.descriptionColumnTableOptions(item)).toEqual(
                 expectationsDesriptionColumnOptions[index],
             );
+        });
+    });
+
+    mockFlowSummaryDataFragments.forEach((item: FlowSummaryDataFragment, index: number) => {
+        it(`should check flow type description with status=${item.status} and outcome=${item.outcome?.__typename}`, () => {
+            expect(FlowTableHelpers.flowTypeDescription(item)).toEqual(expectationsFlowTypeDescriptions[index]);
         });
     });
 
@@ -166,6 +190,40 @@ describe("FlowTableHelpers", () => {
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and cacheable source`, () => {
         expect(FlowTableHelpers.descriptionSubMessage(mockFlowSummaryDataFragmentShowForceLink)).toEqual(
             `Source is uncacheable: to re-scan the data, use`,
+        );
+    });
+
+    it(`should check description end of message with description FlowDescriptionDatasetReset typename`, () => {
+        expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[9])).toEqual(
+            `All dataset history has been cleared`,
+        );
+    });
+
+    it(`should check description end of message with description FlowDescriptionDatasetCompacting typename with nothing to do`, () => {
+        expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[10])).toEqual(`Nothing to do`);
+    });
+
+    it(`should check description end of message with description FlowDescriptionDatasetCompacting typename with compaction success`, () => {
+        expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[11])).toEqual(
+            `Compacted 125 original blocks to 13 resulting blocks`,
+        );
+    });
+
+    it(`should check description end of message with description FlowDescriptionDatasetCompacting typename with compaction success in metadata-only mode`, () => {
+        expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[12])).toEqual(
+            `All data except metadata has been deleted`,
+        );
+    });
+
+    it(`should check description end of message with description FlowDescriptionDatasetCompacting typename with compaction running`, () => {
+        expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[13])).toEqual(
+            `Running hard compaction`,
+        );
+    });
+
+    it(`should check description end of message with description FlowDescriptionDatasetExecuteTransform typename with input compacted error`, () => {
+        expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[14])).toEqual(
+            `Input dataset <a class="text-small text-danger">my-dataset-input</a> was hard compacted`,
         );
     });
 });

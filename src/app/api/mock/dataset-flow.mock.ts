@@ -363,7 +363,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         initiator: null,
         outcome: {
             __typename: "FlowSuccessResult",
-            message: "Succes",
+            message: "Success",
         },
         startCondition: null,
         timing: {
@@ -381,9 +381,9 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
     {
         datasetId: mockDatasetMainDataId,
         description: {
-            ingestResult: null,
-            pollingSource: mockFlowPollingSourceFragmentFetchUrl,
-            __typename: "FlowDescriptionDatasetPollingIngest",
+            transformResult: null,
+            transform: mockFlowSetTransformFragment,
+            __typename: "FlowDescriptionDatasetExecuteTransform",
         },
         flowId: "414",
         status: FlowStatus.Running,
@@ -404,9 +404,8 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
     {
         datasetId: mockDatasetMainDataId,
         description: {
-            ingestResult: null,
-            pollingSource: mockFlowPollingSourceFragmentFetchUrl,
-            __typename: "FlowDescriptionDatasetPollingIngest",
+            __typename: "FlowDescriptionDatasetReset",
+            resetResult: null,
         },
         flowId: "414",
         status: FlowStatus.Waiting,
@@ -431,9 +430,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
     {
         datasetId: mockDatasetMainDataId,
         description: {
-            ingestResult: null,
-            pollingSource: mockFlowPollingSourceFragmentFetchUrl,
-            __typename: "FlowDescriptionDatasetPollingIngest",
+            __typename: "FlowDescriptionDatasetHardCompaction",
         },
         flowId: "414",
         status: FlowStatus.Finished,
@@ -458,9 +455,13 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
     {
         datasetId: mockDatasetMainDataId,
         description: {
-            ingestResult: null,
-            pollingSource: mockFlowPollingSourceFragmentFetchUrl,
-            __typename: "FlowDescriptionDatasetPollingIngest",
+            __typename: "FlowDescriptionDatasetHardCompaction",
+        },
+        configSnapshot: {
+            __typename: "FlowConfigRuleCompaction",
+            compactionMode: {
+                __typename: "FlowConfigCompactionModeMetadataOnly",
+            },
         },
         flowId: "414",
         status: FlowStatus.Finished,
@@ -482,6 +483,32 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             __typename: "FlowTimingRecords",
         },
         retryPolicy: null,
+        tasks: [],
+        __typename: "Flow",
+    },
+    {
+        datasetId: mockDatasetMainDataId,
+        description: {
+            ingestResult: null,
+            pollingSource: mockFlowPollingSourceFragmentFetchUrl,
+            __typename: "FlowDescriptionDatasetPollingIngest",
+        },
+        flowId: "414",
+        status: FlowStatus.Retrying,
+        initiator: null,
+        outcome: null,
+        timing: {
+            scheduledAt: "2024-02-12T19:21:29.554197038+00:00",
+            awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
+            runningSince: "2024-02-12T18:21:27.477789591+00:00",
+            lastAttemptFinishedAt: "2024-02-12T18:21:29.554197038+00:00",
+            initiatedAt: "2024-02-12T18:20:25+00:00",
+            __typename: "FlowTimingRecords",
+        },
+        retryPolicy: {
+            __typename: "FlowRetryPolicy",
+            maxAttempts: 3,
+        },
         tasks: [],
         __typename: "Flow",
     },
@@ -1318,7 +1345,7 @@ export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
                             initiator: null,
                             outcome: {
                                 __typename: "FlowSuccessResult",
-                                message: "Succes",
+                                message: "Success",
                             },
                             timing: {
                                 scheduledAt: "2024-03-15T19:43:37.844613373+00:00",

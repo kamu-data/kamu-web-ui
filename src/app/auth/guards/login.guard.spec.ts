@@ -11,7 +11,6 @@ import { LoginGuard } from "./login.guard";
 import ProjectLinks from "src/app/project-links";
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 import { LoginService } from "../login/login.service";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { AccountProvider } from "src/app/api/kamu.graphql.interface";
 
 describe("LoginGuard", () => {
@@ -19,7 +18,7 @@ describe("LoginGuard", () => {
     let loginService: LoginService;
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [ApolloTestingModule, HttpClientTestingModule],
+            imports: [ApolloTestingModule],
         });
         guard = TestBed.inject(LoginGuard);
         loginService = TestBed.inject(LoginService);

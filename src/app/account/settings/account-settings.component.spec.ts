@@ -6,7 +6,6 @@
  */
 
 import { mockAccountDetails, mockAccountDetailsWithEmail } from "../../api/mock/auth.mock";
-import { RouterTestingModule } from "@angular/router/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { AccountSettingsComponent } from "./account-settings.component";
@@ -19,10 +18,9 @@ import {
 } from "src/app/common/helpers/base-test.helpers.spec";
 import { of } from "rxjs";
 import { LoginService } from "../../auth/login/login.service";
-import { MatIconModule } from "@angular/material/icon";
 import { provideToastr } from "ngx-toastr";
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
-import { provideAnimations } from "@angular/platform-browser/animations";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
 describe("AccountSettingsComponent", () => {
     let component: AccountSettingsComponent;
@@ -33,14 +31,8 @@ describe("AccountSettingsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [provideAnimations(), provideToastr()],
-            imports: [
-                ApolloTestingModule,
-                RouterTestingModule,
-                HttpClientTestingModule,
-                MatIconModule,
-                AccountSettingsComponent,
-            ],
+            providers: [provideToastr()],
+            imports: [SharedTestModule, ApolloTestingModule, HttpClientTestingModule, AccountSettingsComponent],
         }).compileComponents();
 
         registerMatSvgIcons();

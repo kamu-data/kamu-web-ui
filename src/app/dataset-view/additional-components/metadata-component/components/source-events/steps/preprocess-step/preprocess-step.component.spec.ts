@@ -7,8 +7,6 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { PreprocessStepComponent } from "./preprocess-step.component";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { Apollo, ApolloModule } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import {
     mockPreprocessStepValue,
@@ -17,13 +15,10 @@ import {
     mockSetPollingSourceEventYamlWithQuery,
     mockSetPollingSourceEventYamlWithoutPreprocess,
 } from "../../../set-transform/mock.data";
-import { QueriesSectionComponent } from "../../../set-transform/components/queries-section/queries-section.component";
-import { EngineSectionComponent } from "../../../set-transform/components/engine-section/engine-section.component";
-import { MatIconModule } from "@angular/material/icon";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { ChangeDetectionStrategy } from "@angular/core";
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { EditorModule } from "../../../../../../../editor/editor.module";
+import { EditorModule } from "src/app/editor/editor.module";
 
 describe("PreprocessStepComponent", () => {
     let component: PreprocessStepComponent;
@@ -31,19 +26,7 @@ describe("PreprocessStepComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                ReactiveFormsModule,
-                ApolloModule,
-                ApolloTestingModule,
-                FormsModule,
-                MatIconModule,
-                SharedTestModule,
-                EditorModule,
-                PreprocessStepComponent,
-                QueriesSectionComponent,
-                EngineSectionComponent,
-            ],
-            providers: [Apollo],
+            imports: [ApolloTestingModule, SharedTestModule, PreprocessStepComponent, EditorModule],
         })
             .overrideComponent(PreprocessStepComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },

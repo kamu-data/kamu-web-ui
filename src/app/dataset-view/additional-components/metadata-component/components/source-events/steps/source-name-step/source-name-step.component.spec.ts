@@ -5,12 +5,9 @@
  * included in the LICENSE file.
  */
 
-import { InputFieldComponent } from "../../../form-components/input-field/input-field.component";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { SourceNameStepComponent } from "./source-name-step.component";
-import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
-import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
+import { FormControl, FormGroup } from "@angular/forms";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
 describe("SourceNameStepComponent", () => {
@@ -19,14 +16,7 @@ describe("SourceNameStepComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                ReactiveFormsModule,
-                NgbTooltipModule,
-                SharedTestModule,
-                SourceNameStepComponent,
-                InputFieldComponent,
-                TooltipIconComponent,
-            ],
+            imports: [SharedTestModule, SourceNameStepComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SourceNameStepComponent);

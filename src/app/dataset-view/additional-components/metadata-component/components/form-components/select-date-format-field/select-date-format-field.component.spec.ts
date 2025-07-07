@@ -7,14 +7,9 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { SelectDateFormatFieldComponent } from "./select-date-format-field.component";
-import { MatIconModule } from "@angular/material/icon";
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { MatTableModule } from "@angular/material/table";
-import { NgbTooltipModule, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
-import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
+import { FormControl, FormGroup } from "@angular/forms";
 import { EventTimeSourceKind } from "../../source-events/add-polling-source/add-polling-source-form.types";
 import { SetPollingSourceTooltipsTexts } from "src/app/common/tooltips/set-polling-source-tooltips.text";
-import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 import { ActivatedRoute } from "@angular/router";
 
 describe("SelectDateFormatFieldComponent", () => {
@@ -24,7 +19,6 @@ describe("SelectDateFormatFieldComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [
-                FormBuilder,
                 {
                     provide: ActivatedRoute,
                     useValue: {
@@ -43,16 +37,7 @@ describe("SelectDateFormatFieldComponent", () => {
                     },
                 },
             ],
-            imports: [
-                ReactiveFormsModule,
-                MatIconModule,
-                MatTableModule,
-                NgbTypeaheadModule,
-                RxReactiveFormsModule,
-                NgbTooltipModule,
-                SelectDateFormatFieldComponent,
-                TooltipIconComponent,
-            ],
+            imports: [SelectDateFormatFieldComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SelectDateFormatFieldComponent);

@@ -7,12 +7,8 @@
 
 import { mockDatasetEndPoints } from "../../../data-access-panel-mock.data";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { DataAccessSqlTabComponent } from "./data-access-sql-tab.component";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { FormsModule } from "@angular/forms";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatIconModule } from "@angular/material/icon";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 
 describe("DataAccessSqlTabComponent", () => {
@@ -21,7 +17,7 @@ describe("DataAccessSqlTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [FormsModule, MatDividerModule, MatIconModule, HttpClientTestingModule, DataAccessSqlTabComponent],
+            imports: [HttpClientTestingModule, DataAccessSqlTabComponent],
         });
 
         registerMatSvgIcons();

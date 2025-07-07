@@ -8,17 +8,11 @@
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { EmailsTabComponent } from "./emails-tab.component";
 import { mockAccountDetailsWithEmail } from "src/app/api/mock/auth.mock";
-import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
-import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
-import { MatDividerModule } from "@angular/material/divider";
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
 import { of } from "rxjs";
-import { RouterTestingModule } from "@angular/router/testing";
-import { routes } from "src/app/app-routing";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { NavigationService } from "src/app/services/navigation.service";
-import { provideAnimations } from "@angular/platform-browser/animations";
+import { Apollo } from "apollo-angular";
 
 describe("EmailsTabComponent", () => {
     let component: EmailsTabComponent;
@@ -28,15 +22,8 @@ describe("EmailsTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [FormBuilder, provideAnimations(), provideToastr()],
-            imports: [
-                ApolloTestingModule,
-                RouterTestingModule.withRoutes(routes),
-                ReactiveFormsModule,
-                MatDividerModule,
-                HttpClientTestingModule,
-                EmailsTabComponent,
-            ],
+            providers: [Apollo, provideToastr()],
+            imports: [EmailsTabComponent],
         });
         accountEmailService = TestBed.inject(AccountEmailService);
         fixture = TestBed.createComponent(EmailsTabComponent);

@@ -8,21 +8,15 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { EditKeyValueModalComponent } from "./edit-key-value-modal.component";
-import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { ActivatedRoute } from "@angular/router";
-import { MatCheckboxModule } from "@angular/material/checkbox";
-import { MatDividerModule } from "@angular/material/divider";
 import { findElementByDataTestId, setFieldValue } from "src/app/common/helpers/base-test.helpers.spec";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
 import { of } from "rxjs";
 import { mockListEnvVariablesQuery } from "src/app/api/mock/environment-variables-and-secrets.mock";
 import { ViewDatasetEnvVar } from "src/app/api/kamu.graphql.interface";
-import { MatIconModule } from "@angular/material/icon";
-import { MatTooltipModule } from "@angular/material/tooltip";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("EditKeyValueModalComponent", () => {
     let component: EditKeyValueModalComponent;
@@ -32,10 +26,8 @@ describe("EditKeyValueModalComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [
-                provideAnimations(),
                 provideToastr(),
                 NgbActiveModal,
-                FormBuilder,
                 Apollo,
                 {
                     provide: ActivatedRoute,
@@ -63,15 +55,7 @@ describe("EditKeyValueModalComponent", () => {
                     },
                 },
             ],
-            imports: [
-                MatCheckboxModule,
-                FormsModule,
-                ReactiveFormsModule,
-                MatDividerModule,
-                MatIconModule,
-                MatTooltipModule,
-                EditKeyValueModalComponent,
-            ],
+            imports: [EditKeyValueModalComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(EditKeyValueModalComponent);

@@ -9,18 +9,13 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core
 import { DatasetSettingsWebhooksTabComponent } from "./dataset-settings-webhooks-tab.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatTableModule } from "@angular/material/table";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { DatasetWebhooksService } from "./service/dataset-webhooks.service";
 import { of } from "rxjs";
-import { MatIconModule } from "@angular/material/icon";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { NgSelectModule } from "@ng-select/ng-select";
 import {
     WebhookSubscriptionModalAction,
     WebhookSubscriptionModalActionResult,
@@ -30,8 +25,6 @@ import { mockWebhookSubscriptionInput } from "src/app/api/mock/webhooks.mock";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { TEST_DATASET_ID } from "src/app/api/mock/dataset.mock";
-import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.directive";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("DatasetSettingsWebhooksTabComponent", () => {
     let component: DatasetSettingsWebhooksTabComponent;
@@ -43,18 +36,8 @@ describe("DatasetSettingsWebhooksTabComponent", () => {
     const ngbModalMock = jasmine.createSpyObj<NgbModal>("NgbModal", ["open"]);
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo, provideAnimations(), provideToastr(), { provide: NgbModal, useValue: ngbModalMock }],
-            imports: [
-                SharedTestModule,
-                HttpClientTestingModule,
-                MatProgressBarModule,
-                MatDividerModule,
-                MatTableModule,
-                MatIconModule,
-                NgSelectModule,
-                FeatureFlagDirective,
-                DatasetSettingsWebhooksTabComponent,
-            ],
+            providers: [Apollo, provideToastr(), { provide: NgbModal, useValue: ngbModalMock }],
+            imports: [SharedTestModule, HttpClientTestingModule, DatasetSettingsWebhooksTabComponent],
         });
 
         registerMatSvgIcons();

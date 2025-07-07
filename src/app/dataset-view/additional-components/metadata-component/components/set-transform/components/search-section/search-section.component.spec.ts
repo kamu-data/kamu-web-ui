@@ -7,12 +7,9 @@
 
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { SearchSectionComponent } from "./search-section.component";
-import { Apollo, ApolloModule } from "apollo-angular";
-import { ApolloTestingModule } from "apollo-angular/testing";
-import { MatTreeModule, MatTreeNestedDataSource } from "@angular/material/tree";
-import { NgbTypeaheadModule, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
-import { MatIconModule } from "@angular/material/icon";
-import { FormsModule } from "@angular/forms";
+import { Apollo } from "apollo-angular";
+import { MatTreeNestedDataSource } from "@angular/material/tree";
+import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { of } from "rxjs";
 import AppValues from "src/app/common/values/app.values";
 import { dispatchInputEvent, emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
@@ -23,7 +20,6 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { mockGetDatasetSchemaQuery } from "../../mock.data";
 import { DatasetNode } from "../../set-transform.types";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { RouterModule } from "@angular/router";
 
 describe("SearchSectionComponent", () => {
     let component: SearchSectionComponent;
@@ -34,17 +30,7 @@ describe("SearchSectionComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [Apollo],
-            imports: [
-                ApolloModule,
-                ApolloTestingModule,
-                MatTreeModule,
-                NgbTypeaheadModule,
-                MatIconModule,
-                FormsModule,
-                SharedTestModule,
-                RouterModule,
-                SearchSectionComponent,
-            ],
+            imports: [SharedTestModule, SearchSectionComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SearchSectionComponent);

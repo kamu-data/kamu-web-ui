@@ -7,22 +7,15 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { SetTransformComponent } from "./set-transform.component";
-import { Apollo, ApolloModule } from "apollo-angular";
-import { ActivatedRoute, RouterModule } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { of } from "rxjs";
 import { mockGetDatasetSchemaQuery, mockParseSetTransformYamlType, mockSetTransformEventYaml } from "./mock.data";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { MatTreeModule, MatTreeNestedDataSource } from "@angular/material/tree";
+import { MatTreeNestedDataSource } from "@angular/material/tree";
 import { DatasetNode } from "./set-transform.types";
 import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
-import { QueriesSectionComponent } from "./components/queries-section/queries-section.component";
-import { EngineSectionComponent } from "./components/engine-section/engine-section.component";
-import { SearchSectionComponent } from "./components/search-section/search-section.component";
-import { MatIconModule } from "@angular/material/icon";
-import { StepperNavigationComponent } from "../stepper-navigation/stepper-navigation.component";
-import { NgbModal, NgbTypeaheadModule } from "@ng-bootstrap/ng-bootstrap";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetNavigationParams } from "src/app/interface/navigation.interface";
@@ -32,8 +25,6 @@ import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetInfo,
 } from "src/app/search/mock.data";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { EditorModule } from "../../../../../editor/editor.module";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
@@ -51,25 +42,8 @@ describe("SetTransformComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                ApolloModule,
-                ApolloTestingModule,
-                MatTreeModule,
-                MatIconModule,
-                NgbTypeaheadModule,
-                FormsModule,
-                HttpClientTestingModule,
-                ReactiveFormsModule,
-                RouterModule,
-                EditorModule,
-                SetTransformComponent,
-                EngineSectionComponent,
-                QueriesSectionComponent,
-                SearchSectionComponent,
-                StepperNavigationComponent,
-            ],
+            imports: [ApolloTestingModule, SetTransformComponent],
             providers: [
-                Apollo,
                 {
                     provide: ActivatedRoute,
                     useValue: {

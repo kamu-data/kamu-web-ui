@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { ReactiveFormsModule } from "@angular/forms";
 import { ApolloModule } from "apollo-angular";
 import { Apollo } from "apollo-angular";
 import {
@@ -25,25 +24,15 @@ import {
     DatasetOverviewFragment,
 } from "src/app/api/kamu.graphql.interface";
 import { NavigationService } from "src/app/services/navigation.service";
-import { NgbModal, NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
-import { MatChipsModule } from "@angular/material/chips";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { OverviewHistorySummaryHeaderComponent } from "src/app/dataset-view/additional-components/overview-component/components/overview-history-summary-header/overview-history-summary-header.component";
-import { ReadmeSectionComponent } from "./components/readme-section/readme-section.component";
-import { DisplayTimeComponent } from "src/app/common/components/display-time/display-time.component";
-import { DisplayHashComponent } from "src/app/common/components/display-hash/display-hash.component";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { provideToastr } from "ngx-toastr";
-import { DynamicTableComponent } from "src/app/common/components/dynamic-table/dynamic-table.component";
-import { MatTableModule } from "@angular/material/table";
-import { RouterTestingModule } from "@angular/router/testing";
 import { mockSetLicense } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
-import { ChangeDetectionStrategy, SecurityContext } from "@angular/core";
+import { ChangeDetectionStrategy } from "@angular/core";
 import { MarkdownModule } from "ngx-markdown";
-import { HttpClient } from "@angular/common/http";
-import { MatIconModule } from "@angular/material/icon";
 import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
 import { of } from "rxjs";
 import {
@@ -53,9 +42,7 @@ import {
 } from "src/app/common/helpers/base-test.helpers.spec";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import AppValues from "src/app/common/values/app.values";
-import { RouterModule } from "@angular/router";
 import { DatasetCollaborationsService } from "../dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("OverviewComponent", () => {
     let component: OverviewComponent;
@@ -72,29 +59,13 @@ describe("OverviewComponent", () => {
             imports: [
                 ApolloModule,
                 HttpClientTestingModule,
-                MarkdownModule.forRoot({
-                    loader: HttpClient,
-                    sanitize: SecurityContext.NONE,
-                }),
-                MatChipsModule,
-                MatTableModule,
-                NgbTooltipModule,
+                MarkdownModule.forRoot(),
                 OwlDateTimeModule,
                 OwlNativeDateTimeModule,
                 OwlMomentDateTimeModule,
-                ReactiveFormsModule,
-                RouterTestingModule,
                 SharedTestModule,
-                MatIconModule,
-                RouterModule,
-                OverviewComponent,
-                OverviewHistorySummaryHeaderComponent,
-                ReadmeSectionComponent,
-                DisplayTimeComponent,
-                DisplayHashComponent,
-                DynamicTableComponent,
             ],
-            providers: [Apollo, provideAnimations(), provideToastr()],
+            providers: [Apollo, provideToastr()],
         })
             .overrideComponent(OverviewComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },

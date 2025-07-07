@@ -5,11 +5,9 @@
  * included in the LICENSE file.
  */
 
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { FormArray, FormGroup } from "@angular/forms";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { KeyValueFieldComponent } from "./key-value-field.component";
-import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
-import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
@@ -19,14 +17,7 @@ describe("KeyValueFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [FormBuilder],
-            imports: [
-                ReactiveFormsModule,
-                NgbTooltipModule,
-                SharedTestModule,
-                KeyValueFieldComponent,
-                TooltipIconComponent,
-            ],
+            imports: [SharedTestModule, KeyValueFieldComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(KeyValueFieldComponent);

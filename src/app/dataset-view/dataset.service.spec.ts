@@ -17,10 +17,8 @@ import {
 import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
 import { DatasetApi } from "../api/dataset.api";
-import { ModalService } from "../common/components/modal/modal.service";
 import { DatasetService } from "./dataset.service";
 import { DatasetSubscriptionsService } from "./dataset.subscriptions.service";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
 import {
     DataQueryResultErrorKind,
     DatasetBasicsFragment,
@@ -52,12 +50,8 @@ describe("AppDatasetService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
             providers: [
-                DatasetApi,
-                ModalService,
                 DatasetService,
-                DatasetSubscriptionsService,
                 Apollo,
                 {
                     provide: APOLLO_OPTIONS,

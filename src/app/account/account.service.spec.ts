@@ -35,7 +35,6 @@ import {
 } from "../api/mock/account.mock";
 import { FlowsTableData } from "../dataset-flow/flows-table/flows-table.types";
 import { ChangeAccountUsernameResult } from "./settings/account-settings.constants";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("AccountService", () => {
     let service: AccountService;
@@ -47,7 +46,7 @@ describe("AccountService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [provideAnimations(), provideToastr()],
+            providers: [provideToastr()],
             imports: [ApolloTestingModule],
         });
         service = TestBed.inject(AccountService);

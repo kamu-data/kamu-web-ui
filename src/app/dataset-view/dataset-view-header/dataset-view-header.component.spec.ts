@@ -8,10 +8,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetViewHeaderComponent } from "./dataset-view-header.component";
 import { mockDatasetBasicsRootFragment, mockDatasetInfo } from "src/app/search/mock.data";
-import { MatIconModule } from "@angular/material/icon";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { MatMenuModule } from "@angular/material/menu";
-import { RouterModule } from "@angular/router";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { Apollo } from "apollo-angular";
@@ -30,14 +27,7 @@ describe("DatasetViewHeaderComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [Apollo],
-            imports: [
-                MatIconModule,
-                MatMenuModule,
-                HttpClientTestingModule,
-                RouterModule,
-                SharedTestModule,
-                DatasetViewHeaderComponent,
-            ],
+            imports: [HttpClientTestingModule, SharedTestModule, DatasetViewHeaderComponent],
         }).compileComponents();
 
         registerMatSvgIcons();

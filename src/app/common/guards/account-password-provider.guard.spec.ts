@@ -11,7 +11,6 @@ import { accountPasswordProviderGuard } from "./account-password-provider.guard"
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { Apollo } from "apollo-angular";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { AccountProvider } from "src/app/api/kamu.graphql.interface";
 
 describe("accountPasswordProviderGuard", () => {
@@ -23,7 +22,6 @@ describe("accountPasswordProviderGuard", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [Apollo],
-            imports: [HttpClientTestingModule],
         });
         loggedUserService = TestBed.inject(LoggedUserService);
     });

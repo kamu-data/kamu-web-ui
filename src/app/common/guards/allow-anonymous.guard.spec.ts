@@ -1,17 +1,24 @@
-import { TestBed } from '@angular/core/testing';
-import { CanActivateFn } from '@angular/router';
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
 
-import { allowAnonymousGuard } from './allow-anonymous.guard';
+import { TestBed } from "@angular/core/testing";
+import { CanActivateFn } from "@angular/router";
 
-describe('allowAnonymousGuard', () => {
-  const executeGuard: CanActivateFn = (...guardParameters) => 
-      TestBed.runInInjectionContext(() => allowAnonymousGuard(...guardParameters));
+import { allowAnonymousGuard } from "./allow-anonymous.guard";
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-  });
+describe("allowAnonymousGuard", () => {
+    const executeGuard: CanActivateFn = (...guardParameters) =>
+        TestBed.runInInjectionContext(() => allowAnonymousGuard(...guardParameters));
 
-  it('should be created', () => {
-    expect(executeGuard).toBeTruthy();
-  });
+    beforeEach(() => {
+        TestBed.configureTestingModule({});
+    });
+
+    it("should be created", () => {
+        expect(executeGuard).toBeTruthy();
+    });
 });

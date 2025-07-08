@@ -21,8 +21,14 @@ import {
     mockDatasetPauseFlowsMutationSuccess,
     mockDatasetResumeFlowsMutationError,
     mockDatasetResumeFlowsMutationSuccess,
+    mockDatasetTriggerCompactionFlowMutation,
+    mockDatasetTriggerCompactionFlowMutationError,
     mockDatasetTriggerIngestFlowMutation,
     mockDatasetTriggerIngestFlowMutationError,
+    mockDatasetTriggerResetFlowMutation,
+    mockDatasetTriggerResetFlowMutationError,
+    mockDatasetTriggerTransformFlowMutation,
+    mockDatasetTriggerTransformFlowMutationError,
     mockGetDatasetListFlowsQuery,
     mockGetFlowByIdQueryError,
     mockGetFlowByIdQuerySuccess,
@@ -134,7 +140,7 @@ describe("DatasetFlowsService", () => {
         expect(subscription$.closed).toBeTrue();
     });
 
-    it("should check trigger dataset flow with error", () => {
+    it("should check trigger dataset ingest flow with error", () => {
         spyOn(datasetFlowApi, "datasetTriggerIngestFlow").and.returnValue(
             of(mockDatasetTriggerIngestFlowMutationError),
         );
@@ -143,6 +149,102 @@ describe("DatasetFlowsService", () => {
         const subscription$ = service.datasetTriggerIngestFlow({ datasetId: MOCK_DATASET_ID }).subscribe(() => {
             expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error");
         });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check trigger dataset transform flow", () => {
+        spyOn(datasetFlowApi, "datasetTriggerTransformFlow").and.returnValue(
+            of(mockDatasetTriggerTransformFlowMutation),
+        );
+
+        const subscription$ = service
+            .datasetTriggerTransformFlow({ datasetId: MOCK_DATASET_ID })
+            .subscribe((result: boolean) => {
+                expect(result).toBe(true);
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check trigger dataset transform flow with error", () => {
+        spyOn(datasetFlowApi, "datasetTriggerTransformFlow").and.returnValue(
+            of(mockDatasetTriggerTransformFlowMutationError),
+        );
+        const toastrServiceErrorSpy = spyOn(toastService, "error");
+
+        const subscription$ = service.datasetTriggerTransformFlow({ datasetId: MOCK_DATASET_ID }).subscribe(() => {
+            expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error");
+        });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check trigger dataset compaction flow", () => {
+        spyOn(datasetFlowApi, "datasetTriggerCompactionFlow").and.returnValue(
+            of(mockDatasetTriggerCompactionFlowMutation),
+        );
+
+        const subscription$ = service
+            .datasetTriggerCompactionFlow({
+                datasetId: MOCK_DATASET_ID,
+                compactionConfigInput: { metadataOnly: { recursive: true } },
+            })
+            .subscribe((result: boolean) => {
+                expect(result).toBe(true);
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check trigger dataset compaction flow with error", () => {
+        spyOn(datasetFlowApi, "datasetTriggerCompactionFlow").and.returnValue(
+            of(mockDatasetTriggerCompactionFlowMutationError),
+        );
+        const toastrServiceErrorSpy = spyOn(toastService, "error");
+
+        const subscription$ = service
+            .datasetTriggerCompactionFlow({
+                datasetId: MOCK_DATASET_ID,
+                compactionConfigInput: { full: { recursive: true, maxSliceRecords: 1000, maxSliceSize: 10000 } },
+            })
+            .subscribe(() => {
+                expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error");
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check trigger dataset reset flow", () => {
+        spyOn(datasetFlowApi, "datasetTriggerResetFlow").and.returnValue(of(mockDatasetTriggerResetFlowMutation));
+
+        const subscription$ = service
+            .datasetTriggerResetFlow({
+                datasetId: MOCK_DATASET_ID,
+                resetConfigInput: { mode: { toSeed: {} }, recursive: false },
+            })
+            .subscribe((result: boolean) => {
+                expect(result).toBe(true);
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check trigger dataset reset flow with error", () => {
+        spyOn(datasetFlowApi, "datasetTriggerResetFlow").and.returnValue(of(mockDatasetTriggerResetFlowMutationError));
+        const toastrServiceErrorSpy = spyOn(toastService, "error");
+
+        const subscription$ = service
+            .datasetTriggerResetFlow({
+                datasetId: MOCK_DATASET_ID,
+                resetConfigInput: {
+                    recursive: false,
+                    mode: { custom: { newHeadHash: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX" } },
+                },
+            })
+            .subscribe(() => {
+                expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error");
+            });
 
         expect(subscription$.closed).toBeTrue();
     });

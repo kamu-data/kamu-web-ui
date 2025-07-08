@@ -1065,6 +1065,27 @@ export const mockDatasetTriggerTransformFlowMutation: DatasetTriggerTransformFlo
     },
 };
 
+export const mockDatasetTriggerTransformFlowMutationError: DatasetTriggerTransformFlowMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                runs: {
+                    triggerTransformFlow: {
+                        __typename: "FlowIncompatibleDatasetKind",
+                        message: "Error",
+                        expectedDatasetKind: DatasetKind.Derivative,
+                        actualDatasetKind: DatasetKind.Root,
+                    },
+                    __typename: "DatasetFlowRunsMut",
+                },
+                __typename: "DatasetFlowsMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
 export const mockDatasetTriggerCompactionFlowMutation: DatasetTriggerCompactionFlowMutation = {
     datasets: {
         byId: {
@@ -1112,6 +1133,27 @@ export const mockDatasetTriggerCompactionFlowMutation: DatasetTriggerCompactionF
                         },
                         message: "Success",
                         __typename: "TriggerFlowSuccess",
+                    },
+                    __typename: "DatasetFlowRunsMut",
+                },
+                __typename: "DatasetFlowsMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockDatasetTriggerCompactionFlowMutationError: DatasetTriggerCompactionFlowMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                runs: {
+                    triggerCompactionFlow: {
+                        __typename: "FlowIncompatibleDatasetKind",
+                        message: "Error",
+                        expectedDatasetKind: DatasetKind.Root,
+                        actualDatasetKind: DatasetKind.Derivative,
                     },
                     __typename: "DatasetFlowRunsMut",
                 },

@@ -5,30 +5,27 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
+import { ComponentFixture, TestBed, fakeAsync } from "@angular/core/testing";
 import { IngestTriggerFormComponent } from "./ingest-trigger-form.component";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
-import { DatasetFlowTriggerService } from "../../../services/dataset-flow-trigger.service";
 import { provideToastr } from "ngx-toastr";
-import { of } from "rxjs";
-import {
-    mockGetDatasetFlowTriggersQuery,
-    mockGetDatasetFlowTriggersTimeDeltaQuery,
-} from "src/app/api/mock/dataset-flow.mock";
 import {
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
     setFieldValue,
 } from "src/app/common/helpers/base-test.helpers.spec";
 import { TimeUnit } from "src/app/api/kamu.graphql.interface";
-import { PollingGroupEnum } from "../../../dataset-settings.model";
+import { ScheduleType } from "../../../dataset-settings.model";
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
+import { MatRadioButtonHarness } from "@angular/material/radio/testing";
+import { HarnessLoader } from "@angular/cdk/testing";
 
 describe("IngestTriggerFormComponent", () => {
     let component: IngestTriggerFormComponent;
     let fixture: ComponentFixture<IngestTriggerFormComponent>;
-    let datasetFlowTriggerService: DatasetFlowTriggerService;
+    let loader: HarnessLoader;
 
     const MOCK_INVALID_CRON_EXPRESSION = "* *";
 
@@ -43,9 +40,12 @@ describe("IngestTriggerFormComponent", () => {
         });
         fixture = TestBed.createComponent(IngestTriggerFormComponent);
         component = fixture.componentInstance;
-        datasetFlowTriggerService = TestBed.inject(DatasetFlowTriggerService);
+
+        loader = TestbedHarnessEnvironment.loader(fixture);
 
         component.datasetBasics = mockDatasetBasicsRootFragment;
+        component.updateStateToggleLabel = "Enable automatic updates";
+        fixture.detectChanges();
     });
 
     it("should create", () => {
@@ -53,12 +53,12 @@ describe("IngestTriggerFormComponent", () => {
     });
 
     it("should check init form with cron expression", fakeAsync(() => {
-        spyOn(datasetFlowTriggerService, "fetchDatasetFlowTriggers").and.returnValue(
-            of(mockGetDatasetFlowTriggersQuery),
-        );
-        fixture.detectChanges();
-
-        tick(); // Wait for async operations
+        component.form.setValue({
+            updatesEnabled: true,
+            __typename: ScheduleType.CRON_5_COMPONENT_EXPRESSION,
+            timeDelta: null,
+            cron: { cronExpression: "* * * * ?" },
+        });
         fixture.detectChanges();
 
         const cronExpessionControl = findElementByDataTestId(fixture, "cron-expression-input") as HTMLInputElement;
@@ -66,11 +66,13 @@ describe("IngestTriggerFormComponent", () => {
     }));
 
     it("should check init form with time delta", fakeAsync(() => {
-        spyOn(datasetFlowTriggerService, "fetchDatasetFlowTriggers").and.returnValue(
-            of(mockGetDatasetFlowTriggersTimeDeltaQuery),
-        );
-        fixture.detectChanges();
-        tick(); // Wait for async operations
+        component.form.setValue({
+            updatesEnabled: true,
+            __typename: ScheduleType.TIME_DELTA,
+            timeDelta: { every: 10, unit: TimeUnit.Minutes },
+            cron: null,
+        });
+
         fixture.detectChanges();
 
         const everyControl = findElementByDataTestId(fixture, "time-delta-every") as HTMLInputElement;
@@ -79,30 +81,46 @@ describe("IngestTriggerFormComponent", () => {
         expect(unitControl.value.trim()).toEqual(TimeUnit.Minutes);
     }));
 
-    it("should check switch polling options", () => {
-        spyOn(datasetFlowTriggerService, "fetchDatasetFlowTriggers").and.returnValue(
-            of(mockGetDatasetFlowTriggersTimeDeltaQuery),
+    it("should check switch polling options", async () => {
+        component.form.patchValue({ updatesEnabled: true, __typename: ScheduleType.CRON_5_COMPONENT_EXPRESSION });
+        fixture.detectChanges();
+
+        // First verify initial state
+        expect(component.scheduleType.value).toEqual(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
+
+        // Click on time delta radio button
+        const timeDeltaRadio: MatRadioButtonHarness = await loader.getHarness(
+            MatRadioButtonHarness.with({ selector: '[data-test-id="trigger-time-delta"]' }),
         );
+        await timeDeltaRadio.check();
+
         fixture.detectChanges();
-        component.pollingForm.patchValue({ updatesEnabled: true });
+        await fixture.whenStable();
+
+        expect(component.scheduleType.value).toEqual(ScheduleType.TIME_DELTA);
+
+        // Click on CRON radio button
+        const cronRadio: MatRadioButtonHarness = await loader.getHarness(
+            MatRadioButtonHarness.with({ selector: '[data-test-id="trigger-cron"]' }),
+        );
+        await cronRadio.check();
+
         fixture.detectChanges();
-        emitClickOnElementByDataTestId(fixture, "cron-expression-form");
-        expect(component.pollingType.value).toEqual(PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION);
-        emitClickOnElementByDataTestId(fixture, "time-delta-form");
-        expect(component.pollingType.value).toEqual(PollingGroupEnum.TIME_DELTA);
+        await fixture.whenStable();
+
+        expect(component.scheduleType.value).toEqual(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
     });
 
     it("should check cron expression error", () => {
-        spyOn(datasetFlowTriggerService, "fetchDatasetFlowTriggers").and.returnValue(
-            of(mockGetDatasetFlowTriggersTimeDeltaQuery),
-        );
+        component.form.patchValue({ updatesEnabled: true, __typename: ScheduleType.TIME_DELTA });
         fixture.detectChanges();
-        component.pollingForm.patchValue({ updatesEnabled: true });
-        fixture.detectChanges();
+
+        // Click on cron expression radio button
         emitClickOnElementByDataTestId(fixture, "cron-expression-form");
-        expect(component.pollingType.value).toEqual(PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION);
         fixture.detectChanges();
-        emitClickOnElementByDataTestId(fixture, "cron-expression-form");
+        expect(component.scheduleType.value).toEqual(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
+
+        // Set invalid cron expression
         setFieldValue(fixture, "cron-expression-input", MOCK_INVALID_CRON_EXPRESSION);
         fixture.detectChanges();
 

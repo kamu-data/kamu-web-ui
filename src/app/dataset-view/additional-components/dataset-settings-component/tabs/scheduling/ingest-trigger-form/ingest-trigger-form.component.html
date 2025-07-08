@@ -1,7 +1,12 @@
-<div *ngIf="formData$ | async as formData; else loadingBlock">
-    <form [formGroup]="pollingForm">
+<div>
+    <form [formGroup]="form">
         <div class="mt-4 ms-1 px-2 pb-1 d-flex gap-1">
-            <mat-slide-toggle color="primary" class="mat-elevation-z0" formControlName="updatesEnabled">
+            <mat-slide-toggle
+                color="primary"
+                class="mat-elevation-z0"
+                formControlName="updatesEnabled"
+                data-test-id="ingest-trigger-updates-enabled"
+            >
                 <span class="ps-2"> {{ updateStateToggleLabel }}</span>
             </mat-slide-toggle>
             <app-tooltip-icon class="d-block" [tooltip]="UPDATES_TOOLTIP" />
@@ -14,20 +19,22 @@
                     <mat-radio-group
                         class="d-flex flex-column row-gap-4 mt-4"
                         formControlName="__typename"
+                        data-test-id="ingest-trigger-type"
                         aria-label="Select an option"
                         color="primary"
                     >
-                        <mat-radio-button disableRipple="true" [value]="PollingGroupEnum.TIME_DELTA">
-                            <app-time-delta-form
-                                formControlName="timeDelta"
-                                data-test-id="time-delta-form"
-                            ></app-time-delta-form>
+                        <mat-radio-button
+                            disableRipple="true"
+                            [value]="ScheduleType.TIME_DELTA"
+                            data-test-id="trigger-time-delta"
+                        >
+                            <app-time-delta-form formControlName="timeDelta"></app-time-delta-form>
                         </mat-radio-button>
-                        <mat-radio-button [value]="PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION">
-                            <app-cron-expression-form
-                                formControlName="cron"
-                                data-test-id="cron-expression-form"
-                            ></app-cron-expression-form>
+                        <mat-radio-button
+                            [value]="ScheduleType.CRON_5_COMPONENT_EXPRESSION"
+                            data-test-id="trigger-cron"
+                        >
+                            <app-cron-expression-form formControlName="cron"></app-cron-expression-form>
                         </mat-radio-button>
                     </mat-radio-group>
 
@@ -44,13 +51,3 @@
         </div>
     </form>
 </div>
-
-<ng-template #loadingBlock>
-    <div class="position-relative">
-        <mat-progress-bar
-            data-test-id="ingest-trigger-form-progress-bar"
-            class="position-absolute"
-            mode="indeterminate"
-        />
-    </div>
-</ng-template>

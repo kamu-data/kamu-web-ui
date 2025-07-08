@@ -5,30 +5,30 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
-import { AbstractControl, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { ChangeDetectionStrategy, Component, forwardRef, Input, OnInit } from "@angular/core";
 import {
-    DatasetBasicsFragment,
-    DatasetFlowType,
-    GetDatasetFlowTriggersQuery,
-} from "src/app/api/kamu.graphql.interface";
-import { PollingGroupFormType } from "../dataset-settings-scheduling-tab.component.types";
-import { PollingGroupEnum } from "../../../dataset-settings.model";
-import { BaseComponent } from "src/app/common/components/base.component";
+    AbstractControl,
+    FormControl,
+    FormGroup,
+    FormsModule,
+    ReactiveFormsModule,
+    NG_VALUE_ACCESSOR,
+    NG_VALIDATORS,
+} from "@angular/forms";
+import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
+import { ScheduleType } from "../../../dataset-settings.model";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetFlowTriggerService } from "../../../services/dataset-flow-trigger.service";
 import { FlowTooltipsTexts } from "src/app/common/tooltips/flow-tooltips.text";
-import { Observable, map, catchError, of } from "rxjs";
 import { TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
 import { CronExpressionFormValue } from "src/app/common/components/cron-expression-form/cron-expression-form.value";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatRadioModule } from "@angular/material/radio";
 import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
-import { AsyncPipe, NgIf } from "@angular/common";
 import { TimeDeltaFormComponent } from "src/app/common/components/time-delta-form/time-delta-form.component";
 import { CronExpressionFormComponent } from "src/app/common/components/cron-expression-form/cron-expression-form.component";
+import { IngestTriggerFormType, IngestTriggerFormValue } from "./ingest-trigger-form.types";
+import { BaseFormControlComponent } from "src/app/common/components/base-form-control.component";
 
 @Component({
     selector: "app-ingest-trigger-form",
@@ -38,14 +38,11 @@ import { CronExpressionFormComponent } from "src/app/common/components/cron-expr
     standalone: true,
     imports: [
         //-----//
-        AsyncPipe,
-        NgIf,
         FormsModule,
         ReactiveFormsModule,
 
         //-----//
         MatRadioModule,
-        MatProgressBarModule,
         MatSlideToggleModule,
 
         //-----//
@@ -53,116 +50,73 @@ import { CronExpressionFormComponent } from "src/app/common/components/cron-expr
         TimeDeltaFormComponent,
         CronExpressionFormComponent,
     ],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => IngestTriggerFormComponent),
+            multi: true,
+        },
+        {
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => IngestTriggerFormComponent),
+            multi: true,
+        },
+    ],
 })
-export class IngestTriggerFormComponent extends BaseComponent implements OnInit {
+export class IngestTriggerFormComponent extends BaseFormControlComponent<IngestTriggerFormValue> implements OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public updateStateToggleLabel: string;
-    @Output() public changeTriggerEmit = new EventEmitter<FormGroup<PollingGroupFormType>>();
 
-    public readonly PollingGroupEnum: typeof PollingGroupEnum = PollingGroupEnum;
+    public readonly ScheduleType: typeof ScheduleType = ScheduleType;
     public readonly UPDATES_TOOLTIP = FlowTooltipsTexts.UPDATE_SELECTOR_TOOLTIP;
 
-    private readonly datasetFlowTriggerService = inject(DatasetFlowTriggerService);
-
-    public pollingForm = new FormGroup<PollingGroupFormType>({
+    public override readonly form = new FormGroup<IngestTriggerFormType>({
         updatesEnabled: new FormControl<boolean>(false, { nonNullable: true }),
-        __typename: new FormControl(PollingGroupEnum.TIME_DELTA, [Validators.required]),
-        timeDelta: new FormControl<MaybeNull<TimeDeltaFormValue>>({ value: null, disabled: false }, [
-            Validators.required,
-        ]),
-        cron: new FormControl<MaybeNull<CronExpressionFormValue>>({ value: null, disabled: true }, [
-            Validators.required,
-        ]),
+        __typename: new FormControl<MaybeNull<ScheduleType>>({ value: null, disabled: true }, { nonNullable: true }),
+        timeDelta: new FormControl<MaybeNull<TimeDeltaFormValue>>({ value: null, disabled: false }),
+        cron: new FormControl<MaybeNull<CronExpressionFormValue>>({ value: null, disabled: true }),
     });
-
-    // Reactive data stream for form initialization
-    public formData$: Observable<FormGroup<PollingGroupFormType>>;
 
     public ngOnInit(): void {
         // Set up form control relationships
         this.setupFormControlRelationships();
-
-        // Initialize the reactive data stream
-        this.formData$ = this.initPollingForm();
     }
 
     private setupFormControlRelationships(): void {
-        this.pollingUpdatesEnabled.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((updated: boolean) => {
-                if (updated) {
-                    this.pollingType.enable();
-                } else {
-                    this.pollingType.disable();
-                }
-            });
+        this.updatesEnabled.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((updated: boolean) => {
+            if (updated) {
+                this.scheduleType.enable();
+            } else {
+                this.scheduleType.disable();
+            }
+        });
 
-        this.pollingType.valueChanges
+        this.scheduleType.valueChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((pollingType: PollingGroupEnum) => {
-                if (pollingType === PollingGroupEnum.TIME_DELTA) {
+            .subscribe((pollingType: ScheduleType) => {
+                if (pollingType === ScheduleType.TIME_DELTA) {
                     this.cronExpression.disable();
                     this.timeDelta.enable();
-                } else if (pollingType === PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION) {
+                } else if (pollingType === ScheduleType.CRON_5_COMPONENT_EXPRESSION) {
                     this.timeDelta.disable();
                     this.cronExpression.enable();
                 }
             });
     }
 
-    private initPollingForm(): Observable<FormGroup<PollingGroupFormType>> {
-        return this.datasetFlowTriggerService
-            .fetchDatasetFlowTriggers(this.datasetBasics.id, DatasetFlowType.Ingest)
-            .pipe(
-                map((data: GetDatasetFlowTriggersQuery) => {
-                    const flowTriggers = data.datasets.byId?.flows.triggers.byType;
-                    const schedule = flowTriggers?.schedule;
-                    if (schedule) {
-                        if (schedule.__typename === PollingGroupEnum.TIME_DELTA) {
-                            this.pollingForm.patchValue({
-                                updatesEnabled: !flowTriggers.paused,
-                                __typename: schedule?.__typename as PollingGroupEnum,
-                                timeDelta: {
-                                    every: schedule.every,
-                                    unit: schedule.unit,
-                                } as TimeDeltaFormValue,
-                            });
-                        }
-                        if (schedule.__typename === PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION) {
-                            this.pollingForm.patchValue({
-                                updatesEnabled: !flowTriggers.paused,
-                                __typename: schedule.__typename as PollingGroupEnum,
-                                cron: {
-                                    cronExpression: schedule.cron5ComponentExpression,
-                                } as CronExpressionFormValue,
-                            });
-                        }
-                    }
-                    this.changeTriggerEmit.emit(this.pollingForm);
-                    return this.pollingForm;
-                }),
-                catchError((_error) => {
-                    // In case of error, still return the form so UI doesn't get stuck
-                    this.changeTriggerEmit.emit(this.pollingForm);
-                    return of(this.pollingForm);
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            );
-    }
-
-    public get pollingType(): AbstractControl {
-        return this.pollingForm.controls.__typename;
+    public get scheduleType(): AbstractControl {
+        return this.form.controls.__typename;
     }
 
     public get timeDelta(): AbstractControl {
-        return this.pollingForm.controls.timeDelta;
+        return this.form.controls.timeDelta;
     }
 
     public get cronExpression(): AbstractControl {
-        return this.pollingForm.controls.cron;
+        return this.form.controls.cron;
     }
 
-    public get pollingUpdatesEnabled(): AbstractControl {
-        return this.pollingForm.controls.updatesEnabled;
+    public get updatesEnabled(): AbstractControl {
+        return this.form.controls.updatesEnabled;
     }
 }

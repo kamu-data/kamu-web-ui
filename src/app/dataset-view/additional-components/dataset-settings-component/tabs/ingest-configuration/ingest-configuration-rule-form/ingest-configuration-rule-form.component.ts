@@ -7,10 +7,10 @@
 
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { IngestConfigurationRuleFormType } from "../../scheduling/dataset-settings-scheduling-tab.component.types";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { FlowConfigRuleIngest } from "src/app/api/kamu.graphql.interface";
 import { MatCheckboxModule } from "@angular/material/checkbox";
+import { IngestConfigurationRuleFormType } from "../dataset-settings-ingest-configuration-tab.data";
 
 @Component({
     selector: "app-ingest-configuration-rule-form",

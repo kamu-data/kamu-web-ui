@@ -6,14 +6,16 @@
  */
 
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { IngestConfigurationRuleFormType } from "../scheduling/dataset-settings-scheduling-tab.component.types";
 import { FormGroup } from "@angular/forms";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetBasicsFragment, FlowConfigRuleIngest, FlowRetryPolicy } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowConfigService } from "../../services/dataset-flow-config.service";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { DatasetSettingsIngestConfigurationTabData } from "./dataset-settings-ingest-configuration-tab.data";
+import {
+    DatasetSettingsIngestConfigurationTabData,
+    IngestConfigurationRuleFormType,
+} from "./dataset-settings-ingest-configuration-tab.data";
 import {
     FlowRetryPolicyFormType,
     FlowRetryPolicyFormValue,

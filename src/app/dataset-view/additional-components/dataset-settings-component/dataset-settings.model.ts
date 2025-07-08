@@ -16,7 +16,7 @@ export enum SettingsTabsEnum {
     WEBHOOKS = "webhooks",
 }
 
-export enum PollingGroupEnum {
+export enum ScheduleType {
     TIME_DELTA = "TimeDelta",
     CRON_5_COMPONENT_EXPRESSION = "Cron5ComponentExpression",
 }

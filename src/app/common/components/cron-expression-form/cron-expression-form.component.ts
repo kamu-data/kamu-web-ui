@@ -6,7 +6,14 @@
  */
 
 import { ChangeDetectionStrategy, Component, forwardRef, Input } from "@angular/core";
-import { FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validators } from "@angular/forms";
+import {
+    FormControl,
+    FormGroup,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    ReactiveFormsModule,
+    Validators,
+} from "@angular/forms";
 import { BaseFormControlComponent } from "../base-form-control.component";
 import { cronExpressionValidator } from "src/app/common/helpers/data.helpers";
 import { cronExpressionNextTime } from "src/app/common/helpers/app.helpers";
@@ -33,13 +40,18 @@ import { NgIf } from "@angular/common";
             useExisting: forwardRef(() => CronExpressionFormComponent),
             multi: true,
         },
+        {
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => CronExpressionFormComponent),
+            multi: true,
+        },
     ],
 })
 export class CronExpressionFormComponent extends BaseFormControlComponent<CronExpressionFormValue> {
     @Input() public label: string = "Cron expression :";
     @Input() public placeholder: string = "Example: * * * * ?";
 
-    public form = new FormGroup<CronExpressionFormType>({
+    public override form = new FormGroup<CronExpressionFormType>({
         cronExpression: new FormControl<MaybeNull<string>>({ value: "", disabled: this.disabled }, [
             Validators.required,
             cronExpressionValidator(),

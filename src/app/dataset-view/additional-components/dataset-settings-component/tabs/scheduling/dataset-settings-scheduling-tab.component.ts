@@ -5,26 +5,30 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { FormGroup } from "@angular/forms";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { BaseComponent } from "src/app/common/components/base.component";
-import { PollingGroupEnum } from "../../dataset-settings.model";
+import { ScheduleType } from "../../dataset-settings.model";
 import {
     DatasetBasicsFragment,
     DatasetFlowType,
     DatasetKind,
-    DatasetPermissionsFragment,
     FlowTriggerInput,
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowTriggerService } from "../../services/dataset-flow-trigger.service";
-import { PollingGroupFormType } from "./dataset-settings-scheduling-tab.component.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
-import { MaybeNull } from "src/app/interface/app.types";
 import { IngestTriggerFormComponent } from "./ingest-trigger-form/ingest-trigger-form.component";
 import { NgIf } from "@angular/common";
 import { MatDividerModule } from "@angular/material/divider";
+import { MaybeNull } from "src/app/interface/app.types";
+import { IngestTriggerFormValue } from "./ingest-trigger-form/ingest-trigger-form.types";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { DatasetSettingsSchedulingTabData } from "./dataset-settings-scheduling-tab.data";
+import {
+    SchedulingSettingsFormType,
+    SchedulingSettingsFormValue,
+} from "./dataset-settings-scheduling-tab.component.types";
 
 @Component({
     selector: "app-dataset-settings-scheduling-tab",
@@ -35,47 +39,95 @@ import { MatDividerModule } from "@angular/material/divider";
     imports: [
         //-----//
         NgIf,
+        FormsModule,
+        ReactiveFormsModule,
 
         //-----//
+        MatProgressBarModule,
         MatDividerModule,
 
         //-----//
         IngestTriggerFormComponent,
     ],
 })
-export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
-    @Input(RoutingResolvers.DATASET_SETTINGS_SCHEDULING_KEY) public schedulungTabData: DatasetViewData;
-
-    public pollingForm: MaybeNull<FormGroup<PollingGroupFormType>> = null;
+export class DatasetSettingsSchedulingTabComponent extends BaseComponent implements OnInit {
+    @Input(RoutingResolvers.DATASET_SETTINGS_SCHEDULING_KEY)
+    public schedulingTabData: DatasetSettingsSchedulingTabData;
 
     private readonly datasetFlowTriggerService = inject(DatasetFlowTriggerService);
 
-    public get datasetBasics(): DatasetBasicsFragment {
-        return this.schedulungTabData.datasetBasics;
-    }
+    public readonly form: FormGroup<SchedulingSettingsFormType> = new FormGroup<SchedulingSettingsFormType>({
+        ingestTrigger: new FormControl<MaybeNull<IngestTriggerFormValue>>(null, [Validators.required]),
+    });
 
-    public get datasetPermissions(): DatasetPermissionsFragment {
-        return this.schedulungTabData.datasetPermissions;
+    public get datasetBasics(): DatasetBasicsFragment {
+        return this.schedulingTabData.datasetBasics;
     }
 
     public get isRootDataset(): boolean {
         return this.datasetBasics.kind === DatasetKind.Root;
     }
 
-    public changePollingTriggers(pollingForm: FormGroup<PollingGroupFormType>): void {
-        this.pollingForm = pollingForm;
+    public ngOnInit(): void {
+        // Initialize the form value
+        this.form.patchValue({
+            ingestTrigger: this.buildInitialIngestTriggerFormValue(),
+        } as SchedulingSettingsFormValue);
+    }
+
+    private buildInitialIngestTriggerFormValue(): MaybeNull<IngestTriggerFormValue> {
+        const schedule = this.schedulingTabData.schedule;
+
+        if (!schedule) {
+            return null;
+        }
+
+        const updatesEnabled = !this.schedulingTabData.paused;
+        switch (schedule.__typename) {
+            case "TimeDelta": {
+                return {
+                    updatesEnabled,
+                    __typename: ScheduleType.TIME_DELTA,
+                    timeDelta: {
+                        every: schedule.every,
+                        unit: schedule.unit,
+                    },
+                    cron: null,
+                } as IngestTriggerFormValue;
+            }
+
+            case "Cron5ComponentExpression": {
+                return {
+                    updatesEnabled,
+                    __typename: ScheduleType.CRON_5_COMPONENT_EXPRESSION,
+                    timeDelta: null,
+                    cron: {
+                        cronExpression: schedule.cron5ComponentExpression,
+                    },
+                } as IngestTriggerFormValue;
+            }
+
+            /* istanbul ignore next */
+            default: {
+                throw new Error(`Unknown schedule type: ${schedule.__typename}`);
+            }
+        }
     }
 
     public saveScheduledUpdates(): void {
-        if (!this.pollingForm) {
+        if (this.form.invalid) {
             return;
         }
+
+        const formValue = this.form.getRawValue() as SchedulingSettingsFormValue;
+        const ingestTriggerFormValue = formValue.ingestTrigger;
+
         this.datasetFlowTriggerService
             .setDatasetFlowTriggers({
                 datasetId: this.datasetBasics.id,
                 datasetFlowType: DatasetFlowType.Ingest,
-                paused: !this.pollingForm.controls.updatesEnabled.value,
-                triggerInput: this.buildPollingTriggerInput(this.pollingForm),
+                paused: !ingestTriggerFormValue.updatesEnabled,
+                triggerInput: this.buildPollingTriggerInput(ingestTriggerFormValue),
                 datasetInfo: {
                     accountName: this.datasetBasics.owner.accountName,
                     datasetName: this.datasetBasics.name,
@@ -85,35 +137,39 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent {
             .subscribe();
     }
 
-    public get disabledSaveButton(): boolean {
-        return !this.pollingForm || this.pollingForm.invalid;
-    }
-
-    private buildPollingTriggerInput(pollingForm: FormGroup<PollingGroupFormType>): FlowTriggerInput {
-        if (pollingForm.controls.__typename.value === PollingGroupEnum.TIME_DELTA) {
-            const timeDeltaValue = pollingForm.controls.timeDelta.value;
-            if (!timeDeltaValue || !timeDeltaValue.every || !timeDeltaValue.unit) {
-                throw new Error("Time delta value is not valid");
-            }
-            return {
-                schedule: {
-                    timeDelta: {
-                        every: timeDeltaValue.every,
-                        unit: timeDeltaValue.unit,
+    private buildPollingTriggerInput(ingestTriggerFormValue: IngestTriggerFormValue): FlowTriggerInput {
+        switch (ingestTriggerFormValue.__typename) {
+            case ScheduleType.TIME_DELTA: {
+                const timeDeltaValue = ingestTriggerFormValue.timeDelta;
+                if (!timeDeltaValue || !timeDeltaValue.every || !timeDeltaValue.unit) {
+                    throw new Error("Time delta value is not valid");
+                }
+                return {
+                    schedule: {
+                        timeDelta: {
+                            every: timeDeltaValue.every,
+                            unit: timeDeltaValue.unit,
+                        },
                     },
-                },
-            };
-        } else {
-            const cronValue = pollingForm.controls.cron.value;
-            if (!cronValue || !cronValue.cronExpression) {
-                throw new Error("Cron expression value is not valid");
+                };
             }
-            return {
-                schedule: {
-                    // sync with server validator
-                    cron5ComponentExpression: cronValue.cronExpression,
-                },
-            };
+
+            case ScheduleType.CRON_5_COMPONENT_EXPRESSION: {
+                const cronValue = ingestTriggerFormValue.cron;
+                if (!cronValue || !cronValue.cronExpression) {
+                    throw new Error("Cron expression value is not valid");
+                }
+                return {
+                    schedule: {
+                        // sync with server validator
+                        cron5ComponentExpression: cronValue.cronExpression,
+                    },
+                };
+            }
+
+            /* istanbul ignore next */
+            default:
+                throw new Error(`Unknown schedule type`);
         }
     }
 }

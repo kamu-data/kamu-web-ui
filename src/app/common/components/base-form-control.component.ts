@@ -5,8 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { EventEmitter, Input, OnInit, Output, Directive } from "@angular/core";
-import { ControlValueAccessor, FormGroup } from "@angular/forms";
+import { EventEmitter, Input, OnInit, Output, Directive, ChangeDetectorRef, inject } from "@angular/core";
+import { AbstractControl, ControlValueAccessor, FormGroup, ValidationErrors, Validator } from "@angular/forms";
 import { BaseComponent } from "./base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
@@ -17,14 +17,21 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
  * @template TValue - The type of the form value object
  */
 @Directive()
-export abstract class BaseFormControlComponent<TValue> extends BaseComponent implements OnInit, ControlValueAccessor {
+export abstract class BaseFormControlComponent<TValue>
+    extends BaseComponent
+    implements OnInit, ControlValueAccessor, Validator
+{
     @Input() public disabled: boolean = false;
     @Output() public formChange = new EventEmitter<FormGroup>();
+
+    private readonly cdr = inject(ChangeDetectorRef);
 
     protected abstract form: FormGroup;
 
     private onChange = (_value: TValue) => {};
     private onTouched = () => {};
+    private onValidatorChange: () => void = () => {};
+
     private isWriting = false;
 
     public ngOnInit(): void {
@@ -36,6 +43,8 @@ export abstract class BaseFormControlComponent<TValue> extends BaseComponent imp
         this.isWriting = true;
         if (value) {
             this.form.patchValue(value, { emitEvent: false });
+        } else {
+            this.form.reset();
         }
         this.isWriting = false;
     }
@@ -48,6 +57,10 @@ export abstract class BaseFormControlComponent<TValue> extends BaseComponent imp
         this.onTouched = fn;
     }
 
+    public registerOnValidatorChange?(fn: () => void): void {
+        this.onValidatorChange = fn;
+    }
+
     public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
         if (isDisabled) {
@@ -55,6 +68,8 @@ export abstract class BaseFormControlComponent<TValue> extends BaseComponent imp
         } else {
             this.form.enable();
         }
+
+        this.cdr.markForCheck();
     }
 
     /**
@@ -84,6 +99,21 @@ export abstract class BaseFormControlComponent<TValue> extends BaseComponent imp
      */
     protected onFormStatusChange(): void {
         this.onTouched();
+        this.onValidatorChange();
+    }
+
+    public validate(_: AbstractControl): ValidationErrors | null {
+        if (this.form.valid) return null;
+
+        const errors: ValidationErrors = {};
+
+        Object.entries(this.form.controls).forEach(([key, ctrl]) => {
+            if (ctrl.invalid) {
+                errors[key] = ctrl.errors;
+            }
+        });
+
+        return errors;
     }
 
     private subscribeToFormChanges(): void {

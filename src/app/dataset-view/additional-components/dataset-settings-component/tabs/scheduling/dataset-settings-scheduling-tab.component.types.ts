@@ -6,25 +6,13 @@
  */
 
 import { FormControl } from "@angular/forms";
-import { PollingGroupEnum } from "../../dataset-settings.model";
 import { MaybeNull } from "src/app/interface/app.types";
-import { TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
-import { CronExpressionFormValue } from "src/app/common/components/cron-expression-form/cron-expression-form.value";
+import { IngestTriggerFormValue } from "./ingest-trigger-form/ingest-trigger-form.types";
 
-export interface PollingGroupFormType {
-    updatesEnabled: FormControl<boolean>;
-    __typename: FormControl<MaybeNull<PollingGroupEnum>>;
-    timeDelta: FormControl<MaybeNull<TimeDeltaFormValue>>;
-    cron: FormControl<MaybeNull<CronExpressionFormValue>>;
+export interface SchedulingSettingsFormType {
+    ingestTrigger: FormControl<MaybeNull<IngestTriggerFormValue>>;
 }
 
-export interface PollingGroupFormValue {
-    updatesEnabled: boolean;
-    __typename: PollingGroupEnum | null;
-    timeDelta: MaybeNull<TimeDeltaFormValue>;
-    cron: MaybeNull<CronExpressionFormValue>;
-}
-
-export interface IngestConfigurationRuleFormType {
-    fetchUncacheable: FormControl<boolean>;
+export interface SchedulingSettingsFormValue {
+    ingestTrigger: IngestTriggerFormValue;
 }

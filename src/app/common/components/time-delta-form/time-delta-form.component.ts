@@ -9,6 +9,7 @@ import { ChangeDetectionStrategy, Component, forwardRef, Input } from "@angular/
 import {
     FormControl,
     FormGroup,
+    NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
     ReactiveFormsModule,
     ValidatorFn,
@@ -40,6 +41,11 @@ import { NgIf } from "@angular/common";
             useExisting: forwardRef(() => TimeDeltaFormComponent),
             multi: true,
         },
+        {
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => TimeDeltaFormComponent),
+            multi: true,
+        },
     ],
 })
 export class TimeDeltaFormComponent extends BaseFormControlComponent<TimeDeltaFormValue> {
@@ -49,7 +55,7 @@ export class TimeDeltaFormComponent extends BaseFormControlComponent<TimeDeltaFo
 
     private everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = everyTimeMapperValidators;
 
-    public form = new FormGroup<TimeDeltaFormType>({
+    public override form = new FormGroup<TimeDeltaFormType>({
         every: new FormControl<MaybeNull<number>>({ value: null, disabled: this.disabled }, [Validators.required]),
         unit: new FormControl<MaybeNull<TimeUnit>>({ value: null, disabled: this.disabled }, [Validators.required]),
     });

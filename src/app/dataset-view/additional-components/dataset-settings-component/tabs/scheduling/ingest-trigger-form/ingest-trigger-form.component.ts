@@ -78,7 +78,6 @@ export class IngestTriggerFormComponent extends BaseFormControlComponent<IngestT
     });
 
     public ngOnInit(): void {
-        // Set up form control relationships
         this.setupFormControlRelationships();
     }
 

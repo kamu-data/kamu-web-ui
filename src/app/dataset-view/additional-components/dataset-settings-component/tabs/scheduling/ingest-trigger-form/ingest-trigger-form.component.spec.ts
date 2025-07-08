@@ -5,126 +5,155 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed, fakeAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { IngestTriggerFormComponent } from "./ingest-trigger-form.component";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import {
-    emitClickOnElementByDataTestId,
-    findElementByDataTestId,
-    setFieldValue,
-} from "src/app/common/helpers/base-test.helpers.spec";
-import { TimeUnit } from "src/app/api/kamu.graphql.interface";
+import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { DatasetBasicsFragment, TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { ScheduleType } from "../../../dataset-settings.model";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
-import { MatRadioButtonHarness } from "@angular/material/radio/testing";
 import { HarnessLoader } from "@angular/cdk/testing";
+import { Component, ViewChild } from "@angular/core";
+import { IngestTriggerFormHarness } from "./ingest-trigger-form.harness";
+
+@Component({
+    standalone: true,
+    imports: [IngestTriggerFormComponent],
+    template: `<app-ingest-trigger-form [datasetBasics]="datasetBasics" [updateStateToggleLabel]="label">
+    </app-ingest-trigger-form>`,
+})
+class TestIngestTriggerFormComponent {
+    public readonly datasetBasics: DatasetBasicsFragment = mockDatasetBasicsRootFragment;
+    public readonly label = "Enable automatic updates";
+
+    @ViewChild(IngestTriggerFormComponent)
+    public formComponent: IngestTriggerFormComponent;
+}
 
 describe("IngestTriggerFormComponent", () => {
+    let hostComponent: TestIngestTriggerFormComponent;
     let component: IngestTriggerFormComponent;
-    let fixture: ComponentFixture<IngestTriggerFormComponent>;
+
+    let fixture: ComponentFixture<TestIngestTriggerFormComponent>;
     let loader: HarnessLoader;
+    let ingestTriggerFormHarness: IngestTriggerFormHarness;
 
     const MOCK_INVALID_CRON_EXPRESSION = "* *";
 
-    beforeEach(() => {
+    beforeEach(async () => {
         TestBed.configureTestingModule({
             providers: [Apollo, provideToastr()],
             imports: [
                 //-----//
                 SharedTestModule,
-                IngestTriggerFormComponent,
+                TestIngestTriggerFormComponent,
             ],
         });
-        fixture = TestBed.createComponent(IngestTriggerFormComponent);
-        component = fixture.componentInstance;
+        fixture = TestBed.createComponent(TestIngestTriggerFormComponent);
+        hostComponent = fixture.componentInstance;
+
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        component = hostComponent.formComponent;
 
         loader = TestbedHarnessEnvironment.loader(fixture);
-
-        component.datasetBasics = mockDatasetBasicsRootFragment;
-        component.updateStateToggleLabel = "Enable automatic updates";
-        fixture.detectChanges();
+        ingestTriggerFormHarness = await loader.getHarness(IngestTriggerFormHarness);
     });
 
     it("should create", () => {
+        expect(hostComponent).toBeTruthy();
         expect(component).toBeTruthy();
+        expect(ingestTriggerFormHarness).toBeTruthy();
     });
 
-    it("should check init form with cron expression", fakeAsync(() => {
-        component.form.setValue({
-            updatesEnabled: true,
-            __typename: ScheduleType.CRON_5_COMPONENT_EXPRESSION,
-            timeDelta: null,
-            cron: { cronExpression: "* * * * ?" },
-        });
-        fixture.detectChanges();
+    it("should enable updates toggle via harness and reflect in form", async () => {
+        expect(component.form.controls.updatesEnabled.value).toBeFalse();
 
-        const cronExpessionControl = findElementByDataTestId(fixture, "cron-expression-input") as HTMLInputElement;
-        expect(cronExpessionControl.value.trim()).toEqual("* * * * ?");
-    }));
+        await ingestTriggerFormHarness.enableUpdates();
+        expect(component.form.controls.updatesEnabled.value).toBeTrue();
 
-    it("should check init form with time delta", fakeAsync(() => {
-        component.form.setValue({
-            updatesEnabled: true,
-            __typename: ScheduleType.TIME_DELTA,
-            timeDelta: { every: 10, unit: TimeUnit.Minutes },
-            cron: null,
-        });
-
-        fixture.detectChanges();
-
-        const everyControl = findElementByDataTestId(fixture, "time-delta-every") as HTMLInputElement;
-        expect(everyControl.value.trim()).toEqual("10");
-        const unitControl = findElementByDataTestId(fixture, "time-delta-unit") as HTMLInputElement;
-        expect(unitControl.value.trim()).toEqual(TimeUnit.Minutes);
-    }));
+        await ingestTriggerFormHarness.disableUpdates();
+        expect(component.form.controls.updatesEnabled.value).toBeFalse();
+    });
 
     it("should check switch polling options", async () => {
-        component.form.patchValue({ updatesEnabled: true, __typename: ScheduleType.CRON_5_COMPONENT_EXPRESSION });
-        fixture.detectChanges();
+        await ingestTriggerFormHarness.enableUpdates();
 
         // First verify initial state
+        expect(component.scheduleType.value).toBeNull();
+
+        // Click on CRON radio button
+        await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
         expect(component.scheduleType.value).toEqual(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
 
         // Click on time delta radio button
-        const timeDeltaRadio: MatRadioButtonHarness = await loader.getHarness(
-            MatRadioButtonHarness.with({ selector: '[data-test-id="trigger-time-delta"]' }),
-        );
-        await timeDeltaRadio.check();
-
-        fixture.detectChanges();
-        await fixture.whenStable();
-
+        await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.TIME_DELTA);
         expect(component.scheduleType.value).toEqual(ScheduleType.TIME_DELTA);
-
-        // Click on CRON radio button
-        const cronRadio: MatRadioButtonHarness = await loader.getHarness(
-            MatRadioButtonHarness.with({ selector: '[data-test-id="trigger-cron"]' }),
-        );
-        await cronRadio.check();
-
-        fixture.detectChanges();
-        await fixture.whenStable();
-
-        expect(component.scheduleType.value).toEqual(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
     });
 
-    it("should check cron expression error", () => {
-        component.form.patchValue({ updatesEnabled: true, __typename: ScheduleType.TIME_DELTA });
-        fixture.detectChanges();
+    it("should fill form with cron expression and reflect in form state", async () => {
+        await ingestTriggerFormHarness.enableUpdates();
+        await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
 
-        // Click on cron expression radio button
-        emitClickOnElementByDataTestId(fixture, "cron-expression-form");
-        fixture.detectChanges();
+        expect(component.form.controls.__typename.value).toEqual(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
+
+        await ingestTriggerFormHarness.setCronExpression("* * * * ?");
+
+        const value = component.form.getRawValue();
+        expect(value).toEqual({
+            updatesEnabled: true,
+            __typename: ScheduleType.CRON_5_COMPONENT_EXPRESSION,
+            timeDelta: { every: null, unit: null },
+            cron: {
+                cronExpression: "* * * * ?",
+            },
+        });
+    });
+
+    it("should check cron expression error", async () => {
+        await ingestTriggerFormHarness.enableUpdates();
+        await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
+
         expect(component.scheduleType.value).toEqual(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
 
         // Set invalid cron expression
-        setFieldValue(fixture, "cron-expression-input", MOCK_INVALID_CRON_EXPRESSION);
-        fixture.detectChanges();
+        await ingestTriggerFormHarness.setCronExpression(MOCK_INVALID_CRON_EXPRESSION);
 
         const errorMessageElem = findElementByDataTestId(fixture, "cron-expression-error");
         expect(errorMessageElem?.textContent?.trim()).toEqual("Invalid expression");
+    });
+
+    it("should check init form with time delta", async () => {
+        await ingestTriggerFormHarness.enableUpdates();
+        await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.TIME_DELTA);
+
+        expect(component.form.controls.__typename.value).toEqual(ScheduleType.TIME_DELTA);
+
+        await ingestTriggerFormHarness.setTimeDeltaSchedule({ every: 10, unit: TimeUnit.Minutes });
+
+        const value = component.form.getRawValue();
+        expect(value).toEqual({
+            updatesEnabled: true,
+            __typename: ScheduleType.TIME_DELTA,
+            timeDelta: { every: 10, unit: TimeUnit.Minutes },
+            cron: { cronExpression: null },
+        });
+    });
+
+    it("should check time delta error", async () => {
+        await ingestTriggerFormHarness.enableUpdates();
+        await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.TIME_DELTA);
+
+        expect(component.scheduleType.value).toEqual(ScheduleType.TIME_DELTA);
+
+        // Set invalid time delta
+        await ingestTriggerFormHarness.setTimeDeltaSchedule({ every: 100, unit: TimeUnit.Minutes }); // Invalid value
+
+        const errorMessageElem = findElementByDataTestId(fixture, "time-delta-range-error");
+        expect(errorMessageElem?.textContent?.trim()).toEqual("Value should be between 0 to 60");
     });
 });

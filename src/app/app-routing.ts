@@ -6,26 +6,18 @@
  */
 
 import { GlobalQueryComponent } from "./query/global-query/global-query.component";
-import { AddPollingSourceComponent } from "./dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source.component";
-import { MetadataBlockComponent } from "./dataset-block/metadata-block/metadata-block.component";
 import { AuthenticatedGuard } from "./auth/guards/authenticated.guard";
-import { AccountSettingsComponent } from "./account/settings/account-settings.component";
 import { PageNotFoundComponent } from "./common/components/page-not-found/page-not-found.component";
 import { ROUTES, Routes } from "@angular/router";
 import { SearchComponent } from "./search/search.component";
 import { LoginComponent } from "./auth/login/login.component";
-import { DatasetViewComponent } from "./dataset-view/dataset-view.component";
-import { DatasetCreateComponent } from "./dataset-create/dataset-create.component";
 import { GithubCallbackComponent } from "./auth/login/github-callback/github.callback";
 import ProjectLinks from "./project-links";
-import { SetTransformComponent } from "./dataset-view/additional-components/metadata-component/components/set-transform/set-transform.component";
 import { LoginGuard } from "./auth/guards/login.guard";
 import { ReturnToCliComponent } from "./auth/login/return-to-cli/return-to-cli.component";
-import { AddPushSourceComponent } from "./dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source.component";
 import { AdminGuard } from "./auth/guards/admin.guard";
 import { AdminDashboardComponent } from "./admin-view/admin-dashboard/admin-dashboard.component";
 import { DatasetFlowDetailsComponent } from "./dataset-flow/dataset-flow-details/dataset-flow-details.component";
-import { AccountComponent } from "./account/account.component";
 import { blockMetadataResolverFn } from "./dataset-block/metadata-block/resolver/block-metadata.resolver";
 import { searchResolverFn } from "./search/resolver/search.resolver";
 import { addPollingSourceResolverFn } from "./dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/resolver/add-polling-source.resolver";
@@ -52,17 +44,13 @@ import { EmailsTabComponent } from "./account/settings/tabs/emails-tab/emails-ta
 import { accountSettingsEmailResolverFn } from "./account/settings/tabs/emails-tab/resolver/account-settings-email.resolver";
 import { accountSettingsAccessTokensResolverFn } from "./account/settings/tabs/access-tokens-tab/resolver/account-settings-access-tokens.resolver";
 import { DatasetViewTypeEnum } from "./dataset-view/dataset-view.interface";
-import { OverviewComponent } from "./dataset-view/additional-components/overview-component/overview.component";
 import { datasetOverviewTabResolverFn } from "./dataset-view/additional-components/overview-component/resolver/dataset-overview-tab.resolver";
 import { datasetViewResolverFn } from "./dataset-view/resolvers/dataset-view.resolver";
 import { FlowsComponent } from "./dataset-view/additional-components/flows-component/flows.component";
 import { datasetFlowsTabResolverFn } from "./dataset-view/additional-components/flows-component/resolver/dataset-flows-tab.resolver";
 import { DataComponent } from "./dataset-view/additional-components/data-component/data.component";
 import { MetadataComponent } from "./dataset-view/additional-components/metadata-component/metadata.component";
-import { HistoryComponent } from "./dataset-view/additional-components/history-component/history.component";
-import { LineageComponent } from "./dataset-view/additional-components/lineage-component/lineage.component";
 import { datasetSettingsActiveSectionResolverFn } from "./dataset-view/additional-components/dataset-settings-component/resolvers/dataset-settings-active-section.resolver";
-import { DatasetSettingsComponent } from "./dataset-view/additional-components/dataset-settings-component/dataset-settings.component";
 import { DatasetSettingsGeneralTabComponent } from "./dataset-view/additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.component";
 import { SettingsTabsEnum } from "./dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { datasetSettingsGeneralTabResolverFn } from "./dataset-view/additional-components/dataset-settings-component/tabs/general/resolver/dataset-settings-general-tab.resolver";
@@ -98,6 +86,10 @@ import { Provider } from "@angular/core";
 import { forbidAnonymousAccessGuardFn } from "./common/guards/forbid-anonymous-access.guard";
 import { AppConfigService } from "./app-config.service";
 import { accessTokenExpiredGuardFn } from "./common/guards/access-token-expired.guard";
+import { AccountSettingsComponent } from "./account/settings/account-settings.component";
+import { AccountComponent } from "./account/account.component";
+import { DatasetSettingsComponent } from "./dataset-view/additional-components/dataset-settings-component/dataset-settings.component";
+import { DatasetViewComponent } from "./dataset-view/dataset-view.component";
 
 export const PUBLIC_ROUTES: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -134,7 +126,7 @@ export const ANONYMOUS_GUARDED_ROUTES: Routes = [
     {
         canActivate: [AuthenticatedGuard],
         path: ProjectLinks.URL_DATASET_CREATE,
-        component: DatasetCreateComponent,
+        loadComponent: () => import("./dataset-create/dataset-create.component").then((m) => m.DatasetCreateComponent),
     },
     {
         path: ProjectLinks.URL_QUERY_EXPLAINER,
@@ -266,8 +258,10 @@ export const ANONYMOUS_GUARDED_ROUTES: Routes = [
                     },
                     {
                         path: "",
-
-                        component: OverviewComponent,
+                        loadComponent: () =>
+                            import("./dataset-view/additional-components/overview-component/overview.component").then(
+                                (m) => m.OverviewComponent,
+                            ),
                         runGuardsAndResolvers: "always",
                         data: {
                             [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Overview,
@@ -294,7 +288,10 @@ export const ANONYMOUS_GUARDED_ROUTES: Routes = [
                     },
                     {
                         path: DatasetViewTypeEnum.History,
-                        component: HistoryComponent,
+                        loadComponent: () =>
+                            import("./dataset-view/additional-components/history-component/history.component").then(
+                                (m) => m.HistoryComponent,
+                            ),
                         runGuardsAndResolvers: "always",
                         data: {
                             [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.History,
@@ -305,7 +302,10 @@ export const ANONYMOUS_GUARDED_ROUTES: Routes = [
                     },
                     {
                         path: DatasetViewTypeEnum.Lineage,
-                        component: LineageComponent,
+                        loadComponent: () =>
+                            import("./dataset-view/additional-components/lineage-component/lineage.component").then(
+                                (m) => m.LineageComponent,
+                            ),
                         runGuardsAndResolvers: "always",
                         data: {
                             [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Lineage,
@@ -452,7 +452,10 @@ export const ANONYMOUS_GUARDED_ROUTES: Routes = [
         children: [
             {
                 path: `${ProjectLinks.URL_BLOCK}/:${ProjectLinks.URL_PARAM_BLOCK_HASH}`,
-                component: MetadataBlockComponent,
+                loadComponent: () =>
+                    import("./dataset-block/metadata-block/metadata-block.component").then(
+                        (m) => m.MetadataBlockComponent,
+                    ),
                 resolve: { [RoutingResolvers.METADATA_BLOCK_KEY]: blockMetadataResolverFn },
             },
             {
@@ -521,7 +524,10 @@ export const ANONYMOUS_GUARDED_ROUTES: Routes = [
                 children: [
                     {
                         path: `${ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE}`,
-                        component: AddPollingSourceComponent,
+                        loadComponent: () =>
+                            import(
+                                "./dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source.component"
+                            ).then((m) => m.AddPollingSourceComponent),
                         resolve: {
                             [RoutingResolvers.ADD_POLLING_SOURCE_KEY]: addPollingSourceResolverFn,
                             [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
@@ -529,7 +535,10 @@ export const ANONYMOUS_GUARDED_ROUTES: Routes = [
                     },
                     {
                         path: `${ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE}`,
-                        component: AddPushSourceComponent,
+                        loadComponent: () =>
+                            import(
+                                "./dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source.component"
+                            ).then((m) => m.AddPushSourceComponent),
                         resolve: {
                             [RoutingResolvers.ADD_PUSH_SOURCE_KEY]: addPushSourceResolverFn,
                             [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
@@ -537,7 +546,10 @@ export const ANONYMOUS_GUARDED_ROUTES: Routes = [
                     },
                     {
                         path: `${ProjectLinks.URL_PARAM_SET_TRANSFORM}`,
-                        component: SetTransformComponent,
+                        loadComponent: () =>
+                            import(
+                                "./dataset-view/additional-components/metadata-component/components/set-transform/set-transform.component"
+                            ).then((m) => m.SetTransformComponent),
                         resolve: {
                             [RoutingResolvers.SET_TRANSFORM_KEY]: setTransformResolverFn,
                             [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,

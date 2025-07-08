@@ -5,7 +5,10 @@
     "ng": "ng",
     "start": "ng serve --watch",
     "build": "ng build",
+    "build:stats": "ng build --stats-json",
     "build-prod": "ng build --configuration production",
+    "build-prod:stats": "ng build --configuration production --stats-json",
+    "analyze": "webpack-bundle-analyzer dist/kamu-platform/stats.json",
     "test": "ng test --no-progress --no-watch --browsers ChromeHeadless --code-coverage",
     "test-firefox": "ng test --no-progress --browsers Firefox --code-coverage",
     "lint": "eslint . --ext .ts",
@@ -65,6 +68,7 @@
     "rxjs": "^7.8.1",
     "siwe": "^3.0.0",
     "tslib": "^2.0.0",
+    "webpack-bundle-analyzer": "^4.10.2",
     "yaml": "^2.6.1",
     "zone.js": "~0.13.3"
   },

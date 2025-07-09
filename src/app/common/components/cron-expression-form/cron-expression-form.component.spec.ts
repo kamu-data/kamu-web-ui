@@ -8,14 +8,35 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 import { CronExpressionFormComponent } from "./cron-expression-form.component";
+import { Component, ViewChild } from "@angular/core";
+import { CronExpressionFormHarness } from "./cron-expression-form.harness";
+import { HarnessLoader } from "@angular/cdk/testing";
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
+
+@Component({
+    standalone: true,
+    imports: [CronExpressionFormComponent],
+    template: `<app-cron-expression-form [label]="'Cron expression :'" [placeholder]="'Example: * * * * ?'" />`,
+})
+class TestCronExpressionFormComponent {
+    @ViewChild(CronExpressionFormComponent)
+    public formComponent: CronExpressionFormComponent;
+}
 
 describe("CronExpressionFormComponent", () => {
+    let hostComponent: TestCronExpressionFormComponent;
     let component: CronExpressionFormComponent;
-    let fixture: ComponentFixture<CronExpressionFormComponent>;
+
+    let fixture: ComponentFixture<TestCronExpressionFormComponent>;
+    let loader: HarnessLoader;
+    let cronHarness: CronExpressionFormHarness;
+
+    const VALID_CRON_EXPRESSION = "0 9 ? * MON"; // Every Monday at 9 AM
+    const INVALID_CRON_EXPRESSION = "0 9 * * MON"; // Invalid because it has both day of month and day of week specified
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [CronExpressionFormComponent],
+            imports: [TestCronExpressionFormComponent],
             providers: [
                 {
                     provide: ActivatedRoute,
@@ -27,9 +48,16 @@ describe("CronExpressionFormComponent", () => {
             ],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(CronExpressionFormComponent);
-        component = fixture.componentInstance;
+        fixture = TestBed.createComponent(TestCronExpressionFormComponent);
+        hostComponent = fixture.componentInstance;
+
         fixture.detectChanges();
+        await fixture.whenStable();
+
+        component = hostComponent.formComponent;
+
+        loader = TestbedHarnessEnvironment.loader(fixture);
+        cronHarness = await loader.getHarness(CronExpressionFormHarness);
     });
 
     it("should create", () => {
@@ -37,14 +65,14 @@ describe("CronExpressionFormComponent", () => {
     });
 
     it("should initialize with default values", () => {
-        expect(component.form.get("cronExpression")?.value).toBe("");
+        expect(component.cronExpressionControl.value).toBe("");
     });
 
     it("should update form value when writeValue is called", () => {
-        const testValue = { cronExpression: "0 9 * * MON" };
+        const testValue = { cronExpression: VALID_CRON_EXPRESSION };
         component.writeValue(testValue);
 
-        expect(component.form.get("cronExpression")?.value).toBe("0 9 * * MON");
+        expect(component.cronExpressionControl.value).toBe(VALID_CRON_EXPRESSION);
     });
 
     it("should disable form when setDisabledState is called with true", () => {
@@ -60,21 +88,44 @@ describe("CronExpressionFormComponent", () => {
     it("should emit formChange when form values change", () => {
         const emitSpy = spyOn(component.formChange, "emit");
 
-        component.form.patchValue({ cronExpression: "0 9 * * MON" });
+        component.form.patchValue({ cronExpression: VALID_CRON_EXPRESSION });
 
         expect(emitSpy).toHaveBeenCalledWith(component.form);
     });
 
-    it("should validate cron expression", () => {
-        const cronControl = component.form.get("cronExpression");
-
+    it("should validate cron expression", async () => {
         // Invalid cron expression
-        cronControl?.setValue("invalid");
-        cronControl?.markAsTouched();
-        expect(cronControl?.hasError("invalidCronExpression")).toBe(true);
+        await cronHarness.setCronExpression(INVALID_CRON_EXPRESSION);
+        expect(component.cronExpressionControl.hasError("invalidCronExpression")).toBe(true);
 
-        // Valid cron expression (basic format that should pass)
-        cronControl?.setValue("* * * * *");
-        expect(cronControl?.hasError("invalidCronExpression")).toBe(false);
+        // Valid cron expression
+        await cronHarness.setCronExpression(VALID_CRON_EXPRESSION);
+        expect(component.cronExpressionControl.hasError("invalidCronExpression")).toBe(false);
+    });
+
+    it("should show error message and no next execution time for invalid cron expression", async () => {
+        await cronHarness.setCronExpression(INVALID_CRON_EXPRESSION);
+
+        const isInvalid = await cronHarness.isInvalid();
+        expect(isInvalid).toBeTrue();
+
+        const errorMessage = await cronHarness.getErrorMessage();
+        expect(errorMessage).toEqual(component.INVALID_EXPRESSION_MESSAGE);
+
+        const nextTime = await cronHarness.getNextTime();
+        expect(nextTime).toBeNull();
+    });
+
+    it("should show next execution time and no error for valid cron expression", async () => {
+        await cronHarness.setCronExpression(VALID_CRON_EXPRESSION);
+
+        const isInvalid = await cronHarness.isInvalid();
+        expect(isInvalid).toBeFalse();
+
+        const errorMessage = await cronHarness.getErrorMessage();
+        expect(errorMessage).toBeNull();
+
+        const nextTime = await cronHarness.getNextTime();
+        expect(nextTime).toContain(component.NEXT_TIME_LABEL);
     });
 });

@@ -22,8 +22,7 @@ import { IngestTriggerFormHarness } from "./ingest-trigger-form.harness";
 @Component({
     standalone: true,
     imports: [IngestTriggerFormComponent],
-    template: `<app-ingest-trigger-form [datasetBasics]="datasetBasics" [updateStateToggleLabel]="label">
-    </app-ingest-trigger-form>`,
+    template: `<app-ingest-trigger-form [datasetBasics]="datasetBasics" [updateStateToggleLabel]="label" />`,
 })
 class TestIngestTriggerFormComponent {
     public readonly datasetBasics: DatasetBasicsFragment = mockDatasetBasicsRootFragment;
@@ -71,13 +70,13 @@ describe("IngestTriggerFormComponent", () => {
     });
 
     it("should enable updates toggle via harness and reflect in form", async () => {
-        expect(component.form.controls.updatesEnabled.value).toBeFalse();
+        expect(component.updatesEnabled.value).toBeFalse();
 
         await ingestTriggerFormHarness.enableUpdates();
-        expect(component.form.controls.updatesEnabled.value).toBeTrue();
+        expect(component.updatesEnabled.value).toBeTrue();
 
         await ingestTriggerFormHarness.disableUpdates();
-        expect(component.form.controls.updatesEnabled.value).toBeFalse();
+        expect(component.updatesEnabled.value).toBeFalse();
     });
 
     it("should check switch polling options", async () => {
@@ -99,7 +98,7 @@ describe("IngestTriggerFormComponent", () => {
         await ingestTriggerFormHarness.enableUpdates();
         await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
 
-        expect(component.form.controls.__typename.value).toEqual(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
+        expect(component.scheduleType.value).toEqual(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
 
         await ingestTriggerFormHarness.setCronExpression("* * * * ?");
 
@@ -131,7 +130,7 @@ describe("IngestTriggerFormComponent", () => {
         await ingestTriggerFormHarness.enableUpdates();
         await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.TIME_DELTA);
 
-        expect(component.form.controls.__typename.value).toEqual(ScheduleType.TIME_DELTA);
+        expect(component.scheduleType.value).toEqual(ScheduleType.TIME_DELTA);
 
         await ingestTriggerFormHarness.setTimeDeltaSchedule({ every: 10, unit: TimeUnit.Minutes });
 

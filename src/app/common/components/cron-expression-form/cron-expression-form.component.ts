@@ -51,6 +51,9 @@ export class CronExpressionFormComponent extends BaseFormControlComponent<CronEx
     @Input() public label: string = "Cron expression :";
     @Input() public placeholder: string = "Example: * * * * ?";
 
+    public readonly INVALID_EXPRESSION_MESSAGE: string = "Invalid expression";
+    public readonly NEXT_TIME_LABEL: string = "Next time";
+
     public override form = new FormGroup<CronExpressionFormType>({
         cronExpression: new FormControl<MaybeNull<string>>({ value: "", disabled: this.disabled }, [
             Validators.required,

@@ -12,17 +12,23 @@
 
     <ng-container
         *ngIf="
-            cronExpressionControl?.errors?.invalidCronExpression &&
-                (cronExpressionControl?.touched || cronExpressionControl?.dirty);
+            cronExpressionControl.errors?.invalidCronExpression &&
+                (cronExpressionControl.touched || cronExpressionControl.dirty);
             else nextTimeTemplate
         "
     >
-        <div class="text-danger fs-12 ms-4 text-break" data-test-id="cron-expression-error">Invalid expression</div>
+        <div class="text-danger fs-12 ms-4 text-break" data-test-id="cron-expression-error">
+            {{ INVALID_EXPRESSION_MESSAGE }}
+        </div>
     </ng-container>
 
     <ng-template #nextTimeTemplate>
-        <span *ngIf="cronExpressionControl?.valid && cronExpressionControl?.value" class="fs-12 ms-4"
-            >Next time: {{ nextTime }}</span
+        <span
+            *ngIf="cronExpressionControl?.valid && cronExpressionControl?.value"
+            class="fs-12 ms-4"
+            data-test-id="cron-expression-next-time"
+        >
+            >{{ NEXT_TIME_LABEL }}: {{ nextTime }}</span
         >
     </ng-template>
 </div>

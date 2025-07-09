@@ -62,6 +62,8 @@ describe("CronExpressionFormComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
+        expect(hostComponent).toBeTruthy();
+        expect(cronHarness).toBeTruthy();
     });
 
     it("should initialize with default values", () => {
@@ -93,6 +95,12 @@ describe("CronExpressionFormComponent", () => {
         expect(emitSpy).toHaveBeenCalledWith(component.form);
     });
 
+    it("should retrieve cron expression from the harness", async () => {
+        await cronHarness.setCronExpression(VALID_CRON_EXPRESSION);
+        const cronExpression = await cronHarness.getCronExpression();
+        expect(cronExpression).toBe(VALID_CRON_EXPRESSION);
+    });
+
     it("should validate cron expression", async () => {
         // Invalid cron expression
         await cronHarness.setCronExpression(INVALID_CRON_EXPRESSION);
@@ -109,6 +117,9 @@ describe("CronExpressionFormComponent", () => {
         const isInvalid = await cronHarness.isInvalid();
         expect(isInvalid).toBeTrue();
 
+        const isUntouched = await cronHarness.isUntouched();
+        expect(isUntouched).toBeFalse();
+
         const errorMessage = await cronHarness.getErrorMessage();
         expect(errorMessage).toEqual(component.INVALID_EXPRESSION_MESSAGE);
 
@@ -122,10 +133,27 @@ describe("CronExpressionFormComponent", () => {
         const isInvalid = await cronHarness.isInvalid();
         expect(isInvalid).toBeFalse();
 
+        const isUntouched = await cronHarness.isUntouched();
+        expect(isUntouched).toBeFalse();
+
         const errorMessage = await cronHarness.getErrorMessage();
         expect(errorMessage).toBeNull();
 
         const nextTime = await cronHarness.getNextTime();
         expect(nextTime).toContain(component.NEXT_TIME_LABEL);
+    });
+
+    it("should not show error neither next time for untouched cron expression", async () => {
+        const isInvalid = await cronHarness.isInvalid();
+        expect(isInvalid).toBeTrue();
+
+        const isUntouched = await cronHarness.isUntouched();
+        expect(isUntouched).toBeTrue();
+
+        const errorMessage = await cronHarness.getErrorMessage();
+        expect(errorMessage).toBeNull();
+
+        const nextTime = await cronHarness.getNextTime();
+        expect(nextTime).toBeNull();
     });
 });

@@ -15,6 +15,7 @@ export class TimeDeltaFormHarness extends ComponentHarness {
 
     private readonly locatorEveryInput = this.locatorFor('[data-test-id="time-delta-every"]');
     private readonly locatorUnitSelect = this.locatorFor('[data-test-id="time-delta-unit"]');
+    private readonly locatorErrorMessage = this.locatorForOptional('[data-test-id="time-delta-range-error"]');
 
     private static readonly UNIT_INDEX: Record<TimeUnit, number> = {
         MINUTES: 0,
@@ -29,9 +30,10 @@ export class TimeDeltaFormHarness extends ComponentHarness {
 
         await input.clear();
         if (every === null) {
-            await input.sendKeys("");
+            await input.clear();
         } else {
             await input.sendKeys(every.toString());
+            await input.blur();
         }
 
         if (unit === null) {
@@ -42,10 +44,11 @@ export class TimeDeltaFormHarness extends ComponentHarness {
                 throw new Error(`Unknown unit: ${unit}`);
             }
             await select.selectOptions(index);
+            await select.blur();
         }
     }
 
-    public async getTimeDelta(): Promise<{ every: number; unit: string }> {
+    public async getTimeDelta(): Promise<{ every: number; unit: TimeUnit }> {
         const input = await this.locatorEveryInput();
         const select = await this.locatorUnitSelect();
 
@@ -53,5 +56,23 @@ export class TimeDeltaFormHarness extends ComponentHarness {
             every: Number(await input.getProperty("value")),
             unit: await select.getProperty("value"),
         };
+    }
+
+    public async isEveryInputInvalid(): Promise<boolean> {
+        const input = await this.locatorEveryInput();
+        return input.hasClass("ng-invalid");
+    }
+
+    public async isEveryInputUntouched(): Promise<boolean> {
+        const input = await this.locatorEveryInput();
+        return input.hasClass("ng-untouched");
+    }
+
+    public async getErrorMessage(): Promise<string | null> {
+        const errorElement = await this.locatorErrorMessage();
+        if (errorElement) {
+            return await errorElement.text();
+        }
+        return null;
     }
 }

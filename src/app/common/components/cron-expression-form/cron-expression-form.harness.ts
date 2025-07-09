@@ -33,6 +33,11 @@ export class CronExpressionFormHarness extends ComponentHarness {
         return input.hasClass("ng-invalid");
     }
 
+    public async isUntouched(): Promise<boolean> {
+        const input = await this.input();
+        return input.hasClass("ng-untouched");
+    }
+
     public async getErrorMessage(): Promise<string | null> {
         const errorMessage = await this.errorMessage();
         if (errorMessage) {

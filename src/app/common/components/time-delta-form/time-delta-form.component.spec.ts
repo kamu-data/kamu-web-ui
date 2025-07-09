@@ -9,14 +9,31 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 import { TimeDeltaFormComponent } from "./time-delta-form.component";
 import { TimeUnit } from "src/app/api/kamu.graphql.interface";
+import { Component, ViewChild } from "@angular/core";
+import { TimeDeltaFormHarness } from "./time-delta-form.harness";
+import { HarnessLoader } from "@angular/cdk/testing";
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
+
+@Component({
+    standalone: true,
+    imports: [TimeDeltaFormComponent],
+    template: `<app-time-delta-form [label]="'Launch every:'" />`,
+})
+class TestTimeDeltaFormComponent {
+    @ViewChild(TimeDeltaFormComponent)
+    public formComponent: TimeDeltaFormComponent;
+}
 
 describe("TimeDeltaFormComponent", () => {
+    let hostComponent: TestTimeDeltaFormComponent;
     let component: TimeDeltaFormComponent;
-    let fixture: ComponentFixture<TimeDeltaFormComponent>;
+    let fixture: ComponentFixture<TestTimeDeltaFormComponent>;
+    let loader: HarnessLoader;
+    let timeDeltaHarness: TimeDeltaFormHarness;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [TimeDeltaFormComponent],
+            imports: [TestTimeDeltaFormComponent],
             providers: [
                 {
                     provide: ActivatedRoute,
@@ -28,26 +45,35 @@ describe("TimeDeltaFormComponent", () => {
             ],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(TimeDeltaFormComponent);
-        component = fixture.componentInstance;
+        fixture = TestBed.createComponent(TestTimeDeltaFormComponent);
+        hostComponent = fixture.componentInstance;
+
         fixture.detectChanges();
+        await fixture.whenStable();
+
+        component = hostComponent.formComponent;
+
+        loader = TestbedHarnessEnvironment.loader(fixture);
+        timeDeltaHarness = await loader.getHarness(TimeDeltaFormHarness);
     });
 
     it("should create", () => {
         expect(component).toBeTruthy();
+        expect(hostComponent).toBeTruthy();
+        expect(timeDeltaHarness).toBeTruthy();
     });
 
     it("should initialize with default values", () => {
-        expect(component.form.get("every")?.value).toBeNull();
-        expect(component.form.get("unit")?.value).toBeNull();
+        expect(component.everyControl.value).toBeNull();
+        expect(component.unitControl.value).toBeNull();
     });
 
     it("should update form value when writeValue is called", () => {
         const testValue = { every: 5, unit: TimeUnit.Hours };
         component.writeValue(testValue);
 
-        expect(component.form.get("every")?.value).toBe(5);
-        expect(component.form.get("unit")?.value).toBe(TimeUnit.Hours);
+        expect(component.everyControl.value).toBe(5);
+        expect(component.unitControl.value).toBe(TimeUnit.Hours);
     });
 
     it("should disable form when setDisabledState is called with true", () => {
@@ -66,5 +92,50 @@ describe("TimeDeltaFormComponent", () => {
         component.form.patchValue({ every: 10, unit: TimeUnit.Minutes });
 
         expect(emitSpy).toHaveBeenCalledWith(component.form);
+    });
+
+    it("should set time delta values as a user", async () => {
+        await timeDeltaHarness.setTimeDelta(5, TimeUnit.Hours);
+
+        const timeDelta = await timeDeltaHarness.getTimeDelta();
+        expect(timeDelta.every).toBe(5);
+        expect(timeDelta.unit).toBe(TimeUnit.Hours);
+    });
+
+    it("should show validation error for invalid range", async () => {
+        await timeDeltaHarness.setTimeDelta(-5, TimeUnit.Minutes);
+
+        const isInvalid = await timeDeltaHarness.isEveryInputInvalid();
+        expect(isInvalid).toBeTrue();
+
+        const isUntouched = await timeDeltaHarness.isEveryInputUntouched();
+        expect(isUntouched).toBeFalse();
+
+        const errorMessage = await timeDeltaHarness.getErrorMessage();
+        expect(errorMessage).toEqual("Value should be between 0 to 60");
+    });
+
+    it("should not show error for valid time delta using harness", async () => {
+        await timeDeltaHarness.setTimeDelta(30, TimeUnit.Minutes);
+
+        const isInvalid = await timeDeltaHarness.isEveryInputInvalid();
+        expect(isInvalid).toBeFalse();
+
+        const isUntouched = await timeDeltaHarness.isEveryInputUntouched();
+        expect(isUntouched).toBeFalse();
+
+        const errorMessage = await timeDeltaHarness.getErrorMessage();
+        expect(errorMessage).toBeNull();
+    });
+
+    it("should not display error message if every input was not touched even though it is invalid", async () => {
+        const isInvalid = await timeDeltaHarness.isEveryInputInvalid();
+        expect(isInvalid).toBeTrue();
+
+        const isUntouched = await timeDeltaHarness.isEveryInputUntouched();
+        expect(isUntouched).toBeTrue();
+
+        const errorMessage = await timeDeltaHarness.getErrorMessage();
+        expect(errorMessage).toBeNull();
     });
 });

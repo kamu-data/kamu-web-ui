@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved handling of expired token
 ### Added
 - Added FormValidationErrorsDirective for all form errors
+- Added lazy loading for application routing
 
 ## [0.52.1] - 2025-07-17
 ### Fixed

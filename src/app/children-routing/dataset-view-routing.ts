@@ -5,6 +5,8 @@
  * included in the LICENSE file.
  */
 
+/* istanbul ignore file */
+
 import { Routes } from "@angular/router";
 import { AuthenticatedGuard } from "../auth/guards/authenticated.guard";
 import { datasetInfoResolverFn } from "../common/resolvers/dataset-info.resolver";

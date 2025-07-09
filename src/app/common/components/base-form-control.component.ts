@@ -100,6 +100,7 @@ export abstract class BaseFormControlComponent<TValue>
     protected onFormStatusChange(): void {
         this.onTouched();
         this.onValidatorChange();
+        this.cdr.markForCheck();
     }
 
     public validate(_: AbstractControl): ValidationErrors | null {

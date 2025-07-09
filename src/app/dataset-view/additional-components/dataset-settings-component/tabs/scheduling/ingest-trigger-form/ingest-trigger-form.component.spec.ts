@@ -17,15 +17,30 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { HarnessLoader } from "@angular/cdk/testing";
 import { Component, ViewChild } from "@angular/core";
 import { IngestTriggerFormHarness } from "./ingest-trigger-form.harness";
+import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 @Component({
     standalone: true,
-    imports: [IngestTriggerFormComponent],
-    template: `<app-ingest-trigger-form [datasetBasics]="datasetBasics" [updateStateToggleLabel]="label" />`,
+    imports: [
+        //-----//
+        FormsModule,
+        ReactiveFormsModule,
+        //-----//
+        IngestTriggerFormComponent,
+    ],
+    template: `<app-ingest-trigger-form
+        [form]="hostForm.controls.ingestTrigger"
+        [datasetBasics]="datasetBasics"
+        [updateStateToggleLabel]="label"
+    />`,
 })
 class TestIngestTriggerFormComponent {
     public readonly datasetBasics: DatasetBasicsFragment = mockDatasetBasicsRootFragment;
     public readonly label = "Enable automatic updates";
+
+    public readonly hostForm = new FormGroup({
+        ingestTrigger: IngestTriggerFormComponent.buildForm(),
+    });
 
     @ViewChild(IngestTriggerFormComponent)
     public formComponent: IngestTriggerFormComponent;

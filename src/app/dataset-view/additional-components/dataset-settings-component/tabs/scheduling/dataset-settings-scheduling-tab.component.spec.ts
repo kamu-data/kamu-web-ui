@@ -15,13 +15,18 @@ import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment 
 import { DatasetFlowTriggerService } from "../../services/dataset-flow-trigger.service";
 import { TimeDelta, TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { ScheduleType } from "../../dataset-settings.model";
-import { IngestTriggerFormValue } from "./ingest-trigger-form/ingest-trigger-form.types";
 import { getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { HarnessLoader } from "@angular/cdk/testing";
+import { IngestTriggerFormHarness } from "./ingest-trigger-form/ingest-trigger-form.harness";
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 
 describe("DatasetSettingsSchedulingTabComponent", () => {
     let component: DatasetSettingsSchedulingTabComponent;
     let fixture: ComponentFixture<DatasetSettingsSchedulingTabComponent>;
     let datasetFlowTriggerService: DatasetFlowTriggerService;
+
+    let loader: HarnessLoader;
+    let ingestTriggerFormHarness: IngestTriggerFormHarness;
 
     const MOCK_PARAM_EVERY = 10;
     const MOCK_PARAM_UNIT = TimeUnit.Minutes;
@@ -47,35 +52,44 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
             schedule: null,
             paused: true,
         };
+
         fixture.detectChanges();
+        await fixture.whenStable();
+
+        loader = TestbedHarnessEnvironment.loader(fixture);
+        ingestTriggerFormHarness = await loader.getHarness(IngestTriggerFormHarness);
     });
 
+    function getSaveButton(): HTMLButtonElement {
+        return getElementByDataTestId(fixture, "save-scheduling-btn") as HTMLButtonElement;
+    }
+
     it("should create", () => {
-        fixture.detectChanges();
         expect(component).toBeTruthy();
+        expect(ingestTriggerFormHarness).toBeTruthy();
     });
 
     it("should check 'Save' button is disabled with no schedule defined", () => {
-        const saveButton: HTMLButtonElement = getElementByDataTestId(
-            fixture,
-            "save-scheduling-btn",
-        ) as HTMLButtonElement;
+        expect(component.form.status).toBe("INVALID");
+
+        const saveButton = getSaveButton();
         expect(saveButton.disabled).toBeTrue();
     });
 
-    it("should check 'Save' button works for ROOT dataset with time delta", () => {
+    it("should check 'Save' button works for ROOT dataset with time delta", async () => {
         const setDatasetFlowTriggersSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTriggers").and.callThrough();
 
-        component.form.setValue({
-            ingestTrigger: {
-                updatesEnabled: true,
-                __typename: ScheduleType.TIME_DELTA,
-                timeDelta: MOCK_INPUT_TIME_DELTA,
-                cron: { cronExpression: "* * * * *" }, // Should be ignored
-            } as IngestTriggerFormValue,
+        await ingestTriggerFormHarness.enableUpdates();
+        await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.TIME_DELTA);
+        await ingestTriggerFormHarness.setTimeDeltaSchedule({
+            every: MOCK_PARAM_EVERY,
+            unit: MOCK_PARAM_UNIT,
         });
 
-        component.saveScheduledUpdates();
+        const saveButton = getSaveButton();
+        expect(saveButton.disabled).toBeFalse();
+
+        saveButton.click();
 
         expect(setDatasetFlowTriggersSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
@@ -88,20 +102,17 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         );
     });
 
-    it("should check 'Save' button works for ROOT dataset with cron expression", () => {
+    it("should check 'Save' button works for ROOT dataset with cron expression", async () => {
         const setDatasetFlowTriggersSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTriggers").and.callThrough();
 
-        component.form.setValue({
-            ingestTrigger: {
-                updatesEnabled: true,
-                __typename: ScheduleType.CRON_5_COMPONENT_EXPRESSION,
-                timeDelta: { every: 1, unit: TimeUnit.Minutes }, // Should be ignored
-                cron: { cronExpression: MOCK_CRON_EXPRESSION },
-            } as IngestTriggerFormValue,
-        });
-        fixture.detectChanges();
+        await ingestTriggerFormHarness.enableUpdates();
+        await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
+        await ingestTriggerFormHarness.setCronExpression(MOCK_CRON_EXPRESSION);
 
-        component.saveScheduledUpdates();
+        const saveButton = getSaveButton();
+        expect(saveButton.disabled).toBeFalse();
+
+        saveButton.click();
 
         expect(setDatasetFlowTriggersSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
@@ -114,42 +125,34 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         );
     });
 
-    it("should check 'Save' button is ignored in invalid state for time delta", () => {
+    it("should check 'Save' button is ignored in invalid state for time delta", async () => {
         const setDatasetFlowTriggersSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTriggers").and.stub();
 
-        component.form.patchValue({
-            ingestTrigger: {
-                updatesEnabled: true,
-                __typename: ScheduleType.TIME_DELTA,
-                timeDelta: {
-                    every: 100, // Invalid value
-                    unit: TimeUnit.Minutes,
-                },
-                cron: null,
-            } as IngestTriggerFormValue,
+        await ingestTriggerFormHarness.enableUpdates();
+        await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.TIME_DELTA);
+        await ingestTriggerFormHarness.setTimeDeltaSchedule({
+            every: 100, // Invalid value
+            unit: TimeUnit.Minutes,
         });
-        fixture.detectChanges();
 
-        component.saveScheduledUpdates();
+        const saveButton = getSaveButton();
+        expect(saveButton.disabled).toBeTrue();
 
+        saveButton.click(); // will be ignored
         expect(setDatasetFlowTriggersSpy).not.toHaveBeenCalled();
     });
 
-    it("should check 'Save' button is ignored in invalid state for cron expression", () => {
+    it("should check 'Save' button is ignored in invalid state for cron expression", async () => {
         const setDatasetFlowTriggersSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTriggers").and.stub();
 
-        component.form.patchValue({
-            ingestTrigger: {
-                updatesEnabled: true,
-                __typename: ScheduleType.CRON_5_COMPONENT_EXPRESSION,
-                timeDelta: null,
-                cron: { cronExpression: "invalid-cron-expression" }, // Invalid value
-            } as IngestTriggerFormValue,
-        });
-        fixture.detectChanges();
+        await ingestTriggerFormHarness.enableUpdates();
+        await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
+        await ingestTriggerFormHarness.setCronExpression("invalid-cron-expression"); // Invalid value
 
-        component.saveScheduledUpdates();
+        const saveButton = getSaveButton();
+        expect(saveButton.disabled).toBeTrue();
 
+        saveButton.click(); // will be ignored
         expect(setDatasetFlowTriggersSpy).not.toHaveBeenCalled();
     });
 });

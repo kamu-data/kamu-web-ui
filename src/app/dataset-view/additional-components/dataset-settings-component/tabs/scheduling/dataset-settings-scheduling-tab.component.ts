@@ -5,8 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from "@angular/core";
+import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { ScheduleType } from "../../dataset-settings.model";
 import {
@@ -50,14 +50,15 @@ import {
         IngestTriggerFormComponent,
     ],
 })
-export class DatasetSettingsSchedulingTabComponent extends BaseComponent implements OnInit {
+export class DatasetSettingsSchedulingTabComponent extends BaseComponent implements AfterViewInit {
     @Input(RoutingResolvers.DATASET_SETTINGS_SCHEDULING_KEY)
     public schedulingTabData: DatasetSettingsSchedulingTabData;
 
+    private readonly cdr = inject(ChangeDetectorRef);
     private readonly datasetFlowTriggerService = inject(DatasetFlowTriggerService);
 
     public readonly form: FormGroup<SchedulingSettingsFormType> = new FormGroup<SchedulingSettingsFormType>({
-        ingestTrigger: new FormControl<MaybeNull<IngestTriggerFormValue>>(null, [Validators.required]),
+        ingestTrigger: IngestTriggerFormComponent.buildForm(),
     });
 
     public get datasetBasics(): DatasetBasicsFragment {
@@ -68,11 +69,14 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
         return this.datasetBasics.kind === DatasetKind.Root;
     }
 
-    public ngOnInit(): void {
-        // Initialize the form value
-        this.form.patchValue({
-            ingestTrigger: this.buildInitialIngestTriggerFormValue(),
-        } as SchedulingSettingsFormValue);
+    public ngAfterViewInit() {
+        this.form.patchValue(
+            {
+                ingestTrigger: this.buildInitialIngestTriggerFormValue(),
+            } as SchedulingSettingsFormValue,
+            { emitEvent: true },
+        );
+        this.cdr.detectChanges();
     }
 
     private buildInitialIngestTriggerFormValue(): MaybeNull<IngestTriggerFormValue> {

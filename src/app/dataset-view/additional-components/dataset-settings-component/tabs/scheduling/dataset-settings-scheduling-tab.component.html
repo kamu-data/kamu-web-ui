@@ -7,7 +7,7 @@
                 <div class="w-100">
                     <app-ingest-trigger-form
                         data-test-id="ingest-trigger-form"
-                        formControlName="ingestTrigger"
+                        [form]="form.controls.ingestTrigger"
                         [datasetBasics]="datasetBasics"
                         [updateStateToggleLabel]="'Enable automatic updates'"
                     />

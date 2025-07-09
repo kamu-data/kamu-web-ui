@@ -5,12 +5,11 @@
  * included in the LICENSE file.
  */
 
-import { FormControl } from "@angular/forms";
-import { MaybeNull } from "src/app/interface/app.types";
-import { IngestTriggerFormValue } from "./ingest-trigger-form/ingest-trigger-form.types";
+import { FormGroup } from "@angular/forms";
+import { IngestTriggerFormType, IngestTriggerFormValue } from "./ingest-trigger-form/ingest-trigger-form.types";
 
 export interface SchedulingSettingsFormType {
-    ingestTrigger: FormControl<MaybeNull<IngestTriggerFormValue>>;
+    ingestTrigger: FormGroup<IngestTriggerFormType>;
 }
 
 export interface SchedulingSettingsFormValue {

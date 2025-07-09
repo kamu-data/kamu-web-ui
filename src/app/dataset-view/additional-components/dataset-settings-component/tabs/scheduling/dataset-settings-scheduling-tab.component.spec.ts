@@ -76,6 +76,65 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         expect(saveButton.disabled).toBeTrue();
     });
 
+    it("should check form is valid when loaded with time delta schedule", async () => {
+        component.schedulingTabData.paused = false;
+        component.schedulingTabData.schedule = {
+            __typename: "TimeDelta",
+            every: MOCK_PARAM_EVERY,
+            unit: MOCK_PARAM_UNIT,
+        };
+        component.ngAfterViewInit();
+        fixture.detectChanges();
+
+        expect(component.form.status).toBe("VALID");
+
+        const domIngestTriggerFormValue = await ingestTriggerFormHarness.currentFormValue();
+        expect(domIngestTriggerFormValue).toEqual({
+            updatesEnabled: true,
+            __typename: ScheduleType.TIME_DELTA,
+            timeDelta: {
+                every: MOCK_PARAM_EVERY,
+                unit: MOCK_PARAM_UNIT,
+            },
+            cron: { cronExpression: null },
+        });
+        expect(component.form.getRawValue()).toEqual({
+            ingestTrigger: {
+                ...domIngestTriggerFormValue,
+                cron: null,
+            },
+        });
+    });
+
+    it("should check form is valid when loaded with cron schedule", async () => {
+        component.schedulingTabData.paused = false;
+        component.schedulingTabData.schedule = {
+            __typename: "Cron5ComponentExpression",
+            cron5ComponentExpression: MOCK_CRON_EXPRESSION,
+        };
+        component.ngAfterViewInit();
+        fixture.detectChanges();
+
+        expect(component.form.status).toBe("VALID");
+
+        const domIngestTriggerFormValue = await ingestTriggerFormHarness.currentFormValue();
+        expect(domIngestTriggerFormValue).toEqual({
+            updatesEnabled: true,
+            __typename: ScheduleType.CRON_5_COMPONENT_EXPRESSION,
+            timeDelta: {
+                every: null,
+                unit: null,
+            },
+            cron: { cronExpression: MOCK_CRON_EXPRESSION },
+        });
+        expect(component.form.getRawValue()).toEqual({
+            ingestTrigger: {
+                ...domIngestTriggerFormValue,
+                timeDelta: null,
+            },
+        });
+    });
+
     it("should check 'Save' button works for ROOT dataset with time delta", async () => {
         const setDatasetFlowTriggersSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTriggers").and.callThrough();
 

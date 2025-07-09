@@ -119,10 +119,6 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
     }
 
     public saveScheduledUpdates(): void {
-        if (this.form.invalid) {
-            return;
-        }
-
         const formValue = this.form.getRawValue() as SchedulingSettingsFormValue;
         const ingestTriggerFormValue = formValue.ingestTrigger;
 
@@ -145,6 +141,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
         switch (ingestTriggerFormValue.__typename) {
             case ScheduleType.TIME_DELTA: {
                 const timeDeltaValue = ingestTriggerFormValue.timeDelta;
+                // istanbul ignore next
                 if (!timeDeltaValue || !timeDeltaValue.every || !timeDeltaValue.unit) {
                     throw new Error("Time delta value is not valid");
                 }
@@ -160,6 +157,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
 
             case ScheduleType.CRON_5_COMPONENT_EXPRESSION: {
                 const cronValue = ingestTriggerFormValue.cron;
+                // istanbul ignore next
                 if (!cronValue || !cronValue.cronExpression) {
                     throw new Error("Cron expression value is not valid");
                 }

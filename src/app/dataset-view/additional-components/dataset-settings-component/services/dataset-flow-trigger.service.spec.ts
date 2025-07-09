@@ -15,7 +15,7 @@ import { provideToastr, ToastrService } from "ngx-toastr";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import { of } from "rxjs";
 import {
-    mockGetDatasetFlowTriggersQuery,
+    mockGetDatasetFlowTriggersCronQuery,
     mockSetDatasetFlowTriggersError,
     mockSetDatasetFlowTriggerSuccess,
 } from "src/app/api/mock/dataset-flow.mock";
@@ -63,7 +63,7 @@ describe("DatasetFlowTriggerService", () => {
     });
 
     it("should check fetchDatasetFlowTriggers method", () => {
-        spyOn(datasetFlowApi, "getDatasetFlowTriggers").and.returnValue(of(mockGetDatasetFlowTriggersQuery));
+        spyOn(datasetFlowApi, "getDatasetFlowTriggers").and.returnValue(of(mockGetDatasetFlowTriggersCronQuery));
         const subscription$ = service
             .fetchDatasetFlowTriggers(MOCK_DATASET_ID, DatasetFlowType.Ingest)
             .subscribe((res: GetDatasetFlowTriggersQuery) => {
@@ -71,7 +71,7 @@ describe("DatasetFlowTriggerService", () => {
                     "Cron5ComponentExpression",
                 );
                 expect(res.datasets.byId?.flows.triggers.byType?.paused).toEqual(
-                    mockGetDatasetFlowTriggersQuery.datasets.byId?.flows.triggers.byType?.paused,
+                    mockGetDatasetFlowTriggersCronQuery.datasets.byId?.flows.triggers.byType?.paused,
                 );
             });
 

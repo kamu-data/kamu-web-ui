@@ -32,6 +32,7 @@ import {
     TaskStatus,
     DatasetTriggerTransformFlowMutation,
     DatasetTriggerCompactionFlowMutation,
+    FlowTriggerScheduleRule,
 } from "./../kamu.graphql.interface";
 import { GetDatasetFlowConfigsQuery, DatasetKind, TimeUnit, TimeDeltaInput } from "../kamu.graphql.interface";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
@@ -227,18 +228,20 @@ export const mockSetDatasetFlowTriggersError: SetDatasetFlowTriggersMutation = {
     },
 };
 
-export const mockGetDatasetFlowTriggersQuery: GetDatasetFlowTriggersQuery = {
+export const mockCronSchedule: FlowTriggerScheduleRule = {
+    __typename: "Cron5ComponentExpression",
+    cron5ComponentExpression: "* * * * ?",
+};
+
+export const mockGetDatasetFlowTriggersCronQuery: GetDatasetFlowTriggersQuery = {
     datasets: {
         __typename: "Datasets",
         byId: {
             flows: {
                 triggers: {
                     byType: {
-                        paused: true,
-                        schedule: {
-                            __typename: "Cron5ComponentExpression",
-                            cron5ComponentExpression: "* * * * ?",
-                        },
+                        paused: false,
+                        schedule: mockCronSchedule,
                     },
                 },
             },

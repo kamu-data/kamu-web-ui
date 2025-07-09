@@ -34,7 +34,7 @@ export const datasetSettingsSchedulingTabResolverFn: ResolveFn<DatasetSettingsSc
                     map((query: GetDatasetFlowTriggersQuery) => {
                         const flowTriggers = query.datasets.byId?.flows.triggers.byType;
                         const paused = flowTriggers?.paused ?? true;
-                        const schedule = flowTriggers?.schedule;
+                        const schedule = flowTriggers?.schedule ?? null;
                         return {
                             datasetBasics: data.datasetBasics,
                             datasetPermissions: data.datasetPermissions,

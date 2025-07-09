@@ -51,7 +51,7 @@ import {
     mockDatasetFlowsInitiatorsQuery,
     mockSetIngestFlowConfigMutation,
     mockSetDatasetFlowTriggersSuccess,
-    mockGetDatasetFlowTriggersQuery,
+    mockGetDatasetFlowTriggersCronQuery,
     mockDatasetPauseFlowsMutationSuccess,
     mockDatasetResumeFlowsMutationSuccess,
     mockDatasetAllFlowsPausedQuery,
@@ -333,7 +333,7 @@ describe("DatasetFlowApi", () => {
             })
             .subscribe((res: GetDatasetFlowTriggersQuery) => {
                 expect(res.datasets.byId?.flows.triggers.byType?.paused).toEqual(
-                    mockGetDatasetFlowTriggersQuery.datasets.byId?.flows.triggers.byType?.paused,
+                    mockGetDatasetFlowTriggersCronQuery.datasets.byId?.flows.triggers.byType?.paused,
                 );
                 expect(res.datasets.byId?.flows.triggers.byType?.schedule?.__typename).toEqual(
                     "Cron5ComponentExpression",
@@ -344,7 +344,7 @@ describe("DatasetFlowApi", () => {
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
         expect(op.operation.variables.datasetFlowType).toEqual(DatasetFlowType.Ingest);
         op.flush({
-            data: mockGetDatasetFlowTriggersQuery,
+            data: mockGetDatasetFlowTriggersCronQuery,
         });
     });
 

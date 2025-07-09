@@ -82,40 +82,42 @@ export class IngestTriggerFormComponent extends BaseFormControlComponent<IngestT
     }
 
     private setupFormControlRelationships(): void {
-        this.updatesEnabled.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((updated: boolean) => {
-            if (updated) {
-                this.scheduleType.enable();
-            } else {
-                this.scheduleType.disable();
-            }
-        });
+        this.updatesEnabledControl.valueChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((updated: boolean) => {
+                if (updated) {
+                    this.scheduleTypeControl.enable();
+                } else {
+                    this.scheduleTypeControl.disable();
+                }
+            });
 
-        this.scheduleType.valueChanges
+        this.scheduleTypeControl.valueChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((pollingType: ScheduleType) => {
                 if (pollingType === ScheduleType.TIME_DELTA) {
-                    this.cronExpression.disable();
-                    this.timeDelta.enable();
+                    this.cronExpressionControl.disable();
+                    this.timeDeltaControl.enable();
                 } else if (pollingType === ScheduleType.CRON_5_COMPONENT_EXPRESSION) {
-                    this.timeDelta.disable();
-                    this.cronExpression.enable();
+                    this.timeDeltaControl.disable();
+                    this.cronExpressionControl.enable();
                 }
             });
     }
 
-    public get scheduleType(): AbstractControl {
+    public get scheduleTypeControl(): AbstractControl {
         return this.form.controls.__typename;
     }
 
-    public get timeDelta(): AbstractControl {
+    public get timeDeltaControl(): AbstractControl {
         return this.form.controls.timeDelta;
     }
 
-    public get cronExpression(): AbstractControl {
+    public get cronExpressionControl(): AbstractControl {
         return this.form.controls.cron;
     }
 
-    public get updatesEnabled(): AbstractControl {
+    public get updatesEnabledControl(): AbstractControl {
         return this.form.controls.updatesEnabled;
     }
 }

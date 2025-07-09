@@ -14,6 +14,7 @@ import { TimeDeltaFormValue } from "src/app/common/components/time-delta-form/ti
 import { CronExpressionFormHarness } from "src/app/common/components/cron-expression-form/cron-expression-form.harness";
 import { TimeDeltaFormHarness } from "src/app/common/components/time-delta-form/time-delta-form.harness";
 import { MatRadioButtonHarness } from "@angular/material/radio/testing";
+import { IngestTriggerFormValue } from "./ingest-trigger-form.types";
 
 export class IngestTriggerFormHarness extends ComponentHarness {
     public static readonly hostSelector = "app-ingest-trigger-form";
@@ -98,5 +99,47 @@ export class IngestTriggerFormHarness extends ComponentHarness {
     public async isUpdatingEnabled(): Promise<boolean> {
         const toggle = await this.locatorUpdatesToggle();
         return toggle.isChecked();
+    }
+
+    public async getScheduleType(): Promise<ScheduleType | null> {
+        const scheduleTypeRadio = await this.locatorScheduleTypeTimeDeltaRadio();
+        const isTimeDeltaSelected = await scheduleTypeRadio.isChecked();
+
+        const cronRadio = await this.locatorScheduleTypeCronRadio();
+        const isCronSelected = await cronRadio.isChecked();
+
+        if (isTimeDeltaSelected) {
+            return ScheduleType.TIME_DELTA;
+        } else if (isCronSelected) {
+            return ScheduleType.CRON_5_COMPONENT_EXPRESSION;
+        }
+        return null;
+    }
+
+    public async currentFormValue(): Promise<IngestTriggerFormValue> {
+        const updatesEnabled = await this.isUpdatingEnabled();
+        const scheduleType = await this.getScheduleType();
+
+        let timeDelta: TimeDeltaFormValue = { every: null, unit: null };
+        let cron: { cronExpression: string | null } = { cronExpression: null };
+
+        if (scheduleType === ScheduleType.TIME_DELTA) {
+            const timeDeltaForm = await this.locatorTimeDeltaForm();
+            if (timeDeltaForm) {
+                timeDelta = await timeDeltaForm.getTimeDelta();
+            }
+        } else if (scheduleType === ScheduleType.CRON_5_COMPONENT_EXPRESSION) {
+            const cronForm = await this.locatorCronForm();
+            if (cronForm) {
+                cron = { cronExpression: await cronForm.getCronExpression() };
+            }
+        }
+
+        return {
+            updatesEnabled,
+            __typename: scheduleType,
+            timeDelta,
+            cron,
+        };
     }
 }

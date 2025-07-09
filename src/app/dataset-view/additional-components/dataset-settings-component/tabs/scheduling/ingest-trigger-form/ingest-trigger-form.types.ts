@@ -20,7 +20,7 @@ export interface IngestTriggerFormType {
 
 export interface IngestTriggerFormValue {
     updatesEnabled: boolean;
-    __typename: ScheduleType;
+    __typename: MaybeNull<ScheduleType>;
     timeDelta: MaybeNull<TimeDeltaFormValue>;
     cron: MaybeNull<CronExpressionFormValue>;
 }

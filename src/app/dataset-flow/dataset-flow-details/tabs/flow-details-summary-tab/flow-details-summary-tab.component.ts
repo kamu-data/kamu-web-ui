@@ -8,7 +8,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FlowOutcomeDataFragment, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/values/app.values";
-import { DataHelpers } from "src/app/common/helpers/data.helpers";
 import { DatasetFlowDetailsHelpers } from "../flow-details-history-tab/flow-details-history-tab.helpers";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetFlowByIdResponse } from "../../dataset-flow-details.types";
@@ -42,10 +41,6 @@ export class FlowDetailsSummaryTabComponent {
 
     public flowDuration(): string {
         return FlowTableHelpers.durationTimingText(this.flowDetails);
-    }
-
-    public durationFlowEvent(startEventTime: string, endEventTime: string): string {
-        return DataHelpers.durationTask(startEventTime, endEventTime);
     }
 
     public flowOutcomeMessage: Record<string, string> = {

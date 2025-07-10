@@ -57,8 +57,8 @@ export class AccessTokenApi {
         );
     }
 
-    public revokeAccessToken(tokenId: string): Observable<RevokeAccessTokenMutation> {
-        return this.revokeAccessTokenGQL.mutate({ tokenId }).pipe(
+    public revokeAccessToken(accountId: string, tokenId: string): Observable<RevokeAccessTokenMutation> {
+        return this.revokeAccessTokenGQL.mutate({ accountId, tokenId }).pipe(
             first(),
             map((result: MutationResult<RevokeAccessTokenMutation>) => {
                 return result.data as RevokeAccessTokenMutation;

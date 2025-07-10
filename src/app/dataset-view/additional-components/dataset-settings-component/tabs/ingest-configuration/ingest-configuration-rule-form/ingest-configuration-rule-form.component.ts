@@ -5,12 +5,16 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { FlowConfigRuleIngest } from "src/app/api/kamu.graphql.interface";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { IngestConfigurationRuleFormType } from "../dataset-settings-ingest-configuration-tab.data";
+import {
+    IngestConfigurationRuleFormType,
+    IngestConfigurationRuleFormValue,
+} from "./ingest-configuration-rule-form.types";
+import { MaybeNull } from "src/app/interface/app.types";
 
 @Component({
     selector: "app-ingest-configuration-rule-form",
@@ -25,26 +29,24 @@ import { IngestConfigurationRuleFormType } from "../dataset-settings-ingest-conf
         MatCheckboxModule,
     ],
 })
-export class IngestConfigurationRuleFormComponent extends BaseComponent implements OnInit {
-    @Input({ required: true }) public ingestionRule: FlowConfigRuleIngest;
+export class IngestConfigurationRuleFormComponent extends BaseComponent {
+    @Input({ required: true }) public form: FormGroup<IngestConfigurationRuleFormType>;
 
-    @Output() public changeConfigurationRuleEmit = new EventEmitter<FormGroup<IngestConfigurationRuleFormType>>();
-
-    public ingestConfigurationRuleForm = new FormGroup<IngestConfigurationRuleFormType>({
-        fetchUncacheable: new FormControl<boolean>(false, { nonNullable: true }),
-    });
-
-    public ngOnInit(): void {
-        this.subscribeToFormValueChanges();
-
-        this.ingestConfigurationRuleForm.patchValue({
-            fetchUncacheable: this.ingestionRule.fetchUncacheable,
+    public static buildForm(): FormGroup<IngestConfigurationRuleFormType> {
+        return new FormGroup<IngestConfigurationRuleFormType>({
+            fetchUncacheable: new FormControl<boolean>(false, { nonNullable: true }),
         });
     }
 
-    private subscribeToFormValueChanges(): void {
-        this.ingestConfigurationRuleForm.valueChanges.subscribe(() => {
-            this.changeConfigurationRuleEmit.emit(this.ingestConfigurationRuleForm);
-        });
+    public static buildFormValue(ingestionRule: MaybeNull<FlowConfigRuleIngest>): IngestConfigurationRuleFormValue {
+        return {
+            fetchUncacheable: ingestionRule?.fetchUncacheable ?? false,
+        };
+    }
+
+    public static buildFlowConfigIngestInput(formValue: IngestConfigurationRuleFormValue): FlowConfigRuleIngest {
+        return {
+            fetchUncacheable: formValue.fetchUncacheable,
+        };
     }
 }

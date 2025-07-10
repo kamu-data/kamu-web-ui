@@ -8,7 +8,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from "@angular/core";
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { DatasetBasicsFragment, DatasetKind, FlowRetryPolicy } from "src/app/api/kamu.graphql.interface";
+import { DatasetBasicsFragment, DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowConfigService } from "../../services/dataset-flow-config.service";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -59,10 +59,6 @@ export class DatasetSettingsIngestConfigurationTabComponent extends BaseComponen
 
     public get isRootDataset(): boolean {
         return this.datasetBasics.kind === DatasetKind.Root;
-    }
-
-    public get retryPolicy(): FlowRetryPolicy | null {
-        return this.ingestConfigurationTabData.retryPolicy;
     }
 
     public ngAfterViewInit() {

@@ -7,17 +7,16 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { IngestTriggerFormComponent } from "./ingest-trigger-form.component";
-import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { DatasetBasicsFragment, TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { ScheduleType } from "../../../dataset-settings.model";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { HarnessLoader } from "@angular/cdk/testing";
 import { Component, ViewChild } from "@angular/core";
 import { IngestTriggerFormHarness } from "./ingest-trigger-form.harness";
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { TimeUnit } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     standalone: true,
@@ -28,14 +27,9 @@ import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
         //-----//
         IngestTriggerFormComponent,
     ],
-    template: `<app-ingest-trigger-form
-        [form]="hostForm.controls.ingestTrigger"
-        [datasetBasics]="datasetBasics"
-        [updateStateToggleLabel]="label"
-    />`,
+    template: `<app-ingest-trigger-form [form]="hostForm.controls.ingestTrigger" [updateStateToggleLabel]="label" />`,
 })
 class TestIngestTriggerFormComponent {
-    public readonly datasetBasics: DatasetBasicsFragment = mockDatasetBasicsRootFragment;
     public readonly label = "Enable automatic updates";
 
     public readonly hostForm = new FormGroup({

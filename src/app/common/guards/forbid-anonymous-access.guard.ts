@@ -7,16 +7,15 @@
 
 import { inject } from "@angular/core";
 import { CanActivateFn } from "@angular/router";
-import { IS_ALLOWED_ANONYMOUS_USERS } from "src/app/app-config.model";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { NavigationService } from "src/app/services/navigation.service";
 
-export const allowAnonymousGuard: CanActivateFn = () => {
-    const canAccessAnonymousUsers = inject(IS_ALLOWED_ANONYMOUS_USERS);
+export const forbidAnonymousAccessGuardFn: CanActivateFn = () => {
     const loggedUserService = inject(LoggedUserService);
     const navigationService = inject(NavigationService);
+
     const loggedUser = loggedUserService.maybeCurrentlyLoggedInUser;
-    if (canAccessAnonymousUsers() || loggedUser) {
+    if (loggedUser) {
         return true;
     } else {
         navigationService.navigateToLogin();

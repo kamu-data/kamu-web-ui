@@ -37,11 +37,10 @@ import { HttpLink } from "apollo-angular/http";
 import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
 import AppValues from "./app/common/values/app.values";
 import { provideRouter, withComponentInputBinding, withRouterConfig } from "@angular/router";
-import { routes } from "./app/app-routing";
 import { provideToastr } from "ngx-toastr";
-import { IS_ALLOWED_ANONYMOUS_USERS } from "./app/app-config.model";
 import { NavigationService } from "./app/services/navigation.service";
 import ProjectLinks from "./app/project-links";
+import { provideCatchAllRoute, provideConditionalGuardedRoutes, PUBLIC_ROUTES } from "./app/app-routing";
 
 const Services = [
     Apollo,
@@ -144,16 +143,6 @@ const Services = [
             disabled: true,
         },
     },
-    {
-        provide: IS_ALLOWED_ANONYMOUS_USERS,
-        useFactory: (appConfigService: AppConfigService) => {
-            return (): boolean => {
-                const allowAnonymousUsers = appConfigService.allowAnonymous;
-                return allowAnonymousUsers;
-            };
-        },
-        deps: [AppConfigService],
-    },
 ];
 
 if (environment.production) {
@@ -170,13 +159,21 @@ bootstrapApplication(AppComponent, {
         ),
         provideAnimations(),
         provideHttpClient(withInterceptorsFromDi()),
+
+        // 3-phase routing table:
+        //  1. Public routes (no guards)
+        //  2. Conditional guarded routes (guards that can be skipped)
+        //  3. Catch-all route (404 page)
         provideRouter(
-            routes,
+            PUBLIC_ROUTES,
             withRouterConfig({
                 onSameUrlNavigation: "reload",
             }),
             withComponentInputBinding(),
         ),
+        provideConditionalGuardedRoutes(),
+        provideCatchAllRoute(),
+
         provideToastr({
             timeOut: 5000,
             positionClass: "toast-bottom-right",

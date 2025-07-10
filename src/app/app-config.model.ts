@@ -8,7 +8,6 @@
 import { Eip1193Provider } from "ethers";
 import { FeatureShowMode } from "./interface/feature-flags.interface";
 import { AccountProvider } from "./api/kamu.graphql.interface";
-import { InjectionToken } from "@angular/core";
 
 export interface AppRuntimeConfig {
     apiServerGqlUrl: string;
@@ -53,5 +52,3 @@ declare global {
         ethereum?: Eip1193Provider;
     }
 }
-
-export const IS_ALLOWED_ANONYMOUS_USERS = new InjectionToken<() => boolean>("IS_ALLOWED_ANONYMOUS_USERS");

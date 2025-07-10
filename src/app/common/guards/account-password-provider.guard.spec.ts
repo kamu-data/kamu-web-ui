@@ -16,6 +16,9 @@ import { AccountProvider } from "src/app/api/kamu.graphql.interface";
 describe("accountPasswordProviderGuard", () => {
     let loggedUserService: LoggedUserService;
 
+    const mockRouterStateSnapshot = {} as RouterStateSnapshot;
+    const mockActivatedRouteSnapshot = {} as ActivatedRouteSnapshot;
+
     const executeGuard: CanActivateFn = (...guardParameters) =>
         TestBed.runInInjectionContext(() => accountPasswordProviderGuard(...guardParameters));
 
@@ -31,20 +34,19 @@ describe("accountPasswordProviderGuard", () => {
     });
 
     it("should check to return true", async () => {
-        const routeSnapshot = {} as ActivatedRouteSnapshot;
-        const state = {} as RouterStateSnapshot;
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-        const result = await executeGuard(routeSnapshot, state);
+        const result = await executeGuard(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
         expect(result).toEqual(true);
     });
 
     it("should check to return false", async () => {
-        const routeSnapshot = {} as ActivatedRouteSnapshot;
-        const state = {} as RouterStateSnapshot;
         const cloneMockAccountDetails = structuredClone(mockAccountDetails);
         cloneMockAccountDetails.accountProvider = AccountProvider.OauthGithub;
+
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(cloneMockAccountDetails);
-        const result = await executeGuard(routeSnapshot, state);
+
+        const result = await executeGuard(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
+
         expect(result).toEqual(false);
     });
 });

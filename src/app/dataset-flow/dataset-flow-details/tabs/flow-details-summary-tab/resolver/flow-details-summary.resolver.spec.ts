@@ -16,7 +16,9 @@ import { mockDatasetFlowByIdResponse } from "src/app/api/mock/dataset-flow.mock"
 import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("flowDetailsSummaryResolverFn", () => {
-    const executeResolver: ResolveFn<DatasetFlowByIdResponse> = (...resolverParameters) =>
+    const mockState = {} as RouterStateSnapshot;
+
+    const executeResolver: ResolveFn<DatasetFlowByIdResponse | null> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => flowDetailsSummaryResolverFn(...resolverParameters));
 
     beforeEach(() => {
@@ -29,8 +31,7 @@ describe("flowDetailsSummaryResolverFn", () => {
         expect(executeResolver).toBeTruthy();
     });
 
-    it("should check activeTabResolver", async () => {
-        const mockState = {} as RouterStateSnapshot;
+    it("should return flow details data from parent route", () => {
         const mockRoute = {
             parent: {
                 data: {
@@ -38,8 +39,50 @@ describe("flowDetailsSummaryResolverFn", () => {
                 } as Data,
             },
         } as ActivatedRouteSnapshot;
-        const result = await executeResolver(mockRoute, mockState);
 
+        const result = executeResolver(mockRoute, mockState);
+
+        expect(result).toBe(mockDatasetFlowByIdResponse);
         expect(result).toEqual(mockDatasetFlowByIdResponse);
+    });
+
+    describe("should return null when no data is available", () => {
+        const testCases = [
+            {
+                description: "parent route has no data",
+                mockRoute: {
+                    parent: {
+                        data: {} as Data,
+                    },
+                } as ActivatedRouteSnapshot,
+            },
+            {
+                description: "parent route data is null",
+                mockRoute: {
+                    parent: {
+                        data: {
+                            [RoutingResolvers.FLOW_DETAILS_KEY]: null,
+                        } as Data,
+                    },
+                } as ActivatedRouteSnapshot,
+            },
+            {
+                description: "parent route is null",
+                mockRoute: {
+                    parent: null,
+                } as ActivatedRouteSnapshot,
+            },
+            {
+                description: "parent route is undefined",
+                mockRoute: {} as ActivatedRouteSnapshot,
+            },
+        ];
+
+        testCases.forEach(({ description, mockRoute }) => {
+            it(`when ${description}`, () => {
+                const result = executeResolver(mockRoute, mockState);
+                expect(result).toBeNull();
+            });
+        });
     });
 });

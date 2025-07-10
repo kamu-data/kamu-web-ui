@@ -115,20 +115,6 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         return this.flowsData.datasetPermissions.permissions.flows.canRun;
     }
 
-    public navigateToAddPollingSource(): void {
-        this.navigationService.navigateToAddPollingSource({
-            accountName: this.flowsData.datasetBasics.owner.accountName,
-            datasetName: this.flowsData.datasetBasics.name,
-        });
-    }
-
-    public navigateToSetTransform(): void {
-        this.navigationService.navigateToSetTransform({
-            accountName: this.flowsData.datasetBasics.owner.accountName,
-            datasetName: this.flowsData.datasetBasics.name,
-        });
-    }
-
     public onPageChange(page: number): void {
         if (page === 1) {
             this.navigationService.navigateToDatasetView({

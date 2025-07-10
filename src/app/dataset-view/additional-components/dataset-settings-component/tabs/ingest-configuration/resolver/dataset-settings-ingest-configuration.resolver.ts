@@ -29,7 +29,7 @@ export const datasetSettingsIngestConfigurationResolverFn: ResolveFn<
             return datasetFlowConfigService.fetchDatasetFlowConfigs(data.datasetBasics.id, DatasetFlowType.Ingest).pipe(
                 map((ingestConfig: GetDatasetFlowConfigsQuery) => {
                     const fullConfig = ingestConfig.datasets.byId?.flows.configs.byType;
-                    const retryPolicy = fullConfig?.retryPolicy;
+                    const retryPolicy = fullConfig?.retryPolicy ?? null;
                     const flowConfigRule = fullConfig?.rule;
                     if (flowConfigRule?.__typename === "FlowConfigRuleIngest") {
                         return {

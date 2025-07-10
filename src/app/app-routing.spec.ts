@@ -68,7 +68,11 @@ describe("Router", () => {
                 {
                     provide: accountSettingsAccessTokensResolverFn,
                     useValue: {
-                        resolve: () => of(mockListAccessTokensQuery.auth.listAccessTokens as AccessTokenConnection),
+                        resolve: () =>
+                            of(
+                                mockListAccessTokensQuery.accounts.byId?.accessTokens
+                                    .listAccessTokens as AccessTokenConnection,
+                            ),
                     },
                 },
                 {

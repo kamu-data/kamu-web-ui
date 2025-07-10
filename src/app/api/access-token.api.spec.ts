@@ -56,10 +56,12 @@ describe("AccessTokenApi", () => {
         service
             .listAccessTokens({ accountId: TEST_ACCOUNT_ID, page: PAGE, perPage: PER_PAGE })
             .subscribe((list: ListAccessTokensQuery) => {
-                expect(list.auth.listAccessTokens.totalCount).toEqual(
-                    mockListAccessTokensQuery.auth.listAccessTokens.totalCount,
+                expect(list.accounts.byId?.accessTokens.listAccessTokens.totalCount).toEqual(
+                    mockListAccessTokensQuery.accounts.byId?.accessTokens.listAccessTokens.totalCount,
                 );
-                expect(list.auth.listAccessTokens.nodes).toEqual(mockListAccessTokensQuery.auth.listAccessTokens.nodes);
+                expect(list.accounts.byId?.accessTokens.listAccessTokens.nodes).toEqual(
+                    mockListAccessTokensQuery.accounts.byId?.accessTokens.listAccessTokens.nodes,
+                );
             });
         const op = controller.expectOne(ListAccessTokensDocument);
         expect(op.operation.variables.accountId).toEqual(TEST_ACCOUNT_ID);
@@ -73,9 +75,9 @@ describe("AccessTokenApi", () => {
 
     it("should check create access token", () => {
         service.createAccessToken(TEST_ACCOUNT_ID, TOKEN_NAME).subscribe((data: CreateAccessTokenMutation) => {
-            if (data.auth.createAccessToken.__typename === "CreateAccessTokenResultSuccess") {
-                expect(data.auth.createAccessToken.message).toEqual(
-                    mockCreateAccessTokenMutation.auth.createAccessToken.message,
+            if (data.accounts.byId?.accessTokens.createAccessToken.__typename === "CreateAccessTokenResultSuccess") {
+                expect(data.accounts.byId?.accessTokens.createAccessToken.message).toEqual(
+                    mockCreateAccessTokenMutation.accounts.byId?.accessTokens.createAccessToken.message as string,
                 );
             }
         });
@@ -111,9 +113,9 @@ describe("AccessTokenApi", () => {
     }));
 
     it("should check revoke access token", () => {
-        service.revokeAccessToken(TOKEN_ID).subscribe((data: RevokeAccessTokenMutation) => {
-            expect(data.auth.revokeAccessToken.message).toEqual(
-                mockRevokeAccessTokenMutation.auth.revokeAccessToken.message,
+        service.revokeAccessToken(TEST_ACCOUNT_ID, TOKEN_ID).subscribe((data: RevokeAccessTokenMutation) => {
+            expect(data.accounts.byId?.accessTokens.revokeAccessToken.message).toEqual(
+                mockRevokeAccessTokenMutation.accounts.byId?.accessTokens.revokeAccessToken.message,
             );
         });
 
@@ -127,7 +129,7 @@ describe("AccessTokenApi", () => {
 
     it("should check revoke access token with error", fakeAsync(() => {
         const subscription$ = service
-            .revokeAccessToken(TOKEN_ID)
+            .revokeAccessToken(TEST_ACCOUNT_ID, TOKEN_ID)
             .pipe(first())
             .subscribe({
                 next: () => fail("Unexpected success"),

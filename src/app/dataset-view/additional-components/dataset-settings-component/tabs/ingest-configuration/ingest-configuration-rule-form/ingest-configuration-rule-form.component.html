@@ -2,7 +2,11 @@
     <form [formGroup]="form">
         <span class="position-absolute text-muted group-box-label text-uppercase">Fetch options</span>
         <div class="d-flex align-items-center pt-3">
-            <mat-checkbox data-test-id="fetchUncacheable" formControlName="fetchUncacheable" color="primary">
+            <mat-checkbox
+                data-test-id="ingest-config-fetch-uncacheable"
+                formControlName="fetchUncacheable"
+                color="primary"
+            >
                 <div class="d-flex align-items-center">Fetch uncacheable</div>
             </mat-checkbox>
         </div>

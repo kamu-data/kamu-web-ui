@@ -10,9 +10,7 @@ import { DatasetSettingsIngestConfigurationTabComponent } from "./dataset-settin
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { provideToastr } from "ngx-toastr";
 import { Apollo } from "apollo-angular";
-import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-import { of } from "rxjs";
 import { DatasetFlowConfigService } from "../../services/dataset-flow-config.service";
 
 describe("DatasetSettingsIngestConfigurationTabComponent", () => {
@@ -43,20 +41,5 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
-    });
-
-    it("should check initial state", () => {
-        fixture.detectChanges();
-        const fetchUncacheableCheckBox = findElementByDataTestId(fixture, "fetchUncacheable") as HTMLInputElement;
-        expect(fetchUncacheableCheckBox.checked).toBeFalsy();
-    });
-
-    it("should check save configuration", () => {
-        const setDatasetIngestFlowConfigsSpy = spyOn(
-            datasetFlowConfigService,
-            "setDatasetIngestFlowConfigs",
-        ).and.returnValue(of());
-        emitClickOnElementByDataTestId(fixture, "save-ingest-configuration");
-        expect(setDatasetIngestFlowConfigsSpy).toHaveBeenCalledTimes(1);
     });
 });

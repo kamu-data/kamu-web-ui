@@ -58,7 +58,7 @@ export class FlowRetryPolicyFormComponent extends BaseComponent implements OnIni
     public readonly RETRY_TOOLTIP: string = FlowTooltipsTexts.RETRY_SELECTOR_TOOLTIP;
 
     public static buildForm(): FormGroup<FlowRetryPolicyFormType> {
-        return new FormGroup<FlowRetryPolicyFormType>({
+        const form = new FormGroup<FlowRetryPolicyFormType>({
             retriesEnabled: new FormControl<boolean>(false, { validators: [Validators.required] }),
             maxAttempts: new FormControl<number>(FlowRetryPolicyFormComponent.DEFAULT_MAX_ATTEMPTS, {
                 validators: [Validators.required, Validators.min(1), Validators.max(100)],
@@ -70,6 +70,13 @@ export class FlowRetryPolicyFormComponent extends BaseComponent implements OnIni
                 validators: [Validators.required],
             }),
         });
+
+        // Set initial disabled state since retriesEnabled starts as false
+        form.controls.maxAttempts.disable();
+        form.controls.minDelay.disable();
+        form.controls.backoffType.disable();
+
+        return form;
     }
 
     public static buildFormValue(retryPolicy: MaybeNull<FlowRetryPolicy>): FlowRetryPolicyFormValue {

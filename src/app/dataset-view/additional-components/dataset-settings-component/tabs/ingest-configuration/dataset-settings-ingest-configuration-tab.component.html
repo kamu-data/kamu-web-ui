@@ -1,6 +1,6 @@
 <h2>Ingest configuration</h2>
 <mat-divider class="mt-1 mb-2" />
-<div class="box mt-4 p-4">
+<div class="box mt-4 p-4" *ngIf="isRootDataset">
     <form [formGroup]="form">
         <div class="w-100 mt-4">
             <app-ingest-configuration-rule-form [form]="form.controls.ingestConfig" />

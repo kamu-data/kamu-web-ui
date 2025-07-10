@@ -7,7 +7,7 @@
 
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { DatasetBasicsFragment, FlowTriggerInput } from "src/app/api/kamu.graphql.interface";
+import { FlowTriggerInput } from "src/app/api/kamu.graphql.interface";
 import { ScheduleType } from "../../../dataset-settings.model";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MaybeNull } from "src/app/interface/app.types";
@@ -45,7 +45,6 @@ import { BaseComponent } from "src/app/common/components/base.component";
 })
 export class IngestTriggerFormComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public form: FormGroup<IngestTriggerFormType>;
-    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public updateStateToggleLabel: string;
 
     public readonly ScheduleType: typeof ScheduleType = ScheduleType;

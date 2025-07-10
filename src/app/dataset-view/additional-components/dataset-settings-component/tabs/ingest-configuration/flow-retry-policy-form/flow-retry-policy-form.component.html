@@ -3,7 +3,12 @@
         <div class="mt-4">
             <span class="position-absolute text-muted group-box-label text-uppercase">Retry options</span>
             <div class="ms-1 px-2 gap-1 d-flex">
-                <mat-slide-toggle color="primary" class="mat-elevation-z0" formControlName="retriesEnabled">
+                <mat-slide-toggle
+                    color="primary"
+                    class="mat-elevation-z0"
+                    formControlName="retriesEnabled"
+                    data-test-id="retry-policy-enabled-toggle"
+                >
                     <span class="ps-2">Enable retries</span>
                 </mat-slide-toggle>
                 <app-tooltip-icon class="d-block" [tooltip]="RETRY_TOOLTIP" />
@@ -16,7 +21,7 @@
                         min="1"
                         formControlName="maxAttempts"
                         class="form-control form-control-width"
-                        data-test-id="max-attempts-input"
+                        data-test-id="retry-policy-max-attempts-input"
                         #maxAttempts
                     />
                     <span
@@ -34,7 +39,7 @@
                 <app-time-delta-form
                     [formControl]="minDelay"
                     [label]="'Min delay:'"
-                    data-test-id="'min-delay-time-delta-form'"
+                    data-test-id="'retry-policy-min-delay-time-delta-form'"
                 />
                 <div class="ms-1 px-2 pb-2">
                     <small class="text-muted"> A minimal delay between retry attempts. </small>
@@ -45,7 +50,7 @@
                     <select
                         [formControl]="backoffType"
                         class="form-select form-control-width me-3"
-                        data-test-id="backoff-select"
+                        data-test-id="retry-policy-backoff-select"
                     >
                         <option [value]="FlowRetryBackoffType.Fixed">Fixed</option>
                         <option [value]="FlowRetryBackoffType.Linear">Linear</option>

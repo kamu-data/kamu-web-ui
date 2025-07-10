@@ -49,4 +49,8 @@ export class IngestConfigurationRuleFormComponent extends BaseComponent {
             fetchUncacheable: formValue.fetchUncacheable,
         };
     }
+
+    public get fetchUncacheableControl(): FormControl<boolean> {
+        return this.form.controls.fetchUncacheable;
+    }
 }

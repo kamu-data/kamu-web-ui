@@ -617,6 +617,22 @@ export const mockFlowItemWidgetDataFragments: FlowItemWidgetDataFragment[] = [
         },
         __typename: "Flow",
     },
+    {
+        datasetId: mockDatasetMainDataId,
+        flowId: "414",
+        status: FlowStatus.Retrying,
+        initiator: null,
+        outcome: null,
+        timing: {
+            initiatedAt: "2024-02-12T18:21:24+00:00",
+            scheduledAt: "2024-02-12T18:22:28+00:00",
+            awaitingExecutorSince: null,
+            runningSince: null,
+            lastAttemptFinishedAt: "2024-02-12T18:21:28+00:00",
+            __typename: "FlowTimingRecords",
+        },
+        __typename: "Flow",
+    },
 ];
 
 export const mockDatasetPauseFlowsMutationSuccess: DatasetPauseFlowsMutation = {

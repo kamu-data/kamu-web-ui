@@ -25,6 +25,7 @@ describe("TileBaseWidgetComponent", () => {
         component = fixture.componentInstance;
         component.nodes = mockFlowItemWidgetDataFragments;
         component.involvedDatasets = mockDatasets;
+        component.displayAlias = true;
         fixture.detectChanges();
     });
 
@@ -45,6 +46,22 @@ describe("TileBaseWidgetComponent", () => {
     it("should check flow's duration of failed flow", () => {
         const result = component.flowDuration(mockFlowItemWidgetDataFragments[4]);
         expect(result).toEqual("4 seconds");
+    });
+
+    it("should check flow's duration of retrying flow", () => {
+        const initiationTime = new Date(new Date().getTime() - 60000); // 1 minute ago
+        const result = component.flowDuration({
+            ...mockFlowItemWidgetDataFragments[5],
+            timing: {
+                ...mockFlowItemWidgetDataFragments[5].timing,
+                initiatedAt: initiationTime.toISOString(),
+                scheduledAt: new Date(initiationTime.getTime() + 5000).toISOString(), // 5 seconds after initiation
+                awaitingExecutorSince: null,
+                runningSince: null,
+                lastAttemptFinishedAt: new Date(initiationTime.getTime() + 10000).toISOString(), // 10 seconds after initiation
+            },
+        });
+        expect(result).toEqual("1 minute");
     });
 
     it("should check flow's duration of running flow", () => {
@@ -72,6 +89,7 @@ describe("TileBaseWidgetComponent", () => {
         { case: mockFlowItemWidgetDataFragments[0], expectedResult: "success" },
         { case: mockFlowItemWidgetDataFragments[3], expectedResult: "aborted" },
         { case: mockFlowItemWidgetDataFragments[4], expectedResult: "failed" },
+        { case: mockFlowItemWidgetDataFragments[5], expectedResult: "-" },
     ].forEach((testCase: TestCase) => {
         it(`should check outcome message equal ${testCase.expectedResult}`, () => {
             expect(component.tileOutcomeMessage(testCase.case)).toEqual(testCase.expectedResult);

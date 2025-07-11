@@ -44,6 +44,7 @@ export interface AppUIConfigFeatureFlags {
     enableScheduling: boolean;
     enableDatasetEnvVarsManagement: boolean;
     enableTermsOfService: boolean;
+    allowAnonymous: boolean;
 }
 
 declare global {

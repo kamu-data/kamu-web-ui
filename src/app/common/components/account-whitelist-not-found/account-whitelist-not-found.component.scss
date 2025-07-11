@@ -1,0 +1,21 @@
+.error-template {
+    padding: 80px 15px;
+    text-align: center;
+}
+
+.error-block {
+    width: 500px;
+
+    .description {
+        line-height: 150%;
+    }
+}
+
+.btn-link {
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+        text-decoration: underline;
+    }
+}

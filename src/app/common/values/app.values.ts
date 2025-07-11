@@ -69,6 +69,7 @@ const language = 'typescript';
         enableScheduling: true,
         enableDatasetEnvVarsManagement: true,
         enableTermsOfService: true,
+        allowAnonymous: true,
     };
 
     public static readonly DEFAULT_UI_CONFIGURATION: AppUIConfig = {

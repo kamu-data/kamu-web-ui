@@ -68,6 +68,7 @@ describe("DataAccessModalComponent", () => {
             enableScheduling: true,
             enableDatasetEnvVarsManagement: true,
             enableTermsOfService: true,
+            allowAnonymous: true,
         });
         expect(component.showApiTokensLink).toEqual(true);
     });

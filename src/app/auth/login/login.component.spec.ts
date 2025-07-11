@@ -49,6 +49,7 @@ describe("LoginComponent", () => {
         enableScheduling: true,
         enableDatasetEnvVarsManagement: true,
         enableTermsOfService: true,
+        allowAnonymous: true,
     };
 
     enum Elements {

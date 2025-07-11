@@ -105,6 +105,10 @@ export class AccessTokensTabComponent extends BaseComponent {
         return this.createTokenForm.controls.name;
     }
 
+    public get accountId(): string {
+        return this.loggedUserService.currentlyLoggedInUser.id;
+    }
+
     public refreshSearchByName(): void {
         this.searchTokenName = "";
         this.deleteComposedToken();
@@ -140,7 +144,7 @@ export class AccessTokensTabComponent extends BaseComponent {
                         this.deleteComposedToken();
 
                         this.accessTokenService
-                            .revokeAccessTokens(tokenId)
+                            .revokeAccessTokens(this.accountId, tokenId)
                             .pipe(takeUntilDestroyed(this.destroyRef))
                             .subscribe(() => this.updateTable(this.currentPage));
                     }
@@ -156,10 +160,7 @@ export class AccessTokensTabComponent extends BaseComponent {
 
     public onGenerateToken(): void {
         this.accessTokenService
-            .createAccessTokens(
-                this.loggedUserService.currentlyLoggedInUser.id,
-                this.createTokenForm.controls.name.value as string,
-            )
+            .createAccessTokens(this.accountId, this.createTokenForm.controls.name.value as string)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((newToken: MaybeNull<CreatedAccessToken>) => {
                 if (newToken) {

@@ -32,32 +32,37 @@ export class AccessTokenService {
     }): Observable<AccessTokenConnection> {
         return this.accessTokenApi
             .listAccessTokens(params)
-            .pipe(map((result: ListAccessTokensQuery) => result.auth.listAccessTokens as AccessTokenConnection));
+            .pipe(
+                map(
+                    (result: ListAccessTokensQuery) =>
+                        result.accounts.byId?.accessTokens.listAccessTokens as AccessTokenConnection,
+                ),
+            );
     }
 
     public createAccessTokens(accountId: string, tokenName: string): Observable<MaybeNull<CreatedAccessToken>> {
         return this.accessTokenApi.createAccessToken(accountId, tokenName).pipe(
             map((result: CreateAccessTokenMutation) => {
-                const typename = result.auth.createAccessToken.__typename;
+                const typename = result.accounts.byId?.accessTokens.createAccessToken.__typename;
                 if (typename === "CreateAccessTokenResultSuccess") {
-                    this.toastrService.success(result.auth.createAccessToken.message);
-                    return result.auth.createAccessToken.token as CreatedAccessToken;
+                    this.toastrService.success(result.accounts.byId?.accessTokens.createAccessToken.message);
+                    return result.accounts.byId?.accessTokens.createAccessToken.token as CreatedAccessToken;
                 } else {
-                    this.toastrService.error(result.auth.createAccessToken.message);
+                    this.toastrService.error(result.accounts.byId?.accessTokens.createAccessToken.message);
                     return null;
                 }
             }),
         );
     }
 
-    public revokeAccessTokens(revokeId: string): Observable<void> {
-        return this.accessTokenApi.revokeAccessToken(revokeId).pipe(
+    public revokeAccessTokens(accountId: string, revokeId: string): Observable<void> {
+        return this.accessTokenApi.revokeAccessToken(accountId, revokeId).pipe(
             map((result: RevokeAccessTokenMutation) => {
-                const typename = result.auth.revokeAccessToken.__typename;
+                const typename = result.accounts.byId?.accessTokens.revokeAccessToken.__typename;
                 if (typename === "RevokeResultSuccess") {
-                    this.toastrService.success(result.auth.revokeAccessToken.message);
+                    this.toastrService.success(result.accounts.byId?.accessTokens.revokeAccessToken.message);
                 } else {
-                    this.toastrService.error(result.auth.revokeAccessToken.message);
+                    this.toastrService.error(result.accounts.byId?.accessTokens.revokeAccessToken.message);
                 }
             }),
         );

@@ -34,6 +34,7 @@ export class LoginService {
     private accessToken$: Subject<string> = new ReplaySubject<string>(1);
     private account$: Subject<AccountFragment> = new ReplaySubject<AccountFragment>(1);
     private passwordLoginError$: Subject<string> = new Subject<string>();
+    private accountWhitelistError$: Subject<string> = new Subject<string>();
 
     private enabledLoginMethods: AccountProvider[] = [];
 
@@ -51,6 +52,10 @@ export class LoginService {
         return this.passwordLoginError$.asObservable();
     }
 
+    public get accountWhitelistErrorOccurrences(): Observable<string> {
+        return this.accountWhitelistError$.asObservable();
+    }
+
     public githubLoginLink(): string {
         const githubClientId: MaybeUndefined<string> = this.appConfigService.githubClientId;
         /* istanbul ignore else */
@@ -63,6 +68,10 @@ export class LoginService {
 
     public emitPasswordLoginErrorOccurred(errorText: string): void {
         this.passwordLoginError$.next(errorText);
+    }
+
+    public emitAccountWhitelistErrorOccurred(errorText: string): void {
+        this.accountWhitelistError$.next(errorText);
     }
 
     public gotoGithub(): void {

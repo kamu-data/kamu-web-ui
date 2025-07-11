@@ -37,8 +37,10 @@ import { HttpLink } from "apollo-angular/http";
 import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
 import AppValues from "./app/common/values/app.values";
 import { provideRouter, withComponentInputBinding, withRouterConfig } from "@angular/router";
-import { routes } from "./app/app-routing";
 import { provideToastr } from "ngx-toastr";
+import { NavigationService } from "./app/services/navigation.service";
+import ProjectLinks from "./app/project-links";
+import { provideCatchAllRoute, provideConditionalGuardedRoutes, PUBLIC_ROUTES } from "./app/app-routing";
 
 const Services = [
     Apollo,
@@ -59,6 +61,7 @@ const Services = [
             appConfig: AppConfigService,
             localStorageService: LocalStorageService,
             injector: Injector,
+            navigationService: NavigationService,
         ) => {
             const httpMainLink: ApolloLink = httpLink.create({
                 uri: appConfig.apiServerGqlUrl,
@@ -67,9 +70,13 @@ const Services = [
             const errorMiddleware: ApolloLink = onError(({ graphQLErrors, networkError }) => {
                 const toastrService = injector.get(ToastrService);
                 if (graphQLErrors) {
-                    graphQLErrors.forEach(({ message }) => {
-                        toastrService.error(message);
-                    });
+                    if (graphQLErrors[0].message === ErrorTexts.ERROR_ACCOUNT_IS_NOT_WHITELISTED) {
+                        navigationService.navigateToPath(ProjectLinks.URL_ACCOUNT_WHITELIST_PAGE_NOT_FOUND);
+                    } else {
+                        graphQLErrors.forEach(({ message }) => {
+                            toastrService.error(message);
+                        });
+                    }
                 }
 
                 if (networkError) {
@@ -107,7 +114,7 @@ const Services = [
                 link: ApolloLink.from([errorMiddleware, authorizationMiddleware, globalLoaderMiddleware, httpMainLink]),
             };
         },
-        deps: [HttpLink, AppConfigService, LocalStorageService, Injector],
+        deps: [HttpLink, AppConfigService, LocalStorageService, Injector, NavigationService],
     },
     HIGHLIGHT_OPTIONS_PROVIDER,
     {
@@ -152,13 +159,21 @@ bootstrapApplication(AppComponent, {
         ),
         provideAnimations(),
         provideHttpClient(withInterceptorsFromDi()),
+
+        // 3-phase routing table:
+        //  1. Public routes (no guards)
+        //  2. Conditional guarded routes (guards that can be skipped)
+        //  3. Catch-all route (404 page)
         provideRouter(
-            routes,
+            PUBLIC_ROUTES,
             withRouterConfig({
                 onSameUrlNavigation: "reload",
             }),
             withComponentInputBinding(),
         ),
+        provideConditionalGuardedRoutes(),
+        provideCatchAllRoute(),
+
         provideToastr({
             timeOut: 5000,
             positionClass: "toast-bottom-right",

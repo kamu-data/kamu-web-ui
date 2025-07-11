@@ -11,7 +11,7 @@ import { MetadataBlockComponent } from "./dataset-block/metadata-block/metadata-
 import { AuthenticatedGuard } from "./auth/guards/authenticated.guard";
 import { AccountSettingsComponent } from "./account/settings/account-settings.component";
 import { PageNotFoundComponent } from "./common/components/page-not-found/page-not-found.component";
-import { Routes } from "@angular/router";
+import { ROUTES, Routes } from "@angular/router";
 import { SearchComponent } from "./search/search.component";
 import { LoginComponent } from "./auth/login/login.component";
 import { DatasetViewComponent } from "./dataset-view/dataset-view.component";
@@ -93,12 +93,20 @@ import { accountSettingsPasswordAndAuthenticationResolverFn } from "./account/se
 import { accountPasswordProviderGuard } from "./common/guards/account-password-provider.guard";
 import { DatasetSettingsIngestConfigurationTabComponent } from "./dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/dataset-settings-ingest-configuration-tab.component";
 import { datasetSettingsIngestConfigurationResolverFn } from "./dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/resolver/dataset-settings-ingest-configuration.resolver";
+import { AccountWhitelistNotFoundComponent } from "./common/components/account-whitelist-not-found/account-whitelist-not-found.component";
+import { Provider } from "@angular/core";
+import { forbidAnonymousAccessGuardFn } from "./common/guards/forbid-anonymous-access.guard";
+import { AppConfigService } from "./app-config.service";
 
-export const routes: Routes = [
+export const PUBLIC_ROUTES: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
     {
         path: ProjectLinks.URL_PAGE_NOT_FOUND,
         component: PageNotFoundComponent,
+    },
+    {
+        path: ProjectLinks.URL_ACCOUNT_WHITELIST_PAGE_NOT_FOUND,
+        component: AccountWhitelistNotFoundComponent,
     },
     {
         path: ProjectLinks.URL_LOGIN,
@@ -113,6 +121,9 @@ export const routes: Routes = [
         path: ProjectLinks.URL_RETURN_TO_CLI,
         component: ReturnToCliComponent,
     },
+];
+
+export const ANONYMOUS_GUARDED_ROUTES: Routes = [
     {
         path: ProjectLinks.URL_SEARCH,
         component: SearchComponent,
@@ -540,9 +551,33 @@ export const routes: Routes = [
         path: ProjectLinks.URL_ADMIN_DASHBOARD,
         component: AdminDashboardComponent,
     },
-
-    {
-        path: "**",
-        component: PageNotFoundComponent,
-    },
 ];
+
+export const provideConditionalGuardedRoutes = (): Provider => ({
+    provide: ROUTES,
+    multi: true,
+    useFactory: (appConfigService: AppConfigService) => {
+        return appConfigService.allowAnonymous
+            ? ANONYMOUS_GUARDED_ROUTES
+            : [
+                  {
+                      path: "",
+                      canActivate: [forbidAnonymousAccessGuardFn],
+                      children: ANONYMOUS_GUARDED_ROUTES,
+                      runGuardsAndResolvers: "always",
+                  },
+              ];
+    },
+    deps: [AppConfigService],
+});
+
+export const provideCatchAllRoute = (): Provider => ({
+    provide: ROUTES,
+    multi: true,
+    useValue: [
+        {
+            path: "**",
+            component: PageNotFoundComponent,
+        },
+    ],
+});

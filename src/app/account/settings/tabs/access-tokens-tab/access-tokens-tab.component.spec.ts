@@ -77,7 +77,8 @@ describe("AccessTokensTabComponent", () => {
         component = fixture.componentInstance;
         navigateToSettingsSpy = spyOn(navigationService, "navigateToSettings");
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-        component.tokenConnection = mockListAccessTokensQuery.auth.listAccessTokens as AccessTokenConnection;
+        component.tokenConnection = mockListAccessTokensQuery.accounts.byId?.accessTokens
+            .listAccessTokens as AccessTokenConnection;
     });
 
     it("should create", () => {
@@ -98,7 +99,10 @@ describe("AccessTokensTabComponent", () => {
 
     it("should check generate new token button", () => {
         component.currentCreateStep = TokenCreateStep.GENERATE;
-        const response = (mockCreateAccessTokenMutation.auth.createAccessToken as CreateAccessTokenResultSuccess).token;
+        const response = (
+            mockCreateAccessTokenMutation.accounts.byId?.accessTokens
+                .createAccessToken as CreateAccessTokenResultSuccess
+        ).token;
         const createAccessTokensSpy = spyOn(accessTokenService, "createAccessTokens").and.returnValue(of(response));
         component.createTokenForm.controls.name.setValue("token-name");
         fixture.detectChanges();

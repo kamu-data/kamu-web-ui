@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "@apollo/client/core";
+import { gql } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -36,6 +36,12 @@ export type Scalars = {
      */
     DateTime: string;
     DeviceCode: string;
+    /**
+     * Wallet address in did:pkh format.
+     *
+     * Example: did:pkh:eip155:1:0xb9c5714089478a327f09197987f16f9e5d936e8a
+     */
+    DidPkh: string;
     Eip4361AuthNonce: string;
     Email: string;
     EventID: string;
@@ -68,6 +74,8 @@ export type AccessTokenEdge = {
 
 export type Account = {
     __typename?: "Account";
+    /** Access to the flow configurations of this account */
+    accessTokens: AccountAccessTokens;
     /** Symbolic account name */
     accountName: Scalars["AccountName"];
     /** Account provider */
@@ -88,6 +96,30 @@ export type Account = {
     isAdmin: Scalars["Boolean"];
 };
 
+export type AccountAccessTokens = {
+    __typename?: "AccountAccessTokens";
+    listAccessTokens: AccessTokenConnection;
+};
+
+export type AccountAccessTokensListAccessTokensArgs = {
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+};
+
+export type AccountAccessTokensMut = {
+    __typename?: "AccountAccessTokensMut";
+    createAccessToken: CreateTokenResult;
+    revokeAccessToken: RevokeResult;
+};
+
+export type AccountAccessTokensMutCreateAccessTokenArgs = {
+    tokenName: Scalars["String"];
+};
+
+export type AccountAccessTokensMutRevokeAccessTokenArgs = {
+    tokenId: Scalars["AccessTokenID"];
+};
+
 export type AccountConnection = {
     __typename?: "AccountConnection";
     edges: Array<AccountEdge>;
@@ -97,6 +129,12 @@ export type AccountConnection = {
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
     totalCount: Scalars["Int"];
+};
+
+export type AccountDatasetRelationOperation = {
+    accountId: Scalars["AccountID"];
+    datasetId: Scalars["DatasetID"];
+    operation: DatasetRoleOperation;
 };
 
 export type AccountEdge = {
@@ -160,6 +198,8 @@ export type AccountLookupFilter = {
 
 export type AccountMut = {
     __typename?: "AccountMut";
+    /** Access to the mutable flow configurations of this account */
+    accessTokens: AccountAccessTokensMut;
     /** Delete a selected account. Allowed only for admin users */
     delete: DeleteAccountResult;
     /** Access to the mutable flow configurations of this account */
@@ -248,6 +288,8 @@ export type AccountsMut = {
     byName?: Maybe<AccountMut>;
     /** Create a new account */
     createAccount: CreateAccountResult;
+    /** Create wallet accounts */
+    createWalletAccounts: CreateWalletAccountsResult;
 };
 
 export type AccountsMutByIdArgs = {
@@ -261,6 +303,10 @@ export type AccountsMutByNameArgs = {
 export type AccountsMutCreateAccountArgs = {
     accountName: Scalars["AccountName"];
     email?: InputMaybe<Scalars["Email"]>;
+};
+
+export type AccountsMutCreateWalletAccountsArgs = {
+    walletAddresses: Array<Scalars["DidPkh"]>;
 };
 
 /**
@@ -328,6 +374,11 @@ export type Admin = {
     selfTest: Scalars["String"];
 };
 
+export type ApplyRolesMatrixResult = {
+    __typename?: "ApplyRolesMatrixResult";
+    message: Scalars["String"];
+};
+
 /**
  * Embedded attachment item.
  *
@@ -362,21 +413,12 @@ export type AttachmentsEmbedded = {
 export type Auth = {
     __typename?: "Auth";
     enabledProviders: Array<AccountProvider>;
-    listAccessTokens: AccessTokenConnection;
-};
-
-export type AuthListAccessTokensArgs = {
-    accountId: Scalars["AccountID"];
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
 };
 
 export type AuthMut = {
     __typename?: "AuthMut";
     accountDetails: Account;
-    createAccessToken: CreateTokenResult;
     login: LoginResponse;
-    revokeAccessToken: RevokeResult;
     /** Web3-related functionality group */
     web3: AuthWeb3Mut;
 };
@@ -385,19 +427,10 @@ export type AuthMutAccountDetailsArgs = {
     accessToken: Scalars["String"];
 };
 
-export type AuthMutCreateAccessTokenArgs = {
-    accountId: Scalars["AccountID"];
-    tokenName: Scalars["String"];
-};
-
 export type AuthMutLoginArgs = {
     deviceCode?: InputMaybe<Scalars["DeviceCode"]>;
     loginCredentialsJson: Scalars["String"];
     loginMethod: AccountProvider;
-};
-
-export type AuthMutRevokeAccessTokenArgs = {
-    tokenId: Scalars["AccessTokenID"];
 };
 
 export type AuthWeb3Mut = {
@@ -464,6 +497,16 @@ export type CliProtocolDesc = {
     __typename?: "CliProtocolDesc";
     pullCommand: Scalars["String"];
     pushCommand: Scalars["String"];
+};
+
+export type CollaborationMut = {
+    __typename?: "CollaborationMut";
+    /** Batch application of relations between accounts and datasets */
+    applyAccountDatasetRelations: ApplyRolesMatrixResult;
+};
+
+export type CollaborationMutApplyAccountDatasetRelationsArgs = {
+    operations: Array<AccountDatasetRelationOperation>;
 };
 
 export type Collection = {
@@ -780,6 +823,16 @@ export type CreateTokenResult = {
     message: Scalars["String"];
 };
 
+export type CreateWalletAccountsResult = {
+    message: Scalars["String"];
+};
+
+export type CreateWalletAccountsSuccess = CreateWalletAccountsResult & {
+    __typename?: "CreateWalletAccountsSuccess";
+    accounts: Array<Account>;
+    message: Scalars["String"];
+};
+
 export type CreateWebhookSubscriptionResult = {
     message: Scalars["String"];
 };
@@ -921,7 +974,7 @@ export type Dataset = {
     envVars: DatasetEnvVars;
     /** Access to the flow configurations of this dataset */
     flows: DatasetFlows;
-    /** Quck access to `head` block hash */
+    /** Quick access to `head` block hash */
     head: Scalars["Multihash"];
     /** Unique identifier of the dataset */
     id: Scalars["DatasetID"];
@@ -1357,6 +1410,18 @@ export type DatasetPushStatus = {
 export type DatasetPushStatuses = {
     __typename?: "DatasetPushStatuses";
     statuses: Array<DatasetPushStatus>;
+};
+
+export type DatasetRoleOperation =
+    | { set: DatasetRoleSetOperation; unset?: never }
+    | { set?: never; unset: DatasetRoleUnsetOperation };
+
+export type DatasetRoleSetOperation = {
+    role: DatasetAccessRole;
+};
+
+export type DatasetRoleUnsetOperation = {
+    dummy: Scalars["Boolean"];
 };
 
 export type DatasetState = {
@@ -2662,6 +2727,12 @@ export type Mutation = {
     accounts: AccountsMut;
     /** Authentication and authorization-related functionality group */
     auth: AuthMut;
+    /**
+     * Collaboration-related functionality group
+     *
+     * Allows setting permissions for multiple datasets in batch mode
+     */
+    collaboration: CollaborationMut;
     /**
      * Dataset-related functionality group.
      *
@@ -4022,21 +4093,27 @@ export type CreateAccessTokenMutationVariables = Exact<{
 
 export type CreateAccessTokenMutation = {
     __typename?: "Mutation";
-    auth: {
-        __typename?: "AuthMut";
-        createAccessToken:
-            | { __typename?: "CreateAccessTokenResultDuplicate"; message: string; tokenName: string }
-            | {
-                  __typename?: "CreateAccessTokenResultSuccess";
-                  message: string;
-                  token: {
-                      __typename?: "CreatedAccessToken";
-                      id: string;
-                      name: string;
-                      composed: string;
-                      account: { __typename?: "Account" } & AccountFragment;
-                  };
-              };
+    accounts: {
+        __typename?: "AccountsMut";
+        byId?: {
+            __typename?: "AccountMut";
+            accessTokens: {
+                __typename?: "AccountAccessTokensMut";
+                createAccessToken:
+                    | { __typename?: "CreateAccessTokenResultDuplicate"; message: string; tokenName: string }
+                    | {
+                          __typename?: "CreateAccessTokenResultSuccess";
+                          message: string;
+                          token: {
+                              __typename?: "CreatedAccessToken";
+                              id: string;
+                              name: string;
+                              composed: string;
+                              account: { __typename?: "Account" } & AccountFragment;
+                          };
+                      };
+            };
+        } | null;
     };
 };
 
@@ -4048,28 +4125,41 @@ export type ListAccessTokensQueryVariables = Exact<{
 
 export type ListAccessTokensQuery = {
     __typename?: "Query";
-    auth: {
-        __typename?: "Auth";
-        listAccessTokens: {
-            __typename?: "AccessTokenConnection";
-            totalCount: number;
-            nodes: Array<{ __typename?: "ViewAccessToken" } & AccessTokenDataFragment>;
-            pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
-        };
+    accounts: {
+        __typename?: "Accounts";
+        byId?: {
+            __typename?: "Account";
+            accessTokens: {
+                __typename?: "AccountAccessTokens";
+                listAccessTokens: {
+                    __typename?: "AccessTokenConnection";
+                    totalCount: number;
+                    nodes: Array<{ __typename?: "ViewAccessToken" } & AccessTokenDataFragment>;
+                    pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
+                };
+            };
+        } | null;
     };
 };
 
 export type RevokeAccessTokenMutationVariables = Exact<{
+    accountId: Scalars["AccountID"];
     tokenId: Scalars["AccessTokenID"];
 }>;
 
 export type RevokeAccessTokenMutation = {
     __typename?: "Mutation";
-    auth: {
-        __typename?: "AuthMut";
-        revokeAccessToken:
-            | { __typename?: "RevokeResultAlreadyRevoked"; tokenId: string; message: string }
-            | { __typename?: "RevokeResultSuccess"; tokenId: string; message: string };
+    accounts: {
+        __typename?: "AccountsMut";
+        byId?: {
+            __typename?: "AccountMut";
+            accessTokens: {
+                __typename?: "AccountAccessTokensMut";
+                revokeAccessToken:
+                    | { __typename?: "RevokeResultAlreadyRevoked"; tokenId: string; message: string }
+                    | { __typename?: "RevokeResultSuccess"; tokenId: string; message: string };
+            };
+        } | null;
     };
 };
 
@@ -8300,22 +8390,26 @@ export const DatasetSearchOverviewFragmentDoc = gql`
 `;
 export const CreateAccessTokenDocument = gql`
     mutation createAccessToken($accountId: AccountID!, $tokenName: String!) {
-        auth {
-            createAccessToken(accountId: $accountId, tokenName: $tokenName) {
-                ... on CreateAccessTokenResultSuccess {
-                    message
-                    token {
-                        id
-                        name
-                        composed
-                        account {
-                            ...Account
+        accounts {
+            byId(accountId: $accountId) {
+                accessTokens {
+                    createAccessToken(tokenName: $tokenName) {
+                        ... on CreateAccessTokenResultSuccess {
+                            message
+                            token {
+                                id
+                                name
+                                composed
+                                account {
+                                    ...Account
+                                }
+                            }
+                        }
+                        ... on CreateAccessTokenResultDuplicate {
+                            message
+                            tokenName
                         }
                     }
-                }
-                ... on CreateAccessTokenResultDuplicate {
-                    message
-                    tokenName
                 }
             }
         }
@@ -8338,14 +8432,18 @@ export class CreateAccessTokenGQL extends Apollo.Mutation<
 }
 export const ListAccessTokensDocument = gql`
     query listAccessTokens($accountId: AccountID!, $page: Int, $perPage: Int) {
-        auth {
-            listAccessTokens(accountId: $accountId, page: $page, perPage: $perPage) {
-                nodes {
-                    ...AccessTokenData
-                }
-                totalCount
-                pageInfo {
-                    ...DatasetPageInfo
+        accounts {
+            byId(accountId: $accountId) {
+                accessTokens {
+                    listAccessTokens(page: $page, perPage: $perPage) {
+                        nodes {
+                            ...AccessTokenData
+                        }
+                        totalCount
+                        pageInfo {
+                            ...DatasetPageInfo
+                        }
+                    }
                 }
             }
         }
@@ -8365,16 +8463,20 @@ export class ListAccessTokensGQL extends Apollo.Query<ListAccessTokensQuery, Lis
     }
 }
 export const RevokeAccessTokenDocument = gql`
-    mutation revokeAccessToken($tokenId: AccessTokenID!) {
-        auth {
-            revokeAccessToken(tokenId: $tokenId) {
-                ... on RevokeResultSuccess {
-                    tokenId
-                    message
-                }
-                ... on RevokeResultAlreadyRevoked {
-                    tokenId
-                    message
+    mutation revokeAccessToken($accountId: AccountID!, $tokenId: AccessTokenID!) {
+        accounts {
+            byId(accountId: $accountId) {
+                accessTokens {
+                    revokeAccessToken(tokenId: $tokenId) {
+                        ... on RevokeResultSuccess {
+                            tokenId
+                            message
+                        }
+                        ... on RevokeResultAlreadyRevoked {
+                            tokenId
+                            message
+                        }
+                    }
                 }
             }
         }

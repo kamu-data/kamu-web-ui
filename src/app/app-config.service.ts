@@ -74,6 +74,10 @@ export class AppConfigService {
         return this.appUiConfig.minNewPasswordLength;
     }
 
+    public get allowAnonymous(): boolean {
+        return this.appUiConfig.featureFlags.allowAnonymous;
+    }
+
     public get semanticSearchThresholdScore(): MaybeUndefined<number> {
         return this.appUiConfig.semanticSearchThresholdScore;
     }

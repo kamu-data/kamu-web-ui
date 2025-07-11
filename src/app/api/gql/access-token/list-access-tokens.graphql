@@ -1,12 +1,16 @@
 query listAccessTokens($accountId: AccountID!, $page: Int, $perPage: Int) {
-  auth {
-    listAccessTokens(accountId: $accountId, page: $page, perPage: $perPage) {
-      nodes {
-        ...AccessTokenData
-      }
-      totalCount
-      pageInfo {
-        ...DatasetPageInfo
+  accounts {
+    byId(accountId: $accountId) {
+      accessTokens {
+        listAccessTokens(page: $page, perPage: $perPage) {
+          nodes {
+            ...AccessTokenData
+          }
+          totalCount
+          pageInfo {
+            ...DatasetPageInfo
+          }
+        }
       }
     }
   }

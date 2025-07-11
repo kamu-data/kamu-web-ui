@@ -64,6 +64,19 @@ type Account {
 	Access to the flow configurations of this account
 	"""
 	flows: AccountFlows!
+	"""
+	Access to the flow configurations of this account
+	"""
+	accessTokens: AccountAccessTokens!
+}
+
+type AccountAccessTokens {
+	listAccessTokens(page: Int, perPage: Int): AccessTokenConnection!
+}
+
+type AccountAccessTokensMut {
+	createAccessToken(tokenName: String!): CreateTokenResult!
+	revokeAccessToken(tokenId: AccessTokenID!): RevokeResult!
 }
 
 type AccountConnection {
@@ -80,6 +93,12 @@ type AccountConnection {
 	"""
 	pageInfo: PageBasedInfo!
 	edges: [AccountEdge!]!
+}
+
+input AccountDatasetRelationOperation {
+	accountId: AccountID!
+	operation: DatasetRoleOperation!
+	datasetId: DatasetID!
 }
 
 scalar AccountDisplayName
@@ -163,6 +182,10 @@ type AccountMut {
 	Access to the mutable flow configurations of this account
 	"""
 	flows: AccountFlowsMut!
+	"""
+	Access to the mutable flow configurations of this account
+	"""
+	accessTokens: AccountAccessTokensMut!
 }
 
 scalar AccountName
@@ -229,6 +252,10 @@ type AccountsMut {
 	Create a new account
 	"""
 	createAccount(accountName: AccountName!, email: Email): CreateAccountResult!
+	"""
+	Create wallet accounts
+	"""
+	createWalletAccounts(walletAddresses: [DidPkh!]!): CreateWalletAccountsResult!
 }
 
 """
@@ -303,6 +330,10 @@ type Admin {
 	selfTest: String!
 }
 
+type ApplyRolesMatrixResult {
+	message: String!
+}
+
 """
 Embedded attachment item.
 
@@ -340,7 +371,6 @@ type AttachmentsEmbedded {
 
 type Auth {
 	enabledProviders: [AccountProvider!]!
-	listAccessTokens(accountId: AccountID!, page: Int, perPage: Int): AccessTokenConnection!
 }
 
 type AuthMut {
@@ -350,8 +380,6 @@ type AuthMut {
 	web3: AuthWeb3Mut!
 	login(loginMethod: AccountProvider!, loginCredentialsJson: String!, deviceCode: DeviceCode): LoginResponse!
 	accountDetails(accessToken: String!): Account!
-	createAccessToken(accountId: AccountID!, tokenName: String!): CreateTokenResult!
-	revokeAccessToken(tokenId: AccessTokenID!): RevokeResult!
 }
 
 type AuthWeb3Mut {
@@ -417,6 +445,13 @@ type Checkpoint {
 type CliProtocolDesc {
 	pullCommand: String!
 	pushCommand: String!
+}
+
+type CollaborationMut {
+	"""
+	Batch application of relations between accounts and datasets
+	"""
+	applyAccountDatasetRelations(operations: [AccountDatasetRelationOperation!]!): ApplyRolesMatrixResult!
 }
 
 type Collection {
@@ -717,6 +752,15 @@ interface CreateTokenResult {
 	message: String!
 }
 
+interface CreateWalletAccountsResult {
+	message: String!
+}
+
+type CreateWalletAccountsSuccess implements CreateWalletAccountsResult {
+	accounts: [Account!]!
+	message: String!
+}
+
 interface CreateWebhookSubscriptionResult {
 	message: String!
 }
@@ -872,7 +916,7 @@ type Dataset {
 	"""
 	visibility: DatasetVisibilityOutput!
 	"""
-	Quck access to `head` block hash
+	Quick access to `head` block hash
 	"""
 	head: Multihash!
 	"""
@@ -1289,6 +1333,19 @@ scalar DatasetRef
 
 scalar DatasetRefRemote
 
+input DatasetRoleOperation @oneOf {
+	set: DatasetRoleSetOperation
+	unset: DatasetRoleUnsetOperation
+}
+
+input DatasetRoleSetOperation {
+	role: DatasetAccessRole!
+}
+
+input DatasetRoleUnsetOperation {
+	dummy: Boolean!
+}
+
 type DatasetState {
 	"""
 	Globally unique identity of the dataset
@@ -1488,6 +1545,13 @@ type DependencyDatasetResultNotAccessible implements DependencyDatasetResult {
 }
 
 scalar DeviceCode
+
+"""
+Wallet address in did:pkh format.
+
+Example: did:pkh:eip155:1:0xb9c5714089478a327f09197987f16f9e5d936e8a
+"""
+scalar DidPkh
 
 """
 Disables the previously defined polling source.
@@ -2568,6 +2632,12 @@ type Mutation {
 	system. This groups deals with their identities and permissions.
 	"""
 	accounts: AccountsMut!
+	"""
+	Collaboration-related functionality group
+	
+	Allows setting permissions for multiple datasets in batch mode
+	"""
+	collaboration: CollaborationMut!
 }
 
 union NameLookupResult = Account

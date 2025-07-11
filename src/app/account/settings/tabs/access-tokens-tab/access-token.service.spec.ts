@@ -52,7 +52,9 @@ describe("AccessTokenService", () => {
         const subscription$ = service
             .listAccessTokens({ accountId: TEST_ACCOUNT_ID, page: PAGE, perPage: PER_PAGE })
             .subscribe((data: AccessTokenConnection) => {
-                expect(data.totalCount).toEqual(mockListAccessTokensQuery.auth.listAccessTokens.totalCount);
+                expect(data.totalCount).toEqual(
+                    mockListAccessTokensQuery.accounts.byId?.accessTokens.listAccessTokens.totalCount as number,
+                );
             });
 
         expect(listAccessTokensSpy).toHaveBeenCalledTimes(1);
@@ -99,7 +101,7 @@ describe("AccessTokenService", () => {
         const revokeAccessTokenSpy = spyOn(accessTokenApi, "revokeAccessToken").and.returnValue(
             of(mockRevokeAccessTokenMutation),
         );
-        const subscription$ = service.revokeAccessTokens(TOKEN_ID).subscribe();
+        const subscription$ = service.revokeAccessTokens(TEST_ACCOUNT_ID, TOKEN_ID).subscribe();
 
         expect(toastrServiceSuccessSpy).toHaveBeenCalledTimes(1);
         expect(revokeAccessTokenSpy).toHaveBeenCalledTimes(1);
@@ -111,7 +113,7 @@ describe("AccessTokenService", () => {
         const revokeAccessTokenSpy = spyOn(accessTokenApi, "revokeAccessToken").and.returnValue(
             of(mockRevokeAccessTokenMutationError),
         );
-        const subscription$ = service.revokeAccessTokens(TOKEN_ID).subscribe();
+        const subscription$ = service.revokeAccessTokens(TEST_ACCOUNT_ID, TOKEN_ID).subscribe();
 
         expect(toastrServiceErrorSpy).toHaveBeenCalledTimes(1);
         expect(revokeAccessTokenSpy).toHaveBeenCalledTimes(1);

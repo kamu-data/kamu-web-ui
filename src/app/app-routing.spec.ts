@@ -7,9 +7,8 @@
 
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { Location } from "@angular/common";
-import { Router } from "@angular/router";
-import { RouterTestingModule } from "@angular/router/testing";
-import { routes } from "./app-routing";
+import { Router, ROUTES } from "@angular/router";
+import { provideCatchAllRoute, provideConditionalGuardedRoutes, PUBLIC_ROUTES } from "./app-routing";
 import ProjectLinks from "./project-links";
 import { promiseWithCatch } from "./common/helpers/app.helpers";
 import { ApolloTestingModule } from "apollo-angular/testing";
@@ -42,6 +41,7 @@ import {
 import { OverviewUpdate } from "./dataset-view/dataset.subscriptions.interface";
 import { NgxGraphModule } from "@swimlane/ngx-graph";
 import { provideAnimations } from "@angular/platform-browser/animations";
+import { AppConfigService } from "./app-config.service";
 
 describe("Router", () => {
     let router: Router;
@@ -53,7 +53,6 @@ describe("Router", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [
-                RouterTestingModule.withRoutes(routes),
                 ApolloTestingModule,
                 HttpClientTestingModule,
                 NgxGraphModule,
@@ -62,12 +61,29 @@ describe("Router", () => {
             ],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
+                {
+                    provide: AppConfigService,
+                    useValue: {
+                        allowAnonymous: true,
+                    },
+                },
+                {
+                    provide: ROUTES,
+                    multi: true,
+                    useValue: PUBLIC_ROUTES,
+                },
+                provideConditionalGuardedRoutes(),
+                provideCatchAllRoute(),
                 provideAnimations(),
                 provideToastr(),
                 {
                     provide: accountSettingsAccessTokensResolverFn,
                     useValue: {
-                        resolve: () => of(mockListAccessTokensQuery.auth.listAccessTokens as AccessTokenConnection),
+                        resolve: () =>
+                            of(
+                                mockListAccessTokensQuery.accounts.byId?.accessTokens
+                                    .listAccessTokens as AccessTokenConnection,
+                            ),
                     },
                 },
                 {

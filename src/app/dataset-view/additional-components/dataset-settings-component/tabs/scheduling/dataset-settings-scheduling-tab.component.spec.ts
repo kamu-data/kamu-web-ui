@@ -96,13 +96,10 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
                 every: MOCK_PARAM_EVERY,
                 unit: MOCK_PARAM_UNIT,
             },
-            cron: { cronExpression: null },
+            cron: { cronExpression: "" },
         });
         expect(component.form.getRawValue()).toEqual({
-            ingestTrigger: {
-                ...domIngestTriggerFormValue,
-                cron: null,
-            },
+            ingestTrigger: domIngestTriggerFormValue,
         });
     });
 
@@ -128,10 +125,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
             cron: { cronExpression: MOCK_CRON_EXPRESSION },
         });
         expect(component.form.getRawValue()).toEqual({
-            ingestTrigger: {
-                ...domIngestTriggerFormValue,
-                timeDelta: null,
-            },
+            ingestTrigger: domIngestTriggerFormValue,
         });
     });
 

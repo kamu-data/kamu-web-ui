@@ -14,12 +14,16 @@ import { TimeDeltaFormHarness } from "./time-delta-form.harness";
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 
+import { ReactiveFormsModule } from "@angular/forms";
+
 @Component({
     standalone: true,
-    imports: [TimeDeltaFormComponent],
-    template: `<app-time-delta-form [label]="'Launch every:'" />`,
+    imports: [TimeDeltaFormComponent, ReactiveFormsModule],
+    template: `<app-time-delta-form [form]="timeDeltaForm" [label]="'Launch every:'" />`,
 })
 class TestTimeDeltaFormComponent {
+    public timeDeltaForm = TimeDeltaFormComponent.buildForm();
+
     @ViewChild(TimeDeltaFormComponent)
     public formComponent: TimeDeltaFormComponent;
 }
@@ -66,40 +70,6 @@ describe("TimeDeltaFormComponent", () => {
     it("should initialize with default values", () => {
         expect(component.everyControl.value).toBeNull();
         expect(component.unitControl.value).toBeNull();
-    });
-
-    it("should update form value when writeValue is called", () => {
-        const testValue = { every: 5, unit: TimeUnit.Hours };
-        component.writeValue(testValue);
-
-        expect(component.everyControl.value).toBe(5);
-        expect(component.unitControl.value).toBe(TimeUnit.Hours);
-    });
-
-    it("should disable form when setDisabledState is called with true", () => {
-        component.setDisabledState(true);
-        expect(component.form.disabled).toBe(true);
-    });
-
-    it("should enable form when setDisabledState is called with false", () => {
-        component.setDisabledState(false);
-        expect(component.form.disabled).toBe(false);
-    });
-
-    it("should emit formChange when form values change", () => {
-        const emitSpy = spyOn(component.formChange, "emit");
-
-        component.form.patchValue({ every: 10, unit: TimeUnit.Minutes });
-
-        expect(emitSpy).toHaveBeenCalledWith(component.form);
-    });
-
-    it("should set time delta values as a user", async () => {
-        await timeDeltaHarness.setTimeDelta(5, TimeUnit.Hours);
-
-        const timeDelta = await timeDeltaHarness.getTimeDelta();
-        expect(timeDelta.every).toBe(5);
-        expect(timeDelta.unit).toBe(TimeUnit.Hours);
     });
 
     it("should show validation error for invalid range", async () => {

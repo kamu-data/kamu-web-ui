@@ -6,12 +6,11 @@
  */
 
 import { FormControl } from "@angular/forms";
-import { MaybeNull } from "src/app/interface/app.types";
 
 export interface CronExpressionFormValue {
-    cronExpression: string | null;
+    cronExpression: string;
 }
 
 export interface CronExpressionFormType {
-    cronExpression: FormControl<MaybeNull<string>>;
+    cronExpression: FormControl<string>;
 }

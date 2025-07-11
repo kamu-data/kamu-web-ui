@@ -88,7 +88,9 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                         every: schedule.every,
                         unit: schedule.unit,
                     },
-                    cron: null,
+                    cron: {
+                        cronExpression: "",
+                    },
                 } as IngestTriggerFormValue;
             }
 
@@ -96,7 +98,10 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                 return {
                     updatesEnabled,
                     __typename: ScheduleType.CRON_5_COMPONENT_EXPRESSION,
-                    timeDelta: null,
+                    timeDelta: {
+                        every: null,
+                        unit: null,
+                    },
                     cron: {
                         cronExpression: schedule.cron5ComponentExpression,
                     },

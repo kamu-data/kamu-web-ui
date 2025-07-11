@@ -145,7 +145,7 @@ describe("IngestTriggerFormComponent", () => {
             updatesEnabled: true,
             __typename: ScheduleType.TIME_DELTA,
             timeDelta: { every: 10, unit: TimeUnit.Minutes },
-            cron: { cronExpression: null },
+            cron: { cronExpression: "" },
         });
         expect(component.form.getRawValue()).toEqual(domFormValue);
     });
@@ -164,10 +164,8 @@ describe("IngestTriggerFormComponent", () => {
         expect(component.form.errors).toBeNull();
 
         expect(component.cronExpressionControl.invalid).toBeTrue();
-        expect(component.cronExpressionControl.errors).toEqual({
-            cronExpression: {
-                invalidCronExpression: true,
-            },
+        expect(component.cronExpressionControl.get("cronExpression")?.errors).toEqual({
+            invalidCronExpression: true,
         });
 
         expect(component.timeDeltaControl.invalid).toBeFalse();
@@ -191,12 +189,10 @@ describe("IngestTriggerFormComponent", () => {
         expect(component.cronExpressionControl.errors).toBeNull();
 
         expect(component.timeDeltaControl.invalid).toBeTrue();
-        expect(component.timeDeltaControl.errors).toEqual({
-            every: {
-                range: {
-                    message: "Value should be between 0 to 60",
-                    refValues: [100, 0, 60],
-                },
+        expect(component.timeDeltaControl.get("every")?.errors).toEqual({
+            range: {
+                message: "Value should be between 0 to 60",
+                refValues: [100, 0, 60],
             },
         });
     });

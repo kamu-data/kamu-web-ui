@@ -5,22 +5,25 @@
  * included in the LICENSE file.
  */
 
-import { FormControl } from "@angular/forms";
+import { FormControl, FormGroup } from "@angular/forms";
 import { MaybeNull } from "src/app/interface/app.types";
-import { TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
-import { CronExpressionFormValue } from "src/app/common/components/cron-expression-form/cron-expression-form.value";
+import { TimeDeltaFormType, TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
+import {
+    CronExpressionFormType,
+    CronExpressionFormValue,
+} from "src/app/common/components/cron-expression-form/cron-expression-form.value";
 import { ScheduleType } from "../../../dataset-settings.model";
 
 export interface IngestTriggerFormType {
     updatesEnabled: FormControl<boolean>;
     __typename: FormControl<MaybeNull<ScheduleType>>;
-    timeDelta: FormControl<MaybeNull<TimeDeltaFormValue>>;
-    cron: FormControl<MaybeNull<CronExpressionFormValue>>;
+    timeDelta: FormGroup<TimeDeltaFormType>;
+    cron: FormGroup<CronExpressionFormType>;
 }
 
 export interface IngestTriggerFormValue {
     updatesEnabled: boolean;
     __typename: MaybeNull<ScheduleType>;
-    timeDelta: MaybeNull<TimeDeltaFormValue>;
-    cron: MaybeNull<CronExpressionFormValue>;
+    timeDelta: TimeDeltaFormValue;
+    cron: CronExpressionFormValue;
 }

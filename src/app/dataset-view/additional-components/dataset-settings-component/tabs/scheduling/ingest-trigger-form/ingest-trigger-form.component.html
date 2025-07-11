@@ -28,13 +28,13 @@
                             [value]="ScheduleType.TIME_DELTA"
                             data-test-id="trigger-time-delta"
                         >
-                            <app-time-delta-form formControlName="timeDelta"></app-time-delta-form>
+                            <app-time-delta-form [form]="form.controls.timeDelta"></app-time-delta-form>
                         </mat-radio-button>
                         <mat-radio-button
                             [value]="ScheduleType.CRON_5_COMPONENT_EXPRESSION"
                             data-test-id="trigger-cron"
                         >
-                            <app-cron-expression-form formControlName="cron"></app-cron-expression-form>
+                            <app-cron-expression-form [form]="form.controls.cron"></app-cron-expression-form>
                         </mat-radio-button>
                     </mat-radio-group>
 

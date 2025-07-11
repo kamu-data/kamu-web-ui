@@ -15,7 +15,7 @@ import {
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
 import { FlowRetryPolicyFormType, FlowRetryPolicyFormValue } from "./flow-retry-policy-form.types";
-import { TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
+import { TimeDeltaFormType } from "src/app/common/components/time-delta-form/time-delta-form.value";
 import { MaybeNull } from "src/app/interface/app.types";
 import { FlowTooltipsTexts } from "src/app/common/tooltips/flow-tooltips.text";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -58,14 +58,15 @@ export class FlowRetryPolicyFormComponent extends BaseComponent implements OnIni
     public readonly RETRY_TOOLTIP: string = FlowTooltipsTexts.RETRY_SELECTOR_TOOLTIP;
 
     public static buildForm(): FormGroup<FlowRetryPolicyFormType> {
+        const minDelayForm = TimeDeltaFormComponent.buildForm();
+        minDelayForm.patchValue(FlowRetryPolicyFormComponent.DEFAULT_MIN_DELAY);
+
         const form = new FormGroup<FlowRetryPolicyFormType>({
             retriesEnabled: new FormControl<boolean>(false, { validators: [Validators.required] }),
             maxAttempts: new FormControl<number>(FlowRetryPolicyFormComponent.DEFAULT_MAX_ATTEMPTS, {
                 validators: [Validators.required, Validators.min(1), Validators.max(100)],
             }),
-            minDelay: new FormControl<TimeDeltaFormValue>(FlowRetryPolicyFormComponent.DEFAULT_MIN_DELAY, {
-                validators: [Validators.required],
-            }),
+            minDelay: minDelayForm,
             backoffType: new FormControl<FlowRetryBackoffType>(FlowRetryPolicyFormComponent.DEFAULT_BACKOFF_TYPE, {
                 validators: [Validators.required],
             }),
@@ -122,7 +123,7 @@ export class FlowRetryPolicyFormComponent extends BaseComponent implements OnIni
         return this.form.controls.maxAttempts;
     }
 
-    public get minDelay(): FormControl<MaybeNull<TimeDeltaFormValue>> {
+    public get minDelay(): FormGroup<TimeDeltaFormType> {
         return this.form.controls.minDelay;
     }
 

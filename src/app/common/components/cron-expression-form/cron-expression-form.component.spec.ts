@@ -12,13 +12,20 @@ import { Component, ViewChild } from "@angular/core";
 import { CronExpressionFormHarness } from "./cron-expression-form.harness";
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
+import { ReactiveFormsModule } from "@angular/forms";
 
 @Component({
     standalone: true,
-    imports: [CronExpressionFormComponent],
-    template: `<app-cron-expression-form [label]="'Cron expression :'" [placeholder]="'Example: * * * * ?'" />`,
+    imports: [CronExpressionFormComponent, ReactiveFormsModule],
+    template: `<app-cron-expression-form
+        [form]="cronForm"
+        [label]="'Cron expression :'"
+        [placeholder]="'Example: * * * * ?'"
+    />`,
 })
 class TestCronExpressionFormComponent {
+    public cronForm = CronExpressionFormComponent.buildForm();
+
     @ViewChild(CronExpressionFormComponent)
     public formComponent: CronExpressionFormComponent;
 }
@@ -66,33 +73,8 @@ describe("CronExpressionFormComponent", () => {
         expect(cronHarness).toBeTruthy();
     });
 
-    it("should initialize with default values", () => {
+    it("should initialize with default value", () => {
         expect(component.cronExpressionControl.value).toBe("");
-    });
-
-    it("should update form value when writeValue is called", () => {
-        const testValue = { cronExpression: VALID_CRON_EXPRESSION };
-        component.writeValue(testValue);
-
-        expect(component.cronExpressionControl.value).toBe(VALID_CRON_EXPRESSION);
-    });
-
-    it("should disable form when setDisabledState is called with true", () => {
-        component.setDisabledState(true);
-        expect(component.form.disabled).toBe(true);
-    });
-
-    it("should enable form when setDisabledState is called with false", () => {
-        component.setDisabledState(false);
-        expect(component.form.disabled).toBe(false);
-    });
-
-    it("should emit formChange when form values change", () => {
-        const emitSpy = spyOn(component.formChange, "emit");
-
-        component.form.patchValue({ cronExpression: VALID_CRON_EXPRESSION });
-
-        expect(emitSpy).toHaveBeenCalledWith(component.form);
     });
 
     it("should retrieve cron expression from the harness", async () => {

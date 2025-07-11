@@ -121,7 +121,7 @@ export class IngestTriggerFormHarness extends ComponentHarness {
         const scheduleType = await this.getScheduleType();
 
         let timeDelta: TimeDeltaFormValue = { every: null, unit: null };
-        let cron: { cronExpression: string | null } = { cronExpression: null };
+        let cron: { cronExpression: string } = { cronExpression: "" };
 
         if (scheduleType === ScheduleType.TIME_DELTA) {
             const timeDeltaForm = await this.locatorTimeDeltaForm();

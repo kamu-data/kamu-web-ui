@@ -12,8 +12,6 @@ import { ScheduleType } from "../../../dataset-settings.model";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MaybeNull } from "src/app/interface/app.types";
 import { FlowTooltipsTexts } from "src/app/common/tooltips/flow-tooltips.text";
-import { TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
-import { CronExpressionFormValue } from "src/app/common/components/cron-expression-form/cron-expression-form.value";
 import { MatRadioModule } from "@angular/material/radio";
 import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
@@ -49,16 +47,21 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
 
     public readonly ScheduleType: typeof ScheduleType = ScheduleType;
     public readonly UPDATES_TOOLTIP = FlowTooltipsTexts.UPDATE_SELECTOR_TOOLTIP;
-
     public static buildForm(): FormGroup<IngestTriggerFormType> {
+        const cronForm = CronExpressionFormComponent.buildForm();
+        const timeDeltaForm = TimeDeltaFormComponent.buildForm();
+
+        cronForm.disable(); // Initially disabled
+        timeDeltaForm.enable(); // Initially enabled
+
         return new FormGroup<IngestTriggerFormType>({
             updatesEnabled: new FormControl<boolean>(false, { nonNullable: true }),
             __typename: new FormControl<MaybeNull<ScheduleType>>(
                 { value: null, disabled: true },
                 { nonNullable: true },
             ),
-            timeDelta: new FormControl<MaybeNull<TimeDeltaFormValue>>({ value: null, disabled: false }),
-            cron: new FormControl<MaybeNull<CronExpressionFormValue>>({ value: null, disabled: true }),
+            timeDelta: timeDeltaForm,
+            cron: cronForm,
         });
     }
 
@@ -83,7 +86,7 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
             case ScheduleType.CRON_5_COMPONENT_EXPRESSION: {
                 const cronValue = ingestTriggerFormValue.cron;
                 // istanbul ignore next
-                if (!cronValue || !cronValue.cronExpression) {
+                if (!cronValue || !cronValue.cronExpression || cronValue.cronExpression.trim() === "") {
                     throw new Error("Cron expression value is not valid");
                 }
                 return {

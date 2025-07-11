@@ -85,6 +85,19 @@ describe("TimeDeltaFormComponent", () => {
         expect(errorMessage).toEqual("Value should be between 0 to 60");
     });
 
+    it("should show validation error for required fields", async () => {
+        await timeDeltaHarness.setTimeDelta("" /*indicates empty value*/, TimeUnit.Minutes);
+
+        const isInvalid = await timeDeltaHarness.isEveryInputInvalid();
+        expect(isInvalid).toBeTrue();
+
+        const isUntouched = await timeDeltaHarness.isEveryInputUntouched();
+        expect(isUntouched).toBeFalse();
+
+        const errorMessage = await timeDeltaHarness.getErrorMessage();
+        expect(errorMessage).toEqual("Value is required");
+    });
+
     it("should not show error for valid time delta using harness", async () => {
         await timeDeltaHarness.setTimeDelta(30, TimeUnit.Minutes);
 

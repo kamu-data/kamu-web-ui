@@ -15,7 +15,9 @@ export class TimeDeltaFormHarness extends ComponentHarness {
 
     private readonly locatorEveryInput = this.locatorFor('[data-test-id="time-delta-every"]');
     private readonly locatorUnitSelect = this.locatorFor('[data-test-id="time-delta-unit"]');
-    private readonly locatorErrorMessage = this.locatorForOptional('[data-test-id="time-delta-range-error"]');
+
+    private readonly locatorRequiredError = this.locatorForOptional('[data-test-id="time-delta-required-error"]');
+    private readonly locatorRangeError = this.locatorForOptional('[data-test-id="time-delta-range-error"]');
 
     private static readonly UNIT_INDEX: Record<TimeUnit, number> = {
         MINUTES: 0,
@@ -24,14 +26,15 @@ export class TimeDeltaFormHarness extends ComponentHarness {
         WEEKS: 3,
     };
 
-    public async setTimeDelta(every: number | null, unit: TimeUnit | null): Promise<void> {
+    public async setTimeDelta(every: number | "" | null, unit: TimeUnit | null): Promise<void> {
         const input = await this.locatorEveryInput();
         const select = await this.locatorUnitSelect();
 
         await input.clear();
-        if (every === null) {
-            await input.clear();
-        } else {
+        if (every === "") {
+            // Blank input, do not set any value, but ensure the input is touched
+            await input.blur();
+        } else if (every) {
             await input.sendKeys(every.toString());
             await input.blur();
         }
@@ -69,9 +72,13 @@ export class TimeDeltaFormHarness extends ComponentHarness {
     }
 
     public async getErrorMessage(): Promise<string | null> {
-        const errorElement = await this.locatorErrorMessage();
-        if (errorElement) {
-            return await errorElement.text();
+        const requiredErrorElement = await this.locatorRequiredError();
+        if (requiredErrorElement) {
+            return await requiredErrorElement.text();
+        }
+        const rangeErrorElement = await this.locatorRangeError();
+        if (rangeErrorElement) {
+            return await rangeErrorElement.text();
         }
         return null;
     }

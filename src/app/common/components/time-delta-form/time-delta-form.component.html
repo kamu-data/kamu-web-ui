@@ -13,9 +13,22 @@
         class="form-control form-control-width"
         data-test-id="time-delta-every"
     />
-    <ng-container *ngIf="everyControl?.errors?.range && (everyControl?.touched || everyControl?.dirty)">
-        <div class="text-danger fs-12 ms-4 text-break" data-test-id="time-delta-range-error">
-            {{ everyControl.errors?.range.message }}
+
+    <ng-container *ngIf="everyControl.errors && (everyControl?.touched || everyControl?.dirty)">
+        <!-- TODO: convert to appFieldError directive -->
+        <div
+            *ngIf="everyControl.errors.required"
+            class="text-danger fs-12 ms-4 text-break"
+            data-test-id="time-delta-required-error"
+        >
+            Value is required
+        </div>
+        <div
+            *ngIf="everyControl.errors.range"
+            class="text-danger fs-12 ms-4 text-break"
+            data-test-id="time-delta-range-error"
+        >
+            {{ everyControl.errors.range.message }}
         </div>
     </ng-container>
 </div>

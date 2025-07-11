@@ -564,6 +564,7 @@ export const provideConditionalGuardedRoutes = (): Provider => ({
                       path: "",
                       canActivate: [forbidAnonymousAccessGuardFn],
                       children: ANONYMOUS_GUARDED_ROUTES,
+                      runGuardsAndResolvers: "always",
                   },
               ];
     },

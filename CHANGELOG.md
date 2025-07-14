@@ -31,6 +31,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - SetTransform event: improved search
 - Migrated to standalone components
 
+## [Unreleased]
+### Added
+- Added FormValidationErrorsDirective for all form errors
+
 ## [0.50.0] - 2025-06-19
 ### Added
 - Added webhook subscriptions feature

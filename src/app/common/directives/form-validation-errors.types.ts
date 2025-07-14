@@ -15,7 +15,9 @@ export type ValidationError =
     | "email"
     | "min"
     | "max"
-    | "whitespace";
+    | "whitespace"
+    | "range"
+    | "invalidCronExpression";
 
 export type ValidationErrorTuple = {
     error: ValidationError;

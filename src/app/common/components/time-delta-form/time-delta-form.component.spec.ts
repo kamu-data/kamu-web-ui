@@ -94,6 +94,8 @@ describe("TimeDeltaFormComponent", () => {
         const isUntouched = await timeDeltaHarness.isEveryInputUntouched();
         expect(isUntouched).toBeFalse();
 
+        fixture.detectChanges();
+
         const errorMessage = await timeDeltaHarness.getErrorMessage();
         expect(errorMessage).toEqual("Value is required");
     });
@@ -108,7 +110,7 @@ describe("TimeDeltaFormComponent", () => {
         expect(isUntouched).toBeFalse();
 
         const errorMessage = await timeDeltaHarness.getErrorMessage();
-        expect(errorMessage).toBeNull();
+        expect(errorMessage).toBe("");
     });
 
     it("should not display error message if every input was not touched even though it is invalid", async () => {
@@ -119,6 +121,6 @@ describe("TimeDeltaFormComponent", () => {
         expect(isUntouched).toBeTrue();
 
         const errorMessage = await timeDeltaHarness.getErrorMessage();
-        expect(errorMessage).toBeNull();
+        expect(errorMessage).toBe("");
     });
 });

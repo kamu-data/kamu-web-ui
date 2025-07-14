@@ -53,7 +53,6 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges, OnIn
         const label = this.fieldLabel || "Input";
 
         const errorDetails = this.fieldControl?.getError(error) as ValidationErrors;
-
         switch (error) {
             case "required":
                 return `${label} is required`;
@@ -77,6 +76,10 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges, OnIn
                 return `The maximum value must be ${errorDetails?.max}`;
             case "whitespace":
                 return `${label} can't contain spaces`;
+            case "range":
+                return `${errorDetails.message}`;
+            case "invalidCronExpression":
+                return "Invalid expression";
 
             default:
                 return "Unknown validator";
@@ -137,7 +140,11 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges, OnIn
                 this.unsubscribe();
 
                 this.controlSubscription = this.fieldControl?.valueChanges
-                    .pipe(tap(() => this.updateErrorMessage()))
+                    .pipe(
+                        tap(() => {
+                            this.updateErrorMessage();
+                        }),
+                    )
                     .subscribe();
             }
 

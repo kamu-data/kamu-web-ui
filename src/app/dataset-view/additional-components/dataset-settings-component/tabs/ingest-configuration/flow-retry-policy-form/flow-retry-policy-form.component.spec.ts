@@ -150,7 +150,7 @@ describe("FlowRetryPolicyFormComponent", () => {
 
         // Verify no validation errors in the nested TimeDelta component
         const validationError = await flowRetryPolicyFormHarness.getMinDelayValidationError();
-        expect(validationError).toBeNull();
+        expect(validationError).toEqual("");
     });
 
     it("should set backoff type via harness and reflect in form", async () => {
@@ -178,7 +178,7 @@ describe("FlowRetryPolicyFormComponent", () => {
 
         // Verify no validation errors in the nested TimeDelta component
         const validationError = await flowRetryPolicyFormHarness.getMinDelayValidationError();
-        expect(validationError).toBeNull();
+        expect(validationError).toEqual("");
     });
 
     it("should get default form value when retries are disabled", async () => {
@@ -270,7 +270,6 @@ describe("FlowRetryPolicyFormComponent", () => {
 
         // Verify validation error appears in the nested TimeDelta component
         const validationError = await flowRetryPolicyFormHarness.getMinDelayValidationError();
-        expect(validationError).not.toBeNull();
-        expect(validationError).toContain("Value should be between 0 to 60");
+        expect(validationError).toEqual("Value should be between 0 to 60");
     });
 });

@@ -99,6 +99,12 @@ fragment FlowSummaryData on Flow {
         newHead
       }
     }
+
+    ... on FlowDescriptionWebhookDeliver {
+      targetUrl
+      label
+      eventType
+    }
   }
 
   flowId

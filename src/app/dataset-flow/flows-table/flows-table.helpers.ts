@@ -40,6 +40,8 @@ export class FlowTableHelpers {
                 return `Garbage collector`;
             case "FlowDescriptionDatasetReset":
                 return `Reset to seed`;
+            case "FlowDescriptionWebhookDeliver":
+                return "Webhook message delivery";
             /* istanbul ignore next */
             default:
                 return "Unsupported flow description";
@@ -178,13 +180,16 @@ export class FlowTableHelpers {
                                 }
 
                             case "FlowDescriptionDatasetReset":
-                                switch (element.description.__typename) {
-                                    case "FlowDescriptionDatasetReset":
-                                        return "All dataset history has been cleared";
-                                    /* istanbul ignore next */
-                                    default:
-                                        return "Unknown reset result typename";
-                                }
+                                return "All dataset history has been cleared";
+
+                            case "FlowDescriptionWebhookDeliver":
+                                return (
+                                    `Delivered message ${element.description.eventType} ` +
+                                    (element.description.label.length > 0
+                                        ? `via subscription "${element.description.label}"`
+                                        : `to ${element.description.targetUrl}`)
+                                );
+
                             // TODO
                             //  - GC
                             /* istanbul ignore next */
@@ -242,6 +247,15 @@ export class FlowTableHelpers {
                             engineDesc.label ?? engineDesc.name
                         }" engine`;
                     }
+                    case "FlowDescriptionWebhookDeliver": {
+                        return (
+                            `Delivering message ${element.description.eventType} ` +
+                            (element.description.label.length
+                                ? `via subscription "${element.description.label}"`
+                                : `to ${element.description.targetUrl}`)
+                        );
+                    }
+
                     // TODO: consider what to display for other flow types
                     //  - push ingest
                     //  - compacting

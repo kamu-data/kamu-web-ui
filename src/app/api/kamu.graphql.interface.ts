@@ -51,6 +51,8 @@ export type Scalars = {
     Multihash: string;
     TaskID: string;
     URL: string;
+    /** URL is a String implementing the [URL Standard](http://url.spec.whatwg.org/) */
+    Url: string;
     WebhookEventType: string;
     WebhookSubscriptionID: string;
     WebhookSubscriptionLabel: string;
@@ -2078,7 +2080,8 @@ export type FlowDescription =
     | FlowDescriptionDatasetPollingIngest
     | FlowDescriptionDatasetPushIngest
     | FlowDescriptionDatasetReset
-    | FlowDescriptionSystemGc;
+    | FlowDescriptionSystemGc
+    | FlowDescriptionWebhookDeliver;
 
 export type FlowDescriptionDatasetExecuteTransform = {
     __typename?: "FlowDescriptionDatasetExecuteTransform";
@@ -2158,6 +2161,13 @@ export type FlowDescriptionUpdateResultUpToDate = {
     __typename?: "FlowDescriptionUpdateResultUpToDate";
     /** The value indicates whether the api cache was used */
     uncacheable: Scalars["Boolean"];
+};
+
+export type FlowDescriptionWebhookDeliver = {
+    __typename?: "FlowDescriptionWebhookDeliver";
+    eventType: Scalars["String"];
+    label: Scalars["String"];
+    targetUrl: Scalars["Url"];
 };
 
 export type FlowEdge = {
@@ -5739,7 +5749,8 @@ export type FlowSummaryDataFragment = {
               __typename?: "FlowDescriptionDatasetReset";
               resetResult?: { __typename?: "FlowDescriptionResetResult"; newHead: string } | null;
           }
-        | { __typename?: "FlowDescriptionSystemGC"; dummy: boolean };
+        | { __typename?: "FlowDescriptionSystemGC"; dummy: boolean }
+        | { __typename?: "FlowDescriptionWebhookDeliver"; targetUrl: string; label: string; eventType: string };
     initiator?: ({ __typename?: "Account" } & AccountFragment) | null;
     outcome?:
         | ({ __typename?: "FlowAbortedResult" } & FlowOutcomeData_FlowAbortedResult_Fragment)
@@ -7216,6 +7227,11 @@ export const FlowSummaryDataFragmentDoc = gql`
                 resetResult {
                     newHead
                 }
+            }
+            ... on FlowDescriptionWebhookDeliver {
+                targetUrl
+                label
+                eventType
             }
         }
         flowId

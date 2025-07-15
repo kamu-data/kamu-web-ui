@@ -26,7 +26,7 @@ import { mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 
-describe("FlowsComponent", () => {
+fdescribe("FlowsComponent", () => {
     let component: FlowsComponent;
     let fixture: ComponentFixture<FlowsComponent>;
     let datasetFlowsService: DatasetFlowsService;
@@ -193,6 +193,23 @@ describe("FlowsComponent", () => {
         fixture.detectChanges();
         const progressBarAfter = findElementByDataTestId(fixture, "init-progress-bar");
         expect(progressBarAfter).toBeUndefined();
+        discardPeriodicTasks();
+    }));
+
+    it("should check 'update now' link for root dataset with PollingSource", fakeAsync(() => {
+        fixture.detectChanges();
+        mockFlowsTableData.connectionDataForWidget.nodes = [];
+        mockFlowsTableData.connectionDataForTable.nodes = [];
+        spyOn(datasetFlowsService, "allFlowsPaused").and.returnValue(of(false));
+        spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData).pipe(delay(10)));
+        spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
+        tick(10);
+        fixture.detectChanges();
+        const updateNowClickSpy = spyOn(component, "updateNow");
+        const updateNowLink = findElementByDataTestId(fixture, "update-now-link");
+        expect(updateNowLink).toBeDefined();
+        updateNowLink?.click();
+        expect(updateNowClickSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 });

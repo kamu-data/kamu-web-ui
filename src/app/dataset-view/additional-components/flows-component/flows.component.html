@@ -108,7 +108,8 @@
                         ]"
                         >update configuration settings</a
                     >
-                    or <a class="text-decoration-none" (click)="updateNow()">update now</a>
+                    or
+                    <a class="text-decoration-none" (click)="updateNow()" data-test-id="update-now-link">update now</a>
                 </span>
             </ng-container>
             <ng-container *ngIf="isSetPollingSourceEmpty">

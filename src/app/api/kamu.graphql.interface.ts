@@ -5559,8 +5559,6 @@ type FlowHistoryData_FlowEventInitiated_Fragment = {
         | { __typename: "FlowActivationCauseAutoPolling" }
         | {
               __typename: "FlowActivationCauseInputDatasetFlow";
-              flowId: string;
-              flowType: DatasetFlowType;
               dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
           }
         | { __typename: "FlowActivationCauseManual"; initiator: { __typename?: "Account" } & AccountFragment }
@@ -7344,8 +7342,6 @@ export const FlowHistoryDataFragmentDoc = gql`
                     dataset {
                         ...DatasetBasics
                     }
-                    flowId
-                    flowType
                 }
             }
         }

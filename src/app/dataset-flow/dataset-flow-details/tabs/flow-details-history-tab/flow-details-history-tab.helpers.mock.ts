@@ -334,8 +334,6 @@ export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         activationCause: {
             __typename: "FlowActivationCauseInputDatasetFlow",
-            flowId: "1",
-            flowType: DatasetFlowType.ExecuteTransform,
             dataset: mockDatasetSearchResult.datasets[0],
         },
     },

@@ -24,8 +24,6 @@ fragment FlowHistoryData on FlowEvent {
         dataset {
           ...DatasetBasics
         }
-        flowId
-        flowType
       }
     }
   }

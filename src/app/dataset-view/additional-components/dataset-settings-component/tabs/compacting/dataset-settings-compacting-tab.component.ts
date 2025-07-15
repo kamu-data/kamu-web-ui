@@ -14,7 +14,7 @@ import { CompactionTooltipsTexts } from "src/app/common/tooltips/compacting.text
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { SliceUnit, sliceSizeMapper } from "./dataset-settings-compacting-tab.types";
 import { DatasetCompactionService } from "../../services/dataset-compaction.service";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import AppValues from "src/app/common/values/app.values";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -48,7 +48,7 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent {
     private datasetCompactionService = inject(DatasetCompactionService);
     private navigationService = inject(NavigationService);
 
-    @Input(RoutingResolvers.DATASET_SETTINGS_COMPACTION_KEY) public datasetBasics: DatasetBasicsFragment;
+    @Input(RoutingResolvers.DATASET_SETTINGS_COMPACTION_KEY) public compactingTabData: DatasetViewData;
     public hardCompactionForm = this.fb.group({
         sliceUnit: [SliceUnit.MB, [Validators.required]],
         sliceSize: [300, [Validators.required, Validators.min(1)]],
@@ -81,6 +81,10 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent {
             (this.hardCompactionForm.controls.sliceSize.value as number) *
             sliceSizeMapper[this.hardCompactionForm.controls.sliceUnit.value as SliceUnit]
         );
+    }
+
+    private get datasetBasics(): DatasetBasicsFragment {
+        return this.compactingTabData.datasetBasics;
     }
 
     public onRunCompaction(): void {

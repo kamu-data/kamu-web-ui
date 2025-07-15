@@ -93,7 +93,7 @@
     </ng-container>
     <ng-template #noRuns>
         <p class="ps-2 pt-2" data-test-id="empty-flow-runs-block">
-            <ng-container *ngIf="!isSetTransformEmpty && !isSetPollingSourceEmpty">
+            <ng-container *ngIf="!isSetTransformEmpty && !isSetPollingSourceEmpty && !hasPushSources">
                 No flow runs.
                 <span *ngIf="canRunFlows">
                     You can
@@ -108,6 +108,7 @@
                         ]"
                         >update configuration settings</a
                     >
+                    or <a class="text-decoration-none" (click)="updateNow()">update now</a>
                 </span>
             </ng-container>
             <ng-container *ngIf="isSetPollingSourceEmpty">
@@ -136,6 +137,7 @@
                     >add transformation
                 </a>
             </ng-container>
+            <ng-container *ngIf="hasPushSources"> No flow runs. </ng-container>
         </p>
     </ng-template>
     <ng-template #loading>

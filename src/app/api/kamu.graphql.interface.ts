@@ -1947,8 +1947,8 @@ export type Flow = {
     initiator?: Maybe<Account>;
     /** Outcome of the flow (Finished state only) */
     outcome?: Maybe<FlowOutcome>;
-    /** Primary flow trigger */
-    primaryTrigger: FlowTriggerInstance;
+    /** Primary flow activation cause */
+    primaryActivationCause: FlowActivationCause;
     /** Flow retry policy */
     retryPolicy?: Maybe<FlowRetryPolicy>;
     /** Start condition */
@@ -1964,6 +1964,34 @@ export type Flow = {
 export type FlowAbortedResult = {
     __typename?: "FlowAbortedResult";
     message: Scalars["String"];
+};
+
+export type FlowActivationCause =
+    | FlowActivationCauseAutoPolling
+    | FlowActivationCauseInputDatasetFlow
+    | FlowActivationCauseManual
+    | FlowActivationCausePush;
+
+export type FlowActivationCauseAutoPolling = {
+    __typename?: "FlowActivationCauseAutoPolling";
+    dummy: Scalars["Boolean"];
+};
+
+export type FlowActivationCauseInputDatasetFlow = {
+    __typename?: "FlowActivationCauseInputDatasetFlow";
+    dataset: Dataset;
+    flowId: Scalars["FlowID"];
+    flowType: DatasetFlowType;
+};
+
+export type FlowActivationCauseManual = {
+    __typename?: "FlowActivationCauseManual";
+    initiator: Account;
+};
+
+export type FlowActivationCausePush = {
+    __typename?: "FlowActivationCausePush";
+    dummy: Scalars["Boolean"];
 };
 
 export type FlowConfigCompactionInput =
@@ -2186,11 +2214,18 @@ export type FlowEventAborted = FlowEvent & {
     eventTime: Scalars["DateTime"];
 };
 
-export type FlowEventInitiated = FlowEvent & {
-    __typename?: "FlowEventInitiated";
+export type FlowEventActivationCauseAdded = FlowEvent & {
+    __typename?: "FlowEventActivationCauseAdded";
+    activationCause: FlowActivationCause;
     eventId: Scalars["EventID"];
     eventTime: Scalars["DateTime"];
-    trigger: FlowTriggerInstance;
+};
+
+export type FlowEventInitiated = FlowEvent & {
+    __typename?: "FlowEventInitiated";
+    activationCause: FlowActivationCause;
+    eventId: Scalars["EventID"];
+    eventTime: Scalars["DateTime"];
 };
 
 export type FlowEventScheduledForActivation = FlowEvent & {
@@ -2215,13 +2250,6 @@ export type FlowEventTaskChanged = FlowEvent & {
     task: Task;
     taskId: Scalars["TaskID"];
     taskStatus: TaskStatus;
-};
-
-export type FlowEventTriggerAdded = FlowEvent & {
-    __typename?: "FlowEventTriggerAdded";
-    eventId: Scalars["EventID"];
-    eventTime: Scalars["DateTime"];
-    trigger: FlowTriggerInstance;
 };
 
 export type FlowFailedError = {
@@ -2360,11 +2388,6 @@ export type FlowTrigger = {
     schedule?: Maybe<FlowTriggerScheduleRule>;
 };
 
-export type FlowTriggerAutoPolling = {
-    __typename?: "FlowTriggerAutoPolling";
-    dummy: Scalars["Boolean"];
-};
-
 export type FlowTriggerBatchingRule = {
     __typename?: "FlowTriggerBatchingRule";
     maxBatchingInterval: TimeDelta;
@@ -2374,29 +2397,6 @@ export type FlowTriggerBatchingRule = {
 export type FlowTriggerInput =
     | { batching: BatchingInput; schedule?: never }
     | { batching?: never; schedule: ScheduleInput };
-
-export type FlowTriggerInputDatasetFlow = {
-    __typename?: "FlowTriggerInputDatasetFlow";
-    dataset: Dataset;
-    flowId: Scalars["FlowID"];
-    flowType: DatasetFlowType;
-};
-
-export type FlowTriggerInstance =
-    | FlowTriggerAutoPolling
-    | FlowTriggerInputDatasetFlow
-    | FlowTriggerManual
-    | FlowTriggerPush;
-
-export type FlowTriggerManual = {
-    __typename?: "FlowTriggerManual";
-    initiator: Account;
-};
-
-export type FlowTriggerPush = {
-    __typename?: "FlowTriggerPush";
-    dummy: Scalars["Boolean"];
-};
 
 export type FlowTriggerScheduleRule = Cron5ComponentExpression | TimeDelta;
 
@@ -5402,6 +5402,9 @@ export type GetFlowByIdQuery = {
                                             __typename?: "FlowEventAborted";
                                         } & FlowHistoryData_FlowEventAborted_Fragment)
                                       | ({
+                                            __typename?: "FlowEventActivationCauseAdded";
+                                        } & FlowHistoryData_FlowEventActivationCauseAdded_Fragment)
+                                      | ({
                                             __typename?: "FlowEventInitiated";
                                         } & FlowHistoryData_FlowEventInitiated_Fragment)
                                       | ({
@@ -5413,9 +5416,6 @@ export type GetFlowByIdQuery = {
                                       | ({
                                             __typename?: "FlowEventTaskChanged";
                                         } & FlowHistoryData_FlowEventTaskChanged_Fragment)
-                                      | ({
-                                            __typename?: "FlowEventTriggerAdded";
-                                        } & FlowHistoryData_FlowEventTriggerAdded_Fragment)
                                   >;
                               } & FlowSummaryDataFragment;
                           };
@@ -5535,20 +5535,36 @@ type FlowHistoryData_FlowConfigSnapshotModified_Fragment = {
 
 type FlowHistoryData_FlowEventAborted_Fragment = { __typename: "FlowEventAborted"; eventId: string; eventTime: string };
 
-type FlowHistoryData_FlowEventInitiated_Fragment = {
-    __typename: "FlowEventInitiated";
+type FlowHistoryData_FlowEventActivationCauseAdded_Fragment = {
+    __typename: "FlowEventActivationCauseAdded";
     eventId: string;
     eventTime: string;
-    trigger:
-        | { __typename: "FlowTriggerAutoPolling" }
+    activationCause:
+        | { __typename: "FlowActivationCauseAutoPolling" }
         | {
-              __typename: "FlowTriggerInputDatasetFlow";
+              __typename: "FlowActivationCauseInputDatasetFlow";
               flowId: string;
               flowType: DatasetFlowType;
               dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
           }
-        | { __typename: "FlowTriggerManual"; initiator: { __typename?: "Account" } & AccountFragment }
-        | { __typename: "FlowTriggerPush" };
+        | { __typename: "FlowActivationCauseManual"; initiator: { __typename?: "Account" } & AccountFragment }
+        | { __typename: "FlowActivationCausePush" };
+};
+
+type FlowHistoryData_FlowEventInitiated_Fragment = {
+    __typename: "FlowEventInitiated";
+    eventId: string;
+    eventTime: string;
+    activationCause:
+        | { __typename: "FlowActivationCauseAutoPolling" }
+        | {
+              __typename: "FlowActivationCauseInputDatasetFlow";
+              flowId: string;
+              flowType: DatasetFlowType;
+              dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+          }
+        | { __typename: "FlowActivationCauseManual"; initiator: { __typename?: "Account" } & AccountFragment }
+        | { __typename: "FlowActivationCausePush" };
 };
 
 type FlowHistoryData_FlowEventScheduledForActivation_Fragment = {
@@ -5605,30 +5621,14 @@ type FlowHistoryData_FlowEventTaskChanged_Fragment = {
     };
 };
 
-type FlowHistoryData_FlowEventTriggerAdded_Fragment = {
-    __typename: "FlowEventTriggerAdded";
-    eventId: string;
-    eventTime: string;
-    trigger:
-        | { __typename: "FlowTriggerAutoPolling" }
-        | {
-              __typename: "FlowTriggerInputDatasetFlow";
-              flowId: string;
-              flowType: DatasetFlowType;
-              dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
-          }
-        | { __typename: "FlowTriggerManual"; initiator: { __typename?: "Account" } & AccountFragment }
-        | { __typename: "FlowTriggerPush" };
-};
-
 export type FlowHistoryDataFragment =
     | FlowHistoryData_FlowConfigSnapshotModified_Fragment
     | FlowHistoryData_FlowEventAborted_Fragment
+    | FlowHistoryData_FlowEventActivationCauseAdded_Fragment
     | FlowHistoryData_FlowEventInitiated_Fragment
     | FlowHistoryData_FlowEventScheduledForActivation_Fragment
     | FlowHistoryData_FlowEventStartConditionUpdated_Fragment
-    | FlowHistoryData_FlowEventTaskChanged_Fragment
-    | FlowHistoryData_FlowEventTriggerAdded_Fragment;
+    | FlowHistoryData_FlowEventTaskChanged_Fragment;
 
 export type FlowItemWidgetDataFragment = {
     __typename?: "Flow";
@@ -7327,20 +7327,20 @@ export const FlowHistoryDataFragmentDoc = gql`
             __typename
         }
         ... on FlowEventInitiated {
-            trigger {
+            activationCause {
                 __typename
-                ... on FlowTriggerAutoPolling {
+                ... on FlowActivationCauseAutoPolling {
                     __typename
                 }
-                ... on FlowTriggerManual {
+                ... on FlowActivationCauseManual {
                     initiator {
                         ...Account
                     }
                 }
-                ... on FlowTriggerPush {
+                ... on FlowActivationCausePush {
                     __typename
                 }
-                ... on FlowTriggerInputDatasetFlow {
+                ... on FlowActivationCauseInputDatasetFlow {
                     dataset {
                         ...DatasetBasics
                     }
@@ -7405,21 +7405,21 @@ export const FlowHistoryDataFragmentDoc = gql`
             }
             nextAttemptAt
         }
-        ... on FlowEventTriggerAdded {
-            trigger {
+        ... on FlowEventActivationCauseAdded {
+            activationCause {
                 __typename
-                ... on FlowTriggerAutoPolling {
+                ... on FlowActivationCauseAutoPolling {
                     __typename
                 }
-                ... on FlowTriggerManual {
+                ... on FlowActivationCauseManual {
                     initiator {
                         ...Account
                     }
                 }
-                ... on FlowTriggerPush {
+                ... on FlowActivationCausePush {
                     __typename
                 }
-                ... on FlowTriggerInputDatasetFlow {
+                ... on FlowActivationCauseInputDatasetFlow {
                     dataset {
                         ...DatasetBasics
                     }

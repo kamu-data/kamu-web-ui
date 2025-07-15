@@ -7,20 +7,20 @@ fragment FlowHistoryData on FlowEvent {
   }
 
   ... on FlowEventInitiated {
-    trigger {
+    activationCause {
       __typename
-      ... on FlowTriggerAutoPolling {
+      ... on FlowActivationCauseAutoPolling {
         __typename
       }
-      ... on FlowTriggerManual {
+      ... on FlowActivationCauseManual {
         initiator {
           ...Account
         }
       }
-      ... on FlowTriggerPush {
+      ... on FlowActivationCausePush {
         __typename
       }
-      ... on FlowTriggerInputDatasetFlow {
+      ... on FlowActivationCauseInputDatasetFlow {
         dataset {
           ...DatasetBasics
         }
@@ -93,21 +93,21 @@ fragment FlowHistoryData on FlowEvent {
     nextAttemptAt
   }
 
-  ... on FlowEventTriggerAdded {
-    trigger {
+  ... on FlowEventActivationCauseAdded {
+    activationCause {
       __typename
-      ... on FlowTriggerAutoPolling {
+      ... on FlowActivationCauseAutoPolling {
         __typename
       }
-      ... on FlowTriggerManual {
+      ... on FlowActivationCauseManual {
         initiator {
           ...Account
         }
       }
-      ... on FlowTriggerPush {
+      ... on FlowActivationCausePush {
         __typename
       }
-      ... on FlowTriggerInputDatasetFlow {
+      ... on FlowActivationCauseInputDatasetFlow {
         dataset {
           ...DatasetBasics
         }

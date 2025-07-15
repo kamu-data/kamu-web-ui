@@ -85,8 +85,8 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         __typename: "FlowEventInitiated",
         eventId: "0",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
-        trigger: {
-            __typename: "FlowTriggerAutoPolling",
+        activationCause: {
+            __typename: "FlowActivationCauseAutoPolling",
         },
     },
     {
@@ -119,11 +119,11 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         nextAttemptAt: null,
     },
     {
-        __typename: "FlowEventTriggerAdded",
+        __typename: "FlowEventActivationCauseAdded",
         eventId: "4",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
-        trigger: {
-            __typename: "FlowTriggerManual",
+        activationCause: {
+            __typename: "FlowActivationCauseManual",
             initiator: {
                 id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
                 accountName: "kamu",
@@ -137,22 +137,22 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         },
     },
     {
-        __typename: "FlowEventTriggerAdded",
+        __typename: "FlowEventActivationCauseAdded",
         eventId: "5",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
-        trigger: {
-            __typename: "FlowTriggerInputDatasetFlow",
+        activationCause: {
+            __typename: "FlowActivationCauseInputDatasetFlow",
             flowId: "1",
             flowType: DatasetFlowType.ExecuteTransform,
             dataset: mockDatasetSearchResult.datasets[0],
         },
     },
     {
-        __typename: "FlowEventTriggerAdded",
+        __typename: "FlowEventActivationCauseAdded",
         eventId: "6",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
-        trigger: {
-            __typename: "FlowTriggerPush",
+        activationCause: {
+            __typename: "FlowActivationCausePush",
         },
     },
     {
@@ -239,8 +239,8 @@ export const mockFlowHistoryDataFragmentForIconOptions: FlowHistoryDataFragment[
         __typename: "FlowEventInitiated",
         eventId: "0",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
-        trigger: {
-            __typename: "FlowTriggerAutoPolling",
+        activationCause: {
+            __typename: "FlowActivationCauseAutoPolling",
         },
     },
     {
@@ -260,11 +260,11 @@ export const mockFlowHistoryDataFragmentForIconOptions: FlowHistoryDataFragment[
         nextAttemptAt: null,
     },
     {
-        __typename: "FlowEventTriggerAdded",
+        __typename: "FlowEventActivationCauseAdded",
         eventId: "3",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
-        trigger: {
-            __typename: "FlowTriggerPush",
+        activationCause: {
+            __typename: "FlowActivationCausePush",
         },
     },
     {
@@ -314,8 +314,8 @@ export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[
         __typename: "FlowEventInitiated",
         eventId: "0",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
-        trigger: {
-            __typename: "FlowTriggerManual",
+        activationCause: {
+            __typename: "FlowActivationCauseManual",
             initiator: {
                 id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
                 accountName: "kamu",
@@ -332,8 +332,8 @@ export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[
         __typename: "FlowEventInitiated",
         eventId: "0",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
-        trigger: {
-            __typename: "FlowTriggerInputDatasetFlow",
+        activationCause: {
+            __typename: "FlowActivationCauseInputDatasetFlow",
             flowId: "1",
             flowType: DatasetFlowType.ExecuteTransform,
             dataset: mockDatasetSearchResult.datasets[0],

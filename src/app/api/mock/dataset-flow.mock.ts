@@ -1238,8 +1238,8 @@ export const mockFlowHistoryDataFragment: FlowHistoryDataFragment[] = [
         __typename: "FlowEventInitiated",
         eventId: "0",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
-        trigger: {
-            __typename: "FlowTriggerAutoPolling",
+        activationCause: {
+            __typename: "FlowActivationCauseAutoPolling",
         },
     },
     {
@@ -1336,8 +1336,8 @@ export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
                                     __typename: "FlowEventInitiated",
                                     eventId: "3565",
                                     eventTime: "2024-03-15T19:43:37.844613373+00:00",
-                                    trigger: {
-                                        __typename: "FlowTriggerAutoPolling",
+                                    activationCause: {
+                                        __typename: "FlowActivationCauseAutoPolling",
                                     },
                                 },
                                 {

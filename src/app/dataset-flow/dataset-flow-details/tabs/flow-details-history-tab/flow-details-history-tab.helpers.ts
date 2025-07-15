@@ -12,14 +12,14 @@ import {
     FlowEventScheduledForActivation,
     FlowEventStartConditionUpdated,
     FlowEventTaskChanged,
-    FlowEventTriggerAdded,
     FlowHistoryDataFragment,
     FlowOutcomeDataFragment,
     FlowStartCondition,
     FlowStatus,
     FlowSummaryDataFragment,
-    FlowTriggerInstance,
+    FlowActivationCause,
     TaskStatus,
+    FlowEventActivationCauseAdded,
 } from "src/app/api/kamu.graphql.interface";
 import { pluralize } from "src/app/common/helpers/app.helpers";
 import { DataHelpers } from "src/app/common/helpers/data.helpers";
@@ -34,7 +34,7 @@ export class DatasetFlowDetailsHelpers {
         const eventTypename = flowEvent.__typename;
         switch (eventTypename) {
             case "FlowEventInitiated":
-                return `Flow initiated ${this.describeTrigger((flowEvent as FlowEventInitiated).trigger)}`;
+                return `Flow initiated ${this.describeActivationCause((flowEvent as FlowEventInitiated).activationCause)}`;
             case "FlowEventAborted":
                 return "Flow was aborted";
             case "FlowEventTaskChanged": {
@@ -43,8 +43,8 @@ export class DatasetFlowDetailsHelpers {
                     flowDetails,
                 )} task ${DatasetFlowDetailsHelpers.flowEventEndOfMessage(event)}`;
             }
-            case "FlowEventTriggerAdded":
-                return `Additionally triggered ${this.describeTrigger((flowEvent as FlowEventTriggerAdded).trigger)}`;
+            case "FlowEventActivationCauseAdded":
+                return `Additionally triggered ${this.describeActivationCause((flowEvent as FlowEventActivationCauseAdded).activationCause)}`;
             case "FlowEventStartConditionUpdated": {
                 const startConditionEvent = flowEvent as FlowEventStartConditionUpdated;
                 return `Waiting for ${this.describeStartCondition(startConditionEvent)}`;
@@ -66,7 +66,7 @@ export class DatasetFlowDetailsHelpers {
                 return { icon: "flag_circle", class: "completed-status" };
             case "FlowEventAborted":
                 return { icon: "cancel", class: "aborted-outcome" };
-            case "FlowEventTriggerAdded":
+            case "FlowEventActivationCauseAdded":
                 return { icon: "add_circle", class: "text-muted" };
             case "FlowEventStartConditionUpdated":
                 return { icon: "downloading", class: "text-muted" };
@@ -126,8 +126,8 @@ export class DatasetFlowDetailsHelpers {
         const eventTypename = flowEvent.__typename;
         switch (eventTypename) {
             case "FlowEventInitiated":
-            case "FlowEventTriggerAdded":
-                return this.describeTriggerDetails((flowEvent as FlowEventInitiated).trigger);
+            case "FlowEventActivationCauseAdded":
+                return this.describeActivationCauseDetails((flowEvent as FlowEventInitiated).activationCause);
             case "FlowConfigSnapshotModified": {
                 const event = flowEvent as FlowConfigSnapshotModified;
                 switch (event.configSnapshot.__typename) {
@@ -295,32 +295,32 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    private static describeTrigger(trigger: FlowTriggerInstance): string {
-        switch (trigger.__typename) {
-            case "FlowTriggerAutoPolling":
+    private static describeActivationCause(activationCause: FlowActivationCause): string {
+        switch (activationCause.__typename) {
+            case "FlowActivationCauseAutoPolling":
                 return "automatically";
-            case "FlowTriggerManual":
+            case "FlowActivationCauseManual":
                 return "manually";
-            case "FlowTriggerPush":
+            case "FlowActivationCausePush":
                 return "after push event";
-            case "FlowTriggerInputDatasetFlow":
+            case "FlowActivationCauseInputDatasetFlow":
                 return "after input dataset event";
             /* istanbul ignore next */
             default:
-                throw new Error("Unknown trigger typename");
+                throw new Error("Unknown activation cause typename");
         }
     }
 
-    private static describeTriggerDetails(trigger: FlowTriggerInstance): string {
-        switch (trigger.__typename) {
-            case "FlowTriggerAutoPolling":
+    private static describeActivationCauseDetails(activationCause: FlowActivationCause): string {
+        switch (activationCause.__typename) {
+            case "FlowActivationCauseAutoPolling":
                 return "";
-            case "FlowTriggerManual":
-                return `Triggered by ${trigger.initiator.accountName}`;
-            case "FlowTriggerPush":
+            case "FlowActivationCauseManual":
+                return `Triggered by ${activationCause.initiator.accountName}`;
+            case "FlowActivationCausePush":
                 return "";
-            case "FlowTriggerInputDatasetFlow":
-                return `Input dataset: ${trigger.dataset.owner.accountName}/${trigger.dataset.name}`;
+            case "FlowActivationCauseInputDatasetFlow":
+                return `Input dataset: ${activationCause.dataset.owner.accountName}/${activationCause.dataset.name}`;
             /* istanbul ignore next */
             default:
                 throw new Error("Unknown trigger typename");

@@ -1,4 +1,4 @@
-<div [formGroup]="form">
+<div [formGroup]="form" *ngIf="form">
     <div class="d-flex">
         <app-tooltip-icon [tooltip]="tooltip" />
         <label class="form-label">{{ label }} <span *ngIf="requiredField" class="text-danger">*</span></label>
@@ -10,22 +10,15 @@
         [attr.data-test-id]="dataTestId"
         [value]="value"
         trim
+        #control
     />
-    <div *ngIf="form.get(controlName)?.invalid && (form.get(controlName)?.touched || form.get(controlName)?.dirty)">
-        <div *ngIf="form?.get(controlName)?.errors?.required" class="mt-1">
-            <span class="text-danger fs-12" attr.data-test-id="error-{{ controlName }}-required">
-                Field is required</span
-            >
-        </div>
-        <div *ngIf="form?.get(controlName)?.errors?.pattern" class="mt-1">
-            <span class="text-danger fs-12" attr.data-test-id="error-{{ controlName }}-pattern">
-                Field format is wrong</span
-            >
-        </div>
-        <div *ngIf="form?.get(controlName)?.errors?.maxlength" class="mt-1">
-            <span class="text-danger fs-12" attr.data-test-id="error-{{ controlName }}-maxLength">
-                Field can be max {{ form.get(controlName)?.errors?.maxlength.requiredLength }} character</span
-            >
-        </div>
-    </div>
+    <div
+        class="text-danger fs-12"
+        [input]="control"
+        [fieldControl]="form.get(controlName)"
+        [fieldLabel]="label"
+        [appFieldError]="['required', 'pattern', 'maxlength', 'noneOf']"
+        [group]="form"
+        [dataTestId]="'error-message'"
+    ></div>
 </div>

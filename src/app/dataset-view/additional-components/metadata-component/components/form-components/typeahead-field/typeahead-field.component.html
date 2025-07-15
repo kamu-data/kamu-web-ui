@@ -12,12 +12,14 @@
         (focus)="focus$.next($any($event).target.value)"
         (click)="click$.next($any($event).target.value)"
         #instance="ngbTypeahead"
+        #control
     />
-    <div *ngIf="!form?.get(controlName)?.valid && form?.get(controlName)?.touched">
-        <div *ngIf="form?.get(controlName)?.errors?.maxlength" class="mt-1">
-            <span class="text-danger fs-12" [attr.data-test-id]="'error-{{controlName}}-maxLength'">
-                Field can be max {{ maxLength }} character{{ maxLength && maxLength > 1 ? "s" : "" }}.</span
-            >
-        </div>
-    </div>
+    <div
+        class="text-danger fs-12"
+        [input]="control"
+        [fieldControl]="form.get(controlName)"
+        [fieldLabel]="label"
+        [appFieldError]="['maxlength']"
+        [group]="form"
+    ></div>
 </div>

@@ -90,8 +90,8 @@ describe("EditLicenseModalComponent", () => {
         inputEl.dispatchEvent(blurEvent);
         fixture.detectChanges();
 
-        const errorSpan = getElementByDataTestId(fixture, `error-url-format`);
-        expect(errorSpan.innerText).toBe("Url format is wrong");
+        const errorElement = getElementByDataTestId(fixture, `error-message-websiteUrl`);
+        expect(errorElement.innerText).toBe("Url format is wrong");
     });
 
     it("should check validation messages are visible", () => {
@@ -113,8 +113,8 @@ describe("EditLicenseModalComponent", () => {
             inputEl.dispatchEvent(blurEvent);
             fixture.detectChanges();
 
-            const errorSpan = getElementByDataTestId(fixture, `error-license-${controlName}`);
-            expect(errorSpan.innerText).toBeDefined();
+            const errorElement = getElementByDataTestId(fixture, `error-message-${controlName}`);
+            expect(errorElement.innerText).toBeDefined();
         });
     });
 });

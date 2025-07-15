@@ -17,7 +17,8 @@ export type ValidationError =
     | "max"
     | "whitespace"
     | "range"
-    | "invalidCronExpression";
+    | "invalidCronExpression"
+    | "noneOf";
 
 export type ValidationErrorTuple = {
     error: ValidationError;

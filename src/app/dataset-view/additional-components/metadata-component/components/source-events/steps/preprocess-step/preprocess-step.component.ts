@@ -17,6 +17,7 @@ import { QueriesSectionComponent } from "../../../set-transform/components/queri
 import { EngineSectionComponent } from "../../../set-transform/components/engine-section/engine-section.component";
 import { NgIf } from "@angular/common";
 import { FormsModule } from "@angular/forms";
+import { NGX_MONACO_EDITOR_CONFIG } from "ngx-monaco-editor-v2";
 
 @Component({
     selector: "app-preprocess-step",
@@ -32,6 +33,12 @@ import { FormsModule } from "@angular/forms";
         //-----//
         EngineSectionComponent,
         QueriesSectionComponent,
+    ],
+    providers: [
+        {
+            provide: NGX_MONACO_EDITOR_CONFIG,
+            useValue: {},
+        },
     ],
 })
 export class PreprocessStepComponent extends BaseComponent implements OnInit {

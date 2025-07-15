@@ -6,7 +6,7 @@
  */
 
 import { Directive, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from "@angular/core";
-import { FormGroup, AbstractControl, ValidationErrors } from "@angular/forms";
+import { FormGroup, AbstractControl, ValidationErrors, FormArray } from "@angular/forms";
 import { Subscription, tap } from "rxjs";
 import AppValues from "../values/app.values";
 import { ValidationError, ValidationErrorTuple } from "./form-validation-errors.types";
@@ -23,7 +23,7 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges, OnIn
         | ValidationErrorTuple
         | ValidationErrorTuple[];
     @Input() public input: HTMLInputElement | NgSelectComponent | undefined;
-    @Input({ required: true }) public group: FormGroup;
+    @Input({ required: true }) public group: FormGroup | FormArray;
     @Input() public fieldControl: AbstractControl | null;
     @Input() public fieldLabel: string | undefined;
     @Input() public dataTestId: string = "";
@@ -80,6 +80,8 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges, OnIn
                 return `${errorDetails.message}`;
             case "invalidCronExpression":
                 return "Invalid expression";
+            case "noneOf":
+                return `${label} already exists`;
 
             default:
                 return "Unknown validator";
@@ -175,5 +177,6 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges, OnIn
         [String(AppValues.URL_PATTERN_ONLY_HTTPS)]: 'must start with "https://"',
         [String(AppValues.DATASET_NAME_PATTERN)]: "format is wrong",
         [String(AppValues.URL_PATTERN)]: "format is wrong",
+        [String(AppValues.ZERO_OR_POSITIVE_PATTERN)]: "must be positive",
     };
 }

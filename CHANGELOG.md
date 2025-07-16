@@ -20,6 +20,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated API integration for flow system changes
 - Enhanced form validation with better error handling
 - Enhanced test coverage across flow-related components
+### Fixed
+- Incorrect login from kamu-cli
+
+## [0.51.1] - 2025-07-15
+### Added
+- Flows tab: added `update now` link when flows list is empty
+### Fixed
+- Compaction tab: fixed bug with `Run compaction` button
+
 
 ## [0.51.0] - 2025-07-11
 ### Added
@@ -30,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Adjustments for API changes in flow system
 - SetTransform event: improved search
 - Migrated to standalone components
+
 
 ## [0.50.0] - 2025-06-19
 ### Added

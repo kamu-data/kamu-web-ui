@@ -100,15 +100,21 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public get isSetPollingSourceEmpty(): boolean {
         return (
             !this.flowsData.overviewUpdate.overview.metadata.currentPollingSource &&
-            this.flowsData.datasetBasics.kind === DatasetKind.Root
+            this.flowsData.datasetBasics.kind === DatasetKind.Root &&
+            !this.hasPushSources
         );
     }
 
     public get isSetTransformEmpty(): boolean {
         return (
             !this.flowsData.overviewUpdate.overview.metadata.currentTransform &&
-            this.flowsData.datasetBasics.kind === DatasetKind.Derivative
+            this.flowsData.datasetBasics.kind === DatasetKind.Derivative &&
+            !this.hasPushSources
         );
+    }
+
+    public get hasPushSources(): boolean {
+        return Boolean(this.flowsData.overviewUpdate.overview.metadata.currentPushSources.length);
     }
 
     public get canRunFlows(): boolean {

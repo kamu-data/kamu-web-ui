@@ -5,8 +5,9 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import AppValues from "src/app/common/values/app.values";
+import { LoggedUserService } from "./../../logged-user.service";
 
 @Component({
     selector: "app-return-to-cli",
@@ -15,6 +16,11 @@ import AppValues from "src/app/common/values/app.values";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
 })
-export class ReturnToCliComponent {
+export class ReturnToCliComponent implements OnInit {
     public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;
+    private loggedUserService = inject(LoggedUserService);
+
+    public ngOnInit(): void {
+        this.loggedUserService.changeUser(null);
+    }
 }

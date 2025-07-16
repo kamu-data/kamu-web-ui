@@ -10,7 +10,7 @@ import { DatasetSettingsCompactingTabComponent } from "./dataset-settings-compac
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { mockDatasetBasicsDerivedFragment, mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
+import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { DatasetCompactionService } from "../../services/dataset-compaction.service";
 import { of } from "rxjs";
@@ -60,7 +60,10 @@ describe("DatasetSettingsCompactingTabComponent", () => {
         modalService = TestBed.inject(ModalService);
         datasetCompactionService = TestBed.inject(DatasetCompactionService);
         navigationService = TestBed.inject(NavigationService);
-        component.datasetBasics = mockDatasetBasicsRootFragment;
+        component.compactingTabData = {
+            datasetBasics: mockDatasetBasicsDerivedFragment,
+            datasetPermissions: structuredClone(mockFullPowerDatasetPermissionsFragment),
+        };
         fixture.detectChanges();
     });
 

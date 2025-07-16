@@ -40,7 +40,6 @@ export class CronExpressionFormHarness extends ComponentHarness {
 
     public async getErrorMessage(): Promise<string | null> {
         const errorMessage = await this.errorMessage();
-
         if (errorMessage) {
             return errorMessage.text();
         }

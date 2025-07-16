@@ -5,18 +5,15 @@
  * included in the LICENSE file.
  */
 
-import { NavigationService } from "./../../../../services/navigation.service";
+import { NavigationService } from "../../../../services/navigation.service";
 import { inject, Injectable } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
 import { Observable, map, take } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
     DatasetFlowType,
-    FlowConfigurationInput,
     FlowTriggerInput,
-    GetDatasetFlowConfigsQuery,
     GetDatasetFlowTriggersQuery,
-    SetDatasetFlowConfigMutation,
     SetDatasetFlowTriggersMutation,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/values/app.values";
@@ -26,36 +23,10 @@ import { DatasetInfo } from "src/app/interface/navigation.interface";
 @Injectable({
     providedIn: "root",
 })
-export class DatasetSchedulingService {
-    private datasetFlowApi = inject(DatasetFlowApi);
-    private toastrService = inject(ToastrService);
-    private navigationService = inject(NavigationService);
-
-    public fetchDatasetFlowConfigs(
-        datasetId: string,
-        datasetFlowType: DatasetFlowType,
-    ): Observable<GetDatasetFlowConfigsQuery> {
-        return this.datasetFlowApi.getDatasetFlowConfigs({ datasetId, datasetFlowType });
-    }
-
-    public setDatasetFlowConfigs(params: {
-        datasetId: string;
-        datasetFlowType: DatasetFlowType;
-        configInput: FlowConfigurationInput;
-    }): Observable<boolean> {
-        return this.datasetFlowApi.setDatasetFlowConfigs(params).pipe(
-            map((data: SetDatasetFlowConfigMutation) => {
-                const setConfig = data.datasets.byId?.flows.configs.setConfig;
-                if (setConfig?.__typename === "SetFlowConfigSuccess") {
-                    this.toastrService.success(setConfig?.message);
-                    return true;
-                } else {
-                    this.toastrService.error(setConfig?.message);
-                    return false;
-                }
-            }),
-        );
-    }
+export class DatasetFlowTriggerService {
+    private readonly datasetFlowApi = inject(DatasetFlowApi);
+    private readonly toastrService = inject(ToastrService);
+    private readonly navigationService = inject(NavigationService);
 
     public fetchDatasetFlowTriggers(
         datasetId: string,
@@ -64,7 +35,7 @@ export class DatasetSchedulingService {
         return this.datasetFlowApi.getDatasetFlowTriggers({ datasetId, datasetFlowType }).pipe(take(1));
     }
 
-    public setDatasetTriggers(params: {
+    public setDatasetFlowTriggers(params: {
         datasetId: string;
         datasetFlowType: DatasetFlowType;
         paused: boolean;

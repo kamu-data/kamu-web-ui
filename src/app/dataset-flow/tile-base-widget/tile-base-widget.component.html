@@ -7,8 +7,8 @@
         [openDelay]="300"
         [ngClass]="tileWidgetClass(node)"
         target="_blank"
-        [attr.data-test-id]="'tile-element' + '-' + i"
-        [href]="setTileItemLink(node)"
+        [attr.data-test-id]="'tile-element-' + i"
+        [href]="getTileItemLink(node)"
     >
         <ng-template #popContent>
             <div class="fs-12 text-muted">
@@ -18,34 +18,34 @@
                 </span>
                 <br />
 
-                <span class="fs-12 fw-bold">Duration:</span>
-                <span class="fs-12">
-                    {{ durationTask(node.timing.runningSince!, node.timing.finishedAt!) }}
-                </span>
-                <br />
-
-                <span class="fs-12 fw-bold">Outcome:</span>
-                <span class="fs-12">
-                    {{ node.outcome ? tileOutcomeMessage(node.outcome) : "-" }}
-                </span>
-                <br />
-
-                <span class="fs-12 fw-bold">Completed time:</span>
-                <span class="fs-12 no-wrap" *ngIf="node.timing.finishedAt; else emptyBlock">
-                    {{ node.timing.finishedAt | date: "M/d/yy, h:mm:ss a" }}
-                </span>
-                <ng-template #emptyBlock>
-                    <span class="fs-12"> - </span>
-                </ng-template>
-                <br />
-
-                <ng-container *ngIf="involvedDatasets.length">
+                <ng-container *ngIf="displayAlias">
                     <span class="fs-12 fw-bold">Alias:</span>
                     <span class="fs-12">
                         {{ datasetAliasByDescription(node) }}
                     </span>
                     <br />
                 </ng-container>
+
+                <span class="fs-12 fw-bold">Duration:</span>
+                <span class="fs-12">
+                    {{ flowDuration(node) }}
+                </span>
+                <br />
+
+                <span class="fs-12 fw-bold">Outcome:</span>
+                <span class="fs-12">
+                    {{ tileOutcomeMessage(node) }}
+                </span>
+                <br />
+
+                <span class="fs-12 fw-bold">Finish time:</span>
+                <span class="fs-12 no-wrap" *ngIf="node.outcome; else emptyBlock">
+                    {{ node.timing.lastAttemptFinishedAt | date: "M/d/yy, h:mm:ss a" }}
+                </span>
+                <ng-template #emptyBlock>
+                    <span class="fs-12"> - </span>
+                </ng-template>
+                <br />
             </div>
         </ng-template>
     </a>

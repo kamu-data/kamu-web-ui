@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { DataHelpers } from "src/app/common/helpers/data.helpers";
 import {
     ChangeDetectionStrategy,
     Component,
@@ -25,15 +24,14 @@ import {
     FlowStatus,
     FlowStartCondition,
     Dataset,
-    DatasetListFlowsDataFragment,
-    DatasetFlowType,
     AccountFragment,
+    DatasetBasicsFragment,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/values/app.values";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { capitalizeString, promiseWithCatch } from "src/app/common/helpers/app.helpers";
+import { FlowTableHelpers } from "./flows-table.helpers";
 import { MatMenuTrigger, MatMenuModule } from "@angular/material/menu";
-import { DatasetFlowTableHelpers } from "./flows-table.helpers";
 import {
     CancelFlowArgs,
     DROPDOWN_ACCOUNT_SETTINGS,
@@ -90,36 +88,45 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     @Input({ required: true }) public filterByStatus: MaybeNull<FlowStatus>;
     @Input({ required: true }) public onlySystemFlows: boolean;
     @Input({ required: true }) public searchByAccount: AccountFragment[] = [];
-    @Input() public searchByDataset: DatasetListFlowsDataFragment[] = [];
+    @Input() public searchByDataset: DatasetBasicsFragment[] = [];
     @Input({ required: true }) public tableOptions: FlowsTableOptions;
+    @Input({ required: true }) public accountFlowInitiators: AccountFragment[];
+    @Input({ required: true }) public involvedDatasets: DatasetBasicsFragment[];
+
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
     @Output() public searchByFiltersChange = new EventEmitter<MaybeNull<FlowsTableFiltersOptions>>();
     @Output() public cancelFlowChange = new EventEmitter<CancelFlowArgs>();
+
+    @ViewChildren(MatMenuTrigger) private triggersMatMenu: QueryList<MatMenuTrigger>;
+
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly FlowDetailsTabs: typeof FlowDetailsTabs = FlowDetailsTabs;
     private readonly FILTERED_ITEMS_COUNT = 10;
 
-    public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>();
-    @ViewChildren(MatMenuTrigger) private triggersMatMenu: QueryList<MatMenuTrigger>;
-    @Input({ required: true }) public accountFlowInitiators: AccountFragment[];
-    @Input({ required: true }) public involvedDatasets: DatasetListFlowsDataFragment[];
-
     public readonly URL_FLOW_DETAILS = ProjectLinks.URL_FLOW_DETAILS;
     public readonly FILTER_DATASET_SETTINGS: DropdownSettings = DROPDOWN_DATASET_SETTINGS;
     public readonly FILTER_STATUS_SETTINGS: DropdownSettings = DROPDOWN_STATUS_SETTINGS;
+
+    private readonly modalService = inject(ModalService);
+    private readonly datasetFlowsService = inject(DatasetFlowsService);
+    private readonly toastrService = inject(ToastrService);
+
+    public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>();
+
     public filterAccountSettings: DropdownSettings = DROPDOWN_ACCOUNT_SETTINGS;
-    public dropdownDatasetList: DatasetListFlowsDataFragment[] = [];
-    public selectedDatasetItems: DatasetListFlowsDataFragment[] = [];
+    public dropdownDatasetList: DatasetBasicsFragment[] = [];
+    public selectedDatasetItems: DatasetBasicsFragment[] = [];
     public dropdownAccountList: AccountFragment[] = [];
     public selectedAccountItems: AccountFragment[] = [];
     public dropdownStatustList: FilterStatusType[] = [];
     public selectedStatusItems: FilterStatusType[] = [];
 
-    private modalService = inject(ModalService);
-    private datasetFlowsService = inject(DatasetFlowsService);
-    private toastrService = inject(ToastrService);
+    public ngOnInit(): void {
+        this.dataSource.data = this.nodes;
+        this.initializeFilters();
+    }
 
     public ngOnChanges(changes: SimpleChanges): void {
         const nodes: SimpleChange = changes.nodes;
@@ -128,29 +135,20 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         }
     }
 
-    public ngOnInit(): void {
-        this.dataSource.data = this.nodes;
-        this.initializeFilters();
-    }
-
-    public durationTask(d1: string, d2: string): string {
-        return DataHelpers.durationTask(d1, d2);
-    }
-
     public flowTypeDescription(flow: FlowSummaryDataFragment): string {
-        return DataHelpers.flowTypeDescription(flow);
+        return FlowTableHelpers.flowTypeDescription(flow);
     }
 
     public descriptionColumnOptions(element: FlowSummaryDataFragment): { icon: string; class: string } {
-        return DatasetFlowTableHelpers.descriptionColumnTableOptions(element);
+        return FlowTableHelpers.descriptionColumnTableOptions(element);
     }
 
     public descriptionDatasetFlowEndOfMessage(element: FlowSummaryDataFragment): string {
-        return DatasetFlowTableHelpers.descriptionEndOfMessage(element);
+        return FlowTableHelpers.descriptionEndOfMessage(element);
     }
 
-    public descriptionDatasetFlowSubMessage(element: FlowSummaryDataFragment, datasetId: string): string {
-        return DatasetFlowTableHelpers.descriptionSubMessage(element, this.involvedDatasets ?? [], datasetId);
+    public descriptionDatasetFlowSubMessage(element: FlowSummaryDataFragment): string {
+        return FlowTableHelpers.descriptionSubMessage(element);
     }
 
     public onSearch(): void {
@@ -168,15 +166,19 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     }
 
     public durationBlockVisible(node: FlowSummaryDataFragment): boolean {
-        return node.status === FlowStatus.Finished && node.outcome?.__typename === "FlowSuccessResult";
+        return node.status === FlowStatus.Finished;
     }
 
     public durationBlockText(node: FlowSummaryDataFragment): string {
-        return DatasetFlowTableHelpers.durationBlockText(node);
+        return FlowTableHelpers.durationBlockText(node);
+    }
+
+    public durationTimingText(node: FlowSummaryDataFragment): string {
+        return FlowTableHelpers.durationTimingText(node);
     }
 
     public tooltipText(node: FlowSummaryDataFragment): string {
-        return DatasetFlowTableHelpers.tooltipText(node);
+        return FlowTableHelpers.tooltipText(node);
     }
 
     public waitingForBlockVisible(node: FlowSummaryDataFragment): boolean {
@@ -184,7 +186,26 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     }
 
     public waitingBlockText(startCondition: MaybeNull<FlowStartCondition>): string {
-        return DatasetFlowTableHelpers.waitingBlockText(startCondition);
+        return FlowTableHelpers.waitingBlockText(startCondition);
+    }
+
+    public retriesBlockVisible(node: FlowSummaryDataFragment): boolean {
+        // We want to show the retries block if:
+        // 1. The flow is currently retrying.
+        // 2. The flow has failed, and there were multiple retry attempts.
+        return (
+            node.status === FlowStatus.Retrying ||
+            (node.status === FlowStatus.Finished &&
+                (node.retryPolicy?.maxAttempts || 0) > 0 &&
+                node.outcome?.__typename === "FlowFailedError")
+        );
+    }
+
+    public retriesBlockText(node: FlowSummaryDataFragment): string {
+        if (!node.retryPolicy) {
+            throw new Error("Retry policy is undefined, but expected");
+        }
+        return FlowTableHelpers.retriesBlockText(node.status, node.tasks.length, node.retryPolicy.maxAttempts);
     }
 
     public datasetById(datasetId: string): Dataset {
@@ -208,8 +229,8 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         );
     }
 
-    public dynamicImgSrc(status: FlowStatus): string {
-        return DatasetFlowDetailsHelpers.dynamicImgSrc(status);
+    public flowStatusAnimationSrc(status: FlowStatus): string {
+        return DatasetFlowDetailsHelpers.flowStatusAnimationSrc(status);
     }
 
     public onResetFilters(): void {
@@ -226,7 +247,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
             node.description.__typename === "FlowDescriptionDatasetPollingIngest" &&
             node.description.ingestResult?.__typename === "FlowDescriptionUpdateResultUpToDate" &&
             node.description.ingestResult.uncacheable &&
-            ((node.configSnapshot?.__typename === "FlowConfigurationIngest" && !node.configSnapshot.fetchUncacheable) ||
+            ((node.configSnapshot?.__typename === "FlowConfigRuleIngest" && !node.configSnapshot.fetchUncacheable) ||
                 !node.configSnapshot)
         );
     }
@@ -240,15 +261,12 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
                 noButtonText: "Cancel",
                 handler: (ok) => {
                     if (ok) {
-                        if (node.description.__typename === "FlowDescriptionDatasetPollingIngest") {
+                        if (node.description.__typename === "FlowDescriptionDatasetPollingIngest" && node.datasetId) {
                             this.datasetFlowsService
-                                .datasetTriggerFlow({
-                                    datasetId: node.description.datasetId,
-                                    datasetFlowType: DatasetFlowType.Ingest,
-                                    flowRunConfiguration: {
-                                        ingest: {
-                                            fetchUncacheable: true,
-                                        },
+                                .datasetTriggerIngestFlow({
+                                    datasetId: node.datasetId,
+                                    ingestConfigInput: {
+                                        fetchUncacheable: true,
                                     },
                                 })
                                 .pipe(takeUntilDestroyed(this.destroyRef))
@@ -258,7 +276,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
                                     }
                                 });
                         } else {
-                            throw new Error("Configuration snapshot is undefined");
+                            throw new Error("Configuration snapshot is undefined or datasetId is missing");
                         }
                     }
                 },

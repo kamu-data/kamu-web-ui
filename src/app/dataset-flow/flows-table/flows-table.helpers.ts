@@ -6,19 +6,46 @@
  */
 
 import {
-    DatasetListFlowsDataFragment,
     FlowStartCondition,
     FlowStatus,
     FlowSummaryDataFragment,
+    FlowTimingRecords,
 } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/interface/app.types";
 import AppValues from "src/app/common/values/app.values";
 import { DataHelpers } from "src/app/common/helpers/data.helpers";
-import { excludeAgoWord, isNil } from "../../common/helpers/app.helpers";
+import { excludeAgoWord, isNil, pluralize } from "../../common/helpers/app.helpers";
 import { format } from "date-fns/format";
 import { formatDistanceToNowStrict } from "date-fns";
 
-export class DatasetFlowTableHelpers {
+export class FlowTableHelpers {
+    public static flowTypeDescription(flow: FlowSummaryDataFragment): string {
+        const decriptionFlow = flow.description;
+        switch (decriptionFlow.__typename) {
+            case "FlowDescriptionDatasetPollingIngest":
+                return `Polling ingest`;
+            case "FlowDescriptionDatasetPushIngest":
+                return `Push ingest`;
+            case "FlowDescriptionDatasetExecuteTransform":
+                return `Execute transformation`;
+            case "FlowDescriptionDatasetHardCompaction":
+                if (
+                    flow.configSnapshot?.__typename === "FlowConfigRuleCompaction" &&
+                    flow.configSnapshot.compactionMode.__typename === "FlowConfigCompactionModeMetadataOnly"
+                ) {
+                    return "Reset";
+                }
+                return `Hard compaction`;
+            case "FlowDescriptionSystemGC":
+                return `Garbage collector`;
+            case "FlowDescriptionDatasetReset":
+                return `Reset to seed`;
+            /* istanbul ignore next */
+            default:
+                return "Unsupported flow description";
+        }
+    }
+
     public static descriptionColumnTableOptions(element: FlowSummaryDataFragment): { icon: string; class: string } {
         switch (element.status) {
             case FlowStatus.Finished:
@@ -40,6 +67,9 @@ export class DatasetFlowTableHelpers {
 
             case FlowStatus.Running:
                 return { icon: "radio_button_checked", class: "running-status" };
+
+            case FlowStatus.Retrying:
+                return { icon: "radio_button_checked", class: "retrying-status" };
 
             case FlowStatus.Waiting:
                 return { icon: "radio_button_checked", class: "waiting-status" };
@@ -68,22 +98,19 @@ export class DatasetFlowTableHelpers {
             case FlowStatus.Running:
                 return "running";
 
+            case FlowStatus.Retrying:
+                return "awaiting retry";
+
             case FlowStatus.Waiting:
                 return "waiting";
+
             /* istanbul ignore next */
             default:
                 throw new Error(`Unsupported flow status`);
         }
     }
 
-    public static descriptionSubMessage(
-        element: FlowSummaryDataFragment,
-        datasets: DatasetListFlowsDataFragment[],
-        datasetId: string,
-    ): string {
-        const datasetWithFlow = datasets.find((dataset) => dataset.id === datasetId);
-        const fetchStep = datasetWithFlow?.metadata.currentPollingSource?.fetch;
-        const transformData = datasetWithFlow?.metadata.currentTransform;
+    public static descriptionSubMessage(element: FlowSummaryDataFragment): string {
         switch (element.status) {
             case FlowStatus.Finished:
                 /* istanbul ignore next */
@@ -100,15 +127,17 @@ export class DatasetFlowTableHelpers {
                                     ? `${element.description.ingestResult.message}`
                                     : element.description.ingestResult?.__typename ===
                                         "FlowDescriptionUpdateResultSuccess"
-                                      ? `Ingested ${element.description.ingestResult.numRecords} new ${
-                                            element.description.ingestResult.numRecords == 1 ? "record" : "records"
-                                        } in ${element.description.ingestResult.numBlocks} new ${
-                                            element.description.ingestResult.numBlocks == 1 ? "block" : "blocks"
-                                        }`
+                                      ? `Ingested ${element.description.ingestResult.numRecords} new ${pluralize(
+                                            "record",
+                                            element.description.ingestResult.numRecords,
+                                        )} in ${element.description.ingestResult.numBlocks} new ${pluralize(
+                                            "block",
+                                            element.description.ingestResult.numBlocks,
+                                        )}`
                                       : element.description.ingestResult?.__typename ===
                                               "FlowDescriptionUpdateResultUpToDate" &&
                                           element.description.ingestResult.uncacheable &&
-                                          ((element.configSnapshot?.__typename === "FlowConfigurationIngest" &&
+                                          ((element.configSnapshot?.__typename === "FlowConfigRuleIngest" &&
                                               !element.configSnapshot.fetchUncacheable) ||
                                               !element.configSnapshot)
                                         ? `Source is uncacheable: to re-scan the data, use`
@@ -120,20 +149,22 @@ export class DatasetFlowTableHelpers {
                                     ? `${element.description.transformResult.message}`
                                     : element.description.transformResult?.__typename ===
                                         "FlowDescriptionUpdateResultSuccess"
-                                      ? `Transformed ${element.description.transformResult.numRecords} new ${
-                                            element.description.transformResult.numRecords == 1 ? "record" : "records"
-                                        } in ${element.description.transformResult.numBlocks} new ${
-                                            element.description.transformResult.numBlocks == 1 ? "block" : "blocks"
-                                        }`
+                                      ? `Transformed ${element.description.transformResult.numRecords} new ${pluralize(
+                                            "record",
+                                            element.description.transformResult.numRecords,
+                                        )} in ${element.description.transformResult.numBlocks} new ${pluralize(
+                                            "block",
+                                            element.description.transformResult.numBlocks,
+                                        )}`
                                       : "Dataset is up-to-date";
 
                             case "FlowDescriptionDatasetHardCompaction":
                                 switch (element.description.compactionResult?.__typename) {
                                     case "FlowDescriptionHardCompactionSuccess":
                                         if (
-                                            element.configSnapshot?.__typename === "FlowConfigurationCompactionRule" &&
-                                            element.configSnapshot.compactionRule.__typename ===
-                                                "CompactionMetadataOnly"
+                                            element.configSnapshot?.__typename === "FlowConfigRuleCompaction" &&
+                                            element.configSnapshot.compactionMode.__typename ===
+                                                "FlowConfigCompactionModeMetadataOnly"
                                         ) {
                                             return "All data except metadata has been deleted";
                                         }
@@ -163,15 +194,15 @@ export class DatasetFlowTableHelpers {
 
                     case "FlowAbortedResult":
                         return `Aborted at ${format(
-                            element.timing.finishedAt as string,
+                            element.timing.lastAttemptFinishedAt as string,
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
 
                     case "FlowFailedError": {
                         switch (element.outcome.reason.__typename) {
-                            case "FlowFailureReasonGeneral":
+                            case "TaskFailureReasonGeneral":
                                 return `An error occurred, see logs for more details`;
-                            case "FlowFailureReasonInputDatasetCompacted": {
+                            case "TaskFailureReasonInputDatasetCompacted": {
                                 return `Input dataset <a class="text-small text-danger">${element.outcome.reason.inputDataset.name}</a> was hard compacted`;
                             }
                             /* istanbul ignore next */
@@ -187,24 +218,25 @@ export class DatasetFlowTableHelpers {
 
             case FlowStatus.Waiting:
             case FlowStatus.Running:
+            case FlowStatus.Retrying:
                 switch (element.description.__typename) {
                     case "FlowDescriptionDatasetHardCompaction":
                         return "Running hard compaction";
                     case "FlowDescriptionDatasetPollingIngest":
-                        /* istanbul ignore next */
-                        if (isNil(fetchStep)) {
-                            throw new Error("FetchStep expected for polling ingest flow");
-                        }
-                        switch (fetchStep?.__typename) {
-                            case "FetchStepUrl":
-                                return `Polling data from url: ${fetchStep.url}`;
-                            case "FetchStepContainer":
-                                return `Polling data from image: ${fetchStep.image}`;
-                            case "FetchStepFilesGlob":
-                                return `Polling data from file: ${fetchStep.path}`;
+                        {
+                            const fetchStep = element.description.pollingSource.fetch;
+                            switch (fetchStep?.__typename) {
+                                case "FetchStepUrl":
+                                    return `Polling data from url: ${fetchStep.url}`;
+                                case "FetchStepContainer":
+                                    return `Polling data from image: ${fetchStep.image}`;
+                                case "FetchStepFilesGlob":
+                                    return `Polling data from file: ${fetchStep.path}`;
+                            }
                         }
                         break;
                     case "FlowDescriptionDatasetExecuteTransform": {
+                        const transformData = element.description.transform;
                         const engineDesc = DataHelpers.descriptionForEngine(transformData?.transform.engine ?? "");
                         return `Transforming ${transformData?.inputs.length} input datasets using "${
                             engineDesc.label ?? engineDesc.name
@@ -241,17 +273,22 @@ export class DatasetFlowTableHelpers {
                     "running for " +
                     excludeAgoWord(formatDistanceToNowStrict(node.timing.runningSince as string, { addSuffix: true }))
                 );
+            case FlowStatus.Retrying:
+                return (
+                    "retrying " +
+                    excludeAgoWord(formatDistanceToNowStrict(node.timing.scheduledAt as string, { addSuffix: true }))
+                );
             case FlowStatus.Finished:
                 switch (node.outcome?.__typename) {
                     case "FlowSuccessResult":
                         return (
                             "finished " +
-                            formatDistanceToNowStrict(node.timing.finishedAt as string, { addSuffix: true })
+                            formatDistanceToNowStrict(node.timing.lastAttemptFinishedAt as string, { addSuffix: true })
                         );
                     case "FlowAbortedResult":
                         return (
                             "aborted " +
-                            formatDistanceToNowStrict(node.timing.finishedAt as string, { addSuffix: true })
+                            formatDistanceToNowStrict(node.timing.lastAttemptFinishedAt as string, { addSuffix: true })
                         );
                     case "FlowFailedError":
                         return (
@@ -265,6 +302,19 @@ export class DatasetFlowTableHelpers {
             /* istanbul ignore next */
             default:
                 throw new Error("Unknown flow status");
+        }
+    }
+
+    public static durationTimingText(flowNode: { timing: FlowTimingRecords; outcome?: MaybeNull<object> }): string {
+        if (flowNode.outcome) {
+            if (flowNode.timing.lastAttemptFinishedAt) {
+                return DataHelpers.durationTask(flowNode.timing.initiatedAt, flowNode.timing.lastAttemptFinishedAt);
+            } else {
+                // Aborted?
+                return "-";
+            }
+        } else {
+            return DataHelpers.durationTask(flowNode.timing.initiatedAt, new Date().toISOString());
         }
     }
 
@@ -284,6 +334,20 @@ export class DatasetFlowTableHelpers {
             /* istanbul ignore next */
             default:
                 return "waiting...";
+        }
+    }
+
+    public static retriesBlockText(flowStatus: FlowStatus, tasksInFlow: number, maxRetryAttempts: number): string {
+        switch (flowStatus) {
+            case FlowStatus.Running:
+            case FlowStatus.Retrying:
+                return `retry attempt ${tasksInFlow} of ${maxRetryAttempts}`;
+
+            case FlowStatus.Finished: // failure is assumed, otherwise there is no retry block
+                return `failed after ${maxRetryAttempts} retry attempts`;
+
+            default:
+                throw new Error('Retries block is only applicable for "Retrying" or "Finished" flow statuses');
         }
     }
 
@@ -315,12 +379,12 @@ export class DatasetFlowTableHelpers {
                 switch (node.outcome?.__typename) {
                     case "FlowSuccessResult":
                         return `Completed time: ${format(
-                            node.timing.finishedAt as string,
+                            node.timing.lastAttemptFinishedAt as string,
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
                     case "FlowAbortedResult":
                         return `Aborted time: ${format(
-                            node.timing.finishedAt as string,
+                            node.timing.lastAttemptFinishedAt as string,
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
                     case "FlowFailedError":
@@ -336,6 +400,12 @@ export class DatasetFlowTableHelpers {
             case FlowStatus.Running:
                 return `Start running time: ${format(
                     node.timing.runningSince as string,
+                    AppValues.CRON_EXPRESSION_DATE_FORMAT,
+                )}`;
+
+            case FlowStatus.Retrying:
+                return `Planned retry time: ${format(
+                    node.timing.scheduledAt as string,
                     AppValues.CRON_EXPRESSION_DATE_FORMAT,
                 )}`;
             /* istanbul ignore next */

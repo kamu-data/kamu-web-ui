@@ -22,7 +22,7 @@ import {
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
-import { DatasetSchedulingService } from "../../../services/dataset-scheduling.service";
+import { DatasetFlowTriggerService } from "../../../services/dataset-flow-trigger.service";
 import {
     FormGroup,
     FormControl,
@@ -35,7 +35,7 @@ import {
 import { MaybeNull } from "src/app/interface/app.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { everyTimeMapperValidators } from "src/app/common/helpers/data.helpers";
-import { TriggersTooltipsTexts } from "src/app/common/tooltips/triggers.text";
+import { FlowTooltipsTexts } from "src/app/common/tooltips/flow-tooltips.text";
 import { finalize } from "rxjs";
 import { BatchingFormType } from "../dataset-settings-transform-options-tab.component.types";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
@@ -69,7 +69,7 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Output() public saveTriggerEmit = new EventEmitter<FormGroup<BatchingFormType>>();
     public readonly timeUnit: typeof TimeUnit = TimeUnit;
-    public readonly UPDATES_TOOLTIP = TriggersTooltipsTexts.UPDATE_SELECTOR_TOOLTIP;
+    public readonly UPDATES_TOOLTIP = FlowTooltipsTexts.UPDATE_SELECTOR_TOOLTIP;
     private everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = everyTimeMapperValidators;
     public pausedFromServer: boolean;
     public isLoaded: boolean = false;
@@ -87,8 +87,8 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
         ]),
     });
 
-    private datasetSchedulingService = inject(DatasetSchedulingService);
-    private cdr = inject(ChangeDetectorRef);
+    private readonly datasetFlowTriggerService = inject(DatasetFlowTriggerService);
+    private readonly cdr = inject(ChangeDetectorRef);
 
     public get batchingUpdatesState(): AbstractControl {
         return this.batchingForm.controls.updatesState;
@@ -148,7 +148,7 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
     }
 
     public initBatchingForm(): void {
-        this.datasetSchedulingService
+        this.datasetFlowTriggerService
             .fetchDatasetFlowTriggers(this.datasetBasics.id, DatasetFlowType.ExecuteTransform)
             .pipe(
                 finalize(() => {

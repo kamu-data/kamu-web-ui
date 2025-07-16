@@ -7,8 +7,8 @@
 
 import { NavigationService } from "./../../../../../services/navigation.service";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
+import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { AbstractControl, FormBuilder, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { DatasetBasicsFragment, DatasetFlowType } from "src/app/api/kamu.graphql.interface";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { CompactionTooltipsTexts } from "src/app/common/tooltips/compacting.text";
 import { ModalService } from "src/app/common/components/modal/modal.service";
@@ -99,7 +99,6 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent {
                         this.datasetCompactionService
                             .runHardCompaction({
                                 datasetId: this.datasetBasics.id,
-                                datasetFlowType: DatasetFlowType.HardCompaction,
                                 compactionArgs: {
                                     full: {
                                         maxSliceSize: this.sliceSizeInBytes,

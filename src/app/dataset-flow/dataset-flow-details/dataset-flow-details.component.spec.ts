@@ -8,17 +8,10 @@
 import { Apollo, ApolloModule } from "apollo-angular";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { DatasetFlowDetailsComponent } from "./dataset-flow-details.component";
-import { ActivatedRoute, RouterModule } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 import { of, shareReplay } from "rxjs";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatIconModule } from "@angular/material/icon";
-import { DatasetViewHeaderComponent } from "src/app/dataset-view/dataset-view-header/dataset-view-header.component";
-import { FlowDetailsHistoryTabComponent } from "./tabs/flow-details-history-tab/flow-details-history-tab.component";
-import { SearchAdditionalButtonsComponent } from "src/app/common/components/search-additional-buttons/search-additional-buttons.component";
-import { SearchAdditionalButtonsNavComponent } from "src/app/common/components/search-additional-buttons/search-additional-buttons-nav.component";
-import { MatMenuModule } from "@angular/material/menu";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
@@ -27,14 +20,8 @@ import {
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { DatasetViewMenuComponent } from "src/app/dataset-view/dataset-view-menu/dataset-view-menu.component";
-import { MatButtonToggleModule } from "@angular/material/button-toggle";
-import { FormsModule } from "@angular/forms";
-import { MatTabsModule } from "@angular/material/tabs";
-import { BrowserAnimationsModule, provideAnimations } from "@angular/platform-browser/animations";
 import { FlowDetailsTabs } from "./dataset-flow-details.types";
 import { mockDatasetFlowByIdResponse, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
-import { DataAccessPanelComponent } from "src/app/data-access-panel/data-access-panel.component";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { NavigationService } from "src/app/services/navigation.service";
 
@@ -51,7 +38,6 @@ describe("DatasetFlowDetailsComponent", () => {
         await TestBed.configureTestingModule({
             providers: [
                 Apollo,
-                provideAnimations(),
                 provideToastr(),
                 {
                     provide: ActivatedRoute,
@@ -72,24 +58,13 @@ describe("DatasetFlowDetailsComponent", () => {
                 },
             ],
             imports: [
-                ApolloTestingModule,
-                ApolloModule,
-                MatDividerModule,
-                MatIconModule,
-                MatMenuModule,
-                MatButtonToggleModule,
+                //-----//
                 HttpClientTestingModule,
-                MatTabsModule,
-                FormsModule,
-                BrowserAnimationsModule,
-                RouterModule,
+                //-----//
+                ApolloModule,
+                ApolloTestingModule,
+                //-----//
                 DatasetFlowDetailsComponent,
-                DatasetViewHeaderComponent,
-                FlowDetailsHistoryTabComponent,
-                SearchAdditionalButtonsComponent,
-                SearchAdditionalButtonsNavComponent,
-                DatasetViewMenuComponent,
-                DataAccessPanelComponent,
             ],
         }).compileComponents();
 

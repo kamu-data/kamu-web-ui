@@ -5,6 +5,10 @@
  * included in the LICENSE file.
  */
 
-export class TriggersTooltipsTexts {
-    public static readonly UPDATE_SELECTOR_TOOLTIP = "Enable or disable updates with defined options.";
+.form-control-width {
+    width: 180px;
+}
+
+.form-control-label {
+    width: 120px;
 }

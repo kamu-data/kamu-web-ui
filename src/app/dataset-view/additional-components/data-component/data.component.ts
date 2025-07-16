@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, O
 import { Location, NgIf, AsyncPipe } from "@angular/common";
 import { filter, finalize, fromEvent, map, Observable, takeUntil } from "rxjs";
 import AppValues from "src/app/common/values/app.values";
-import { DatasetFlowType, DatasetKind, OffsetInterval } from "../../../api/kamu.graphql.interface";
+import { DatasetKind, OffsetInterval } from "../../../api/kamu.graphql.interface";
 import { DataSqlErrorUpdate, OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetRequestBySql } from "../../../interface/dataset.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
@@ -135,23 +135,23 @@ export class DataComponent extends BaseComponent implements OnInit {
     }
 
     private updateNow(): void {
-        this.datasetFlowsService
-            .datasetTriggerFlow({
-                datasetId: this.dataTabData.datasetBasics.id,
-                datasetFlowType:
-                    this.dataTabData.datasetBasics.kind === DatasetKind.Root
-                        ? DatasetFlowType.Ingest
-                        : DatasetFlowType.ExecuteTransform,
-            })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((success: boolean) => {
-                if (success) {
-                    this.navigationService.navigateToDatasetView({
-                        accountName: this.dataTabData.datasetBasics.owner.accountName,
-                        datasetName: this.dataTabData.datasetBasics.name,
-                        tab: DatasetViewTypeEnum.Flows,
-                    });
-                }
-            });
+        const datasetTrigger$: Observable<boolean> =
+            this.dataTabData.datasetBasics.kind === DatasetKind.Root
+                ? this.datasetFlowsService.datasetTriggerIngestFlow({
+                      datasetId: this.dataTabData.datasetBasics.id,
+                  })
+                : this.datasetFlowsService.datasetTriggerTransformFlow({
+                      datasetId: this.dataTabData.datasetBasics.id,
+                  });
+
+        datasetTrigger$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((success: boolean) => {
+            if (success) {
+                this.navigationService.navigateToDatasetView({
+                    accountName: this.dataTabData.datasetBasics.owner.accountName,
+                    datasetName: this.dataTabData.datasetBasics.name,
+                    tab: DatasetViewTypeEnum.Flows,
+                });
+            }
+        });
     }
 }

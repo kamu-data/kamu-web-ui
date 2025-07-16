@@ -1,7 +1,12 @@
-<div *ngIf="isLoaded; else loadingBlock">
-    <form [formGroup]="pollingForm">
+<div>
+    <form [formGroup]="form">
         <div class="mt-4 ms-1 px-2 pb-1 d-flex gap-1">
-            <mat-slide-toggle color="primary" class="mat-elevation-z0" formControlName="updatesState">
+            <mat-slide-toggle
+                color="primary"
+                class="mat-elevation-z0"
+                formControlName="updatesEnabled"
+                data-test-id="ingest-trigger-updates-enabled"
+            >
                 <span class="ps-2"> {{ updateStateToggleLabel }}</span>
             </mat-slide-toggle>
             <app-tooltip-icon class="d-block" [tooltip]="UPDATES_TOOLTIP" />
@@ -14,74 +19,25 @@
                     <mat-radio-group
                         class="d-flex flex-column row-gap-4 mt-4"
                         formControlName="__typename"
+                        data-test-id="ingest-trigger-type"
                         aria-label="Select an option"
                         color="primary"
                     >
-                        <mat-radio-button disableRipple="true" [value]="pollingGroupEnum.TIME_DELTA">
-                            <div class="d-flex align-items-center" data-test-id="button-time-delta">
-                                <span class="form-control-label">Launch every:</span>
-                                <select
-                                    formControlName="unit"
-                                    class="form-select form-control-width me-3"
-                                    data-test-id="polling-group-unit"
-                                >
-                                    <option [value]="timeUnit.Minutes">Minutes</option>
-                                    <option [value]="timeUnit.Hours">Hours</option>
-                                    <option [value]="timeUnit.Days">Days</option>
-                                    <option [value]="timeUnit.Weeks">Weeks</option>
-                                </select>
-                                <input
-                                    type="number"
-                                    formControlName="every"
-                                    min="1"
-                                    class="form-control form-control-width"
-                                    data-test-id="polling-group-every"
-                                />
-                                <ng-container
-                                    *ngIf="
-                                        pollingForm?.get('every')?.errors?.range &&
-                                        (pollingForm.get('every')?.touched || pollingForm.get('every')?.dirty)
-                                    "
-                                >
-                                    <div class="text-danger fs-12 ms-4 text-break" data-test-id="range-error">
-                                        {{ pollingForm.get("every")?.errors?.range.message }}
-                                    </div>
-                                </ng-container>
-                            </div>
+                        <mat-radio-button
+                            disableRipple="true"
+                            [value]="ScheduleType.TIME_DELTA"
+                            data-test-id="trigger-time-delta"
+                        >
+                            <app-time-delta-form [form]="form.controls.timeDelta"></app-time-delta-form>
                         </mat-radio-button>
-                        <mat-radio-button [value]="pollingGroupEnum.CRON_5_COMPONENT_EXPRESSION">
-                            <div class="d-flex align-items-center" data-test-id="button-cron-expression">
-                                <div class="d-flex align-middle">
-                                    <span class="form-control-label d-block"> Cron expression : </span>
-                                </div>
-                                <input
-                                    type="text"
-                                    formControlName="cronExpression"
-                                    placeholder="Example: * * * * ?"
-                                    class="form-control form-control-expression"
-                                    data-test-id="polling-group-cron-expression"
-                                />
-
-                                <ng-container
-                                    *ngIf="
-                                        pollingForm?.get('cronExpression')?.errors?.invalidCronExpression &&
-                                            (pollingForm.get('cronExpression')?.touched ||
-                                                pollingForm.get('cronExpression')?.dirty);
-                                        else nextTimeTemplate
-                                    "
-                                >
-                                    <div class="text-danger fs-12 ms-4 text-break" data-test-id="cronExpression-error">
-                                        Invalid expression
-                                    </div>
-                                </ng-container>
-                                <ng-template #nextTimeTemplate>
-                                    <span *ngIf="pollingForm?.get('cronExpression')?.valid" class="fs-12 ms-4"
-                                        >Next time: {{ nextTime }}</span
-                                    >
-                                </ng-template>
-                            </div>
+                        <mat-radio-button
+                            [value]="ScheduleType.CRON_5_COMPONENT_EXPRESSION"
+                            data-test-id="trigger-cron"
+                        >
+                            <app-cron-expression-form [form]="form.controls.cron"></app-cron-expression-form>
                         </mat-radio-button>
                     </mat-radio-group>
+
                     <div class="text-muted fs-12 border-top px-4 py-4 mt-4">
                         Cron expression accepted values
                         <div class="fs-12">1. minutes: 0-59 * , -</div>
@@ -95,13 +51,3 @@
         </div>
     </form>
 </div>
-
-<ng-template #loadingBlock>
-    <div class="position-relative">
-        <mat-progress-bar
-            data-test-id="ingest-trigger-form-progress-bar"
-            class="position-absolute"
-            mode="indeterminate"
-        />
-    </div>
-</ng-template>

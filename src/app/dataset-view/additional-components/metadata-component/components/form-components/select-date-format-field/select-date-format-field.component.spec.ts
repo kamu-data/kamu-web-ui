@@ -9,7 +9,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { SelectDateFormatFieldComponent } from "./select-date-format-field.component";
 import { FormControl, FormGroup } from "@angular/forms";
 import { EventTimeSourceKind } from "../../source-events/add-polling-source/add-polling-source-form.types";
-import { SetPollingSourceTooltipsTexts } from "src/app/common/tooltips/tooltips.text";
+import { SetPollingSourceTooltipsTexts } from "src/app/common/tooltips/set-polling-source-tooltips.text";
 import { ActivatedRoute } from "@angular/router";
 
 describe("SelectDateFormatFieldComponent", () => {

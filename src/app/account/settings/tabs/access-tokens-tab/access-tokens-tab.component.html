@@ -147,14 +147,14 @@
             <!-- Created Column -->
             <ng-container matColumnDef="createdAt">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Created</th>
-                <td mat-cell *matCellDef="let element">{{ element.createdAt | date: DATE_FORMAT }}</td>
+                <td mat-cell *matCellDef="let element">{{ element.createdAt | date: DISPLAY_TIME_FORMAT }}</td>
             </ng-container>
 
             <!-- Revoked Column -->
             <ng-container matColumnDef="revokedAt">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Revoked</th>
                 <td mat-cell *matCellDef="let element">
-                    {{ element.revokedAt | date: DATE_FORMAT }}
+                    {{ element.revokedAt | date: DISPLAY_TIME_FORMAT }}
                 </td>
             </ng-container>
 

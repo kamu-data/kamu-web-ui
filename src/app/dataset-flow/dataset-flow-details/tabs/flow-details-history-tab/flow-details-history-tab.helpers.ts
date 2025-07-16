@@ -21,8 +21,10 @@ import {
     FlowTriggerInstance,
     TaskStatus,
 } from "src/app/api/kamu.graphql.interface";
-import AppValues from "src/app/common/values/app.values";
+import { pluralize } from "src/app/common/helpers/app.helpers";
 import { DataHelpers } from "src/app/common/helpers/data.helpers";
+import AppValues from "src/app/common/values/app.values";
+import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
 
 export class DatasetFlowDetailsHelpers {
     public static flowEventDescription(
@@ -37,9 +39,9 @@ export class DatasetFlowDetailsHelpers {
                 return "Flow was aborted";
             case "FlowEventTaskChanged": {
                 const event = flowEvent as FlowEventTaskChanged;
-                return `${DataHelpers.flowTypeDescription(
+                return `${FlowTableHelpers.flowTypeDescription(
                     flowDetails,
-                )} task ${DatasetFlowDetailsHelpers.descriptionEndOfMessage(event)}`;
+                )} task ${DatasetFlowDetailsHelpers.flowEventEndOfMessage(event)}`;
             }
             case "FlowEventTriggerAdded":
                 return `Additionally triggered ${this.describeTrigger((flowEvent as FlowEventTriggerAdded).trigger)}`;
@@ -57,10 +59,7 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    public static flowEventIconOptions(
-        flowEvent: FlowHistoryDataFragment,
-        flowDetails: FlowSummaryDataFragment,
-    ): { icon: string; class: string } {
+    public static flowEventIconOptions(flowEvent: FlowHistoryDataFragment): { icon: string; class: string } {
         const eventTypename = flowEvent.__typename;
         switch (eventTypename) {
             case "FlowEventInitiated":
@@ -79,11 +78,20 @@ export class DatasetFlowDetailsHelpers {
                 const event = flowEvent as FlowEventTaskChanged;
                 switch (event.taskStatus) {
                     case TaskStatus.Finished:
-                        return DatasetFlowDetailsHelpers.flowOutcomeOptions(
-                            flowDetails.outcome as FlowOutcomeDataFragment,
-                        );
+                        switch (event.task.outcome?.__typename) {
+                            case "TaskOutcomeSuccess":
+                                return { icon: "check_circle", class: "completed-status" };
+                            case "TaskOutcomeFailed":
+                                return { icon: "dangerous", class: "failed-status" };
+                            case "TaskOutcomeCancelled":
+                                return { icon: "cancel", class: "aborted-outcome" };
+                            /* istanbul ignore next */
+                            default:
+                                throw new Error("Unsupported task outcome");
+                        }
+
                     case TaskStatus.Queued:
-                        return { icon: "radio_button_checked", class: "scheduled-status" };
+                        return { icon: "radio_button_checked", class: "queued-status" };
                     case TaskStatus.Running:
                         return { icon: "radio_button_checked", class: "running-status" };
                     /* istanbul ignore next */
@@ -98,7 +106,6 @@ export class DatasetFlowDetailsHelpers {
     }
 
     public static flowOutcomeOptions(outcome: FlowOutcomeDataFragment): { icon: string; class: string } {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         switch (outcome.__typename) {
             case "FlowSuccessResult":
                 return { icon: "check_circle", class: "completed-status" };
@@ -124,11 +131,11 @@ export class DatasetFlowDetailsHelpers {
             case "FlowConfigSnapshotModified": {
                 const event = flowEvent as FlowConfigSnapshotModified;
                 switch (event.configSnapshot.__typename) {
-                    case "FlowConfigurationCompactionRule":
+                    case "FlowConfigRuleCompaction":
                         return "Modified by compaction rule";
-                    case "FlowConfigurationIngest":
+                    case "FlowConfigRuleIngest":
                         return "Modified by ingest rule";
-                    case "FlowConfigurationReset":
+                    case "FlowConfigRuleReset":
                         return "Modified by reset rule";
                     /* istanbul ignore next */
                     default:
@@ -145,20 +152,41 @@ export class DatasetFlowDetailsHelpers {
                 const event = flowEvent as FlowEventTaskChanged;
                 switch (event.taskStatus) {
                     case TaskStatus.Running:
-                        return `Task #${flowEvent.taskId}`;
+                        return this.describeTaskIdentity(event.taskId, flowDetails);
                     case TaskStatus.Finished:
-                        switch (flowDetails.outcome?.__typename) {
-                            case "FlowFailedError":
-                                switch (flowDetails.outcome.reason.__typename) {
-                                    case "FlowFailureReasonGeneral":
-                                        return `An error occurred, see logs for more details`;
-                                    case "FlowFailureReasonInputDatasetCompacted":
-                                        return `Input dataset <span class="text-small text-danger">${flowDetails.outcome.reason.inputDataset.name}</span> was compacted`;
+                        switch (event.task.outcome?.__typename) {
+                            case "TaskOutcomeCancelled":
+                                return "Task was cancelled";
+                            case "TaskOutcomeFailed": {
+                                let mainMessage: string;
+                                switch (event.task.outcome.reason.__typename) {
+                                    case "TaskFailureReasonGeneral":
+                                        mainMessage = `An error occurred, see logs for more details`;
+                                        break;
+                                    case "TaskFailureReasonInputDatasetCompacted":
+                                        mainMessage = `Input dataset <span class="text-small text-danger">${event.task.outcome.reason.inputDataset.name}</span> was compacted`;
+                                        break;
                                     /* istanbul ignore next */
                                     default:
                                         return "Unknown flow failed error";
                                 }
-                            case "FlowSuccessResult":
+
+                                if (flowDetails.retryPolicy) {
+                                    if (event.nextAttemptAt) {
+                                        const nextRetryAttemptNo =
+                                            flowDetails.tasks.findIndex((task) => task.taskId === event.taskId) + 1;
+                                        return (
+                                            `${mainMessage}<br/>Retry attempt ${nextRetryAttemptNo} of ${flowDetails.retryPolicy.maxAttempts} ` +
+                                            `scheduled in ${DataHelpers.durationTask(event.eventTime, event.nextAttemptAt)}`
+                                        );
+                                    } else {
+                                        return `${mainMessage}<br/>No more retry attempts left`;
+                                    }
+                                } else {
+                                    return mainMessage;
+                                }
+                            }
+                            case "TaskOutcomeSuccess": {
                                 switch (flowDetails.description.__typename) {
                                     case "FlowDescriptionDatasetPollingIngest":
                                     case "FlowDescriptionDatasetPushIngest":
@@ -167,20 +195,17 @@ export class DatasetFlowDetailsHelpers {
                                             ? `${flowDetails.description.ingestResult.message}`
                                             : flowDetails.description.ingestResult?.__typename ===
                                                 "FlowDescriptionUpdateResultSuccess"
-                                              ? `Ingested ${flowDetails.description.ingestResult.numRecords} new ${
-                                                    flowDetails.description.ingestResult.numRecords == 1
-                                                        ? "record"
-                                                        : "records"
-                                                } in ${flowDetails.description.ingestResult.numBlocks} new ${
-                                                    flowDetails.description.ingestResult.numBlocks == 1
-                                                        ? "block"
-                                                        : "blocks"
-                                                }`
+                                              ? `Ingested ${flowDetails.description.ingestResult.numRecords} new ${pluralize(
+                                                    "record",
+                                                    flowDetails.description.ingestResult.numRecords,
+                                                )} in ${flowDetails.description.ingestResult.numBlocks} new ${pluralize(
+                                                    "block",
+                                                    flowDetails.description.ingestResult.numBlocks,
+                                                )}`
                                               : flowDetails.description.ingestResult?.__typename ===
                                                       "FlowDescriptionUpdateResultUpToDate" &&
                                                   flowDetails.description.ingestResult.uncacheable &&
-                                                  ((flowDetails.configSnapshot?.__typename ===
-                                                      "FlowConfigurationIngest" &&
+                                                  ((flowDetails.configSnapshot?.__typename === "FlowConfigRuleIngest" &&
                                                       !flowDetails.configSnapshot.fetchUncacheable) ||
                                                       !flowDetails.configSnapshot)
                                                 ? "Source is uncacheable: to re-scan the data, use force update"
@@ -192,15 +217,13 @@ export class DatasetFlowDetailsHelpers {
                                             ? `${flowDetails.description.transformResult.message}`
                                             : flowDetails.description.transformResult?.__typename ===
                                                 "FlowDescriptionUpdateResultSuccess"
-                                              ? `Transformed ${flowDetails.description.transformResult.numRecords} new ${
-                                                    flowDetails.description.transformResult.numRecords == 1
-                                                        ? "record"
-                                                        : "records"
-                                                } in ${flowDetails.description.transformResult.numBlocks} new ${
-                                                    flowDetails.description.transformResult.numBlocks == 1
-                                                        ? "block"
-                                                        : "blocks"
-                                                }`
+                                              ? `Transformed ${flowDetails.description.transformResult.numRecords} new ${pluralize(
+                                                    "record",
+                                                    flowDetails.description.transformResult.numRecords,
+                                                )} in ${flowDetails.description.transformResult.numBlocks} new ${pluralize(
+                                                    "block",
+                                                    flowDetails.description.transformResult.numBlocks,
+                                                )}`
                                               : "Dataset is up-to-date";
 
                                     case "FlowDescriptionDatasetHardCompaction":
@@ -230,6 +253,7 @@ export class DatasetFlowDetailsHelpers {
                                     default:
                                         return "Unknown description typename";
                                 }
+                            }
                             /* istanbul ignore next */
                             default:
                                 throw new Error("Unknown flow outcome");
@@ -241,7 +265,7 @@ export class DatasetFlowDetailsHelpers {
             }
             case "FlowEventStartConditionUpdated": {
                 const startConditionEvent = flowEvent as FlowEventStartConditionUpdated;
-                return this.describeStartConditionDetails(startConditionEvent);
+                return this.describeStartConditionDetails(startConditionEvent, flowDetails);
             }
             /* istanbul ignore next */
             default:
@@ -249,10 +273,20 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    public static descriptionEndOfMessage(element: FlowEventTaskChanged): string {
+    public static flowEventEndOfMessage(element: FlowEventTaskChanged): string {
         switch (element.taskStatus) {
             case TaskStatus.Finished:
-                return "finished";
+                switch (element.task.outcome?.__typename) {
+                    case "TaskOutcomeSuccess":
+                        return "finished successfully";
+                    case "TaskOutcomeFailed":
+                        return "failed";
+                    case "TaskOutcomeCancelled":
+                        return "was cancelled";
+                    /* istanbul ignore next */
+                    default:
+                        throw new Error("Unsupported task outcome");
+                }
             case TaskStatus.Running:
                 return "running";
             /* istanbul ignore next */
@@ -309,7 +343,10 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    private static describeStartConditionDetails(startConditionEvent: FlowEventStartConditionUpdated): string {
+    private static describeStartConditionDetails(
+        startConditionEvent: FlowEventStartConditionUpdated,
+        flowDetails: FlowSummaryDataFragment,
+    ): string {
         const startCondition: FlowStartCondition = startConditionEvent.startCondition;
         switch (startCondition.__typename) {
             case "FlowStartConditionThrottling":
@@ -324,7 +361,7 @@ export class DatasetFlowDetailsHelpers {
                     startCondition.watermarkModified ? "modified" : "unchanged"
                 }. Deadline at ${format(startCondition.batchingDeadline, AppValues.CRON_EXPRESSION_DATE_FORMAT)}`;
             case "FlowStartConditionExecutor":
-                return `Task #${startCondition.taskId}`;
+                return this.describeTaskIdentity(startCondition.taskId, flowDetails);
             case "FlowStartConditionSchedule":
                 return `Wake up time at ${format(startCondition.wakeUpAt, AppValues.CRON_EXPRESSION_DATE_FORMAT)}`;
             /* istanbul ignore next */
@@ -333,12 +370,24 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    public static dynamicImgSrc(status: FlowStatus): string {
+    private static describeTaskIdentity(taskId: string, flowDetails: FlowSummaryDataFragment): string {
+        const taskDescription = `Task #${taskId}`;
+        if (flowDetails.retryPolicy && flowDetails.tasks[0].taskId !== taskId) {
+            const retryAttemptNo = flowDetails.tasks.findIndex((task) => task.taskId === taskId);
+            return `${taskDescription} (retry attempt ${retryAttemptNo} of ${flowDetails.retryPolicy.maxAttempts})`;
+        } else {
+            return taskDescription;
+        }
+    }
+
+    public static flowStatusAnimationSrc(status: FlowStatus): string {
         switch (status) {
             case FlowStatus.Running:
                 return "assets/images/gear.gif";
             case FlowStatus.Waiting:
                 return "assets/images/hourglass.gif";
+            case FlowStatus.Retrying:
+                return "assets/images/rotating-arrow.gif";
             default:
                 return "";
         }

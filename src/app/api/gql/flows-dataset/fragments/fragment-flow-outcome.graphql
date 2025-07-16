@@ -5,11 +5,11 @@ fragment FlowOutcomeData on FlowOutcome {
 
   ... on FlowFailedError {
     reason {
-      ... on FlowFailureReasonGeneral {
+      ... on TaskFailureReasonGeneral {
         message
       }
 
-      ... on FlowFailureReasonInputDatasetCompacted {
+      ... on TaskFailureReasonInputDatasetCompacted {
         message
         inputDataset {
           ...DatasetBasics

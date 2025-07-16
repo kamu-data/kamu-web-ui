@@ -194,13 +194,18 @@ describe("OverviewComponent", () => {
         spyOnProperty(component, "enableScheduling", "get").and.returnValue(true);
         spyOnProperty(component, "canSchedule", "get").and.returnValue(true);
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-        const datasetTriggerFlowSpy = spyOn(datasetFlowsService, "datasetTriggerFlow").and.returnValue(of(true));
+
+        const datasetTriggerIngestFlowSpy = spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(
+            of(true),
+        );
         fixture.detectChanges();
+
         emitClickOnElementByDataTestId(fixture, "refresh-now-button");
+
         tick(AppValues.SIMULATION_START_CONDITION_DELAY_MS);
 
         expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
-        expect(datasetTriggerFlowSpy).toHaveBeenCalledTimes(1);
+        expect(datasetTriggerIngestFlowSpy).toHaveBeenCalledTimes(1);
         flush();
     }));
 

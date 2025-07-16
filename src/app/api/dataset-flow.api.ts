@@ -20,10 +20,18 @@ import {
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsGQL,
     DatasetResumeFlowsMutation,
-    DatasetTriggerFlowGQL,
-    DatasetTriggerFlowMutation,
-    FlowConfigurationInput,
-    FlowRunConfiguration,
+    DatasetTriggerCompactionFlowGQL,
+    DatasetTriggerCompactionFlowMutation,
+    DatasetTriggerIngestFlowGQL,
+    DatasetTriggerIngestFlowMutation,
+    DatasetTriggerResetFlowGQL,
+    DatasetTriggerResetFlowMutation,
+    DatasetTriggerTransformFlowGQL,
+    DatasetTriggerTransformFlowMutation,
+    FlowConfigCompactionInput,
+    FlowConfigIngestInput,
+    FlowConfigResetInput,
+    FlowRetryPolicyInput,
     FlowTriggerInput,
     GetDatasetFlowConfigsGQL,
     GetDatasetFlowConfigsQuery,
@@ -33,14 +41,17 @@ import {
     GetDatasetListFlowsQuery,
     GetFlowByIdGQL,
     GetFlowByIdQuery,
-    SetDatasetFlowConfigGQL,
-    SetDatasetFlowConfigMutation,
+    SetCompactionFlowConfigGQL,
+    SetCompactionFlowConfigMutation,
     SetDatasetFlowTriggersGQL,
     SetDatasetFlowTriggersMutation,
+    SetIngestFlowConfigGQL,
+    SetIngestFlowConfigMutation,
 } from "./kamu.graphql.interface";
 import { Observable, first, map } from "rxjs";
 import { ApolloQueryResult } from "@apollo/client";
 import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
+import { MaybeNull } from "../interface/app.types";
 
 @Injectable({ providedIn: "root" })
 export class DatasetFlowApi {
@@ -49,24 +60,62 @@ export class DatasetFlowApi {
     private datasetPauseFlowsGQL = inject(DatasetPauseFlowsGQL);
     private datasetResumeFlowsGQL = inject(DatasetResumeFlowsGQL);
     private datasetAllFlowsPausedGQL = inject(DatasetAllFlowsPausedGQL);
-    private datasetTriggerFlowGQL = inject(DatasetTriggerFlowGQL);
+
+    private datasetTriggerIngestFlowGQL = inject(DatasetTriggerIngestFlowGQL);
+    private datasetTriggetTransformFlowGQL = inject(DatasetTriggerTransformFlowGQL);
+    private datasetTriggerCompactionFlowGQL = inject(DatasetTriggerCompactionFlowGQL);
+    private datasetTriggerResetFlowGQL = inject(DatasetTriggerResetFlowGQL);
+
     private datasetFlowByIdGQL = inject(GetFlowByIdGQL);
     private cancelScheduledTasksGQL = inject(CancelScheduledTasksGQL);
     private datasetFlowsInitiatorsGQL = inject(DatasetFlowsInitiatorsGQL);
-    private setDatasetFlowConfigGQL = inject(SetDatasetFlowConfigGQL);
     private setDatasetFlowTriggersGQL = inject(SetDatasetFlowTriggersGQL);
     private getDatasetFlowTriggersGQL = inject(GetDatasetFlowTriggersGQL);
 
-    public datasetTriggerFlow(params: {
-        accountId: string;
+    private setIngestFlowConfigGQL = inject(SetIngestFlowConfigGQL);
+    private setCompactionFlowConfigGQL = inject(SetCompactionFlowConfigGQL);
+
+    public datasetTriggerIngestFlow(params: {
         datasetId: string;
-        datasetFlowType: DatasetFlowType;
-        flowRunConfiguration?: FlowRunConfiguration;
-    }): Observable<DatasetTriggerFlowMutation> {
-        return this.datasetTriggerFlowGQL.mutate({ ...params }).pipe(
+        ingestConfigInput?: FlowConfigIngestInput;
+    }): Observable<DatasetTriggerIngestFlowMutation> {
+        return this.datasetTriggerIngestFlowGQL.mutate({ ...params }).pipe(
             first(),
-            map((result: MutationResult<DatasetTriggerFlowMutation>) => {
-                return result.data as DatasetTriggerFlowMutation;
+            map((result: MutationResult<DatasetTriggerIngestFlowMutation>) => {
+                return result.data as DatasetTriggerIngestFlowMutation;
+            }),
+        );
+    }
+
+    public datasetTriggerTransformFlow(params: { datasetId: string }): Observable<DatasetTriggerTransformFlowMutation> {
+        return this.datasetTriggetTransformFlowGQL.mutate({ ...params }).pipe(
+            first(),
+            map((result: MutationResult<DatasetTriggerTransformFlowMutation>) => {
+                return result.data as DatasetTriggerTransformFlowMutation;
+            }),
+        );
+    }
+
+    public datasetTriggerCompactionFlow(params: {
+        datasetId: string;
+        compactionConfigInput?: FlowConfigCompactionInput;
+    }): Observable<DatasetTriggerCompactionFlowMutation> {
+        return this.datasetTriggerCompactionFlowGQL.mutate({ ...params }).pipe(
+            first(),
+            map((result: MutationResult<DatasetTriggerCompactionFlowMutation>) => {
+                return result.data as DatasetTriggerCompactionFlowMutation;
+            }),
+        );
+    }
+
+    public datasetTriggerResetFlow(params: {
+        datasetId: string;
+        resetConfigInput: FlowConfigResetInput;
+    }): Observable<DatasetTriggerResetFlowMutation> {
+        return this.datasetTriggerResetFlowGQL.mutate({ ...params }).pipe(
+            first(),
+            map((result: MutationResult<DatasetTriggerResetFlowMutation>) => {
+                return result.data as DatasetTriggerResetFlowMutation;
             }),
         );
     }
@@ -84,21 +133,38 @@ export class DatasetFlowApi {
             );
     }
 
-    public setDatasetFlowConfigs(params: {
+    public setDatasetFlowIngestConfig(params: {
         datasetId: string;
-        datasetFlowType: DatasetFlowType;
-        configInput: FlowConfigurationInput;
-    }): Observable<SetDatasetFlowConfigMutation> {
-        return this.setDatasetFlowConfigGQL
+        ingestConfigInput: FlowConfigIngestInput;
+        retryPolicyInput: MaybeNull<FlowRetryPolicyInput>;
+    }): Observable<SetIngestFlowConfigMutation> {
+        return this.setIngestFlowConfigGQL
             .mutate({
                 datasetId: params.datasetId,
-                datasetFlowType: params.datasetFlowType,
-                configInput: params.configInput,
+                ingestConfigInput: params.ingestConfigInput,
+                retryPolicyInput: params.retryPolicyInput,
             })
             .pipe(
                 first(),
-                map((result: MutationResult<SetDatasetFlowConfigMutation>) => {
-                    return result.data as SetDatasetFlowConfigMutation;
+                map((result: MutationResult<SetIngestFlowConfigMutation>) => {
+                    return result.data as SetIngestFlowConfigMutation;
+                }),
+            );
+    }
+
+    public setDatasetFlowCompactionConfig(params: {
+        datasetId: string;
+        compactionConfigInput: FlowConfigCompactionInput;
+    }): Observable<SetCompactionFlowConfigMutation> {
+        return this.setCompactionFlowConfigGQL
+            .mutate({
+                datasetId: params.datasetId,
+                compactionConfigInput: params.compactionConfigInput,
+            })
+            .pipe(
+                first(),
+                map((result: MutationResult<SetCompactionFlowConfigMutation>) => {
+                    return result.data as SetCompactionFlowConfigMutation;
                 }),
             );
     }

@@ -9,7 +9,7 @@ import { MaybeNull } from "src/app/interface/app.types";
 import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.interface";
 import {
     AccountFragment,
-    DatasetListFlowsDataFragment,
+    DatasetBasicsFragment,
     FlowConnectionDataFragment,
     FlowConnectionWidgetDataFragment,
     FlowStatus,
@@ -18,7 +18,7 @@ import {
 export interface FlowsTableData {
     connectionDataForTable: FlowConnectionDataFragment;
     connectionDataForWidget: FlowConnectionWidgetDataFragment;
-    involvedDatasets: DatasetListFlowsDataFragment[];
+    involvedDatasets: DatasetBasicsFragment[];
 }
 
 export interface TransformDescriptionTableData {
@@ -37,7 +37,7 @@ export interface FlowsTableOptions {
 
 export interface FlowsTableFiltersOptions {
     accounts: AccountFragment[];
-    datasets: DatasetListFlowsDataFragment[];
+    datasets: DatasetBasicsFragment[];
     status: MaybeNull<FlowStatus>;
     onlySystemFlows: boolean;
 }

@@ -92,10 +92,11 @@ export class AccessTokensTabComponent extends BaseComponent {
         name: ["", [Validators.required, Validators.maxLength(100)]],
     });
     public showRevokedToken = false;
+
     public readonly DISPLAY_COLUMNS: string[] = ["status", "name", "createdAt", "revokedAt", "actions"];
     public readonly TokenCreateStep: typeof TokenCreateStep = TokenCreateStep;
     public readonly PER_PAGE = 15;
-    public readonly DATE_FORMAT = AppValues.DISPLAY_FLOW_DATE_FORMAT;
+    public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
 
     public get currentPage(): number {
         return this.tokenConnection.pageInfo.currentPage + 1;

@@ -7,12 +7,9 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FlowDetailsLogsTabComponent } from "./flow-details-logs-tab.component";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { MatIconModule } from "@angular/material/icon";
 import { mockDatasetFlowByIdResponse } from "src/app/api/mock/dataset-flow.mock";
 import { AppConfigService } from "src/app/app-config.service";
 
@@ -24,7 +21,7 @@ describe("FlowDetailsLogsTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [SharedTestModule, HttpClientTestingModule, MatIconModule, FlowDetailsLogsTabComponent],
+            imports: [FlowDetailsLogsTabComponent],
             providers: [Apollo],
         });
         loggedUserService = TestBed.inject(LoggedUserService);

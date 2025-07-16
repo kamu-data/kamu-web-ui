@@ -26,6 +26,7 @@ import {
     FlowStatus,
 } from "../kamu.graphql.interface";
 import { mockAccountDetails } from "./auth.mock";
+import { mockFlowPollingSourceFragmentFetchUrl } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
 
 export const mockAccountByNameResponse: AccountByNameQuery = {
     __typename: "Query",
@@ -54,10 +55,11 @@ export const mockAccountListFlowsQuery: AccountListFlowsQuery = {
                     table: {
                         nodes: [
                             {
+                                datasetId:
+                                    "did:odf:fed014aee1c33d51f36c21fab6f13444bdce6fe3d5762cbb889adead63498f57f4168",
                                 description: {
-                                    datasetId:
-                                        "did:odf:fed014aee1c33d51f36c21fab6f13444bdce6fe3d5762cbb889adead63498f57f4168",
                                     ingestResult: null,
+                                    pollingSource: mockFlowPollingSourceFragmentFetchUrl,
                                     __typename: "FlowDescriptionDatasetPollingIngest",
                                 },
                                 flowId: "0",
@@ -77,12 +79,16 @@ export const mockAccountListFlowsQuery: AccountListFlowsQuery = {
                                     __typename: "FlowSuccessResult",
                                 },
                                 timing: {
+                                    initiatedAt: "2024-06-10T07:00:30+00:00",
+                                    scheduledAt: "2024-06-10T07:00:31+00:00",
                                     awaitingExecutorSince: "2024-06-10T07:00:31+00:00",
                                     runningSince: "2024-06-10T07:00:31.306400327+00:00",
-                                    finishedAt: "2024-06-10T07:00:31.337328+00:00",
+                                    lastAttemptFinishedAt: "2024-06-10T07:00:31.337328+00:00",
                                     __typename: "FlowTimingRecords",
                                 },
                                 startCondition: null,
+                                retryPolicy: null,
+                                tasks: [],
                                 __typename: "Flow",
                             },
                         ],
@@ -97,10 +103,11 @@ export const mockAccountListFlowsQuery: AccountListFlowsQuery = {
                         edges: [
                             {
                                 node: {
+                                    datasetId:
+                                        "did:odf:fed014aee1c33d51f36c21fab6f13444bdce6fe3d5762cbb889adead63498f57f4168",
                                     description: {
-                                        datasetId:
-                                            "did:odf:fed014aee1c33d51f36c21fab6f13444bdce6fe3d5762cbb889adead63498f57f4168",
                                         ingestResult: null,
+                                        pollingSource: mockFlowPollingSourceFragmentFetchUrl,
                                         __typename: "FlowDescriptionDatasetPollingIngest",
                                     },
                                     flowId: "0",
@@ -120,12 +127,16 @@ export const mockAccountListFlowsQuery: AccountListFlowsQuery = {
                                         __typename: "FlowSuccessResult",
                                     },
                                     timing: {
+                                        initiatedAt: "2024-06-10T07:00:30+00:00",
+                                        scheduledAt: "2024-06-10T07:00:31+00:00",
                                         awaitingExecutorSince: "2024-06-10T07:00:31+00:00",
                                         runningSince: "2024-06-10T07:00:31.306400327+00:00",
-                                        finishedAt: "2024-06-10T07:00:31.337328+00:00",
+                                        lastAttemptFinishedAt: "2024-06-10T07:00:31.337328+00:00",
                                         __typename: "FlowTimingRecords",
                                     },
                                     startCondition: null,
+                                    retryPolicy: null,
+                                    tasks: [],
                                     __typename: "Flow",
                                 },
                                 __typename: "FlowEdge",
@@ -137,23 +148,20 @@ export const mockAccountListFlowsQuery: AccountListFlowsQuery = {
                         nodes: [
                             {
                                 flowId: "0",
-                                description: {
-                                    __typename: "FlowDescriptionDatasetPollingIngest",
-                                    datasetId: mockDatasetMainDataId,
-                                },
+                                datasetId: mockDatasetMainDataId,
                                 status: FlowStatus.Finished,
-
                                 outcome: {
                                     message: "SUCCESS",
                                     __typename: "FlowSuccessResult",
                                 },
                                 timing: {
+                                    initiatedAt: "2024-06-10T07:00:30+00:00",
+                                    scheduledAt: "2024-06-10T07:00:31+00:00",
                                     awaitingExecutorSince: "2024-06-10T07:00:31+00:00",
                                     runningSince: "2024-06-10T07:00:31.306400327+00:00",
-                                    finishedAt: "2024-06-10T07:00:31.337328+00:00",
+                                    lastAttemptFinishedAt: "2024-06-10T07:00:31.337328+00:00",
                                     __typename: "FlowTimingRecords",
                                 },
-
                                 __typename: "Flow",
                             },
                         ],

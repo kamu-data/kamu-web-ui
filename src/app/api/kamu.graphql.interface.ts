@@ -723,32 +723,6 @@ export type CommitResultSuccess = CommitResult &
         oldHead?: Maybe<Scalars["Multihash"]>;
     };
 
-export type CompactionConditionFull = {
-    maxSliceRecords: Scalars["Int"];
-    maxSliceSize: Scalars["Int"];
-    recursive: Scalars["Boolean"];
-};
-
-export type CompactionConditionInput =
-    | { full: CompactionConditionFull; metadataOnly?: never }
-    | { full?: never; metadataOnly: CompactionConditionMetadataOnly };
-
-export type CompactionConditionMetadataOnly = {
-    recursive: Scalars["Boolean"];
-};
-
-export type CompactionFull = {
-    __typename?: "CompactionFull";
-    maxSliceRecords: Scalars["Int"];
-    maxSliceSize: Scalars["Int"];
-    recursive: Scalars["Boolean"];
-};
-
-export type CompactionMetadataOnly = {
-    __typename?: "CompactionMetadataOnly";
-    recursive: Scalars["Boolean"];
-};
-
 export type CompareChainsResult = CompareChainsResultError | CompareChainsResultStatus;
 
 export type CompareChainsResultError = {
@@ -1184,12 +1158,17 @@ export type DatasetFlowConfigsByTypeArgs = {
 
 export type DatasetFlowConfigsMut = {
     __typename?: "DatasetFlowConfigsMut";
-    setConfig: SetFlowConfigResult;
+    setCompactionConfig: SetFlowConfigResult;
+    setIngestConfig: SetFlowConfigResult;
 };
 
-export type DatasetFlowConfigsMutSetConfigArgs = {
-    configInput: FlowConfigurationInput;
-    datasetFlowType: DatasetFlowType;
+export type DatasetFlowConfigsMutSetCompactionConfigArgs = {
+    compactionConfigInput: FlowConfigCompactionInput;
+};
+
+export type DatasetFlowConfigsMutSetIngestConfigArgs = {
+    ingestConfigInput: FlowConfigIngestInput;
+    retryPolicyInput?: InputMaybe<FlowRetryPolicyInput>;
 };
 
 export type DatasetFlowFilters = {
@@ -1218,16 +1197,26 @@ export type DatasetFlowRunsListFlowsArgs = {
 export type DatasetFlowRunsMut = {
     __typename?: "DatasetFlowRunsMut";
     cancelScheduledTasks: CancelScheduledTasksResult;
-    triggerFlow: TriggerFlowResult;
+    triggerCompactionFlow: TriggerFlowResult;
+    triggerIngestFlow: TriggerFlowResult;
+    triggerResetFlow: TriggerFlowResult;
+    triggerTransformFlow: TriggerFlowResult;
 };
 
 export type DatasetFlowRunsMutCancelScheduledTasksArgs = {
     flowId: Scalars["FlowID"];
 };
 
-export type DatasetFlowRunsMutTriggerFlowArgs = {
-    datasetFlowType: DatasetFlowType;
-    flowRunConfiguration?: InputMaybe<FlowRunConfiguration>;
+export type DatasetFlowRunsMutTriggerCompactionFlowArgs = {
+    compactionConfigInput?: InputMaybe<FlowConfigCompactionInput>;
+};
+
+export type DatasetFlowRunsMutTriggerIngestFlowArgs = {
+    ingestConfigInput?: InputMaybe<FlowConfigIngestInput>;
+};
+
+export type DatasetFlowRunsMutTriggerResetFlowArgs = {
+    resetConfigInput?: InputMaybe<FlowConfigResetInput>;
 };
 
 export type DatasetFlowTriggers = {
@@ -1943,7 +1932,9 @@ export type FlightSqlDesc = {
 export type Flow = {
     __typename?: "Flow";
     /** Flow config snapshot */
-    configSnapshot?: Maybe<FlowConfigurationSnapshot>;
+    configSnapshot?: Maybe<FlowConfigRule>;
+    /** Associated dataset ID, if any */
+    datasetId?: Maybe<Scalars["DatasetID"]>;
     /** Description of key flow parameters */
     description: FlowDescription;
     /** Unique identifier of the flow */
@@ -1956,6 +1947,8 @@ export type Flow = {
     outcome?: Maybe<FlowOutcome>;
     /** Primary flow trigger */
     primaryTrigger: FlowTriggerInstance;
+    /** Flow retry policy */
+    retryPolicy?: Maybe<FlowRetryPolicy>;
     /** Start condition */
     startCondition?: Maybe<FlowStartCondition>;
     /** Status of the flow */
@@ -1971,55 +1964,102 @@ export type FlowAbortedResult = {
     message: Scalars["String"];
 };
 
+export type FlowConfigCompactionInput =
+    | { full: FlowConfigInputCompactionFull; metadataOnly?: never }
+    | { full?: never; metadataOnly: FlowConfigInputCompactionMetadataOnly };
+
+export type FlowConfigCompactionMode = FlowConfigCompactionModeFull | FlowConfigCompactionModeMetadataOnly;
+
+export type FlowConfigCompactionModeFull = {
+    __typename?: "FlowConfigCompactionModeFull";
+    maxSliceRecords: Scalars["Int"];
+    maxSliceSize: Scalars["Int"];
+    recursive: Scalars["Boolean"];
+};
+
+export type FlowConfigCompactionModeMetadataOnly = {
+    __typename?: "FlowConfigCompactionModeMetadataOnly";
+    recursive: Scalars["Boolean"];
+};
+
+export type FlowConfigIngestInput = {
+    /** Flag indicates to ignore cache during ingest step for API calls */
+    fetchUncacheable: Scalars["Boolean"];
+};
+
+export type FlowConfigInputCompactionFull = {
+    maxSliceRecords: Scalars["Int"];
+    maxSliceSize: Scalars["Int"];
+    recursive: Scalars["Boolean"];
+};
+
+export type FlowConfigInputCompactionMetadataOnly = {
+    recursive: Scalars["Boolean"];
+};
+
+export type FlowConfigInputResetPropagationMode =
+    | { custom: FlowConfigInputResetPropagationModeCustom; toSeed?: never }
+    | { custom?: never; toSeed: FlowConfigInputResetPropagationModeToSeed };
+
+export type FlowConfigInputResetPropagationModeCustom = {
+    newHeadHash: Scalars["Multihash"];
+};
+
+export type FlowConfigInputResetPropagationModeToSeed = {
+    dummy?: InputMaybe<Scalars["String"]>;
+};
+
+export type FlowConfigResetInput = {
+    mode: FlowConfigInputResetPropagationMode;
+    oldHeadHash?: InputMaybe<Scalars["Multihash"]>;
+    recursive: Scalars["Boolean"];
+};
+
+export type FlowConfigResetPropagationMode =
+    | FlowConfigResetPropagationModeCustom
+    | FlowConfigResetPropagationModeToSeed;
+
+export type FlowConfigResetPropagationModeCustom = {
+    __typename?: "FlowConfigResetPropagationModeCustom";
+    newHeadHash: Scalars["Multihash"];
+};
+
+export type FlowConfigResetPropagationModeToSeed = {
+    __typename?: "FlowConfigResetPropagationModeToSeed";
+    dummy?: Maybe<Scalars["String"]>;
+};
+
+export type FlowConfigRule = FlowConfigRuleCompaction | FlowConfigRuleIngest | FlowConfigRuleReset;
+
+export type FlowConfigRuleCompaction = {
+    __typename?: "FlowConfigRuleCompaction";
+    compactionMode: FlowConfigCompactionMode;
+};
+
+export type FlowConfigRuleIngest = {
+    __typename?: "FlowConfigRuleIngest";
+    fetchUncacheable: Scalars["Boolean"];
+};
+
+export type FlowConfigRuleReset = {
+    __typename?: "FlowConfigRuleReset";
+    mode: FlowConfigResetPropagationMode;
+    oldHeadHash?: Maybe<Scalars["Multihash"]>;
+    recursive: Scalars["Boolean"];
+};
+
 export type FlowConfigSnapshotModified = FlowEvent & {
     __typename?: "FlowConfigSnapshotModified";
-    configSnapshot: FlowConfigurationSnapshot;
+    configSnapshot: FlowConfigRule;
     eventId: Scalars["EventID"];
     eventTime: Scalars["DateTime"];
 };
 
 export type FlowConfiguration = {
     __typename?: "FlowConfiguration";
-    compaction?: Maybe<FlowConfigurationCompaction>;
-    ingest?: Maybe<FlowConfigurationIngest>;
-    reset?: Maybe<FlowConfigurationReset>;
+    retryPolicy?: Maybe<FlowRetryPolicy>;
+    rule: FlowConfigRule;
 };
-
-export type FlowConfigurationCompaction = CompactionFull | CompactionMetadataOnly;
-
-export type FlowConfigurationCompactionRule = {
-    __typename?: "FlowConfigurationCompactionRule";
-    compactionRule: FlowConfigurationCompaction;
-};
-
-export type FlowConfigurationIngest = {
-    __typename?: "FlowConfigurationIngest";
-    fetchUncacheable: Scalars["Boolean"];
-};
-
-export type FlowConfigurationInput =
-    | { compaction: CompactionConditionInput; ingest?: never }
-    | { compaction?: never; ingest: IngestConditionInput };
-
-export type FlowConfigurationReset = {
-    __typename?: "FlowConfigurationReset";
-    mode: SnapshotPropagationMode;
-    oldHeadHash?: Maybe<Scalars["Multihash"]>;
-    recursive: Scalars["Boolean"];
-};
-
-export type FlowConfigurationResetCustom = {
-    newHeadHash: Scalars["Multihash"];
-};
-
-export type FlowConfigurationResetToSeedDummy = {
-    dummy?: InputMaybe<Scalars["String"]>;
-};
-
-export type FlowConfigurationSnapshot =
-    | FlowConfigurationCompactionRule
-    | FlowConfigurationIngest
-    | FlowConfigurationReset;
 
 export type FlowConnection = {
     __typename?: "FlowConnection";
@@ -2042,14 +2082,13 @@ export type FlowDescription =
 
 export type FlowDescriptionDatasetExecuteTransform = {
     __typename?: "FlowDescriptionDatasetExecuteTransform";
-    datasetId: Scalars["DatasetID"];
+    transform: SetTransform;
     transformResult?: Maybe<FlowDescriptionUpdateResult>;
 };
 
 export type FlowDescriptionDatasetHardCompaction = {
     __typename?: "FlowDescriptionDatasetHardCompaction";
     compactionResult?: Maybe<FlowDescriptionDatasetHardCompactionResult>;
-    datasetId: Scalars["DatasetID"];
 };
 
 export type FlowDescriptionDatasetHardCompactionResult =
@@ -2058,13 +2097,12 @@ export type FlowDescriptionDatasetHardCompactionResult =
 
 export type FlowDescriptionDatasetPollingIngest = {
     __typename?: "FlowDescriptionDatasetPollingIngest";
-    datasetId: Scalars["DatasetID"];
     ingestResult?: Maybe<FlowDescriptionUpdateResult>;
+    pollingSource: SetPollingSource;
 };
 
 export type FlowDescriptionDatasetPushIngest = {
     __typename?: "FlowDescriptionDatasetPushIngest";
-    datasetId: Scalars["DatasetID"];
     ingestResult?: Maybe<FlowDescriptionUpdateResult>;
     inputRecordsCount: Scalars["Int"];
     message: Scalars["String"];
@@ -2073,7 +2111,6 @@ export type FlowDescriptionDatasetPushIngest = {
 
 export type FlowDescriptionDatasetReset = {
     __typename?: "FlowDescriptionDatasetReset";
-    datasetId: Scalars["DatasetID"];
     resetResult?: Maybe<FlowDescriptionResetResult>;
 };
 
@@ -2164,6 +2201,7 @@ export type FlowEventTaskChanged = FlowEvent & {
     __typename?: "FlowEventTaskChanged";
     eventId: Scalars["EventID"];
     eventTime: Scalars["DateTime"];
+    nextAttemptAt?: Maybe<Scalars["DateTime"]>;
     task: Task;
     taskId: Scalars["TaskID"];
     taskStatus: TaskStatus;
@@ -2178,20 +2216,7 @@ export type FlowEventTriggerAdded = FlowEvent & {
 
 export type FlowFailedError = {
     __typename?: "FlowFailedError";
-    reason: FlowFailureReason;
-};
-
-export type FlowFailureReason = FlowFailureReasonGeneral | FlowFailureReasonInputDatasetCompacted;
-
-export type FlowFailureReasonGeneral = {
-    __typename?: "FlowFailureReasonGeneral";
-    message: Scalars["String"];
-};
-
-export type FlowFailureReasonInputDatasetCompacted = {
-    __typename?: "FlowFailureReasonInputDatasetCompacted";
-    inputDataset: Dataset;
-    message: Scalars["String"];
+    reason: TaskFailureReason;
 };
 
 export type FlowIncompatibleDatasetKind = SetFlowConfigResult &
@@ -2238,10 +2263,25 @@ export type FlowPreconditionsNotMet = SetFlowConfigResult &
         preconditions: Scalars["String"];
     };
 
-export type FlowRunConfiguration =
-    | { compaction: CompactionConditionInput; ingest?: never; reset?: never }
-    | { compaction?: never; ingest: IngestConditionInput; reset?: never }
-    | { compaction?: never; ingest?: never; reset: ResetConditionInput };
+export enum FlowRetryBackoffType {
+    Exponential = "EXPONENTIAL",
+    ExponentialWithJitter = "EXPONENTIAL_WITH_JITTER",
+    Fixed = "FIXED",
+    Linear = "LINEAR",
+}
+
+export type FlowRetryPolicy = {
+    __typename?: "FlowRetryPolicy";
+    backoffType: FlowRetryBackoffType;
+    maxAttempts: Scalars["Int"];
+    minDelay: TimeDelta;
+};
+
+export type FlowRetryPolicyInput = {
+    backoffType: FlowRetryBackoffType;
+    maxAttempts: Scalars["Int"];
+    minDelay: TimeDeltaInput;
+};
 
 export type FlowStartCondition =
     | FlowStartConditionBatching
@@ -2276,6 +2316,7 @@ export type FlowStartConditionThrottling = {
 
 export enum FlowStatus {
     Finished = "FINISHED",
+    Retrying = "RETRYING",
     Running = "RUNNING",
     Waiting = "WAITING",
 }
@@ -2289,13 +2330,17 @@ export type FlowTimingRecords = {
     __typename?: "FlowTimingRecords";
     /** Recorded time of last task scheduling */
     awaitingExecutorSince?: Maybe<Scalars["DateTime"]>;
+    /** Initiation time */
+    initiatedAt: Scalars["DateTime"];
     /**
      * Recorded time of finish (successful or failed after retry) or abortion
      * (Finished state seen at least once)
      */
-    finishedAt?: Maybe<Scalars["DateTime"]>;
+    lastAttemptFinishedAt?: Maybe<Scalars["DateTime"]>;
     /** Recorded start of running (Running state seen at least once) */
     runningSince?: Maybe<Scalars["DateTime"]>;
+    /** Planned scheduling time */
+    scheduledAt?: Maybe<Scalars["DateTime"]>;
 };
 
 export type FlowTrigger = {
@@ -2345,11 +2390,10 @@ export type FlowTriggerPush = {
 
 export type FlowTriggerScheduleRule = Cron5ComponentExpression | TimeDelta;
 
-export type FlowTypeIsNotSupported = SetFlowConfigResult &
-    SetFlowTriggerResult & {
-        __typename?: "FlowTypeIsNotSupported";
-        message: Scalars["String"];
-    };
+export type FlowTypeIsNotSupported = SetFlowTriggerResult & {
+    __typename?: "FlowTypeIsNotSupported";
+    message: Scalars["String"];
+};
 
 export type GetFlowResult = {
     message: Scalars["String"];
@@ -2359,11 +2403,6 @@ export type GetFlowSuccess = GetFlowResult & {
     __typename?: "GetFlowSuccess";
     flow: Flow;
     message: Scalars["String"];
-};
-
-export type IngestConditionInput = {
-    /** Flag indicates to ignore cache during ingest step for API calls */
-    fetchUncacheable: Scalars["Boolean"];
 };
 
 export type InitiatorFilterInput =
@@ -2825,10 +2864,6 @@ export type PrivateDatasetVisibilityInput = {
     dummy?: InputMaybe<Scalars["String"]>;
 };
 
-export type PropagationMode =
-    | { custom: FlowConfigurationResetCustom; toSeed?: never }
-    | { custom?: never; toSeed: FlowConfigurationResetToSeedDummy };
-
 export type PublicDatasetVisibility = {
     __typename?: "PublicDatasetVisibility";
     anonymousAvailable: Scalars["Boolean"];
@@ -3179,12 +3214,6 @@ export type RequestHeader = {
     value: Scalars["String"];
 };
 
-export type ResetConditionInput = {
-    mode: PropagationMode;
-    oldHeadHash?: InputMaybe<Scalars["Multihash"]>;
-    recursive: Scalars["Boolean"];
-};
-
 export type RestProtocolDesc = {
     __typename?: "RestProtocolDesc";
     pushUrl: Scalars["String"];
@@ -3484,18 +3513,6 @@ export type SetWatermarkUpdated = SetWatermarkResult & {
     newHead: Scalars["Multihash"];
 };
 
-export type SnapshotConfigurationResetCustom = {
-    __typename?: "SnapshotConfigurationResetCustom";
-    newHeadHash: Scalars["Multihash"];
-};
-
-export type SnapshotConfigurationResetToSeedDummy = {
-    __typename?: "SnapshotConfigurationResetToSeedDummy";
-    dummy?: Maybe<Scalars["String"]>;
-};
-
-export type SnapshotPropagationMode = SnapshotConfigurationResetCustom | SnapshotConfigurationResetToSeedDummy;
-
 /**
  * Defines how external data should be cached.
  *
@@ -3605,15 +3622,36 @@ export type Task = {
     taskId: Scalars["TaskID"];
 };
 
+export type TaskFailureReason = TaskFailureReasonGeneral | TaskFailureReasonInputDatasetCompacted;
+
+export type TaskFailureReasonGeneral = {
+    __typename?: "TaskFailureReasonGeneral";
+    message: Scalars["String"];
+};
+
+export type TaskFailureReasonInputDatasetCompacted = {
+    __typename?: "TaskFailureReasonInputDatasetCompacted";
+    inputDataset: Dataset;
+    message: Scalars["String"];
+};
+
 /** Describes a certain final outcome of the task */
-export enum TaskOutcome {
-    /** Task was cancelled by a user */
-    Cancelled = "CANCELLED",
-    /** Task failed to complete */
-    Failed = "FAILED",
-    /** Task succeeded */
-    Success = "SUCCESS",
-}
+export type TaskOutcome = TaskOutcomeCancelled | TaskOutcomeFailed | TaskOutcomeSuccess;
+
+export type TaskOutcomeCancelled = {
+    __typename?: "TaskOutcomeCancelled";
+    message: Scalars["String"];
+};
+
+export type TaskOutcomeFailed = {
+    __typename?: "TaskOutcomeFailed";
+    reason: TaskFailureReason;
+};
+
+export type TaskOutcomeSuccess = {
+    __typename?: "TaskOutcomeSuccess";
+    message: Scalars["String"];
+};
 
 /** Life-cycle status of a task */
 export enum TaskStatus {
@@ -5090,6 +5128,195 @@ export type UpsertEnvVariableMutation = {
     };
 };
 
+export type GetDatasetFlowConfigsQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    datasetFlowType: DatasetFlowType;
+}>;
+
+export type GetDatasetFlowConfigsQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?:
+            | ({
+                  __typename?: "Dataset";
+                  flows: {
+                      __typename?: "DatasetFlows";
+                      configs: {
+                          __typename: "DatasetFlowConfigs";
+                          byType?: {
+                              __typename: "FlowConfiguration";
+                              rule:
+                                  | {
+                                        __typename?: "FlowConfigRuleCompaction";
+                                        compactionMode:
+                                            | {
+                                                  __typename?: "FlowConfigCompactionModeFull";
+                                                  maxSliceSize: number;
+                                                  maxSliceRecords: number;
+                                                  recursive: boolean;
+                                              }
+                                            | { __typename?: "FlowConfigCompactionModeMetadataOnly" };
+                                    }
+                                  | { __typename?: "FlowConfigRuleIngest"; fetchUncacheable: boolean }
+                                  | {
+                                        __typename?: "FlowConfigRuleReset";
+                                        oldHeadHash?: string | null;
+                                        recursive: boolean;
+                                        mode:
+                                            | { __typename?: "FlowConfigResetPropagationModeCustom" }
+                                            | {
+                                                  __typename?: "FlowConfigResetPropagationModeToSeed";
+                                                  dummy?: string | null;
+                                              };
+                                    };
+                              retryPolicy?: {
+                                  __typename?: "FlowRetryPolicy";
+                                  maxAttempts: number;
+                                  backoffType: FlowRetryBackoffType;
+                                  minDelay: { __typename?: "TimeDelta" } & TimeDeltaDataFragment;
+                              } | null;
+                          } | null;
+                      };
+                  };
+              } & DatasetBasicsFragment)
+            | null;
+    };
+};
+
+export type SetCompactionFlowConfigMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    compactionConfigInput: FlowConfigCompactionInput;
+}>;
+
+export type SetCompactionFlowConfigMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            flows: {
+                __typename?: "DatasetFlowsMut";
+                configs: {
+                    __typename?: "DatasetFlowConfigsMut";
+                    setCompactionConfig:
+                        | {
+                              __typename?: "FlowIncompatibleDatasetKind";
+                              message: string;
+                              actualDatasetKind: DatasetKind;
+                              expectedDatasetKind: DatasetKind;
+                          }
+                        | { __typename?: "FlowInvalidConfigInputError"; message: string; reason: string }
+                        | { __typename?: "FlowPreconditionsNotMet"; message: string; preconditions: string }
+                        | { __typename?: "SetFlowConfigSuccess"; message: string };
+                };
+            };
+        } | null;
+    };
+};
+
+export type SetIngestFlowConfigMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    ingestConfigInput: FlowConfigIngestInput;
+    retryPolicyInput?: InputMaybe<FlowRetryPolicyInput>;
+}>;
+
+export type SetIngestFlowConfigMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            flows: {
+                __typename?: "DatasetFlowsMut";
+                configs: {
+                    __typename?: "DatasetFlowConfigsMut";
+                    setIngestConfig:
+                        | {
+                              __typename?: "FlowIncompatibleDatasetKind";
+                              message: string;
+                              actualDatasetKind: DatasetKind;
+                              expectedDatasetKind: DatasetKind;
+                          }
+                        | { __typename?: "FlowInvalidConfigInputError"; message: string; reason: string }
+                        | { __typename?: "FlowPreconditionsNotMet"; message: string; preconditions: string }
+                        | { __typename?: "SetFlowConfigSuccess"; message: string };
+                };
+            };
+        } | null;
+    };
+};
+
+export type SetDatasetFlowTriggersMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    datasetFlowType: DatasetFlowType;
+    paused: Scalars["Boolean"];
+    triggerInput: FlowTriggerInput;
+}>;
+
+export type SetDatasetFlowTriggersMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            flows: {
+                __typename?: "DatasetFlowsMut";
+                triggers: {
+                    __typename?: "DatasetFlowTriggersMut";
+                    setTrigger:
+                        | {
+                              __typename?: "FlowIncompatibleDatasetKind";
+                              message: string;
+                              expectedDatasetKind: DatasetKind;
+                              actualDatasetKind: DatasetKind;
+                          }
+                        | { __typename?: "FlowInvalidTriggerInputError"; message: string; reason: string }
+                        | { __typename?: "FlowPreconditionsNotMet"; message: string }
+                        | { __typename?: "FlowTypeIsNotSupported"; message: string }
+                        | { __typename?: "SetFlowTriggerSuccess"; message: string };
+                };
+            };
+        } | null;
+    };
+};
+
+export type GetDatasetFlowTriggersQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    datasetFlowType: DatasetFlowType;
+}>;
+
+export type GetDatasetFlowTriggersQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            flows: {
+                __typename?: "DatasetFlows";
+                triggers: {
+                    __typename?: "DatasetFlowTriggers";
+                    byType?: {
+                        __typename?: "FlowTrigger";
+                        paused: boolean;
+                        schedule?:
+                            | { __typename?: "Cron5ComponentExpression"; cron5ComponentExpression: string }
+                            | ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment)
+                            | null;
+                        batching?: {
+                            __typename?: "FlowTriggerBatchingRule";
+                            minRecordsToAwait: number;
+                            maxBatchingInterval: { __typename?: "TimeDelta" } & TimeDeltaDataFragment;
+                        } | null;
+                    } | null;
+                };
+            };
+        } | null;
+    };
+};
+
+export type TimeDeltaDataFragment = { __typename?: "TimeDelta"; every: number; unit: TimeUnit };
+
 export type DatasetAllFlowsPausedQueryVariables = Exact<{
     datasetId: Scalars["DatasetID"];
 }>;
@@ -5236,7 +5463,7 @@ export type GetDatasetListFlowsQuery = {
                           tiles: { __typename?: "FlowConnection" } & FlowConnectionWidgetDataFragment;
                       };
                   };
-              } & DatasetListFlowsDataFragment)
+              } & DatasetBasicsFragment)
             | null;
     };
 };
@@ -5279,169 +5506,6 @@ export type DatasetResumeFlowsMutation = {
     };
 };
 
-export type DatasetTriggerFlowMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    datasetFlowType: DatasetFlowType;
-    flowRunConfiguration?: InputMaybe<FlowRunConfiguration>;
-}>;
-
-export type DatasetTriggerFlowMutation = {
-    __typename?: "Mutation";
-    datasets: {
-        __typename?: "DatasetsMut";
-        byId?: {
-            __typename?: "DatasetMut";
-            flows: {
-                __typename?: "DatasetFlowsMut";
-                runs: {
-                    __typename?: "DatasetFlowRunsMut";
-                    triggerFlow:
-                        | {
-                              __typename?: "FlowIncompatibleDatasetKind";
-                              expectedDatasetKind: DatasetKind;
-                              actualDatasetKind: DatasetKind;
-                              message: string;
-                          }
-                        | { __typename?: "FlowInvalidRunConfigurations"; error: string; message: string }
-                        | { __typename?: "FlowPreconditionsNotMet"; message: string }
-                        | {
-                              __typename?: "TriggerFlowSuccess";
-                              message: string;
-                              flow: { __typename?: "Flow" } & FlowSummaryDataFragment;
-                          };
-                };
-            };
-        } | null;
-    };
-};
-
-export type FlowSummaryDataFragment = {
-    __typename?: "Flow";
-    flowId: string;
-    status: FlowStatus;
-    description:
-        | {
-              __typename?: "FlowDescriptionDatasetExecuteTransform";
-              datasetId: string;
-              transformResult?:
-                  | {
-                        __typename?: "FlowDescriptionUpdateResultSuccess";
-                        numBlocks: number;
-                        numRecords: number;
-                        updatedWatermark?: string | null;
-                    }
-                  | { __typename?: "FlowDescriptionUpdateResultUnknown"; message: string }
-                  | { __typename?: "FlowDescriptionUpdateResultUpToDate"; uncacheable: boolean }
-                  | null;
-          }
-        | {
-              __typename?: "FlowDescriptionDatasetHardCompaction";
-              datasetId: string;
-              compactionResult?:
-                  | { __typename?: "FlowDescriptionHardCompactionNothingToDo"; message: string; dummy?: string | null }
-                  | {
-                        __typename?: "FlowDescriptionHardCompactionSuccess";
-                        originalBlocksCount: number;
-                        resultingBlocksCount: number;
-                        newHead: string;
-                    }
-                  | null;
-          }
-        | {
-              __typename?: "FlowDescriptionDatasetPollingIngest";
-              datasetId: string;
-              ingestResult?:
-                  | {
-                        __typename?: "FlowDescriptionUpdateResultSuccess";
-                        numBlocks: number;
-                        numRecords: number;
-                        updatedWatermark?: string | null;
-                    }
-                  | { __typename?: "FlowDescriptionUpdateResultUnknown"; message: string }
-                  | { __typename?: "FlowDescriptionUpdateResultUpToDate"; uncacheable: boolean }
-                  | null;
-          }
-        | {
-              __typename?: "FlowDescriptionDatasetPushIngest";
-              datasetId: string;
-              sourceName?: string | null;
-              inputRecordsCount: number;
-              ingestResult?:
-                  | {
-                        __typename?: "FlowDescriptionUpdateResultSuccess";
-                        numBlocks: number;
-                        numRecords: number;
-                        updatedWatermark?: string | null;
-                    }
-                  | { __typename?: "FlowDescriptionUpdateResultUnknown"; message: string }
-                  | { __typename?: "FlowDescriptionUpdateResultUpToDate"; uncacheable: boolean }
-                  | null;
-          }
-        | {
-              __typename?: "FlowDescriptionDatasetReset";
-              datasetId: string;
-              resetResult?: { __typename?: "FlowDescriptionResetResult"; newHead: string } | null;
-          }
-        | { __typename?: "FlowDescriptionSystemGC"; dummy: boolean };
-    initiator?: ({ __typename?: "Account" } & AccountFragment) | null;
-    outcome?:
-        | ({ __typename?: "FlowAbortedResult" } & FlowOutcomeData_FlowAbortedResult_Fragment)
-        | ({ __typename?: "FlowFailedError" } & FlowOutcomeData_FlowFailedError_Fragment)
-        | ({ __typename?: "FlowSuccessResult" } & FlowOutcomeData_FlowSuccessResult_Fragment)
-        | null;
-    timing: {
-        __typename?: "FlowTimingRecords";
-        awaitingExecutorSince?: string | null;
-        runningSince?: string | null;
-        finishedAt?: string | null;
-    };
-    startCondition?:
-        | {
-              __typename: "FlowStartConditionBatching";
-              batchingDeadline: string;
-              accumulatedRecordsCount: number;
-              watermarkModified: boolean;
-              activeBatchingRule: {
-                  __typename?: "FlowTriggerBatchingRule";
-                  minRecordsToAwait: number;
-                  maxBatchingInterval: { __typename?: "TimeDelta" } & TimeDeltaDataFragment;
-              };
-          }
-        | { __typename: "FlowStartConditionExecutor"; taskId: string }
-        | { __typename: "FlowStartConditionSchedule"; wakeUpAt: string }
-        | { __typename: "FlowStartConditionThrottling"; intervalSec: number; wakeUpAt: string; shiftedFrom: string }
-        | null;
-    configSnapshot?:
-        | {
-              __typename?: "FlowConfigurationCompactionRule";
-              compactionRule: { __typename: "CompactionFull" } | { __typename: "CompactionMetadataOnly" };
-          }
-        | { __typename?: "FlowConfigurationIngest"; fetchUncacheable: boolean }
-        | { __typename?: "FlowConfigurationReset" }
-        | null;
-};
-
-export type DatasetListFlowsDataFragment = {
-    __typename?: "Dataset";
-    metadata: {
-        __typename?: "DatasetMetadata";
-        currentPollingSource?: {
-            __typename?: "SetPollingSource";
-            fetch:
-                | ({ __typename?: "FetchStepContainer" } & FetchStepContainerDataFragment)
-                | { __typename?: "FetchStepEthereumLogs" }
-                | ({ __typename?: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment)
-                | { __typename?: "FetchStepMqtt" }
-                | ({ __typename?: "FetchStepUrl" } & FetchStepUrlDataFragment);
-        } | null;
-        currentTransform?: {
-            __typename?: "SetTransform";
-            inputs: Array<{ __typename: "TransformInput" }>;
-            transform: { __typename?: "TransformSql"; engine: string };
-        } | null;
-    };
-} & DatasetBasicsFragment;
-
 export type FlowConnectionDataFragment = {
     __typename?: "FlowConnection";
     totalCount: number;
@@ -5455,9 +5519,9 @@ type FlowHistoryData_FlowConfigSnapshotModified_Fragment = {
     eventId: string;
     eventTime: string;
     configSnapshot:
-        | { __typename: "FlowConfigurationCompactionRule" }
-        | { __typename: "FlowConfigurationIngest" }
-        | { __typename: "FlowConfigurationReset" };
+        | { __typename: "FlowConfigRuleCompaction" }
+        | { __typename: "FlowConfigRuleIngest" }
+        | { __typename: "FlowConfigRuleReset" };
 };
 
 type FlowHistoryData_FlowEventAborted_Fragment = { __typename: "FlowEventAborted"; eventId: string; eventTime: string };
@@ -5510,8 +5574,26 @@ type FlowHistoryData_FlowEventTaskChanged_Fragment = {
     __typename: "FlowEventTaskChanged";
     taskId: string;
     taskStatus: TaskStatus;
+    nextAttemptAt?: string | null;
     eventId: string;
     eventTime: string;
+    task: {
+        __typename?: "Task";
+        outcome?:
+            | { __typename: "TaskOutcomeCancelled" }
+            | {
+                  __typename: "TaskOutcomeFailed";
+                  reason:
+                      | { __typename: "TaskFailureReasonGeneral"; message: string }
+                      | {
+                            __typename: "TaskFailureReasonInputDatasetCompacted";
+                            message: string;
+                            inputDataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+                        };
+              }
+            | { __typename: "TaskOutcomeSuccess" }
+            | null;
+    };
 };
 
 type FlowHistoryData_FlowEventTriggerAdded_Fragment = {
@@ -5542,14 +5624,8 @@ export type FlowHistoryDataFragment =
 export type FlowItemWidgetDataFragment = {
     __typename?: "Flow";
     flowId: string;
+    datasetId?: string | null;
     status: FlowStatus;
-    description:
-        | { __typename?: "FlowDescriptionDatasetExecuteTransform"; datasetId: string }
-        | { __typename?: "FlowDescriptionDatasetHardCompaction"; datasetId: string }
-        | { __typename?: "FlowDescriptionDatasetPollingIngest"; datasetId: string }
-        | { __typename?: "FlowDescriptionDatasetPushIngest"; datasetId: string }
-        | { __typename?: "FlowDescriptionDatasetReset"; datasetId: string }
-        | { __typename?: "FlowDescriptionSystemGC" };
     initiator?: { __typename?: "Account"; accountName: string } | null;
     outcome?:
         | ({ __typename?: "FlowAbortedResult" } & FlowOutcomeData_FlowAbortedResult_Fragment)
@@ -5558,9 +5634,11 @@ export type FlowItemWidgetDataFragment = {
         | null;
     timing: {
         __typename?: "FlowTimingRecords";
+        initiatedAt: string;
+        scheduledAt?: string | null;
         awaitingExecutorSince?: string | null;
         runningSince?: string | null;
-        finishedAt?: string | null;
+        lastAttemptFinishedAt?: string | null;
     };
 };
 
@@ -5569,9 +5647,9 @@ type FlowOutcomeData_FlowAbortedResult_Fragment = { __typename?: "FlowAbortedRes
 type FlowOutcomeData_FlowFailedError_Fragment = {
     __typename?: "FlowFailedError";
     reason:
-        | { __typename?: "FlowFailureReasonGeneral"; message: string }
+        | { __typename?: "TaskFailureReasonGeneral"; message: string }
         | {
-              __typename?: "FlowFailureReasonInputDatasetCompacted";
+              __typename?: "TaskFailureReasonInputDatasetCompacted";
               message: string;
               inputDataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
           };
@@ -5584,10 +5662,271 @@ export type FlowOutcomeDataFragment =
     | FlowOutcomeData_FlowFailedError_Fragment
     | FlowOutcomeData_FlowSuccessResult_Fragment;
 
+export type FlowSummaryDataFragment = {
+    __typename?: "Flow";
+    flowId: string;
+    datasetId?: string | null;
+    status: FlowStatus;
+    description:
+        | {
+              __typename?: "FlowDescriptionDatasetExecuteTransform";
+              transform: {
+                  __typename?: "SetTransform";
+                  inputs: Array<{ __typename: "TransformInput" }>;
+                  transform: { __typename?: "TransformSql"; engine: string };
+              };
+              transformResult?:
+                  | {
+                        __typename?: "FlowDescriptionUpdateResultSuccess";
+                        numBlocks: number;
+                        numRecords: number;
+                        updatedWatermark?: string | null;
+                    }
+                  | { __typename?: "FlowDescriptionUpdateResultUnknown"; message: string }
+                  | { __typename?: "FlowDescriptionUpdateResultUpToDate"; uncacheable: boolean }
+                  | null;
+          }
+        | {
+              __typename?: "FlowDescriptionDatasetHardCompaction";
+              compactionResult?:
+                  | { __typename?: "FlowDescriptionHardCompactionNothingToDo"; message: string; dummy?: string | null }
+                  | {
+                        __typename?: "FlowDescriptionHardCompactionSuccess";
+                        originalBlocksCount: number;
+                        resultingBlocksCount: number;
+                        newHead: string;
+                    }
+                  | null;
+          }
+        | {
+              __typename?: "FlowDescriptionDatasetPollingIngest";
+              pollingSource: {
+                  __typename?: "SetPollingSource";
+                  fetch:
+                      | ({ __typename?: "FetchStepContainer" } & FetchStepContainerDataFragment)
+                      | { __typename?: "FetchStepEthereumLogs" }
+                      | ({ __typename?: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment)
+                      | { __typename?: "FetchStepMqtt" }
+                      | ({ __typename?: "FetchStepUrl" } & FetchStepUrlDataFragment);
+              };
+              ingestResult?:
+                  | {
+                        __typename?: "FlowDescriptionUpdateResultSuccess";
+                        numBlocks: number;
+                        numRecords: number;
+                        updatedWatermark?: string | null;
+                    }
+                  | { __typename?: "FlowDescriptionUpdateResultUnknown"; message: string }
+                  | { __typename?: "FlowDescriptionUpdateResultUpToDate"; uncacheable: boolean }
+                  | null;
+          }
+        | {
+              __typename?: "FlowDescriptionDatasetPushIngest";
+              sourceName?: string | null;
+              inputRecordsCount: number;
+              ingestResult?:
+                  | {
+                        __typename?: "FlowDescriptionUpdateResultSuccess";
+                        numBlocks: number;
+                        numRecords: number;
+                        updatedWatermark?: string | null;
+                    }
+                  | { __typename?: "FlowDescriptionUpdateResultUnknown"; message: string }
+                  | { __typename?: "FlowDescriptionUpdateResultUpToDate"; uncacheable: boolean }
+                  | null;
+          }
+        | {
+              __typename?: "FlowDescriptionDatasetReset";
+              resetResult?: { __typename?: "FlowDescriptionResetResult"; newHead: string } | null;
+          }
+        | { __typename?: "FlowDescriptionSystemGC"; dummy: boolean };
+    initiator?: ({ __typename?: "Account" } & AccountFragment) | null;
+    outcome?:
+        | ({ __typename?: "FlowAbortedResult" } & FlowOutcomeData_FlowAbortedResult_Fragment)
+        | ({ __typename?: "FlowFailedError" } & FlowOutcomeData_FlowFailedError_Fragment)
+        | ({ __typename?: "FlowSuccessResult" } & FlowOutcomeData_FlowSuccessResult_Fragment)
+        | null;
+    timing: {
+        __typename?: "FlowTimingRecords";
+        initiatedAt: string;
+        scheduledAt?: string | null;
+        awaitingExecutorSince?: string | null;
+        runningSince?: string | null;
+        lastAttemptFinishedAt?: string | null;
+    };
+    startCondition?:
+        | {
+              __typename: "FlowStartConditionBatching";
+              batchingDeadline: string;
+              accumulatedRecordsCount: number;
+              watermarkModified: boolean;
+              activeBatchingRule: {
+                  __typename?: "FlowTriggerBatchingRule";
+                  minRecordsToAwait: number;
+                  maxBatchingInterval: { __typename?: "TimeDelta" } & TimeDeltaDataFragment;
+              };
+          }
+        | { __typename: "FlowStartConditionExecutor"; taskId: string }
+        | { __typename: "FlowStartConditionSchedule"; wakeUpAt: string }
+        | { __typename: "FlowStartConditionThrottling"; intervalSec: number; wakeUpAt: string; shiftedFrom: string }
+        | null;
+    configSnapshot?:
+        | {
+              __typename?: "FlowConfigRuleCompaction";
+              compactionMode:
+                  | { __typename: "FlowConfigCompactionModeFull" }
+                  | { __typename: "FlowConfigCompactionModeMetadataOnly" };
+          }
+        | { __typename?: "FlowConfigRuleIngest"; fetchUncacheable: boolean }
+        | { __typename?: "FlowConfigRuleReset" }
+        | null;
+    tasks: Array<{ __typename?: "Task"; taskId: string }>;
+    retryPolicy?: { __typename?: "FlowRetryPolicy"; maxAttempts: number } | null;
+};
+
 export type FlowConnectionWidgetDataFragment = {
     __typename?: "FlowConnection";
     totalCount: number;
     nodes: Array<{ __typename?: "Flow" } & FlowItemWidgetDataFragment>;
+};
+
+export type DatasetTriggerCompactionFlowMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    compactionConfigInput?: InputMaybe<FlowConfigCompactionInput>;
+}>;
+
+export type DatasetTriggerCompactionFlowMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            flows: {
+                __typename?: "DatasetFlowsMut";
+                runs: {
+                    __typename?: "DatasetFlowRunsMut";
+                    triggerCompactionFlow:
+                        | {
+                              __typename?: "FlowIncompatibleDatasetKind";
+                              expectedDatasetKind: DatasetKind;
+                              actualDatasetKind: DatasetKind;
+                              message: string;
+                          }
+                        | { __typename?: "FlowInvalidRunConfigurations"; error: string; message: string }
+                        | { __typename?: "FlowPreconditionsNotMet"; message: string }
+                        | {
+                              __typename?: "TriggerFlowSuccess";
+                              message: string;
+                              flow: { __typename?: "Flow" } & FlowSummaryDataFragment;
+                          };
+                };
+            };
+        } | null;
+    };
+};
+
+export type DatasetTriggerIngestFlowMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    ingestConfigInput?: InputMaybe<FlowConfigIngestInput>;
+}>;
+
+export type DatasetTriggerIngestFlowMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            flows: {
+                __typename?: "DatasetFlowsMut";
+                runs: {
+                    __typename?: "DatasetFlowRunsMut";
+                    triggerIngestFlow:
+                        | {
+                              __typename?: "FlowIncompatibleDatasetKind";
+                              expectedDatasetKind: DatasetKind;
+                              actualDatasetKind: DatasetKind;
+                              message: string;
+                          }
+                        | { __typename?: "FlowInvalidRunConfigurations"; error: string; message: string }
+                        | { __typename?: "FlowPreconditionsNotMet"; message: string }
+                        | {
+                              __typename?: "TriggerFlowSuccess";
+                              message: string;
+                              flow: { __typename?: "Flow" } & FlowSummaryDataFragment;
+                          };
+                };
+            };
+        } | null;
+    };
+};
+
+export type DatasetTriggerResetFlowMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    resetConfigInput: FlowConfigResetInput;
+}>;
+
+export type DatasetTriggerResetFlowMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            flows: {
+                __typename?: "DatasetFlowsMut";
+                runs: {
+                    __typename?: "DatasetFlowRunsMut";
+                    triggerResetFlow:
+                        | {
+                              __typename?: "FlowIncompatibleDatasetKind";
+                              expectedDatasetKind: DatasetKind;
+                              actualDatasetKind: DatasetKind;
+                              message: string;
+                          }
+                        | { __typename?: "FlowInvalidRunConfigurations"; error: string; message: string }
+                        | { __typename?: "FlowPreconditionsNotMet"; message: string }
+                        | {
+                              __typename?: "TriggerFlowSuccess";
+                              message: string;
+                              flow: { __typename?: "Flow" } & FlowSummaryDataFragment;
+                          };
+                };
+            };
+        } | null;
+    };
+};
+
+export type DatasetTriggerTransformFlowMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+}>;
+
+export type DatasetTriggerTransformFlowMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            flows: {
+                __typename?: "DatasetFlowsMut";
+                runs: {
+                    __typename?: "DatasetFlowRunsMut";
+                    triggerTransformFlow:
+                        | {
+                              __typename?: "FlowIncompatibleDatasetKind";
+                              expectedDatasetKind: DatasetKind;
+                              actualDatasetKind: DatasetKind;
+                              message: string;
+                          }
+                        | { __typename?: "FlowInvalidRunConfigurations"; error: string; message: string }
+                        | { __typename?: "FlowPreconditionsNotMet"; message: string }
+                        | {
+                              __typename?: "TriggerFlowSuccess";
+                              message: string;
+                              flow: { __typename?: "Flow" } & FlowSummaryDataFragment;
+                          };
+                };
+            };
+        } | null;
+    };
 };
 
 export type AddDataEventFragment = {
@@ -6365,153 +6704,6 @@ export type RenameDatasetMutation = {
     };
 };
 
-export type GetDatasetFlowConfigsQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    datasetFlowType: DatasetFlowType;
-}>;
-
-export type GetDatasetFlowConfigsQuery = {
-    __typename?: "Query";
-    datasets: {
-        __typename?: "Datasets";
-        byId?:
-            | ({
-                  __typename?: "Dataset";
-                  flows: {
-                      __typename?: "DatasetFlows";
-                      configs: {
-                          __typename: "DatasetFlowConfigs";
-                          byType?: {
-                              __typename?: "FlowConfiguration";
-                              ingest?: { __typename?: "FlowConfigurationIngest"; fetchUncacheable: boolean } | null;
-                              reset?: {
-                                  __typename?: "FlowConfigurationReset";
-                                  oldHeadHash?: string | null;
-                                  recursive: boolean;
-                                  mode:
-                                      | { __typename?: "SnapshotConfigurationResetCustom" }
-                                      | { __typename?: "SnapshotConfigurationResetToSeedDummy"; dummy?: string | null };
-                              } | null;
-                              compaction?:
-                                  | {
-                                        __typename?: "CompactionFull";
-                                        maxSliceSize: number;
-                                        maxSliceRecords: number;
-                                        recursive: boolean;
-                                    }
-                                  | { __typename?: "CompactionMetadataOnly" }
-                                  | null;
-                          } | null;
-                      };
-                  };
-              } & DatasetBasicsFragment)
-            | null;
-    };
-};
-
-export type SetDatasetFlowConfigMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    datasetFlowType: DatasetFlowType;
-    configInput: FlowConfigurationInput;
-}>;
-
-export type SetDatasetFlowConfigMutation = {
-    __typename?: "Mutation";
-    datasets: {
-        __typename?: "DatasetsMut";
-        byId?: {
-            __typename?: "DatasetMut";
-            flows: {
-                __typename?: "DatasetFlowsMut";
-                configs: {
-                    __typename?: "DatasetFlowConfigsMut";
-                    setConfig:
-                        | {
-                              __typename?: "FlowIncompatibleDatasetKind";
-                              message: string;
-                              actualDatasetKind: DatasetKind;
-                              expectedDatasetKind: DatasetKind;
-                          }
-                        | { __typename?: "FlowInvalidConfigInputError"; message: string; reason: string }
-                        | { __typename?: "FlowPreconditionsNotMet"; message: string; preconditions: string }
-                        | { __typename?: "FlowTypeIsNotSupported"; message: string }
-                        | { __typename?: "SetFlowConfigSuccess"; message: string };
-                };
-            };
-        } | null;
-    };
-};
-
-export type SetDatasetFlowTriggersMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    datasetFlowType: DatasetFlowType;
-    paused: Scalars["Boolean"];
-    triggerInput: FlowTriggerInput;
-}>;
-
-export type SetDatasetFlowTriggersMutation = {
-    __typename?: "Mutation";
-    datasets: {
-        __typename?: "DatasetsMut";
-        byId?: {
-            __typename?: "DatasetMut";
-            flows: {
-                __typename?: "DatasetFlowsMut";
-                triggers: {
-                    __typename?: "DatasetFlowTriggersMut";
-                    setTrigger:
-                        | {
-                              __typename?: "FlowIncompatibleDatasetKind";
-                              message: string;
-                              expectedDatasetKind: DatasetKind;
-                              actualDatasetKind: DatasetKind;
-                          }
-                        | { __typename?: "FlowInvalidTriggerInputError"; message: string; reason: string }
-                        | { __typename?: "FlowPreconditionsNotMet"; message: string }
-                        | { __typename?: "FlowTypeIsNotSupported"; message: string }
-                        | { __typename?: "SetFlowTriggerSuccess"; message: string };
-                };
-            };
-        } | null;
-    };
-};
-
-export type GetDatasetFlowTriggersQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    datasetFlowType: DatasetFlowType;
-}>;
-
-export type GetDatasetFlowTriggersQuery = {
-    __typename?: "Query";
-    datasets: {
-        __typename?: "Datasets";
-        byId?: {
-            __typename?: "Dataset";
-            flows: {
-                __typename?: "DatasetFlows";
-                triggers: {
-                    __typename?: "DatasetFlowTriggers";
-                    byType?: {
-                        __typename?: "FlowTrigger";
-                        paused: boolean;
-                        schedule?:
-                            | { __typename?: "Cron5ComponentExpression"; cron5ComponentExpression: string }
-                            | ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment)
-                            | null;
-                        batching?: {
-                            __typename?: "FlowTriggerBatchingRule";
-                            minRecordsToAwait: number;
-                            maxBatchingInterval: { __typename?: "TimeDelta" } & TimeDeltaDataFragment;
-                        } | null;
-                    } | null;
-                };
-            };
-        } | null;
-    };
-};
-
-export type TimeDeltaDataFragment = { __typename?: "TimeDelta"; every: number; unit: TimeUnit };
-
 export type SearchCollaboratorQueryVariables = Exact<{
     query: Scalars["String"];
     filters: LookupFilters;
@@ -6897,34 +7089,6 @@ export const ViewDatasetEnvVarDataFragmentDoc = gql`
         isSecret
     }
 `;
-export const DatasetListFlowsDataFragmentDoc = gql`
-    fragment DatasetListFlowsData on Dataset {
-        ...DatasetBasics
-        metadata {
-            currentPollingSource {
-                fetch {
-                    ...FetchStepUrlData
-                    ...FetchStepFilesGlobData
-                    ...FetchStepContainerData
-                }
-            }
-            currentTransform {
-                inputs {
-                    __typename
-                }
-                transform {
-                    ... on TransformSql {
-                        engine
-                    }
-                }
-            }
-        }
-    }
-    ${DatasetBasicsFragmentDoc}
-    ${FetchStepUrlDataFragmentDoc}
-    ${FetchStepFilesGlobDataFragmentDoc}
-    ${FetchStepContainerDataFragmentDoc}
-`;
 export const AccountFragmentDoc = gql`
     fragment Account on Account {
         id
@@ -6943,10 +7107,10 @@ export const FlowOutcomeDataFragmentDoc = gql`
         }
         ... on FlowFailedError {
             reason {
-                ... on FlowFailureReasonGeneral {
+                ... on TaskFailureReasonGeneral {
                     message
                 }
-                ... on FlowFailureReasonInputDatasetCompacted {
+                ... on TaskFailureReasonInputDatasetCompacted {
                     message
                     inputDataset {
                         ...DatasetBasics
@@ -6970,7 +7134,13 @@ export const FlowSummaryDataFragmentDoc = gql`
     fragment FlowSummaryData on Flow {
         description {
             ... on FlowDescriptionDatasetPollingIngest {
-                datasetId
+                pollingSource {
+                    fetch {
+                        ...FetchStepUrlData
+                        ...FetchStepFilesGlobData
+                        ...FetchStepContainerData
+                    }
+                }
                 ingestResult {
                     ... on FlowDescriptionUpdateResultUpToDate {
                         uncacheable
@@ -6986,7 +7156,6 @@ export const FlowSummaryDataFragmentDoc = gql`
                 }
             }
             ... on FlowDescriptionDatasetPushIngest {
-                datasetId
                 sourceName
                 inputRecordsCount
                 ingestResult {
@@ -7004,7 +7173,16 @@ export const FlowSummaryDataFragmentDoc = gql`
                 }
             }
             ... on FlowDescriptionDatasetExecuteTransform {
-                datasetId
+                transform {
+                    inputs {
+                        __typename
+                    }
+                    transform {
+                        ... on TransformSql {
+                            engine
+                        }
+                    }
+                }
                 transformResult {
                     ... on FlowDescriptionUpdateResultUpToDate {
                         uncacheable
@@ -7020,7 +7198,6 @@ export const FlowSummaryDataFragmentDoc = gql`
                 }
             }
             ... on FlowDescriptionDatasetHardCompaction {
-                datasetId
                 compactionResult {
                     ... on FlowDescriptionHardCompactionSuccess {
                         originalBlocksCount
@@ -7037,13 +7214,13 @@ export const FlowSummaryDataFragmentDoc = gql`
                 dummy
             }
             ... on FlowDescriptionDatasetReset {
-                datasetId
                 resetResult {
                     newHead
                 }
             }
         }
         flowId
+        datasetId
         status
         initiator {
             ...Account
@@ -7052,9 +7229,11 @@ export const FlowSummaryDataFragmentDoc = gql`
             ...FlowOutcomeData
         }
         timing {
+            initiatedAt
+            scheduledAt
             awaitingExecutorSince
             runningSince
-            finishedAt
+            lastAttemptFinishedAt
         }
         startCondition {
             __typename
@@ -7082,16 +7261,25 @@ export const FlowSummaryDataFragmentDoc = gql`
             }
         }
         configSnapshot {
-            ... on FlowConfigurationIngest {
+            ... on FlowConfigRuleIngest {
                 fetchUncacheable
             }
-            ... on FlowConfigurationCompactionRule {
-                compactionRule {
+            ... on FlowConfigRuleCompaction {
+                compactionMode {
                     __typename
                 }
             }
         }
+        tasks {
+            taskId
+        }
+        retryPolicy {
+            maxAttempts
+        }
     }
+    ${FetchStepUrlDataFragmentDoc}
+    ${FetchStepFilesGlobDataFragmentDoc}
+    ${FetchStepContainerDataFragmentDoc}
     ${AccountFragmentDoc}
     ${FlowOutcomeDataFragmentDoc}
     ${TimeDeltaDataFragmentDoc}
@@ -7188,6 +7376,26 @@ export const FlowHistoryDataFragmentDoc = gql`
             __typename
             taskId
             taskStatus
+            task {
+                outcome {
+                    __typename
+                    ... on TaskOutcomeFailed {
+                        reason {
+                            __typename
+                            ... on TaskFailureReasonGeneral {
+                                message
+                            }
+                            ... on TaskFailureReasonInputDatasetCompacted {
+                                message
+                                inputDataset {
+                                    ...DatasetBasics
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            nextAttemptAt
         }
         ... on FlowEventTriggerAdded {
             trigger {
@@ -7225,24 +7433,8 @@ export const FlowHistoryDataFragmentDoc = gql`
 export const FlowItemWidgetDataFragmentDoc = gql`
     fragment FlowItemWidgetData on Flow {
         flowId
+        datasetId
         status
-        description {
-            ... on FlowDescriptionDatasetPollingIngest {
-                datasetId
-            }
-            ... on FlowDescriptionDatasetPushIngest {
-                datasetId
-            }
-            ... on FlowDescriptionDatasetExecuteTransform {
-                datasetId
-            }
-            ... on FlowDescriptionDatasetHardCompaction {
-                datasetId
-            }
-            ... on FlowDescriptionDatasetReset {
-                datasetId
-            }
-        }
         initiator {
             accountName
         }
@@ -7250,9 +7442,11 @@ export const FlowItemWidgetDataFragmentDoc = gql`
             ...FlowOutcomeData
         }
         timing {
+            initiatedAt
+            scheduledAt
             awaitingExecutorSince
             runningSince
-            finishedAt
+            lastAttemptFinishedAt
         }
     }
     ${FlowOutcomeDataFragmentDoc}
@@ -9731,6 +9925,256 @@ export class UpsertEnvVariableGQL extends Apollo.Mutation<
         super(apollo);
     }
 }
+export const GetDatasetFlowConfigsDocument = gql`
+    query getDatasetFlowConfigs($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                ...DatasetBasics
+                flows {
+                    configs {
+                        __typename
+                        byType(datasetFlowType: $datasetFlowType) {
+                            __typename
+                            rule {
+                                ... on FlowConfigRuleIngest {
+                                    fetchUncacheable
+                                }
+                                ... on FlowConfigRuleReset {
+                                    oldHeadHash
+                                    recursive
+                                    mode {
+                                        ... on FlowConfigResetPropagationModeToSeed {
+                                            dummy
+                                        }
+                                    }
+                                }
+                                ... on FlowConfigRuleCompaction {
+                                    compactionMode {
+                                        ... on FlowConfigCompactionModeFull {
+                                            maxSliceSize
+                                            maxSliceRecords
+                                            recursive
+                                        }
+                                    }
+                                }
+                            }
+                            retryPolicy {
+                                maxAttempts
+                                minDelay {
+                                    ...TimeDeltaData
+                                }
+                                backoffType
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+    ${TimeDeltaDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class GetDatasetFlowConfigsGQL extends Apollo.Query<
+    GetDatasetFlowConfigsQuery,
+    GetDatasetFlowConfigsQueryVariables
+> {
+    document = GetDatasetFlowConfigsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const SetCompactionFlowConfigDocument = gql`
+    mutation setCompactionFlowConfig($datasetId: DatasetID!, $compactionConfigInput: FlowConfigCompactionInput!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    configs {
+                        setCompactionConfig(compactionConfigInput: $compactionConfigInput) {
+                            ... on SetFlowConfigSuccess {
+                                message
+                            }
+                            ... on FlowPreconditionsNotMet {
+                                message
+                                preconditions
+                            }
+                            ... on FlowInvalidConfigInputError {
+                                message
+                                reason
+                            }
+                            ... on FlowIncompatibleDatasetKind {
+                                message
+                                actualDatasetKind
+                                expectedDatasetKind
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class SetCompactionFlowConfigGQL extends Apollo.Mutation<
+    SetCompactionFlowConfigMutation,
+    SetCompactionFlowConfigMutationVariables
+> {
+    document = SetCompactionFlowConfigDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const SetIngestFlowConfigDocument = gql`
+    mutation setIngestFlowConfig(
+        $datasetId: DatasetID!
+        $ingestConfigInput: FlowConfigIngestInput!
+        $retryPolicyInput: FlowRetryPolicyInput
+    ) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    configs {
+                        setIngestConfig(ingestConfigInput: $ingestConfigInput, retryPolicyInput: $retryPolicyInput) {
+                            ... on SetFlowConfigSuccess {
+                                message
+                            }
+                            ... on FlowPreconditionsNotMet {
+                                message
+                                preconditions
+                            }
+                            ... on FlowInvalidConfigInputError {
+                                message
+                                reason
+                            }
+                            ... on FlowIncompatibleDatasetKind {
+                                message
+                                actualDatasetKind
+                                expectedDatasetKind
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class SetIngestFlowConfigGQL extends Apollo.Mutation<
+    SetIngestFlowConfigMutation,
+    SetIngestFlowConfigMutationVariables
+> {
+    document = SetIngestFlowConfigDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const SetDatasetFlowTriggersDocument = gql`
+    mutation setDatasetFlowTriggers(
+        $datasetId: DatasetID!
+        $datasetFlowType: DatasetFlowType!
+        $paused: Boolean!
+        $triggerInput: FlowTriggerInput!
+    ) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    triggers {
+                        setTrigger(datasetFlowType: $datasetFlowType, paused: $paused, triggerInput: $triggerInput) {
+                            ... on SetFlowTriggerSuccess {
+                                message
+                            }
+                            ... on FlowIncompatibleDatasetKind {
+                                message
+                                expectedDatasetKind
+                                actualDatasetKind
+                            }
+                            ... on FlowPreconditionsNotMet {
+                                message
+                            }
+                            ... on FlowTypeIsNotSupported {
+                                message
+                            }
+                            ... on FlowInvalidTriggerInputError {
+                                message
+                                reason
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class SetDatasetFlowTriggersGQL extends Apollo.Mutation<
+    SetDatasetFlowTriggersMutation,
+    SetDatasetFlowTriggersMutationVariables
+> {
+    document = SetDatasetFlowTriggersDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const GetDatasetFlowTriggersDocument = gql`
+    query getDatasetFlowTriggers($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    triggers {
+                        byType(datasetFlowType: $datasetFlowType) {
+                            paused
+                            schedule {
+                                ... on TimeDelta {
+                                    ...TimeDeltaData
+                                }
+                                ... on Cron5ComponentExpression {
+                                    cron5ComponentExpression
+                                }
+                            }
+                            batching {
+                                maxBatchingInterval {
+                                    ...TimeDeltaData
+                                }
+                                minRecordsToAwait
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${TimeDeltaDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class GetDatasetFlowTriggersGQL extends Apollo.Query<
+    GetDatasetFlowTriggersQuery,
+    GetDatasetFlowTriggersQueryVariables
+> {
+    document = GetDatasetFlowTriggersDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
 export const DatasetAllFlowsPausedDocument = gql`
     query datasetAllFlowsPaused($datasetId: DatasetID!) {
         datasets {
@@ -9879,7 +10323,7 @@ export const GetDatasetListFlowsDocument = gql`
     ) {
         datasets {
             byId(datasetId: $datasetId) {
-                ...DatasetListFlowsData
+                ...DatasetBasics
                 flows {
                     runs {
                         table: listFlows(page: $page, perPage: $perPageTable, filters: $filters) {
@@ -9897,7 +10341,7 @@ export const GetDatasetListFlowsDocument = gql`
             }
         }
     }
-    ${DatasetListFlowsDataFragmentDoc}
+    ${DatasetBasicsFragmentDoc}
     ${FlowConnectionDataFragmentDoc}
     ${FlowConnectionWidgetDataFragmentDoc}
 `;
@@ -9966,17 +10410,13 @@ export class DatasetResumeFlowsGQL extends Apollo.Mutation<
         super(apollo);
     }
 }
-export const DatasetTriggerFlowDocument = gql`
-    mutation datasetTriggerFlow(
-        $datasetId: DatasetID!
-        $datasetFlowType: DatasetFlowType!
-        $flowRunConfiguration: FlowRunConfiguration
-    ) {
+export const DatasetTriggerCompactionFlowDocument = gql`
+    mutation datasetTriggerCompactionFlow($datasetId: DatasetID!, $compactionConfigInput: FlowConfigCompactionInput) {
         datasets {
             byId(datasetId: $datasetId) {
                 flows {
                     runs {
-                        triggerFlow(datasetFlowType: $datasetFlowType, flowRunConfiguration: $flowRunConfiguration) {
+                        triggerCompactionFlow(compactionConfigInput: $compactionConfigInput) {
                             ... on TriggerFlowSuccess {
                                 flow {
                                     ...FlowSummaryData
@@ -10007,11 +10447,152 @@ export const DatasetTriggerFlowDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class DatasetTriggerFlowGQL extends Apollo.Mutation<
-    DatasetTriggerFlowMutation,
-    DatasetTriggerFlowMutationVariables
+export class DatasetTriggerCompactionFlowGQL extends Apollo.Mutation<
+    DatasetTriggerCompactionFlowMutation,
+    DatasetTriggerCompactionFlowMutationVariables
 > {
-    document = DatasetTriggerFlowDocument;
+    document = DatasetTriggerCompactionFlowDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetTriggerIngestFlowDocument = gql`
+    mutation datasetTriggerIngestFlow($datasetId: DatasetID!, $ingestConfigInput: FlowConfigIngestInput) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    runs {
+                        triggerIngestFlow(ingestConfigInput: $ingestConfigInput) {
+                            ... on TriggerFlowSuccess {
+                                flow {
+                                    ...FlowSummaryData
+                                }
+                                message
+                            }
+                            ... on FlowIncompatibleDatasetKind {
+                                expectedDatasetKind
+                                actualDatasetKind
+                                message
+                            }
+                            ... on FlowPreconditionsNotMet {
+                                message
+                            }
+                            ... on FlowInvalidRunConfigurations {
+                                error
+                                message
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${FlowSummaryDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetTriggerIngestFlowGQL extends Apollo.Mutation<
+    DatasetTriggerIngestFlowMutation,
+    DatasetTriggerIngestFlowMutationVariables
+> {
+    document = DatasetTriggerIngestFlowDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetTriggerResetFlowDocument = gql`
+    mutation datasetTriggerResetFlow($datasetId: DatasetID!, $resetConfigInput: FlowConfigResetInput!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    runs {
+                        triggerResetFlow(resetConfigInput: $resetConfigInput) {
+                            ... on TriggerFlowSuccess {
+                                flow {
+                                    ...FlowSummaryData
+                                }
+                                message
+                            }
+                            ... on FlowIncompatibleDatasetKind {
+                                expectedDatasetKind
+                                actualDatasetKind
+                                message
+                            }
+                            ... on FlowPreconditionsNotMet {
+                                message
+                            }
+                            ... on FlowInvalidRunConfigurations {
+                                error
+                                message
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${FlowSummaryDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetTriggerResetFlowGQL extends Apollo.Mutation<
+    DatasetTriggerResetFlowMutation,
+    DatasetTriggerResetFlowMutationVariables
+> {
+    document = DatasetTriggerResetFlowDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetTriggerTransformFlowDocument = gql`
+    mutation datasetTriggerTransformFlow($datasetId: DatasetID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    runs {
+                        triggerTransformFlow {
+                            ... on TriggerFlowSuccess {
+                                flow {
+                                    ...FlowSummaryData
+                                }
+                                message
+                            }
+                            ... on FlowIncompatibleDatasetKind {
+                                expectedDatasetKind
+                                actualDatasetKind
+                                message
+                            }
+                            ... on FlowPreconditionsNotMet {
+                                message
+                            }
+                            ... on FlowInvalidRunConfigurations {
+                                error
+                                message
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${FlowSummaryDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetTriggerTransformFlowGQL extends Apollo.Mutation<
+    DatasetTriggerTransformFlowMutation,
+    DatasetTriggerTransformFlowMutationVariables
+> {
+    document = DatasetTriggerTransformFlowDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);
@@ -10085,202 +10666,6 @@ export const RenameDatasetDocument = gql`
 })
 export class RenameDatasetGQL extends Apollo.Mutation<RenameDatasetMutation, RenameDatasetMutationVariables> {
     document = RenameDatasetDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
-export const GetDatasetFlowConfigsDocument = gql`
-    query getDatasetFlowConfigs($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
-        datasets {
-            byId(datasetId: $datasetId) {
-                ...DatasetBasics
-                flows {
-                    configs {
-                        __typename
-                        byType(datasetFlowType: $datasetFlowType) {
-                            ingest {
-                                fetchUncacheable
-                            }
-                            reset {
-                                oldHeadHash
-                                recursive
-                                mode {
-                                    ... on SnapshotConfigurationResetToSeedDummy {
-                                        dummy
-                                    }
-                                }
-                            }
-                            compaction {
-                                ... on CompactionFull {
-                                    maxSliceSize
-                                    maxSliceRecords
-                                    recursive
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    ${DatasetBasicsFragmentDoc}
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class GetDatasetFlowConfigsGQL extends Apollo.Query<
-    GetDatasetFlowConfigsQuery,
-    GetDatasetFlowConfigsQueryVariables
-> {
-    document = GetDatasetFlowConfigsDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
-export const SetDatasetFlowConfigDocument = gql`
-    mutation setDatasetFlowConfig(
-        $datasetId: DatasetID!
-        $datasetFlowType: DatasetFlowType!
-        $configInput: FlowConfigurationInput!
-    ) {
-        datasets {
-            byId(datasetId: $datasetId) {
-                flows {
-                    configs {
-                        setConfig(datasetFlowType: $datasetFlowType, configInput: $configInput) {
-                            ... on SetFlowConfigSuccess {
-                                message
-                            }
-                            ... on FlowTypeIsNotSupported {
-                                message
-                            }
-                            ... on FlowPreconditionsNotMet {
-                                message
-                                preconditions
-                            }
-                            ... on FlowInvalidConfigInputError {
-                                message
-                                reason
-                            }
-                            ... on FlowIncompatibleDatasetKind {
-                                message
-                                actualDatasetKind
-                                expectedDatasetKind
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class SetDatasetFlowConfigGQL extends Apollo.Mutation<
-    SetDatasetFlowConfigMutation,
-    SetDatasetFlowConfigMutationVariables
-> {
-    document = SetDatasetFlowConfigDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
-export const SetDatasetFlowTriggersDocument = gql`
-    mutation setDatasetFlowTriggers(
-        $datasetId: DatasetID!
-        $datasetFlowType: DatasetFlowType!
-        $paused: Boolean!
-        $triggerInput: FlowTriggerInput!
-    ) {
-        datasets {
-            byId(datasetId: $datasetId) {
-                flows {
-                    triggers {
-                        setTrigger(datasetFlowType: $datasetFlowType, paused: $paused, triggerInput: $triggerInput) {
-                            ... on SetFlowTriggerSuccess {
-                                message
-                            }
-                            ... on FlowIncompatibleDatasetKind {
-                                message
-                                expectedDatasetKind
-                                actualDatasetKind
-                            }
-                            ... on FlowPreconditionsNotMet {
-                                message
-                            }
-                            ... on FlowTypeIsNotSupported {
-                                message
-                            }
-                            ... on FlowInvalidTriggerInputError {
-                                message
-                                reason
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class SetDatasetFlowTriggersGQL extends Apollo.Mutation<
-    SetDatasetFlowTriggersMutation,
-    SetDatasetFlowTriggersMutationVariables
-> {
-    document = SetDatasetFlowTriggersDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
-export const GetDatasetFlowTriggersDocument = gql`
-    query getDatasetFlowTriggers($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
-        datasets {
-            byId(datasetId: $datasetId) {
-                flows {
-                    triggers {
-                        byType(datasetFlowType: $datasetFlowType) {
-                            paused
-                            schedule {
-                                ... on TimeDelta {
-                                    ...TimeDeltaData
-                                }
-                                ... on Cron5ComponentExpression {
-                                    cron5ComponentExpression
-                                }
-                            }
-                            batching {
-                                maxBatchingInterval {
-                                    ...TimeDeltaData
-                                }
-                                minRecordsToAwait
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    ${TimeDeltaDataFragmentDoc}
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class GetDatasetFlowTriggersGQL extends Apollo.Query<
-    GetDatasetFlowTriggersQuery,
-    GetDatasetFlowTriggersQueryVariables
-> {
-    document = GetDatasetFlowTriggersDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

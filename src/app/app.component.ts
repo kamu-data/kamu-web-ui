@@ -177,6 +177,7 @@ export class AppComponent extends BaseComponent implements OnInit {
             .addSvgIcon("timer", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/timer.svg"))
             .addSvgIcon("clock", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/clock.svg"))
             .addSvgIcon("hour-glass", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/hour-glass.svg"))
+            .addSvgIcon("retry", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/retry.svg"))
             .addSvgIcon("compact", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/compress.svg"))
             .addSvgIcon(
                 "access-token",

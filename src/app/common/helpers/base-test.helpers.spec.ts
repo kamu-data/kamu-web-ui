@@ -163,6 +163,7 @@ export function registerMatSvgIcons(): void {
         "timer",
         "clock",
         "hour-glass",
+        "retry",
         "compact",
         "access-token",
         "tree-structure",

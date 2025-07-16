@@ -14,6 +14,7 @@ export type ValidationError =
     | "passwordsMismatch"
     | "email"
     | "min"
+    | "max"
     | "whitespace";
 
 export type ValidationErrorTuple = {

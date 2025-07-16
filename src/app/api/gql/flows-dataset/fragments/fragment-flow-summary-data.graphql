@@ -1,7 +1,14 @@
 fragment FlowSummaryData on Flow {
   description {
     ... on FlowDescriptionDatasetPollingIngest {
-      datasetId
+      pollingSource {
+        fetch {
+          ...FetchStepUrlData
+          ...FetchStepFilesGlobData
+          ...FetchStepContainerData
+        }
+      }
+
       ingestResult {
         ... on FlowDescriptionUpdateResultUpToDate {
           uncacheable
@@ -20,7 +27,6 @@ fragment FlowSummaryData on Flow {
     }
 
     ... on FlowDescriptionDatasetPushIngest {
-      datasetId
       sourceName
       inputRecordsCount
       ingestResult {
@@ -41,7 +47,17 @@ fragment FlowSummaryData on Flow {
     }
 
     ... on FlowDescriptionDatasetExecuteTransform {
-      datasetId
+      transform {
+        inputs {
+          __typename
+        }
+        transform {
+          ... on TransformSql {
+            engine
+          }
+        }
+      }
+
       transformResult {
         ... on FlowDescriptionUpdateResultUpToDate {
           uncacheable
@@ -60,7 +76,6 @@ fragment FlowSummaryData on Flow {
     }
 
     ... on FlowDescriptionDatasetHardCompaction {
-      datasetId
       compactionResult {
         ... on FlowDescriptionHardCompactionSuccess {
           originalBlocksCount
@@ -80,25 +95,32 @@ fragment FlowSummaryData on Flow {
     }
 
     ... on FlowDescriptionDatasetReset {
-      datasetId
       resetResult {
         newHead
       }
     }
   }
+
   flowId
+  datasetId
   status
+
   initiator {
     ...Account
   }
+
   outcome {
     ...FlowOutcomeData
   }
+
   timing {
+    initiatedAt
+    scheduledAt
     awaitingExecutorSince
     runningSince
-    finishedAt
+    lastAttemptFinishedAt
   }
+
   startCondition {
     __typename
     ... on FlowStartConditionThrottling {
@@ -129,14 +151,22 @@ fragment FlowSummaryData on Flow {
   }
 
   configSnapshot {
-    ... on FlowConfigurationIngest {
+    ... on FlowConfigRuleIngest {
       fetchUncacheable
     }
 
-    ... on FlowConfigurationCompactionRule {
-      compactionRule {
+    ... on FlowConfigRuleCompaction {
+      compactionMode {
         __typename
       }
     }
+  }
+
+  tasks {
+    taskId
+  }
+
+  retryPolicy {
+    maxAttempts
   }
 }

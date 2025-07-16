@@ -132,7 +132,7 @@ describe("FlowsComponent", () => {
 
     it("should check update now button", fakeAsync(() => {
         const refreshFlowSpy = spyOn(component, "refreshFlow");
-        spyOn(datasetFlowsService, "datasetTriggerFlow").and.returnValue(of(true));
+        spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(true));
         component.updateNow();
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(refreshFlowSpy).toHaveBeenCalledTimes(1);

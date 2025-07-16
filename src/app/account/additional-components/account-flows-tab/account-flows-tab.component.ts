@@ -10,7 +10,7 @@ import { combineLatest, map, of, switchMap, timer } from "rxjs";
 import { MaybeNull } from "src/app/interface/app.types";
 import {
     AccountFragment,
-    DatasetListFlowsDataFragment,
+    DatasetBasicsFragment,
     FlowStatus,
     FlowSummaryDataFragment,
     InitiatorFilterInput,
@@ -50,14 +50,15 @@ import { NgIf, AsyncPipe } from "@angular/common";
     ],
 })
 export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent implements OnInit {
-    public nodes: FlowSummaryDataFragment[] = [];
-    public searchByDataset: DatasetListFlowsDataFragment[] = [];
-    public filters: MaybeNull<FlowsTableFiltersOptions>;
     public readonly DISPLAY_COLUMNS = ["description", "information", "creator", "dataset", "options"];
 
-    private accountService = inject(AccountService);
-    private loggedUserService = inject(LoggedUserService);
-    private ngZone = inject(NgZone);
+    private readonly accountService = inject(AccountService);
+    private readonly loggedUserService = inject(LoggedUserService);
+    private readonly ngZone = inject(NgZone);
+
+    public nodes: FlowSummaryDataFragment[] = [];
+    public searchByDataset: DatasetBasicsFragment[] = [];
+    public filters: MaybeNull<FlowsTableFiltersOptions>;
 
     public ngOnInit(): void {
         this.getPageFromUrl();

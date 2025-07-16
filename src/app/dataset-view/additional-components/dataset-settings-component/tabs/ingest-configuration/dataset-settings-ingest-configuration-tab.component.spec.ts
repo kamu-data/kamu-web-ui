@@ -7,61 +7,299 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetSettingsIngestConfigurationTabComponent } from "./dataset-settings-ingest-configuration-tab.component";
-import { FormGroup, FormControl } from "@angular/forms";
-import { IngestConfigurationFormType } from "../scheduling/dataset-settings-scheduling-tab.component.types";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
 import { provideToastr } from "ngx-toastr";
 import { Apollo } from "apollo-angular";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-import { MatDividerModule } from "@angular/material/divider";
-import { of } from "rxjs";
-import { mockIngestGetDatasetFlowConfigsSuccess } from "src/app/api/mock/dataset-flow.mock";
-import { provideAnimations } from "@angular/platform-browser/animations";
+import { DatasetFlowConfigService } from "../../services/dataset-flow-config.service";
+import { HarnessLoader } from "@angular/cdk/testing";
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
+import { IngestConfigurationRuleFormHarness } from "./ingest-configuration-rule-form/ingest-configuration-rule-form.harness";
+import { FlowRetryPolicyFormHarness } from "./flow-retry-policy-form/flow-retry-policy-form.harness";
+import { FlowRetryBackoffType, TimeUnit } from "src/app/api/kamu.graphql.interface";
+import { getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { ApolloTestingModule } from "apollo-angular/testing";
+import { FlowRetryPolicyFormComponent } from "./flow-retry-policy-form/flow-retry-policy-form.component";
 
 describe("DatasetSettingsIngestConfigurationTabComponent", () => {
     let component: DatasetSettingsIngestConfigurationTabComponent;
     let fixture: ComponentFixture<DatasetSettingsIngestConfigurationTabComponent>;
-    let datasetSchedulingService: DatasetSchedulingService;
+    let datasetFlowConfigService: DatasetFlowConfigService;
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [SharedTestModule, MatDividerModule, DatasetSettingsIngestConfigurationTabComponent],
-            providers: [Apollo, HttpClientTestingModule, provideAnimations(), provideToastr()],
-        });
+    let loader: HarnessLoader;
+    let ingestConfigurationRuleFormHarness: IngestConfigurationRuleFormHarness;
+    let flowRetryPolicyFormHarness: FlowRetryPolicyFormHarness;
+
+    const MOCK_RETRY_POLICY = {
+        __typename: "FlowRetryPolicy" as const,
+        maxAttempts: 5,
+        minDelay: { every: 30, unit: TimeUnit.Minutes },
+        backoffType: FlowRetryBackoffType.Exponential,
+    };
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [SharedTestModule, ApolloTestingModule, DatasetSettingsIngestConfigurationTabComponent],
+            providers: [Apollo, provideToastr()],
+        }).compileComponents();
+
         fixture = TestBed.createComponent(DatasetSettingsIngestConfigurationTabComponent);
-        datasetSchedulingService = TestBed.inject(DatasetSchedulingService);
+        datasetFlowConfigService = TestBed.inject(DatasetFlowConfigService);
+
         component = fixture.componentInstance;
         component.ingestConfigurationTabData = {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            ingestionRule: {
+                __typename: "FlowConfigRuleIngest",
+                fetchUncacheable: false,
+            },
+            retryPolicy: null,
         };
-        component.ingestConfigurationForm = new FormGroup<IngestConfigurationFormType>({
-            fetchUncacheable: new FormControl<boolean>(false, { nonNullable: true }),
-        });
-        spyOn(datasetSchedulingService, "fetchDatasetFlowConfigs").and.returnValue(
-            of(mockIngestGetDatasetFlowConfigsSuccess),
-        );
+
         fixture.detectChanges();
+        await fixture.whenStable();
+
+        loader = TestbedHarnessEnvironment.loader(fixture);
+        ingestConfigurationRuleFormHarness = await loader.getHarness(IngestConfigurationRuleFormHarness);
+        flowRetryPolicyFormHarness = await loader.getHarness(FlowRetryPolicyFormHarness);
     });
+
+    function getSaveButton(): HTMLButtonElement {
+        return getElementByDataTestId(fixture, "save-ingest-configuration-btn") as HTMLButtonElement;
+    }
+
+    // Helper function to validate form state consistency
+    async function expectFormValueToEqual(expectedValue: {
+        ingestConfig: { fetchUncacheable: boolean };
+        flowRetryPolicy: {
+            retriesEnabled: boolean;
+            maxAttempts: number;
+            minDelay: { every: number; unit: TimeUnit };
+            backoffType: FlowRetryBackoffType;
+        };
+    }): Promise<void> {
+        const domIngestConfigValue = await ingestConfigurationRuleFormHarness.currentFormValue();
+        const domFlowRetryPolicyValue = await flowRetryPolicyFormHarness.currentFormValue();
+
+        expect(domIngestConfigValue).toEqual(expectedValue.ingestConfig);
+        expect(domFlowRetryPolicyValue).toEqual(expectedValue.flowRetryPolicy);
+        expect(component.form.getRawValue()).toEqual({
+            ingestConfig: expectedValue.ingestConfig,
+            flowRetryPolicy: expectedValue.flowRetryPolicy,
+        });
+    }
 
     it("should create", () => {
         expect(component).toBeTruthy();
+        expect(ingestConfigurationRuleFormHarness).toBeTruthy();
+        expect(flowRetryPolicyFormHarness).toBeTruthy();
     });
 
-    it("should check initial state", () => {
+    it("should have default form values", async () => {
+        expect(component.form.status).toBe("VALID");
+
+        await expectFormValueToEqual({
+            ingestConfig: { fetchUncacheable: false },
+            flowRetryPolicy: {
+                retriesEnabled: false,
+                maxAttempts: FlowRetryPolicyFormComponent.DEFAULT_MAX_ATTEMPTS,
+                minDelay: FlowRetryPolicyFormComponent.DEFAULT_MIN_DELAY,
+                backoffType: FlowRetryPolicyFormComponent.DEFAULT_BACKOFF_TYPE,
+            },
+        });
+    });
+
+    it("should check 'Save' button is enabled by default", () => {
+        expect(component.form.status).toBe("VALID");
+
+        const saveButton = getSaveButton();
+        expect(saveButton.disabled).toBeFalse();
+    });
+
+    it("should check form is valid when loaded with ingestion rule enabled", async () => {
+        component.ingestConfigurationTabData.ingestionRule.fetchUncacheable = true;
+        component.ngAfterViewInit();
         fixture.detectChanges();
-        const fetchUncacheableCheckBox = findElementByDataTestId(fixture, "fetchUncacheable") as HTMLInputElement;
-        expect(fetchUncacheableCheckBox.checked).toBeFalsy();
+
+        expect(component.form.status).toBe("VALID");
+
+        await expectFormValueToEqual({
+            ingestConfig: { fetchUncacheable: true },
+            flowRetryPolicy: {
+                retriesEnabled: false,
+                maxAttempts: FlowRetryPolicyFormComponent.DEFAULT_MAX_ATTEMPTS,
+                minDelay: FlowRetryPolicyFormComponent.DEFAULT_MIN_DELAY,
+                backoffType: FlowRetryPolicyFormComponent.DEFAULT_BACKOFF_TYPE,
+            },
+        });
     });
 
-    it("should check save configuration", () => {
-        const setDatasetFlowConfigsSpy = spyOn(datasetSchedulingService, "setDatasetFlowConfigs").and.returnValue(
-            of().pipe(),
+    it("should check form is valid when loaded with retry policy", async () => {
+        component.ingestConfigurationTabData.retryPolicy = MOCK_RETRY_POLICY;
+        component.ngAfterViewInit();
+        fixture.detectChanges();
+
+        expect(component.form.status).toBe("VALID");
+
+        await expectFormValueToEqual({
+            ingestConfig: { fetchUncacheable: false },
+            flowRetryPolicy: {
+                retriesEnabled: true,
+                maxAttempts: 5,
+                minDelay: { every: 30, unit: TimeUnit.Minutes },
+                backoffType: FlowRetryBackoffType.Exponential,
+            },
+        });
+    });
+
+    it("should check form is valid when loaded with both ingestion rule and retry policy", async () => {
+        component.ingestConfigurationTabData.ingestionRule.fetchUncacheable = true;
+        component.ingestConfigurationTabData.retryPolicy = MOCK_RETRY_POLICY;
+        component.ngAfterViewInit();
+        fixture.detectChanges();
+
+        expect(component.form.status).toBe("VALID");
+
+        await expectFormValueToEqual({
+            ingestConfig: { fetchUncacheable: true },
+            flowRetryPolicy: {
+                retriesEnabled: true,
+                maxAttempts: 5,
+                minDelay: { every: 30, unit: TimeUnit.Minutes },
+                backoffType: FlowRetryBackoffType.Exponential,
+            },
+        });
+    });
+
+    it("should check 'Save' button works for ROOT dataset with ingest configuration", async () => {
+        const setDatasetIngestFlowConfigsSpy = spyOn(
+            datasetFlowConfigService,
+            "setDatasetIngestFlowConfigs",
+        ).and.callThrough();
+
+        await ingestConfigurationRuleFormHarness.enableFetchUncacheable();
+        await flowRetryPolicyFormHarness.enableRetries();
+        await flowRetryPolicyFormHarness.setMaxAttempts(7);
+        await flowRetryPolicyFormHarness.setMinDelay({ every: 45, unit: TimeUnit.Minutes });
+        await flowRetryPolicyFormHarness.setBackoffType(FlowRetryBackoffType.Linear);
+
+        const saveButton = getSaveButton();
+        expect(saveButton.disabled).toBeFalse();
+
+        saveButton.click();
+
+        expect(setDatasetIngestFlowConfigsSpy).toHaveBeenCalledWith(
+            jasmine.objectContaining({
+                datasetId: mockDatasetBasicsRootFragment.id,
+                ingestConfigInput: { fetchUncacheable: true },
+                retryPolicyInput: {
+                    maxAttempts: 7,
+                    minDelay: { every: 45, unit: TimeUnit.Minutes },
+                    backoffType: FlowRetryBackoffType.Linear,
+                },
+            }),
         );
-        emitClickOnElementByDataTestId(fixture, "save-ingest-configuration");
-        expect(setDatasetFlowConfigsSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check 'Save' button works with only ingest configuration enabled", async () => {
+        const setDatasetIngestFlowConfigsSpy = spyOn(
+            datasetFlowConfigService,
+            "setDatasetIngestFlowConfigs",
+        ).and.callThrough();
+
+        await ingestConfigurationRuleFormHarness.enableFetchUncacheable();
+        // Keep retry policy disabled
+
+        const saveButton = getSaveButton();
+        expect(saveButton.disabled).toBeFalse();
+
+        saveButton.click();
+
+        expect(setDatasetIngestFlowConfigsSpy).toHaveBeenCalledWith(
+            jasmine.objectContaining({
+                datasetId: mockDatasetBasicsRootFragment.id,
+                ingestConfigInput: { fetchUncacheable: true },
+                retryPolicyInput: null,
+            }),
+        );
+    });
+
+    it("should check 'Save' button works with only retry policy enabled", async () => {
+        const setDatasetIngestFlowConfigsSpy = spyOn(
+            datasetFlowConfigService,
+            "setDatasetIngestFlowConfigs",
+        ).and.callThrough();
+
+        // Keep ingest configuration disabled
+        await flowRetryPolicyFormHarness.enableRetries();
+        await flowRetryPolicyFormHarness.setMaxAttempts(2);
+        await flowRetryPolicyFormHarness.setMinDelay({ every: 20, unit: TimeUnit.Minutes });
+        await flowRetryPolicyFormHarness.setBackoffType(FlowRetryBackoffType.Fixed);
+
+        const saveButton = getSaveButton();
+        expect(saveButton.disabled).toBeFalse();
+
+        saveButton.click();
+
+        expect(setDatasetIngestFlowConfigsSpy).toHaveBeenCalledWith(
+            jasmine.objectContaining({
+                datasetId: mockDatasetBasicsRootFragment.id,
+                ingestConfigInput: { fetchUncacheable: false },
+                retryPolicyInput: {
+                    maxAttempts: 2,
+                    minDelay: { every: 20, unit: TimeUnit.Minutes },
+                    backoffType: FlowRetryBackoffType.Fixed,
+                },
+            }),
+        );
+    });
+
+    it("should check 'Save' button is disabled when retry policy has invalid values", async () => {
+        const setDatasetIngestFlowConfigsSpy = spyOn(
+            datasetFlowConfigService,
+            "setDatasetIngestFlowConfigs",
+        ).and.stub();
+
+        await flowRetryPolicyFormHarness.enableRetries();
+        await flowRetryPolicyFormHarness.setMaxAttempts(5);
+        await flowRetryPolicyFormHarness.setMinDelay({ every: 65, unit: TimeUnit.Minutes }); // Invalid: exceeds max
+        await flowRetryPolicyFormHarness.setBackoffType(FlowRetryBackoffType.Exponential);
+
+        // Wait for validation to kick in
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        const saveButton = getSaveButton();
+        expect(saveButton.disabled).toBeTrue();
+
+        saveButton.click(); // will be ignored
+        expect(setDatasetIngestFlowConfigsSpy).not.toHaveBeenCalled();
+    });
+
+    it("should update form values via harnesses and maintain consistency", async () => {
+        // Enable ingest configuration
+        await ingestConfigurationRuleFormHarness.enableFetchUncacheable();
+
+        // Enable and configure retry policy
+        await flowRetryPolicyFormHarness.enableRetries();
+        await flowRetryPolicyFormHarness.setMaxAttempts(8);
+        await flowRetryPolicyFormHarness.setMinDelay({ every: 12, unit: TimeUnit.Hours }); // Valid: within 0-24 range
+        await flowRetryPolicyFormHarness.setBackoffType(FlowRetryBackoffType.ExponentialWithJitter);
+
+        // Verify form consistency
+        await expectFormValueToEqual({
+            ingestConfig: { fetchUncacheable: true },
+            flowRetryPolicy: {
+                retriesEnabled: true,
+                maxAttempts: 8,
+                minDelay: { every: 12, unit: TimeUnit.Hours },
+                backoffType: FlowRetryBackoffType.ExponentialWithJitter,
+            },
+        });
+
+        // Verify validation errors are null
+        const minDelayValidationError = await flowRetryPolicyFormHarness.getMinDelayValidationError();
+        expect(minDelayValidationError).toBeNull();
     });
 });

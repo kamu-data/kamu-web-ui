@@ -63,14 +63,14 @@
                 <div class="ms-1 py-2 position-relative">
                     <img
                         *ngIf="element.status !== FlowStatus.Finished"
-                        [src]="dynamicImgSrc(element.status)"
+                        [src]="flowStatusAnimationSrc(element.status)"
                         class="dynamic-icon"
                     />
                     <a
                         [routerLink]="[
                             '/',
-                            datasetById(element.description.datasetId).owner.accountName,
-                            datasetById(element.description.datasetId).name,
+                            datasetById(element.datasetId).owner.accountName,
+                            datasetById(element.datasetId).name,
                             URL_FLOW_DETAILS,
                             element.flowId,
                             FlowDetailsTabs.HISTORY,
@@ -82,11 +82,9 @@
                     </a>
                     <div class="d-flex flex-row truncate-sub-message pe-4">
                         <div
-                            [title]="descriptionDatasetFlowSubMessage(element, element.description.datasetId)"
+                            [title]="descriptionDatasetFlowSubMessage(element)"
                             class="text-small d-block truncate-sub-message"
-                            [innerHTML]="
-                                descriptionDatasetFlowSubMessage(element, element.description.datasetId) | safeHtml
-                            "
+                            [innerHTML]="descriptionDatasetFlowSubMessage(element) | safeHtml"
                         ></div>
                         &nbsp;
 
@@ -122,12 +120,16 @@
 
                     <span class="text-small pt-1">
                         <span class="text-small">completed in </span>
-                        {{ durationTask(element.timing.runningSince, element.timing.finishedAt) }}
+                        {{ durationTimingText(element) }}
                     </span>
                 </div>
                 <div class="d-flex align-items-center" *ngIf="waitingForBlockVisible(element)">
                     <mat-icon class="ps-1 pe-1 me-2px text-muted" [title]="'waiting condition'" svgIcon="hour-glass" />
                     <span class="text-small pt-1"> {{ waitingBlockText(element.startCondition) }} </span>
+                </div>
+                <div class="d-flex align-items-center" *ngIf="retriesBlockVisible(element)">
+                    <mat-icon class="ps-1 pe-1 me-2px text-muted" [title]="'retry attempts'" svgIcon="retry" />
+                    <span class="text-small pt-1"> {{ retriesBlockText(element) }} </span>
                 </div>
             </div>
         </td>
@@ -161,11 +163,11 @@
                 <a
                     [routerLink]="[
                         '/',
-                        datasetById(element.description.datasetId).owner.accountName,
-                        datasetById(element.description.datasetId).name,
+                        datasetById(element.datasetId).owner.accountName,
+                        datasetById(element.datasetId).name,
                     ]"
                     class="text-small"
-                    >{{ datasetById(element.description.datasetId).name }}</a
+                    >{{ datasetById(element.datasetId).name }}</a
                 >
             </div>
         </td>
@@ -184,8 +186,8 @@
                         mat-menu-item
                         [routerLink]="[
                             '/',
-                            datasetById(element.description.datasetId).owner.accountName,
-                            datasetById(element.description.datasetId).name,
+                            datasetById(element.datasetId).owner.accountName,
+                            datasetById(element.datasetId).name,
                             URL_FLOW_DETAILS,
                             element.flowId,
                             FlowDetailsTabs.HISTORY,
@@ -195,7 +197,7 @@
                     </a>
                     <mat-divider />
                     <button
-                        (click)="cancelFlow(element.flowId, element.description.datasetId)"
+                        (click)="cancelFlow(element.flowId, element.datasetId)"
                         mat-menu-item
                         [disabled]="element.status === FlowStatus.Finished"
                     >

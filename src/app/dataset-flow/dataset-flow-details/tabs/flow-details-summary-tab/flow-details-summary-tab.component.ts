@@ -8,10 +8,10 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FlowOutcomeDataFragment, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/values/app.values";
-import { DataHelpers } from "src/app/common/helpers/data.helpers";
 import { DatasetFlowDetailsHelpers } from "../flow-details-history-tab/flow-details-history-tab.helpers";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetFlowByIdResponse } from "../../dataset-flow-details.types";
+import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
 import { NgIf, UpperCasePipe, TitleCasePipe, DatePipe } from "@angular/common";
 
 @Component({
@@ -25,7 +25,7 @@ export class FlowDetailsSummaryTabComponent {
     @Input(RoutingResolvers.FLOW_DETAILS_SUMMARY_KEY) public response: DatasetFlowByIdResponse;
 
     public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;
-    public readonly DATE_FORMAT = AppValues.DISPLAY_FLOW_DATE_FORMAT;
+    public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
 
     public get flowDetails(): FlowSummaryDataFragment {
         return this.response.flow;
@@ -36,11 +36,11 @@ export class FlowDetailsSummaryTabComponent {
     }
 
     public flowTypeDescription(flow: FlowSummaryDataFragment): string {
-        return DataHelpers.flowTypeDescription(flow);
+        return FlowTableHelpers.flowTypeDescription(flow);
     }
 
-    public durationFlowEvent(startEventTime: string, endEventTime: string): string {
-        return DataHelpers.durationTask(startEventTime, endEventTime);
+    public flowDuration(): string {
+        return FlowTableHelpers.durationTimingText(this.flowDetails);
     }
 
     public flowOutcomeMessage: Record<string, string> = {

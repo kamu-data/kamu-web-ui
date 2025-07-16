@@ -1,0 +1,33 @@
+mutation datasetTriggerResetFlow($datasetId: DatasetID!, $resetConfigInput: FlowConfigResetInput!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      flows {
+        runs {
+          triggerResetFlow(resetConfigInput: $resetConfigInput) {
+            ... on TriggerFlowSuccess {
+              flow {
+                ...FlowSummaryData
+              }
+              message
+            }
+
+            ... on FlowIncompatibleDatasetKind {
+              expectedDatasetKind
+              actualDatasetKind
+              message
+            }
+
+            ... on FlowPreconditionsNotMet {
+              message
+            }
+
+            ... on FlowInvalidRunConfigurations {
+              error
+              message
+            }
+          }
+        }
+      }
+    }
+  }
+}

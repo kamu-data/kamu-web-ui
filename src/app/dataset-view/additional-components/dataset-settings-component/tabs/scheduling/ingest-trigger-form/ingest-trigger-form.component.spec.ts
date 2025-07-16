@@ -7,113 +7,193 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { IngestTriggerFormComponent } from "./ingest-trigger-form.component";
-import { MatSlideToggleModule } from "@angular/material/slide-toggle";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatRadioModule } from "@angular/material/radio";
-import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { DatasetSchedulingService } from "../../../services/dataset-scheduling.service";
-import { of } from "rxjs";
-import {
-    mockGetDatasetFlowTriggersQuery,
-    mockGetDatasetFlowTriggersTimeDeltaQuery,
-} from "src/app/api/mock/dataset-flow.mock";
-import {
-    emitClickOnElementByDataTestId,
-    findElementByDataTestId,
-    setFieldValue,
-} from "src/app/common/helpers/base-test.helpers.spec";
+import { ScheduleType } from "../../../dataset-settings.model";
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
+import { HarnessLoader } from "@angular/cdk/testing";
+import { Component, ViewChild } from "@angular/core";
+import { IngestTriggerFormHarness } from "./ingest-trigger-form.harness";
+import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { TimeUnit } from "src/app/api/kamu.graphql.interface";
-import { PollingGroupEnum } from "../../../dataset-settings.model";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { provideAnimations } from "@angular/platform-browser/animations";
+
+@Component({
+    standalone: true,
+    imports: [
+        //-----//
+        FormsModule,
+        ReactiveFormsModule,
+        //-----//
+        IngestTriggerFormComponent,
+    ],
+    template: `<app-ingest-trigger-form [form]="hostForm.controls.ingestTrigger" [updateStateToggleLabel]="label" />`,
+})
+class TestIngestTriggerFormComponent {
+    public readonly label = "Enable automatic updates";
+
+    public readonly hostForm = new FormGroup({
+        ingestTrigger: IngestTriggerFormComponent.buildForm(),
+    });
+
+    @ViewChild(IngestTriggerFormComponent)
+    public formComponent: IngestTriggerFormComponent;
+}
 
 describe("IngestTriggerFormComponent", () => {
+    let hostComponent: TestIngestTriggerFormComponent;
     let component: IngestTriggerFormComponent;
-    let fixture: ComponentFixture<IngestTriggerFormComponent>;
-    let datasetSchedulingService: DatasetSchedulingService;
+
+    let fixture: ComponentFixture<TestIngestTriggerFormComponent>;
+    let loader: HarnessLoader;
+    let ingestTriggerFormHarness: IngestTriggerFormHarness;
 
     const MOCK_INVALID_CRON_EXPRESSION = "* *";
 
-    beforeEach(() => {
+    beforeEach(async () => {
         TestBed.configureTestingModule({
-            providers: [Apollo, provideAnimations(), provideToastr()],
+            providers: [Apollo, provideToastr()],
             imports: [
-                FormsModule,
-                ReactiveFormsModule,
-                MatRadioModule,
+                //-----//
                 SharedTestModule,
-                MatSlideToggleModule,
-                MatProgressBarModule,
-                IngestTriggerFormComponent,
+                TestIngestTriggerFormComponent,
             ],
         });
-        fixture = TestBed.createComponent(IngestTriggerFormComponent);
-        component = fixture.componentInstance;
-        datasetSchedulingService = TestBed.inject(DatasetSchedulingService);
-        component.datasetBasics = mockDatasetBasicsRootFragment;
-        component.isLoaded = true;
+        fixture = TestBed.createComponent(TestIngestTriggerFormComponent);
+        hostComponent = fixture.componentInstance;
+
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        component = hostComponent.formComponent;
+
+        loader = TestbedHarnessEnvironment.loader(fixture);
+        ingestTriggerFormHarness = await loader.getHarness(IngestTriggerFormHarness);
     });
 
     it("should create", () => {
+        expect(hostComponent).toBeTruthy();
         expect(component).toBeTruthy();
+        expect(ingestTriggerFormHarness).toBeTruthy();
     });
 
-    it("should check init form with cron expression", () => {
-        spyOn(datasetSchedulingService, "fetchDatasetFlowTriggers").and.returnValue(
-            of(mockGetDatasetFlowTriggersQuery),
-        );
-        fixture.detectChanges();
+    it("should enable updates toggle via harness and reflect in form", async () => {
+        expect(component.updatesEnabledControl.value).toBeFalse();
 
-        const cronExpessionControl = findElementByDataTestId(
-            fixture,
-            "polling-group-cron-expression",
-        ) as HTMLInputElement;
-        expect(cronExpessionControl.value.trim()).toEqual("* * * * ?");
+        await ingestTriggerFormHarness.enableUpdates();
+        expect(component.updatesEnabledControl.value).toBeTrue();
+        expect(component.scheduleTypeControl.disabled).toBeFalse();
+        expect(component.timeDeltaControl.disabled).toBeFalse();
+        expect(component.cronExpressionControl.disabled).toBeTrue(); // Initially CRON is disabled
+
+        await ingestTriggerFormHarness.disableUpdates();
+        expect(component.updatesEnabledControl.value).toBeFalse();
+        expect(component.scheduleTypeControl.disabled).toBeTrue();
+        expect(component.timeDeltaControl.disabled).toBeFalse();
+        expect(component.cronExpressionControl.disabled).toBeTrue();
     });
 
-    it("should check init form with time delta", () => {
-        spyOn(datasetSchedulingService, "fetchDatasetFlowTriggers").and.returnValue(
-            of(mockGetDatasetFlowTriggersTimeDeltaQuery),
-        );
-        fixture.detectChanges();
+    it("should check switch polling options", async () => {
+        await ingestTriggerFormHarness.enableUpdates();
 
-        const everyControl = findElementByDataTestId(fixture, "polling-group-every") as HTMLInputElement;
-        expect(everyControl.value.trim()).toEqual("10");
-        const unitControl = findElementByDataTestId(fixture, "polling-group-unit") as HTMLInputElement;
-        expect(unitControl.value.trim()).toEqual(TimeUnit.Minutes);
+        // First verify initial state
+        expect(component.scheduleTypeControl.value).toBeNull();
+
+        // Click on CRON radio button
+        await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
+        expect(component.scheduleTypeControl.value).toEqual(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
+        expect(component.cronExpressionControl.disabled).toBeFalse();
+        expect(component.timeDeltaControl.disabled).toBeTrue();
+
+        // Click on time delta radio button
+        await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.TIME_DELTA);
+        expect(component.scheduleTypeControl.value).toEqual(ScheduleType.TIME_DELTA);
+        expect(component.cronExpressionControl.disabled).toBeTrue();
+        expect(component.timeDeltaControl.disabled).toBeFalse();
     });
 
-    it("should check switch polling options", () => {
-        spyOn(datasetSchedulingService, "fetchDatasetFlowTriggers").and.returnValue(
-            of(mockGetDatasetFlowTriggersTimeDeltaQuery),
-        );
-        fixture.detectChanges();
-        component.pollingForm.patchValue({ updatesState: true });
-        fixture.detectChanges();
-        emitClickOnElementByDataTestId(fixture, "button-cron-expression");
-        expect(component.pollingType.value).toEqual(PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION);
-        emitClickOnElementByDataTestId(fixture, "button-time-delta");
-        expect(component.pollingType.value).toEqual(PollingGroupEnum.TIME_DELTA);
+    it("should fill form with cron expression and reflect in form state", async () => {
+        await ingestTriggerFormHarness.enableUpdates();
+        await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
+
+        expect(component.scheduleTypeControl.value).toEqual(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
+
+        await ingestTriggerFormHarness.setCronExpression("* * * * ?");
+
+        const domFormValue = await ingestTriggerFormHarness.currentFormValue();
+        expect(domFormValue).toEqual({
+            updatesEnabled: true,
+            __typename: ScheduleType.CRON_5_COMPONENT_EXPRESSION,
+            timeDelta: { every: null, unit: null },
+            cron: {
+                cronExpression: "* * * * ?",
+            },
+        });
+        expect(component.form.getRawValue()).toEqual(domFormValue);
     });
 
-    it("should check cron expression error", () => {
-        spyOn(datasetSchedulingService, "fetchDatasetFlowTriggers").and.returnValue(
-            of(mockGetDatasetFlowTriggersTimeDeltaQuery),
-        );
-        fixture.detectChanges();
-        component.pollingForm.patchValue({ updatesState: true });
-        fixture.detectChanges();
-        emitClickOnElementByDataTestId(fixture, "button-cron-expression");
-        expect(component.pollingType.value).toEqual(PollingGroupEnum.CRON_5_COMPONENT_EXPRESSION);
-        fixture.detectChanges();
-        emitClickOnElementByDataTestId(fixture, "button-cron-expression");
-        setFieldValue(fixture, "polling-group-cron-expression", MOCK_INVALID_CRON_EXPRESSION);
-        fixture.detectChanges();
+    it("should check init form with time delta", async () => {
+        await ingestTriggerFormHarness.enableUpdates();
+        await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.TIME_DELTA);
 
-        const errorMessageElem = findElementByDataTestId(fixture, "cronExpression-error");
-        expect(errorMessageElem?.textContent?.trim()).toEqual("Invalid expression");
+        expect(component.scheduleTypeControl.value).toEqual(ScheduleType.TIME_DELTA);
+
+        await ingestTriggerFormHarness.setTimeDeltaSchedule({ every: 10, unit: TimeUnit.Minutes });
+
+        const domFormValue = await ingestTriggerFormHarness.currentFormValue();
+        expect(domFormValue).toEqual({
+            updatesEnabled: true,
+            __typename: ScheduleType.TIME_DELTA,
+            timeDelta: { every: 10, unit: TimeUnit.Minutes },
+            cron: { cronExpression: "" },
+        });
+        expect(component.form.getRawValue()).toEqual(domFormValue);
+    });
+
+    it("should check cron expression error", async () => {
+        await ingestTriggerFormHarness.enableUpdates();
+        await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
+
+        expect(component.scheduleTypeControl.value).toEqual(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
+
+        // Set invalid cron expression
+        await ingestTriggerFormHarness.setCronExpression(MOCK_INVALID_CRON_EXPRESSION);
+
+        // Ensure errors and status are set correctly
+        expect(component.form.invalid).toBeTrue();
+        expect(component.form.errors).toBeNull();
+
+        expect(component.cronExpressionControl.invalid).toBeTrue();
+        expect(component.cronExpressionControl.get("cronExpression")?.errors).toEqual({
+            invalidCronExpression: true,
+        });
+
+        expect(component.timeDeltaControl.invalid).toBeFalse();
+        expect(component.timeDeltaControl.errors).toBeNull();
+    });
+
+    it("should check time delta error", async () => {
+        await ingestTriggerFormHarness.enableUpdates();
+        await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.TIME_DELTA);
+
+        expect(component.scheduleTypeControl.value).toEqual(ScheduleType.TIME_DELTA);
+
+        // Set invalid time delta
+        await ingestTriggerFormHarness.setTimeDeltaSchedule({ every: 100, unit: TimeUnit.Minutes }); // Invalid value
+
+        // Ensure errors and status are set correctly
+        expect(component.form.invalid).toBeTrue();
+        expect(component.form.errors).toBeNull();
+
+        expect(component.cronExpressionControl.invalid).toBeFalse();
+        expect(component.cronExpressionControl.errors).toBeNull();
+
+        expect(component.timeDeltaControl.invalid).toBeTrue();
+        expect(component.timeDeltaControl.get("every")?.errors).toEqual({
+            range: {
+                message: "Value should be between 0 to 60",
+                refValues: [100, 0, 60],
+            },
+        });
     });
 });

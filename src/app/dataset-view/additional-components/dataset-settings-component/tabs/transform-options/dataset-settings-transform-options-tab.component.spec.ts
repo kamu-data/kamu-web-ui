@@ -13,7 +13,7 @@ import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragme
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
+import { DatasetFlowTriggerService } from "../../services/dataset-flow-trigger.service";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
@@ -23,7 +23,7 @@ import { provideAnimations } from "@angular/platform-browser/animations";
 describe("DatasetSettingsTransformOptionsTabComponent", () => {
     let component: DatasetSettingsTransformOptionsTabComponent;
     let fixture: ComponentFixture<DatasetSettingsTransformOptionsTabComponent>;
-    let datasetSchedulingService: DatasetSchedulingService;
+    let datasetFlowTriggerService: DatasetFlowTriggerService;
 
     const MOCK_MIN_RECORDS_TO_AWAIT = 40;
     const MOCK_PARAM_EVERY = 10;
@@ -40,7 +40,8 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
             ],
         });
         fixture = TestBed.createComponent(DatasetSettingsTransformOptionsTabComponent);
-        datasetSchedulingService = TestBed.inject(DatasetSchedulingService);
+        datasetFlowTriggerService = TestBed.inject(DatasetFlowTriggerService);
+
         component = fixture.componentInstance;
         component.transformViewData = {
             datasetBasics: mockDatasetBasicsDerivedFragment,
@@ -54,7 +55,8 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
     });
 
     it("should check 'Save triger' button works for DERIVATIVE dataset", () => {
-        const setDatasetFlowBatchingSpy = spyOn(datasetSchedulingService, "setDatasetTriggers").and.callThrough();
+        const setDatasetFlowTriggersSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTriggers").and.callThrough();
+
         const mockBatchingTriggerForm = new FormGroup<BatchingFormType>({
             updatesState: new FormControl<boolean>(false, { nonNullable: true }),
             every: new FormControl<MaybeNull<number>>({ value: MOCK_PARAM_EVERY, disabled: false }, [
@@ -72,7 +74,7 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
 
         component.saveBatchingTriggers(mockBatchingTriggerForm);
 
-        expect(setDatasetFlowBatchingSpy).toHaveBeenCalledWith(
+        expect(setDatasetFlowTriggersSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
                 triggerInput: {
                     batching: {

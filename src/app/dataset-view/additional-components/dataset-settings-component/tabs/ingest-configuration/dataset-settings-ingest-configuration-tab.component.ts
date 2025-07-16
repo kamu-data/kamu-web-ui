@@ -5,17 +5,22 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { IngestConfigurationFormType } from "../scheduling/dataset-settings-scheduling-tab.component.types";
-import { FormGroup } from "@angular/forms";
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from "@angular/core";
+import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
-import { DatasetBasicsFragment, DatasetFlowType } from "src/app/api/kamu.graphql.interface";
-import { DatasetSchedulingService } from "../../services/dataset-scheduling.service";
+import { DatasetBasicsFragment, DatasetKind } from "src/app/api/kamu.graphql.interface";
+import { DatasetFlowConfigService } from "../../services/dataset-flow-config.service";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { IngestConfigurationFormComponent } from "./ingest-configuration-form/ingest-configuration-form.component";
+import { DatasetSettingsIngestConfigurationTabData } from "./dataset-settings-ingest-configuration-tab.data";
 import { MatDividerModule } from "@angular/material/divider";
+import { IngestConfigurationRuleFormComponent } from "./ingest-configuration-rule-form/ingest-configuration-rule-form.component";
+import { FlowRetryPolicyFormComponent } from "./flow-retry-policy-form/flow-retry-policy-form.component";
+import {
+    IngestConfigurationFormType,
+    IngestConfigurationFormValue,
+} from "./dataset-settings-ingest-configuration-tab.types";
+import { NgIf } from "@angular/common";
 
 @Component({
     selector: "app-dataset-settings-ingest-configuration-tab",
@@ -24,37 +29,65 @@ import { MatDividerModule } from "@angular/material/divider";
     standalone: true,
     imports: [
         //-----//
+        NgIf,
+        FormsModule,
+        ReactiveFormsModule,
+
+        //-----//
         MatDividerModule,
 
         //-----//
-        IngestConfigurationFormComponent,
+        FlowRetryPolicyFormComponent,
+        IngestConfigurationRuleFormComponent,
     ],
 })
-export class DatasetSettingsIngestConfigurationTabComponent extends BaseComponent {
+export class DatasetSettingsIngestConfigurationTabComponent extends BaseComponent implements AfterViewInit {
     @Input(RoutingResolvers.DATASET_SETTINGS_INGEST_CONFIGURATION_KEY)
-    public ingestConfigurationTabData: DatasetViewData;
-    public ingestConfigurationForm: FormGroup<IngestConfigurationFormType>;
+    public ingestConfigurationTabData: DatasetSettingsIngestConfigurationTabData;
 
-    private datasetSchedulingService = inject(DatasetSchedulingService);
+    private readonly cdr = inject(ChangeDetectorRef);
+    private readonly datasetFlowConfigService = inject(DatasetFlowConfigService);
+
+    public readonly form: FormGroup<IngestConfigurationFormType> = new FormGroup<IngestConfigurationFormType>({
+        ingestConfig: IngestConfigurationRuleFormComponent.buildForm(),
+        flowRetryPolicy: FlowRetryPolicyFormComponent.buildForm(),
+    });
 
     public get datasetBasics(): DatasetBasicsFragment {
         return this.ingestConfigurationTabData.datasetBasics;
     }
 
-    public changeIngestConfiguration(ingestConfigurationForm: FormGroup<IngestConfigurationFormType>): void {
-        this.ingestConfigurationForm = ingestConfigurationForm;
+    public get isRootDataset(): boolean {
+        return this.datasetBasics.kind === DatasetKind.Root;
     }
 
-    public saveConfiguration(): void {
-        this.datasetSchedulingService
-            .setDatasetFlowConfigs({
+    public ngAfterViewInit() {
+        this.form.patchValue(
+            {
+                ingestConfig: IngestConfigurationRuleFormComponent.buildFormValue(
+                    this.ingestConfigurationTabData.ingestionRule,
+                ),
+                flowRetryPolicy: FlowRetryPolicyFormComponent.buildFormValue(
+                    this.ingestConfigurationTabData.retryPolicy,
+                ),
+            } as IngestConfigurationFormValue,
+            { emitEvent: true },
+        );
+        this.cdr.detectChanges();
+    }
+
+    protected saveConfiguration(): void {
+        const formValue = this.form.getRawValue() as IngestConfigurationFormValue;
+
+        this.datasetFlowConfigService
+            .setDatasetIngestFlowConfigs({
                 datasetId: this.datasetBasics.id,
-                datasetFlowType: DatasetFlowType.Ingest,
-                configInput: {
-                    ingest: {
-                        fetchUncacheable: this.ingestConfigurationForm.controls.fetchUncacheable.value,
-                    },
-                },
+                ingestConfigInput: IngestConfigurationRuleFormComponent.buildFlowConfigIngestInput(
+                    formValue.ingestConfig,
+                ),
+                retryPolicyInput: FlowRetryPolicyFormComponent.buildFlowConfigRetryPolicyInput(
+                    formValue.flowRetryPolicy,
+                ),
             })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe();

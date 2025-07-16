@@ -91,9 +91,9 @@ export function convertSecondsToHumanReadableFormat(seconds: number): string {
     const secondString = remainingSeconds >= 1 ? `${remainingSeconds} second${remainingSeconds > 1 ? "s" : ""}` : "";
 
     if (hours > 0) {
-        return `${hourString}   ${minuteString || "0 minute"} ${secondString && `  ${secondString}`}`;
+        return `${hourString} ${minuteString || "0 minute"}${secondString && ` ${secondString}`}`;
     } else if (!hours && minutes > 0) {
-        return `${minuteString} ${secondString && `  ${secondString}`}`;
+        return `${minuteString}${secondString && ` ${secondString}`}`;
     }
 
     return secondString;
@@ -101,6 +101,10 @@ export function convertSecondsToHumanReadableFormat(seconds: number): string {
 
 export function capitalizeString(value: string): string {
     return value[0].toUpperCase() + value.slice(1).toLowerCase();
+}
+
+export function pluralize(word: string, count: number): string {
+    return count === 1 ? word : word + "s";
 }
 
 // After the set time in the timeout, the class("clipboard-btn--success") is removed.

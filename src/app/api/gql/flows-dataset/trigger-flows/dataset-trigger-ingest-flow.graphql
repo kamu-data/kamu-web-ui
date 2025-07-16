@@ -1,0 +1,33 @@
+mutation datasetTriggerIngestFlow($datasetId: DatasetID!, $ingestConfigInput: FlowConfigIngestInput) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      flows {
+        runs {
+          triggerIngestFlow(ingestConfigInput: $ingestConfigInput) {
+            ... on TriggerFlowSuccess {
+              flow {
+                ...FlowSummaryData
+              }
+              message
+            }
+
+            ... on FlowIncompatibleDatasetKind {
+              expectedDatasetKind
+              actualDatasetKind
+              message
+            }
+
+            ... on FlowPreconditionsNotMet {
+              message
+            }
+
+            ... on FlowInvalidRunConfigurations {
+              error
+              message
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -14,7 +14,11 @@ import {
     DatasetPermissionsFragment,
 } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
-import { DatasetSettingsSidePanelItem, SettingsTabsEnum, datasetSettingsSidePanelData } from "./dataset-settings.model";
+import {
+    DatasetSettingsSidePanelItem,
+    SettingsTabsEnum,
+    DATASET_SETTINGS_SIDE_PANEL_DATA,
+} from "./dataset-settings.model";
 import { AppConfigService } from "src/app/app-config.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
@@ -47,6 +51,8 @@ import { NgFor, NgIf } from "@angular/common";
     ],
 })
 export class DatasetSettingsComponent extends BaseComponent {
+    public readonly DATASET_SETTINGS_SIDE_PANEL_DATA: DatasetSettingsSidePanelItem[] = DATASET_SETTINGS_SIDE_PANEL_DATA;
+
     @Input(RoutingResolvers.DATASET_VIEW_SETTINGS_KEY) public datasetSettingsTabData: DatasetOverviewTabData;
     @Input(RoutingResolvers.DATASET_VIEW_SETTINGS_ACTIVE_SECTION_KEY) public activeTab: SettingsTabsEnum;
 
@@ -62,10 +68,8 @@ export class DatasetSettingsComponent extends BaseComponent {
         return this.datasetSettingsTabData.overviewUpdate.overview;
     }
 
-    public sidePanelData: DatasetSettingsSidePanelItem[] = datasetSettingsSidePanelData;
-
-    private appConfigService = inject(AppConfigService);
-    private navigationService = inject(NavigationService);
+    private readonly appConfigService = inject(AppConfigService);
+    private readonly navigationService = inject(NavigationService);
 
     public navigateToSection(section: SettingsTabsEnum): void {
         this.navigationService.navigateToDatasetView({

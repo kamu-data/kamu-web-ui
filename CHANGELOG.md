@@ -5,9 +5,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Flow retry functionality with configurable retry policies
+- Retry policy configuration forms with TimeDelta (for min delay parameter)
+- Enhanced flow table with retry status indicators (attempt X of Y)
+- Improved flow details summary tab with retry information
+- Improved tile widget content for better retry status visualization
+- Flow history view now supports retry attempts
+- New test suites for flow retry functionality and ingest configuration
+- CDK harnesses for improved component testing
+### Changed
+- Converted Ingest Configuration and Update Schedule setting pages into nested form groups
+- Optimized flow listing queries by using new GraphQL fields
+- Updated API integration for flow system changes
+- Enhanced form validation with better error handling
+- Enhanced test coverage across flow-related components
 ### Fixed
 - Incorrect login from kamu-cli
-
 
 ## [0.51.1] - 2025-07-15
 ### Added

@@ -6,8 +6,8 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { DatasetFlowType, DatasetKind, FlowStatus, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
-import { combineLatest, map, switchMap, timer } from "rxjs";
+import { DatasetKind, FlowStatus, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
+import { combineLatest, map, Observable, switchMap, timer } from "rxjs";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
@@ -121,20 +121,6 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         return this.flowsData.datasetPermissions.permissions.flows.canRun;
     }
 
-    public navigateToAddPollingSource(): void {
-        this.navigationService.navigateToAddPollingSource({
-            accountName: this.flowsData.datasetBasics.owner.accountName,
-            datasetName: this.flowsData.datasetBasics.name,
-        });
-    }
-
-    public navigateToSetTransform(): void {
-        this.navigationService.navigateToSetTransform({
-            accountName: this.flowsData.datasetBasics.owner.accountName,
-            datasetName: this.flowsData.datasetBasics.name,
-        });
-    }
-
     public onPageChange(page: number): void {
         if (page === 1) {
             this.navigationService.navigateToDatasetView({
@@ -154,23 +140,23 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public updateNow(): void {
-        this.flowsService
-            .datasetTriggerFlow({
-                datasetId: this.flowsData.datasetBasics.id,
-                datasetFlowType:
-                    this.flowsData.datasetBasics.kind === DatasetKind.Root
-                        ? DatasetFlowType.Ingest
-                        : DatasetFlowType.ExecuteTransform,
-            })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((success: boolean) => {
-                if (success) {
-                    setTimeout(() => {
-                        this.refreshFlow();
-                        this.cdr.detectChanges();
-                    }, this.TIMEOUT_REFRESH_FLOW);
-                }
-            });
+        const datasetTrigger$: Observable<boolean> =
+            this.flowsData.datasetBasics.kind === DatasetKind.Root
+                ? this.flowsService.datasetTriggerIngestFlow({
+                      datasetId: this.flowsData.datasetBasics.id,
+                  })
+                : this.flowsService.datasetTriggerTransformFlow({
+                      datasetId: this.flowsData.datasetBasics.id,
+                  });
+
+        datasetTrigger$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((success: boolean) => {
+            if (success) {
+                setTimeout(() => {
+                    this.refreshFlow();
+                    this.cdr.detectChanges();
+                }, this.TIMEOUT_REFRESH_FLOW);
+            }
+        });
     }
 
     public toggleStateDatasetFlowConfigs(paused: boolean): void {

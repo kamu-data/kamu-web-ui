@@ -1,0 +1,69 @@
+<div class="position-relative border border-1 rounded-3 align-self-start px-3 pb-3">
+    <form [formGroup]="form">
+        <div class="mt-4">
+            <span class="position-absolute text-muted group-box-label text-uppercase">Retry options</span>
+            <div class="ms-1 px-2 gap-1 d-flex">
+                <mat-slide-toggle
+                    color="primary"
+                    class="mat-elevation-z0"
+                    formControlName="retriesEnabled"
+                    data-test-id="retry-policy-enabled-toggle"
+                >
+                    <span class="ps-2">Enable retries</span>
+                </mat-slide-toggle>
+                <app-tooltip-icon class="d-block" [tooltip]="RETRY_TOOLTIP" />
+            </div>
+            <div class="d-flex flex-column gap-4 mt-4">
+                <div class="d-flex align-items-center gap-3 ms-1 px-2">
+                    <span class="form-control-label">Max attempts:</span>
+                    <input
+                        type="number"
+                        min="1"
+                        formControlName="maxAttempts"
+                        class="form-control form-control-width"
+                        data-test-id="retry-policy-max-attempts-input"
+                        #maxAttempts
+                    />
+                    <span
+                        class="text-danger ms-4 fs-12 d-flex align-items-end text-break"
+                        [input]="maxAttempts"
+                        [fieldLabel]="'Max attempts'"
+                        [appFieldError]="['min', 'max', 'required']"
+                        [group]="form"
+                    ></span>
+                </div>
+                <div class="ms-1 px-2 pb-2">
+                    <small class="text-muted"> Maximum number of attempts to retry the flow in case of failure. </small>
+                </div>
+
+                <app-time-delta-form
+                    [form]="minDelay"
+                    [label]="'Min delay:'"
+                    data-test-id="'retry-policy-min-delay-time-delta-form'"
+                />
+                <div class="ms-1 px-2 pb-2">
+                    <small class="text-muted"> A minimal delay between retry attempts. </small>
+                </div>
+
+                <div class="d-flex align-items-center gap-3 ms-1 px-2">
+                    <span class="form-control-label">Backoff:</span>
+                    <select
+                        [formControl]="backoffType"
+                        class="form-select form-control-width me-3"
+                        data-test-id="retry-policy-backoff-select"
+                    >
+                        <option [value]="FlowRetryBackoffType.Fixed">Fixed</option>
+                        <option [value]="FlowRetryBackoffType.Linear">Linear</option>
+                        <option [value]="FlowRetryBackoffType.Exponential">Exponential</option>
+                        <option [value]="FlowRetryBackoffType.ExponentialWithJitter">Exponential with jitter</option>
+                    </select>
+                </div>
+                <div *ngIf="backoffType.value" class="ms-1 px-2 pb-2">
+                    <small class="text-muted">
+                        {{ BACKOFF_EXPLANATIONS[backoffType.value] }}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -54,6 +54,10 @@ export class FlowDetailsHistoryTabComponent {
         return this.response.flow;
     }
 
+    public get currentTime(): string {
+        return new Date().toISOString();
+    }
+
     public get history(): FlowHistoryDataFragment[] {
         return this.flowHistory.filter(
             (item) => !(item.__typename === "FlowEventTaskChanged" && item.taskStatus === TaskStatus.Queued),
@@ -64,11 +68,8 @@ export class FlowDetailsHistoryTabComponent {
         return DatasetFlowDetailsHelpers.flowEventDescription(flowEvent, flowDetails);
     }
 
-    public flowEventIconOptions(
-        flowEvent: FlowHistoryDataFragment,
-        flowDetails: FlowSummaryDataFragment,
-    ): { icon: string; class: string } {
-        return DatasetFlowDetailsHelpers.flowEventIconOptions(flowEvent, flowDetails);
+    public flowEventIconOptions(flowEvent: FlowHistoryDataFragment): { icon: string; class: string } {
+        return DatasetFlowDetailsHelpers.flowEventIconOptions(flowEvent);
     }
 
     public durationFlowEvent(startEventTime: string, endEventTime: string): string {
@@ -79,7 +80,7 @@ export class FlowDetailsHistoryTabComponent {
         return DatasetFlowDetailsHelpers.flowEventSubMessage(flowEvent, flowDetails);
     }
 
-    public dynamicImgSrc(status: FlowStatus): string {
-        return DatasetFlowDetailsHelpers.dynamicImgSrc(status);
+    public flowStatusAnimationSrc(status: FlowStatus): string {
+        return DatasetFlowDetailsHelpers.flowStatusAnimationSrc(status);
     }
 }

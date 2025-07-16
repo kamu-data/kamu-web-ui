@@ -11,13 +11,16 @@ import {
     eventFlowDescriptionsResultHistoryTab,
     flowEventIconOptionsResults,
     flowEventSubMessageResults,
+    flowOutcomeOptionsResults,
     mockFlowHistoryDataFragmentForDescriptions,
     mockFlowHistoryDataFragmentForIconOptions,
     mockFlowHistoryDataFragmentForSubMessages,
+    mockFlowHistoryDataOutcomeOptions,
     mockFlowSummaryDataFragmentIngestResult,
     mockHistoryFragmentWithFinishedStatus,
+    mockHistoryFragmentWithQueuedStatus,
 } from "./flow-details-history-tab.helpers.mock";
-import { FlowStatus } from "src/app/api/kamu.graphql.interface";
+import { FlowHistoryDataFragment, FlowStatus } from "src/app/api/kamu.graphql.interface";
 import {
     mockDatasetExecuteTransformFlowDescriptionUpdateResultUnknown,
     mockDatasetExecuteTransformFlowSummaryData,
@@ -44,37 +47,50 @@ describe("DatasetFlowDetailsHelpers", () => {
 
     mockFlowHistoryDataFragmentForIconOptions.forEach((item, index) => {
         it(`should check flow event icon and class with typename = ${item.__typename}`, () => {
-            expect(DatasetFlowDetailsHelpers.flowEventIconOptions(item, mockFlowSummaryDataFragments[0])).toEqual(
-                flowEventIconOptionsResults[index],
-            );
+            expect(DatasetFlowDetailsHelpers.flowEventIconOptions(item)).toEqual(flowEventIconOptionsResults[index]);
         });
     });
 
-    it(`should check flow event icon and class with typename = FlowEventTaskChanged and flow outcome = Success `, () => {
-        expect(
-            DatasetFlowDetailsHelpers.flowEventIconOptions(
-                mockHistoryFragmentWithFinishedStatus,
-                mockFlowSummaryDataFragments[0],
-            ),
-        ).toEqual(flowEventIconOptionsResults[6]);
+    it(`should check flow event icon and class with typename = FlowEventTaskChanged and task outcome = Success `, () => {
+        expect(DatasetFlowDetailsHelpers.flowEventIconOptions(mockHistoryFragmentWithFinishedStatus)).toEqual(
+            flowEventIconOptionsResults[7],
+        );
     });
 
-    it(`should check flow event icon and class with typename = FlowEventTaskChanged and flow outcome = Failed `, () => {
+    it(`should check flow event icon and class with typename = FlowEventTaskChanged and task outcome = Failed `, () => {
         expect(
-            DatasetFlowDetailsHelpers.flowEventIconOptions(
-                mockHistoryFragmentWithFinishedStatus,
-                mockFlowSummaryDataFragments[4],
-            ),
-        ).toEqual(flowEventIconOptionsResults[7]);
-    });
-
-    it(`should check flow event icon and class with typename = FlowEventTaskChanged and flow outcome = Aborted `, () => {
-        expect(
-            DatasetFlowDetailsHelpers.flowEventIconOptions(
-                mockHistoryFragmentWithFinishedStatus,
-                mockFlowSummaryDataFragments[3],
-            ),
+            DatasetFlowDetailsHelpers.flowEventIconOptions({
+                ...mockHistoryFragmentWithFinishedStatus,
+                task: {
+                    outcome: {
+                        __typename: "TaskOutcomeFailed",
+                        reason: {
+                            __typename: "TaskFailureReasonGeneral",
+                            message: "Failed due to some reason",
+                        },
+                    },
+                },
+            } as FlowHistoryDataFragment),
         ).toEqual(flowEventIconOptionsResults[8]);
+    });
+
+    it(`should check flow event icon and class with typename = FlowEventTaskChanged and task outcome = Cancelled `, () => {
+        expect(
+            DatasetFlowDetailsHelpers.flowEventIconOptions({
+                ...mockHistoryFragmentWithFinishedStatus,
+                task: {
+                    outcome: {
+                        __typename: "TaskOutcomeCancelled",
+                    },
+                },
+            } as FlowHistoryDataFragment),
+        ).toEqual(flowEventIconOptionsResults[9]);
+    });
+
+    it(`should check flow event icon and class with typename = FlowEventTaskChanged and in queued state `, () => {
+        expect(DatasetFlowDetailsHelpers.flowEventIconOptions(mockHistoryFragmentWithQueuedStatus)).toEqual(
+            flowEventIconOptionsResults[10],
+        );
     });
 
     mockFlowHistoryDataFragmentForSubMessages.forEach((item, index) => {
@@ -88,10 +104,21 @@ describe("DatasetFlowDetailsHelpers", () => {
     it(`should check flow event submessage with typename = FlowEventTaskChanged and flow outcome = Failed`, () => {
         expect(
             DatasetFlowDetailsHelpers.flowEventSubMessage(
-                mockHistoryFragmentWithFinishedStatus,
+                {
+                    ...mockHistoryFragmentWithFinishedStatus,
+                    task: {
+                        outcome: {
+                            __typename: "TaskOutcomeFailed",
+                            reason: {
+                                __typename: "TaskFailureReasonGeneral",
+                                message: "Failed due to some reason",
+                            },
+                        },
+                    },
+                } as FlowHistoryDataFragment,
                 mockFlowSummaryDataFragments[4],
             ),
-        ).toEqual(flowEventSubMessageResults[11]);
+        ).toEqual(flowEventSubMessageResults[12]);
     });
 
     it(`should check flow event submessage with typename = FlowEventTaskChanged and flow outcome = Success (ingestResult=null)`, () => {
@@ -100,7 +127,7 @@ describe("DatasetFlowDetailsHelpers", () => {
                 mockHistoryFragmentWithFinishedStatus,
                 mockFlowSummaryDataFragments[0],
             ),
-        ).toEqual(flowEventSubMessageResults[12]);
+        ).toEqual(flowEventSubMessageResults[13]);
     });
 
     it(`should check flow event submessage with typename = FlowEventTaskChanged and flow outcome = Success (ingestResult!==null)`, () => {
@@ -109,7 +136,7 @@ describe("DatasetFlowDetailsHelpers", () => {
                 mockHistoryFragmentWithFinishedStatus,
                 mockFlowSummaryDataFragmentIngestResult,
             ),
-        ).toEqual(flowEventSubMessageResults[13]);
+        ).toEqual(flowEventSubMessageResults[14]);
     });
 
     it(`should check flow event submessage with typename = FlowEventTaskChanged and flow outcome = Success (ExecuteTransform)`, () => {
@@ -118,7 +145,7 @@ describe("DatasetFlowDetailsHelpers", () => {
                 mockHistoryFragmentWithFinishedStatus,
                 mockDatasetExecuteTransformFlowSummaryData,
             ),
-        ).toEqual(flowEventSubMessageResults[14]);
+        ).toEqual(flowEventSubMessageResults[15]);
     });
 
     it(`should check flow event submessage with typename = FlowDescriptionUpdateResultUnknown and flow outcome = Success (ExecuteTransform)`, () => {
@@ -139,8 +166,23 @@ describe("DatasetFlowDetailsHelpers", () => {
         ).toEqual(flowEventSubMessageResults[15]);
     });
 
+    it(`should check flow event submessage with typename = FlowEventTaskChanged and retry scheduled`, () => {
+        expect(
+            DatasetFlowDetailsHelpers.flowEventSubMessage(
+                mockFlowHistoryDataFragmentForDescriptions[8],
+                mockFlowSummaryDataFragments[5],
+            ),
+        ).toEqual(flowEventSubMessageResults[17]);
+    });
+
     it(`should check don't show dynamic image`, () => {
         const expectedResult = "";
-        expect(DatasetFlowDetailsHelpers.dynamicImgSrc(FlowStatus.Finished)).toEqual(expectedResult);
+        expect(DatasetFlowDetailsHelpers.flowStatusAnimationSrc(FlowStatus.Finished)).toEqual(expectedResult);
+    });
+
+    mockFlowHistoryDataOutcomeOptions.forEach((item, index) => {
+        it(`should check flow outcome options with typename = ${item.__typename}`, () => {
+            expect(DatasetFlowDetailsHelpers.flowOutcomeOptions(item)).toEqual(flowOutcomeOptionsResults[index]);
+        });
     });
 });

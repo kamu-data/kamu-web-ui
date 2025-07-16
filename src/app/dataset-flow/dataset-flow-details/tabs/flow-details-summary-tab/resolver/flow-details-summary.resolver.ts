@@ -9,7 +9,9 @@ import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 import RoutingResolvers from "../../../../../common/resolvers/routing-resolvers";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 
-export const flowDetailsSummaryResolverFn: ResolveFn<DatasetFlowByIdResponse> = (route: ActivatedRouteSnapshot) => {
-    const flowByIdResponse = route.parent?.data[RoutingResolvers.FLOW_DETAILS_KEY] as DatasetFlowByIdResponse;
-    return flowByIdResponse;
+export const flowDetailsSummaryResolverFn: ResolveFn<DatasetFlowByIdResponse | null> = (
+    route: ActivatedRouteSnapshot,
+) => {
+    const flowByIdResponse = route.parent?.data?.[RoutingResolvers.FLOW_DETAILS_KEY] as DatasetFlowByIdResponse;
+    return flowByIdResponse ?? null;
 };

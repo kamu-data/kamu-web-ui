@@ -7,6 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ReturnToCliComponent } from "./return-to-cli.component";
+import { Apollo } from "apollo-angular";
 
 describe("ReturnToCliComponent", () => {
     let component: ReturnToCliComponent;
@@ -15,6 +16,7 @@ describe("ReturnToCliComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [ReturnToCliComponent],
+            providers: [Apollo],
         }).compileComponents();
 
         fixture = TestBed.createComponent(ReturnToCliComponent);

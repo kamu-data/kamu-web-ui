@@ -8,7 +8,7 @@
 import {
     AccountProvider,
     AccountType,
-    DatasetFlowType,
+    FlowActivationCauseDatasetUpdateSource,
     FlowHistoryDataFragment,
     FlowOutcomeDataFragment,
     FlowStatus,
@@ -141,10 +141,9 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         eventId: "5",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         activationCause: {
-            __typename: "FlowActivationCauseInputDatasetFlow",
-            flowId: "1",
-            flowType: DatasetFlowType.ExecuteTransform,
+            __typename: "FlowActivationCauseDatasetUpdate",
             dataset: mockDatasetSearchResult.datasets[0],
+            source: FlowActivationCauseDatasetUpdateSource.UpstreamFlow,
         },
     },
     {
@@ -152,7 +151,9 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         eventId: "6",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         activationCause: {
-            __typename: "FlowActivationCausePush",
+            __typename: "FlowActivationCauseDatasetUpdate",
+            dataset: mockDatasetSearchResult.datasets[0],
+            source: FlowActivationCauseDatasetUpdateSource.HttpIngest,
         },
     },
     {
@@ -224,8 +225,8 @@ export const eventFlowDescriptionsResultHistoryTab: string[] = [
     "Reset to seed task running",
     "Reset to seed task finished successfully",
     "Additionally triggered manually",
-    "Additionally triggered after input dataset event",
-    "Additionally triggered after push event",
+    "Additionally triggered after upstream flow event",
+    "Additionally triggered after HTTP push ingest event",
     "Waiting for scheduled execution",
     "Waiting for free executor",
     "Waiting for batching condition",
@@ -264,7 +265,9 @@ export const mockFlowHistoryDataFragmentForIconOptions: FlowHistoryDataFragment[
         eventId: "3",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         activationCause: {
-            __typename: "FlowActivationCausePush",
+            __typename: "FlowActivationCauseDatasetUpdate",
+            dataset: mockDatasetSearchResult.datasets[0],
+            source: FlowActivationCauseDatasetUpdateSource.SmartProtocolPush,
         },
     },
     {
@@ -333,8 +336,9 @@ export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[
         eventId: "0",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         activationCause: {
-            __typename: "FlowActivationCauseInputDatasetFlow",
+            __typename: "FlowActivationCauseDatasetUpdate",
             dataset: mockDatasetSearchResult.datasets[0],
+            source: FlowActivationCauseDatasetUpdateSource.UpstreamFlow,
         },
     },
     {
@@ -379,7 +383,7 @@ export const flowEventSubMessageResults: string[] = [
     "",
     "",
     "Task #1",
-    "",
+    "Input dataset: kamu/alberta.case-details",
     "Wake up time at Feb 12th 2024 8:22:30 PM GMT+02:00, shifted from 8:22:29 PM",
     "Activating at Mar 13th 2024 4:54:30 PM GMT+02:00",
     "Modified by ingest rule",

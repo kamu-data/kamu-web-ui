@@ -17,13 +17,11 @@ fragment FlowHistoryData on FlowEvent {
           ...Account
         }
       }
-      ... on FlowActivationCausePush {
-        __typename
-      }
-      ... on FlowActivationCauseInputDatasetFlow {
+      ... on FlowActivationCauseDatasetUpdate {
         dataset {
           ...DatasetBasics
         }
+        source
       }
     }
   }
@@ -102,15 +100,11 @@ fragment FlowHistoryData on FlowEvent {
           ...Account
         }
       }
-      ... on FlowActivationCausePush {
-        __typename
-      }
-      ... on FlowActivationCauseInputDatasetFlow {
+      ... on FlowActivationCauseDatasetUpdate {
         dataset {
           ...DatasetBasics
         }
-        flowId
-        flowType
+        source
       }
     }
   }

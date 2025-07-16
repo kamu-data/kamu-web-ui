@@ -1968,30 +1968,29 @@ export type FlowAbortedResult = {
 
 export type FlowActivationCause =
     | FlowActivationCauseAutoPolling
-    | FlowActivationCauseInputDatasetFlow
-    | FlowActivationCauseManual
-    | FlowActivationCausePush;
+    | FlowActivationCauseDatasetUpdate
+    | FlowActivationCauseManual;
 
 export type FlowActivationCauseAutoPolling = {
     __typename?: "FlowActivationCauseAutoPolling";
     dummy: Scalars["Boolean"];
 };
 
-export type FlowActivationCauseInputDatasetFlow = {
-    __typename?: "FlowActivationCauseInputDatasetFlow";
+export type FlowActivationCauseDatasetUpdate = {
+    __typename?: "FlowActivationCauseDatasetUpdate";
     dataset: Dataset;
-    flowId: Scalars["FlowID"];
-    flowType: DatasetFlowType;
+    source: FlowActivationCauseDatasetUpdateSource;
 };
+
+export enum FlowActivationCauseDatasetUpdateSource {
+    HttpIngest = "HTTP_INGEST",
+    SmartProtocolPush = "SMART_PROTOCOL_PUSH",
+    UpstreamFlow = "UPSTREAM_FLOW",
+}
 
 export type FlowActivationCauseManual = {
     __typename?: "FlowActivationCauseManual";
     initiator: Account;
-};
-
-export type FlowActivationCausePush = {
-    __typename?: "FlowActivationCausePush";
-    dummy: Scalars["Boolean"];
 };
 
 export type FlowConfigCompactionInput =
@@ -5542,13 +5541,11 @@ type FlowHistoryData_FlowEventActivationCauseAdded_Fragment = {
     activationCause:
         | { __typename: "FlowActivationCauseAutoPolling" }
         | {
-              __typename: "FlowActivationCauseInputDatasetFlow";
-              flowId: string;
-              flowType: DatasetFlowType;
+              __typename: "FlowActivationCauseDatasetUpdate";
+              source: FlowActivationCauseDatasetUpdateSource;
               dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
           }
-        | { __typename: "FlowActivationCauseManual"; initiator: { __typename?: "Account" } & AccountFragment }
-        | { __typename: "FlowActivationCausePush" };
+        | { __typename: "FlowActivationCauseManual"; initiator: { __typename?: "Account" } & AccountFragment };
 };
 
 type FlowHistoryData_FlowEventInitiated_Fragment = {
@@ -5558,11 +5555,11 @@ type FlowHistoryData_FlowEventInitiated_Fragment = {
     activationCause:
         | { __typename: "FlowActivationCauseAutoPolling" }
         | {
-              __typename: "FlowActivationCauseInputDatasetFlow";
+              __typename: "FlowActivationCauseDatasetUpdate";
+              source: FlowActivationCauseDatasetUpdateSource;
               dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
           }
-        | { __typename: "FlowActivationCauseManual"; initiator: { __typename?: "Account" } & AccountFragment }
-        | { __typename: "FlowActivationCausePush" };
+        | { __typename: "FlowActivationCauseManual"; initiator: { __typename?: "Account" } & AccountFragment };
 };
 
 type FlowHistoryData_FlowEventScheduledForActivation_Fragment = {
@@ -7335,13 +7332,11 @@ export const FlowHistoryDataFragmentDoc = gql`
                         ...Account
                     }
                 }
-                ... on FlowActivationCausePush {
-                    __typename
-                }
-                ... on FlowActivationCauseInputDatasetFlow {
+                ... on FlowActivationCauseDatasetUpdate {
                     dataset {
                         ...DatasetBasics
                     }
+                    source
                 }
             }
         }
@@ -7412,15 +7407,11 @@ export const FlowHistoryDataFragmentDoc = gql`
                         ...Account
                     }
                 }
-                ... on FlowActivationCausePush {
-                    __typename
-                }
-                ... on FlowActivationCauseInputDatasetFlow {
+                ... on FlowActivationCauseDatasetUpdate {
                     dataset {
                         ...DatasetBasics
                     }
-                    flowId
-                    flowType
+                    source
                 }
             }
         }

@@ -20,6 +20,7 @@ import {
     FlowActivationCause,
     TaskStatus,
     FlowEventActivationCauseAdded,
+    FlowActivationCauseDatasetUpdateSource,
 } from "src/app/api/kamu.graphql.interface";
 import { pluralize } from "src/app/common/helpers/app.helpers";
 import { DataHelpers } from "src/app/common/helpers/data.helpers";
@@ -301,10 +302,18 @@ export class DatasetFlowDetailsHelpers {
                 return "automatically";
             case "FlowActivationCauseManual":
                 return "manually";
-            case "FlowActivationCausePush":
-                return "after push event";
-            case "FlowActivationCauseInputDatasetFlow":
-                return "after input dataset event";
+            case "FlowActivationCauseDatasetUpdate":
+                switch (activationCause.source) {
+                    case FlowActivationCauseDatasetUpdateSource.UpstreamFlow:
+                        return "after upstream flow event";
+                    case FlowActivationCauseDatasetUpdateSource.HttpIngest:
+                        return "after HTTP push ingest event";
+                    case FlowActivationCauseDatasetUpdateSource.SmartProtocolPush:
+                        return "after smart protocol push event";
+                    /* istanbul ignore next */
+                    default:
+                        throw new Error("Unknown activation cause data source");
+                }
             /* istanbul ignore next */
             default:
                 throw new Error("Unknown activation cause typename");
@@ -317,9 +326,7 @@ export class DatasetFlowDetailsHelpers {
                 return "";
             case "FlowActivationCauseManual":
                 return `Triggered by ${activationCause.initiator.accountName}`;
-            case "FlowActivationCausePush":
-                return "";
-            case "FlowActivationCauseInputDatasetFlow":
+            case "FlowActivationCauseDatasetUpdate":
                 return `Input dataset: ${activationCause.dataset.owner.accountName}/${activationCause.dataset.name}`;
             /* istanbul ignore next */
             default:

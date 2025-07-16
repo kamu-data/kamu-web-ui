@@ -240,13 +240,15 @@ export class DatasetFlowDetailsHelpers {
                                         }
 
                                     case "FlowDescriptionDatasetReset":
-                                        switch (flowDetails.description.__typename) {
-                                            case "FlowDescriptionDatasetReset":
-                                                return "All dataset history has been cleared.";
-                                            /* istanbul ignore next */
-                                            default:
-                                                return "Unknown reset result typename";
-                                        }
+                                        return "All dataset history has been cleared.";
+
+                                    case "FlowDescriptionWebhookDeliver":
+                                        return (
+                                            `Delivered message ${flowDetails.description.eventType} ` +
+                                            (flowDetails.description.label.length > 0
+                                                ? `via subscription "${flowDetails.description.label}"`
+                                                : `to ${flowDetails.description.targetUrl}`)
+                                        );
 
                                     // TODO
                                     //  - GC

@@ -205,7 +205,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         if (!node.retryPolicy) {
             throw new Error("Retry policy is undefined, but expected");
         }
-        return FlowTableHelpers.retriesBlockText(node.status, node.tasks.length, node.retryPolicy.maxAttempts);
+        return FlowTableHelpers.retriesBlockText(node.status, node.taskIds.length, node.retryPolicy.maxAttempts);
     }
 
     public datasetById(datasetId: string): Dataset {

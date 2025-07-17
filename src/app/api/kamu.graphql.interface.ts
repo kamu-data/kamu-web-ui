@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "apollo-angular";
+import { gql } from "@apollo/client/core";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -1953,8 +1953,8 @@ export type Flow = {
     startCondition?: Maybe<FlowStartCondition>;
     /** Status of the flow */
     status: FlowStatus;
-    /** Associated tasks */
-    tasks: Array<Task>;
+    /** IDs of associated tasks */
+    taskIds: Array<Scalars["TaskID"]>;
     /** Timing records associated with the flow lifecycle */
     timing: FlowTimingRecords;
 };
@@ -5511,7 +5511,6 @@ export type FlowConnectionDataFragment = {
     totalCount: number;
     nodes: Array<{ __typename?: "Flow" } & FlowSummaryDataFragment>;
     pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
-    edges: Array<{ __typename?: "FlowEdge"; node: { __typename?: "Flow" } & FlowSummaryDataFragment }>;
 };
 
 type FlowHistoryData_FlowConfigSnapshotModified_Fragment = {
@@ -5667,6 +5666,7 @@ export type FlowSummaryDataFragment = {
     flowId: string;
     datasetId?: string | null;
     status: FlowStatus;
+    taskIds: Array<string>;
     description:
         | {
               __typename?: "FlowDescriptionDatasetExecuteTransform";
@@ -5780,7 +5780,6 @@ export type FlowSummaryDataFragment = {
         | { __typename?: "FlowConfigRuleIngest"; fetchUncacheable: boolean }
         | { __typename?: "FlowConfigRuleReset" }
         | null;
-    tasks: Array<{ __typename?: "Task"; taskId: string }>;
     retryPolicy?: { __typename?: "FlowRetryPolicy"; maxAttempts: number } | null;
 };
 
@@ -7270,9 +7269,7 @@ export const FlowSummaryDataFragmentDoc = gql`
                 }
             }
         }
-        tasks {
-            taskId
-        }
+        taskIds
         retryPolicy {
             maxAttempts
         }
@@ -7300,11 +7297,6 @@ export const FlowConnectionDataFragmentDoc = gql`
         totalCount
         pageInfo {
             ...DatasetPageInfo
-        }
-        edges {
-            node {
-                ...FlowSummaryData
-            }
         }
     }
     ${FlowSummaryDataFragmentDoc}

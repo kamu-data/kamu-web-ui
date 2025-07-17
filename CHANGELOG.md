@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.52.1] - 2025-07-17
 ### Fixed
 - Hotfix (performance): flow listings should not attempt loading full tasks
+- Flow table: "completed in" => "total duration", to better reflect the value
 
 ## [0.52.0] - 2025-07-16
 ### Added

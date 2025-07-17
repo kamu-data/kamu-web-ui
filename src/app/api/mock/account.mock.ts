@@ -88,7 +88,7 @@ export const mockAccountListFlowsQuery: AccountListFlowsQuery = {
                                 },
                                 startCondition: null,
                                 retryPolicy: null,
-                                tasks: [],
+                                taskIds: [],
                                 __typename: "Flow",
                             },
                         ],
@@ -100,48 +100,6 @@ export const mockAccountListFlowsQuery: AccountListFlowsQuery = {
                             totalPages: 1,
                             __typename: "PageBasedInfo",
                         },
-                        edges: [
-                            {
-                                node: {
-                                    datasetId:
-                                        "did:odf:fed014aee1c33d51f36c21fab6f13444bdce6fe3d5762cbb889adead63498f57f4168",
-                                    description: {
-                                        ingestResult: null,
-                                        pollingSource: mockFlowPollingSourceFragmentFetchUrl,
-                                        __typename: "FlowDescriptionDatasetPollingIngest",
-                                    },
-                                    flowId: "0",
-                                    status: FlowStatus.Finished,
-                                    initiator: {
-                                        id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                                        accountName: "kamu",
-                                        displayName: "kamu",
-                                        accountType: AccountType.User,
-                                        avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                                        isAdmin: true,
-                                        __typename: "Account",
-                                        accountProvider: AccountProvider.Password,
-                                    },
-                                    outcome: {
-                                        message: "SUCCESS",
-                                        __typename: "FlowSuccessResult",
-                                    },
-                                    timing: {
-                                        initiatedAt: "2024-06-10T07:00:30+00:00",
-                                        scheduledAt: "2024-06-10T07:00:31+00:00",
-                                        awaitingExecutorSince: "2024-06-10T07:00:31+00:00",
-                                        runningSince: "2024-06-10T07:00:31.306400327+00:00",
-                                        lastAttemptFinishedAt: "2024-06-10T07:00:31.337328+00:00",
-                                        __typename: "FlowTimingRecords",
-                                    },
-                                    startCondition: null,
-                                    retryPolicy: null,
-                                    tasks: [],
-                                    __typename: "Flow",
-                                },
-                                __typename: "FlowEdge",
-                            },
-                        ],
                         __typename: "FlowConnection",
                     },
                     tiles: {

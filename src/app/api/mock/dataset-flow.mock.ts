@@ -378,7 +378,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             __typename: "FlowTimingRecords",
         },
         retryPolicy: null,
-        tasks: [],
+        taskIds: [],
         __typename: "Flow",
     },
     {
@@ -401,7 +401,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             __typename: "FlowTimingRecords",
         },
         retryPolicy: null,
-        tasks: [],
+        taskIds: [],
         __typename: "Flow",
     },
     {
@@ -427,7 +427,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             __typename: "FlowTimingRecords",
         },
         retryPolicy: null,
-        tasks: [],
+        taskIds: [],
         __typename: "Flow",
     },
     {
@@ -452,7 +452,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             __typename: "FlowTimingRecords",
         },
         retryPolicy: null,
-        tasks: [],
+        taskIds: [],
         __typename: "Flow",
     },
     {
@@ -486,7 +486,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             __typename: "FlowTimingRecords",
         },
         retryPolicy: null,
-        tasks: [],
+        taskIds: [],
         __typename: "Flow",
     },
     {
@@ -512,14 +512,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             __typename: "FlowRetryPolicy",
             maxAttempts: 3,
         },
-        tasks: [
-            {
-                taskId: "0",
-            },
-            {
-                taskId: "1",
-            },
-        ],
+        taskIds: ["0", "1"],
         __typename: "Flow",
     },
 ];
@@ -745,7 +738,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     __typename: "FlowConfigRuleIngest",
                                 },
                                 retryPolicy: null,
-                                tasks: [],
+                                taskIds: [],
                                 __typename: "Flow",
                             },
                             {
@@ -780,7 +773,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     __typename: "FlowConfigRuleIngest",
                                 },
                                 retryPolicy: null,
-                                tasks: [],
+                                taskIds: [],
                                 __typename: "Flow",
                             },
                         ],
@@ -792,95 +785,6 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                             totalPages: 1,
                             __typename: "PageBasedInfo",
                         },
-                        edges: [
-                            {
-                                node: {
-                                    datasetId:
-                                        "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
-                                    description: {
-                                        ingestResult: {
-                                            numBlocks: 2,
-                                            numRecords: 203,
-                                            updatedWatermark: "2024-08-07T00:56:35+00:00",
-                                            __typename: "FlowDescriptionUpdateResultSuccess",
-                                        },
-                                        pollingSource: mockFlowPollingSourceFragmentFetchUrl,
-                                        __typename: "FlowDescriptionDatasetPollingIngest",
-                                    },
-                                    flowId: "3",
-                                    status: FlowStatus.Finished,
-                                    initiator: {
-                                        id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                                        accountName: "kamu",
-                                        displayName: "kamu",
-                                        accountType: AccountType.User,
-                                        avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                                        isAdmin: true,
-                                        __typename: "Account",
-                                        accountProvider: AccountProvider.Password,
-                                    },
-                                    outcome: {
-                                        message: "SUCCESS",
-                                        __typename: "FlowSuccessResult",
-                                    },
-                                    timing: {
-                                        scheduledAt: "2024-08-21T08:46:19.426925618+00:00",
-                                        awaitingExecutorSince: "2024-08-21T08:46:19.426925618+00:00",
-                                        runningSince: "2024-08-21T08:46:20.507478673+00:00",
-                                        lastAttemptFinishedAt: "2024-08-21T08:46:22.636437316+00:00",
-                                        initiatedAt: "2024-08-21T08:46:18.426925618+00:00",
-                                        __typename: "FlowTimingRecords",
-                                    },
-                                    startCondition: null,
-                                    configSnapshot: {
-                                        fetchUncacheable: false,
-                                        __typename: "FlowConfigRuleIngest",
-                                    },
-                                    retryPolicy: null,
-                                    tasks: [],
-                                    __typename: "Flow",
-                                },
-                                __typename: "FlowEdge",
-                            },
-                            {
-                                node: {
-                                    datasetId:
-                                        "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
-                                    description: {
-                                        ingestResult: null,
-                                        pollingSource: mockFlowPollingSourceFragmentFetchUrl,
-                                        __typename: "FlowDescriptionDatasetPollingIngest",
-                                    },
-                                    flowId: "2",
-                                    status: FlowStatus.Finished,
-                                    initiator: null,
-                                    outcome: {
-                                        reason: {
-                                            message: "FAILED",
-                                            __typename: "TaskFailureReasonGeneral",
-                                        },
-                                        __typename: "FlowFailedError",
-                                    },
-                                    timing: {
-                                        scheduledAt: "2024-08-21T08:45:17+00:00",
-                                        awaitingExecutorSince: "2024-08-21T08:45:17+00:00",
-                                        runningSince: "2024-08-21T08:45:18.722052534+00:00",
-                                        lastAttemptFinishedAt: null,
-                                        initiatedAt: "2024-08-21T08:45:16+00:00",
-                                        __typename: "FlowTimingRecords",
-                                    },
-                                    startCondition: null,
-                                    configSnapshot: {
-                                        fetchUncacheable: false,
-                                        __typename: "FlowConfigRuleIngest",
-                                    },
-                                    retryPolicy: null,
-                                    tasks: [],
-                                    __typename: "Flow",
-                                },
-                                __typename: "FlowEdge",
-                            },
-                        ],
                         __typename: "FlowConnection",
                     },
                     tiles: {
@@ -989,7 +893,7 @@ export const mockDatasetTriggerIngestFlowMutation: DatasetTriggerIngestFlowMutat
                             },
                             startCondition: null,
                             retryPolicy: null,
-                            tasks: [],
+                            taskIds: [],
                             __typename: "Flow",
                         },
                         message: "Success",
@@ -1068,7 +972,7 @@ export const mockDatasetTriggerTransformFlowMutation: DatasetTriggerTransformFlo
                             },
                             startCondition: null,
                             retryPolicy: null,
-                            tasks: [],
+                            taskIds: [],
                             __typename: "Flow",
                         },
                         message: "Success",
@@ -1147,7 +1051,7 @@ export const mockDatasetTriggerCompactionFlowMutation: DatasetTriggerCompactionF
                             },
                             startCondition: null,
                             retryPolicy: null,
-                            tasks: [],
+                            taskIds: [],
                             __typename: "Flow",
                         },
                         message: "Success",
@@ -1224,7 +1128,7 @@ export const mockDatasetTriggerResetFlowMutation: DatasetTriggerResetFlowMutatio
                             },
                             startCondition: null,
                             retryPolicy: null,
-                            tasks: [],
+                            taskIds: [],
                             __typename: "Flow",
                         },
                         message: "Success",
@@ -1294,7 +1198,7 @@ export const mockCancelScheduledTasksMutationSuccess: CancelScheduledTasksMutati
                             },
                             startCondition: null,
                             retryPolicy: null,
-                            tasks: [],
+                            taskIds: [],
                             __typename: "Flow",
                         },
                         __typename: "CancelScheduledTasksSuccess",
@@ -1425,7 +1329,7 @@ export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
                             },
                             startCondition: null,
                             retryPolicy: null,
-                            tasks: [],
+                            taskIds: [],
                             __typename: "Flow",
                             history: [
                                 {

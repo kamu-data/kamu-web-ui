@@ -95,7 +95,7 @@ describe("FlowDetailsSummaryTabComponent", () => {
         it("should render retry policy section when retryPolicy is present", async () => {
             await setupComponent({
                 retryPolicy: { maxAttempts: 3 },
-                tasks: [{ taskId: "task-1" }, { taskId: "task-2" }], // 2 tasks = 1 retry attempt
+                taskIds: ["task-1", "task-2"], // 2 tasks = 1 retry attempt
             });
 
             expect(await harness.hasRetryPolicySection()).toBe(true);

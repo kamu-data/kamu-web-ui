@@ -97,6 +97,7 @@ import { AccountWhitelistNotFoundComponent } from "./common/components/account-w
 import { Provider } from "@angular/core";
 import { forbidAnonymousAccessGuardFn } from "./common/guards/forbid-anonymous-access.guard";
 import { AppConfigService } from "./app-config.service";
+import { accessTokenExpiredGuardFn } from "./common/guards/access-token-expired.guard";
 
 export const PUBLIC_ROUTES: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -557,16 +558,16 @@ export const provideConditionalGuardedRoutes = (): Provider => ({
     provide: ROUTES,
     multi: true,
     useFactory: (appConfigService: AppConfigService) => {
-        return appConfigService.allowAnonymous
-            ? ANONYMOUS_GUARDED_ROUTES
-            : [
-                  {
-                      path: "",
-                      canActivate: [forbidAnonymousAccessGuardFn],
-                      children: ANONYMOUS_GUARDED_ROUTES,
-                      runGuardsAndResolvers: "always",
-                  },
-              ];
+        return [
+            {
+                path: "",
+                canActivate: appConfigService.allowAnonymous
+                    ? [accessTokenExpiredGuardFn]
+                    : [forbidAnonymousAccessGuardFn, accessTokenExpiredGuardFn],
+                children: ANONYMOUS_GUARDED_ROUTES,
+                runGuardsAndResolvers: "always",
+            },
+        ];
     },
     deps: [AppConfigService],
 });

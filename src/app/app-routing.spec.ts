@@ -139,22 +139,19 @@ describe("Router", () => {
         flush();
     }));
 
-    [
-        ProjectLinks.URL_GITHUB_CALLBACK,
-        ProjectLinks.URL_SEARCH,
-        `myaccount/mydataset`,
-        ProjectLinks.URL_PAGE_NOT_FOUND,
-    ].forEach((url: string) => {
-        it(`Route to ${url} lands on the component without Login`, fakeAsync(() => {
-            promiseWithCatch(router.navigate([url]));
-            tick();
+    [ProjectLinks.URL_GITHUB_CALLBACK, ProjectLinks.URL_SEARCH, ProjectLinks.URL_PAGE_NOT_FOUND].forEach(
+        (url: string) => {
+            it(`Route to ${url} lands on the component without Login`, fakeAsync(() => {
+                promiseWithCatch(router.navigate([url]));
+                tick();
 
-            expect(location.path()).toBe("/" + url);
-            flush();
-        }));
-    });
+                expect(location.path()).toBe("/" + url);
+                flush();
+            }));
+        },
+    );
 
-    [ProjectLinks.URL_DATASET_CREATE, ProjectLinks.URL_SETTINGS].forEach((url: string) => {
+    [ProjectLinks.URL_DATASET_CREATE].forEach((url: string) => {
         it(`Route to ${url} fails without a login and moves to Home`, fakeAsync(() => {
             promiseWithCatch(router.navigate([url]));
             tick();

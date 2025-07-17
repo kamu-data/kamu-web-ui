@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Added
+- Added FormValidationErrorsDirective for all form errors
+
 ## [0.52.1] - 2025-07-17
 ### Fixed
 - Hotfix (performance): flow listings should not attempt loading full tasks
@@ -44,7 +48,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Adjustments for API changes in flow system
 - SetTransform event: improved search
 - Migrated to standalone components
-
 
 ## [0.50.0] - 2025-06-19
 ### Added

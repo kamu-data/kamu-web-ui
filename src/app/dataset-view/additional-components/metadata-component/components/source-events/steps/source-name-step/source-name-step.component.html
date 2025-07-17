@@ -11,8 +11,5 @@
             [requiredField]="true"
             [tooltip]="'Source name'"
         />
-        <div class="mt-1" *ngIf="form?.get('sourceName')?.errors?.noneOf">
-            <small class="text-danger ps-2"> {{ "Name already exists" }}</small>
-        </div>
     </div>
 </div>

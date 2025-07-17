@@ -13,7 +13,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { everyTimeMapperValidators } from "src/app/common/helpers/data.helpers";
 import { MaybeNull } from "src/app/interface/app.types";
 import { TimeDeltaFormType } from "./time-delta-form.value";
-import { NgIf } from "@angular/common";
+import { FormValidationErrorsDirective } from "../../directives/form-validation-errors.directive";
 
 @Component({
     selector: "app-time-delta-form",
@@ -23,9 +23,10 @@ import { NgIf } from "@angular/common";
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        NgIf,
         ReactiveFormsModule,
+
         //-----//
+        FormValidationErrorsDirective,
     ],
 })
 export class TimeDeltaFormComponent extends BaseComponent implements OnInit {

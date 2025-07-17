@@ -16,17 +16,17 @@
                 <div>
                     <label class="form-label"> Command <span class="text-danger">*</span> </label>
                 </div>
-                <input class="form-control" formControlName="command" required />
+                <input class="form-control" formControlName="command" required #command />
 
                 <div
-                    *ngIf="
-                        sectionForm.controls[i].get('command')?.errors?.required &&
-                        sectionForm.controls[i].get('command')?.touched
-                    "
-                    class="mt-1"
-                >
-                    <span class="text-danger fs-12" attr.data-test-id="error-{{ i }}-required"> Field is required</span>
-                </div>
+                    class="text-danger fs-12"
+                    [input]="command"
+                    [fieldLabel]="'Command'"
+                    [fieldControl]="sectionForm.controls[i].get('command')"
+                    [appFieldError]="['required']"
+                    [group]="sectionForm"
+                ></div>
+
                 <div class="buttons-section d-flex flex-row">
                     <button
                         class="no-button"

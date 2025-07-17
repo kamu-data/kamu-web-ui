@@ -13,6 +13,8 @@ import { DatasetSchema } from "../../interface/dataset.interface";
 import AppValues from "../values/app.values";
 import { format, isSameDay, subDays } from "date-fns";
 import { HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
+import { jwtDecode } from "jwt-decode";
+import { JwtPayload } from "../guards/access-token-expired.types";
 
 export function requireValue<T>(input: MaybeNull<T>) {
     if (input === null) throw Error("value is required!");
@@ -220,3 +222,12 @@ export const HIGHLIGHT_OPTIONS_PROVIDER = {
         },
     },
 };
+
+export function isAccessTokenExpired(accessToken: string): boolean {
+    const decoded = jwtDecode<JwtPayload>(accessToken);
+    const exp = decoded.exp;
+    const expirationDate = new Date(exp * 1000);
+    const now = new Date();
+    const isExpired = now.getTime() > expirationDate.getTime();
+    return isExpired;
+}

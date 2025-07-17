@@ -12,6 +12,7 @@ import AppValues from "../common/values/app.values";
 export class LocalStorageService {
     public get accessToken(): string | null {
         return localStorage.getItem(AppValues.LOCAL_STORAGE_ACCESS_TOKEN);
+        //return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkRtaXRyaXkiLCJpYXQiOjE2MDAwMDAwMDAsImV4cCI6MTYwMDAwMDAwMX0.BvM9I0B-_j0XkXnWw9g8kC09fgzFg7UD2CQlj4L5LPk";
     }
 
     public get loginDeviceCode(): string | null {

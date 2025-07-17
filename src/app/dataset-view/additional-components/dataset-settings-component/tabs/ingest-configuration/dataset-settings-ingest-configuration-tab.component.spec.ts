@@ -300,6 +300,6 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
 
         // Verify validation errors are null
         const minDelayValidationError = await flowRetryPolicyFormHarness.getMinDelayValidationError();
-        expect(minDelayValidationError).toBe("");
+        expect(minDelayValidationError).toBeNull();
     });
 });

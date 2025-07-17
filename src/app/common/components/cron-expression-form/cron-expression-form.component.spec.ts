@@ -124,7 +124,7 @@ describe("CronExpressionFormComponent", () => {
         expect(isUntouched).toBeFalse();
 
         const errorMessage = await cronHarness.getErrorMessage();
-        expect(errorMessage).toEqual("");
+        expect(errorMessage).toBeNull();
 
         const nextTime = await cronHarness.getNextTime();
         expect(nextTime).toContain(component.NEXT_TIME_LABEL);
@@ -138,7 +138,7 @@ describe("CronExpressionFormComponent", () => {
         expect(isUntouched).toBeTrue();
 
         const errorMessage = await cronHarness.getErrorMessage();
-        expect(errorMessage).toEqual("");
+        expect(errorMessage).toBeNull();
 
         const nextTime = await cronHarness.getNextTime();
         expect(nextTime).toBeNull();

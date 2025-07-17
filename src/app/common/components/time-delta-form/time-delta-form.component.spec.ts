@@ -110,7 +110,7 @@ describe("TimeDeltaFormComponent", () => {
         expect(isUntouched).toBeFalse();
 
         const errorMessage = await timeDeltaHarness.getErrorMessage();
-        expect(errorMessage).toBe("");
+        expect(errorMessage).toBeNull();
     });
 
     it("should not display error message if every input was not touched even though it is invalid", async () => {
@@ -121,6 +121,6 @@ describe("TimeDeltaFormComponent", () => {
         expect(isUntouched).toBeTrue();
 
         const errorMessage = await timeDeltaHarness.getErrorMessage();
-        expect(errorMessage).toBe("");
+        expect(errorMessage).toBeNull();
     });
 });

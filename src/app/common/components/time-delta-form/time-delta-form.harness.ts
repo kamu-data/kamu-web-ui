@@ -73,7 +73,8 @@ export class TimeDeltaFormHarness extends ComponentHarness {
     public async getErrorMessage(): Promise<string | null> {
         const errorElement = await this.locatorError();
         if (errorElement) {
-            return await errorElement.text();
+            const message = await errorElement.text();
+            return message === "" ? null : message;
         }
 
         return null;

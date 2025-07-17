@@ -162,9 +162,7 @@ fragment FlowSummaryData on Flow {
     }
   }
 
-  tasks {
-    taskId
-  }
+  taskIds
 
   retryPolicy {
     maxAttempts

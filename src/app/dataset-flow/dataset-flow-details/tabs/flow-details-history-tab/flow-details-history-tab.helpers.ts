@@ -174,7 +174,7 @@ export class DatasetFlowDetailsHelpers {
                                 if (flowDetails.retryPolicy) {
                                     if (event.nextAttemptAt) {
                                         const nextRetryAttemptNo =
-                                            flowDetails.tasks.findIndex((task) => task.taskId === event.taskId) + 1;
+                                            flowDetails.taskIds.findIndex((taskId) => taskId === event.taskId) + 1;
                                         return (
                                             `${mainMessage}<br/>Retry attempt ${nextRetryAttemptNo} of ${flowDetails.retryPolicy.maxAttempts} ` +
                                             `scheduled in ${DataHelpers.durationTask(event.eventTime, event.nextAttemptAt)}`
@@ -372,8 +372,8 @@ export class DatasetFlowDetailsHelpers {
 
     private static describeTaskIdentity(taskId: string, flowDetails: FlowSummaryDataFragment): string {
         const taskDescription = `Task #${taskId}`;
-        if (flowDetails.retryPolicy && flowDetails.tasks[0].taskId !== taskId) {
-            const retryAttemptNo = flowDetails.tasks.findIndex((task) => task.taskId === taskId);
+        if (flowDetails.retryPolicy && flowDetails.taskIds[0] !== taskId) {
+            const retryAttemptNo = flowDetails.taskIds.findIndex((id) => id === taskId);
             return `${taskDescription} (retry attempt ${retryAttemptNo} of ${flowDetails.retryPolicy.maxAttempts})`;
         } else {
             return taskDescription;

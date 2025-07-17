@@ -76,7 +76,7 @@ export const mockFlowSummaryDataFragmentIngestResult: FlowSummaryDataFragment = 
         __typename: "FlowTimingRecords",
     },
     retryPolicy: null,
-    tasks: [],
+    taskIds: [],
     __typename: "Flow",
 };
 

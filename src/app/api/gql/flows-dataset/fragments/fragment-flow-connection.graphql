@@ -6,9 +6,4 @@ fragment FlowConnectionData on FlowConnection {
   pageInfo {
     ...DatasetPageInfo
   }
-  edges {
-    node {
-      ...FlowSummaryData
-    }
-  }
 }

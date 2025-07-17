@@ -12,6 +12,7 @@ import { dispatchInputEvent, getInputElementByDataTestId } from "src/app/common/
 import { ChangeDetectionStrategy } from "@angular/core";
 import AppValues from "src/app/common/values/app.values";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
 
 describe("InputFieldComponent", () => {
     let component: InputFieldComponent;
@@ -19,7 +20,7 @@ describe("InputFieldComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [SharedTestModule, InputFieldComponent],
+            imports: [SharedTestModule, InputFieldComponent, FormValidationErrorsDirective],
         })
             .overrideComponent(InputFieldComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
@@ -34,6 +35,7 @@ describe("InputFieldComponent", () => {
         });
         component.controlName = "test";
         component.dataTestId = "input";
+        component.label = "Input";
     });
 
     it("should create", () => {
@@ -44,8 +46,8 @@ describe("InputFieldComponent", () => {
         fixture.detectChanges();
         dispatchInputEvent(fixture, "input", "");
 
-        const requiredMessage = getInputElementByDataTestId(fixture, "error-test-required");
-        expect(requiredMessage.textContent?.trim()).toBe("Field is required");
+        const requiredMessage = getInputElementByDataTestId(fixture, "error-message");
+        expect(requiredMessage.textContent?.trim()).toBe("Input is required");
     });
 
     it("should check maxLength validation error", () => {
@@ -56,8 +58,8 @@ describe("InputFieldComponent", () => {
 
         dispatchInputEvent(fixture, "input", "mock");
 
-        const maxLengthMessage = getInputElementByDataTestId(fixture, "error-test-maxLength");
-        expect(maxLengthMessage.textContent?.trim()).toBe("Field can be max 1 character");
+        const maxLengthMessage = getInputElementByDataTestId(fixture, "error-message");
+        expect(maxLengthMessage.textContent?.trim()).toBe("Input can't exceed 1 characters");
     });
 
     it("should check pattern validation error", () => {
@@ -65,7 +67,7 @@ describe("InputFieldComponent", () => {
 
         dispatchInputEvent(fixture, "input", "mock");
 
-        const patternMessage = getInputElementByDataTestId(fixture, "error-test-pattern");
-        expect(patternMessage.textContent?.trim()).toBe("Field format is wrong");
+        const patternMessage = getInputElementByDataTestId(fixture, "error-message");
+        expect(patternMessage.textContent?.trim()).toBe("Input format is wrong");
     });
 });

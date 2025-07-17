@@ -12,6 +12,7 @@ import { NgIf } from "@angular/common";
 import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
 
 @Component({
     selector: "app-input-field",
@@ -31,6 +32,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
         //-----//
         TooltipIconComponent,
+        FormValidationErrorsDirective,
     ],
 })
 export class InputFieldComponent extends BaseField {

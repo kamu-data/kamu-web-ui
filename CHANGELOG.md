@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Improved handling of expired token
-
+### Added
+- Added FormValidationErrorsDirective for all form errors
 
 ## [0.52.1] - 2025-07-17
 ### Fixed
@@ -49,7 +50,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Adjustments for API changes in flow system
 - SetTransform event: improved search
 - Migrated to standalone components
-
 
 ## [0.50.0] - 2025-06-19
 ### Added

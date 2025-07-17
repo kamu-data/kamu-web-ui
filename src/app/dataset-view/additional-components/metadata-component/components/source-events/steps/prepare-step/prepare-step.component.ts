@@ -27,6 +27,7 @@ import {
 import { EditPollingSourceService } from "../../add-polling-source/edit-polling-source.service";
 import { MatIconModule } from "@angular/material/icon";
 import { NgFor, NgIf } from "@angular/common";
+import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
 
 @Component({
     selector: "app-prepare-step",
@@ -44,6 +45,9 @@ import { NgFor, NgIf } from "@angular/common";
 
         //-----//
         MatIconModule,
+
+        //-----//
+        FormValidationErrorsDirective,
     ],
 })
 export class PrepareStepComponent extends BaseComponent implements OnInit {

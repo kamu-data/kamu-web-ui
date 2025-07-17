@@ -13,7 +13,7 @@ export class CronExpressionFormHarness extends ComponentHarness {
     public static readonly hostSelector = "app-cron-expression-form";
 
     private readonly input = this.locatorFor('[data-test-id="cron-expression-input"]');
-    private readonly errorMessage = this.locatorForOptional('[data-test-id="cron-expression-error"]');
+    private readonly errorMessage = this.locatorForOptional('[data-test-id="error-message"]');
     private readonly nextTime = this.locatorForOptional('[data-test-id="cron-expression-next-time"]');
 
     public async setCronExpression(value: string): Promise<void> {
@@ -39,9 +39,10 @@ export class CronExpressionFormHarness extends ComponentHarness {
     }
 
     public async getErrorMessage(): Promise<string | null> {
-        const errorMessage = await this.errorMessage();
-        if (errorMessage) {
-            return errorMessage.text();
+        const errorElement = await this.errorMessage();
+        if (errorElement) {
+            const message = await errorElement.text();
+            return message === "" ? null : message;
         }
         return null;
     }

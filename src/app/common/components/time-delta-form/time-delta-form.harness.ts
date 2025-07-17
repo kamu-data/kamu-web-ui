@@ -16,8 +16,7 @@ export class TimeDeltaFormHarness extends ComponentHarness {
     private readonly locatorEveryInput = this.locatorFor('[data-test-id="time-delta-every"]');
     private readonly locatorUnitSelect = this.locatorFor('[data-test-id="time-delta-unit"]');
 
-    private readonly locatorRequiredError = this.locatorForOptional('[data-test-id="time-delta-required-error"]');
-    private readonly locatorRangeError = this.locatorForOptional('[data-test-id="time-delta-range-error"]');
+    private readonly locatorError = this.locatorForOptional('[data-test-id="error-message"]');
 
     private static readonly UNIT_INDEX: Record<TimeUnit, number> = {
         MINUTES: 0,
@@ -72,14 +71,12 @@ export class TimeDeltaFormHarness extends ComponentHarness {
     }
 
     public async getErrorMessage(): Promise<string | null> {
-        const requiredErrorElement = await this.locatorRequiredError();
-        if (requiredErrorElement) {
-            return await requiredErrorElement.text();
+        const errorElement = await this.locatorError();
+        if (errorElement) {
+            const message = await errorElement.text();
+            return message === "" ? null : message;
         }
-        const rangeErrorElement = await this.locatorRangeError();
-        if (rangeErrorElement) {
-            return await rangeErrorElement.text();
-        }
+
         return null;
     }
 }

@@ -7,10 +7,11 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { BaseField } from "../base-field";
-import { NgIf, JsonPipe } from "@angular/common";
+import { NgIf } from "@angular/common";
 import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
 
 @Component({
     selector: "app-number-field",
@@ -20,7 +21,6 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
     imports: [
         //-----//
         NgIf,
-        JsonPipe,
         FormsModule,
         ReactiveFormsModule,
 
@@ -29,6 +29,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
         //-----//
         TooltipIconComponent,
+        FormValidationErrorsDirective,
     ],
 })
 export class NumberFieldComponent extends BaseField {

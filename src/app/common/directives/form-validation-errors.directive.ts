@@ -22,7 +22,7 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges, OnIn
         | ValidationError[]
         | ValidationErrorTuple
         | ValidationErrorTuple[];
-    @Input() public input: HTMLInputElement | NgSelectComponent | undefined;
+    @Input() public input: HTMLInputElement | NgSelectComponent | HTMLSelectElement | undefined;
     @Input({ required: true }) public group: FormGroup | FormArray;
     @Input() public fieldControl: AbstractControl | null;
     @Input() public fieldLabel: string | undefined;
@@ -132,7 +132,7 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges, OnIn
     /* istanbul ignore next */
     public initFieldControl() {
         if (this.input && this.group) {
-            if (this.input instanceof HTMLInputElement) {
+            if (this.input instanceof HTMLInputElement || this.input instanceof HTMLSelectElement) {
                 const controlName = this.input.getAttribute("formControlName") ?? "";
                 this.fieldControl = this.fieldControl || this.group.get(controlName);
 

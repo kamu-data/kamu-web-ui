@@ -1471,7 +1471,8 @@ pre {
     }
 }
 
-input {
+input,
+select {
     &.ng-invalid {
         &.ng-touched,
         &.ng-dirty {

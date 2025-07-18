@@ -16,6 +16,7 @@
                             formControlName="unit"
                             class="form-select form-control-width"
                             data-test-id="batching-interval-unit"
+                            #unit
                         >
                             <option [value]="timeUnit.Minutes">Minutes</option>
                             <option [value]="timeUnit.Hours">Hours</option>
@@ -30,6 +31,13 @@
                             data-test-id="batching-interval-every"
                             #every
                         />
+                        <div
+                            class="text-danger fs-12"
+                            [input]="unit"
+                            [fieldLabel]="'Unit'"
+                            [appFieldError]="['required']"
+                            [group]="batchingForm"
+                        ></div>
                         <div
                             class="text-danger fs-12"
                             [input]="every"

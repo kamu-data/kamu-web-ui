@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Improved handling of expired token
+- Validation in cron expression has become more informative
 ### Added
 - Added FormValidationErrorsDirective for all form errors
 

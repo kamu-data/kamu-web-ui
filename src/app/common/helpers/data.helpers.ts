@@ -5,14 +5,12 @@
  * included in the LICENSE file.
  */
 
-import { MaybeNull } from "src/app/interface/app.types";
 import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
 import { DataQueryResultSuccessViewFragment, MetadataBlockFragment, TimeUnit } from "../../api/kamu.graphql.interface";
 import { EventPropertyLogo } from "../../dataset-block/metadata-block/components/event-details/supported.events";
 import { JsonFormValidators } from "../../dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { MaybeUndefined } from "../../interface/app.types";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
-import { isValidCronExpression } from "./cron-expression-validator.helper";
 import { ErrorPolicy, WatchQueryFetchPolicy } from "@apollo/client";
 import { convertSecondsToHumanReadableFormat, removeAllLineBreaks } from "./app.helpers";
 import { SliceUnit } from "../../dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
@@ -281,12 +279,6 @@ export const MY_MOMENT_FORMATS = {
     dateA11yLabel: "LL",
     monthYearA11yLabel: "MMMM YYYY",
 };
-
-export function cronExpressionValidator(): ValidatorFn {
-    return (control: AbstractControl): MaybeNull<ValidationErrors> => {
-        return !isValidCronExpression(control.value as string) ? { invalidCronExpression: true } : null;
-    };
-}
 
 export const everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = {
     [TimeUnit.Minutes]: RxwebValidators.range({

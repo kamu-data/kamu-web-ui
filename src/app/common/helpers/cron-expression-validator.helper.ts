@@ -22,7 +22,6 @@ export function cronValidator(control: AbstractControl): ValidationErrors | null
     }
 
     const [minute, hour, day, month, weekday] = parts;
-
     const errors: string[] = [];
 
     validatePart(minute, 0, 59, "Minute", errors);
@@ -61,7 +60,23 @@ function validatePart(part: string, min: number, max: number, label: string, err
           }
         : {}; // no named values allowed if false
 
-    const validPattern = /^(\*|[A-Z]+|\d+|\d+-\d+|\*\/\d+|([A-Z]+|\d+)(,([A-Z]+|\d+))*)$/;
+    const validPattern =
+        /^((\*|\?|[A-Z]+|\d+|\d+-\d+|\d+\/\d+|\*\/\d+|\d+-\d+\/\d+|[A-Z]+-[A-Z]+(\/\d+)?)(,(\*|\?|[A-Z]+|\d+|\d+-\d+|\d+\/\d+|\*\/\d+|\d+-\d+\/\d+|[A-Z]+-[A-Z]+(\/\d+)?))*)$/;
+
+    if (part === "?" && !["Minute", "Hour", "Month"].includes(label)) {
+        return;
+    }
+
+    if (label === "Month" && part.includes("-") && /[A-Za-z]/.test(part)) {
+        const [fromStr, toStr] = part.split("-");
+        const from = parseCronValue(fromStr, namedValuesMap);
+        const to = parseCronValue(toStr, namedValuesMap);
+
+        if (from === null || to === null || from > to) {
+            errors.push(`${label} has invalid named range: "${part}".`);
+        }
+        return;
+    }
 
     if (!validPattern.test(part)) {
         errors.push(`${label} has invalid format: "${part}".`);
@@ -83,6 +98,15 @@ function validatePart(part: string, min: number, max: number, label: string, err
             return isNaN(step) ? [] : [min];
         } else if (p === "*") {
             return [min];
+        } else if (p.includes("/")) {
+            const [fromStr, toStr] = p.split("/");
+            const from = parseCronValue(fromStr, namedValuesMap);
+            const to = parseCronValue(toStr, namedValuesMap);
+            if (from === null || to === null) {
+                errors.push(`${label} has invalid range: "${p}".`);
+                return [];
+            }
+            return Array.from({ length: to - from + 1 }, (_, i) => from + i);
         } else {
             const v = parseCronValue(p, namedValuesMap);
             if (v === null) {
@@ -92,8 +116,8 @@ function validatePart(part: string, min: number, max: number, label: string, err
             return [v];
         }
     });
-    const result = values.reduce((accumulator, value) => accumulator.concat(value), []);
 
+    const result = values.reduce((accumulator, value) => accumulator.concat(value), []);
     result.forEach((v) => {
         if (isNaN(v) || v < min || v > max) {
             errors.push(`${label} must be between ${min} and ${max}, but got ${v}.`);
@@ -103,10 +127,9 @@ function validatePart(part: string, min: number, max: number, label: string, err
 
 function parseCronValue(input: string, namedMap: Record<string, number>): number | null {
     const upper = input.toUpperCase();
-    // eslint-disable-next-line no-prototype-builtins
-    if (namedMap.hasOwnProperty(upper)) {
-        return namedMap[upper];
-    }
+
+    if (namedMap[upper]) return namedMap[upper];
+
     const num = Number(input);
     return isNaN(num) ? null : num;
 }

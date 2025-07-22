@@ -34,12 +34,14 @@ import { LocalStorageService } from "src/app/services/local-storage.service";
 import { MatIconModule } from "@angular/material/icon";
 import ProjectLinks from "src/app/project-links";
 import { AccountProvider } from "src/app/api/kamu.graphql.interface";
+import { LoginMethodsService } from "../login-methods.service";
 
 describe("LoginComponent", () => {
     let component: LoginComponent;
     let fixture: ComponentFixture<LoginComponent>;
     let appConfigService: AppConfigService;
     let loginService: LoginService;
+    let loginMethodsService: LoginMethodsService;
     let navigationService: NavigationService;
     let localStorageService: LocalStorageService;
     let authApi: AuthApi;
@@ -109,6 +111,7 @@ describe("LoginComponent", () => {
         localStorageService.reset();
 
         loginService = TestBed.inject(LoginService);
+        loginMethodsService = TestBed.inject(LoginMethodsService);
         navigationService = TestBed.inject(NavigationService);
 
         authApi = TestBed.inject(AuthApi);
@@ -124,7 +127,7 @@ describe("LoginComponent", () => {
         beforeEach(() => {
             appConfigService = TestBed.inject(AppConfigService);
             spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue(MOCK_FEATURE_FLAGS);
-            spyOnProperty(loginService, "loginMethods", "get").and.returnValue([
+            spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue([
                 AccountProvider.OauthGithub,
                 AccountProvider.Password,
                 AccountProvider.Web3Wallet,
@@ -281,7 +284,7 @@ describe("LoginComponent", () => {
                 beforeEach(() => {
                     appConfigService = TestBed.inject(AppConfigService);
                     spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue(MOCK_FEATURE_FLAGS);
-                    spyOnProperty(loginService, "loginMethods", "get").and.returnValue([loginMethod]);
+                    spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue([loginMethod]);
 
                     spyGotoGithub = spyOn(loginService, "gotoGithub").and.stub();
 
@@ -310,7 +313,7 @@ describe("LoginComponent", () => {
         beforeEach(() => {
             appConfigService = TestBed.inject(AppConfigService);
             spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue(MOCK_FEATURE_FLAGS);
-            spyOnProperty(loginService, "loginMethods", "get").and.returnValue([]);
+            spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue([]);
         });
 
         it("component should throw error", () => {

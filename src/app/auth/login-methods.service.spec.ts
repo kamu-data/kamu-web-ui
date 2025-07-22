@@ -7,23 +7,22 @@
 
 import { TestBed } from "@angular/core/testing";
 
-import { Eip1193EthereumService } from "./ethereum.service";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { LoginMethodsService } from "./login-methods.service";
+import { AuthApi } from "../api/auth.api";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { AuthApi } from "src/app/api/auth.api";
-import { provideToastr } from "ngx-toastr";
-import { provideAnimations } from "@angular/platform-browser/animations";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
-describe("Eip1193EthereumService", () => {
-    let service: Eip1193EthereumService;
+describe("LoginMethodsService", () => {
+    let service: LoginMethodsService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [AuthApi, Apollo, provideAnimations(), provideToastr()],
+            providers: [AuthApi, Apollo],
             imports: [ApolloTestingModule, HttpClientTestingModule],
         });
-        service = TestBed.inject(Eip1193EthereumService);
+
+        service = TestBed.inject(LoginMethodsService);
     });
 
     it("should be created", () => {

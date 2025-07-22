@@ -5,35 +5,30 @@
  * included in the LICENSE file.
  */
 
-import { inject, Injectable, Injector } from "@angular/core";
-import { BrowserProvider } from "ethers";
-import { firstValueFrom, Observable } from "rxjs";
+import { Injector } from "@angular/core";
+import { BrowserProvider, Eip1193Provider } from "ethers";
 import { SiweMessage } from "siwe";
 import { MaybeNull } from "src/app/interface/app.types";
-import { AuthApi } from "src/app/api/auth.api";
 import { ToastrService } from "ngx-toastr";
 import { Web3WalletOwnershipVerificationRequest } from "src/app/api/auth.api.model";
+import { EthereumGateway } from "./ethereum.gateway";
 
-@Injectable({
-    providedIn: "root",
-})
-export class Eip1193EthereumService {
+/* istanbul ignore file */
+
+export class Eip1193EthereumGateway implements EthereumGateway {
     private provider: BrowserProvider;
     private account: string;
 
-    private authApi = inject(AuthApi);
-    private injector = inject(Injector);
+    public constructor(private injector: Injector) {}
 
-    //   Need to get ToastrService from injector rather than constructor injection to avoid cyclic dependency error
     private get toastrService(): ToastrService {
         return this.injector.get(ToastrService);
     }
 
-    public get currentWalet(): MaybeNull<string> {
+    public get currentWallet(): MaybeNull<string> {
         return this.account;
     }
 
-    /* istanbul ignore next */
     public async connectWallet(): Promise<void> {
         if (!this.checkAvailableMetamaskProvider()) {
             return;
@@ -68,14 +63,8 @@ export class Eip1193EthereumService {
         }
     }
 
-    private getNonceValue(walletAddress: string): Observable<string> {
-        return this.authApi.fetchAuthNonceFromWeb3Wallet(walletAddress);
-    }
-
-    /* istanbul ignore next */
-    public async createSiweMessage(address: string, statement: string): Promise<string> {
+    public async createSiweMessage(address: string, statement: string, nonce: string): Promise<string> {
         const chainId = Number((await this.provider.getNetwork()).chainId);
-        const nonce = await firstValueFrom(this.getNonceValue(address));
         const now = new Date();
         const minutes_15_in_milliseconds = 15 * 60 * 1000;
 
@@ -94,18 +83,24 @@ export class Eip1193EthereumService {
         return message.prepareMessage();
     }
 
-    /* istanbul ignore next */
-    public async signInWithEthereum(): Promise<MaybeNull<Web3WalletOwnershipVerificationRequest>> {
+    public async signInWithEthereum(nonce: string): Promise<MaybeNull<Web3WalletOwnershipVerificationRequest>> {
         try {
             const signer = await this.provider.getSigner();
             const message = await this.createSiweMessage(
                 await signer.getAddress(),
                 "By signing, you confirm wallet ownership and log in. No transaction or fees are involved.",
+                nonce,
             );
             const signature = await signer.signMessage(message);
             return { message, signature };
         } catch (error) {
             return null;
         }
+    }
+}
+
+declare global {
+    interface Window {
+        ethereum?: Eip1193Provider;
     }
 }

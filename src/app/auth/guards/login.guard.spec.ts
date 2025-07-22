@@ -10,18 +10,18 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { LoginGuard } from "./login.guard";
 import ProjectLinks from "src/app/project-links";
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
-import { LoginService } from "../login/login.service";
 import { AccountProvider } from "src/app/api/kamu.graphql.interface";
+import { LoginMethodsService } from "../login-methods.service";
 
 describe("LoginGuard", () => {
     let guard: LoginGuard;
-    let loginService: LoginService;
+    let loginMethodsService: LoginMethodsService;
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [ApolloTestingModule],
         });
         guard = TestBed.inject(LoginGuard);
-        loginService = TestBed.inject(LoginService);
+        loginMethodsService = TestBed.inject(LoginMethodsService);
     });
 
     it("should be created", () => {
@@ -59,10 +59,12 @@ describe("LoginGuard", () => {
         it(`should check route ${testCase.route} with login ${
             testCase.loginMethods.length > 0 ? "enabled" : "disabled"
         }`, () => {
-            spyOnProperty(loginService, "loginMethods", "get").and.returnValue(testCase.loginMethods);
+            spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue(testCase.loginMethods);
+
             const result = guard.canActivate(new ActivatedRouteSnapshot(), {
                 url: "/" + testCase.route,
             } as RouterStateSnapshot);
+
             expect(result).toEqual(testCase.expectedResult);
         });
     });

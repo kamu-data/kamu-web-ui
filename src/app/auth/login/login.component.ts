@@ -25,6 +25,7 @@ import { FormValidationErrorsDirective } from "../../common/directives/form-vali
 import { SpinnerComponent } from "../../common/components/spinner/spinner/spinner.component";
 import { MatIconModule } from "@angular/material/icon";
 import { NgIf, NgTemplateOutlet, AsyncPipe } from "@angular/common";
+import { LoginMethodsService } from "../login-methods.service";
 @Component({
     selector: "app-login",
     templateUrl: "./login.component.html",
@@ -55,6 +56,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
     private route = inject(ActivatedRoute);
     private fb = inject(FormBuilder);
     private loginService = inject(LoginService);
+    private loginMethodsService = inject(LoginMethodsService);
     private appConfigService = inject(AppConfigService);
     private navigationService = inject(NavigationService);
 
@@ -77,7 +79,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
             this.localStorageService.setRedirectAfterLoginUrl(redirectUrl);
             this.navigationService.navigateToReplacedPath(ProjectLinks.URL_LOGIN);
         } else {
-            const loginMethods: AccountProvider[] = this.loginService.loginMethods;
+            const loginMethods: AccountProvider[] = this.loginMethodsService.loginMethods;
             if (loginMethods.length === 1) {
                 this.onSelectedLoginMethod(loginMethods[0]);
             } else if (loginMethods.length === 0) {

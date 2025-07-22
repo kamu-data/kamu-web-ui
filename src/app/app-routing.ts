@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { GlobalQueryComponent } from "./query/global-query/global-query.component";
 import { AuthenticatedGuard } from "./auth/guards/authenticated.guard";
 import { PageNotFoundComponent } from "./common/components/page-not-found/page-not-found.component";
 import { ROUTES, Routes } from "@angular/router";
@@ -17,26 +16,15 @@ import { LoginGuard } from "./auth/guards/login.guard";
 import { ReturnToCliComponent } from "./auth/login/return-to-cli/return-to-cli.component";
 import { AdminGuard } from "./auth/guards/admin.guard";
 import { AdminDashboardComponent } from "./admin-view/admin-dashboard/admin-dashboard.component";
-import { DatasetFlowDetailsComponent } from "./dataset-flow/dataset-flow-details/dataset-flow-details.component";
 import { blockMetadataResolverFn } from "./dataset-block/metadata-block/resolver/block-metadata.resolver";
 import { searchResolverFn } from "./search/resolver/search.resolver";
 import RoutingResolvers from "./common/resolvers/routing-resolvers";
 import { accountGuard } from "./account/guards/account.guard";
-import { flowDetailsResolverFn } from "./dataset-flow/dataset-flow-details/resolvers/flow-details.resolver";
-import { datasetInfoResolverFn } from "./common/resolvers/dataset-info.resolver";
-import { datasetViewResolverFn } from "./dataset-view/resolvers/dataset-view.resolver";
-import { accountSettingsActiveTabResolverFn } from "./account/settings/resolver/account-settings-active-tab.resolver";
-import { accountActiveTabResolverFn } from "./account/resolver/account-active-tab.resolver";
-import { datasetViewActiveTabResolverFn } from "./dataset-view/resolvers/dataset-view-active-tab.resolver";
-import { flowDetailsActiveTabResolverFn } from "./dataset-flow/dataset-flow-details/resolvers/flow-details-active-tab.resolver";
 import { AccountWhitelistNotFoundComponent } from "./common/components/account-whitelist-not-found/account-whitelist-not-found.component";
 import { Provider } from "@angular/core";
 import { forbidAnonymousAccessGuardFn } from "./common/guards/forbid-anonymous-access.guard";
 import { AppConfigService } from "./app-config.service";
 import { accessTokenExpiredGuardFn } from "./common/guards/access-token-expired.guard";
-import { AccountSettingsComponent } from "./account/settings/account-settings.component";
-import { AccountComponent } from "./account/account.component";
-import { DatasetViewComponent } from "./dataset-view/dataset-view.component";
 
 export const PUBLIC_ROUTES: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },
@@ -73,53 +61,57 @@ export const ANONYMOUS_GUARDED_ROUTES: Routes = [
     {
         canActivate: [AuthenticatedGuard],
         path: ProjectLinks.URL_DATASET_CREATE,
-        loadComponent: () => import("./dataset-create/dataset-create.component").then((m) => m.DatasetCreateComponent),
+        loadComponent: () =>
+            import(
+                /* webpackChunkName: "dataset-create" */
+                "./dataset-create/dataset-create.component"
+            ).then((m) => m.DatasetCreateComponent),
     },
     {
         path: ProjectLinks.URL_QUERY_EXPLAINER,
         loadComponent: () =>
-            import("./query-explainer/query-explainer.component").then((m) => m.QueryExplainerComponent),
+            import(/* webpackChunkName: "query-explainer" */ "./query-explainer/query-explainer.component").then(
+                (m) => m.QueryExplainerComponent,
+            ),
     },
     {
         path: ProjectLinks.URL_QUERY,
-        component: GlobalQueryComponent,
-        loadChildren: () => import("./query/query.module").then((m) => m.QueryModule),
+        loadComponent: () =>
+            import(/* webpackChunkName: "global-query" */ "./query/global-query/global-query.component").then(
+                (m) => m.GlobalQueryComponent,
+            ),
     },
     {
         path: `${ProjectLinks.URL_SETTINGS}`,
         canActivate: [AuthenticatedGuard],
-        component: AccountSettingsComponent,
         runGuardsAndResolvers: "always",
-        resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_ACTIVE_TAB_KEY]: accountSettingsActiveTabResolverFn },
-        loadChildren: () => import("./children-routing/account-settings-routing").then((m) => m.accountSettingsRoutes),
+        loadChildren: () =>
+            import(
+                /* webpackChunkName: "account-settings" */
+                "./account/settings/account-settings-routing"
+            ).then((m) => m.ACCOUNT_SETTINGS_ROUTES),
     },
     {
         path: `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}`,
         children: [
             {
                 path: "",
-                component: AccountComponent,
                 canActivate: [accountGuard],
                 runGuardsAndResolvers: "always",
-                resolve: { [RoutingResolvers.ACCOUNT_ACTIVE_TAB_KEY]: accountActiveTabResolverFn },
-                children: [
-                    {
-                        path: ProjectLinks.URL_ACCOUNT_SELECT,
-                        loadChildren: () =>
-                            import("./children-routing/account-select-routing").then((m) => m.accountSelectRoutes),
-                    },
-                ],
+                loadChildren: () =>
+                    import(
+                        /* webpackChunkName: "account-select" */
+                        "./account/additional-components/account-select-routing"
+                    ).then((m) => m.ACCOUNT_SELECT_ROUTES),
             },
             {
                 path: `:${ProjectLinks.URL_PARAM_DATASET_NAME}`,
-                component: DatasetViewComponent,
                 runGuardsAndResolvers: "always",
-                resolve: {
-                    [RoutingResolvers.DATASET_VIEW_KEY]: datasetViewResolverFn,
-                    [RoutingResolvers.DATASET_VIEW_ACTIVE_TAB_KEY]: datasetViewActiveTabResolverFn,
-                    [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
-                },
-                loadChildren: () => import("./children-routing/dataset-view-routing").then((m) => m.datasetViewRoutes),
+                loadChildren: () =>
+                    import(
+                        /* webpackChunkName: "dataset-view" */
+                        "./dataset-view/dataset-view-routing"
+                    ).then((m) => m.DATASET_VIEW_ROUTES),
             },
         ],
     },
@@ -129,34 +121,36 @@ export const ANONYMOUS_GUARDED_ROUTES: Routes = [
             {
                 path: `${ProjectLinks.URL_BLOCK}/:${ProjectLinks.URL_PARAM_BLOCK_HASH}`,
                 loadComponent: () =>
-                    import("./dataset-block/metadata-block/metadata-block.component").then(
-                        (m) => m.MetadataBlockComponent,
-                    ),
+                    import(
+                        /* webpackChunkName: "metadata-block" */
+                        "./dataset-block/metadata-block/metadata-block.component"
+                    ).then((m) => m.MetadataBlockComponent),
                 resolve: { [RoutingResolvers.METADATA_BLOCK_KEY]: blockMetadataResolverFn },
             },
             {
                 path: `${ProjectLinks.URL_FLOW_DETAILS}/:${ProjectLinks.URL_PARAM_FLOW_ID}`,
-                component: DatasetFlowDetailsComponent,
                 canActivate: [AuthenticatedGuard],
-                runGuardsAndResolvers: "always",
-                resolve: {
-                    [RoutingResolvers.FLOW_DETAILS_ACTIVE_TAB_KEY]: flowDetailsActiveTabResolverFn,
-                    [RoutingResolvers.FLOW_DETAILS_KEY]: flowDetailsResolverFn,
-                    [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
-                },
-                loadChildren: () => import("./children-routing/flow-details-routing").then((m) => m.flowDetailsRoutes),
+                loadChildren: () =>
+                    import(
+                        /* webpackChunkName: "flow-details" */
+                        "./dataset-flow/dataset-flow-details/flow-details-routing"
+                    ).then((m) => m.FLOW_DETAILS_ROUTES),
             },
             {
                 path: "",
                 canActivate: [AuthenticatedGuard],
                 loadChildren: () =>
-                    import("./children-routing/source-events-routing").then((m) => m.sourceEventsRoutes),
+                    import(
+                        /* webpackChunkName: "dataset-source-events" */
+                        "./dataset-view/additional-components/metadata-component/components/source-events/source-events-routing"
+                    ).then((m) => m.SOURCE_EVENTS_ROUTES),
             },
         ],
     },
     {
         canActivate: [AdminGuard],
         path: ProjectLinks.URL_ADMIN_DASHBOARD,
+        // In future, we might want to lazy load this component
         component: AdminDashboardComponent,
     },
 ];

@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+- Utilized Angular lazy loading mechanisms to reduce the size of initially loaded bundle
 - Improved handling of expired token
 - Validation in cron expression has become more informative
 ### Added

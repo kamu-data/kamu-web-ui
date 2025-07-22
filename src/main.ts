@@ -32,7 +32,6 @@ import {
     HttpClient,
 } from "@angular/common/http";
 import { LoggedUserService } from "./app/auth/logged-user.service";
-import { LoginService } from "./app/auth/login/login.service";
 import { HttpLink } from "apollo-angular/http";
 import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
 import AppValues from "./app/common/values/app.values";
@@ -41,6 +40,7 @@ import { provideToastr } from "ngx-toastr";
 import { NavigationService } from "src/app/services/navigation.service";
 import ProjectLinks from "./app/project-links";
 import { provideCatchAllRoute, provideConditionalGuardedRoutes, PUBLIC_ROUTES } from "./app/app-routing";
+import { LoginMethodsService } from "./app/auth/login-methods.service";
 
 const Services = [
     Apollo,
@@ -139,12 +139,12 @@ const Services = [
     },
     {
         provide: APP_INITIALIZER,
-        useFactory: (loginService: LoginService) => {
+        useFactory: (loginMethodsService: LoginMethodsService) => {
             return (): Promise<void> => {
-                return firstValueFrom(loginService.initialize()).catch((e) => logError(e));
+                return firstValueFrom(loginMethodsService.initialize()).catch((e) => logError(e));
             };
         },
-        deps: [LoginService],
+        deps: [LoginMethodsService],
         multi: true,
     },
     {

@@ -68,7 +68,6 @@
     "rxjs": "^7.8.1",
     "siwe": "^3.0.0",
     "tslib": "^2.0.0",
-    "webpack-bundle-analyzer": "^4.10.2",
     "yaml": "^2.6.1",
     "zone.js": "~0.13.3"
   },
@@ -109,6 +108,7 @@
     "stylelint-scss": "^5.3.2",
     "timekeeper": "^2.3.1",
     "ts-node": "~8.3.0",
-    "typescript": "5.1.6"
+    "typescript": "5.1.6",
+    "webpack-bundle-analyzer": "^4.10.2"
   }
 }

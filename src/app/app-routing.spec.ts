@@ -16,8 +16,6 @@ import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { LoggedUserService } from "./auth/logged-user.service";
 import { PageNotFoundComponent } from "./common/components/page-not-found/page-not-found.component";
 import { LoginComponent } from "./auth/login/login.component";
-import { LoginService } from "./auth/login/login.service";
-
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { accountSettingsAccessTokensResolverFn } from "./account/settings/tabs/access-tokens-tab/resolver/account-settings-access-tokens.resolver";
 import { provideToastr } from "ngx-toastr";
@@ -42,13 +40,14 @@ import { OverviewUpdate } from "./dataset-view/dataset.subscriptions.interface";
 import { NgxGraphModule } from "@swimlane/ngx-graph";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { AppConfigService } from "./app-config.service";
+import { LoginMethodsService } from "./auth/login-methods.service";
 
 describe("Router", () => {
     let router: Router;
     let fixture: ComponentFixture<PageNotFoundComponent>; // any component is fine, we are testing router
     let location: Location;
     let loggedUserService: LoggedUserService;
-    let loginService: LoginService;
+    let loginMethodsService: LoginMethodsService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -124,7 +123,7 @@ describe("Router", () => {
         router = TestBed.inject(Router);
         location = TestBed.inject(Location);
         loggedUserService = TestBed.inject(LoggedUserService);
-        loginService = TestBed.inject(LoginService);
+        loginMethodsService = TestBed.inject(LoginMethodsService);
 
         fixture = TestBed.createComponent(PageNotFoundComponent);
         router.initialNavigation();
@@ -186,7 +185,7 @@ describe("Router", () => {
 
     describe("#login routes", () => {
         it("login redirects to default page when not allowed in configuration", fakeAsync(() => {
-            spyOnProperty(loginService, "loginMethods", "get").and.returnValue([]);
+            spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue([]);
 
             promiseWithCatch(router.navigate([ProjectLinks.URL_LOGIN]));
             tick();
@@ -206,7 +205,7 @@ describe("Router", () => {
         }));
 
         it("login opens Login component when allowed and not logged in", fakeAsync(() => {
-            spyOnProperty(loginService, "loginMethods", "get").and.returnValue([AccountProvider.Password]);
+            spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue([AccountProvider.Password]);
             spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(false);
 
             promiseWithCatch(router.navigate([ProjectLinks.URL_LOGIN]));

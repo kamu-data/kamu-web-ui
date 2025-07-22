@@ -6,7 +6,7 @@
  */
 
 import { inject, Injectable } from "@angular/core";
-import { Observable, ReplaySubject, Subject, map } from "rxjs";
+import { Observable, ReplaySubject, Subject, firstValueFrom, map } from "rxjs";
 import { AuthApi } from "src/app/api/auth.api";
 import {
     GithubLoginCredentials,
@@ -19,7 +19,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { AppConfigService } from "src/app/app-config.service";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { LocalStorageService } from "src/app/services/local-storage.service";
-import { Eip1193EthereumService } from "./ethereum.service";
+import { EthereumGatewayFactory } from "./ethereum/ethereum.gateway.factory";
 
 @Injectable({
     providedIn: "root",
@@ -29,14 +29,12 @@ export class LoginService {
     private navigationService = inject(NavigationService);
     private appConfigService = inject(AppConfigService);
     private localStorageService = inject(LocalStorageService);
-    private ethereumService = inject(Eip1193EthereumService);
+    private ethereumGatewayFactory = inject(EthereumGatewayFactory);
 
     private accessToken$: Subject<string> = new ReplaySubject<string>(1);
     private account$: Subject<AccountFragment> = new ReplaySubject<AccountFragment>(1);
     private passwordLoginError$: Subject<string> = new Subject<string>();
     private accountWhitelistError$: Subject<string> = new Subject<string>();
-
-    private enabledLoginMethods: AccountProvider[] = [];
 
     private loginCallback: (loginResponse: LoginResponseType) => void = this.redirectUrlLoginCallback.bind(this);
 
@@ -78,18 +76,6 @@ export class LoginService {
         window.location.href = this.githubLoginLink();
     }
 
-    public initialize(): Observable<void> {
-        return this.authApi.readEnabledLoginMethods().pipe(
-            map((enabledLoginMethods: AccountProvider[]): void => {
-                this.enabledLoginMethods = enabledLoginMethods;
-            }),
-        );
-    }
-
-    public get loginMethods(): AccountProvider[] {
-        return this.enabledLoginMethods;
-    }
-
     public setLoginCallback(loginCallback: (loginResponse: LoginResponseType) => void): void {
         this.loginCallback = loginCallback;
     }
@@ -113,11 +99,17 @@ export class LoginService {
     }
 
     public async web3WalletLogin(): Promise<void> {
+        const ethereumGateway = await this.ethereumGatewayFactory.create();
+
         const deviceCode: MaybeNull<string> = this.localStorageService.loginDeviceCode;
-        await this.ethereumService.connectWallet();
-        if (this.ethereumService.currentWalet) {
+        await ethereumGateway.connectWallet();
+        if (ethereumGateway.currentWallet) {
+            const nonce = await firstValueFrom(
+                this.authApi.fetchAuthNonceFromWeb3Wallet(ethereumGateway.currentWallet),
+            );
+
             const verificationRequest: MaybeNull<Web3WalletOwnershipVerificationRequest> =
-                await this.ethereumService.signInWithEthereum();
+                await ethereumGateway.signInWithEthereum(nonce);
             if (verificationRequest) {
                 this.authApi
                     .fetchAccountAndTokenFromWeb3Wallet(verificationRequest, deviceCode ?? undefined)

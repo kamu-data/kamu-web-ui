@@ -27,7 +27,8 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { AppConfigService } from "src/app/app-config.service";
 import { SessionStorageService } from "src/app/services/session-storage.service";
-import { Eip1193EthereumService } from "./ethereum.service";
+import { EthereumGatewayFactory } from "./ethereum/ethereum.gateway.factory";
+import { MockEthereumGatewayFactory, MockEthereumGateway } from "./ethereum/mock.ethereum.gateway";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 
 describe("LoginService", () => {
@@ -37,11 +38,10 @@ describe("LoginService", () => {
     let localStorageService: LocalStorageService;
     let sessionStorageService: SessionStorageService;
     let appConfigService: AppConfigService;
-    let ethereumService: Eip1193EthereumService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [AuthApi, Apollo],
+            providers: [AuthApi, Apollo, { provide: EthereumGatewayFactory, useClass: MockEthereumGatewayFactory }],
             imports: [ApolloTestingModule, HttpClientTestingModule],
         });
 
@@ -55,7 +55,6 @@ describe("LoginService", () => {
         navigationService = TestBed.inject(NavigationService);
         authApi = TestBed.inject(AuthApi);
         appConfigService = TestBed.inject(AppConfigService);
-        ethereumService = TestBed.inject(Eip1193EthereumService);
     });
 
     it("should be created", () => {
@@ -187,18 +186,120 @@ describe("LoginService", () => {
         ).toEqual(true);
     });
 
-    it("should check web3 wallet login", fakeAsync(() => {
-        const connectWalletSpy = spyOn(ethereumService, "connectWallet");
-        spyOnProperty(ethereumService, "currentWalet", "get").and.returnValue("test_wallet0xsawwwW");
-        const mockVerificationRequest = { message: "", signature: "" };
-        const mockPromise = Promise.resolve(mockVerificationRequest);
-        spyOn(ethereumService, "signInWithEthereum").and.returnValue(mockPromise);
-        const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromWeb3Wallet").and.returnValue(of());
+    it("should successfully complete web3 wallet login flow", fakeAsync(() => {
+        const mockNonce = "mock-nonce-12345";
+        const expectedVerificationRequest = {
+            walletAddress: MockEthereumGateway.WALLET_ADDRESS,
+            signature: `${MockEthereumGateway.SIGNATURE_PREFIX}${mockNonce}`,
+            message: MockEthereumGateway.MESSAGE,
+        };
 
+        let interceptedLoginResponse: MaybeUndefined<LoginResponseType>;
+        service.setLoginCallback((loginResponse: LoginResponseType) => {
+            interceptedLoginResponse = loginResponse;
+        });
+
+        const fetchAuthNonceSpy = spyOn(authApi, "fetchAuthNonceFromWeb3Wallet").and.returnValue(of(mockNonce));
+        const fetchAccountAndTokenSpy = spyOn(authApi, "fetchAccountAndTokenFromWeb3Wallet").and.returnValue(
+            of(mockPasswordLoginResponse.auth.login),
+        );
+
+        // Act
         promiseWithCatch(service.web3WalletLogin());
         tick();
 
-        expect(connectWalletSpy).toHaveBeenCalledOnceWith();
-        expect(authApiSpy).toHaveBeenCalledTimes(1);
+        // Assert
+        expect(fetchAuthNonceSpy).toHaveBeenCalledOnceWith(MockEthereumGateway.WALLET_ADDRESS);
+        expect(fetchAccountAndTokenSpy).toHaveBeenCalledOnceWith(expectedVerificationRequest, undefined);
+        expect(interceptedLoginResponse).toEqual(mockPasswordLoginResponse.auth.login);
+        flush();
     }));
+
+    it("should handle web3 wallet login with device code", fakeAsync(() => {
+        const mockDeviceCode = "mock-device-code-123";
+        const mockNonce = "mock-nonce-12345";
+        const expectedVerificationRequest = {
+            walletAddress: MockEthereumGateway.WALLET_ADDRESS,
+            signature: `${MockEthereumGateway.SIGNATURE_PREFIX}${mockNonce}`,
+            message: MockEthereumGateway.MESSAGE,
+        };
+
+        let interceptedLoginResponse: MaybeUndefined<LoginResponseType>;
+        service.setLoginCallback((loginResponse: LoginResponseType) => {
+            interceptedLoginResponse = loginResponse;
+        });
+
+        spyOnProperty(localStorageService, "loginDeviceCode", "get").and.returnValue(mockDeviceCode);
+        const fetchAuthNonceSpy = spyOn(authApi, "fetchAuthNonceFromWeb3Wallet").and.returnValue(of(mockNonce));
+        const fetchAccountAndTokenSpy = spyOn(authApi, "fetchAccountAndTokenFromWeb3Wallet").and.returnValue(
+            of(mockPasswordLoginResponse.auth.login),
+        );
+
+        // Act
+        promiseWithCatch(service.web3WalletLogin());
+        tick();
+
+        // Assert
+        expect(fetchAuthNonceSpy).toHaveBeenCalledOnceWith(MockEthereumGateway.WALLET_ADDRESS);
+        expect(fetchAccountAndTokenSpy).toHaveBeenCalledOnceWith(expectedVerificationRequest, mockDeviceCode);
+        expect(interceptedLoginResponse).toEqual(mockPasswordLoginResponse.auth.login);
+        flush();
+    }));
+
+    it("should handle web3 wallet login when no wallet is connected", fakeAsync(() => {
+        // Arrange: Create a mock that simulates no wallet connection
+        const ethereumGatewayFactory = TestBed.inject(EthereumGatewayFactory);
+        const mockGateway = new MockEthereumGateway();
+        mockGateway.walletToConnectTo = null; // Simulate no wallet connected
+
+        let interceptedLoginResponse: MaybeUndefined<LoginResponseType>;
+        service.setLoginCallback((loginResponse: LoginResponseType) => {
+            interceptedLoginResponse = loginResponse;
+        });
+
+        spyOn(ethereumGatewayFactory, "create").and.resolveTo(mockGateway);
+        const fetchAuthNonceSpy = spyOn(authApi, "fetchAuthNonceFromWeb3Wallet");
+        const fetchAccountAndTokenSpy = spyOn(authApi, "fetchAccountAndTokenFromWeb3Wallet");
+
+        // Act
+        promiseWithCatch(service.web3WalletLogin());
+        tick();
+
+        // Assert
+        expect(fetchAuthNonceSpy).not.toHaveBeenCalled();
+        expect(fetchAccountAndTokenSpy).not.toHaveBeenCalled();
+        expect(interceptedLoginResponse).toBeUndefined();
+        flush();
+    }));
+
+    it("should handle web3 wallet login when verification request is null", fakeAsync(() => {
+        // Arrange: Create a mock that returns null for signInWithEthereum
+        const ethereumGatewayFactory = TestBed.inject(EthereumGatewayFactory);
+        const mockGateway = new MockEthereumGateway();
+        const mockNonce = "mock-nonce-12345";
+        const signInWithEthereumSpy = jasmine.createSpy("signInWithEthereum").and.resolveTo(null);
+        mockGateway.signInWithEthereum = signInWithEthereumSpy;
+
+        let interceptedLoginResponse: MaybeUndefined<LoginResponseType>;
+        service.setLoginCallback((loginResponse: LoginResponseType) => {
+            interceptedLoginResponse = loginResponse;
+        });
+
+        spyOn(ethereumGatewayFactory, "create").and.resolveTo(mockGateway);
+        const fetchAuthNonceSpy = spyOn(authApi, "fetchAuthNonceFromWeb3Wallet").and.returnValue(of(mockNonce));
+        const fetchAccountAndTokenSpy = spyOn(authApi, "fetchAccountAndTokenFromWeb3Wallet");
+
+        // Act
+        promiseWithCatch(service.web3WalletLogin());
+        tick();
+
+        // Assert
+        expect(fetchAuthNonceSpy).toHaveBeenCalledOnceWith(MockEthereumGateway.WALLET_ADDRESS);
+        expect(signInWithEthereumSpy).toHaveBeenCalledOnceWith(mockNonce);
+        expect(fetchAccountAndTokenSpy).not.toHaveBeenCalled();
+        expect(interceptedLoginResponse).toBeUndefined();
+        flush();
+    }));
+
+    // Remove the separate custom callback test since it's now covered in the other tests
 });

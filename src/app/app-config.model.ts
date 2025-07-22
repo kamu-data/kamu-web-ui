@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { Eip1193Provider } from "ethers";
 import { FeatureShowMode } from "./interface/feature-flags.interface";
 import { AccountProvider } from "./api/kamu.graphql.interface";
 
@@ -45,10 +44,4 @@ export interface AppUIConfigFeatureFlags {
     enableDatasetEnvVarsManagement: boolean;
     enableTermsOfService: boolean;
     allowAnonymous: boolean;
-}
-
-declare global {
-    interface Window {
-        ethereum?: Eip1193Provider;
-    }
 }

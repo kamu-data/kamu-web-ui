@@ -15,7 +15,6 @@ import { Observable } from "rxjs";
 import { LoggedUserService } from "../auth/logged-user.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { CreateDatasetFormType, SelectStorageItemType, STORAGE_LIST } from "./dataset-create.types";
-import { LoginService } from "../auth/login/login.service";
 import AppValues from "../common/values/app.values";
 import { YamlEditorComponent } from "../editor/components/yaml-editor/yaml-editor.component";
 import { NgSelectModule } from "@ng-select/ng-select";
@@ -24,6 +23,7 @@ import { FormValidationErrorsDirective } from "../common/directives/form-validat
 import { NgFor, NgIf, AsyncPipe } from "@angular/common";
 import { MatDividerModule } from "@angular/material/divider";
 import { EditorModule } from "../editor/editor.module";
+import { LoginMethodsService } from "../auth/login-methods.service";
 
 @Component({
     selector: "app-dataset-create",
@@ -55,11 +55,12 @@ export class DatasetCreateComponent extends BaseComponent {
     private fb = inject(FormBuilder);
     private datasetCreateService = inject(DatasetCreateService);
     private loggedUserService = inject(LoggedUserService);
-    private loginService = inject(LoginService);
+    private loginMethodsService = inject(LoginMethodsService);
 
     public readonly DatasetVisibility: typeof DatasetVisibility = DatasetVisibility;
     public readonly DatasetKind: typeof DatasetKind = DatasetKind;
     private static readonly INITIAL_YAML_HINT = "# You can edit this file\n";
+
     public yamlTemplate = "";
     public showMonacoEditor = false;
     public errorMessage$: Observable<string>;
@@ -167,6 +168,6 @@ export class DatasetCreateComponent extends BaseComponent {
     }
 
     public get isAccountProviderMultiMode(): boolean {
-        return this.loginService.loginMethods.includes(AccountProvider.OauthGithub);
+        return this.loginMethodsService.loginMethods.includes(AccountProvider.OauthGithub);
     }
 }

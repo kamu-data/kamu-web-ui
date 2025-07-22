@@ -10,14 +10,14 @@ import { inject, Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 import ProjectLinks from "src/app/project-links";
 import { LoggedUserService } from "../logged-user.service";
-import { LoginService } from "../login/login.service";
+import { LoginMethodsService } from "../login-methods.service";
 
 @Injectable({
     providedIn: "root",
 })
 export class LoginGuard {
     private navigationService = inject(NavigationService);
-    private loginService = inject(LoginService);
+    private loginMethodsService = inject(LoginMethodsService);
     private loggedUserService = inject(LoggedUserService);
 
     public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
@@ -30,6 +30,6 @@ export class LoginGuard {
     }
 
     private canLogin(): boolean {
-        return this.loginService.loginMethods.length > 0 && !this.loggedUserService.isAuthenticated;
+        return this.loginMethodsService.loginMethods.length > 0 && !this.loggedUserService.isAuthenticated;
     }
 }

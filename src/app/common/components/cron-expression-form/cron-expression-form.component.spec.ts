@@ -40,8 +40,8 @@ describe("CronExpressionFormComponent", () => {
     let cronHarness: CronExpressionFormHarness;
 
     const VALID_CRON_EXPRESSION = "0 9 ? * MON"; // Every Monday at 9 AM
-    const INVALID_CRON_EXPRESSION = "0 9 * * MON"; // Invalid because it has both day of month and day of week specified
-    const INVALID_EXPRESSION_MESSAGE = "Invalid expression";
+    const INVALID_CRON_EXPRESSION = "0 9 * # MON"; // Invalid because has special character '#'
+    const INVALID_EXPRESSION_MESSAGE = `Month has invalid format: "#".`;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({

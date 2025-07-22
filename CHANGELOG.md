@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Improved handling of expired token
+- Validation in cron expression has become more informative
 ### Added
 - Added FormValidationErrorsDirective for all form errors
 - Added lazy loading for application routing
+- Added unit validation message for app-time-delta-form
 
 ## [0.52.1] - 2025-07-17
 ### Fixed

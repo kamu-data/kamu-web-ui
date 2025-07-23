@@ -94,6 +94,8 @@ describe("TimeDeltaFormComponent", () => {
         const isUntouched = await timeDeltaHarness.isEveryInputUntouched();
         expect(isUntouched).toBeFalse();
 
+        fixture.detectChanges();
+
         const errorMessage = await timeDeltaHarness.getErrorMessage();
         expect(errorMessage).toEqual("Value is required");
     });

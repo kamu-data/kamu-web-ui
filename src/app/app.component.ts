@@ -19,7 +19,6 @@ import { MaybeNull } from "./interface/app.types";
 import { isMobileView, promiseWithCatch } from "./common/helpers/app.helpers";
 import { AppConfigService } from "./app-config.service";
 import { AppUIConfigFeatureFlags } from "./app-config.model";
-import { LoginService } from "./auth/login/login.service";
 import { loadErrorMessages } from "@apollo/client/dev";
 import { isDevMode } from "@angular/core";
 import { LoggedUserService } from "./auth/logged-user.service";
@@ -32,6 +31,7 @@ import { DatasetViewTypeEnum } from "./dataset-view/dataset-view.interface";
 import { ModalComponent } from "./common/components/modal/modal.component";
 import { SpinnerComponent } from "./common/components/spinner/spinner/spinner.component";
 import { AppHeaderComponent } from "./header/app-header/app-header.component";
+import { LoginMethodsService } from "./auth/login-methods.service";
 
 export const ALL_URLS_WITHOUT_HEADER: string[] = [
     ProjectLinks.URL_LOGIN,
@@ -79,7 +79,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     private router = inject(Router);
-    private loginService = inject(LoginService);
+    private loginMethodsService = inject(LoginMethodsService);
     private modalService = inject(ModalService);
     private navigationService = inject(NavigationService);
     private appConfigService = inject(AppConfigService);
@@ -118,7 +118,7 @@ export class AppComponent extends BaseComponent implements OnInit {
 
     private readConfiguration(): void {
         this.featureFlags = this.appConfigService.featureFlags;
-        this.loginMethods = this.loginService.loginMethods;
+        this.loginMethods = this.loginMethodsService.loginMethods;
     }
 
     private checkView(): void {

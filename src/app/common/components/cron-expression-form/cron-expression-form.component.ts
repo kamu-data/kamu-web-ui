@@ -8,10 +8,11 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { BaseComponent } from "../base.component";
-import { cronExpressionValidator } from "src/app/common/helpers/data.helpers";
 import { cronExpressionNextTime } from "src/app/common/helpers/app.helpers";
 import { CronExpressionFormType } from "./cron-expression-form.value";
 import { NgIf } from "@angular/common";
+import { FormValidationErrorsDirective } from "../../directives/form-validation-errors.directive";
+import { cronValidator } from "../../helpers/cron-expression-validator.helper";
 
 @Component({
     selector: "app-cron-expression-form",
@@ -25,6 +26,7 @@ import { NgIf } from "@angular/common";
         ReactiveFormsModule,
 
         //-----//
+        FormValidationErrorsDirective,
     ],
 })
 export class CronExpressionFormComponent extends BaseComponent {
@@ -32,13 +34,12 @@ export class CronExpressionFormComponent extends BaseComponent {
     @Input() public label: string = "Cron expression :";
     @Input() public placeholder: string = "Example: * * * * ?";
 
-    public readonly INVALID_EXPRESSION_MESSAGE: string = "Invalid expression";
     public readonly NEXT_TIME_LABEL: string = "Next time";
 
     public static buildForm(): FormGroup<CronExpressionFormType> {
         return new FormGroup<CronExpressionFormType>({
             cronExpression: new FormControl<string>("", {
-                validators: [Validators.required, cronExpressionValidator()],
+                validators: [Validators.required, cronValidator],
                 nonNullable: true,
             }),
         });

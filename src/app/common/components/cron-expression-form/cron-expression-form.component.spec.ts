@@ -13,6 +13,7 @@ import { CronExpressionFormHarness } from "./cron-expression-form.harness";
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ReactiveFormsModule } from "@angular/forms";
+import { FormValidationErrorsDirective } from "../../directives/form-validation-errors.directive";
 
 @Component({
     standalone: true,
@@ -39,11 +40,13 @@ describe("CronExpressionFormComponent", () => {
     let cronHarness: CronExpressionFormHarness;
 
     const VALID_CRON_EXPRESSION = "0 9 ? * MON"; // Every Monday at 9 AM
-    const INVALID_CRON_EXPRESSION = "0 9 * * MON"; // Invalid because it has both day of month and day of week specified
+    const INVALID_CRON_EXPRESSION = "0 9 * # MON"; // Invalid because has special character '#'
+    const INVALID_EXPRESSION_MESSAGE = `Month has invalid format: "#".`;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [TestCronExpressionFormComponent],
+            imports: [TestCronExpressionFormComponent, FormValidationErrorsDirective],
+
             providers: [
                 {
                     provide: ActivatedRoute,
@@ -102,8 +105,10 @@ describe("CronExpressionFormComponent", () => {
         const isUntouched = await cronHarness.isUntouched();
         expect(isUntouched).toBeFalse();
 
+        fixture.detectChanges();
+
         const errorMessage = await cronHarness.getErrorMessage();
-        expect(errorMessage).toEqual(component.INVALID_EXPRESSION_MESSAGE);
+        expect(errorMessage).toEqual(INVALID_EXPRESSION_MESSAGE);
 
         const nextTime = await cronHarness.getNextTime();
         expect(nextTime).toBeNull();

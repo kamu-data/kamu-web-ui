@@ -5,10 +5,8 @@
  * included in the LICENSE file.
  */
 
-.form-control-width {
-    width: 132px;
-}
-
-.form-control-label {
-    width: 120px;
+export interface JwtPayload {
+    exp: number;
+    iat?: number;
+    [key: string]: unknown;
 }

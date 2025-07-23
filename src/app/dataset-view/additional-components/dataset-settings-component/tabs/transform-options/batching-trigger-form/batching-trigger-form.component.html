@@ -16,6 +16,7 @@
                             formControlName="unit"
                             class="form-select form-control-width"
                             data-test-id="batching-interval-unit"
+                            #unit
                         >
                             <option [value]="timeUnit.Minutes">Minutes</option>
                             <option [value]="timeUnit.Hours">Hours</option>
@@ -28,17 +29,22 @@
                             formControlName="every"
                             class="form-control form-control-width"
                             data-test-id="batching-interval-every"
+                            #every
                         />
-                        <ng-container
-                            *ngIf="
-                                batchingForm?.get('every')?.errors?.range &&
-                                (batchingForm.get('every')?.touched || batchingForm.get('every')?.dirty)
-                            "
-                        >
-                            <div class="text-danger fs-12 ms-4 text-break" data-test-id="range-error">
-                                {{ batchingForm.get("every")?.errors?.range.message }}
-                            </div>
-                        </ng-container>
+                        <div
+                            class="text-danger fs-12"
+                            [input]="unit"
+                            [fieldLabel]="'Unit'"
+                            [appFieldError]="['required']"
+                            [group]="batchingForm"
+                        ></div>
+                        <div
+                            class="text-danger fs-12"
+                            [input]="every"
+                            [fieldLabel]="'Max value'"
+                            [appFieldError]="['required', 'range']"
+                            [group]="batchingForm"
+                        ></div>
                     </div>
                     <div class="d-flex align-items-center gap-3 ms-1 px-2 pb-3">
                         <span class="form-control-label">Min records to await:</span>

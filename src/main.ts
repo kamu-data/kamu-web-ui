@@ -12,7 +12,7 @@ import { MarkdownModule } from "ngx-markdown";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { bootstrapApplication } from "@angular/platform-browser";
 import { MAT_RIPPLE_GLOBAL_OPTIONS } from "@angular/material/core";
-import { HIGHLIGHT_OPTIONS_PROVIDER, logError } from "./app/common/helpers/app.helpers";
+import { HIGHLIGHT_OPTIONS_PROVIDER, isAccessTokenExpired, logError } from "./app/common/helpers/app.helpers";
 import { firstValueFrom } from "rxjs";
 import { apolloCache } from "./app/common/helpers/apollo-cache.helper";
 import { ErrorTexts } from "./app/common/values/errors.text";
@@ -32,15 +32,15 @@ import {
     HttpClient,
 } from "@angular/common/http";
 import { LoggedUserService } from "./app/auth/logged-user.service";
-import { LoginService } from "./app/auth/login/login.service";
 import { HttpLink } from "apollo-angular/http";
 import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
 import AppValues from "./app/common/values/app.values";
 import { provideRouter, withComponentInputBinding, withRouterConfig } from "@angular/router";
 import { provideToastr } from "ngx-toastr";
-import { NavigationService } from "./app/services/navigation.service";
+import { NavigationService } from "src/app/services/navigation.service";
 import ProjectLinks from "./app/project-links";
 import { provideCatchAllRoute, provideConditionalGuardedRoutes, PUBLIC_ROUTES } from "./app/app-routing";
+import { LoginMethodsService } from "./app/auth/login-methods.service";
 
 const Services = [
     Apollo,
@@ -69,9 +69,19 @@ const Services = [
 
             const errorMiddleware: ApolloLink = onError(({ graphQLErrors, networkError }) => {
                 const toastrService = injector.get(ToastrService);
+
                 if (graphQLErrors) {
                     if (graphQLErrors[0].message === ErrorTexts.ERROR_ACCOUNT_IS_NOT_WHITELISTED) {
                         navigationService.navigateToPath(ProjectLinks.URL_ACCOUNT_WHITELIST_PAGE_NOT_FOUND);
+                    } else if (graphQLErrors[0].message === ErrorTexts.ERROR_ACCESS_TOKEN) {
+                        const accessToken: string | null = localStorageService.accessToken;
+                        if (accessToken) {
+                            toastrService.error(
+                                isAccessTokenExpired(accessToken)
+                                    ? ErrorTexts.ERROR_ACCESS_TOKEN_EXPIRED
+                                    : graphQLErrors[0].message,
+                            );
+                        }
                     } else {
                         graphQLErrors.forEach(({ message }) => {
                             toastrService.error(message);
@@ -129,12 +139,12 @@ const Services = [
     },
     {
         provide: APP_INITIALIZER,
-        useFactory: (loginService: LoginService) => {
+        useFactory: (loginMethodsService: LoginMethodsService) => {
             return (): Promise<void> => {
-                return firstValueFrom(loginService.initialize()).catch((e) => logError(e));
+                return firstValueFrom(loginMethodsService.initialize()).catch((e) => logError(e));
             };
         },
-        deps: [LoginService],
+        deps: [LoginMethodsService],
         multi: true,
     },
     {

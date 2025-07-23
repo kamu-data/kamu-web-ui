@@ -165,7 +165,8 @@ describe("IngestTriggerFormComponent", () => {
 
         expect(component.cronExpressionControl.invalid).toBeTrue();
         expect(component.cronExpressionControl.get("cronExpression")?.errors).toEqual({
-            invalidCronExpression: true,
+            invalidCronExpression:
+                "Cron expression must consist of 5 fields (minute, hour, day of month, month, day of week), but got 2.",
         });
 
         expect(component.timeDeltaControl.invalid).toBeFalse();

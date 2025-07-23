@@ -1,6 +1,6 @@
-<div class="d-flex align-items-center gap-3 ms-1 px-2" data-test-id="time-delta-form">
+<div class="d-flex align-items-center gap-3 ms-1 px-2" data-test-id="time-delta-form" [formGroup]="form">
     <span class="form-control-label">{{ label }}</span>
-    <select [formControl]="unitControl" class="form-select form-control-width me-3" data-test-id="time-delta-unit">
+    <select formControlName="unit" #unit class="form-select form-control-width me-3" data-test-id="time-delta-unit">
         <option [value]="TimeUnit.Minutes">Minutes</option>
         <option [value]="TimeUnit.Hours">Hours</option>
         <option [value]="TimeUnit.Days">Days</option>
@@ -8,27 +8,26 @@
     </select>
     <input
         type="number"
-        [formControl]="everyControl"
+        formControlName="every"
         min="1"
         class="form-control form-control-width"
         data-test-id="time-delta-every"
+        #every
     />
+    <span
+        class="text-danger fs-12"
+        [input]="unit"
+        [fieldLabel]="'Unit'"
+        [appFieldError]="['required']"
+        [group]="form"
+    ></span>
 
-    <ng-container *ngIf="everyControl.errors && (everyControl?.touched || everyControl?.dirty)">
-        <!-- TODO: convert to appFieldError directive -->
-        <div
-            *ngIf="everyControl.errors.required"
-            class="text-danger fs-12 ms-4 text-break"
-            data-test-id="time-delta-required-error"
-        >
-            Value is required
-        </div>
-        <div
-            *ngIf="everyControl.errors.range"
-            class="text-danger fs-12 ms-4 text-break"
-            data-test-id="time-delta-range-error"
-        >
-            {{ everyControl.errors.range.message }}
-        </div>
-    </ng-container>
+    <span
+        class="text-danger fs-12"
+        [input]="every"
+        [fieldLabel]="'Value'"
+        [appFieldError]="['required', 'range']"
+        [group]="form"
+        [dataTestId]="'error-message'"
+    ></span>
 </div>

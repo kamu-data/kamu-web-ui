@@ -24,8 +24,8 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { finalize } from "rxjs";
 import { LicenseFormType } from "./edit-license-modal.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { NgIf } from "@angular/common";
 import { MatDividerModule } from "@angular/material/divider";
+import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
 
 @Component({
     selector: "app-edit-license-modal",
@@ -34,11 +34,13 @@ import { MatDividerModule } from "@angular/material/divider";
     imports: [
         //-----//
         FormsModule,
-        NgIf,
         ReactiveFormsModule,
 
         //-----//
         MatDividerModule,
+
+        //-----//
+        FormValidationErrorsDirective,
     ],
 })
 export class EditLicenseModalComponent extends BaseComponent implements OnInit {

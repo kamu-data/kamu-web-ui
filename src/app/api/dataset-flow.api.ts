@@ -231,14 +231,10 @@ export class DatasetFlowApi {
             );
     }
 
-    public datasetPauseFlows(params: {
-        datasetId: string;
-        datasetFlowType?: DatasetFlowType;
-    }): Observable<DatasetPauseFlowsMutation> {
+    public datasetPauseFlows(params: { datasetId: string }): Observable<DatasetPauseFlowsMutation> {
         return this.datasetPauseFlowsGQL
             .mutate({
                 datasetId: params.datasetId,
-                datasetFlowType: params.datasetFlowType,
             })
             .pipe(
                 first(),
@@ -248,14 +244,10 @@ export class DatasetFlowApi {
             );
     }
 
-    public datasetResumeFlows(params: {
-        datasetId: string;
-        datasetFlowType?: DatasetFlowType;
-    }): Observable<DatasetResumeFlowsMutation> {
+    public datasetResumeFlows(params: { datasetId: string }): Observable<DatasetResumeFlowsMutation> {
         return this.datasetResumeFlowsGQL
             .mutate({
                 datasetId: params.datasetId,
-                datasetFlowType: params.datasetFlowType,
             })
             .pipe(
                 first(),

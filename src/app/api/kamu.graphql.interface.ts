@@ -1235,17 +1235,19 @@ export type DatasetFlowTriggersByTypeArgs = {
 
 export type DatasetFlowTriggersMut = {
     __typename?: "DatasetFlowTriggersMut";
+    pauseFlow: Scalars["Boolean"];
     pauseFlows: Scalars["Boolean"];
+    resumeFlow: Scalars["Boolean"];
     resumeFlows: Scalars["Boolean"];
     setTrigger: SetFlowTriggerResult;
 };
 
-export type DatasetFlowTriggersMutPauseFlowsArgs = {
-    datasetFlowType?: InputMaybe<DatasetFlowType>;
+export type DatasetFlowTriggersMutPauseFlowArgs = {
+    datasetFlowType: DatasetFlowType;
 };
 
-export type DatasetFlowTriggersMutResumeFlowsArgs = {
-    datasetFlowType?: InputMaybe<DatasetFlowType>;
+export type DatasetFlowTriggersMutResumeFlowArgs = {
+    datasetFlowType: DatasetFlowType;
 };
 
 export type DatasetFlowTriggersMutSetTriggerArgs = {
@@ -5479,7 +5481,6 @@ export type GetDatasetListFlowsQuery = {
 
 export type DatasetPauseFlowsMutationVariables = Exact<{
     datasetId: Scalars["DatasetID"];
-    datasetFlowType?: InputMaybe<DatasetFlowType>;
 }>;
 
 export type DatasetPauseFlowsMutation = {
@@ -5498,7 +5499,6 @@ export type DatasetPauseFlowsMutation = {
 
 export type DatasetResumeFlowsMutationVariables = Exact<{
     datasetId: Scalars["DatasetID"];
-    datasetFlowType?: InputMaybe<DatasetFlowType>;
 }>;
 
 export type DatasetResumeFlowsMutation = {
@@ -10352,12 +10352,12 @@ export class GetDatasetListFlowsGQL extends Apollo.Query<GetDatasetListFlowsQuer
     }
 }
 export const DatasetPauseFlowsDocument = gql`
-    mutation datasetPauseFlows($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType) {
+    mutation datasetPauseFlows($datasetId: DatasetID!) {
         datasets {
             byId(datasetId: $datasetId) {
                 flows {
                     triggers {
-                        pauseFlows(datasetFlowType: $datasetFlowType)
+                        pauseFlows
                     }
                 }
             }
@@ -10379,12 +10379,12 @@ export class DatasetPauseFlowsGQL extends Apollo.Mutation<
     }
 }
 export const DatasetResumeFlowsDocument = gql`
-    mutation datasetResumeFlows($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType) {
+    mutation datasetResumeFlows($datasetId: DatasetID!) {
         datasets {
             byId(datasetId: $datasetId) {
                 flows {
                     triggers {
-                        resumeFlows(datasetFlowType: $datasetFlowType)
+                        resumeFlows
                     }
                 }
             }

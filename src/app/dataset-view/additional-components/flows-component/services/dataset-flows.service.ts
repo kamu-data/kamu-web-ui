@@ -15,7 +15,6 @@ import {
     DatasetAllFlowsPausedQuery,
     DatasetBasicsFragment,
     DatasetFlowFilters,
-    DatasetFlowType,
     DatasetFlowsInitiatorsQuery,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsMutation,
@@ -153,7 +152,7 @@ export class DatasetFlowsService {
         );
     }
 
-    public datasetPauseFlows(params: { datasetId: string; datasetFlowType?: DatasetFlowType }): Observable<void> {
+    public datasetPauseFlows(params: { datasetId: string }): Observable<void> {
         return this.datasetFlowApi.datasetPauseFlows(params).pipe(
             map((data: DatasetPauseFlowsMutation) => {
                 const result = data.datasets.byId?.flows.triggers.pauseFlows;
@@ -164,7 +163,7 @@ export class DatasetFlowsService {
         );
     }
 
-    public datasetResumeFlows(params: { datasetId: string; datasetFlowType?: DatasetFlowType }): Observable<void> {
+    public datasetResumeFlows(params: { datasetId: string }): Observable<void> {
         return this.datasetFlowApi.datasetResumeFlows(params).pipe(
             map((data: DatasetResumeFlowsMutation) => {
                 const result = data.datasets.byId?.flows.triggers.resumeFlows;

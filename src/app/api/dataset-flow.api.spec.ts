@@ -394,7 +394,6 @@ describe("DatasetFlowApi", () => {
         service
             .datasetPauseFlows({
                 datasetId: TEST_DATASET_ID,
-                datasetFlowType: DatasetFlowType.Ingest,
             })
             .subscribe((res: DatasetPauseFlowsMutation) => {
                 expect(res.datasets.byId?.flows.triggers.pauseFlows).toEqual(true);
@@ -402,7 +401,6 @@ describe("DatasetFlowApi", () => {
 
         const op = controller.expectOne(DatasetPauseFlowsDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
-        expect(op.operation.variables.datasetFlowType).toEqual(DatasetFlowType.Ingest);
         op.flush({
             data: mockDatasetPauseFlowsMutationSuccess,
         });
@@ -412,7 +410,6 @@ describe("DatasetFlowApi", () => {
         service
             .datasetResumeFlows({
                 datasetId: TEST_DATASET_ID,
-                datasetFlowType: DatasetFlowType.Ingest,
             })
             .subscribe((res: DatasetResumeFlowsMutation) => {
                 expect(res.datasets.byId?.flows.triggers.resumeFlows).toEqual(true);
@@ -420,7 +417,6 @@ describe("DatasetFlowApi", () => {
 
         const op = controller.expectOne(DatasetResumeFlowsDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
-        expect(op.operation.variables.datasetFlowType).toEqual(DatasetFlowType.Ingest);
         op.flush({
             data: mockDatasetResumeFlowsMutationSuccess,
         });

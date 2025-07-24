@@ -2136,7 +2136,6 @@ export type FlowDescriptionDatasetPollingIngest = {
 export type FlowDescriptionDatasetPushIngest = {
     __typename?: "FlowDescriptionDatasetPushIngest";
     ingestResult?: Maybe<FlowDescriptionUpdateResult>;
-    inputRecordsCount: Scalars["Int"];
     message: Scalars["String"];
     sourceName?: Maybe<Scalars["String"]>;
 };
@@ -5728,7 +5727,6 @@ export type FlowSummaryDataFragment = {
         | {
               __typename?: "FlowDescriptionDatasetPushIngest";
               sourceName?: string | null;
-              inputRecordsCount: number;
               ingestResult?:
                   | {
                         __typename?: "FlowDescriptionUpdateResultSuccess";
@@ -7162,7 +7160,6 @@ export const FlowSummaryDataFragmentDoc = gql`
             }
             ... on FlowDescriptionDatasetPushIngest {
                 sourceName
-                inputRecordsCount
                 ingestResult {
                     ... on FlowDescriptionUpdateResultUpToDate {
                         uncacheable

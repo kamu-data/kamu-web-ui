@@ -28,7 +28,6 @@ fragment FlowSummaryData on Flow {
 
     ... on FlowDescriptionDatasetPushIngest {
       sourceName
-      inputRecordsCount
       ingestResult {
         ... on FlowDescriptionUpdateResultUpToDate {
           uncacheable

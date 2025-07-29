@@ -98,7 +98,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     @Output() public searchByFiltersChange = new EventEmitter<MaybeNull<FlowsTableFiltersOptions>>();
     @Output() public cancelFlowChange = new EventEmitter<CancelFlowArgs>();
 
-    @ViewChild(MatTable) private table: MatTable<FlowSummaryDataFragment>;
+    @ViewChild(MatTable) private table: MaybeNull<MatTable<FlowSummaryDataFragment>> = null;
     @ViewChildren(MatMenuTrigger) private triggersMatMenu: QueryList<MatMenuTrigger>;
 
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
@@ -154,7 +154,9 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
                 }
             }
 
-            this.table.renderRows();
+            if (this.table) {
+                this.table.renderRows();
+            }
         }
     }
 

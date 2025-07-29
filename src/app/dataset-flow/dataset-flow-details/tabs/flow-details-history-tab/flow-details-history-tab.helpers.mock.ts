@@ -312,7 +312,7 @@ export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[
     ...mockFlowHistoryDataFragmentForIconOptions,
     {
         __typename: "FlowEventInitiated",
-        eventId: "0",
+        eventId: "7",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         trigger: {
             __typename: "FlowTriggerManual",
@@ -330,7 +330,7 @@ export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[
     },
     {
         __typename: "FlowEventInitiated",
-        eventId: "0",
+        eventId: "8",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         trigger: {
             __typename: "FlowTriggerInputDatasetFlow",
@@ -341,7 +341,7 @@ export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[
     },
     {
         __typename: "FlowEventStartConditionUpdated",
-        eventId: "4",
+        eventId: "9",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         startCondition: {
             __typename: "FlowStartConditionBatching",
@@ -359,7 +359,7 @@ export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[
     },
     {
         __typename: "FlowEventStartConditionUpdated",
-        eventId: "4",
+        eventId: "10",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         startCondition: {
             __typename: "FlowStartConditionExecutor",
@@ -368,7 +368,7 @@ export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[
     },
     {
         __typename: "FlowEventStartConditionUpdated",
-        eventId: "4",
+        eventId: "11",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         startCondition: {
             __typename: "FlowStartConditionSchedule",

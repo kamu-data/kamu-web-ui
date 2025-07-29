@@ -47,7 +47,7 @@
     <label class="form-check-label"> Only system flows </label>
 </div>
 
-<table mat-table [dataSource]="dataSource">
+<table mat-table [dataSource]="dataSource" [trackBy]="trackByFlowId">
     <!-- Description Column -->
     <ng-container matColumnDef="description">
         <th mat-header-cell *matHeaderCellDef style="width: 20%">

@@ -17,6 +17,7 @@ import {
     QueryList,
     SimpleChange,
     SimpleChanges,
+    ViewChild,
     ViewChildren,
 } from "@angular/core";
 import {
@@ -28,7 +29,7 @@ import {
     DatasetBasicsFragment,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/values/app.values";
-import { MatTableDataSource, MatTableModule } from "@angular/material/table";
+import { MatTable, MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { capitalizeString, promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { FlowTableHelpers } from "./flows-table.helpers";
 import { MatMenuTrigger, MatMenuModule } from "@angular/material/menu";
@@ -97,6 +98,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     @Output() public searchByFiltersChange = new EventEmitter<MaybeNull<FlowsTableFiltersOptions>>();
     @Output() public cancelFlowChange = new EventEmitter<CancelFlowArgs>();
 
+    @ViewChild(MatTable) private table: MaybeNull<MatTable<FlowSummaryDataFragment>> = null;
     @ViewChildren(MatMenuTrigger) private triggersMatMenu: QueryList<MatMenuTrigger>;
 
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
@@ -129,10 +131,36 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
-        const nodes: SimpleChange = changes.nodes;
-        if (nodes && nodes.currentValue !== nodes.previousValue) {
-            this.dataSource.data = nodes.currentValue as FlowSummaryDataFragment[];
+        const nodesChange: SimpleChange = changes.nodes;
+        if (!nodesChange || !nodesChange.currentValue) return;
+
+        const newNodes: FlowSummaryDataFragment[] = nodesChange.currentValue as FlowSummaryDataFragment[];
+        const existingData = this.dataSource.data;
+
+        // Build lookup map from current data
+        const existingById = new Map<string, FlowSummaryDataFragment>();
+        for (const row of existingData) {
+            existingById.set(row.flowId, row);
         }
+
+        // Efficient in-place update & reordering
+        for (let i = 0; i < newNodes.length; i++) {
+            const newNode = newNodes[i];
+            const existing = existingById.get(newNode.flowId);
+            if (existing) {
+                // Shallow object patch, but reference preserved
+                Object.assign(existing, newNode);
+                existingData[i] = existing;
+            } else {
+                existingData[i] = newNode;
+            }
+        }
+
+        // Trim any excess rows from the previous array
+        existingData.length = newNodes.length;
+
+        // Trigger re-render
+        this.table?.renderRows();
     }
 
     public flowTypeDescription(flow: FlowSummaryDataFragment): string {
@@ -299,5 +327,9 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
             ? [{ id: capitalizeString(this.filterByStatus), status: capitalizeString(this.filterByStatus) }]
             : [];
         this.filterAccountSettings.disabled = this.onlySystemFlows;
+    }
+
+    public trackByFlowId(index: number, item: FlowSummaryDataFragment): string {
+        return item.flowId;
     }
 }

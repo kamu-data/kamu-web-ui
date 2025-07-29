@@ -131,33 +131,36 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
-        const nodes: SimpleChange = changes.nodes;
-        if (nodes && nodes.currentValue !== nodes.previousValue) {
-            const newNodes: FlowSummaryDataFragment[] = changes.nodes.currentValue as FlowSummaryDataFragment[];
-            const oldNodes = this.dataSource.data;
+        const nodesChange: SimpleChange = changes.nodes;
+        if (!nodesChange || !nodesChange.currentValue) return;
 
-            const nodeMap = new Map(oldNodes.map((n) => [n.flowId, n]));
-            const newIds = new Set(newNodes.map((n) => n.flowId));
+        const newNodes: FlowSummaryDataFragment[] = nodesChange.currentValue as FlowSummaryDataFragment[];
+        const existingData = this.dataSource.data;
 
-            for (const newNode of newNodes) {
-                const existing = nodeMap.get(newNode.flowId);
-                if (existing) {
-                    Object.assign(existing, newNode);
-                } else {
-                    oldNodes.push(newNode);
-                }
-            }
+        // Build lookup map from current data
+        const existingById = new Map<string, FlowSummaryDataFragment>();
+        for (const row of existingData) {
+            existingById.set(row.flowId, row);
+        }
 
-            for (let i = oldNodes.length - 1; i >= 0; i--) {
-                if (!newIds.has(oldNodes[i].flowId)) {
-                    oldNodes.splice(i, 1);
-                }
-            }
-
-            if (this.table) {
-                this.table.renderRows();
+        // Efficient in-place update & reordering
+        for (let i = 0; i < newNodes.length; i++) {
+            const newNode = newNodes[i];
+            const existing = existingById.get(newNode.flowId);
+            if (existing) {
+                // Shallow object patch, but reference preserved
+                Object.assign(existing, newNode);
+                existingData[i] = existing;
+            } else {
+                existingData[i] = newNode;
             }
         }
+
+        // Trim any excess rows from the previous array
+        existingData.length = newNodes.length;
+
+        // Trigger re-render
+        this.table?.renderRows();
     }
 
     public flowTypeDescription(flow: FlowSummaryDataFragment): string {

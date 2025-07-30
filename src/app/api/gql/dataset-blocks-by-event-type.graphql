@@ -1,0 +1,11 @@
+query datasetBlocksByEventType($accountName: AccountName!, $datasetName: DatasetName!, $eventType: MetadataEventType!) {
+  datasets {
+    byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+      metadata {
+        extendedBlocksByEventType(eventType: $eventType) {
+          encoded
+        }
+      }
+    }
+  }
+}

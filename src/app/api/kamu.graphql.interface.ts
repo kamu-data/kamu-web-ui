@@ -1328,12 +1328,17 @@ export type DatasetMetadata = {
     currentVocab?: Maybe<SetVocab>;
     /** Last recorded watermark */
     currentWatermark?: Maybe<Scalars["DateTime"]>;
+    extendedBlocksByEventType: Array<MetadataBlockExtended>;
     /** Sync statuses of push remotes */
     pushSyncStatuses: DatasetPushStatuses;
 };
 
 export type DatasetMetadataCurrentSchemaArgs = {
     format?: InputMaybe<DataSchemaFormat>;
+};
+
+export type DatasetMetadataExtendedBlocksByEventTypeArgs = {
+    eventType: MetadataEventType;
 };
 
 export type DatasetMetadataMut = {
@@ -2590,6 +2595,7 @@ export type MetadataBlockExtended = {
     __typename?: "MetadataBlockExtended";
     author: Account;
     blockHash: Scalars["Multihash"];
+    encoded?: Maybe<Scalars["String"]>;
     event: MetadataEvent;
     prevBlockHash?: Maybe<Scalars["Multihash"]>;
     sequenceNumber: Scalars["Int"];
@@ -2655,6 +2661,22 @@ export type MetadataEvent =
     | SetPollingSource
     | SetTransform
     | SetVocab;
+
+export enum MetadataEventType {
+    AddData = "ADD_DATA",
+    AddPushSource = "ADD_PUSH_SOURCE",
+    DisablePollingSource = "DISABLE_POLLING_SOURCE",
+    DisablePushSource = "DISABLE_PUSH_SOURCE",
+    ExecuteTransform = "EXECUTE_TRANSFORM",
+    Seed = "SEED",
+    SetAttachments = "SET_ATTACHMENTS",
+    SetDataSchema = "SET_DATA_SCHEMA",
+    SetInfo = "SET_INFO",
+    SetLicense = "SET_LICENSE",
+    SetPollingSource = "SET_POLLING_SOURCE",
+    SetTransform = "SET_TRANSFORM",
+    SetVocab = "SET_VOCAB",
+}
 
 export enum MetadataManifestFormat {
     Yaml = "YAML",
@@ -4621,6 +4643,26 @@ export type GetDatasetBasicsWithPermissionsQuery = {
     datasets: {
         __typename?: "Datasets";
         byOwnerAndName?: ({ __typename?: "Dataset" } & DatasetBasicsFragment & DatasetPermissionsFragment) | null;
+    };
+};
+
+export type DatasetBlocksByEventTypeQueryVariables = Exact<{
+    accountName: Scalars["AccountName"];
+    datasetName: Scalars["DatasetName"];
+    eventType: MetadataEventType;
+}>;
+
+export type DatasetBlocksByEventTypeQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byOwnerAndName?: {
+            __typename?: "Dataset";
+            metadata: {
+                __typename?: "DatasetMetadata";
+                extendedBlocksByEventType: Array<{ __typename?: "MetadataBlockExtended"; encoded?: string | null }>;
+            };
+        } | null;
     };
 };
 
@@ -9143,6 +9185,37 @@ export class GetDatasetBasicsWithPermissionsGQL extends Apollo.Query<
     GetDatasetBasicsWithPermissionsQueryVariables
 > {
     document = GetDatasetBasicsWithPermissionsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetBlocksByEventTypeDocument = gql`
+    query datasetBlocksByEventType(
+        $accountName: AccountName!
+        $datasetName: DatasetName!
+        $eventType: MetadataEventType!
+    ) {
+        datasets {
+            byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+                metadata {
+                    extendedBlocksByEventType(eventType: $eventType) {
+                        encoded
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetBlocksByEventTypeGQL extends Apollo.Query<
+    DatasetBlocksByEventTypeQuery,
+    DatasetBlocksByEventTypeQueryVariables
+> {
+    document = DatasetBlocksByEventTypeDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

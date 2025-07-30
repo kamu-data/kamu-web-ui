@@ -21,7 +21,19 @@ fragment FlowHistoryData on FlowEvent {
         dataset {
           ...DatasetBasics
         }
-        source
+        source {
+          __typename
+          ... on FlowActivationCauseDatasetUpdateSourceUpstreamFlow {
+            flowId
+          }
+          ... on FlowActivationCauseDatasetUpdateSourceHttpIngest {
+            sourceName
+          }
+          ... on FlowActivationCauseDatasetUpdateSourceSmartProtocolPush {
+            accountName
+            isForce
+          }
+        }
       }
     }
   }
@@ -104,7 +116,19 @@ fragment FlowHistoryData on FlowEvent {
         dataset {
           ...DatasetBasics
         }
-        source
+        source {
+          __typename
+          ... on FlowActivationCauseDatasetUpdateSourceUpstreamFlow {
+            flowId
+          }
+          ... on FlowActivationCauseDatasetUpdateSourceHttpIngest {
+            sourceName
+          }
+          ... on FlowActivationCauseDatasetUpdateSourceSmartProtocolPush {
+            accountName
+            isForce
+          }
+        }
       }
     }
   }

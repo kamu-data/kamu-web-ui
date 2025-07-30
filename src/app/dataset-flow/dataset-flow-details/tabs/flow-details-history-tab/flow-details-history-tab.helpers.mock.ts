@@ -8,7 +8,6 @@
 import {
     AccountProvider,
     AccountType,
-    FlowActivationCauseDatasetUpdateSource,
     FlowHistoryDataFragment,
     FlowOutcomeDataFragment,
     FlowStatus,
@@ -143,7 +142,10 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         activationCause: {
             __typename: "FlowActivationCauseDatasetUpdate",
             dataset: mockDatasetSearchResult.datasets[0],
-            source: FlowActivationCauseDatasetUpdateSource.UpstreamFlow,
+            source: {
+                __typename: "FlowActivationCauseDatasetUpdateSourceUpstreamFlow",
+                flowId: "12345",
+            },
         },
     },
     {
@@ -153,7 +155,9 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         activationCause: {
             __typename: "FlowActivationCauseDatasetUpdate",
             dataset: mockDatasetSearchResult.datasets[0],
-            source: FlowActivationCauseDatasetUpdateSource.HttpIngest,
+            source: {
+                __typename: "FlowActivationCauseDatasetUpdateSourceHttpIngest",
+            },
         },
     },
     {
@@ -267,7 +271,10 @@ export const mockFlowHistoryDataFragmentForIconOptions: FlowHistoryDataFragment[
         activationCause: {
             __typename: "FlowActivationCauseDatasetUpdate",
             dataset: mockDatasetSearchResult.datasets[0],
-            source: FlowActivationCauseDatasetUpdateSource.SmartProtocolPush,
+            source: {
+                __typename: "FlowActivationCauseDatasetUpdateSourceSmartProtocolPush",
+                isForce: false,
+            },
         },
     },
     {
@@ -338,7 +345,10 @@ export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[
         activationCause: {
             __typename: "FlowActivationCauseDatasetUpdate",
             dataset: mockDatasetSearchResult.datasets[0],
-            source: FlowActivationCauseDatasetUpdateSource.UpstreamFlow,
+            source: {
+                __typename: "FlowActivationCauseDatasetUpdateSourceUpstreamFlow",
+                flowId: "12345",
+            },
         },
     },
     {
@@ -383,12 +393,12 @@ export const flowEventSubMessageResults: string[] = [
     "",
     "",
     "Task #1",
-    "Input dataset: kamu/alberta.case-details",
+    'Input dataset: <a class="fs-12" href="/kamu/alberta.case-details">kamu/alberta.case-details</a>',
     "Wake up time at Feb 12th 2024 8:22:30 PM GMT+02:00, shifted from 8:22:29 PM",
     "Activating at Mar 13th 2024 4:54:30 PM GMT+02:00",
     "Modified by ingest rule",
     "Triggered by kamu",
-    "Input dataset: kamu/alberta.case-details",
+    '<a class="fs-12" href="/kamu/alberta.case-details/flow-details/12345/history">Flow #12345</a>. Input dataset: <a class="fs-12" href="/kamu/alberta.case-details">kamu/alberta.case-details</a>',
     "Accumulated 100/500 records. Watermark modified. Deadline at Aug 6th 2022 12:17:30 AM GMT+03:00", //1
     "Task #5",
     "Wake up time at Mar 13th 2024 5:54:30 PM GMT+02:00",

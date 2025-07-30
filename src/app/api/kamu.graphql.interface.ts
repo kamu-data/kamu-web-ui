@@ -1984,11 +1984,26 @@ export type FlowActivationCauseDatasetUpdate = {
     source: FlowActivationCauseDatasetUpdateSource;
 };
 
-export enum FlowActivationCauseDatasetUpdateSource {
-    HttpIngest = "HTTP_INGEST",
-    SmartProtocolPush = "SMART_PROTOCOL_PUSH",
-    UpstreamFlow = "UPSTREAM_FLOW",
-}
+export type FlowActivationCauseDatasetUpdateSource =
+    | FlowActivationCauseDatasetUpdateSourceHttpIngest
+    | FlowActivationCauseDatasetUpdateSourceSmartProtocolPush
+    | FlowActivationCauseDatasetUpdateSourceUpstreamFlow;
+
+export type FlowActivationCauseDatasetUpdateSourceHttpIngest = {
+    __typename?: "FlowActivationCauseDatasetUpdateSourceHttpIngest";
+    sourceName?: Maybe<Scalars["String"]>;
+};
+
+export type FlowActivationCauseDatasetUpdateSourceSmartProtocolPush = {
+    __typename?: "FlowActivationCauseDatasetUpdateSourceSmartProtocolPush";
+    accountName?: Maybe<Scalars["AccountName"]>;
+    isForce: Scalars["Boolean"];
+};
+
+export type FlowActivationCauseDatasetUpdateSourceUpstreamFlow = {
+    __typename?: "FlowActivationCauseDatasetUpdateSourceUpstreamFlow";
+    flowId: Scalars["FlowID"];
+};
 
 export type FlowActivationCauseManual = {
     __typename?: "FlowActivationCauseManual";
@@ -5543,8 +5558,15 @@ type FlowHistoryData_FlowEventActivationCauseAdded_Fragment = {
         | { __typename: "FlowActivationCauseAutoPolling" }
         | {
               __typename: "FlowActivationCauseDatasetUpdate";
-              source: FlowActivationCauseDatasetUpdateSource;
               dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+              source:
+                  | { __typename: "FlowActivationCauseDatasetUpdateSourceHttpIngest"; sourceName?: string | null }
+                  | {
+                        __typename: "FlowActivationCauseDatasetUpdateSourceSmartProtocolPush";
+                        accountName?: string | null;
+                        isForce: boolean;
+                    }
+                  | { __typename: "FlowActivationCauseDatasetUpdateSourceUpstreamFlow"; flowId: string };
           }
         | { __typename: "FlowActivationCauseManual"; initiator: { __typename?: "Account" } & AccountFragment };
 };
@@ -5557,8 +5579,15 @@ type FlowHistoryData_FlowEventInitiated_Fragment = {
         | { __typename: "FlowActivationCauseAutoPolling" }
         | {
               __typename: "FlowActivationCauseDatasetUpdate";
-              source: FlowActivationCauseDatasetUpdateSource;
               dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+              source:
+                  | { __typename: "FlowActivationCauseDatasetUpdateSourceHttpIngest"; sourceName?: string | null }
+                  | {
+                        __typename: "FlowActivationCauseDatasetUpdateSourceSmartProtocolPush";
+                        accountName?: string | null;
+                        isForce: boolean;
+                    }
+                  | { __typename: "FlowActivationCauseDatasetUpdateSourceUpstreamFlow"; flowId: string };
           }
         | { __typename: "FlowActivationCauseManual"; initiator: { __typename?: "Account" } & AccountFragment };
 };
@@ -7338,7 +7367,19 @@ export const FlowHistoryDataFragmentDoc = gql`
                     dataset {
                         ...DatasetBasics
                     }
-                    source
+                    source {
+                        __typename
+                        ... on FlowActivationCauseDatasetUpdateSourceUpstreamFlow {
+                            flowId
+                        }
+                        ... on FlowActivationCauseDatasetUpdateSourceHttpIngest {
+                            sourceName
+                        }
+                        ... on FlowActivationCauseDatasetUpdateSourceSmartProtocolPush {
+                            accountName
+                            isForce
+                        }
+                    }
                 }
             }
         }
@@ -7413,7 +7454,19 @@ export const FlowHistoryDataFragmentDoc = gql`
                     dataset {
                         ...DatasetBasics
                     }
-                    source
+                    source {
+                        __typename
+                        ... on FlowActivationCauseDatasetUpdateSourceUpstreamFlow {
+                            flowId
+                        }
+                        ... on FlowActivationCauseDatasetUpdateSourceHttpIngest {
+                            sourceName
+                        }
+                        ... on FlowActivationCauseDatasetUpdateSourceSmartProtocolPush {
+                            accountName
+                            isForce
+                        }
+                    }
                 }
             }
         }

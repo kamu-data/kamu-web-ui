@@ -20,12 +20,13 @@ import {
     FlowActivationCause,
     TaskStatus,
     FlowEventActivationCauseAdded,
-    FlowActivationCauseDatasetUpdateSource,
 } from "src/app/api/kamu.graphql.interface";
 import { pluralize } from "src/app/common/helpers/app.helpers";
 import { DataHelpers } from "src/app/common/helpers/data.helpers";
 import AppValues from "src/app/common/values/app.values";
 import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
+import ProjectLinks from "src/app/project-links";
+import { FlowDetailsTabs } from "../../dataset-flow-details.types";
 
 export class DatasetFlowDetailsHelpers {
     public static flowEventDescription(
@@ -305,12 +306,12 @@ export class DatasetFlowDetailsHelpers {
             case "FlowActivationCauseManual":
                 return "manually";
             case "FlowActivationCauseDatasetUpdate":
-                switch (activationCause.source) {
-                    case FlowActivationCauseDatasetUpdateSource.UpstreamFlow:
+                switch (activationCause.source.__typename) {
+                    case "FlowActivationCauseDatasetUpdateSourceUpstreamFlow":
                         return "after upstream flow event";
-                    case FlowActivationCauseDatasetUpdateSource.HttpIngest:
+                    case "FlowActivationCauseDatasetUpdateSourceHttpIngest":
                         return "after HTTP push ingest event";
-                    case FlowActivationCauseDatasetUpdateSource.SmartProtocolPush:
+                    case "FlowActivationCauseDatasetUpdateSourceSmartProtocolPush":
                         return "after smart protocol push event";
                     /* istanbul ignore next */
                     default:
@@ -328,8 +329,34 @@ export class DatasetFlowDetailsHelpers {
                 return "";
             case "FlowActivationCauseManual":
                 return `Triggered by ${activationCause.initiator.accountName}`;
-            case "FlowActivationCauseDatasetUpdate":
-                return `Input dataset: ${activationCause.dataset.owner.accountName}/${activationCause.dataset.name}`;
+            case "FlowActivationCauseDatasetUpdate": {
+                const datasetHyperlink = DatasetFlowDetailsHelpers.datasetHyperlink(
+                    activationCause.dataset.owner.accountName,
+                    activationCause.dataset.name,
+                );
+                const inputDatasetLink = `Input dataset: <a class="fs-12" href="${datasetHyperlink}">${activationCause.dataset.owner.accountName}/${activationCause.dataset.name}</a>`;
+                switch (activationCause.source.__typename) {
+                    case "FlowActivationCauseDatasetUpdateSourceUpstreamFlow": {
+                        const flowHistoryHyperlink = DatasetFlowDetailsHelpers.flowHistoryHyperlink(
+                            activationCause.dataset.owner.accountName,
+                            activationCause.dataset.name,
+                            activationCause.source.flowId,
+                        );
+
+                        const flowHistoryLink =
+                            `<a class="fs-12" href="${flowHistoryHyperlink}">` +
+                            `Flow #${activationCause.source.flowId}</a>`;
+                        return `${flowHistoryLink}. ${inputDatasetLink}`;
+                    }
+                    case "FlowActivationCauseDatasetUpdateSourceHttpIngest":
+                        return inputDatasetLink;
+                    case "FlowActivationCauseDatasetUpdateSourceSmartProtocolPush":
+                        return inputDatasetLink;
+                    /* istanbul ignore next */
+                    default:
+                        throw new Error("Unknown activation cause data source");
+                }
+            }
             /* istanbul ignore next */
             default:
                 throw new Error("Unknown trigger typename");
@@ -400,5 +427,16 @@ export class DatasetFlowDetailsHelpers {
             default:
                 return "";
         }
+    }
+
+    private static datasetHyperlink(ownerName: string, datasetName: string): string {
+        return `/${ownerName}/${datasetName}`;
+    }
+
+    private static flowHistoryHyperlink(ownerName: string, datasetName: string, flowId: string): string {
+        return (
+            `${DatasetFlowDetailsHelpers.datasetHyperlink(ownerName, datasetName)}/` +
+            `${ProjectLinks.URL_FLOW_DETAILS}/${flowId}/${FlowDetailsTabs.HISTORY}`
+        );
     }
 }

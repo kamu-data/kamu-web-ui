@@ -20,7 +20,8 @@ export class FlowDetailsSummaryTabHarness extends ComponentHarness {
     private readonly locatorFlowStatus = this.locatorFor('[data-test-id="flow-status"]');
     private readonly locatorFlowInitiator = this.locatorFor('[data-test-id="flow-initiator"]');
     private readonly locatorFlowInitiatedTime = this.locatorFor('[data-test-id="flow-initiated-time"]');
-    private readonly locatorFlowRunningTime = this.locatorFor('[data-test-id="flow-running-time"]');
+    private readonly locatorFlowRunDuration = this.locatorFor('[data-test-id="flow-run-duration"]');
+    private readonly locatorFlowTotalTime = this.locatorFor('[data-test-id="flow-total-time"]');
     private readonly locatorFlowOutcome = this.locatorForOptional('[data-test-id="flow-outcome"]');
     private readonly locatorFlowRetryAttempts = this.locatorForOptional('[data-test-id="flow-retry-attempts"]');
     private readonly locatorFlowFinishedTime = this.locatorForOptional('[data-test-id="flow-finished-time"]');
@@ -58,10 +59,18 @@ export class FlowDetailsSummaryTabHarness extends ComponentHarness {
     }
 
     /**
-     * Gets the flow running time text
+     * Gets the flow run duration text
      */
-    public async getFlowRunningTime(): Promise<string> {
-        const element = await this.locatorFlowRunningTime();
+    public async getFlowRunDuration(): Promise<string> {
+        const element = await this.locatorFlowRunDuration();
+        return (await element.text()).trim();
+    }
+
+    /**
+     * Gets the flow totaltext
+     */
+    public async getFlowTotalTime(): Promise<string> {
+        const element = await this.locatorFlowTotalTime();
         return (await element.text()).trim();
     }
 
@@ -142,8 +151,9 @@ export class FlowDetailsSummaryTabHarness extends ComponentHarness {
         const flowStatus = await this.getFlowStatus();
         const flowInitiator = await this.getFlowInitiator();
         const flowInitiatedTime = await this.getFlowInitiatedTime();
-        const flowRunningTime = await this.getFlowRunningTime();
+        const flowRunDuration = await this.getFlowRunDuration();
+        const flowTotalTime = await this.getFlowTotalTime();
 
-        return !!(flowType && flowStatus && flowInitiator && flowInitiatedTime && flowRunningTime);
+        return !!(flowType && flowStatus && flowInitiator && flowInitiatedTime && flowRunDuration && flowTotalTime);
     }
 }

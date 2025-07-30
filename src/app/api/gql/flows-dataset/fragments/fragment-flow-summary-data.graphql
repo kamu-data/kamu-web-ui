@@ -120,6 +120,7 @@ fragment FlowSummaryData on Flow {
 
   timing {
     initiatedAt
+    firstAttemptScheduledAt
     scheduledAt
     awaitingExecutorSince
     runningSince

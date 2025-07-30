@@ -370,6 +370,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         },
         startCondition: null,
         timing: {
+            firstAttemptScheduledAt: "2024-02-16T09:25:00+00:00",
             scheduledAt: "2024-02-16T09:25:00+00:00",
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
             runningSince: "2024-02-12T18:21:27.477789591+00:00",
@@ -393,6 +394,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         initiator: null,
         outcome: null,
         timing: {
+            firstAttemptScheduledAt: "2024-02-12T18:20:26+00:00",
             scheduledAt: "2024-02-12T18:20:26+00:00",
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
             runningSince: "2024-02-12T18:21:27.477789591+00:00",
@@ -419,6 +421,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             wakeUpAt: "2024-03-05T19:35:46+00:00",
         },
         timing: {
+            firstAttemptScheduledAt: "2024-02-12T18:21:25+00:00",
             scheduledAt: "2024-02-12T18:21:25+00:00",
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
             runningSince: "2024-02-12T18:21:27.477789591+00:00",
@@ -444,6 +447,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         },
         startCondition: null,
         timing: {
+            firstAttemptScheduledAt: "2024-02-12T18:21:25+00:00",
             scheduledAt: "2024-02-12T18:21:25+00:00",
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
             runningSince: null,
@@ -478,6 +482,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         },
         startCondition: null,
         timing: {
+            firstAttemptScheduledAt: "2024-02-12T18:21:25+00:00",
             scheduledAt: "2024-02-12T18:21:25+00:00",
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
             runningSince: null,
@@ -501,6 +506,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         initiator: null,
         outcome: null,
         timing: {
+            firstAttemptScheduledAt: "2024-02-12T18:22:28+00:00",
             scheduledAt: "2024-02-12T19:21:29.554197038+00:00",
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
             runningSince: "2024-02-12T18:21:27.477789591+00:00",
@@ -529,6 +535,7 @@ export const mockFlowItemWidgetDataFragments: FlowItemWidgetDataFragment[] = [
         },
         timing: {
             initiatedAt: "2024-02-16T09:24:00+00:00",
+            firstAttemptScheduledAt: "2024-02-16T09:25:00+00:00",
             scheduledAt: "2024-02-16T09:25:00+00:00",
             awaitingExecutorSince: "2024-02-16T09:25:01+00:00",
             runningSince: "2024-02-16T09:25:02+00:00",
@@ -545,6 +552,7 @@ export const mockFlowItemWidgetDataFragments: FlowItemWidgetDataFragment[] = [
         outcome: null,
         timing: {
             initiatedAt: "2024-02-12T18:20:25+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:20:26+00:00",
             scheduledAt: "2024-02-12T18:20:26+00:00",
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
             runningSince: "2024-02-12T18:21:27.477789591+00:00",
@@ -561,6 +569,7 @@ export const mockFlowItemWidgetDataFragments: FlowItemWidgetDataFragment[] = [
         outcome: null,
         timing: {
             initiatedAt: "2024-02-12T18:21:24+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:21:25+00:00",
             scheduledAt: "2024-02-12T18:21:25+00:00",
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
             runningSince: "2024-02-12T18:21:27.477789591+00:00",
@@ -580,6 +589,7 @@ export const mockFlowItemWidgetDataFragments: FlowItemWidgetDataFragment[] = [
         },
         timing: {
             initiatedAt: "2024-02-12T18:21:24+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:21:25+00:00",
             scheduledAt: "2024-02-12T18:21:25+00:00",
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
             runningSince: null,
@@ -602,6 +612,7 @@ export const mockFlowItemWidgetDataFragments: FlowItemWidgetDataFragment[] = [
         },
         timing: {
             initiatedAt: "2024-02-12T18:21:24+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:21:25+00:00",
             scheduledAt: "2024-02-12T18:21:25+00:00",
             awaitingExecutorSince: "2024-02-12T18:21:26+00:00",
             runningSince: "2024-02-12T18:21:27+00:00",
@@ -618,10 +629,34 @@ export const mockFlowItemWidgetDataFragments: FlowItemWidgetDataFragment[] = [
         outcome: null,
         timing: {
             initiatedAt: "2024-02-12T18:21:24+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:21:25+00:00",
             scheduledAt: "2024-02-12T18:22:28+00:00",
             awaitingExecutorSince: null,
             runningSince: null,
             lastAttemptFinishedAt: "2024-02-12T18:21:28+00:00",
+            __typename: "FlowTimingRecords",
+        },
+        __typename: "Flow",
+    },
+    {
+        datasetId: mockDatasetMainDataId,
+        flowId: "420",
+        status: FlowStatus.Finished,
+        initiator: null,
+        outcome: {
+            __typename: "FlowFailedError",
+            reason: {
+                __typename: "TaskFailureReasonGeneral",
+                message: "Failed",
+            },
+        },
+        timing: {
+            initiatedAt: "2024-02-12T18:21:24+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:21:25+00:00",
+            scheduledAt: "2024-02-12T18:25:25+00:00",
+            awaitingExecutorSince: "2024-02-12T18:25:26+00:00",
+            runningSince: "2024-02-12T18:25:27+00:00",
+            lastAttemptFinishedAt: "2024-02-12T18:25:28+00:00",
             __typename: "FlowTimingRecords",
         },
         __typename: "Flow",
@@ -725,6 +760,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     __typename: "FlowSuccessResult",
                                 },
                                 timing: {
+                                    firstAttemptScheduledAt: "2024-08-21T08:46:19.426925618+00:00",
                                     scheduledAt: "2024-08-21T08:46:19.426925618+00:00",
                                     awaitingExecutorSince: "2024-08-21T08:46:19.426925618+00:00",
                                     runningSince: "2024-08-21T08:46:20.507478673+00:00",
@@ -760,6 +796,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     __typename: "FlowFailedError",
                                 },
                                 timing: {
+                                    firstAttemptScheduledAt: "2024-08-21T08:45:17+00:00",
                                     scheduledAt: "2024-08-21T08:45:17+00:00",
                                     awaitingExecutorSince: "2024-08-21T08:45:17+00:00",
                                     runningSince: "2024-08-21T08:45:18.722052534+00:00",
@@ -803,6 +840,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                 },
                                 timing: {
                                     initiatedAt: "2024-08-21T08:46:09.426925618+00:00",
+                                    firstAttemptScheduledAt: "2024-08-21T08:46:19.426925618+00:00",
                                     scheduledAt: "2024-08-21T08:46:19.426925618+00:00",
                                     awaitingExecutorSince: "2024-08-21T08:46:19.426925618+00:00",
                                     runningSince: "2024-08-21T08:46:20.507478673+00:00",
@@ -825,6 +863,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                 },
                                 timing: {
                                     initiatedAt: "2024-08-21T08:45:07+00:00",
+                                    firstAttemptScheduledAt: "2024-08-21T08:45:17+00:00",
                                     scheduledAt: "2024-08-21T08:45:17+00:00",
                                     awaitingExecutorSince: "2024-08-21T08:45:17+00:00",
                                     runningSince: "2024-08-21T08:45:18.722052534+00:00",
@@ -884,6 +923,7 @@ export const mockDatasetTriggerIngestFlowMutation: DatasetTriggerIngestFlowMutat
                             },
                             outcome: null,
                             timing: {
+                                firstAttemptScheduledAt: "2024-02-16T09:26:00+00:00",
                                 scheduledAt: "2024-02-16T09:26:00+00:00",
                                 awaitingExecutorSince: "2024-02-16T09:26:04+00:00",
                                 runningSince: null,
@@ -963,6 +1003,7 @@ export const mockDatasetTriggerTransformFlowMutation: DatasetTriggerTransformFlo
                             },
                             outcome: null,
                             timing: {
+                                firstAttemptScheduledAt: "2024-02-16T09:26:00+00:00",
                                 scheduledAt: "2024-02-16T09:26:00+00:00",
                                 awaitingExecutorSince: "2024-02-16T09:26:04+00:00",
                                 runningSince: null,
@@ -1042,6 +1083,7 @@ export const mockDatasetTriggerCompactionFlowMutation: DatasetTriggerCompactionF
                             },
                             outcome: null,
                             timing: {
+                                firstAttemptScheduledAt: "2024-02-16T09:26:00+00:00",
                                 scheduledAt: "2024-02-16T09:26:00+00:00",
                                 awaitingExecutorSince: "2024-02-16T09:26:04+00:00",
                                 runningSince: null,
@@ -1119,6 +1161,7 @@ export const mockDatasetTriggerResetFlowMutation: DatasetTriggerResetFlowMutatio
                             },
                             outcome: null,
                             timing: {
+                                firstAttemptScheduledAt: "2024-02-16T09:26:00+00:00",
                                 scheduledAt: "2024-02-16T09:26:00+00:00",
                                 awaitingExecutorSince: "2024-02-16T09:26:04+00:00",
                                 runningSince: null,
@@ -1189,6 +1232,7 @@ export const mockCancelScheduledTasksMutationSuccess: CancelScheduledTasksMutati
                                 message: "Aborted",
                             },
                             timing: {
+                                firstAttemptScheduledAt: "2024-03-06T15:20:52.117446697+00:00",
                                 scheduledAt: null,
                                 awaitingExecutorSince: null,
                                 runningSince: null,
@@ -1321,6 +1365,7 @@ export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
                             },
                             timing: {
                                 scheduledAt: "2024-03-15T19:43:37.844613373+00:00",
+                                firstAttemptScheduledAt: "2024-03-15T19:43:37.844613373+00:00",
                                 awaitingExecutorSince: "2024-03-15T19:43:38+00:00",
                                 runningSince: "2024-03-15T19:43:39.414651763+00:00",
                                 lastAttemptFinishedAt: "2024-03-15T19:43:39.538294176+00:00",

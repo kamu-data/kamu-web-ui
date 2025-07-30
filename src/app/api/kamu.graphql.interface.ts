@@ -2368,6 +2368,8 @@ export type FlowTimingRecords = {
     __typename?: "FlowTimingRecords";
     /** Recorded time of last task scheduling */
     awaitingExecutorSince?: Maybe<Scalars["DateTime"]>;
+    /** First scheduling time */
+    firstAttemptScheduledAt?: Maybe<Scalars["DateTime"]>;
     /** Initiation time */
     initiatedAt: Scalars["DateTime"];
     /**
@@ -2377,7 +2379,7 @@ export type FlowTimingRecords = {
     lastAttemptFinishedAt?: Maybe<Scalars["DateTime"]>;
     /** Recorded start of running (Running state seen at least once) */
     runningSince?: Maybe<Scalars["DateTime"]>;
-    /** Planned scheduling time */
+    /** Planned scheduling time (different than first in case of retries) */
     scheduledAt?: Maybe<Scalars["DateTime"]>;
 };
 
@@ -5638,6 +5640,7 @@ export type FlowItemWidgetDataFragment = {
     timing: {
         __typename?: "FlowTimingRecords";
         initiatedAt: string;
+        firstAttemptScheduledAt?: string | null;
         scheduledAt?: string | null;
         awaitingExecutorSince?: string | null;
         runningSince?: string | null;
@@ -5753,6 +5756,7 @@ export type FlowSummaryDataFragment = {
     timing: {
         __typename?: "FlowTimingRecords";
         initiatedAt: string;
+        firstAttemptScheduledAt?: string | null;
         scheduledAt?: string | null;
         awaitingExecutorSince?: string | null;
         runningSince?: string | null;
@@ -7237,6 +7241,7 @@ export const FlowSummaryDataFragmentDoc = gql`
         }
         timing {
             initiatedAt
+            firstAttemptScheduledAt
             scheduledAt
             awaitingExecutorSince
             runningSince
@@ -7435,6 +7440,7 @@ export const FlowItemWidgetDataFragmentDoc = gql`
         }
         timing {
             initiatedAt
+            firstAttemptScheduledAt
             scheduledAt
             awaitingExecutorSince
             runningSince

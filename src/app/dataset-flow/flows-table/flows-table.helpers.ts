@@ -319,7 +319,7 @@ export class FlowTableHelpers {
         }
     }
 
-    public static durationTimingText(flowNode: { timing: FlowTimingRecords; outcome?: MaybeNull<object> }): string {
+    public static fullDurationTimingText(flowNode: { timing: FlowTimingRecords; outcome?: MaybeNull<object> }): string {
         if (flowNode.outcome) {
             if (flowNode.timing.lastAttemptFinishedAt) {
                 return DataHelpers.durationTask(flowNode.timing.initiatedAt, flowNode.timing.lastAttemptFinishedAt);
@@ -329,6 +329,27 @@ export class FlowTableHelpers {
             }
         } else {
             return DataHelpers.durationTask(flowNode.timing.initiatedAt, new Date().toISOString());
+        }
+    }
+
+    public static runDurationTimingText(flowNode: { timing: FlowTimingRecords; outcome?: MaybeNull<object> }): string {
+        if (flowNode.outcome) {
+            if (flowNode.timing.firstAttemptScheduledAt && flowNode.timing.lastAttemptFinishedAt) {
+                return DataHelpers.durationTask(
+                    flowNode.timing.firstAttemptScheduledAt,
+                    flowNode.timing.lastAttemptFinishedAt,
+                );
+            } else {
+                // Aborted?
+                return "-";
+            }
+        } else {
+            if (flowNode.timing.firstAttemptScheduledAt) {
+                return DataHelpers.durationTask(flowNode.timing.firstAttemptScheduledAt, new Date().toISOString());
+            } else {
+                // Waiting?
+                return "-";
+            }
         }
     }
 

@@ -136,7 +136,6 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
                                     __typename: "FlowConfigCompactionModeFull",
                                     maxSliceSize: 1000000,
                                     maxSliceRecords: 50000,
-                                    recursive: false,
                                 },
                             },
                             retryPolicy: null,

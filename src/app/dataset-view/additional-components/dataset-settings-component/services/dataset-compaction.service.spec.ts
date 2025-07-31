@@ -54,7 +54,6 @@ describe("DatasetCompactionService", () => {
                     full: {
                         maxSliceSize: MOCK_SLICE_SIZE,
                         maxSliceRecords: MOCK_SLICE_RECORDS,
-                        recursive: true,
                     },
                 },
             })
@@ -75,7 +74,6 @@ describe("DatasetCompactionService", () => {
                     mode: {
                         toSeed: {},
                     },
-                    recursive: true,
                 },
             })
             .subscribe((result: boolean) => {
@@ -96,7 +94,6 @@ describe("DatasetCompactionService", () => {
                     mode: {
                         toSeed: {},
                     },
-                    recursive: true,
                 },
             })
             .subscribe((result: boolean) => {

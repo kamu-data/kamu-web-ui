@@ -123,7 +123,6 @@ describe("DatasetFlowApi", () => {
                     __typename: "FlowConfigCompactionModeFull",
                     maxSliceSize: 1000000,
                     maxSliceRecords: 50000,
-                    recursive: false,
                 });
             });
 
@@ -181,7 +180,6 @@ describe("DatasetFlowApi", () => {
                     full: {
                         maxSliceSize: 1000000,
                         maxSliceRecords: 50000,
-                        recursive: false,
                     },
                 },
             })
@@ -193,7 +191,6 @@ describe("DatasetFlowApi", () => {
             full: {
                 maxSliceSize: 1000000,
                 maxSliceRecords: 50000,
-                recursive: false,
             },
         });
 
@@ -210,7 +207,6 @@ describe("DatasetFlowApi", () => {
                     full: {
                         maxSliceSize: 1000000,
                         maxSliceRecords: 50000,
-                        recursive: false,
                     },
                 },
             })
@@ -222,7 +218,6 @@ describe("DatasetFlowApi", () => {
             full: {
                 maxSliceSize: 1000000,
                 maxSliceRecords: 50000,
-                recursive: false,
             },
         });
         op.flush({
@@ -306,7 +301,6 @@ describe("DatasetFlowApi", () => {
                     mode: {
                         toSeed: {},
                     },
-                    recursive: false,
                 },
             })
             .subscribe();
@@ -317,7 +311,6 @@ describe("DatasetFlowApi", () => {
             mode: {
                 toSeed: {},
             },
-            recursive: false,
         });
 
         op.flush({

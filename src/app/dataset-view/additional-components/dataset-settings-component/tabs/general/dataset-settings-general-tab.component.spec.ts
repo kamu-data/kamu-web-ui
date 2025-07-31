@@ -258,7 +258,6 @@ describe("DatasetSettingsGeneralTabComponent", () => {
                 mode: {
                     toSeed: {},
                 },
-                recursive: component.recursiveControl.value,
             },
         });
         flush();
@@ -284,7 +283,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
             datasetId: component.datasetBasics.id,
             compactionConfigInput: {
                 metadataOnly: {
-                    recursive: component.recursiveControl.value,
+                    dummy: false,
                 },
             },
         });

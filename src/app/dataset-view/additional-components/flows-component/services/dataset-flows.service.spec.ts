@@ -188,7 +188,7 @@ describe("DatasetFlowsService", () => {
         const subscription$ = service
             .datasetTriggerCompactionFlow({
                 datasetId: MOCK_DATASET_ID,
-                compactionConfigInput: { metadataOnly: { recursive: true } },
+                compactionConfigInput: { metadataOnly: { dummy: false } },
             })
             .subscribe((result: boolean) => {
                 expect(result).toBe(true);
@@ -206,7 +206,7 @@ describe("DatasetFlowsService", () => {
         const subscription$ = service
             .datasetTriggerCompactionFlow({
                 datasetId: MOCK_DATASET_ID,
-                compactionConfigInput: { full: { recursive: true, maxSliceRecords: 1000, maxSliceSize: 10000 } },
+                compactionConfigInput: { full: { maxSliceRecords: 1000, maxSliceSize: 10000 } },
             })
             .subscribe(() => {
                 expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error");
@@ -221,7 +221,7 @@ describe("DatasetFlowsService", () => {
         const subscription$ = service
             .datasetTriggerResetFlow({
                 datasetId: MOCK_DATASET_ID,
-                resetConfigInput: { mode: { toSeed: {} }, recursive: false },
+                resetConfigInput: { mode: { toSeed: {} } },
             })
             .subscribe((result: boolean) => {
                 expect(result).toBe(true);
@@ -238,7 +238,6 @@ describe("DatasetFlowsService", () => {
             .datasetTriggerResetFlow({
                 datasetId: MOCK_DATASET_ID,
                 resetConfigInput: {
-                    recursive: false,
                     mode: { custom: { newHeadHash: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX" } },
                 },
             })

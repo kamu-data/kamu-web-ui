@@ -43,7 +43,6 @@ describe("DatasetFlowConfigService", () => {
         full: {
             maxSliceRecords: 10,
             maxSliceSize: 1000,
-            recursive: false,
         },
     };
 

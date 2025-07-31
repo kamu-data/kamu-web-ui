@@ -16,7 +16,6 @@ query getDatasetFlowConfigs($datasetId: DatasetID!, $datasetFlowType: DatasetFlo
 
               ... on FlowConfigRuleReset {
                 oldHeadHash
-                recursive
                 mode {
                   ... on FlowConfigResetPropagationModeToSeed {
                     dummy
@@ -29,7 +28,6 @@ query getDatasetFlowConfigs($datasetId: DatasetID!, $datasetFlowType: DatasetFlo
                   ... on FlowConfigCompactionModeFull {
                     maxSliceSize
                     maxSliceRecords
-                    recursive
                   }
                 }
               }

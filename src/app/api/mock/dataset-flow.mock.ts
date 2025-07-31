@@ -112,7 +112,6 @@ export const mockCompactingGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQu
                                 __typename: "FlowConfigCompactionModeFull",
                                 maxSliceSize: 1000000,
                                 maxSliceRecords: 50000,
-                                recursive: false,
                             },
                         },
                         __typename: "FlowConfiguration",

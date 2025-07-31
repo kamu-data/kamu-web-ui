@@ -53,16 +53,11 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent {
         sliceUnit: [SliceUnit.MB, [Validators.required]],
         sliceSize: [300, [Validators.required, Validators.min(1)]],
         recordsCount: [10000, [Validators.required, Validators.min(1)]],
-        recursive: [true],
     });
     public readonly SliceUnit: typeof SliceUnit = SliceUnit;
     public readonly MAX_SLICE_SIZE_TOOLTIP = CompactionTooltipsTexts.MAX_SLICE_SIZE;
     public readonly MAX_SLICE_RECORDS_TOOLTIP = CompactionTooltipsTexts.MAX_SLICE_RECORDS;
     public readonly RECURSIVE_TOOLTIP = CompactionTooltipsTexts.HARD_COMPACTION_RECURSIVE;
-
-    public get recursive(): AbstractControl {
-        return this.hardCompactionForm.controls.recursive;
-    }
 
     public get sliceUnit(): AbstractControl {
         return this.hardCompactionForm.controls.sliceUnit;
@@ -103,7 +98,6 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent {
                                     full: {
                                         maxSliceSize: this.sliceSizeInBytes,
                                         maxSliceRecords: this.recordsCount.value as number,
-                                        recursive: this.recursive.value as boolean,
                                     },
                                 },
                             })

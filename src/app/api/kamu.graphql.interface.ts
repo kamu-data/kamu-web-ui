@@ -2020,12 +2020,11 @@ export type FlowConfigCompactionModeFull = {
     __typename?: "FlowConfigCompactionModeFull";
     maxSliceRecords: Scalars["Int"];
     maxSliceSize: Scalars["Int"];
-    recursive: Scalars["Boolean"];
 };
 
 export type FlowConfigCompactionModeMetadataOnly = {
     __typename?: "FlowConfigCompactionModeMetadataOnly";
-    recursive: Scalars["Boolean"];
+    dummy: Scalars["Boolean"];
 };
 
 export type FlowConfigIngestInput = {
@@ -2036,11 +2035,10 @@ export type FlowConfigIngestInput = {
 export type FlowConfigInputCompactionFull = {
     maxSliceRecords: Scalars["Int"];
     maxSliceSize: Scalars["Int"];
-    recursive: Scalars["Boolean"];
 };
 
 export type FlowConfigInputCompactionMetadataOnly = {
-    recursive: Scalars["Boolean"];
+    dummy: Scalars["Boolean"];
 };
 
 export type FlowConfigInputResetPropagationMode =
@@ -2058,7 +2056,6 @@ export type FlowConfigInputResetPropagationModeToSeed = {
 export type FlowConfigResetInput = {
     mode: FlowConfigInputResetPropagationMode;
     oldHeadHash?: InputMaybe<Scalars["Multihash"]>;
-    recursive: Scalars["Boolean"];
 };
 
 export type FlowConfigResetPropagationMode =
@@ -2091,7 +2088,6 @@ export type FlowConfigRuleReset = {
     __typename?: "FlowConfigRuleReset";
     mode: FlowConfigResetPropagationMode;
     oldHeadHash?: Maybe<Scalars["Multihash"]>;
-    recursive: Scalars["Boolean"];
 };
 
 export type FlowConfigSnapshotModified = FlowEvent & {
@@ -5181,7 +5177,6 @@ export type GetDatasetFlowConfigsQuery = {
                                                   __typename?: "FlowConfigCompactionModeFull";
                                                   maxSliceSize: number;
                                                   maxSliceRecords: number;
-                                                  recursive: boolean;
                                               }
                                             | { __typename?: "FlowConfigCompactionModeMetadataOnly" };
                                     }
@@ -5189,7 +5184,6 @@ export type GetDatasetFlowConfigsQuery = {
                                   | {
                                         __typename?: "FlowConfigRuleReset";
                                         oldHeadHash?: string | null;
-                                        recursive: boolean;
                                         mode:
                                             | { __typename?: "FlowConfigResetPropagationModeCustom" }
                                             | {
@@ -9992,7 +9986,6 @@ export const GetDatasetFlowConfigsDocument = gql`
                                 }
                                 ... on FlowConfigRuleReset {
                                     oldHeadHash
-                                    recursive
                                     mode {
                                         ... on FlowConfigResetPropagationModeToSeed {
                                             dummy
@@ -10004,7 +9997,6 @@ export const GetDatasetFlowConfigsDocument = gql`
                                         ... on FlowConfigCompactionModeFull {
                                             maxSliceSize
                                             maxSliceRecords
-                                            recursive
                                         }
                                     }
                                 }

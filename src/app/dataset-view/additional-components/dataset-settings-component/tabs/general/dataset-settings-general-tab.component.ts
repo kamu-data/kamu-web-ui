@@ -110,7 +110,6 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
 
         this.resetDatasetForm = this.fb.nonNullable.group({
             mode: [DatasetResetMode.RESET_TO_SEED],
-            recursive: [false],
         });
 
         if (!this.datasetPermissions.permissions.general.canRename) {
@@ -128,10 +127,6 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
 
     public get datasetNameControl(): AbstractControl {
         return this.renameDatasetForm.controls.datasetName;
-    }
-
-    public get recursiveControl(): FormControl<boolean> {
-        return this.resetDatasetForm.controls.recursive;
     }
 
     public get modeControl(): FormControl<DatasetResetMode> {
@@ -221,7 +216,6 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                                             mode: {
                                                 toSeed: {},
                                             },
-                                            recursive: this.recursiveControl.value,
                                         },
                                     })
                                     .pipe(takeUntilDestroyed(this.destroyRef))
@@ -244,7 +238,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                                         datasetId: this.datasetBasics.id,
                                         compactionConfigInput: {
                                             metadataOnly: {
-                                                recursive: this.recursiveControl.value,
+                                                dummy: false,
                                             },
                                         },
                                     })

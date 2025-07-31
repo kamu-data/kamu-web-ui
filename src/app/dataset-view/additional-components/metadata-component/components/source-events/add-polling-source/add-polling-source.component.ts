@@ -102,11 +102,6 @@ export class AddPollingSourceComponent extends BaseSourceEventComponent implemen
 
     public ngOnInit(): void {
         super.ngOnInit();
-        this.initEditForm();
-    }
-
-    public initEditForm(): void {
-        this.history = this.editService.history;
     }
 
     public changeStep(step: SourcesSection): void {

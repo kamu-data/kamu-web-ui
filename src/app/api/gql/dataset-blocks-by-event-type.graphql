@@ -4,6 +4,11 @@ query datasetBlocksByEventType($accountName: AccountName!, $datasetName: Dataset
       metadata {
         extendedBlocksByEventType(eventType: $eventType) {
           encoded
+          event {
+            ... on AddPushSource {
+              sourceName
+            }
+          }
         }
       }
     }

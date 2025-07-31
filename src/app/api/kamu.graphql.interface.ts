@@ -4660,7 +4660,24 @@ export type DatasetBlocksByEventTypeQuery = {
             __typename?: "Dataset";
             metadata: {
                 __typename?: "DatasetMetadata";
-                extendedBlocksByEventType: Array<{ __typename?: "MetadataBlockExtended"; encoded?: string | null }>;
+                extendedBlocksByEventType: Array<{
+                    __typename?: "MetadataBlockExtended";
+                    encoded?: string | null;
+                    event:
+                        | { __typename?: "AddData" }
+                        | { __typename?: "AddPushSource"; sourceName: string }
+                        | { __typename?: "DisablePollingSource" }
+                        | { __typename?: "DisablePushSource" }
+                        | { __typename?: "ExecuteTransform" }
+                        | { __typename?: "Seed" }
+                        | { __typename?: "SetAttachments" }
+                        | { __typename?: "SetDataSchema" }
+                        | { __typename?: "SetInfo" }
+                        | { __typename?: "SetLicense" }
+                        | { __typename?: "SetPollingSource" }
+                        | { __typename?: "SetTransform" }
+                        | { __typename?: "SetVocab" };
+                }>;
             };
         } | null;
     };
@@ -9201,6 +9218,11 @@ export const DatasetBlocksByEventTypeDocument = gql`
                 metadata {
                     extendedBlocksByEventType(eventType: $eventType) {
                         encoded
+                        event {
+                            ... on AddPushSource {
+                                sourceName
+                            }
+                        }
                     }
                 }
             }

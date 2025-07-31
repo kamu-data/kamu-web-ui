@@ -328,7 +328,7 @@ export class DatasetFlowDetailsHelpers {
             case "FlowActivationCauseAutoPolling":
                 return "";
             case "FlowActivationCauseManual":
-                return `Triggered by ${activationCause.initiator.accountName}`;
+                return `Triggered by <a class="fs-12" href="${DatasetFlowDetailsHelpers.accountHyperlink(activationCause.initiator.accountName)}">${activationCause.initiator.accountName}</a>`;
             case "FlowActivationCauseDatasetUpdate": {
                 const datasetHyperlink = DatasetFlowDetailsHelpers.datasetHyperlink(
                     activationCause.dataset.owner.accountName,
@@ -427,6 +427,10 @@ export class DatasetFlowDetailsHelpers {
             default:
                 return "";
         }
+    }
+
+    private static accountHyperlink(accountName: string): string {
+        return `/${accountName}`;
     }
 
     private static datasetHyperlink(ownerName: string, datasetName: string): string {

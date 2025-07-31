@@ -38,6 +38,7 @@ import {
     DatasetTriggerTransformFlowDocument,
     DatasetTriggerCompactionFlowDocument,
     DatasetTriggerResetFlowDocument,
+    DatasetTriggerResetToMetadataFlowDocument,
 } from "./kamu.graphql.interface";
 import { TEST_DATASET_ID } from "./mock/dataset.mock";
 import { DatasetFlowApi } from "./dataset-flow.api";
@@ -62,6 +63,7 @@ import {
     mockDatasetTriggerTransformFlowMutation,
     mockDatasetTriggerCompactionFlowMutation,
     mockDatasetTriggerResetFlowMutation,
+    mockDatasetTriggerResetToMetadataFlowMutation,
 } from "./mock/dataset-flow.mock";
 
 describe("DatasetFlowApi", () => {
@@ -108,7 +110,7 @@ describe("DatasetFlowApi", () => {
         });
     });
 
-    it("should check getDatasetFlowConfigs with datasetFlowType=HARC_COMPACTION", () => {
+    it("should check getDatasetFlowConfigs with datasetFlowType=HARD_COMPACTION", () => {
         service
             .getDatasetFlowConfigs({ datasetId: TEST_DATASET_ID, datasetFlowType: DatasetFlowType.HardCompaction })
             .subscribe((res: GetDatasetFlowConfigsQuery) => {
@@ -119,8 +121,8 @@ describe("DatasetFlowApi", () => {
                 const compactionConfig = configRule as FlowConfigRuleCompaction;
 
                 expect(compactionConfig).toBeDefined();
-                expect(compactionConfig.compactionMode).toEqual({
-                    __typename: "FlowConfigCompactionModeFull",
+                expect(compactionConfig).toEqual({
+                    __typename: "FlowConfigRuleCompaction",
                     maxSliceSize: 1000000,
                     maxSliceRecords: 50000,
                 });
@@ -177,10 +179,8 @@ describe("DatasetFlowApi", () => {
             .setDatasetFlowCompactionConfig({
                 datasetId: TEST_DATASET_ID,
                 compactionConfigInput: {
-                    full: {
-                        maxSliceSize: 1000000,
-                        maxSliceRecords: 50000,
-                    },
+                    maxSliceSize: 1000000,
+                    maxSliceRecords: 50000,
                 },
             })
             .subscribe();
@@ -188,10 +188,8 @@ describe("DatasetFlowApi", () => {
         const op = controller.expectOne(SetCompactionFlowConfigDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
         expect(op.operation.variables.compactionConfigInput).toEqual({
-            full: {
-                maxSliceSize: 1000000,
-                maxSliceRecords: 50000,
-            },
+            maxSliceSize: 1000000,
+            maxSliceRecords: 50000,
         });
 
         op.flush({
@@ -204,10 +202,8 @@ describe("DatasetFlowApi", () => {
             .setDatasetFlowCompactionConfig({
                 datasetId: TEST_DATASET_ID,
                 compactionConfigInput: {
-                    full: {
-                        maxSliceSize: 1000000,
-                        maxSliceRecords: 50000,
-                    },
+                    maxSliceSize: 1000000,
+                    maxSliceRecords: 50000,
                 },
             })
             .subscribe();
@@ -215,10 +211,8 @@ describe("DatasetFlowApi", () => {
         const op = controller.expectOne(SetCompactionFlowConfigDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
         expect(op.operation.variables.compactionConfigInput).toEqual({
-            full: {
-                maxSliceSize: 1000000,
-                maxSliceRecords: 50000,
-            },
+            maxSliceSize: 1000000,
+            maxSliceRecords: 50000,
         });
         op.flush({
             data: mockSetCompactionFlowConfigMutationError,
@@ -315,6 +309,21 @@ describe("DatasetFlowApi", () => {
 
         op.flush({
             data: mockDatasetTriggerResetFlowMutation,
+        });
+    });
+
+    it("should check datasetTriggerResetToMetadataFlow", () => {
+        service
+            .datasetTriggerResetToMetadataFlow({
+                datasetId: TEST_DATASET_ID,
+            })
+            .subscribe();
+
+        const op = controller.expectOne(DatasetTriggerResetToMetadataFlowDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+
+        op.flush({
+            data: mockDatasetTriggerResetToMetadataFlowMutation,
         });
     });
 

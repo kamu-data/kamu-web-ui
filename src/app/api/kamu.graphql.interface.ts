@@ -1202,6 +1202,7 @@ export type DatasetFlowRunsMut = {
     triggerCompactionFlow: TriggerFlowResult;
     triggerIngestFlow: TriggerFlowResult;
     triggerResetFlow: TriggerFlowResult;
+    triggerResetToMetadataFlow: TriggerFlowResult;
     triggerTransformFlow: TriggerFlowResult;
 };
 
@@ -1261,6 +1262,7 @@ export enum DatasetFlowType {
     HardCompaction = "HARD_COMPACTION",
     Ingest = "INGEST",
     Reset = "RESET",
+    ResetToMetadata = "RESET_TO_METADATA",
 }
 
 export type DatasetFlows = {
@@ -2010,35 +2012,14 @@ export type FlowActivationCauseManual = {
     initiator: Account;
 };
 
-export type FlowConfigCompactionInput =
-    | { full: FlowConfigInputCompactionFull; metadataOnly?: never }
-    | { full?: never; metadataOnly: FlowConfigInputCompactionMetadataOnly };
-
-export type FlowConfigCompactionMode = FlowConfigCompactionModeFull | FlowConfigCompactionModeMetadataOnly;
-
-export type FlowConfigCompactionModeFull = {
-    __typename?: "FlowConfigCompactionModeFull";
+export type FlowConfigCompactionInput = {
     maxSliceRecords: Scalars["Int"];
     maxSliceSize: Scalars["Int"];
-};
-
-export type FlowConfigCompactionModeMetadataOnly = {
-    __typename?: "FlowConfigCompactionModeMetadataOnly";
-    dummy: Scalars["Boolean"];
 };
 
 export type FlowConfigIngestInput = {
     /** Flag indicates to ignore cache during ingest step for API calls */
     fetchUncacheable: Scalars["Boolean"];
-};
-
-export type FlowConfigInputCompactionFull = {
-    maxSliceRecords: Scalars["Int"];
-    maxSliceSize: Scalars["Int"];
-};
-
-export type FlowConfigInputCompactionMetadataOnly = {
-    dummy: Scalars["Boolean"];
 };
 
 export type FlowConfigInputResetPropagationMode =
@@ -2076,7 +2057,8 @@ export type FlowConfigRule = FlowConfigRuleCompaction | FlowConfigRuleIngest | F
 
 export type FlowConfigRuleCompaction = {
     __typename?: "FlowConfigRuleCompaction";
-    compactionMode: FlowConfigCompactionMode;
+    maxSliceRecords: Scalars["Int"];
+    maxSliceSize: Scalars["Int"];
 };
 
 export type FlowConfigRuleIngest = {
@@ -2120,6 +2102,7 @@ export type FlowDescription =
     | FlowDescriptionDatasetPollingIngest
     | FlowDescriptionDatasetPushIngest
     | FlowDescriptionDatasetReset
+    | FlowDescriptionDatasetResetToMetadata
     | FlowDescriptionSystemGc
     | FlowDescriptionWebhookDeliver;
 
@@ -2131,12 +2114,8 @@ export type FlowDescriptionDatasetExecuteTransform = {
 
 export type FlowDescriptionDatasetHardCompaction = {
     __typename?: "FlowDescriptionDatasetHardCompaction";
-    compactionResult?: Maybe<FlowDescriptionDatasetHardCompactionResult>;
+    compactionResult?: Maybe<FlowDescriptionDatasetReorganizationResult>;
 };
-
-export type FlowDescriptionDatasetHardCompactionResult =
-    | FlowDescriptionHardCompactionNothingToDo
-    | FlowDescriptionHardCompactionSuccess;
 
 export type FlowDescriptionDatasetPollingIngest = {
     __typename?: "FlowDescriptionDatasetPollingIngest";
@@ -2151,19 +2130,28 @@ export type FlowDescriptionDatasetPushIngest = {
     sourceName?: Maybe<Scalars["String"]>;
 };
 
+export type FlowDescriptionDatasetReorganizationResult =
+    | FlowDescriptionReorganizationNothingToDo
+    | FlowDescriptionReorganizationSuccess;
+
 export type FlowDescriptionDatasetReset = {
     __typename?: "FlowDescriptionDatasetReset";
     resetResult?: Maybe<FlowDescriptionResetResult>;
 };
 
-export type FlowDescriptionHardCompactionNothingToDo = {
-    __typename?: "FlowDescriptionHardCompactionNothingToDo";
+export type FlowDescriptionDatasetResetToMetadata = {
+    __typename?: "FlowDescriptionDatasetResetToMetadata";
+    resetToMetadataResult?: Maybe<FlowDescriptionDatasetReorganizationResult>;
+};
+
+export type FlowDescriptionReorganizationNothingToDo = {
+    __typename?: "FlowDescriptionReorganizationNothingToDo";
     dummy?: Maybe<Scalars["String"]>;
     message: Scalars["String"];
 };
 
-export type FlowDescriptionHardCompactionSuccess = {
-    __typename?: "FlowDescriptionHardCompactionSuccess";
+export type FlowDescriptionReorganizationSuccess = {
+    __typename?: "FlowDescriptionReorganizationSuccess";
     newHead: Scalars["Multihash"];
     originalBlocksCount: Scalars["Int"];
     resultingBlocksCount: Scalars["Int"];
@@ -5172,13 +5160,8 @@ export type GetDatasetFlowConfigsQuery = {
                               rule:
                                   | {
                                         __typename?: "FlowConfigRuleCompaction";
-                                        compactionMode:
-                                            | {
-                                                  __typename?: "FlowConfigCompactionModeFull";
-                                                  maxSliceSize: number;
-                                                  maxSliceRecords: number;
-                                              }
-                                            | { __typename?: "FlowConfigCompactionModeMetadataOnly" };
+                                        maxSliceSize: number;
+                                        maxSliceRecords: number;
                                     }
                                   | { __typename?: "FlowConfigRuleIngest"; fetchUncacheable: boolean }
                                   | {
@@ -5719,9 +5702,9 @@ export type FlowSummaryDataFragment = {
         | {
               __typename?: "FlowDescriptionDatasetHardCompaction";
               compactionResult?:
-                  | { __typename?: "FlowDescriptionHardCompactionNothingToDo"; message: string; dummy?: string | null }
+                  | { __typename?: "FlowDescriptionReorganizationNothingToDo"; message: string; dummy?: string | null }
                   | {
-                        __typename?: "FlowDescriptionHardCompactionSuccess";
+                        __typename?: "FlowDescriptionReorganizationSuccess";
                         originalBlocksCount: number;
                         resultingBlocksCount: number;
                         newHead: string;
@@ -5768,6 +5751,18 @@ export type FlowSummaryDataFragment = {
               __typename?: "FlowDescriptionDatasetReset";
               resetResult?: { __typename?: "FlowDescriptionResetResult"; newHead: string } | null;
           }
+        | {
+              __typename?: "FlowDescriptionDatasetResetToMetadata";
+              resetToMetadataResult?:
+                  | { __typename?: "FlowDescriptionReorganizationNothingToDo"; message: string; dummy?: string | null }
+                  | {
+                        __typename?: "FlowDescriptionReorganizationSuccess";
+                        originalBlocksCount: number;
+                        resultingBlocksCount: number;
+                        newHead: string;
+                    }
+                  | null;
+          }
         | { __typename?: "FlowDescriptionSystemGC"; dummy: boolean }
         | { __typename?: "FlowDescriptionWebhookDeliver"; targetUrl: string; label: string; eventType: string };
     initiator?: ({ __typename?: "Account" } & AccountFragment) | null;
@@ -5802,12 +5797,7 @@ export type FlowSummaryDataFragment = {
         | { __typename: "FlowStartConditionThrottling"; intervalSec: number; wakeUpAt: string; shiftedFrom: string }
         | null;
     configSnapshot?:
-        | {
-              __typename?: "FlowConfigRuleCompaction";
-              compactionMode:
-                  | { __typename: "FlowConfigCompactionModeFull" }
-                  | { __typename: "FlowConfigCompactionModeMetadataOnly" };
-          }
+        | { __typename?: "FlowConfigRuleCompaction" }
         | { __typename?: "FlowConfigRuleIngest"; fetchUncacheable: boolean }
         | { __typename?: "FlowConfigRuleReset" }
         | null;
@@ -5906,6 +5896,40 @@ export type DatasetTriggerResetFlowMutation = {
                 runs: {
                     __typename?: "DatasetFlowRunsMut";
                     triggerResetFlow:
+                        | {
+                              __typename?: "FlowIncompatibleDatasetKind";
+                              expectedDatasetKind: DatasetKind;
+                              actualDatasetKind: DatasetKind;
+                              message: string;
+                          }
+                        | { __typename?: "FlowInvalidRunConfigurations"; error: string; message: string }
+                        | { __typename?: "FlowPreconditionsNotMet"; message: string }
+                        | {
+                              __typename?: "TriggerFlowSuccess";
+                              message: string;
+                              flow: { __typename?: "Flow" } & FlowSummaryDataFragment;
+                          };
+                };
+            };
+        } | null;
+    };
+};
+
+export type DatasetTriggerResetToMetadataFlowMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+}>;
+
+export type DatasetTriggerResetToMetadataFlowMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            flows: {
+                __typename?: "DatasetFlowsMut";
+                runs: {
+                    __typename?: "DatasetFlowRunsMut";
+                    triggerResetToMetadataFlow:
                         | {
                               __typename?: "FlowIncompatibleDatasetKind";
                               expectedDatasetKind: DatasetKind;
@@ -7228,12 +7252,12 @@ export const FlowSummaryDataFragmentDoc = gql`
             }
             ... on FlowDescriptionDatasetHardCompaction {
                 compactionResult {
-                    ... on FlowDescriptionHardCompactionSuccess {
+                    ... on FlowDescriptionReorganizationSuccess {
                         originalBlocksCount
                         resultingBlocksCount
                         newHead
                     }
-                    ... on FlowDescriptionHardCompactionNothingToDo {
+                    ... on FlowDescriptionReorganizationNothingToDo {
                         message
                         dummy
                     }
@@ -7245,6 +7269,19 @@ export const FlowSummaryDataFragmentDoc = gql`
             ... on FlowDescriptionDatasetReset {
                 resetResult {
                     newHead
+                }
+            }
+            ... on FlowDescriptionDatasetResetToMetadata {
+                resetToMetadataResult {
+                    ... on FlowDescriptionReorganizationSuccess {
+                        originalBlocksCount
+                        resultingBlocksCount
+                        newHead
+                    }
+                    ... on FlowDescriptionReorganizationNothingToDo {
+                        message
+                        dummy
+                    }
                 }
             }
             ... on FlowDescriptionWebhookDeliver {
@@ -7298,11 +7335,6 @@ export const FlowSummaryDataFragmentDoc = gql`
         configSnapshot {
             ... on FlowConfigRuleIngest {
                 fetchUncacheable
-            }
-            ... on FlowConfigRuleCompaction {
-                compactionMode {
-                    __typename
-                }
             }
         }
         taskIds
@@ -9993,12 +10025,8 @@ export const GetDatasetFlowConfigsDocument = gql`
                                     }
                                 }
                                 ... on FlowConfigRuleCompaction {
-                                    compactionMode {
-                                        ... on FlowConfigCompactionModeFull {
-                                            maxSliceSize
-                                            maxSliceRecords
-                                        }
-                                    }
+                                    maxSliceSize
+                                    maxSliceRecords
                                 }
                             }
                             retryPolicy {
@@ -10589,6 +10617,53 @@ export class DatasetTriggerResetFlowGQL extends Apollo.Mutation<
     DatasetTriggerResetFlowMutationVariables
 > {
     document = DatasetTriggerResetFlowDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetTriggerResetToMetadataFlowDocument = gql`
+    mutation datasetTriggerResetToMetadataFlow($datasetId: DatasetID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    runs {
+                        triggerResetToMetadataFlow {
+                            ... on TriggerFlowSuccess {
+                                flow {
+                                    ...FlowSummaryData
+                                }
+                                message
+                            }
+                            ... on FlowIncompatibleDatasetKind {
+                                expectedDatasetKind
+                                actualDatasetKind
+                                message
+                            }
+                            ... on FlowPreconditionsNotMet {
+                                message
+                            }
+                            ... on FlowInvalidRunConfigurations {
+                                error
+                                message
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${FlowSummaryDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetTriggerResetToMetadataFlowGQL extends Apollo.Mutation<
+    DatasetTriggerResetToMetadataFlowMutation,
+    DatasetTriggerResetToMetadataFlowMutationVariables
+> {
+    document = DatasetTriggerResetToMetadataFlowDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

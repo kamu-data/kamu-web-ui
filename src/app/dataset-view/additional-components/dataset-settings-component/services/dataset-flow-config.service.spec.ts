@@ -40,10 +40,8 @@ describe("DatasetFlowConfigService", () => {
     };
 
     const MOCK_COMPACTION_INPUT: FlowConfigCompactionInput = {
-        full: {
-            maxSliceRecords: 10,
-            maxSliceSize: 1000,
-        },
+        maxSliceRecords: 10,
+        maxSliceSize: 1000,
     };
 
     beforeEach(() => {

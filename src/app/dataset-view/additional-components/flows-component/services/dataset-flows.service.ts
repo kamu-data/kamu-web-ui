@@ -21,6 +21,7 @@ import {
     DatasetTriggerCompactionFlowMutation,
     DatasetTriggerIngestFlowMutation,
     DatasetTriggerResetFlowMutation,
+    DatasetTriggerResetToMetadataFlowMutation,
     DatasetTriggerTransformFlowMutation,
     FlowConfigCompactionInput,
     FlowConfigIngestInput,
@@ -94,6 +95,23 @@ export class DatasetFlowsService {
                         return true;
                     } else {
                         this.toastrService.error(data.datasets.byId?.flows.runs.triggerCompactionFlow.message);
+                        return false;
+                    }
+                }),
+            );
+    }
+
+    public datasetTriggerResetToMetadataFlow(params: { datasetId: string }): Observable<boolean> {
+        return this.datasetFlowApi
+            .datasetTriggerResetToMetadataFlow({
+                datasetId: params.datasetId,
+            })
+            .pipe(
+                map((data: DatasetTriggerResetToMetadataFlowMutation) => {
+                    if (data.datasets.byId?.flows.runs.triggerResetToMetadataFlow.__typename === "TriggerFlowSuccess") {
+                        return true;
+                    } else {
+                        this.toastrService.error(data.datasets.byId?.flows.runs.triggerResetToMetadataFlow.message);
                         return false;
                     }
                 }),

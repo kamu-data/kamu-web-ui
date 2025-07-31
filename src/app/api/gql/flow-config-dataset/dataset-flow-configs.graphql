@@ -24,12 +24,8 @@ query getDatasetFlowConfigs($datasetId: DatasetID!, $datasetFlowType: DatasetFlo
               }
 
               ... on FlowConfigRuleCompaction {
-                compactionMode {
-                  ... on FlowConfigCompactionModeFull {
-                    maxSliceSize
-                    maxSliceRecords
-                  }
-                }
+                maxSliceSize
+                maxSliceRecords
               }
             }
             retryPolicy {

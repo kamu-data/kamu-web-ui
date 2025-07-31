@@ -30,7 +30,6 @@ import { DatasetSettingsService } from "../../services/dataset-settings.service"
 import { Observable, shareReplay } from "rxjs";
 import { CompactionTooltipsTexts } from "src/app/common/tooltips/compacting.text";
 import { DatasetResetMode, RenameDatasetFormType, ResetDatasetFormType } from "./dataset-settings-general-tab.types";
-import { DatasetCompactionService } from "../../services/dataset-compaction.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import AppValues from "src/app/common/values/app.values";
 import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
@@ -86,8 +85,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     private datasetSettingsService = inject(DatasetSettingsService);
     private fb = inject(FormBuilder);
     private modalService = inject(ModalService);
-    private datasetCompactionService = inject(DatasetCompactionService);
-    private flowsService = inject(DatasetFlowsService);
+    private datasetFlowsService = inject(DatasetFlowsService);
     private navigationService = inject(NavigationService);
     private datasetService = inject(DatasetService);
 
@@ -209,10 +207,10 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                         const mode = this.modeControl.value;
                         switch (mode) {
                             case DatasetResetMode.RESET_TO_SEED: {
-                                this.datasetCompactionService
-                                    .resetToSeed({
+                                this.datasetFlowsService
+                                    .datasetTriggerResetFlow({
                                         datasetId: this.datasetBasics.id,
-                                        resetArgs: {
+                                        resetConfigInput: {
                                             mode: {
                                                 toSeed: {},
                                             },
@@ -233,14 +231,9 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                                 break;
                             }
                             case DatasetResetMode.RESET_METADATA_ONLY: {
-                                this.flowsService
-                                    .datasetTriggerCompactionFlow({
+                                this.datasetFlowsService
+                                    .datasetTriggerResetToMetadataFlow({
                                         datasetId: this.datasetBasics.id,
-                                        compactionConfigInput: {
-                                            metadataOnly: {
-                                                dummy: false,
-                                            },
-                                        },
                                     })
                                     .pipe(takeUntilDestroyed(this.destroyRef))
                                     .subscribe((result: boolean) => {

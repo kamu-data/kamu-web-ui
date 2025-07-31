@@ -209,9 +209,9 @@ describe("FlowTableHelpers", () => {
         );
     });
 
-    it(`should check description end of message with description FlowDescriptionDatasetCompacting typename with compaction success in metadata-only mode`, () => {
+    it(`should check description end of message with description FlowDescriptionDatasetResetToMetadata typename`, () => {
         expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[12])).toEqual(
-            `All data except metadata has been deleted`,
+            `All data except metadata has been deleted. Original blocks: 125. Resulting blocks: 13.`,
         );
     });
 
@@ -225,5 +225,27 @@ describe("FlowTableHelpers", () => {
         expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[14])).toEqual(
             `Input dataset <a class="text-small text-danger">my-dataset-input</a> was hard compacted`,
         );
+    });
+
+    it(`should check description end of message with description FlowDescriptionDatasetResetToMetadata with nothing to do`, () => {
+        expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[15])).toEqual(`Nothing to do`);
+    });
+
+    it(`should check description end of message with description FlowDescriptionWebhookDeliver`, () => {
+        expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[16])).toEqual(
+            `Delivered message DATASET.REF.UPDATED via subscription "Example Webhook"`,
+        );
+
+        expect(
+            FlowTableHelpers.descriptionSubMessage({
+                ...mockTableFlowSummaryDataFragments[16],
+                description: {
+                    __typename: "FlowDescriptionWebhookDeliver",
+                    targetUrl: "https://example.com/webhook",
+                    label: "",
+                    eventType: "DATASET.REF.UPDATED",
+                },
+            }),
+        ).toEqual(`Delivered message DATASET.REF.UPDATED to https://example.com/webhook`);
     });
 });

@@ -230,10 +230,10 @@ export class DatasetFlowDetailsHelpers {
 
                                     case "FlowDescriptionDatasetHardCompaction":
                                         switch (flowDetails.description.compactionResult?.__typename) {
-                                            case "FlowDescriptionHardCompactionSuccess":
+                                            case "FlowDescriptionReorganizationSuccess":
                                                 return `Compacted ${flowDetails.description.compactionResult.originalBlocksCount} original blocks to ${flowDetails.description.compactionResult.resultingBlocksCount} resulting blocks`;
 
-                                            case "FlowDescriptionHardCompactionNothingToDo":
+                                            case "FlowDescriptionReorganizationNothingToDo":
                                                 return flowDetails.description.compactionResult.message;
                                             /* istanbul ignore next */
                                             default:
@@ -242,6 +242,19 @@ export class DatasetFlowDetailsHelpers {
 
                                     case "FlowDescriptionDatasetReset":
                                         return "All dataset history has been cleared.";
+
+                                    case "FlowDescriptionDatasetResetToMetadata":
+                                        switch (flowDetails.description.resetToMetadataResult?.__typename) {
+                                            case "FlowDescriptionReorganizationSuccess":
+                                                return `All data except metadata has been deleted. Original blocks: ${flowDetails.description.resetToMetadataResult.originalBlocksCount}. Resulting blocks: ${flowDetails.description.resetToMetadataResult.resultingBlocksCount}`;
+
+                                            case "FlowDescriptionReorganizationNothingToDo":
+                                                return flowDetails.description.resetToMetadataResult.message;
+
+                                            /* istanbul ignore next */
+                                            default:
+                                                return "Unknown compaction result typename";
+                                        }
 
                                     case "FlowDescriptionWebhookDeliver":
                                         return (

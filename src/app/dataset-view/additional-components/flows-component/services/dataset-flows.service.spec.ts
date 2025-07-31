@@ -27,6 +27,8 @@ import {
     mockDatasetTriggerIngestFlowMutationError,
     mockDatasetTriggerResetFlowMutation,
     mockDatasetTriggerResetFlowMutationError,
+    mockDatasetTriggerResetToMetadataFlowMutation,
+    mockDatasetTriggerResetToMetadataFlowMutationError,
     mockDatasetTriggerTransformFlowMutation,
     mockDatasetTriggerTransformFlowMutationError,
     mockGetDatasetListFlowsQuery,
@@ -188,7 +190,10 @@ describe("DatasetFlowsService", () => {
         const subscription$ = service
             .datasetTriggerCompactionFlow({
                 datasetId: MOCK_DATASET_ID,
-                compactionConfigInput: { metadataOnly: { dummy: false } },
+                compactionConfigInput: {
+                    maxSliceRecords: 10000,
+                    maxSliceSize: 3000000,
+                },
             })
             .subscribe((result: boolean) => {
                 expect(result).toBe(true);
@@ -206,7 +211,7 @@ describe("DatasetFlowsService", () => {
         const subscription$ = service
             .datasetTriggerCompactionFlow({
                 datasetId: MOCK_DATASET_ID,
-                compactionConfigInput: { full: { maxSliceRecords: 1000, maxSliceSize: 10000 } },
+                compactionConfigInput: { maxSliceRecords: 1000, maxSliceSize: 10000 },
             })
             .subscribe(() => {
                 expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error");
@@ -240,6 +245,39 @@ describe("DatasetFlowsService", () => {
                 resetConfigInput: {
                     mode: { custom: { newHeadHash: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX" } },
                 },
+            })
+            .subscribe(() => {
+                expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error");
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check trigger dataset reset to metadata flow", () => {
+        spyOn(datasetFlowApi, "datasetTriggerResetToMetadataFlow").and.returnValue(
+            of(mockDatasetTriggerResetToMetadataFlowMutation),
+        );
+
+        const subscription$ = service
+            .datasetTriggerResetToMetadataFlow({
+                datasetId: MOCK_DATASET_ID,
+            })
+            .subscribe((result: boolean) => {
+                expect(result).toBe(true);
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check trigger dataset reset to metadata flow with error", () => {
+        spyOn(datasetFlowApi, "datasetTriggerResetToMetadataFlow").and.returnValue(
+            of(mockDatasetTriggerResetToMetadataFlowMutationError),
+        );
+        const toastrServiceErrorSpy = spyOn(toastService, "error");
+
+        const subscription$ = service
+            .datasetTriggerResetToMetadataFlow({
+                datasetId: MOCK_DATASET_ID,
             })
             .subscribe(() => {
                 expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error");

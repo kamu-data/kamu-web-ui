@@ -6,7 +6,6 @@
  */
 
 import { NavigationService } from "./../../../../../services/navigation.service";
-import { DatasetCompactionService } from "./../../services/dataset-compaction.service";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { DatasetSettingsGeneralTabComponent } from "./dataset-settings-general-tab.component";
 import { DatasetSettingsService } from "../../services/dataset-settings.service";
@@ -39,9 +38,8 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     let fixture: ComponentFixture<DatasetSettingsGeneralTabComponent>;
     let datasetSettingsService: DatasetSettingsService;
     let modalService: ModalService;
-    let datasetCompactionService: DatasetCompactionService;
+    let datasetFlowsService: DatasetFlowsService;
     let navigationService: NavigationService;
-    let flowsService: DatasetFlowsService;
     let datasetService: DatasetService;
 
     beforeEach(async () => {
@@ -83,8 +81,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
         datasetSettingsService = TestBed.inject(DatasetSettingsService);
         modalService = TestBed.inject(ModalService);
-        datasetCompactionService = TestBed.inject(DatasetCompactionService);
-        flowsService = TestBed.inject(DatasetFlowsService);
+        datasetFlowsService = TestBed.inject(DatasetFlowsService);
         datasetService = TestBed.inject(DatasetService);
 
         navigationService = TestBed.inject(NavigationService);
@@ -245,16 +242,18 @@ describe("DatasetSettingsGeneralTabComponent", () => {
             options.handler?.call(undefined, true);
             return Promise.resolve("");
         });
-        const resetToSeedSpy = spyOn(datasetCompactionService, "resetToSeed").and.returnValue(of(true));
+        const datasetTriggerResetFlowSpy = spyOn(datasetFlowsService, "datasetTriggerResetFlow").and.returnValue(
+            of(true),
+        );
         const navigationServiceSpy = spyOn(navigationService, "navigateToDatasetView");
         emitClickOnElementByDataTestId(fixture, Elements.ResetDatasetButton);
         tick(AppValues.SIMULATION_START_CONDITION_DELAY_MS);
 
         expect(navigationServiceSpy).toHaveBeenCalledTimes(1);
         expect(modalServiceSpy).toHaveBeenCalledTimes(1);
-        expect(resetToSeedSpy).toHaveBeenCalledWith({
+        expect(datasetTriggerResetFlowSpy).toHaveBeenCalledWith({
             datasetId: component.datasetBasics.id,
-            resetArgs: {
+            resetConfigInput: {
                 mode: {
                     toSeed: {},
                 },
@@ -270,22 +269,18 @@ describe("DatasetSettingsGeneralTabComponent", () => {
             return Promise.resolve("");
         });
         const navigationServiceSpy = spyOn(navigationService, "navigateToDatasetView");
-        const datasetTriggerCompactionFlowSpy = spyOn(flowsService, "datasetTriggerCompactionFlow").and.returnValue(
-            of(true),
-        );
+        const datasetTriggerResetToMetadataFlowSpy = spyOn(
+            datasetFlowsService,
+            "datasetTriggerResetToMetadataFlow",
+        ).and.returnValue(of(true));
 
         emitClickOnElementByDataTestId(fixture, Elements.ResetDatasetButton);
         tick(AppValues.SIMULATION_START_CONDITION_DELAY_MS);
 
         expect(navigationServiceSpy).toHaveBeenCalledTimes(1);
         expect(modalServiceSpy).toHaveBeenCalledTimes(1);
-        expect(datasetTriggerCompactionFlowSpy).toHaveBeenCalledWith({
+        expect(datasetTriggerResetToMetadataFlowSpy).toHaveBeenCalledWith({
             datasetId: component.datasetBasics.id,
-            compactionConfigInput: {
-                metadataOnly: {
-                    dummy: false,
-                },
-            },
         });
 
         flush();

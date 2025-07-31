@@ -29,17 +29,13 @@ export class FlowTableHelpers {
             case "FlowDescriptionDatasetExecuteTransform":
                 return `Execute transformation`;
             case "FlowDescriptionDatasetHardCompaction":
-                if (
-                    flow.configSnapshot?.__typename === "FlowConfigRuleCompaction" &&
-                    flow.configSnapshot.compactionMode.__typename === "FlowConfigCompactionModeMetadataOnly"
-                ) {
-                    return "Reset";
-                }
                 return `Hard compaction`;
             case "FlowDescriptionSystemGC":
                 return `Garbage collector`;
             case "FlowDescriptionDatasetReset":
                 return `Reset to seed`;
+            case "FlowDescriptionDatasetResetToMetadata":
+                return `Reset to metadata only`;
             case "FlowDescriptionWebhookDeliver":
                 return "Webhook message delivery";
             /* istanbul ignore next */
@@ -162,18 +158,12 @@ export class FlowTableHelpers {
 
                             case "FlowDescriptionDatasetHardCompaction":
                                 switch (element.description.compactionResult?.__typename) {
-                                    case "FlowDescriptionHardCompactionSuccess":
-                                        if (
-                                            element.configSnapshot?.__typename === "FlowConfigRuleCompaction" &&
-                                            element.configSnapshot.compactionMode.__typename ===
-                                                "FlowConfigCompactionModeMetadataOnly"
-                                        ) {
-                                            return "All data except metadata has been deleted";
-                                        }
+                                    case "FlowDescriptionReorganizationSuccess":
                                         return `Compacted ${element.description.compactionResult.originalBlocksCount} original blocks to ${element.description.compactionResult.resultingBlocksCount} resulting blocks`;
 
-                                    case "FlowDescriptionHardCompactionNothingToDo":
+                                    case "FlowDescriptionReorganizationNothingToDo":
                                         return element.description.compactionResult.message;
+
                                     /* istanbul ignore next */
                                     default:
                                         return "Unknown compaction result typename";
@@ -181,6 +171,18 @@ export class FlowTableHelpers {
 
                             case "FlowDescriptionDatasetReset":
                                 return "All dataset history has been cleared";
+
+                            case "FlowDescriptionDatasetResetToMetadata":
+                                switch (element.description.resetToMetadataResult?.__typename) {
+                                    case "FlowDescriptionReorganizationSuccess":
+                                        return `All data except metadata has been deleted. Original blocks: ${element.description.resetToMetadataResult.originalBlocksCount}. Resulting blocks: ${element.description.resetToMetadataResult.resultingBlocksCount}.`;
+
+                                    case "FlowDescriptionReorganizationNothingToDo":
+                                        return element.description.resetToMetadataResult.message;
+                                    /* istanbul ignore next */
+                                    default:
+                                        return "Unknown reset to metadata result typename";
+                                }
 
                             case "FlowDescriptionWebhookDeliver":
                                 return (
@@ -227,6 +229,10 @@ export class FlowTableHelpers {
                 switch (element.description.__typename) {
                     case "FlowDescriptionDatasetHardCompaction":
                         return "Running hard compaction";
+                    case "FlowDescriptionDatasetResetToMetadata":
+                        return "Resetting dataset to metadata only";
+                    case "FlowDescriptionDatasetReset":
+                        return "Resetting dataset";
                     case "FlowDescriptionDatasetPollingIngest":
                         {
                             const fetchStep = element.description.pollingSource.fetch;

@@ -76,13 +76,13 @@ fragment FlowSummaryData on Flow {
 
     ... on FlowDescriptionDatasetHardCompaction {
       compactionResult {
-        ... on FlowDescriptionHardCompactionSuccess {
+        ... on FlowDescriptionReorganizationSuccess {
           originalBlocksCount
           resultingBlocksCount
           newHead
         }
 
-        ... on FlowDescriptionHardCompactionNothingToDo {
+        ... on FlowDescriptionReorganizationNothingToDo {
           message
           dummy
         }
@@ -96,6 +96,21 @@ fragment FlowSummaryData on Flow {
     ... on FlowDescriptionDatasetReset {
       resetResult {
         newHead
+      }
+    }
+
+    ... on FlowDescriptionDatasetResetToMetadata {
+      resetToMetadataResult {
+        ... on FlowDescriptionReorganizationSuccess {
+          originalBlocksCount
+          resultingBlocksCount
+          newHead
+        }
+
+        ... on FlowDescriptionReorganizationNothingToDo {
+          message
+          dummy
+        }
       }
     }
 
@@ -159,12 +174,6 @@ fragment FlowSummaryData on Flow {
   configSnapshot {
     ... on FlowConfigRuleIngest {
       fetchUncacheable
-    }
-
-    ... on FlowConfigRuleCompaction {
-      compactionMode {
-        __typename
-      }
     }
   }
 

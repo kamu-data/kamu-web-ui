@@ -7,21 +7,18 @@
 
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
-import { map } from "rxjs";
-import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
+import { MetadataEventType } from "src/app/api/kamu.graphql.interface";
 import { EditAddPushSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/edit-add-push-source.service";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
+import { MaybeNull } from "src/app/interface/app.types";
 
-export const addPushSourceResolverFn: ResolveFn<string> = (route: ActivatedRouteSnapshot) => {
+export const addPushSourceResolverFn: ResolveFn<MaybeNull<string>> = (route: ActivatedRouteSnapshot) => {
     const editService = inject(EditAddPushSourceService);
     const datasetInfo = {
         accountName: route.paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME),
         datasetName: route.paramMap.get(ProjectLinks.URL_PARAM_DATASET_NAME),
     } as DatasetInfo;
-    const sourceName = route.paramMap.get(ProjectLinks.URL_QUERY_PARAM_PUSH_SOURCE_NAME) ?? "";
-
-    return editService
-        .getEventAsYaml(datasetInfo, SupportedEvents.AddPushSource, sourceName)
-        .pipe(map((data) => data as string));
+    const sourceName = route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PUSH_SOURCE_NAME) ?? "";
+    return editService.getEventAsYaml(datasetInfo, MetadataEventType.AddPushSource, sourceName);
 };

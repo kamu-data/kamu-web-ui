@@ -14,11 +14,8 @@ import { from, of } from "rxjs";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { FinalYamlModalComponent } from "../../final-yaml-modal/final-yaml-modal.component";
 import { ActivatedRoute } from "@angular/router";
-import { EditAddPushSourceService } from "./edit-add-push-source.service";
-import { mockDatasetHistoryResponse, mockDatasetInfo } from "src/app/search/mock.data";
-import { DatasetPageInfoFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
+import { mockDatasetInfo } from "src/app/search/mock.data";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { NavigationService } from "src/app/services/navigation.service";
 import { MergeKind, ReadKind } from "../add-polling-source/add-polling-source-form.types";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
@@ -52,12 +49,9 @@ describe("AddPushSourceComponent with query parameter name", () => {
     let component: AddPushSourceComponent;
     let fixture: ComponentFixture<AddPushSourceComponent>;
     let datasetCommitService: DatasetCommitService;
-    let editService: EditAddPushSourceService;
-    let navigationService: NavigationService;
     let loggedUserService: LoggedUserService;
     let modalService: NgbModal;
     let modalRef: NgbModalRef;
-    const datasetHistoryResponse = mockDatasetHistoryResponse.datasets.byOwnerAndName?.metadata.chain.blocks;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -69,17 +63,11 @@ describe("AddPushSourceComponent with query parameter name", () => {
         modalService = TestBed.inject(NgbModal);
         modalRef = modalService.open(FinalYamlModalComponent);
         datasetCommitService = TestBed.inject(DatasetCommitService);
-        editService = TestBed.inject(EditAddPushSourceService);
-        navigationService = TestBed.inject(NavigationService);
         loggedUserService = TestBed.inject(LoggedUserService);
         component = fixture.componentInstance;
         component.eventYamlByHash = mockAddPushSourceYaml;
         component.queryParamName = "mockSourceName";
         component.datasetInfo = mockDatasetInfo;
-        editService.history = {
-            history: datasetHistoryResponse?.nodes as MetadataBlockFragment[],
-            pageInfo: datasetHistoryResponse?.pageInfo as DatasetPageInfoFragment,
-        };
         component.addPushSourceForm = new FormGroup({
             sourceName: new FormControl(""),
             read: new FormGroup({
@@ -113,20 +101,6 @@ describe("AddPushSourceComponent with query parameter name", () => {
     it("should check eventYamlByHash is not null", () => {
         component.ngOnInit();
         expect(component.eventYamlByHash).toEqual(mockAddPushSourceYaml);
-    });
-
-    it("should check navigate to PageNotFoundComponent ", () => {
-        editService.history = {
-            // Deleted "AddPushSource" event from history
-            history: (datasetHistoryResponse?.nodes as MetadataBlockFragment[]).splice(5, 1),
-            pageInfo: datasetHistoryResponse?.pageInfo as DatasetPageInfoFragment,
-        };
-        const navigateToPageNotFoundSpy = spyOn(navigationService, "navigateToPageNotFound");
-        const mockEventYamlByHash =
-            "kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2023-12-28T09:41:56.469218218Z\n  prevBlockHash: zW1jaUXuf1HLoKvdQhYNq1e3x6KCFrY7UCqXsgVMfJBJF77\n  sequenceNumber: 1\n  event:\n    kind: AddPushSource\n    sourceName: mockSource\n    read:\n      kind: Csv\n      schema:\n      - id INT\n      separator: ','\n      encoding: utf8\n      quote: '\"'\n      escape: \\\n      dateFormat: rfc3339\n      timestampFormat: rfc3339\n    merge:\n      kind: Append\n";
-        spyOn(editService, "getEventAsYaml").and.returnValue(of(mockEventYamlByHash));
-        component.ngOnInit();
-        expect(navigateToPageNotFoundSpy).toHaveBeenCalledWith();
     });
 
     it("should check change step", () => {
@@ -171,8 +145,6 @@ describe("AddPushSourceComponent with query parameter name", () => {
 describe("AddPushSourceComponent without query parameter name", () => {
     let component: AddPushSourceComponent;
     let fixture: ComponentFixture<AddPushSourceComponent>;
-    let editService: EditAddPushSourceService;
-    const datasetHistoryResponse = mockDatasetHistoryResponse.datasets.byOwnerAndName?.metadata.chain.blocks;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -181,7 +153,6 @@ describe("AddPushSourceComponent without query parameter name", () => {
         }).compileComponents();
 
         fixture = TestBed.createComponent(AddPushSourceComponent);
-        editService = TestBed.inject(EditAddPushSourceService);
         component = fixture.componentInstance;
         component.queryParamName = "";
         component.eventYamlByHash = mockAddPushSourceYaml;
@@ -202,10 +173,7 @@ describe("AddPushSourceComponent without query parameter name", () => {
             }),
             prepare: new FormArray([]),
         });
-        editService.history = {
-            history: datasetHistoryResponse?.nodes as MetadataBlockFragment[],
-            pageInfo: datasetHistoryResponse?.pageInfo as DatasetPageInfoFragment,
-        };
+
         fixture.detectChanges();
     });
 

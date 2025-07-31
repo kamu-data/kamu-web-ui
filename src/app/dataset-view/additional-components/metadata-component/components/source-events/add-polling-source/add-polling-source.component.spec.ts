@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy } from "@angular/core";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
@@ -16,11 +15,9 @@ import { of, from } from "rxjs";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetBasicsRootFragment,
-    mockDatasetHistoryResponse,
     mockDatasetInfo,
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
-import { DatasetPageInfoFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { DatasetCommitService } from "../../../../overview-component/services/dataset-commit.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
@@ -38,6 +35,7 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { ActivatedRoute } from "@angular/router";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 describe("AddPollingSourceComponent", () => {
     let component: AddPollingSourceComponent;
@@ -51,11 +49,11 @@ describe("AddPollingSourceComponent", () => {
     let navigationService: NavigationService;
     let loggedUserService: LoggedUserService;
 
-    const MOCK_EVENT_YAML = "test_tyaml";
-
+    const MOCK_EVENT_YAML =
+        'kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2025-07-31T09:14:31.436171360Z\n  prevBlockHash: f16203af1cb7aa30e9a9c12f8f76d54bf1d27f912a9f84d7938ec06b129e22977fa38\n  sequenceNumber: 13\n  event:\n    kind: SetPollingSource\n    fetch:\n      kind: Url\n      url: https://api.etherscan.io/api?module2=account&action=tokentx&address=0xeadb3840596cabf312f2bc88a4bb0b93a4e1ff5f&page=1&offset=1000&startblock=0&endblock=99999999&apikey=${{ env.ETHERSCAN_API_KEY }}\n      eventTime:\n        kind: FromMetadata\n    read:\n      kind: Json\n      subPath: result\n      dateFormat: rfc3339\n      encoding: utf8\n      timestampFormat: rfc3339\n    preprocess:\n      kind: Sql\n      engine: datafusion\n      queries:\n      - query: |\n          SELECT\n            to_timestamp_seconds(cast(timeStamp as bigint)) as block_time,\n            cast(blockNumber as bigint) as block_number,\n            blockHash as block_hash,\n            hash as transaction_hash,\n            transactionIndex as transaction_index,\n            nonce,\n            "from",\n            to,\n            value,\n            contractAddress as contract_address,\n            tokenName as token_name,\n            tokenSymbol as token_symbol,\n            tokenDecimal as token_decimal,\n            gas,\n            gasPrice as gas_price,\n            gasUsed as gas_used,\n            cumulativeGasUsed as cumulative_gas_used,\n            confirmations\n          FROM input\n    merge:\n      kind: Ledger\n      primaryKey:\n      - transaction_hash\n';
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [ApolloTestingModule, AddPollingSourceComponent],
+            imports: [ApolloTestingModule, AddPollingSourceComponent, BrowserAnimationsModule],
             providers: [
                 {
                     provide: ActivatedRoute,
@@ -75,11 +73,7 @@ describe("AddPollingSourceComponent", () => {
                     },
                 },
             ],
-        })
-            .overrideComponent(AddPollingSourceComponent, {
-                set: { changeDetection: ChangeDetectionStrategy.Default },
-            })
-            .compileComponents();
+        }).compileComponents();
 
         fixture = TestBed.createComponent(AddPollingSourceComponent);
         modalService = TestBed.inject(NgbModal);
@@ -95,12 +89,7 @@ describe("AddPollingSourceComponent", () => {
         component.eventYamlByHash = MOCK_EVENT_YAML;
         component.currentStep = SetPollingSourceSection.FETCH;
         component.datasetInfo = mockDatasetInfo;
-        component.history = {
-            history: mockDatasetHistoryResponse.datasets.byOwnerAndName?.metadata.chain.blocks
-                .nodes as MetadataBlockFragment[],
-            pageInfo: mockDatasetHistoryResponse.datasets.byOwnerAndName?.metadata.chain.blocks
-                .pageInfo as DatasetPageInfoFragment,
-        };
+
         component.pollingSourceForm = new FormGroup({
             fetch: new FormGroup({
                 kind: new FormControl(FetchKind.URL),
@@ -245,8 +234,8 @@ describe("AddPollingSourceComponent", () => {
     });
 
     it("should check change showPreprocessStep property", () => {
-        expect(component.showPreprocessStep).toEqual(false);
-        component.onShowPreprocessStep(true);
         expect(component.showPreprocessStep).toEqual(true);
+        component.onShowPreprocessStep(false);
+        expect(component.showPreprocessStep).toEqual(false);
     });
 });

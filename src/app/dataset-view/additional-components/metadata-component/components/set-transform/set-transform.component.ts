@@ -92,7 +92,6 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
         } else {
             this.initDefaultQueriesSection();
         }
-        this.history = this.editService.history;
     }
 
     private initDefaultQueriesSection(query = ""): void {

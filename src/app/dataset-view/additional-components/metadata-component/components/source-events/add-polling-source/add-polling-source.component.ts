@@ -6,11 +6,10 @@
  */
 
 import { FetchKind, SetPollingSourceSection } from "./add-polling-source-form.types";
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { FormArray, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { FETCH_STEP_RADIO_CONTROLS } from "./form-control.source";
 import { FETCH_FORM_DATA } from "../steps/data/fetch-form-data";
-import { EditPollingSourceService } from "./edit-polling-source.service";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { STEPPER_GLOBAL_OPTIONS } from "@angular/cdk/stepper";
 import { SourcesSection } from "./process-form.service.types";
@@ -97,8 +96,6 @@ export class AddPollingSourceComponent extends BaseSourceEventComponent implemen
     public get mergeForm(): FormGroup {
         return this.pollingSourceForm.get(SetPollingSourceSection.MERGE) as FormGroup;
     }
-
-    private editService = inject(EditPollingSourceService);
 
     public ngOnInit(): void {
         super.ngOnInit();

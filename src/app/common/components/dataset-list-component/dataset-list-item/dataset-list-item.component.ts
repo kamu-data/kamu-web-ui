@@ -19,6 +19,8 @@ import { DatasetVisibilityComponent } from "../../dataset-visibility/dataset-vis
 import { RouterLink } from "@angular/router";
 import { MatIconModule } from "@angular/material/icon";
 import { NgIf, NgFor } from "@angular/common";
+import AppValues from "src/app/common/values/app.values";
+import { DatasetKindComponent } from "../../dataset-kind/dataset-kind.component";
 
 @Component({
     selector: "app-dataset-list-item",
@@ -40,6 +42,7 @@ import { NgIf, NgFor } from "@angular/common";
 
         //-----//
         DatasetVisibilityComponent,
+        DatasetKindComponent,
         DisplayTimeComponent,
         FeatureFlagDirective,
     ],
@@ -48,6 +51,8 @@ export class DatasetListItemComponent {
     @Input({ required: true }) public row: DatasetSearchOverviewFragment;
     @Input({ required: true }) public isClickableRow: boolean;
     @Input({ required: true }) public rowIndex: number;
+
+    public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
 
     private modalService = inject(ModalService);
     private navigationService = inject(NavigationService);

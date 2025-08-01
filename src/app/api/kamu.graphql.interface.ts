@@ -6582,8 +6582,16 @@ export type DatasetReadmeFragment = {
 
 export type DatasetSearchOverviewFragment = {
     __typename?: "Dataset";
+    id: string;
+    kind: DatasetKind;
+    name: string;
+    alias: string;
     createdAt: string;
     lastUpdatedAt: string;
+    owner: { __typename?: "Account" } & AccountExtendedFragment;
+    visibility:
+        | { __typename: "PrivateDatasetVisibility" }
+        | { __typename?: "PublicDatasetVisibility"; anonymousAvailable: boolean };
     metadata: {
         __typename?: "DatasetMetadata";
         currentInfo: { __typename?: "SetInfo" } & DatasetCurrentInfoFragment;
@@ -6596,7 +6604,7 @@ export type DatasetSearchOverviewFragment = {
             | { __typename?: "DependencyDatasetResultNotAccessible"; id: string }
         >;
     };
-} & DatasetBasicsFragment;
+};
 
 export type DatasetTransformContentFragment = {
     __typename?: "TransformSql";
@@ -8354,7 +8362,21 @@ export const DatasetPermissionsFragmentDoc = gql`
 `;
 export const DatasetSearchOverviewFragmentDoc = gql`
     fragment DatasetSearchOverview on Dataset {
-        ...DatasetBasics
+        id
+        kind
+        name
+        owner {
+            ...AccountExtended
+        }
+        alias
+        visibility {
+            ... on PrivateDatasetVisibility {
+                __typename
+            }
+            ... on PublicDatasetVisibility {
+                anonymousAvailable
+            }
+        }
         createdAt
         lastUpdatedAt
         metadata {
@@ -8376,9 +8398,10 @@ export const DatasetSearchOverviewFragmentDoc = gql`
             }
         }
     }
-    ${DatasetBasicsFragmentDoc}
+    ${AccountExtendedFragmentDoc}
     ${DatasetCurrentInfoFragmentDoc}
     ${LicenseFragmentDoc}
+    ${DatasetBasicsFragmentDoc}
 `;
 export const CreateAccessTokenDocument = gql`
     mutation createAccessToken($accountId: AccountID!, $tokenName: String!) {

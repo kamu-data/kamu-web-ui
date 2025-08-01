@@ -1,5 +1,21 @@
 fragment DatasetSearchOverview on Dataset {
-  ...DatasetBasics
+  id
+  kind
+  name
+  owner {
+    ...AccountExtended
+  }
+  alias
+  visibility {
+    ... on PrivateDatasetVisibility {
+      __typename
+    }
+
+    ... on PublicDatasetVisibility {
+      anonymousAvailable
+    }
+  }
+
   createdAt
   lastUpdatedAt
   metadata {

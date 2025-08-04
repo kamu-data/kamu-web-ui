@@ -1,13 +1,16 @@
 @import "var";
 @import "node_modules/bootstrap/dist/css/bootstrap.min";
 
+ul {
+    padding: 0;
+}
+
 .timeline-block {
     position: relative;
 
     .timeline-block__item {
         display: flex;
         padding: 16px 0;
-        margin-left: 16px;
         list-style: none;
         position: relative;
 
@@ -16,9 +19,9 @@
                 position: absolute;
                 display: block;
                 width: 1px;
-                top: 32px;
+                top: 27px;
                 left: 10px;
-                height: 60px;
+                height: 69px;
                 content: "";
                 background-color: $app-color-border-muted;
             }
@@ -28,9 +31,20 @@
             position: absolute;
             display: block;
             width: 1px;
-            top: 32px;
-            left: 10px;
-            height: 84px;
+            top: 27px;
+            left: 9.5px;
+            height: 95px;
+            content: "";
+            background-color: $app-color-border-muted;
+        }
+
+        &::before {
+            position: absolute;
+            display: block;
+            height: 1px;
+            width: 26px;
+            top: 22.5px;
+            left: 15px;
             content: "";
             background-color: $app-color-border-muted;
         }
@@ -65,14 +79,12 @@ a {
     top: 12px;
     height: 20px;
     width: 20px;
-    border-radius: 50%;
-    border: 2px solid #d8dee4;
-    background: white;
+    background: transparent;
     margin-right: 19px;
 
     .inner-icon {
-        height: 8px;
-        width: 8px;
+        height: 10px;
+        width: 10px;
         border-radius: 50%;
         border: 3px solid #7ca6aa;
         background: transparent;

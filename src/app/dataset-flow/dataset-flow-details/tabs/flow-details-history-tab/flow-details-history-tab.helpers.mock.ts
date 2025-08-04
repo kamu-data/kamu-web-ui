@@ -16,7 +16,7 @@ import {
     TaskStatus,
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
-import { mockDatasetSearchResult } from "src/app/search/mock.data";
+import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 
 export const mockHistoryFragmentWithFinishedStatus: FlowHistoryDataFragment = {
     __typename: "FlowEventTaskChanged",
@@ -144,7 +144,9 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
             __typename: "FlowTriggerInputDatasetFlow",
             flowId: "1",
             flowType: DatasetFlowType.ExecuteTransform,
-            dataset: mockDatasetSearchResult.datasets[0],
+            dataset: {
+                ...mockDatasetBasicsDerivedFragment,
+            },
         },
     },
     {
@@ -336,7 +338,9 @@ export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[
             __typename: "FlowTriggerInputDatasetFlow",
             flowId: "1",
             flowType: DatasetFlowType.ExecuteTransform,
-            dataset: mockDatasetSearchResult.datasets[0],
+            dataset: {
+                ...mockDatasetBasicsDerivedFragment,
+            },
         },
     },
     {
@@ -386,7 +390,7 @@ export const flowEventSubMessageResults: string[] = [
     "Activating at Mar 13th 2024 4:54:30 PM GMT+02:00",
     "Modified by ingest rule",
     "Triggered by kamu",
-    "Input dataset: kamu/alberta.case-details",
+    "Input dataset: kamu/mockNameDerived",
     "Accumulated 100/500 records. Watermark modified. Deadline at Aug 6th 2022 12:17:30 AM GMT+03:00", //1
     "Task #5",
     "Wake up time at Mar 13th 2024 5:54:30 PM GMT+02:00",

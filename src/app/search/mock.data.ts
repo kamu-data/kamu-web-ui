@@ -7,6 +7,7 @@
 
 import {
     AccountBasicsFragment,
+    AccountExtendedFragment,
     AccountProvider,
     CommitEventToDatasetMutation,
     CreateDatasetFromSnapshotMutation,
@@ -85,6 +86,12 @@ export const mockOwnerFieldsWithAvatar: AccountBasicsFragment & { avatarUrl?: st
     accountProvider: AccountProvider.Password,
 };
 
+export const mockOwnerFieldsWithAvatarBasics: AccountExtendedFragment = {
+    id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+    accountName: "kamu",
+    avatarUrl: TEST_AVATAR_URL,
+};
+
 export const mockPublicDatasetVisibility: PublicDatasetVisibility = {
     __typename: "PublicDatasetVisibility",
     anonymousAvailable: true,
@@ -155,7 +162,7 @@ export const mockDatasetSearchResult: DatasetSearchResult = {
             name: "alberta.case-details",
             owner: {
                 __typename: "Account",
-                ...mockOwnerFields,
+                ...mockOwnerFieldsWithAvatarBasics,
             },
             alias: mockOwnerFields.accountName + "/alberta.case-details",
             createdAt: "2022-08-05T21:17:30.613911358+00:00",

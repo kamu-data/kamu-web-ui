@@ -1,4 +1,3 @@
-<div class="container-content my-4" *ngIf="isEventWithYamlView">
-    <p class="text-center text-muted">YAML format:</p>
-    <app-yaml-event-viewer data-test-id="yaml-event-viewer" [data]="blockAsYaml" />
+<div class="container-content my-4">
+    <markdown clipboard class="variable-binding" [data]="yamlWrapper(blockAsYaml)" />
 </div>

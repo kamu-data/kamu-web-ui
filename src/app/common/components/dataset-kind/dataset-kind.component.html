@@ -1,3 +1,9 @@
-<span data-test-id="dataset-kind" class="label label--secondary v-align-middle badge-background">{{
-    isRoot ? "Root" : "Derivative"
-}}</span>
+<span
+    [ngClass]="{
+        root: isRoot,
+        derivative: !isRoot,
+    }"
+    data-test-id="dataset-kind"
+    class="label label--secondary v-align-middle"
+    >{{ isRoot ? "Root" : "Derivative" }}</span
+>

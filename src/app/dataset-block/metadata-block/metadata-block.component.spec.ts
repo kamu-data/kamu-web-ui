@@ -68,4 +68,10 @@ describe("MetadataBlockComponent", () => {
     it("should create", () => {
         expect(component).toBeTruthy();
     });
+
+    it("should check toggle yaml view", () => {
+        expect(component.yamlView).toEqual(false);
+        component.toggleYamlView(true);
+        expect(component.yamlView).toEqual(true);
+    });
 });

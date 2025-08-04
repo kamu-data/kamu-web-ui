@@ -1,6 +1,11 @@
 <div *ngIf="block">
     <div class="justify-content-between custom-button">
-        <mat-slide-toggle color="primary" class="mat-elevation-z0" (change)="changeToggle($event)">
+        <mat-slide-toggle
+            data-test-id="yaml-toggle"
+            color="primary"
+            class="mat-elevation-z0"
+            (change)="changeToggle($event)"
+        >
             <span class="ps-2">Show as YAML</span>
         </mat-slide-toggle>
         <div class="d-flex flex-row" appFeatureFlag="dataset.panel.history.blockActions">

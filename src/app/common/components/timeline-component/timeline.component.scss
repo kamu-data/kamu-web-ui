@@ -20,8 +20,8 @@ ul {
                 display: block;
                 width: 1px;
                 top: 27px;
-                left: 10px;
-                height: 69px;
+                left: 9.5px;
+                height: 73px;
                 content: "";
                 background-color: $app-color-border-muted;
             }
@@ -33,7 +33,7 @@ ul {
             width: 1px;
             top: 27px;
             left: 9.5px;
-            height: 95px;
+            height: 99px;
             content: "";
             background-color: $app-color-border-muted;
         }
@@ -41,12 +41,18 @@ ul {
         &::before {
             position: absolute;
             display: block;
-            height: 1px;
-            width: 26px;
-            top: 22.5px;
-            left: 15px;
+            width: 1px;
+            top: -60px;
+            left: 9.5px;
+            height: 77px;
             content: "";
             background-color: $app-color-border-muted;
+        }
+
+        &:first-child {
+            &::before {
+                display: none;
+            }
         }
     }
 }
@@ -76,23 +82,28 @@ a {
 .container-icon {
     display: flex;
     position: relative;
-    top: 12px;
-    height: 20px;
-    width: 20px;
+    top: 17px;
+    left: 5px;
+    height: 10px;
+    width: 10px;
     background: transparent;
-    margin-right: 19px;
+    margin-right: 30px;
 
     .inner-icon {
-        height: 10px;
-        width: 10px;
+        position: absolute;
+        min-height: 10px;
+        min-width: 10px;
         border-radius: 50%;
-        border: 3px solid #7ca6aa;
+        border: 2px solid #606060;
         background: transparent;
     }
 }
 
-.commit-icon {
+.horizontal-line {
     position: absolute;
-    top: 19px;
-    left: 8px;
+    width: 30px;
+    left: 15px;
+    height: 1px;
+    background: $app-color-border-muted;
+    top: 21px;
 }

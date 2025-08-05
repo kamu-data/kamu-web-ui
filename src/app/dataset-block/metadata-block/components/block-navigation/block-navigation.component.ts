@@ -13,11 +13,12 @@ import { MaybeNull } from "src/app/interface/app.types";
 import { EventTypeFilterPipe } from "./pipes/event-type-filter.pipe";
 import { BlockHashFilterPipe } from "./pipes/block-hash-filter.pipe";
 import { PaginationComponent } from "../../../../common/components/pagination-component/pagination.component";
-import { DisplayHashComponent } from "../../../../common/components/display-hash/display-hash.component";
 import { NgSelectModule } from "@ng-select/ng-select";
 import { NgIf, NgFor } from "@angular/common";
 import { MatIconModule } from "@angular/material/icon";
 import { FormsModule } from "@angular/forms";
+import { RouterLink } from "@angular/router";
+import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-block-navigation",
@@ -30,6 +31,7 @@ import { FormsModule } from "@angular/forms";
         FormsModule,
         NgIf,
         NgFor,
+        RouterLink,
 
         //-----//
         MatIconModule,
@@ -37,7 +39,6 @@ import { FormsModule } from "@angular/forms";
 
         //-----//
         BlockHashFilterPipe,
-        DisplayHashComponent,
         EventTypeFilterPipe,
         PaginationComponent,
     ],
@@ -49,6 +50,7 @@ export class BlockNavigationComponent {
     @Output() public onPageChangeEmit = new EventEmitter<number>();
     public searchHash = "";
     public currentPage = 1;
+    public readonly URL_BLOCK = ProjectLinks.URL_BLOCK;
 
     public dropdownList = Object.entries(SupportedEvents).map(([key]) => {
         return { id: key, value: key };

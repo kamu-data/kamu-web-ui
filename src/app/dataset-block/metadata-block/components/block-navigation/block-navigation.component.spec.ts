@@ -15,6 +15,8 @@ import {
 } from "src/app/common/helpers/base-test.helpers.spec";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { provideToastr } from "ngx-toastr";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { MOCK_DATASET_INFO } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 
 describe("BlockNavigationComponent", () => {
     let component: BlockNavigationComponent;
@@ -23,13 +25,14 @@ describe("BlockNavigationComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [provideToastr()],
-            imports: [HttpClientTestingModule, BlockNavigationComponent],
+            imports: [HttpClientTestingModule, BlockNavigationComponent, SharedTestModule],
         }).compileComponents();
 
         registerMatSvgIcons();
 
         fixture = TestBed.createComponent(BlockNavigationComponent);
         component = fixture.componentInstance;
+        component.datasetInfo = MOCK_DATASET_INFO;
         fixture.detectChanges();
     });
 

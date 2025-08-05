@@ -45,6 +45,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { FormsModule } from "@angular/forms";
 import { NgIf, NgFor } from "@angular/common";
+import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.directive";
 
 @Component({
     selector: "app-search-and-schemas-section",
@@ -53,15 +54,21 @@ import { NgIf, NgFor } from "@angular/common";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
+        //-----//
         NgIf,
+        NgFor,
         FormsModule,
-        NgbTypeahead,
+        CdkAccordionModule,
+
+        //-----//
+        MatDividerModule,
         MatIconModule,
         NgbHighlight,
-        MatDividerModule,
-        CdkAccordionModule,
-        NgFor,
+        NgbTypeahead,
+
+        //-----//
         DynamicTableComponent,
+        FeatureFlagDirective,
         SavedQueriesSectionComponent,
     ],
 })

@@ -5,9 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- Data tab: fixed view for "Saved queries" block
 ### Changed
 - Avoiding full re-rendering of flow listing tables on polling source updates
 - "History" tab redesign  
+- Metadata block page: сhanged display of ID for input section
 
 ## [0.53.0] - 2025-07-23
 ### Changed

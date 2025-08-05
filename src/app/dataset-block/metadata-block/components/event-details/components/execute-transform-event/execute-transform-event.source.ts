@@ -88,7 +88,7 @@ export const EXECUTE_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = 
     "ExecuteTransform.ExecuteTransformInput.datasetId": {
         label: "Dataset ID:",
         tooltip: ExecuteTransformTooltipsTexts.INPUT_DATASET_ID,
-        presentationComponent: SimplePropertyComponent,
+        presentationComponent: HashPropertyComponent,
         separateRowForValue: false,
         dataTestId: "execute-transform-input-dataset-id",
     },

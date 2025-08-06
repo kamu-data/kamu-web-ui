@@ -105,7 +105,7 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
     public selectedEngine = AppValues.DEFAULT_ENGINE_NAME.toLowerCase();
     public knownEngines$: Observable<EngineDesc[]>;
     public enabledProof: boolean = false;
-    public proofResponse: QueryExplainerProofResponse;
+    public proofResponse: MaybeNull<QueryExplainerProofResponse>;
 
     public ngOnInit(): void {
         this.knownEngines$ = this.engineService.engines().pipe(map((result) => result.data.knownEngines));

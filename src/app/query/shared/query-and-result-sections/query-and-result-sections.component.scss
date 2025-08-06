@@ -18,7 +18,8 @@
     border-bottom-left-radius: 5px;
 }
 
-.share-query-button {
+.share-query-button,
+.verify-query-button {
     display: flex;
     color: #1a7f37;
     padding: 5px 10px;
@@ -41,4 +42,12 @@
 
 .no-pointer {
     cursor: not-allowed;
+}
+
+.pb-30 {
+    padding-bottom: 30px;
+}
+
+.ml-90 {
+    margin-left: 90px;
 }

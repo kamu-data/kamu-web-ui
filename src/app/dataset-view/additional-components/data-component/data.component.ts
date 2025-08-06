@@ -33,6 +33,7 @@ import { EditorModule } from "src/app/editor/editor.module";
 @Component({
     selector: "app-data",
     templateUrl: "./data.component.html",
+    styleUrls: ["./data.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [

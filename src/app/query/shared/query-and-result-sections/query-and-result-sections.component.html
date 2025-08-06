@@ -1,5 +1,5 @@
 <div class="sql-query-editor-header d-flex flex-row justify-content-between">
-    <div class="box-title align-items-center pb-3 m-0 d-flex flex-row gap-3">
+    <div class="box-title pb-3 m-0 d-flex flex-row align-items-center gap-3">
         <span class="d-block">Engine:</span>
         <app-engine-select
             *ngIf="knownEngines$ | async as knownEngines"
@@ -7,6 +7,16 @@
             [engine]="selectedEngine"
             [disabledOptionsMode]="true"
         ></app-engine-select>
+
+        <mat-slide-toggle
+            *ngIf="isAuthenticated"
+            [(ngModel)]="enabledProof"
+            color="primary"
+            class="mat-elevation-z0 ml-90"
+            data-test-id="generate-proof-enabled"
+        >
+            <span class="ps-2"> Generate proof</span>
+        </mat-slide-toggle>
     </div>
     <div class="btn-group-parent">
         <div class="d-flex">
@@ -15,15 +25,17 @@
                 [disabled]="!sqlRequestCode"
                 data-test-id="shareSqlQueryButton"
                 (click)="shareQuery()"
+                [title]="'Share query'"
                 class="share-query-button border border-1 rounded justify-content-center align-items-center me-4"
             >
-                <span class="mr-1 button-text"> Share query</span><mat-icon>share</mat-icon>
+                <mat-icon>share</mat-icon>
             </button>
             <button
                 appFeatureFlag="dataset.panel.data.editRun"
                 data-test-id="runSqlQueryButton"
                 [disabled]="!sqlRequestCode || sqlLoading"
                 name="run sql button"
+                [title]="'Run SQL query'"
                 (click)="runSQLRequest({ query: sqlRequestCode }, true)"
                 class="sql-run-button border border-1 rounded-left-2 border-right-0 btn-group-item btn justify-content-center align-items-center"
             >
@@ -53,17 +65,6 @@
                     <mat-divider></mat-divider>
                 </div>
                 <ng-container *ngIf="isAdmin">
-                    <div appFeatureFlag="dataset.panel.data.editRun.verify" class="select-menu-list">
-                        <button type="button" (click)="verifyQueryResult()" class="select-menu-item flex-items-start">
-                            <div>
-                                <div class="f5 text-bold">Verify query result</div>
-                                <div class="text-small color-fg-muted text-normal pb-1 lh-130">
-                                    You can verify the query result and make sure that you can trust it
-                                </div>
-                            </div>
-                        </button>
-                        <mat-divider></mat-divider>
-                    </div>
                     <div appFeatureFlag="dataset.panel.data.editRun.curl" class="select-menu-list">
                         <button type="button" (click)="copyCurlCommand()" class="select-menu-item flex-items-start">
                             <div>
@@ -80,7 +81,7 @@
     </div>
 </div>
 
-<div class="position-relative mt-4">
+<div class="position-relative mt-2">
     <ng-container *ngIf="!this.editorLoaded || sqlLoading">
         <mat-progress-bar data-test-id="editor-progress-bar" class="position-absolute" mode="indeterminate" />
     </ng-container>
@@ -126,6 +127,24 @@
         <ng-template #noRecords>
             <h3>0 records</h3>
         </ng-template>
+    </ng-container>
+
+    <ng-container *ngIf="enabledProof && proofResponse && !sqlError">
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <h2 class="box-title align-items-center pb-3 m-0">Query Proof:</h2>
+        </div>
+        <div class="mt-2">
+            <markdown clipboard class="variable-binding" [data]="jsonWrapper(proofResponse)" />
+        </div>
+        <div class="d-flex justify-content-end mt-4 pb-30">
+            <button
+                data-test-id="shareSqlQueryButton"
+                (click)="verifyQueryResult()"
+                class="verify-query-button border border-1 rounded justify-content-center align-items-center"
+            >
+                <span class="mr-1 button-text"> Verify</span><mat-icon>beenhere</mat-icon>
+            </button>
+        </div>
     </ng-container>
 </ng-container>
 

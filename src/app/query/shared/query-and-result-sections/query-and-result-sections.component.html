@@ -1,7 +1,8 @@
 <div class="sql-query-editor-header d-flex flex-row justify-content-between">
-    <div class="box-title pb-3 m-0 d-flex flex-row align-items-center gap-3">
-        <span class="d-block">Engine:</span>
+    <div class="box-title pb-3 m-0 d-flex flex-row align-items-center">
+        <span class="d-block me-3">Engine:</span>
         <app-engine-select
+            class="me-3"
             *ngIf="knownEngines$ | async as knownEngines"
             [data]="knownEngines"
             [engine]="selectedEngine"
@@ -9,14 +10,17 @@
         ></app-engine-select>
 
         <mat-slide-toggle
-            *ngIf="isAuthenticated"
             [(ngModel)]="enabledProof"
             color="primary"
-            class="mat-elevation-z0 ml-90"
+            class="mat-elevation-z0"
             data-test-id="generate-proof-enabled"
+            [disabled]="!isAuthenticated"
+            [ngClass]="{ 'ml-90': isAuthenticated, 'ml-70': !isAuthenticated }"
         >
             <span class="ps-2"> Generate proof</span>
         </mat-slide-toggle>
+
+        <app-tooltip-icon *ngIf="!isAuthenticated" class="mt-1 ms-1" [tooltip]="GENERATE_PROOF_TOOLTIP" />
     </div>
     <div class="btn-group-parent">
         <div class="d-flex">

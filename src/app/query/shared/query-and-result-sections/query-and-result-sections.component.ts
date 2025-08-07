@@ -46,10 +46,11 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatIconModule } from "@angular/material/icon";
 import { EngineSelectComponent } from "../../../dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
-import { NgIf, AsyncPipe } from "@angular/common";
+import { NgIf, AsyncPipe, NgClass } from "@angular/common";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { FormsModule } from "@angular/forms";
 import { MarkdownModule } from "ngx-markdown";
+import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 
 @Component({
     selector: "app-query-and-result-sections",
@@ -61,6 +62,7 @@ import { MarkdownModule } from "ngx-markdown";
         //-----//
         AsyncPipe,
         NgIf,
+        NgClass,
         FormsModule,
 
         //-----//
@@ -77,6 +79,7 @@ import { MarkdownModule } from "ngx-markdown";
         RequestTimerComponent,
         DynamicTableComponent,
         LoadMoreComponent,
+        TooltipIconComponent,
     ],
 })
 export class QueryAndResultSectionsComponent extends BaseComponent implements OnInit, OnChanges {
@@ -106,6 +109,7 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
     public knownEngines$: Observable<EngineDesc[]>;
     public enabledProof: boolean = false;
     public proofResponse: MaybeNull<QueryExplainerProofResponse>;
+    public readonly GENERATE_PROOF_TOOLTIP: string = "Please log in to use this feature";
 
     public ngOnInit(): void {
         this.knownEngines$ = this.engineService.engines().pipe(map((result) => result.data.knownEngines));

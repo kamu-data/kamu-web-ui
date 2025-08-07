@@ -1976,7 +1976,7 @@ export const datasetMetadataDerivativeDataset: DatasetMetadata = {
         __typename: undefined,
         statuses: [],
     },
-    extendedBlocksByEventType: [],
+    metadataProjection: [],
 };
 
 export const datasetMetadataRootDataset: DatasetMetadata = {
@@ -2072,7 +2072,7 @@ export const datasetMetadataRootDataset: DatasetMetadata = {
         __typename: undefined,
         statuses: [],
     },
-    extendedBlocksByEventType: [],
+    metadataProjection: [],
 };
 
 export const mockOverviewUpdate = {

@@ -56,7 +56,7 @@ describe("setTransformResolverFn", () => {
         await executeResolver(routeSnapshot, router.routerState.snapshot);
         expect(getEventAsYamlSpy).toHaveBeenCalledOnceWith(
             { accountName: TEST_ACCOUNT_NAME, datasetName: TEST_DATASET_NAME },
-            MetadataEventType.SetTransform,
+            [MetadataEventType.SetTransform],
         );
     });
 });

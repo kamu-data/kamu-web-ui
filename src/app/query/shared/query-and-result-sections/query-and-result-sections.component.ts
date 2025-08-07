@@ -46,7 +46,11 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatIconModule } from "@angular/material/icon";
 import { EngineSelectComponent } from "../../../dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
-import { NgIf, AsyncPipe } from "@angular/common";
+import { NgIf, AsyncPipe, NgClass } from "@angular/common";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { FormsModule } from "@angular/forms";
+import { MarkdownModule } from "ngx-markdown";
+import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 
 @Component({
     selector: "app-query-and-result-sections",
@@ -58,12 +62,16 @@ import { NgIf, AsyncPipe } from "@angular/common";
         //-----//
         AsyncPipe,
         NgIf,
+        NgClass,
+        FormsModule,
 
         //-----//
         MatIconModule,
         MatMenuModule,
         MatDividerModule,
         MatProgressBarModule,
+        MatSlideToggleModule,
+        MarkdownModule,
 
         //-----//
         EngineSelectComponent,
@@ -71,6 +79,7 @@ import { NgIf, AsyncPipe } from "@angular/common";
         RequestTimerComponent,
         DynamicTableComponent,
         LoadMoreComponent,
+        TooltipIconComponent,
     ],
 })
 export class QueryAndResultSectionsComponent extends BaseComponent implements OnInit, OnChanges {
@@ -98,6 +107,9 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
     public isAllDataLoaded: boolean;
     public selectedEngine = AppValues.DEFAULT_ENGINE_NAME.toLowerCase();
     public knownEngines$: Observable<EngineDesc[]>;
+    public enabledProof: boolean = false;
+    public proofResponse: MaybeNull<QueryExplainerProofResponse>;
+    public readonly GENERATE_PROOF_TOOLTIP: string = "Please log in to use this feature";
 
     public ngOnInit(): void {
         this.knownEngines$ = this.engineService.engines().pipe(map((result) => result.data.knownEngines));
@@ -121,6 +133,10 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
         return this.loggedUserService.isAdmin;
     }
 
+    public get isAuthenticated(): boolean {
+        return this.loggedUserService.isAuthenticated;
+    }
+
     private resetRowsLimits(): void {
         this.skipRows = undefined;
         this.rowsLimit = AppValues.SQL_QUERY_LIMIT;
@@ -129,6 +145,15 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
     public runSQLRequest(params: DatasetRequestBySql, initialSqlRun = false): void {
         if (initialSqlRun) {
             this.resetRowsLimits();
+        }
+        if (this.enabledProof) {
+            this.queryExplainerService
+                .processQueryWithProof(this.sqlRequestCode)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe((response: QueryExplainerProofResponse) => {
+                    this.proofResponse = response;
+                    this.cdr.detectChanges();
+                });
         }
         this.runSQLRequestEmit.emit(params);
     }
@@ -152,34 +177,30 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
 
     public verifyQueryResult(): void {
         let uploadToken: string;
-        this.queryExplainerService
-            .processQueryWithProof(this.sqlRequestCode)
-            .pipe(
-                switchMap((response: QueryExplainerProofResponse) => {
-                    const file = new File(
-                        [
-                            new Blob([JSON.stringify(response, null, 2)], {
-                                type: "application/json",
-                            }),
-                        ],
-                        "query-explainer.json",
-                    );
-                    return this.fileUploadService.uploadFilePrepare(file).pipe(
-                        tap((data) => (uploadToken = data.uploadToken)),
-                        switchMap((uploadPrepareResponse: UploadPrepareResponse) =>
-                            this.fileUploadService.prepareUploadData(uploadPrepareResponse, file),
-                        ),
-                        switchMap(({ uploadPrepareResponse, bodyObject, uploadHeaders }: UploadPrepareData) =>
-                            this.fileUploadService.uploadFileByMethod(
-                                uploadPrepareResponse.method,
-                                uploadPrepareResponse.uploadUrl,
-                                bodyObject,
-                                uploadHeaders,
-                            ),
-                        ),
-                    );
+        const file = new File(
+            [
+                new Blob([JSON.stringify(this.proofResponse, null, 2)], {
+                    type: "application/json",
                 }),
+            ],
+            "query-explainer.json",
+        );
 
+        this.fileUploadService
+            .uploadFilePrepare(file)
+            .pipe(
+                tap((data) => (uploadToken = data.uploadToken)),
+                switchMap((uploadPrepareResponse: UploadPrepareResponse) =>
+                    this.fileUploadService.prepareUploadData(uploadPrepareResponse, file),
+                ),
+                switchMap(({ uploadPrepareResponse, bodyObject, uploadHeaders }: UploadPrepareData) =>
+                    this.fileUploadService.uploadFileByMethod(
+                        uploadPrepareResponse.method,
+                        uploadPrepareResponse.uploadUrl,
+                        bodyObject,
+                        uploadHeaders,
+                    ),
+                ),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(() => {
@@ -209,5 +230,9 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
 
     public get isUserAuthenticated(): boolean {
         return this.loggedUserService.isAuthenticated;
+    }
+
+    public jsonWrapper(json: unknown): string {
+        return "```json\n" + JSON.stringify(json, null, 2) + "\n```";
     }
 }

@@ -62,6 +62,7 @@
               "node_modules/prismjs/prism.js",
               "node_modules/prismjs/components/prism-sql.min.js",
               "node_modules/prismjs/components/prism-css.min.js",
+              "node_modules/prismjs/components/prism-json.min.js",
               "node_modules/prismjs/plugins/line-numbers/prism-line-numbers.js",
               "node_modules/prismjs/plugins/line-highlight/prism-line-highlight.js",
               "node_modules/prismjs/plugins/command-line/prism-command-line.js",

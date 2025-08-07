@@ -27,6 +27,7 @@ import { FileUploadService } from "src/app/services/file-upload.service";
 import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import { MarkdownModule } from "ngx-markdown";
 
 describe("QueryAndResultSectionsComponent", () => {
     let component: QueryAndResultSectionsComponent;
@@ -39,7 +40,13 @@ describe("QueryAndResultSectionsComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, EditorModule, SharedTestModule, QueryAndResultSectionsComponent],
+            imports: [
+                HttpClientTestingModule,
+                EditorModule,
+                SharedTestModule,
+                QueryAndResultSectionsComponent,
+                MarkdownModule.forRoot(),
+            ],
             providers: [Apollo, provideToastr()],
         });
         fixture = TestBed.createComponent(QueryAndResultSectionsComponent);
@@ -144,15 +151,23 @@ describe("QueryAndResultSectionsComponent", () => {
         expect(clipboardCopySpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should check click on `Verify query result` button", () => {
-        const processQuerySpy = spyOn(queryExplainerService, "processQueryWithProof").and.returnValue(
-            of(mockQueryExplainerResponse),
-        );
+    it("should check click on `Verify` button", () => {
         const uploadFilePrepareSpy = spyOn(fileUploadService, "uploadFilePrepare").and.returnValue(
             of(mockUploadPrepareResponse),
         );
         component.verifyQueryResult();
-        expect(processQuerySpy).toHaveBeenCalledTimes(1);
         expect(uploadFilePrepareSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should run the query when the Generate proof' switch is enabled", () => {
+        component.enabledProof = true;
+        const processQuerySpy = spyOn(queryExplainerService, "processQueryWithProof").and.returnValue(
+            of(mockQueryExplainerResponse),
+        );
+
+        component.runSQLRequest({ query: "select * from 'mock-dataset'" });
+
+        expect(processQuerySpy).toHaveBeenCalledTimes(1);
+        expect(component.proofResponse).toEqual(mockQueryExplainerResponse);
     });
 });

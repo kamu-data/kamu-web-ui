@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, NgZone, OnInit } from "@angular/core";
 import { Location, NgIf, AsyncPipe } from "@angular/common";
 import { filter, finalize, fromEvent, map, Observable, takeUntil } from "rxjs";
 import AppValues from "src/app/common/values/app.values";
@@ -33,6 +33,7 @@ import { EditorModule } from "src/app/editor/editor.module";
 @Component({
     selector: "app-data",
     templateUrl: "./data.component.html",
+    styleUrls: ["./data.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
@@ -66,6 +67,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     private sessionStorageService = inject(SessionStorageService);
     private cdr = inject(ChangeDetectorRef);
     private cancelRequestService = inject(CancelRequestService);
+    private ngZone = inject(NgZone);
 
     public ngOnInit(): void {
         this.sqlErrorMarker$ = this.sqlQueryService.sqlErrorOccurrences.pipe(
@@ -99,7 +101,9 @@ export class DataComponent extends BaseComponent implements OnInit {
     }
 
     public onRunSQLRequest(params: DatasetRequestBySql): void {
-        this.sqlLoading = true;
+        this.ngZone.run(() => {
+            this.sqlLoading = true;
+        });
         this.sqlQueryService
             // TODO: Propagate limit from UI and display when it was reached
             .requestDataSqlRun(params)

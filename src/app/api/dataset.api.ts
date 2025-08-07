@@ -19,6 +19,7 @@ import {
     DatasetBlocksByEventTypeGQL,
     MetadataEventType,
     DatasetBlocksByEventTypeQuery,
+    MetadataManifestFormat,
 } from "./kamu.graphql.interface";
 import {
     CommitEventToDatasetGQL,
@@ -102,7 +103,8 @@ export class DatasetApi {
     public getBlocksByEventType(params: {
         accountName: string;
         datasetName: string;
-        eventType: MetadataEventType;
+        eventTypes: [MetadataEventType];
+        encoding: MetadataManifestFormat;
     }): Observable<DatasetBlocksByEventTypeQuery> {
         return this.datasetBlocksByEventTypeGQL
             .watch(

@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "@apollo/client/core";
+import { gql } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -1328,7 +1328,7 @@ export type DatasetMetadata = {
     currentVocab?: Maybe<SetVocab>;
     /** Last recorded watermark */
     currentWatermark?: Maybe<Scalars["DateTime"]>;
-    extendedBlocksByEventType: Array<MetadataBlockExtended>;
+    metadataProjection: Array<MetadataBlockExtended>;
     /** Sync statuses of push remotes */
     pushSyncStatuses: DatasetPushStatuses;
 };
@@ -1337,8 +1337,10 @@ export type DatasetMetadataCurrentSchemaArgs = {
     format?: InputMaybe<DataSchemaFormat>;
 };
 
-export type DatasetMetadataExtendedBlocksByEventTypeArgs = {
-    eventType: MetadataEventType;
+export type DatasetMetadataMetadataProjectionArgs = {
+    encoding?: InputMaybe<MetadataManifestFormat>;
+    eventTypes: Array<MetadataEventType>;
+    head?: InputMaybe<Scalars["Multihash"]>;
 };
 
 export type DatasetMetadataMut = {
@@ -2663,11 +2665,7 @@ export type MetadataEvent =
     | SetVocab;
 
 export enum MetadataEventType {
-    AddData = "ADD_DATA",
     AddPushSource = "ADD_PUSH_SOURCE",
-    DisablePollingSource = "DISABLE_POLLING_SOURCE",
-    DisablePushSource = "DISABLE_PUSH_SOURCE",
-    ExecuteTransform = "EXECUTE_TRANSFORM",
     Seed = "SEED",
     SetAttachments = "SET_ATTACHMENTS",
     SetDataSchema = "SET_DATA_SCHEMA",
@@ -4649,7 +4647,8 @@ export type GetDatasetBasicsWithPermissionsQuery = {
 export type DatasetBlocksByEventTypeQueryVariables = Exact<{
     accountName: Scalars["AccountName"];
     datasetName: Scalars["DatasetName"];
-    eventType: MetadataEventType;
+    eventTypes: Array<MetadataEventType> | MetadataEventType;
+    encoding?: InputMaybe<MetadataManifestFormat>;
 }>;
 
 export type DatasetBlocksByEventTypeQuery = {
@@ -4660,7 +4659,7 @@ export type DatasetBlocksByEventTypeQuery = {
             __typename?: "Dataset";
             metadata: {
                 __typename?: "DatasetMetadata";
-                extendedBlocksByEventType: Array<{
+                metadataProjection: Array<{
                     __typename?: "MetadataBlockExtended";
                     encoded?: string | null;
                     event:
@@ -9211,12 +9210,13 @@ export const DatasetBlocksByEventTypeDocument = gql`
     query datasetBlocksByEventType(
         $accountName: AccountName!
         $datasetName: DatasetName!
-        $eventType: MetadataEventType!
+        $eventTypes: [MetadataEventType!]!
+        $encoding: MetadataManifestFormat
     ) {
         datasets {
             byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
                 metadata {
-                    extendedBlocksByEventType(eventType: $eventType) {
+                    metadataProjection(eventTypes: $eventTypes, encoding: $encoding) {
                         encoded
                         event {
                             ... on AddPushSource {

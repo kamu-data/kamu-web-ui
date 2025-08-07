@@ -1,8 +1,13 @@
-query datasetBlocksByEventType($accountName: AccountName!, $datasetName: DatasetName!, $eventType: MetadataEventType!) {
+query datasetBlocksByEventType(
+  $accountName: AccountName!
+  $datasetName: DatasetName!
+  $eventTypes: [MetadataEventType!]!
+  $encoding: MetadataManifestFormat
+) {
   datasets {
     byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
       metadata {
-        extendedBlocksByEventType(eventType: $eventType) {
+        metadataProjection(eventTypes: $eventTypes, encoding: $encoding) {
           encoded
           event {
             ... on AddPushSource {

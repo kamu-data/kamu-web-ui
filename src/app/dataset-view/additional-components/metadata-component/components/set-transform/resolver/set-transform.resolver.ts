@@ -19,5 +19,5 @@ export const setTransformResolverFn: ResolveFn<MaybeNull<string>> = (route: Acti
         accountName: route.paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME),
         datasetName: route.paramMap.get(ProjectLinks.URL_PARAM_DATASET_NAME),
     } as DatasetInfo;
-    return editService.getEventAsYaml(datasetInfo, MetadataEventType.SetTransform);
+    return editService.getEventAsYaml(datasetInfo, [MetadataEventType.SetTransform]);
 };

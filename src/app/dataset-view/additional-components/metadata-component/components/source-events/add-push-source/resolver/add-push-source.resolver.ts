@@ -20,5 +20,5 @@ export const addPushSourceResolverFn: ResolveFn<MaybeNull<string>> = (route: Act
         datasetName: route.paramMap.get(ProjectLinks.URL_PARAM_DATASET_NAME),
     } as DatasetInfo;
     const sourceName = route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PUSH_SOURCE_NAME) ?? "";
-    return editService.getEventAsYaml(datasetInfo, MetadataEventType.AddPushSource, sourceName);
+    return editService.getEventAsYaml(datasetInfo, [MetadataEventType.AddPushSource], sourceName);
 };

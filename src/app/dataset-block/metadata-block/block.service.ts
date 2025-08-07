@@ -9,7 +9,12 @@ import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { DatasetApi } from "src/app/api/dataset.api";
-import { GetMetadataBlockQuery, MetadataBlockFragment, MetadataEventType } from "src/app/api/kamu.graphql.interface";
+import {
+    GetMetadataBlockQuery,
+    MetadataBlockFragment,
+    MetadataEventType,
+    MetadataManifestFormat,
+} from "src/app/api/kamu.graphql.interface";
 import { MaybeUndefined } from "src/app/interface/app.types";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { MetadataBlockInfo } from "./metadata-block.types";
@@ -45,15 +50,11 @@ export class BlockService {
     public requestBlocksByEventType(params: {
         accountName: string;
         datasetName: string;
-        eventType: MetadataEventType;
+        eventTypes: [MetadataEventType];
+        encoding: MetadataManifestFormat;
     }): Observable<MetadataBlockExtended[]> {
         return this.datasetApi
             .getBlocksByEventType(params)
-            .pipe(
-                map(
-                    (data) =>
-                        data.datasets.byOwnerAndName?.metadata.extendedBlocksByEventType as MetadataBlockExtended[],
-                ),
-            );
+            .pipe(map((data) => data.datasets.byOwnerAndName?.metadata.metadataProjection as MetadataBlockExtended[]));
     }
 }

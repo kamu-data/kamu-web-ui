@@ -51,6 +51,7 @@ export class MetadataBlockComponent extends BaseDatasetDataComponent implements 
     private static readonly BLOCKS_PER_PAGE = 10;
     public datasetInfo$: Observable<DatasetInfo>;
     public datasetHistoryUpdate$: Observable<MaybeNull<DatasetHistoryUpdate>>;
+    public yamlView: boolean = false;
 
     public ngOnInit(): void {
         this.datasetBasics$ = this.datasetService.datasetChanges;
@@ -63,6 +64,10 @@ export class MetadataBlockComponent extends BaseDatasetDataComponent implements 
 
     public onPageChange(currentPage: number): void {
         this.loadHistory(currentPage - 1);
+    }
+
+    public toggleYamlView(yamlView: boolean): void {
+        this.yamlView = yamlView;
     }
 
     private loadDatasetBasicDataWithPermissions(): void {

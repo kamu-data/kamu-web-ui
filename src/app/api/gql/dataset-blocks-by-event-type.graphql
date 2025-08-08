@@ -2,13 +2,13 @@ query datasetBlocksByEventType(
   $accountName: AccountName!
   $datasetName: DatasetName!
   $eventTypes: [MetadataEventType!]!
-  $encoding: MetadataManifestFormat
+  $encoding: MetadataManifestFormat!
 ) {
   datasets {
     byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
       metadata {
-        metadataProjection(eventTypes: $eventTypes, encoding: $encoding) {
-          encoded {
+        metadataProjection(eventTypes: $eventTypes) {
+          encoded(encoding: $encoding) {
             content
           }
           event {

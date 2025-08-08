@@ -1338,7 +1338,6 @@ export type DatasetMetadataCurrentSchemaArgs = {
 };
 
 export type DatasetMetadataMetadataProjectionArgs = {
-    encoding?: InputMaybe<MetadataManifestFormat>;
     eventTypes: Array<MetadataEventType>;
     head?: InputMaybe<Scalars["Multihash"]>;
 };
@@ -2608,6 +2607,10 @@ export type MetadataBlockExtended = {
     prevBlockHash?: Maybe<Scalars["Multihash"]>;
     sequenceNumber: Scalars["Int"];
     systemTime: Scalars["DateTime"];
+};
+
+export type MetadataBlockExtendedEncodedArgs = {
+    encoding: MetadataManifestFormat;
 };
 
 export type MetadataChain = {
@@ -4654,7 +4657,7 @@ export type DatasetBlocksByEventTypeQueryVariables = Exact<{
     accountName: Scalars["AccountName"];
     datasetName: Scalars["DatasetName"];
     eventTypes: Array<MetadataEventType> | MetadataEventType;
-    encoding?: InputMaybe<MetadataManifestFormat>;
+    encoding: MetadataManifestFormat;
 }>;
 
 export type DatasetBlocksByEventTypeQuery = {
@@ -9217,13 +9220,13 @@ export const DatasetBlocksByEventTypeDocument = gql`
         $accountName: AccountName!
         $datasetName: DatasetName!
         $eventTypes: [MetadataEventType!]!
-        $encoding: MetadataManifestFormat
+        $encoding: MetadataManifestFormat!
     ) {
         datasets {
             byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
                 metadata {
-                    metadataProjection(eventTypes: $eventTypes, encoding: $encoding) {
-                        encoded {
+                    metadataProjection(eventTypes: $eventTypes) {
+                        encoded(encoding: $encoding) {
                             content
                         }
                         event {

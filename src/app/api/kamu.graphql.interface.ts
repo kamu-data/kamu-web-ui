@@ -1659,6 +1659,12 @@ export type Eip4361AuthNonceResponse = {
     value: Scalars["Eip4361AuthNonce"];
 };
 
+export type EncodedBlock = {
+    __typename?: "EncodedBlock";
+    content: Scalars["String"];
+    encoding: MetadataManifestFormat;
+};
+
 export type EngineDesc = {
     __typename?: "EngineDesc";
     /**
@@ -2597,7 +2603,7 @@ export type MetadataBlockExtended = {
     __typename?: "MetadataBlockExtended";
     author: Account;
     blockHash: Scalars["Multihash"];
-    encoded?: Maybe<Scalars["String"]>;
+    encoded?: Maybe<EncodedBlock>;
     event: MetadataEvent;
     prevBlockHash?: Maybe<Scalars["Multihash"]>;
     sequenceNumber: Scalars["Int"];
@@ -4661,7 +4667,7 @@ export type DatasetBlocksByEventTypeQuery = {
                 __typename?: "DatasetMetadata";
                 metadataProjection: Array<{
                     __typename?: "MetadataBlockExtended";
-                    encoded?: string | null;
+                    encoded?: { __typename?: "EncodedBlock"; content: string } | null;
                     event:
                         | { __typename?: "AddData" }
                         | { __typename?: "AddPushSource"; sourceName: string }
@@ -9217,7 +9223,9 @@ export const DatasetBlocksByEventTypeDocument = gql`
             byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
                 metadata {
                     metadataProjection(eventTypes: $eventTypes, encoding: $encoding) {
-                        encoded
+                        encoded {
+                            content
+                        }
                         event {
                             ... on AddPushSource {
                                 sourceName

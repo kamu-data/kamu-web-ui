@@ -8,7 +8,9 @@ query datasetBlocksByEventType(
     byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
       metadata {
         metadataProjection(eventTypes: $eventTypes, encoding: $encoding) {
-          encoded
+          encoded {
+            content
+          }
           event {
             ... on AddPushSource {
               sourceName

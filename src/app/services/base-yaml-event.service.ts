@@ -43,12 +43,12 @@ export abstract class BaseYamlEventService {
                                 (item) =>
                                     item.event.__typename === "AddPushSource" && item.event.sourceName === sourceName,
                             )[0];
-                            return block.encoded as string;
+                            return block.encoded?.content as string;
                         } else {
                             return null;
                         }
                     } else {
-                        return blocks.length ? (blocks[0].encoded as string) : null;
+                        return blocks.length ? (blocks[0].encoded?.content as string) : null;
                     }
                 }),
             );

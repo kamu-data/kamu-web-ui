@@ -43,7 +43,8 @@ import { BlockRowDataComponent } from "../../../common/components/block-row-data
 import { MatIconModule } from "@angular/material/icon";
 import { CommitNavigatorComponent } from "./components/commit-navigator/commit-navigator.component";
 import { FeatureFlagDirective } from "../../../common/directives/feature-flag.directive";
-import { NgIf, NgFor, NgTemplateOutlet, TitleCasePipe } from "@angular/common";
+import { NgIf, NgFor, NgTemplateOutlet, TitleCasePipe, NgClass } from "@angular/common";
+import { MetadataTabs } from "./metadata.types";
 
 @Component({
     selector: "app-metadata",
@@ -58,6 +59,7 @@ import { NgIf, NgFor, NgTemplateOutlet, TitleCasePipe } from "@angular/common";
         NgTemplateOutlet,
         RouterLink,
         TitleCasePipe,
+        NgClass,
 
         //-----//
         MatIconModule,
@@ -82,6 +84,9 @@ import { NgIf, NgFor, NgTemplateOutlet, TitleCasePipe } from "@angular/common";
 export class MetadataComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_VIEW_METADATA_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
     @Output() public pageChangeEmit = new EventEmitter<number>();
+
+    public activeTab: MetadataTabs = MetadataTabs.SCHEMA;
+    public readonly MetadataTabs: typeof MetadataTabs = MetadataTabs;
 
     public readonly ReadSectionMapping: Record<string, string> = {
         ReadStepCsv: "Csv",
@@ -199,6 +204,10 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         } else {
             return false;
         }
+    }
+
+    public setActiveTab(activeTab: MetadataTabs): void {
+        this.activeTab = activeTab;
     }
 
     public navigateToEditPollingSource(): void {

@@ -1,4 +1,4 @@
-<div class="search-result-container__content container-main">
+<div class="container container-main">
     <div id="metadata-block">
         <div appFeatureFlag="dataset.panel.metadata.pagination" id="pagination-block" *ngIf="currentState">
             <app-custom-pagination
@@ -44,290 +44,431 @@
             </button>
         </div>
 
-        <ng-container *ngIf="currentState">
-            <div class="d-flex justify-content-end" *ngIf="currentPushSources?.length">
-                <button
-                    appFeatureFlag="dataset.panel.metadata.newPushSource"
-                    class="new-push-source-btn border-1 bg-light border rounded-2 btn btn-sm justify-content-between align-items-center"
-                    data-test-id="'add-new-push-source'"
-                    (click)="navigateToAddPushSource()"
-                >
-                    <mat-icon class="text-muted fs-4 d-block">add</mat-icon>
-                    <span class="fs-12 me-2">New push source</span>
-                </button>
+        <div
+            class="container-details"
+            *ngIf="
+                !(!currentTransform && datasetMetadataTabData.datasetBasics.kind === 'DERIVATIVE') &&
+                !(hasAnySource() && datasetMetadataTabData?.datasetBasics?.kind === 'ROOT')
+            "
+        >
+            <div class="sidebar mt-3">
+                <ul class="action-list">
+                    <li
+                        class="action-list-item"
+                        [ngClass]="{
+                            'action-list-item__nav-active': activeTab === MetadataTabs.SCHEMA,
+                        }"
+                        (click)="setActiveTab(MetadataTabs.SCHEMA)"
+                    >
+                        <a routerLinkActive="active">
+                            <span class="action-list-item__label d-flex align-items-center">
+                                <mat-icon class="text-muted me-2" svgIcon="table-chart-outline" />
+                                Schema</span
+                            ></a
+                        >
+                    </li>
+                    <li
+                        class="action-list-item"
+                        *ngIf="currentPollingSource"
+                        [ngClass]="{
+                            'action-list-item__nav-active': activeTab === MetadataTabs.POLLING_SOURCE,
+                        }"
+                        (click)="setActiveTab(MetadataTabs.POLLING_SOURCE)"
+                    >
+                        <a routerLinkActive="active">
+                            <span class="action-list-item__label d-flex align-items-center">
+                                <mat-icon class="text-muted me-2" svgIcon="source_notes" />
+
+                                Polling source</span
+                            ></a
+                        >
+                    </li>
+                    <li
+                        class="action-list-item"
+                        *ngIf="currentPushSources?.length"
+                        [ngClass]="{
+                            'action-list-item__nav-active': activeTab === MetadataTabs.PUSH_SOURCES,
+                        }"
+                        (click)="setActiveTab(MetadataTabs.PUSH_SOURCES)"
+                    >
+                        <a routerLinkActive="active">
+                            <span class="action-list-item__label d-flex align-items-center">
+                                <mat-icon class="text-muted me-2" svgIcon="enable" />
+                                Push sources</span
+                            ></a
+                        >
+                    </li>
+                    <li
+                        class="action-list-item"
+                        *ngIf="currentTransform"
+                        [ngClass]="{
+                            'action-list-item__nav-active': activeTab === MetadataTabs.TRANSFORM,
+                        }"
+                        (click)="setActiveTab(MetadataTabs.TRANSFORM)"
+                    >
+                        <a routerLinkActive="active">
+                            <span class="action-list-item__label d-flex align-items-center">
+                                <mat-icon class="text-muted me-2" svgIcon="tree-structure" />
+                                Transformation</span
+                            ></a
+                        >
+                    </li>
+                    <li
+                        class="action-list-item"
+                        [ngClass]="{
+                            'action-list-item__nav-active': activeTab === MetadataTabs.LICENSE,
+                        }"
+                        (click)="setActiveTab(MetadataTabs.LICENSE)"
+                    >
+                        <a routerLinkActive="active">
+                            <span class="action-list-item__label d-flex align-items-center">
+                                <mat-icon class="text-muted me-2" svgIcon="receipt_long" />
+                                License</span
+                            ></a
+                        >
+                    </li>
+                    <li
+                        class="action-list-item"
+                        [ngClass]="{
+                            'action-list-item__nav-active': activeTab === MetadataTabs.WATERMARK,
+                        }"
+                        (click)="setActiveTab(MetadataTabs.WATERMARK)"
+                    >
+                        <a routerLinkActive="active">
+                            <span class="action-list-item__label d-flex align-items-center">
+                                <mat-icon class="text-muted me-2" svgIcon="timeline" />
+
+                                Watermark</span
+                            ></a
+                        >
+                    </li>
+                </ul>
             </div>
-            <div class="d-flex flex-column gap-4 mt-4">
-                <ng-container *ngIf="currentPushSources?.length">
-                    <div
-                        class="position-relative border border-1 p-4 rounded-3"
-                        *ngFor="let source of currentPushSources; let i = index"
-                    >
-                        <span class="position-absolute text-muted group-box-label text-uppercase"
-                            >#{{ i + 1 }} Push source &lt;
-                            <span class="text-normal text-muted fs-10">
-                                {{ !source.sourceName ? "default" : source.sourceName }}</span
-                            >
-                            &gt;</span
+            <div class="content sidebar my-4">
+                <div>
+                    <ng-container *ngIf="activeTab === MetadataTabs.SCHEMA">
+                        <div
+                            class="position-relative border border-1 p-2 rounded-3"
+                            *ngIf="currentState && currentState.schema; else noSchema"
                         >
-                        <div class="d-flex justify-content-end" *ngIf="canEditAddPushSource">
-                            <button
-                                appFeatureFlag="dataset.panel.metadata.editPushSource"
-                                class="edit-push-source-btn border-1 bg-light border rounded-2 me-3 btn btn-sm justify-content-between align-items-center"
-                                data-test-id="'edit-source-link'"
-                                (click)="navigateToEditAddPushSource(source.sourceName!)"
-                            >
-                                <mat-icon class="mat-icon-svg-size me-2 text-muted" svgIcon="pencil" />
-                                <span class="fs-12 me-2">Edit push source</span>
-                            </button>
-                            <button
-                                appFeatureFlag="dataset.panel.metadata.deletePushSource"
-                                class="delete-push-source-btn border-1 bg-light border rounded-2 px-2 btn btn-sm justify-content-between align-items-center"
-                                data-test-id="'edit-source-link'"
-                                (click)="onDeletePushSource()"
-                            >
-                                <mat-icon class="text-muted fs-4 d-block">delete</mat-icon>
-                                <span class="fs-12 me-2 d-block"> Delete push source</span>
-                            </button>
-                        </div>
-                        <div class="mt-4">
-                            <ng-container
-                                [ngTemplateOutlet]="sourceTemplate"
-                                [ngTemplateOutletContext]="{ $implicit: source }"
-                            ></ng-container>
-                        </div>
-                    </div>
-                </ng-container>
-                <div class="position-relative border border-1 p-2 rounded-3" *ngIf="currentState.schema">
-                    <span class="position-absolute text-muted group-box-label text-uppercase">Schema</span>
-                    <div class="mx-4">
-                        <app-block-row-data
-                            [tooltip]="
-                                'A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.'
-                            "
-                            [label]="'Schema:'"
-                        >
-                            <app-dynamic-table
-                                [hasTableHeader]="true"
-                                [schemaFields]="currentState.schema.fields"
-                                [idTable]="'schema-block-table'"
-                            />
-                        </app-block-row-data>
-                    </div>
-                </div>
-                <div *ngIf="currentLicense" class="position-relative border border-1 p-2 rounded-3">
-                    <span class="position-absolute text-muted group-box-label text-uppercase">License</span>
-                    <div class="mx-4">
-                        <app-block-row-data [tooltip]="'Unique identifier of the license.'" [label]="'ID:'">
-                            <span>{{ currentLicense.shortName }}</span>
-                        </app-block-row-data>
-                    </div>
-
-                    <div class="mx-4">
-                        <app-block-row-data [tooltip]="'Full name of the license.'" [label]="'Name:'">
-                            <span> {{ currentLicense.name }}</span>
-                        </app-block-row-data>
-                    </div>
-
-                    <div class="mx-4" *ngIf="currentLicense.spdxId">
-                        <app-block-row-data
-                            [tooltip]="'License identifier from the SPDX License List.'"
-                            [label]="'SPDX ID:'"
-                        >
-                            <span> {{ currentLicense.spdxId }}</span>
-                        </app-block-row-data>
-                    </div>
-
-                    <div class="mx-4">
-                        <app-block-row-data [tooltip]="'Link to the official website.'" [label]="'Website:'">
-                            <app-link-property [data]="currentLicense.websiteUrl" />
-                        </app-block-row-data>
-                    </div>
-                </div>
-
-                <ng-container *ngIf="currentPollingSource">
-                    <div class="position-relative border border-1 p-2 rounded-3">
-                        <span class="position-absolute text-muted group-box-label text-uppercase">Fetch</span>
-                        <div class="mx-4" *ngIf="currentPollingSource.fetch.__typename === 'FetchStepUrl'">
-                            <app-block-row-data [tooltip]="'URL of the data source.'" [label]="'Url:'">
-                                <app-link-property [data]="currentPollingSource.fetch.url" />
-                            </app-block-row-data>
-                        </div>
-
-                        <div class="mx-4" *ngIf="currentPollingSource.fetch.__typename === 'FetchStepContainer'">
-                            <app-block-row-data [tooltip]="'Image name and and an optional tag.'" [label]="'Image:'">
-                                <span>{{ currentPollingSource.fetch.image }}</span>
-                            </app-block-row-data>
-                        </div>
-
-                        <div class="mx-4" *ngIf="currentPollingSource.fetch.__typename === 'FetchStepFilesGlob'">
-                            <app-block-row-data [tooltip]="'Path with a glob pattern.'" [label]="'Path:'">
-                                <span>{{ currentPollingSource.fetch.path }}</span>
-                            </app-block-row-data>
-                        </div>
-
-                        <div class="mx-4" *ngIf="currentPollingSource.fetch.__typename === 'FetchStepMqtt'">
-                            <app-block-row-data [tooltip]="'Hostname of the MQTT broker.'" [label]="'Hostname:'">
-                                <span>{{ currentPollingSource.fetch.host }}</span>
-                            </app-block-row-data>
-                            <app-block-row-data [tooltip]="'Port of the MQTT broker.'" [label]="'Port:'">
-                                <span>{{ currentPollingSource.fetch.port }}</span>
-                            </app-block-row-data>
-                        </div>
-
-                        <div class="mx-4" *ngIf="currentPollingSource.fetch.__typename === 'FetchStepEthereumLogs'">
-                            <app-block-row-data
-                                [tooltip]="'Connects to an Ethereum node to stream transaction logs.'"
-                                [label]="'Type:'"
-                            >
-                                <span>Ethereum Logs</span>
-                            </app-block-row-data>
-                            <app-block-row-data
-                                *ngIf="currentPollingSource.fetch.chainId"
-                                [tooltip]="'Identifier of the chain to scan logs from.'"
-                                [label]="'Chain ID:'"
-                            >
-                                <span>{{ currentPollingSource.fetch.chainId }}</span>
-                            </app-block-row-data>
-                            <app-block-row-data
-                                *ngIf="currentPollingSource.fetch.nodeUrl"
-                                [tooltip]="'Url of the node.'"
-                                [label]="'Node url:'"
-                            >
-                                <a class="simple-link" [href]="currentPollingSource.fetch.nodeUrl">{{
-                                    currentPollingSource.fetch.nodeUrl
-                                }}</a>
-                            </app-block-row-data>
-                            <app-block-row-data
-                                *ngIf="currentPollingSource.fetch.filter"
-                                [tooltip]="
-                                    'An SQL WHERE clause that can be used to pre-filter the logs before fetching them from the ETH node.'
-                                "
-                                [label]="'Filter:'"
-                            >
-                                <app-yaml-event-viewer [data]="currentPollingSource.fetch.filter" />
-                            </app-block-row-data>
-                            <app-block-row-data
-                                *ngIf="currentPollingSource.fetch.signature"
-                                [tooltip]="
-                                    'Solidity log event signature to use for decoding. Using this field adds event to the output containing decoded log as JSON.'
-                                "
-                                [label]="'Signature:'"
-                            >
-                                <app-yaml-event-viewer [data]="currentPollingSource.fetch.signature" />
-                            </app-block-row-data>
-                        </div>
-                    </div>
-
-                    <ng-container
-                        [ngTemplateOutlet]="sourceTemplate"
-                        [ngTemplateOutletContext]="{ $implicit: currentPollingSource }"
-                    ></ng-container>
-                </ng-container>
-
-                <div class="position-relative border border-1 p-2 rounded-3" *ngIf="currentWatermark">
-                    <span class="position-absolute text-muted group-box-label text-uppercase">Watermark</span>
-                    <div class="mx-4">
-                        <app-block-row-data
-                            [tooltip]="'Last watermark of the output data stream.'"
-                            [label]="'Watermark:'"
-                        >
-                            <a class="page-link">
-                                <app-display-time [data]="currentWatermark" />
-                            </a>
-                        </app-block-row-data>
-                    </div>
-                </div>
-
-                <ng-container *ngIf="currentTransform">
-                    <div
-                        class="position-relative border border-1 p-2 rounded-3"
-                        *ngFor="let input of currentTransform.inputs; let i = index"
-                    >
-                        <ng-container *ngIf="input.inputDataset.__typename === 'TransformInputDatasetAccessible'">
-                            <span class="position-absolute text-muted group-box-label text-uppercase"
-                                >Inputs {{ i + 1 }}</span
-                            >
-                            <div class="mx-4">
-                                <app-block-row-data [tooltip]="'Unique dataset identifier.'" [label]="'Id:'">
-                                    <span>{{ input.inputDataset.dataset.id }}</span>
-                                </app-block-row-data>
-                            </div>
-                            <div class="mx-4">
-                                <app-block-row-data [tooltip]="'Type of the dataset.'" [label]="'Dataset type:'">
-                                    <span>{{ input.inputDataset.dataset.kind | titlecase }}</span>
-                                </app-block-row-data>
-                            </div>
-                            <div class="mx-4">
-                                <app-block-row-data [tooltip]="'Type of the dataset.'" [label]="'Name:'">
-                                    <app-dataset-name-property
-                                        [data]="{
-                                            datasetName: input.inputDataset.dataset.name,
-                                            ownerAccountName: input.inputDataset.dataset.owner.accountName,
-                                        }"
-                                    />
-                                </app-block-row-data>
-                            </div>
-                            <div class="mx-4">
-                                <app-block-row-data [tooltip]="'Owner of the dataset.'" [label]="'Owner:'">
-                                    <app-owner-property
-                                        [data]="{
-                                            id: input.inputDataset.dataset.owner.id,
-                                            accountName: input.inputDataset.dataset.owner.accountName,
-                                            accountProvider: input.inputDataset.dataset.owner.accountProvider,
-                                        }"
-                                    />
-                                </app-block-row-data>
-                            </div>
-                            <div class="mx-4">
-                                <app-block-row-data [tooltip]="'Query alias of the dataset.'" [label]="'Query alias:'">
-                                    <span>{{ input.alias }}</span>
-                                </app-block-row-data>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngIf="input.inputDataset.__typename === 'TransformInputDatasetNotAccessible'">
-                            <span class="position-absolute text-muted group-box-label text-uppercase"
-                                >Inputs {{ i + 1 }}</span
-                            >
                             <div class="mx-4">
                                 <app-block-row-data
-                                    [tooltip]="'Unique dataset identifier. Dataset is private'"
-                                    [label]="'Id:'"
+                                    [tooltip]="
+                                        'A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.'
+                                    "
+                                    [label]="'Schema:'"
                                 >
-                                    <span>{{ input.inputDataset.datasetRef }}</span>
+                                    <app-dynamic-table
+                                        [hasTableHeader]="true"
+                                        [schemaFields]="currentState.schema.fields"
+                                        [idTable]="'schema-block-table'"
+                                    />
                                 </app-block-row-data>
                             </div>
-                        </ng-container>
-                    </div>
-                    <div class="position-relative border border-1 p-2 rounded-3">
-                        <span class="position-absolute text-muted group-box-label text-uppercase">Transform</span>
-                        <div class="mx-4">
-                            <app-block-row-data
-                                [tooltip]="'Identifier of the engine used for this transformation.'"
-                                [label]="'Engine:'"
-                            >
-                                <app-engine-property [data]="currentTransform.transform.engine" />
-                            </app-block-row-data>
                         </div>
-
-                        <div class="mx-4">
-                            <app-block-row-data
-                                [tooltip]="'Queries use for specifying multi-step SQL transformations.'"
-                                [label]="'Queries:'"
+                        <ng-template #noSchema>There is no schema</ng-template>
+                    </ng-container>
+                    <ng-container *ngIf="activeTab === MetadataTabs.PUSH_SOURCES">
+                        <ng-container *ngIf="currentPushSources?.length">
+                            <div
+                                class="position-relative border border-1 p-4 rounded-3 mb-4"
+                                *ngFor="let source of currentPushSources; let i = index"
                             >
-                            </app-block-row-data>
-                            <div class="row my-4">
-                                <app-sql-query-viewer [data]="currentTransform.transform.queries" />
+                                <span class="position-absolute text-muted group-box-label text-uppercase"
+                                    >#{{ i + 1 }} Push source &lt;
+                                    <span class="text-normal text-muted fs-10">
+                                        {{ !source.sourceName ? "default" : source.sourceName }}</span
+                                    >
+                                    &gt;</span
+                                >
+                                <div class="d-flex justify-content-end" *ngIf="canEditAddPushSource">
+                                    <button
+                                        appFeatureFlag="dataset.panel.metadata.editPushSource"
+                                        class="edit-push-source-btn border-1 bg-light border rounded-2 me-3 btn btn-sm justify-content-between align-items-center"
+                                        data-test-id="'edit-source-link'"
+                                        (click)="navigateToEditAddPushSource(source.sourceName!)"
+                                    >
+                                        <mat-icon class="mat-icon-svg-size me-2 text-muted" svgIcon="pencil" />
+                                        <span class="fs-12 me-2">Edit push source</span>
+                                    </button>
+                                    <button
+                                        appFeatureFlag="dataset.panel.metadata.deletePushSource"
+                                        class="delete-push-source-btn border-1 bg-light border rounded-2 px-2 btn btn-sm justify-content-between align-items-center"
+                                        data-test-id="'edit-source-link'"
+                                        (click)="onDeletePushSource()"
+                                    >
+                                        <mat-icon class="text-muted fs-4 d-block">delete</mat-icon>
+                                        <span class="fs-12 me-2 d-block"> Delete push source</span>
+                                    </button>
+                                </div>
+                                <div class="mt-4">
+                                    <ng-container
+                                        [ngTemplateOutlet]="sourceTemplate"
+                                        [ngTemplateOutletContext]="{ $implicit: source }"
+                                    ></ng-container>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                    <ng-container *ngIf="activeTab === MetadataTabs.TRANSFORM">
+                        <ng-container *ngIf="currentTransform">
+                            <div
+                                class="position-relative border border-1 p-2 rounded-3 mb-4"
+                                *ngFor="let input of currentTransform.inputs; let i = index"
+                            >
+                                <ng-container
+                                    *ngIf="input.inputDataset.__typename === 'TransformInputDatasetAccessible'"
+                                >
+                                    <span class="position-absolute text-muted group-box-label text-uppercase"
+                                        >Inputs {{ i + 1 }}</span
+                                    >
+                                    <div class="mx-4">
+                                        <app-block-row-data [tooltip]="'Unique dataset identifier.'" [label]="'Id:'">
+                                            <span>{{ input.inputDataset.dataset.id }}</span>
+                                        </app-block-row-data>
+                                    </div>
+                                    <div class="mx-4">
+                                        <app-block-row-data
+                                            [tooltip]="'Type of the dataset.'"
+                                            [label]="'Dataset type:'"
+                                        >
+                                            <span>{{ input.inputDataset.dataset.kind | titlecase }}</span>
+                                        </app-block-row-data>
+                                    </div>
+                                    <div class="mx-4">
+                                        <app-block-row-data [tooltip]="'Type of the dataset.'" [label]="'Name:'">
+                                            <app-dataset-name-property
+                                                [data]="{
+                                                    datasetName: input.inputDataset.dataset.name,
+                                                    ownerAccountName: input.inputDataset.dataset.owner.accountName,
+                                                }"
+                                            />
+                                        </app-block-row-data>
+                                    </div>
+                                    <div class="mx-4">
+                                        <app-block-row-data [tooltip]="'Owner of the dataset.'" [label]="'Owner:'">
+                                            <app-owner-property
+                                                [data]="{
+                                                    id: input.inputDataset.dataset.owner.id,
+                                                    accountName: input.inputDataset.dataset.owner.accountName,
+                                                    accountProvider: input.inputDataset.dataset.owner.accountProvider,
+                                                }"
+                                            />
+                                        </app-block-row-data>
+                                    </div>
+                                    <div class="mx-4">
+                                        <app-block-row-data
+                                            [tooltip]="'Query alias of the dataset.'"
+                                            [label]="'Query alias:'"
+                                        >
+                                            <span>{{ input.alias }}</span>
+                                        </app-block-row-data>
+                                    </div>
+                                </ng-container>
+                                <ng-container
+                                    *ngIf="input.inputDataset.__typename === 'TransformInputDatasetNotAccessible'"
+                                >
+                                    <span class="position-absolute text-muted group-box-label text-uppercase"
+                                        >Inputs {{ i + 1 }}</span
+                                    >
+                                    <div class="mx-4">
+                                        <app-block-row-data
+                                            [tooltip]="'Unique dataset identifier. Dataset is private'"
+                                            [label]="'Id:'"
+                                        >
+                                            <span>{{ input.inputDataset.datasetRef }}</span>
+                                        </app-block-row-data>
+                                    </div>
+                                </ng-container>
+                            </div>
+                            <div class="position-relative border border-1 p-2 rounded-3">
+                                <span class="position-absolute text-muted group-box-label text-uppercase"
+                                    >Transform</span
+                                >
+                                <div class="mx-4">
+                                    <app-block-row-data
+                                        [tooltip]="'Identifier of the engine used for this transformation.'"
+                                        [label]="'Engine:'"
+                                    >
+                                        <app-engine-property [data]="currentTransform.transform.engine" />
+                                    </app-block-row-data>
+                                </div>
+
+                                <div class="mx-4">
+                                    <app-block-row-data
+                                        [tooltip]="'Queries use for specifying multi-step SQL transformations.'"
+                                        [label]="'Queries:'"
+                                    >
+                                    </app-block-row-data>
+                                    <div class="row my-4">
+                                        <app-sql-query-viewer [data]="currentTransform.transform.queries" />
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                    <ng-container *ngIf="activeTab === MetadataTabs.POLLING_SOURCE">
+                        <ng-container *ngIf="currentPollingSource">
+                            <div class="position-relative border border-1 p-2 rounded-3">
+                                <span class="position-absolute text-muted group-box-label text-uppercase">Fetch</span>
+                                <div class="mx-4" *ngIf="currentPollingSource.fetch.__typename === 'FetchStepUrl'">
+                                    <app-block-row-data [tooltip]="'URL of the data source.'" [label]="'Url:'">
+                                        <app-link-property [data]="currentPollingSource.fetch.url" />
+                                    </app-block-row-data>
+                                </div>
+
+                                <div
+                                    class="mx-4"
+                                    *ngIf="currentPollingSource.fetch.__typename === 'FetchStepContainer'"
+                                >
+                                    <app-block-row-data
+                                        [tooltip]="'Image name and and an optional tag.'"
+                                        [label]="'Image:'"
+                                    >
+                                        <span>{{ currentPollingSource.fetch.image }}</span>
+                                    </app-block-row-data>
+                                </div>
+
+                                <div
+                                    class="mx-4"
+                                    *ngIf="currentPollingSource.fetch.__typename === 'FetchStepFilesGlob'"
+                                >
+                                    <app-block-row-data [tooltip]="'Path with a glob pattern.'" [label]="'Path:'">
+                                        <span>{{ currentPollingSource.fetch.path }}</span>
+                                    </app-block-row-data>
+                                </div>
+
+                                <div class="mx-4" *ngIf="currentPollingSource.fetch.__typename === 'FetchStepMqtt'">
+                                    <app-block-row-data
+                                        [tooltip]="'Hostname of the MQTT broker.'"
+                                        [label]="'Hostname:'"
+                                    >
+                                        <span>{{ currentPollingSource.fetch.host }}</span>
+                                    </app-block-row-data>
+                                    <app-block-row-data [tooltip]="'Port of the MQTT broker.'" [label]="'Port:'">
+                                        <span>{{ currentPollingSource.fetch.port }}</span>
+                                    </app-block-row-data>
+                                </div>
+
+                                <div
+                                    class="mx-4"
+                                    *ngIf="currentPollingSource.fetch.__typename === 'FetchStepEthereumLogs'"
+                                >
+                                    <app-block-row-data
+                                        [tooltip]="'Connects to an Ethereum node to stream transaction logs.'"
+                                        [label]="'Type:'"
+                                    >
+                                        <span>Ethereum Logs</span>
+                                    </app-block-row-data>
+                                    <app-block-row-data
+                                        *ngIf="currentPollingSource.fetch.chainId"
+                                        [tooltip]="'Identifier of the chain to scan logs from.'"
+                                        [label]="'Chain ID:'"
+                                    >
+                                        <span>{{ currentPollingSource.fetch.chainId }}</span>
+                                    </app-block-row-data>
+                                    <app-block-row-data
+                                        *ngIf="currentPollingSource.fetch.nodeUrl"
+                                        [tooltip]="'Url of the node.'"
+                                        [label]="'Node url:'"
+                                    >
+                                        <a class="simple-link" [href]="currentPollingSource.fetch.nodeUrl">{{
+                                            currentPollingSource.fetch.nodeUrl
+                                        }}</a>
+                                    </app-block-row-data>
+                                    <app-block-row-data
+                                        *ngIf="currentPollingSource.fetch.filter"
+                                        [tooltip]="
+                                            'An SQL WHERE clause that can be used to pre-filter the logs before fetching them from the ETH node.'
+                                        "
+                                        [label]="'Filter:'"
+                                    >
+                                        <app-yaml-event-viewer [data]="currentPollingSource.fetch.filter" />
+                                    </app-block-row-data>
+                                    <app-block-row-data
+                                        *ngIf="currentPollingSource.fetch.signature"
+                                        [tooltip]="
+                                            'Solidity log event signature to use for decoding. Using this field adds event to the output containing decoded log as JSON.'
+                                        "
+                                        [label]="'Signature:'"
+                                    >
+                                        <app-yaml-event-viewer [data]="currentPollingSource.fetch.signature" />
+                                    </app-block-row-data>
+                                </div>
+                            </div>
+
+                            <ng-container
+                                [ngTemplateOutlet]="sourceTemplate"
+                                [ngTemplateOutletContext]="{ $implicit: currentPollingSource }"
+                            ></ng-container>
+                        </ng-container>
+                    </ng-container>
+                    <ng-container *ngIf="activeTab === MetadataTabs.LICENSE">
+                        <div
+                            *ngIf="currentLicense; else noLicense"
+                            class="position-relative border border-1 p-2 rounded-3"
+                        >
+                            <span class="position-absolute text-muted group-box-label text-uppercase">License</span>
+                            <div class="mx-4">
+                                <app-block-row-data [tooltip]="'Unique identifier of the license.'" [label]="'ID:'">
+                                    <span>{{ currentLicense.shortName }}</span>
+                                </app-block-row-data>
+                            </div>
+
+                            <div class="mx-4">
+                                <app-block-row-data [tooltip]="'Full name of the license.'" [label]="'Name:'">
+                                    <span> {{ currentLicense.name }}</span>
+                                </app-block-row-data>
+                            </div>
+
+                            <div class="mx-4" *ngIf="currentLicense.spdxId">
+                                <app-block-row-data
+                                    [tooltip]="'License identifier from the SPDX License List.'"
+                                    [label]="'SPDX ID:'"
+                                >
+                                    <span> {{ currentLicense.spdxId }}</span>
+                                </app-block-row-data>
+                            </div>
+
+                            <div class="mx-4">
+                                <app-block-row-data [tooltip]="'Link to the official website.'" [label]="'Website:'">
+                                    <app-link-property [data]="currentLicense.websiteUrl" />
+                                </app-block-row-data>
                             </div>
                         </div>
-                    </div>
-                </ng-container>
+                        <ng-template #noLicense>
+                            <p>There is no license</p>
+                        </ng-template>
+                    </ng-container>
+                    <ng-container *ngIf="activeTab === MetadataTabs.WATERMARK">
+                        <div
+                            class="position-relative border border-1 p-2 rounded-3"
+                            *ngIf="currentWatermark; else noWatermark"
+                        >
+                            <span class="position-absolute text-muted group-box-label text-uppercase">Watermark</span>
+                            <div class="mx-4">
+                                <app-block-row-data
+                                    [tooltip]="'Last watermark of the output data stream.'"
+                                    [label]="'Watermark:'"
+                                >
+                                    <a class="page-link">
+                                        <app-display-time [data]="currentWatermark" />
+                                    </a>
+                                </app-block-row-data>
+                            </div>
+                        </div>
+                        <ng-template #noWatermark>There is no watermark</ng-template>
+                    </ng-container>
+
+                    <!-- <router-outlet></router-outlet> -->
+                </div>
             </div>
-        </ng-container>
+        </div>
         <ng-container *ngIf="hasAnySource() && datasetMetadataTabData.datasetBasics.kind === 'ROOT'">
-            <h3 class="box-title text-center mt-4">There is no metadata.</h3>
+            <h3 class="text-center mt-4">There is no metadata.</h3>
         </ng-container>
         <ng-container *ngIf="!currentTransform && datasetMetadataTabData.datasetBasics.kind === 'DERIVATIVE'">
-            <h3 class="box-title text-center">
+            <h3 class="text-center">
                 There is no metadata. Need to add
                 <a
                     class="add-link"
@@ -347,7 +488,7 @@
 
 <ng-template #sourceTemplate let-sourceEvent>
     <div class="d-flex flex-column gap-4">
-        <div class="position-relative border border-1 p-2 rounded-3">
+        <div class="position-relative border border-1 p-2 rounded-3 mt-4">
             <span class="position-absolute text-muted group-box-label text-uppercase">Read</span>
             <div class="mx-4" *ngIf="sourceEvent.read.__typename">
                 <app-block-row-data [tooltip]="'Determines where data is sourced from.'" [label]="'Type:'">
@@ -362,28 +503,6 @@
                     [label]="'Schema:'"
                 >
                     <app-schema-property [data]="sourceEvent.read.schema" />
-                </app-block-row-data>
-            </div>
-        </div>
-        <div class="position-relative border border-1 p-2 rounded-3">
-            <span class="position-absolute text-muted group-box-label text-uppercase">Merge</span>
-            <div class="mx-4" *ngIf="sourceEvent.merge.__typename">
-                <app-block-row-data
-                    [tooltip]="
-                        'Merge strategy determines how newly ingested data should be combined with the data that already exists in the dataset.'
-                    "
-                    [label]="'Strategy:'"
-                >
-                    <app-merge-strategy-property [data]="sourceEvent.merge.__typename" />
-                </app-block-row-data>
-            </div>
-
-            <div class="mx-4" *ngIf="sourceEvent.merge.__typename === 'MergeStrategyLedger'">
-                <app-block-row-data
-                    [tooltip]="'Names of the columns that uniquely identify the record throughout its lifetime.'"
-                    [label]="'Primary key:'"
-                >
-                    <app-cards-property [data]="sourceEvent.merge.primaryKey" />
                 </app-block-row-data>
             </div>
         </div>
@@ -407,6 +526,28 @@
                 <div class="row my-4">
                     <app-sql-query-viewer [data]="sourceEvent.preprocess.queries" />
                 </div>
+            </div>
+        </div>
+        <div class="position-relative border border-1 p-2 rounded-3">
+            <span class="position-absolute text-muted group-box-label text-uppercase">Merge</span>
+            <div class="mx-4" *ngIf="sourceEvent.merge.__typename">
+                <app-block-row-data
+                    [tooltip]="
+                        'Merge strategy determines how newly ingested data should be combined with the data that already exists in the dataset.'
+                    "
+                    [label]="'Strategy:'"
+                >
+                    <app-merge-strategy-property [data]="sourceEvent.merge.__typename" />
+                </app-block-row-data>
+            </div>
+
+            <div class="mx-4" *ngIf="sourceEvent.merge.__typename === 'MergeStrategyLedger'">
+                <app-block-row-data
+                    [tooltip]="'Names of the columns that uniquely identify the record throughout its lifetime.'"
+                    [label]="'Primary key:'"
+                >
+                    <app-cards-property [data]="sourceEvent.merge.primaryKey" />
+                </app-block-row-data>
             </div>
         </div>
     </div>

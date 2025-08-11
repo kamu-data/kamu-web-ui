@@ -198,7 +198,6 @@ export class AppComponent extends BaseComponent implements OnInit {
                 "table-chart-outline",
                 this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/table-chart-outline.svg"),
             )
-            .addSvgIcon("transform", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/transform.svg"))
             .addSvgIcon(
                 "receipt_long",
                 this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/receipt_long.svg"),

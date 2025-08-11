@@ -15,17 +15,22 @@ import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.sp
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
 import { provideToastr } from "ngx-toastr";
+import { HarnessLoader } from "@angular/cdk/testing";
+import { MatSlideToggleHarness } from "@angular/material/slide-toggle/testing";
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 describe("MetadataBlockComponent", () => {
     let component: MetadataBlockComponent;
     let fixture: ComponentFixture<MetadataBlockComponent>;
+    let loader: HarnessLoader;
 
     const blockFragment = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
         .blockByHash as MetadataBlockFragment;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [ApolloTestingModule, HttpClientTestingModule, MetadataBlockComponent],
+            imports: [ApolloTestingModule, HttpClientTestingModule, MetadataBlockComponent, MatSlideToggleModule],
             providers: [
                 provideToastr(),
                 {
@@ -57,6 +62,7 @@ describe("MetadataBlockComponent", () => {
 
         fixture = TestBed.createComponent(MetadataBlockComponent);
         component = fixture.componentInstance;
+        loader = TestbedHarnessEnvironment.loader(fixture);
         (component.metadata = {
             block: blockFragment,
             blockAsYaml: "test yaml",
@@ -69,9 +75,15 @@ describe("MetadataBlockComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check toggle yaml view", () => {
-        expect(component.yamlView).toEqual(false);
-        component.toggleYamlView(true);
-        expect(component.yamlView).toEqual(true);
+    it("should check emit value for yaml view", async () => {
+        const matToggle = await loader.getHarness(
+            MatSlideToggleHarness.with({ selector: '[data-test-id="yaml-toggle"]' }),
+        );
+
+        const changeToggleSpy = spyOn(component, "toggleYamlView");
+
+        await matToggle.toggle();
+
+        expect(changeToggleSpy).toHaveBeenCalledTimes(1);
     });
 });

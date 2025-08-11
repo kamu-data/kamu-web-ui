@@ -28,11 +28,15 @@
     <div class="container-main row">
         <div class="col-md-6">
             <div class="container-content mb-4">
-                <app-block-header
-                    [block]="metadata.block"
-                    [datasetInfo]="datasetInfo"
-                    (yamlToggleChange)="toggleYamlView($event)"
-                />
+                <mat-slide-toggle
+                    data-test-id="yaml-toggle"
+                    color="primary"
+                    class="mat-elevation-z0"
+                    (change)="toggleYamlView($event)"
+                >
+                    <span class="ps-2">Show as YAML</span>
+                </mat-slide-toggle>
+                <app-block-header *ngIf="!yamlView" [block]="metadata.block" [datasetInfo]="datasetInfo" />
                 <app-yaml-view-section *ngIf="yamlView" [blockAsYaml]="metadata.blockAsYaml" [block]="metadata.block" />
                 <app-event-details *ngIf="!yamlView" [block]="metadata.block" [datasetInfo]="datasetInfo" />
             </div>

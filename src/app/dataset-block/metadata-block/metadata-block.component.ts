@@ -23,6 +23,7 @@ import { BlockHeaderComponent } from "./components/block-header/block-header.com
 import { DatasetViewMenuComponent } from "../../dataset-view/dataset-view-menu/dataset-view-menu.component";
 import { DatasetViewHeaderComponent } from "../../dataset-view/dataset-view-header/dataset-view-header.component";
 import { NgIf, AsyncPipe } from "@angular/common";
+import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 @Component({
     selector: "app-metadata-block",
@@ -33,6 +34,9 @@ import { NgIf, AsyncPipe } from "@angular/common";
         //-----//
         AsyncPipe,
         NgIf,
+
+        //-----//
+        MatSlideToggleModule,
 
         //-----//
         BlockHeaderComponent,
@@ -66,8 +70,8 @@ export class MetadataBlockComponent extends BaseDatasetDataComponent implements 
         this.loadHistory(currentPage - 1);
     }
 
-    public toggleYamlView(yamlView: boolean): void {
-        this.yamlView = yamlView;
+    public toggleYamlView(event: MatSlideToggleChange): void {
+        this.yamlView = event.checked;
     }
 
     private loadDatasetBasicDataWithPermissions(): void {

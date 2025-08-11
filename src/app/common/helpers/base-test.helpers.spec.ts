@@ -174,6 +174,11 @@ export function registerMatSvgIcons(): void {
         "webhook",
         "metamask",
         "ethereum-2",
+        "table-chart-outline",
+        "receipt_long",
+        "timeline",
+        "source_notes",
+        "enable",
         "configuration",
     ];
     icons.forEach((icon: string) => {

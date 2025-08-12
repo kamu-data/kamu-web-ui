@@ -26,6 +26,7 @@ import { NgIf, AsyncPipe } from "@angular/common";
 @Component({
     selector: "app-history",
     templateUrl: "./history.component.html",
+    styleUrls: ["./history.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [

@@ -42,22 +42,29 @@
             >
                 <div *ngFor="let block of result" class="d-flex lh-lg align-items-center justify-content-between">
                     <div class="flex-grow-1 no-wrap lh-1">
-                        <mat-icon class="d-inline align-middle fs-4">tag</mat-icon>
-                        <app-display-hash
-                            [value]="block.blockHash"
-                            [navigationTargetDataset]="datasetInfo"
-                            [showCopyButton]="false"
-                        />
+                        <div class="number-width d-inline-block">
+                            <span class="d-inline-block">{{ block.sequenceNumber }} </span>
+                        </div>
+
+                        <a
+                            class="ml-11"
+                            [routerLink]="[
+                                '/',
+                                datasetInfo.accountName,
+                                datasetInfo.datasetName,
+                                URL_BLOCK,
+                                block.blockHash,
+                            ]"
+                            >{{ block.event.__typename }}</a
+                        >
                         <div
                             [innerHTML]="highlightHash(block.blockHash, searchHash)"
-                            class="ms-4 fs-10 text-muted"
+                            class="ml-29 mt-2 fs-10 text-muted"
                         ></div>
                     </div>
-                    <div class="me-4 align-self-baseline" *ngIf="currentBlockHash === block.blockHash">
+
+                    <div class="align-self-baseline" *ngIf="currentBlockHash === block.blockHash">
                         <span class="badge bg-success">current</span>
-                    </div>
-                    <div class="">
-                        <p>{{ block.event.__typename }}</p>
                     </div>
                 </div>
                 <ng-container *ngIf="result.length === 0">

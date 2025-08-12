@@ -1,3 +1,8 @@
 <div class="container-content my-4">
-    <markdown clipboard class="variable-binding" [data]="yamlWrapper(blockAsYaml)" data-test-id="yaml-event-viewer" />
+    <markdown
+        clipboard
+        class="variable-binding"
+        [data]="blockAsYaml | markdownFormat: 'yaml'"
+        data-test-id="yaml-event-viewer"
+    />
 </div>

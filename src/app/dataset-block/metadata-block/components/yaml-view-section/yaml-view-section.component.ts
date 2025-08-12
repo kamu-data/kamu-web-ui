@@ -8,6 +8,7 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { MarkdownModule } from "ngx-markdown";
+import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
 
 @Component({
     selector: "app-yaml-view-section",
@@ -17,13 +18,12 @@ import { MarkdownModule } from "ngx-markdown";
     imports: [
         //-----//
         MarkdownModule,
+
+        //-----//
+        MarkdownFormatPipe,
     ],
 })
 export class YamlViewSectionComponent {
     @Input({ required: true }) public blockAsYaml: string;
     @Input({ required: true }) public block: MetadataBlockFragment;
-
-    public yamlWrapper(yaml: string): string {
-        return "```yaml\n" + yaml + "\n```";
-    }
 }

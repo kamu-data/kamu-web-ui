@@ -4,7 +4,7 @@
         <div class="mt-4 mx-4">
             <div class="fw-semibold">Query:</div>
             <div class="mt-2">
-                <markdown clipboard class="variable-binding" [data]="sqlWrapper(this.sqlCode)" />
+                <markdown clipboard class="variable-binding" [data]="this.sqlCode | markdownFormat: 'sql'" />
             </div>
         </div>
         <div

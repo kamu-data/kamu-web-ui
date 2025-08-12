@@ -68,7 +68,7 @@ export class EventDetailsComponent implements AfterViewInit, OnChanges {
             );
             componentRef.setInput("event", this.block.event);
         }
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
     }
 
     private componentEventTypeFactory: { [key in SupportedEvents]: MaybeUndefined<Type<BaseComponent>> } = {

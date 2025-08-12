@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { MarkdownFormatPipe } from "./markdown-format.pipe";
+import { MarkdownFormatPipe, MarkdownSupportedFormats } from "./markdown-format.pipe";
 
 describe("MarkdownFormatPipe", () => {
     const pipe = new MarkdownFormatPipe();
@@ -17,18 +17,13 @@ describe("MarkdownFormatPipe", () => {
     [
         {
             value: "version: 1",
-            format: "yaml",
+            format: "yaml" as MarkdownSupportedFormats,
             expectedResult: "```yaml\n" + "version: 1" + "\n```",
         },
         {
             value: "select * from 'test-dataset'",
-            format: "sql",
+            format: "sql" as MarkdownSupportedFormats,
             expectedResult: "```sql\n" + "select * from 'test-dataset'" + "\n```",
-        },
-        {
-            value: "select * from 'test-dataset'",
-            format: "unknown",
-            expectedResult: "select * from 'test-dataset'",
         },
     ].forEach(({ value, format, expectedResult }) => {
         it("#MarkdownFormatPipe", () => {

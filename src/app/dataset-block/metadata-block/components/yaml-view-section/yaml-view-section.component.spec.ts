@@ -11,7 +11,8 @@ import { ChangeDetectionStrategy } from "@angular/core";
 import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { metadataBlockSetVocab } from "src/app/common/helpers/data.helpers.spec";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
+import { MarkdownModule } from "ngx-markdown";
+import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
 
 describe("YamlViewSectionComponent", () => {
     let component: YamlViewSectionComponent;
@@ -21,8 +22,8 @@ describe("YamlViewSectionComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [SharedTestModule, YamlViewSectionComponent],
-            providers: [HIGHLIGHT_OPTIONS_PROVIDER],
+            imports: [SharedTestModule, YamlViewSectionComponent, MarkdownModule.forRoot(), MarkdownFormatPipe],
+            providers: [],
         })
             .overrideComponent(YamlViewSectionComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },

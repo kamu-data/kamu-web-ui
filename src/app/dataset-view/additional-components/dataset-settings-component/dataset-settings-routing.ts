@@ -36,6 +36,7 @@ export const DATASET_SETTINGS_ROUTES: Routes = [
     {
         path: "",
         component: DatasetSettingsComponent,
+        runGuardsAndResolvers: "always",
         resolve: {
             [RoutingResolvers.DATASET_VIEW_SETTINGS_KEY]: datasetSettingsTabResolverFn,
             [RoutingResolvers.DATASET_VIEW_SETTINGS_ACTIVE_SECTION_KEY]: datasetSettingsActiveSectionResolverFn,

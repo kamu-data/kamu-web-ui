@@ -1,13 +1,16 @@
 @import "var";
 @import "node_modules/bootstrap/dist/css/bootstrap.min";
 
+ul {
+    padding: 0;
+}
+
 .timeline-block {
     position: relative;
 
     .timeline-block__item {
         display: flex;
         padding: 16px 0;
-        margin-left: 16px;
         list-style: none;
         position: relative;
 
@@ -15,10 +18,10 @@
             &::after {
                 position: absolute;
                 display: block;
-                width: 2px;
-                top: 36px;
-                left: 15px;
-                height: 60px;
+                width: 1px;
+                top: 27px;
+                left: 9.5px;
+                height: 73px;
                 content: "";
                 background-color: $app-color-border-muted;
             }
@@ -27,10 +30,10 @@
         &::after {
             position: absolute;
             display: block;
-            width: 2px;
-            top: 36px;
-            left: 15px;
-            height: 89px;
+            width: 1px;
+            top: 27px;
+            left: 9.5px;
+            height: 99px;
             content: "";
             background-color: $app-color-border-muted;
         }
@@ -38,12 +41,18 @@
         &::before {
             position: absolute;
             display: block;
-            height: 1px;
-            width: 21px;
-            top: 27.5px;
-            left: 28px;
+            width: 1px;
+            top: -60px;
+            left: 9.5px;
+            height: 77px;
             content: "";
             background-color: $app-color-border-muted;
+        }
+
+        &:first-child {
+            &::before {
+                display: none;
+            }
         }
     }
 }
@@ -73,13 +82,28 @@ a {
 .container-icon {
     display: flex;
     position: relative;
-    height: 30px;
-    width: 30px;
-    margin-right: 19px;
+    top: 17px;
+    left: 5px;
+    height: 10px;
+    width: 10px;
+    background: transparent;
+    margin-right: 30px;
+
+    .inner-icon {
+        position: absolute;
+        min-height: 10px;
+        min-width: 10px;
+        border-radius: 50%;
+        border: 2px solid #606060;
+        background: transparent;
+    }
 }
 
-.commit-icon {
+.horizontal-line {
     position: absolute;
-    top: 19px;
-    left: 8px;
+    width: 30px;
+    left: 15px;
+    height: 1px;
+    background: $app-color-border-muted;
+    top: 21px;
 }

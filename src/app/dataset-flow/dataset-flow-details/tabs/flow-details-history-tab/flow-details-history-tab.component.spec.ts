@@ -147,7 +147,7 @@ describe("FlowDetailsHistoryTabComponent", () => {
                         ...mockFlowHistoryDataFragment[1],
                         __typename: "FlowEventStartConditionUpdated",
                         startCondition: {
-                            __typename: "FlowStartConditionBatching",
+                            __typename: "FlowStartConditionReactive",
                             activeBatchingRule: { minRecordsToAwait: 0 },
                         },
                     }, // empty batching condition
@@ -169,7 +169,7 @@ describe("FlowDetailsHistoryTabComponent", () => {
                         ...mockFlowHistoryDataFragment[1],
                         __typename: "FlowEventStartConditionUpdated",
                         startCondition: {
-                            __typename: "FlowStartConditionBatching",
+                            __typename: "FlowStartConditionReactive",
                             activeBatchingRule: { minRecordsToAwait: 100 },
                             batchingDeadline: mockFlowHistoryDataFragment[2].eventTime,
                             accumulatedRecordsCount: 200,
@@ -183,7 +183,7 @@ describe("FlowDetailsHistoryTabComponent", () => {
             const itemCount = await harness.getHistoryItemsCount();
             expect(itemCount).toBe(3);
             expect(await harness.getHistoryItemDescription(0)).toContain("Flow initiated automatically");
-            expect(await harness.getHistoryItemDescription(1)).toContain("Waiting for batching condition");
+            expect(await harness.getHistoryItemDescription(1)).toContain("Waiting for reactive condition");
             expect(await harness.getHistoryItemDescription(2)).toContain("Polling ingest task running");
         });
     });

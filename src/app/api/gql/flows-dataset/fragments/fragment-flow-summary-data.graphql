@@ -150,7 +150,7 @@ fragment FlowSummaryData on Flow {
       shiftedFrom
     }
 
-    ... on FlowStartConditionBatching {
+    ... on FlowStartConditionReactive {
       activeBatchingRule {
         minRecordsToAwait
         maxBatchingInterval {

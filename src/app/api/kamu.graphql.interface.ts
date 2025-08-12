@@ -445,7 +445,7 @@ export type AuthWeb3MutEip4361AuthNonceArgs = {
 };
 
 export type BatchingInput = {
-    maxBatchingInterval: TimeDeltaInput;
+    maxBatchingInterval?: InputMaybe<TimeDeltaInput>;
     minRecordsToAwait: Scalars["Int"];
 };
 
@@ -454,6 +454,11 @@ export type BlockRef = {
     blockHash: Scalars["Multihash"];
     name: Scalars["String"];
 };
+
+export enum BreakingChangeRule {
+    NoAction = "NO_ACTION",
+    Recover = "RECOVER",
+}
 
 export type BuildInfo = {
     __typename?: "BuildInfo";
@@ -2116,6 +2121,7 @@ export type FlowDescription =
     | FlowDescriptionDatasetReset
     | FlowDescriptionDatasetResetToMetadata
     | FlowDescriptionSystemGc
+    | FlowDescriptionUnknown
     | FlowDescriptionWebhookDeliver;
 
 export type FlowDescriptionDatasetExecuteTransform = {
@@ -2177,6 +2183,11 @@ export type FlowDescriptionResetResult = {
 export type FlowDescriptionSystemGc = {
     __typename?: "FlowDescriptionSystemGC";
     dummy: Scalars["Boolean"];
+};
+
+export type FlowDescriptionUnknown = {
+    __typename?: "FlowDescriptionUnknown";
+    message: Scalars["String"];
 };
 
 export type FlowDescriptionUpdateResult =
@@ -2333,22 +2344,23 @@ export type FlowRetryPolicyInput = {
 };
 
 export type FlowStartCondition =
-    | FlowStartConditionBatching
     | FlowStartConditionExecutor
+    | FlowStartConditionReactive
     | FlowStartConditionSchedule
     | FlowStartConditionThrottling;
-
-export type FlowStartConditionBatching = {
-    __typename?: "FlowStartConditionBatching";
-    accumulatedRecordsCount: Scalars["Int"];
-    activeBatchingRule: FlowTriggerBatchingRule;
-    batchingDeadline: Scalars["DateTime"];
-    watermarkModified: Scalars["Boolean"];
-};
 
 export type FlowStartConditionExecutor = {
     __typename?: "FlowStartConditionExecutor";
     taskId: Scalars["TaskID"];
+};
+
+export type FlowStartConditionReactive = {
+    __typename?: "FlowStartConditionReactive";
+    accumulatedRecordsCount: Scalars["Int"];
+    activeBatchingRule: FlowTriggerBatchingRule;
+    batchingDeadline: Scalars["DateTime"];
+    forBreakingChange: BreakingChangeRule;
+    watermarkModified: Scalars["Boolean"];
 };
 
 export type FlowStartConditionSchedule = {
@@ -2396,20 +2408,26 @@ export type FlowTimingRecords = {
 
 export type FlowTrigger = {
     __typename?: "FlowTrigger";
-    batching?: Maybe<FlowTriggerBatchingRule>;
     paused: Scalars["Boolean"];
+    reactive?: Maybe<FlowTriggerReactiveRule>;
     schedule?: Maybe<FlowTriggerScheduleRule>;
 };
 
 export type FlowTriggerBatchingRule = {
     __typename?: "FlowTriggerBatchingRule";
-    maxBatchingInterval: TimeDelta;
+    maxBatchingInterval?: Maybe<TimeDelta>;
     minRecordsToAwait: Scalars["Int"];
 };
 
 export type FlowTriggerInput =
-    | { batching: BatchingInput; schedule?: never }
-    | { batching?: never; schedule: ScheduleInput };
+    | { reactive: ReactiveInput; schedule?: never }
+    | { reactive?: never; schedule: ScheduleInput };
+
+export type FlowTriggerReactiveRule = {
+    __typename?: "FlowTriggerReactiveRule";
+    forBreakingChange: BreakingChangeRule;
+    forNewData: FlowTriggerBatchingRule;
+};
 
 export type FlowTriggerScheduleRule = Cron5ComponentExpression | TimeDelta;
 
@@ -2956,6 +2974,11 @@ export enum QueryDialect {
     SqlRisingWave = "SQL_RISING_WAVE",
     SqlSpark = "SQL_SPARK",
 }
+
+export type ReactiveInput = {
+    forBreakingChange: BreakingChangeRule;
+    forNewData: BatchingInput;
+};
 
 /**
  * Defines how raw data should be read into the structured form.
@@ -5336,10 +5359,14 @@ export type GetDatasetFlowTriggersQuery = {
                             | { __typename?: "Cron5ComponentExpression"; cron5ComponentExpression: string }
                             | ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment)
                             | null;
-                        batching?: {
-                            __typename?: "FlowTriggerBatchingRule";
-                            minRecordsToAwait: number;
-                            maxBatchingInterval: { __typename?: "TimeDelta" } & TimeDeltaDataFragment;
+                        reactive?: {
+                            __typename?: "FlowTriggerReactiveRule";
+                            forBreakingChange: BreakingChangeRule;
+                            forNewData: {
+                                __typename?: "FlowTriggerBatchingRule";
+                                minRecordsToAwait: number;
+                                maxBatchingInterval?: ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment) | null;
+                            };
                         } | null;
                     } | null;
                 };
@@ -5610,18 +5637,18 @@ type FlowHistoryData_FlowEventStartConditionUpdated_Fragment = {
     eventId: string;
     eventTime: string;
     startCondition:
+        | { __typename: "FlowStartConditionExecutor"; taskId: string }
         | {
-              __typename: "FlowStartConditionBatching";
+              __typename: "FlowStartConditionReactive";
               batchingDeadline: string;
               accumulatedRecordsCount: number;
               watermarkModified: boolean;
               activeBatchingRule: {
                   __typename?: "FlowTriggerBatchingRule";
                   minRecordsToAwait: number;
-                  maxBatchingInterval: { __typename?: "TimeDelta" } & TimeDeltaDataFragment;
+                  maxBatchingInterval?: ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment) | null;
               };
           }
-        | { __typename: "FlowStartConditionExecutor"; taskId: string }
         | { __typename: "FlowStartConditionSchedule"; wakeUpAt: string }
         | { __typename: "FlowStartConditionThrottling"; intervalSec: number; wakeUpAt: string; shiftedFrom: string };
 };
@@ -5793,6 +5820,7 @@ export type FlowSummaryDataFragment = {
                   | null;
           }
         | { __typename?: "FlowDescriptionSystemGC"; dummy: boolean }
+        | { __typename?: "FlowDescriptionUnknown" }
         | { __typename?: "FlowDescriptionWebhookDeliver"; targetUrl: string; label: string; eventType: string };
     initiator?: ({ __typename?: "Account" } & AccountFragment) | null;
     outcome?:
@@ -5810,18 +5838,18 @@ export type FlowSummaryDataFragment = {
         lastAttemptFinishedAt?: string | null;
     };
     startCondition?:
+        | { __typename: "FlowStartConditionExecutor"; taskId: string }
         | {
-              __typename: "FlowStartConditionBatching";
+              __typename: "FlowStartConditionReactive";
               batchingDeadline: string;
               accumulatedRecordsCount: number;
               watermarkModified: boolean;
               activeBatchingRule: {
                   __typename?: "FlowTriggerBatchingRule";
                   minRecordsToAwait: number;
-                  maxBatchingInterval: { __typename?: "TimeDelta" } & TimeDeltaDataFragment;
+                  maxBatchingInterval?: ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment) | null;
               };
           }
-        | { __typename: "FlowStartConditionExecutor"; taskId: string }
         | { __typename: "FlowStartConditionSchedule"; wakeUpAt: string }
         | { __typename: "FlowStartConditionThrottling"; intervalSec: number; wakeUpAt: string; shiftedFrom: string }
         | null;
@@ -7343,7 +7371,7 @@ export const FlowSummaryDataFragmentDoc = gql`
                 wakeUpAt
                 shiftedFrom
             }
-            ... on FlowStartConditionBatching {
+            ... on FlowStartConditionReactive {
                 activeBatchingRule {
                     minRecordsToAwait
                     maxBatchingInterval {
@@ -7446,7 +7474,7 @@ export const FlowHistoryDataFragmentDoc = gql`
                     wakeUpAt
                     shiftedFrom
                 }
-                ... on FlowStartConditionBatching {
+                ... on FlowStartConditionReactive {
                     activeBatchingRule {
                         minRecordsToAwait
                         maxBatchingInterval {
@@ -10247,11 +10275,14 @@ export const GetDatasetFlowTriggersDocument = gql`
                                     cron5ComponentExpression
                                 }
                             }
-                            batching {
-                                maxBatchingInterval {
-                                    ...TimeDeltaData
+                            reactive {
+                                forNewData {
+                                    maxBatchingInterval {
+                                        ...TimeDeltaData
+                                    }
+                                    minRecordsToAwait
                                 }
-                                minRecordsToAwait
+                                forBreakingChange
                             }
                         }
                     }

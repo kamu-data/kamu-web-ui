@@ -11,7 +11,7 @@ import { DatasetSettingsTransformOptionsTabComponent } from "./dataset-settings-
 import { MatDividerModule } from "@angular/material/divider";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { TimeUnit } from "src/app/api/kamu.graphql.interface";
+import { BreakingChangeRule, FlowTriggerInput, TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetFlowTriggerService } from "../../services/dataset-flow-trigger.service";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
@@ -54,7 +54,7 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check 'Save triger' button works for DERIVATIVE dataset", () => {
+    it("should check 'Save trigger' button works for DERIVATIVE dataset", () => {
         const setDatasetFlowTriggersSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTriggers").and.callThrough();
 
         const mockBatchingTriggerForm = new FormGroup<BatchingFormType>({
@@ -77,14 +77,17 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
         expect(setDatasetFlowTriggersSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
                 triggerInput: {
-                    batching: {
-                        minRecordsToAwait: MOCK_MIN_RECORDS_TO_AWAIT,
-                        maxBatchingInterval: {
-                            every: MOCK_PARAM_EVERY,
-                            unit: MOCK_PARAM_UNIT,
+                    reactive: {
+                        forNewData: {
+                            minRecordsToAwait: MOCK_MIN_RECORDS_TO_AWAIT,
+                            maxBatchingInterval: {
+                                every: MOCK_PARAM_EVERY,
+                                unit: MOCK_PARAM_UNIT,
+                            },
                         },
+                        forBreakingChange: BreakingChangeRule.Recover,
                     },
-                },
+                } as FlowTriggerInput,
             }),
         );
     });

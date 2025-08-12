@@ -159,14 +159,14 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
             )
             .subscribe((data: GetDatasetFlowTriggersQuery) => {
                 const flowTriggers = data.datasets.byId?.flows.triggers.byType;
-                const batching = flowTriggers?.batching;
+                const reactive = flowTriggers?.reactive;
                 this.pausedFromServer = Boolean(flowTriggers?.paused);
 
-                if (batching && batching.maxBatchingInterval.every && !flowTriggers.paused) {
+                if (reactive && reactive.forNewData.maxBatchingInterval?.every && !flowTriggers.paused) {
                     this.batchingForm.patchValue({
-                        unit: batching.maxBatchingInterval.unit,
-                        every: batching.maxBatchingInterval.every,
-                        minRecordsToAwait: batching.minRecordsToAwait,
+                        unit: reactive.forNewData.maxBatchingInterval.unit,
+                        every: reactive.forNewData.maxBatchingInterval.every,
+                        minRecordsToAwait: reactive.forNewData.minRecordsToAwait,
                         updatesState: !flowTriggers.paused,
                     });
                 } else {
@@ -175,7 +175,7 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
                         this.batchingForm.patchValue({
                             updatesState: !flowTriggers.paused,
                         });
-                    } else if (batching && batching.maxBatchingInterval.every) {
+                    } else if (reactive && reactive.forNewData.maxBatchingInterval?.every) {
                         this.disableControls();
                     }
                 }

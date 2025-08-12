@@ -6,6 +6,7 @@
  */
 
 import {
+    BreakingChangeRule,
     FetchStepContainer,
     FetchStepFilesGlob,
     FetchStepUrl,
@@ -51,10 +52,10 @@ describe("FlowTableHelpers", () => {
         ).toEqual("waiting for a throttling condition");
     });
 
-    it("should check waiting block text with FlowStartConditionBatching typename", () => {
+    it("should check waiting block text with FlowStartConditionReactive typename", () => {
         expect(
             FlowTableHelpers.waitingBlockText({
-                __typename: "FlowStartConditionBatching",
+                __typename: "FlowStartConditionReactive",
                 activeBatchingRule: {
                     minRecordsToAwait: 500,
                     maxBatchingInterval: {
@@ -65,8 +66,9 @@ describe("FlowTableHelpers", () => {
                 batchingDeadline: "2022-08-05T21:17:30.613911358+00:00",
                 accumulatedRecordsCount: 100,
                 watermarkModified: true,
+                forBreakingChange: BreakingChangeRule.Recover,
             }),
-        ).toEqual("waiting for a batching condition");
+        ).toEqual("waiting for a reactive condition");
     });
 
     it("should check waiting block text with FlowStartConditionExecutor typename", () => {

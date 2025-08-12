@@ -380,8 +380,8 @@ export class DatasetFlowDetailsHelpers {
         switch (startConditionEvent.startCondition.__typename) {
             case "FlowStartConditionThrottling":
                 return "throttling condition";
-            case "FlowStartConditionBatching":
-                return "batching condition";
+            case "FlowStartConditionReactive":
+                return "reactive condition";
             case "FlowStartConditionExecutor":
                 return "free executor";
             case "FlowStartConditionSchedule":
@@ -403,7 +403,7 @@ export class DatasetFlowDetailsHelpers {
                     startCondition.wakeUpAt,
                     AppValues.CRON_EXPRESSION_DATE_FORMAT,
                 )}, shifted from ${format(startCondition.shiftedFrom, AppValues.TIME_FORMAT)}`;
-            case "FlowStartConditionBatching":
+            case "FlowStartConditionReactive":
                 return `Accumulated ${startCondition.accumulatedRecordsCount}/${
                     startCondition.activeBatchingRule.minRecordsToAwait
                 } records. Watermark ${

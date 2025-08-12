@@ -282,7 +282,7 @@ export class FlowTableHelpers {
                     case "FlowStartConditionSchedule": {
                         return `wake up time: ${formatDistanceToNowStrict(node.startCondition.wakeUpAt, { addSuffix: true })}`;
                     }
-                    case "FlowStartConditionBatching":
+                    case "FlowStartConditionReactive":
                         return `deadline time: ${formatDistanceToNowStrict(node.startCondition.batchingDeadline, { addSuffix: true })}`;
                     /* istanbul ignore next */
                     default:
@@ -364,8 +364,8 @@ export class FlowTableHelpers {
             case "FlowStartConditionThrottling":
                 return "waiting for a throttling condition";
 
-            case "FlowStartConditionBatching":
-                return "waiting for a batching condition";
+            case "FlowStartConditionReactive":
+                return "waiting for a reactive condition";
 
             case "FlowStartConditionExecutor": {
                 return "waiting for a free executor";
@@ -407,7 +407,7 @@ export class FlowTableHelpers {
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
                     }
-                    case "FlowStartConditionBatching":
+                    case "FlowStartConditionReactive":
                         return `Deadline time: ${format(
                             node.startCondition.batchingDeadline,
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,

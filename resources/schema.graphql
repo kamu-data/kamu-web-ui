@@ -393,12 +393,17 @@ scalar Base64Usnp
 
 input BatchingInput {
 	minRecordsToAwait: Int!
-	maxBatchingInterval: TimeDeltaInput!
+	maxBatchingInterval: TimeDeltaInput
 }
 
 type BlockRef {
 	name: String!
 	blockHash: Multihash!
+}
+
+enum BreakingChangeRule {
+	NO_ACTION
+	RECOVER
 }
 
 type BuildInfo {
@@ -2076,7 +2081,7 @@ type FlowConnection {
 	edges: [FlowEdge!]!
 }
 
-union FlowDescription = FlowDescriptionDatasetPollingIngest | FlowDescriptionDatasetPushIngest | FlowDescriptionDatasetExecuteTransform | FlowDescriptionDatasetHardCompaction | FlowDescriptionDatasetReset | FlowDescriptionDatasetResetToMetadata | FlowDescriptionSystemGC | FlowDescriptionWebhookDeliver
+union FlowDescription = FlowDescriptionUnknown | FlowDescriptionDatasetPollingIngest | FlowDescriptionDatasetPushIngest | FlowDescriptionDatasetExecuteTransform | FlowDescriptionDatasetHardCompaction | FlowDescriptionDatasetReset | FlowDescriptionDatasetResetToMetadata | FlowDescriptionSystemGC | FlowDescriptionWebhookDeliver
 
 type FlowDescriptionDatasetExecuteTransform {
 	transformResult: FlowDescriptionUpdateResult
@@ -2125,6 +2130,10 @@ type FlowDescriptionResetResult {
 
 type FlowDescriptionSystemGC {
 	dummy: Boolean!
+}
+
+type FlowDescriptionUnknown {
+	message: String!
 }
 
 union FlowDescriptionUpdateResult = FlowDescriptionUpdateResultUpToDate | FlowDescriptionUpdateResultSuccess | FlowDescriptionUpdateResultUnknown
@@ -2257,17 +2266,18 @@ input FlowRetryPolicyInput {
 	backoffType: FlowRetryBackoffType!
 }
 
-union FlowStartCondition = FlowStartConditionSchedule | FlowStartConditionThrottling | FlowStartConditionBatching | FlowStartConditionExecutor
+union FlowStartCondition = FlowStartConditionSchedule | FlowStartConditionThrottling | FlowStartConditionReactive | FlowStartConditionExecutor
 
-type FlowStartConditionBatching {
+type FlowStartConditionExecutor {
+	taskId: TaskID!
+}
+
+type FlowStartConditionReactive {
 	activeBatchingRule: FlowTriggerBatchingRule!
 	batchingDeadline: DateTime!
 	accumulatedRecordsCount: Int!
 	watermarkModified: Boolean!
-}
-
-type FlowStartConditionExecutor {
-	taskId: TaskID!
+	forBreakingChange: BreakingChangeRule!
 }
 
 type FlowStartConditionSchedule {
@@ -2322,17 +2332,22 @@ type FlowTimingRecords {
 type FlowTrigger {
 	paused: Boolean!
 	schedule: FlowTriggerScheduleRule
-	batching: FlowTriggerBatchingRule
+	reactive: FlowTriggerReactiveRule
 }
 
 type FlowTriggerBatchingRule {
 	minRecordsToAwait: Int!
-	maxBatchingInterval: TimeDelta!
+	maxBatchingInterval: TimeDelta
 }
 
 input FlowTriggerInput @oneOf {
 	schedule: ScheduleInput
-	batching: BatchingInput
+	reactive: ReactiveInput
+}
+
+type FlowTriggerReactiveRule {
+	forNewData: FlowTriggerBatchingRule!
+	forBreakingChange: BreakingChangeRule!
 }
 
 union FlowTriggerScheduleRule = TimeDelta | Cron5ComponentExpression
@@ -2853,6 +2868,11 @@ enum QueryDialect {
 	SQL_FLINK
 	SQL_DATA_FUSION
 	SQL_RISING_WAVE
+}
+
+input ReactiveInput {
+	forNewData: BatchingInput!
+	forBreakingChange: BreakingChangeRule!
 }
 
 """

@@ -20,6 +20,7 @@ import {
     mockSetDatasetFlowTriggerSuccess,
 } from "src/app/api/mock/dataset-flow.mock";
 import {
+    BreakingChangeRule,
     DatasetFlowType,
     FlowTriggerInput,
     GetDatasetFlowTriggersQuery,
@@ -38,12 +39,15 @@ describe("DatasetFlowTriggerService", () => {
     const MOCK_PAUSED = false;
 
     const MOCK_TRIGGER_INPUT: FlowTriggerInput = {
-        batching: {
-            minRecordsToAwait: 100,
-            maxBatchingInterval: {
-                every: 10,
-                unit: TimeUnit.Minutes,
+        reactive: {
+            forNewData: {
+                minRecordsToAwait: 100,
+                maxBatchingInterval: {
+                    every: 10,
+                    unit: TimeUnit.Minutes,
+                },
             },
+            forBreakingChange: BreakingChangeRule.Recover,
         },
     };
 

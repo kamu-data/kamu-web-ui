@@ -183,7 +183,7 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         eventId: "9",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         startCondition: {
-            __typename: "FlowStartConditionBatching",
+            __typename: "FlowStartConditionReactive",
             activeBatchingRule: {
                 minRecordsToAwait: 500,
                 maxBatchingInterval: {
@@ -233,7 +233,7 @@ export const eventFlowDescriptionsResultHistoryTab: string[] = [
     "Additionally triggered after HTTP push ingest event",
     "Waiting for scheduled execution",
     "Waiting for free executor",
-    "Waiting for batching condition",
+    "Waiting for reactive condition",
     "Waiting for throttling condition",
     "Flow scheduled for activation",
     "Flow configuration was modified",
@@ -356,7 +356,7 @@ export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[
         eventId: "9",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         startCondition: {
-            __typename: "FlowStartConditionBatching",
+            __typename: "FlowStartConditionReactive",
             activeBatchingRule: {
                 minRecordsToAwait: 500,
                 maxBatchingInterval: {

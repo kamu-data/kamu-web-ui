@@ -808,7 +808,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
             __typename: "FlowTimingRecords",
         },
         startCondition: {
-            __typename: "FlowStartConditionBatching",
+            __typename: "FlowStartConditionReactive",
             activeBatchingRule: {
                 minRecordsToAwait: 500,
                 maxBatchingInterval: {

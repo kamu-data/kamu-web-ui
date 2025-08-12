@@ -69,7 +69,7 @@ export class FlowDetailsHistoryTabComponent {
     private isEmptyBatchingConditionItem(item: FlowHistoryDataFragment): boolean {
         return (
             item.__typename === "FlowEventStartConditionUpdated" &&
-            item.startCondition.__typename === "FlowStartConditionBatching" &&
+            item.startCondition.__typename === "FlowStartConditionReactive" &&
             item.startCondition.activeBatchingRule.minRecordsToAwait === 0
         );
     }

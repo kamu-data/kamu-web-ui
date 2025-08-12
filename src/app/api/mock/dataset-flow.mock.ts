@@ -34,6 +34,7 @@ import {
     DatasetTriggerCompactionFlowMutation,
     FlowTriggerScheduleRule,
     DatasetTriggerResetToMetadataFlowMutation,
+    BreakingChangeRule,
 } from "./../kamu.graphql.interface";
 import { GetDatasetFlowConfigsQuery, DatasetKind, TimeUnit, TimeDeltaInput } from "../kamu.graphql.interface";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
@@ -274,12 +275,15 @@ export const mockGetDatasetFlowTriggersBatchingQuery: GetDatasetFlowTriggersQuer
                 triggers: {
                     byType: {
                         paused: false,
-                        batching: {
-                            minRecordsToAwait: 100,
-                            maxBatchingInterval: {
-                                every: 10,
-                                unit: TimeUnit.Hours,
+                        reactive: {
+                            forNewData: {
+                                minRecordsToAwait: 100,
+                                maxBatchingInterval: {
+                                    every: 10,
+                                    unit: TimeUnit.Hours,
+                                },
                             },
+                            forBreakingChange: BreakingChangeRule.Recover,
                         },
                     },
                 },
@@ -296,12 +300,15 @@ export const mockGetDatasetFlowTriggersDefaultBatchingQuery: GetDatasetFlowTrigg
                 triggers: {
                     byType: {
                         paused: true,
-                        batching: {
-                            minRecordsToAwait: 0,
-                            maxBatchingInterval: {
-                                every: 0,
-                                unit: TimeUnit.Hours,
+                        reactive: {
+                            forNewData: {
+                                minRecordsToAwait: 0,
+                                maxBatchingInterval: {
+                                    every: 0,
+                                    unit: TimeUnit.Hours,
+                                },
                             },
+                            forBreakingChange: BreakingChangeRule.Recover,
                         },
                     },
                 },

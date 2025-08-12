@@ -47,14 +47,45 @@ export class BlockService {
         );
     }
 
-    public requestBlocksByEventType(params: {
+    // public requestBlocksByEventType(params: {
+    //     accountName: string;
+    //     datasetName: string;
+    //     eventTypes: [MetadataEventType];
+    //     encoding: MetadataManifestFormat;
+    // }): Observable<MetadataBlockExtended[]> {
+    //     console.log("delete");
+    //     return this.datasetApi
+    //         .getBlocksByEventType(params)
+    //         .pipe(map((data) => data.datasets.byOwnerAndName?.metadata.metadataProjection as MetadataBlockExtended[]));
+    // }
+
+    public requestBlocksByPollingSourceEvent(params: {
         accountName: string;
         datasetName: string;
-        eventTypes: [MetadataEventType];
         encoding: MetadataManifestFormat;
     }): Observable<MetadataBlockExtended[]> {
         return this.datasetApi
-            .getBlocksByEventType(params)
+            .getBlocksByEventType({ ...params, eventTypes: [MetadataEventType.SetPollingSource] })
+            .pipe(map((data) => data.datasets.byOwnerAndName?.metadata.metadataProjection as MetadataBlockExtended[]));
+    }
+
+    public requestBlocksBySetTransformEvent(params: {
+        accountName: string;
+        datasetName: string;
+        encoding: MetadataManifestFormat;
+    }): Observable<MetadataBlockExtended[]> {
+        return this.datasetApi
+            .getBlocksByEventType({ ...params, eventTypes: [MetadataEventType.SetTransform] })
+            .pipe(map((data) => data.datasets.byOwnerAndName?.metadata.metadataProjection as MetadataBlockExtended[]));
+    }
+
+    public requestBlocksByAddPushSourceEvent(params: {
+        accountName: string;
+        datasetName: string;
+        encoding: MetadataManifestFormat;
+    }): Observable<MetadataBlockExtended[]> {
+        return this.datasetApi
+            .getBlocksByEventType({ ...params, eventTypes: [MetadataEventType.AddPushSource] })
             .pipe(map((data) => data.datasets.byOwnerAndName?.metadata.metadataProjection as MetadataBlockExtended[]));
     }
 }

@@ -13,7 +13,6 @@ import { EditSetTransformService } from "src/app/dataset-view/additional-compone
 import { of } from "rxjs";
 import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "src/app/api/mock/dataset.mock";
 import ProjectLinks from "src/app/project-links";
-import { MetadataEventType } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/interface/app.types";
 
 describe("setTransformResolverFn", () => {
@@ -54,9 +53,9 @@ describe("setTransformResolverFn", () => {
 
         const getEventAsYamlSpy = spyOn(editService, "getEventAsYaml").and.returnValue(of());
         await executeResolver(routeSnapshot, router.routerState.snapshot);
-        expect(getEventAsYamlSpy).toHaveBeenCalledOnceWith(
-            { accountName: TEST_ACCOUNT_NAME, datasetName: TEST_DATASET_NAME },
-            [MetadataEventType.SetTransform],
-        );
+        expect(getEventAsYamlSpy).toHaveBeenCalledOnceWith({
+            accountName: TEST_ACCOUNT_NAME,
+            datasetName: TEST_DATASET_NAME,
+        });
     });
 });

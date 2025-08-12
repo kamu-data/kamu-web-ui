@@ -5,16 +5,27 @@
  * included in the LICENSE file.
  */
 
-import { Injectable } from "@angular/core";
-import { SetTransform, SqlQueryStep, TransformInput } from "src/app/api/kamu.graphql.interface";
+import { inject, Injectable } from "@angular/core";
+import {
+    MetadataBlockExtended,
+    MetadataManifestFormat,
+    SetTransform,
+    SqlQueryStep,
+    TransformInput,
+} from "src/app/api/kamu.graphql.interface";
 import { parse } from "yaml";
 import { EditSetTransformParseType, SetTransformYamlType } from "./set-transform.types";
-import { BaseYamlEventService } from "src/app/services/base-yaml-event.service";
+import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
+import { Observable, map } from "rxjs";
+import { MaybeNull } from "src/app/interface/app.types";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
 
 @Injectable({
     providedIn: "root",
 })
-export class EditSetTransformService extends BaseYamlEventService {
+export class EditSetTransformService {
+    private blockService = inject(BlockService);
+
     public parseEventFromYaml(event: string): SetTransformYamlType {
         const editFormParseValue = parse(event) as EditSetTransformParseType;
         return editFormParseValue.content.event;
@@ -22,6 +33,16 @@ export class EditSetTransformService extends BaseYamlEventService {
 
     public parseInputDatasets(datasets: Set<string>): TransformInput[] {
         return Array.from(datasets).map((item) => JSON.parse(item) as TransformInput);
+    }
+
+    public getEventAsYaml(info: DatasetInfo): Observable<MaybeNull<string>> {
+        return this.blockService
+            .requestBlocksBySetTransformEvent({ ...info, encoding: MetadataManifestFormat.Yaml })
+            .pipe(
+                map((blocks: MetadataBlockExtended[]) => {
+                    return blocks.length ? (blocks[0].encoded?.content as string) : null;
+                }),
+            );
     }
 
     public transformEventAsObject(

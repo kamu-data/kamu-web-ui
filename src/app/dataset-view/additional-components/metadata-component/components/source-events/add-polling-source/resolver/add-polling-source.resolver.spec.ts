@@ -13,7 +13,6 @@ import { EditPollingSourceService } from "src/app/dataset-view/additional-compon
 import ProjectLinks from "src/app/project-links";
 import { of } from "rxjs";
 import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "src/app/api/mock/dataset.mock";
-import { MetadataEventType } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/interface/app.types";
 
 describe("addPollingSourceResolverFn", () => {
@@ -53,9 +52,9 @@ describe("addPollingSourceResolverFn", () => {
 
         const getEventAsYamlSpy = spyOn(editService, "getEventAsYaml").and.returnValue(of());
         await executeResolver(routeSnapshot, router.routerState.snapshot);
-        expect(getEventAsYamlSpy).toHaveBeenCalledOnceWith(
-            { accountName: TEST_ACCOUNT_NAME, datasetName: TEST_DATASET_NAME },
-            [MetadataEventType.SetPollingSource],
-        );
+        expect(getEventAsYamlSpy).toHaveBeenCalledOnceWith({
+            accountName: TEST_ACCOUNT_NAME,
+            datasetName: TEST_DATASET_NAME,
+        });
     });
 });

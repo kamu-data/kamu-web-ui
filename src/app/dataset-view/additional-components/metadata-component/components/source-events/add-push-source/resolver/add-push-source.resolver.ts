@@ -7,7 +7,6 @@
 
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
-import { MetadataEventType } from "src/app/api/kamu.graphql.interface";
 import { EditAddPushSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/edit-add-push-source.service";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
@@ -20,5 +19,5 @@ export const addPushSourceResolverFn: ResolveFn<MaybeNull<string>> = (route: Act
         datasetName: route.paramMap.get(ProjectLinks.URL_PARAM_DATASET_NAME),
     } as DatasetInfo;
     const sourceName = route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PUSH_SOURCE_NAME) ?? "";
-    return editService.getEventAsYaml(datasetInfo, [MetadataEventType.AddPushSource], sourceName);
+    return editService.getEventAsYaml(datasetInfo, sourceName);
 };

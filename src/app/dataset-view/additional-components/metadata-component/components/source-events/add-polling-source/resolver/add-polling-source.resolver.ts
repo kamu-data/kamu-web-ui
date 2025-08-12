@@ -7,7 +7,6 @@
 
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
-import { MetadataEventType } from "src/app/api/kamu.graphql.interface";
 import { EditPollingSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/edit-polling-source.service";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
@@ -19,5 +18,5 @@ export const addPollingSourceResolverFn: ResolveFn<MaybeNull<string>> = (route: 
         accountName: route.paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME),
         datasetName: route.paramMap.get(ProjectLinks.URL_PARAM_DATASET_NAME),
     } as DatasetInfo;
-    return editService.getEventAsYaml(datasetInfo, [MetadataEventType.SetPollingSource]);
+    return editService.getEventAsYaml(datasetInfo);
 };

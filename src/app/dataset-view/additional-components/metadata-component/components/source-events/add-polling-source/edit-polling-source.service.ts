@@ -19,22 +19,37 @@ import {
 } from "./add-polling-source-form.types";
 import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
-import { BaseYamlEventService } from "src/app/services/base-yaml-event.service";
 import { SourcesSection } from "./process-form.service.types";
+import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
+import { Observable, map } from "rxjs";
+import { MetadataManifestFormat, MetadataBlockExtended } from "src/app/api/kamu.graphql.interface";
+import { MaybeNull } from "src/app/interface/app.types";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
 
 @Injectable({
     providedIn: "root",
 })
-export class EditPollingSourceService extends BaseYamlEventService {
+export class EditPollingSourceService {
     private readonly PATTERN_CONTROL = "pattern";
     private readonly TIMESTAMP_FORMAT_CONTROL = "timestampFormat";
     private readonly READ_JSON_SUB_PATH_CONTROL = "subPath";
 
     private fb = inject(FormBuilder);
+    private blockService = inject(BlockService);
 
     public parseEventFromYaml(event: string): AddPollingSourceEditFormType {
         const editFormParseValue = parse(event) as EditFormParseType;
         return editFormParseValue.content.event;
+    }
+
+    public getEventAsYaml(info: DatasetInfo): Observable<MaybeNull<string>> {
+        return this.blockService
+            .requestBlocksByPollingSourceEvent({ ...info, encoding: MetadataManifestFormat.Yaml })
+            .pipe(
+                map((blocks: MetadataBlockExtended[]) => {
+                    return blocks.length ? (blocks[0].encoded?.content as string) : null;
+                }),
+            );
     }
 
     public patchFormValues(

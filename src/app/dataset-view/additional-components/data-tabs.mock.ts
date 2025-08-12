@@ -1953,6 +1953,7 @@ export const datasetMetadataDerivativeDataset: DatasetMetadata = {
     currentReadme: null,
     currentUpstreamDependencies: [],
     currentDownstreamDependencies: [],
+    metadataProjection: [],
     chain: {
         __typename: undefined,
         blockByHash: undefined,
@@ -2046,6 +2047,7 @@ export const datasetMetadataRootDataset: DatasetMetadata = {
         eventTimeColumn: "block_time",
     },
     currentReadme: null,
+    metadataProjection: [],
     chain: {
         __typename: undefined,
         blockByHash: undefined,

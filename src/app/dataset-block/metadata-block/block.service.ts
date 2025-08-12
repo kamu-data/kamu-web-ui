@@ -47,18 +47,6 @@ export class BlockService {
         );
     }
 
-    // public requestBlocksByEventType(params: {
-    //     accountName: string;
-    //     datasetName: string;
-    //     eventTypes: [MetadataEventType];
-    //     encoding: MetadataManifestFormat;
-    // }): Observable<MetadataBlockExtended[]> {
-    //     console.log("delete");
-    //     return this.datasetApi
-    //         .getBlocksByEventType(params)
-    //         .pipe(map((data) => data.datasets.byOwnerAndName?.metadata.metadataProjection as MetadataBlockExtended[]));
-    // }
-
     public requestBlocksByPollingSourceEvent(params: {
         accountName: string;
         datasetName: string;

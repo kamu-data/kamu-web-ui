@@ -54,7 +54,7 @@ export class EventDetailsComponent implements AfterViewInit, OnChanges {
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
-        if (changes.block && changes.block.currentValue) {
+        if (changes.block && changes.block.currentValue && !changes.block.isFirstChange()) {
             this.createView();
         }
     }
@@ -68,7 +68,7 @@ export class EventDetailsComponent implements AfterViewInit, OnChanges {
             );
             componentRef.setInput("event", this.block.event);
         }
-        this.cdr.markForCheck();
+        this.cdr.detectChanges();
     }
 
     private componentEventTypeFactory: { [key in SupportedEvents]: MaybeUndefined<Type<BaseComponent>> } = {

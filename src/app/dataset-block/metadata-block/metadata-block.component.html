@@ -36,9 +36,15 @@
                 >
                     <span class="ps-2">Show as YAML</span>
                 </mat-slide-toggle>
-                <app-block-header *ngIf="!yamlView" [block]="metadata.block" [datasetInfo]="datasetInfo" />
-                <app-yaml-view-section *ngIf="yamlView" [blockAsYaml]="metadata.blockAsYaml" [block]="metadata.block" />
-                <app-event-details *ngIf="!yamlView" [block]="metadata.block" [datasetInfo]="datasetInfo" />
+                <ng-container *ngIf="blockView === BlockView.PROPERTIES">
+                    <app-block-header [block]="metadata.block" [datasetInfo]="datasetInfo" />
+                    <app-event-details [block]="metadata.block" [datasetInfo]="datasetInfo" />
+                </ng-container>
+                <app-yaml-view-section
+                    *ngIf="blockView === BlockView.YAML"
+                    [blockAsYaml]="metadata.blockAsYaml"
+                    [block]="metadata.block"
+                />
             </div>
         </div>
         <div class="col-md-6">

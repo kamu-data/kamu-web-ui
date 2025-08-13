@@ -12,3 +12,8 @@ export interface MetadataBlockInfo {
     blockAsYaml: string;
     downstreamsCount: number;
 }
+
+export enum BlockView {
+    YAML = "yaml",
+    PROPERTIES = "properties",
+}

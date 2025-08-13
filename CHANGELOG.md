@@ -5,9 +5,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Block metadata page: added "Show as YAML" toggle
+### Fixed
+- Data tab: fixed view for "Saved queries" block
+- Settings tab: active tab is highlighted correctly
 ### Changed
 - Avoiding full re-rendering of flow listing tables on polling source updates
 - Removed ineffective filtration for BaseYamlEventService
+- "History" tab redesign  
+- Metadata block page: сhanged display of ID for input section
+- Changed view of block navigator
 
 ## [0.53.0] - 2025-07-23
 ### Changed

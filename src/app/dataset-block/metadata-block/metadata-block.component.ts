@@ -14,7 +14,7 @@ import { MaybeNull } from "src/app/interface/app.types";
 import { BaseDatasetDataComponent } from "src/app/common/components/base-dataset-data.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import ProjectLinks from "src/app/project-links";
-import { MetadataBlockInfo } from "./metadata-block.types";
+import { BlockView, MetadataBlockInfo } from "./metadata-block.types";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { YamlViewSectionComponent } from "./components/yaml-view-section/yaml-view-section.component";
 import { BlockNavigationComponent } from "./components/block-navigation/block-navigation.component";
@@ -23,6 +23,7 @@ import { BlockHeaderComponent } from "./components/block-header/block-header.com
 import { DatasetViewMenuComponent } from "../../dataset-view/dataset-view-menu/dataset-view-menu.component";
 import { DatasetViewHeaderComponent } from "../../dataset-view/dataset-view-header/dataset-view-header.component";
 import { NgIf, AsyncPipe } from "@angular/common";
+import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 @Component({
     selector: "app-metadata-block",
@@ -33,6 +34,9 @@ import { NgIf, AsyncPipe } from "@angular/common";
         //-----//
         AsyncPipe,
         NgIf,
+
+        //-----//
+        MatSlideToggleModule,
 
         //-----//
         BlockHeaderComponent,
@@ -51,6 +55,8 @@ export class MetadataBlockComponent extends BaseDatasetDataComponent implements 
     private static readonly BLOCKS_PER_PAGE = 10;
     public datasetInfo$: Observable<DatasetInfo>;
     public datasetHistoryUpdate$: Observable<MaybeNull<DatasetHistoryUpdate>>;
+    public blockView: BlockView = BlockView.PROPERTIES;
+    public readonly BlockView: typeof BlockView = BlockView;
 
     public ngOnInit(): void {
         this.datasetBasics$ = this.datasetService.datasetChanges;
@@ -63,6 +69,10 @@ export class MetadataBlockComponent extends BaseDatasetDataComponent implements 
 
     public onPageChange(currentPage: number): void {
         this.loadHistory(currentPage - 1);
+    }
+
+    public toggleYamlView(event: MatSlideToggleChange): void {
+        this.blockView = event.checked ? BlockView.YAML : BlockView.PROPERTIES;
     }
 
     private loadDatasetBasicDataWithPermissions(): void {

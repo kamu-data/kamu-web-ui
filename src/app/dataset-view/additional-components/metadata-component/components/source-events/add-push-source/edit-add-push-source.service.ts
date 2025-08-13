@@ -26,7 +26,7 @@ export class EditAddPushSourceService {
     }
 
     public getEventAsYaml(info: DatasetInfo, sourceName: string): Observable<MaybeNull<string>> {
-        return this.blockService.requestBlocksByAddPushSourceEvent({
+        return this.blockService.getAddPushSourceBlock({
             ...info,
             sourceName,
             encoding: MetadataManifestFormat.Yaml,

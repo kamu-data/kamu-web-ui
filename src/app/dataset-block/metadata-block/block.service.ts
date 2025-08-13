@@ -51,7 +51,7 @@ export class BlockService {
         );
     }
 
-    public requestBlocksByPollingSourceEvent(params: {
+    public getPollingSourceBlock(params: {
         accountName: string;
         datasetName: string;
         encoding: MetadataManifestFormat;
@@ -66,7 +66,7 @@ export class BlockService {
             );
     }
 
-    public requestBlocksBySetTransformEvent(params: {
+    public getSetTransformBlock(params: {
         accountName: string;
         datasetName: string;
         encoding: MetadataManifestFormat;
@@ -79,7 +79,7 @@ export class BlockService {
         );
     }
 
-    public requestBlocksByAddPushSourceEvent(params: {
+    public getAddPushSourceBlock(params: {
         accountName: string;
         datasetName: string;
         sourceName: string;

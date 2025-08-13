@@ -43,7 +43,7 @@ export class EditPollingSourceService {
     }
 
     public getEventAsYaml(info: DatasetInfo): Observable<MaybeNull<string>> {
-        return this.blockService.requestBlocksByPollingSourceEvent({ ...info, encoding: MetadataManifestFormat.Yaml });
+        return this.blockService.getPollingSourceBlock({ ...info, encoding: MetadataManifestFormat.Yaml });
     }
 
     public patchFormValues(

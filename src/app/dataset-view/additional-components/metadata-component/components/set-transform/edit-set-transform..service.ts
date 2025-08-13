@@ -30,7 +30,7 @@ export class EditSetTransformService {
     }
 
     public getEventAsYaml(info: DatasetInfo): Observable<MaybeNull<string>> {
-        return this.blockService.requestBlocksBySetTransformEvent({ ...info, encoding: MetadataManifestFormat.Yaml });
+        return this.blockService.getSetTransformBlock({ ...info, encoding: MetadataManifestFormat.Yaml });
     }
 
     public transformEventAsObject(

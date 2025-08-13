@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a missing provider for "Set watermark" feature
 ### Changed
 - Avoiding full re-rendering of flow listing tables on polling source updates
+- Removed ineffective filtration for BaseYamlEventService
 - "History" tab redesign  
 - Metadata block page: сhanged display of ID for input section
 - Changed view of block navigator

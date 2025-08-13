@@ -16,28 +16,16 @@ import {
     ReadKind,
     SetPollingSourceSection,
 } from "./add-polling-source-form.types";
-import {
-    mockDatasetInfo,
-    mockHistoryEditPollingSourceService,
-    mockParseSetPollingSourceEventFromYamlToObject,
-} from "src/app/search/mock.data";
-import { of } from "rxjs";
-import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
+import { mockParseSetPollingSourceEventFromYamlToObject } from "src/app/search/mock.data";
 
 describe("EditPollingSourceService", () => {
     let service: EditPollingSourceService;
-    let datasetService: DatasetService;
-    let blockService: BlockService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [Apollo],
         });
         service = TestBed.inject(EditPollingSourceService);
-        datasetService = TestBed.inject(DatasetService);
-        blockService = TestBed.inject(BlockService);
     });
 
     it("should be created", () => {
@@ -49,18 +37,6 @@ describe("EditPollingSourceService", () => {
             "kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2023-06-02T08:44:54.984731027Z\n  prevBlockHash: zW1gUpztxhibmmBcpeNgXN5wrJHjkPWzWfEK5DMuSZLzs2u\n  sequenceNumber: 1\n  event:\n    kind: SetPollingSource\n    fetch:\n      kind: FilesGlob\n      path: path\n      eventTime:\n        kind: FromMetadata\n    read:\n      kind: Csv\n      separator: ','\n      encoding: UTF-8\n      quote: '\"'\n      escape: \\\n      dateFormat: yyyy-MM-dd\n      timestampFormat: yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]\n    merge:\n      kind: Append\n";
         const result: AddPollingSourceEditFormType = mockParseSetPollingSourceEventFromYamlToObject;
         expect(service.parseEventFromYaml(mockEventYaml)).toEqual(result);
-    });
-
-    it("should check subscribe of getSetPollingSourceAsYaml", () => {
-        const mockHistory = mockHistoryEditPollingSourceService;
-        spyOn(datasetService, "getDatasetHistory").and.returnValue(of(mockHistory));
-        spyOn(blockService, "requestMetadataBlock").and.returnValue(of());
-        service.getEventAsYaml(mockDatasetInfo, SupportedEvents.SetPollingSource).subscribe(
-            () => null,
-            () => {
-                expect(service.history).toBeDefined();
-            },
-        );
     });
 
     it("should be check patch form with fetch url step and without headers", () => {

@@ -21,8 +21,8 @@ import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { SourcesSection } from "./process-form.service.types";
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
-import { Observable, map } from "rxjs";
-import { MetadataManifestFormat, MetadataBlockExtended } from "src/app/api/kamu.graphql.interface";
+import { Observable } from "rxjs";
+import { MetadataManifestFormat } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 
@@ -43,13 +43,7 @@ export class EditPollingSourceService {
     }
 
     public getEventAsYaml(info: DatasetInfo): Observable<MaybeNull<string>> {
-        return this.blockService
-            .requestBlocksByPollingSourceEvent({ ...info, encoding: MetadataManifestFormat.Yaml })
-            .pipe(
-                map((blocks: MetadataBlockExtended[]) => {
-                    return blocks.length ? (blocks[0].encoded?.content as string) : null;
-                }),
-            );
+        return this.blockService.requestBlocksByPollingSourceEvent({ ...info, encoding: MetadataManifestFormat.Yaml });
     }
 
     public patchFormValues(

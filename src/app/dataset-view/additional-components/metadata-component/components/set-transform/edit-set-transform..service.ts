@@ -6,17 +6,11 @@
  */
 
 import { inject, Injectable } from "@angular/core";
-import {
-    MetadataBlockExtended,
-    MetadataManifestFormat,
-    SetTransform,
-    SqlQueryStep,
-    TransformInput,
-} from "src/app/api/kamu.graphql.interface";
+import { MetadataManifestFormat, SetTransform, SqlQueryStep, TransformInput } from "src/app/api/kamu.graphql.interface";
 import { parse } from "yaml";
 import { EditSetTransformParseType, SetTransformYamlType } from "./set-transform.types";
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
-import { Observable, map } from "rxjs";
+import { Observable } from "rxjs";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 
@@ -36,13 +30,7 @@ export class EditSetTransformService {
     }
 
     public getEventAsYaml(info: DatasetInfo): Observable<MaybeNull<string>> {
-        return this.blockService
-            .requestBlocksBySetTransformEvent({ ...info, encoding: MetadataManifestFormat.Yaml })
-            .pipe(
-                map((blocks: MetadataBlockExtended[]) => {
-                    return blocks.length ? (blocks[0].encoded?.content as string) : null;
-                }),
-            );
+        return this.blockService.requestBlocksBySetTransformEvent({ ...info, encoding: MetadataManifestFormat.Yaml });
     }
 
     public transformEventAsObject(

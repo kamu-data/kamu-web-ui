@@ -24,6 +24,7 @@ import { SourceNameStepComponent } from "../steps/source-name-step/source-name-s
 import { MatStepperModule } from "@angular/material/stepper";
 import { NgIf } from "@angular/common";
 import { RouterLink } from "@angular/router";
+import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 
 @Component({
     selector: "app-add-push-source",
@@ -58,6 +59,7 @@ export class AddPushSourceComponent extends BaseSourceEventComponent {
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 
     private editService = inject(EditAddPushSourceService);
+    private blockService = inject(BlockService);
 
     public ngOnInit(): void {
         this.initEditForm();
@@ -90,7 +92,7 @@ export class AddPushSourceComponent extends BaseSourceEventComponent {
     }
 
     private getAllSourceNames(): string[] {
-        return this.editService.sourceNames;
+        return this.blockService.sourceNames;
     }
 
     public get readPushForm(): FormGroup {

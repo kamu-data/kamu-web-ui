@@ -1328,12 +1328,18 @@ export type DatasetMetadata = {
     currentVocab?: Maybe<SetVocab>;
     /** Last recorded watermark */
     currentWatermark?: Maybe<Scalars["DateTime"]>;
+    metadataProjection: Array<MetadataBlockExtended>;
     /** Sync statuses of push remotes */
     pushSyncStatuses: DatasetPushStatuses;
 };
 
 export type DatasetMetadataCurrentSchemaArgs = {
     format?: InputMaybe<DataSchemaFormat>;
+};
+
+export type DatasetMetadataMetadataProjectionArgs = {
+    eventTypes: Array<MetadataEventType>;
+    head?: InputMaybe<Scalars["Multihash"]>;
 };
 
 export type DatasetMetadataMut = {
@@ -1650,6 +1656,12 @@ export type DisablePushSource = {
 export type Eip4361AuthNonceResponse = {
     __typename?: "Eip4361AuthNonceResponse";
     value: Scalars["Eip4361AuthNonce"];
+};
+
+export type EncodedBlock = {
+    __typename?: "EncodedBlock";
+    content: Scalars["String"];
+    encoding: MetadataManifestFormat;
 };
 
 export type EngineDesc = {
@@ -2590,10 +2602,15 @@ export type MetadataBlockExtended = {
     __typename?: "MetadataBlockExtended";
     author: Account;
     blockHash: Scalars["Multihash"];
+    encoded?: Maybe<EncodedBlock>;
     event: MetadataEvent;
     prevBlockHash?: Maybe<Scalars["Multihash"]>;
     sequenceNumber: Scalars["Int"];
     systemTime: Scalars["DateTime"];
+};
+
+export type MetadataBlockExtendedEncodedArgs = {
+    encoding: MetadataManifestFormat;
 };
 
 export type MetadataChain = {
@@ -2655,6 +2672,18 @@ export type MetadataEvent =
     | SetPollingSource
     | SetTransform
     | SetVocab;
+
+export enum MetadataEventType {
+    AddPushSource = "ADD_PUSH_SOURCE",
+    Seed = "SEED",
+    SetAttachments = "SET_ATTACHMENTS",
+    SetDataSchema = "SET_DATA_SCHEMA",
+    SetInfo = "SET_INFO",
+    SetLicense = "SET_LICENSE",
+    SetPollingSource = "SET_POLLING_SOURCE",
+    SetTransform = "SET_TRANSFORM",
+    SetVocab = "SET_VOCAB",
+}
 
 export enum MetadataManifestFormat {
     Yaml = "YAML",
@@ -4621,6 +4650,44 @@ export type GetDatasetBasicsWithPermissionsQuery = {
     datasets: {
         __typename?: "Datasets";
         byOwnerAndName?: ({ __typename?: "Dataset" } & DatasetBasicsFragment & DatasetPermissionsFragment) | null;
+    };
+};
+
+export type DatasetBlocksByEventTypeQueryVariables = Exact<{
+    accountName: Scalars["AccountName"];
+    datasetName: Scalars["DatasetName"];
+    eventTypes: Array<MetadataEventType> | MetadataEventType;
+    encoding: MetadataManifestFormat;
+}>;
+
+export type DatasetBlocksByEventTypeQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byOwnerAndName?: {
+            __typename?: "Dataset";
+            metadata: {
+                __typename?: "DatasetMetadata";
+                metadataProjection: Array<{
+                    __typename?: "MetadataBlockExtended";
+                    encoded?: { __typename?: "EncodedBlock"; content: string } | null;
+                    event:
+                        | { __typename?: "AddData" }
+                        | { __typename?: "AddPushSource"; sourceName: string }
+                        | { __typename?: "DisablePollingSource" }
+                        | { __typename?: "DisablePushSource" }
+                        | { __typename?: "ExecuteTransform" }
+                        | { __typename?: "Seed" }
+                        | { __typename?: "SetAttachments" }
+                        | { __typename?: "SetDataSchema" }
+                        | { __typename?: "SetInfo" }
+                        | { __typename?: "SetLicense" }
+                        | { __typename?: "SetPollingSource" }
+                        | { __typename?: "SetTransform" }
+                        | { __typename?: "SetVocab" };
+                }>;
+            };
+        } | null;
     };
 };
 
@@ -9166,6 +9233,45 @@ export class GetDatasetBasicsWithPermissionsGQL extends Apollo.Query<
     GetDatasetBasicsWithPermissionsQueryVariables
 > {
     document = GetDatasetBasicsWithPermissionsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetBlocksByEventTypeDocument = gql`
+    query datasetBlocksByEventType(
+        $accountName: AccountName!
+        $datasetName: DatasetName!
+        $eventTypes: [MetadataEventType!]!
+        $encoding: MetadataManifestFormat!
+    ) {
+        datasets {
+            byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+                metadata {
+                    metadataProjection(eventTypes: $eventTypes) {
+                        encoded(encoding: $encoding) {
+                            content
+                        }
+                        event {
+                            ... on AddPushSource {
+                                sourceName
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetBlocksByEventTypeGQL extends Apollo.Query<
+    DatasetBlocksByEventTypeQuery,
+    DatasetBlocksByEventTypeQueryVariables
+> {
+    document = DatasetBlocksByEventTypeDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

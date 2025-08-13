@@ -10,6 +10,10 @@ import { BlockHeaderComponent } from "./block-header.component";
 import { Apollo } from "apollo-angular";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
+import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { ToastrModule } from "ngx-toastr";
 
 describe("BlockHeaderComponent", () => {
     let component: BlockHeaderComponent;
@@ -17,7 +21,7 @@ describe("BlockHeaderComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [SharedTestModule, BlockHeaderComponent],
+            imports: [SharedTestModule, BlockHeaderComponent, ToastrModule.forRoot(), HttpClientTestingModule],
             providers: [Apollo],
         }).compileComponents();
 
@@ -25,6 +29,8 @@ describe("BlockHeaderComponent", () => {
 
         fixture = TestBed.createComponent(BlockHeaderComponent);
         component = fixture.componentInstance;
+        component.block = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
+            .blockByHash as MetadataBlockFragment;
         fixture.detectChanges();
     });
 

@@ -1,6 +1,6 @@
 <div class="dataset-list-container py-2">
-    <div class="dataset-list-container__title-row mb-1">
-        <div class="dataset-list-container__title-row__dataset-name d-flex align-items-center">
+    <div class="dataset-list-container-title-row mb-1">
+        <div class="dataset-list-container-title-row-dataset-name d-flex align-items-center">
             <div class="me-2 mb-1">
                 <a [routerLink]="['/', row.owner.accountName]">
                     <img
@@ -15,7 +15,7 @@
             <a
                 [routerLink]="['/', row.owner.accountName, row.name]"
                 attr.data-test-id="dataset-name-button-{{ rowIndex }}"
-                class="dataset-list-container__title mb-1 pl-0"
+                class="dataset-list-container-title mb-1 pl-0"
             >
                 {{ row.owner.accountName }}/{{ row.name }}
             </a>
@@ -31,7 +31,7 @@
             >
         </div>
         <div>
-            <ng-template #popTitle class="signed-commit__popup-header">
+            <ng-template #popTitle class="signed-commit-popup-header">
                 <div class="signed-commit-header d-grid">
                     <div class="pr-1">
                         <mat-icon class="mat-icon-svg-size me-2" svgIcon="verified-commit" />
@@ -87,7 +87,7 @@
         </div>
     </div>
     <div>
-        <p class="dataset-list-container__description my-2">
+        <p class="dataset-list-container-description my-2">
             {{ row.metadata.currentInfo.description }}
         </p>
         <div class="app-mat-chip">
@@ -97,7 +97,7 @@
                 </div>
             </mat-chip-set>
         </div>
-        <div class="dataset-list-container__additional-block mt-1">
+        <div class="dataset-list-container-additional-block mt-1">
             <p class="text-small mr-3">
                 Updated
                 <app-display-time

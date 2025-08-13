@@ -5,13 +5,8 @@
  * included in the LICENSE file.
  */
 
-import {
-    AccountProvider,
-    DatasetEndpoints,
-    DatasetKind,
-    DatasetProtocolsQuery,
-} from "src/app/api/kamu.graphql.interface";
-import { mockPublicDatasetVisibility } from "src/app/search/mock.data";
+import { DatasetEndpoints, DatasetKind, DatasetProtocolsQuery } from "src/app/api/kamu.graphql.interface";
+import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "src/app/search/mock.data";
 
 export const mockDatasetEndPoints: DatasetEndpoints = {
     __typename: "DatasetEndpoints",
@@ -110,9 +105,7 @@ export const mockDatasetProtocolsQuery: DatasetProtocolsQuery = {
             name: "account.tokens.portfolio",
             owner: {
                 __typename: "Account",
-                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                accountName: "kamu",
-                accountProvider: AccountProvider.Password,
+                ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/account.tokens.portfolio",
             visibility: mockPublicDatasetVisibility,

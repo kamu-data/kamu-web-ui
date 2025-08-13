@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Data tab: fixed view for "Saved queries" block
 - Settings tab: active tab is highlighted correctly
+- Added a missing provider for "Set watermark" feature
 ### Changed
 - Avoiding full re-rendering of flow listing tables on polling source updates
 - "History" tab redesign  

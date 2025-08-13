@@ -1,21 +1,5 @@
 fragment DatasetSearchOverview on Dataset {
-  id
-  kind
-  name
-  owner {
-    ...AccountExtended
-  }
-  alias
-  visibility {
-    ... on PrivateDatasetVisibility {
-      __typename
-    }
-
-    ... on PublicDatasetVisibility {
-      anonymousAvailable
-    }
-  }
-
+  ...DatasetBasics
   createdAt
   lastUpdatedAt
   metadata {

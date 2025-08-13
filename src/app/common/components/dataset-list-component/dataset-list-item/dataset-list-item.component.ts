@@ -7,7 +7,7 @@
 
 import { ModalService } from "../../modal/modal.service";
 import { Component, inject, Input } from "@angular/core";
-import { DatasetSearchOverviewFragment } from "src/app/api/kamu.graphql.interface";
+import { DatasetKind, DatasetSearchOverviewFragment } from "src/app/api/kamu.graphql.interface";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
 import { MatDividerModule } from "@angular/material/divider";
@@ -18,9 +18,8 @@ import { FeatureFlagDirective } from "../../../directives/feature-flag.directive
 import { DatasetVisibilityComponent } from "../../dataset-visibility/dataset-visibility.component";
 import { RouterLink } from "@angular/router";
 import { MatIconModule } from "@angular/material/icon";
-import { NgIf, NgFor } from "@angular/common";
+import { NgIf, NgFor, NgClass } from "@angular/common";
 import AppValues from "src/app/common/values/app.values";
-import { DatasetKindComponent } from "../../dataset-kind/dataset-kind.component";
 
 @Component({
     selector: "app-dataset-list-item",
@@ -29,6 +28,7 @@ import { DatasetKindComponent } from "../../dataset-kind/dataset-kind.component"
     standalone: true,
     imports: [
         //-----//
+        NgClass,
         NgFor,
         NgIf,
         RouterLink,
@@ -42,7 +42,6 @@ import { DatasetKindComponent } from "../../dataset-kind/dataset-kind.component"
 
         //-----//
         DatasetVisibilityComponent,
-        DatasetKindComponent,
         DisplayTimeComponent,
         FeatureFlagDirective,
     ],
@@ -56,6 +55,10 @@ export class DatasetListItemComponent {
 
     private modalService = inject(ModalService);
     private navigationService = inject(NavigationService);
+
+    public get isRoot(): boolean {
+        return this.row.kind === DatasetKind.Root;
+    }
 
     public selectTopic(topicName: string): void {
         promiseWithCatch(

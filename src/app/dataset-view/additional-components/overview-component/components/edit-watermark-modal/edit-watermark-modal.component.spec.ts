@@ -20,6 +20,8 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
+import { By } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 describe("EditWatermarkModalComponent", () => {
     let component: EditWatermarkModalComponent;
@@ -38,6 +40,7 @@ describe("EditWatermarkModalComponent", () => {
                 SharedTestModule,
                 HttpClientTestingModule,
                 EditWatermarkModalComponent,
+                BrowserAnimationsModule,
             ],
         }).compileComponents();
 
@@ -75,6 +78,14 @@ describe("EditWatermarkModalComponent", () => {
         spyOn(datasetCommitService, "updateWatermark").and.returnValue(of());
         emitClickOnElementByDataTestId(fixture, "commit-setWatermark-event");
         expect(commitSetWatermarkEventSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check to show a datepicker", () => {
+        fixture.detectChanges();
+        emitClickOnElementByDataTestId(fixture, "fromdatepicker");
+        fixture.detectChanges();
+        const datepicker = fixture.debugElement.query(By.css(".owl-dt-popup-container"));
+        expect(datepicker).toBeDefined();
     });
 
     afterAll(() => {

@@ -43,7 +43,9 @@
             [min]="minLocalWatermark"
         />
         <owl-date-time #fromdatepicker />
-        <span [owlDateTimeTrigger]="fromdatepicker" class="trigger ms-2"><mat-icon>calendar_month</mat-icon> </span>
+        <span [owlDateTimeTrigger]="fromdatepicker" data-test-id="fromdatepicker" class="trigger ms-2"
+            ><mat-icon>calendar_month</mat-icon>
+        </span>
     </div>
 </div>
 <div class="p-4 d-flex justify-content-end">

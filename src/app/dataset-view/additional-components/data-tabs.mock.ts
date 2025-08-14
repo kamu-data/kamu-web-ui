@@ -68,8 +68,7 @@ export const mockHistoryUpdate: DatasetHistoryUpdate = {
             systemTime: "2022-08-05T21:19:28.817281255+00:00",
             author: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
+                ...mockOwnerFieldsWithAvatar,
             },
             event: {
                 __typename: "AddData",
@@ -101,8 +100,7 @@ export const mockHistoryUpdate: DatasetHistoryUpdate = {
             sequenceNumber: 3,
             author: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
+                ...mockOwnerFieldsWithAvatar,
             },
             event: {
                 __typename: "SetInfo",
@@ -840,8 +838,7 @@ export const mockOverviewDataUpdate = {
                             sequenceNumber: 14,
                             author: {
                                 __typename: "Account",
-                                id: TEST_ACCOUNT_ID,
-                                accountName: "kamu",
+                                ...mockOwnerFieldsWithAvatar,
                             },
                             event: {
                                 __typename: "AddData",
@@ -946,8 +943,7 @@ export const mockOverviewDataUpdateNullable = {
                             sequenceNumber: 14,
                             author: {
                                 __typename: "Account",
-                                id: TEST_ACCOUNT_ID,
-                                accountName: "kamu",
+                                ...mockOwnerFieldsWithAvatar,
                             },
                             event: {
                                 __typename: "AddData",
@@ -1148,8 +1144,7 @@ export const mockMetadataRootUpdate: MetadataSchemaUpdate = {
                             sequenceNumber: 13,
                             author: {
                                 __typename: "Account",
-                                id: TEST_ACCOUNT_ID,
-                                accountName: "sergeiz",
+                                ...mockOwnerFieldsWithAvatar,
                             },
                             event: {
                                 __typename: "SetAttachments",
@@ -1339,8 +1334,7 @@ export const mockMetadataRootPushSourceUpdate: MetadataSchemaUpdate = {
                             sequenceNumber: 13,
                             author: {
                                 __typename: "Account",
-                                id: TEST_ACCOUNT_ID,
-                                accountName: "sergeiz",
+                                ...mockOwnerFieldsWithAvatar,
                             },
                             event: {
                                 __typename: "SetAttachments",
@@ -1535,8 +1529,7 @@ export const mockMetadataDerivedUpdate: MetadataSchemaUpdate = {
                             sequenceNumber: 6,
                             author: {
                                 __typename: "Account",
-                                id: TEST_ACCOUNT_ID,
-                                accountName: "kamu",
+                                ...mockOwnerFieldsWithAvatar,
                             },
                             event: {
                                 __typename: "ExecuteTransform",
@@ -1688,8 +1681,7 @@ export const mockOverviewWithSetInfo = {
                         sequenceNumber: 14,
                         author: {
                             __typename: "Account",
-                            id: TEST_ACCOUNT_ID,
-                            accountName: "kamu",
+                            ...mockOwnerFieldsWithAvatar,
                         },
                         event: {
                             __typename: "AddData",
@@ -1824,8 +1816,7 @@ export const mockOverviewWithSetLicense = {
                         sequenceNumber: 14,
                         author: {
                             __typename: "Account",
-                            id: TEST_ACCOUNT_ID,
-                            accountName: "kamu",
+                            ...mockOwnerFieldsWithAvatar,
                         },
                         event: {
                             __typename: "AddData",

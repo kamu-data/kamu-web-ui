@@ -7,7 +7,6 @@
 
 import {
     AccountBasicsFragment,
-    AccountExtendedFragment,
     AccountProvider,
     CommitEventToDatasetMutation,
     CreateDatasetFromSnapshotMutation,
@@ -78,11 +77,6 @@ export const mockOwnerFieldsWithAvatar: AccountBasicsFragment = {
     accountName: "kamu",
     avatarUrl: TEST_AVATAR_URL,
     accountProvider: AccountProvider.Password,
-};
-
-export const mockOwnerFieldsWithAvatarBasics: AccountExtendedFragment = {
-    id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-    accountName: "kamu",
 };
 
 export const mockPublicDatasetVisibility: PublicDatasetVisibility = {
@@ -439,9 +433,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                 sequenceNumber: 6,
                                 author: {
                                     __typename: "Account",
-                                    id: TEST_ACCOUNT_ID,
-                                    accountName: "kamu",
-                                    avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                                    ...mockOwnerFieldsWithAvatar,
                                 },
                                 event: {
                                     __typename: "AddData",
@@ -1337,8 +1329,7 @@ export const mockHistoryEditPollingSourceService: DatasetHistoryUpdate = {
             sequenceNumber: 0,
             author: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
+                ...mockOwnerFieldsWithAvatar,
             },
             event: {
                 __typename: "Seed",
@@ -1354,8 +1345,7 @@ export const mockHistoryEditPollingSourceService: DatasetHistoryUpdate = {
             sequenceNumber: 0,
             author: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
+                ...mockOwnerFieldsWithAvatar,
             },
             event: {
                 __typename: "Seed",
@@ -1371,8 +1361,7 @@ export const mockHistoryEditPollingSourceService: DatasetHistoryUpdate = {
             sequenceNumber: 1,
             author: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
+                ...mockOwnerFieldsWithAvatar,
             },
             event: {
                 __typename: "SetPollingSource",
@@ -1410,8 +1399,7 @@ export const mockHistoryEditPollingSourceService: DatasetHistoryUpdate = {
             sequenceNumber: 0,
             author: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
+                ...mockOwnerFieldsWithAvatar,
             },
             event: {
                 __typename: "Seed",
@@ -1439,8 +1427,7 @@ export const mockHistoryEditAddPushSourceService: DatasetHistoryUpdate = {
             sequenceNumber: 0,
             author: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
+                ...mockOwnerFieldsWithAvatar,
             },
             event: {
                 __typename: "Seed",
@@ -1456,8 +1443,7 @@ export const mockHistoryEditAddPushSourceService: DatasetHistoryUpdate = {
             sequenceNumber: 0,
             author: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
+                ...mockOwnerFieldsWithAvatar,
             },
             event: {
                 __typename: "Seed",
@@ -1473,8 +1459,7 @@ export const mockHistoryEditAddPushSourceService: DatasetHistoryUpdate = {
             sequenceNumber: 1,
             author: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
+                ...mockOwnerFieldsWithAvatar,
             },
             event: {
                 __typename: "AddPushSource",
@@ -1503,8 +1488,7 @@ export const mockHistoryEditAddPushSourceService: DatasetHistoryUpdate = {
             sequenceNumber: 0,
             author: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
+                ...mockOwnerFieldsWithAvatar,
             },
             event: {
                 __typename: "Seed",

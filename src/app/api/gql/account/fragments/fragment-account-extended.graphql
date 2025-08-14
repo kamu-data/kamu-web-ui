@@ -1,5 +1,0 @@
-fragment AccountExtended on Account {
-  id
-  accountName
-  avatarUrl
-}

@@ -414,9 +414,7 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
                         sequenceNumber: 6,
                         author: {
                             __typename: "Account",
-                            id: TEST_ACCOUNT_ID,
-                            accountName: "kamu",
-                            avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                            ...mockOwnerFieldsWithAvatar,
                         },
                         event: {
                             __typename: "ExecuteTransform",

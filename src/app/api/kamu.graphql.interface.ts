@@ -2004,9 +2004,15 @@ export type FlowActivationCauseDatasetUpdate = {
 };
 
 export type FlowActivationCauseDatasetUpdateSource =
+    | FlowActivationCauseDatasetUpdateSourceExternallyDetectedChange
     | FlowActivationCauseDatasetUpdateSourceHttpIngest
     | FlowActivationCauseDatasetUpdateSourceSmartProtocolPush
     | FlowActivationCauseDatasetUpdateSourceUpstreamFlow;
+
+export type FlowActivationCauseDatasetUpdateSourceExternallyDetectedChange = {
+    __typename?: "FlowActivationCauseDatasetUpdateSourceExternallyDetectedChange";
+    dummy: Scalars["Boolean"];
+};
 
 export type FlowActivationCauseDatasetUpdateSourceHttpIngest = {
     __typename?: "FlowActivationCauseDatasetUpdateSourceHttpIngest";
@@ -5631,6 +5637,7 @@ type FlowHistoryData_FlowEventActivationCauseAdded_Fragment = {
               __typename: "FlowActivationCauseDatasetUpdate";
               dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
               source:
+                  | { __typename: "FlowActivationCauseDatasetUpdateSourceExternallyDetectedChange" }
                   | { __typename: "FlowActivationCauseDatasetUpdateSourceHttpIngest"; sourceName?: string | null }
                   | {
                         __typename: "FlowActivationCauseDatasetUpdateSourceSmartProtocolPush";
@@ -5652,6 +5659,7 @@ type FlowHistoryData_FlowEventInitiated_Fragment = {
               __typename: "FlowActivationCauseDatasetUpdate";
               dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
               source:
+                  | { __typename: "FlowActivationCauseDatasetUpdateSourceExternallyDetectedChange" }
                   | { __typename: "FlowActivationCauseDatasetUpdateSourceHttpIngest"; sourceName?: string | null }
                   | {
                         __typename: "FlowActivationCauseDatasetUpdateSourceSmartProtocolPush";

@@ -324,6 +324,8 @@ export class DatasetFlowDetailsHelpers {
                         return "after upstream flow event";
                     case "FlowActivationCauseDatasetUpdateSourceHttpIngest":
                         return "after HTTP push ingest event";
+                    case "FlowActivationCauseDatasetUpdateSourceExternallyDetectedChange":
+                        return "after detected external change";
                     case "FlowActivationCauseDatasetUpdateSourceSmartProtocolPush":
                         return "after smart protocol push event";
                     /* istanbul ignore next */
@@ -362,9 +364,10 @@ export class DatasetFlowDetailsHelpers {
                         return `${flowHistoryLink}. ${inputDatasetLink}`;
                     }
                     case "FlowActivationCauseDatasetUpdateSourceHttpIngest":
-                        return inputDatasetLink;
                     case "FlowActivationCauseDatasetUpdateSourceSmartProtocolPush":
+                    case "FlowActivationCauseDatasetUpdateSourceExternallyDetectedChange":
                         return inputDatasetLink;
+
                     /* istanbul ignore next */
                     default:
                         throw new Error("Unknown activation cause data source");

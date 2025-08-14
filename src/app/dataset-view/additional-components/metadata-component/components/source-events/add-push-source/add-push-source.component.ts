@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { AddPushSource, MetadataBlockFragment } from "../../../../../../api/kamu.graphql.interface";
 import { SupportedEvents } from "../../../../../../dataset-block/metadata-block/components/event-details/supported.events";
 import ProjectLinks from "src/app/project-links";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
@@ -13,7 +12,6 @@ import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { SourcesSection } from "../add-polling-source/process-form.service.types";
 import { EditAddPushSourceService } from "./edit-add-push-source.service";
-import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { BaseSourceEventComponent } from "../../base-source-event.component";
 import { AddPushSourceSection } from "./add-push-source-form.types";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
@@ -26,6 +24,7 @@ import { SourceNameStepComponent } from "../steps/source-name-step/source-name-s
 import { MatStepperModule } from "@angular/material/stepper";
 import { NgIf } from "@angular/common";
 import { RouterLink } from "@angular/router";
+import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 
 @Component({
     selector: "app-add-push-source",
@@ -60,6 +59,7 @@ export class AddPushSourceComponent extends BaseSourceEventComponent {
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 
     private editService = inject(EditAddPushSourceService);
+    private blockService = inject(BlockService);
 
     public ngOnInit(): void {
         this.initEditForm();
@@ -76,10 +76,6 @@ export class AddPushSourceComponent extends BaseSourceEventComponent {
     });
 
     public initEditForm(): void {
-        this.history = this.editService.history;
-        if (this.unsupportedSourceName()) {
-            this.navigationServices.navigateToPageNotFound();
-        }
         if (this.eventYamlByHash) {
             const currentPushSourceEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
             this.addPushSourceForm.patchValue({
@@ -89,27 +85,14 @@ export class AddPushSourceComponent extends BaseSourceEventComponent {
         if (!this.queryParamName) {
             this.addPushSourceForm.controls.sourceName.addValidators(
                 RxwebValidators.noneOf({
-                    matchValues: [...this.getAllSourceNames(this.history)],
+                    matchValues: [...this.getAllSourceNames()],
                 }),
             );
         }
     }
 
-    private getAllSourceNames(historyUpdate: DatasetHistoryUpdate): string[] {
-        return historyUpdate.history
-            .filter((item: MetadataBlockFragment) => item.event.__typename === SupportedEvents.AddPushSource)
-            .map((data: MetadataBlockFragment) => (data.event as AddPushSource).sourceName);
-    }
-
-    private unsupportedSourceName(): boolean {
-        return (
-            Boolean(this.queryParamName) &&
-            !this.editService.filterHistoryByType(
-                this.history.history,
-                SupportedEvents.AddPushSource,
-                this.queryParamName,
-            ).length
-        );
+    private getAllSourceNames(): string[] {
+        return this.blockService.sourceNames;
     }
 
     public get readPushForm(): FormGroup {

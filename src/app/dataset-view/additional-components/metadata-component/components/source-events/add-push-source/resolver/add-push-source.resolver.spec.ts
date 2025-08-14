@@ -12,15 +12,15 @@ import { EditAddPushSourceService } from "src/app/dataset-view/additional-compon
 import { Apollo } from "apollo-angular";
 import { of } from "rxjs";
 import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "src/app/api/mock/dataset.mock";
-import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import ProjectLinks from "src/app/project-links";
+import { MaybeNull } from "src/app/interface/app.types";
 
 describe("addPushSourceResolverFn", () => {
     let editService: EditAddPushSourceService;
     let routeSnapshot: ActivatedRouteSnapshot;
     let router: Router;
 
-    const executeResolver: ResolveFn<string> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<MaybeNull<string>> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => addPushSourceResolverFn(...resolverParameters));
 
     beforeEach(() => {
@@ -54,7 +54,6 @@ describe("addPushSourceResolverFn", () => {
         await executeResolver(routeSnapshot, router.routerState.snapshot);
         expect(getEventAsYamlSpy).toHaveBeenCalledOnceWith(
             { accountName: TEST_ACCOUNT_NAME, datasetName: TEST_DATASET_NAME },
-            SupportedEvents.AddPushSource,
             "",
         );
     });

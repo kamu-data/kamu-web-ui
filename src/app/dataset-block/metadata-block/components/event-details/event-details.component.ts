@@ -11,7 +11,9 @@ import { SupportedEvents } from "./supported.events";
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
+    inject,
     Input,
     OnChanges,
     SimpleChanges,
@@ -45,13 +47,14 @@ export class EventDetailsComponent implements AfterViewInit, OnChanges {
     @Input({ required: true }) public datasetInfo: DatasetInfo;
     @ViewChild("dynamicContainer", { read: ViewContainerRef })
     public dynamicContainer: MaybeNull<ViewContainerRef>;
+    private cdr = inject(ChangeDetectorRef);
 
     public ngAfterViewInit(): void {
         this.createView();
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
-        if (changes.block && !changes.block.firstChange && changes.block.previousValue !== changes.block.currentValue) {
+        if (changes.block && changes.block.currentValue && !changes.block.isFirstChange()) {
             this.createView();
         }
     }
@@ -65,6 +68,7 @@ export class EventDetailsComponent implements AfterViewInit, OnChanges {
             );
             componentRef.setInput("event", this.block.event);
         }
+        this.cdr.detectChanges();
     }
 
     private componentEventTypeFactory: { [key in SupportedEvents]: MaybeUndefined<Type<BaseComponent>> } = {

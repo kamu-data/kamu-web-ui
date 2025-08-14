@@ -1977,6 +1977,7 @@ export const datasetMetadataDerivativeDataset: DatasetMetadata = {
         __typename: undefined,
         statuses: [],
     },
+    metadataProjection: [],
 };
 
 export const datasetMetadataRootDataset: DatasetMetadata = {
@@ -2073,6 +2074,7 @@ export const datasetMetadataRootDataset: DatasetMetadata = {
         __typename: undefined,
         statuses: [],
     },
+    metadataProjection: [],
 };
 
 export const mockOverviewUpdate = {

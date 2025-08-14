@@ -48,7 +48,7 @@
             </div>
         </div>
         <div class="col-md-6">
-            <div class="container-content" *ngIf="datasetHistoryUpdate$ | async as datasetHistory">
+            <div class="container-content mb-4" *ngIf="datasetHistoryUpdate$ | async as datasetHistory">
                 <app-block-navigation
                     [datasetHistory]="datasetHistory"
                     [currentBlockHash]="blockHash"

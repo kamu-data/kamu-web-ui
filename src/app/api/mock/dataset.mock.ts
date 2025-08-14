@@ -6,7 +6,6 @@
  */
 
 import {
-    AccountProvider,
     CompareChainsStatus,
     DataBatchFormat,
     DatasetByAccountAndDatasetNameQuery,
@@ -23,7 +22,11 @@ import {
 import { DataSchemaFormat } from "../kamu.graphql.interface";
 import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
 import { TEST_LOGIN } from "./auth.mock";
-import { mockFullPowerDatasetPermissionsFragment, mockPublicDatasetVisibility } from "src/app/search/mock.data";
+import {
+    mockFullPowerDatasetPermissionsFragment,
+    mockOwnerFieldsWithAvatar,
+    mockPublicDatasetVisibility,
+} from "src/app/search/mock.data";
 import {
     LineageGraphDatasetNodeObject,
     LineageGraphNodeData,
@@ -34,6 +37,7 @@ import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
 
 export const TEST_DATASET_ID = "did:odf:z4k88e8kmp7wTEePmNDSprhY2TqwDxSiFwHiau8fnUk4V4Cpgu7";
 export const TEST_DATASET_NAME = "test-dataset";
+export const TEST_LOGIN_RESULT = "kamu";
 export const TEST_ACCOUNT_ID = "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f";
 export const TEST_ACCOUNT_NAME = "test-account-name";
 export const TEST_BLOCK_HASH = "zW1hNbxPz28K1oLNGbddudUzKKLT9LDPh8chjksEo6HcDev";
@@ -71,9 +75,8 @@ export const mockDatasetListDownstreamsQuery: DatasetListDownstreamsQuery = {
                         dataset: {
                             name: "rhine-basin.netherlands",
                             owner: {
-                                accountName: "deltares.nl",
-                                avatarUrl: "https://avatars.githubusercontent.com/u/6613768?s=200&v=4",
                                 __typename: "Account",
+                                ...mockOwnerFieldsWithAvatar,
                             },
                             __typename: "Dataset",
                         },
@@ -122,10 +125,8 @@ export const mockDatasetListItem: DatasetSearchOverviewFragment = {
                     kind: DatasetKind.Derivative,
                     name: "rhine-basin.netherlands",
                     owner: {
-                        id: "did:odf:fed011d18a62694a81fa4e3a0801f67721fa46c97c74617e6d07756eec09a6f6280d7",
-                        accountName: "deltares.nl",
                         __typename: "Account",
-                        accountProvider: AccountProvider.Password,
+                        ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "deltares.nl/rhine-basin.netherlands",
                     visibility: {
@@ -142,9 +143,7 @@ export const mockDatasetListItem: DatasetSearchOverviewFragment = {
     name: "alberta.case-details",
     owner: {
         __typename: "Account",
-        id: TEST_ACCOUNT_ID,
-        accountName: "kamu",
-        accountProvider: AccountProvider.Password,
+        ...mockOwnerFieldsWithAvatar,
     },
     alias: "kamu/alberta.case-details",
     visibility: mockPublicDatasetVisibility,
@@ -172,9 +171,7 @@ export const mockDatasetByAccountAndDatasetNameQuery: DatasetByAccountAndDataset
             name: TEST_DATASET_NAME,
             owner: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: TEST_LOGIN,
-                accountProvider: AccountProvider.Password,
+                ...mockOwnerFieldsWithAvatar,
             },
             alias: TEST_LOGIN + "/" + TEST_DATASET_NAME,
             visibility: mockPublicDatasetVisibility,
@@ -192,9 +189,7 @@ export const mockDatasetByIdQuery: DatasetByIdQuery = {
             name: TEST_DATASET_NAME,
             owner: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: TEST_LOGIN,
-                accountProvider: AccountProvider.Password,
+                ...mockOwnerFieldsWithAvatar,
             },
             alias: TEST_LOGIN + "/" + TEST_DATASET_NAME,
             visibility: mockPublicDatasetVisibility,
@@ -313,9 +308,7 @@ export const mockDatasetBasicsWithPermissionQuery: GetDatasetBasicsWithPermissio
             name: TEST_DATASET_NAME,
             owner: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: TEST_LOGIN,
-                accountProvider: AccountProvider.Password,
+                ...mockOwnerFieldsWithAvatar,
             },
             alias: TEST_LOGIN + "/" + TEST_DATASET_NAME,
             permissions: {
@@ -366,10 +359,8 @@ export const mockDatasetsByAccountNameQuery: DatasetsByAccountNameQuery = {
                                     kind: DatasetKind.Derivative,
                                     name: "rhine-basin.netherlands",
                                     owner: {
-                                        id: "did:odf:fed011d18a62694a81fa4e3a0801f67721fa46c97c74617e6d07756eec09a6f6280d7",
-                                        accountName: "deltares.nl",
                                         __typename: "Account",
-                                        accountProvider: AccountProvider.Password,
+                                        ...mockOwnerFieldsWithAvatar,
                                     },
                                     alias: "deltares.nl/rhine-basin.netherlands",
                                     visibility: {
@@ -386,9 +377,7 @@ export const mockDatasetsByAccountNameQuery: DatasetsByAccountNameQuery = {
                     name: "alberta.case-details",
                     owner: {
                         __typename: "Account",
-                        id: TEST_ACCOUNT_ID,
-                        accountName: "kamu",
-                        accountProvider: AccountProvider.Password,
+                        ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/alberta.case-details",
                     visibility: mockPublicDatasetVisibility,
@@ -425,9 +414,7 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
                         sequenceNumber: 6,
                         author: {
                             __typename: "Account",
-                            id: TEST_ACCOUNT_ID,
-                            accountName: "kamu",
-                            avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                            ...mockOwnerFieldsWithAvatar,
                         },
                         event: {
                             __typename: "ExecuteTransform",
@@ -470,9 +457,8 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
             kind: DatasetKind.Root,
             alias: "kamu/com.naturalearthdata.admin0.countries.50m",
             owner: {
-                id: TEST_ACCOUNT_ID,
-                accountName: "alias",
-                accountProvider: AccountProvider.Password,
+                __typename: "Account",
+                ...mockOwnerFieldsWithAvatar,
             },
             visibility: mockPublicDatasetVisibility,
         },

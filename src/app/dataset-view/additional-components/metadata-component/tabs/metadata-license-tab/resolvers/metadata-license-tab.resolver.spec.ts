@@ -8,11 +8,11 @@
 import { TestBed } from "@angular/core/testing";
 import { ResolveFn } from "@angular/router";
 import { metadataLicenseTabResolverFn } from "./metadata-license-tab.resolver";
-import { LicenseFragment } from "src/app/api/kamu.graphql.interface";
 import { MaybeNullOrUndefined } from "src/app/interface/app.types";
+import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 
 describe("metadataLicenseTabResolver", () => {
-    const executeResolver: ResolveFn<MaybeNullOrUndefined<LicenseFragment>> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<MaybeNullOrUndefined<DatasetOverviewTabData>> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => metadataLicenseTabResolverFn(...resolverParameters));
 
     beforeEach(() => {

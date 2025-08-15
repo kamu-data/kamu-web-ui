@@ -38,10 +38,13 @@ import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.dir
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataLicenseTabComponent {
-    @Input(RoutingResolvers.METADATA_LICENSE_TAB_KEY) public license: MaybeNullOrUndefined<LicenseFragment>;
-    @Input(RoutingResolvers.DATASET_VIEW_METADATA_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
+    @Input(RoutingResolvers.METADATA_LICENSE_TAB_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
 
     private ngbModalService = inject(NgbModal);
+
+    public get license(): MaybeNullOrUndefined<LicenseFragment> {
+        return this.datasetMetadataTabData.overviewUpdate.overview.metadata.currentLicense as LicenseFragment;
+    }
 
     public get canEditLicense(): boolean {
         return !isNil(this.license) && this.datasetMetadataTabData.datasetPermissions.permissions.metadata.canCommit;

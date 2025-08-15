@@ -7,14 +7,12 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ResolveFn } from "@angular/router";
+import { metadataWatermarkTabResolverFn } from "./metadata-watermark-tab.resolver";
+import { MaybeNullOrUndefined } from "src/app/interface/app.types";
 
-import { metadataSchemaTabResolverFn } from "./metadata-schema-tab.resolver";
-import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetSchema } from "src/app/interface/dataset.interface";
-
-describe("metadataSchemaTabResolver", () => {
-    const executeResolver: ResolveFn<MaybeNull<DatasetSchema>> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => metadataSchemaTabResolverFn(...resolverParameters));
+describe("metadataWatermarkTabResolver", () => {
+    const executeResolver: ResolveFn<MaybeNullOrUndefined<string>> = (...resolverParameters) =>
+        TestBed.runInInjectionContext(() => metadataWatermarkTabResolverFn(...resolverParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({});

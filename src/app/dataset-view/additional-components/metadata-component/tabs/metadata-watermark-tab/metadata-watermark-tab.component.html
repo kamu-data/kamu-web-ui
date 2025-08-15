@@ -1,1 +1,22 @@
-<p>metadata-watermark-tab works!</p>
+<div class="d-flex justify-content-start mb-4" *ngIf="canEditWatermark">
+    <button
+        class="border-1 bg-light border edit-watermark-btn rounded-2 me-3 btn btn-sm justify-content-between align-items-center"
+        data-test-id="'edit-watermark'"
+        (click)="onEditWatermark()"
+    >
+        <mat-icon class="mat-icon-svg-size me-2 text-muted" svgIcon="pencil" />
+        <span class="fs-12 me-2">Edit watermark</span>
+    </button>
+</div>
+
+<div class="position-relative border border-1 p-2 rounded-3" *ngIf="watermark; else noWatermark">
+    <span class="position-absolute text-muted group-box-label text-uppercase">Watermark</span>
+    <div class="mx-4">
+        <app-block-row-data [tooltip]="'Last watermark of the output data stream.'" [label]="'Watermark:'">
+            <a class="page-link">
+                <app-display-time [data]="watermark" />
+            </a>
+        </app-block-row-data>
+    </div>
+</div>
+<ng-template #noWatermark>There is no watermark</ng-template>

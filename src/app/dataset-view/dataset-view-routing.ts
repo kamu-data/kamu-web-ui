@@ -32,6 +32,11 @@ import { MetadataWatermarkTabComponent } from "./additional-components/metadata-
 import { MetadataTransformationTabComponent } from "./additional-components/metadata-component/tabs/metadata-transformation-tab/metadata-transformation-tab.component";
 import { MetadataPushSourcesTabComponent } from "./additional-components/metadata-component/tabs/metadata-push-sources-tab/metadata-push-sources-tab.component";
 import { metadataSchemaTabResolverFn } from "./additional-components/metadata-component/tabs/metadata-schema-tab/resolvers/metadata-schema-tab.resolver";
+import { metadataWatermarkTabResolverFn } from "./additional-components/metadata-component/tabs/metadata-watermark-tab/resolvers/metadata-watermark-tab.resolver";
+import { metadataTransformationTabResolverFn } from "./additional-components/metadata-component/tabs/metadata-transformation-tab/resolvers/metadata-transformation-tab.resolver";
+import { metadataLicenseTabResolverFn } from "./additional-components/metadata-component/tabs/metadata-license-tab/resolvers/metadata-license-tab.resolver";
+import { metadataPollingSourceTabResolverFn } from "./additional-components/metadata-component/tabs/metadata-polling-source-tab/resolvers/metadata-polling-source-tab.resolver";
+import { metadataPushSourcesTabResolverFn } from "./additional-components/metadata-component/tabs/metadata-push-sources-tab/resolvers/metadata-push-sources-tab.resolver";
 
 export const DATASET_VIEW_ROUTES: Routes = [
     {
@@ -93,6 +98,7 @@ export const DATASET_VIEW_ROUTES: Routes = [
                         component: MetadataSchemaTabComponent,
                         resolve: {
                             [RoutingResolvers.METADATA_SCHEMA_TAB_KEY]: metadataSchemaTabResolverFn,
+                            [RoutingResolvers.DATASET_VIEW_METADATA_KEY]: datasetMetadataTabResolverFn,
                         },
                         data: {
                             [ProjectLinks.URL_PARAM_TAB]: MetadataTabs.Schema,
@@ -101,6 +107,10 @@ export const DATASET_VIEW_ROUTES: Routes = [
                     {
                         path: MetadataTabs.PollingSource,
                         component: MetadataPollingSourceTabComponent,
+                        resolve: {
+                            [RoutingResolvers.METADATA_POLLING_SOURCE_TAB_KEY]: metadataPollingSourceTabResolverFn,
+                            [RoutingResolvers.DATASET_VIEW_METADATA_KEY]: datasetMetadataTabResolverFn,
+                        },
                         data: {
                             [ProjectLinks.URL_PARAM_TAB]: MetadataTabs.PollingSource,
                         },
@@ -108,6 +118,10 @@ export const DATASET_VIEW_ROUTES: Routes = [
                     {
                         path: MetadataTabs.License,
                         component: MetadataLicenseTabComponent,
+                        resolve: {
+                            [RoutingResolvers.METADATA_LICENSE_TAB_KEY]: metadataLicenseTabResolverFn,
+                            [RoutingResolvers.DATASET_VIEW_METADATA_KEY]: datasetMetadataTabResolverFn,
+                        },
                         data: {
                             [ProjectLinks.URL_PARAM_TAB]: MetadataTabs.License,
                         },
@@ -115,6 +129,10 @@ export const DATASET_VIEW_ROUTES: Routes = [
                     {
                         path: MetadataTabs.Watermark,
                         component: MetadataWatermarkTabComponent,
+                        resolve: {
+                            [RoutingResolvers.METADATA_WATERMARK_TAB_KEY]: metadataWatermarkTabResolverFn,
+                            [RoutingResolvers.DATASET_VIEW_METADATA_KEY]: datasetMetadataTabResolverFn,
+                        },
                         data: {
                             [ProjectLinks.URL_PARAM_TAB]: MetadataTabs.Watermark,
                         },
@@ -122,6 +140,10 @@ export const DATASET_VIEW_ROUTES: Routes = [
                     {
                         path: MetadataTabs.Transformation,
                         component: MetadataTransformationTabComponent,
+                        resolve: {
+                            [RoutingResolvers.METADATA_TRANSFORMATION_TAB_KEY]: metadataTransformationTabResolverFn,
+                            [RoutingResolvers.DATASET_VIEW_METADATA_KEY]: datasetMetadataTabResolverFn,
+                        },
                         data: {
                             [ProjectLinks.URL_PARAM_TAB]: MetadataTabs.Transformation,
                         },
@@ -129,6 +151,10 @@ export const DATASET_VIEW_ROUTES: Routes = [
                     {
                         path: MetadataTabs.PushSources,
                         component: MetadataPushSourcesTabComponent,
+                        resolve: {
+                            [RoutingResolvers.METADATA_PUSH_SOURCES_TAB_KEY]: metadataPushSourcesTabResolverFn,
+                            [RoutingResolvers.DATASET_VIEW_METADATA_KEY]: datasetMetadataTabResolverFn,
+                        },
                         data: {
                             [ProjectLinks.URL_PARAM_TAB]: MetadataTabs.PushSources,
                         },

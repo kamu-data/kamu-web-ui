@@ -7,7 +7,7 @@
 
 import { MaybeNullOrUndefined } from "../../../../../interface/app.types";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { OWL_DATE_TIME_FORMATS, OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
+import { DateTimeAdapter, OWL_DATE_TIME_FORMATS, OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
@@ -21,13 +21,17 @@ import { toZonedTime } from "date-fns-tz";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { MatDividerModule } from "@angular/material/divider";
+import { MomentDateTimeAdapter, OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 
 @Component({
     selector: "app-edit-watermark-modal",
     templateUrl: "./edit-watermark-modal.component.html",
     styleUrls: ["./edit-watermark-modal.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [{ provide: OWL_DATE_TIME_FORMATS, useValue: MY_MOMENT_FORMATS }],
+    providers: [
+        { provide: DateTimeAdapter, useClass: MomentDateTimeAdapter },
+        { provide: OWL_DATE_TIME_FORMATS, useValue: MY_MOMENT_FORMATS },
+    ],
     standalone: true,
     imports: [
         //-----//
@@ -37,6 +41,7 @@ import { MatDividerModule } from "@angular/material/divider";
         MatDividerModule,
         MatIconModule,
         OwlDateTimeModule,
+        OwlMomentDateTimeModule,
     ],
 })
 export class EditWatermarkModalComponent extends BaseComponent implements OnInit {

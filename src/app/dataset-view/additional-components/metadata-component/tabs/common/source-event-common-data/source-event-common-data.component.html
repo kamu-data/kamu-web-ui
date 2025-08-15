@@ -1,0 +1,64 @@
+<div class="d-flex flex-column gap-4">
+    <div class="position-relative border border-1 p-2 rounded-3 mt-4">
+        <span class="position-absolute text-muted group-box-label text-uppercase">Read</span>
+        <div class="mx-4" *ngIf="sourceEvent.read.__typename">
+            <app-block-row-data [tooltip]="'Determines where data is sourced from.'" [label]="'Type:'">
+                <span>{{ ReadSectionMapping[sourceEvent.read.__typename] }}</span>
+            </app-block-row-data>
+        </div>
+        <div class="mx-4" *ngIf="sourceEvent.read.schema && sourceEvent.read.schema.length > 0">
+            <app-block-row-data
+                [tooltip]="
+                    'A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.'
+                "
+                [label]="'Schema:'"
+            >
+                <app-schema-property [data]="sourceEvent.read.schema" />
+            </app-block-row-data>
+        </div>
+    </div>
+    <div *ngIf="sourceEvent.preprocess" class="position-relative border border-1 p-2 rounded-3">
+        <span class="position-absolute text-muted group-box-label text-uppercase">Preprocess</span>
+        <div class="mx-4">
+            <app-block-row-data
+                [tooltip]="'Identifier of the engine used for this transformation.'"
+                [label]="'Engine:'"
+            >
+                <app-engine-property [data]="sourceEvent.preprocess.engine" />
+            </app-block-row-data>
+        </div>
+
+        <div class="mx-4">
+            <app-block-row-data
+                [tooltip]="'Queries use for specifying multi-step SQL transformations.'"
+                [label]="'Queries:'"
+            >
+            </app-block-row-data>
+            <div class="row my-4">
+                <app-sql-query-viewer [data]="sourceEvent.preprocess.queries" />
+            </div>
+        </div>
+    </div>
+    <div class="position-relative border border-1 p-2 rounded-3">
+        <span class="position-absolute text-muted group-box-label text-uppercase">Merge</span>
+        <div class="mx-4" *ngIf="sourceEvent.merge.__typename">
+            <app-block-row-data
+                [tooltip]="
+                    'Merge strategy determines how newly ingested data should be combined with the data that already exists in the dataset.'
+                "
+                [label]="'Strategy:'"
+            >
+                <app-merge-strategy-property [data]="sourceEvent.merge.__typename" />
+            </app-block-row-data>
+        </div>
+
+        <div class="mx-4" *ngIf="sourceEvent.merge.__typename === 'MergeStrategyLedger'">
+            <app-block-row-data
+                [tooltip]="'Names of the columns that uniquely identify the record throughout its lifetime.'"
+                [label]="'Primary key:'"
+            >
+                <app-cards-property [data]="sourceEvent.merge.primaryKey" />
+            </app-block-row-data>
+        </div>
+    </div>
+</div>

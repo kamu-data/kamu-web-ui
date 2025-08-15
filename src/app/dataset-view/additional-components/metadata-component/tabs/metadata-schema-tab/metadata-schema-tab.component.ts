@@ -5,13 +5,17 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { NgIf } from "@angular/common";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetSchema } from "src/app/interface/dataset.interface";
 import { BlockRowDataComponent } from "src/app/common/components/block-row-data/block-row-data.component";
 import { DynamicTableComponent } from "src/app/common/components/dynamic-table/dynamic-table.component";
+import { MatIconModule } from "@angular/material/icon";
+import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
+import { isNil, promiseWithCatch } from "src/app/common/helpers/app.helpers";
+import { ModalService } from "src/app/common/components/modal/modal.service";
 
 @Component({
     selector: "app-metadata-schema-tab",
@@ -19,6 +23,9 @@ import { DynamicTableComponent } from "src/app/common/components/dynamic-table/d
     imports: [
         //-----//
         NgIf,
+
+        //-----//
+        MatIconModule,
 
         //-----//
         BlockRowDataComponent,
@@ -30,4 +37,20 @@ import { DynamicTableComponent } from "src/app/common/components/dynamic-table/d
 })
 export class MetadataSchemaTabComponent {
     @Input(RoutingResolvers.METADATA_SCHEMA_TAB_KEY) public schema: MaybeNull<DatasetSchema>;
+    @Input(RoutingResolvers.DATASET_VIEW_METADATA_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
+
+    private modalService = inject(ModalService);
+
+    public get canEditSchema(): boolean {
+        return !isNil(this.schema) && this.datasetMetadataTabData.datasetPermissions.permissions.metadata.canCommit;
+    }
+
+    public onEditSchema(): void {
+        promiseWithCatch(
+            this.modalService.warning({
+                message: "Feature coming soon",
+                yesButtonText: "Ok",
+            }),
+        );
+    }
 }

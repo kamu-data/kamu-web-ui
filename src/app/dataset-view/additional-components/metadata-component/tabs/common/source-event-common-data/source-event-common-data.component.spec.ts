@@ -6,17 +6,17 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MetadataPushSourcesTabComponent } from "./metadata-push-sources-tab.component";
+import { SourceEventCommonDataComponent } from "./source-event-common-data.component";
 
-describe("MetadataPushSourcesTabComponent", () => {
-    let component: MetadataPushSourcesTabComponent;
-    let fixture: ComponentFixture<MetadataPushSourcesTabComponent>;
+describe("SourceEventCommonDataComponent", () => {
+    let component: SourceEventCommonDataComponent;
+    let fixture: ComponentFixture<SourceEventCommonDataComponent>;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [MetadataPushSourcesTabComponent],
+            imports: [SourceEventCommonDataComponent],
         });
-        fixture = TestBed.createComponent(MetadataPushSourcesTabComponent);
+        fixture = TestBed.createComponent(SourceEventCommonDataComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

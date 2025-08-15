@@ -53,100 +53,27 @@
         >
             <div class="sidebar mt-3">
                 <ul class="action-list">
-                    <li
-                        class="action-list-item"
-                        [ngClass]="{
-                            'action-list-item__nav-active': activeTab === MetadataTabs.SCHEMA,
-                        }"
-                        (click)="setActiveTab(MetadataTabs.SCHEMA)"
-                    >
-                        <a routerLinkActive="active">
-                            <span class="action-list-item__label d-flex align-items-center">
-                                <mat-icon class="text-muted me-2" svgIcon="table-chart-outline" />
-                                Schema</span
-                            ></a
+                    <ng-container *ngFor="let menuItem of METADATA_MENU_DESCRIPTORS">
+                        <li
+                            class="action-list-item"
+                            [ngClass]="{
+                                'action-list-item__nav-active': activeTab === menuItem.activeTab,
+                            }"
+                            *ngIf="getVisibilityMenuItem(menuItem.activeTab)"
                         >
-                    </li>
-                    <li
-                        class="action-list-item"
-                        *ngIf="currentPollingSource"
-                        [ngClass]="{
-                            'action-list-item__nav-active': activeTab === MetadataTabs.POLLING_SOURCE,
-                        }"
-                        (click)="setActiveTab(MetadataTabs.POLLING_SOURCE)"
-                    >
-                        <a routerLinkActive="active">
-                            <span class="action-list-item__label d-flex align-items-center">
-                                <mat-icon class="text-muted me-2" svgIcon="source_notes" />
-
-                                Polling source</span
-                            ></a
-                        >
-                    </li>
-                    <li
-                        class="action-list-item"
-                        *ngIf="currentPushSources?.length"
-                        [ngClass]="{
-                            'action-list-item__nav-active': activeTab === MetadataTabs.PUSH_SOURCES,
-                        }"
-                        (click)="setActiveTab(MetadataTabs.PUSH_SOURCES)"
-                    >
-                        <a routerLinkActive="active">
-                            <span class="action-list-item__label d-flex align-items-center">
-                                <mat-icon class="text-muted me-2" svgIcon="enable" />
-                                Push sources</span
-                            ></a
-                        >
-                    </li>
-                    <li
-                        class="action-list-item"
-                        *ngIf="currentTransform"
-                        [ngClass]="{
-                            'action-list-item__nav-active': activeTab === MetadataTabs.TRANSFORM,
-                        }"
-                        (click)="setActiveTab(MetadataTabs.TRANSFORM)"
-                    >
-                        <a routerLinkActive="active">
-                            <span class="action-list-item__label d-flex align-items-center">
-                                <mat-icon class="text-muted me-2" svgIcon="tree-structure" />
-                                Transformation</span
-                            ></a
-                        >
-                    </li>
-                    <li
-                        class="action-list-item"
-                        [ngClass]="{
-                            'action-list-item__nav-active': activeTab === MetadataTabs.LICENSE,
-                        }"
-                        (click)="setActiveTab(MetadataTabs.LICENSE)"
-                    >
-                        <a routerLinkActive="active">
-                            <span class="action-list-item__label d-flex align-items-center">
-                                <mat-icon class="text-muted me-2" svgIcon="receipt_long" />
-                                License</span
-                            ></a
-                        >
-                    </li>
-                    <li
-                        class="action-list-item"
-                        [ngClass]="{
-                            'action-list-item__nav-active': activeTab === MetadataTabs.WATERMARK,
-                        }"
-                        (click)="setActiveTab(MetadataTabs.WATERMARK)"
-                    >
-                        <a routerLinkActive="active">
-                            <span class="action-list-item__label d-flex align-items-center">
-                                <mat-icon class="text-muted me-2" svgIcon="timeline" />
-
-                                Watermark</span
-                            ></a
-                        >
-                    </li>
+                            <a routerLinkActive="active" [routerLink]="getRouteLink(menuItem.activeTab)">
+                                <span class="action-list-item__label d-flex align-items-center">
+                                    <mat-icon class="text-muted me-2" [svgIcon]="menuItem.iconName" />
+                                    {{ menuItem.label }}</span
+                                ></a
+                            >
+                        </li>
+                    </ng-container>
                 </ul>
             </div>
             <div class="content sidebar my-4">
                 <div>
-                    <ng-container *ngIf="activeTab === MetadataTabs.SCHEMA">
+                    <!-- <ng-container *ngIf="activeTab === MetadataTabs.SCHEMA">
                         <div
                             class="position-relative border border-1 p-2 rounded-3"
                             *ngIf="currentState && currentState.schema; else noSchema"
@@ -458,9 +385,9 @@
                             </div>
                         </div>
                         <ng-template #noWatermark>There is no watermark</ng-template>
-                    </ng-container>
+                    </ng-container> -->
 
-                    <!-- <router-outlet></router-outlet> -->
+                    <router-outlet></router-outlet>
                 </div>
             </div>
         </div>

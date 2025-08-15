@@ -1,0 +1,21 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { MetadataLicenseTabComponent } from './metadata-license-tab.component';
+
+describe('MetadataLicenseTabComponent', () => {
+  let component: MetadataLicenseTabComponent;
+  let fixture: ComponentFixture<MetadataLicenseTabComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [MetadataLicenseTabComponent]
+    });
+    fixture = TestBed.createComponent(MetadataLicenseTabComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

@@ -23,6 +23,15 @@ import { DatasetViewComponent } from "./dataset-view.component";
 import { datasetViewResolverFn } from "./resolvers/dataset-view.resolver";
 import { datasetViewActiveTabResolverFn } from "./resolvers/dataset-view-active-tab.resolver";
 import { OverviewComponent } from "./additional-components/overview-component/overview.component";
+import { MetadataSchemaTabComponent } from "./additional-components/metadata-component/tabs/metadata-schema-tab/metadata-schema-tab.component";
+import { MetadataTabs } from "./additional-components/metadata-component/metadata.constants";
+import { MetadataPollingSourceTabComponent } from "./additional-components/metadata-component/tabs/metadata-polling-source-tab/metadata-polling-source-tab.component";
+import { metadataActiveTabResolverFn } from "./additional-components/metadata-component/resolver/metadata-active-tab.resolver";
+import { MetadataLicenseTabComponent } from "./additional-components/metadata-component/tabs/metadata-license-tab/metadata-license-tab.component";
+import { MetadataWatermarkTabComponent } from "./additional-components/metadata-component/tabs/metadata-watermark-tab/metadata-watermark-tab.component";
+import { MetadataTransformationTabComponent } from "./additional-components/metadata-component/tabs/metadata-transformation-tab/metadata-transformation-tab.component";
+import { MetadataPushSourcesTabComponent } from "./additional-components/metadata-component/tabs/metadata-push-sources-tab/metadata-push-sources-tab.component";
+import { metadataSchemaTabResolverFn } from "./additional-components/metadata-component/tabs/metadata-schema-tab/resolvers/metadata-schema-tab.resolver";
 
 export const DATASET_VIEW_ROUTES: Routes = [
     {
@@ -69,7 +78,62 @@ export const DATASET_VIEW_ROUTES: Routes = [
                 data: {
                     [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Metadata,
                 },
-                resolve: { [RoutingResolvers.DATASET_VIEW_METADATA_KEY]: datasetMetadataTabResolverFn },
+                resolve: {
+                    [RoutingResolvers.DATASET_VIEW_METADATA_KEY]: datasetMetadataTabResolverFn,
+                    [RoutingResolvers.DATASET_METADATA_ACTIVE_TAB_KEY]: metadataActiveTabResolverFn,
+                },
+                children: [
+                    {
+                        path: "",
+                        redirectTo: MetadataTabs.Schema,
+                        pathMatch: "full",
+                    },
+                    {
+                        path: MetadataTabs.Schema,
+                        component: MetadataSchemaTabComponent,
+                        resolve: {
+                            [RoutingResolvers.METADATA_SCHEMA_TAB_KEY]: metadataSchemaTabResolverFn,
+                        },
+                        data: {
+                            [ProjectLinks.URL_PARAM_TAB]: MetadataTabs.Schema,
+                        },
+                    },
+                    {
+                        path: MetadataTabs.PollingSource,
+                        component: MetadataPollingSourceTabComponent,
+                        data: {
+                            [ProjectLinks.URL_PARAM_TAB]: MetadataTabs.PollingSource,
+                        },
+                    },
+                    {
+                        path: MetadataTabs.License,
+                        component: MetadataLicenseTabComponent,
+                        data: {
+                            [ProjectLinks.URL_PARAM_TAB]: MetadataTabs.License,
+                        },
+                    },
+                    {
+                        path: MetadataTabs.Watermark,
+                        component: MetadataWatermarkTabComponent,
+                        data: {
+                            [ProjectLinks.URL_PARAM_TAB]: MetadataTabs.Watermark,
+                        },
+                    },
+                    {
+                        path: MetadataTabs.Transformation,
+                        component: MetadataTransformationTabComponent,
+                        data: {
+                            [ProjectLinks.URL_PARAM_TAB]: MetadataTabs.Transformation,
+                        },
+                    },
+                    {
+                        path: MetadataTabs.PushSources,
+                        component: MetadataPushSourcesTabComponent,
+                        data: {
+                            [ProjectLinks.URL_PARAM_TAB]: MetadataTabs.PushSources,
+                        },
+                    },
+                ],
             },
             {
                 path: DatasetViewTypeEnum.History,

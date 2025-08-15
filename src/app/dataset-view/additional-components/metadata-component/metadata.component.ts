@@ -26,11 +26,11 @@ import { ModalService } from "src/app/common/components/modal/modal.service";
 import ProjectLinks from "src/app/project-links";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { DatasetOverviewTabData } from "../../dataset-view.interface";
+import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { CardsPropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
 import { MergeStrategyPropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/merge-strategy-property/merge-strategy-property.component";
 import { SchemaPropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/schema-property/schema-property.component";
-import { RouterLink } from "@angular/router";
+import { RouterLink, RouterOutlet } from "@angular/router";
 import { SqlQueryViewerComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/sql-query-viewer/sql-query-viewer.component";
 import { EnginePropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/engine-property/engine-property.component";
 import { OwnerPropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/owner-property/owner-property.component";
@@ -44,7 +44,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { CommitNavigatorComponent } from "./components/commit-navigator/commit-navigator.component";
 import { FeatureFlagDirective } from "../../../common/directives/feature-flag.directive";
 import { NgIf, NgFor, NgTemplateOutlet, TitleCasePipe, NgClass } from "@angular/common";
-import { MetadataTabs } from "./metadata.types";
+import { METADATA_TAB_MENU_ITEMS, MetadataMenuItem, MetadataTabs } from "./metadata.constants";
 
 @Component({
     selector: "app-metadata",
@@ -58,6 +58,7 @@ import { MetadataTabs } from "./metadata.types";
         NgFor,
         NgTemplateOutlet,
         RouterLink,
+        RouterOutlet,
         TitleCasePipe,
         NgClass,
 
@@ -83,9 +84,10 @@ import { MetadataTabs } from "./metadata.types";
 })
 export class MetadataComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_VIEW_METADATA_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
+    @Input(RoutingResolvers.DATASET_METADATA_ACTIVE_TAB_KEY) public activeTab: MetadataTabs;
     @Output() public pageChangeEmit = new EventEmitter<number>();
 
-    public activeTab: MetadataTabs = MetadataTabs.SCHEMA;
+    public readonly METADATA_MENU_DESCRIPTORS: MetadataMenuItem[] = METADATA_TAB_MENU_ITEMS;
     public readonly MetadataTabs: typeof MetadataTabs = MetadataTabs;
 
     public readonly ReadSectionMapping: Record<string, string> = {
@@ -122,12 +124,35 @@ export class MetadataComponent extends BaseComponent implements OnInit {
             });
     }
 
+    public getRouteLink(tab: MetadataTabs): string {
+        return `/${this.datasetMetadataTabData.datasetBasics.owner.accountName}/${this.datasetMetadataTabData.datasetBasics.name}/${DatasetViewTypeEnum.Metadata}/${tab}`;
+    }
+
+    public getVisibilityMenuItem(tab: MetadataTabs): boolean {
+        switch (tab) {
+            case MetadataTabs.PollingSource:
+                return Boolean(this.currentPollingSource);
+            case MetadataTabs.PushSources:
+                return Boolean(this.currentPushSources?.length);
+            case MetadataTabs.Transformation:
+                return Boolean(this.currentTransform);
+            case MetadataTabs.Watermark:
+                return this.isRoot;
+            default:
+                return true;
+        }
+    }
+
     public onPageChange(currentPage: number): void {
         this.pageChangeEmit.emit(currentPage);
     }
 
     public get currentPage(): number {
         return this.currentState ? this.currentState.pageInfo.currentPage + 1 : 1;
+    }
+
+    public get isRoot(): boolean {
+        return this.datasetMetadataTabData.datasetBasics.kind === DatasetKind.Root;
     }
 
     public get totalPages(): number {

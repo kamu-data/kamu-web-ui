@@ -36,10 +36,13 @@ import { ModalService } from "src/app/common/components/modal/modal.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataSchemaTabComponent {
-    @Input(RoutingResolvers.METADATA_SCHEMA_TAB_KEY) public schema: MaybeNull<DatasetSchema>;
-    @Input(RoutingResolvers.DATASET_VIEW_METADATA_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
+    @Input(RoutingResolvers.METADATA_SCHEMA_TAB_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
 
     private modalService = inject(ModalService);
+
+    public get schema(): MaybeNull<DatasetSchema> {
+        return this.datasetMetadataTabData.overviewUpdate.schema;
+    }
 
     public get canEditSchema(): boolean {
         return !isNil(this.schema) && this.datasetMetadataTabData.datasetPermissions.permissions.metadata.canCommit;

@@ -40,12 +40,15 @@ import { SourceEventCommonDataComponent } from "../common/source-event-common-da
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataPushSourcesTabComponent {
-    @Input(RoutingResolvers.METADATA_PUSH_SOURCES_TAB_KEY)
-    public pushSources: MaybeNullOrUndefined<AddPushSourceEventFragment[]>;
-    @Input(RoutingResolvers.DATASET_VIEW_METADATA_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
+    @Input(RoutingResolvers.METADATA_PUSH_SOURCES_TAB_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
 
     private modalService = inject(ModalService);
     private navigationService = inject(NavigationService);
+
+    public get pushSources(): MaybeNullOrUndefined<AddPushSourceEventFragment[]> {
+        return this.datasetMetadataTabData.overviewUpdate.overview.metadata
+            .currentPushSources as AddPushSourceEventFragment[];
+    }
 
     public get canEditAddPushSource(): boolean {
         return (

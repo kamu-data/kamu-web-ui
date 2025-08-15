@@ -43,12 +43,15 @@ import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.dir
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataPollingSourceTabComponent {
-    @Input(RoutingResolvers.METADATA_POLLING_SOURCE_TAB_KEY)
-    public pollingSource: MaybeNullOrUndefined<SetPollingSourceEventFragment>;
-    @Input(RoutingResolvers.DATASET_VIEW_METADATA_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
+    @Input(RoutingResolvers.METADATA_POLLING_SOURCE_TAB_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
 
     private modalService = inject(ModalService);
     private navigationService = inject(NavigationService);
+
+    public get pollingSource(): MaybeNullOrUndefined<SetPollingSourceEventFragment> {
+        return this.datasetMetadataTabData.overviewUpdate.overview.metadata
+            .currentPollingSource as SetPollingSourceEventFragment;
+    }
 
     public get canEditSetPollingSource(): boolean {
         return (

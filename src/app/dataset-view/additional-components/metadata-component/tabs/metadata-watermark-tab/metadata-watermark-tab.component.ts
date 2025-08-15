@@ -38,10 +38,13 @@ import { EditWatermarkModalComponent } from "../../../overview-component/compone
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataWatermarkTabComponent {
-    @Input(RoutingResolvers.METADATA_WATERMARK_TAB_KEY) public watermark: MaybeNullOrUndefined<string>;
-    @Input(RoutingResolvers.DATASET_VIEW_METADATA_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
+    @Input(RoutingResolvers.METADATA_WATERMARK_TAB_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
 
     private ngbModalService = inject(NgbModal);
+
+    public get watermark(): MaybeNullOrUndefined<string> {
+        return this.datasetMetadataTabData.overviewUpdate.overview.metadata.currentWatermark;
+    }
 
     public get canEditWatermark(): boolean {
         return !isNil(this.watermark) && this.datasetMetadataTabData.datasetPermissions.permissions.metadata.canCommit;

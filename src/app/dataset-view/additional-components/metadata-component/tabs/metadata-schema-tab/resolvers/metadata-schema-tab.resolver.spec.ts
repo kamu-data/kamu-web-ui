@@ -7,13 +7,12 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ResolveFn } from "@angular/router";
-
 import { metadataSchemaTabResolverFn } from "./metadata-schema-tab.resolver";
 import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetSchema } from "src/app/interface/dataset.interface";
+import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 
 describe("metadataSchemaTabResolver", () => {
-    const executeResolver: ResolveFn<MaybeNull<DatasetSchema>> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<MaybeNull<DatasetOverviewTabData>> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => metadataSchemaTabResolverFn(...resolverParameters));
 
     beforeEach(() => {

@@ -8,11 +8,10 @@
 import { TestBed } from "@angular/core/testing";
 import { ResolveFn } from "@angular/router";
 import { metadataPushSourcesTabResolverFn } from "./metadata-push-sources-tab.resolver";
-import { AddPushSourceEventFragment } from "src/app/api/kamu.graphql.interface";
-import { MaybeNullOrUndefined } from "src/app/interface/app.types";
+import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 
 describe("metadataPushSourcesTabComponentResolver", () => {
-    const executeResolver: ResolveFn<MaybeNullOrUndefined<AddPushSourceEventFragment[]>> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<DatasetOverviewTabData | null> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => metadataPushSourcesTabResolverFn(...resolverParameters));
 
     beforeEach(() => {

@@ -7,16 +7,33 @@
 
 import { inject } from "@angular/core";
 import { ResolveFn } from "@angular/router";
-import { map } from "rxjs";
-import { SetPollingSourceEventFragment } from "src/app/api/kamu.graphql.interface";
+import { combineLatest, map } from "rxjs";
+import { DatasetKind } from "src/app/api/kamu.graphql.interface";
+import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { MaybeNullOrUndefined } from "src/app/interface/app.types";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { NavigationService } from "src/app/services/navigation.service";
 
-export const metadataPollingSourceTabResolverFn: ResolveFn<
-    MaybeNullOrUndefined<SetPollingSourceEventFragment>
-> = () => {
+export const metadataPollingSourceTabResolverFn: ResolveFn<DatasetOverviewTabData | null> = () => {
+    const datasetService = inject(DatasetService);
     const datasetSubsService = inject(DatasetSubscriptionsService);
-    return datasetSubsService.metadataSchemaChanges.pipe(
-        map((data) => data.metadataSummary.metadata.currentPollingSource),
+    const navigationService = inject(NavigationService);
+
+    return combineLatest([
+        datasetService.datasetChanges,
+        datasetSubsService.permissionsChanges,
+        datasetSubsService.overviewChanges,
+    ]).pipe(
+        map(([datasetBasics, datasetPermissions, overviewUpdate]) => {
+            if (datasetBasics.kind === DatasetKind.Derivative) {
+                navigationService.navigateToPageNotFound();
+                return null;
+            }
+            return {
+                datasetBasics,
+                datasetPermissions,
+                overviewUpdate,
+            };
+        }),
     );
 };

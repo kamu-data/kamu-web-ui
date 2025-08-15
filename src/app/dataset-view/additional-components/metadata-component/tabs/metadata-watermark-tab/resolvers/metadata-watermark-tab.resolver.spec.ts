@@ -9,9 +9,10 @@ import { TestBed } from "@angular/core/testing";
 import { ResolveFn } from "@angular/router";
 import { metadataWatermarkTabResolverFn } from "./metadata-watermark-tab.resolver";
 import { MaybeNullOrUndefined } from "src/app/interface/app.types";
+import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 
 describe("metadataWatermarkTabResolver", () => {
-    const executeResolver: ResolveFn<MaybeNullOrUndefined<string>> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<MaybeNullOrUndefined<DatasetOverviewTabData | null>> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => metadataWatermarkTabResolverFn(...resolverParameters));
 
     beforeEach(() => {

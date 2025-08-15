@@ -98,7 +98,7 @@ export const DATASET_VIEW_ROUTES: Routes = [
                         component: MetadataSchemaTabComponent,
                         resolve: {
                             [RoutingResolvers.METADATA_SCHEMA_TAB_KEY]: metadataSchemaTabResolverFn,
-                            [RoutingResolvers.DATASET_VIEW_METADATA_KEY]: datasetMetadataTabResolverFn,
+                            // [RoutingResolvers.DATASET_VIEW_METADATA_KEY]: datasetMetadataTabResolverFn,
                         },
                         data: {
                             [ProjectLinks.URL_PARAM_TAB]: MetadataTabs.Schema,
@@ -109,8 +109,9 @@ export const DATASET_VIEW_ROUTES: Routes = [
                         component: MetadataPollingSourceTabComponent,
                         resolve: {
                             [RoutingResolvers.METADATA_POLLING_SOURCE_TAB_KEY]: metadataPollingSourceTabResolverFn,
-                            [RoutingResolvers.DATASET_VIEW_METADATA_KEY]: datasetMetadataTabResolverFn,
+                            // [RoutingResolvers.DATASET_VIEW_METADATA_KEY]: datasetMetadataTabResolverFn,
                         },
+
                         data: {
                             [ProjectLinks.URL_PARAM_TAB]: MetadataTabs.PollingSource,
                         },
@@ -142,7 +143,7 @@ export const DATASET_VIEW_ROUTES: Routes = [
                         component: MetadataTransformationTabComponent,
                         resolve: {
                             [RoutingResolvers.METADATA_TRANSFORMATION_TAB_KEY]: metadataTransformationTabResolverFn,
-                            [RoutingResolvers.DATASET_VIEW_METADATA_KEY]: datasetMetadataTabResolverFn,
+                            // [RoutingResolvers.DATASET_VIEW_METADATA_KEY]: datasetMetadataTabResolverFn,
                         },
                         data: {
                             [ProjectLinks.URL_PARAM_TAB]: MetadataTabs.Transformation,
@@ -153,7 +154,7 @@ export const DATASET_VIEW_ROUTES: Routes = [
                         component: MetadataPushSourcesTabComponent,
                         resolve: {
                             [RoutingResolvers.METADATA_PUSH_SOURCES_TAB_KEY]: metadataPushSourcesTabResolverFn,
-                            [RoutingResolvers.DATASET_VIEW_METADATA_KEY]: datasetMetadataTabResolverFn,
+                            // [RoutingResolvers.DATASET_VIEW_METADATA_KEY]: datasetMetadataTabResolverFn,
                         },
                         data: {
                             [ProjectLinks.URL_PARAM_TAB]: MetadataTabs.PushSources,

@@ -7,12 +7,32 @@
 
 import { inject } from "@angular/core";
 import { ResolveFn } from "@angular/router";
-import { map } from "rxjs";
-import { DatasetTransformFragment } from "src/app/api/kamu.graphql.interface";
+import { combineLatest, map } from "rxjs";
+import { DatasetKind } from "src/app/api/kamu.graphql.interface";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { MaybeNullOrUndefined } from "src/app/interface/app.types";
+import { NavigationService } from "src/app/services/navigation.service";
+import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 
-export const metadataTransformationTabResolverFn: ResolveFn<MaybeNullOrUndefined<DatasetTransformFragment>> = () => {
+export const metadataTransformationTabResolverFn: ResolveFn<DatasetOverviewTabData | null> = () => {
+    const datasetService = inject(DatasetService);
     const datasetSubsService = inject(DatasetSubscriptionsService);
-    return datasetSubsService.metadataSchemaChanges.pipe(map((data) => data.metadataSummary.metadata.currentTransform));
+    const navigationService = inject(NavigationService);
+    return combineLatest([
+        datasetService.datasetChanges,
+        datasetSubsService.permissionsChanges,
+        datasetSubsService.overviewChanges,
+    ]).pipe(
+        map(([datasetBasics, datasetPermissions, overviewUpdate]) => {
+            if (datasetBasics.kind === DatasetKind.Root) {
+                navigationService.navigateToPageNotFound();
+                return null;
+            }
+            return {
+                datasetBasics,
+                datasetPermissions,
+                overviewUpdate,
+            };
+        }),
+    );
 };

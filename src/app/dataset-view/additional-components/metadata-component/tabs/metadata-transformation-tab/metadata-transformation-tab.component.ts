@@ -45,11 +45,14 @@ import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.dir
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataTransformationTabComponent {
-    @Input(RoutingResolvers.METADATA_TRANSFORMATION_TAB_KEY)
-    public transformation: MaybeNullOrUndefined<DatasetTransformFragment>;
-    @Input(RoutingResolvers.DATASET_VIEW_METADATA_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
+    @Input(RoutingResolvers.METADATA_TRANSFORMATION_TAB_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
 
     private navigationService = inject(NavigationService);
+
+    public get transformation(): MaybeNullOrUndefined<DatasetTransformFragment> {
+        return this.datasetMetadataTabData.overviewUpdate.overview.metadata
+            .currentTransform as DatasetTransformFragment;
+    }
 
     public get canEditSetTransform(): boolean {
         return (

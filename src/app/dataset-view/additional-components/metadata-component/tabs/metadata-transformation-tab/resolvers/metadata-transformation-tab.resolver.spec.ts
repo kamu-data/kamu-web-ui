@@ -8,11 +8,11 @@
 import { TestBed } from "@angular/core/testing";
 import { ResolveFn } from "@angular/router";
 import { metadataTransformationTabResolverFn } from "./metadata-transformation-tab.resolver";
-import { DatasetTransformFragment } from "src/app/api/kamu.graphql.interface";
 import { MaybeNullOrUndefined } from "src/app/interface/app.types";
+import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 
 describe("metadataTransformationTabResolver", () => {
-    const executeResolver: ResolveFn<MaybeNullOrUndefined<DatasetTransformFragment>> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<MaybeNullOrUndefined<DatasetOverviewTabData | null>> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => metadataTransformationTabResolverFn(...resolverParameters));
 
     beforeEach(() => {

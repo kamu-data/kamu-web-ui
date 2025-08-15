@@ -8,11 +8,11 @@
 import { TestBed } from "@angular/core/testing";
 import { ResolveFn } from "@angular/router";
 import { metadataPollingSourceTabResolverFn } from "./metadata-polling-source-tab.resolver";
-import { SetPollingSourceEventFragment } from "src/app/api/kamu.graphql.interface";
 import { MaybeNullOrUndefined } from "src/app/interface/app.types";
+import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 
 describe("metadataPollingSourceTabResolver", () => {
-    const executeResolver: ResolveFn<MaybeNullOrUndefined<SetPollingSourceEventFragment>> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<MaybeNullOrUndefined<DatasetOverviewTabData | null>> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => metadataPollingSourceTabResolverFn(...resolverParameters));
 
     beforeEach(() => {

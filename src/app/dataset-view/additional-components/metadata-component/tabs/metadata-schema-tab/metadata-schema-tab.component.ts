@@ -32,7 +32,6 @@ import { ModalService } from "src/app/common/components/modal/modal.service";
         DynamicTableComponent,
     ],
     templateUrl: "./metadata-schema-tab.component.html",
-    styleUrls: ["./metadata-schema-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataSchemaTabComponent {

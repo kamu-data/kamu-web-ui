@@ -32,7 +32,6 @@ import { EditWatermarkModalComponent } from "../../../overview-component/compone
         DisplayTimeComponent,
     ],
     templateUrl: "./metadata-watermark-tab.component.html",
-    styleUrls: ["./metadata-watermark-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataWatermarkTabComponent {

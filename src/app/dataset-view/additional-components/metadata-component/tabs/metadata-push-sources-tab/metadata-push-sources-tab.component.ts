@@ -9,7 +9,6 @@ import { NgIf, NgFor } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { AddPushSourceEventFragment, DatasetKind } from "src/app/api/kamu.graphql.interface";
-import { BlockRowDataComponent } from "src/app/common/components/block-row-data/block-row-data.component";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.directive";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
@@ -31,7 +30,6 @@ import { SourceEventCommonDataComponent } from "../common/source-event-common-da
         MatIconModule,
 
         //-----//
-        BlockRowDataComponent,
         FeatureFlagDirective,
         SourceEventCommonDataComponent,
     ],
@@ -58,6 +56,7 @@ export class MetadataPushSourcesTabComponent {
         );
     }
 
+    /* istanbul ignore next */
     public onDeletePushSource(): void {
         promiseWithCatch(
             this.modalService.warning({

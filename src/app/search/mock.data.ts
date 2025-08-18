@@ -138,7 +138,7 @@ export const mockMetadataCurrentInfo: DatasetCurrentInfoFragment = {
     ],
 };
 
-const mockMetadataCurrentLicense: LicenseFragment = {
+export const mockMetadataCurrentLicense: LicenseFragment = {
     __typename: "SetLicense",
     shortName: "OGL-Canada-2.0",
     name: "Open Government Licence - Canada",

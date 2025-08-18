@@ -179,6 +179,7 @@ export function registerMatSvgIcons(): void {
         "timeline",
         "source_notes",
         "enable",
+        "add",
         "configuration",
     ];
     icons.forEach((icon: string) => {

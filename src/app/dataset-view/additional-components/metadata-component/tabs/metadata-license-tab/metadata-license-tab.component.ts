@@ -13,11 +13,9 @@ import { MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { LicenseFragment } from "src/app/api/kamu.graphql.interface";
 import { LinkPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/link-property/link-property.component";
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
-import { isNil } from "src/app/common/helpers/app.helpers";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { EditLicenseModalComponent } from "../../../overview-component/components/edit-license-modal/edit-license-modal.component";
 import { MatIconModule } from "@angular/material/icon";
-import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.directive";
 
 @Component({
     selector: "app-metadata-license-tab",
@@ -31,7 +29,6 @@ import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.dir
 
         //-----//
         BlockRowDataComponent,
-        FeatureFlagDirective,
         LinkPropertyComponent,
     ],
     templateUrl: "./metadata-license-tab.component.html",
@@ -47,7 +44,7 @@ export class MetadataLicenseTabComponent {
     }
 
     public get canEditLicense(): boolean {
-        return !isNil(this.license) && this.datasetMetadataTabData.datasetPermissions.permissions.metadata.canCommit;
+        return this.datasetMetadataTabData.datasetPermissions.permissions.metadata.canCommit;
     }
 
     public onEditLicense(): void {

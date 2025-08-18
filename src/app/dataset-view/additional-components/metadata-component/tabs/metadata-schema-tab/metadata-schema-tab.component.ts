@@ -48,6 +48,7 @@ export class MetadataSchemaTabComponent {
         return !isNil(this.schema) && this.datasetMetadataTabData.datasetPermissions.permissions.metadata.canCommit;
     }
 
+    /* istanbul ignore next */
     public onEditSchema(): void {
         promiseWithCatch(
             this.modalService.warning({

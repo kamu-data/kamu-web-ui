@@ -12,7 +12,6 @@ import { MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { BlockRowDataComponent } from "src/app/common/components/block-row-data/block-row-data.component";
 import { DisplayTimeComponent } from "src/app/common/components/display-time/display-time.component";
 import { MatIconModule } from "@angular/material/icon";
-import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.directive";
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { isNil } from "src/app/common/helpers/app.helpers";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
@@ -31,7 +30,6 @@ import { EditWatermarkModalComponent } from "../../../overview-component/compone
         //-----//
         BlockRowDataComponent,
         DisplayTimeComponent,
-        FeatureFlagDirective,
     ],
     templateUrl: "./metadata-watermark-tab.component.html",
     styleUrls: ["./metadata-watermark-tab.component.scss"],

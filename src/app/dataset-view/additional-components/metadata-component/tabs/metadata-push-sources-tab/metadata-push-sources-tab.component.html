@@ -2,7 +2,9 @@
     <div class="position-relative border border-1 p-4 rounded-3 mb-4" *ngFor="let source of pushSources; let i = index">
         <span class="position-absolute text-muted group-box-label text-uppercase"
             >#{{ i + 1 }} Push source &lt;
-            <span class="text-normal text-muted fs-10"> {{ !source.sourceName ? "default" : source.sourceName }}</span>
+            <span class="text-normal text-muted fs-10" [attr.data-test-id]="'source-name-' + i">
+                {{ !source.sourceName ? "default" : source.sourceName }}</span
+            >
             &gt;</span
         >
         <div class="d-flex justify-content-end" *ngIf="canEditAddPushSource">

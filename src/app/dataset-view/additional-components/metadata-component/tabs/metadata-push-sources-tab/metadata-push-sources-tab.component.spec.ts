@@ -7,21 +7,59 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MetadataPushSourcesTabComponent } from "./metadata-push-sources-tab.component";
+import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { mockFullPowerDatasetPermissionsFragment, mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
+import { mockMetadataDerivedUpdate, mockOverviewDataUpdate, mockOverviewUpdate } from "../../../data-tabs.mock";
+import { NavigationService } from "src/app/services/navigation.service";
+import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
 describe("MetadataPushSourcesTabComponent", () => {
     let component: MetadataPushSourcesTabComponent;
     let fixture: ComponentFixture<MetadataPushSourcesTabComponent>;
+    let navigationService: NavigationService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [MetadataPushSourcesTabComponent],
+            imports: [MetadataPushSourcesTabComponent, HttpClientTestingModule, SharedTestModule],
         });
         fixture = TestBed.createComponent(MetadataPushSourcesTabComponent);
+        navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
+
+        component.datasetMetadataTabData = {
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            overviewUpdate: {
+                schema: mockMetadataDerivedUpdate.schema,
+                content: mockOverviewDataUpdate.content,
+                overview: mockOverviewUpdate.overview,
+                size: mockOverviewDataUpdate.size,
+            } as OverviewUpdate,
+        };
+        registerMatSvgIcons();
         fixture.detectChanges();
     });
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should check navigate to edit AddPushSource event with source name", () => {
+        const navigateToAddPollingSourceSpy = spyOn(navigationService, "navigateToAddPushSource");
+        component.datasetMetadataTabData.datasetBasics = mockDatasetBasicsRootFragment;
+
+        const sourceName = "mockName";
+        fixture.detectChanges();
+
+        component.navigateToEditAddPushSource(sourceName);
+        expect(navigateToAddPollingSourceSpy).toHaveBeenCalledWith(
+            {
+                accountName: mockDatasetBasicsRootFragment.owner.accountName,
+                datasetName: mockDatasetBasicsRootFragment.name,
+            },
+            sourceName,
+        );
     });
 });

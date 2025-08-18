@@ -2,7 +2,7 @@
     <button
         appFeatureFlag="dataset.panel.metadata.editPollingSource"
         class="border-1 bg-light border edit-polling-source-btn rounded-2 me-3 btn btn-sm justify-content-between align-items-center"
-        data-test-id="'edit-source-link'"
+        data-test-id="edit-polling-source"
         (click)="navigateToEditPollingSource()"
     >
         <mat-icon class="mat-icon-svg-size me-2 text-muted" svgIcon="pencil" />
@@ -24,7 +24,7 @@
         <span class="position-absolute text-muted group-box-label text-uppercase">Fetch</span>
         <div class="mx-4" *ngIf="pollingSource.fetch.__typename === 'FetchStepUrl'">
             <app-block-row-data [tooltip]="'URL of the data source.'" [label]="'Url:'">
-                <app-link-property [data]="pollingSource.fetch.url" />
+                <app-link-property data-test-id="fetch-step-url" [data]="pollingSource.fetch.url" />
             </app-block-row-data>
         </div>
 

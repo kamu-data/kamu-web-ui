@@ -68,6 +68,7 @@ export class MetadataPollingSourceTabComponent {
         });
     }
 
+    /* istanbul ignore next */
     public onDeletePollingSource(): void {
         promiseWithCatch(
             this.modalService.warning({

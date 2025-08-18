@@ -208,6 +208,7 @@ export class AppComponent extends BaseComponent implements OnInit {
                 this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/source_notes.svg"),
             )
             .addSvgIcon("enable", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/enable.svg"))
+            .addSvgIcon("add", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/add.svg"))
             .addSvgIcon(
                 "configuration",
                 this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/configuration.svg"),

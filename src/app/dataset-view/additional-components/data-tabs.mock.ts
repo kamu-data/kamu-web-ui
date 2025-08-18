@@ -21,7 +21,11 @@ import {
     MetadataSchemaUpdate,
     OverviewUpdate,
 } from "../dataset.subscriptions.interface";
-import { mockDatasetBasicsDerivedFragment, mockPublicDatasetVisibility } from "src/app/search/mock.data";
+import {
+    mockDatasetBasicsDerivedFragment,
+    mockMetadataCurrentLicense,
+    mockPublicDatasetVisibility,
+} from "src/app/search/mock.data";
 import { Node } from "@swimlane/ngx-graph";
 import { LineageNodeAccess } from "./lineage-component/lineage-model";
 import { OperationColumnClassEnum } from "src/app/interface/dataset.interface";
@@ -954,7 +958,7 @@ export const mockOverviewDataUpdateNullable = {
                 description: null,
                 keywords: null,
             },
-            currentLicense: null,
+            currentLicense: mockMetadataCurrentLicense,
             currentWatermark: "2022-08-05T20:24:55+00:00",
             currentTransform: null,
             currentPushSources: [],

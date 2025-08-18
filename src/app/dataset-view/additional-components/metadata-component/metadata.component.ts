@@ -20,29 +20,15 @@ import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetMetadataSummaryFragment, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
 import { momentConvertDateToLocalWithFormat } from "src/app/common/helpers/app.helpers";
 import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "src/app/interface/app.types";
-import { NavigationService } from "src/app/services/navigation.service";
-import { ModalService } from "src/app/common/components/modal/modal.service";
 import ProjectLinks from "src/app/project-links";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
-import { CardsPropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
-import { MergeStrategyPropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/merge-strategy-property/merge-strategy-property.component";
-import { SchemaPropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/schema-property/schema-property.component";
 import { RouterLink, RouterOutlet } from "@angular/router";
-import { SqlQueryViewerComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/sql-query-viewer/sql-query-viewer.component";
-import { EnginePropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/engine-property/engine-property.component";
-import { OwnerPropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/owner-property/owner-property.component";
-import { DatasetNamePropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/dataset-name-property/dataset-name-property.component";
-import { DisplayTimeComponent } from "../../../common/components/display-time/display-time.component";
-import { YamlEventViewerComponent } from "../../../common/components/yaml-event-viewer/yaml-event-viewer.component";
-import { LinkPropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/link-property/link-property.component";
-import { DynamicTableComponent } from "../../../common/components/dynamic-table/dynamic-table.component";
-import { BlockRowDataComponent } from "../../../common/components/block-row-data/block-row-data.component";
 import { MatIconModule } from "@angular/material/icon";
 import { CommitNavigatorComponent } from "./components/commit-navigator/commit-navigator.component";
 import { FeatureFlagDirective } from "../../../common/directives/feature-flag.directive";
-import { NgIf, NgFor, NgTemplateOutlet, TitleCasePipe, NgClass } from "@angular/common";
+import { NgIf, NgFor, NgClass } from "@angular/common";
 import { METADATA_TAB_MENU_ITEMS, MetadataMenuItem, MetadataTabs } from "./metadata.constants";
 
 @Component({
@@ -55,10 +41,8 @@ import { METADATA_TAB_MENU_ITEMS, MetadataMenuItem, MetadataTabs } from "./metad
         //-----//
         NgIf,
         NgFor,
-        NgTemplateOutlet,
         RouterLink,
         RouterOutlet,
-        TitleCasePipe,
         NgClass,
 
         //-----//
@@ -67,18 +51,6 @@ import { METADATA_TAB_MENU_ITEMS, MetadataMenuItem, MetadataTabs } from "./metad
         //-----//
         CommitNavigatorComponent,
         FeatureFlagDirective,
-        BlockRowDataComponent,
-        DynamicTableComponent,
-        LinkPropertyComponent,
-        YamlEventViewerComponent,
-        DisplayTimeComponent,
-        DatasetNamePropertyComponent,
-        OwnerPropertyComponent,
-        EnginePropertyComponent,
-        SqlQueryViewerComponent,
-        SchemaPropertyComponent,
-        MergeStrategyPropertyComponent,
-        CardsPropertyComponent,
     ],
 })
 export class MetadataComponent extends BaseComponent implements OnInit {
@@ -98,8 +70,6 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     public readonly URL_PARAM_SET_TRANSFORM = ProjectLinks.URL_PARAM_SET_TRANSFORM;
 
     private datasetSubsService = inject(DatasetSubscriptionsService);
-    private navigationService = inject(NavigationService);
-    private modalService = inject(ModalService);
 
     public ngOnInit() {
         this.datasetSubsService.metadataSchemaChanges
@@ -175,13 +145,6 @@ export class MetadataComponent extends BaseComponent implements OnInit {
               })
             : "";
     }
-
-    // public navigateToEditSetTransform(): void {
-    //     this.navigationService.navigateToSetTransform({
-    //         accountName: this.datasetMetadataTabData.datasetBasics.owner.accountName,
-    //         datasetName: this.datasetMetadataTabData.datasetBasics.name,
-    //     });
-    // }
 
     public hasAnySource(): boolean {
         return !this.currentPollingSource && !this.currentPushSources?.length;

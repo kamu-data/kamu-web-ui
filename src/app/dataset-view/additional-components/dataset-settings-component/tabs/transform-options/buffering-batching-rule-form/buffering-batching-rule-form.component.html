@@ -22,6 +22,7 @@
         <app-time-delta-form
             [form]="form.controls.maxBatchingInterval"
             label="Batching interval:"
+            [excludeUnits]="[TimeUnit.Days, TimeUnit.Weeks]"
         ></app-time-delta-form>
     </form>
 </div>

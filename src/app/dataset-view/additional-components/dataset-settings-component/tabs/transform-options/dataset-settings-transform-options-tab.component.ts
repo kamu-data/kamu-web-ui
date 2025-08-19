@@ -8,7 +8,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { DatasetBasicsFragment, DatasetFlowType, DatasetKind } from "src/app/api/kamu.graphql.interface";
+import { DatasetBasicsFragment, DatasetFlowType, DatasetKind, TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowTriggerService } from "../../services/dataset-flow-trigger.service";
 import { BaseComponent } from "src/app/common/components/base.component";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
@@ -80,7 +80,23 @@ export class DatasetSettingsTransformOptionsTabComponent extends BaseComponent i
 
         const updatesEnabled = !this.transformTabData.paused;
         switch (reactive.forNewData.__typename) {
-            case "FlowTriggerBatchingRuleBuffering":
+            case "FlowTriggerBatchingRuleBuffering": {
+                // Since we are disabling Days and Weeks in batching rule UI, check for special values
+                let maxBatchingInterval = reactive.forNewData.maxBatchingInterval;
+                if (maxBatchingInterval.unit === TimeUnit.Days) {
+                    // 1 day is the maximum allowed for buffering rule = 24 hours
+                    if (maxBatchingInterval.every > 1) {
+                        throw new Error("Max batching interval for buffering rule cannot be more than 1 day");
+                    }
+                    maxBatchingInterval = {
+                        every: 24,
+                        unit: TimeUnit.Hours,
+                    };
+                } else if (maxBatchingInterval.unit === TimeUnit.Weeks) {
+                    // Weeks are definitely unexpected
+                    throw new Error("Weeks are unexpected in max batching interval for buffering rule");
+                }
+
                 return {
                     updatesEnabled,
                     forNewData: {
@@ -88,13 +104,14 @@ export class DatasetSettingsTransformOptionsTabComponent extends BaseComponent i
                         buffering: {
                             minRecordsToAwait: reactive.forNewData.minRecordsToAwait,
                             maxBatchingInterval: {
-                                every: reactive.forNewData.maxBatchingInterval.every,
-                                unit: reactive.forNewData.maxBatchingInterval.unit,
+                                every: maxBatchingInterval.every,
+                                unit: maxBatchingInterval.unit,
                             },
                         },
                     },
                     forBreakingChange: reactive.forBreakingChange,
                 };
+            }
 
             case "FlowTriggerBatchingRuleImmediate":
                 return {

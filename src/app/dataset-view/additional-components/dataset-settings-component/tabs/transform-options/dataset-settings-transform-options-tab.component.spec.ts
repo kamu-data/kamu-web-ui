@@ -138,6 +138,57 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
         });
     });
 
+    it("should check time unit of day is converted into 24 hours", async () => {
+        component.transformTabData.paused = false;
+        component.transformTabData.reactive = {
+            forNewData: {
+                __typename: "FlowTriggerBatchingRuleBuffering",
+                minRecordsToAwait: 10,
+                maxBatchingInterval: {
+                    every: 1,
+                    unit: TimeUnit.Days, // This should be converted to 24 hours
+                },
+            },
+            forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
+        };
+        component.ngAfterViewInit();
+        fixture.detectChanges();
+
+        expect(component.form.status).toBe("VALID");
+
+        const domTransformTriggerFormValue = await transformTriggerFormHarness.currentFormValue();
+        expect(domTransformTriggerFormValue).toEqual({
+            updatesEnabled: true,
+            forNewData: {
+                batchingRuleType: BatchingRuleType.BUFFERING,
+                buffering: {
+                    minRecordsToAwait: 10,
+                    maxBatchingInterval: {
+                        every: 24,
+                        unit: TimeUnit.Hours,
+                    },
+                },
+            },
+            forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
+        });
+        expect(component.form.getRawValue()).toEqual({
+            transformTrigger: {
+                updatesEnabled: true,
+                forNewData: {
+                    batchingRuleType: BatchingRuleType.BUFFERING,
+                    buffering: {
+                        minRecordsToAwait: 10,
+                        maxBatchingInterval: {
+                            every: 24,
+                            unit: TimeUnit.Hours,
+                        },
+                    },
+                },
+                forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
+            },
+        });
+    });
+
     it("should check form is valid when loaded with immediate batching rule", async () => {
         component.transformTabData.paused = false;
         component.transformTabData.reactive = {

@@ -12,6 +12,7 @@ import { FormValidationErrorsDirective } from "src/app/common/directives/form-va
 import { TimeDeltaFormComponent } from "src/app/common/components/time-delta-form/time-delta-form.component";
 import { MaybeNull } from "src/app/interface/app.types";
 import { BufferingBatchingRuleFormType } from "./buffering-batching-rule-form.types";
+import { TimeUnit } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-buffering-batching-rule-form",
@@ -33,6 +34,8 @@ import { BufferingBatchingRuleFormType } from "./buffering-batching-rule-form.ty
 })
 export class BufferingBatchingRuleFormComponent extends BaseComponent {
     @Input({ required: true }) public form: FormGroup<BufferingBatchingRuleFormType>;
+
+    public readonly TimeUnit: typeof TimeUnit = TimeUnit;
 
     public static buildForm(): FormGroup<BufferingBatchingRuleFormType> {
         const timeDeltaForm = TimeDeltaFormComponent.buildForm();

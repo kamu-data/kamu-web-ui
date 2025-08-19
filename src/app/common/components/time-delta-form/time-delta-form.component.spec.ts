@@ -28,6 +28,19 @@ class TestTimeDeltaFormComponent {
     public formComponent: TimeDeltaFormComponent;
 }
 
+@Component({
+    standalone: true,
+    imports: [TimeDeltaFormComponent, ReactiveFormsModule],
+    template: `<app-time-delta-form [form]="timeDeltaForm" [label]="'Launch every:'" [excludeUnits]="excludeUnits" />`,
+})
+class TestTimeDeltaFormWithExclusionsComponent {
+    public timeDeltaForm = TimeDeltaFormComponent.buildForm();
+    public excludeUnits: TimeUnit[] = [TimeUnit.Minutes, TimeUnit.Hours];
+
+    @ViewChild(TimeDeltaFormComponent)
+    public formComponent: TimeDeltaFormComponent;
+}
+
 describe("TimeDeltaFormComponent", () => {
     let hostComponent: TestTimeDeltaFormComponent;
     let component: TimeDeltaFormComponent;
@@ -122,5 +135,92 @@ describe("TimeDeltaFormComponent", () => {
 
         const errorMessage = await timeDeltaHarness.getErrorMessage();
         expect(errorMessage).toBeNull();
+    });
+
+    it("should show all units by default (no exclusions)", async () => {
+        const availableUnits = await timeDeltaHarness.getAvailableUnits();
+
+        // Should have all four units by default
+        expect(availableUnits).toEqual([TimeUnit.Minutes, TimeUnit.Hours, TimeUnit.Days, TimeUnit.Weeks]);
+    });
+
+    it("should have correct availableUnits computed property with no exclusions", () => {
+        const availableUnits = component.availableUnits;
+
+        expect(availableUnits).toEqual([
+            { value: TimeUnit.Minutes, label: "Minutes" },
+            { value: TimeUnit.Hours, label: "Hours" },
+            { value: TimeUnit.Days, label: "Days" },
+            { value: TimeUnit.Weeks, label: "Weeks" },
+        ]);
+    });
+});
+
+describe("TimeDeltaFormComponent with excluded units", () => {
+    let hostComponent: TestTimeDeltaFormWithExclusionsComponent;
+    let component: TimeDeltaFormComponent;
+    let fixture: ComponentFixture<TestTimeDeltaFormWithExclusionsComponent>;
+    let loader: HarnessLoader;
+    let timeDeltaHarness: TimeDeltaFormHarness;
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [TestTimeDeltaFormWithExclusionsComponent],
+            providers: [
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: { params: {} },
+                        params: { subscribe: () => {} },
+                    },
+                },
+            ],
+        }).compileComponents();
+
+        fixture = TestBed.createComponent(TestTimeDeltaFormWithExclusionsComponent);
+        hostComponent = fixture.componentInstance;
+
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        component = hostComponent.formComponent;
+
+        loader = TestbedHarnessEnvironment.loader(fixture);
+        timeDeltaHarness = await loader.getHarness(TimeDeltaFormHarness);
+    });
+
+    it("should only show non-excluded units", async () => {
+        const availableUnits = await timeDeltaHarness.getAvailableUnits();
+
+        // Should only have Days and Weeks (Minutes and Hours are excluded)
+        expect(availableUnits).toEqual([TimeUnit.Days, TimeUnit.Weeks]);
+        expect(availableUnits).not.toContain(TimeUnit.Minutes);
+        expect(availableUnits).not.toContain(TimeUnit.Hours);
+    });
+
+    it("should work correctly with allowed units", async () => {
+        await timeDeltaHarness.setTimeDelta(2, TimeUnit.Days);
+
+        const { every, unit } = await timeDeltaHarness.getTimeDelta();
+        expect(every).toBe(2);
+        expect(unit).toBe(TimeUnit.Days);
+
+        const isInvalid = await timeDeltaHarness.isEveryInputInvalid();
+        expect(isInvalid).toBeFalse();
+    });
+
+    it("should throw error when trying to set excluded unit", async () => {
+        await expectAsync(timeDeltaHarness.setTimeDelta(30, TimeUnit.Minutes)).toBeRejectedWithError(
+            "Unit MINUTES is not available in the current configuration",
+        );
+    });
+
+    it("should have correct available units computed property", () => {
+        const availableUnits = component.availableUnits;
+
+        expect(availableUnits).toEqual([
+            { value: TimeUnit.Days, label: "Days" },
+            { value: TimeUnit.Weeks, label: "Weeks" },
+        ]);
     });
 });

@@ -192,8 +192,8 @@ describe("IngestTriggerFormComponent", () => {
         expect(component.timeDeltaControl.invalid).toBeTrue();
         expect(component.timeDeltaControl.get("every")?.errors).toEqual({
             range: {
-                message: "Value should be between 0 to 60",
-                refValues: [100, 0, 60],
+                message: "Value should be between 1 to 60",
+                refValues: [100, 1, 60],
             },
         });
     });

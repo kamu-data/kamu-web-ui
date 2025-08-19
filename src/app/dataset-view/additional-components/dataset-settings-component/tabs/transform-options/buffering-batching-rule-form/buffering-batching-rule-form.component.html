@@ -1,0 +1,26 @@
+<div class="p-4">
+    <form [formGroup]="form">
+        <div class="d-flex align-items-center gap-3 mb-2 ms-1 px-2">
+            <span class="form-control-label">Minimum records:</span>
+            <input
+                type="number"
+                min="0"
+                formControlName="minRecordsToAwait"
+                class="form-control form-control-width"
+                data-test-id="batching-min-records"
+                #minRecordsToAwait
+            />
+            <div
+                class="text-danger fs-12"
+                [input]="minRecordsToAwait"
+                [fieldLabel]="'Minimum records'"
+                [appFieldError]="['required', 'min']"
+                [group]="form"
+            ></div>
+        </div>
+        <app-time-delta-form
+            [form]="form.controls.maxBatchingInterval"
+            label="Batching interval:"
+        ></app-time-delta-form>
+    </form>
+</div>

@@ -1,0 +1,85 @@
+<div>
+    <form [formGroup]="form">
+        <div class="mt-4 ms-1 px-2 pb-2 d-flex gap-1">
+            <mat-slide-toggle
+                color="primary"
+                class="mat-elevation-z0"
+                formControlName="updatesEnabled"
+                data-test-id="transform-trigger-updates-enabled"
+            >
+                <span class="ps-2"> {{ updateStateToggleLabel }}</span>
+            </mat-slide-toggle>
+            <app-tooltip-icon class="d-block" [tooltip]="UPDATES_TOOLTIP" />
+        </div>
+
+        <div class="position-relative border border-1 mt-4 rounded-3">
+            <div>
+                <span class="position-absolute text-muted group-box-label text-uppercase">New data</span>
+                <div class="p-4">
+                    <mat-radio-group
+                        class="d-flex flex-column"
+                        [formControl]="batchingRuleTypeControl"
+                        data-test-id="transform-batching-rule-type"
+                        aria-label="Select an option"
+                        color="primary"
+                    >
+                        <mat-radio-button
+                            disableRipple="true"
+                            [value]="BatchingRuleType.IMMEDIATE"
+                            data-test-id="batching-rule-immediate"
+                        >
+                            <div class="d-flex align-items-center">
+                                Launch transform immediately
+                                <app-tooltip-icon class="ps-2 pt-1" [tooltip]="NEW_DATA_TRANSFORM_IMMEDIATE_TOOLTIP" />
+                            </div>
+                        </mat-radio-button>
+                        <mat-radio-button [value]="BatchingRuleType.BUFFERING" data-test-id="batching-rule-buffering">
+                            <div class="d-flex align-items-center">
+                                Process new data in batches:
+                                <app-tooltip-icon class="ps-2 pt-1" [tooltip]="NEW_DATA_TRANSFORM_BUFFERING_TOOLTIP" />
+                            </div>
+                        </mat-radio-button>
+                        <app-buffering-batching-rule-form
+                            [form]="bufferingBatchingForm"
+                        ></app-buffering-batching-rule-form>
+                    </mat-radio-group>
+                </div>
+            </div>
+        </div>
+
+        <div class="position-relative border border-1 mt-4 rounded-3">
+            <div>
+                <span class="position-absolute text-muted group-box-label text-uppercase">Breaking changes</span>
+                <div class="p-4">
+                    <mat-radio-group
+                        class="d-flex flex-column"
+                        formControlName="forBreakingChange"
+                        data-test-id="transform-breaking-change-rule"
+                        aria-label="Select an option"
+                        color="primary"
+                    >
+                        <mat-radio-button
+                            disableRipple="true"
+                            [value]="FlowTriggerBreakingChangeRule.NoAction"
+                            data-test-id="breaking-change-no-action"
+                        >
+                            <div class="d-flex align-items-center">
+                                No action
+                                <app-tooltip-icon class="ps-2 pt-1" [tooltip]="BREAKING_NO_ACTION_TOOLTIP" />
+                            </div>
+                        </mat-radio-button>
+                        <mat-radio-button
+                            [value]="FlowTriggerBreakingChangeRule.Recover"
+                            data-test-id="breaking-change-recover"
+                        >
+                            <div class="d-flex align-items-center">
+                                Recover
+                                <app-tooltip-icon class="ps-2 pt-1" [tooltip]="BREAKING_RECOVER_TOOLTIP" />
+                            </div>
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -35,6 +35,7 @@ import {
     FlowTriggerScheduleRule,
     DatasetTriggerResetToMetadataFlowMutation,
     FlowTriggerBreakingChangeRule,
+    FlowTriggerReactiveRule,
 } from "./../kamu.graphql.interface";
 import { GetDatasetFlowConfigsQuery, DatasetKind, TimeUnit, TimeDeltaInput } from "../kamu.graphql.interface";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
@@ -267,6 +268,20 @@ export const mockGetDatasetFlowTriggersTimeDeltaQuery: GetDatasetFlowTriggersQue
     },
 };
 
+export const mockBufferingBatchingReactiveRule: FlowTriggerReactiveRule = {
+    __typename: "FlowTriggerReactiveRule",
+    forNewData: {
+        __typename: "FlowTriggerBatchingRuleBuffering",
+        minRecordsToAwait: 100,
+        maxBatchingInterval: {
+            __typename: "TimeDelta",
+            every: 10,
+            unit: TimeUnit.Hours,
+        },
+    },
+    forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
+};
+
 export const mockGetDatasetFlowTriggersBatchingQuery: GetDatasetFlowTriggersQuery = {
     datasets: {
         __typename: "Datasets",
@@ -276,10 +291,12 @@ export const mockGetDatasetFlowTriggersBatchingQuery: GetDatasetFlowTriggersQuer
                     byType: {
                         paused: false,
                         reactive: {
+                            __typename: "FlowTriggerReactiveRule",
                             forNewData: {
                                 __typename: "FlowTriggerBatchingRuleBuffering",
                                 minRecordsToAwait: 100,
                                 maxBatchingInterval: {
+                                    __typename: "TimeDelta",
                                     every: 10,
                                     unit: TimeUnit.Hours,
                                 },

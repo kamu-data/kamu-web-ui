@@ -7,10 +7,11 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { BaseComponent } from "src/app/common/components/base.component";
-import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { BufferingBatchingRuleFormType } from "../transform-trigger-form/transform-trigger-form.types";
 import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
 import { TimeDeltaFormComponent } from "src/app/common/components/time-delta-form/time-delta-form.component";
+import { MaybeNull } from "src/app/interface/app.types";
 
 @Component({
     selector: "app-buffering-batching-rule-form",
@@ -32,4 +33,15 @@ import { TimeDeltaFormComponent } from "src/app/common/components/time-delta-for
 })
 export class BufferingBatchingRuleFormComponent extends BaseComponent {
     @Input({ required: true }) public form: FormGroup<BufferingBatchingRuleFormType>;
+
+    public static buildForm(): FormGroup<BufferingBatchingRuleFormType> {
+        const timeDeltaForm = TimeDeltaFormComponent.buildForm();
+
+        const formGroup = new FormGroup<BufferingBatchingRuleFormType>({
+            minRecordsToAwait: new FormControl<MaybeNull<number>>(null, [Validators.required, Validators.min(1)]),
+            maxBatchingInterval: timeDeltaForm,
+        });
+
+        return formGroup;
+    }
 }

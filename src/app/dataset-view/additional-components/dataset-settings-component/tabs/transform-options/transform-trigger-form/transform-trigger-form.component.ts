@@ -8,7 +8,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { FlowTriggerBreakingChangeRule, FlowTriggerInput } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
-import { FormGroup, FormControl, Validators, AbstractControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormGroup, FormControl, AbstractControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MaybeNull } from "src/app/interface/app.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
@@ -21,7 +21,6 @@ import {
     TransformTriggerFormValue,
 } from "./transform-trigger-form.types";
 import { BatchingRuleType } from "../../../dataset-settings.model";
-import { TimeDeltaFormComponent } from "src/app/common/components/time-delta-form/time-delta-form.component";
 import { FlowTooltipsTexts } from "src/app/common/tooltips/flow-tooltips.text";
 import { MatRadioModule } from "@angular/material/radio";
 import { BufferingBatchingRuleFormComponent } from "../buffering-batching-rule-form/buffering-batching-rule-form.component";
@@ -60,19 +59,13 @@ export class TransformTriggerFormComponent extends BaseComponent implements OnIn
     public readonly FlowTriggerBreakingChangeRule: typeof FlowTriggerBreakingChangeRule = FlowTriggerBreakingChangeRule;
 
     public static buildForm(): FormGroup<TransformTriggerFormType> {
-        const timeDeltaForm = TimeDeltaFormComponent.buildForm();
+        const bufferingForm = BufferingBatchingRuleFormComponent.buildForm();
 
         const formGroup = new FormGroup<TransformTriggerFormType>({
             updatesEnabled: new FormControl<boolean>(false, { nonNullable: true }),
             forNewData: new FormGroup<ReactiveTriggerFormType>({
                 batchingRuleType: new FormControl<BatchingRuleType>(BatchingRuleType.IMMEDIATE, { nonNullable: true }),
-                buffering: new FormGroup<BufferingBatchingRuleFormType>({
-                    minRecordsToAwait: new FormControl<MaybeNull<number>>(null, [
-                        Validators.required,
-                        Validators.min(1),
-                    ]),
-                    maxBatchingInterval: timeDeltaForm,
-                }),
+                buffering: bufferingForm,
             }),
             forBreakingChange: new FormControl<MaybeNull<FlowTriggerBreakingChangeRule>>(
                 { value: FlowTriggerBreakingChangeRule.NoAction, disabled: false },

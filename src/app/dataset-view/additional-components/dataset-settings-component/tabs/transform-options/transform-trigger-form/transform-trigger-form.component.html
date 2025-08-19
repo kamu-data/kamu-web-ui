@@ -33,15 +33,27 @@
                                 <app-tooltip-icon class="ps-2 pt-1" [tooltip]="NEW_DATA_TRANSFORM_IMMEDIATE_TOOLTIP" />
                             </div>
                         </mat-radio-button>
-                        <mat-radio-button [value]="BatchingRuleType.BUFFERING" data-test-id="batching-rule-buffering">
-                            <div class="d-flex align-items-center">
-                                Process new data in batches:
-                                <app-tooltip-icon class="ps-2 pt-1" [tooltip]="NEW_DATA_TRANSFORM_BUFFERING_TOOLTIP" />
+                        <mat-radio-button
+                            [value]="BatchingRuleType.BUFFERING"
+                            class="has-nested-form"
+                            data-test-id="batching-rule-buffering"
+                            #bufferingRadioButton
+                        >
+                            <div class="d-flex flex-column">
+                                <div class="d-flex align-items-center">
+                                    Process new data in batches:
+                                    <app-tooltip-icon class="ps-2" [tooltip]="NEW_DATA_TRANSFORM_BUFFERING_TOOLTIP" />
+                                </div>
+                                <fieldset
+                                    class="nested-fieldset"
+                                    [attr.disabled]="bufferingRadioButton.checked ? null : 'true'"
+                                >
+                                    <app-buffering-batching-rule-form
+                                        [form]="bufferingBatchingForm"
+                                    ></app-buffering-batching-rule-form>
+                                </fieldset>
                             </div>
                         </mat-radio-button>
-                        <app-buffering-batching-rule-form
-                            [form]="bufferingBatchingForm"
-                        ></app-buffering-batching-rule-form>
                     </mat-radio-group>
                 </div>
             </div>

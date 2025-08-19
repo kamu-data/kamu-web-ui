@@ -83,13 +83,13 @@ describe("TransformTriggerFormComponent", () => {
         await transformTriggerFormHarness.enableUpdates();
         expect(component.updatesEnabledControl.value).toBeTrue();
         expect(component.batchingRuleTypeControl.disabled).toBeFalse();
-        // expect(component.forNewDataControl.disabled).toBeFalse();
+        expect(component.forNewDataControl.disabled).toBeFalse();
         expect(component.forBreakingChangeControl.disabled).toBeFalse();
 
         await transformTriggerFormHarness.disableUpdates();
         expect(component.updatesEnabledControl.value).toBeFalse();
         expect(component.batchingRuleTypeControl.disabled).toBeTrue();
-        //expect(component.forNewDataControl.disabled).toBeFalse();
+        expect(component.forNewDataControl.disabled).toBeTrue();
         expect(component.forBreakingChangeControl.disabled).toBeTrue();
     });
 });

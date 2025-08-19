@@ -16,3 +16,20 @@ h4 {
         width: 80px;
     }
 }
+
+:host ::ng-deep .mat-mdc-radio-button.has-nested-form .mdc-form-field {
+    align-items: flex-start;
+}
+
+:host ::ng-deep .mat-mdc-radio-button.has-nested-form .mdc-label {
+    display: block;
+}
+
+:host ::ng-deep .mat-mdc-radio-button.has-nested-form .mdc-radio {
+    margin-top: -7px;
+}
+
+.nested-fieldset:disabled {
+    color: var(--mat-radio-disabled-label-color);
+    pointer-events: none;
+}

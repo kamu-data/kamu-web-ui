@@ -39,7 +39,7 @@ import {
     DatasetTriggerCompactionFlowDocument,
     DatasetTriggerResetFlowDocument,
     DatasetTriggerResetToMetadataFlowDocument,
-    BreakingChangeRule,
+    FlowTriggerBreakingChangeRule,
 } from "./kamu.graphql.interface";
 import { TEST_DATASET_ID } from "./mock/dataset.mock";
 import { DatasetFlowApi } from "./dataset-flow.api";
@@ -228,10 +228,12 @@ describe("DatasetFlowApi", () => {
                 paused: false,
                 triggerInput: {
                     reactive: {
-                        forBreakingChange: BreakingChangeRule.Recover,
+                        forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
                         forNewData: {
-                            maxBatchingInterval: mockTimeDeltaInput,
-                            minRecordsToAwait: MOCK_MIN_RECORDS_TO_AWAIT,
+                            buffering: {
+                                maxBatchingInterval: mockTimeDeltaInput,
+                                minRecordsToAwait: MOCK_MIN_RECORDS_TO_AWAIT,
+                            },
                         },
                     },
                 },

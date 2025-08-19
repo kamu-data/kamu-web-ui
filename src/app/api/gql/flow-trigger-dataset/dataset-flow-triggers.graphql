@@ -17,10 +17,13 @@ query getDatasetFlowTriggers($datasetId: DatasetID!, $datasetFlowType: DatasetFl
 
             reactive {
               forNewData {
-                maxBatchingInterval {
-                  ...TimeDeltaData
+                __typename
+                ... on FlowTriggerBatchingRuleBuffering {
+                  maxBatchingInterval {
+                    ...TimeDeltaData
+                  }
+                  minRecordsToAwait
                 }
-                minRecordsToAwait
               }
               forBreakingChange
             }

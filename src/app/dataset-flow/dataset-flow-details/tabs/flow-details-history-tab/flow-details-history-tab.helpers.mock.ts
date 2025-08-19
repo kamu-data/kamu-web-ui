@@ -185,6 +185,7 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         startCondition: {
             __typename: "FlowStartConditionReactive",
             activeBatchingRule: {
+                __typename: "FlowTriggerBatchingRuleBuffering",
                 minRecordsToAwait: 500,
                 maxBatchingInterval: {
                     every: 5,
@@ -358,6 +359,7 @@ export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[
         startCondition: {
             __typename: "FlowStartConditionReactive",
             activeBatchingRule: {
+                __typename: "FlowTriggerBatchingRuleBuffering",
                 minRecordsToAwait: 500,
                 maxBatchingInterval: {
                     every: 5,

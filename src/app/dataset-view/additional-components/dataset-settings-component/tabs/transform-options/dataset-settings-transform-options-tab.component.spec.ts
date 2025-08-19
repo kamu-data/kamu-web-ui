@@ -11,7 +11,7 @@ import { DatasetSettingsTransformOptionsTabComponent } from "./dataset-settings-
 import { MatDividerModule } from "@angular/material/divider";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { BreakingChangeRule, FlowTriggerInput, TimeUnit } from "src/app/api/kamu.graphql.interface";
+import { FlowTriggerBreakingChangeRule, FlowTriggerInput, TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetFlowTriggerService } from "../../services/dataset-flow-trigger.service";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
@@ -79,13 +79,15 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
                 triggerInput: {
                     reactive: {
                         forNewData: {
-                            minRecordsToAwait: MOCK_MIN_RECORDS_TO_AWAIT,
-                            maxBatchingInterval: {
-                                every: MOCK_PARAM_EVERY,
-                                unit: MOCK_PARAM_UNIT,
+                            buffering: {
+                                minRecordsToAwait: MOCK_MIN_RECORDS_TO_AWAIT,
+                                maxBatchingInterval: {
+                                    every: MOCK_PARAM_EVERY,
+                                    unit: MOCK_PARAM_UNIT,
+                                },
                             },
                         },
-                        forBreakingChange: BreakingChangeRule.Recover,
+                        forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
                     },
                 } as FlowTriggerInput,
             }),

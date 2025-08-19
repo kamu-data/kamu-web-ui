@@ -139,7 +139,7 @@ describe("FlowDetailsHistoryTabComponent", () => {
             expect(await harness.getHistoryItemDescription(2)).toContain("Polling ingest task running");
         });
 
-        it("should skip empty batching condition items", async () => {
+        it("should skip immediate batching condition items", async () => {
             await setupComponent({
                 flowHistory: [
                     mockFlowHistoryDataFragment[0], // initiated
@@ -148,20 +148,22 @@ describe("FlowDetailsHistoryTabComponent", () => {
                         __typename: "FlowEventStartConditionUpdated",
                         startCondition: {
                             __typename: "FlowStartConditionReactive",
-                            activeBatchingRule: { minRecordsToAwait: 0 },
+                            activeBatchingRule: {
+                                __typename: "FlowTriggerBatchingRuleImmediate",
+                            },
                         },
-                    }, // empty batching condition
+                    }, // immediate batching condition
                     mockFlowHistoryDataFragment[2], // task changed to running
                 ],
             });
 
             const itemCount = await harness.getHistoryItemsCount();
-            expect(itemCount).toBe(2); // Should skip the empty batching condition item
+            expect(itemCount).toBe(2); // Should skip the immediate batching condition item
             expect(await harness.getHistoryItemDescription(0)).toContain("Flow initiated automatically");
             expect(await harness.getHistoryItemDescription(1)).toContain("Polling ingest task running");
         });
 
-        it("should render non-empty batching condition items", async () => {
+        it("should render buffering batching condition items", async () => {
             await setupComponent({
                 flowHistory: [
                     mockFlowHistoryDataFragment[0], // initiated
@@ -170,12 +172,19 @@ describe("FlowDetailsHistoryTabComponent", () => {
                         __typename: "FlowEventStartConditionUpdated",
                         startCondition: {
                             __typename: "FlowStartConditionReactive",
-                            activeBatchingRule: { minRecordsToAwait: 100 },
+                            activeBatchingRule: {
+                                __typename: "FlowTriggerBatchingRuleBuffering",
+                                minRecordsToAwait: 100,
+                                maxBatchingInterval: {
+                                    every: 10,
+                                    unit: "Minutes",
+                                },
+                            },
                             batchingDeadline: mockFlowHistoryDataFragment[2].eventTime,
                             accumulatedRecordsCount: 200,
                             watermarkModified: false,
                         },
-                    }, // non-empty batching condition
+                    }, // buffering batching condition
                     mockFlowHistoryDataFragment[2], // task changed to running
                 ],
             });

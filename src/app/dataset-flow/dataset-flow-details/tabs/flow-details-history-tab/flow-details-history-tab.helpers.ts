@@ -406,16 +406,29 @@ export class DatasetFlowDetailsHelpers {
                     startCondition.wakeUpAt,
                     AppValues.CRON_EXPRESSION_DATE_FORMAT,
                 )}, shifted from ${format(startCondition.shiftedFrom, AppValues.TIME_FORMAT)}`;
+
             case "FlowStartConditionReactive":
-                return `Accumulated ${startCondition.accumulatedRecordsCount}/${
-                    startCondition.activeBatchingRule.minRecordsToAwait
-                } records. Watermark ${
-                    startCondition.watermarkModified ? "modified" : "unchanged"
-                }. Deadline at ${format(startCondition.batchingDeadline, AppValues.CRON_EXPRESSION_DATE_FORMAT)}`;
+                switch (startCondition.activeBatchingRule.__typename) {
+                    case "FlowTriggerBatchingRuleBuffering":
+                        return `Accumulated ${startCondition.accumulatedRecordsCount}/${
+                            startCondition.activeBatchingRule.minRecordsToAwait
+                        } records. Watermark ${
+                            startCondition.watermarkModified ? "modified" : "unchanged"
+                        }. Deadline at ${format(startCondition.batchingDeadline, AppValues.CRON_EXPRESSION_DATE_FORMAT)}`; /* istanbul ignore next */
+
+                    case "FlowTriggerBatchingRuleImmediate":
+                        return "Waiting for input data";
+
+                    default:
+                        throw new Error("Unknown batching rule typename");
+                }
+
             case "FlowStartConditionExecutor":
                 return this.describeTaskIdentity(startCondition.taskId, flowDetails);
+
             case "FlowStartConditionSchedule":
                 return `Wake up time at ${format(startCondition.wakeUpAt, AppValues.CRON_EXPRESSION_DATE_FORMAT)}`;
+
             /* istanbul ignore next */
             default:
                 throw new Error("Unknown start condition typename");

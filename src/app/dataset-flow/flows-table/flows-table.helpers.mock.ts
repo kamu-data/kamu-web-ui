@@ -812,6 +812,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         startCondition: {
             __typename: "FlowStartConditionReactive",
             activeBatchingRule: {
+                __typename: "FlowTriggerBatchingRuleBuffering",
                 minRecordsToAwait: 500,
                 maxBatchingInterval: {
                     every: 5,

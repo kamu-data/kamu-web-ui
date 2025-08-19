@@ -152,9 +152,12 @@ fragment FlowSummaryData on Flow {
 
     ... on FlowStartConditionReactive {
       activeBatchingRule {
-        minRecordsToAwait
-        maxBatchingInterval {
-          ...TimeDeltaData
+        __typename
+        ... on FlowTriggerBatchingRuleBuffering {
+          maxBatchingInterval {
+            ...TimeDeltaData
+          }
+          minRecordsToAwait
         }
       }
       batchingDeadline

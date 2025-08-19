@@ -6,12 +6,12 @@
  */
 
 import {
-    BreakingChangeRule,
     FetchStepContainer,
     FetchStepFilesGlob,
     FetchStepUrl,
     FlowStatus,
     FlowSummaryDataFragment,
+    FlowTriggerBreakingChangeRule,
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
 import { FlowTableHelpers } from "./flows-table.helpers";
@@ -57,6 +57,7 @@ describe("FlowTableHelpers", () => {
             FlowTableHelpers.waitingBlockText({
                 __typename: "FlowStartConditionReactive",
                 activeBatchingRule: {
+                    __typename: "FlowTriggerBatchingRuleBuffering",
                     minRecordsToAwait: 500,
                     maxBatchingInterval: {
                         every: 5,
@@ -66,7 +67,7 @@ describe("FlowTableHelpers", () => {
                 batchingDeadline: "2022-08-05T21:17:30.613911358+00:00",
                 accumulatedRecordsCount: 100,
                 watermarkModified: true,
-                forBreakingChange: BreakingChangeRule.Recover,
+                forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
             }),
         ).toEqual("waiting for a reactive condition");
     });

@@ -34,7 +34,7 @@ import {
     DatasetTriggerCompactionFlowMutation,
     FlowTriggerScheduleRule,
     DatasetTriggerResetToMetadataFlowMutation,
-    BreakingChangeRule,
+    FlowTriggerBreakingChangeRule,
 } from "./../kamu.graphql.interface";
 import { GetDatasetFlowConfigsQuery, DatasetKind, TimeUnit, TimeDeltaInput } from "../kamu.graphql.interface";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
@@ -277,13 +277,14 @@ export const mockGetDatasetFlowTriggersBatchingQuery: GetDatasetFlowTriggersQuer
                         paused: false,
                         reactive: {
                             forNewData: {
+                                __typename: "FlowTriggerBatchingRuleBuffering",
                                 minRecordsToAwait: 100,
                                 maxBatchingInterval: {
                                     every: 10,
                                     unit: TimeUnit.Hours,
                                 },
                             },
-                            forBreakingChange: BreakingChangeRule.Recover,
+                            forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
                         },
                     },
                 },
@@ -302,13 +303,14 @@ export const mockGetDatasetFlowTriggersDefaultBatchingQuery: GetDatasetFlowTrigg
                         paused: true,
                         reactive: {
                             forNewData: {
+                                __typename: "FlowTriggerBatchingRuleBuffering",
                                 minRecordsToAwait: 0,
                                 maxBatchingInterval: {
                                     every: 0,
                                     unit: TimeUnit.Hours,
                                 },
                             },
-                            forBreakingChange: BreakingChangeRule.Recover,
+                            forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
                         },
                     },
                 },

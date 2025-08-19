@@ -70,7 +70,7 @@ export class FlowDetailsHistoryTabComponent {
         return (
             item.__typename === "FlowEventStartConditionUpdated" &&
             item.startCondition.__typename === "FlowStartConditionReactive" &&
-            item.startCondition.activeBatchingRule.minRecordsToAwait === 0
+            item.startCondition.activeBatchingRule.__typename === "FlowTriggerBatchingRuleImmediate"
         );
     }
 

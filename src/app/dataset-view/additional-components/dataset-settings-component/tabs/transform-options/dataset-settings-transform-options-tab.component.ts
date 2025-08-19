@@ -9,9 +9,9 @@ import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormGroup } from "@angular/forms";
 import {
-    BreakingChangeRule,
     DatasetBasicsFragment,
     DatasetFlowType,
+    FlowTriggerBreakingChangeRule,
     FlowTriggerInput,
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
@@ -66,13 +66,15 @@ export class DatasetSettingsTransformOptionsTabComponent extends BaseComponent {
         return {
             reactive: {
                 forNewData: {
-                    minRecordsToAwait: batchingTriggerForm.controls.minRecordsToAwait.value as number,
-                    maxBatchingInterval: {
-                        every: batchingTriggerForm.controls.every.value as number,
-                        unit: batchingTriggerForm.controls.unit.value as TimeUnit,
+                    buffering: {
+                        minRecordsToAwait: batchingTriggerForm.controls.minRecordsToAwait.value as number,
+                        maxBatchingInterval: {
+                            every: batchingTriggerForm.controls.every.value as number,
+                            unit: batchingTriggerForm.controls.unit.value as TimeUnit,
+                        },
                     },
                 },
-                forBreakingChange: BreakingChangeRule.Recover, // TODO
+                forBreakingChange: FlowTriggerBreakingChangeRule.Recover, // TODO UI support
             },
         };
     }

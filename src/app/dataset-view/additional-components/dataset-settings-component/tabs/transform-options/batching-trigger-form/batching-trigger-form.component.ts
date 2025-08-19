@@ -162,7 +162,12 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
                 const reactive = flowTriggers?.reactive;
                 this.pausedFromServer = Boolean(flowTriggers?.paused);
 
-                if (reactive && reactive.forNewData.maxBatchingInterval?.every && !flowTriggers.paused) {
+                if (
+                    reactive &&
+                    reactive.forNewData.__typename == "FlowTriggerBatchingRuleBuffering" &&
+                    reactive.forNewData.maxBatchingInterval?.every &&
+                    !flowTriggers.paused
+                ) {
                     this.batchingForm.patchValue({
                         unit: reactive.forNewData.maxBatchingInterval.unit,
                         every: reactive.forNewData.maxBatchingInterval.every,
@@ -175,7 +180,7 @@ export class BatchingTriggerFormComponent extends BaseComponent implements OnIni
                         this.batchingForm.patchValue({
                             updatesState: !flowTriggers.paused,
                         });
-                    } else if (reactive && reactive.forNewData.maxBatchingInterval?.every) {
+                    } else if (reactive && reactive.forNewData.__typename == "FlowTriggerBatchingRuleBuffering") {
                         this.disableControls();
                     }
                 }

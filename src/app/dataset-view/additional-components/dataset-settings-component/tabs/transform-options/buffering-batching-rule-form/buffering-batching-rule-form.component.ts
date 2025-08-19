@@ -8,10 +8,10 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
-import { BufferingBatchingRuleFormType } from "../transform-trigger-form/transform-trigger-form.types";
 import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
 import { TimeDeltaFormComponent } from "src/app/common/components/time-delta-form/time-delta-form.component";
 import { MaybeNull } from "src/app/interface/app.types";
+import { BufferingBatchingRuleFormType } from "./buffering-batching-rule-form.types";
 
 @Component({
     selector: "app-buffering-batching-rule-form",

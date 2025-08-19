@@ -14,9 +14,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import {
-    BufferingBatchingRuleFormType,
-    BufferingBatchingRuleFormValue,
-    ReactiveTriggerFormType,
+    BatchingRuleFormType,
     TransformTriggerFormType,
     TransformTriggerFormValue,
 } from "./transform-trigger-form.types";
@@ -24,6 +22,7 @@ import { BatchingRuleType } from "../../../dataset-settings.model";
 import { FlowTooltipsTexts } from "src/app/common/tooltips/flow-tooltips.text";
 import { MatRadioModule } from "@angular/material/radio";
 import { BufferingBatchingRuleFormComponent } from "../buffering-batching-rule-form/buffering-batching-rule-form.component";
+import { BufferingBatchingRuleFormType } from "../buffering-batching-rule-form/buffering-batching-rule-form.types";
 
 @Component({
     selector: "app-transform-trigger-form",
@@ -63,12 +62,15 @@ export class TransformTriggerFormComponent extends BaseComponent implements OnIn
 
         const formGroup = new FormGroup<TransformTriggerFormType>({
             updatesEnabled: new FormControl<boolean>(false, { nonNullable: true }),
-            forNewData: new FormGroup<ReactiveTriggerFormType>({
-                batchingRuleType: new FormControl<BatchingRuleType>(BatchingRuleType.IMMEDIATE, { nonNullable: true }),
+            forNewData: new FormGroup<BatchingRuleFormType>({
+                batchingRuleType: new FormControl<MaybeNull<BatchingRuleType>>(
+                    { value: null, disabled: true },
+                    { nonNullable: true },
+                ),
                 buffering: bufferingForm,
             }),
             forBreakingChange: new FormControl<MaybeNull<FlowTriggerBreakingChangeRule>>(
-                { value: FlowTriggerBreakingChangeRule.NoAction, disabled: false },
+                { value: null, disabled: true },
                 { nonNullable: true },
             ),
         });
@@ -83,7 +85,7 @@ export class TransformTriggerFormComponent extends BaseComponent implements OnIn
 
         switch (transformTriggerFormValue.forNewData.batchingRuleType) {
             case BatchingRuleType.BUFFERING: {
-                const bufferingValue = transformTriggerFormValue.forNewData.buffering as BufferingBatchingRuleFormValue;
+                const bufferingValue = transformTriggerFormValue.forNewData.buffering;
                 const batchingIntervalValue = bufferingValue?.maxBatchingInterval;
                 // istanbul ignore next
                 if (!batchingIntervalValue || !batchingIntervalValue.every || !batchingIntervalValue.unit) {
@@ -117,6 +119,11 @@ export class TransformTriggerFormComponent extends BaseComponent implements OnIn
                         forBreakingChange: transformTriggerFormValue.forBreakingChange,
                     },
                 };
+
+            default:
+                throw new Error(
+                    `Unsupported batching rule type: ${transformTriggerFormValue.forNewData.batchingRuleType}`,
+                );
         }
     }
 
@@ -132,11 +139,11 @@ export class TransformTriggerFormComponent extends BaseComponent implements OnIn
         return this.form.controls.forBreakingChange;
     }
 
-    public get forNewDataControl(): FormGroup<ReactiveTriggerFormType> {
+    public get forNewDataControl(): FormGroup<BatchingRuleFormType> {
         return this.form.controls.forNewData;
     }
 
-    public get batchingRuleTypeControl(): FormControl<BatchingRuleType> {
+    public get batchingRuleTypeControl(): FormControl<MaybeNull<BatchingRuleType>> {
         return this.forNewDataControl.controls.batchingRuleType;
     }
 
@@ -159,7 +166,7 @@ export class TransformTriggerFormComponent extends BaseComponent implements OnIn
 
         this.batchingRuleTypeControl.valueChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((batchingRuleType: BatchingRuleType) => {
+            .subscribe((batchingRuleType: MaybeNull<BatchingRuleType>) => {
                 // Only update buffering form state if the parent forNewDataControl is enabled
                 if (this.forNewDataControl.enabled) {
                     if (batchingRuleType === BatchingRuleType.BUFFERING) {

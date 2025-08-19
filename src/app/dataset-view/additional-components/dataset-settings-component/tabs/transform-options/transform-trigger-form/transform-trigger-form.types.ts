@@ -7,38 +7,31 @@
 
 import { FormControl, FormGroup } from "@angular/forms";
 import { MaybeNull } from "src/app/interface/app.types";
-import { TimeDeltaFormType, TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
 import { BatchingRuleType } from "../../../dataset-settings.model";
 import { FlowTriggerBreakingChangeRule } from "src/app/api/kamu.graphql.interface";
+import {
+    BufferingBatchingRuleFormType,
+    BufferingBatchingRuleFormValue,
+} from "../buffering-batching-rule-form/buffering-batching-rule-form.types";
 
 export interface TransformTriggerFormType {
     updatesEnabled: FormControl<boolean>;
-    forNewData: FormGroup<ReactiveTriggerFormType>;
+    forNewData: FormGroup<BatchingRuleFormType>;
     forBreakingChange: FormControl<MaybeNull<FlowTriggerBreakingChangeRule>>;
 }
 
 export interface TransformTriggerFormValue {
     updatesEnabled: boolean;
-    forNewData: ReactiveTriggerFormValue;
+    forNewData: BatchingRuleFormValue;
     forBreakingChange: MaybeNull<FlowTriggerBreakingChangeRule>;
 }
 
-export interface ReactiveTriggerFormType {
-    batchingRuleType: FormControl<BatchingRuleType>;
+export interface BatchingRuleFormType {
+    batchingRuleType: FormControl<MaybeNull<BatchingRuleType>>;
     buffering: FormGroup<BufferingBatchingRuleFormType>;
 }
 
-export interface ReactiveTriggerFormValue {
-    batchingRuleType: BatchingRuleType;
+export interface BatchingRuleFormValue {
+    batchingRuleType: MaybeNull<BatchingRuleType>;
     buffering?: BufferingBatchingRuleFormValue;
-}
-
-export interface BufferingBatchingRuleFormType {
-    minRecordsToAwait: FormControl<MaybeNull<number>>;
-    maxBatchingInterval: FormGroup<TimeDeltaFormType>;
-}
-
-export interface BufferingBatchingRuleFormValue {
-    minRecordsToAwait: MaybeNull<number>;
-    maxBatchingInterval: TimeDeltaFormValue;
 }

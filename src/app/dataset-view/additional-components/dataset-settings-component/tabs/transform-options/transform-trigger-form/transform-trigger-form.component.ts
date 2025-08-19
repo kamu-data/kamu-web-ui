@@ -59,6 +59,7 @@ export class TransformTriggerFormComponent extends BaseComponent implements OnIn
 
     public static buildForm(): FormGroup<TransformTriggerFormType> {
         const bufferingForm = BufferingBatchingRuleFormComponent.buildForm();
+        bufferingForm.disable();
 
         const formGroup = new FormGroup<TransformTriggerFormType>({
             updatesEnabled: new FormControl<boolean>(false, { nonNullable: true }),
@@ -79,10 +80,6 @@ export class TransformTriggerFormComponent extends BaseComponent implements OnIn
     }
 
     public static buildTransformTriggerInput(transformTriggerFormValue: TransformTriggerFormValue): FlowTriggerInput {
-        if (!transformTriggerFormValue.forBreakingChange) {
-            throw new Error("For breaking change is required");
-        }
-
         switch (transformTriggerFormValue.forNewData.batchingRuleType) {
             case BatchingRuleType.BUFFERING: {
                 const bufferingValue = transformTriggerFormValue.forNewData.buffering;
@@ -105,25 +102,23 @@ export class TransformTriggerFormComponent extends BaseComponent implements OnIn
                                 },
                             },
                         },
-                        forBreakingChange: transformTriggerFormValue.forBreakingChange,
+                        forBreakingChange:
+                            transformTriggerFormValue.forBreakingChange ?? FlowTriggerBreakingChangeRule.NoAction,
                     },
                 };
             }
 
             case BatchingRuleType.IMMEDIATE:
+            case null: // No batching rule
                 return {
                     reactive: {
                         forNewData: {
                             immediate: { dummy: true },
                         },
-                        forBreakingChange: transformTriggerFormValue.forBreakingChange,
+                        forBreakingChange:
+                            transformTriggerFormValue.forBreakingChange ?? FlowTriggerBreakingChangeRule.NoAction,
                     },
                 };
-
-            default:
-                throw new Error(
-                    `Unsupported batching rule type: ${transformTriggerFormValue.forNewData.batchingRuleType}`,
-                );
         }
     }
 

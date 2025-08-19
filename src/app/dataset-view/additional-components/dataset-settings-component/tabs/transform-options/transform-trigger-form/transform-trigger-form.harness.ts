@@ -168,7 +168,7 @@ export class TransformTriggerFormHarness extends ComponentHarness {
                 buffering:
                     batchingRuleType === BatchingRuleType.BUFFERING ? await this.getBufferingFormValue() : undefined,
             },
-            forBreakingChange: breakingChangeRule ?? null,
+            forBreakingChange: breakingChangeRule ?? FlowTriggerBreakingChangeRule.NoAction,
         } as TransformTriggerFormValue;
     }
 }

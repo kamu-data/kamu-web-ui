@@ -38,7 +38,11 @@ import {
 } from "./../kamu.graphql.interface";
 import { GetDatasetFlowConfigsQuery, DatasetKind, TimeUnit, TimeDeltaInput } from "../kamu.graphql.interface";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
-import { mockDatasetMainDataId, mockPublicDatasetVisibility } from "src/app/search/mock.data";
+import {
+    mockDatasetMainDataId,
+    mockOwnerFieldsWithAvatar,
+    mockPublicDatasetVisibility,
+} from "src/app/search/mock.data";
 import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 import {
     mockFlowPollingSourceFragmentFetchUrl,
@@ -63,10 +67,8 @@ export const mockIngestGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQuery 
             kind: DatasetKind.Root,
             name: "account.transactions",
             owner: {
-                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                accountName: "kamu",
                 __typename: "Account",
-                accountProvider: AccountProvider.Password,
+                ...mockOwnerFieldsWithAvatar,
             },
             alias: "account.transactions",
             visibility: mockPublicDatasetVisibility,
@@ -96,10 +98,8 @@ export const mockCompactingGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQu
             kind: DatasetKind.Root,
             name: "account.transactions",
             owner: {
-                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                accountName: "kamu",
                 __typename: "Account",
-                accountProvider: AccountProvider.Password,
+                ...mockOwnerFieldsWithAvatar,
             },
             alias: "account.transactions",
             visibility: mockPublicDatasetVisibility,
@@ -779,10 +779,8 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
             kind: DatasetKind.Root,
             name: "test-dataset",
             owner: {
-                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                accountName: "kamu",
                 __typename: "Account",
-                accountProvider: AccountProvider.Password,
+                ...mockOwnerFieldsWithAvatar,
             },
             alias: "test-dataset",
             visibility: mockPublicDatasetVisibility,

@@ -343,7 +343,7 @@ describe("AppDatasetService", () => {
 
     it("should return list downstreams", () => {
         spyOn(datasetApi, "datasetListDownstreams").and.returnValue(of(mockDatasetListDownstreamsQuery));
-        const expectedResult = ["deltares.nl/rhine-basin.netherlands"];
+        const expectedResult = ["kamu/rhine-basin.netherlands"];
 
         const subscription$ = service
             .requestListDownstreams(TEST_DATASET_ID)

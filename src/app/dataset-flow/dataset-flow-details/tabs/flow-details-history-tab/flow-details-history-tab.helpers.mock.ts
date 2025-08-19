@@ -15,7 +15,7 @@ import {
     TaskStatus,
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
-import { mockDatasetSearchResult } from "src/app/search/mock.data";
+import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 
 export const mockHistoryFragmentWithFinishedStatus: FlowHistoryDataFragment = {
     __typename: "FlowEventTaskChanged",
@@ -141,7 +141,7 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         activationCause: {
             __typename: "FlowActivationCauseDatasetUpdate",
-            dataset: mockDatasetSearchResult.datasets[0],
+            dataset: { ...mockDatasetBasicsDerivedFragment },
             source: {
                 __typename: "FlowActivationCauseDatasetUpdateSourceUpstreamFlow",
                 flowId: "12345",
@@ -154,7 +154,7 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         activationCause: {
             __typename: "FlowActivationCauseDatasetUpdate",
-            dataset: mockDatasetSearchResult.datasets[0],
+            dataset: { ...mockDatasetBasicsDerivedFragment },
             source: {
                 __typename: "FlowActivationCauseDatasetUpdateSourceHttpIngest",
             },
@@ -270,7 +270,7 @@ export const mockFlowHistoryDataFragmentForIconOptions: FlowHistoryDataFragment[
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         activationCause: {
             __typename: "FlowActivationCauseDatasetUpdate",
-            dataset: mockDatasetSearchResult.datasets[0],
+            dataset: { ...mockDatasetBasicsDerivedFragment },
             source: {
                 __typename: "FlowActivationCauseDatasetUpdateSourceSmartProtocolPush",
                 isForce: false,
@@ -344,7 +344,7 @@ export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         activationCause: {
             __typename: "FlowActivationCauseDatasetUpdate",
-            dataset: mockDatasetSearchResult.datasets[0],
+            dataset: { ...mockDatasetBasicsDerivedFragment },
             source: {
                 __typename: "FlowActivationCauseDatasetUpdateSourceUpstreamFlow",
                 flowId: "12345",
@@ -393,12 +393,12 @@ export const flowEventSubMessageResults: string[] = [
     "",
     "",
     "Task #1",
-    'Input dataset: <a class="fs-12" href="/kamu/alberta.case-details">kamu/alberta.case-details</a>',
+    'Input dataset: <a class="fs-12" href="/kamu/mockNameDerived">kamu/mockNameDerived</a>',
     "Wake up time at Feb 12th 2024 8:22:30 PM GMT+02:00, shifted from 8:22:29 PM",
     "Activating at Mar 13th 2024 4:54:30 PM GMT+02:00",
     "Modified by ingest rule",
     'Triggered by <a class="fs-12" href="/kamu">kamu</a>',
-    '<a class="fs-12" href="/kamu/alberta.case-details/flow-details/12345/history">Flow #12345</a>. Input dataset: <a class="fs-12" href="/kamu/alberta.case-details">kamu/alberta.case-details</a>',
+    '<a class="fs-12" href="/kamu/mockNameDerived/flow-details/12345/history">Flow #12345</a>. Input dataset: <a class="fs-12" href="/kamu/mockNameDerived">kamu/mockNameDerived</a>',
     "Accumulated 100/500 records. Watermark modified. Deadline at Aug 6th 2022 12:17:30 AM GMT+03:00", //1
     "Task #5",
     "Wake up time at Mar 13th 2024 5:54:30 PM GMT+02:00",

@@ -14,7 +14,11 @@ import {
     FlowSummaryDataFragment,
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
-import { mockDatasetMainDataId, mockPublicDatasetVisibility } from "src/app/search/mock.data";
+import {
+    mockDatasetMainDataId,
+    mockOwnerFieldsWithAvatar,
+    mockPublicDatasetVisibility,
+} from "src/app/search/mock.data";
 import { flowEventSubMessageResults } from "../dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers.mock";
 
 export const expectationsDesriptionColumnOptions = [
@@ -615,10 +619,8 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
                     name: "my-dataset-input",
                     alias: "owner/my-dataset-input",
                     owner: {
-                        id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                        accountName: "kamu",
                         __typename: "Account",
-                        accountProvider: AccountProvider.Password,
+                        ...mockOwnerFieldsWithAvatar,
                     },
                     visibility: {
                         __typename: "PrivateDatasetVisibility",
@@ -999,10 +1001,8 @@ export const mockDatasets: DatasetBasicsFragment[] = [
         kind: DatasetKind.Root,
         name: "account.tokens.transfers",
         owner: {
-            id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-            accountName: "kamu",
             __typename: "Account",
-            accountProvider: AccountProvider.Password,
+            ...mockOwnerFieldsWithAvatar,
         },
         alias: "account.tokens.transfers",
         visibility: mockPublicDatasetVisibility,
@@ -1013,10 +1013,8 @@ export const mockDatasets: DatasetBasicsFragment[] = [
         kind: DatasetKind.Root,
         name: "account.tokens.transfers",
         owner: {
-            id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-            accountName: "kamu",
             __typename: "Account",
-            accountProvider: AccountProvider.Password,
+            ...mockOwnerFieldsWithAvatar,
         },
         alias: "account.tokens.transfers",
         visibility: mockPublicDatasetVisibility,
@@ -1027,10 +1025,8 @@ export const mockDatasets: DatasetBasicsFragment[] = [
         kind: DatasetKind.Root,
         name: "account.tokens.transfers",
         owner: {
-            id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-            accountName: "kamu",
             __typename: "Account",
-            accountProvider: AccountProvider.Password,
+            ...mockOwnerFieldsWithAvatar,
         },
         alias: "account.tokens.transfers",
         visibility: mockPublicDatasetVisibility,
@@ -1042,10 +1038,8 @@ export const mockDatasets: DatasetBasicsFragment[] = [
         kind: DatasetKind.Root,
         name: "account.tokens.transfers",
         owner: {
-            id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-            accountName: "kamu",
             __typename: "Account",
-            accountProvider: AccountProvider.Password,
+            ...mockOwnerFieldsWithAvatar,
         },
         alias: "account.tokens.transfers",
         visibility: mockPublicDatasetVisibility,

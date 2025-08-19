@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "@apollo/client/core";
+import { gql } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -4441,6 +4441,7 @@ export type AccountBasicsFragment = {
     id: string;
     accountName: string;
     accountProvider: AccountProvider;
+    avatarUrl?: string | null;
 };
 
 export type DatasetConnectionDataFragment = {
@@ -4467,13 +4468,6 @@ export type DatasetConnectionDataFragment = {
             };
         } & DatasetBasicsFragment
     >;
-};
-
-export type AccountExtendedFragment = {
-    __typename?: "Account";
-    id: string;
-    accountName: string;
-    avatarUrl?: string | null;
 };
 
 export type AccountWithEmailFragment = {
@@ -6795,7 +6789,7 @@ export type MetadataBlockFragment = {
     prevBlockHash?: string | null;
     systemTime: string;
     sequenceNumber: number;
-    author: { __typename?: "Account" } & AccountExtendedFragment;
+    author: { __typename?: "Account" } & AccountBasicsFragment;
     event:
         | ({ __typename: "AddData" } & AddDataEventFragment)
         | ({ __typename: "AddPushSource" } & AddPushSourceEventFragment)
@@ -7121,6 +7115,7 @@ export const AccountBasicsFragmentDoc = gql`
         id
         accountName
         accountProvider
+        avatarUrl
     }
 `;
 export const DatasetBasicsFragmentDoc = gql`
@@ -8247,13 +8242,6 @@ export const DatasetReadmeFragmentDoc = gql`
         }
     }
 `;
-export const AccountExtendedFragmentDoc = gql`
-    fragment AccountExtended on Account {
-        id
-        accountName
-        avatarUrl
-    }
-`;
 export const SeedEventFragmentDoc = gql`
     fragment SeedEvent on Seed {
         datasetId
@@ -8352,7 +8340,7 @@ export const MetadataBlockFragmentDoc = gql`
         systemTime
         sequenceNumber
         author {
-            ...AccountExtended
+            ...AccountBasics
         }
         event {
             __typename
@@ -8370,7 +8358,7 @@ export const MetadataBlockFragmentDoc = gql`
             ...DisablePollingSourceEvent
         }
     }
-    ${AccountExtendedFragmentDoc}
+    ${AccountBasicsFragmentDoc}
     ${SeedEventFragmentDoc}
     ${SetVocabEventFragmentDoc}
     ${DatasetTransformFragmentDoc}

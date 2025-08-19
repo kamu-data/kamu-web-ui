@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { mockPublicDatasetVisibility } from "src/app/search/mock.data";
+import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "src/app/search/mock.data";
 import { mockDatasetMainDataId } from "src/app/search/mock.data";
 import {
     AccountByNameQuery,
@@ -151,10 +151,8 @@ export const mockAccountListDatasetsWithFlowsQuery: AccountListDatasetsWithFlows
                                 kind: DatasetKind.Root,
                                 name: "baccount.tokens.transfers",
                                 owner: {
-                                    id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                                    accountName: "kamu",
                                     __typename: "Account",
-                                    accountProvider: AccountProvider.Password,
+                                    ...mockOwnerFieldsWithAvatar,
                                 },
                                 alias: "account.tokens.transfers",
                                 visibility: mockPublicDatasetVisibility,
@@ -179,10 +177,8 @@ export const mockAccountListDatasetsWithFlowsQuery: AccountListDatasetsWithFlows
                                 kind: DatasetKind.Root,
                                 name: "account.tokens.transfers",
                                 owner: {
-                                    id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                                    accountName: "kamu",
                                     __typename: "Account",
-                                    accountProvider: AccountProvider.Password,
+                                    ...mockOwnerFieldsWithAvatar,
                                 },
                                 alias: "account.tokens.transfers",
                                 visibility: mockPublicDatasetVisibility,
@@ -207,10 +203,8 @@ export const mockAccountListDatasetsWithFlowsQuery: AccountListDatasetsWithFlows
                                 kind: DatasetKind.Root,
                                 name: "account.tokens.transfers",
                                 owner: {
-                                    id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                                    accountName: "kamu",
                                     __typename: "Account",
-                                    accountProvider: AccountProvider.Password,
+                                    ...mockOwnerFieldsWithAvatar,
                                 },
                                 alias: "caccount.tokens.transfers",
                                 visibility: mockPublicDatasetVisibility,
@@ -235,10 +229,8 @@ export const mockAccountListDatasetsWithFlowsQuery: AccountListDatasetsWithFlows
                                 kind: DatasetKind.Root,
                                 name: "account.tokens.transfers",
                                 owner: {
-                                    id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                                    accountName: "kamu",
                                     __typename: "Account",
-                                    accountProvider: AccountProvider.Password,
+                                    ...mockOwnerFieldsWithAvatar,
                                 },
                                 alias: "account.tokens.transfers",
                                 visibility: mockPublicDatasetVisibility,

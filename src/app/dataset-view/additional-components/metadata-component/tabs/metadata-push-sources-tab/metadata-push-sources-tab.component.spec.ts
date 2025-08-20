@@ -7,9 +7,8 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MetadataPushSourcesTabComponent } from "./metadata-push-sources-tab.component";
-import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { mockFullPowerDatasetPermissionsFragment, mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
-import { mockMetadataDerivedUpdate, mockOverviewDataUpdate, mockOverviewUpdate } from "../../../data-tabs.mock";
+import { mockMetadataRootUpdate } from "../../../data-tabs.mock";
 import { NavigationService } from "src/app/services/navigation.service";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
@@ -31,12 +30,7 @@ describe("MetadataPushSourcesTabComponent", () => {
         component.datasetMetadataTabData = {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-            overviewUpdate: {
-                schema: mockMetadataDerivedUpdate.schema,
-                content: mockOverviewDataUpdate.content,
-                overview: mockOverviewUpdate.overview,
-                size: mockOverviewDataUpdate.size,
-            } as OverviewUpdate,
+            metadataSummary: mockMetadataRootUpdate.metadataSummary,
         };
         registerMatSvgIcons();
         fixture.detectChanges();

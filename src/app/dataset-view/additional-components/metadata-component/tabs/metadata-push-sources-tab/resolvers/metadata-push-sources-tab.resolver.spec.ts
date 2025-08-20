@@ -8,7 +8,6 @@
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 import { metadataPushSourcesTabResolverFn } from "./metadata-push-sources-tab.resolver";
-import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 import { Apollo } from "apollo-angular";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
@@ -19,14 +18,15 @@ import {
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
 import { Observable } from "rxjs";
-import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { mockMetadataRootUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { MetadataTabData } from "../../../metadata.constants";
 
 describe("metadataPushSourcesTabComponentResolver", () => {
     let datasetService: DatasetService;
     let datasetSubsService: DatasetSubscriptionsService;
     let navigationService: NavigationService;
 
-    const executeResolver: ResolveFn<DatasetOverviewTabData | null> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<MetadataTabData | null> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => metadataPushSourcesTabResolverFn(...resolverParameters));
 
     beforeEach(() => {
@@ -45,19 +45,19 @@ describe("metadataPushSourcesTabComponentResolver", () => {
     it("should check resolver", () => {
         datasetService.emitDatasetChanged(mockDatasetBasicsRootFragment);
         datasetSubsService.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
-        const cloneMockOverviewUpdate = structuredClone(mockOverviewUpdate);
-        cloneMockOverviewUpdate.overview.metadata.currentPollingSource = null;
-        cloneMockOverviewUpdate.overview.metadata.currentPushSources = [];
-        datasetSubsService.emitOverviewChanged(cloneMockOverviewUpdate);
+        const cloneMockMetadataRootUpdate = structuredClone(mockMetadataRootUpdate);
+        cloneMockMetadataRootUpdate.metadataSummary.metadata.currentPollingSource = null;
+        cloneMockMetadataRootUpdate.metadataSummary.metadata.currentPushSources = [];
+        datasetSubsService.emitMetadataSchemaChanged(cloneMockMetadataRootUpdate);
         const routeSnapshot = {} as ActivatedRouteSnapshot;
         const mockState = {} as RouterStateSnapshot;
 
-        const result = executeResolver(routeSnapshot, mockState) as Observable<DatasetOverviewTabData>;
-        result.subscribe((data: DatasetOverviewTabData) => {
+        const result = executeResolver(routeSnapshot, mockState) as Observable<MetadataTabData>;
+        result.subscribe((data: MetadataTabData) => {
             expect(data).toEqual({
                 datasetBasics: mockDatasetBasicsRootFragment,
                 datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-                overviewUpdate: cloneMockOverviewUpdate,
+                metadataSummary: cloneMockMetadataRootUpdate.metadataSummary,
             });
         });
     });
@@ -66,10 +66,10 @@ describe("metadataPushSourcesTabComponentResolver", () => {
         const navigateToPageNotFoundSpy = spyOn(navigationService, "navigateToPageNotFound");
         datasetSubsService.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
         datasetService.emitDatasetChanged(mockDatasetBasicsDerivedFragment);
-        datasetSubsService.emitOverviewChanged(structuredClone(mockOverviewUpdate));
+        datasetSubsService.emitMetadataSchemaChanged(mockMetadataRootUpdate);
         const routeSnapshot = {} as ActivatedRouteSnapshot;
         const mockState = {} as RouterStateSnapshot;
-        const result = executeResolver(routeSnapshot, mockState) as Observable<DatasetOverviewTabData>;
+        const result = executeResolver(routeSnapshot, mockState) as Observable<MetadataTabData>;
         result.subscribe(() => {
             expect(navigateToPageNotFoundSpy).toHaveBeenCalledTimes(1);
         });

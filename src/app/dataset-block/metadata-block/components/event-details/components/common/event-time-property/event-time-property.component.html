@@ -1,6 +1,9 @@
 <div *ngIf="isFromMetadata">
     <p>From metadata</p>
 </div>
+<div *ngIf="isFromSystemTime">
+    <p>From system time</p>
+</div>
 <div *ngIf="isFromPath">
     <p>From path</p>
     <p *ngIf="data.__typename === 'EventTimeSourceFromPath' && data.pattern">Pattern: {{ data.pattern }}</p>

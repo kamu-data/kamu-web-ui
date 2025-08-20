@@ -13,10 +13,10 @@ import { ModalService } from "src/app/common/components/modal/modal.service";
 import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.directive";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { NavigationService } from "src/app/services/navigation.service";
 import { SourceEventCommonDataComponent } from "../common/source-event-common-data/source-event-common-data.component";
+import { MetadataTabData } from "../../metadata.constants";
 
 @Component({
     selector: "app-metadata-push-sources-tab",
@@ -38,14 +38,13 @@ import { SourceEventCommonDataComponent } from "../common/source-event-common-da
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataPushSourcesTabComponent {
-    @Input(RoutingResolvers.METADATA_PUSH_SOURCES_TAB_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
+    @Input(RoutingResolvers.METADATA_PUSH_SOURCES_TAB_KEY) public datasetMetadataTabData: MetadataTabData;
 
     private modalService = inject(ModalService);
     private navigationService = inject(NavigationService);
 
     public get pushSources(): MaybeNullOrUndefined<AddPushSourceEventFragment[]> {
-        return this.datasetMetadataTabData.overviewUpdate.overview.metadata
-            .currentPushSources as AddPushSourceEventFragment[];
+        return this.datasetMetadataTabData.metadataSummary.metadata.currentPushSources;
     }
 
     public get canEditAddPushSource(): boolean {

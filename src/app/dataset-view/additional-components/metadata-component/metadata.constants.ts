@@ -5,6 +5,12 @@
  * included in the LICENSE file.
  */
 
+import {
+    DatasetBasicsFragment,
+    DatasetMetadataSummaryFragment,
+    DatasetPermissionsFragment,
+} from "src/app/api/kamu.graphql.interface";
+
 export enum MetadataTabs {
     Schema = "schema",
     PollingSource = "polling-source",
@@ -12,6 +18,12 @@ export enum MetadataTabs {
     Transformation = "transformation",
     Watermark = "watermark",
     License = "license",
+}
+
+export interface MetadataTabData {
+    datasetBasics: DatasetBasicsFragment;
+    datasetPermissions: DatasetPermissionsFragment;
+    metadataSummary: DatasetMetadataSummaryFragment;
 }
 
 export interface MetadataMenuItem {

@@ -14,6 +14,8 @@ import { EnginePropertyComponent } from "src/app/dataset-block/metadata-block/co
 import { SqlQueryViewerComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/sql-query-viewer/sql-query-viewer.component";
 import { MergeStrategyPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/merge-strategy-property/merge-strategy-property.component";
 import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
+import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
+import { SeparatorPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/separator-property/separator-property.component";
 
 @Component({
     selector: "app-source-event-common-data",
@@ -29,12 +31,15 @@ import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/com
         MergeStrategyPropertyComponent,
         SchemaPropertyComponent,
         SqlQueryViewerComponent,
+        SeparatorPropertyComponent,
     ],
     templateUrl: "./source-event-common-data.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SourceEventCommonDataComponent {
     @Input({ required: true }) public sourceEvent: SetPollingSourceEventFragment | AddPushSourceEventFragment;
+
+    public readonly SOURCES_TOOLTIPS: typeof SourcesTooltipsTexts = SourcesTooltipsTexts;
 
     public readonly ReadSectionMapping: Record<string, string> = {
         ReadStepCsv: "Csv",

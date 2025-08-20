@@ -6,12 +6,43 @@
  */
 
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 import { datasetSettingsGeneralTabResolverFn } from "../../general/resolver/dataset-settings-general-tab.resolver";
+import { DatasetSettingsTransformOptionsTabData } from "../dataset-settings-transform-options-tab.data";
+import { map, Observable, of, switchMap } from "rxjs";
+import { inject } from "@angular/core";
+import { DatasetFlowTriggerService } from "../../../services/dataset-flow-trigger.service";
+import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetFlowType, GetDatasetFlowTriggersQuery } from "src/app/api/kamu.graphql.interface";
 
-export const datasetSettingsTransformTabResolverFn: ResolveFn<DatasetViewData | null> = (
+export const datasetSettingsTransformTabResolverFn: ResolveFn<DatasetSettingsTransformOptionsTabData | null> = (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
 ) => {
-    return datasetSettingsGeneralTabResolverFn(route, state);
+    const datasetFlowTriggerService = inject(DatasetFlowTriggerService);
+
+    return (
+        datasetSettingsGeneralTabResolverFn(route, state) as Observable<DatasetSettingsTransformOptionsTabData | null>
+    ).pipe(
+        // We can safely cast here because the resolver is used in a context where the type is DatasetSettingsIngestConfigurationTabData
+        switchMap((data: DatasetViewData | null) => {
+            if (data === null) {
+                return of(null);
+            }
+            return datasetFlowTriggerService
+                .fetchDatasetFlowTriggers(data.datasetBasics.id, DatasetFlowType.ExecuteTransform)
+                .pipe(
+                    map((query: GetDatasetFlowTriggersQuery) => {
+                        const flowTriggers = query.datasets.byId?.flows.triggers.byType;
+                        const paused = flowTriggers?.paused ?? true;
+                        const reactive = flowTriggers?.reactive ?? null;
+                        return {
+                            datasetBasics: data.datasetBasics,
+                            datasetPermissions: data.datasetPermissions,
+                            reactive,
+                            paused,
+                        } as DatasetSettingsTransformOptionsTabData;
+                    }),
+                );
+        }),
+    );
 };

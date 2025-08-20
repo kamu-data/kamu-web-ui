@@ -12,8 +12,12 @@ import { HarnessLoader } from "@angular/cdk/testing";
 
 import { FlowDetailsHistoryTabComponent } from "./flow-details-history-tab.component";
 import { FlowDetailsHistoryTabHarness } from "./flow-details-history-tab.component.harness";
-import { FlowStatus } from "src/app/api/kamu.graphql.interface";
-import { mockDatasetFlowByIdResponse } from "src/app/api/mock/dataset-flow.mock";
+import { FlowStatus, TaskStatus } from "src/app/api/kamu.graphql.interface";
+import {
+    mockDatasetFlowByIdResponse,
+    mockFlowHistoryDataFragment,
+    mockFlowSummaryDataFragments,
+} from "src/app/api/mock/dataset-flow.mock";
 
 describe("FlowDetailsHistoryTabComponent", () => {
     let component: FlowDetailsHistoryTabComponent;
@@ -36,7 +40,7 @@ describe("FlowDetailsHistoryTabComponent", () => {
 
         // Apply overrides to the mock response
         if (mockOverrides) {
-            Object.assign(mockResponse.flow, mockOverrides);
+            Object.assign(mockResponse, mockOverrides);
         }
 
         component.response = mockResponse;
@@ -60,7 +64,10 @@ describe("FlowDetailsHistoryTabComponent", () => {
 
         it("should render last item with running status showing animation image", async () => {
             await setupComponent({
-                status: FlowStatus.Running,
+                flow: {
+                    ...mockFlowSummaryDataFragments[0],
+                    status: FlowStatus.Running,
+                },
             });
 
             const hasAnimationImage = await harness.hasAnimationImage();
@@ -69,7 +76,10 @@ describe("FlowDetailsHistoryTabComponent", () => {
 
         it("should render last item with finished status without animation image", async () => {
             await setupComponent({
-                status: FlowStatus.Finished,
+                flow: {
+                    ...mockFlowSummaryDataFragments[0],
+                    status: FlowStatus.Finished,
+                },
             });
 
             const hasAnimationImage = await harness.hasAnimationImage();
@@ -105,6 +115,85 @@ describe("FlowDetailsHistoryTabComponent", () => {
                 expect(firstIcon).toBeTruthy();
                 expect(firstIcon?.icon).toBeTruthy();
             }
+        });
+    });
+
+    describe("History item filtering", () => {
+        it("should skip queued tasks messages", async () => {
+            await setupComponent({
+                flowHistory: [
+                    mockFlowHistoryDataFragment[0], // initiated
+                    mockFlowHistoryDataFragment[1], // start condition updated
+                    {
+                        ...mockFlowHistoryDataFragment[2],
+                        taskStatus: TaskStatus.Queued,
+                    },
+                    mockFlowHistoryDataFragment[2], // task changed to running
+                ],
+            });
+
+            const itemCount = await harness.getHistoryItemsCount();
+            expect(itemCount).toBe(3); // Should skip the queued task
+            expect(await harness.getHistoryItemDescription(0)).toContain("Flow initiated automatically");
+            expect(await harness.getHistoryItemDescription(1)).toContain("Waiting for free executor");
+            expect(await harness.getHistoryItemDescription(2)).toContain("Polling ingest task running");
+        });
+
+        it("should skip immediate batching condition items", async () => {
+            await setupComponent({
+                flowHistory: [
+                    mockFlowHistoryDataFragment[0], // initiated
+                    {
+                        ...mockFlowHistoryDataFragment[1],
+                        __typename: "FlowEventStartConditionUpdated",
+                        startCondition: {
+                            __typename: "FlowStartConditionReactive",
+                            activeBatchingRule: {
+                                __typename: "FlowTriggerBatchingRuleImmediate",
+                            },
+                        },
+                    }, // immediate batching condition
+                    mockFlowHistoryDataFragment[2], // task changed to running
+                ],
+            });
+
+            const itemCount = await harness.getHistoryItemsCount();
+            expect(itemCount).toBe(2); // Should skip the immediate batching condition item
+            expect(await harness.getHistoryItemDescription(0)).toContain("Flow initiated automatically");
+            expect(await harness.getHistoryItemDescription(1)).toContain("Polling ingest task running");
+        });
+
+        it("should render buffering batching condition items", async () => {
+            await setupComponent({
+                flowHistory: [
+                    mockFlowHistoryDataFragment[0], // initiated
+                    {
+                        ...mockFlowHistoryDataFragment[1],
+                        __typename: "FlowEventStartConditionUpdated",
+                        startCondition: {
+                            __typename: "FlowStartConditionReactive",
+                            activeBatchingRule: {
+                                __typename: "FlowTriggerBatchingRuleBuffering",
+                                minRecordsToAwait: 100,
+                                maxBatchingInterval: {
+                                    every: 10,
+                                    unit: "Minutes",
+                                },
+                            },
+                            batchingDeadline: mockFlowHistoryDataFragment[2].eventTime,
+                            accumulatedRecordsCount: 200,
+                            watermarkModified: false,
+                        },
+                    }, // buffering batching condition
+                    mockFlowHistoryDataFragment[2], // task changed to running
+                ],
+            });
+
+            const itemCount = await harness.getHistoryItemsCount();
+            expect(itemCount).toBe(3);
+            expect(await harness.getHistoryItemDescription(0)).toContain("Flow initiated automatically");
+            expect(await harness.getHistoryItemDescription(1)).toContain("Waiting for reactive condition");
+            expect(await harness.getHistoryItemDescription(2)).toContain("Polling ingest task running");
         });
     });
 });

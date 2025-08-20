@@ -132,12 +132,8 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
                             __typename: "FlowConfiguration",
                             rule: {
                                 __typename: "FlowConfigRuleCompaction",
-                                compactionMode: {
-                                    __typename: "FlowConfigCompactionModeFull",
-                                    maxSliceSize: 1000000,
-                                    maxSliceRecords: 50000,
-                                    recursive: false,
-                                },
+                                maxSliceSize: 1000000,
+                                maxSliceRecords: 50000,
                             },
                             retryPolicy: null,
                         },

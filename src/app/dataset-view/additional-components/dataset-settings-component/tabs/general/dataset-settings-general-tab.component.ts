@@ -30,7 +30,6 @@ import { DatasetSettingsService } from "../../services/dataset-settings.service"
 import { Observable, shareReplay } from "rxjs";
 import { CompactionTooltipsTexts } from "src/app/common/tooltips/compacting.text";
 import { DatasetResetMode, RenameDatasetFormType, ResetDatasetFormType } from "./dataset-settings-general-tab.types";
-import { DatasetCompactionService } from "../../services/dataset-compaction.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import AppValues from "src/app/common/values/app.values";
 import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
@@ -86,8 +85,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     private datasetSettingsService = inject(DatasetSettingsService);
     private fb = inject(FormBuilder);
     private modalService = inject(ModalService);
-    private datasetCompactionService = inject(DatasetCompactionService);
-    private flowsService = inject(DatasetFlowsService);
+    private datasetFlowsService = inject(DatasetFlowsService);
     private navigationService = inject(NavigationService);
     private datasetService = inject(DatasetService);
 
@@ -110,7 +108,6 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
 
         this.resetDatasetForm = this.fb.nonNullable.group({
             mode: [DatasetResetMode.RESET_TO_SEED],
-            recursive: [false],
         });
 
         if (!this.datasetPermissions.permissions.general.canRename) {
@@ -128,10 +125,6 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
 
     public get datasetNameControl(): AbstractControl {
         return this.renameDatasetForm.controls.datasetName;
-    }
-
-    public get recursiveControl(): FormControl<boolean> {
-        return this.resetDatasetForm.controls.recursive;
     }
 
     public get modeControl(): FormControl<DatasetResetMode> {
@@ -214,14 +207,13 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                         const mode = this.modeControl.value;
                         switch (mode) {
                             case DatasetResetMode.RESET_TO_SEED: {
-                                this.datasetCompactionService
-                                    .resetToSeed({
+                                this.datasetFlowsService
+                                    .datasetTriggerResetFlow({
                                         datasetId: this.datasetBasics.id,
-                                        resetArgs: {
+                                        resetConfigInput: {
                                             mode: {
                                                 toSeed: {},
                                             },
-                                            recursive: this.recursiveControl.value,
                                         },
                                     })
                                     .pipe(takeUntilDestroyed(this.destroyRef))
@@ -239,14 +231,9 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                                 break;
                             }
                             case DatasetResetMode.RESET_METADATA_ONLY: {
-                                this.flowsService
-                                    .datasetTriggerCompactionFlow({
+                                this.datasetFlowsService
+                                    .datasetTriggerResetToMetadataFlow({
                                         datasetId: this.datasetBasics.id,
-                                        compactionConfigInput: {
-                                            metadataOnly: {
-                                                recursive: this.recursiveControl.value,
-                                            },
-                                        },
                                     })
                                     .pipe(takeUntilDestroyed(this.destroyRef))
                                     .subscribe((result: boolean) => {

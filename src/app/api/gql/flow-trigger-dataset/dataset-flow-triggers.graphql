@@ -15,11 +15,17 @@ query getDatasetFlowTriggers($datasetId: DatasetID!, $datasetFlowType: DatasetFl
               }
             }
 
-            batching {
-              maxBatchingInterval {
-                ...TimeDeltaData
+            reactive {
+              forNewData {
+                __typename
+                ... on FlowTriggerBatchingRuleBuffering {
+                  maxBatchingInterval {
+                    ...TimeDeltaData
+                  }
+                  minRecordsToAwait
+                }
               }
-              minRecordsToAwait
+              forBreakingChange
             }
           }
         }

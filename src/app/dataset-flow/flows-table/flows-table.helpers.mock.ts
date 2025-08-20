@@ -14,7 +14,11 @@ import {
     FlowSummaryDataFragment,
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
-import { mockDatasetMainDataId, mockPublicDatasetVisibility } from "src/app/search/mock.data";
+import {
+    mockDatasetMainDataId,
+    mockOwnerFieldsWithAvatar,
+    mockPublicDatasetVisibility,
+} from "src/app/search/mock.data";
 import { flowEventSubMessageResults } from "../dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers.mock";
 
 export const expectationsDesriptionColumnOptions = [
@@ -27,6 +31,8 @@ export const expectationsDesriptionColumnOptions = [
     { icon: "cancel", class: "aborted-outcome" },
     { icon: "dangerous", class: "failed-status" },
     { icon: "radio_button_checked", class: "retrying-status" },
+    { icon: "dangerous", class: "failed-status" },
+    { icon: "radio_button_checked", class: "running-status" },
 ];
 
 export const expectationsFlowTypeDescriptions = [
@@ -34,8 +40,10 @@ export const expectationsFlowTypeDescriptions = [
     "Execute transformation",
     "Reset to seed",
     "Hard compaction",
-    "Reset",
+    "Reset to metadata only",
     "Polling ingest",
+    "Push ingest",
+    "Webhook message delivery",
 ];
 
 export const expectationsDescriptionEndOfMessage = [
@@ -45,6 +53,8 @@ export const expectationsDescriptionEndOfMessage = [
     "aborted",
     "failed",
     "awaiting retry",
+    "failed",
+    "running",
 ];
 
 export const mockFlowPollingSourceFragmentFetchUrl = {
@@ -113,6 +123,7 @@ export const mockDatasetExecuteTransformFlowSummaryData: FlowSummaryDataFragment
     },
     timing: {
         initiatedAt: "2024-02-12T18:22:29+00:00",
+        firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
         scheduledAt: "2024-02-12T18:22:30+00:00",
         awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
         runningSince: null,
@@ -143,6 +154,7 @@ export const mockDatasetExecuteTransformFlowDescriptionUpdateResultUnknown: Flow
     },
     timing: {
         initiatedAt: "2024-02-12T18:22:29+00:00",
+        firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
         scheduledAt: "2024-02-12T18:22:30+00:00",
         awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
         runningSince: null,
@@ -173,6 +185,7 @@ export const mockDatasetPollingIngestFlowDescriptionUpdateResultUnknown: FlowSum
     },
     timing: {
         initiatedAt: "2024-02-12T18:22:29+00:00",
+        firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
         scheduledAt: "2024-02-12T18:22:30+00:00",
         awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
         runningSince: null,
@@ -185,6 +198,7 @@ export const mockDatasetPollingIngestFlowDescriptionUpdateResultUnknown: FlowSum
 };
 
 export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
+    // 0
     {
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
@@ -198,6 +212,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         outcome: null,
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
             scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: null,
@@ -208,6 +223,32 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         taskIds: [],
         __typename: "Flow",
     },
+    // 1
+    {
+        datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+        description: {
+            transformResult: null,
+            transform: mockFlowSetTransformFragment,
+            __typename: "FlowDescriptionDatasetExecuteTransform",
+        },
+        flowId: "415",
+        status: FlowStatus.Running,
+        initiator: null,
+        outcome: null,
+        timing: {
+            initiatedAt: "2024-02-12T18:22:29+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
+            scheduledAt: "2024-02-12T18:22:30+00:00",
+            awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
+            runningSince: null,
+            lastAttemptFinishedAt: null,
+            __typename: "FlowTimingRecords",
+        },
+        retryPolicy: null,
+        taskIds: [],
+        __typename: "Flow",
+    },
+    // 2
     {
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
@@ -222,6 +263,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
             scheduledAt: "2024-02-12T18:22:30+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: null,
             lastAttemptFinishedAt: null,
@@ -231,29 +273,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         taskIds: [],
         __typename: "Flow",
     },
-    {
-        datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
-        description: {
-            transformResult: null,
-            transform: mockFlowSetTransformFragment,
-            __typename: "FlowDescriptionDatasetExecuteTransform",
-        },
-        flowId: "415",
-        status: FlowStatus.Running,
-        initiator: null,
-        outcome: null,
-        timing: {
-            initiatedAt: "2024-02-12T18:22:29+00:00",
-            scheduledAt: "2024-02-12T18:22:30+00:00",
-            awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
-            runningSince: null,
-            lastAttemptFinishedAt: null,
-            __typename: "FlowTimingRecords",
-        },
-        retryPolicy: null,
-        taskIds: [],
-        __typename: "Flow",
-    },
+    // 3
     {
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
@@ -267,6 +287,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         outcome: null,
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
             scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: null,
@@ -277,6 +298,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         taskIds: [],
         __typename: "Flow",
     },
+    // 4
     {
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
@@ -297,6 +319,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         },
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
             scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: null,
@@ -307,6 +330,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         taskIds: [],
         __typename: "Flow",
     },
+    // 5
     {
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
@@ -327,6 +351,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         },
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
             scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: "2024-02-12T18:22:31+00:00",
@@ -337,6 +362,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         taskIds: [],
         __typename: "Flow",
     },
+    // 6
     {
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
@@ -356,6 +382,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         },
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
             scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: "2024-02-12T18:22:31+00:00",
@@ -366,6 +393,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         taskIds: [],
         __typename: "Flow",
     },
+    // 7
     {
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
@@ -388,6 +416,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         },
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
             scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: null,
@@ -398,6 +427,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         taskIds: [],
         __typename: "Flow",
     },
+    // 8
     {
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
@@ -411,6 +441,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         outcome: null,
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
             scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: null,
@@ -421,6 +452,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         taskIds: [],
         __typename: "Flow",
     },
+    // 9
     {
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
@@ -435,6 +467,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         },
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
             scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: null,
@@ -445,12 +478,13 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         taskIds: [],
         __typename: "Flow",
     },
+    // 10
     {
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
             __typename: "FlowDescriptionDatasetHardCompaction",
             compactionResult: {
-                __typename: "FlowDescriptionHardCompactionNothingToDo",
+                __typename: "FlowDescriptionReorganizationNothingToDo",
                 message: "Nothing to do",
             },
         },
@@ -463,6 +497,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         },
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
             scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: null,
@@ -473,12 +508,13 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         taskIds: [],
         __typename: "Flow",
     },
+    // 11
     {
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
             __typename: "FlowDescriptionDatasetHardCompaction",
             compactionResult: {
-                __typename: "FlowDescriptionHardCompactionSuccess",
+                __typename: "FlowDescriptionReorganizationSuccess",
                 originalBlocksCount: 125,
                 resultingBlocksCount: 13,
                 newHead: "zW1gUpztxhibmmBcpeNgXN5wrJHjkPWzWfEK5DMuSZLzs2u",
@@ -493,6 +529,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         },
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
             scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: null,
@@ -503,21 +540,16 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         taskIds: [],
         __typename: "Flow",
     },
+    // 12
     {
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
-            __typename: "FlowDescriptionDatasetHardCompaction",
-            compactionResult: {
-                __typename: "FlowDescriptionHardCompactionSuccess",
+            __typename: "FlowDescriptionDatasetResetToMetadata",
+            resetToMetadataResult: {
+                __typename: "FlowDescriptionReorganizationSuccess",
                 originalBlocksCount: 125,
                 resultingBlocksCount: 13,
                 newHead: "zW1gUpztxhibmmBcpeNgXN5wrJHjkPWzWfEK5DMuSZLzs2u",
-            },
-        },
-        configSnapshot: {
-            __typename: "FlowConfigRuleCompaction",
-            compactionMode: {
-                __typename: "FlowConfigCompactionModeMetadataOnly",
             },
         },
         flowId: "415",
@@ -529,6 +561,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         },
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
             scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: null,
@@ -539,6 +572,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         taskIds: [],
         __typename: "Flow",
     },
+    // 13
     {
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
@@ -551,6 +585,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         outcome: null,
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
             scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: "2024-02-12T18:22:31+00:00",
@@ -561,6 +596,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         taskIds: [],
         __typename: "Flow",
     },
+    // 14
     {
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
@@ -583,10 +619,8 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
                     name: "my-dataset-input",
                     alias: "owner/my-dataset-input",
                     owner: {
-                        id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                        accountName: "kamu",
                         __typename: "Account",
-                        accountProvider: AccountProvider.Password,
+                        ...mockOwnerFieldsWithAvatar,
                     },
                     visibility: {
                         __typename: "PrivateDatasetVisibility",
@@ -596,10 +630,70 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         },
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
             scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
             runningSince: "2024-02-12T18:22:31+00:00",
             lastAttemptFinishedAt: "2024-02-12T18:22:33+00:00",
+            __typename: "FlowTimingRecords",
+        },
+        retryPolicy: null,
+        taskIds: [],
+        __typename: "Flow",
+    },
+    // 15
+    {
+        datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+        description: {
+            __typename: "FlowDescriptionDatasetResetToMetadata",
+            resetToMetadataResult: {
+                __typename: "FlowDescriptionReorganizationNothingToDo",
+                message: "Nothing to do",
+            },
+        },
+        flowId: "415",
+        status: FlowStatus.Finished,
+        initiator: null,
+        outcome: {
+            __typename: "FlowSuccessResult",
+            message: "Success",
+        },
+        timing: {
+            initiatedAt: "2024-02-12T18:22:29+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
+            scheduledAt: "2024-02-12T18:22:30+00:00",
+            awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
+            runningSince: null,
+            lastAttemptFinishedAt: null,
+            __typename: "FlowTimingRecords",
+        },
+        retryPolicy: null,
+        taskIds: [],
+        __typename: "Flow",
+    },
+    // 16
+    {
+        datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
+        description: {
+            __typename: "FlowDescriptionWebhookDeliver",
+            targetUrl: "https://example.com/webhook",
+            label: "Example Webhook",
+            eventType: "DATASET.REF.UPDATED",
+        },
+        flowId: "415",
+        status: FlowStatus.Finished,
+        initiator: null,
+        outcome: {
+            __typename: "FlowSuccessResult",
+            message: "Success",
+        },
+        timing: {
+            initiatedAt: "2024-02-12T18:22:29+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
+            scheduledAt: "2024-02-12T18:22:30+00:00",
+            awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
+            runningSince: null,
+            lastAttemptFinishedAt: null,
             __typename: "FlowTimingRecords",
         },
         retryPolicy: null,
@@ -622,6 +716,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         outcome: null,
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
             scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-03-14T10:24:29+00:00",
             runningSince: null,
@@ -649,6 +744,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         outcome: null,
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
             scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-03-14T10:24:29+00:00",
             runningSince: null,
@@ -676,6 +772,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         outcome: null,
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
             scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-03-14T10:24:29+00:00",
             runningSince: null,
@@ -705,6 +802,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         outcome: null,
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
             scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-03-14T10:24:29+00:00",
             runningSince: null,
@@ -712,8 +810,9 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
             __typename: "FlowTimingRecords",
         },
         startCondition: {
-            __typename: "FlowStartConditionBatching",
+            __typename: "FlowStartConditionReactive",
             activeBatchingRule: {
+                __typename: "FlowTriggerBatchingRuleBuffering",
                 minRecordsToAwait: 500,
                 maxBatchingInterval: {
                     every: 5,
@@ -741,6 +840,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         outcome: null,
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
             scheduledAt: "2024-03-14T11:44:29+00:00",
             awaitingExecutorSince: "2024-03-14T10:24:29+00:00",
             runningSince: "2024-03-14T10:34:29+00:00",
@@ -768,6 +868,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         outcome: null,
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
             scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-03-14T10:24:29+00:00",
             runningSince: "2024-03-14T10:34:29+00:00",
@@ -798,6 +899,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         },
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
             scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-03-14T10:24:29+00:00",
             runningSince: "2024-03-14T10:34:29+00:00",
@@ -825,6 +927,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         },
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
             scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-03-14T09:22:29+00:00",
             runningSince: null,
@@ -855,6 +958,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         },
         timing: {
             initiatedAt: "2024-02-12T18:22:29+00:00",
+            firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
             scheduledAt: "2024-02-12T18:22:30+00:00",
             awaitingExecutorSince: "2024-03-14T09:22:29+00:00",
             runningSince: "2024-03-14T09:24:29+00:00",
@@ -898,10 +1002,8 @@ export const mockDatasets: DatasetBasicsFragment[] = [
         kind: DatasetKind.Root,
         name: "account.tokens.transfers",
         owner: {
-            id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-            accountName: "kamu",
             __typename: "Account",
-            accountProvider: AccountProvider.Password,
+            ...mockOwnerFieldsWithAvatar,
         },
         alias: "account.tokens.transfers",
         visibility: mockPublicDatasetVisibility,
@@ -912,10 +1014,8 @@ export const mockDatasets: DatasetBasicsFragment[] = [
         kind: DatasetKind.Root,
         name: "account.tokens.transfers",
         owner: {
-            id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-            accountName: "kamu",
             __typename: "Account",
-            accountProvider: AccountProvider.Password,
+            ...mockOwnerFieldsWithAvatar,
         },
         alias: "account.tokens.transfers",
         visibility: mockPublicDatasetVisibility,
@@ -926,10 +1026,8 @@ export const mockDatasets: DatasetBasicsFragment[] = [
         kind: DatasetKind.Root,
         name: "account.tokens.transfers",
         owner: {
-            id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-            accountName: "kamu",
             __typename: "Account",
-            accountProvider: AccountProvider.Password,
+            ...mockOwnerFieldsWithAvatar,
         },
         alias: "account.tokens.transfers",
         visibility: mockPublicDatasetVisibility,
@@ -941,10 +1039,8 @@ export const mockDatasets: DatasetBasicsFragment[] = [
         kind: DatasetKind.Root,
         name: "account.tokens.transfers",
         owner: {
-            id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-            accountName: "kamu",
             __typename: "Account",
-            accountProvider: AccountProvider.Password,
+            ...mockOwnerFieldsWithAvatar,
         },
         alias: "account.tokens.transfers",
         visibility: mockPublicDatasetVisibility,
@@ -980,6 +1076,7 @@ export const mockFlowSummaryDataFragmentShowForceLink: FlowSummaryDataFragment =
     },
     timing: {
         initiatedAt: "2024-08-21T08:46:18.426925618+00:00",
+        firstAttemptScheduledAt: "2024-08-21T08:46:19.426925618+00:00",
         scheduledAt: "2024-08-21T08:46:19.426925618+00:00",
         awaitingExecutorSince: "2024-08-21T08:46:19.426925618+00:00",
         runningSince: "2024-08-21T08:46:20.507478673+00:00",

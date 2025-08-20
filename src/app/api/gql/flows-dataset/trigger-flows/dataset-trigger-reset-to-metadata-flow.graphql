@@ -1,0 +1,33 @@
+mutation datasetTriggerResetToMetadataFlow($datasetId: DatasetID!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      flows {
+        runs {
+          triggerResetToMetadataFlow {
+            ... on TriggerFlowSuccess {
+              flow {
+                ...FlowSummaryData
+              }
+              message
+            }
+
+            ... on FlowIncompatibleDatasetKind {
+              expectedDatasetKind
+              actualDatasetKind
+              message
+            }
+
+            ... on FlowPreconditionsNotMet {
+              message
+            }
+
+            ... on FlowInvalidRunConfigurations {
+              error
+              message
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -11,7 +11,6 @@ import {
     DataSchemaFormat,
     DatasetLineageBasicsFragment,
     DatasetMetadata,
-    AccountProvider,
 } from "src/app/api/kamu.graphql.interface";
 import {
     DataUpdate,
@@ -24,11 +23,13 @@ import {
 import {
     mockDatasetBasicsDerivedFragment,
     mockMetadataCurrentLicense,
+    mockOwnerFieldsWithAvatar,
     mockPublicDatasetVisibility,
 } from "src/app/search/mock.data";
 import { Node } from "@swimlane/ngx-graph";
 import { LineageNodeAccess } from "./lineage-component/lineage-model";
 import { OperationColumnClassEnum } from "src/app/interface/dataset.interface";
+import { TEST_AVATAR_URL } from "src/app/api/mock/auth.mock";
 
 export const mockDataUpdate: DataUpdate = {
     schema: {
@@ -68,8 +69,7 @@ export const mockHistoryUpdate: DatasetHistoryUpdate = {
             systemTime: "2022-08-05T21:19:28.817281255+00:00",
             author: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
+                ...mockOwnerFieldsWithAvatar,
             },
             event: {
                 __typename: "AddData",
@@ -101,8 +101,7 @@ export const mockHistoryUpdate: DatasetHistoryUpdate = {
             sequenceNumber: 3,
             author: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
+                ...mockOwnerFieldsWithAvatar,
             },
             event: {
                 __typename: "SetInfo",
@@ -166,10 +165,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
         name: "alberta.case-details",
         owner: {
             __typename: "Account",
-            id: TEST_ACCOUNT_ID,
-            accountName: "kamu",
-            avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-            accountProvider: AccountProvider.Password,
+            ...mockOwnerFieldsWithAvatar,
         },
         alias: "kamu/alberta.case-details",
         visibility: mockPublicDatasetVisibility,
@@ -209,10 +205,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             name: "alberta.case-details",
             owner: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
-                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                accountProvider: AccountProvider.Password,
+                ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/alberta.case-details",
             visibility: mockPublicDatasetVisibility,
@@ -268,10 +261,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             },
             owner: {
                 __typename: "Account",
-                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
-                accountProvider: AccountProvider.Password,
+                ...mockOwnerFieldsWithAvatar,
             },
             id: "did:odf:z4k88e8jmNqgCt5L84XPdaog32MttcHzGiXcktfuTuDY3QKwiyK",
             kind: DatasetKind.Derivative,
@@ -303,10 +293,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             },
             owner: {
                 __typename: "Account",
-                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
-                accountProvider: AccountProvider.Password,
+                ...mockOwnerFieldsWithAvatar,
             },
             id: "did:odf:z4k88e8nN5SdNPxsc5oeqwdCLvjzcvJzoyEQ938E87A15nTrkAk",
             kind: DatasetKind.Derivative,
@@ -338,10 +325,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             },
             owner: {
                 __typename: "Account",
-                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
-                accountProvider: AccountProvider.Password,
+                ...mockOwnerFieldsWithAvatar,
             },
             id: "did:odf:z4k88e8qAReYmLPFUyaKfk1UHCSY2Mkh6X1AHxuUGNhec76QsGq",
             kind: DatasetKind.Derivative,
@@ -359,10 +343,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 name: "alberta.case-details",
                 owner: {
                     __typename: "Account",
-                    id: TEST_ACCOUNT_ID,
-                    accountName: "kamu",
-                    accountProvider: AccountProvider.Password,
-                    avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                    ...mockOwnerFieldsWithAvatar,
                 },
                 alias: "kamu/alberta.case-details",
                 visibility: mockPublicDatasetVisibility,
@@ -417,10 +398,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 },
                 owner: {
                     __typename: "Account",
-                    avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                    id: TEST_ACCOUNT_ID,
-                    accountName: "kamu",
-                    accountProvider: AccountProvider.Password,
+                    ...mockOwnerFieldsWithAvatar,
                 },
                 id: "did:odf:z4k88e8jmNqgCt5L84XPdaog32MttcHzGiXcktfuTuDY3QKwiyK",
                 kind: DatasetKind.Derivative,
@@ -454,10 +432,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 },
                 owner: {
                     __typename: "Account",
-                    avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                    id: TEST_ACCOUNT_ID,
-                    accountName: "kamu",
-                    accountProvider: AccountProvider.Password,
+                    ...mockOwnerFieldsWithAvatar,
                 },
                 id: "did:odf:z4k88e8jmNqgCt5L84XPdaog32MttcHzGiXcktfuTuDY3QKwiyK",
                 kind: DatasetKind.Derivative,
@@ -489,10 +464,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 },
                 owner: {
                     __typename: "Account",
-                    avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                    id: TEST_ACCOUNT_ID,
-                    accountName: "kamu",
-                    accountProvider: AccountProvider.Password,
+                    ...mockOwnerFieldsWithAvatar,
                 },
                 id: "did:odf:z4k88e8nN5SdNPxsc5oeqwdCLvjzcvJzoyEQ938E87A15nTrkAk",
                 kind: DatasetKind.Derivative,
@@ -526,10 +498,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 },
                 owner: {
                     __typename: "Account",
-                    avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                    id: TEST_ACCOUNT_ID,
-                    accountName: "kamu",
-                    accountProvider: AccountProvider.Password,
+                    ...mockOwnerFieldsWithAvatar,
                 },
                 id: "did:odf:z4k88e8nN5SdNPxsc5oeqwdCLvjzcvJzoyEQ938E87A15nTrkAk",
                 kind: DatasetKind.Derivative,
@@ -561,10 +530,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 },
                 owner: {
                     __typename: "Account",
-                    avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                    id: TEST_ACCOUNT_ID,
-                    accountName: "kamu",
-                    accountProvider: AccountProvider.Password,
+                    ...mockOwnerFieldsWithAvatar,
                 },
                 id: "did:odf:z4k88e8qAReYmLPFUyaKfk1UHCSY2Mkh6X1AHxuUGNhec76QsGq",
                 kind: DatasetKind.Derivative,
@@ -584,10 +550,7 @@ export const mockLineageGraphUpdateWithMqttSource: LineageUpdate = {
         name: "temp",
         owner: {
             __typename: "Account",
-            id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-            accountName: "kamu",
-            avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-            accountProvider: AccountProvider.Password,
+            ...mockOwnerFieldsWithAvatar,
         },
         alias: "temp",
         visibility: mockPublicDatasetVisibility,
@@ -621,10 +584,7 @@ export const mockLineageGraphUpdateWithMqttSource: LineageUpdate = {
             name: "temp",
             owner: {
                 __typename: "Account",
-                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                accountName: "kamu",
-                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                accountProvider: AccountProvider.Password,
+                ...mockOwnerFieldsWithAvatar,
             },
             alias: "temp",
             visibility: mockPublicDatasetVisibility,
@@ -675,7 +635,7 @@ export const mockBuildGraphNodesResult: Node[] = [
                 isCurrent: true,
                 access: LineageNodeAccess.PUBLIC,
                 accountName: "kamu",
-                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                avatarUrl: TEST_AVATAR_URL,
             },
         },
     },
@@ -691,7 +651,7 @@ export const mockBuildGraphNodesResult: Node[] = [
                 isCurrent: false,
                 access: LineageNodeAccess.PUBLIC,
                 accountName: "kamu",
-                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                avatarUrl: TEST_AVATAR_URL,
             },
         },
     },
@@ -707,7 +667,7 @@ export const mockBuildGraphNodesResult: Node[] = [
                 isCurrent: false,
                 access: LineageNodeAccess.PUBLIC,
                 accountName: "kamu",
-                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                avatarUrl: TEST_AVATAR_URL,
             },
         },
     },
@@ -723,7 +683,7 @@ export const mockBuildGraphNodesResult: Node[] = [
                 isCurrent: false,
                 access: LineageNodeAccess.PUBLIC,
                 accountName: "kamu",
-                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                avatarUrl: TEST_AVATAR_URL,
             },
         },
     },
@@ -879,8 +839,7 @@ export const mockOverviewDataUpdate = {
                             sequenceNumber: 14,
                             author: {
                                 __typename: "Account",
-                                id: TEST_ACCOUNT_ID,
-                                accountName: "kamu",
+                                ...mockOwnerFieldsWithAvatar,
                             },
                             event: {
                                 __typename: "AddData",
@@ -985,8 +944,7 @@ export const mockOverviewDataUpdateNullable = {
                             sequenceNumber: 14,
                             author: {
                                 __typename: "Account",
-                                id: TEST_ACCOUNT_ID,
-                                accountName: "kamu",
+                                ...mockOwnerFieldsWithAvatar,
                             },
                             event: {
                                 __typename: "AddData",
@@ -1187,8 +1145,7 @@ export const mockMetadataRootUpdate: MetadataSchemaUpdate = {
                             sequenceNumber: 13,
                             author: {
                                 __typename: "Account",
-                                id: TEST_ACCOUNT_ID,
-                                accountName: "sergeiz",
+                                ...mockOwnerFieldsWithAvatar,
                             },
                             event: {
                                 __typename: "SetAttachments",
@@ -1378,8 +1335,7 @@ export const mockMetadataRootPushSourceUpdate: MetadataSchemaUpdate = {
                             sequenceNumber: 13,
                             author: {
                                 __typename: "Account",
-                                id: TEST_ACCOUNT_ID,
-                                accountName: "sergeiz",
+                                ...mockOwnerFieldsWithAvatar,
                             },
                             event: {
                                 __typename: "SetAttachments",
@@ -1525,9 +1481,7 @@ export const mockMetadataDerivedUpdate: MetadataSchemaUpdate = {
                                 name: "alberta.case-details",
                                 owner: {
                                     __typename: "Account",
-                                    id: TEST_ACCOUNT_ID,
-                                    accountName: "kamu",
-                                    accountProvider: AccountProvider.Password,
+                                    ...mockOwnerFieldsWithAvatar,
                                 },
                                 alias: "kamu/alberta.case-details",
                                 visibility: mockPublicDatasetVisibility,
@@ -1576,8 +1530,7 @@ export const mockMetadataDerivedUpdate: MetadataSchemaUpdate = {
                             sequenceNumber: 6,
                             author: {
                                 __typename: "Account",
-                                id: TEST_ACCOUNT_ID,
-                                accountName: "kamu",
+                                ...mockOwnerFieldsWithAvatar,
                             },
                             event: {
                                 __typename: "ExecuteTransform",
@@ -1729,8 +1682,7 @@ export const mockOverviewWithSetInfo = {
                         sequenceNumber: 14,
                         author: {
                             __typename: "Account",
-                            id: TEST_ACCOUNT_ID,
-                            accountName: "kamu",
+                            ...mockOwnerFieldsWithAvatar,
                         },
                         event: {
                             __typename: "AddData",
@@ -1865,8 +1817,7 @@ export const mockOverviewWithSetLicense = {
                         sequenceNumber: 14,
                         author: {
                             __typename: "Account",
-                            id: TEST_ACCOUNT_ID,
-                            accountName: "kamu",
+                            ...mockOwnerFieldsWithAvatar,
                         },
                         event: {
                             __typename: "AddData",
@@ -1980,6 +1931,7 @@ export const datasetMetadataDerivativeDataset: DatasetMetadata = {
         __typename: undefined,
         statuses: [],
     },
+    metadataProjection: [],
 };
 
 export const datasetMetadataRootDataset: DatasetMetadata = {
@@ -2075,6 +2027,7 @@ export const datasetMetadataRootDataset: DatasetMetadata = {
         __typename: undefined,
         statuses: [],
     },
+    metadataProjection: [],
 };
 
 export const mockOverviewUpdate = {

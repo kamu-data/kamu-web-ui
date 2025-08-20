@@ -177,11 +177,18 @@ describe("FlowDetailsSummaryTabComponent", () => {
             expect(flowInitiatedTime).toBeTruthy();
         });
 
-        it("should render flow running time", async () => {
+        it("should render flow running duration", async () => {
             await setupComponent();
 
-            const flowRunningTime = await harness.getFlowRunningTime();
-            expect(flowRunningTime).toBeTruthy();
+            const flowRunDuration = await harness.getFlowRunDuration();
+            expect(flowRunDuration).toBeTruthy();
+        });
+
+        it("should render flow total time", async () => {
+            await setupComponent();
+
+            const flowTotalTime = await harness.getFlowTotalTime();
+            expect(flowTotalTime).toBeTruthy();
         });
 
         it("should render all basic fields", async () => {

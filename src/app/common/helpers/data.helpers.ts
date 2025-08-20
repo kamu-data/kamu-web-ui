@@ -282,24 +282,24 @@ export const MY_MOMENT_FORMATS = {
 
 export const everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = {
     [TimeUnit.Minutes]: RxwebValidators.range({
-        minimumNumber: 0,
+        minimumNumber: 1,
         maximumNumber: 60,
-        message: "Value should be between 0 to 60",
+        message: "Value should be between 1 to 60",
     }),
     [TimeUnit.Hours]: RxwebValidators.range({
-        minimumNumber: 0,
+        minimumNumber: 1,
         maximumNumber: 24,
-        message: "Value should be between 0 to 24",
+        message: "Value should be between 1 to 24",
     }),
     [TimeUnit.Days]: RxwebValidators.range({
-        minimumNumber: 0,
+        minimumNumber: 1,
         maximumNumber: 31,
-        message: "Value should be between 0 to 31",
+        message: "Value should be between 1 to 31",
     }),
     [TimeUnit.Weeks]: RxwebValidators.range({
-        minimumNumber: 0,
+        minimumNumber: 1,
         maximumNumber: 51,
-        message: "Value should be between 0 to 51",
+        message: "Value should be between 1 to 51",
     }),
 };
 

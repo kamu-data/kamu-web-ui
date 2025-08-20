@@ -5,13 +5,16 @@
  * included in the LICENSE file.
  */
 
-import { FormControl } from "@angular/forms";
-import { TimeUnit } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/interface/app.types";
+import { FormGroup } from "@angular/forms";
+import {
+    TransformTriggerFormType,
+    TransformTriggerFormValue,
+} from "./transform-trigger-form/transform-trigger-form.types";
 
-export interface BatchingFormType {
-    updatesState: FormControl<boolean>;
-    every: FormControl<MaybeNull<number>>;
-    unit: FormControl<MaybeNull<TimeUnit>>;
-    minRecordsToAwait: FormControl<MaybeNull<number>>;
+export interface TransformSettingsFormType {
+    transformTrigger: FormGroup<TransformTriggerFormType>;
+}
+
+export interface TransformSettingsFormValue {
+    transformTrigger: TransformTriggerFormValue;
 }

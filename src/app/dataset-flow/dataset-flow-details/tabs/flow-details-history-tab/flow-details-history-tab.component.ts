@@ -60,7 +60,17 @@ export class FlowDetailsHistoryTabComponent {
 
     public get history(): FlowHistoryDataFragment[] {
         return this.flowHistory.filter(
-            (item) => !(item.__typename === "FlowEventTaskChanged" && item.taskStatus === TaskStatus.Queued),
+            (item) =>
+                !(item.__typename === "FlowEventTaskChanged" && item.taskStatus === TaskStatus.Queued) &&
+                !this.isEmptyBatchingConditionItem(item),
+        );
+    }
+
+    private isEmptyBatchingConditionItem(item: FlowHistoryDataFragment): boolean {
+        return (
+            item.__typename === "FlowEventStartConditionUpdated" &&
+            item.startCondition.__typename === "FlowStartConditionReactive" &&
+            item.startCondition.activeBatchingRule.__typename === "FlowTriggerBatchingRuleImmediate"
         );
     }
 

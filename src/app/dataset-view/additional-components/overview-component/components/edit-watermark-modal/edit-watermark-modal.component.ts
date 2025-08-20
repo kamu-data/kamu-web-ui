@@ -48,6 +48,7 @@ export class EditWatermarkModalComponent extends BaseComponent implements OnInit
     @Input({ required: true }) public currentWatermark: MaybeNullOrUndefined<string>;
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     public date: Date;
+
     public timeZone = this.currentTimeZone;
 
     public activeModal = inject(NgbActiveModal);

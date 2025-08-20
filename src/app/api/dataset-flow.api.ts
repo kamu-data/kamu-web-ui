@@ -26,6 +26,8 @@ import {
     DatasetTriggerIngestFlowMutation,
     DatasetTriggerResetFlowGQL,
     DatasetTriggerResetFlowMutation,
+    DatasetTriggerResetToMetadataFlowGQL,
+    DatasetTriggerResetToMetadataFlowMutation,
     DatasetTriggerTransformFlowGQL,
     DatasetTriggerTransformFlowMutation,
     FlowConfigCompactionInput,
@@ -65,6 +67,7 @@ export class DatasetFlowApi {
     private datasetTriggetTransformFlowGQL = inject(DatasetTriggerTransformFlowGQL);
     private datasetTriggerCompactionFlowGQL = inject(DatasetTriggerCompactionFlowGQL);
     private datasetTriggerResetFlowGQL = inject(DatasetTriggerResetFlowGQL);
+    private datasetTriggerResetToMetadataFlowGQL = inject(DatasetTriggerResetToMetadataFlowGQL);
 
     private datasetFlowByIdGQL = inject(GetFlowByIdGQL);
     private cancelScheduledTasksGQL = inject(CancelScheduledTasksGQL);
@@ -116,6 +119,17 @@ export class DatasetFlowApi {
             first(),
             map((result: MutationResult<DatasetTriggerResetFlowMutation>) => {
                 return result.data as DatasetTriggerResetFlowMutation;
+            }),
+        );
+    }
+
+    public datasetTriggerResetToMetadataFlow(params: {
+        datasetId: string;
+    }): Observable<DatasetTriggerResetToMetadataFlowMutation> {
+        return this.datasetTriggerResetToMetadataFlowGQL.mutate({ ...params }).pipe(
+            first(),
+            map((result: MutationResult<DatasetTriggerResetToMetadataFlowMutation>) => {
+                return result.data as DatasetTriggerResetToMetadataFlowMutation;
             }),
         );
     }
@@ -231,14 +245,10 @@ export class DatasetFlowApi {
             );
     }
 
-    public datasetPauseFlows(params: {
-        datasetId: string;
-        datasetFlowType?: DatasetFlowType;
-    }): Observable<DatasetPauseFlowsMutation> {
+    public datasetPauseFlows(params: { datasetId: string }): Observable<DatasetPauseFlowsMutation> {
         return this.datasetPauseFlowsGQL
             .mutate({
                 datasetId: params.datasetId,
-                datasetFlowType: params.datasetFlowType,
             })
             .pipe(
                 first(),
@@ -248,14 +258,10 @@ export class DatasetFlowApi {
             );
     }
 
-    public datasetResumeFlows(params: {
-        datasetId: string;
-        datasetFlowType?: DatasetFlowType;
-    }): Observable<DatasetResumeFlowsMutation> {
+    public datasetResumeFlows(params: { datasetId: string }): Observable<DatasetResumeFlowsMutation> {
         return this.datasetResumeFlowsGQL
             .mutate({
                 datasetId: params.datasetId,
-                datasetFlowType: params.datasetFlowType,
             })
             .pipe(
                 first(),

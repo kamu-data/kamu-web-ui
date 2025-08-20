@@ -5,13 +5,39 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Redesign "Metadata" tab
+
+## [0.55.0] - 2025-08-20
+### Added
+- Search page: added avatar image and badge for dataset kind
+- Support for webhook flows visualization and history
+- Transform options page replaced, new form allows entering:
+   - new data strategy: process immediately vs batching mode
+   - breaking change strategy: ignore vs recover
+- Flow history enhancements:
+  - hyperlink to input dataset and upstream flow   
+  - skipping empty batching conditions
+  - skipping duration of the initiation event
+  - differentiating between "run duration" and "total time"
+### Changed
+- Numerous flow system API corrections addressed
+- No more "recursive" flags in compaction and reset flows
+- Separate "Reset to Metadata" flow
+
+## [0.54.0] - 2025-08-13
+### Added
+- Block metadata page: added "Show as YAML" toggle
 ### Fixed
 - Data tab: fixed view for "Saved queries" block
+- Settings tab: active tab is highlighted correctly
+- Added a missing provider for "Set watermark" feature
 ### Changed
 - Avoiding full re-rendering of flow listing tables on polling source updates
+- Removed ineffective filtration for BaseYamlEventService
 - "History" tab redesign  
 - Metadata block page: сhanged display of ID for input section
-- Redesign "Metadata" tab
+- Changed view of block navigator
 
 ## [0.53.0] - 2025-07-23
 ### Changed

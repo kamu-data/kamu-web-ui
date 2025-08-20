@@ -52,10 +52,18 @@
             </div>
             <div class="row mb-4">
                 <div class="col-md-3">
-                    <span class="fw-bold">Total run time</span>
+                    <span class="fw-bold">Run duration</span>
                 </div>
                 <div class="col-md-9">
-                    <span data-test-id="flow-running-time">{{ flowDuration() }}</span>
+                    <span data-test-id="flow-run-duration">{{ flowRunDuration() }}</span>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <span class="fw-bold">Total time</span>
+                </div>
+                <div class="col-md-9">
+                    <span data-test-id="flow-total-time">{{ flowFullDuration() }}</span>
                 </div>
             </div>
             <div class="row">

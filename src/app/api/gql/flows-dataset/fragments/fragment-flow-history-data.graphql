@@ -7,25 +7,33 @@ fragment FlowHistoryData on FlowEvent {
   }
 
   ... on FlowEventInitiated {
-    trigger {
+    activationCause {
       __typename
-      ... on FlowTriggerAutoPolling {
+      ... on FlowActivationCauseAutoPolling {
         __typename
       }
-      ... on FlowTriggerManual {
+      ... on FlowActivationCauseManual {
         initiator {
           ...Account
         }
       }
-      ... on FlowTriggerPush {
-        __typename
-      }
-      ... on FlowTriggerInputDatasetFlow {
+      ... on FlowActivationCauseDatasetUpdate {
         dataset {
           ...DatasetBasics
         }
-        flowId
-        flowType
+        source {
+          __typename
+          ... on FlowActivationCauseDatasetUpdateSourceUpstreamFlow {
+            flowId
+          }
+          ... on FlowActivationCauseDatasetUpdateSourceHttpIngest {
+            sourceName
+          }
+          ... on FlowActivationCauseDatasetUpdateSourceSmartProtocolPush {
+            accountName
+            isForce
+          }
+        }
       }
     }
   }
@@ -39,11 +47,14 @@ fragment FlowHistoryData on FlowEvent {
         shiftedFrom
       }
 
-      ... on FlowStartConditionBatching {
+      ... on FlowStartConditionReactive {
         activeBatchingRule {
-          minRecordsToAwait
-          maxBatchingInterval {
-            ...TimeDeltaData
+          __typename
+          ... on FlowTriggerBatchingRuleBuffering {
+            minRecordsToAwait
+            maxBatchingInterval {
+              ...TimeDeltaData
+            }
           }
         }
         batchingDeadline
@@ -93,26 +104,34 @@ fragment FlowHistoryData on FlowEvent {
     nextAttemptAt
   }
 
-  ... on FlowEventTriggerAdded {
-    trigger {
+  ... on FlowEventActivationCauseAdded {
+    activationCause {
       __typename
-      ... on FlowTriggerAutoPolling {
+      ... on FlowActivationCauseAutoPolling {
         __typename
       }
-      ... on FlowTriggerManual {
+      ... on FlowActivationCauseManual {
         initiator {
           ...Account
         }
       }
-      ... on FlowTriggerPush {
-        __typename
-      }
-      ... on FlowTriggerInputDatasetFlow {
+      ... on FlowActivationCauseDatasetUpdate {
         dataset {
           ...DatasetBasics
         }
-        flowId
-        flowType
+        source {
+          __typename
+          ... on FlowActivationCauseDatasetUpdateSourceUpstreamFlow {
+            flowId
+          }
+          ... on FlowActivationCauseDatasetUpdateSourceHttpIngest {
+            sourceName
+          }
+          ... on FlowActivationCauseDatasetUpdateSourceSmartProtocolPush {
+            accountName
+            isForce
+          }
+        }
       }
     }
   }

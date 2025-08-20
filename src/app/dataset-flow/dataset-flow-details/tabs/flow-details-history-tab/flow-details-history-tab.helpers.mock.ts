@@ -8,7 +8,6 @@
 import {
     AccountProvider,
     AccountType,
-    DatasetFlowType,
     FlowHistoryDataFragment,
     FlowOutcomeDataFragment,
     FlowStatus,
@@ -16,7 +15,7 @@ import {
     TaskStatus,
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
-import { mockDatasetSearchResult } from "src/app/search/mock.data";
+import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 
 export const mockHistoryFragmentWithFinishedStatus: FlowHistoryDataFragment = {
     __typename: "FlowEventTaskChanged",
@@ -85,8 +84,8 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         __typename: "FlowEventInitiated",
         eventId: "0",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
-        trigger: {
-            __typename: "FlowTriggerAutoPolling",
+        activationCause: {
+            __typename: "FlowActivationCauseAutoPolling",
         },
     },
     {
@@ -119,11 +118,11 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         nextAttemptAt: null,
     },
     {
-        __typename: "FlowEventTriggerAdded",
+        __typename: "FlowEventActivationCauseAdded",
         eventId: "4",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
-        trigger: {
-            __typename: "FlowTriggerManual",
+        activationCause: {
+            __typename: "FlowActivationCauseManual",
             initiator: {
                 id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
                 accountName: "kamu",
@@ -137,22 +136,28 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         },
     },
     {
-        __typename: "FlowEventTriggerAdded",
+        __typename: "FlowEventActivationCauseAdded",
         eventId: "5",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
-        trigger: {
-            __typename: "FlowTriggerInputDatasetFlow",
-            flowId: "1",
-            flowType: DatasetFlowType.ExecuteTransform,
-            dataset: mockDatasetSearchResult.datasets[0],
+        activationCause: {
+            __typename: "FlowActivationCauseDatasetUpdate",
+            dataset: { ...mockDatasetBasicsDerivedFragment },
+            source: {
+                __typename: "FlowActivationCauseDatasetUpdateSourceUpstreamFlow",
+                flowId: "12345",
+            },
         },
     },
     {
-        __typename: "FlowEventTriggerAdded",
+        __typename: "FlowEventActivationCauseAdded",
         eventId: "6",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
-        trigger: {
-            __typename: "FlowTriggerPush",
+        activationCause: {
+            __typename: "FlowActivationCauseDatasetUpdate",
+            dataset: { ...mockDatasetBasicsDerivedFragment },
+            source: {
+                __typename: "FlowActivationCauseDatasetUpdateSourceHttpIngest",
+            },
         },
     },
     {
@@ -178,8 +183,9 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         eventId: "9",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         startCondition: {
-            __typename: "FlowStartConditionBatching",
+            __typename: "FlowStartConditionReactive",
             activeBatchingRule: {
+                __typename: "FlowTriggerBatchingRuleBuffering",
                 minRecordsToAwait: 500,
                 maxBatchingInterval: {
                     every: 5,
@@ -224,11 +230,11 @@ export const eventFlowDescriptionsResultHistoryTab: string[] = [
     "Reset to seed task running",
     "Reset to seed task finished successfully",
     "Additionally triggered manually",
-    "Additionally triggered after input dataset event",
-    "Additionally triggered after push event",
+    "Additionally triggered after upstream flow event",
+    "Additionally triggered after HTTP push ingest event",
     "Waiting for scheduled execution",
     "Waiting for free executor",
-    "Waiting for batching condition",
+    "Waiting for reactive condition",
     "Waiting for throttling condition",
     "Flow scheduled for activation",
     "Flow configuration was modified",
@@ -239,8 +245,8 @@ export const mockFlowHistoryDataFragmentForIconOptions: FlowHistoryDataFragment[
         __typename: "FlowEventInitiated",
         eventId: "0",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
-        trigger: {
-            __typename: "FlowTriggerAutoPolling",
+        activationCause: {
+            __typename: "FlowActivationCauseAutoPolling",
         },
     },
     {
@@ -260,11 +266,16 @@ export const mockFlowHistoryDataFragmentForIconOptions: FlowHistoryDataFragment[
         nextAttemptAt: null,
     },
     {
-        __typename: "FlowEventTriggerAdded",
+        __typename: "FlowEventActivationCauseAdded",
         eventId: "3",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
-        trigger: {
-            __typename: "FlowTriggerPush",
+        activationCause: {
+            __typename: "FlowActivationCauseDatasetUpdate",
+            dataset: { ...mockDatasetBasicsDerivedFragment },
+            source: {
+                __typename: "FlowActivationCauseDatasetUpdateSourceSmartProtocolPush",
+                isForce: false,
+            },
         },
     },
     {
@@ -314,8 +325,8 @@ export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[
         __typename: "FlowEventInitiated",
         eventId: "7",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
-        trigger: {
-            __typename: "FlowTriggerManual",
+        activationCause: {
+            __typename: "FlowActivationCauseManual",
             initiator: {
                 id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
                 accountName: "kamu",
@@ -332,11 +343,13 @@ export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[
         __typename: "FlowEventInitiated",
         eventId: "8",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
-        trigger: {
-            __typename: "FlowTriggerInputDatasetFlow",
-            flowId: "1",
-            flowType: DatasetFlowType.ExecuteTransform,
-            dataset: mockDatasetSearchResult.datasets[0],
+        activationCause: {
+            __typename: "FlowActivationCauseDatasetUpdate",
+            dataset: { ...mockDatasetBasicsDerivedFragment },
+            source: {
+                __typename: "FlowActivationCauseDatasetUpdateSourceUpstreamFlow",
+                flowId: "12345",
+            },
         },
     },
     {
@@ -344,8 +357,9 @@ export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[
         eventId: "9",
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         startCondition: {
-            __typename: "FlowStartConditionBatching",
+            __typename: "FlowStartConditionReactive",
             activeBatchingRule: {
+                __typename: "FlowTriggerBatchingRuleBuffering",
                 minRecordsToAwait: 500,
                 maxBatchingInterval: {
                     every: 5,
@@ -381,12 +395,12 @@ export const flowEventSubMessageResults: string[] = [
     "",
     "",
     "Task #1",
-    "",
+    'Input dataset: <a class="fs-12" href="/kamu/mockNameDerived">kamu/mockNameDerived</a>',
     "Wake up time at Feb 12th 2024 8:22:30 PM GMT+02:00, shifted from 8:22:29 PM",
     "Activating at Mar 13th 2024 4:54:30 PM GMT+02:00",
     "Modified by ingest rule",
-    "Triggered by kamu",
-    "Input dataset: kamu/alberta.case-details",
+    'Triggered by <a class="fs-12" href="/kamu">kamu</a>',
+    '<a class="fs-12" href="/kamu/mockNameDerived/flow-details/12345/history">Flow #12345</a>. Input dataset: <a class="fs-12" href="/kamu/mockNameDerived">kamu/mockNameDerived</a>',
     "Accumulated 100/500 records. Watermark modified. Deadline at Aug 6th 2022 12:17:30 AM GMT+03:00", //1
     "Task #5",
     "Wake up time at Mar 13th 2024 5:54:30 PM GMT+02:00",

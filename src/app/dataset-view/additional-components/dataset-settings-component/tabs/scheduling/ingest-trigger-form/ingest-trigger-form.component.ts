@@ -47,6 +47,7 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
 
     public readonly ScheduleType: typeof ScheduleType = ScheduleType;
     public readonly UPDATES_TOOLTIP = FlowTooltipsTexts.UPDATE_SELECTOR_TOOLTIP;
+
     public static buildForm(): FormGroup<IngestTriggerFormType> {
         const cronForm = CronExpressionFormComponent.buildForm();
         const timeDeltaForm = TimeDeltaFormComponent.buildForm();

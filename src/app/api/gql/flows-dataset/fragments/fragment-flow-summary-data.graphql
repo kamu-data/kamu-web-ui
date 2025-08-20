@@ -28,7 +28,6 @@ fragment FlowSummaryData on Flow {
 
     ... on FlowDescriptionDatasetPushIngest {
       sourceName
-      inputRecordsCount
       ingestResult {
         ... on FlowDescriptionUpdateResultUpToDate {
           uncacheable
@@ -77,13 +76,13 @@ fragment FlowSummaryData on Flow {
 
     ... on FlowDescriptionDatasetHardCompaction {
       compactionResult {
-        ... on FlowDescriptionHardCompactionSuccess {
+        ... on FlowDescriptionReorganizationSuccess {
           originalBlocksCount
           resultingBlocksCount
           newHead
         }
 
-        ... on FlowDescriptionHardCompactionNothingToDo {
+        ... on FlowDescriptionReorganizationNothingToDo {
           message
           dummy
         }
@@ -98,6 +97,27 @@ fragment FlowSummaryData on Flow {
       resetResult {
         newHead
       }
+    }
+
+    ... on FlowDescriptionDatasetResetToMetadata {
+      resetToMetadataResult {
+        ... on FlowDescriptionReorganizationSuccess {
+          originalBlocksCount
+          resultingBlocksCount
+          newHead
+        }
+
+        ... on FlowDescriptionReorganizationNothingToDo {
+          message
+          dummy
+        }
+      }
+    }
+
+    ... on FlowDescriptionWebhookDeliver {
+      targetUrl
+      label
+      eventType
     }
   }
 
@@ -115,6 +135,7 @@ fragment FlowSummaryData on Flow {
 
   timing {
     initiatedAt
+    firstAttemptScheduledAt
     scheduledAt
     awaitingExecutorSince
     runningSince
@@ -129,11 +150,14 @@ fragment FlowSummaryData on Flow {
       shiftedFrom
     }
 
-    ... on FlowStartConditionBatching {
+    ... on FlowStartConditionReactive {
       activeBatchingRule {
-        minRecordsToAwait
-        maxBatchingInterval {
-          ...TimeDeltaData
+        __typename
+        ... on FlowTriggerBatchingRuleBuffering {
+          maxBatchingInterval {
+            ...TimeDeltaData
+          }
+          minRecordsToAwait
         }
       }
       batchingDeadline
@@ -153,12 +177,6 @@ fragment FlowSummaryData on Flow {
   configSnapshot {
     ... on FlowConfigRuleIngest {
       fetchUncacheable
-    }
-
-    ... on FlowConfigRuleCompaction {
-      compactionMode {
-        __typename
-      }
     }
   }
 

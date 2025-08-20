@@ -15,13 +15,13 @@ import {
     DatasetAllFlowsPausedQuery,
     DatasetBasicsFragment,
     DatasetFlowFilters,
-    DatasetFlowType,
     DatasetFlowsInitiatorsQuery,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsMutation,
     DatasetTriggerCompactionFlowMutation,
     DatasetTriggerIngestFlowMutation,
     DatasetTriggerResetFlowMutation,
+    DatasetTriggerResetToMetadataFlowMutation,
     DatasetTriggerTransformFlowMutation,
     FlowConfigCompactionInput,
     FlowConfigIngestInput,
@@ -101,6 +101,23 @@ export class DatasetFlowsService {
             );
     }
 
+    public datasetTriggerResetToMetadataFlow(params: { datasetId: string }): Observable<boolean> {
+        return this.datasetFlowApi
+            .datasetTriggerResetToMetadataFlow({
+                datasetId: params.datasetId,
+            })
+            .pipe(
+                map((data: DatasetTriggerResetToMetadataFlowMutation) => {
+                    if (data.datasets.byId?.flows.runs.triggerResetToMetadataFlow.__typename === "TriggerFlowSuccess") {
+                        return true;
+                    } else {
+                        this.toastrService.error(data.datasets.byId?.flows.runs.triggerResetToMetadataFlow.message);
+                        return false;
+                    }
+                }),
+            );
+    }
+
     public datasetTriggerResetFlow(params: {
         datasetId: string;
         resetConfigInput: FlowConfigResetInput;
@@ -153,7 +170,7 @@ export class DatasetFlowsService {
         );
     }
 
-    public datasetPauseFlows(params: { datasetId: string; datasetFlowType?: DatasetFlowType }): Observable<void> {
+    public datasetPauseFlows(params: { datasetId: string }): Observable<void> {
         return this.datasetFlowApi.datasetPauseFlows(params).pipe(
             map((data: DatasetPauseFlowsMutation) => {
                 const result = data.datasets.byId?.flows.triggers.pauseFlows;
@@ -164,7 +181,7 @@ export class DatasetFlowsService {
         );
     }
 
-    public datasetResumeFlows(params: { datasetId: string; datasetFlowType?: DatasetFlowType }): Observable<void> {
+    public datasetResumeFlows(params: { datasetId: string }): Observable<void> {
         return this.datasetFlowApi.datasetResumeFlows(params).pipe(
             map((data: DatasetResumeFlowsMutation) => {
                 const result = data.datasets.byId?.flows.triggers.resumeFlows;

@@ -1,6 +1,28 @@
-<div class="custom-container pb-80">
+<div class="custom-container">
     <h2>Transform settings</h2>
     <mat-divider class="mt-1 mb-2" />
-
-    <app-batching-trigger-form [datasetBasics]="datasetBasics" (saveTriggerEmit)="saveBatchingTriggers($event)" />
+    <div class="box mt-3 p-4" *ngIf="isDerivedDataset">
+        <form [formGroup]="form">
+            <div class="d-flex flex-column gap-4">
+                <div class="w-100">
+                    <app-transform-trigger-form
+                        data-test-id="transform-trigger-form"
+                        [form]="form.controls.transformTrigger"
+                        [updateStateToggleLabel]="'Enable automatic updates'"
+                    />
+                </div>
+            </div>
+            <div class="mt-4 d-flex justify-content-end">
+                <button
+                    type="button"
+                    class="btn btn-success"
+                    (click)="saveUpdates()"
+                    [disabled]="form.invalid"
+                    data-test-id="save-btn"
+                >
+                    Save
+                </button>
+            </div>
+        </form>
+    </div>
 </div>

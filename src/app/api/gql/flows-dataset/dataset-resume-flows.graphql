@@ -1,9 +1,9 @@
-mutation datasetResumeFlows($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType) {
+mutation datasetResumeFlows($datasetId: DatasetID!) {
   datasets {
     byId(datasetId: $datasetId) {
       flows {
         triggers {
-          resumeFlows(datasetFlowType: $datasetFlowType)
+          resumeFlows
         }
       }
     }

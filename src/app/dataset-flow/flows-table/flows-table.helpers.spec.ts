@@ -11,6 +11,7 @@ import {
     FetchStepUrl,
     FlowStatus,
     FlowSummaryDataFragment,
+    FlowTriggerBreakingChangeRule,
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
 import { FlowTableHelpers } from "./flows-table.helpers";
@@ -51,11 +52,12 @@ describe("FlowTableHelpers", () => {
         ).toEqual("waiting for a throttling condition");
     });
 
-    it("should check waiting block text with FlowStartConditionBatching typename", () => {
+    it("should check waiting block text with FlowStartConditionReactive typename", () => {
         expect(
             FlowTableHelpers.waitingBlockText({
-                __typename: "FlowStartConditionBatching",
+                __typename: "FlowStartConditionReactive",
                 activeBatchingRule: {
+                    __typename: "FlowTriggerBatchingRuleBuffering",
                     minRecordsToAwait: 500,
                     maxBatchingInterval: {
                         every: 5,
@@ -65,8 +67,9 @@ describe("FlowTableHelpers", () => {
                 batchingDeadline: "2022-08-05T21:17:30.613911358+00:00",
                 accumulatedRecordsCount: 100,
                 watermarkModified: true,
+                forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
             }),
-        ).toEqual("waiting for a batching condition");
+        ).toEqual("waiting for a reactive condition");
     });
 
     it("should check waiting block text with FlowStartConditionExecutor typename", () => {
@@ -209,9 +212,9 @@ describe("FlowTableHelpers", () => {
         );
     });
 
-    it(`should check description end of message with description FlowDescriptionDatasetCompacting typename with compaction success in metadata-only mode`, () => {
+    it(`should check description end of message with description FlowDescriptionDatasetResetToMetadata typename`, () => {
         expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[12])).toEqual(
-            `All data except metadata has been deleted`,
+            `All data except metadata has been deleted. Original blocks: 125. Resulting blocks: 13.`,
         );
     });
 
@@ -225,5 +228,27 @@ describe("FlowTableHelpers", () => {
         expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[14])).toEqual(
             `Input dataset <a class="text-small text-danger">my-dataset-input</a> was hard compacted`,
         );
+    });
+
+    it(`should check description end of message with description FlowDescriptionDatasetResetToMetadata with nothing to do`, () => {
+        expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[15])).toEqual(`Nothing to do`);
+    });
+
+    it(`should check description end of message with description FlowDescriptionWebhookDeliver`, () => {
+        expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[16])).toEqual(
+            `Delivered message DATASET.REF.UPDATED via subscription "Example Webhook"`,
+        );
+
+        expect(
+            FlowTableHelpers.descriptionSubMessage({
+                ...mockTableFlowSummaryDataFragments[16],
+                description: {
+                    __typename: "FlowDescriptionWebhookDeliver",
+                    targetUrl: "https://example.com/webhook",
+                    label: "",
+                    eventType: "DATASET.REF.UPDATED",
+                },
+            }),
+        ).toEqual(`Delivered message DATASET.REF.UPDATED to https://example.com/webhook`);
     });
 });

@@ -13,7 +13,6 @@ import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { CompactionTooltipsTexts } from "src/app/common/tooltips/compacting.text";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { SliceUnit, sliceSizeMapper } from "./dataset-settings-compacting-tab.types";
-import { DatasetCompactionService } from "../../services/dataset-compaction.service";
 import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import AppValues from "src/app/common/values/app.values";
 import { BaseComponent } from "src/app/common/components/base.component";
@@ -22,6 +21,7 @@ import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { FormValidationErrorsDirective } from "../../../../../common/directives/form-validation-errors.directive";
 import { TooltipIconComponent } from "../../../../../common/components/tooltip-icon/tooltip-icon.component";
 import { MatDividerModule } from "@angular/material/divider";
+import { DatasetFlowsService } from "../../../flows-component/services/dataset-flows.service";
 
 @Component({
     selector: "app-dataset-settings-compacting-tab",
@@ -45,7 +45,7 @@ import { MatDividerModule } from "@angular/material/divider";
 export class DatasetSettingsCompactingTabComponent extends BaseComponent {
     public modalService = inject(ModalService);
     private fb = inject(FormBuilder);
-    private datasetCompactionService = inject(DatasetCompactionService);
+    private datasetFlowsService = inject(DatasetFlowsService);
     private navigationService = inject(NavigationService);
 
     @Input(RoutingResolvers.DATASET_SETTINGS_COMPACTION_KEY) public compactingTabData: DatasetViewData;
@@ -53,16 +53,11 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent {
         sliceUnit: [SliceUnit.MB, [Validators.required]],
         sliceSize: [300, [Validators.required, Validators.min(1)]],
         recordsCount: [10000, [Validators.required, Validators.min(1)]],
-        recursive: [true],
     });
     public readonly SliceUnit: typeof SliceUnit = SliceUnit;
     public readonly MAX_SLICE_SIZE_TOOLTIP = CompactionTooltipsTexts.MAX_SLICE_SIZE;
     public readonly MAX_SLICE_RECORDS_TOOLTIP = CompactionTooltipsTexts.MAX_SLICE_RECORDS;
     public readonly RECURSIVE_TOOLTIP = CompactionTooltipsTexts.HARD_COMPACTION_RECURSIVE;
-
-    public get recursive(): AbstractControl {
-        return this.hardCompactionForm.controls.recursive;
-    }
 
     public get sliceUnit(): AbstractControl {
         return this.hardCompactionForm.controls.sliceUnit;
@@ -96,15 +91,12 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent {
                 noButtonText: "Cancel",
                 handler: (ok) => {
                     if (ok) {
-                        this.datasetCompactionService
-                            .runHardCompaction({
+                        this.datasetFlowsService
+                            .datasetTriggerCompactionFlow({
                                 datasetId: this.datasetBasics.id,
-                                compactionArgs: {
-                                    full: {
-                                        maxSliceSize: this.sliceSizeInBytes,
-                                        maxSliceRecords: this.recordsCount.value as number,
-                                        recursive: this.recursive.value as boolean,
-                                    },
+                                compactionConfigInput: {
+                                    maxSliceSize: this.sliceSizeInBytes,
+                                    maxSliceRecords: this.recordsCount.value as number,
                                 },
                             })
                             .pipe(takeUntilDestroyed(this.destroyRef))

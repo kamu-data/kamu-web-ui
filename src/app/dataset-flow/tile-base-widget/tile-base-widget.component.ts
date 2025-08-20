@@ -49,8 +49,12 @@ export class TileBaseWidgetComponent {
     public readonly URL_FLOW_DETAILS = ProjectLinks.URL_FLOW_DETAILS;
     public readonly DEFAULT_ADMIN_ACCOUNT_NAME = AppValues.DEFAULT_ADMIN_ACCOUNT_NAME;
 
-    public flowDuration(flowNode: FlowItemWidgetDataFragment): string {
-        return FlowTableHelpers.durationTimingText(flowNode);
+    public flowTotalDuration(node: FlowItemWidgetDataFragment): string {
+        return FlowTableHelpers.fullDurationTimingText(node);
+    }
+
+    public flowRunDuration(flowNode: FlowItemWidgetDataFragment): string {
+        return FlowTableHelpers.runDurationTimingText(flowNode);
     }
 
     public tileWidgetClass(node: FlowItemWidgetDataFragment): string {

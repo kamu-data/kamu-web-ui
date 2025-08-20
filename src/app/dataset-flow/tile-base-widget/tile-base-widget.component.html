@@ -26,9 +26,15 @@
                     <br />
                 </ng-container>
 
-                <span class="fs-12 fw-bold">Duration:</span>
+                <span class="fs-12 fw-bold">Run Duration:</span>
                 <span class="fs-12">
-                    {{ flowDuration(node) }}
+                    {{ flowRunDuration(node) }}
+                </span>
+                <br />
+
+                <span class="fs-12 fw-bold">Total Time:</span>
+                <span class="fs-12">
+                    {{ flowTotalDuration(node) }}
                 </span>
                 <br />
 

@@ -47,7 +47,11 @@
                         </span>
                     </div>
                     <div class="col-md-3">
-                        <span class="fs-12" *ngIf="!lastIndex" [attr.data-test-id]="'history-item-' + i + '-duration'">
+                        <span
+                            class="fs-12"
+                            *ngIf="i !== 0 && !lastIndex"
+                            [attr.data-test-id]="'history-item-' + i + '-duration'"
+                        >
                             {{ durationFlowEvent(history[i].eventTime, history[i + 1].eventTime) }}
                         </span>
                         <span

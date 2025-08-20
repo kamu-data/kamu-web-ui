@@ -202,7 +202,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     }
 
     public durationTimingText(node: FlowSummaryDataFragment): string {
-        return FlowTableHelpers.durationTimingText(node);
+        return FlowTableHelpers.runDurationTimingText(node);
     }
 
     public tooltipText(node: FlowSummaryDataFragment): string {

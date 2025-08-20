@@ -1,10 +1,7 @@
 <div class="d-flex align-items-center gap-3 ms-1 px-2" data-test-id="time-delta-form" [formGroup]="form">
     <span class="form-control-label">{{ label }}</span>
     <select formControlName="unit" #unit class="form-select form-control-width me-3" data-test-id="time-delta-unit">
-        <option [value]="TimeUnit.Minutes">Minutes</option>
-        <option [value]="TimeUnit.Hours">Hours</option>
-        <option [value]="TimeUnit.Days">Days</option>
-        <option [value]="TimeUnit.Weeks">Weeks</option>
+        <option *ngFor="let unit of availableUnits; trackBy: trackByUnit" [value]="unit.value">{{ unit.label }}</option>
     </select>
     <input
         type="number"
@@ -21,7 +18,6 @@
         [appFieldError]="['required']"
         [group]="form"
     ></span>
-
     <span
         class="text-danger fs-12"
         [input]="every"

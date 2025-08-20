@@ -14,7 +14,6 @@ export enum DatasetResetMode {
 
 export interface ResetDatasetFormType {
     mode: FormControl<DatasetResetMode>;
-    recursive: FormControl<boolean>;
 }
 
 export interface RenameDatasetFormType {

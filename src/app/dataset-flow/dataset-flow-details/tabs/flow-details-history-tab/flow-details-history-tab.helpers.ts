@@ -168,6 +168,9 @@ export class DatasetFlowDetailsHelpers {
                                     case "TaskFailureReasonInputDatasetCompacted":
                                         mainMessage = `Input dataset <span class="text-small text-danger">${event.task.outcome.reason.inputDataset.name}</span> was compacted`;
                                         break;
+                                    case "TaskFailureReasonWebhookDeliveryProblem":
+                                        mainMessage = `${event.task.outcome.reason.message}<br>Target URL: ${event.task.outcome.reason.targetUrl}`;
+                                        break;
                                     /* istanbul ignore next */
                                     default:
                                         return "Unknown flow failed error";

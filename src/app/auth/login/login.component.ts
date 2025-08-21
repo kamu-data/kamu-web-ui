@@ -75,9 +75,6 @@ export class LoginComponent extends BaseComponent implements OnInit {
         const redirectUrl = this.route.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL);
         if (redirectUrl && this.localStorageService.accessToken) {
             this.navigationService.navigateToReplacedPath(redirectUrl);
-        } else if (redirectUrl) {
-            this.localStorageService.setRedirectAfterLoginUrl(redirectUrl);
-            this.navigationService.navigateToReplacedPath(ProjectLinks.URL_LOGIN);
         } else {
             const loginMethods: AccountProvider[] = this.loginMethodsService.loginMethods;
             if (loginMethods.length === 1) {

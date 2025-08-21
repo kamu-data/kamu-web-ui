@@ -226,10 +226,12 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onLogin(): void {
-        if (this.router.url !== `/${ProjectLinks.URL_PAGE_NOT_FOUND}`)
-            this.localStorageService.setRedirectAfterLoginUrl(this.router.url);
-
-        this.navigationService.navigateToLogin();
+        const redirectUrl = window.location.pathname;
+        if (![`/${ProjectLinks.URL_PAGE_NOT_FOUND}`, `/${ProjectLinks.URL_SEARCH}`].includes(redirectUrl)) {
+            this.navigationService.navigateToLogin(redirectUrl);
+        } else {
+            this.navigationService.navigateToLogin();
+        }
     }
 
     public onLogout(): void {

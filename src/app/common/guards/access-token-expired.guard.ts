@@ -17,8 +17,7 @@ export const accessTokenExpiredGuardFn: CanActivateFn = (_, state) => {
 
     const accessToken: string | null = localStorageService.accessToken;
     if (accessToken && isAccessTokenExpired(accessToken)) {
-        localStorageService.setRedirectAfterLoginUrl(state.url);
-        navigationService.navigateToLogin();
+        navigationService.navigateToLogin(state.url);
         return false;
     }
     return true;

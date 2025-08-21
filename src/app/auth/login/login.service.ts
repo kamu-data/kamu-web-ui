@@ -6,7 +6,7 @@
  */
 
 import { inject, Injectable } from "@angular/core";
-import { Observable, ReplaySubject, Subject, firstValueFrom, map } from "rxjs";
+import { BehaviorSubject, Observable, ReplaySubject, Subject, firstValueFrom, map } from "rxjs";
 import { AuthApi } from "src/app/api/auth.api";
 import {
     GithubLoginCredentials,
@@ -20,6 +20,8 @@ import { AppConfigService } from "src/app/app-config.service";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { EthereumGatewayFactory } from "./ethereum/ethereum.gateway.factory";
+import ProjectLinks from "src/app/project-links";
+import { ActivatedRoute } from "@angular/router";
 
 @Injectable({
     providedIn: "root",
@@ -30,11 +32,13 @@ export class LoginService {
     private appConfigService = inject(AppConfigService);
     private localStorageService = inject(LocalStorageService);
     private ethereumGatewayFactory = inject(EthereumGatewayFactory);
+    private route = inject(ActivatedRoute);
 
     private accessToken$: Subject<string> = new ReplaySubject<string>(1);
     private account$: Subject<AccountFragment> = new ReplaySubject<AccountFragment>(1);
     private passwordLoginError$: Subject<string> = new Subject<string>();
     private accountWhitelistError$: Subject<string> = new Subject<string>();
+    private githubRedirectUrl$ = new BehaviorSubject<MaybeUndefined<string>>(undefined);
 
     private loginCallback: (loginResponse: LoginResponseType) => void = this.redirectUrlLoginCallback.bind(this);
 
@@ -56,9 +60,16 @@ export class LoginService {
 
     public githubLoginLink(): string {
         const githubClientId: MaybeUndefined<string> = this.appConfigService.githubClientId;
+        const githubRedirectUrl = this.route.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL);
+
         /* istanbul ignore else */
         if (githubClientId) {
-            return `https://github.com/login/oauth/authorize?scope=user:email&client_id=${githubClientId}`;
+            const githubLoginOauthUrl = `https://github.com/login/oauth/authorize?scope=user:email&client_id=${githubClientId}`;
+            if (githubRedirectUrl)
+                return `${githubLoginOauthUrl}&redirect_uri=${window.location.origin}/${ProjectLinks.URL_GITHUB_CALLBACK}?${ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL}=${githubRedirectUrl}`;
+            else {
+                return githubLoginOauthUrl;
+            }
         } else {
             throw new Error("GitHub Client ID undefined in configuration");
         }
@@ -80,7 +91,8 @@ export class LoginService {
         this.loginCallback = loginCallback;
     }
 
-    public githubLogin(credentials: GithubLoginCredentials): void {
+    public githubLogin(credentials: GithubLoginCredentials, redirectUrl: MaybeUndefined<string>): void {
+        this.githubRedirectUrl$.next(redirectUrl);
         const deviceCode: MaybeNull<string> = this.localStorageService.loginDeviceCode;
         this.authApi.fetchAccountAndTokenFromGithubCallbackCode(credentials, deviceCode ?? undefined).subscribe({
             next: this.loginCallback,
@@ -141,10 +153,13 @@ export class LoginService {
     private defaultLoginCallback(loginResponse: LoginResponseType): void {
         this.accessToken$.next(loginResponse.accessToken);
         this.fetchAccountFromAccessToken(loginResponse.accessToken).subscribe(() => {
-            const url = this.localStorageService.redirectAfterLoginUrl;
-            this.localStorageService.setRedirectAfterLoginUrl(null);
-            if (url) {
-                this.navigationService.navigateToPath(url);
+            const githubRedirectUrl = this.githubRedirectUrl$.getValue();
+            const redirectUrl = githubRedirectUrl
+                ? githubRedirectUrl
+                : this.route.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL);
+
+            if (redirectUrl) {
+                this.navigationService.navigateToPath(redirectUrl);
             } else {
                 this.navigationService.navigateToHome();
             }

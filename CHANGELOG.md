@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Visualizing webhook task failures in flow table and history, differentiating between:
+  - connection failure
+  - response timeout
+  - bad status code
 ### Fixed
 - Require initial choice of radio buttons in transform options form
 - Time delta form is not disabled initially in ingest schedule

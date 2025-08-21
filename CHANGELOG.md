@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Fixed
+- Require initial choice of radio buttons in transform options form
+- Time delta form is not disabled initially in ingest schedule
+- Improved setting form labels - auto disable when control is disabled
+
 ## [0.55.0] - 2025-08-20
 ### Added
 - Search page: added avatar image and badge for dataset kind

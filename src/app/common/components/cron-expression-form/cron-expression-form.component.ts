@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { BaseComponent } from "../base.component";
 import { cronExpressionNextTime } from "src/app/common/helpers/app.helpers";
@@ -13,6 +13,7 @@ import { CronExpressionFormType } from "./cron-expression-form.value";
 import { NgIf } from "@angular/common";
 import { FormValidationErrorsDirective } from "../../directives/form-validation-errors.directive";
 import { cronValidator } from "../../helpers/cron-expression-validator.helper";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: "app-cron-expression-form",
@@ -29,12 +30,13 @@ import { cronValidator } from "../../helpers/cron-expression-validator.helper";
         FormValidationErrorsDirective,
     ],
 })
-export class CronExpressionFormComponent extends BaseComponent {
+export class CronExpressionFormComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public form: FormGroup<CronExpressionFormType>;
     @Input() public label: string = "Cron expression :";
     @Input() public placeholder: string = "Example: * * * * ?";
 
     public readonly NEXT_TIME_LABEL: string = "Next time";
+    private readonly cdr = inject(ChangeDetectorRef);
 
     public static buildForm(): FormGroup<CronExpressionFormType> {
         return new FormGroup<CronExpressionFormType>({
@@ -51,5 +53,15 @@ export class CronExpressionFormComponent extends BaseComponent {
 
     public get nextTime(): string {
         return cronExpressionNextTime(this.cronExpressionControl.value);
+    }
+
+    public ngOnInit(): void {
+        this.subscribeToFormStatusChanges();
+    }
+
+    private subscribeToFormStatusChanges(): void {
+        this.form.statusChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.cdr.markForCheck();
+        });
     }
 }

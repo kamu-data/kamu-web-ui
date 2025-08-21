@@ -6,7 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { FlowTriggerInput } from "src/app/api/kamu.graphql.interface";
 import { ScheduleType } from "../../../dataset-settings.model";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -53,13 +53,13 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
         const timeDeltaForm = TimeDeltaFormComponent.buildForm();
 
         cronForm.disable(); // Initially disabled
-        timeDeltaForm.enable(); // Initially enabled
+        timeDeltaForm.disable(); // Initially disabled
 
         return new FormGroup<IngestTriggerFormType>({
             updatesEnabled: new FormControl<boolean>(false, { nonNullable: true }),
             __typename: new FormControl<MaybeNull<ScheduleType>>(
                 { value: null, disabled: true },
-                { nonNullable: true },
+                { nonNullable: true, validators: [Validators.required] },
             ),
             timeDelta: timeDeltaForm,
             cron: cronForm,

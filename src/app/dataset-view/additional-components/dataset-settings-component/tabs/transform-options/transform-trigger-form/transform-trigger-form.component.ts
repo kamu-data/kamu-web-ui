@@ -8,7 +8,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { FlowTriggerBreakingChangeRule, FlowTriggerInput } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
-import { FormGroup, FormControl, AbstractControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormGroup, FormControl, AbstractControl, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MaybeNull } from "src/app/interface/app.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
@@ -66,13 +66,13 @@ export class TransformTriggerFormComponent extends BaseComponent implements OnIn
             forNewData: new FormGroup<BatchingRuleFormType>({
                 batchingRuleType: new FormControl<MaybeNull<BatchingRuleType>>(
                     { value: null, disabled: true },
-                    { nonNullable: true },
+                    { nonNullable: true, validators: [Validators.required] },
                 ),
                 buffering: bufferingForm,
             }),
             forBreakingChange: new FormControl<MaybeNull<FlowTriggerBreakingChangeRule>>(
                 { value: null, disabled: true },
-                { nonNullable: true },
+                { nonNullable: true, validators: [Validators.required] },
             ),
         });
 

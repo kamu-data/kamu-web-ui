@@ -1,5 +1,5 @@
 <div class="d-flex align-items-center gap-3 ms-1 px-2" data-test-id="time-delta-form" [formGroup]="form">
-    <span class="form-control-label">{{ label }}</span>
+    <span class="form-control-label" [class.disabled]="form.disabled">{{ label }}</span>
     <select formControlName="unit" #unit class="form-select form-control-width me-3" data-test-id="time-delta-unit">
         <option *ngFor="let unit of availableUnits; trackBy: trackByUnit" [value]="unit.value">{{ unit.label }}</option>
     </select>

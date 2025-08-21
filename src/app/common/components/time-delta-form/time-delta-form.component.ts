@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input, OnInit, OnChanges } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnInit, OnChanges, ChangeDetectorRef, inject } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from "@angular/forms";
 import { NgFor } from "@angular/common";
 import { TimeUnit } from "src/app/api/kamu.graphql.interface";
@@ -37,12 +37,14 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit, OnC
     @Input() public excludeUnits: TimeUnit[] = [];
 
     public readonly TimeUnit: typeof TimeUnit = TimeUnit;
+    private readonly cdr = inject(ChangeDetectorRef);
 
     public availableUnits: { value: TimeUnit; label: string }[] = [];
 
     public ngOnInit(): void {
         this.updateAvailableUnits();
         this.setEveryTimeValidator();
+        this.subscribeToFormStatusChanges();
     }
 
     public ngOnChanges(): void {
@@ -90,5 +92,11 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit, OnC
                     this.everyControl.updateValueAndValidity();
                 }
             });
+    }
+
+    private subscribeToFormStatusChanges(): void {
+        this.form.statusChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.cdr.markForCheck();
+        });
     }
 }

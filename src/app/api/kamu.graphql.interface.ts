@@ -3706,7 +3706,10 @@ export type Task = {
     taskId: Scalars["TaskID"];
 };
 
-export type TaskFailureReason = TaskFailureReasonGeneral | TaskFailureReasonInputDatasetCompacted;
+export type TaskFailureReason =
+    | TaskFailureReasonGeneral
+    | TaskFailureReasonInputDatasetCompacted
+    | TaskFailureReasonWebhookDeliveryProblem;
 
 export type TaskFailureReasonGeneral = {
     __typename?: "TaskFailureReasonGeneral";
@@ -3717,6 +3720,12 @@ export type TaskFailureReasonInputDatasetCompacted = {
     __typename?: "TaskFailureReasonInputDatasetCompacted";
     inputDataset: Dataset;
     message: Scalars["String"];
+};
+
+export type TaskFailureReasonWebhookDeliveryProblem = {
+    __typename?: "TaskFailureReasonWebhookDeliveryProblem";
+    message: Scalars["String"];
+    targetUrl: Scalars["Url"];
 };
 
 /** Describes a certain final outcome of the task */
@@ -5731,7 +5740,8 @@ type FlowHistoryData_FlowEventTaskChanged_Fragment = {
                             __typename: "TaskFailureReasonInputDatasetCompacted";
                             message: string;
                             inputDataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
-                        };
+                        }
+                      | { __typename: "TaskFailureReasonWebhookDeliveryProblem"; message: string; targetUrl: string };
               }
             | { __typename: "TaskOutcomeSuccess" }
             | null;
@@ -5779,7 +5789,8 @@ type FlowOutcomeData_FlowFailedError_Fragment = {
               __typename?: "TaskFailureReasonInputDatasetCompacted";
               message: string;
               inputDataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
-          };
+          }
+        | { __typename?: "TaskFailureReasonWebhookDeliveryProblem"; message: string; targetUrl: string };
 };
 
 type FlowOutcomeData_FlowSuccessResult_Fragment = { __typename?: "FlowSuccessResult"; message: string };
@@ -7289,6 +7300,10 @@ export const FlowOutcomeDataFragmentDoc = gql`
                         ...DatasetBasics
                     }
                 }
+                ... on TaskFailureReasonWebhookDeliveryProblem {
+                    message
+                    targetUrl
+                }
             }
         }
         ... on FlowAbortedResult {
@@ -7583,6 +7598,10 @@ export const FlowHistoryDataFragmentDoc = gql`
                                 inputDataset {
                                     ...DatasetBasics
                                 }
+                            }
+                            ... on TaskFailureReasonWebhookDeliveryProblem {
+                                message
+                                targetUrl
                             }
                         }
                     }

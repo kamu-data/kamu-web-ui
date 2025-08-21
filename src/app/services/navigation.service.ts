@@ -13,6 +13,8 @@ import { DatasetNavigationParams, MetadataBlockNavigationParams } from "../inter
 import ProjectLinks from "../project-links";
 import { FlowDetailsTabs } from "../dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { AccountSettingsTabs } from "../account/settings/account-settings.constants";
+import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
+import { MetadataTabs } from "./../dataset-view/additional-components/metadata-component/metadata.constants";
 
 @Injectable({ providedIn: "root" })
 export class NavigationService {
@@ -65,6 +67,17 @@ export class NavigationService {
             this.router.navigate([ProjectLinks.URL_SETTINGS, tab ? tab : AccountSettingsTabs.PROFILE], {
                 queryParams: page && page > 1 ? { page } : {},
             }),
+        );
+    }
+
+    public navigateToMetadata(params: DatasetInfo, tab?: MetadataTabs): void {
+        promiseWithCatch(
+            this.router.navigate([
+                params.accountName,
+                params.datasetName,
+                DatasetViewTypeEnum.Metadata,
+                tab ? tab : MetadataTabs.Watermark,
+            ]),
         );
     }
 

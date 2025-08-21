@@ -68,6 +68,8 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     };
 
     public readonly URL_PARAM_SET_TRANSFORM = ProjectLinks.URL_PARAM_SET_TRANSFORM;
+    public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
+    public readonly URL_PARAM_ADD_PUSH_SOURCE = ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE;
 
     private datasetSubsService = inject(DatasetSubscriptionsService);
 

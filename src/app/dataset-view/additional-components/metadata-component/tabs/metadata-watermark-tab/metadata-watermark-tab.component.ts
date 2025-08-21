@@ -16,6 +16,10 @@ import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interf
 import { isNil } from "src/app/common/helpers/app.helpers";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { EditWatermarkModalComponent } from "../../../overview-component/components/edit-watermark-modal/edit-watermark-modal.component";
+import { from, take } from "rxjs";
+import { MetadataTabs } from "../../metadata.constants";
+import { NavigationService } from "src/app/services/navigation.service";
+import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-metadata-watermark-tab",
@@ -38,9 +42,14 @@ export class MetadataWatermarkTabComponent {
     @Input(RoutingResolvers.METADATA_WATERMARK_TAB_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
 
     private ngbModalService = inject(NgbModal);
+    private navigationService = inject(NavigationService);
 
     public get watermark(): MaybeNullOrUndefined<string> {
         return this.datasetMetadataTabData.overviewUpdate.overview.metadata.currentWatermark;
+    }
+
+    public get datasetBasics(): DatasetBasicsFragment {
+        return this.datasetMetadataTabData.datasetBasics;
     }
 
     public get canEditWatermark(): boolean {
@@ -52,5 +61,13 @@ export class MetadataWatermarkTabComponent {
         const modalRefInstance = modalRef.componentInstance as EditWatermarkModalComponent;
         modalRefInstance.currentWatermark = this.watermark;
         modalRefInstance.datasetBasics = this.datasetMetadataTabData.datasetBasics;
+        from(modalRef.result)
+            .pipe(take(1))
+            .subscribe(() => {
+                this.navigationService.navigateToMetadata(
+                    { accountName: this.datasetBasics.owner.accountName, datasetName: this.datasetBasics.name },
+                    MetadataTabs.Watermark,
+                );
+            });
     }
 }

@@ -16,7 +16,7 @@ import { EditWatermarkModalComponent } from "./components/edit-watermark-modal/e
 import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { AddDataModalComponent } from "./components/add-data-modal/add-data-modal.component";
-import { Observable } from "rxjs";
+import { from, Observable, take } from "rxjs";
 import { AppConfigService } from "src/app/app-config.service";
 import { isNil, promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import AppValues from "src/app/common/values/app.values";
@@ -288,6 +288,15 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
             size: this.datasetOverviewTabData.overviewUpdate.size,
         };
         modalRefInstance.datasetBasics = this.datasetOverviewTabData.datasetBasics;
+        from(modalRef.result)
+            .pipe(take(1))
+            .subscribe(() => {
+                this.navigationService.navigateToDatasetView({
+                    accountName: this.datasetOverviewTabData.datasetBasics.owner.accountName,
+                    datasetName: this.datasetOverviewTabData.datasetBasics.name,
+                    tab: DatasetViewTypeEnum.Overview,
+                });
+            });
     }
 
     public openWatermarkModal(): void {

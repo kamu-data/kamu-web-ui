@@ -45,7 +45,32 @@
             </div>
         </div>
         <ng-container *ngIf="hasAnySource() && datasetMetadataTabData.datasetBasics.kind === 'ROOT'">
-            <h3 class="text-center mt-4">There is no metadata.</h3>
+            <h3 class="text-center mt-4">
+                There is no metadata. Need to add
+                <a
+                    class="add-link"
+                    [routerLink]="[
+                        '/',
+                        datasetMetadataTabData.datasetBasics.owner.accountName,
+                        datasetMetadataTabData.datasetBasics.name,
+                        URL_PARAM_ADD_POLLING_SOURCE,
+                    ]"
+                >
+                    Polling source event</a
+                >
+                or
+                <a
+                    class="add-link"
+                    [routerLink]="[
+                        '/',
+                        datasetMetadataTabData.datasetBasics.owner.accountName,
+                        datasetMetadataTabData.datasetBasics.name,
+                        URL_PARAM_ADD_PUSH_SOURCE,
+                    ]"
+                >
+                    Push source event</a
+                >
+            </h3>
         </ng-container>
         <ng-container *ngIf="!currentTransform && datasetMetadataTabData.datasetBasics.kind === 'DERIVATIVE'">
             <h3 class="text-center">

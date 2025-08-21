@@ -10,6 +10,6 @@ import { MetadataTabs } from "../metadata.constants";
 import ProjectLinks from "src/app/project-links";
 
 export const metadataActiveTabResolverFn: ResolveFn<MetadataTabs> = (route: ActivatedRouteSnapshot) => {
-    const activeTab = route.children[0].data[ProjectLinks.URL_PARAM_TAB] as MetadataTabs;
+    const activeTab = route.children[0]?.data[ProjectLinks.URL_PARAM_TAB] as MetadataTabs;
     return activeTab;
 };

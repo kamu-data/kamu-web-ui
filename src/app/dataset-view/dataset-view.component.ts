@@ -13,7 +13,7 @@ import { BaseDatasetDataComponent } from "../common/components/base-dataset-data
 import RoutingResolvers from "../common/resolvers/routing-resolvers";
 import { DatasetInfo } from "../interface/navigation.interface";
 import { map } from "rxjs";
-import { RouterOutlet } from "@angular/router";
+import { Router, RouterOutlet } from "@angular/router";
 import { DatasetViewMenuComponent } from "./dataset-view-menu/dataset-view-menu.component";
 import { DatasetViewHeaderComponent } from "./dataset-view-header/dataset-view-header.component";
 import { NgIf } from "@angular/common";
@@ -43,6 +43,7 @@ export class DatasetViewComponent extends BaseDatasetDataComponent implements On
 
     public readonly DatasetViewTypeEnum = DatasetViewTypeEnum;
     private sessionStorageService = inject(SessionStorageService);
+    private router = inject(Router);
 
     public datasetViewData: DatasetViewData;
 
@@ -68,11 +69,7 @@ export class DatasetViewComponent extends BaseDatasetDataComponent implements On
                 .pipe(
                     map((isHeadHashBlockChanged: boolean) => {
                         if (isHeadHashBlockChanged) {
-                            this.navigationService.navigateToDatasetView({
-                                accountName: this.datasetInfo.accountName,
-                                datasetName: this.datasetInfo.datasetName,
-                                tab: this.datasetViewType,
-                            });
+                            this.navigationService.navigateToPath(this.router.url);
                         }
                     }),
                 )

@@ -10,18 +10,22 @@
     </button>
 </div>
 
-<div class="position-relative border border-1 p-2 rounded-3" *ngIf="schema; else noSchema">
+<div
+    class="position-relative border border-1 px-2 pt-2 container-bottom-padding rounded-3"
+    *ngIf="schema; else noSchema"
+>
     <div class="mx-4">
         <app-block-row-data
             [tooltip]="'A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.'"
             [label]="'Schema:'"
         >
-            <app-dynamic-table
-                [hasTableHeader]="true"
-                [schemaFields]="schema.fields"
-                [idTable]="'schema-block-table'"
-            />
         </app-block-row-data>
+        <app-dynamic-table
+            class="mb-2"
+            [hasTableHeader]="true"
+            [schemaFields]="schema.fields"
+            [idTable]="'schema-block-table'"
+        />
     </div>
 </div>
 <ng-template #noSchema>There is no schema</ng-template>

@@ -83,13 +83,15 @@ describe("IngestTriggerFormComponent", () => {
         await ingestTriggerFormHarness.enableUpdates();
         expect(component.updatesEnabledControl.value).toBeTrue();
         expect(component.scheduleTypeControl.disabled).toBeFalse();
-        expect(component.timeDeltaControl.disabled).toBeFalse();
-        expect(component.cronExpressionControl.disabled).toBeTrue(); // Initially CRON is disabled
+        // initially disabled, because we did not select any schedule type
+        expect(component.timeDeltaControl.disabled).toBeTrue();
+        expect(component.cronExpressionControl.disabled).toBeTrue();
 
         await ingestTriggerFormHarness.disableUpdates();
         expect(component.updatesEnabledControl.value).toBeFalse();
         expect(component.scheduleTypeControl.disabled).toBeTrue();
-        expect(component.timeDeltaControl.disabled).toBeFalse();
+        // still disabled, because we did not select any schedule type
+        expect(component.timeDeltaControl.disabled).toBeTrue();
         expect(component.cronExpressionControl.disabled).toBeTrue();
     });
 

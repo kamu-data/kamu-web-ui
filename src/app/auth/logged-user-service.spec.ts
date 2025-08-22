@@ -74,7 +74,7 @@ describe("LoggedUserService", () => {
         }
 
         function loginFullyViaGithub(): void {
-            loginService.githubLogin({ code: TEST_GITHUB_CODE } as GithubLoginCredentials);
+            loginService.githubLogin({ code: TEST_GITHUB_CODE } as GithubLoginCredentials, null);
 
             const op = controller.expectOne(LoginDocument);
             op.flush({
@@ -83,10 +83,13 @@ describe("LoggedUserService", () => {
         }
 
         function loginFullyViaPassword(): void {
-            loginService.passwordLogin({
-                login: TEST_LOGIN,
-                password: TEST_PASSWORD,
-            } as PasswordLoginCredentials);
+            loginService.passwordLogin(
+                {
+                    login: TEST_LOGIN,
+                    password: TEST_PASSWORD,
+                } as PasswordLoginCredentials,
+                null,
+            );
 
             const op = controller.expectOne(LoginDocument);
             op.flush({

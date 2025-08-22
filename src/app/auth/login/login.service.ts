@@ -21,7 +21,6 @@ import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { EthereumGatewayFactory } from "./ethereum/ethereum.gateway.factory";
 import ProjectLinks from "src/app/project-links";
-import { ActivatedRoute } from "@angular/router";
 
 @Injectable({
     providedIn: "root",
@@ -32,13 +31,12 @@ export class LoginService {
     private appConfigService = inject(AppConfigService);
     private localStorageService = inject(LocalStorageService);
     private ethereumGatewayFactory = inject(EthereumGatewayFactory);
-    private route = inject(ActivatedRoute);
 
     private accessToken$: Subject<string> = new ReplaySubject<string>(1);
     private account$: Subject<AccountFragment> = new ReplaySubject<AccountFragment>(1);
     private passwordLoginError$: Subject<string> = new Subject<string>();
     private accountWhitelistError$: Subject<string> = new Subject<string>();
-    private githubRedirectUrl$ = new BehaviorSubject<MaybeUndefined<string>>(undefined);
+    private redirectUrl$ = new BehaviorSubject<MaybeNull<string>>(null);
 
     private loginCallback: (loginResponse: LoginResponseType) => void = this.redirectUrlLoginCallback.bind(this);
 
@@ -58,15 +56,13 @@ export class LoginService {
         return this.accountWhitelistError$.asObservable();
     }
 
-    public githubLoginLink(): string {
+    public githubLoginLink(redirectUrl: MaybeNull<string>): string {
         const githubClientId: MaybeUndefined<string> = this.appConfigService.githubClientId;
-        const githubRedirectUrl = this.route.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL);
-
         /* istanbul ignore else */
         if (githubClientId) {
             const githubLoginOauthUrl = `https://github.com/login/oauth/authorize?scope=user:email&client_id=${githubClientId}`;
-            if (githubRedirectUrl)
-                return `${githubLoginOauthUrl}&redirect_uri=${window.location.origin}/${ProjectLinks.URL_GITHUB_CALLBACK}?${ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL}=${githubRedirectUrl}`;
+            if (redirectUrl)
+                return `${githubLoginOauthUrl}&redirect_uri=${window.location.origin}/${ProjectLinks.URL_GITHUB_CALLBACK}?${ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL}=${redirectUrl}`;
             else {
                 return githubLoginOauthUrl;
             }
@@ -83,16 +79,16 @@ export class LoginService {
         this.accountWhitelistError$.next(errorText);
     }
 
-    public gotoGithub(): void {
-        window.location.href = this.githubLoginLink();
+    public gotoGithub(redirectUrl: MaybeNull<string>): void {
+        window.location.href = this.githubLoginLink(redirectUrl);
     }
 
     public setLoginCallback(loginCallback: (loginResponse: LoginResponseType) => void): void {
         this.loginCallback = loginCallback;
     }
 
-    public githubLogin(credentials: GithubLoginCredentials, redirectUrl: MaybeUndefined<string>): void {
-        this.githubRedirectUrl$.next(redirectUrl);
+    public githubLogin(credentials: GithubLoginCredentials, redirectUrl: MaybeNull<string>): void {
+        this.redirectUrl$.next(redirectUrl);
         const deviceCode: MaybeNull<string> = this.localStorageService.loginDeviceCode;
         this.authApi.fetchAccountAndTokenFromGithubCallbackCode(credentials, deviceCode ?? undefined).subscribe({
             next: this.loginCallback,
@@ -103,14 +99,16 @@ export class LoginService {
         });
     }
 
-    public passwordLogin(credentials: PasswordLoginCredentials): void {
+    public passwordLogin(credentials: PasswordLoginCredentials, redirectUrl: MaybeNull<string>): void {
+        this.redirectUrl$.next(redirectUrl);
         const deviceCode: MaybeNull<string> = this.localStorageService.loginDeviceCode;
         this.authApi.fetchAccountAndTokenFromPasswordLogin(credentials, deviceCode ?? undefined).subscribe({
             next: this.loginCallback,
         });
     }
 
-    public async web3WalletLogin(): Promise<void> {
+    public async web3WalletLogin(redirectUrl: MaybeNull<string>): Promise<void> {
+        this.redirectUrl$.next(redirectUrl);
         const ethereumGateway = await this.ethereumGatewayFactory.create();
 
         const deviceCode: MaybeNull<string> = this.localStorageService.loginDeviceCode;
@@ -153,11 +151,7 @@ export class LoginService {
     private defaultLoginCallback(loginResponse: LoginResponseType): void {
         this.accessToken$.next(loginResponse.accessToken);
         this.fetchAccountFromAccessToken(loginResponse.accessToken).subscribe(() => {
-            const githubRedirectUrl = this.githubRedirectUrl$.getValue();
-            const redirectUrl = githubRedirectUrl
-                ? githubRedirectUrl
-                : this.route.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL);
-
+            const redirectUrl = this.redirectUrl$.getValue();
             if (redirectUrl) {
                 this.navigationService.navigateToPath(redirectUrl);
             } else {

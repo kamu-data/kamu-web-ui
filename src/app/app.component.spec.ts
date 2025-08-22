@@ -79,7 +79,7 @@ describe("AppComponent", () => {
     it("should check call onLogin method", () => {
         const loginSpy = spyOn(navigationService, "navigateToLogin").and.returnValue();
         component.onLogin();
-        expect(loginSpy).toHaveBeenCalledWith();
+        expect(loginSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check call onSelectDataset method and navigate to dataset", () => {

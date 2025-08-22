@@ -188,10 +188,13 @@ describe("LoginComponent", () => {
 
                 emitClickOnElementByDataTestId(fixture, Elements.SUBMIT_PASSWORD);
 
-                expect(loginServicePasswordSubmit).toHaveBeenCalledOnceWith({
-                    login: TEST_LOGIN,
-                    password: TEST_PASSWORD,
-                } as PasswordLoginCredentials);
+                expect(loginServicePasswordSubmit).toHaveBeenCalledOnceWith(
+                    {
+                        login: TEST_LOGIN,
+                        password: TEST_PASSWORD,
+                    } as PasswordLoginCredentials,
+                    "",
+                );
             });
 
             it("Missing login or password leads to disable submit", () => {
@@ -269,7 +272,7 @@ describe("LoginComponent", () => {
             const navigationSpy = spyOn(navigationService, "navigateToReturnToCli").and.stub();
 
             const credentials: PasswordLoginCredentials = { login: TEST_LOGIN, password: TEST_PASSWORD };
-            loginService.passwordLogin(credentials);
+            loginService.passwordLogin(credentials, null);
 
             expect(authApiSpy).toHaveBeenCalledOnceWith(credentials, SOME_DEVICE_CODE);
             expect(navigationSpy).toHaveBeenCalledTimes(1);

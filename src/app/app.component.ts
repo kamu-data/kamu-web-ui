@@ -226,7 +226,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onLogin(): void {
-        const redirectUrl = window.location.pathname;
+        const redirectUrl = this.router.url;
         if (![`/${ProjectLinks.URL_PAGE_NOT_FOUND}`, `/${ProjectLinks.URL_SEARCH}`].includes(redirectUrl)) {
             this.navigationService.navigateToLogin(redirectUrl);
         } else {

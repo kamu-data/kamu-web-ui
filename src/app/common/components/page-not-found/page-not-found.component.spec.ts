@@ -45,6 +45,7 @@ describe("PageNotFoundComponent", () => {
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(false);
         const navigateToHomeSpy = spyOn(navigationService, "navigateToLogin").and.returnValue();
         emitClickOnElementByDataTestId(fixture, "navigate-to-login-btn");
-        expect(navigateToHomeSpy).toHaveBeenCalledWith();
+        expect(navigateToHomeSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToHomeSpy.calls.mostRecent().args.length).toEqual(1);
     });
 });

@@ -164,6 +164,12 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
                 ),
             })
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe();
+            .subscribe(() => {
+                this.navigationServices.navigateToDatasetView({
+                    accountName: this.getDatasetInfoFromUrl().accountName,
+                    datasetName: this.getDatasetInfoFromUrl().datasetName,
+                    tab: DatasetViewTypeEnum.Overview,
+                });
+            });
     }
 }

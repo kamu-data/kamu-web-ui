@@ -49,7 +49,7 @@ export class DatasetCommitService {
         accountName: string;
         datasetName: string;
         event: string;
-    }): Observable<void> {
+    }): Observable<boolean> {
         if (this.loggedUserService.isAuthenticated) {
             return this.getIdByAccountNameAndDatasetName(params.accountName, params.datasetName).pipe(
                 switchMap((datasetId: string) =>
@@ -62,12 +62,13 @@ export class DatasetCommitService {
                 map((data: CommitEventToDatasetMutation) => {
                     if (data.datasets.byId) {
                         if (data.datasets.byId.metadata.chain.commitEvent.__typename === "CommitResultSuccess") {
-                            this.redirectToOverviewTab(params.accountName, params.datasetName);
+                            return true;
                         } else if (
                             data.datasets.byId.metadata.chain.commitEvent.__typename === "CommitResultAppendError" ||
                             data.datasets.byId.metadata.chain.commitEvent.__typename === "MetadataManifestMalformed"
                         ) {
                             this.emitCommitEventErrorOccurred(data.datasets.byId.metadata.chain.commitEvent.message);
+                            return false;
                         } else {
                             throw new DatasetOperationError([
                                 new Error(data.datasets.byId.metadata.chain.commitEvent.message),

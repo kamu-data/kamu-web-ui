@@ -15,6 +15,11 @@ fragment FlowOutcomeData on FlowOutcome {
           ...DatasetBasics
         }
       }
+
+      ... on TaskFailureReasonWebhookDeliveryProblem {
+        message
+        targetUrl
+      }
     }
   }
 

@@ -208,7 +208,7 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.FetchStepContainer.command": {
         label: "Commands:",
-        tooltip: SetPollingSourceTooltipsTexts.ENVIRONMENT_VARIABLES,
+        tooltip: SetPollingSourceTooltipsTexts.COMMANDS,
         presentationComponent: CardsPropertyComponent,
         separateRowForValue: false,
         dataTestId: "setPollingSource-fetchStepContainer-command",

@@ -69,11 +69,11 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         expect(ingestTriggerFormHarness).toBeTruthy();
     });
 
-    it("should check 'Save' button is disabled with no schedule defined", () => {
-        expect(component.form.status).toBe("INVALID");
+    it("should check 'Save' button is enabled with no schedule defined and disabled updates", () => {
+        expect(component.form.status).toBe("VALID");
 
         const saveButton = getSaveButton();
-        expect(saveButton.disabled).toBeTrue();
+        expect(saveButton.disabled).toBeFalse();
     });
 
     it("should check form is valid when loaded with time delta schedule", async () => {

@@ -45,4 +45,12 @@ export default class RoutingResolvers {
     public static readonly DATASET_SETTINGS_COMPACTION_KEY = "datasetSettingsCompactionData";
     public static readonly DATASET_SETTINGS_VARIABLES_AND_SECRETS_KEY = "datasetSettingsVariablesSecretsData";
     public static readonly DATASET_SETTINGS_WEBHOOKS_KEY = "datasetSettingsWebhooksData";
+
+    public static readonly DATASET_METADATA_ACTIVE_TAB_KEY = "datasetMetadataActiveTabData";
+    public static readonly METADATA_SCHEMA_TAB_KEY = "metadataSchemaTabData";
+    public static readonly METADATA_LICENSE_TAB_KEY = "metadataLicenseTabData";
+    public static readonly METADATA_WATERMARK_TAB_KEY = "metadataWatermarkTabData";
+    public static readonly METADATA_TRANSFORMATION_TAB_KEY = "metadataTransformationTabData";
+    public static readonly METADATA_POLLING_SOURCE_TAB_KEY = "metadataPollingSourceTabData";
+    public static readonly METADATA_PUSH_SOURCES_TAB_KEY = "metadataPUshSourcesTabData";
 }

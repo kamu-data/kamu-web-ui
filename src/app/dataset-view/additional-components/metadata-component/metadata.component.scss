@@ -1,3 +1,5 @@
+@import "var";
+
 a {
     color: #0969da;
 }
@@ -8,4 +10,71 @@ a {
 .edit-polling-source-btn,
 .delete-polling-source-btn {
     display: flex;
+}
+
+.container {
+    overflow: auto;
+    padding: 28px 28px 10px 8px;
+    background: $app-white;
+    border: 1px solid $app-very-light-gray;
+    box-sizing: border-box;
+    box-shadow: 0 5px 4px $app-versatile-business-dark;
+    border-radius: 8px;
+}
+
+.container-details {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 10px;
+
+    .action-list-item {
+        position: relative;
+        list-style: none;
+        border-radius: 6px;
+        text-decoration: none;
+        margin: 5px 10px 5px 0;
+
+        a {
+            &:hover {
+                text-decoration: none;
+                cursor: pointer;
+            }
+        }
+
+        &__nav-active {
+            background: $app-color-action-list-item-default-selected-bg;
+            font-weight: 600;
+
+            &::after {
+                position: absolute;
+                top: calc(50% - 12px);
+                left: -8px;
+                width: 4px;
+                height: 24px;
+                content: "";
+                background: $app-color-accent-fg;
+                border-radius: 6px;
+            }
+        }
+
+        &__label {
+            position: relative;
+            display: grid;
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+            color: $app-color-fg-default;
+            text-align: left;
+            user-select: none;
+            background-color: transparent;
+            border: none;
+            border-radius: 6px;
+            transition: background 33.333ms linear;
+            align-items: start;
+
+            &:hover {
+                background: $app-color-action-list-item-default-selected-bg;
+            }
+        }
+    }
 }

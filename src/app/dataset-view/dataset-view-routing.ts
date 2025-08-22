@@ -15,7 +15,6 @@ import { DataComponent } from "./additional-components/data-component/data.compo
 import { datasetDataTabResolverFn } from "./additional-components/data-component/resolver/dataset-data-tab.resolver";
 import { FlowsComponent } from "./additional-components/flows-component/flows.component";
 import { datasetFlowsTabResolverFn } from "./additional-components/flows-component/resolver/dataset-flows-tab.resolver";
-import { datasetMetadataTabResolverFn } from "./additional-components/metadata-component/resolver/dataset-metadata-tab.resolver";
 import { datasetOverviewTabResolverFn } from "./additional-components/overview-component/resolver/dataset-overview-tab.resolver";
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import ProjectLinks from "../project-links";
@@ -60,16 +59,15 @@ export const DATASET_VIEW_ROUTES: Routes = [
             },
             {
                 path: DatasetViewTypeEnum.Metadata,
-                loadComponent: () =>
-                    import(
-                        /* webpackChunkName: "dataset-view-metadata" */
-                        "./additional-components/metadata-component/metadata.component"
-                    ).then((m) => m.MetadataComponent),
                 runGuardsAndResolvers: "always",
                 data: {
                     [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Metadata,
                 },
-                resolve: { [RoutingResolvers.DATASET_VIEW_METADATA_KEY]: datasetMetadataTabResolverFn },
+                loadChildren: () =>
+                    import(
+                        /* webpackChunkName: "dataset-view-metadata" */
+                        "./additional-components/metadata-component/metadata.routing"
+                    ).then((m) => m.METADATA_ROUTES),
             },
             {
                 path: DatasetViewTypeEnum.History,

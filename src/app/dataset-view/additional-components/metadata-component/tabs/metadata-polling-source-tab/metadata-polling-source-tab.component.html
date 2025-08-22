@@ -1,0 +1,157 @@
+<div class="d-flex justify-content-start mb-4" *ngIf="canEditSetPollingSource">
+    <button
+        appFeatureFlag="dataset.panel.metadata.editPollingSource"
+        class="border-1 bg-light border edit-polling-source-btn rounded-2 me-3 btn btn-sm justify-content-between align-items-center"
+        data-test-id="edit-polling-source"
+        (click)="navigateToEditPollingSource()"
+    >
+        <mat-icon class="mat-icon-svg-size me-2 text-muted" svgIcon="pencil" />
+        <span class="fs-12 me-2">Edit polling source</span>
+    </button>
+    <button
+        appFeatureFlag="dataset.panel.metadata.deletePollingSource"
+        class="border-1 bg-light border delete-polling-source-btn rounded-2 px-2 btn btn-sm justify-content-between align-items-center"
+        data-test-id="'edit-source-link'"
+        (click)="onDeletePollingSource()"
+    >
+        <mat-icon class="text-muted fs-4 d-block">delete</mat-icon>
+        <span class="fs-12 me-2 d-block"> Delete polling source</span>
+    </button>
+</div>
+
+<ng-container *ngIf="pollingSource">
+    <div class="position-relative border border-1 p-2 rounded-3">
+        <span class="position-absolute text-muted group-box-label text-uppercase">Fetch</span>
+        <div class="mx-4" *ngIf="pollingSource.fetch.__typename === 'FetchStepUrl'">
+            <app-block-row-data [tooltip]="POLLING_SOURCE_TOOLTIPS.FROM_URL" [label]="'Type:'">
+                <app-step-type-property [data]="pollingSource.fetch.__typename"></app-step-type-property>
+            </app-block-row-data>
+            <app-block-row-data [tooltip]="POLLING_SOURCE_TOOLTIPS.URL" [label]="'Url:'">
+                <app-link-property data-test-id="fetch-step-url" [data]="pollingSource.fetch.url" />
+            </app-block-row-data>
+            <app-block-row-data
+                *ngIf="pollingSource.fetch.eventTime"
+                [tooltip]="POLLING_SOURCE_TOOLTIPS.EVENT_TIME"
+                [label]="'Event time:'"
+            >
+                <app-event-time-property [data]="pollingSource.fetch.eventTime"></app-event-time-property>
+            </app-block-row-data>
+            <app-block-row-data *ngIf="headers?.length" [tooltip]="SOURCES_TOOLTIPS.HEADERS" [label]="'Headers:'">
+                <app-env-variables-property [data]="headers"></app-env-variables-property>
+            </app-block-row-data>
+        </div>
+
+        <div class="mx-4" *ngIf="pollingSource.fetch.__typename === 'FetchStepContainer'">
+            <app-block-row-data [tooltip]="POLLING_SOURCE_TOOLTIPS.FROM_CONTAINER" [label]="'Type:'">
+                <app-step-type-property [data]="pollingSource.fetch.__typename"></app-step-type-property>
+            </app-block-row-data>
+            <app-block-row-data [tooltip]="POLLING_SOURCE_TOOLTIPS.IMAGE" [label]="'Image:'">
+                <span>{{ pollingSource.fetch.image }}</span>
+            </app-block-row-data>
+            <app-block-row-data
+                *ngIf="pollingSource.fetch.command?.length"
+                [tooltip]="POLLING_SOURCE_TOOLTIPS.COMMAND"
+                [label]="'Commands:'"
+            >
+                <app-cards-property [data]="pollingSource.fetch.command!" />
+            </app-block-row-data>
+            <app-block-row-data
+                *ngIf="pollingSource.fetch.args?.length"
+                [tooltip]="POLLING_SOURCE_TOOLTIPS.ARGUMENTS"
+                [label]="'Arguments:'"
+            >
+                <app-cards-property [data]="pollingSource.fetch.args!" />
+            </app-block-row-data>
+            <app-block-row-data
+                *ngIf="pollingSource.fetch.env?.length"
+                [tooltip]="POLLING_SOURCE_TOOLTIPS.ENVIRONMENT_VARIABLES"
+                [label]="'Environment variables:'"
+            >
+                <app-env-variables-property [data]="pollingSource.fetch.env!" />
+            </app-block-row-data>
+        </div>
+
+        <div class="mx-4" *ngIf="pollingSource.fetch.__typename === 'FetchStepFilesGlob'">
+            <app-block-row-data [tooltip]="POLLING_SOURCE_TOOLTIPS.FROM_FILES_GLOB" [label]="'Type:'">
+                <app-step-type-property [data]="pollingSource.fetch.__typename"></app-step-type-property>
+            </app-block-row-data>
+            <app-block-row-data [tooltip]="POLLING_SOURCE_TOOLTIPS.PATH" [label]="'Path:'">
+                <span>{{ pollingSource.fetch.path }}</span>
+            </app-block-row-data>
+            <app-block-row-data
+                *ngIf="pollingSource.fetch.eventTime"
+                [tooltip]="POLLING_SOURCE_TOOLTIPS.EVENT_TIME"
+                [label]="'Event time:'"
+            >
+                <app-event-time-property [data]="pollingSource.fetch.eventTime"></app-event-time-property>
+            </app-block-row-data>
+            <app-block-row-data
+                *ngIf="pollingSource.fetch.order"
+                [tooltip]="POLLING_SOURCE_TOOLTIPS.ORDER"
+                [label]="'Order:'"
+            >
+                <app-order-property [data]="pollingSource.fetch.order"></app-order-property>
+            </app-block-row-data>
+        </div>
+
+        <div class="mx-4" *ngIf="pollingSource.fetch.__typename === 'FetchStepMqtt'">
+            <app-block-row-data [tooltip]="POLLING_SOURCE_TOOLTIPS.FROM_MQTT" [label]="'Type:'">
+                <app-step-type-property [data]="pollingSource.fetch.__typename"></app-step-type-property>
+            </app-block-row-data>
+            <app-block-row-data [tooltip]="POLLING_SOURCE_TOOLTIPS.MQTT_HOST" [label]="'Hostname:'">
+                <span>{{ pollingSource.fetch.host }}</span>
+            </app-block-row-data>
+            <app-block-row-data [tooltip]="POLLING_SOURCE_TOOLTIPS.MQTT_PORT" [label]="'Port:'">
+                <span>{{ pollingSource.fetch.port }}</span>
+            </app-block-row-data>
+            <app-block-row-data [tooltip]="POLLING_SOURCE_TOOLTIPS.MQTT_USERNAME" [label]="'Username:'">
+                <span>{{ pollingSource.fetch.username }}</span>
+            </app-block-row-data>
+            <app-block-row-data [tooltip]="POLLING_SOURCE_TOOLTIPS.MQTT_PASSWORD" [label]="'Password:'">
+                <span>{{ pollingSource.fetch.password }}</span>
+            </app-block-row-data>
+            <app-block-row-data
+                *ngIf="pollingSource.fetch.topics.length"
+                [tooltip]="POLLING_SOURCE_TOOLTIPS.MQTT_TOPICS"
+                [label]="'Topics:'"
+            >
+                <app-topics-property [data]="pollingSource.fetch.topics" />
+            </app-block-row-data>
+        </div>
+
+        <div class="mx-4" *ngIf="pollingSource.fetch.__typename === 'FetchStepEthereumLogs'">
+            <app-block-row-data [tooltip]="POLLING_SOURCE_TOOLTIPS.FROM_ETHEREUM_LOGS" [label]="'Type:'">
+                <app-step-type-property [data]="pollingSource.fetch.__typename"></app-step-type-property>
+            </app-block-row-data>
+            <app-block-row-data
+                *ngIf="pollingSource.fetch.chainId"
+                [tooltip]="POLLING_SOURCE_TOOLTIPS.ETHEREUM_LOGS_CHAIN_ID"
+                [label]="'Chain ID:'"
+            >
+                <span>{{ pollingSource.fetch.chainId }}</span>
+            </app-block-row-data>
+            <app-block-row-data
+                *ngIf="pollingSource.fetch.nodeUrl"
+                [tooltip]="POLLING_SOURCE_TOOLTIPS.ETHEREUM_LOGS_NODE_URL"
+                [label]="'Node url:'"
+            >
+                <a class="simple-link" [href]="pollingSource.fetch.nodeUrl">{{ pollingSource.fetch.nodeUrl }}</a>
+            </app-block-row-data>
+            <app-block-row-data
+                *ngIf="pollingSource.fetch.filter"
+                [tooltip]="POLLING_SOURCE_TOOLTIPS.ETHEREUM_LOGS_FILTER"
+                [label]="'Filter:'"
+            >
+                <app-yaml-event-viewer [data]="pollingSource.fetch.filter" />
+            </app-block-row-data>
+            <app-block-row-data
+                *ngIf="pollingSource.fetch.signature"
+                [tooltip]="POLLING_SOURCE_TOOLTIPS.ETHEREUM_LOGS_SIGNATURE"
+                [label]="'Signature:'"
+            >
+                <app-yaml-event-viewer [data]="pollingSource.fetch.signature" />
+            </app-block-row-data>
+        </div>
+    </div>
+    <app-source-event-common-data [sourceEvent]="pollingSource" />
+</ng-container>

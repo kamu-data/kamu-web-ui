@@ -22,6 +22,7 @@ import {
 } from "../dataset.subscriptions.interface";
 import {
     mockDatasetBasicsDerivedFragment,
+    mockMetadataCurrentLicense,
     mockOwnerFieldsWithAvatar,
     mockPublicDatasetVisibility,
 } from "src/app/search/mock.data";
@@ -916,7 +917,7 @@ export const mockOverviewDataUpdateNullable = {
                 description: null,
                 keywords: null,
             },
-            currentLicense: null,
+            currentLicense: mockMetadataCurrentLicense,
             currentWatermark: "2022-08-05T20:24:55+00:00",
             currentTransform: null,
             currentPushSources: [],

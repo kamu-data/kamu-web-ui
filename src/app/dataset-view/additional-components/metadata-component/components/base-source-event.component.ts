@@ -31,6 +31,7 @@ import {
     SupportedEvents,
 } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 
 @Injectable()
 export abstract class BaseSourceEventComponent extends BaseMainEventComponent implements OnInit {
@@ -94,7 +95,13 @@ export abstract class BaseSourceEventComponent extends BaseMainEventComponent im
                 event: this.selectSourceEvent(form, sourceEvent),
             })
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe();
+            .subscribe(() => {
+                this.navigationServices.navigateToDatasetView({
+                    accountName: this.getDatasetInfoFromUrl().accountName,
+                    datasetName: this.getDatasetInfoFromUrl().datasetName,
+                    tab: DatasetViewTypeEnum.Overview,
+                });
+            });
     }
 
     private selectSourceEvent(form: FormGroup, event: SourcesEvents): string {

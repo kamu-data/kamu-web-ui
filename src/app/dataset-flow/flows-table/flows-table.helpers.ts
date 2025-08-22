@@ -212,6 +212,9 @@ export class FlowTableHelpers {
                             case "TaskFailureReasonInputDatasetCompacted": {
                                 return `Input dataset <a class="text-small text-danger">${element.outcome.reason.inputDataset.name}</a> was hard compacted`;
                             }
+                            case "TaskFailureReasonWebhookDeliveryProblem": {
+                                return `${element.outcome.reason.message}<br>Target URL: ${element.outcome.reason.targetUrl}`;
+                            }
                             /* istanbul ignore next */
                             default:
                                 return "Unknown flow failed error";

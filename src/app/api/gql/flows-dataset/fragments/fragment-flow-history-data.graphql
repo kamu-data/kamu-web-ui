@@ -97,6 +97,11 @@ fragment FlowHistoryData on FlowEvent {
                 ...DatasetBasics
               }
             }
+
+            ... on TaskFailureReasonWebhookDeliveryProblem {
+              message
+              targetUrl
+            }
           }
         }
       }

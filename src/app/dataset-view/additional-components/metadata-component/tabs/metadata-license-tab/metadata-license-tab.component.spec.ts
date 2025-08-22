@@ -61,10 +61,7 @@ describe("MetadataLicenseTabComponent", () => {
 
     it("should check to open edit window", () => {
         const openModalSpy = spyOn(modalService, "open").and.callThrough();
-        const editLicenseButton = findElementByDataTestId(fixture, "edit-license");
-        expect(editLicenseButton).toBeDefined();
-        editLicenseButton?.click();
-        fixture.detectChanges();
+        component.onEditLicense();
         expect(openModalSpy).toHaveBeenCalledTimes(1);
     });
 

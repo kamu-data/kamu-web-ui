@@ -4,8 +4,8 @@
         data-test-id="edit-watermark"
         (click)="onEditWatermark()"
     >
-        <mat-icon class="mat-icon-svg-size me-2 text-muted" svgIcon="pencil" />
-        <span class="fs-12 me-2">Edit watermark</span>
+        <mat-icon class="mat-icon-svg-size me-2 text-muted" [svgIcon]="watermark ? 'pencil' : 'add'" />
+        <span class="fs-12 me-2">{{ watermark ? "Edit" : "Add" }} watermark</span>
     </button>
 </div>
 

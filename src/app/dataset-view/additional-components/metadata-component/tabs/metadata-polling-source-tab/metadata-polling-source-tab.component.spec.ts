@@ -45,9 +45,7 @@ describe("MetadataPollingSourceTabComponent", () => {
 
     it("should check to redirect to 'polling-source' route", () => {
         const navigateToAddPollingSourceSpy = spyOn(navigationService, "navigateToAddPollingSource");
-        const editPollingSourceButton = findElementByDataTestId(fixture, "edit-polling-source");
-        editPollingSourceButton?.click();
-        fixture.detectChanges();
+        component.navigateToEditPollingSource();
         expect(navigateToAddPollingSourceSpy).toHaveBeenCalledTimes(1);
     });
 

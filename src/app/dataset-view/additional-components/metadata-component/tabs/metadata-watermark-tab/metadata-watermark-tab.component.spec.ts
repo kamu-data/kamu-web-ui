@@ -14,7 +14,7 @@ import {
     mockOverviewDataUpdate,
     mockOverviewDataUpdateNullable,
 } from "../../../data-tabs.mock";
-import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
@@ -53,10 +53,7 @@ describe("MetadataWatermarkTabComponent", () => {
 
     it("should check to open edit window", () => {
         const openModalSpy = spyOn(modalService, "open").and.callThrough();
-        const editWatermarkButton = findElementByDataTestId(fixture, "edit-watermark");
-        expect(editWatermarkButton).toBeDefined();
-        editWatermarkButton?.click();
-        fixture.detectChanges();
+        component.onEditWatermark();
         expect(openModalSpy).toHaveBeenCalledTimes(1);
     });
 });

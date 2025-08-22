@@ -13,7 +13,6 @@ import { BlockRowDataComponent } from "src/app/common/components/block-row-data/
 import { DisplayTimeComponent } from "src/app/common/components/display-time/display-time.component";
 import { MatIconModule } from "@angular/material/icon";
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
-import { isNil } from "src/app/common/helpers/app.helpers";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { EditWatermarkModalComponent } from "../../../overview-component/components/edit-watermark-modal/edit-watermark-modal.component";
 import { from, take } from "rxjs";
@@ -53,7 +52,7 @@ export class MetadataWatermarkTabComponent {
     }
 
     public get canEditWatermark(): boolean {
-        return !isNil(this.watermark) && this.datasetMetadataTabData.datasetPermissions.permissions.metadata.canCommit;
+        return this.datasetMetadataTabData.datasetPermissions.permissions.metadata.canCommit;
     }
 
     public onEditWatermark(): void {

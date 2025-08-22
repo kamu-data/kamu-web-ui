@@ -6,7 +6,7 @@
  */
 
 import { inject, Injectable } from "@angular/core";
-import { Observable, ReplaySubject, Subject, firstValueFrom, map } from "rxjs";
+import { BehaviorSubject, Observable, ReplaySubject, Subject, firstValueFrom, map } from "rxjs";
 import { AuthApi } from "src/app/api/auth.api";
 import {
     GithubLoginCredentials,
@@ -20,6 +20,7 @@ import { AppConfigService } from "src/app/app-config.service";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { EthereumGatewayFactory } from "./ethereum/ethereum.gateway.factory";
+import ProjectLinks from "src/app/project-links";
 
 @Injectable({
     providedIn: "root",
@@ -35,6 +36,7 @@ export class LoginService {
     private account$: Subject<AccountFragment> = new ReplaySubject<AccountFragment>(1);
     private passwordLoginError$: Subject<string> = new Subject<string>();
     private accountWhitelistError$: Subject<string> = new Subject<string>();
+    private redirectUrl$ = new BehaviorSubject<MaybeNull<string>>(null);
 
     private loginCallback: (loginResponse: LoginResponseType) => void = this.redirectUrlLoginCallback.bind(this);
 
@@ -54,11 +56,16 @@ export class LoginService {
         return this.accountWhitelistError$.asObservable();
     }
 
-    public githubLoginLink(): string {
+    public githubLoginLink(redirectUrl: MaybeNull<string>): string {
         const githubClientId: MaybeUndefined<string> = this.appConfigService.githubClientId;
         /* istanbul ignore else */
         if (githubClientId) {
-            return `https://github.com/login/oauth/authorize?scope=user:email&client_id=${githubClientId}`;
+            const githubLoginOauthUrl = `https://github.com/login/oauth/authorize?scope=user:email&client_id=${githubClientId}`;
+            if (redirectUrl)
+                return `${githubLoginOauthUrl}&redirect_uri=${window.location.origin}/${ProjectLinks.URL_GITHUB_CALLBACK}?${ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL}=${redirectUrl}`;
+            else {
+                return githubLoginOauthUrl;
+            }
         } else {
             throw new Error("GitHub Client ID undefined in configuration");
         }
@@ -72,15 +79,16 @@ export class LoginService {
         this.accountWhitelistError$.next(errorText);
     }
 
-    public gotoGithub(): void {
-        window.location.href = this.githubLoginLink();
+    public gotoGithub(redirectUrl: MaybeNull<string>): void {
+        window.location.href = this.githubLoginLink(redirectUrl);
     }
 
     public setLoginCallback(loginCallback: (loginResponse: LoginResponseType) => void): void {
         this.loginCallback = loginCallback;
     }
 
-    public githubLogin(credentials: GithubLoginCredentials): void {
+    public githubLogin(credentials: GithubLoginCredentials, redirectUrl: MaybeNull<string>): void {
+        this.redirectUrl$.next(redirectUrl);
         const deviceCode: MaybeNull<string> = this.localStorageService.loginDeviceCode;
         this.authApi.fetchAccountAndTokenFromGithubCallbackCode(credentials, deviceCode ?? undefined).subscribe({
             next: this.loginCallback,
@@ -91,14 +99,16 @@ export class LoginService {
         });
     }
 
-    public passwordLogin(credentials: PasswordLoginCredentials): void {
+    public passwordLogin(credentials: PasswordLoginCredentials, redirectUrl: MaybeNull<string>): void {
+        this.redirectUrl$.next(redirectUrl);
         const deviceCode: MaybeNull<string> = this.localStorageService.loginDeviceCode;
         this.authApi.fetchAccountAndTokenFromPasswordLogin(credentials, deviceCode ?? undefined).subscribe({
             next: this.loginCallback,
         });
     }
 
-    public async web3WalletLogin(): Promise<void> {
+    public async web3WalletLogin(redirectUrl: MaybeNull<string>): Promise<void> {
+        this.redirectUrl$.next(redirectUrl);
         const ethereumGateway = await this.ethereumGatewayFactory.create();
 
         const deviceCode: MaybeNull<string> = this.localStorageService.loginDeviceCode;
@@ -141,10 +151,9 @@ export class LoginService {
     private defaultLoginCallback(loginResponse: LoginResponseType): void {
         this.accessToken$.next(loginResponse.accessToken);
         this.fetchAccountFromAccessToken(loginResponse.accessToken).subscribe(() => {
-            const url = this.localStorageService.redirectAfterLoginUrl;
-            this.localStorageService.setRedirectAfterLoginUrl(null);
-            if (url) {
-                this.navigationService.navigateToPath(url);
+            const redirectUrl = this.redirectUrl$.getValue();
+            if (redirectUrl) {
+                this.navigationService.navigateToPath(redirectUrl);
             } else {
                 this.navigationService.navigateToHome();
             }

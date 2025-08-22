@@ -12,6 +12,7 @@ import { ReplaySubject } from "rxjs";
 import { ActivatedRoute, RouterEvent } from "@angular/router";
 import { MaybeNull } from "../../interface/app.types";
 import { MatIconRegistry } from "@angular/material/icon";
+import ProjectLinks from "src/app/project-links";
 
 export function findElement<T>(fixture: ComponentFixture<T>, selector: string): DebugElement {
     return fixture.debugElement.query(By.css(selector));
@@ -112,6 +113,22 @@ export const snapshotParamMapMock = {
                             return "accountName";
                         case "datasetName":
                             return "datasetName";
+                    }
+                },
+            },
+        },
+    },
+};
+
+export const snapshotRedirectUrlMock = {
+    provide: ActivatedRoute,
+    useValue: {
+        snapshot: {
+            queryParamMap: {
+                get: (key: string) => {
+                    switch (key) {
+                        case ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL:
+                            return "";
                     }
                 },
             },

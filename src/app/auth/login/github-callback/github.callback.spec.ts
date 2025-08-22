@@ -50,7 +50,7 @@ describe("GithubCallbackComponent", () => {
         component.code = GITHUB_TEST_CODE;
         fixture.detectChanges();
 
-        expect(githubLoginSpy).toHaveBeenCalledWith({ code: GITHUB_TEST_CODE } as GithubLoginCredentials);
+        expect(githubLoginSpy).toHaveBeenCalledWith({ code: GITHUB_TEST_CODE } as GithubLoginCredentials, undefined);
     });
 
     it("should don't call githubLogin method", () => {

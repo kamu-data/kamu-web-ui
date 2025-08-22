@@ -12,6 +12,7 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { Apollo } from "apollo-angular";
 import { AccountProvider } from "src/app/api/kamu.graphql.interface";
+import { RedirectUrlTestModule } from "../modules/redirect-url-test.module";
 
 describe("accountPasswordProviderGuard", () => {
     let loggedUserService: LoggedUserService;
@@ -25,6 +26,7 @@ describe("accountPasswordProviderGuard", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [Apollo],
+            imports: [RedirectUrlTestModule],
         });
         loggedUserService = TestBed.inject(LoggedUserService);
     });

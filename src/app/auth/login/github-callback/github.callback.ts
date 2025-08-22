@@ -19,9 +19,10 @@ import { GithubLoginCredentials } from "src/app/api/auth.api.model";
     standalone: true,
 })
 export class GithubCallbackComponent extends BaseComponent implements OnInit {
+    @Input(ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL) public redirectUrl: string;
     @Input(ProjectLinks.URL_QUERY_PARAM_CODE) public set code(value: string) {
         if (value) {
-            this.loginService.githubLogin({ code: value } as GithubLoginCredentials);
+            this.loginService.githubLogin({ code: value } as GithubLoginCredentials, this.redirectUrl);
         }
     }
 
@@ -30,7 +31,11 @@ export class GithubCallbackComponent extends BaseComponent implements OnInit {
 
     public ngOnInit() {
         if (!this.searchString.includes("?code=")) {
-            this.navigationService.navigateToHome();
+            if (this.redirectUrl) {
+                this.navigationService.navigateToLogin(this.redirectUrl);
+            } else {
+                this.navigationService.navigateToHome();
+            }
         }
     }
 }

@@ -122,8 +122,14 @@ export class NavigationService {
         );
     }
 
-    public navigateToLogin(): void {
-        promiseWithCatch(this.router.navigate([ProjectLinks.URL_LOGIN]));
+    public navigateToLogin(redirectUrl?: string): void {
+        promiseWithCatch(
+            this.router.navigate([ProjectLinks.URL_LOGIN], {
+                queryParams: {
+                    [ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL]: redirectUrl,
+                },
+            }),
+        );
     }
 
     public navigateToOwnerView(ownerName: string, tab?: string, page?: number): void {

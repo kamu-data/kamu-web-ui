@@ -12,7 +12,8 @@ import { Observable, map, take } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
     DatasetFlowType,
-    FlowTriggerInput,
+    FlowTriggerRuleInput,
+    FlowTriggerStopPolicyInput,
     GetDatasetFlowTriggersQuery,
     SetDatasetFlowTriggersMutation,
 } from "src/app/api/kamu.graphql.interface";
@@ -39,7 +40,8 @@ export class DatasetFlowTriggerService {
         datasetId: string;
         datasetFlowType: DatasetFlowType;
         paused: boolean;
-        triggerInput: FlowTriggerInput;
+        triggerRuleInput: FlowTriggerRuleInput;
+        triggerStopPolicyInput: FlowTriggerStopPolicyInput;
         datasetInfo: DatasetInfo;
     }): Observable<void> {
         return this.datasetFlowApi.setDatasetFlowTriggers(params).pipe(

@@ -146,7 +146,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
 
         expect(setDatasetFlowTriggersSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
-                triggerInput: {
+                triggerRuleInput: {
                     schedule: {
                         timeDelta: MOCK_INPUT_TIME_DELTA,
                     },
@@ -169,7 +169,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
 
         expect(setDatasetFlowTriggersSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
-                triggerInput: {
+                triggerRuleInput: {
                     schedule: {
                         cron5ComponentExpression: `${MOCK_CRON_EXPRESSION}`,
                     },

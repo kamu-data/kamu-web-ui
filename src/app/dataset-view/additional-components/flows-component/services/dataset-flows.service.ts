@@ -11,7 +11,7 @@ import { Observable, map } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
     AccountFragment,
-    CancelScheduledTasksMutation,
+    CancelFlowRunMutation,
     DatasetAllFlowsPausedQuery,
     DatasetBasicsFragment,
     DatasetFlowFilters,
@@ -139,13 +139,13 @@ export class DatasetFlowsService {
             );
     }
 
-    public cancelScheduledTasks(params: { datasetId: string; flowId: string }): Observable<boolean> {
-        return this.datasetFlowApi.cancelScheduledTasks(params).pipe(
-            map((data: CancelScheduledTasksMutation) => {
-                if (data.datasets.byId?.flows.runs.cancelScheduledTasks.__typename === "CancelScheduledTasksSuccess") {
+    public cancelFlowRun(params: { datasetId: string; flowId: string }): Observable<boolean> {
+        return this.datasetFlowApi.cancelFlowRun(params).pipe(
+            map((data: CancelFlowRunMutation) => {
+                if (data.datasets.byId?.flows.runs.cancelFlowRun.__typename === "CancelFlowRunSuccess") {
                     return true;
                 } else {
-                    this.toastrService.error(data.datasets.byId?.flows.runs.cancelScheduledTasks.message);
+                    this.toastrService.error(data.datasets.byId?.flows.runs.cancelFlowRun.message);
                     return false;
                 }
             }),

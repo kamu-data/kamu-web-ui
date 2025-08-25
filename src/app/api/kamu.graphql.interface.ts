@@ -467,12 +467,12 @@ export type BuildInfo = {
     rustcSemver?: Maybe<Scalars["String"]>;
 };
 
-export type CancelScheduledTasksResult = {
+export type CancelFlowRunResult = {
     message: Scalars["String"];
 };
 
-export type CancelScheduledTasksSuccess = CancelScheduledTasksResult & {
-    __typename?: "CancelScheduledTasksSuccess";
+export type CancelFlowRunSuccess = CancelFlowRunResult & {
+    __typename?: "CancelFlowRunSuccess";
     flow: Flow;
     message: Scalars["String"];
 };
@@ -1193,7 +1193,7 @@ export type DatasetFlowRunsListFlowsArgs = {
 
 export type DatasetFlowRunsMut = {
     __typename?: "DatasetFlowRunsMut";
-    cancelScheduledTasks: CancelScheduledTasksResult;
+    cancelFlowRun: CancelFlowRunResult;
     triggerCompactionFlow: TriggerFlowResult;
     triggerIngestFlow: TriggerFlowResult;
     triggerResetFlow: TriggerFlowResult;
@@ -1201,7 +1201,7 @@ export type DatasetFlowRunsMut = {
     triggerTransformFlow: TriggerFlowResult;
 };
 
-export type DatasetFlowRunsMutCancelScheduledTasksArgs = {
+export type DatasetFlowRunsMutCancelFlowRunArgs = {
     flowId: Scalars["FlowID"];
 };
 
@@ -1249,7 +1249,8 @@ export type DatasetFlowTriggersMutResumeFlowArgs = {
 export type DatasetFlowTriggersMutSetTriggerArgs = {
     datasetFlowType: DatasetFlowType;
     paused: Scalars["Boolean"];
-    triggerInput: FlowTriggerInput;
+    triggerRuleInput: FlowTriggerRuleInput;
+    triggerStopPolicyInput: FlowTriggerStopPolicyInput;
 };
 
 export enum DatasetFlowType {
@@ -2302,7 +2303,13 @@ export type FlowInvalidTriggerInputError = SetFlowTriggerResult & {
     reason: Scalars["String"];
 };
 
-export type FlowNotFound = CancelScheduledTasksResult &
+export type FlowInvalidTriggerStopPolicyInputError = SetFlowTriggerResult & {
+    __typename?: "FlowInvalidTriggerStopPolicyInputError";
+    message: Scalars["String"];
+    reason: Scalars["String"];
+};
+
+export type FlowNotFound = CancelFlowRunResult &
     GetFlowResult & {
         __typename?: "FlowNotFound";
         flowId: Scalars["FlowID"];
@@ -2407,6 +2414,7 @@ export type FlowTrigger = {
     paused: Scalars["Boolean"];
     reactive?: Maybe<FlowTriggerReactiveRule>;
     schedule?: Maybe<FlowTriggerScheduleRule>;
+    stopPolicy: FlowTriggerStopPolicy;
 };
 
 export type FlowTriggerBatchingRule = FlowTriggerBatchingRuleBuffering | FlowTriggerBatchingRuleImmediate;
@@ -2440,27 +2448,51 @@ export enum FlowTriggerBreakingChangeRule {
     Recover = "RECOVER",
 }
 
-export type FlowTriggerInput =
-    | { reactive: FlowTriggerReactiveInput; schedule?: never }
-    | { reactive?: never; schedule: FlowTriggerScheduleInput };
-
-export type FlowTriggerReactiveInput = {
-    forBreakingChange: FlowTriggerBreakingChangeRule;
-    forNewData: FlowTriggerBatchingRuleInput;
-};
-
 export type FlowTriggerReactiveRule = {
     __typename?: "FlowTriggerReactiveRule";
     forBreakingChange: FlowTriggerBreakingChangeRule;
     forNewData: FlowTriggerBatchingRule;
 };
 
-export type FlowTriggerScheduleInput =
+export type FlowTriggerRuleInput =
+    | { reactive: FlowTriggerRuleReactiveInput; schedule?: never }
+    | { reactive?: never; schedule: FlowTriggerRuleScheduleInput };
+
+export type FlowTriggerRuleReactiveInput = {
+    forBreakingChange: FlowTriggerBreakingChangeRule;
+    forNewData: FlowTriggerBatchingRuleInput;
+};
+
+export type FlowTriggerRuleScheduleInput =
     /** Supported CRON syntax: min hour dayOfMonth month dayOfWeek */
     | { cron5ComponentExpression: Scalars["String"]; timeDelta?: never }
     | { cron5ComponentExpression?: never; timeDelta: TimeDeltaInput };
 
 export type FlowTriggerScheduleRule = Cron5ComponentExpression | TimeDelta;
+
+export type FlowTriggerStopPolicy = FlowTriggerStopPolicyAfterConsecutiveFailures | FlowTriggerStopPolicyNever;
+
+export type FlowTriggerStopPolicyAfterConsecutiveFailures = {
+    __typename?: "FlowTriggerStopPolicyAfterConsecutiveFailures";
+    maxFailures: Scalars["Int"];
+};
+
+export type FlowTriggerStopPolicyAfterConsecutiveFailuresInput = {
+    maxFailures: Scalars["Int"];
+};
+
+export type FlowTriggerStopPolicyInput =
+    | { afterConsecutiveFailures: FlowTriggerStopPolicyAfterConsecutiveFailuresInput; never?: never }
+    | { afterConsecutiveFailures?: never; never: FlowTriggerStopPolicyNeverInput };
+
+export type FlowTriggerStopPolicyNever = {
+    __typename?: "FlowTriggerStopPolicyNever";
+    dummy: Scalars["Boolean"];
+};
+
+export type FlowTriggerStopPolicyNeverInput = {
+    dummy: Scalars["Boolean"];
+};
 
 export type FlowTypeIsNotSupported = SetFlowTriggerResult & {
     __typename?: "FlowTypeIsNotSupported";
@@ -3005,6 +3037,22 @@ export enum QueryDialect {
     SqlRisingWave = "SQL_RISING_WAVE",
     SqlSpark = "SQL_SPARK",
 }
+
+export type ReactivateWebhookSubscriptionResult = {
+    message: Scalars["String"];
+};
+
+export type ReactivateWebhookSubscriptionResultSuccess = ReactivateWebhookSubscriptionResult & {
+    __typename?: "ReactivateWebhookSubscriptionResultSuccess";
+    message: Scalars["String"];
+    reactivated: Scalars["Boolean"];
+};
+
+export type ReactivateWebhookSubscriptionResultUnexpected = ReactivateWebhookSubscriptionResult & {
+    __typename?: "ReactivateWebhookSubscriptionResultUnexpected";
+    message: Scalars["String"];
+    status: WebhookSubscriptionStatus;
+};
 
 /**
  * Defines how raw data should be read into the structured form.
@@ -4149,6 +4197,7 @@ export type WebhookSubscriptionInvalidTargetUrl = CreateWebhookSubscriptionResul
 export type WebhookSubscriptionMut = {
     __typename?: "WebhookSubscriptionMut";
     pause: PauseWebhookSubscriptionResult;
+    reactivate: ReactivateWebhookSubscriptionResult;
     remove: RemoveWebhookSubscriptionResult;
     resume: ResumeWebhookSubscriptionResult;
     update: UpdateWebhookSubscriptionResult;
@@ -5369,7 +5418,8 @@ export type SetDatasetFlowTriggersMutationVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     datasetFlowType: DatasetFlowType;
     paused: Scalars["Boolean"];
-    triggerInput: FlowTriggerInput;
+    triggerRuleInput: FlowTriggerRuleInput;
+    triggerStopPolicyInput: FlowTriggerStopPolicyInput;
 }>;
 
 export type SetDatasetFlowTriggersMutation = {
@@ -5385,11 +5435,12 @@ export type SetDatasetFlowTriggersMutation = {
                     setTrigger:
                         | {
                               __typename?: "FlowIncompatibleDatasetKind";
-                              message: string;
                               expectedDatasetKind: DatasetKind;
                               actualDatasetKind: DatasetKind;
+                              message: string;
                           }
-                        | { __typename?: "FlowInvalidTriggerInputError"; message: string; reason: string }
+                        | { __typename?: "FlowInvalidTriggerInputError"; reason: string; message: string }
+                        | { __typename?: "FlowInvalidTriggerStopPolicyInputError"; message: string }
                         | { __typename?: "FlowPreconditionsNotMet"; message: string }
                         | { __typename?: "FlowTypeIsNotSupported"; message: string }
                         | { __typename?: "SetFlowTriggerSuccess"; message: string };
@@ -5459,12 +5510,12 @@ export type DatasetAllFlowsPausedQuery = {
     };
 };
 
-export type CancelScheduledTasksMutationVariables = Exact<{
+export type CancelFlowRunMutationVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     flowId: Scalars["FlowID"];
 }>;
 
-export type CancelScheduledTasksMutation = {
+export type CancelFlowRunMutation = {
     __typename?: "Mutation";
     datasets: {
         __typename?: "DatasetsMut";
@@ -5474,9 +5525,9 @@ export type CancelScheduledTasksMutation = {
                 __typename?: "DatasetFlowsMut";
                 runs: {
                     __typename?: "DatasetFlowRunsMut";
-                    cancelScheduledTasks:
+                    cancelFlowRun:
                         | {
-                              __typename?: "CancelScheduledTasksSuccess";
+                              __typename?: "CancelFlowRunSuccess";
                               message: string;
                               flow: { __typename?: "Flow" } & FlowSummaryDataFragment;
                           }
@@ -10332,29 +10383,25 @@ export const SetDatasetFlowTriggersDocument = gql`
         $datasetId: DatasetID!
         $datasetFlowType: DatasetFlowType!
         $paused: Boolean!
-        $triggerInput: FlowTriggerInput!
+        $triggerRuleInput: FlowTriggerRuleInput!
+        $triggerStopPolicyInput: FlowTriggerStopPolicyInput!
     ) {
         datasets {
             byId(datasetId: $datasetId) {
                 flows {
                     triggers {
-                        setTrigger(datasetFlowType: $datasetFlowType, paused: $paused, triggerInput: $triggerInput) {
-                            ... on SetFlowTriggerSuccess {
-                                message
-                            }
+                        setTrigger(
+                            datasetFlowType: $datasetFlowType
+                            paused: $paused
+                            triggerRuleInput: $triggerRuleInput
+                            triggerStopPolicyInput: $triggerStopPolicyInput
+                        ) {
+                            message
                             ... on FlowIncompatibleDatasetKind {
-                                message
                                 expectedDatasetKind
                                 actualDatasetKind
                             }
-                            ... on FlowPreconditionsNotMet {
-                                message
-                            }
-                            ... on FlowTypeIsNotSupported {
-                                message
-                            }
                             ... on FlowInvalidTriggerInputError {
-                                message
                                 reason
                             }
                         }
@@ -10455,18 +10502,18 @@ export class DatasetAllFlowsPausedGQL extends Apollo.Query<
         super(apollo);
     }
 }
-export const CancelScheduledTasksDocument = gql`
-    mutation cancelScheduledTasks($datasetId: DatasetID!, $flowId: FlowID!) {
+export const CancelFlowRunDocument = gql`
+    mutation cancelFlowRun($datasetId: DatasetID!, $flowId: FlowID!) {
         datasets {
             byId(datasetId: $datasetId) {
                 flows {
                     runs {
-                        cancelScheduledTasks(flowId: $flowId) {
+                        cancelFlowRun(flowId: $flowId) {
                             ... on FlowNotFound {
                                 flowId
                                 message
                             }
-                            ... on CancelScheduledTasksSuccess {
+                            ... on CancelFlowRunSuccess {
                                 message
                                 flow {
                                     ...FlowSummaryData
@@ -10484,11 +10531,8 @@ export const CancelScheduledTasksDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class CancelScheduledTasksGQL extends Apollo.Mutation<
-    CancelScheduledTasksMutation,
-    CancelScheduledTasksMutationVariables
-> {
-    document = CancelScheduledTasksDocument;
+export class CancelFlowRunGQL extends Apollo.Mutation<CancelFlowRunMutation, CancelFlowRunMutationVariables> {
+    document = CancelFlowRunDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

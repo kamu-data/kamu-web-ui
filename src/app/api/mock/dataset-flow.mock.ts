@@ -8,7 +8,7 @@
 import {
     AccountProvider,
     AccountType,
-    CancelScheduledTasksMutation,
+    CancelFlowRunMutation,
     DatasetAllFlowsPausedQuery,
     DatasetFlowsInitiatorsQuery,
     DatasetPauseFlowsMutation,
@@ -1353,12 +1353,12 @@ export const mockDatasetTriggerResetToMetadataFlowMutationError: DatasetTriggerR
     },
 };
 
-export const mockCancelScheduledTasksMutationSuccess: CancelScheduledTasksMutation = {
+export const mockCancelFlowRunMutationSuccess: CancelFlowRunMutation = {
     datasets: {
         byId: {
             flows: {
                 runs: {
-                    cancelScheduledTasks: {
+                    cancelFlowRun: {
                         message: "Success",
                         flow: {
                             configSnapshot: {
@@ -1392,7 +1392,7 @@ export const mockCancelScheduledTasksMutationSuccess: CancelScheduledTasksMutati
                             taskIds: [],
                             __typename: "Flow",
                         },
-                        __typename: "CancelScheduledTasksSuccess",
+                        __typename: "CancelFlowRunSuccess",
                     },
                     __typename: "DatasetFlowRunsMut",
                 },
@@ -1404,12 +1404,12 @@ export const mockCancelScheduledTasksMutationSuccess: CancelScheduledTasksMutati
     },
 };
 
-export const mockCancelScheduledTasksMutationError: CancelScheduledTasksMutation = {
+export const mockCancelFlowRunMutationError: CancelFlowRunMutation = {
     datasets: {
         byId: {
             flows: {
                 runs: {
-                    cancelScheduledTasks: {
+                    cancelFlowRun: {
                         __typename: "FlowNotFound",
                         flowId: "230",
                         message: "Flow '230' was not found",

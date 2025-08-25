@@ -15,6 +15,8 @@ import {
     mockDatasetWebhookCreateSubscriptionMutationError,
     mockDatasetWebhookPauseSubscriptionMutation,
     mockDatasetWebhookPauseSubscriptionMutationError,
+    mockDatasetWebhookReactivateSubscriptionMutation,
+    mockDatasetWebhookReactivateSubscriptionMutationError,
     mockDatasetWebhookRemoveSubscriptionMutation,
     mockDatasetWebhookRemoveSubscriptionMutationError,
     mockDatasetWebhookResumeSubscriptionMutation,
@@ -181,6 +183,36 @@ describe("DatasetWebhooksService", () => {
         });
 
         expect(datasetWebhookResumeSubscriptionSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check reactivate dataset webhook subscription with success", () => {
+        const datasetWebhookReactivateSubscriptionSpy = spyOn(
+            webhooksApi,
+            "datasetWebhookReactivateSubscription",
+        ).and.returnValue(of(mockDatasetWebhookReactivateSubscriptionMutation));
+        const toastrServiceSuccessSpy = spyOn(toastrService, "success");
+
+        service.datasetWebhookReactivateSubscription(DATASET_ID, MOCK_SUBSCRIPTION_ID).subscribe((result: boolean) => {
+            expect(result).toEqual(true);
+            expect(toastrServiceSuccessSpy).toHaveBeenCalledTimes(1);
+        });
+
+        expect(datasetWebhookReactivateSubscriptionSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check reactivate dataset webhook subscription with error", () => {
+        const datasetWebhookReactivateSubscriptionSpy = spyOn(
+            webhooksApi,
+            "datasetWebhookReactivateSubscription",
+        ).and.returnValue(of(mockDatasetWebhookReactivateSubscriptionMutationError));
+        const toastrServiceErrorSpy = spyOn(toastrService, "error");
+
+        service.datasetWebhookReactivateSubscription(DATASET_ID, MOCK_SUBSCRIPTION_ID).subscribe((result: boolean) => {
+            expect(result).toEqual(false);
+            expect(toastrServiceErrorSpy).toHaveBeenCalledTimes(1);
+        });
+
+        expect(datasetWebhookReactivateSubscriptionSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check update dataset webhook subscription with success", () => {

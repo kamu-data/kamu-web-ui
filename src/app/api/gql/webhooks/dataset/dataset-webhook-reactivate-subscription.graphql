@@ -1,0 +1,16 @@
+mutation datasetWebhookReactivateSubscription($datasetId: DatasetID!, $id: WebhookSubscriptionID!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      webhooks {
+        subscription(id: $id) {
+          reactivate {
+            message
+            ... on ReactivateWebhookSubscriptionResultUnexpected {
+              status
+            }
+          }
+        }
+      }
+    }
+  }
+}

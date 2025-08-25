@@ -2,33 +2,27 @@ mutation setDatasetFlowTriggers(
   $datasetId: DatasetID!
   $datasetFlowType: DatasetFlowType!
   $paused: Boolean!
-  $triggerInput: FlowTriggerInput!
+  $triggerRuleInput: FlowTriggerRuleInput!
+  $triggerStopPolicyInput: FlowTriggerStopPolicyInput!
 ) {
   datasets {
     byId(datasetId: $datasetId) {
       flows {
         triggers {
-          setTrigger(datasetFlowType: $datasetFlowType, paused: $paused, triggerInput: $triggerInput) {
-            ... on SetFlowTriggerSuccess {
-              message
-            }
+          setTrigger(
+            datasetFlowType: $datasetFlowType
+            paused: $paused
+            triggerRuleInput: $triggerRuleInput
+            triggerStopPolicyInput: $triggerStopPolicyInput
+          ) {
+            message
 
             ... on FlowIncompatibleDatasetKind {
-              message
               expectedDatasetKind
               actualDatasetKind
             }
 
-            ... on FlowPreconditionsNotMet {
-              message
-            }
-
-            ... on FlowTypeIsNotSupported {
-              message
-            }
-
             ... on FlowInvalidTriggerInputError {
-              message
               reason
             }
           }

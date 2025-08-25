@@ -22,9 +22,10 @@ import {
 import {
     FlowTriggerBreakingChangeRule,
     DatasetFlowType,
-    FlowTriggerInput,
+    FlowTriggerRuleInput,
     GetDatasetFlowTriggersQuery,
     TimeUnit,
+    FlowTriggerStopPolicyInput,
 } from "src/app/api/kamu.graphql.interface";
 import { mockDatasetInfo } from "src/app/search/mock.data";
 import { provideAnimations } from "@angular/platform-browser/animations";
@@ -38,7 +39,7 @@ describe("DatasetFlowTriggerService", () => {
     const MOCK_DATASET_ID = "did:odf:fed0100d72fc7a0d7ced1ff2d47e3bfeb844390f18a7fa7e24ced6563aa7357dfa2e8";
     const MOCK_PAUSED = false;
 
-    const MOCK_TRIGGER_INPUT: FlowTriggerInput = {
+    const MOCK_TRIGGER_RULE_INPUT: FlowTriggerRuleInput = {
         reactive: {
             forNewData: {
                 buffering: {
@@ -50,6 +51,12 @@ describe("DatasetFlowTriggerService", () => {
                 },
             },
             forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
+        },
+    };
+
+    const MOCK_TRIGGER_STOP_POLICY_INPUT: FlowTriggerStopPolicyInput = {
+        never: {
+            dummy: true,
         },
     };
 
@@ -93,7 +100,8 @@ describe("DatasetFlowTriggerService", () => {
                 datasetId: MOCK_DATASET_ID,
                 datasetFlowType: DatasetFlowType.ExecuteTransform,
                 paused: MOCK_PAUSED,
-                triggerInput: MOCK_TRIGGER_INPUT,
+                triggerRuleInput: MOCK_TRIGGER_RULE_INPUT,
+                triggerStopPolicyInput: MOCK_TRIGGER_STOP_POLICY_INPUT,
                 datasetInfo: mockDatasetInfo,
             })
             .subscribe(() => {
@@ -114,7 +122,8 @@ describe("DatasetFlowTriggerService", () => {
                 datasetId: MOCK_DATASET_ID,
                 datasetFlowType: DatasetFlowType.ExecuteTransform,
                 paused: MOCK_PAUSED,
-                triggerInput: MOCK_TRIGGER_INPUT,
+                triggerRuleInput: MOCK_TRIGGER_RULE_INPUT,
+                triggerStopPolicyInput: MOCK_TRIGGER_STOP_POLICY_INPUT,
                 datasetInfo: mockDatasetInfo,
             })
             .subscribe(() => {

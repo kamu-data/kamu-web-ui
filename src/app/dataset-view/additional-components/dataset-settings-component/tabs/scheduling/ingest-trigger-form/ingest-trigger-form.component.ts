@@ -7,7 +7,7 @@
 
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
-import { FlowTriggerInput } from "src/app/api/kamu.graphql.interface";
+import { FlowTriggerRuleInput } from "src/app/api/kamu.graphql.interface";
 import { ScheduleType } from "../../../dataset-settings.model";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MaybeNull } from "src/app/interface/app.types";
@@ -66,7 +66,7 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
         });
     }
 
-    public static buildPollingTriggerInput(ingestTriggerFormValue: IngestTriggerFormValue): FlowTriggerInput {
+    public static buildPollingTriggerRuleInput(ingestTriggerFormValue: IngestTriggerFormValue): FlowTriggerRuleInput {
         switch (ingestTriggerFormValue.__typename) {
             case ScheduleType.TIME_DELTA: {
                 const timeDeltaValue = ingestTriggerFormValue.timeDelta;

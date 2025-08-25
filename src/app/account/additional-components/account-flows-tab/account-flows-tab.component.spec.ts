@@ -84,7 +84,7 @@ describe("AccountFlowsTabComponent", () => {
 
     it("should check cancel flow button", fakeAsync(() => {
         const refreshFlowSpy = spyOn(component, "refreshFlow");
-        spyOn(datasetFlowsService, "cancelScheduledTasks").and.returnValue(of(true));
+        spyOn(datasetFlowsService, "cancelFlowRun").and.returnValue(of(true));
         component.onCancelFlow({ flowId: MOCK_FLOW_ID, datasetId: mockDatasetMainDataId });
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(refreshFlowSpy).toHaveBeenCalledTimes(1);

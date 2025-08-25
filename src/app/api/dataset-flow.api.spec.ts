@@ -9,8 +9,6 @@ import { TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 import {
-    CancelScheduledTasksDocument,
-    CancelScheduledTasksMutation,
     DatasetAllFlowsPausedDocument,
     DatasetAllFlowsPausedQuery,
     DatasetFlowType,
@@ -40,6 +38,8 @@ import {
     DatasetTriggerResetFlowDocument,
     DatasetTriggerResetToMetadataFlowDocument,
     FlowTriggerBreakingChangeRule,
+    CancelFlowRunMutation,
+    CancelFlowRunDocument,
 } from "./kamu.graphql.interface";
 import { TEST_DATASET_ID } from "./mock/dataset.mock";
 import { DatasetFlowApi } from "./dataset-flow.api";
@@ -47,7 +47,7 @@ import {
     mockIngestGetDatasetFlowConfigsSuccess,
     mockTimeDeltaInput,
     mockDatasetTriggerIngestFlowMutation,
-    mockCancelScheduledTasksMutationSuccess,
+    mockCancelFlowRunMutationSuccess,
     mockGetDatasetListFlowsQuery,
     mockGetFlowByIdQuerySuccess,
     mockDatasetFlowsInitiatorsQuery,
@@ -226,7 +226,7 @@ describe("DatasetFlowApi", () => {
                 datasetId: TEST_DATASET_ID,
                 datasetFlowType: DatasetFlowType.ExecuteTransform,
                 paused: false,
-                triggerInput: {
+                triggerRuleInput: {
                     reactive: {
                         forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
                         forNewData: {
@@ -235,6 +235,11 @@ describe("DatasetFlowApi", () => {
                                 minRecordsToAwait: MOCK_MIN_RECORDS_TO_AWAIT,
                             },
                         },
+                    },
+                },
+                triggerStopPolicyInput: {
+                    never: {
+                        dummy: true,
                     },
                 },
             })
@@ -358,19 +363,19 @@ describe("DatasetFlowApi", () => {
 
     it("should check cancel scheduled tasks", () => {
         service
-            .cancelScheduledTasks({
+            .cancelFlowRun({
                 datasetId: TEST_DATASET_ID,
                 flowId: MOCK_FLOW_ID,
             })
-            .subscribe((res: CancelScheduledTasksMutation) => {
-                expect(res.datasets.byId?.flows.runs.cancelScheduledTasks.message).toEqual("Success");
+            .subscribe((res: CancelFlowRunMutation) => {
+                expect(res.datasets.byId?.flows.runs.cancelFlowRun.message).toEqual("Success");
             });
 
-        const op = controller.expectOne(CancelScheduledTasksDocument);
+        const op = controller.expectOne(CancelFlowRunDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
         expect(op.operation.variables.flowId).toEqual(MOCK_FLOW_ID);
         op.flush({
-            data: mockCancelScheduledTasksMutationSuccess,
+            data: mockCancelFlowRunMutationSuccess,
         });
     });
 

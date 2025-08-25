@@ -6,7 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { FlowTriggerBreakingChangeRule, FlowTriggerInput } from "src/app/api/kamu.graphql.interface";
+import { FlowTriggerBreakingChangeRule, FlowTriggerRuleInput } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { FormGroup, FormControl, AbstractControl, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MaybeNull } from "src/app/interface/app.types";
@@ -79,7 +79,9 @@ export class TransformTriggerFormComponent extends BaseComponent implements OnIn
         return formGroup;
     }
 
-    public static buildTransformTriggerInput(transformTriggerFormValue: TransformTriggerFormValue): FlowTriggerInput {
+    public static buildTransformTriggerRuleInput(
+        transformTriggerFormValue: TransformTriggerFormValue,
+    ): FlowTriggerRuleInput {
         switch (transformTriggerFormValue.forNewData.batchingRuleType) {
             case BatchingRuleType.BUFFERING: {
                 const bufferingValue = transformTriggerFormValue.forNewData.buffering;

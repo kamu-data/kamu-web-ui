@@ -8,8 +8,8 @@
 import { MutationResult } from "apollo-angular";
 import { inject, Injectable } from "@angular/core";
 import {
-    CancelScheduledTasksGQL,
-    CancelScheduledTasksMutation,
+    CancelFlowRunGQL,
+    CancelFlowRunMutation,
     DatasetAllFlowsPausedGQL,
     DatasetAllFlowsPausedQuery,
     DatasetFlowFilters,
@@ -34,7 +34,8 @@ import {
     FlowConfigIngestInput,
     FlowConfigResetInput,
     FlowRetryPolicyInput,
-    FlowTriggerInput,
+    FlowTriggerRuleInput,
+    FlowTriggerStopPolicyInput,
     GetDatasetFlowConfigsGQL,
     GetDatasetFlowConfigsQuery,
     GetDatasetFlowTriggersGQL,
@@ -70,7 +71,7 @@ export class DatasetFlowApi {
     private datasetTriggerResetToMetadataFlowGQL = inject(DatasetTriggerResetToMetadataFlowGQL);
 
     private datasetFlowByIdGQL = inject(GetFlowByIdGQL);
-    private cancelScheduledTasksGQL = inject(CancelScheduledTasksGQL);
+    private cancelFlowRunGQL = inject(CancelFlowRunGQL);
     private datasetFlowsInitiatorsGQL = inject(DatasetFlowsInitiatorsGQL);
     private setDatasetFlowTriggersGQL = inject(SetDatasetFlowTriggersGQL);
     private getDatasetFlowTriggersGQL = inject(GetDatasetFlowTriggersGQL);
@@ -187,7 +188,8 @@ export class DatasetFlowApi {
         datasetId: string;
         datasetFlowType: DatasetFlowType;
         paused: boolean;
-        triggerInput: FlowTriggerInput;
+        triggerRuleInput: FlowTriggerRuleInput;
+        triggerStopPolicyInput: FlowTriggerStopPolicyInput;
     }): Observable<SetDatasetFlowTriggersMutation> {
         return this.setDatasetFlowTriggersGQL.mutate(params).pipe(
             first(),
@@ -289,19 +291,16 @@ export class DatasetFlowApi {
             );
     }
 
-    public cancelScheduledTasks(params: {
-        datasetId: string;
-        flowId: string;
-    }): Observable<CancelScheduledTasksMutation> {
-        return this.cancelScheduledTasksGQL
+    public cancelFlowRun(params: { datasetId: string; flowId: string }): Observable<CancelFlowRunMutation> {
+        return this.cancelFlowRunGQL
             .mutate({
                 datasetId: params.datasetId,
                 flowId: params.flowId,
             })
             .pipe(
                 first(),
-                map((result: MutationResult<CancelScheduledTasksMutation>) => {
-                    return result.data as CancelScheduledTasksMutation;
+                map((result: MutationResult<CancelFlowRunMutation>) => {
+                    return result.data as CancelFlowRunMutation;
                 }),
             );
     }

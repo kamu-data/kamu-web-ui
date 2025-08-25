@@ -246,7 +246,7 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
         expect(setDatasetFlowTriggersSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
                 paused: false,
-                triggerInput: {
+                triggerRuleInput: {
                     reactive: {
                         forNewData: {
                             buffering: {
@@ -279,7 +279,7 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
         expect(setDatasetFlowTriggersSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
                 paused: false,
-                triggerInput: {
+                triggerRuleInput: {
                     reactive: {
                         forNewData: {
                             immediate: {

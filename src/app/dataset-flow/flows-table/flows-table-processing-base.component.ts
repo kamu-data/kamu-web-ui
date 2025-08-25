@@ -57,7 +57,7 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
 
     public onCancelFlow(params: CancelFlowArgs): void {
         this.flowsService
-            .cancelScheduledTasks({
+            .cancelFlowRun({
                 datasetId: params.datasetId,
                 flowId: params.flowId,
             })

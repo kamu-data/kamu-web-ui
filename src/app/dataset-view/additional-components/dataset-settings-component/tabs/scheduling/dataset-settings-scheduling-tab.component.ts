@@ -9,7 +9,12 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, i
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { ScheduleType } from "../../dataset-settings.model";
-import { DatasetBasicsFragment, DatasetFlowType, DatasetKind } from "src/app/api/kamu.graphql.interface";
+import {
+    DatasetBasicsFragment,
+    DatasetFlowType,
+    DatasetKind,
+    FlowTriggerStopPolicyInput,
+} from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowTriggerService } from "../../services/dataset-flow-trigger.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
@@ -124,7 +129,8 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                 datasetId: this.datasetBasics.id,
                 datasetFlowType: DatasetFlowType.Ingest,
                 paused: !ingestTriggerFormValue.updatesEnabled,
-                triggerInput: IngestTriggerFormComponent.buildPollingTriggerInput(ingestTriggerFormValue),
+                triggerRuleInput: IngestTriggerFormComponent.buildPollingTriggerRuleInput(ingestTriggerFormValue),
+                triggerStopPolicyInput: { never: { dummy: true } } as FlowTriggerStopPolicyInput, // TODO: UI support
                 datasetInfo: {
                     accountName: this.datasetBasics.owner.accountName,
                     datasetName: this.datasetBasics.name,

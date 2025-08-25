@@ -412,11 +412,11 @@ type BuildInfo {
 	cargoOptLevel: String
 }
 
-interface CancelScheduledTasksResult {
+interface CancelFlowRunResult {
 	message: String!
 }
 
-type CancelScheduledTasksSuccess implements CancelScheduledTasksResult {
+type CancelFlowRunSuccess implements CancelFlowRunResult {
 	flow: Flow!
 	message: String!
 }
@@ -1116,7 +1116,7 @@ type DatasetFlowRunsMut {
 	triggerCompactionFlow(compactionConfigInput: FlowConfigCompactionInput): TriggerFlowResult!
 	triggerResetFlow(resetConfigInput: FlowConfigResetInput): TriggerFlowResult!
 	triggerResetToMetadataFlow: TriggerFlowResult!
-	cancelScheduledTasks(flowId: FlowID!): CancelScheduledTasksResult!
+	cancelFlowRun(flowId: FlowID!): CancelFlowRunResult!
 }
 
 type DatasetFlowTriggers {
@@ -1131,7 +1131,7 @@ type DatasetFlowTriggers {
 }
 
 type DatasetFlowTriggersMut {
-	setTrigger(datasetFlowType: DatasetFlowType!, paused: Boolean!, triggerInput: FlowTriggerInput!): SetFlowTriggerResult!
+	setTrigger(datasetFlowType: DatasetFlowType!, paused: Boolean!, triggerRuleInput: FlowTriggerRuleInput!, triggerStopPolicyInput: FlowTriggerStopPolicyInput!): SetFlowTriggerResult!
 	pauseFlow(datasetFlowType: DatasetFlowType!): Boolean!
 	pauseFlows: Boolean!
 	resumeFlow(datasetFlowType: DatasetFlowType!): Boolean!
@@ -2229,7 +2229,12 @@ type FlowInvalidTriggerInputError implements SetFlowTriggerResult {
 	message: String!
 }
 
-type FlowNotFound implements GetFlowResult & CancelScheduledTasksResult {
+type FlowInvalidTriggerStopPolicyInputError implements SetFlowTriggerResult {
+	reason: String!
+	message: String!
+}
+
+type FlowNotFound implements GetFlowResult & CancelFlowRunResult {
 	flowId: FlowID!
 	message: String!
 }
@@ -2327,6 +2332,7 @@ type FlowTrigger {
 	paused: Boolean!
 	schedule: FlowTriggerScheduleRule
 	reactive: FlowTriggerReactiveRule
+	stopPolicy: FlowTriggerStopPolicy!
 }
 
 union FlowTriggerBatchingRule = FlowTriggerBatchingRuleImmediate | FlowTriggerBatchingRuleBuffering
@@ -2359,22 +2365,22 @@ enum FlowTriggerBreakingChangeRule {
 	RECOVER
 }
 
-input FlowTriggerInput @oneOf {
-	schedule: FlowTriggerScheduleInput
-	reactive: FlowTriggerReactiveInput
-}
-
-input FlowTriggerReactiveInput {
-	forNewData: FlowTriggerBatchingRuleInput!
-	forBreakingChange: FlowTriggerBreakingChangeRule!
-}
-
 type FlowTriggerReactiveRule {
 	forNewData: FlowTriggerBatchingRule!
 	forBreakingChange: FlowTriggerBreakingChangeRule!
 }
 
-input FlowTriggerScheduleInput @oneOf {
+input FlowTriggerRuleInput @oneOf {
+	schedule: FlowTriggerRuleScheduleInput
+	reactive: FlowTriggerRuleReactiveInput
+}
+
+input FlowTriggerRuleReactiveInput {
+	forNewData: FlowTriggerBatchingRuleInput!
+	forBreakingChange: FlowTriggerBreakingChangeRule!
+}
+
+input FlowTriggerRuleScheduleInput @oneOf {
 	timeDelta: TimeDeltaInput
 	"""
 	Supported CRON syntax: min hour dayOfMonth month dayOfWeek
@@ -2383,6 +2389,29 @@ input FlowTriggerScheduleInput @oneOf {
 }
 
 union FlowTriggerScheduleRule = TimeDelta | Cron5ComponentExpression
+
+union FlowTriggerStopPolicy = FlowTriggerStopPolicyNever | FlowTriggerStopPolicyAfterConsecutiveFailures
+
+type FlowTriggerStopPolicyAfterConsecutiveFailures {
+	maxFailures: Int!
+}
+
+input FlowTriggerStopPolicyAfterConsecutiveFailuresInput {
+	maxFailures: Int!
+}
+
+input FlowTriggerStopPolicyInput @oneOf {
+	never: FlowTriggerStopPolicyNeverInput
+	afterConsecutiveFailures: FlowTriggerStopPolicyAfterConsecutiveFailuresInput
+}
+
+type FlowTriggerStopPolicyNever {
+	dummy: Boolean!
+}
+
+input FlowTriggerStopPolicyNeverInput {
+	dummy: Boolean!
+}
 
 type FlowTypeIsNotSupported implements SetFlowTriggerResult {
 	message: String!
@@ -2900,6 +2929,20 @@ enum QueryDialect {
 	SQL_FLINK
 	SQL_DATA_FUSION
 	SQL_RISING_WAVE
+}
+
+interface ReactivateWebhookSubscriptionResult {
+	message: String!
+}
+
+type ReactivateWebhookSubscriptionResultSuccess implements ReactivateWebhookSubscriptionResult {
+	reactivated: Boolean!
+	message: String!
+}
+
+type ReactivateWebhookSubscriptionResultUnexpected implements ReactivateWebhookSubscriptionResult {
+	status: WebhookSubscriptionStatus!
+	message: String!
 }
 
 """
@@ -4122,6 +4165,7 @@ type WebhookSubscriptionMut {
 	update(input: WebhookSubscriptionInput!): UpdateWebhookSubscriptionResult!
 	pause: PauseWebhookSubscriptionResult!
 	resume: ResumeWebhookSubscriptionResult!
+	reactivate: ReactivateWebhookSubscriptionResult!
 	remove: RemoveWebhookSubscriptionResult!
 }
 

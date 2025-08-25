@@ -8,7 +8,13 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { DatasetBasicsFragment, DatasetFlowType, DatasetKind, TimeUnit } from "src/app/api/kamu.graphql.interface";
+import {
+    DatasetBasicsFragment,
+    DatasetFlowType,
+    DatasetKind,
+    FlowTriggerStopPolicyInput,
+    TimeUnit,
+} from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowTriggerService } from "../../services/dataset-flow-trigger.service";
 import { BaseComponent } from "src/app/common/components/base.component";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
@@ -136,7 +142,9 @@ export class DatasetSettingsTransformOptionsTabComponent extends BaseComponent i
                 datasetId: this.datasetBasics.id,
                 datasetFlowType: DatasetFlowType.ExecuteTransform,
                 paused: !transformTriggerFormValue.updatesEnabled,
-                triggerInput: TransformTriggerFormComponent.buildTransformTriggerInput(transformTriggerFormValue),
+                triggerRuleInput:
+                    TransformTriggerFormComponent.buildTransformTriggerRuleInput(transformTriggerFormValue),
+                triggerStopPolicyInput: { never: { dummy: true } } as FlowTriggerStopPolicyInput, // TODO: UI support
                 datasetInfo: {
                     accountName: this.datasetBasics.owner.accountName,
                     datasetName: this.datasetBasics.name,

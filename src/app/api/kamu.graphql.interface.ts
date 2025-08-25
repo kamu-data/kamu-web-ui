@@ -7070,6 +7070,34 @@ export type DatasetWebhookPauseSubscriptionMutation = {
     };
 };
 
+export type DatasetWebhookReactivateSubscriptionMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    id: Scalars["WebhookSubscriptionID"];
+}>;
+
+export type DatasetWebhookReactivateSubscriptionMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            webhooks: {
+                __typename?: "DatasetWebhooksMut";
+                subscription?: {
+                    __typename?: "WebhookSubscriptionMut";
+                    reactivate:
+                        | { __typename?: "ReactivateWebhookSubscriptionResultSuccess"; message: string }
+                        | {
+                              __typename?: "ReactivateWebhookSubscriptionResultUnexpected";
+                              status: WebhookSubscriptionStatus;
+                              message: string;
+                          };
+                } | null;
+            };
+        } | null;
+    };
+};
+
 export type DatasetWebhookRemoveSubscriptionMutationVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     id: Scalars["WebhookSubscriptionID"];
@@ -11208,6 +11236,38 @@ export class DatasetWebhookPauseSubscriptionGQL extends Apollo.Mutation<
     DatasetWebhookPauseSubscriptionMutationVariables
 > {
     document = DatasetWebhookPauseSubscriptionDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetWebhookReactivateSubscriptionDocument = gql`
+    mutation datasetWebhookReactivateSubscription($datasetId: DatasetID!, $id: WebhookSubscriptionID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                webhooks {
+                    subscription(id: $id) {
+                        reactivate {
+                            message
+                            ... on ReactivateWebhookSubscriptionResultUnexpected {
+                                status
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetWebhookReactivateSubscriptionGQL extends Apollo.Mutation<
+    DatasetWebhookReactivateSubscriptionMutation,
+    DatasetWebhookReactivateSubscriptionMutationVariables
+> {
+    document = DatasetWebhookReactivateSubscriptionDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

@@ -11,6 +11,8 @@ import {
     DatasetWebhookCreateSubscriptionMutation,
     DatasetWebhookPauseSubscriptionGQL,
     DatasetWebhookPauseSubscriptionMutation,
+    DatasetWebhookReactivateSubscriptionGQL,
+    DatasetWebhookReactivateSubscriptionMutation,
     DatasetWebhookRemoveSubscriptionGQL,
     DatasetWebhookRemoveSubscriptionMutation,
     DatasetWebhookResumeSubscriptionGQL,
@@ -36,6 +38,7 @@ export class WebhooksApi {
     private datasetWebhookRemoveSubscriptionGQL = inject(DatasetWebhookRemoveSubscriptionGQL);
     private datasetWebhookPauseSubscriptionGQL = inject(DatasetWebhookPauseSubscriptionGQL);
     private datasetWebhookResumeSubscriptionGQL = inject(DatasetWebhookResumeSubscriptionGQL);
+    private datasetWebhookReactivateSubscriptionGQL = inject(DatasetWebhookReactivateSubscriptionGQL);
     private datasetWebhookUpdateSubscriptionGQL = inject(DatasetWebhookUpdateSubscriptionGQL);
 
     public webhookEventTypes(): Observable<WebhookEventTypesQuery> {
@@ -100,6 +103,18 @@ export class WebhooksApi {
             first(),
             map((result: MutationResult<DatasetWebhookResumeSubscriptionMutation>) => {
                 return result.data as DatasetWebhookResumeSubscriptionMutation;
+            }),
+        );
+    }
+
+    public datasetWebhookReactivateSubscription(
+        datasetId: string,
+        id: string,
+    ): Observable<DatasetWebhookReactivateSubscriptionMutation> {
+        return this.datasetWebhookReactivateSubscriptionGQL.mutate({ datasetId, id }).pipe(
+            first(),
+            map((result: MutationResult<DatasetWebhookReactivateSubscriptionMutation>) => {
+                return result.data as DatasetWebhookReactivateSubscriptionMutation;
             }),
         );
     }

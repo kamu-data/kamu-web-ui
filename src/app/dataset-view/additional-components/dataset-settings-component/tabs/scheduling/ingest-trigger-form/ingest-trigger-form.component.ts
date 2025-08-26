@@ -104,8 +104,8 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
     private setupFormControlRelationships(): void {
         this.updatesEnabledControl.valueChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((updated: boolean) => {
-                if (updated) {
+            .subscribe((enabled: boolean) => {
+                if (enabled) {
                     this.scheduleTypeControl.enable();
                 } else {
                     this.scheduleTypeControl.disable();
@@ -117,12 +117,14 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
         this.scheduleTypeControl.valueChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((pollingType: ScheduleType) => {
-                if (pollingType === ScheduleType.TIME_DELTA) {
-                    this.cronExpressionControl.disable();
-                    this.timeDeltaControl.enable();
-                } else if (pollingType === ScheduleType.CRON_5_COMPONENT_EXPRESSION) {
-                    this.timeDeltaControl.disable();
-                    this.cronExpressionControl.enable();
+                if (this.updatesEnabledControl.value) {
+                    if (pollingType === ScheduleType.TIME_DELTA) {
+                        this.cronExpressionControl.disable();
+                        this.timeDeltaControl.enable();
+                    } else if (pollingType === ScheduleType.CRON_5_COMPONENT_EXPRESSION) {
+                        this.timeDeltaControl.disable();
+                        this.cronExpressionControl.enable();
+                    }
                 }
             });
     }

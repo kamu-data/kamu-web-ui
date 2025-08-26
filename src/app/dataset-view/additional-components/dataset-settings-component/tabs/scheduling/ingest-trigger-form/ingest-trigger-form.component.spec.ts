@@ -203,4 +203,37 @@ describe("IngestTriggerFormComponent", () => {
             },
         });
     });
+
+    it("should keep controls disabled when schedule type changes while updates are disabled", () => {
+        // Initially updates are disabled
+        expect(component.updatesEnabledControl.value).toBeFalse();
+        expect(component.scheduleTypeControl.disabled).toBeTrue();
+        expect(component.timeDeltaControl.disabled).toBeTrue();
+        expect(component.cronExpressionControl.disabled).toBeTrue();
+
+        // Programmatically change schedule type while updates are disabled
+        // This simulates loading a saved value while the form is in disabled state
+        component.scheduleTypeControl.setValue(ScheduleType.TIME_DELTA);
+
+        // Controls should remain disabled despite schedule type change
+        expect(component.scheduleTypeControl.disabled).toBeTrue();
+        expect(component.timeDeltaControl.disabled).toBeTrue();
+        expect(component.cronExpressionControl.disabled).toBeTrue();
+
+        // Change to cron expression type
+        component.scheduleTypeControl.setValue(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
+
+        // Controls should still remain disabled
+        expect(component.scheduleTypeControl.disabled).toBeTrue();
+        expect(component.timeDeltaControl.disabled).toBeTrue();
+        expect(component.cronExpressionControl.disabled).toBeTrue();
+
+        // Now enable updates - controls should become enabled based on schedule type
+        hostComponent.hostForm.controls.updatesEnabled.setValue(true);
+
+        expect(component.scheduleTypeControl.disabled).toBeFalse();
+        // Only cron control should be enabled since schedule type is CRON_5_COMPONENT_EXPRESSION
+        expect(component.cronExpressionControl.disabled).toBeFalse();
+        expect(component.timeDeltaControl.disabled).toBeTrue();
+    });
 });

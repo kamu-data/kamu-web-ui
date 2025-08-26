@@ -19,7 +19,9 @@ import { TransformTriggerFormHarness } from "./transform-trigger-form/transform-
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { FlowTriggerBreakingChangeRule, TimeUnit } from "src/app/api/kamu.graphql.interface";
-import { BatchingRuleType } from "../../dataset-settings.model";
+import { BatchingRuleType, FlowTriggerStopPolicyType } from "../../dataset-settings.model";
+import { FlowStopPolicyFormComponent } from "../shared/flow-stop-policy-form/flow-stop-policy-form.component";
+import { FlowStopPolicyFormHarness } from "../shared/flow-stop-policy-form/flow-stop-policy-form.harness";
 
 describe("DatasetSettingsTransformOptionsTabComponent", () => {
     let component: DatasetSettingsTransformOptionsTabComponent;
@@ -28,6 +30,7 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
 
     let loader: HarnessLoader;
     let transformTriggerFormHarness: TransformTriggerFormHarness;
+    let stopPolicyFormHarness: FlowStopPolicyFormHarness;
 
     beforeEach(async () => {
         TestBed.configureTestingModule({
@@ -43,6 +46,7 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             reactive: null,
+            stopPolicy: null,
             paused: true,
         } as DatasetSettingsTransformOptionsTabData;
 
@@ -51,11 +55,13 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
 
         loader = TestbedHarnessEnvironment.loader(fixture);
         transformTriggerFormHarness = await loader.getHarness(TransformTriggerFormHarness);
+        stopPolicyFormHarness = await loader.getHarness(FlowStopPolicyFormHarness);
     });
 
     it("should create", () => {
         expect(component).toBeTruthy();
         expect(transformTriggerFormHarness).toBeTruthy();
+        expect(stopPolicyFormHarness).toBeTruthy();
     });
 
     function getSaveButton(): HTMLButtonElement {
@@ -78,7 +84,6 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
 
         const domTransformTriggerFormValue = await transformTriggerFormHarness.currentFormValue();
         expect(domTransformTriggerFormValue).toEqual({
-            updatesEnabled: false,
             forNewData: {
                 batchingRuleType: BatchingRuleType.IMMEDIATE,
                 buffering: undefined,
@@ -100,6 +105,10 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
             },
             forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
         };
+        component.transformTabData.stopPolicy = {
+            __typename: "FlowTriggerStopPolicyNever",
+            dummy: false,
+        };
         component.ngAfterViewInit();
         fixture.detectChanges();
 
@@ -107,7 +116,6 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
 
         const domTransformTriggerFormValue = await transformTriggerFormHarness.currentFormValue();
         expect(domTransformTriggerFormValue).toEqual({
-            updatesEnabled: true,
             forNewData: {
                 batchingRuleType: BatchingRuleType.BUFFERING,
                 buffering: {
@@ -121,8 +129,8 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
             forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
         });
         expect(component.form.getRawValue()).toEqual({
+            updatesEnabled: true,
             transformTrigger: {
-                updatesEnabled: true,
                 forNewData: {
                     batchingRuleType: BatchingRuleType.BUFFERING,
                     buffering: {
@@ -134,6 +142,10 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
                     },
                 },
                 forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
+            },
+            stopPolicy: {
+                stopPolicyType: FlowTriggerStopPolicyType.NEVER,
+                maxFailures: FlowStopPolicyFormComponent.DEFAULT_MAX_FAILURES,
             },
         });
     });
@@ -151,6 +163,10 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
             },
             forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
         };
+        component.transformTabData.stopPolicy = {
+            __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
+            maxFailures: 3,
+        };
         component.ngAfterViewInit();
         fixture.detectChanges();
 
@@ -158,7 +174,6 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
 
         const domTransformTriggerFormValue = await transformTriggerFormHarness.currentFormValue();
         expect(domTransformTriggerFormValue).toEqual({
-            updatesEnabled: true,
             forNewData: {
                 batchingRuleType: BatchingRuleType.BUFFERING,
                 buffering: {
@@ -172,8 +187,8 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
             forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
         });
         expect(component.form.getRawValue()).toEqual({
+            updatesEnabled: true,
             transformTrigger: {
-                updatesEnabled: true,
                 forNewData: {
                     batchingRuleType: BatchingRuleType.BUFFERING,
                     buffering: {
@@ -185,6 +200,10 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
                     },
                 },
                 forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
+            },
+            stopPolicy: {
+                stopPolicyType: FlowTriggerStopPolicyType.AFTER_CONSECUTIVE_FAILURES,
+                maxFailures: 3,
             },
         });
     });
@@ -198,6 +217,10 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
             },
             forBreakingChange: FlowTriggerBreakingChangeRule.NoAction,
         };
+        component.transformTabData.stopPolicy = {
+            __typename: "FlowTriggerStopPolicyNever",
+            dummy: false,
+        };
         component.ngAfterViewInit();
         fixture.detectChanges();
 
@@ -205,7 +228,6 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
 
         const domTransformTriggerFormValue = await transformTriggerFormHarness.currentFormValue();
         expect(domTransformTriggerFormValue).toEqual({
-            updatesEnabled: true,
             forNewData: {
                 batchingRuleType: BatchingRuleType.IMMEDIATE,
                 buffering: undefined,
@@ -213,8 +235,8 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
             forBreakingChange: FlowTriggerBreakingChangeRule.NoAction,
         });
         expect(component.form.getRawValue()).toEqual({
+            updatesEnabled: true,
             transformTrigger: {
-                updatesEnabled: true,
                 forNewData: {
                     batchingRuleType: BatchingRuleType.IMMEDIATE,
                     buffering: {
@@ -227,25 +249,32 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
                 },
                 forBreakingChange: FlowTriggerBreakingChangeRule.NoAction,
             },
+            stopPolicy: {
+                stopPolicyType: FlowTriggerStopPolicyType.NEVER,
+                maxFailures: FlowStopPolicyFormComponent.DEFAULT_MAX_FAILURES,
+            },
         });
     });
 
     it("should check 'Save' button works with buffering batching rule", async () => {
-        const setDatasetFlowTriggersSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTriggers").and.callThrough();
+        const setDatasetFlowTriggerSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTrigger").and.callThrough();
 
-        await transformTriggerFormHarness.enableUpdates();
+        component.form.controls.updatesEnabled.setValue(true);
+
         await transformTriggerFormHarness.setSelectedBatchingRuleType(BatchingRuleType.BUFFERING);
         await transformTriggerFormHarness.enterBufferingBatchingRule(10, { every: 5, unit: TimeUnit.Minutes });
         await transformTriggerFormHarness.setSelectedBreakingChangeRule(FlowTriggerBreakingChangeRule.Recover);
+
+        await stopPolicyFormHarness.setSelectedStopPolicyType(FlowTriggerStopPolicyType.AFTER_CONSECUTIVE_FAILURES);
+        await stopPolicyFormHarness.setMaxFailures(3);
 
         const saveButton = getSaveButton();
         expect(saveButton.disabled).toBeFalse();
 
         saveButton.click();
 
-        expect(setDatasetFlowTriggersSpy).toHaveBeenCalledWith(
+        expect(setDatasetFlowTriggerSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
-                paused: false,
                 triggerRuleInput: {
                     reactive: {
                         forNewData: {
@@ -265,20 +294,22 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
     });
 
     it("should check 'Save' button works for with immediate batching rule", async () => {
-        const setDatasetFlowTriggersSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTriggers").and.callThrough();
+        const setDatasetFlowTriggerSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTrigger").and.callThrough();
 
-        await transformTriggerFormHarness.enableUpdates();
+        component.form.controls.updatesEnabled.setValue(true);
+
         await transformTriggerFormHarness.setSelectedBatchingRuleType(BatchingRuleType.IMMEDIATE);
         await transformTriggerFormHarness.setSelectedBreakingChangeRule(FlowTriggerBreakingChangeRule.NoAction);
+
+        await stopPolicyFormHarness.setSelectedStopPolicyType(FlowTriggerStopPolicyType.NEVER);
 
         const saveButton = getSaveButton();
         expect(saveButton.disabled).toBeFalse();
 
         saveButton.click();
 
-        expect(setDatasetFlowTriggersSpy).toHaveBeenCalledWith(
+        expect(setDatasetFlowTriggerSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
-                paused: false,
                 triggerRuleInput: {
                     reactive: {
                         forNewData: {
@@ -293,20 +324,19 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
         );
     });
 
-    it("should check 'Save' button works for disabling updates", async () => {
-        const setDatasetFlowTriggersSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTriggers").and.callThrough();
+    it("should check 'Save' button works for disabling updates", () => {
+        const pauseDatasetFlowTriggerSpy = spyOn(
+            datasetFlowTriggerService,
+            "pauseDatasetFlowTrigger",
+        ).and.callThrough();
 
-        await transformTriggerFormHarness.disableUpdates();
+        component.form.controls.updatesEnabled.setValue(false);
 
         const saveButton = getSaveButton();
         expect(saveButton.disabled).toBeFalse();
 
         saveButton.click();
 
-        expect(setDatasetFlowTriggersSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
-                paused: true,
-            }),
-        );
+        expect(pauseDatasetFlowTriggerSpy).toHaveBeenCalledTimes(1);
     });
 });

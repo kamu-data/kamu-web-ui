@@ -8,7 +8,7 @@
 /* istanbul ignore file */
 
 import { ComponentHarness } from "@angular/cdk/testing";
-import { FlowStopPolicyType } from "../../../dataset-settings.model";
+import { FlowTriggerStopPolicyType } from "../../../dataset-settings.model";
 import { MatRadioButtonHarness } from "@angular/material/radio/testing";
 import { FlowStopPolicyFormValue } from "./flow-stop-policy-form.types";
 
@@ -27,15 +27,15 @@ export class FlowStopPolicyFormHarness extends ComponentHarness {
 
     private readonly locatorMaxFailuresInput = this.locatorFor('[data-test-id="stop-policy-max-failures-input"]');
 
-    public async setSelectedStopPolicyType(stopPolicyType: FlowStopPolicyType): Promise<void> {
+    public async setSelectedStopPolicyType(stopPolicyType: FlowTriggerStopPolicyType): Promise<void> {
         const neverRadio = await this.locatorStopPolicyTypeNeverRadio();
         const afterConsecutiveFailuresRadio = await this.locatorStopPolicyTypeAfterConsecutiveFailuresRadio();
 
-        if (stopPolicyType === FlowStopPolicyType.NEVER) {
+        if (stopPolicyType === FlowTriggerStopPolicyType.NEVER) {
             if (!(await neverRadio.isChecked())) {
                 await neverRadio.check();
             }
-        } else if (stopPolicyType === FlowStopPolicyType.AFTER_CONSECUTIVE_FAILURES) {
+        } else if (stopPolicyType === FlowTriggerStopPolicyType.AFTER_CONSECUTIVE_FAILURES) {
             if (!(await afterConsecutiveFailuresRadio.isChecked())) {
                 await afterConsecutiveFailuresRadio.check();
             }
@@ -45,7 +45,7 @@ export class FlowStopPolicyFormHarness extends ComponentHarness {
         }
     }
 
-    public async getStopPolicyType(): Promise<FlowStopPolicyType | null> {
+    public async getStopPolicyType(): Promise<FlowTriggerStopPolicyType | null> {
         const neverRadio = await this.locatorStopPolicyTypeNeverRadio();
         const isNeverSelected = await neverRadio.isChecked();
 
@@ -53,16 +53,16 @@ export class FlowStopPolicyFormHarness extends ComponentHarness {
         const isAfterConsecutiveFailuresSelected = await afterConsecutiveFailuresRadio.isChecked();
 
         if (isNeverSelected) {
-            return FlowStopPolicyType.NEVER;
+            return FlowTriggerStopPolicyType.NEVER;
         } else if (isAfterConsecutiveFailuresSelected) {
-            return FlowStopPolicyType.AFTER_CONSECUTIVE_FAILURES;
+            return FlowTriggerStopPolicyType.AFTER_CONSECUTIVE_FAILURES;
         }
         return null;
     }
 
     public async setMaxFailures(value: number): Promise<void> {
         const stopPolicyType = await this.getStopPolicyType();
-        if (stopPolicyType !== FlowStopPolicyType.AFTER_CONSECUTIVE_FAILURES) {
+        if (stopPolicyType !== FlowTriggerStopPolicyType.AFTER_CONSECUTIVE_FAILURES) {
             throw new Error("Cannot set max failures when stop policy is not 'after consecutive failures'");
         }
 

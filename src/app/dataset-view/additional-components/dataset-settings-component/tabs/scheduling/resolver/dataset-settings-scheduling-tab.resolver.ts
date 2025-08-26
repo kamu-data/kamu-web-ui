@@ -11,7 +11,7 @@ import { datasetSettingsGeneralTabResolverFn } from "../../general/resolver/data
 import { DatasetFlowTriggerService } from "../../../services/dataset-flow-trigger.service";
 import { inject } from "@angular/core";
 import { map, Observable, of, switchMap } from "rxjs";
-import { DatasetFlowType, GetDatasetFlowTriggersQuery } from "src/app/api/kamu.graphql.interface";
+import { DatasetFlowType, GetDatasetFlowTriggerQuery } from "src/app/api/kamu.graphql.interface";
 import { DatasetSettingsSchedulingTabData } from "../dataset-settings-scheduling-tab.data";
 
 export const datasetSettingsSchedulingTabResolverFn: ResolveFn<DatasetSettingsSchedulingTabData | null> = (
@@ -29,9 +29,9 @@ export const datasetSettingsSchedulingTabResolverFn: ResolveFn<DatasetSettingsSc
                 return of(null);
             }
             return datasetFlowTriggerService
-                .fetchDatasetFlowTriggers(data.datasetBasics.id, DatasetFlowType.Ingest)
+                .fetchDatasetFlowTrigger(data.datasetBasics.id, DatasetFlowType.Ingest)
                 .pipe(
-                    map((query: GetDatasetFlowTriggersQuery) => {
+                    map((query: GetDatasetFlowTriggerQuery) => {
                         const flowTriggers = query.datasets.byId?.flows.triggers.byType;
                         const paused = flowTriggers?.paused ?? true;
                         const schedule = flowTriggers?.schedule ?? null;

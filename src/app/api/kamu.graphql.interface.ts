@@ -1248,7 +1248,6 @@ export type DatasetFlowTriggersMutResumeFlowArgs = {
 
 export type DatasetFlowTriggersMutSetTriggerArgs = {
     datasetFlowType: DatasetFlowType;
-    paused: Scalars["Boolean"];
     triggerRuleInput: FlowTriggerRuleInput;
     triggerStopPolicyInput: FlowTriggerStopPolicyInput;
 };
@@ -5414,15 +5413,33 @@ export type SetIngestFlowConfigMutation = {
     };
 };
 
-export type SetDatasetFlowTriggersMutationVariables = Exact<{
+export type PauseDatasetFlowTriggerMutationVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     datasetFlowType: DatasetFlowType;
-    paused: Scalars["Boolean"];
+}>;
+
+export type PauseDatasetFlowTriggerMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            flows: {
+                __typename?: "DatasetFlowsMut";
+                triggers: { __typename?: "DatasetFlowTriggersMut"; pauseFlow: boolean };
+            };
+        } | null;
+    };
+};
+
+export type SetDatasetFlowTriggerMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    datasetFlowType: DatasetFlowType;
     triggerRuleInput: FlowTriggerRuleInput;
     triggerStopPolicyInput: FlowTriggerStopPolicyInput;
 }>;
 
-export type SetDatasetFlowTriggersMutation = {
+export type SetDatasetFlowTriggerMutation = {
     __typename?: "Mutation";
     datasets: {
         __typename?: "DatasetsMut";
@@ -5450,12 +5467,12 @@ export type SetDatasetFlowTriggersMutation = {
     };
 };
 
-export type GetDatasetFlowTriggersQueryVariables = Exact<{
+export type GetDatasetFlowTriggerQueryVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     datasetFlowType: DatasetFlowType;
 }>;
 
-export type GetDatasetFlowTriggersQuery = {
+export type GetDatasetFlowTriggerQuery = {
     __typename?: "Query";
     datasets: {
         __typename?: "Datasets";
@@ -10409,11 +10426,37 @@ export class SetIngestFlowConfigGQL extends Apollo.Mutation<
         super(apollo);
     }
 }
-export const SetDatasetFlowTriggersDocument = gql`
-    mutation setDatasetFlowTriggers(
+export const PauseDatasetFlowTriggerDocument = gql`
+    mutation pauseDatasetFlowTrigger($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    triggers {
+                        pauseFlow(datasetFlowType: $datasetFlowType)
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class PauseDatasetFlowTriggerGQL extends Apollo.Mutation<
+    PauseDatasetFlowTriggerMutation,
+    PauseDatasetFlowTriggerMutationVariables
+> {
+    document = PauseDatasetFlowTriggerDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const SetDatasetFlowTriggerDocument = gql`
+    mutation setDatasetFlowTrigger(
         $datasetId: DatasetID!
         $datasetFlowType: DatasetFlowType!
-        $paused: Boolean!
         $triggerRuleInput: FlowTriggerRuleInput!
         $triggerStopPolicyInput: FlowTriggerStopPolicyInput!
     ) {
@@ -10423,7 +10466,6 @@ export const SetDatasetFlowTriggersDocument = gql`
                     triggers {
                         setTrigger(
                             datasetFlowType: $datasetFlowType
-                            paused: $paused
                             triggerRuleInput: $triggerRuleInput
                             triggerStopPolicyInput: $triggerStopPolicyInput
                         ) {
@@ -10446,18 +10488,18 @@ export const SetDatasetFlowTriggersDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class SetDatasetFlowTriggersGQL extends Apollo.Mutation<
-    SetDatasetFlowTriggersMutation,
-    SetDatasetFlowTriggersMutationVariables
+export class SetDatasetFlowTriggerGQL extends Apollo.Mutation<
+    SetDatasetFlowTriggerMutation,
+    SetDatasetFlowTriggerMutationVariables
 > {
-    document = SetDatasetFlowTriggersDocument;
+    document = SetDatasetFlowTriggerDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);
     }
 }
-export const GetDatasetFlowTriggersDocument = gql`
-    query getDatasetFlowTriggers($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
+export const GetDatasetFlowTriggerDocument = gql`
+    query getDatasetFlowTrigger($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
         datasets {
             byId(datasetId: $datasetId) {
                 flows {
@@ -10502,11 +10544,11 @@ export const GetDatasetFlowTriggersDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class GetDatasetFlowTriggersGQL extends Apollo.Query<
-    GetDatasetFlowTriggersQuery,
-    GetDatasetFlowTriggersQueryVariables
+export class GetDatasetFlowTriggerGQL extends Apollo.Query<
+    GetDatasetFlowTriggerQuery,
+    GetDatasetFlowTriggerQueryVariables
 > {
-    document = GetDatasetFlowTriggersDocument;
+    document = GetDatasetFlowTriggerDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

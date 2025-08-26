@@ -12,7 +12,7 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { FlowStopPolicyFormType, FlowStopPolicyFormValue } from "./flow-stop-policy-form.types";
 import { MaybeNull } from "src/app/interface/app.types";
-import { FlowStopPolicyType } from "../../../dataset-settings.model";
+import { FlowTriggerStopPolicyType } from "../../../dataset-settings.model";
 import { FlowTriggerStopPolicyInput } from "src/app/api/kamu.graphql.interface";
 import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
 import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
@@ -45,7 +45,7 @@ export class FlowStopPolicyFormComponent extends BaseComponent implements OnInit
 
     public static readonly DEFAULT_MAX_FAILURES: number = 1;
 
-    public readonly StopPolicyType: typeof FlowStopPolicyType = FlowStopPolicyType;
+    public readonly StopPolicyType: typeof FlowTriggerStopPolicyType = FlowTriggerStopPolicyType;
 
     public readonly NEVER_TOOLTIP: string = FlowTooltipsTexts.STOP_POLICY_NEVER_TOOLTIP;
     public readonly CONSECUTIVE_FAILURES_TOOLTIP: string =
@@ -53,7 +53,7 @@ export class FlowStopPolicyFormComponent extends BaseComponent implements OnInit
 
     public static buildForm(): FormGroup<FlowStopPolicyFormType> {
         return new FormGroup<FlowStopPolicyFormType>({
-            stopPolicyType: new FormControl<MaybeNull<FlowStopPolicyType>>(
+            stopPolicyType: new FormControl<MaybeNull<FlowTriggerStopPolicyType>>(
                 { value: null, disabled: true },
                 { nonNullable: true, validators: [Validators.required] },
             ),
@@ -66,12 +66,13 @@ export class FlowStopPolicyFormComponent extends BaseComponent implements OnInit
 
     public static buildStopPolicyInput(stopPolicyFormValue: FlowStopPolicyFormValue): FlowTriggerStopPolicyInput {
         switch (stopPolicyFormValue.stopPolicyType) {
-            case FlowStopPolicyType.NEVER:
+            case FlowTriggerStopPolicyType.NEVER:
                 return {
                     never: { dummy: false },
                 } as FlowTriggerStopPolicyInput;
 
-            case FlowStopPolicyType.AFTER_CONSECUTIVE_FAILURES:
+            case FlowTriggerStopPolicyType.AFTER_CONSECUTIVE_FAILURES:
+            case null: // No stop policy yet
                 return {
                     afterConsecutiveFailures: { maxFailures: stopPolicyFormValue.maxFailures },
                 } as FlowTriggerStopPolicyInput;
@@ -86,7 +87,7 @@ export class FlowStopPolicyFormComponent extends BaseComponent implements OnInit
         this.setupFormControlRelationships();
     }
 
-    public get stopPolicyTypeControl(): FormControl<MaybeNull<FlowStopPolicyType>> {
+    public get stopPolicyTypeControl(): FormControl<MaybeNull<FlowTriggerStopPolicyType>> {
         return this.form.controls.stopPolicyType;
     }
 
@@ -107,11 +108,11 @@ export class FlowStopPolicyFormComponent extends BaseComponent implements OnInit
 
         this.stopPolicyTypeControl.valueChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((stopPolicyType: MaybeNull<FlowStopPolicyType>) => {
+            .subscribe((stopPolicyType: MaybeNull<FlowTriggerStopPolicyType>) => {
                 // Only allow reading when updates are enabled in general
                 if (
                     this.updatesEnabledControl.value &&
-                    stopPolicyType === FlowStopPolicyType.AFTER_CONSECUTIVE_FAILURES
+                    stopPolicyType === FlowTriggerStopPolicyType.AFTER_CONSECUTIVE_FAILURES
                 ) {
                     this.maxFailuresControl.enable();
                 } else {

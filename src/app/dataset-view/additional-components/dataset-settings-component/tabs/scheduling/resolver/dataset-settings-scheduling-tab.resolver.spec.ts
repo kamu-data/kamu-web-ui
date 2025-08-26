@@ -25,7 +25,7 @@ import {
 } from "src/app/search/mock.data";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { NavigationService } from "src/app/services/navigation.service";
-import { mockCronSchedule, mockGetDatasetFlowTriggersCronQuery } from "src/app/api/mock/dataset-flow.mock";
+import { mockCronSchedule, mockGetDatasetFlowTriggerCronQuery } from "src/app/api/mock/dataset-flow.mock";
 
 describe("datasetSettingsSchedulingTabResolverFn", () => {
     const mockActivatedRouteSnapshot = new ActivatedRouteSnapshot();
@@ -72,9 +72,9 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
         permissionsChangesSpy.and.returnValue(of(mockReadonlyDatasetPermissionsFragment));
         spyOn(navigationService, "navigateToPageNotFound").and.stub();
 
-        const fetchDatasetFlowTriggersSpy: jasmine.Spy = spyOn(
+        const fetchDatasetFlowTriggerSpy: jasmine.Spy = spyOn(
             datasetFlowTriggerService,
-            "fetchDatasetFlowTriggers",
+            "fetchDatasetFlowTrigger",
         ).and.stub();
 
         const resolver$ = executeResolver(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
@@ -86,14 +86,14 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
                 expect(data).toBeNull();
             });
 
-        expect(fetchDatasetFlowTriggersSpy).not.toHaveBeenCalled();
+        expect(fetchDatasetFlowTriggerSpy).not.toHaveBeenCalled();
         expect(resolverSubscription$.closed).toBeTrue();
     });
 
-    it("should call fetchDatasetFlowTriggers with correct parameters", () => {
-        const fetchDatasetFlowTriggersSpy: jasmine.Spy = spyOn(
+    it("should call fetchDatasetFlowTrigger with correct parameters", () => {
+        const fetchDatasetFlowTriggerSpy: jasmine.Spy = spyOn(
             datasetFlowTriggerService,
-            "fetchDatasetFlowTriggers",
+            "fetchDatasetFlowTrigger",
         ).and.returnValue(
             of({
                 datasets: {
@@ -133,7 +133,7 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
                 });
             });
 
-        expect(fetchDatasetFlowTriggersSpy).toHaveBeenCalledWith(
+        expect(fetchDatasetFlowTriggerSpy).toHaveBeenCalledWith(
             mockDatasetBasicsRootFragment.id,
             DatasetFlowType.Ingest,
         );
@@ -142,8 +142,8 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
     });
 
     it("should correctly map flowTriggers to paused and schedule", () => {
-        spyOn(datasetFlowTriggerService, "fetchDatasetFlowTriggers").and.returnValue(
-            of(mockGetDatasetFlowTriggersCronQuery),
+        spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger").and.returnValue(
+            of(mockGetDatasetFlowTriggerCronQuery),
         );
 
         const resolver$ = executeResolver(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
@@ -156,7 +156,7 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
                     datasetBasics: mockDatasetBasicsRootFragment,
                     datasetPermissions: mockFullPowerDatasetPermissionsFragment,
                     schedule: mockCronSchedule,
-                    paused: mockGetDatasetFlowTriggersCronQuery.datasets.byId?.flows.triggers.byType?.paused || false,
+                    paused: mockGetDatasetFlowTriggerCronQuery.datasets.byId?.flows.triggers.byType?.paused || false,
                     stopPolicy: {
                         __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
                         maxFailures: 1,
@@ -167,7 +167,7 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
     });
 
     it("should correctly map flowTriggers when no data is defined", () => {
-        spyOn(datasetFlowTriggerService, "fetchDatasetFlowTriggers").and.returnValue(
+        spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger").and.returnValue(
             of({
                 datasets: {
                     __typename: "Datasets",
@@ -199,9 +199,9 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
         expect(resolverSubscription$.closed).toBeTrue();
     });
 
-    it("should handle errors from fetchDatasetFlowTriggers", () => {
+    it("should handle errors from fetchDatasetFlowTrigger", () => {
         const errorMessage = "Failed to fetch flow triggers";
-        spyOn(datasetFlowTriggerService, "fetchDatasetFlowTriggers").and.throwError(errorMessage);
+        spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger").and.throwError(errorMessage);
 
         const resolver$ = executeResolver(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
         expect(resolver$).not.toBeNull();

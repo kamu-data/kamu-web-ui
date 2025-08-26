@@ -22,14 +22,14 @@ import {
     FlowConnectionDataFragment,
     GetDatasetFlowConfigsDocument,
     GetDatasetFlowConfigsQuery,
-    GetDatasetFlowTriggersDocument,
-    GetDatasetFlowTriggersQuery,
+    GetDatasetFlowTriggerDocument,
+    GetDatasetFlowTriggerQuery,
     GetDatasetListFlowsDocument,
     GetDatasetListFlowsQuery,
     GetFlowByIdDocument,
     GetFlowByIdQuery,
     SetIngestFlowConfigDocument,
-    SetDatasetFlowTriggersDocument,
+    SetDatasetFlowTriggerDocument,
     FlowConfigRuleIngest,
     FlowConfigRuleCompaction,
     SetCompactionFlowConfigDocument,
@@ -52,8 +52,8 @@ import {
     mockGetFlowByIdQuerySuccess,
     mockDatasetFlowsInitiatorsQuery,
     mockSetIngestFlowConfigMutation,
-    mockSetDatasetFlowTriggersSuccess,
-    mockGetDatasetFlowTriggersCronQuery,
+    mockSetDatasetFlowTriggerSuccess,
+    mockGetDatasetFlowTriggerCronQuery,
     mockDatasetPauseFlowsMutationSuccess,
     mockDatasetResumeFlowsMutationSuccess,
     mockDatasetAllFlowsPausedQuery,
@@ -220,12 +220,11 @@ describe("DatasetFlowApi", () => {
         });
     });
 
-    it("should check setDatasetFlowTriggers", () => {
+    it("should check setDatasetFlowTrigger", () => {
         service
-            .setDatasetFlowTriggers({
+            .setDatasetFlowTrigger({
                 datasetId: TEST_DATASET_ID,
                 datasetFlowType: DatasetFlowType.ExecuteTransform,
-                paused: false,
                 triggerRuleInput: {
                     reactive: {
                         forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
@@ -245,12 +244,12 @@ describe("DatasetFlowApi", () => {
             })
             .subscribe();
 
-        const op = controller.expectOne(SetDatasetFlowTriggersDocument);
+        const op = controller.expectOne(SetDatasetFlowTriggerDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
         expect(op.operation.variables.datasetFlowType).toEqual(DatasetFlowType.ExecuteTransform);
 
         op.flush({
-            data: mockSetDatasetFlowTriggersSuccess,
+            data: mockSetDatasetFlowTriggerSuccess,
         });
     });
 
@@ -338,26 +337,26 @@ describe("DatasetFlowApi", () => {
         });
     });
 
-    it("should check getDatasetFlowTriggers", () => {
+    it("should check getDatasetFlowTrigger", () => {
         service
-            .getDatasetFlowTriggers({
+            .getDatasetFlowTrigger({
                 datasetId: TEST_DATASET_ID,
                 datasetFlowType: DatasetFlowType.Ingest,
             })
-            .subscribe((res: GetDatasetFlowTriggersQuery) => {
+            .subscribe((res: GetDatasetFlowTriggerQuery) => {
                 expect(res.datasets.byId?.flows.triggers.byType?.paused).toEqual(
-                    mockGetDatasetFlowTriggersCronQuery.datasets.byId?.flows.triggers.byType?.paused,
+                    mockGetDatasetFlowTriggerCronQuery.datasets.byId?.flows.triggers.byType?.paused,
                 );
                 expect(res.datasets.byId?.flows.triggers.byType?.schedule?.__typename).toEqual(
                     "Cron5ComponentExpression",
                 );
             });
 
-        const op = controller.expectOne(GetDatasetFlowTriggersDocument);
+        const op = controller.expectOne(GetDatasetFlowTriggerDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
         expect(op.operation.variables.datasetFlowType).toEqual(DatasetFlowType.Ingest);
         op.flush({
-            data: mockGetDatasetFlowTriggersCronQuery,
+            data: mockGetDatasetFlowTriggerCronQuery,
         });
     });
 

@@ -7,7 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { TransformTriggerFormComponent } from "./transform-trigger-form.component";
-import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { Component, ViewChild } from "@angular/core";
@@ -31,7 +31,7 @@ import { TimeDeltaFormValue } from "src/app/common/components/time-delta-form/ti
     ],
     template: `<app-transform-trigger-form
         [form]="hostForm.controls.transformTrigger"
-        [updateStateToggleLabel]="label"
+        [updatesEnabledControl]="hostForm.controls.updatesEnabled"
     />`,
 })
 class TestTransformTriggerFormComponent {
@@ -39,6 +39,7 @@ class TestTransformTriggerFormComponent {
 
     public readonly hostForm = new FormGroup({
         transformTrigger: TransformTriggerFormComponent.buildForm(),
+        updatesEnabled: new FormControl(false),
     });
 
     @ViewChild(TransformTriggerFormComponent)
@@ -81,17 +82,19 @@ describe("TransformTriggerFormComponent", () => {
         expect(transformTriggerFormHarness).toBeTruthy();
     });
 
-    it("should enable updates toggle via harness and reflect in form", async () => {
+    it("should enable updates toggle and reflect in form", () => {
         expect(component.updatesEnabledControl.value).toBeFalse();
 
-        await transformTriggerFormHarness.enableUpdates();
+        hostComponent.hostForm.controls.updatesEnabled.setValue(true);
+
         expect(component.updatesEnabledControl.value).toBeTrue();
         expect(component.batchingRuleTypeControl.disabled).toBeFalse();
         expect(component.forNewDataControl.disabled).toBeFalse();
         expect(component.bufferingBatchingForm.disabled).toBeTrue(); // Immediate by default
         expect(component.forBreakingChangeControl.disabled).toBeFalse();
 
-        await transformTriggerFormHarness.disableUpdates();
+        hostComponent.hostForm.controls.updatesEnabled.setValue(false);
+
         expect(component.updatesEnabledControl.value).toBeFalse();
         expect(component.batchingRuleTypeControl.disabled).toBeTrue();
         expect(component.forNewDataControl.disabled).toBeTrue();
@@ -100,7 +103,7 @@ describe("TransformTriggerFormComponent", () => {
     });
 
     it("should set batching rule type to immediate", async () => {
-        await transformTriggerFormHarness.enableUpdates();
+        hostComponent.hostForm.controls.updatesEnabled.setValue(true);
         expect(component.batchingRuleTypeControl.value).toBeNull();
 
         await transformTriggerFormHarness.setSelectedBatchingRuleType(BatchingRuleType.IMMEDIATE);
@@ -110,7 +113,7 @@ describe("TransformTriggerFormComponent", () => {
     });
 
     it("should set batching rule type to buffering", async () => {
-        await transformTriggerFormHarness.enableUpdates();
+        hostComponent.hostForm.controls.updatesEnabled.setValue(true);
         expect(component.batchingRuleTypeControl.value).toBeNull();
 
         await transformTriggerFormHarness.setSelectedBatchingRuleType(BatchingRuleType.BUFFERING);
@@ -120,7 +123,7 @@ describe("TransformTriggerFormComponent", () => {
     });
 
     it("should set buffering values", async () => {
-        await transformTriggerFormHarness.enableUpdates();
+        hostComponent.hostForm.controls.updatesEnabled.setValue(true);
         await transformTriggerFormHarness.setSelectedBatchingRuleType(BatchingRuleType.BUFFERING);
 
         const MIN_RECORDS = 100;
@@ -133,7 +136,7 @@ describe("TransformTriggerFormComponent", () => {
     });
 
     it("should set breaking change rule to no action", async () => {
-        await transformTriggerFormHarness.enableUpdates();
+        hostComponent.hostForm.controls.updatesEnabled.setValue(true);
         expect(component.forBreakingChangeControl.value).toBeNull();
 
         await transformTriggerFormHarness.setSelectedBreakingChangeRule(FlowTriggerBreakingChangeRule.NoAction);
@@ -142,7 +145,7 @@ describe("TransformTriggerFormComponent", () => {
     });
 
     it("should set breaking change rule to recover", async () => {
-        await transformTriggerFormHarness.enableUpdates();
+        hostComponent.hostForm.controls.updatesEnabled.setValue(true);
         expect(component.forBreakingChangeControl.value).toBeNull();
 
         await transformTriggerFormHarness.setSelectedBreakingChangeRule(FlowTriggerBreakingChangeRule.Recover);
@@ -151,7 +154,7 @@ describe("TransformTriggerFormComponent", () => {
     });
 
     it("should set complete form value with buffering batching rule", async () => {
-        await transformTriggerFormHarness.enableUpdates();
+        hostComponent.hostForm.controls.updatesEnabled.setValue(true);
         await transformTriggerFormHarness.setSelectedBatchingRuleType(BatchingRuleType.BUFFERING);
 
         const MIN_RECORDS = 50;
@@ -162,7 +165,6 @@ describe("TransformTriggerFormComponent", () => {
 
         const domFormValue = await transformTriggerFormHarness.currentFormValue();
         expect(domFormValue).toEqual({
-            updatesEnabled: true,
             forNewData: {
                 batchingRuleType: BatchingRuleType.BUFFERING,
                 buffering: {
@@ -177,13 +179,12 @@ describe("TransformTriggerFormComponent", () => {
     });
 
     it("should set complete form value with immediate batching rule", async () => {
-        await transformTriggerFormHarness.enableUpdates();
+        hostComponent.hostForm.controls.updatesEnabled.setValue(true);
         await transformTriggerFormHarness.setSelectedBatchingRuleType(BatchingRuleType.IMMEDIATE);
         await transformTriggerFormHarness.setSelectedBreakingChangeRule(FlowTriggerBreakingChangeRule.Recover);
 
         const domFormValue = await transformTriggerFormHarness.currentFormValue();
         expect(domFormValue).toEqual({
-            updatesEnabled: true,
             forNewData: {
                 batchingRuleType: BatchingRuleType.IMMEDIATE,
                 buffering: undefined,
@@ -192,7 +193,6 @@ describe("TransformTriggerFormComponent", () => {
         });
 
         expect(component.form.getRawValue() as TransformTriggerFormValue).toEqual({
-            updatesEnabled: true,
             forNewData: {
                 batchingRuleType: BatchingRuleType.IMMEDIATE,
                 // Note: in raw value we will see the disabled form

@@ -1,7 +1,6 @@
-mutation setDatasetFlowTriggers(
+mutation setDatasetFlowTrigger(
   $datasetId: DatasetID!
   $datasetFlowType: DatasetFlowType!
-  $paused: Boolean!
   $triggerRuleInput: FlowTriggerRuleInput!
   $triggerStopPolicyInput: FlowTriggerStopPolicyInput!
 ) {
@@ -11,7 +10,6 @@ mutation setDatasetFlowTriggers(
         triggers {
           setTrigger(
             datasetFlowType: $datasetFlowType
-            paused: $paused
             triggerRuleInput: $triggerRuleInput
             triggerStopPolicyInput: $triggerStopPolicyInput
           ) {

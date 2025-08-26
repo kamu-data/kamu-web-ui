@@ -1,17 +1,5 @@
 <div>
     <form [formGroup]="form">
-        <div class="mt-4 ms-1 px-2 pb-2 d-flex gap-1">
-            <mat-slide-toggle
-                color="primary"
-                class="mat-elevation-z0"
-                formControlName="updatesEnabled"
-                data-test-id="transform-trigger-updates-enabled"
-            >
-                <span class="ps-2"> {{ updateStateToggleLabel }}</span>
-            </mat-slide-toggle>
-            <app-tooltip-icon class="d-block" [tooltip]="UPDATES_TOOLTIP" />
-        </div>
-
         <div class="position-relative border border-1 mt-4 rounded-3">
             <div>
                 <span class="position-absolute text-muted group-box-label text-uppercase">New data</span>

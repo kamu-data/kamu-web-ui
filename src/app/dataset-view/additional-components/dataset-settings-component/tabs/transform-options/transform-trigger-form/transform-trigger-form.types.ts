@@ -15,13 +15,11 @@ import {
 } from "../buffering-batching-rule-form/buffering-batching-rule-form.types";
 
 export interface TransformTriggerFormType {
-    updatesEnabled: FormControl<boolean>;
     forNewData: FormGroup<BatchingRuleFormType>;
     forBreakingChange: FormControl<MaybeNull<FlowTriggerBreakingChangeRule>>;
 }
 
 export interface TransformTriggerFormValue {
-    updatesEnabled: boolean;
     forNewData: BatchingRuleFormValue;
     forBreakingChange: MaybeNull<FlowTriggerBreakingChangeRule>;
 }

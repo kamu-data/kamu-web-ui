@@ -93,7 +93,7 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
 
             /* istanbul ignore next */
             default:
-                throw new Error(`Unknown schedule type`);
+                throw new Error(`Unknown schedule type: ${ingestTriggerFormValue.__typename}`);
         }
     }
 

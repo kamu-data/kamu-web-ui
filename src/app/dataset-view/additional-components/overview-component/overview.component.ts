@@ -254,12 +254,11 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
     }
 
     public get showAddDataButton(): boolean {
-        if (Boolean(this.datasetOverviewTabData.overviewUpdate.content.length) && this.isUserLogged) {
+        if (this.isUserLogged) {
             return (
-                (!this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentPollingSource &&
-                    this.datasetOverviewTabData.datasetBasics.kind === DatasetKind.Root) ||
-                (!this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentTransform &&
-                    this.datasetOverviewTabData.datasetBasics.kind === DatasetKind.Derivative)
+                !this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentPollingSource &&
+                this.datasetOverviewTabData.datasetBasics.kind === DatasetKind.Root &&
+                this.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit
             );
         } else {
             return false;

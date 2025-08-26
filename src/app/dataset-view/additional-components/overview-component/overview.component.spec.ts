@@ -251,6 +251,7 @@ describe("OverviewComponent", () => {
         it("should check show Add data button without currentPollingSource", () => {
             currentOverview().metadata.currentPollingSource = null;
             spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+            component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = true;
             fixture.detectChanges();
 
             expect(component.showAddDataButton).toEqual(true);
@@ -306,15 +307,6 @@ describe("OverviewComponent", () => {
 
             const refreshButton = findElementByDataTestId(fixture, "refresh-now-button") as HTMLButtonElement;
             expect(refreshButton.disabled).toBeTrue();
-        });
-
-        it("should check show Add data button without currentTransform", () => {
-            component.datasetOverviewTabData.datasetBasics = mockDatasetBasicsDerivedFragment;
-            currentOverview().metadata.currentTransform = null;
-            spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-            fixture.detectChanges();
-
-            expect(component.showAddDataButton).toEqual(true);
         });
 
         it("should check don't show Add data button with currentTransform", () => {

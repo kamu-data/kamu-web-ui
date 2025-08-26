@@ -14,13 +14,13 @@ import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { DatasetFlowTriggerService } from "../../services/dataset-flow-trigger.service";
 import { TimeDelta, TimeUnit } from "src/app/api/kamu.graphql.interface";
-import { ScheduleType, StopPolicyType } from "../../dataset-settings.model";
+import { ScheduleType, FlowStopPolicyType } from "../../dataset-settings.model";
 import { getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { HarnessLoader } from "@angular/cdk/testing";
 import { IngestTriggerFormHarness } from "./ingest-trigger-form/ingest-trigger-form.harness";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
-import { StopPolicyFormComponent } from "./stop-policy-form/stop-policy-form.component";
-import { StopPolicyFormHarness } from "./stop-policy-form/stop-policy-form.harness";
+import { FlowStopPolicyFormComponent } from "../shared/flow-stop-policy-form/flow-stop-policy-form.component";
+import { FlowStopPolicyFormHarness } from "../shared/flow-stop-policy-form/flow-stop-policy-form.harness";
 
 describe("DatasetSettingsSchedulingTabComponent", () => {
     let component: DatasetSettingsSchedulingTabComponent;
@@ -29,7 +29,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
 
     let loader: HarnessLoader;
     let ingestTriggerFormHarness: IngestTriggerFormHarness;
-    let stopPolicyFormHarness: StopPolicyFormHarness;
+    let stopPolicyFormHarness: FlowStopPolicyFormHarness;
 
     const MOCK_PARAM_EVERY = 10;
     const MOCK_PARAM_UNIT = TimeUnit.Minutes;
@@ -62,7 +62,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
 
         loader = TestbedHarnessEnvironment.loader(fixture);
         ingestTriggerFormHarness = await loader.getHarness(IngestTriggerFormHarness);
-        stopPolicyFormHarness = await loader.getHarness(StopPolicyFormHarness);
+        stopPolicyFormHarness = await loader.getHarness(FlowStopPolicyFormHarness);
     });
 
     function getSaveButton(): HTMLButtonElement {
@@ -111,7 +111,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
             updatesEnabled: true,
             ingestTrigger: domIngestTriggerFormValue,
             stopPolicy: {
-                stopPolicyType: StopPolicyType.AFTER_CONSECUTIVE_FAILURES,
+                stopPolicyType: FlowStopPolicyType.AFTER_CONSECUTIVE_FAILURES,
                 maxFailures: 3,
             },
         });
@@ -145,8 +145,8 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
             updatesEnabled: true,
             ingestTrigger: domIngestTriggerFormValue,
             stopPolicy: {
-                stopPolicyType: StopPolicyType.NEVER,
-                maxFailures: StopPolicyFormComponent.DEFAULT_MAX_FAILURES,
+                stopPolicyType: FlowStopPolicyType.NEVER,
+                maxFailures: FlowStopPolicyFormComponent.DEFAULT_MAX_FAILURES,
             },
         });
     });
@@ -161,7 +161,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
             every: MOCK_PARAM_EVERY,
             unit: MOCK_PARAM_UNIT,
         });
-        await stopPolicyFormHarness.setSelectedStopPolicyType(StopPolicyType.NEVER);
+        await stopPolicyFormHarness.setSelectedStopPolicyType(FlowStopPolicyType.NEVER);
 
         const saveButton = getSaveButton();
         expect(saveButton.disabled).toBeFalse();
@@ -187,7 +187,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
         await ingestTriggerFormHarness.setCronExpression(MOCK_CRON_EXPRESSION);
 
-        await stopPolicyFormHarness.setSelectedStopPolicyType(StopPolicyType.AFTER_CONSECUTIVE_FAILURES);
+        await stopPolicyFormHarness.setSelectedStopPolicyType(FlowStopPolicyType.AFTER_CONSECUTIVE_FAILURES);
         await stopPolicyFormHarness.setMaxFailures(3);
 
         const saveButton = getSaveButton();
@@ -216,7 +216,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
             every: 100, // Invalid value
             unit: TimeUnit.Minutes,
         });
-        await stopPolicyFormHarness.setSelectedStopPolicyType(StopPolicyType.NEVER);
+        await stopPolicyFormHarness.setSelectedStopPolicyType(FlowStopPolicyType.NEVER);
 
         const saveButton = getSaveButton();
         expect(saveButton.disabled).toBeTrue();
@@ -232,7 +232,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
 
         await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
         await ingestTriggerFormHarness.setCronExpression("invalid-cron-expression"); // Invalid value
-        await stopPolicyFormHarness.setSelectedStopPolicyType(StopPolicyType.NEVER);
+        await stopPolicyFormHarness.setSelectedStopPolicyType(FlowStopPolicyType.NEVER);
 
         const saveButton = getSaveButton();
         expect(saveButton.disabled).toBeTrue();

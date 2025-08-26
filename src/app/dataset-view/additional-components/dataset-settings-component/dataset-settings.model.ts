@@ -26,7 +26,7 @@ export enum BatchingRuleType {
     BUFFERING = "Buffering",
 }
 
-export enum StopPolicyType {
+export enum FlowStopPolicyType {
     NEVER = "Never",
     AFTER_CONSECUTIVE_FAILURES = "AfterConsecutiveFailures",
 }

@@ -8,7 +8,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BaseComponent } from "src/app/common/components/base.component";
-import { ScheduleType, StopPolicyType } from "../../dataset-settings.model";
+import { ScheduleType, FlowStopPolicyType } from "../../dataset-settings.model";
 import { DatasetBasicsFragment, DatasetFlowType, DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowTriggerService } from "../../services/dataset-flow-trigger.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -21,8 +21,8 @@ import { IngestTriggerFormValue } from "./ingest-trigger-form/ingest-trigger-for
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { DatasetSettingsSchedulingTabData } from "./dataset-settings-scheduling-tab.data";
 import { SchedulingSettingsFormType, SchedulingSettingsFormValue } from "./dataset-settings-scheduling-tab.types";
-import { StopPolicyFormComponent } from "./stop-policy-form/stop-policy-form.component";
-import { StopPolicyFormValue } from "./stop-policy-form/stop-policy-form.types";
+import { FlowStopPolicyFormComponent } from "../shared/flow-stop-policy-form/flow-stop-policy-form.component";
+import { FlowStopPolicyFormValue } from "../shared/flow-stop-policy-form/flow-stop-policy-form.types";
 import { FlowTooltipsTexts } from "src/app/common/tooltips/flow-tooltips.text";
 import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
@@ -46,7 +46,7 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
         //-----//
         IngestTriggerFormComponent,
-        StopPolicyFormComponent,
+        FlowStopPolicyFormComponent,
         TooltipIconComponent,
     ],
 })
@@ -62,7 +62,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
     public readonly form: FormGroup<SchedulingSettingsFormType> = new FormGroup<SchedulingSettingsFormType>({
         updatesEnabled: new FormControl<boolean>({ value: false, disabled: false }, { nonNullable: true }),
         ingestTrigger: IngestTriggerFormComponent.buildForm(),
-        stopPolicy: StopPolicyFormComponent.buildForm(),
+        stopPolicy: FlowStopPolicyFormComponent.buildForm(),
     });
 
     public get datasetBasics(): DatasetBasicsFragment {
@@ -126,7 +126,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
         }
     }
 
-    private buildInitialStopPolicyFormValue(): MaybeNull<StopPolicyFormValue> {
+    private buildInitialStopPolicyFormValue(): MaybeNull<FlowStopPolicyFormValue> {
         const stopPolicy = this.schedulingTabData.stopPolicy;
         if (!stopPolicy) {
             return null;
@@ -135,13 +135,13 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
         switch (stopPolicy.__typename) {
             case "FlowTriggerStopPolicyNever":
                 return {
-                    stopPolicyType: StopPolicyType.NEVER,
-                    maxFailures: StopPolicyFormComponent.DEFAULT_MAX_FAILURES,
+                    stopPolicyType: FlowStopPolicyType.NEVER,
+                    maxFailures: FlowStopPolicyFormComponent.DEFAULT_MAX_FAILURES,
                 };
 
             case "FlowTriggerStopPolicyAfterConsecutiveFailures":
                 return {
-                    stopPolicyType: StopPolicyType.AFTER_CONSECUTIVE_FAILURES,
+                    stopPolicyType: FlowStopPolicyType.AFTER_CONSECUTIVE_FAILURES,
                     maxFailures: stopPolicy.maxFailures,
                 };
 
@@ -162,7 +162,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                 datasetFlowType: DatasetFlowType.Ingest,
                 paused: !formValue.updatesEnabled,
                 triggerRuleInput: IngestTriggerFormComponent.buildPollingTriggerRuleInput(ingestTriggerFormValue),
-                triggerStopPolicyInput: StopPolicyFormComponent.buildStopPolicyInput(formValue.stopPolicy),
+                triggerStopPolicyInput: FlowStopPolicyFormComponent.buildStopPolicyInput(formValue.stopPolicy),
                 datasetInfo: {
                     accountName: this.datasetBasics.owner.accountName,
                     datasetName: this.datasetBasics.name,

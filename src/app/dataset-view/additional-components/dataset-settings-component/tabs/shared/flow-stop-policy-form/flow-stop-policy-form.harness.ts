@@ -8,12 +8,12 @@
 /* istanbul ignore file */
 
 import { ComponentHarness } from "@angular/cdk/testing";
-import { StopPolicyType } from "../../../dataset-settings.model";
+import { FlowStopPolicyType } from "../../../dataset-settings.model";
 import { MatRadioButtonHarness } from "@angular/material/radio/testing";
-import { StopPolicyFormValue } from "./stop-policy-form.types";
+import { FlowStopPolicyFormValue } from "./flow-stop-policy-form.types";
 
-export class StopPolicyFormHarness extends ComponentHarness {
-    public static readonly hostSelector = "app-stop-policy-form";
+export class FlowStopPolicyFormHarness extends ComponentHarness {
+    public static readonly hostSelector = "app-flow-stop-policy-form";
 
     private readonly locatorStopPolicyTypeNeverRadio = this.locatorFor(
         MatRadioButtonHarness.with({ selector: '[data-test-id="stop-policy-never"]' }),
@@ -27,15 +27,15 @@ export class StopPolicyFormHarness extends ComponentHarness {
 
     private readonly locatorMaxFailuresInput = this.locatorFor('[data-test-id="stop-policy-max-failures-input"]');
 
-    public async setSelectedStopPolicyType(stopPolicyType: StopPolicyType): Promise<void> {
+    public async setSelectedStopPolicyType(stopPolicyType: FlowStopPolicyType): Promise<void> {
         const neverRadio = await this.locatorStopPolicyTypeNeverRadio();
         const afterConsecutiveFailuresRadio = await this.locatorStopPolicyTypeAfterConsecutiveFailuresRadio();
 
-        if (stopPolicyType === StopPolicyType.NEVER) {
+        if (stopPolicyType === FlowStopPolicyType.NEVER) {
             if (!(await neverRadio.isChecked())) {
                 await neverRadio.check();
             }
-        } else if (stopPolicyType === StopPolicyType.AFTER_CONSECUTIVE_FAILURES) {
+        } else if (stopPolicyType === FlowStopPolicyType.AFTER_CONSECUTIVE_FAILURES) {
             if (!(await afterConsecutiveFailuresRadio.isChecked())) {
                 await afterConsecutiveFailuresRadio.check();
             }
@@ -45,7 +45,7 @@ export class StopPolicyFormHarness extends ComponentHarness {
         }
     }
 
-    public async getStopPolicyType(): Promise<StopPolicyType | null> {
+    public async getStopPolicyType(): Promise<FlowStopPolicyType | null> {
         const neverRadio = await this.locatorStopPolicyTypeNeverRadio();
         const isNeverSelected = await neverRadio.isChecked();
 
@@ -53,16 +53,16 @@ export class StopPolicyFormHarness extends ComponentHarness {
         const isAfterConsecutiveFailuresSelected = await afterConsecutiveFailuresRadio.isChecked();
 
         if (isNeverSelected) {
-            return StopPolicyType.NEVER;
+            return FlowStopPolicyType.NEVER;
         } else if (isAfterConsecutiveFailuresSelected) {
-            return StopPolicyType.AFTER_CONSECUTIVE_FAILURES;
+            return FlowStopPolicyType.AFTER_CONSECUTIVE_FAILURES;
         }
         return null;
     }
 
     public async setMaxFailures(value: number): Promise<void> {
         const stopPolicyType = await this.getStopPolicyType();
-        if (stopPolicyType !== StopPolicyType.AFTER_CONSECUTIVE_FAILURES) {
+        if (stopPolicyType !== FlowStopPolicyType.AFTER_CONSECUTIVE_FAILURES) {
             throw new Error("Cannot set max failures when stop policy is not 'after consecutive failures'");
         }
 
@@ -88,7 +88,7 @@ export class StopPolicyFormHarness extends ComponentHarness {
         return null;
     }
 
-    public async currentFormValue(): Promise<StopPolicyFormValue> {
+    public async currentFormValue(): Promise<FlowStopPolicyFormValue> {
         const stopPolicyType = await this.getStopPolicyType();
         const maxFailures = await this.getMaxFailures();
 

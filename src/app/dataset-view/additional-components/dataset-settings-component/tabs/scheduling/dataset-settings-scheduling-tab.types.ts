@@ -7,16 +7,19 @@
 
 import { FormControl, FormGroup } from "@angular/forms";
 import { IngestTriggerFormType, IngestTriggerFormValue } from "./ingest-trigger-form/ingest-trigger-form.types";
-import { StopPolicyFormType, StopPolicyFormValue } from "./stop-policy-form/stop-policy-form.types";
+import {
+    FlowStopPolicyFormType,
+    FlowStopPolicyFormValue,
+} from "../shared/flow-stop-policy-form/flow-stop-policy-form.types";
 
 export interface SchedulingSettingsFormType {
     updatesEnabled: FormControl<boolean>;
     ingestTrigger: FormGroup<IngestTriggerFormType>;
-    stopPolicy: FormGroup<StopPolicyFormType>;
+    stopPolicy: FormGroup<FlowStopPolicyFormType>;
 }
 
 export interface SchedulingSettingsFormValue {
     updatesEnabled: boolean;
     ingestTrigger: IngestTriggerFormValue;
-    stopPolicy: StopPolicyFormValue;
+    stopPolicy: FlowStopPolicyFormValue;
 }

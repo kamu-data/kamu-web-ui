@@ -7,14 +7,14 @@
 
 import { FormControl } from "@angular/forms";
 import { MaybeNull } from "src/app/interface/app.types";
-import { StopPolicyType } from "../../../dataset-settings.model";
+import { FlowStopPolicyType } from "../../../dataset-settings.model";
 
-export interface StopPolicyFormType {
-    stopPolicyType: FormControl<MaybeNull<StopPolicyType>>;
+export interface FlowStopPolicyFormType {
+    stopPolicyType: FormControl<MaybeNull<FlowStopPolicyType>>;
     maxFailures: FormControl<number>;
 }
 
-export interface StopPolicyFormValue {
-    stopPolicyType: MaybeNull<StopPolicyType>;
+export interface FlowStopPolicyFormValue {
+    stopPolicyType: MaybeNull<FlowStopPolicyType>;
     maxFailures: number;
 }

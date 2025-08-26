@@ -14,11 +14,13 @@ import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { DatasetFlowTriggerService } from "../../services/dataset-flow-trigger.service";
 import { TimeDelta, TimeUnit } from "src/app/api/kamu.graphql.interface";
-import { ScheduleType } from "../../dataset-settings.model";
+import { ScheduleType, StopPolicyType } from "../../dataset-settings.model";
 import { getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { HarnessLoader } from "@angular/cdk/testing";
 import { IngestTriggerFormHarness } from "./ingest-trigger-form/ingest-trigger-form.harness";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
+import { StopPolicyFormComponent } from "./stop-policy-form/stop-policy-form.component";
+import { StopPolicyFormHarness } from "./stop-policy-form/stop-policy-form.harness";
 
 describe("DatasetSettingsSchedulingTabComponent", () => {
     let component: DatasetSettingsSchedulingTabComponent;
@@ -27,6 +29,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
 
     let loader: HarnessLoader;
     let ingestTriggerFormHarness: IngestTriggerFormHarness;
+    let stopPolicyFormHarness: StopPolicyFormHarness;
 
     const MOCK_PARAM_EVERY = 10;
     const MOCK_PARAM_UNIT = TimeUnit.Minutes;
@@ -50,6 +53,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             schedule: null,
+            stopPolicy: null,
             paused: true,
         };
 
@@ -58,6 +62,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
 
         loader = TestbedHarnessEnvironment.loader(fixture);
         ingestTriggerFormHarness = await loader.getHarness(IngestTriggerFormHarness);
+        stopPolicyFormHarness = await loader.getHarness(StopPolicyFormHarness);
     });
 
     function getSaveButton(): HTMLButtonElement {
@@ -67,6 +72,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
     it("should create", () => {
         expect(component).toBeTruthy();
         expect(ingestTriggerFormHarness).toBeTruthy();
+        expect(stopPolicyFormHarness).toBeTruthy();
     });
 
     it("should check 'Save' button is enabled with no schedule defined and disabled updates", () => {
@@ -83,6 +89,10 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
             every: MOCK_PARAM_EVERY,
             unit: MOCK_PARAM_UNIT,
         };
+        component.schedulingTabData.stopPolicy = {
+            __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
+            maxFailures: 3,
+        };
         component.ngAfterViewInit();
         fixture.detectChanges();
 
@@ -90,7 +100,6 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
 
         const domIngestTriggerFormValue = await ingestTriggerFormHarness.currentFormValue();
         expect(domIngestTriggerFormValue).toEqual({
-            updatesEnabled: true,
             __typename: ScheduleType.TIME_DELTA,
             timeDelta: {
                 every: MOCK_PARAM_EVERY,
@@ -99,7 +108,12 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
             cron: { cronExpression: "" },
         });
         expect(component.form.getRawValue()).toEqual({
+            updatesEnabled: true,
             ingestTrigger: domIngestTriggerFormValue,
+            stopPolicy: {
+                stopPolicyType: StopPolicyType.AFTER_CONSECUTIVE_FAILURES,
+                maxFailures: 3,
+            },
         });
     });
 
@@ -109,6 +123,10 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
             __typename: "Cron5ComponentExpression",
             cron5ComponentExpression: MOCK_CRON_EXPRESSION,
         };
+        component.schedulingTabData.stopPolicy = {
+            __typename: "FlowTriggerStopPolicyNever",
+            dummy: false,
+        };
         component.ngAfterViewInit();
         fixture.detectChanges();
 
@@ -116,7 +134,6 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
 
         const domIngestTriggerFormValue = await ingestTriggerFormHarness.currentFormValue();
         expect(domIngestTriggerFormValue).toEqual({
-            updatesEnabled: true,
             __typename: ScheduleType.CRON_5_COMPONENT_EXPRESSION,
             timeDelta: {
                 every: null,
@@ -125,19 +142,26 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
             cron: { cronExpression: MOCK_CRON_EXPRESSION },
         });
         expect(component.form.getRawValue()).toEqual({
+            updatesEnabled: true,
             ingestTrigger: domIngestTriggerFormValue,
+            stopPolicy: {
+                stopPolicyType: StopPolicyType.NEVER,
+                maxFailures: StopPolicyFormComponent.DEFAULT_MAX_FAILURES,
+            },
         });
     });
 
     it("should check 'Save' button works for ROOT dataset with time delta", async () => {
         const setDatasetFlowTriggersSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTriggers").and.callThrough();
 
-        await ingestTriggerFormHarness.enableUpdates();
+        component.form.controls.updatesEnabled.setValue(true);
+
         await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.TIME_DELTA);
         await ingestTriggerFormHarness.setTimeDeltaSchedule({
             every: MOCK_PARAM_EVERY,
             unit: MOCK_PARAM_UNIT,
         });
+        await stopPolicyFormHarness.setSelectedStopPolicyType(StopPolicyType.NEVER);
 
         const saveButton = getSaveButton();
         expect(saveButton.disabled).toBeFalse();
@@ -158,9 +182,13 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
     it("should check 'Save' button works for ROOT dataset with cron expression", async () => {
         const setDatasetFlowTriggersSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTriggers").and.callThrough();
 
-        await ingestTriggerFormHarness.enableUpdates();
+        component.form.controls.updatesEnabled.setValue(true);
+
         await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
         await ingestTriggerFormHarness.setCronExpression(MOCK_CRON_EXPRESSION);
+
+        await stopPolicyFormHarness.setSelectedStopPolicyType(StopPolicyType.AFTER_CONSECUTIVE_FAILURES);
+        await stopPolicyFormHarness.setMaxFailures(3);
 
         const saveButton = getSaveButton();
         expect(saveButton.disabled).toBeFalse();
@@ -181,12 +209,14 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
     it("should check 'Save' button is ignored in invalid state for time delta", async () => {
         const setDatasetFlowTriggersSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTriggers").and.stub();
 
-        await ingestTriggerFormHarness.enableUpdates();
+        component.form.controls.updatesEnabled.setValue(true);
+
         await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.TIME_DELTA);
         await ingestTriggerFormHarness.setTimeDeltaSchedule({
             every: 100, // Invalid value
             unit: TimeUnit.Minutes,
         });
+        await stopPolicyFormHarness.setSelectedStopPolicyType(StopPolicyType.NEVER);
 
         const saveButton = getSaveButton();
         expect(saveButton.disabled).toBeTrue();
@@ -198,9 +228,11 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
     it("should check 'Save' button is ignored in invalid state for cron expression", async () => {
         const setDatasetFlowTriggersSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTriggers").and.stub();
 
-        await ingestTriggerFormHarness.enableUpdates();
+        component.form.controls.updatesEnabled.setValue(true);
+
         await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
         await ingestTriggerFormHarness.setCronExpression("invalid-cron-expression"); // Invalid value
+        await stopPolicyFormHarness.setSelectedStopPolicyType(StopPolicyType.NEVER);
 
         const saveButton = getSaveButton();
         expect(saveButton.disabled).toBeTrue();

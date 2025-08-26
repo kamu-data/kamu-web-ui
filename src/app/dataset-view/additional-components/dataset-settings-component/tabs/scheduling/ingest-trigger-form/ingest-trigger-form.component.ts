@@ -109,6 +109,8 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
                     this.scheduleTypeControl.enable();
                 } else {
                     this.scheduleTypeControl.disable();
+                    this.timeDeltaControl.disable();
+                    this.cronExpressionControl.disable();
                 }
             });
 

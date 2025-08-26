@@ -23,11 +23,7 @@
                         aria-label="Select an option"
                         color="primary"
                     >
-                        <mat-radio-button
-                            disableRipple="true"
-                            [value]="BatchingRuleType.IMMEDIATE"
-                            data-test-id="batching-rule-immediate"
-                        >
+                        <mat-radio-button [value]="BatchingRuleType.IMMEDIATE" data-test-id="batching-rule-immediate">
                             <div class="d-flex align-items-center">
                                 Launch transform immediately
                                 <app-tooltip-icon class="ps-2 pt-1" [tooltip]="NEW_DATA_TRANSFORM_IMMEDIATE_TOOLTIP" />
@@ -71,7 +67,6 @@
                         color="primary"
                     >
                         <mat-radio-button
-                            disableRipple="true"
                             [value]="FlowTriggerBreakingChangeRule.NoAction"
                             data-test-id="breaking-change-no-action"
                         >

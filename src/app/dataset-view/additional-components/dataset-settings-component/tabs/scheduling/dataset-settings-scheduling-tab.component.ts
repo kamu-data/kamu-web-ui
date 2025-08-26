@@ -8,7 +8,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BaseComponent } from "src/app/common/components/base.component";
-import { ScheduleType } from "../../dataset-settings.model";
+import { ScheduleType, StopPolicyType } from "../../dataset-settings.model";
 import { DatasetBasicsFragment, DatasetFlowType, DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { DatasetFlowTriggerService } from "../../services/dataset-flow-trigger.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -76,7 +76,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
     public ngAfterViewInit() {
         this.form.patchValue(
             {
-                updatesEnabled: false,
+                updatesEnabled: this.schedulingTabData.paused === false,
                 ingestTrigger: this.buildInitialIngestTriggerFormValue(),
                 stopPolicy: this.buildInitialStopPolicyFormValue(),
             } as SchedulingSettingsFormValue,
@@ -92,11 +92,9 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
             return null;
         }
 
-        const updatesEnabled = !this.schedulingTabData.paused;
         switch (schedule.__typename) {
             case "TimeDelta": {
                 return {
-                    updatesEnabled,
                     __typename: ScheduleType.TIME_DELTA,
                     timeDelta: {
                         every: schedule.every,
@@ -110,7 +108,6 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
 
             case "Cron5ComponentExpression": {
                 return {
-                    updatesEnabled,
                     __typename: ScheduleType.CRON_5_COMPONENT_EXPRESSION,
                     timeDelta: {
                         every: null,
@@ -130,10 +127,29 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
     }
 
     private buildInitialStopPolicyFormValue(): MaybeNull<StopPolicyFormValue> {
-        return {
-            stopPolicyType: null,
-            maxFailures: 1,
-        };
+        const stopPolicy = this.schedulingTabData.stopPolicy;
+        if (!stopPolicy) {
+            return null;
+        }
+
+        switch (stopPolicy.__typename) {
+            case "FlowTriggerStopPolicyNever":
+                return {
+                    stopPolicyType: StopPolicyType.NEVER,
+                    maxFailures: StopPolicyFormComponent.DEFAULT_MAX_FAILURES,
+                };
+
+            case "FlowTriggerStopPolicyAfterConsecutiveFailures":
+                return {
+                    stopPolicyType: StopPolicyType.AFTER_CONSECUTIVE_FAILURES,
+                    maxFailures: stopPolicy.maxFailures,
+                };
+
+            /* istanbul ignore next */
+            default: {
+                throw new Error(`Unknown stop policy type: ${stopPolicy.__typename}`);
+            }
+        }
     }
 
     public saveScheduledUpdates(): void {

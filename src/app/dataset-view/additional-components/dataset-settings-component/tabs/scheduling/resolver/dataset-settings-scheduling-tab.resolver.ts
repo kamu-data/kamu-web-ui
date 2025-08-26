@@ -35,11 +35,13 @@ export const datasetSettingsSchedulingTabResolverFn: ResolveFn<DatasetSettingsSc
                         const flowTriggers = query.datasets.byId?.flows.triggers.byType;
                         const paused = flowTriggers?.paused ?? true;
                         const schedule = flowTriggers?.schedule ?? null;
+                        const stopPolicy = flowTriggers?.stopPolicy ?? null;
                         return {
                             datasetBasics: data.datasetBasics,
                             datasetPermissions: data.datasetPermissions,
                             schedule,
                             paused,
+                            stopPolicy,
                         } as DatasetSettingsSchedulingTabData;
                     }),
                 );

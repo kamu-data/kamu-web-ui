@@ -241,6 +241,10 @@ export const mockGetDatasetFlowTriggersCronQuery: GetDatasetFlowTriggersQuery = 
                     byType: {
                         paused: false,
                         schedule: mockCronSchedule,
+                        stopPolicy: {
+                            __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
+                            maxFailures: 1,
+                        },
                     },
                 },
             },
@@ -260,6 +264,10 @@ export const mockGetDatasetFlowTriggersTimeDeltaQuery: GetDatasetFlowTriggersQue
                             __typename: "TimeDelta",
                             every: 10,
                             unit: TimeUnit.Minutes,
+                        },
+                        stopPolicy: {
+                            __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
+                            maxFailures: 1,
                         },
                     },
                 },
@@ -303,6 +311,10 @@ export const mockGetDatasetFlowTriggersBatchingQuery: GetDatasetFlowTriggersQuer
                             },
                             forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
                         },
+                        stopPolicy: {
+                            __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
+                            maxFailures: 1,
+                        },
                     },
                 },
             },
@@ -328,6 +340,10 @@ export const mockGetDatasetFlowTriggersDefaultBatchingQuery: GetDatasetFlowTrigg
                                 },
                             },
                             forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
+                        },
+                        stopPolicy: {
+                            __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
+                            maxFailures: 1,
                         },
                     },
                 },

@@ -10,6 +10,7 @@
 import { ComponentHarness } from "@angular/cdk/testing";
 import { StopPolicyType } from "../../../dataset-settings.model";
 import { MatRadioButtonHarness } from "@angular/material/radio/testing";
+import { StopPolicyFormValue } from "./stop-policy-form.types";
 
 export class StopPolicyFormHarness extends ComponentHarness {
     public static readonly hostSelector = "app-stop-policy-form";
@@ -21,6 +22,10 @@ export class StopPolicyFormHarness extends ComponentHarness {
     private readonly locatorStopPolicyTypeAfterConsecutiveFailuresRadio = this.locatorFor(
         MatRadioButtonHarness.with({ selector: '[data-test-id="stop-policy-after-consecutive-failures"]' }),
     );
+
+    private readonly locatorError = this.locatorForOptional('[data-test-id="stop-policy-max-failures-error-message"]');
+
+    private readonly locatorMaxFailuresInput = this.locatorFor('[data-test-id="stop-policy-max-failures-input"]');
 
     public async setSelectedStopPolicyType(stopPolicyType: StopPolicyType): Promise<void> {
         const neverRadio = await this.locatorStopPolicyTypeNeverRadio();
@@ -53,5 +58,43 @@ export class StopPolicyFormHarness extends ComponentHarness {
             return StopPolicyType.AFTER_CONSECUTIVE_FAILURES;
         }
         return null;
+    }
+
+    public async setMaxFailures(value: number): Promise<void> {
+        const stopPolicyType = await this.getStopPolicyType();
+        if (stopPolicyType !== StopPolicyType.AFTER_CONSECUTIVE_FAILURES) {
+            throw new Error("Cannot set max failures when stop policy is not 'after consecutive failures'");
+        }
+
+        const input = await this.locatorMaxFailuresInput();
+        await input.clear();
+        await input.sendKeys(value.toString());
+        await input.blur();
+    }
+
+    public async getMaxFailures(): Promise<number> {
+        const input = await this.locatorMaxFailuresInput();
+        const value = await input.getProperty<string>("value");
+        return Number(value) || 0;
+    }
+
+    public async getErrorMessage(): Promise<string | null> {
+        const errorElement = await this.locatorError();
+        if (errorElement) {
+            const message = await errorElement.text();
+            return message === "" ? null : message;
+        }
+
+        return null;
+    }
+
+    public async currentFormValue(): Promise<StopPolicyFormValue> {
+        const stopPolicyType = await this.getStopPolicyType();
+        const maxFailures = await this.getMaxFailures();
+
+        return {
+            stopPolicyType,
+            maxFailures,
+        };
     }
 }

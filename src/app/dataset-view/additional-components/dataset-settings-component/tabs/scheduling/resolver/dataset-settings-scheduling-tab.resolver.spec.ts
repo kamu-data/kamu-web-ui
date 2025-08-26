@@ -103,6 +103,10 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
                                 byType: {
                                     paused: true,
                                     schedule: null,
+                                    stopPolicy: {
+                                        __typename: "FlowTriggerStopPolicyNever",
+                                        dummy: false,
+                                    },
                                 },
                             },
                         },
@@ -121,6 +125,10 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
                     datasetBasics: mockDatasetBasicsRootFragment,
                     datasetPermissions: mockFullPowerDatasetPermissionsFragment,
                     schedule: null,
+                    stopPolicy: {
+                        __typename: "FlowTriggerStopPolicyNever",
+                        dummy: false,
+                    },
                     paused: true,
                 });
             });
@@ -149,6 +157,10 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
                     datasetPermissions: mockFullPowerDatasetPermissionsFragment,
                     schedule: mockCronSchedule,
                     paused: mockGetDatasetFlowTriggersCronQuery.datasets.byId?.flows.triggers.byType?.paused || false,
+                    stopPolicy: {
+                        __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
+                        maxFailures: 1,
+                    },
                 });
             });
         expect(resolverSubscription$.closed).toBeTrue();
@@ -180,6 +192,7 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
                     datasetBasics: mockDatasetBasicsRootFragment,
                     datasetPermissions: mockFullPowerDatasetPermissionsFragment,
                     schedule: null,
+                    stopPolicy: null,
                     paused: true,
                 });
             });

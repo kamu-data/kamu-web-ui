@@ -48,6 +48,7 @@
                                             [fieldLabel]="'Max failures'"
                                             [appFieldError]="['min', 'required']"
                                             [group]="form"
+                                            [dataTestId]="'stop-policy-max-failures-error-message'"
                                         ></span>
                                     </div>
                                     <div class="ms-1 px-2 pt-2 pb-2">
@@ -58,11 +59,7 @@
                                 </fieldset>
                             </div>
                         </mat-radio-button>
-                        <mat-radio-button
-                            disableRipple="true"
-                            [value]="StopPolicyType.NEVER"
-                            data-test-id="stop-policy-never"
-                        >
+                        <mat-radio-button [value]="StopPolicyType.NEVER" data-test-id="stop-policy-never">
                             <div class="d-flex align-items-center">
                                 Never
                                 <app-tooltip-icon class="ps-2 pt-1" [tooltip]="NEVER_TOOLTIP" />

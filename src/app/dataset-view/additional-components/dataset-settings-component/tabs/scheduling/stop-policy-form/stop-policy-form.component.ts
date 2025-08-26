@@ -43,6 +43,8 @@ export class StopPolicyFormComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public form: FormGroup<StopPolicyFormType>;
     @Input({ required: true }) public updatesEnabledControl: FormControl<boolean>;
 
+    public static readonly DEFAULT_MAX_FAILURES: number = 1;
+
     public readonly StopPolicyType: typeof StopPolicyType = StopPolicyType;
 
     public readonly NEVER_TOOLTIP: string = FlowTooltipsTexts.STOP_POLICY_NEVER_TOOLTIP;
@@ -52,11 +54,11 @@ export class StopPolicyFormComponent extends BaseComponent implements OnInit {
     public static buildForm(): FormGroup<StopPolicyFormType> {
         return new FormGroup<StopPolicyFormType>({
             stopPolicyType: new FormControl<MaybeNull<StopPolicyType>>(
-                { value: null, disabled: false },
+                { value: null, disabled: true },
                 { nonNullable: true, validators: [Validators.required] },
             ),
             maxFailures: new FormControl<number>(
-                { value: 1, disabled: true },
+                { value: StopPolicyFormComponent.DEFAULT_MAX_FAILURES, disabled: true },
                 { nonNullable: true, validators: [Validators.required, Validators.min(1)] },
             ),
         });
@@ -106,7 +108,8 @@ export class StopPolicyFormComponent extends BaseComponent implements OnInit {
         this.stopPolicyTypeControl.valueChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((stopPolicyType: MaybeNull<StopPolicyType>) => {
-                if (stopPolicyType === StopPolicyType.AFTER_CONSECUTIVE_FAILURES) {
+                // Only allow reading when updates are enabled in general
+                if (this.updatesEnabledControl.value && stopPolicyType === StopPolicyType.AFTER_CONSECUTIVE_FAILURES) {
                     this.maxFailuresControl.enable();
                 } else {
                     this.maxFailuresControl.disable();

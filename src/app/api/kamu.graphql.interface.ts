@@ -5483,6 +5483,9 @@ export type GetDatasetFlowTriggersQuery = {
                                   }
                                 | { __typename: "FlowTriggerBatchingRuleImmediate" };
                         } | null;
+                        stopPolicy:
+                            | { __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures"; maxFailures: number }
+                            | { __typename: "FlowTriggerStopPolicyNever" };
                     } | null;
                 };
             };
@@ -10480,6 +10483,12 @@ export const GetDatasetFlowTriggersDocument = gql`
                                     }
                                 }
                                 forBreakingChange
+                            }
+                            stopPolicy {
+                                __typename
+                                ... on FlowTriggerStopPolicyAfterConsecutiveFailures {
+                                    maxFailures
+                                }
                             }
                         }
                     }

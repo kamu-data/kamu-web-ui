@@ -11,11 +11,7 @@
                         aria-label="Select an option"
                         color="primary"
                     >
-                        <mat-radio-button
-                            disableRipple="true"
-                            [value]="ScheduleType.TIME_DELTA"
-                            data-test-id="trigger-time-delta"
-                        >
+                        <mat-radio-button [value]="ScheduleType.TIME_DELTA" data-test-id="trigger-time-delta">
                             <app-time-delta-form [form]="form.controls.timeDelta"></app-time-delta-form>
                         </mat-radio-button>
                         <mat-radio-button

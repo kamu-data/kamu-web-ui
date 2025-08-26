@@ -15,7 +15,7 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { HarnessLoader } from "@angular/cdk/testing";
 import { Component, ViewChild } from "@angular/core";
 import { IngestTriggerFormHarness } from "./ingest-trigger-form.harness";
-import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { TimeUnit } from "src/app/api/kamu.graphql.interface";
 
 @Component({
@@ -27,12 +27,16 @@ import { TimeUnit } from "src/app/api/kamu.graphql.interface";
         //-----//
         IngestTriggerFormComponent,
     ],
-    template: `<app-ingest-trigger-form [form]="hostForm.controls.ingestTrigger" [updateStateToggleLabel]="label" />`,
+    template: `<app-ingest-trigger-form
+        [form]="hostForm.controls.ingestTrigger"
+        [updatesEnabledControl]="hostForm.controls.updatesEnabled"
+    />`,
 })
 class TestIngestTriggerFormComponent {
     public readonly label = "Enable automatic updates";
 
     public readonly hostForm = new FormGroup({
+        updatesEnabled: new FormControl(false),
         ingestTrigger: IngestTriggerFormComponent.buildForm(),
     });
 
@@ -77,17 +81,19 @@ describe("IngestTriggerFormComponent", () => {
         expect(ingestTriggerFormHarness).toBeTruthy();
     });
 
-    it("should enable updates toggle via harness and reflect in form", async () => {
+    it("should enable updates toggle via harness and reflect in form", () => {
         expect(component.updatesEnabledControl.value).toBeFalse();
 
-        await ingestTriggerFormHarness.enableUpdates();
+        hostComponent.hostForm.controls.updatesEnabled.setValue(true);
+
         expect(component.updatesEnabledControl.value).toBeTrue();
         expect(component.scheduleTypeControl.disabled).toBeFalse();
         // initially disabled, because we did not select any schedule type
         expect(component.timeDeltaControl.disabled).toBeTrue();
         expect(component.cronExpressionControl.disabled).toBeTrue();
 
-        await ingestTriggerFormHarness.disableUpdates();
+        hostComponent.hostForm.controls.updatesEnabled.setValue(false);
+
         expect(component.updatesEnabledControl.value).toBeFalse();
         expect(component.scheduleTypeControl.disabled).toBeTrue();
         // still disabled, because we did not select any schedule type
@@ -96,7 +102,7 @@ describe("IngestTriggerFormComponent", () => {
     });
 
     it("should check switch polling options", async () => {
-        await ingestTriggerFormHarness.enableUpdates();
+        hostComponent.hostForm.controls.updatesEnabled.setValue(true);
 
         // First verify initial state
         expect(component.scheduleTypeControl.value).toBeNull();
@@ -115,7 +121,7 @@ describe("IngestTriggerFormComponent", () => {
     });
 
     it("should fill form with cron expression and reflect in form state", async () => {
-        await ingestTriggerFormHarness.enableUpdates();
+        hostComponent.hostForm.controls.updatesEnabled.setValue(true);
         await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
 
         expect(component.scheduleTypeControl.value).toEqual(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
@@ -124,7 +130,6 @@ describe("IngestTriggerFormComponent", () => {
 
         const domFormValue = await ingestTriggerFormHarness.currentFormValue();
         expect(domFormValue).toEqual({
-            updatesEnabled: true,
             __typename: ScheduleType.CRON_5_COMPONENT_EXPRESSION,
             timeDelta: { every: null, unit: null },
             cron: {
@@ -135,7 +140,7 @@ describe("IngestTriggerFormComponent", () => {
     });
 
     it("should check init form with time delta", async () => {
-        await ingestTriggerFormHarness.enableUpdates();
+        hostComponent.hostForm.controls.updatesEnabled.setValue(true);
         await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.TIME_DELTA);
 
         expect(component.scheduleTypeControl.value).toEqual(ScheduleType.TIME_DELTA);
@@ -144,7 +149,6 @@ describe("IngestTriggerFormComponent", () => {
 
         const domFormValue = await ingestTriggerFormHarness.currentFormValue();
         expect(domFormValue).toEqual({
-            updatesEnabled: true,
             __typename: ScheduleType.TIME_DELTA,
             timeDelta: { every: 10, unit: TimeUnit.Minutes },
             cron: { cronExpression: "" },
@@ -153,7 +157,7 @@ describe("IngestTriggerFormComponent", () => {
     });
 
     it("should check cron expression error", async () => {
-        await ingestTriggerFormHarness.enableUpdates();
+        hostComponent.hostForm.controls.updatesEnabled.setValue(true);
         await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
 
         expect(component.scheduleTypeControl.value).toEqual(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
@@ -176,7 +180,7 @@ describe("IngestTriggerFormComponent", () => {
     });
 
     it("should check time delta error", async () => {
-        await ingestTriggerFormHarness.enableUpdates();
+        hostComponent.hostForm.controls.updatesEnabled.setValue(true);
         await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.TIME_DELTA);
 
         expect(component.scheduleTypeControl.value).toEqual(ScheduleType.TIME_DELTA);

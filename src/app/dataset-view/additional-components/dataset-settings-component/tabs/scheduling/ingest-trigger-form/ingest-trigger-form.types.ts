@@ -15,14 +15,12 @@ import {
 import { ScheduleType } from "../../../dataset-settings.model";
 
 export interface IngestTriggerFormType {
-    updatesEnabled: FormControl<boolean>;
     __typename: FormControl<MaybeNull<ScheduleType>>;
     timeDelta: FormGroup<TimeDeltaFormType>;
     cron: FormGroup<CronExpressionFormType>;
 }
 
 export interface IngestTriggerFormValue {
-    updatesEnabled: boolean;
     __typename: MaybeNull<ScheduleType>;
     timeDelta: TimeDeltaFormValue;
     cron: CronExpressionFormValue;

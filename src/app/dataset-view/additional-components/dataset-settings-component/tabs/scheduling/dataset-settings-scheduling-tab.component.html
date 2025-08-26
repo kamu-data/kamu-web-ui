@@ -3,12 +3,30 @@
     <mat-divider class="mt-1 mb-2" />
     <div class="box mt-3 p-4" *ngIf="isRootDataset">
         <form [formGroup]="form">
+            <div class="mt-4 ms-1 px-2 pb-1 d-flex gap-1">
+                <mat-slide-toggle
+                    color="primary"
+                    class="mat-elevation-z0"
+                    formControlName="updatesEnabled"
+                    data-test-id="ingest-trigger-updates-enabled"
+                >
+                    <span class="ps-2">Enable automatic updates</span>
+                </mat-slide-toggle>
+                <app-tooltip-icon class="d-block" [tooltip]="UPDATES_TOOLTIP" />
+            </div>
             <div class="d-flex flex-column gap-4">
                 <div class="w-100">
                     <app-ingest-trigger-form
                         data-test-id="ingest-trigger-form"
                         [form]="form.controls.ingestTrigger"
-                        [updateStateToggleLabel]="'Enable automatic updates'"
+                        [updatesEnabledControl]="form.controls.updatesEnabled"
+                    />
+                </div>
+                <div class="w-100">
+                    <app-stop-policy-form
+                        data-test-id="stop-policy-form"
+                        [form]="form.controls.stopPolicy"
+                        [updatesEnabledControl]="form.controls.updatesEnabled"
                     />
                 </div>
             </div>

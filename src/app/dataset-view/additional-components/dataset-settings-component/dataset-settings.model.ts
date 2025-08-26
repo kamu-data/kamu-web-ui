@@ -26,6 +26,11 @@ export enum BatchingRuleType {
     BUFFERING = "Buffering",
 }
 
+export enum StopPolicyType {
+    NEVER = "Never",
+    AFTER_CONSECUTIVE_FAILURES = "AfterConsecutiveFailures",
+}
+
 export interface DatasetSettingsSidePanelItem {
     name: string;
     iconName: string;

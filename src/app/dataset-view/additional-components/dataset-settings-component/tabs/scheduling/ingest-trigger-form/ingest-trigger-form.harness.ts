@@ -117,7 +117,6 @@ export class IngestTriggerFormHarness extends ComponentHarness {
     }
 
     public async currentFormValue(): Promise<IngestTriggerFormValue> {
-        const updatesEnabled = await this.isUpdatingEnabled();
         const scheduleType = await this.getScheduleType();
 
         let timeDelta: TimeDeltaFormValue = { every: null, unit: null };
@@ -136,7 +135,6 @@ export class IngestTriggerFormHarness extends ComponentHarness {
         }
 
         return {
-            updatesEnabled,
             __typename: scheduleType,
             timeDelta,
             cron,

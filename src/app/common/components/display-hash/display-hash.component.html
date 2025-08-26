@@ -2,15 +2,19 @@
     <a
         *ngIf="navigationTargetDataset"
         [title]="value"
-        [class]="class"
+        [class]="'font-monospace ' + class"
         data-test-id="navigableValue"
         [routerLink]="['/', navigationTargetDataset.accountName, navigationTargetDataset.datasetName, URL_BLOCK, value]"
         >{{ value | slice: -8 }}</a
     >
 
-    <span *ngIf="!navigationTargetDataset" class="mr-1" [title]="value" data-test-id="notNavigableValue">{{
-        value | slice: -8
-    }}</span>
+    <span
+        *ngIf="!navigationTargetDataset"
+        class="mr-1 font-monospace"
+        [title]="value"
+        data-test-id="notNavigableValue"
+        >{{ value | slice: -8 }}</span
+    >
 
     <button
         *ngIf="showCopyButton"

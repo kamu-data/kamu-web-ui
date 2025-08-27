@@ -56,9 +56,13 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
     }
 
     public onAbortFlow(params: CancelFlowArgs): void {
+        const datasetId: string = requireValue(
+            params.datasetId,
+            "Aborting flows without datasetId is not supported yet",
+        );
         this.flowsService
             .cancelFlowRun({
-                datasetId: params.datasetId,
+                datasetId,
                 flowId: params.flowId,
             })
             .pipe(takeUntilDestroyed(this.destroyRef))

@@ -1960,6 +1960,8 @@ export type Flow = {
     outcome?: Maybe<FlowOutcome>;
     /** Primary flow activation cause */
     primaryActivationCause: FlowActivationCause;
+    /** Associated flow trigger */
+    relatedTrigger?: Maybe<FlowTrigger>;
     /** Flow retry policy */
     retryPolicy?: Maybe<FlowRetryPolicy>;
     /** Start condition */
@@ -5702,7 +5704,7 @@ export type DatasetResumeFlowsMutation = {
 export type FlowConnectionDataFragment = {
     __typename?: "FlowConnection";
     totalCount: number;
-    nodes: Array<{ __typename?: "Flow" } & FlowSummaryDataFragment>;
+    nodes: Array<{ __typename?: "Flow" } & FlowSummaryDataWithTriggerFragment>;
     pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
 };
 
@@ -5870,6 +5872,15 @@ export type FlowOutcomeDataFragment =
     | FlowOutcomeData_FlowAbortedResult_Fragment
     | FlowOutcomeData_FlowFailedError_Fragment
     | FlowOutcomeData_FlowSuccessResult_Fragment;
+
+export type FlowSummaryDataWithTriggerFragment = {
+    __typename?: "Flow";
+    relatedTrigger?: {
+        __typename?: "FlowTrigger";
+        paused: boolean;
+        schedule?: { __typename: "Cron5ComponentExpression" } | { __typename: "TimeDelta" } | null;
+    } | null;
+} & FlowSummaryDataFragment;
 
 export type FlowSummaryDataFragment = {
     __typename?: "Flow";
@@ -7585,6 +7596,18 @@ export const FlowSummaryDataFragmentDoc = gql`
     ${FlowOutcomeDataFragmentDoc}
     ${TimeDeltaDataFragmentDoc}
 `;
+export const FlowSummaryDataWithTriggerFragmentDoc = gql`
+    fragment FlowSummaryDataWithTrigger on Flow {
+        ...FlowSummaryData
+        relatedTrigger {
+            paused
+            schedule {
+                __typename
+            }
+        }
+    }
+    ${FlowSummaryDataFragmentDoc}
+`;
 export const DatasetPageInfoFragmentDoc = gql`
     fragment DatasetPageInfo on PageBasedInfo {
         hasNextPage
@@ -7596,14 +7619,14 @@ export const DatasetPageInfoFragmentDoc = gql`
 export const FlowConnectionDataFragmentDoc = gql`
     fragment FlowConnectionData on FlowConnection {
         nodes {
-            ...FlowSummaryData
+            ...FlowSummaryDataWithTrigger
         }
         totalCount
         pageInfo {
             ...DatasetPageInfo
         }
     }
-    ${FlowSummaryDataFragmentDoc}
+    ${FlowSummaryDataWithTriggerFragmentDoc}
     ${DatasetPageInfoFragmentDoc}
 `;
 export const FlowHistoryDataFragmentDoc = gql`

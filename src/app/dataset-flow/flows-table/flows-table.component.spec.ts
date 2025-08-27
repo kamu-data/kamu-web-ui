@@ -90,8 +90,8 @@ describe("FlowsTableComponent", () => {
             options.handler?.call(undefined, false);
             return Promise.resolve("");
         });
-        component.cancelFlow(MOCK_FLOW_ID, mockDatasetMainDataId);
-        expect(modalWindowSpy).toHaveBeenCalledWith(jasmine.objectContaining({ title: "Cancel flow" }));
+        component.abortFlow(MOCK_FLOW_ID, mockDatasetMainDataId);
+        expect(modalWindowSpy).toHaveBeenCalledWith(jasmine.objectContaining({ title: "Abort flow" }));
     });
 
     it("should check search method", () => {

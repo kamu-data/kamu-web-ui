@@ -96,7 +96,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
 
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
     @Output() public searchByFiltersChange = new EventEmitter<MaybeNull<FlowsTableFiltersOptions>>();
-    @Output() public cancelFlowChange = new EventEmitter<CancelFlowArgs>();
+    @Output() public abortFlowChange = new EventEmitter<CancelFlowArgs>();
 
     @ViewChild(MatTable) private table: MaybeNull<MatTable<FlowSummaryDataFragment>> = null;
     @ViewChildren(MatMenuTrigger) private triggersMatMenu: QueryList<MatMenuTrigger>;
@@ -241,16 +241,16 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         return dataset;
     }
 
-    public cancelFlow(flowId: string, datasetId: string): void {
+    public abortFlow(flowId: string, datasetId: string): void {
         promiseWithCatch(
             this.modalService.error({
-                title: "Cancel flow",
-                message: "Do you want to cancel the flow?",
+                title: "Abort flow",
+                message: "Do you want to abort the flow?",
                 yesButtonText: "Ok",
                 noButtonText: "Cancel",
                 handler: (ok) => {
                     if (ok) {
-                        this.cancelFlowChange.emit({ flowId, datasetId });
+                        this.abortFlowChange.emit({ flowId, datasetId });
                     }
                 },
             }),

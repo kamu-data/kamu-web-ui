@@ -3763,6 +3763,7 @@ export type TaskFailureReason =
 export type TaskFailureReasonGeneral = {
     __typename?: "TaskFailureReasonGeneral";
     message: Scalars["String"];
+    recoverable: Scalars["Boolean"];
 };
 
 export type TaskFailureReasonInputDatasetCompacted = {
@@ -5808,7 +5809,7 @@ type FlowHistoryData_FlowEventTaskChanged_Fragment = {
             | {
                   __typename: "TaskOutcomeFailed";
                   reason:
-                      | { __typename: "TaskFailureReasonGeneral"; message: string }
+                      | { __typename: "TaskFailureReasonGeneral"; message: string; recoverable: boolean }
                       | {
                             __typename: "TaskFailureReasonInputDatasetCompacted";
                             message: string;
@@ -5857,7 +5858,7 @@ type FlowOutcomeData_FlowAbortedResult_Fragment = { __typename?: "FlowAbortedRes
 type FlowOutcomeData_FlowFailedError_Fragment = {
     __typename?: "FlowFailedError";
     reason:
-        | { __typename?: "TaskFailureReasonGeneral"; message: string }
+        | { __typename?: "TaskFailureReasonGeneral"; message: string; recoverable: boolean }
         | {
               __typename?: "TaskFailureReasonInputDatasetCompacted";
               message: string;
@@ -7403,6 +7404,7 @@ export const FlowOutcomeDataFragmentDoc = gql`
             reason {
                 ... on TaskFailureReasonGeneral {
                     message
+                    recoverable
                 }
                 ... on TaskFailureReasonInputDatasetCompacted {
                     message
@@ -7714,6 +7716,7 @@ export const FlowHistoryDataFragmentDoc = gql`
                             __typename
                             ... on TaskFailureReasonGeneral {
                                 message
+                                recoverable
                             }
                             ... on TaskFailureReasonInputDatasetCompacted {
                                 message

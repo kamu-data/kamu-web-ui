@@ -208,7 +208,7 @@ export class FlowTableHelpers {
                     case "FlowFailedError": {
                         switch (element.outcome.reason.__typename) {
                             case "TaskFailureReasonGeneral":
-                                return `An error occurred, see logs for more details`;
+                                return `An${element.outcome.reason.recoverable ? "" : " unrecoverable"} error occurred, see logs for more details`;
                             case "TaskFailureReasonInputDatasetCompacted": {
                                 return `Input dataset <a class="text-small text-danger">${element.outcome.reason.inputDataset.name}</a> was hard compacted`;
                             }

@@ -412,6 +412,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             reason: {
                 __typename: "TaskFailureReasonGeneral",
                 message: "Failed",
+                recoverable: true,
             },
         },
         timing: {
@@ -954,6 +955,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
             reason: {
                 __typename: "TaskFailureReasonGeneral",
                 message: "Failed",
+                recoverable: true,
             },
         },
         timing: {

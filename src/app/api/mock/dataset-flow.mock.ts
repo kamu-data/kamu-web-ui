@@ -493,6 +493,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             reason: {
                 __typename: "TaskFailureReasonGeneral",
                 message: "Failed",
+                recoverable: true,
             },
         },
         startCondition: null,
@@ -551,6 +552,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             reason: {
                 __typename: "TaskFailureReasonGeneral",
                 message: "Failed",
+                recoverable: true,
             },
         },
         startCondition: null,
@@ -681,6 +683,7 @@ export const mockFlowItemWidgetDataFragments: FlowItemWidgetDataFragment[] = [
             reason: {
                 __typename: "TaskFailureReasonGeneral",
                 message: "Failed",
+                recoverable: true,
             },
         },
         timing: {
@@ -721,6 +724,7 @@ export const mockFlowItemWidgetDataFragments: FlowItemWidgetDataFragment[] = [
             reason: {
                 __typename: "TaskFailureReasonGeneral",
                 message: "Failed",
+                recoverable: true,
             },
         },
         timing: {
@@ -863,6 +867,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     reason: {
                                         message: "FAILED",
                                         __typename: "TaskFailureReasonGeneral",
+                                        recoverable: true,
                                     },
                                     __typename: "FlowFailedError",
                                 },
@@ -929,6 +934,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     reason: {
                                         message: "FAILED",
                                         __typename: "TaskFailureReasonGeneral",
+                                        recoverable: true,
                                     },
                                     __typename: "FlowFailedError",
                                 },

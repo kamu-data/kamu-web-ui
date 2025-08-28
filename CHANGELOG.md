@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - connection failure
   - response timeout
   - bad status code
+- Flows table: visualizing the latest batching condition statictics
 ### Changed
 - Redesign "Metadata" tab
 - Updated the algorithm for checking the hash of the head

@@ -51,3 +51,35 @@ a {
 .pt-1px {
     padding-top: 1px;
 }
+
+.fs-16 {
+    font-size: 16px !important;
+}
+
+.completed-container {
+    padding: 10px 30px 10px 20px;
+    background-color: #d6ffe8;
+    border: 1px solid #a4f4c9;
+    border-radius: 6px;
+}
+
+.failing-container {
+    padding: 10px 30px 10px 20px;
+    background-color: #fff7ea;
+    border: 1px solid #ffa500;
+    border-radius: 6px;
+}
+
+.pause-container {
+    padding: 10px 30px 10px 20px;
+    background-color: #fff7ea;
+    border: 1px solid #ffde21;
+    border-radius: 6px;
+}
+
+.stopped-container {
+    padding: 10px 30px 10px 20px;
+    background-color: #fff2f2;
+    border: 1px solid #ef6363;
+    border-radius: 6px;
+}

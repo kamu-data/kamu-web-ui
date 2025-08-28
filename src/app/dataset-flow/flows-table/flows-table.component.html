@@ -37,14 +37,19 @@
     </div>
 </div>
 
-<div class="form-check my-3 d-flex gap-2">
-    <input
-        class="form-check-input"
-        type="checkbox"
-        [(ngModel)]="onlySystemFlows"
-        [attr.data-test-id]="'only-system-flow'"
-    />
-    <label class="form-check-label"> Only system flows </label>
+<div class="d-flex flex-row justify-content-between align-items-center">
+    <div class="form-check my-3 d-flex gap-2">
+        <input
+            class="form-check-input"
+            type="checkbox"
+            [(ngModel)]="onlySystemFlows"
+            [attr.data-test-id]="'only-system-flow'"
+        />
+        <label class="form-check-label"> Only system flows </label>
+    </div>
+    <div class="me-4">
+        <span class="fw-500">Total Flow Runs: {{ dataSource.data.length }}</span>
+    </div>
 </div>
 
 <table mat-table [dataSource]="dataSource" [trackBy]="trackByFlowId">
